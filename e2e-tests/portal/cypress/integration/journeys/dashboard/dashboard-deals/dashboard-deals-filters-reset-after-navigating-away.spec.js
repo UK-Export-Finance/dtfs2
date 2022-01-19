@@ -22,7 +22,7 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
-  it('DOES STUFF', () => {
+  it('resets filters after navigating away from the dashboard', () => {
     // toggle to show filters (hidden by default)
     dashboard.filters.showHideButton().click();
 
@@ -44,8 +44,8 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
     dashboard.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
 
     // navigate somewhere else
-    header.reports().click();
-    cy.url().should('eq', relative('/reports'));
+    cy.visit('/dashboard/facilities/gef');
+    cy.url().should('eq', relative('/dashboard/facilities/gef'));
 
     // go back to dashboard
     header.dashboard().click();

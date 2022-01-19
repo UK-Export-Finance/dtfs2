@@ -34,29 +34,6 @@ type ErrorListItem {
   text: String
 }
 
-type DealDetails {
-  ukefDealId: String
-  maker: Maker
-  checker: Checker
-  checkerMIN: Checker
-  submissionDate: String
-  approvalDate: String
-  created: String
-  workflowStatus: String
-}
-
-type Deal {
-  _id: String!
-  dealType: String
-  submissionType: String
-  bankInternalRefName: String
-  additionalRefName: String
-  updatedAt: Float
-  status: String
-  bank: Bank
-  details: DealDetails
-}
-
 type AllDeal {
   _id: String!
   status: String
@@ -65,12 +42,6 @@ type AllDeal {
   product: String
   submissionType: String
   updatedAt: Float
-}
-
-type DealsQuery {
-  status: StatusType
-  count: Int
-  deals: [Deal]
 }
 
 type AllDealsQuery {
@@ -90,12 +61,6 @@ input DashboardFilters {
   operator: String
 }
 
-input DashboardReportsFilters {
-  field: String
-  value: String
-  operator: String
-}
-
 input DealsInput {
   start: Int
   pagesize: Int
@@ -103,58 +68,16 @@ input DealsInput {
   sort: [DashboardSort]
 }
 
-input DealsReportsInput {
-  start: Int
-  pagesize: Int
-  filters: [DashboardReportsFilters]
-  sort: [DashboardSort]
-}
-
-type Transaction {
-  deal_id: String
-  deal_status: String
-  deal_supplierName: String
-  deal_bankInternalRefName: String
-  deal_ukefDealId: String
-  deal_bank: String
-  deal_created: String
-  deal_submissionDate: String
-  deal_submissionType: String
-  transaction_id: String
-  bankFacilityId: String
-  ukefFacilityId: String
-  transactionType: String
-  value: String
-  transactionStage: String
-  createdDate: String
-  lastEdited: String
-  issuedDate: String
-  maker: String
-  checker: String
-  issueFacilityDetailsSubmitted: String
-  currency: Currency
-  requestedCoverStartDate: String
-  previousCoverStartDate: String
-  dateOfCoverChange: String
-  issuedFacilitySubmittedToUkefTimestamp: String
-  issuedFacilitySubmittedToUkefBy: String
-}
-
-type TransactionQuery {
-  count: Int
-  transactions: [Transaction]
-}
-
-input TransactionFilters {
+input GefFacilitiesFilters {
   field: String
   value: String
   operator: String
 }
 
-input TransactionInput {
+input GefFacilitiesInput {
   start: Int
   pagesize: Int
-  filters: [TransactionFilters]
+  filters: [GefFacilitiesFilters]
 }
 
 type Exporter {
@@ -204,7 +127,6 @@ type GefDeal {
   eligibility: Eligibility
 }
 
-
 type GefCurrency {
    id: String
 }
@@ -242,9 +164,7 @@ type GefFacilitiesQuery {
 type Query {
   currencies: [Currency]
   allDeals(params: DealsInput): AllDealsQuery
-  deals(params: DealsReportsInput): DealsQuery
-  transactions(params: TransactionInput): TransactionQuery
-  gefFacilities(params: TransactionInput): GefFacilitiesQuery
+  gefFacilities(params: GefFacilitiesInput): GefFacilitiesQuery
 }
 
 type DealStatusErrorItem {

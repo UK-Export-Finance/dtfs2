@@ -29,6 +29,7 @@ const cleanDeals = async (token) => {
   const deals = await api.listDeals(token);
 
   if (deals) {
+    console.log('yo deals[0] \n', deals[0]);
     for (const deal of deals) {
 
       // NOTE: BSS and GEF deals use different MongoDB _ids.
@@ -36,11 +37,11 @@ const cleanDeals = async (token) => {
       // to use the correct .find({ _id ... }) with or without ObjectId.
       // When BSS and GEF have the same _id generation,
       // they can use the same endpoint.
-      if (deal.dealType === 'BSS/EWCS') {
+      if (deal.product === 'BSS/EWCS') {
         await api.deleteDeal(deal._id, token);
 
       }
-      if (deal.dealType === 'GEF') {
+      if (deal.product === 'GEF') {
         await gefApi.deleteDeal(deal._id, token);
       }
     }
