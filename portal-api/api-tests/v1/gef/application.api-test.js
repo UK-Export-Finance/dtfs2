@@ -21,7 +21,7 @@ const api = require('../../../src/v1/api');
 jest.mock('../../../src/reference-data/api', () => ({
   sendEmail: jest.fn(() => Promise.resolve({})),
   numberGenerator: {
-    create: () => ({}),
+    create: () => ({ ukefId: '1' }),
   },
 }));
 
