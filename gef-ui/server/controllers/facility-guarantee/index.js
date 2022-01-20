@@ -42,7 +42,6 @@ const updateFacilityGuarantee = async (req, res) => {
   async function update() {
     const feeTypeIsInAdvance = feeType === 'In advance';
     const feeTypeIsInArrears = feeType === 'In arrears';
-    const feeTypeIsInAtMaturity = feeType === 'At maturity';
 
     let paymentType;
     let feeFrequency;

@@ -505,35 +505,16 @@ describe(baseUrl, () => {
           errRef: 'type',
         }]);
       });
-      it('returns an enum error when putting the payment type', async () => {
-        const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, paymentType: 'TEST' }).to(baseUrl);
-        expect(status).toEqual(422);
-        expect(body).toEqual([{
-          errCode: ERROR.ENUM_ERROR,
-          errMsg: 'Unrecognised enum',
-          errRef: 'paymentType',
-        }]);
-      });
     });
     describe('PUT', () => {
       it('returns an enum error when putting the wrong type', async () => {
         const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-        const res = await as(aMaker).put({ paymentType: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
+        const res = await as(aMaker).put({ type: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
         expect(res.status).toEqual(422);
         expect(res.body).toEqual([{
           errCode: ERROR.ENUM_ERROR,
           errMsg: 'Unrecognised enum',
-          errRef: 'paymentType',
-        }]);
-      });
-      it('returns an enum error when putting the payment type', async () => {
-        const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-        const res = await as(aMaker).put({ paymentType: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
-        expect(res.status).toEqual(422);
-        expect(res.body).toEqual([{
-          errCode: ERROR.ENUM_ERROR,
-          errMsg: 'Unrecognised enum',
-          errRef: 'paymentType',
+          errRef: 'type',
         }]);
       });
     });
