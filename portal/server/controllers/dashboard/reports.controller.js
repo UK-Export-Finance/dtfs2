@@ -9,12 +9,15 @@ exports.getPortalReports = async (req, res) => {
   const pastDeadlineUnissuedFacilitiesCount = facilities.filter((facility) => facility.daysLeftToIssue < 0);
   const facilitiesThatNeedIssuingCount = facilities.filter((facility) => facility.daysLeftToIssue < 15 && facility.daysLeftToIssue >= 0);
   if (facilities) {
-    return res.render('portal-reports/reports.njk', {
+    return res.render('reports/reports-dashboard.njk', {
       allUnissuedFacilitiesCount: facilities.length,
       pastDeadlineUnissuedFacilitiesCount: pastDeadlineUnissuedFacilitiesCount.length,
       facilitiesThatNeedIssuingCount: facilitiesThatNeedIssuingCount.length,
+      user: req.session.user,
+      primaryNav: 'reports',
     });
   }
+  return res.redirect('/not-found');
 };
 
 exports.getUnissuedFacilitiesReports = async (req, res) => {
@@ -23,7 +26,7 @@ exports.getUnissuedFacilitiesReports = async (req, res) => {
   const facilities = await api.getUnissuedFacilitiesReports(userToken);
 
   if (facilities) {
-    return res.render('portal-reports/unissued-facilities.njk', { facilities });
+    return res.render('reports/unissued-facilities.njk', { facilities, user: req.session.user, primaryNav: 'reports' });
   }
 
   return res.redirect('/not-found');
@@ -65,4 +68,6 @@ exports.downloadUnissuedFacilitiesReports = async (req, res) => {
   if (facilities.length) {
     return downloadCsv(res, 'unissued_facilities_report', columns, facilities);
   }
+
+  return res.redirect('/not-found');
 };

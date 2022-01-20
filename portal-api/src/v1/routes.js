@@ -169,7 +169,7 @@ openRouter.route('/users/reset-password').post(users.resetPassword);
 openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswordWithToken);
 
 // Portal reports
-authRouter.route('/portal-reports').get(validate({ role: ['maker', 'checker'] }), reportsController.findUnissuedFacilitiesReports);
+authRouter.route('/reports/unissued-facilities').get(validate({ role: ['maker', 'checker'] }), reportsController.findUnissuedFacilitiesReports);
 
 // token-validator
 authRouter.get('/validate', validate(), (req, res) => {

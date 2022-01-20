@@ -627,7 +627,7 @@ const gefFacilities = async (start, pagesize, filters, token) => {
 const getUnissuedFacilitiesReports = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${portalApi}/v1/portal-reports`,
+    url: `${portalApi}/v1/reports/unissued-facilities`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',

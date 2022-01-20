@@ -39,7 +39,7 @@ const resolvedValue = [{
 
 describe('controllers/reports.controller', () => {
   let res;
-  let req;
+  const req = { session: { token: 'mock-token', user: '' } };
   beforeEach(() => {
     res = mockResponse();
   });
@@ -47,58 +47,64 @@ describe('controllers/reports.controller', () => {
   describe('getPortalReports', () => {
     it('sets all counts to `0` when there are no unissued facilities', async () => {
       api.getUnissuedFacilitiesReports.mockResolvedValue([]);
-      req = { session: { token: 'mock-token' } };
       await getPortalReports(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('portal-reports/reports.njk', {
+      expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 0,
         pastDeadlineUnissuedFacilitiesCount: 0,
         facilitiesThatNeedIssuingCount: 0,
+        primaryNav: 'reports',
+        user: req.session.user,
       });
     });
     it('sets `allUnissuedFacilitiesCount` to `1` when one facility is unissued', async () => {
       api.getUnissuedFacilitiesReports.mockResolvedValue([resolvedValue[0]]);
-      req = { session: { token: 'mock-token' } };
       await getPortalReports(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('portal-reports/reports.njk', {
+      expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 1,
         pastDeadlineUnissuedFacilitiesCount: 0,
         facilitiesThatNeedIssuingCount: 0,
+        primaryNav: 'reports',
+        user: req.session.user,
       });
     });
     it('sets `facilitiesThatNeedIssuingCount` to `1` when one facility needs issuing in less than 15 days', async () => {
       api.getUnissuedFacilitiesReports.mockResolvedValue([resolvedValue[1]]);
-      req = { session: { token: 'mock-token' } };
       await getPortalReports(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('portal-reports/reports.njk', {
+      expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 1,
         pastDeadlineUnissuedFacilitiesCount: 0,
         facilitiesThatNeedIssuingCount: 1,
+        primaryNav: 'reports',
+        user: req.session.user,
       });
     });
     it('sets `pastDeadlineUnissuedFacilitiesCount` to `1` when one facility is overdue', async () => {
       api.getUnissuedFacilitiesReports.mockResolvedValue([resolvedValue[2]]);
-      req = { session: { token: 'mock-token' } };
       await getPortalReports(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('portal-reports/reports.njk', {
+      expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 1,
         pastDeadlineUnissuedFacilitiesCount: 1,
         facilitiesThatNeedIssuingCount: 0,
+        primaryNav: 'reports',
+        user: req.session.user,
       });
     });
 
     it('renders all (3) unissued facilities that are overdue or that need issuing in less than 15 days', async () => {
       api.getUnissuedFacilitiesReports.mockResolvedValue(resolvedValue);
-      req = { session: { token: 'mock-token' } };
+
       await getPortalReports(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('portal-reports/reports.njk', {
+      expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 3,
         pastDeadlineUnissuedFacilitiesCount: 1,
         facilitiesThatNeedIssuingCount: 1,
+        primaryNav: 'reports',
+        user: req.session.user,
       });
     });
   });
@@ -106,7 +112,6 @@ describe('controllers/reports.controller', () => {
   describe('getUnissuedFacilitiesReports', () => {
     it('renders the 404 page if the api call returns `undefined` value', async () => {
       api.getUnissuedFacilitiesReports.mockResolvedValue();
-      req = { session: { token: 'mock-token' } };
       await getUnissuedFacilitiesReports(req, res);
 
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
@@ -114,10 +119,13 @@ describe('controllers/reports.controller', () => {
 
     it('renders the unissued-facilities report page', async () => {
       api.getUnissuedFacilitiesReports.mockResolvedValue([resolvedValue[1]]);
-      req = { session: { token: 'mock-token' } };
       await getUnissuedFacilitiesReports(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('portal-reports/unissued-facilities.njk', { facilities: [resolvedValue[1]] });
+      expect(res.render).toHaveBeenCalledWith('reports/unissued-facilities.njk', {
+        facilities: [resolvedValue[1]],
+        primaryNav: 'reports',
+        user: req.session.user,
+      });
     });
   });
 });

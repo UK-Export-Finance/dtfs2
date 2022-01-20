@@ -35,7 +35,7 @@ context('Dashboard: Reports', () => {
   describe('Reports page', () => {
     beforeEach(() => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative('/portal-reports'));
+      cy.visit(relative('/reports'));
     });
     it('returns the reports page with unissued facilities', () => {
       reports2.allUnissuedFacilities().should('contain', 'You need to issue 1 facility');
