@@ -3,10 +3,11 @@ const gql = require('graphql-tag');
 //   deals(params: {start:0, pagesize: $pagesize, filter: [{field: "status", value: "Draft"}]}) {
 const dealsQuery = `
 query {
-  deals {
+  allDeals {
+    count
     deals {
       _id
-      dealType
+      product
     }
   }
 }`;

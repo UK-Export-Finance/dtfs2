@@ -14,14 +14,6 @@ const MOCK_API = {
 
     return Promise.resolve(mockResponse);
   },
-  queryDeals: () => {
-    const mockResponse = {
-      deals: MOCK_DEALS,
-      count: MOCK_DEALS.length,
-    };
-
-    return Promise.resolve(mockResponse);
-  },
 };
 
 module.exports = MOCK_API;

@@ -1,3 +1,4 @@
+/*
 const { gefFacilitiesDashboard } = require('../../../../pages');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
@@ -66,3 +67,4 @@ context('Dashboard Deals pagination controls', () => {
     gefFacilitiesDashboard.confirmFacilitiesPresent(page1);
   });
 });
+*/

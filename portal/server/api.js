@@ -1,9 +1,10 @@
 const axios = require('axios');
 const FormData = require('form-data');
-const apollo = require('./graphql/apollo');
 
+const apollo = require('./graphql/apollo');
 const {
-  allDealsQuery, dealsQuery, transactionsQuery, gefFacilitiesQuery,
+  allDealsQuery,
+  gefFacilitiesQuery,
 } = require('./graphql/queries');
 
 require('dotenv').config();
@@ -60,18 +61,6 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
     status: response.status,
     data: response.data,
   };
-};
-
-const contracts = async (start, pagesize, filters, token) => {
-  const params = {
-    start,
-    pagesize,
-    filters,
-  };
-
-  const response = await apollo('GET', dealsQuery, params, token);
-
-  return response.data.deals;
 };
 
 const allDeals = async (start, pagesize, filters, token, sort) => {
@@ -463,20 +452,6 @@ const getIndustrySectors = async (token) => {
   };
 };
 
-const transactions = async (start, pagesize, filters, token) => {
-  const params = {
-    start,
-    pagesize,
-    filters,
-  };
-
-  const response = await apollo('GET', transactionsQuery, params, token);
-  if (response.errors) {
-    console.log({ responseError: JSON.stringify(response, null, 4) });
-  }
-  return response.data.transactions;
-};
-
 const validateToken = async (token) => {
   if (!token) return false;
 
@@ -654,7 +629,6 @@ module.exports = {
   banks,
   cloneDeal,
   contractBond,
-  contracts,
   createBond,
   createDeal,
   createLoan,
@@ -662,7 +636,6 @@ module.exports = {
   login,
   resetPassword,
   resetPasswordFromToken,
-  transactions,
   updateBond,
   updateBondIssueFacility,
   updateBondCoverStartDate,
