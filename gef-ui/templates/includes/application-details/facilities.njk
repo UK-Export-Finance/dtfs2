@@ -56,7 +56,8 @@
     {{ govukSummaryList({
       rows: item.rows,
       attributes: {
-        'data-cy': 'facility-summary-list'
+        'data-cy': 'facility-summary-list',
+        id: item.ukefFacilityId
       }
     }) }}
   {% endfor %}
