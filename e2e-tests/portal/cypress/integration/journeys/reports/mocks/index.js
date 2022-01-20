@@ -1,14 +1,13 @@
 const mockUsers = require('../../../../fixtures/mockUsers');
 const CONSTANTS = require('../../../../fixtures/constants');
+const EXPORTER = require('../../../../fixtures/mockExporter');
 
 const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
 
 const BASE_DEAL = {
   bank: { id: BANK1_MAKER1.bank.id },
   additionalRefName: 'Mock',
-  exporter: {
-    companyName: 'Mock company',
-  },
+  exporter: EXPORTER.exporterOne,
 };
 
 const BSS_DEAL_BASE = {

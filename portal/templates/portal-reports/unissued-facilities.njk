@@ -10,6 +10,7 @@
 
   {{ govukBreadcrumbs({
     classes: 'govuk-!-margin-top-0',
+    attributes: { "data-cy": "reports--unissued-facilities-breadcrumbs" },
     items: [
       {
         text: "Reports",
@@ -24,7 +25,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-      <h1 class="govuk-heading-l">Unissued facilities</h1>
+      <h1 class="govuk-heading-l" data-cy="reports--unissued-facilities-mainHeading">Unissued facilities</h1>
       <p class="govuk-body">
         The number of days left to issue is an estimate. We calculate this using the date of submission and the deadline for issuing a facility which is 3 months after the submission date.
       </p>
@@ -33,7 +34,8 @@
       {{ govukButton({
           text: "Download",
           classes: "govuk-button--secondary",
-          href: "/download-report-unissued-facilities"
+          href: "/download-report-unissued-facilities",
+          attributes: { "data-cy": "reports--unissued-facilities-download" }
       }) }}
     </div>
   </div>
@@ -107,6 +109,7 @@
 
 {{ govukTable({
    classes: 'portal__facilities-table',
+   attributes: {'data-cy': 'reports--unissued-facilities-table' },
    head: [
       {
         text: "Bank ref",
