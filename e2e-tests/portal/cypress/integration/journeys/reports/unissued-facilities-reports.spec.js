@@ -3,7 +3,7 @@ import relative from '../../relativeURL';
 const { GEF_DEAL_DRAFT } = require('./mocks');
 const mockUsers = require('../../../fixtures/mockUsers');
 const CONSTANTS = require('../../../fixtures/constants');
-const { reports2 } = require('../../pages');
+const { reports } = require('../../pages');
 
 const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
 
@@ -38,19 +38,19 @@ context('Dashboard: Reports', () => {
       cy.visit(relative('/reports'));
     });
     it('returns the reports page with unissued facilities', () => {
-      reports2.allUnissuedFacilities().should('contain', 'You need to issue 1 facility');
-      reports2.pastDeadlineUnissuedFacilities().should('contain', 'You have 0 facilities that have past the deadline for issuing');
-      reports2.facilitiesThatNeedIssuing().should('contain', 'You have 0 facility that needs issuing');
-      reports2.reviewAllUnissuedFacilities().should('exist');
+      reports.allUnissuedFacilities().should('contain', 'You need to issue 1 facility');
+      reports.pastDeadlineUnissuedFacilities().should('contain', 'You have 0 facilities that have past the deadline for issuing');
+      reports.facilitiesThatNeedIssuing().should('contain', 'You have 0 facility that needs issuing');
+      reports.reviewAllUnissuedFacilities().should('exist');
     });
 
     it('displays the `Unissued facilities` reports page', () => {
-      reports2.reviewAllUnissuedFacilities().click();
+      reports.reviewAllUnissuedFacilities().click();
       cy.url().should('eq', relative('/reports/unissued-facilities'));
-      reports2.reportsUnissuedFacilitiesBreadcrumbs().should('exist');
-      reports2.reportsUnissuedFacilitiesDownload().should('exist');
+      reports.reportsUnissuedFacilitiesBreadcrumbs().should('exist');
+      reports.reportsUnissuedFacilitiesDownload().should('exist');
 
-      reports2.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
+      reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
       cy.get('@row1').find('[data-cy="facility__bankRef"]').should('contain', 'Draft GEF');
       cy.get('@row1').find('[data-cy="facility__product"]').should('contain', 'GEF');
       cy.get('@row1').find('[data-cy="facility__facilityId"]').should('contain', '00000001');
