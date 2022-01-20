@@ -35,17 +35,17 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
     }
 
     return false;
-  } else {
-    /**
-     * Check that the previous task in the current group is completed
-     * */
-    const previousTaskId = String(Number(taskId - 1));
+  }
 
-    const previousTask = getTaskInGroupById(group.groupTasks, previousTaskId);
+  /**
+   * Check that the previous task in the current group is completed
+   * */
+  const previousTaskId = String(Number(taskId - 1));
 
-    if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
-      return true;
-    }
+  const previousTask = getTaskInGroupById(group.groupTasks, previousTaskId);
+
+  if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+    return true;
   }
 
   return false;
@@ -93,7 +93,6 @@ const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
 
   return false;
 };
-
 
 /**
  * Rules/conditions for task.canEdit and task.status
