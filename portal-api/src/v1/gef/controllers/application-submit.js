@@ -1,14 +1,15 @@
-const { ObjectID } = require('mongodb');
 const now = require('../../../now');
 const refDataApi = require('../../../reference-data/api');
-const db = require('../../../drivers/db-client');
 const {
   getAllFacilitiesByDealId,
   update: updateFacility,
 } = require('./facilities.controller');
+const {
+  firstSubmissionPortalActivity,
+  facilityChangePortalActivity,
+} = require('./portal-activities.controller');
+
 const CONSTANTS = require('../../../constants');
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../portalActivity-object-generator/activityConstants');
-const portalActivityGenerator = require('../../portalActivity-object-generator');
 
 const generateSubmissionData = async (existingApplication) => {
   const result = {
@@ -118,60 +119,32 @@ const addUkefFacilityIdToFacilities = async (dealId) => {
   return facilities;
 };
 
-// retrieves user information from database
-const getUserInfo = async (userId) => {
-  const userCollectionName = 'users';
+// checks if any canResubmitIssuedFacilities present
+const checkForChangedFacilities = (facilities) => {
+  let hasChanged = false;
 
-  const userCollection = await db.getCollection(userCollectionName);
-  const {
-    firstname,
-    surname = '',
-  } = userId
-    ? await userCollection.findOne({ _id: new ObjectID(String(userId)) })
-    : {};
+  facilities.forEach((facility) => {
+    if (facility.canResubmitIssuedFacilities) {
+      hasChanged = true;
+    }
+  });
 
-  // creates user object which can be used
-  const user = {
-    firstname,
-    surname,
-    _id: userId,
-  };
-
-  return user;
-};
-
-// generates labels for portalActivities array based on type of submission
-const submissionTypeToConstant = (submissionType) => {
-  let submissionConstant;
-
-  switch (submissionType) {
-    case CONSTANTS.DEAL.SUBMISSION_TYPE.AIN:
-      submissionConstant = PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION;
-      break;
-    case CONSTANTS.DEAL.SUBMISSION_TYPE.MIN:
-      submissionConstant = PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION;
-      break;
-    case CONSTANTS.DEAL.SUBMISSION_TYPE.MIA:
-      submissionConstant = PORTAL_ACTIVITY_LABEL.MIA_SUBMISSION;
-      break;
-    default:
-      submissionConstant = null;
-  }
-
-  return submissionConstant;
+  return hasChanged;
 };
 
 // adds to the portalActivities array for submission to UKEF events
 const submissionPortalActivity = async (application) => {
-  const { submissionType, portalActivities, checkerId } = application;
-  // generates the label for activity array
-  const applicationType = submissionTypeToConstant(submissionType);
-  // creates user object to add to array
-  const user = await getUserInfo(checkerId);
-  // generates an activities object
-  const activityObj = portalActivityGenerator(applicationType, user, PORTAL_ACTIVITY_TYPE.NOTICE, '');
-  // adds to beginning of portalActivities array so most recent displayed first
-  portalActivities.unshift(activityObj);
+  const { submissionCount } = application;
+  let { portalActivities } = application;
+
+  const facilities = await getAllFacilitiesByDealId(application._id);
+
+  if (!submissionCount) {
+    portalActivities = await firstSubmissionPortalActivity(application);
+  }
+  if (checkForChangedFacilities(facilities)) {
+    portalActivities = await facilityChangePortalActivity(application, facilities);
+  }
 
   return portalActivities;
 };
@@ -219,10 +192,10 @@ const checkCoverDateConfirmed = async (app) => {
 const addSubmissionData = async (dealId, existingApplication) => {
   await checkCoverDateConfirmed(existingApplication);
   const { count, date } = await generateSubmissionData(existingApplication);
+  const updatedPortalActivity = await submissionPortalActivity(existingApplication);
   await addSubmissionDateToIssuedFacilities(dealId);
   await addUkefFacilityIdToFacilities(dealId);
   await removeChangedToIssued(dealId);
-  const updatedPortalActivity = await submissionPortalActivity(existingApplication);
 
   const submissionData = {
     submissionCount: count,
@@ -241,8 +214,6 @@ const addSubmissionData = async (dealId, existingApplication) => {
 module.exports = {
   addSubmissionData,
   submissionPortalActivity,
-  submissionTypeToConstant,
-  getUserInfo,
   addSubmissionDateToIssuedFacilities,
   removeChangedToIssued,
   checkCoverDateConfirmed,

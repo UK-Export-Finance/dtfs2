@@ -23,9 +23,39 @@ describe('mapPortalActivities', () => {
     },
     text: '',
     label: 'Automatic inclusion notice submitted to UKEF',
+    html: '',
+    facilityType: '',
+    facilityID: '',
+    maker: '',
+    checker: '',
   }];
 
-  it('should return formatted array for mojTimeline', () => {
+  const facilityActivity = [{
+    type: 'FACILITY_STAGE',
+    timestamp: 1638458265,
+    author: {
+      firstName: 'Bob',
+      lastName: 'Smith',
+      _id: 12345,
+    },
+    text: '',
+    label: 'Bank facility stage changed',
+    html: 'facility',
+    facilityType: 'Cash facility',
+    facilityID: '12345',
+    maker: {
+      firstname: 'Joe',
+      surname: 'Bloggs',
+      id: '12345',
+    },
+    checker: {
+      firstname: 'Bob',
+      surname: 'Smith',
+      id: '4567',
+    },
+  }];
+
+  it('should return formatted array for mojTimeline for first submission', () => {
     const response = mapPortalActivities(gefActivity);
 
     // expected format
@@ -34,6 +64,38 @@ describe('mapPortalActivities', () => {
       text: '',
       datetime: { timestamp: fromUnixTime(1638458265), type: 'datetime' },
       byline: { text: 'Bob Smith' },
+      html: '',
+      facilityType: '',
+      facilityID: '',
+      maker: '',
+      checker: '',
+    }];
+
+    expect(response).toEqual(expected);
+  });
+
+  it('should return formatted array for mojTimeline for facility submission', () => {
+    const response = mapPortalActivities(facilityActivity);
+
+    // expected format
+    const expected = [{
+      label: { text: 'Bank facility stage changed' },
+      text: '',
+      datetime: { timestamp: fromUnixTime(1638458265), type: 'datetime' },
+      byline: { text: 'Bob Smith' },
+      html: 'facility',
+      facilityType: 'Cash facility',
+      facilityID: '12345',
+      maker: {
+        firstname: 'Joe',
+        surname: 'Bloggs',
+        id: '12345',
+      },
+      checker: {
+        firstname: 'Bob',
+        surname: 'Smith',
+        id: '4567',
+      },
     }];
 
     expect(response).toEqual(expected);
