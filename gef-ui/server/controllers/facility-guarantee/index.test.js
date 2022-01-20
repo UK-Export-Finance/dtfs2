@@ -68,7 +68,7 @@ describe('controllers/facility-guarantee', () => {
       mockRequest.query.status = 'change';
       mockFacilityResponse.details.feeFrequency = 'Monthly';
       mockFacilityResponse.details.dayCountBasis = '365';
-      mockFacilityResponse.details.feeType = 'in advance';
+      mockFacilityResponse.details.feeType = CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE;
 
       api.getFacility.mockResolvedValueOnce(mockFacilityResponse);
 
@@ -78,7 +78,7 @@ describe('controllers/facility-guarantee', () => {
         inArrearsFrequency: '',
         inAdvanceFrequency: 'Monthly',
         dayCountBasis: '365',
-        feeType: 'in advance',
+        feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
         dealId: '123',
         facilityId: 'xyz',
       }));
@@ -107,7 +107,7 @@ describe('controllers/facility-guarantee', () => {
 
       jest.resetAllMocks();
 
-      mockRequest.body.feeType = 'in advance';
+      mockRequest.body.feeType = CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE;
       mockRequest.body.feeFrequency = 'Monthly';
       mockRequest.body.dayCountBasis = '';
 
@@ -121,15 +121,15 @@ describe('controllers/facility-guarantee', () => {
     });
 
     it('calls the update api with the correct data and redirects user back to application page', async () => {
-      mockRequest.body.feeType = 'in advance';
+      mockRequest.body.feeType = CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE;
       mockRequest.body.dayCountBasis = '365';
       mockRequest.body.inAdvanceFrequency = 'Monthly';
 
       await updateFacilityGuarantee(mockRequest, mockResponse);
 
       expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-        feeType: 'in advance',
-        paymentType: 'IN_ADVANCE_MONTHLY',
+        feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
+        paymentType: 'Monthly',
         dayCountBasis: '365',
         feeFrequency: 'Monthly',
       });
@@ -138,7 +138,7 @@ describe('controllers/facility-guarantee', () => {
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-      mockRequest.body.feeType = 'in advance';
+      mockRequest.body.feeType = CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE;
       mockRequest.body.dayCountBasis = '365';
       mockRequest.body.inAdvanceFrequency = 'Monthly';
 

@@ -4,7 +4,20 @@ const {
   generateHeadingString,
   generateListItemString,
 } = require('../../helpers/notify-template-formatters');
+const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('./gef-facilities-content-strings');
+
+/*
+* mapIssuedValue
+* map to be the same value that's displayed in Portal UI.
+*/
+const mapIssuedValue = (hasBeenIssued) => {
+  if (hasBeenIssued) {
+    return CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED;
+  }
+
+  return CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED;
+};
 
 /*
 * facilityFieldsObj
@@ -14,7 +27,7 @@ const facilityFieldsObj = (facility) => {
   const fields = (({
     ukefFacilityId,
     bankReference,
-    facilityStage,
+    hasBeenIssued,
     coverStartDate,
     value,
     currencyCode,
@@ -28,7 +41,7 @@ const facilityFieldsObj = (facility) => {
   }) => ({
     ukefFacilityId,
     bankReference,
-    facilityStage,
+    hasBeenIssued,
     coverStartDate,
     value,
     currencyCode,
@@ -48,12 +61,22 @@ const facilityFieldsObj = (facility) => {
   }
 
   // format for emails
+  if (fields.hasBeenIssued) {
+    fields.hasBeenIssued = mapIssuedValue(fields.hasBeenIssued);
+  }
+
   if (fields.coverStartDate) {
     fields.coverStartDate = format(Number(fields.coverStartDate), 'do MMMM yyyy');
   }
+
   if (fields.coverPercentage) {
     fields.coverPercentage = `${fields.coverPercentage}%`;
   }
+
+  if (fields.interestPercentage) {
+    fields.interestPercentage = `${fields.interestPercentage}%`;
+  }
+
   if (fields.guaranteeFee) {
     fields.guaranteeFee = `${fields.guaranteeFee}%`;
   }
@@ -158,6 +181,7 @@ const gefFacilitiesList = (facilities) => {
 };
 
 module.exports = {
+  mapIssuedValue,
   facilityFieldsObj,
   generateFacilityFieldListItemString,
   generateFacilityFieldsListString,

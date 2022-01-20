@@ -1,6 +1,10 @@
 const wipeDB = require('../../wipeDB');
 const CONSTANTS = require('../../../src/constants');
-const { FACILITY_TYPE, ERROR } = require('../../../src/v1/gef/enums');
+const {
+  FACILITY_TYPE,
+  FACILITY_PAYMENT_TYPE,
+  ERROR,
+} = require('../../../src/v1/gef/enums');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -83,9 +87,9 @@ describe(baseUrl, () => {
       value: 10000000,
       coverPercentage: 75,
       interestPercentage: 10,
-      paymentType: 'IN_ARREARS_QUARTLY',
+      paymentType: 'Monthly',
       dayCountBasis: 365,
-      feeType: 'in advance',
+      feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
       feeFrequency: 'Monthly',
       coverDateConfirmed: true,
       ukefFacilityId: 1234,
@@ -275,8 +279,8 @@ describe(baseUrl, () => {
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
-        paymentType: 'IN_ADVANCE_QUARTERLY',
-        feeType: 'in advance',
+        paymentType: 'Monthly',
+        feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
         feeFrequency: 'Monthly',
         dayCountBasis: 365,
         coverDateConfirmed: true,
@@ -323,8 +327,8 @@ describe(baseUrl, () => {
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
-        paymentType: 'IN_ADVANCE_QUARTERLY',
-        feeType: 'in advance',
+        paymentType: 'Monthly',
+        feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
         feeFrequency: 'Monthly',
         dayCountBasis: 365,
       };
@@ -505,35 +509,16 @@ describe(baseUrl, () => {
           errRef: 'type',
         }]);
       });
-      it('returns an enum error when putting the payment type', async () => {
-        const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, paymentType: 'TEST' }).to(baseUrl);
-        expect(status).toEqual(422);
-        expect(body).toEqual([{
-          errCode: ERROR.ENUM_ERROR,
-          errMsg: 'Unrecognised enum',
-          errRef: 'paymentType',
-        }]);
-      });
     });
     describe('PUT', () => {
       it('returns an enum error when putting the wrong type', async () => {
         const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-        const res = await as(aMaker).put({ paymentType: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
+        const res = await as(aMaker).put({ type: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
         expect(res.status).toEqual(422);
         expect(res.body).toEqual([{
           errCode: ERROR.ENUM_ERROR,
           errMsg: 'Unrecognised enum',
-          errRef: 'paymentType',
-        }]);
-      });
-      it('returns an enum error when putting the payment type', async () => {
-        const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-        const res = await as(aMaker).put({ paymentType: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
-        expect(res.status).toEqual(422);
-        expect(res.body).toEqual([{
-          errCode: ERROR.ENUM_ERROR,
-          errMsg: 'Unrecognised enum',
-          errRef: 'paymentType',
+          errRef: 'type',
         }]);
       });
     });
