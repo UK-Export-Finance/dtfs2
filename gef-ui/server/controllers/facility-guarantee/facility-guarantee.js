@@ -47,7 +47,7 @@ function validateFacilityGuarantee({
     facilityGuaranteeErrors.push(inArrearsFrequencyError);
   }
 
-  const DAY_COUNT_BASIS = [ '360', '365' ];
+  const DAY_COUNT_BASIS = ['360', '365'];
 
   if (!DAY_COUNT_BASIS.includes(dayCountBasis)) {
     facilityGuaranteeErrors.push(dayCountBasisError);
