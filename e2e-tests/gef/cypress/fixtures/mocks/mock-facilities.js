@@ -22,8 +22,9 @@ exports.MOCK_FACILITY_ONE = {
   submittedAsIssuedDate: '1638363717231',
   feeType: 'in advance',
   feeFrequency: 'Monthly',
+  ukefFacilityId: '1',
   dayCountBasis: 365,
-  coverDateConfirmed: false,
+  coverDateConfirmed: null,
   canResubmitIssuedFacilities: null,
 };
 
@@ -47,7 +48,7 @@ exports.MOCK_FACILITY_TWO = {
   ukefExposure: 1600,
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
-  ukefFacilityId: '0030113305',
+  ukefFacilityId: '2',
   feeType: 'in advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
@@ -75,7 +76,7 @@ exports.MOCK_FACILITY_TWO_NULL_MIA = {
   ukefExposure: 1600,
   guaranteeFee: 0.9,
   submittedAsIssuedDate: null,
-  ukefFacilityId: '0030113305',
+  ukefFacilityId: '2',
   feeType: 'in advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
@@ -84,7 +85,7 @@ exports.MOCK_FACILITY_TWO_NULL_MIA = {
 };
 
 exports.MOCK_FACILITY_THREE = {
-  type: CONSTANTS.FACILITY_TYPE.CASH,
+  type: CONSTANTS.FACILITY_TYPE.CONTINGENT,
   hasBeenIssued: false,
   name: 'Facility three',
   shouldCoverStartOnSubmission: true,
@@ -103,7 +104,7 @@ exports.MOCK_FACILITY_THREE = {
   ukefExposure: 1600,
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
-  ukefFacilityId: '0030113305',
+  ukefFacilityId: '3',
   feeType: 'in advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
@@ -131,7 +132,7 @@ exports.MOCK_FACILITY_FOUR = {
   ukefExposure: 1600,
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
-  ukefFacilityId: '0030113305',
+  ukefFacilityId: '4',
   feeType: 'in advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,

@@ -148,7 +148,7 @@ context('Application Details Page', () => {
       applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
 
       statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.DRAFT);
-      statusBanner.bannerExporter().should('not.contain', '-');
+      statusBanner.bannerExporter().contains(dealWithInProgressExporter.exporter.companyName);
     });
 
     it('displays the correct submission type heading', () => {
@@ -202,6 +202,7 @@ context('Application Details Page', () => {
 
       statusBanner.bannerStatus().contains('Draft');
       statusBanner.bannerSubmissionType().should('have.text', CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
+      statusBanner.bannerExporter().contains(dealWithCompletedExporterAndFacilities.exporter.companyName);
     });
 
     it('displays the correct submission type heading', () => {

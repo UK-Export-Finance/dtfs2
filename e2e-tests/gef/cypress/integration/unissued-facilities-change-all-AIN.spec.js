@@ -43,7 +43,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
           });
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
@@ -320,9 +320,9 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       // should be able to change number 1 as changed to issued
       applicationPreview.facilitySummaryListRowValue(3, 0).contains(MOCK_FACILITY_ONE.name);
-      applicationPreview.facilitySummaryListRowValue(3, 2).contains(issuedDate);
+      applicationPreview.facilitySummaryListRowValue(3, 3).contains(issuedDate);
       applicationPreview.facilitySummaryListRowAction(3, 0).contains('Change');
-      applicationPreview.facilitySummaryListRowValue(3, 3).contains(coverStart);
+      applicationPreview.facilitySummaryListRowValue(3, 4).contains(coverStart);
       applicationPreview.facilitySummaryListRowAction(3, 0).click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));

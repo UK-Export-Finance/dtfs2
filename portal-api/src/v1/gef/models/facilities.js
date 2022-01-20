@@ -77,6 +77,8 @@ class Facility {
       if (req.canResubmitIssuedFacilities != null) {
         this.canResubmitIssuedFacilities = Boolean(req.canResubmitIssuedFacilities);
       }
+      // used to store the user details of maker who changed unissued facility to issued
+      this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker) || null;
     } else {
       // update facility
       if (req.hasBeenIssued != null) {
@@ -183,6 +185,10 @@ class Facility {
 
       if (req.canResubmitIssuedFacilities != null) {
         this.canResubmitIssuedFacilities = Boolean(req.canResubmitIssuedFacilities);
+      }
+
+      if (req.unissuedToIssuedByMaker != null) {
+        this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker);
       }
 
       this.updatedAt = Date.now();
