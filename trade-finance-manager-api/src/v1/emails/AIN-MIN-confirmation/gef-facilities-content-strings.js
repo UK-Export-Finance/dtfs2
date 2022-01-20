@@ -12,7 +12,7 @@ const GENERIC_LIST_ITEM_TITLES = {
 const GEF_FACILITIES_CONTENT_STRINGS = {
   HEADINGS: {
     CASH: 'Here are your cash facility details for your records',
-    CONTINGENT: 'Here are your contingent details for your records',
+    CONTINGENT: 'Here are your contingent facility details for your records',
   },
   LIST_ITEM_TITLES: {
     // keep the same names as the actual field names, for easy reference/usage
