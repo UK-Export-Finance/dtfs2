@@ -49,6 +49,12 @@ const FACILITY_PROVIDED_DETAILS = {
   OTHER: 'OTHER',
 };
 
+const FACILITY_PAYMENT_TYPE = {
+  IN_ADVANCE: 'In advance',
+  IN_ARREARS: 'In arrears',
+  AT_MATURITY: 'At maturity',
+};
+
 const CURRENCY = {
   GBP: 'GBP',
   EUR: 'EUR',
@@ -63,5 +69,6 @@ module.exports = {
   DEAL_STATUS,
   ERROR,
   FACILITY_PROVIDED_DETAILS,
+  FACILITY_PAYMENT_TYPE,
   CURRENCY,
 };

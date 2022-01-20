@@ -2,6 +2,7 @@ const { validationErrorHandler } = require('../../utils/helpers');
 const Facility = require('../../models/facility');
 const validateFacilityGuarantee = require('./facility-guarantee');
 const api = require('../../services/api');
+const { FACILITY_PAYMENT_TYPE } = require('../../constants');
 
 const facilityGuarantee = async (req, res) => {
   const { params, query, session } = req;
@@ -20,8 +21,8 @@ const facilityGuarantee = async (req, res) => {
       dealId: facility.dealId,
       facilityId: facility.facilityId,
       feeType: facility.feeType,
-      inAdvanceFrequency: facility.feeType === 'In advance' ? facility.feeFrequency : '',
-      inArrearsFrequency: facility.feeType === 'In arrears' ? facility.feeFrequency : '',
+      inAdvanceFrequency: facility.feeType === FACILITY_PAYMENT_TYPE.IN_ADVANCE ? facility.feeFrequency : '',
+      inArrearsFrequency: facility.feeType === FACILITY_PAYMENT_TYPE.IN_ARREARS ? facility.feeFrequency : '',
       dayCountBasis: facility.dayCountBasis,
       status,
     });
@@ -40,8 +41,8 @@ const updateFacilityGuarantee = async (req, res) => {
   const facilityGuaranteeErrors = [];
 
   async function update() {
-    const feeTypeIsInAdvance = feeType === 'In advance';
-    const feeTypeIsInArrears = feeType === 'In arrears';
+    const feeTypeIsInAdvance = feeType === FACILITY_PAYMENT_TYPE.IN_ADVANCE;
+    const feeTypeIsInArrears = feeType === FACILITY_PAYMENT_TYPE.IN_ARREARS;
 
     let paymentType;
     let feeFrequency;

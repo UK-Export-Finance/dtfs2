@@ -1,5 +1,5 @@
 const CONSTANTS = require('../../../../constants');
-const { FACILITY_TYPE } = require('../../enums');
+const { FACILITY_TYPE, FACILITY_PAYMENT_TYPE } = require('../../enums');
 
 /* eslint-disable consistent-return */
 const hasRequiredItems = (doc) => {
@@ -45,7 +45,7 @@ const hasRequiredItems = (doc) => {
   if (!doc.feeType) {
     required.push('feeType');
   }
-  if (doc.feeType !== 'At maturity' && !doc.feeFrequency) {
+  if (doc.feeType !== FACILITY_PAYMENT_TYPE.AT_MATURITY && !doc.feeFrequency) {
     required.push('feeFrequency');
   }
   if (!doc.dayCountBasis) {

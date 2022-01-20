@@ -1,3 +1,5 @@
+const CONSTANTS = require('../../constants');
+
 function validateFacilityGuarantee({
   feeType,
   dayCountBasis,
@@ -23,15 +25,19 @@ function validateFacilityGuarantee({
     errMsg: 'Select how often your bank will pay the fee to UKEF',
   };
 
-  if (!['In advance', 'In arrears', 'At maturity'].includes(feeType)) {
+  if (![
+    CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
+    CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ARREARS,
+    CONSTANTS.FACILITY_PAYMENT_TYPE.AT_MATURITY,
+  ].includes(feeType)) {
     facilityGuaranteeErrors.push(feeTypeError);
   }
   const FREQUENCIES = ['Monthly', 'Quarterly', 'Semi-annually', 'Annually'];
-  if (['In advance'].includes(feeType)
+  if ([CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE].includes(feeType)
     && !FREQUENCIES.includes(inAdvanceFrequency)) {
     facilityGuaranteeErrors.push(inAdvanceFrequencyError);
   }
-  if (['In arrears'].includes(feeType)
+  if ([CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ARREARS].includes(feeType)
     && !FREQUENCIES.includes(inArrearsFrequency)) {
     facilityGuaranteeErrors.push(inArrearsFrequencyError);
   }

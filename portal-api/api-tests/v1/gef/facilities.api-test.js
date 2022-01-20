@@ -1,6 +1,10 @@
 const wipeDB = require('../../wipeDB');
 const CONSTANTS = require('../../../src/constants');
-const { FACILITY_TYPE, ERROR } = require('../../../src/v1/gef/enums');
+const {
+  FACILITY_TYPE,
+  FACILITY_PAYMENT_TYPE,
+  ERROR,
+} = require('../../../src/v1/gef/enums');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -85,7 +89,7 @@ describe(baseUrl, () => {
       interestPercentage: 10,
       paymentType: 'Monthly',
       dayCountBasis: 365,
-      feeType: 'In advance',
+      feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
       feeFrequency: 'Monthly',
       coverDateConfirmed: true,
       ukefFacilityId: 1234,
@@ -276,7 +280,7 @@ describe(baseUrl, () => {
         coverPercentage: 80,
         interestPercentage: 40,
         paymentType: 'Monthly',
-        feeType: 'In advance',
+        feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
         feeFrequency: 'Monthly',
         dayCountBasis: 365,
         coverDateConfirmed: true,
@@ -324,7 +328,7 @@ describe(baseUrl, () => {
         coverPercentage: 80,
         interestPercentage: 40,
         paymentType: 'Monthly',
-        feeType: 'In advance',
+        feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
         feeFrequency: 'Monthly',
         dayCountBasis: 365,
       };

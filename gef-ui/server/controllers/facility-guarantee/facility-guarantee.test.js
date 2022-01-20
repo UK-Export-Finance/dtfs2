@@ -1,4 +1,5 @@
 import validateFacilityGuarantee from './facility-guarantee';
+import CONSTANTS from '../../constants';
 
 const feeTypeErrorExpected = {
   errRef: 'feeType',
@@ -32,9 +33,9 @@ describe('facility-guarantee', () => {
     expect(errors).not.toContainEqual(inAdvanceFrequencyErrorExpected);
   });
 
-  it('validates frequency when fee type is In advance', () => {
+  it(`validates frequency when fee type is ${CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE}`, () => {
     const errors = validateFacilityGuarantee({
-      feeType: 'In advance', // advance/arrears/maturity
+      feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE, // advance/arrears/maturity
       dayCountBasis: '',
       inAdvanceFrequency: '',
     });
@@ -42,9 +43,9 @@ describe('facility-guarantee', () => {
     expect(errors).toContainEqual(inAdvanceFrequencyErrorExpected);
   });
 
-  it('validates frequency when fee type is In arrears', () => {
+  it(`validates frequency when fee type is ${CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ARREARS}`, () => {
     const errors = validateFacilityGuarantee({
-      feeType: 'In arrears', // advance/arrears/maturity
+      feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ARREARS, // advance/arrears/maturity
       dayCountBasis: '',
       inArrearsFrequency: '',
     });
@@ -54,7 +55,7 @@ describe('facility-guarantee', () => {
 
   it('validates frequency when completed', () => {
     const errors = validateFacilityGuarantee({
-      feeType: 'In advance', // advance/arrears/maturity
+      feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE, // advance/arrears/maturity
       inAdvanceFrequency: 'Monthly',
       dayCountBasis: '',
     });
@@ -63,16 +64,16 @@ describe('facility-guarantee', () => {
 
   it('validates day count basis', () => {
     const errors = validateFacilityGuarantee({
-      feeType: 'In advance', // advance/arrears/maturity
+      feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE, // advance/arrears/maturity
       dayCountBasis: '360',
       inAdvanceFrequency: 'Monthly',
     });
     expect(errors).toEqual([]);
   });
 
-  it('does not validate frequency when at maturity', () => {
+  it(`does not validate frequency when ${CONSTANTS.FACILITY_PAYMENT_TYPE.AT_MATURITY}`, () => {
     const errors = validateFacilityGuarantee({
-      feeType: 'At maturity', // advance/arrears/maturity
+      feeType: CONSTANTS.FACILITY_PAYMENT_TYPE.AT_MATURITY, // advance/arrears/maturity
       dayCountBasis: '360',
     });
     expect(errors).toEqual([]);
