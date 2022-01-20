@@ -148,7 +148,6 @@ context('Application Details Page', () => {
       applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
 
       statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.DRAFT);
-      statusBanner.bannerExporter().should('not.contain', '-');
     });
 
     it('displays the correct submission type heading', () => {
