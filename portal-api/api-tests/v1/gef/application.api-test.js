@@ -14,8 +14,16 @@ const CONSTANTS = require('../../../src/constants');
 const mockApplications = require('../../fixtures/gef/application');
 const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 const mockFacilities = require('../../fixtures/gef/facilities');
+const referenceData = require('../../../src/reference-data/api');
 
 const api = require('../../../src/v1/api');
+
+jest.mock('../../../src/reference-data/api', () => ({
+  sendEmail: jest.fn(() => Promise.resolve({})),
+  numberGenerator: {
+    create: () => ({}),
+  },
+}));
 
 const baseUrl = '/v1/gef/application';
 const facilitiesUrl = '/v1/gef/facilities';
@@ -320,6 +328,96 @@ describe(baseUrl, () => {
         errRef: 'status',
         errMsg: 'Unrecognised enum',
       }]);
+    });
+
+
+    describe('status update emails', () => {
+      const expectedEmailVariables = (maker, updatedByUser, deal, newStatus) => ({
+        firstName: maker.firstName,
+        surname: maker.surname,
+        submissionType: deal.submissionType,
+        supplierName: deal.exporter.companyName,
+        bankInternalRefName: deal.bankInternalRefName,
+        currentStatus: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF,
+        previousStatus: deal.status,
+        updatedByName: `${updatedByUser.firstname} ${updatedByUser.surname}`,
+        updatedByEmail: updatedByUser.email,
+      });
+
+      describe(`when new status is ${CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL}`, () => {
+        it('sends an email', async () => {
+          const mockApplication = mockApplications[0];
+          const { body } = await as(aMaker).post(mockApplication).to(baseUrl);
+          expect(body.submissionCount).toEqual(0);
+
+          const dealId = body._id;
+          await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL }).to(`${baseUrl}/status/${dealId}`);
+
+          const sendEmailCalls = referenceData.sendEmail.mock.calls;
+          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+
+          expect(firstSendEmailCall).toEqual(
+            CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
+            aMaker.bank.emails[0],
+            expectedEmailVariables(
+              aMaker,
+              aMaker,
+              mockApplication,
+              CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
+            ),
+          );
+        });
+      });
+
+      describe(`when new status is ${CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED}`, () => {
+        it('sends an email', async () => {
+          const mockApplication = mockApplications[0];
+          const { body } = await as(aMaker).post(mockApplication).to(baseUrl);
+          expect(body.submissionCount).toEqual(0);
+
+          const dealId = body._id;
+          await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED }).to(`${baseUrl}/status/${dealId}`);
+
+          const sendEmailCalls = referenceData.sendEmail.mock.calls;
+          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+
+          expect(firstSendEmailCall).toEqual(
+            CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
+            aMaker.bank.emails[0],
+            expectedEmailVariables(
+              aMaker,
+              aChecker,
+              mockApplication,
+              CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED,
+            ),
+          );
+        });
+      });
+
+      describe(`when new status is ${CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF}`, () => {
+        it('sends an email', async () => {
+          const mockApplication = mockApplications[0];
+          const { body } = await as(aMaker).post(mockApplication).to(baseUrl);
+          expect(body.submissionCount).toEqual(0);
+
+          const dealId = body._id;
+          await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
+
+          const sendEmailCalls = referenceData.sendEmail.mock.calls;
+          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+
+          expect(firstSendEmailCall).toEqual(
+            CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
+            aChecker.bank.emails[0],
+            expectedEmailVariables(
+              aMaker,
+              aChecker,
+              mockApplication,
+              CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF,
+            ),
+          );
+        });
+      });
     });
 
     describe('when new status is `SUBMITTED_TO_UKEF`', () => {
