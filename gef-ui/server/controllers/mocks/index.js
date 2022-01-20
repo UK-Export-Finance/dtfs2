@@ -277,7 +277,7 @@ const MockRequestUnissued = () => {
     user: {
       bank: { id: 'BANKID' },
       roles: ['MAKER'],
-      _id: 12345,
+      _id: '12345',
       firstname: 'Test',
       surname: 'Test',
     },

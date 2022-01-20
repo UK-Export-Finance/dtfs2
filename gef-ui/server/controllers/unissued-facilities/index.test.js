@@ -176,7 +176,7 @@ describe('postChangeUnissuedFacility()', () => {
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
 
   const maker = {
-    _id: 12345,
+    _id: '12345',
     firstname: 'Test',
     surname: 'Test',
   };
@@ -387,7 +387,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
 
   const maker = {
-    _id: 12345,
+    _id: '12345',
     firstname: 'Test',
     surname: 'Test',
   };
