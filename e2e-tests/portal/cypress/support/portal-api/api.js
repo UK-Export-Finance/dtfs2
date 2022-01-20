@@ -190,7 +190,7 @@ module.exports.insertGefApplication = (deal, token) => cy.request({
   return resp.body;
 });
 
-exports.setGefSubmissionType = (dealId, payload, token) => cy.request({
+exports.updateGefApplication = (dealId, payload, token) => cy.request({
   url: `${api()}/v1/gef/application/${dealId}`,
   method: 'PUT',
   body: payload,

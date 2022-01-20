@@ -11,7 +11,7 @@ const dealsCollectionName = 'deals';
 const gefDealUrl = '/v1/gef/application';
 const gefFacilityUrl = '/v1/gef/facilities';
 
-describe('v1/portal-reports', () => {
+describe('v1/reports/unissued-facilities', () => {
   let aMaker;
   let mockApplication;
 
@@ -49,7 +49,7 @@ describe('v1/portal-reports', () => {
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/portal-reports');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([{
@@ -82,7 +82,7 @@ describe('v1/portal-reports', () => {
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/portal-reports');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([{
@@ -115,7 +115,7 @@ describe('v1/portal-reports', () => {
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/portal-reports');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -123,7 +123,7 @@ describe('v1/portal-reports', () => {
 
   it('retrieves an empty array if the deal has NOT been submitted to UKEF', async () => {
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/portal-reports');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -137,7 +137,7 @@ describe('v1/portal-reports', () => {
     expect(submissionTypeStatus).toEqual(200);
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/portal-reports');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -151,7 +151,7 @@ describe('v1/portal-reports', () => {
     expect(submissionTypeStatus).toEqual(200);
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/portal-reports');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -165,7 +165,7 @@ describe('v1/portal-reports', () => {
     expect(submissionTypeStatus).toEqual(200);
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/portal-reports');
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);

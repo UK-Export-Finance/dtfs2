@@ -29,7 +29,7 @@
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
       <h3 class="govuk-heading-m has-text-danger">Less than 15 days left</h3>
-      {% if allUnissuedFacilitiesCount == 1 %}
+      {% if facilitiesThatNeedIssuingCount == 1 %}
         <p class="govuk-body" data-cy="reports--facilities-that-need-issuing">You have {{ facilitiesThatNeedIssuingCount }} facility that needs issuing</p>
       {% elif facilitiesThatNeedIssuingCount > 1 %}
         <p class="govuk-body" data-cy="reports--facilities-that-need-issuing">You have {{ facilitiesThatNeedIssuingCount }} facilities that need issuing</p>
