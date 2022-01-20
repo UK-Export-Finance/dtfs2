@@ -63,9 +63,9 @@ const FACILITY_PROVIDED_DETAILS = {
 };
 
 const FACILITY_PAYMENT_TYPE = {
-  IN_ADVANCE: 'IN_ADVANCE',
-  IN_ARREARS: 'IN_ARREARS',
-  AT_MATURITY: 'AT_MATURITY',
+  IN_ADVANCE: 'In advance',
+  IN_ARREARS: 'In arrears',
+  AT_MATURITY: 'At maturity',
 };
 
 const AUTHORISATION_LEVEL = {

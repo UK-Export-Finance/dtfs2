@@ -1,5 +1,6 @@
 const { format } = require('date-fns');
 const {
+  mapIssuedValue,
   facilityFieldsObj,
   generateFacilityFieldListItemString,
   generateFacilityFieldsListString,
@@ -10,6 +11,7 @@ const {
   generateHeadingString,
   generateListItemString,
 } = require('../../helpers/notify-template-formatters');
+const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 
 const MOCK_CASH_CONTINGENT_FACILITES = require('../../__mocks__/mock-cash-contingent-facilities');
@@ -41,6 +43,26 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     [mockDayCountBasis.name]: mockDayCountBasis.value,
   };
 
+  describe('mapIssuedValue', () => {
+    describe('when facility.hasBeenIssued is true', () => {
+      it(`should return ${CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED}`, () => {
+        const result = mapIssuedValue(true);
+        const expected = CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED;
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when facility.hasBeenIssued is false', () => {
+      it(`should return ${CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED}`, () => {
+        const result = mapIssuedValue(false);
+        const expected = CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED;
+
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+
   describe('facilityFieldsObj', () => {
     it('should return and format specific fields from a facility object', () => {
       const result = facilityFieldsObj(mockFacility);
@@ -48,11 +70,11 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const expected = {
         ukefFacilityId: mockFacility.ukefFacilityId,
         bankReference: mockFacility.bankReference,
-        facilityStage: mockFacility.facilityStage,
+        hasBeenIssued: mapIssuedValue(mockFacility.hasBeenIssued),
         coverStartDate: format(Number(mockFacility.coverStartDate), 'do MMMM yyyy'),
         value: mockFacility.value,
         currencyCode: mockFacility.currencyCode,
-        interestPercentage: mockFacility.interestPercentage,
+        interestPercentage: `${mockFacility.interestPercentage}%`,
         coverPercentage: `${mockFacility.coverPercentage}%`,
         guaranteeFee: `${mockFacility.guaranteeFee}%`,
         ukefExposure: mockFacility.ukefExposure,

@@ -3,7 +3,7 @@ const GENERIC_LIST_ITEM_TITLES = {
   facilityStage: 'Facility stage',
   requestedCoverStartDate: 'Requested cover start date',
   coverStartDate: 'Cover start date',
-  coverPercentage: 'Covered percentage',
+  coverPercentage: 'Percentage of UKEF cover needed',
   guaranteeFee: 'Guarantee fee payable by bank',
   ukefExposure: 'UKEF exposure',
   dayCountBasis: 'Day count basis',
@@ -12,20 +12,20 @@ const GENERIC_LIST_ITEM_TITLES = {
 const GEF_FACILITIES_CONTENT_STRINGS = {
   HEADINGS: {
     CASH: 'Here are your cash facility details for your records',
-    CONTINGENT: 'Here are your contingent details for your records',
+    CONTINGENT: 'Here are your contingent facility details for your records',
   },
   LIST_ITEM_TITLES: {
     // keep the same names as the actual field names, for easy reference/usage
     CASH: {
       ukefFacilityId: GENERIC_LIST_ITEM_TITLES.ukefFacilityId,
       bankReference: 'Cash facility ID',
-      facilityStage: GENERIC_LIST_ITEM_TITLES.facilityStage,
+      hasBeenIssued: GENERIC_LIST_ITEM_TITLES.facilityStage,
       requestedCoverStartDate: GENERIC_LIST_ITEM_TITLES.requestedCoverStartDate,
       coverStartDate: GENERIC_LIST_ITEM_TITLES.coverStartDate,
       value: 'Cash facility value',
       currencyCode: 'Cash facility currency',
       coverPercentage: GENERIC_LIST_ITEM_TITLES.coverPercentage,
-      interestPercentage: 'Minimum risk margin fee',
+      interestPercentage: 'Interest margin your bank will charge',
       guaranteeFee: GENERIC_LIST_ITEM_TITLES.guaranteeFee,
       ukefExposure: GENERIC_LIST_ITEM_TITLES.ukefExposure,
       feeType: 'Premium type',
@@ -35,13 +35,13 @@ const GEF_FACILITIES_CONTENT_STRINGS = {
     CONTINGENT: {
       ukefFacilityId: GENERIC_LIST_ITEM_TITLES.ukefFacilityId,
       bankReference: 'Bank\'s Contingent facility ID',
-      facilityStage: GENERIC_LIST_ITEM_TITLES.facilityStage,
+      hasBeenIssued: GENERIC_LIST_ITEM_TITLES.facilityStage,
       requestedCoverStartDate: GENERIC_LIST_ITEM_TITLES.requestedCoverStartDate,
       coverStartDate: GENERIC_LIST_ITEM_TITLES.coverStartDate,
       value: 'Contingent facility value',
       currencyCode: 'Contingent facility currency',
       coverPercentage: GENERIC_LIST_ITEM_TITLES.coverPercentage,
-      interestPercentage: 'Interest margin percentage',
+      interestPercentage: 'Risk margin your bank will charge',
       guaranteeFee: GENERIC_LIST_ITEM_TITLES.guaranteeFee,
       ukefExposure: GENERIC_LIST_ITEM_TITLES.ukefExposure,
       feeType: 'Fee type',

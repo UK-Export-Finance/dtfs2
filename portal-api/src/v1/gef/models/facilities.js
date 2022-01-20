@@ -14,27 +14,6 @@ const checkType = (type) => {
   }
 };
 
-const checkPaymentType = (paymentType) => {
-  if (paymentType) {
-    switch (paymentType.toUpperCase()) {
-      case 'IN_ARREARS_MONTHLY':
-      case 'IN_ARREARS_QUARTLY':
-      case 'IN_ARREARS_SEMI_ANNUALLY':
-      case 'IN_ARREARS_ANNUALLY':
-      case 'IN_ADVANCE_QUARTERLY':
-      case 'IN_ADVANCE_MONTHLY':
-      case 'IN_ADVANCE_SEMI_ANNUALLY':
-      case 'IN_ADVANCE_ANNUALLY':
-      case 'AT_MATURITY':
-        return paymentType;
-      default:
-        return null;
-    }
-  } else {
-    return null;
-  }
-};
-
 class Facility {
   constructor(req) {
     if (req.dealId) {
@@ -148,7 +127,7 @@ class Facility {
       }
 
       if (req.paymentType != null) {
-        this.paymentType = checkPaymentType(req.paymentType);
+        this.paymentType = req.paymentType;
       }
 
       if (req.ukefExposure != null) {
