@@ -85,7 +85,7 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
 
   /**
    * If 'Adverse History Check' task is completed
-   * All tasks in the Underwriting Group Task become unlocked/able to be started
+   * All tasks in the Underwriting Group Task become unlocked and are able to be started
    * */
   const canUnlockUnderWritingGroupTasks = isAdverseHistoryTaskIsComplete(taskGroups);
 
@@ -99,11 +99,17 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
             task.id === taskUpdate.id
             && task.groupId === taskUpdate.groupId);
 
-          const shouldUpdate = (!isTaskThatIsBeingUpdated
+          // add the task to list of emails to be sent
+          if (!isTaskThatIsBeingUpdated) {
+            taskEmailsToSend.push(task);
+          }
+
+          // unlock the task
+          const shouldUnlock = (!isTaskThatIsBeingUpdated
             && !task.canEdit
             && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START);
 
-          if (shouldUpdate) {
+          if (shouldUnlock) {
             return {
               ...task,
               canEdit: true,

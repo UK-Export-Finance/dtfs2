@@ -45,7 +45,7 @@ module.exports.listAllDeals = (token) => {
     body: JSON.stringify(body),
   }).then((resp) => {
     expect(resp.status).to.equal(200);
-    return resp.body.data.deals.deals;
+    return resp.body.data.allDeals.deals;
   });
 };
 

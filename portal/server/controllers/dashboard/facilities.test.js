@@ -41,8 +41,8 @@ describe('controllers/facilities', () => {
       },
     };
 
-    api.transactions = jest.fn();
     api.gefFacilities = jest.fn();
+    api.transactions = jest.fn();
 
     res = mockResponse();
   });

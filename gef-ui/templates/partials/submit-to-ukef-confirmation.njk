@@ -15,7 +15,7 @@
         submissionType: submissionType,
         status: status,
         text: 'submitted to UKEF',
-        unissuedToIssued: unissuedToIssued
+        hasIssuedFacility: hasIssuedFacility
       }%}
 
       {{ govukPanel({
@@ -26,12 +26,12 @@
         classes: "govuk-!-margin-bottom-7"
       }) }}
 
-      {% if unissuedToIssued and submissionType !== 'Manual Inclusion Application'%}
-          <p data-cy="confirmation-text">We’ll send you a confirmation email shortly, once we’ve acknowledged your issued facilities.</p>
+      {% if hasIssuedFacility %}
+          <p data-cy="confirmation-text">We'll send you a confirmation email shortly, once we've acknowledged your issued facilities.</p>
       {% else %}
         {% if isNotice %}
           {% if ukefDecisionAccepted %}
-            <p data-cy="confirmation-text">We’ll send you a confirmation email shortly, once we’ve acknowledged your inclusion notice.</p>
+            <p data-cy="confirmation-text">We'll send you a confirmation email shortly, once we've acknowledged your inclusion notice.</p>
           {% else %}
             <p data-cy="confirmation-text">We'll send you an email shortly to confirm we've accepted your notice.</p>
           {% endif %}

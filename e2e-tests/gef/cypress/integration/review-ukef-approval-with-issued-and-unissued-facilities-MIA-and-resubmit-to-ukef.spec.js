@@ -230,11 +230,11 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       applicationPreview.submitButtonPostApproval().click();
-      applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
+      applicationSubmission.submissionText().contains(`Someone at your bank must check your ${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} before they can submit it to UKEF.`);
       applicationSubmission.submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
-      applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
+      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
 });
@@ -406,7 +406,7 @@ context('Return to maker', () => {
     it('should be able to submit to checker after making changes', () => {
       applicationDetails.submitButton().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
+      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
 });
@@ -434,13 +434,13 @@ context('Submit to UKEF', () => {
       statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
 
-    it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
+    it('submit to ukef and it should change to MIN (from MIA)', () => {
       applicationPreview.submitButton().should('exist');
       applicationPreview.submitButton().click();
       applicationSubmission.submitButton().click();
-      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
+      applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)} submitted to UKEF`);
       // check that correct text is displayed under confirmation panel
-      applicationSubmission.confirmationText().contains('We’ll send you a confirmation email shortly, once we’ve acknowledged your inclusion notice.');
+      applicationSubmission.confirmationText().contains('We\'ll send you a confirmation email shortly, once we\'ve acknowledged your inclusion notice.');
     });
   });
 });

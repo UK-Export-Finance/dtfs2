@@ -507,7 +507,6 @@ const RES_MOCK_AIN_APPLICATION_CHECKER = () => {
   res.comments = [];
   res.previousStatus = CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF;
   res.ukefDecision = [];
-  res.ukefDecisionAccepted = true;
   res.id = '61a7710b2ae62b0013dae687';
   res.exporter = { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] };
   res.facilities = {
