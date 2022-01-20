@@ -20,6 +20,7 @@ import applicationSubmission from './pages/application-submission';
 import statusBanner from './pages/application-status-banner';
 import returnToMaker from './pages/return-to-maker';
 import applicationDetails from './pages/application-details';
+import applicationActivities from './pages/application-activities';
 
 let dealId;
 let token;
@@ -46,7 +47,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
           });
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
@@ -192,6 +193,8 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(3, 5).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 6).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 7).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(3, 7).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(3, 8).should('not.exist');
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
@@ -270,13 +273,14 @@ context('Return to maker for unissued to issued facilities', () => {
 
       // forth facility table only has change as not yet issued
       applicationDetails.facilitySummaryListRowAction(3, 0).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 1).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(3, 2).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(3, 1).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(3, 2).contains('Change');
       applicationDetails.facilitySummaryListRowAction(3, 3).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(3, 4).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(3, 5).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(3, 6).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(3, 7).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(3, 8).should('have.value', '');
 
       // should not be able to edit exporter table
       applicationDetails.exporterSummaryListRowAction(0, 0).should('have.value', '');
@@ -306,7 +310,7 @@ context('Return to maker for unissued to issued facilities', () => {
       const coverStart = format(dateConstants.today, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
-      applicationDetails.facilitySummaryListRowAction(3, 1).click();
+      applicationDetails.facilitySummaryListRowAction(3, 2).click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
 
       aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
@@ -327,15 +331,17 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListRowValue(3, 0).contains(MOCK_FACILITY_ONE.name);
       applicationDetails.facilitySummaryListRowAction(3, 0).contains('Change');
       applicationDetails.facilitySummaryListRowAction(3, 1).should('have.value', '');
-      applicationDetails.facilitySummaryListRowValue(3, 2).contains(issuedDate);
-      applicationDetails.facilitySummaryListRowAction(3, 2).contains('Change');
-      applicationDetails.facilitySummaryListRowValue(3, 3).contains(coverStart);
+      applicationDetails.facilitySummaryListRowAction(3, 2).should('have.value', '');
+      applicationDetails.facilitySummaryListRowValue(3, 3).contains(issuedDate);
       applicationDetails.facilitySummaryListRowAction(3, 3).contains('Change');
-      applicationDetails.facilitySummaryListRowValue(3, 4).contains(coverEnd);
+      applicationDetails.facilitySummaryListRowValue(3, 4).contains(coverStart);
       applicationDetails.facilitySummaryListRowAction(3, 4).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(3, 5).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 6).should('have.value', '');
+      applicationDetails.facilitySummaryListRowValue(3, 5).contains(coverEnd);
+      applicationDetails.facilitySummaryListRowAction(3, 5).contains('Change');
       applicationDetails.facilitySummaryListRowAction(3, 7).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(3, 8).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(3, 9).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(0, 10).should('have.value', '');
 
       // check that header updated to include this facility
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
@@ -427,6 +433,8 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(3, 6).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 7).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 8).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(3, 9).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(3, 10).should('not.exist');
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
@@ -436,6 +444,70 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted to UKEF');
       // check that correct text is displayed under confirmation panel
       applicationSubmission.confirmationText().contains('We\'ll send you a confirmation email shortly, once we\'ve acknowledged your issued facilities.');
+    });
+  });
+
+  /**
+   * Check the activity feed for facility changed to issued activity
+   * Should contain Bank facility stage changed
+   * Should contain links and tags
+   * Should not contain already issued facilities
+   */
+  describe('Check the activity feed shows issued facilities activity', () => {
+    beforeEach(() => {
+      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.login(CREDENTIALS.MAKER);
+      cy.visit(relative(`/gef/application-details/${dealId}`));
+    });
+
+    it('activity tab contains the correct elements and redirects to correct place on clicking facility link', () => {
+      applicationActivities.subNavigationBarActivities().click();
+      applicationActivities.activityTimeline().contains('Bank facility stage changed');
+
+      // first facility issued activity
+      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Changed by ${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
+      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId).contains(`Checked by ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Unissued');
+      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Issued');
+      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
+        .contains(`${unissuedFacilitiesArray[0].type} facility ${unissuedFacilitiesArray[0].ukefFacilityId}`);
+      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId).click();
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[0].ukefFacilityId}`));
+
+      applicationActivities.subNavigationBarActivities().click();
+
+      // 2nd facility issued activity
+      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[1].ukefFacilityId).contains(`Changed by ${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
+      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[1].ukefFacilityId).contains(`Checked by ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Unissued');
+      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[1].ukefFacilityId).contains('Issued');
+      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId)
+        .contains(`${unissuedFacilitiesArray[1].type} facility ${unissuedFacilitiesArray[1].ukefFacilityId}`);
+      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId).click();
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[1].ukefFacilityId}`));
+
+      applicationActivities.subNavigationBarActivities().click();
+
+      // 3rd facility issued activity
+      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[2].ukefFacilityId).contains(`Changed by ${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
+      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[2].ukefFacilityId).contains(`Checked by ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Unissued');
+      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[2].ukefFacilityId).contains('Issued');
+      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId)
+        .contains(`${unissuedFacilitiesArray[2].type} facility ${unissuedFacilitiesArray[2].ukefFacilityId}`);
+      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId).click();
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[2].ukefFacilityId}`));
+    });
+
+    it('should not contain already issued facility', () => {
+      applicationActivities.subNavigationBarActivities().click();
+
+      // already issued facility should not appear in the activity list
+      applicationActivities.facilityActivityChangedBy(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityCheckedBy(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityUnissuedTag(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityIssuedTag(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityLink(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
     });
   });
 });

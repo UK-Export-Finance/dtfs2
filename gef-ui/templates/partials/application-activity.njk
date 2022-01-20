@@ -28,13 +28,13 @@
     {% for activity in portalActivities %}
 
       {% set facilityHtml %}
-        <p class="colour-light-grey">Changed by {{activity.maker.firstname}} {{activity.maker.surname}}</p>
-        <p class="colour-light-grey">Checked by {{activity.checker.firstname}} {{activity.checker.surname}} </p>
+        <p class="colour-light-grey" data-cy="facility-changedby-{{activity.facilityID}}">Changed by {{activity.maker.firstname}} {{activity.maker.surname}}</p>
+        <p class="colour-light-grey" data-cy="facility-checkedby-{{activity.facilityID}}">Checked by {{activity.checker.firstname}} {{activity.checker.surname}} </p>
 
-        <a href=/gef/application-details/{{dealId}}#{{activity.facilityID}} class="govuk-link" data-cy="facility-link">{{activity.facilityType}}  {{activity.facilityID}}</a>
-        <strong class="govuk-tag govuk-tag--purple govuk-!-margin-left-2 govuk-!-margin-right-2"> Unissued </strong>
+        <a href=/gef/application-details/{{dealId}}#{{activity.facilityID}} class="govuk-link" data-cy="facility-link-{{activity.facilityID}}">{{activity.facilityType}}  {{activity.facilityID}}</a>
+        <strong class="govuk-tag govuk-tag--purple govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="facility-unissued-tag-{{activity.facilityID}}"> Unissued </strong>
         >
-        <strong class="govuk-tag govuk-tag--purple govuk-!-margin-left-2 govuk-!-margin-right-2"> Issued </strong>
+        <strong class="govuk-tag govuk-tag--purple govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="facility-issued-tag-{{activity.facilityID}}"> Issued </strong>
       {% endset %}
 
       {% if activity.html === 'facility'%}
