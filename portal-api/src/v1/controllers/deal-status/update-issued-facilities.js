@@ -102,7 +102,7 @@ const updateIssuedFacilities = async (
           shouldUpdateCount += 1;
 
           if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
-            facility.lastEdited = now();
+            facility.updatedAt = now();
             facility.previousFacilityStage = facilityStage;
 
             if (shouldUpdateStatus) {
@@ -119,20 +119,20 @@ const updateIssuedFacilities = async (
             // they've been submitted
             // ...or have completed all required fields.
             facility.status = newStatus;
-            facility.lastEdited = now();
+            facility.updatedAt = now();
           }
 
           if (canUpdateIssuedFacilitiesCoverStartDates
             && !facility.issueFacilityDetailsSubmitted
             && !facility.requestedCoverStartDate) {
             if (fromStatusIsApprovedStatus && isMINdeal) {
-              facility.lastEdited = now();
+              facility.updatedAt = now();
               facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;
             } else if (isMIAdeal && dealHasBeenApproved) {
-              facility.lastEdited = now();
+              facility.updatedAt = now();
               facility.requestedCoverStartDate = now();
             } else if (facilityHasValidIssuedDate(facility, deal)) {
-              facility.lastEdited = now();
+              facility.updatedAt = now();
               facility.requestedCoverStartDate = facility.issuedDate;
             }
           }

@@ -3,13 +3,13 @@ const CONSTANTS = require('../../constants');
 
 /**
 * Generate timestamps:
-* - lastEdited
+* - updatedAt
 * - dateStarted
 * - dateCompleted
 * */
 const generateTaskDates = (statusFrom, statusTo) => {
   const dates = {
-    lastEdited: getTime(new Date()),
+    updatedAt: getTime(new Date()),
   };
 
   if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO) {

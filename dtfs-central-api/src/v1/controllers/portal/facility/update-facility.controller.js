@@ -16,7 +16,7 @@ const updateFacility = async (facilityId, facilityBody, dealId, user, routePath)
 
   const update = {
     ...facilityBody,
-    lastEdited: now(),
+    updatedAt: now(),
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(

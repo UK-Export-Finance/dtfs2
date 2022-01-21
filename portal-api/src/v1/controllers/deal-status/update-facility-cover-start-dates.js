@@ -18,7 +18,7 @@ const updateFacilityCoverStartDates = async (user, deal) => {
       if (shouldUpdate) {
         const today = new Date();
 
-        facility.lastEdited = now();
+        facility.updatedAt = now();
         facility.requestedCoverStartDate = now();
         facility['requestedCoverStartDate-day'] = today.getDate();
         facility['requestedCoverStartDate-month'] = today.getMonth() + 1;

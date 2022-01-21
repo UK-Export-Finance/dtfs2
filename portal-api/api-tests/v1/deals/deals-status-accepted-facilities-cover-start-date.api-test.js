@@ -86,7 +86,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
           const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
 
           expect(updatedBond.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
-          expect(typeof updatedBond.lastEdited).toEqual('string');
+          expect(typeof updatedBond.updatedAt).toEqual('string');
         });
       });
     });
@@ -109,7 +109,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         issuedLoansThatShouldBeUpdated.forEach((loan) => {
           const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
           expect(updatedLoan.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
-          expect(typeof updatedLoan.lastEdited).toEqual('string');
+          expect(typeof updatedLoan.updatedAt).toEqual('string');
         });
       });
     });
@@ -162,7 +162,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         issuedBondsThatShouldBeUpdated.forEach((bond) => {
           const updatedBond = body.deal.bondTransactions.items.find((l) => l._id === bond._id);
           expect(updatedBond.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
-          expect(typeof updatedBond.lastEdited).toEqual('string');
+          expect(typeof updatedBond.updatedAt).toEqual('string');
         });
       });
     });
@@ -185,7 +185,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         issuedLoansThatShouldBeUpdated.forEach((loan) => {
           const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
           expect(updatedLoan.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
-          expect(typeof updatedLoan.lastEdited).toEqual('string');
+          expect(typeof updatedLoan.updatedAt).toEqual('string');
         });
       });
     });

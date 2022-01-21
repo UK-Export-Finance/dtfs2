@@ -16,7 +16,7 @@
  *       createdDate:
  *         type: string
  *         example: '1632392646415'
- *       lastEdited:
+ *       updatedAt:
  *         type: string
  *         example: '1632392778918'
  *       status:

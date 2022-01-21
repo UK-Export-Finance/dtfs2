@@ -472,7 +472,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.loan['requestedCoverStartDate-year']).toEqual(loan['requestedCoverStartDate-year']);
     });
 
-    it('should generate lastEdited timestamp', async () => {
+    it('should generate updatedAt timestamp', async () => {
       const { dealId, loanId } = await createLoan();
 
       const loan = {
@@ -485,7 +485,7 @@ describe('/v1/deals/:id/loan', () => {
       const { status, body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
       expect(status).toEqual(200);
-      expect(body.loan.lastEdited).toEqual(expect.any(String));
+      expect(body.loan.updatedAt).toEqual(expect.any(String));
     });
 
     it('should update the associated deal\'s facilitiesUpdated timestamp', async () => {

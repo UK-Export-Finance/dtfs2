@@ -19,7 +19,7 @@ describe('mapTaskObject', () => {
     api.findUserById.mockClear();
   });
 
-  it('should return mapped object with full assignee name and lastEdited timestamp', async () => {
+  it('should return mapped object with full assignee name and updatedAt timestamp', async () => {
     const originalTask = MOCK_MIA_TASKS[0].groupTasks[0];
 
     const updateInput = {
@@ -47,10 +47,10 @@ describe('mapTaskObject', () => {
       },
     };
 
-    const { lastEdited, ...resultWithoutLastEdited } = result;
+    const { updatedAt, ...resultWithoutupdatedAt } = result;
 
-    expect(resultWithoutLastEdited).toEqual(expected);
+    expect(resultWithoutupdatedAt).toEqual(expected);
 
-    expect(typeof lastEdited).toEqual('number');
+    expect(typeof updatedAt).toEqual('number');
   });
 });

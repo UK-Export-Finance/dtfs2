@@ -83,7 +83,7 @@ describe('mapFacilities', () => {
         createdDate: 1610369832226.0,
         bankReferenceNumber: '5678',
         guaranteeFeePayableByBank: '27.0000',
-        lastEdited: 1610369832226.0,
+        updatedAt: 1610369832226.0,
         currencySameAsSupplyContractCurrency: 'true',
         minimumQuarterlyFee: '10',
         premiumType: 'At maturity',

@@ -221,7 +221,7 @@ exports.findFacilities = async (
         },
       },
       { $unwind: '$count' },
-      { $project: { count: '$count.total', facilities: 1 } },
+      { $project: { count: '$count.totupdatedAtities: 1 } },
     ])
     .toArray();
 

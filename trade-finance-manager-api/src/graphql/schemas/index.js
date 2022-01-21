@@ -216,7 +216,7 @@ type TFMTask {
   team: TFMTeam
   assignedTo: TFMTaskAssignedTo
   canEdit: Boolean
-  lastEdited: String
+  updatedAt: String
   history: [TFMTaskHistory]
   dateStarted: String
   dateCompleted: String

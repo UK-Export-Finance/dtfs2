@@ -96,7 +96,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             expect(bond.status).toEqual('Ready for check');
             expect(bond.facilityStage).toEqual('Issued');
             expect(bond.previousFacilityStage).toEqual('Unissued');
-            expect(typeof bond.lastEdited).toEqual('string');
+            expect(typeof bond.updatedAt).toEqual('string');
           });
 
           const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
@@ -108,7 +108,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             expect(loan.status).toEqual('Ready for check');
             expect(loan.facilityStage).toEqual('Unconditional');
             expect(loan.previousFacilityStage).toEqual('Conditional');
-            expect(typeof loan.lastEdited).toEqual('string');
+            expect(typeof loan.updatedAt).toEqual('string');
           });
         });
       });
@@ -130,7 +130,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             expect(theLoan.status).toEqual('Ready for check');
             expect(theLoan.facilityStage).toEqual('Unconditional');
             expect(theLoan.previousFacilityStage).toEqual('Conditional');
-            expect(typeof theLoan.lastEdited).toEqual('string');
+            expect(typeof theLoan.updatedAt).toEqual('string');
           });
         });
       });
@@ -165,7 +165,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             issuedBondsThatShouldBeUpdated.forEach((bond) => {
               const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
               expect(updatedBond.requestedCoverStartDate).toEqual(bond.issuedDate);
-              expect(typeof updatedBond.lastEdited).toEqual('string');
+              expect(typeof updatedBond.updatedAt).toEqual('string');
             });
           });
         });
@@ -188,7 +188,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             issuedLoansThatShouldBeUpdated.forEach((loan) => {
               const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
               expect(updatedLoan.requestedCoverStartDate).toEqual(loan.issuedDate);
-              expect(typeof updatedLoan.lastEdited).toEqual('string');
+              expect(typeof updatedLoan.updatedAt).toEqual('string');
             });
           });
         });
@@ -213,7 +213,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             issuedBondsThatShouldBeUpdated.forEach((bond) => {
               const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
               expect(updatedBond.requestedCoverStartDate).toEqual(bond.issuedDate);
-              expect(typeof updatedBond.lastEdited).toEqual('string');
+              expect(typeof updatedBond.updatedAt).toEqual('string');
             });
           });
         });
@@ -236,7 +236,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             issuedLoansThatShouldBeUpdated.forEach((loan) => {
               const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
               expect(updatedLoan.requestedCoverStartDate).toEqual(loan.issuedDate);
-              expect(typeof updatedLoan.lastEdited).toEqual('string');
+              expect(typeof updatedLoan.updatedAt).toEqual('string');
             });
           });
         });
@@ -292,7 +292,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             issuedBondsThatShouldBeUpdated.forEach((bond) => {
               const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
               expect(typeof updatedBond.requestedCoverStartDate).toEqual('string');
-              expect(typeof updatedBond.lastEdited).toEqual('string');
+              expect(typeof updatedBond.updatedAt).toEqual('string');
             });
           });
         });
@@ -315,7 +315,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             issuedLoansThatShouldBeUpdated.forEach((loan) => {
               const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
               expect(typeof updatedLoan.requestedCoverStartDate).toEqual('string');
-              expect(typeof updatedLoan.lastEdited).toEqual('string');
+              expect(typeof updatedLoan.updatedAt).toEqual('string');
             });
           });
         });
@@ -377,7 +377,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
             expect(updatedBond.status).toEqual('Maker\'s input required');
-            expect(typeof updatedBond.lastEdited).toEqual('string');
+            expect(typeof updatedBond.updatedAt).toEqual('string');
           });
         });
       });
@@ -399,7 +399,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
             const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
             expect(updatedLoan.status).toEqual('Maker\'s input required');
-            expect(typeof updatedLoan.lastEdited).toEqual('string');
+            expect(typeof updatedLoan.updatedAt).toEqual('string');
           });
         });
       });
@@ -530,7 +530,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           expect(body.deal.bondTransactions.items[0]).toEqual({
             ...newBonds[0],
             status: 'Completed',
-            lastEdited: expect.any(String),
+            updatedAt: expect.any(String),
             createdDate: expect.any(String),
             requestedCoverStartDate: expect.any(String),
             _id: expect.any(String),
@@ -540,7 +540,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           expect(body.deal.bondTransactions.items[1]).toEqual({
             ...newBonds[1],
             status: 'Completed',
-            lastEdited: expect.any(String),
+            updatedAt: expect.any(String),
             createdDate: expect.any(String),
             requestedCoverStartDate: expect.any(String),
             'requestedCoverStartDate-day': expect.any(Number),
@@ -553,7 +553,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           expect(body.deal.bondTransactions.items[2]).toEqual({
             ...newBonds[2],
             status: 'Completed',
-            lastEdited: expect.any(String),
+            updatedAt: expect.any(String),
             createdDate: expect.any(String),
             requestedCoverStartDate: expect.any(String),
             'requestedCoverStartDate-day': expect.any(Number),
@@ -575,7 +575,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           expect(body.deal.loanTransactions.items[1]).toEqual({
             ...newLoans[1],
             status: 'Completed',
-            lastEdited: expect.any(String),
+            updatedAt: expect.any(String),
             createdDate: expect.any(String),
             requestedCoverStartDate: expect.any(String),
             'requestedCoverStartDate-day': expect.any(Number),
@@ -588,7 +588,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           expect(body.deal.loanTransactions.items[2]).toEqual({
             ...newLoans[2],
             status: 'Completed',
-            lastEdited: expect.any(String),
+            updatedAt: expect.any(String),
             createdDate: expect.any(String),
             requestedCoverStartDate: expect.any(String),
             'requestedCoverStartDate-day': expect.any(Number),
@@ -645,7 +645,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       };
 
       describe('any unconditional loans', () => {
-        it('should add issuedFacilitySubmittedToUkefTimestamp, issuedFacilitySubmittedToUkefBy and lastEdited', async () => {
+        it('should add issuedFacilitySubmittedToUkefTimestamp, issuedFacilitySubmittedToUkefBy and updatedAt', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
@@ -660,7 +660,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           unconditionalLoansThatShouldBeUpdated.forEach((loan) => {
             const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
-            expect(typeof updatedLoan.lastEdited).toEqual('string');
+            expect(typeof updatedLoan.updatedAt).toEqual('string');
             expect(typeof updatedLoan.issuedFacilitySubmittedToUkefTimestamp).toEqual('string');
             expect(updatedLoan.issuedFacilitySubmittedToUkefBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
             expect(updatedLoan.issuedFacilitySubmittedToUkefBy.email).toEqual(expectedFacilitiesSubmittedBy.email);
@@ -671,7 +671,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       describe('any issued bonds', () => {
-        it('should add issuedFacilitySubmittedToUkefTimestamp, issuedFacilitySubmittedToUkefBy and lastEdited', async () => {
+        it('should add issuedFacilitySubmittedToUkefTimestamp, issuedFacilitySubmittedToUkefBy and updatedAt', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
@@ -686,7 +686,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
-            expect(typeof updatedBond.lastEdited).toEqual('string');
+            expect(typeof updatedBond.updatedAt).toEqual('string');
             expect(typeof updatedBond.issuedFacilitySubmittedToUkefTimestamp).toEqual('string');
             expect(updatedBond.issuedFacilitySubmittedToUkefBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
             expect(updatedBond.issuedFacilitySubmittedToUkefBy.email).toEqual(expectedFacilitiesSubmittedBy.email);
@@ -714,7 +714,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
             expect(updatedLoan.issueFacilityDetailsSubmitted).toEqual(true);
             expect(updatedLoan.status).toEqual('Submitted');
-            expect(typeof updatedLoan.lastEdited).toEqual('string');
+            expect(typeof updatedLoan.updatedAt).toEqual('string');
           });
         });
       });
@@ -737,7 +737,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
             expect(updatedBond.issueFacilityDetailsSubmitted).toEqual(true);
             expect(updatedBond.status).toEqual('Submitted');
-            expect(typeof updatedBond.lastEdited).toEqual('string');
+            expect(typeof updatedBond.updatedAt).toEqual('string');
           });
         });
       });

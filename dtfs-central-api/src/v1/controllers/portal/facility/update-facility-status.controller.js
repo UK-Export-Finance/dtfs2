@@ -17,7 +17,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
 
   const update = {
     ...existingFacility,
-    lastEdited: now(),
+    updatedAt: now(),
     previousStatus,
     status,
   };

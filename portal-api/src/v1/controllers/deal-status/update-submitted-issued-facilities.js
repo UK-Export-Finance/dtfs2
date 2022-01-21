@@ -19,7 +19,7 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
     const shouldUpdate = (isUnconditionalUnsubmittedLoan || isIssuedUnsubmittedBond);
 
     if (shouldUpdate) {
-      facility.lastEdited = now();
+      facility.updatedAt = now();
 
       facility.issueFacilityDetailsSubmitted = true;
       facility.issuedFacilitySubmittedToUkefTimestamp = now();

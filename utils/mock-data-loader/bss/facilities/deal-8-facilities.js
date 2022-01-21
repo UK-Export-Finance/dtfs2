@@ -30,7 +30,7 @@ module.exports = [
     'requestedCoverStartDate-month': null,
     'requestedCoverStartDate-year': null,
     ukefExposure: '60,000.00',
-    lastEdited: nowTimestamp,
+    updatedAt: nowTimestamp,
     interestMarginFee: '2',
     coveredPercentage: '60',
     minimumQuarterlyFee: '',
