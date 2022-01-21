@@ -81,30 +81,34 @@ const getUnissuedFacilities = async () => {
 
 // this function is used to build the "Unissued facilities" page for on Reports
 exports.findUnissuedFacilitiesReports = async (req, res) => {
-  const facilities = await getUnissuedFacilities();
-  const unissuedFacilities = [];
-  let facility = '';
+  try {
+    const facilities = await getUnissuedFacilities();
+    const unissuedFacilities = [];
+    let facility = '';
 
-  // loop through
-  facilities.forEach((item) => {
-    facility = item;
+    // loop through
+    facilities.forEach((item) => {
+      facility = item;
 
-    // check if the submission date is not null
-    const defaultDate = item.submissionDate || '';
-    const setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(0, 0, 0, 0);
-    // add 3 months to the submission date - as per ticket
-    const deadlineForIssuing = add(setDateToMidnight, { months: 3 });
-    // format the date DD MMM YYYY (i.e. 18 April 2022)
-    facility.deadlineForIssuing = facility.submissionDate ? format(deadlineForIssuing, 'dd LLL yyyy') : '';
+      // check if the submission date is not null
+      const defaultDate = item.submissionDate || '';
+      const setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(0, 0, 0, 0);
+      // add 3 months to the submission date - as per ticket
+      const deadlineForIssuing = add(setDateToMidnight, { months: 3 });
+      // format the date DD MMM YYYY (i.e. 18 April 2022)
+      facility.deadlineForIssuing = facility.submissionDate ? format(deadlineForIssuing, 'dd LLL yyyy') : '';
 
-    // get today's date
-    const todaysDate = new Date();
-    facility.daysLeftToIssue = defaultDate ? differenceInCalendarDays(deadlineForIssuing, todaysDate) : 0;
+      // get today's date
+      const todaysDate = new Date();
+      facility.daysLeftToIssue = defaultDate ? differenceInCalendarDays(deadlineForIssuing, todaysDate) : 0;
 
-    const defaultFacilityValue = item.value ? parseInt(item.value, 10) : 0;
-    facility.currencyAndValue = item.value ? `${item.currency} ${formattedNumber(defaultFacilityValue)}` : '';
-    unissuedFacilities.push(facility);
-  });
+      const defaultFacilityValue = item.value ? parseInt(item.value, 10) : 0;
+      facility.currencyAndValue = item.value ? `${item.currency} ${formattedNumber(defaultFacilityValue)}` : '';
+      unissuedFacilities.push(facility);
+    });
 
-  res.status(200).send(unissuedFacilities);
+    res.status(200).send(unissuedFacilities);
+  } catch (error) {
+    console.error('Unable to retrieve unissued facilities', { error });
+  }
 };
