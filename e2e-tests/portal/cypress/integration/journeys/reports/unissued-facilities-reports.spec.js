@@ -29,7 +29,7 @@ context('Dashboard: Reports', () => {
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 6 days left
-      const setDateToMidnight = (new Date()).setHours(0, 0, 0, 0);
+      const setDateToMidnight = (new Date()).setHours(0, 0, 1, 0);
       setDateToMidnight.toLocaleString('en-GB', { timeZone: 'Europe/London' });
       let daysInThePast = sub(setDateToMidnight, { days: 85 });
       daysInThePast = new Date(daysInThePast).valueOf().toString();
@@ -48,7 +48,7 @@ context('Dashboard: Reports', () => {
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 4 days overdue
-      const setDateToMidnight = (new Date()).setHours(0, 0, 0, 0);
+      const setDateToMidnight = (new Date()).setHours(0, 0, 1, 0);
       setDateToMidnight.toLocaleString('en-GB', { timeZone: 'Europe/London' });
       let daysInThePast = sub(setDateToMidnight, { days: 95 });
       daysInThePast = new Date(daysInThePast).valueOf().toString();
