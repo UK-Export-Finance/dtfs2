@@ -9,7 +9,7 @@ const { reports } = require('../../pages');
 const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
 
 context('Dashboard: Reports', () => {
-  const setDateToMidnight = (new Date()).setHours(0, 0, 0, 0);
+  const setDateToMidnight = new Date();
 
   before(() => {
     cy.deleteGefApplications(BANK1_MAKER1);
