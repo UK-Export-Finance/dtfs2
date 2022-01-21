@@ -88,7 +88,7 @@ context('Dashboard: Reports', () => {
       cy.get('@row1').find('[data-cy="facility__facilityId"]').should('contain', '0000003');
       cy.get('@row1').find('[data-cy="facility__companyName"]').should('contain', 'Delta');
       cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'EUR 223,344');
-      cy.get('@row1').find('[data-cy="facility__daysLeftToIssue"]').should('contain', '4 days overdue');
+      cy.get('@row1').find('[data-cy="facility__daysLeftToIssue"]').should('contain', 'days overdue');
 
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
       cy.get('@row2').find('[data-cy="facility__bankRef"]').should('contain', 'Draft GEF');
@@ -96,7 +96,7 @@ context('Dashboard: Reports', () => {
       cy.get('@row2').find('[data-cy="facility__facilityId"]').should('contain', '00000002');
       cy.get('@row2').find('[data-cy="facility__companyName"]').should('contain', 'Delta');
       cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'EUR 889,988');
-      cy.get('@row2').find('[data-cy="facility__daysLeftToIssue"]').should('contain', '6 days left');
+      cy.get('@row2').find('[data-cy="facility__daysLeftToIssue"]').should('contain', 'days left');
 
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
       cy.get('@row3').find('[data-cy="facility__bankRef"]').should('contain', 'Draft GEF');
