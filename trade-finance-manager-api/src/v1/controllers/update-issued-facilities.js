@@ -25,12 +25,9 @@ const updatedIssuedFacilities = async (deal) => {
     const {
       _id: facilityId,
       hasBeenIssued,
-      hasBeenAcknowledged,
     } = facility;
 
-    const shouldUpdateFacility = (hasBeenIssued && !hasBeenAcknowledged);
-
-    if (shouldUpdateFacility) {
+    if (hasBeenIssued) {
       let facilityPremiumSchedule;
       let feeRecord;
       let facilityUpdate;
@@ -90,7 +87,6 @@ const updatedIssuedFacilities = async (deal) => {
        * */
       const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
       facility.tfm = updateFacilityResponse.tfm;
-
       updatedFacilities.push(facility);
     }
 
