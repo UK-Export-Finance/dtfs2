@@ -25,15 +25,9 @@ const updatedIssuedFacilities = async (deal) => {
     const {
       _id: facilityId,
       hasBeenIssued,
-      hasBeenAcknowledged,
     } = facility;
 
-    // `hasBeenAcknowledged` is BSS/EWCS specific only
-    const shouldUpdateFacility = dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
-      ? hasBeenIssued
-      : (hasBeenIssued && !hasBeenAcknowledged);
-
-    if (shouldUpdateFacility) {
+    if (hasBeenIssued) {
       let facilityPremiumSchedule;
       let feeRecord;
       let facilityUpdate;
