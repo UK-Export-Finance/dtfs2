@@ -4,6 +4,7 @@ const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
 const isIssued = require('../helpers/is-issued');
+const CONSTANTS = require('../../constants');
 
 const addToACBSLog = async ({
   deal = {}, facility = {}, bank = {}, acbsTaskLinks,
@@ -50,9 +51,11 @@ const createACBS = async (deal) => {
 
 const updateDealAcbs = async (taskOutput) => {
   const { facilities, ...dealAcbs } = taskOutput;
+  // Add `acbs` object to tfm-deal
   await tfmController.updateAcbs(taskOutput.portalDealId, dealAcbs);
   const facilitiesUpdates = facilities.map((facility) => {
     const { facilityId, ...acbsFacility } = facility;
+    // Add `acbs` object to tfm-facilities
     return tfmController.updateFacilityAcbs(facilityId, acbsFacility);
   });
   await Promise.all(facilitiesUpdates);
@@ -62,41 +65,43 @@ const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster }) =>
   tfmController.updateFacilityAcbs(facilityId, { issuedFacilityMaster });
 
 const checkAzureAcbsFunction = async () => {
+  try {
   // Fetch outstanding functions
+    const collection = await db.getCollection('durable-functions-log');
+    const runningTasks = await collection.find({
+      type: 'ACBS',
+      status: 'Running',
+    }).toArray();
+    const tasks = await runningTasks.map(async ({ acbsTaskLinks = {} }) =>
+      api.getFunctionsAPI(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, acbsTaskLinks.statusQueryGetUri));
+    const taskList = await Promise.all(tasks);
 
-  const collection = await db.getCollection('durable-functions-log');
-  const runningTasks = await collection.find({
-    type: 'ACBS',
-    status: 'Running',
-  }).toArray();
-
-  const tasks = runningTasks.map(({ acbsTaskLinks = {} }) => api.getFunctionsAPI(acbsTaskLinks.statusQueryGetUri));
-  const taskList = await Promise.all(tasks);
-
-  taskList.forEach(async (task) => {
-    // eslint-disable-next-line no-underscore-dangle
-    // Update
-    if (task.runtimeStatus !== 'Running') {
-      await collection.findOneAndUpdate(
-        { instanceId: task.instanceId },
-        $.flatten({
-          status: task.runtimeStatus,
-          acbsTaskResult: task,
-        }),
-      );
-    }
-
-    if (task.runtimeStatus === 'Completed') {
-      switch (task.name) {
-        case 'acbs-issue-facility':
-          await updateIssuedFacilityAcbs(task.output);
-          break;
-
-        default:
-          await updateDealAcbs(task.output);
+    taskList.forEach(async (task) => {
+      // Update
+      if (task.runtimeStatus !== 'Running') {
+        await collection.findOneAndUpdate(
+          { instanceId: task.instanceId },
+          $.flatten({
+            status: task.runtimeStatus,
+            acbsTaskResult: task,
+          }),
+        );
       }
-    }
-  });
+      // ADD `acbs` object to tfm-deals and tfm-facilities
+      if (task.runtimeStatus === 'Completed') {
+        switch (task.name) {
+          case 'acbs-issue-facility':
+            await updateIssuedFacilityAcbs(task.output);
+            break;
+
+          default:
+            await updateDealAcbs(task.output);
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error processing durable functions log', { error });
+  }
 };
 
 const issueAcbsFacilities = async (deal) => {
@@ -112,8 +117,8 @@ const issueAcbsFacilities = async (deal) => {
   const acbsIssuedFacilitiesPromises = deal.facilities.filter((facility) => {
     // Only concerned with issued facilities on Portal that aren't issued on ACBS
     const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
-    return !isIssued(facilityStageInAcbs) && isIssued(facility.facilityStage);
-  }).map((facility) => api.updateACBSfacility(facility, deal.exporter.companyName));
+    return !isIssued(facilityStageInAcbs) && !facility.tfm.acbs.issuedFacilityMaster && isIssued(facility.facilityStage);
+  }).map((facility) => api.updateACBSfacility(facility, deal.dealType, deal.exporter.companyName));
 
   const acbsIssuedFacilities = await Promise.all(acbsIssuedFacilitiesPromises);
 

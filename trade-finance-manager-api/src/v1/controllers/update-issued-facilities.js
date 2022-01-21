@@ -28,7 +28,10 @@ const updatedIssuedFacilities = async (deal) => {
       hasBeenAcknowledged,
     } = facility;
 
-    const shouldUpdateFacility = (hasBeenIssued && !hasBeenAcknowledged);
+    // `hasBeenAcknowledged` is BSS/EWCS specific only
+    const shouldUpdateFacility = dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
+      ? hasBeenIssued
+      : (hasBeenIssued && !hasBeenAcknowledged);
 
     if (shouldUpdateFacility) {
       let facilityPremiumSchedule;
@@ -90,7 +93,6 @@ const updatedIssuedFacilities = async (deal) => {
        * */
       const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
       facility.tfm = updateFacilityResponse.tfm;
-
       updatedFacilities.push(facility);
     }
 

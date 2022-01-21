@@ -14,7 +14,7 @@ const CONSTANTS = require('../constants');
 const getAcbsCountryCode = async (context) => {
   const { country } = context.bindingData;
   const { status, data } = await mdmEaApi.getACBSCountryCode(country);
-  return status === 200 ? data[0].isoCode : CONSTANTS.DEAL.COUNTRY.DEFAULT;
+  return (status === 200 && data.length > 1) ? data[0].isoCode : CONSTANTS.DEAL.COUNTRY.DEFAULT;
 };
 
 module.exports = getAcbsCountryCode;

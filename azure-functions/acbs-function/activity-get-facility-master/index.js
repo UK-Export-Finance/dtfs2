@@ -11,7 +11,6 @@
 const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 
-
 const getFacilityMaster = async (context) => {
   const { facilityId } = context.bindingData;
 
