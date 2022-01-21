@@ -93,7 +93,6 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
       // check if the submission date is not null
       const defaultDate = item.submissionDate || '';
       const setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(0, 0, 1, 0);
-      setDateToMidnight.toLocaleString('en-GB', { timeZone: 'Europe/London' });
       // add 3 months to the submission date - as per ticket
       const deadlineForIssuing = add(setDateToMidnight, { months: 3 });
       // format the date DD MMM YYYY (i.e. 18 April 2022)
