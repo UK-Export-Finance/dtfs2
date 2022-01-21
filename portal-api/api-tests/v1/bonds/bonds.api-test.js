@@ -348,7 +348,7 @@ describe('/v1/deals/:id/bond', () => {
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
           createdDate: expect.any(String),
-          updatedAt: expect.any(String),
+          updatedAt: expect.any(Number),
           facilityType: 'Bond',
           requestedCoverStartDate: null,
           conversionRate: null,
@@ -417,7 +417,7 @@ describe('/v1/deals/:id/bond', () => {
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
           createdDate: expect.any(String),
-          updatedAt: expect.any(String),
+          updatedAt: expect.any(Number),
           facilityType: 'Bond',
           hasBeenIssued: true,
           requestedCoverStartDate: null,
@@ -493,7 +493,7 @@ describe('/v1/deals/:id/bond', () => {
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
           createdDate: expect.any(String),
-          updatedAt: expect.any(String),
+          updatedAt: expect.any(Number),
           facilityType: 'Bond',
           hasBeenIssued: false,
           requestedCoverStartDate: null,
@@ -553,7 +553,7 @@ describe('/v1/deals/:id/bond', () => {
         ukefExposure: expectedUkefExposure,
         status: 'Completed',
         createdDate: expect.any(String),
-        updatedAt: expect.any(String),
+        updatedAt: expect.any(Number),
         facilityType: 'Bond',
         requestedCoverStartDate: null,
         conversionRate: null,
@@ -686,7 +686,7 @@ describe('/v1/deals/:id/bond', () => {
       const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
-      expect(body.updatedAt).toEqual(expect.any(String));
+      expect(body.updatedAt).toEqual(expect.any(Number));
     });
 
     it('should update the associated deal\'s facilitiesUpdated timestamp', async () => {

@@ -17,7 +17,7 @@
  *         type: string
  *         example: '1632392646415'
  *       updatedAt:
- *         type: string
+ *         type: integer
  *         example: '1632392778918'
  *       status:
  *         type: string

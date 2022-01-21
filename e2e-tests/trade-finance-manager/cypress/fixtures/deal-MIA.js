@@ -196,6 +196,7 @@ const MOCK_DEAL = {
       issuedDate: '1606900616651',
       requestedCoverStartDate: '1606900616652',
       bankReferenceNumber: 'Test-123',
+      updatedAt: Date.now(),
     },
     {
       facilityType: CONSTANTS.FACILITY_TYPE.LOAN,
@@ -205,7 +206,7 @@ const MOCK_DEAL = {
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '5678',
       guaranteeFeePayableByBank: '27.0000',
-      updatedAt: 1610369832226.0,
+      updatedAt: Date.now(),
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '30',

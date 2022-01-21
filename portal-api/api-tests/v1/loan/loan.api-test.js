@@ -485,7 +485,7 @@ describe('/v1/deals/:id/loan', () => {
       const { status, body } = await as(aSuperuser).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
       expect(status).toEqual(200);
-      expect(body.loan.updatedAt).toEqual(expect.any(String));
+      expect(body.loan.updatedAt).toEqual(expect.any(Number));
     });
 
     it('should update the associated deal\'s facilitiesUpdated timestamp', async () => {

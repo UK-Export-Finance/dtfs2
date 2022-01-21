@@ -47,9 +47,9 @@ describe('mapTaskObject', () => {
       },
     };
 
-    const { updatedAt, ...resultWithoutupdatedAt } = result;
+    const { updatedAt, ...resultWithoutUpdatedAt } = result;
 
-    expect(resultWithoutupdatedAt).toEqual(expected);
+    expect(resultWithoutUpdatedAt).toEqual(expected);
 
     expect(typeof updatedAt).toEqual('number');
   });

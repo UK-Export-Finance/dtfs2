@@ -1,5 +1,4 @@
 const CONSTANTS = require('../../../constants');
-const now = require('../../../now');
 const facilitiesController = require('../facilities.controller');
 
 const updateSubmittedIssuedFacilities = async (user, deal) => {
@@ -19,10 +18,12 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
     const shouldUpdate = (isUnconditionalUnsubmittedLoan || isIssuedUnsubmittedBond);
 
     if (shouldUpdate) {
-      facility.updatedAt = now();
+      const now = Date.now();
+
+      facility.updatedAt = now;
 
       facility.issueFacilityDetailsSubmitted = true;
-      facility.issuedFacilitySubmittedToUkefTimestamp = now();
+      facility.issuedFacilitySubmittedToUkefTimestamp = now;
       facility.issuedFacilitySubmittedToUkefBy = user;
 
       if (!facility.previousFacilityStage

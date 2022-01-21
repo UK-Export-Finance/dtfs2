@@ -4,7 +4,7 @@ const {
   getTime,
 } = require('date-fns');
 
-const nowTimestamp = getTime(new Date());
+const nowTimestamp = Date.now();
 
 const twoMonthsFromNow = add(new Date(), {
   months: 2,
