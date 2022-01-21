@@ -50,4 +50,5 @@ module.exports = {
   mga: require('./mga'),
   footer: require('./footer'),
   selectScheme: require('./selectScheme'),
+  reports: require('./reports'),
 };

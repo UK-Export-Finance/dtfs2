@@ -22,10 +22,18 @@ const SUBMISSION_TYPE = {
   MIN: 'Manual Inclusion Notice',
 };
 
+const FACILITY_TYPE = {
+  CASH: 'Cash',
+  CONTINGENT: 'Contingent',
+};
+
 module.exports = {
   DEALS: {
     DEAL_TYPE,
     DEAL_STATUS,
     SUBMISSION_TYPE,
+  },
+  FACILITY: {
+    FACILITY_TYPE,
   },
 };

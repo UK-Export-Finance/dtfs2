@@ -1,11 +1,12 @@
 const moment = require('moment');
 const dealFullyCompleted = require('./deal-fully-completed');
+const CONSTANTS = require('../../src/constants');
 
 const deal = {
   ...dealFullyCompleted,
   mockFacilities: [
     {
-      facilityType: 'Bond',
+      facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
@@ -31,7 +32,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'Bond',
+      facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
@@ -56,7 +57,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'Bond',
+      facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -83,7 +84,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      facilityType: 'Loan',
+      facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -112,7 +113,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'Loan',
+      facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -140,7 +141,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      facilityType: 'Loan',
+      facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
       previousFacilityStage: 'Conditional',

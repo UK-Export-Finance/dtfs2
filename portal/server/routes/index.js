@@ -9,6 +9,7 @@ const userRoutes = require('./user');
 const mgaRoutes = require('./mga');
 const feedbackRoutes = require('./feedback');
 const schemeTypeRoutes = require('./schemeType');
+const portalRoutes = require('./reports.route');
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use('/', userRoutes);
 router.use('/', mgaRoutes);
 router.use('/', feedbackRoutes);
 router.use('/', schemeTypeRoutes);
+router.use('/', portalRoutes);
 
 module.exports = router;
