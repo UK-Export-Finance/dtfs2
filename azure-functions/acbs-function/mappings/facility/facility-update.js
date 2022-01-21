@@ -11,7 +11,7 @@
   "maximumLiability":               ukef Exposure
   "productTypeId":                  Facility Type i.e. 250 for BOND ??? What is LOAN and GEF?
   "capitalConversionFactorCode":    This field is required for GEF. Cash facility has 8, Contingent facility has 9.
-  "productTypeName":                Facility Type Name/ description i.e. BOND (what is LOAN & GEF)
+  "productTypeName":                Facility Type Name/ description i.e. GEF / BSS so appropriate description can be set
   "currency":                       Facility currency code
   "guaranteeCommencementDate":      see Deal for how to work it out
   "guaranteeExpiryDate":            Guarantee Commencement Date plus exposure period
@@ -40,18 +40,17 @@
 const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
-const facilityUpdate = (facility, acbsFacility, obligorName) => ({
+const facilityUpdate = (facility, acbsFacility, obligorName, dealType) => ({
   ...acbsFacility,
+  exposurePeriod: String(helpers.getExposurePeriod(facility, dealType)),
+  description: helpers.getDescription(facility, dealType),
   capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
   issueDate: helpers.getIssueDate(facility, acbsFacility.effectiveDate),
   facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
   foreCastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
   guaranteePercentage: CONSTANTS.FACILITY.GUARANTEE_PERCENTAGE.ISSUED,
-  productTypeName:
-    facility.facilityType
-    || facility.facilitySnapshot.type
-    || facility.facilitySnapshot.facilityType,
-  obligorName,
+  productTypeName: dealType,
+  obligorName: obligorName.substring(0, 35),
 });
 
 module.exports = facilityUpdate;

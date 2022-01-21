@@ -447,8 +447,8 @@ const createACBS = async (deal, bank) => {
   return {};
 };
 
-const updateACBSfacility = async (facility, supplierName) => {
-  if (!!facility && !!supplierName) {
+const updateACBSfacility = async (facility, dealType, supplierName) => {
+  if (!!facility && !!dealType && !!supplierName) {
     try {
       const response = await axios({
         method: 'post',
@@ -458,12 +458,13 @@ const updateACBSfacility = async (facility, supplierName) => {
         },
         data: {
           facility,
+          dealType,
           supplierName,
         },
       });
       return response.data;
     } catch (err) {
-      console.error('ACBS Facility update error\n\r', err);
+      console.error('ACBS Facility update error', { err });
       return err;
     }
   }
@@ -485,7 +486,9 @@ const getFunctionsAPI = async (type = 'ACBS', url = '') => {
     default:
   }
 
-  const modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, functionUrl);
+  const modifiedUrl = url
+    ? url.replace(/http:\/\/localhost:[\d]*/, functionUrl)
+    : functionUrl;
 
   try {
     const response = await axios({
@@ -497,7 +500,10 @@ const getFunctionsAPI = async (type = 'ACBS', url = '') => {
     });
     return response.data;
   } catch (err) {
-    return err.response.data;
+    console.error(`Unable to getFunctionsAPI for ${modifiedUrl}`, { err });
+    return err.response.data
+      ? err.response.data
+      : err;
   }
 };
 
