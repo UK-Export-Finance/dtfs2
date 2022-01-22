@@ -78,7 +78,7 @@ describe('/v1/portal/facilities', () => {
       expect(facilityAfterCreation).toEqual({
         _id: body._id,
         ...newFacility,
-        createdDate: expect.any(String),
+        createdDate: expect.any(Number),
       });
     });
 
@@ -174,7 +174,7 @@ describe('/v1/portal/facilities', () => {
 
       expect(status).toEqual(200);
       expect(body._id).toEqual(newId);
-      expect(typeof body.createdDate).toEqual('string');
+      expect(typeof body.createdDate).toEqual('number');
     });
 
     it('404s requests for unknown ids', async () => {

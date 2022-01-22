@@ -216,10 +216,10 @@ type TFMTask {
   team: TFMTeam
   assignedTo: TFMTaskAssignedTo
   canEdit: Boolean
-  updatedAt: String
+  updatedAt: Float
   history: [TFMTaskHistory]
-  dateStarted: String
-  dateCompleted: String
+  dateStarted: Float
+  dateCompleted: Float
 }
 
 type TFMTaskGroup {

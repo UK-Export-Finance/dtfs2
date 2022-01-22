@@ -555,8 +555,8 @@ describe('/v1/deals/:id/loan', () => {
 
       expect(status).toEqual(200);
       expect(body.deal.loanTransactions.items.length).toEqual(1);
-      expect(body.deal.loanTransactions.items[0]._id).toBeDefined(); // eslint-disable-line no-underscore-dangle
-      expect(typeof body.deal.loanTransactions.items[0].createdDate).toEqual('string');
+      expect(body.deal.loanTransactions.items[0]._id).toBeDefined();
+      expect(typeof body.deal.loanTransactions.items[0].createdDate).toEqual('Number');
       expect(body.deal.loanTransactions.items[0].facilityType).toEqual('Loan');
     });
 
