@@ -16,7 +16,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -29,7 +29,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
     - name: Commit hash
@@ -88,7 +88,7 @@ jobs:
         path: reference-data-proxy
         tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
-        add_git_labels: true 
+        add_git_labels: true
     - name: Build and push Number-Generator
       uses: docker/build-push-action@v1
       with:
@@ -99,14 +99,14 @@ jobs:
         path: azure-functions/number-generator-function
         tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
-        add_git_labels: true   
+        add_git_labels: true
 
   test:
     name: "Run PR tests"
     needs: build
     environment:
       name: APITEST
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
       AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
@@ -127,7 +127,7 @@ jobs:
 
       COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-      
+
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
 
@@ -142,10 +142,10 @@ jobs:
     - name: Pull portal-api
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api  
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api
     - name: Start Docker Compose
       run: |
-        source secrets/set_jwt_keypair.sh && docker-compose up -d portal-api
+        source secrets/set_jwt_keypair.sh && docker-compose -f docker-compose.gha.yml up -d portal-api
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
@@ -194,7 +194,7 @@ jobs:
 
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
       GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-      
+
       JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
       JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
 
@@ -214,13 +214,13 @@ jobs:
       MULESOFT_API_UKEF_MDM_EA_URL: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }}
       MULESOFT_API_UKEF_MDM_EA_KEY: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}
       MULESOFT_API_UKEF_MDM_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
-      SESSION_SECRET: ${{ secrets.SESSION_SECRET }} 
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
 
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
       ESTORE_URL: ${{ secrets.ESTORE_URL }}
-      
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them

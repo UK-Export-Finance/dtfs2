@@ -61,8 +61,9 @@ The GEF UI, API and data structure should be used for other products in order to
 
 This has not been thought about as a team. Maybe BSS and GEF could use exactly the same endpoints, but have some flags for any product differences? Maybe they should be seperated? What's the best, most scalable approach?
 
-Over time the differences between this and central API have become murkier. It is worth considering 
+Over time the differences between this and central API have become murkier. It is worth considering
 
 If the team like working with GraphQL, it is worth embracing it and planning to move to a complete schema, this eliminating the need for REST endpoints except for things like healthcheck etc. With other APIs doing the same, it is worth investigating [Apollo Federation](https://www.apollographql.com/docs/federation/) to simplify working with a range of services.
 
 There is area for the GraphQL Schema to be simplified. Possible options are making use of GraphQL files, or by modularising the Schema currently in use.
+
