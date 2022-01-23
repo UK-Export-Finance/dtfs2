@@ -191,7 +191,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
           const updatedBond = deal.bondTransactions.items.find((b) => b._id === bond._id);
 
           expect(updatedBond.issueFacilityDetailsSubmitted).toEqual(true);
-          expect(typeof updatedBond.issuedFacilitySubmittedToUkefTimestamp).toEqual('string');
+          expect(typeof updatedBond.issuedFacilitySubmittedToUkefTimestamp).toEqual('number');
           expect(updatedBond.issuedFacilitySubmittedToUkefBy.username).toEqual(aBarclaysChecker.username);
           expect(updatedBond.issuedFacilitySubmittedToUkefBy.email).toEqual(aBarclaysChecker.email);
           expect(updatedBond.issuedFacilitySubmittedToUkefBy.firstname).toEqual(aBarclaysChecker.firstname);

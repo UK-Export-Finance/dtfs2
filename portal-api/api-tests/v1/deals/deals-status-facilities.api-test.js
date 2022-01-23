@@ -687,7 +687,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
             expect(typeof updatedBond.updatedAt).toEqual('number');
-            expect(typeof updatedBond.issuedFacilitySubmittedToUkefTimestamp).toEqual('string');
+            expect(typeof updatedBond.issuedFacilitySubmittedToUkefTimestamp).toEqual('number');
             expect(updatedBond.issuedFacilitySubmittedToUkefBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
             expect(updatedBond.issuedFacilitySubmittedToUkefBy.email).toEqual(expectedFacilitiesSubmittedBy.email);
             expect(updatedBond.issuedFacilitySubmittedToUkefBy.firstname).toEqual(expectedFacilitiesSubmittedBy.firstname);

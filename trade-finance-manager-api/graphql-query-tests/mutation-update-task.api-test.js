@@ -79,8 +79,8 @@ describe('graphql mutation - update task', () => {
         userId: taskUpdate.assignedTo.userId,
       },
       updatedAt: expect.any(Number),
-      dateStarted: expect.any(String),
-      dateCompleted: expect.any(String),
+      dateStarted: expect.any(Number),
+      dateCompleted: expect.any(Number),
     };
 
     expect(data.updateTask).toEqual(expected);
