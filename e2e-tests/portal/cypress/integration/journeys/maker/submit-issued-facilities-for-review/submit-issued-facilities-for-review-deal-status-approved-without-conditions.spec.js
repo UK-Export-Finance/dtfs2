@@ -29,8 +29,8 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
         const { mockFacilities } = dealWithStatus;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
+          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+          const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
           dealFacilities.bonds = bonds;
           dealFacilities.loans = loans;

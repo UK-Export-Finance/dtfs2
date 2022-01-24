@@ -188,7 +188,7 @@ const deal = {
   },
   mockFacilities: [
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Performance bond',
@@ -224,7 +224,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Performance bond',
@@ -254,7 +254,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Bid bond',
@@ -278,7 +278,7 @@ const deal = {
       },
     },
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Performance bond',
@@ -314,7 +314,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: now,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
@@ -344,7 +344,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: now,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
@@ -368,7 +368,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: now,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
@@ -390,7 +390,7 @@ const deal = {
       },
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: now,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,

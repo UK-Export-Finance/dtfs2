@@ -1,5 +1,4 @@
 const CONSTANTS = require('../../../../constants');
-const { capitalizeFirstLetter } = require('../../../../utils/string');
 
 const mapFacilityType = (facility) => {
   const {
@@ -12,7 +11,7 @@ const mapFacilityType = (facility) => {
   }
 
   if (facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN) {
-    return capitalizeFirstLetter(CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+    return CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN;
   }
 
   if (ukefFacilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH) {

@@ -12,7 +12,7 @@ describe(component, () => {
       _id: '1',
       facilitySnapshot: {
         ukefFacilityId: '100',
-        facilityType: 'Loan',
+        type: 'Loan',
       },
       tfm: {
         riskProfile: 'Flat',
@@ -32,7 +32,7 @@ describe(component, () => {
   it('should render facility type', () => {
     wrapper = render(params);
 
-    wrapper.expectText(`[data-cy="facility-${params.facility._id}-type"]`).toRead(params.facility.facilitySnapshot.facilityType);
+    wrapper.expectText(`[data-cy="facility-${params.facility._id}-type"]`).toRead(params.facility.facilitySnapshot.type);
   });
 
   describe('risk profile table row', () => {

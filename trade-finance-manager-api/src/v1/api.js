@@ -389,11 +389,11 @@ const getCurrencyExchangeRate = async (source, target) => {
   }
 };
 
-const getFacilityExposurePeriod = async (startDate, endDate, facilityType) => {
+const getFacilityExposurePeriod = async (startDate, endDate, type) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/exposure-period/${startDate}/${endDate}/${facilityType}`,
+      url: `${refDataUrl}/exposure-period/${startDate}/${endDate}/${type}`,
       headers: {
         'Content-Type': 'application/json',
       },

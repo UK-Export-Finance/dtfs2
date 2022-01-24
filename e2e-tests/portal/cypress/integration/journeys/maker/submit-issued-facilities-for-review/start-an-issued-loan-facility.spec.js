@@ -20,7 +20,7 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
 
         const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        const loans = mockFacilities.filter((f) => f.facilityType === 'Loan');
+        const loans = mockFacilities.filter((f) => f.type === 'Loan');
 
         cy.createFacilities(dealId, loans, MAKER_LOGIN).then((createdFacilities) => {
           dealFacilities.loans = createdFacilities;

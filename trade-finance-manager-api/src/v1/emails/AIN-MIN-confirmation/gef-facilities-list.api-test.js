@@ -23,7 +23,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
   );
 
   const mockFacilityType = {
-    name: 'facilityType',
+    name: 'mock',
     value: 'Cash',
   };
 
@@ -163,14 +163,14 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const mockCashFacilities = [
         {
           ...mockFacility,
-          facilityType: 'Cash',
+          type: 'Cash',
         },
       ];
 
       const mockContingentFacilities = [
         {
           ...mockFacility,
-          facilityType: 'Contingent',
+          type: 'Contingent',
         },
       ];
 

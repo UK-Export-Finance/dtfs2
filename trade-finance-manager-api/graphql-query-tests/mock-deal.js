@@ -167,7 +167,7 @@ const MOCK_DEAL = {
     facilities: [
       {
         _id: '1010738',
-        facilityType: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
+        type: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
         createdDate: '1640088922460',
         bankReferenceNumber: '1122444',
         'coverEndDate-day': '21',
@@ -234,7 +234,7 @@ const MOCK_DEAL = {
       },
       {
         _id: '1010739',
-        facilityType: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
+        type: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
         createdDate: '1640088922461',
         bondBeneficiary: '',
         bondIssuer: '',
@@ -308,7 +308,7 @@ const MOCK_DEAL = {
           _id: '12345678',
           ukefFacilityId: '0040004833',
           bondIssuer: 'Issuer',
-          facilityType: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
+          type: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
           bondType: 'Advance payment guarantee',
           facilityStage: 'Unissued',
           hasBeenIssued: false,
@@ -337,7 +337,7 @@ const MOCK_DEAL = {
       items: [
         {
           _id: '23456789',
-          facilityType: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
+          type: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
           ukefFacilityId: '0040004833',
           createdDate: 1610369832226.0,
           facilityStage: 'Conditional',

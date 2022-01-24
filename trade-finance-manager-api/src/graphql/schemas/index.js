@@ -140,7 +140,7 @@ type FacilitySnapshot {
   ukefFacilityId: String
   dealId: String!
   facilityProduct: FacilityProduct!
-  facilityType: String
+  type: String
   ukefFacilityType: String!
   facilityStage: String!
   facilityValueExportCurrency: String!
@@ -397,7 +397,7 @@ type DealSnapshotFacility {
    facilityId: String!
    ukefFacilityId: String!
    dealType: String!
-   facilityType: String
+   type: String
    coverEndDate: String
    coverEndDateEpoch: String
    companyName: String

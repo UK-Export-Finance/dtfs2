@@ -68,12 +68,12 @@ describe('/v1/tfm/deal/:id', () => {
         };
 
         const mockBond = {
-          facilityType: 'Bond',
+          type: 'Bond',
           ...mockFacility,
         };
 
         const mockLoan = {
-          facilityType: 'Loan',
+          type: 'Loan',
           ...mockFacility,
         };
 

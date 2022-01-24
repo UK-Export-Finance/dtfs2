@@ -12,7 +12,7 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
   mapped.premiumTypeId = mapPremiumTypeId(facility);
   mapped.premiumFrequencyId = mapPremiumFrequencyId(facility);
 
-  mapped.productGroup = mapProductGroup(facility.facilityType);
+  mapped.productGroup = mapProductGroup(facility.type);
 
   mapped.facilityURN = facility.ukefFacilityId;
 

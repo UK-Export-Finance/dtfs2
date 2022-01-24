@@ -3,7 +3,7 @@ const { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } = require('..
 module.exports = [
   {
     mockDealId: 7,
-    facilityType: 'Loan',
+    type: 'Loan',
     ukefGuaranteeInMonths: '24',
     'coverEndDate-day': null,
     'coverEndDate-month': null,
@@ -40,7 +40,7 @@ module.exports = [
   },
   {
     mockDealId: 7,
-    facilityType: 'Bond',
+    type: 'Bond',
     ukefGuaranteeInMonths: null,
     facilityStage: 'Issued',
     hasBeenIssued: true,

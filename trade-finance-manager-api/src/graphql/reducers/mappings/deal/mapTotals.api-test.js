@@ -5,7 +5,7 @@ describe('mapTotals', () => {
   const mockBondAndLoanFacilities = [
     {
       facilitySnapshot: {
-        facilityType: 'Bond',
+        type: 'Bond',
       },
       tfm: {
         ukefExposure: 80000.00,
@@ -14,7 +14,7 @@ describe('mapTotals', () => {
     },
     {
       facilitySnapshot: {
-        facilityType: 'Bond',
+        type: 'Bond',
       },
       tfm: {
         ukefExposure: 23000.00,
@@ -23,7 +23,7 @@ describe('mapTotals', () => {
     },
     {
       facilitySnapshot: {
-        facilityType: 'Loan',
+        type: 'Loan',
       },
       tfm: {
         ukefExposure: 8000.00,
@@ -32,7 +32,7 @@ describe('mapTotals', () => {
     },
     {
       facilitySnapshot: {
-        facilityType: 'Loan',
+        type: 'Loan',
         value: '1234.56',
         currency: { id: 'GBP' },
       },

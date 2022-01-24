@@ -185,7 +185,7 @@ const deal = {
   },
   mockFacilities: [
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -229,7 +229,7 @@ const deal = {
       previousFacilityStage: 'Issued',
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: 1599048722968.0,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,

@@ -9,7 +9,7 @@ const page = {
   results: () => cy.get('.govuk-table__body'),
   bankFacilityId: (id) => cy.get(`[data-cy="facility__bankId--${id}"]`),
   ukefFacilityId: (id) => cy.get(`[data-cy="facility__ukefId--${id}"]`),
-  facilityType: (id) => cy.get(`[data-cy="facility__facilityType--${id}"]`),
+  type: (id) => cy.get(`[data-cy="facility__type--${id}"]`),
   noticeType: (id) => cy.get(`[data-cy="facility__noticeType--${id}"]`),
   facilityValue: (id) => cy.get(`[data-cy="facility__value--${id}"]`),
   bankStage: (id) => cy.get(`[data-cy="facility__bankStage--${id}"]`),

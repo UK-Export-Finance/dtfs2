@@ -110,7 +110,7 @@
   },
   "mockFacilities": [
     {
-        "facilityType": "Bond",
+        "type": "Bond",
         "bondIssuer": "issuer",
         "bondType": "bond type",
         "facilityStage": "unissued",
@@ -126,7 +126,7 @@
         "dayCountBasis": "test"
     },
     {
-      "facilityType": "Loan",
+      "type": "Loan",
       "facilityStage": "Unconditional",
       "hasBeenIssued": true,
       "bankReferenceNumber": "123",

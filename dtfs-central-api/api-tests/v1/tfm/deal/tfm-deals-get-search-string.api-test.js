@@ -252,7 +252,7 @@ describe('/v1/tfm/deals', () => {
           },
           bondTransactions: {
             items: [
-              { _id: '1', facilityType: 'Bond' },
+              { _id: '1', type: 'Bond' },
             ],
           },
         });
@@ -264,7 +264,7 @@ describe('/v1/tfm/deals', () => {
           },
           loanTransactions: {
             items: [
-              { _id: '1', facilityType: 'Loan' },
+              { _id: '1', type: 'Loan' },
             ],
           },
         });
@@ -322,7 +322,7 @@ describe('/v1/tfm/deals', () => {
             },
             loanTransactions: {
               items: [
-                { _id: '1', facilityType: 'Loan' },
+                { _id: '1', type: 'Loan' },
               ],
             },
           });

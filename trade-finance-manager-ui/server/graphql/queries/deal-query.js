@@ -110,7 +110,7 @@ const dealQuery = gql`
             facilityProduct {
               code
             },
-            facilityType,
+            type,
             ukefFacilityType,
             facilityStage,
             facilityValueExportCurrency,

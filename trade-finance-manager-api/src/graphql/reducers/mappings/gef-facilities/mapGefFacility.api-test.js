@@ -49,7 +49,7 @@ describe('mapGefFacility', () => {
         dates: mapGefFacilityDates(facilitySnapshot, mockFacility.tfm, MOCK_GEF_DEAL),
         facilityProduct: mapFacilityProduct(facilitySnapshot.type),
         facilityStage: mapFacilityStage(facilitySnapshot.hasBeenIssued),
-        facilityType: mapFacilityType(facilitySnapshot),
+        type: mapFacilityType(facilitySnapshot),
         currency: facilitySnapshot.currency.id,
         facilityValueExportCurrency: `${facilitySnapshot.currency.id} ${formattedFacilityValue}`,
         value: mapFacilityValue(facilitySnapshot.currency.id, formattedFacilityValue, mockFacility.tfm),

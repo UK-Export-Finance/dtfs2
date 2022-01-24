@@ -79,7 +79,7 @@ describe('submissionPortalActivity()', () => {
 
     expect(portalActivityObject.html).toEqual('');
 
-    expect(portalActivityObject.facilityType).toEqual('');
+    expect(portalActivityObject.type).toEqual('');
 
     expect(portalActivityObject.facilityID).toEqual('');
   });
@@ -155,7 +155,7 @@ describe('submissionPortalActivity()', () => {
 
     expect(portalActivityObject.html).toEqual('facility');
 
-    expect(portalActivityObject.facilityType).toEqual(`${req.body.type} facility`);
+    expect(portalActivityObject.type).toEqual(`${req.body.type} facility`);
 
     expect(portalActivityObject.facilityID).toEqual(mockFacilities[4].ukefFacilityId);
   });

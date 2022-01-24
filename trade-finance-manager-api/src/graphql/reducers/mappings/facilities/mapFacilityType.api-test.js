@@ -1,5 +1,4 @@
 const mapFacilityType = require('./mapFacilityType');
-const { capitalizeFirstLetter } = require('../../../../utils/string');
 const CONSTANTS = require('../../../../constants');
 
 describe('mapFacilityType', () => {
@@ -18,18 +17,18 @@ describe('mapFacilityType', () => {
   });
 
   describe('when facility is a loan', () => {
-    it('should capitalize facilityType', () => {
+    it('should return loan', () => {
       const mockLoanFacility = {
         bondType: null,
-        facilityType: 'Loan',
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
         facilityProduct: {
-          code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN,
+          code: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
         },
       };
 
       const result = mapFacilityType(mockLoanFacility);
 
-      expect(result).toEqual(capitalizeFirstLetter('loan'));
+      expect(result).toEqual('Loan');
     });
   });
 

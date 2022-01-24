@@ -39,7 +39,7 @@ const GET_FACILITY = gql`
           code,
           name
         },
-        facilityType,
+        type,
         ukefFacilityType,
         facilityStage,
         facilityValueExportCurrency,

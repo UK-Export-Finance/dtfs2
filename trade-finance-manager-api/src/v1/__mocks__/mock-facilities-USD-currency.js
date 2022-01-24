@@ -1,7 +1,7 @@
 const MOCK_FACILITIES = [
   {
     _id: '10001',
-    facilityType: 'Bond',
+    type: 'Bond',
     bondIssuer: 'Issuer',
     bondType: 'Advance payment guarantee',
     facilityStage: 'Unissued',
@@ -27,7 +27,7 @@ const MOCK_FACILITIES = [
   },
   {
     _id: '10002',
-    facilityType: 'Loan',
+    type: 'Loan',
     createdDate: 1610369832226.0,
     facilityStage: 'Conditional',
     hasBeenIssued: false,

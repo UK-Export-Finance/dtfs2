@@ -1,8 +1,8 @@
-const facilityType = require('./facility-type');
+const type = require('./type');
 const dealId = require('./associated-deal-id');
 
 const rules = [
-  facilityType,
+  type,
   dealId,
 ];
 

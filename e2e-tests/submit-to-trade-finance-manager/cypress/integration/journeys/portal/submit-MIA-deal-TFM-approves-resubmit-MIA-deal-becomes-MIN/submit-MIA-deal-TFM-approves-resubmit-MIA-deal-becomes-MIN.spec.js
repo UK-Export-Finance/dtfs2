@@ -30,13 +30,13 @@ context('Portal to TFM deal submission', () => {
 
         cy.createFacilities(dealId, mockFacilities, MAKER).then((createdFacilities) => {
           createdFacilities.forEach((facility) => {
-            const { facilityType } = facility;
+            const { type } = facility;
 
-            if (facilityType === 'Bond') {
+            if (type === 'Bond') {
               bondId = facility._id;
             }
 
-            if (facilityType === 'Loan') {
+            if (type === 'Loan') {
               loanId = facility._id;
             }
           });

@@ -22,11 +22,11 @@ const facilityHasValidIssuedDate = (facility, deal) => {
   return false;
 };
 
-const isLoanFacility = (facilityType) =>
-  facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN;
+const isLoanFacility = (type) =>
+  type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN;
 
-const isBondFacility = (facilityType) =>
-  facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND;
+const isBondFacility = (type) =>
+  type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND;
 
 const loanHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
   if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
@@ -48,16 +48,16 @@ const bondHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
 };
 
 const shouldUpdateFacility = (facility) => {
-  const { facilityType, facilityStage, previousFacilityStage } = facility;
+  const { type, facilityStage, previousFacilityStage } = facility;
 
-  if (isLoanFacility(facilityType)) {
+  if (isLoanFacility(type)) {
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
       || loanHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
       return true;
     }
   }
 
-  if (isBondFacility(facilityType)) {
+  if (isBondFacility(type)) {
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
       || bondHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
       return true;
@@ -89,7 +89,7 @@ const updateIssuedFacilities = async (
       deal.facilities.forEach(async (facilityId) => {
         const facility = await facilitiesController.findOne(facilityId);
 
-        const { facilityStage, facilityType } = facility;
+        const { facilityStage, type } = facility;
 
         const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                     && facility.issueFacilityDetailsProvided
@@ -108,9 +108,9 @@ const updateIssuedFacilities = async (
               facility.status = newStatus;
             }
 
-            if (isLoanFacility(facilityType)) {
+            if (isLoanFacility(type)) {
               facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
-            } else if (isBondFacility(facilityType)) {
+            } else if (isBondFacility(type)) {
               facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
             }
           } else if (shouldUpdateStatus) {
