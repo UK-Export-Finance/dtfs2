@@ -127,10 +127,6 @@ type GefDeal {
   eligibility: Eligibility
 }
 
-type GefCurrency {
-   id: String
-}
-
 type Facility {
   _id: String
   name: String
@@ -138,9 +134,10 @@ type Facility {
   ukefFacilityId: String
   type: String
   submissionType: String
+  currency: Currency
   value: Float
   hasBeenIssued: Boolean
-  issuedDate: String
+  submittedAsIssuedDate: Float
 }
 
 type AllFacilitiesQuery {

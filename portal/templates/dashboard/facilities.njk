@@ -48,6 +48,17 @@
       </a>
     {% endset %}
 
+    {% if facility.hasBeenIssued %}
+      {% set stage  = 'Issued' %}
+
+      {% else %}
+      {% set stage  = 'Unissued' %}
+    {% endif %}
+
+    {% if facility.currency.id %}
+      {% set currency = facility.currency.id %}
+    {% endif %}
+
     {% set item = [
       {
         html: linkHtml,
@@ -60,7 +71,7 @@
         classes: "govuk-body-s"
       },
       {
-        text: facility.type | capitalize,
+        text: facility.type | dashIfEmpty,
         attributes: { "data-cy": "facility__type--" + facility.bankId },
         classes: "govuk-body-s"
       },
@@ -70,13 +81,18 @@
         classes: "govuk-body-s"
       },
       {
-        text: facility.value,
+        text: currency + ' ' + facility.value | formatAsCurrency | dashIfEmpty,
         attributes: { "data-cy": "facility__value--" + facility.bankId },
         classes: "govuk-body-s"
       },
       {
-        text: facility.bankStage | dashIfEmpty,
+        text: stage  | dashIfEmpty,
         attributes: { "data-cy": "facility__bankStage--" + facility.bankId },
+        classes: "govuk-body-s"
+      },
+      {
+        text: facility.submittedAsIssuedDate | localiseTimestamp("D MMM YYYY", user.timezone) | dashIfEmpty,
+        attributes: { "data-cy": "facility__submittedAsIssued--" + facility.bankId },
         classes: "govuk-body-s"
       }
     ] %}
@@ -133,6 +149,6 @@
     rows: items
   }) }}
 
-  {{ pagination.pagination(pages.totalPages, pages.currentPage, pages.totalItems, '/dashboard/facilities' if tab === 'bssFacilities' else '/dashboard/facilities/gef') }}
+  {{ pagination.pagination(pages.totalPages, pages.currentPage, pages.totalItems, '/dashboard/facilities') }}
 
 {% endblock %}

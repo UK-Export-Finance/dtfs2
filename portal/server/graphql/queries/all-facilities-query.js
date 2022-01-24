@@ -11,8 +11,12 @@ query allFacilities($start: Int, $pagesize: Int, $filters: [FacilitiesFilters]){
       ukefFacilityId
       type
       submissionType
+      currency {
+        id
+      }
       value
       hasBeenIssued
+      submittedAsIssuedDate
     }
   }
 }`;

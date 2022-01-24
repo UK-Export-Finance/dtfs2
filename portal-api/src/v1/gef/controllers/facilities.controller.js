@@ -217,9 +217,11 @@ exports.findFacilities = async (
           name: 'mock name', // what is this in BSS?
           ukefFacilityId: '$ukefFacilityId',
           // type: '$facilityType', // need to align
-          type: 'TODO',
+          currency: '$currency',
           value: '$value',
+          type: '$type',
           hasBeenIssued: '$hasBeenIssued',
+          submittedAsIssuedDate: '$submittedAsIssuedDate',
         },
       },
       {
@@ -246,6 +248,5 @@ exports.findFacilities = async (
     ])
     .toArray();
 
-    console.log('API - db query result \n', doc);
   return doc;
 };

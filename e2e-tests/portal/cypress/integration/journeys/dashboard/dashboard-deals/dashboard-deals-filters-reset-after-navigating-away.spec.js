@@ -44,8 +44,8 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
     dashboard.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
 
     // navigate somewhere else
-    cy.visit('/dashboard/facilities/gef');
-    cy.url().should('eq', relative('/dashboard/facilities/gef/0'));
+    cy.visit('/dashboard/facilities');
+    cy.url().should('eq', relative('/dashboard/facilities/0'));
 
     // go back to dashboard
     header.dashboard().click();
