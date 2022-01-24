@@ -117,7 +117,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       facilitySnapshot: {
         _id: facility1Id,
         ...newFacility1,
-        createdDate: expect.any(String),
+        createdDate: expect.any(Number),
       },
       tfm: DEFAULTS.FACILITY_TFM,
     });
@@ -130,7 +130,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       facilitySnapshot: {
         _id: facility2Id,
         ...newFacility2,
-        createdDate: expect.any(String),
+        createdDate: expect.any(Number),
       },
       tfm: DEFAULTS.FACILITY_TFM,
     });

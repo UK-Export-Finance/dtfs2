@@ -80,7 +80,7 @@ describe('/v1/portal/facilities', () => {
 
       expect(facilityAfterCreation.facilityType).toEqual(newFacility.facilityType);
       expect(facilityAfterCreation.dealId).toEqual(newFacility.dealId);
-      expect(typeof facilityAfterCreation.createdDate).toEqual('string');
+      expect(typeof facilityAfterCreation.createdDate).toEqual('number');
     });
 
     it('creates incremental integer facility IDs', async () => {

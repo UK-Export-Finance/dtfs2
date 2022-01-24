@@ -16,9 +16,9 @@
  *       createdDate:
  *         type: string
  *         example: '1632392646415'
- *       lastEdited:
- *         type: string
- *         example: '1632392778918'
+ *       updatedAt:
+ *         type: integer
+ *         example: 1632392778918
  *       status:
  *         type: string
  *         example: Acknowledged by UKEF
