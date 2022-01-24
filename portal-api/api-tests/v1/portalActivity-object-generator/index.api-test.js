@@ -80,7 +80,7 @@ describe('portalActivityGenerator()', () => {
     });
 
     it('should correctly return type', () => {
-      expect(result.type).toEqual('Cash facility');
+      expect(result.facilityType).toEqual('Cash facility');
     });
 
     it('should correctly return facilityID', () => {
@@ -141,8 +141,8 @@ describe('portalActivityGenerator()', () => {
       expect(result.checker).toEqual(checker);
     });
 
-    it('should correctly return type', () => {
-      expect(result.type).toEqual('');
+    it('should correctly return facilityType', () => {
+      expect(result.facilityType).toEqual('');
     });
 
     it('should correctly return facilityID', () => {

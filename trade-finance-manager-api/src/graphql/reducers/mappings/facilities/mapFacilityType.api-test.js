@@ -22,7 +22,7 @@ describe('mapFacilityType', () => {
         bondType: null,
         type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
         facilityProduct: {
-          code: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+          code: CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN,
         },
       };
 

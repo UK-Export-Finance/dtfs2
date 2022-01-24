@@ -184,7 +184,7 @@ describe('facilityChangePortalActivity()', () => {
 
     expect(portalActivityObject.html).toEqual('facility');
 
-    expect(portalActivityObject.type).toEqual(`${mockFacilityOne[0].type} facility`);
+    expect(portalActivityObject.facilityType).toEqual(`${mockFacilityOne[0].type} facility`);
 
     expect(portalActivityObject.facilityID).toEqual(mockFacilityOne[0].ukefFacilityId);
   });
