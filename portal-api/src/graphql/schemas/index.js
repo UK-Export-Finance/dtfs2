@@ -68,16 +68,16 @@ input DealsInput {
   sort: [DashboardSort]
 }
 
-input GefFacilitiesFilters {
+input FacilitiesFilters {
   field: String
   value: String
   operator: String
 }
 
-input GefFacilitiesInput {
+input FacilitiesInput {
   start: Int
   pagesize: Int
-  filters: [GefFacilitiesFilters]
+  filters: [FacilitiesFilters]
 }
 
 type Exporter {
@@ -131,40 +131,27 @@ type GefCurrency {
    id: String
 }
 
-type GefFacility {
+type Facility {
   _id: String
-  dealId: String
-  type: String
-  hasBeenIssued: Boolean
   name: String
-  shouldCoverStartOnSubmission: String
-  coverStartDate: Float
-  coverEndDate: Float
-  monthsOfCover: Int
-  details: String
-  detailsOther: String
-  currency: GefCurrency
-  value: Float
-  coverPercentage: Float
-  interestPercentage: Float
-  paymentType: String
-  ukefExposure: Float
-  submittedAsIssuedDate: Float
+  dealId: String
   ukefFacilityId: String
-  createdAt: Float
-  updatedAt: Float
-  deal: GefDeal
+  type: String
+  submissionType: String
+  value: Float
+  hasBeenIssued: Boolean
+  issuedDate: String
 }
 
-type GefFacilitiesQuery {
+type AllFacilitiesQuery {
   count: Int
-  facilities: [GefFacility]
+  facilities: [Facility]
 }
 
 type Query {
   currencies: [Currency]
   allDeals(params: DealsInput): AllDealsQuery
-  gefFacilities(params: GefFacilitiesInput): GefFacilitiesQuery
+  allFacilities(params: FacilitiesInput): AllFacilitiesQuery
 }
 
 type DealStatusErrorItem {

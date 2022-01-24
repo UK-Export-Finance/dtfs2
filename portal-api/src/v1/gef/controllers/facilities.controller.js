@@ -189,28 +189,44 @@ const facilitiesFilters = (user, filters = []) => {
 };
 
 exports.findFacilities = async (
-  requestingUser,
-  filters,
+  filters = {},
+  sort = {},
   start = 0,
   pagesize = 0,
 ) => {
-  const sanitisedFilters = facilitiesFilters(requestingUser, filters);
+  // const sanitisedFilters = facilitiesFilters(requestingUser, filters);
 
   const collection = await db.getCollection(facilitiesCollectionName);
 
   const doc = await collection
     .aggregate([
+      { $match: filters },
+      // {
+      //   $lookup: {
+      //     from: 'deals',
+      //     localField: 'dealId',
+      //     foreignField: '_id',
+      //     as: 'deal',
+      //   },
+      // },
+      // { $unwind: '$deal' },
+
       {
-        $lookup: {
-          from: 'deals',
-          localField: 'dealId',
-          foreignField: '_id',
-          as: 'deal',
+        $project: {
+          _id: 1,
+          name: 'mock name', // what is this in BSS?
+          ukefFacilityId: '$ukefFacilityId',
+          // type: '$facilityType', // need to align
+          type: 'TODO',
+          value: '$value',
+          hasBeenIssued: '$hasBeenIssued',
         },
       },
-      { $unwind: '$deal' },
-      { $match: sanitisedFilters },
-      { $sort: { updatedAt: -1, createdAt: -1 } },
+      {
+        $sort: {
+          updatedAt: -1,
+        },
+      },
       {
         $facet: {
           count: [{ $count: 'total' }],
@@ -221,9 +237,15 @@ exports.findFacilities = async (
         },
       },
       { $unwind: '$count' },
-      { $project: { count: '$count.total', facilities: 1 } },
+      {
+        $project: {
+          count: '$count.total',
+          facilities: 1,
+        },
+      },
     ])
     .toArray();
 
+    console.log('API - db query result \n', doc);
   return doc;
 };

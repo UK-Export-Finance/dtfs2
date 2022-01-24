@@ -4,7 +4,7 @@ const FormData = require('form-data');
 const apollo = require('./graphql/apollo');
 const {
   allDealsQuery,
-  gefFacilitiesQuery,
+  allFacilitiesQuery,
 } = require('./graphql/queries');
 
 require('dotenv').config();
@@ -78,6 +78,22 @@ const allDeals = async (start, pagesize, filters, token, sort) => {
   }
 
   return response.data.allDeals;
+};
+
+const allFacilities = async (start, pagesize, filters, token) => {
+  const params = {
+    start,
+    pagesize,
+    filters,
+  };
+
+  const response = await apollo('GET', allFacilitiesQuery, params, token);
+
+  if (response.errors) {
+    console.error('Portal UI - GraphQL error querying all facilities ', response.errors);
+  }
+
+  return response.data.allFacilities;
 };
 
 const createDeal = async (deal, token) => {
@@ -612,18 +628,6 @@ const createFeedback = async (formData, token) => {
   return response.data;
 };
 
-const gefFacilities = async (start, pagesize, filters, token) => {
-  const params = {
-    start,
-    pagesize,
-    filters,
-  };
-
-  const response = await apollo('GET', gefFacilitiesQuery, params, token);
-
-  return response.data.gefFacilities || { count: 0, facilities: [] };
-};
-
 const getUnissuedFacilitiesReports = async (token) => {
   const response = await axios({
     method: 'get',
@@ -639,6 +643,7 @@ const getUnissuedFacilitiesReports = async (token) => {
 
 module.exports = {
   allDeals,
+  allFacilities,
   banks,
   cloneDeal,
   contractBond,
@@ -678,6 +683,5 @@ module.exports = {
   downloadFile,
   mga,
   downloadMga,
-  gefFacilities,
   getUnissuedFacilitiesReports,
 };

@@ -42,9 +42,9 @@
       <a
           href="{{ facility.url }}"
           class="govuk-link"
-          data-cy="facility__link--{{ facility.bankId }}"
+          data-cy="facility__link--TODO"
       >
-        {{ facility.bankId }}
+        TODO
       </a>
     {% endset %}
 
@@ -55,7 +55,7 @@
         classes: "govuk-body-s"
       },
       {
-        text: facility.ukefId | dashIfEmpty,
+        text: facility.ukefFacilityId | dashIfEmpty,
         attributes: { "data-cy": "facility__ukefId--" + facility.bankId },
         classes: "govuk-body-s"
       },
@@ -70,18 +70,13 @@
         classes: "govuk-body-s"
       },
       {
-        text: facility.value.currency + ' ' + (facility.value.amount | string | formatAsCurrency),
+        text: facility.value,
         attributes: { "data-cy": "facility__value--" + facility.bankId },
         classes: "govuk-body-s"
       },
       {
-        text: facility.bankStage,
+        text: facility.bankStage | dashIfEmpty,
         attributes: { "data-cy": "facility__bankStage--" + facility.bankId },
-        classes: "govuk-body-s"
-      },
-      {
-        text: facility.date | localiseTimestamp("D MMM YYYY", user.timezone) | dashIfEmpty,
-        attributes: { 'data-cy': 'facility__date--' + facility.bankId },
         classes: "govuk-body-s"
       }
     ] %}
@@ -93,9 +88,9 @@
     classes: "govuk-!-margin-bottom-0",
     head: [
       {
-        text: "Bank facility ID",
+        text: "Facility name",
         attributes: {
-        "data-cy": "facility__bankId--header"
+        "data-cy": "facility__name--header"
       }
       },
       {
