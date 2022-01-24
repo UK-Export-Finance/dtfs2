@@ -155,7 +155,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.facilityType === 'Bond'
+              f.type === 'Bond'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -178,7 +178,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.facilityType === 'Loan'
+              f.type === 'Loan'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -203,7 +203,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.facilityType === 'Bond'
+              f.type === 'Bond'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -226,7 +226,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.facilityType === 'Loan'
+              f.type === 'Loan'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -282,7 +282,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-              f.facilityType === 'Bond'
+              f.type === 'Bond'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -305,7 +305,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
             const issuedLoansThatShouldBeUpdated = createdFacilities.filter((f) =>
-              f.facilityType === 'Loan'
+              f.type === 'Loan'
               && isUnsubmittedIssuedFacility(f)
               && !f.requestedCoverStartDate);
 
@@ -368,7 +368,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'Bond'
+            f.type === 'Bond'
             && isIssuedFacilityWithFacilityStageChange(f));
 
           // make sure we have some bonds to test against
@@ -390,7 +390,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'Loan'
+            f.type === 'Loan'
             && isIssuedFacilityWithFacilityStageChange(f));
 
           // make sure we have some loans to test against
@@ -422,7 +422,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const baseBond = {
-        facilityType: 'Bond',
+        type: 'Bond',
         bondIssuer: 'issuer',
         bondType: 'bond type',
         bondBeneficiary: 'test',
@@ -461,7 +461,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       ];
 
       const conditionalLoan = () => ({
-        facilityType: 'Loan',
+        type: 'Loan',
         facilityStage: 'Conditional',
         hasBeenIssued: false,
         ukefGuaranteeInMonths: '12',
@@ -475,7 +475,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const unconditionalLoan = () => ({
-        facilityType: 'Loan',
+        type: 'Loan',
         facilityStage: 'Unconditional',
         hasBeenIssued: true,
         value: '100',
@@ -652,7 +652,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'Loan'
+            f.type === 'Loan'
             && f.facilityStage === 'Unconditional');
 
           // make sure we have some loans to test against
@@ -678,7 +678,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'Bond'
+            f.type === 'Bond'
             && f.facilityStage === 'Issued');
 
           // make sure we have some bonds to test against
@@ -704,7 +704,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'Loan'
+            f.type === 'Loan'
             && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(f));
 
           // make sure we have some loans to test against
@@ -727,7 +727,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
-            f.facilityType === 'Bond'
+            f.type === 'Bond'
             && isUnsubmittedFacilityWithIssueFacilityDetailsProvided(f));
 
           // make sure we have some bonds to test against

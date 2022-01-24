@@ -10,7 +10,7 @@
  *       dealId:
  *         type: string
  *         example: 456abc
- *       facilityType:
+ *       type:
  *         type: string
  *         example: Bond
  *       createdDate:

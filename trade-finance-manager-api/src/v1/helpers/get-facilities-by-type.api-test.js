@@ -4,23 +4,23 @@ const CONSTANTS = require('../../constants');
 describe('get-facilities-by-type', () => {
   it('should return an array for each facility type', () => {
     const mockBonds = [
-      { _id: 1, facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND },
-      { _id: 2, facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND },
+      { _id: 1, type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND },
+      { _id: 2, type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND },
     ];
 
     const mockLoans = [
-      { _id: 3, facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN },
-      { _id: 4, facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN },
+      { _id: 3, type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN },
+      { _id: 4, type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN },
     ];
 
     const mockCashes = [
-      { _id: 5, facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH },
-      { _id: 6, facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH },
+      { _id: 5, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH },
+      { _id: 6, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH },
     ];
 
     const mockContingents = [
-      { _id: 5, facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT },
-      { _id: 6, facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT },
+      { _id: 5, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT },
+      { _id: 6, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT },
     ];
 
     const mockFacilities = [

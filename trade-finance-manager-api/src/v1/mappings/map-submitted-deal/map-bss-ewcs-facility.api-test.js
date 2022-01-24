@@ -40,7 +40,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
       const {
         _id,
         ukefFacilityId,
-        facilityType,
+        type,
         value,
         currency,
         coveredPercentage,
@@ -61,7 +61,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
       const expected = {
         _id,
         ukefFacilityId: Number(ukefFacilityId),
-        facilityType,
+        type,
         currencyCode: currency.id,
         value: Number(value.replace(/,/g, '')),
         coverPercentage: Number(coveredPercentage),

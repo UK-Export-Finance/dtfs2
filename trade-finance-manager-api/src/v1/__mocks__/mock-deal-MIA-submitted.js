@@ -171,7 +171,7 @@ const MOCK_DEAL = {
     items: [
       {
         _id: '12345678',
-        facilityType: 'Bond',
+        type: 'Bond',
         createdDate: 1610369832226.0,
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
@@ -202,7 +202,7 @@ const MOCK_DEAL = {
     items: [
       {
         _id: '23456789',
-        facilityType: 'Loan',
+        type: 'Loan',
         createdDate: 1610369832226.0,
         facilityStage: 'Conditional',
         hasBeenIssued: false,

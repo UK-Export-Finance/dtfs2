@@ -4,18 +4,18 @@ const { FACILITY_TYPE } = require('../../../constants/facilities');
 
 module.exports = (facility = {}, errorList) => {
   const newErrorList = { ...errorList };
-  const { facilityType } = facility;
+  const { type } = facility;
 
-  if (!hasValue(facilityType)) {
-    newErrorList.facilityType = {
+  if (!hasValue(type)) {
+    newErrorList.type = {
       order: orderNumber(newErrorList),
       text: 'Enter the Facility type',
     };
   }
 
-  if (hasValue(facilityType)) {
-    if (facilityType !== FACILITY_TYPE.BOND && facilityType !== FACILITY_TYPE.LOAN) {
-      newErrorList.facilityType = {
+  if (hasValue(type)) {
+    if (type !== FACILITY_TYPE.BOND && type !== FACILITY_TYPE.LOAN) {
+      newErrorList.type = {
         order: orderNumber(newErrorList),
         text: 'Facility type must be Bond or Loan',
       };

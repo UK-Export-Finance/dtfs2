@@ -51,15 +51,15 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const bond = body.facilities.find(({ facilityType }) =>
-          facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+        const bond = body.facilities.find(({ type }) =>
+          type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
         expect(bond.tfm.facilityValueInGBP).toEqual(
           Number(bond.value) * MOCK_CURRENCY_EXCHANGE_RATE,
         );
 
-        const loan = body.facilities.find(({ facilityType }) =>
-          facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+        const loan = body.facilities.find(({ type }) =>
+          type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
         expect(loan.tfm.facilityValueInGBP).toEqual(
           Number(loan.value) * MOCK_CURRENCY_EXCHANGE_RATE,
@@ -72,8 +72,8 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const bond = body.facilities.find(({ facilityType }) =>
-            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+          const bond = body.facilities.find(({ type }) =>
+            type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
           const facilityValueInGBP = Number(bond.value) * MOCK_CURRENCY_EXCHANGE_RATE;
 
@@ -93,8 +93,8 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const loan = body.facilities.find(({ facilityType }) =>
-            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+          const loan = body.facilities.find(({ type }) =>
+            type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
           const facilityValueInGBP = Number(loan.value) * MOCK_CURRENCY_EXCHANGE_RATE;
 
@@ -114,8 +114,8 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const bond = body.facilities.find(({ facilityType }) =>
-            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+          const bond = body.facilities.find(({ type }) =>
+            type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
           expect(bond.tfm.ukefExposure).toEqual(Number(bond.tfm.ukefExposure));
           expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL_BSS.details.submissionDate);
@@ -128,8 +128,8 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const loan = body.facilities.find(({ facilityType }) =>
-            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+          const loan = body.facilities.find(({ type }) =>
+            type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
           expect(loan.tfm.ukefExposure).toEqual(Number(loan.tfm.ukefExposure));
           expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL_BSS.details.submissionDate);
@@ -163,11 +163,11 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const bond = body.facilities.find(({ facilityType }) =>
-            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+          const bond = body.facilities.find(({ type }) =>
+            type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-          const loan = body.facilities.find(({ facilityType }) =>
-            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+          const loan = body.facilities.find(({ type }) =>
+            type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
           expect(loan.tfm.riskProfile).toEqual('Flat');
           expect(bond.tfm.riskProfile).toEqual('Flat');
@@ -180,11 +180,11 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const cashFacility = body.facilities.find(({ facilityType }) =>
-            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH);
+          const cashFacility = body.facilities.find(({ type }) =>
+            type === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH);
 
-          const contingentFacility = body.facilities.find(({ facilityType }) =>
-            facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT);
+          const contingentFacility = body.facilities.find(({ type }) =>
+            type === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT);
 
           expect(cashFacility.tfm.riskProfile).toEqual('Flat');
           expect(contingentFacility.tfm.riskProfile).toEqual('Flat');

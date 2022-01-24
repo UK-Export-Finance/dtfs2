@@ -170,7 +170,7 @@ const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      facilityType: CONSTANTS.FACILITY_TYPE.BOND,
+      type: CONSTANTS.FACILITY_TYPE.BOND,
       bondIssuer: 'Issuer',
       bondType: 'Advance payment guarantee',
       facilityStage: 'Issued',
@@ -199,7 +199,7 @@ const MOCK_DEAL = {
       updatedAt: Date.now(),
     },
     {
-      facilityType: CONSTANTS.FACILITY_TYPE.LOAN,
+      type: CONSTANTS.FACILITY_TYPE.LOAN,
       createdDate: 1610369832226.0,
       facilityStage: 'Conditional',
       hasBeenIssued: false,

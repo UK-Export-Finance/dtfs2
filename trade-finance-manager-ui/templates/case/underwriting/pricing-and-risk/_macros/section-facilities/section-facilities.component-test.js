@@ -13,21 +13,21 @@ describe(component, () => {
         _id: '1',
         facilitySnapshot: {
           ukefFacilityId: '100',
-          facilityType: 'Loan',
+          type: 'Loan',
         },
       },
       {
         _id: '2',
         facilitySnapshot: {
           ukefFacilityId: '100',
-          facilityType: 'Loan',
+          type: 'Loan',
         },
       },
       {
         _id: '3',
         facilitySnapshot: {
           ukefFacilityId: '100',
-          facilityType: 'Loan',
+          type: 'Loan',
         },
       },
     ],

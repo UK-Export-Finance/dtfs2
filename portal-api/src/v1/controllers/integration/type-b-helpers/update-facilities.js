@@ -165,9 +165,9 @@ const updateFacilities = (facilities, dealId, workflowDeal, interfaceUser, check
   facilities.forEach(async (facilityId) => {
     const facility = await facilitiesController.findOne(facilityId);
 
-    if (facility.facilityType === 'Bond') {
+    if (facility.type === 'Bond') {
       await updateBond(facility, dealId, workflowDeal, interfaceUser, checkIssueFacilities);
-    } else if (facility.facilityType === 'Loan') {
+    } else if (facility.type === 'Loan') {
       await updateLoan(facility, dealId, workflowDeal, interfaceUser, checkIssueFacilities);
     }
   });

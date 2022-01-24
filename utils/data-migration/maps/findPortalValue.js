@@ -9,10 +9,10 @@ const findPortalValue = (v1Value, v1FieldName, v2FieldType, v2FieldName, logErro
   return v2Value;
 };
 
-const findFacilityStageValue = (v1Value, v1FieldName, facilityType, logError) => {
-  const mappedStage = Object.entries(CONSTANTS.FACILITIES.FACILITIES_STAGE[facilityType]).find((s) => s === v1Value);
+const findFacilityStageValue = (v1Value, v1FieldName, type, logError) => {
+  const mappedStage = Object.entries(CONSTANTS.FACILITIES.FACILITIES_STAGE[type]).find((s) => s === v1Value);
   if (v1Value && !mappedStage) {
-    logError(`${v1FieldName}: ${v1Value} did not map to v2 FACILTIES_STAGE.${facilityType}`);
+    logError(`${v1FieldName}: ${v1Value} did not map to v2 FACILTIES_STAGE.${type}`);
   }
   console.log({ mappedStage });
   return mappedStage;

@@ -5,7 +5,7 @@ describe('map-premium-ids', () => {
   describe('mapPremiumFrequencyId', () => {
     describe('bonds', () => {
       const facility = {
-        facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
       };
 
       it('should return monthly frequencyId', () => {
@@ -61,7 +61,7 @@ describe('map-premium-ids', () => {
 
     describe('loans', () => {
       const facility = {
-        facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
       };
 
       it('should return monthly frequencyId', () => {
@@ -119,7 +119,7 @@ describe('map-premium-ids', () => {
   describe('mapPremiumTypeId', () => {
     describe('bonds', () => {
       const facility = {
-        facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
       };
 
       it('should return In Advance fee type', () => {
@@ -165,7 +165,7 @@ describe('map-premium-ids', () => {
 
     describe('loans', () => {
       const facility = {
-        facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
       };
 
       it('should return In Advance fee type', () => {

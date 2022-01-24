@@ -190,7 +190,7 @@ const deal = {
   },
   mockFacilities: [
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Performance bond',
@@ -232,7 +232,7 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: now,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,

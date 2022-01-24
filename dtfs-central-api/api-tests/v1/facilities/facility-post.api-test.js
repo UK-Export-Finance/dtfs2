@@ -14,7 +14,7 @@ const mockUser = {
 };
 
 const newFacility = {
-  facilityType: 'Bond',
+  type: 'Bond',
   dealId: '123123456',
 };
 
@@ -51,7 +51,7 @@ describe('/v1/portal/facilities', () => {
     it('returns 404 when associatedDeal/dealId is not found', async () => {
       const facilityWithInvalidDealId = {
         dealId: '1234',
-        facilityType: 'Bond',
+        type: 'Bond',
       };
 
       const { status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
@@ -62,7 +62,7 @@ describe('/v1/portal/facilities', () => {
     it('returns 404 when user is not found', async () => {
       const facilityWithInvalidDealId = {
         dealId: '1234',
-        facilityType: 'Bond',
+        type: 'Bond',
       };
 
       const { status } = await api.post({ facility: facilityWithInvalidDealId }).to('/v1/portal/facilities');
@@ -78,7 +78,7 @@ describe('/v1/portal/facilities', () => {
 
       const { body: facilityAfterCreation } = await api.get(`/v1/portal/facilities/${body._id}`);
 
-      expect(facilityAfterCreation.facilityType).toEqual(newFacility.facilityType);
+      expect(facilityAfterCreation.type).toEqual(newFacility.type);
       expect(facilityAfterCreation.dealId).toEqual(newFacility.dealId);
       expect(typeof facilityAfterCreation.createdDate).toEqual('number');
     });
@@ -127,7 +127,7 @@ describe('/v1/portal/facilities', () => {
     describe('when required fields are missing', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
-          facilityType: '',
+          type: '',
           dealId: '',
         };
 
@@ -136,8 +136,8 @@ describe('/v1/portal/facilities', () => {
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(2);
 
-        expect(body.validationErrors.errorList.facilityType).toBeDefined();
-        expect(body.validationErrors.errorList.facilityType.text).toEqual('Enter the Facility type');
+        expect(body.validationErrors.errorList.type).toBeDefined();
+        expect(body.validationErrors.errorList.type.text).toEqual('Enter the Facility type');
 
         expect(body.validationErrors.errorList.dealId).toBeDefined();
         expect(body.validationErrors.errorList.dealId.text).toEqual('Enter the Associated deal id');
@@ -147,7 +147,7 @@ describe('/v1/portal/facilities', () => {
     describe('when required fields are invalid', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
-          facilityType: 'invalid-facility',
+          type: 'invalid-facility',
           dealId: '123123456',
           user: {},
         };
@@ -157,8 +157,8 @@ describe('/v1/portal/facilities', () => {
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(1);
 
-        expect(body.validationErrors.errorList.facilityType).toBeDefined();
-        expect(body.validationErrors.errorList.facilityType.text).toEqual('Facility type must be Bond or Loan');
+        expect(body.validationErrors.errorList.type).toBeDefined();
+        expect(body.validationErrors.errorList.type.text).toEqual('Facility type must be Bond or Loan');
       });
     });
   });

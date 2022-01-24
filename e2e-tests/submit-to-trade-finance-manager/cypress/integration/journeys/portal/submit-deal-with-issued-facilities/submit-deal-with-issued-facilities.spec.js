@@ -75,7 +75,7 @@ context('Portal to TFM deal submission', () => {
     let facilityRow;
 
     const issuedBond = dealFacilities.find((facility) =>
-      facility.facilityType === 'Bond'
+      facility.type === 'Bond'
       && facility.facilityStage === 'Issued');
 
     const issuedBondId = issuedBond._id;
@@ -99,7 +99,7 @@ context('Portal to TFM deal submission', () => {
     cy.forceVisit(tfmCaseDealPage);
 
     const issuedLoan = dealFacilities.find((facility) =>
-      facility.facilityType === 'Loan'
+      facility.type === 'Loan'
       && facility.facilityStage === 'Unconditional');
 
     const issuedLoanId = issuedLoan._id;

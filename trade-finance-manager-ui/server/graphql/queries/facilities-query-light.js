@@ -7,7 +7,7 @@ query Facilities($searchString: String){
       dealId
       facilityId
       ukefFacilityId
-      facilityType
+      type
       companyName
       coverEndDate
       coverEndDateEpoch

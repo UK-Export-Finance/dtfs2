@@ -14,7 +14,7 @@ const newDeal = {
 };
 
 const newFacility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
 };
 
 const mockUser = {

@@ -50,7 +50,7 @@ context('View a deal', () => {
 
     gefFacilitiesDashboard.bankFacilityId(facilityId).should('contain', 'abc-1-def');
     gefFacilitiesDashboard.ukefFacilityId(facilityId).should('contain', '00000001');
-    gefFacilitiesDashboard.facilityType(facilityId).should('contain', 'Cash');
+    gefFacilitiesDashboard.type(facilityId).should('contain', 'Cash');
     gefFacilitiesDashboard.noticeType(facilityId).should('contain', '-');
     gefFacilitiesDashboard.facilityValue(facilityId).should('contain', 'GBP 123.00');
     gefFacilitiesDashboard.bankStage(facilityId).should('contain', 'Issued');

@@ -168,7 +168,7 @@ const MOCK_DEAL = {
     items: [
       {
         _id: 'MOCK_MIA_SECOND_SUBMIT-BOND-1',
-        facilityType: 'Bond',
+        type: 'Bond',
         createdDate: 1610369832226.0,
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
@@ -200,7 +200,7 @@ const MOCK_DEAL = {
     items: [
       {
         _id: 'MOCK_MIA_SECOND_SUBMIT-LOAN-1',
-        facilityType: 'Loan',
+        type: 'Loan',
         createdDate: 1610369832226.0,
         facilityStage: 'Conditional',
         hasBeenIssued: false,
