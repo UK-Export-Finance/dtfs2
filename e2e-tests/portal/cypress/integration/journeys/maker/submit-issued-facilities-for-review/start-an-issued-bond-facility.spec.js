@@ -20,7 +20,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
 
         const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        const bonds = mockFacilities.filter((f) => f.facilityType === 'Bond');
+        const bonds = mockFacilities.filter((f) => f.type === 'Bond');
 
         cy.createFacilities(dealId, bonds, MAKER_LOGIN).then((createdFacilities) => {
           dealFacilities.bonds = createdFacilities;

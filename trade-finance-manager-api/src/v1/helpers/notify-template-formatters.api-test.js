@@ -37,7 +37,7 @@ describe('notify-template-formatters', () => {
   });
 
   describe('generateFacilitiesListHeading', () => {
-    describe('when facilityType is loan', () => {
+    describe('when type is loan', () => {
       it('should return loan product name', () => {
         const result = generateFacilitiesListHeading(CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
@@ -45,7 +45,7 @@ describe('notify-template-formatters', () => {
       });
     });
 
-    describe('when facilityType is bond', () => {
+    describe('when type is bond', () => {
       it('should return bond product name', () => {
         const result = generateFacilitiesListHeading(CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
@@ -53,7 +53,7 @@ describe('notify-template-formatters', () => {
       });
     });
 
-    describe('when facilityType is cash', () => {
+    describe('when type is cash', () => {
       it('should return cash product name', () => {
         const result = generateFacilitiesListHeading(CONSTANTS.FACILITIES.FACILITY_TYPE.CASH);
 
@@ -61,7 +61,7 @@ describe('notify-template-formatters', () => {
       });
     });
 
-    describe('when facilityType is contingent', () => {
+    describe('when type is contingent', () => {
       it('should return contingent product name', () => {
         const result = generateFacilitiesListHeading(CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT);
 
@@ -87,12 +87,12 @@ describe('notify-template-formatters', () => {
     it('should return string list for all facilities with a single heading', () => {
       const mockFacilities = [
         {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+          type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           ukefFacilityId: '1',
           uniqueIdentificationNumber: '123',
         },
         {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+          type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           ukefFacilityId: '2',
           uniqueIdentificationNumber: '456',
         },
@@ -100,7 +100,7 @@ describe('notify-template-formatters', () => {
 
       const result = generateFacilitiesListString(mockFacilities);
 
-      const heading = generateFacilitiesListHeading(mockFacilities[0].facilityType);
+      const heading = generateFacilitiesListHeading(mockFacilities[0].type);
 
       const firstString = expectedString(mockFacilities[0], 'uniqueIdentificationNumber');
       const secondString = expectedString(mockFacilities[1], 'uniqueIdentificationNumber');
@@ -115,7 +115,7 @@ describe('notify-template-formatters', () => {
       it('should return string with bankReference', () => {
         const mockFacilities = [
           {
-            facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+            type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
             ukefFacilityId: '1',
             bankReference: '123',
           },
@@ -123,7 +123,7 @@ describe('notify-template-formatters', () => {
 
         const result = generateFacilitiesListString(mockFacilities);
 
-        const heading = generateFacilitiesListHeading(mockFacilities[0].facilityType);
+        const heading = generateFacilitiesListHeading(mockFacilities[0].type);
 
         const string = expectedString(mockFacilities[0], 'bankReference');
 
@@ -137,14 +137,14 @@ describe('notify-template-formatters', () => {
       it('should return string', () => {
         const mockFacilities = [
           {
-            facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+            type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
             ukefFacilityId: '1',
           },
         ];
 
         const result = generateFacilitiesListString(mockFacilities);
 
-        const heading = generateFacilitiesListHeading(mockFacilities[0].facilityType);
+        const heading = generateFacilitiesListHeading(mockFacilities[0].type);
 
         const string = `*UKEF facility ID: ${mockFacilities[0].ukefFacilityId}\n\n`;
 
@@ -167,19 +167,19 @@ describe('notify-template-formatters', () => {
     it('should return issued and unissued facilities list string', () => {
       const mockFacilities = [
         {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+          type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           hasBeenIssued: true,
         },
         {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+          type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           hasBeenIssued: false,
         },
         {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+          type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
           hasBeenIssued: true,
         },
         {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+          type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
           hasBeenIssued: false,
         },
       ];
@@ -211,7 +211,7 @@ describe('notify-template-formatters', () => {
       it('should return issued as empty string', () => {
         const mockFacilities = [
           {
-            facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+            type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
             hasBeenIssued: false,
           },
         ];
@@ -226,7 +226,7 @@ describe('notify-template-formatters', () => {
       it('should return unissued as empty string', () => {
         const mockFacilities = [
           {
-            facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+            type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
             hasBeenIssued: true,
           },
         ];
@@ -242,19 +242,19 @@ describe('notify-template-formatters', () => {
     it('should return issued and unissued facilities list string', () => {
       const mockFacilities = [
         {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+          type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
           hasBeenIssued: true,
         },
         {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+          type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
           hasBeenIssued: false,
         },
         {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+          type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
           hasBeenIssued: true,
         },
         {
-          facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+          type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
           hasBeenIssued: false,
         },
       ];
@@ -286,7 +286,7 @@ describe('notify-template-formatters', () => {
       it('should return unissued as empty string', () => {
         const mockFacilities = [
           {
-            facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+            type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
             hasBeenIssued: true,
           },
         ];

@@ -2,7 +2,7 @@ const isFacilityValidForPremiumSchedule = require('./is-facility-valid-for-premi
 const CONSTANTS = require('../../constants');
 
 const facility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
   feeType: 'At maturity',
   ukefFacilityId: 1234,
   guaranteeFee: 10,

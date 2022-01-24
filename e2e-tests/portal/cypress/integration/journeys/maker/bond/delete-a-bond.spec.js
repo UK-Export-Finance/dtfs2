@@ -19,7 +19,7 @@ const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: 'test',
       bondType: 'Bid bond',
@@ -42,7 +42,7 @@ const MOCK_DEAL = {
       },
     },
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: 'test',
       bondType: 'Bid bond',
@@ -65,7 +65,7 @@ const MOCK_DEAL = {
       },
     },
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: 'test',
       bondType: 'Bid bond',
@@ -108,7 +108,7 @@ context('Delete a Bond', () => {
         const { mockFacilities } = MOCK_DEAL;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
+          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
 
           dealFacilities.bonds = bonds;
         });

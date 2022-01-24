@@ -32,7 +32,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
     let originalFacilities;
 
     const mockUnsubmittedUnconditionalLoan = () => ({
-      facilityType: 'Loan',
+      type: 'Loan',
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
@@ -71,7 +71,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
     });
 
     const unsubmittedIssuedBond = () => ({
-      facilityType: 'Bond',
+      type: 'Bond',
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -145,7 +145,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
         // NOTE: aka - unconditional loans created from Deal Draft, did not need to complete Issue Facility Form
         const unsubmittedUnconditionalLoansNotProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
-          facility.facilityType === 'Loan'
+          facility.type === 'Loan'
           && !facility.issueFacilityDetailsSubmitted
           && !facility.issueFacilityDetailsProvided);
 
@@ -178,7 +178,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
         // NOTE: aka - issued bonds created from Deal Draft, did not need to complete Issue Facility Form
         const unsubmittedIssuedBondsNotProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
-          facility.facilityType === 'Bond'
+          facility.type === 'Bond'
           && !facility.issueFacilityDetailsSubmitted
           && !facility.issueFacilityDetailsProvided);
 
@@ -211,7 +211,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
         // NOTE: aka - unconditional loans created from Deal Draft, had to complete Issue Facility Form
         const unsubmittedUnconditionalLoansProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
-          facility.facilityType === 'Loan'
+          facility.type === 'Loan'
           && facility.issueFacilityDetailsProvided
           && facility.status === 'Ready for check'
           && !facility.issueFacilityDetailsSubmitted);
@@ -239,7 +239,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
         // NOTE: aka - unconditional bonds created from Deal Draft, had to complete Issue Facility Form
         const unsubmittedIssuedBondsProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
-          facility.facilityType === 'Bond'
+          facility.type === 'Bond'
           && facility.issueFacilityDetailsProvided
           && facility.status === 'Ready for check'
           && !facility.issueFacilityDetailsSubmitted);

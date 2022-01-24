@@ -545,7 +545,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(200);
     });
 
-    it('adds an empty loan to a deal, with facility createdDate, facilityType', async () => {
+    it('adds an empty loan to a deal, with facility createdDate, type', async () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
@@ -557,7 +557,7 @@ describe('/v1/deals/:id/loan', () => {
       expect(body.deal.loanTransactions.items.length).toEqual(1);
       expect(body.deal.loanTransactions.items[0]._id).toBeDefined();
       expect(typeof body.deal.loanTransactions.items[0].createdDate).toEqual('number');
-      expect(body.deal.loanTransactions.items[0].facilityType).toEqual('Loan');
+      expect(body.deal.loanTransactions.items[0].type).toEqual('Loan');
     });
 
     it('adds an empty loan to a deal', async () => {
@@ -565,7 +565,7 @@ describe('/v1/deals/:id/loan', () => {
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
       const newLoan = {
-        facilityType: 'Loan',
+        type: 'Loan',
         dealId,
       };
 

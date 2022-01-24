@@ -162,7 +162,7 @@ const deal = {
   },
   mockFacilities: [
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       bondIssuer: '',
       bondType: 'Bid bond',
       facilityStage: 'Unissued',
@@ -185,7 +185,7 @@ const deal = {
       status: 'Not started',
     },
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       bondIssuer: '',
       bondType: 'Bid bond',
       facilityStage: 'Unissued',
@@ -208,7 +208,7 @@ const deal = {
       status: 'Not started',
     },
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       bondIssuer: '',
       bondType: 'Bid bond',
       facilityStage: 'Unissued',
@@ -231,7 +231,7 @@ const deal = {
       status: 'Not started',
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -258,7 +258,7 @@ const deal = {
       status: 'Not started',
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -285,7 +285,7 @@ const deal = {
       status: 'Not started',
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',

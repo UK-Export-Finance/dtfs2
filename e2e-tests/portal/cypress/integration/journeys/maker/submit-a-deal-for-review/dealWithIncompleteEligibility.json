@@ -97,7 +97,7 @@
   },
   "mockFacilities": [
     {
-        "facilityType": "Bond",
+        "type": "Bond",
         "bondIssuer": "issuer",
         "bondType": "bond type",
         "facilityStage": "unissued",

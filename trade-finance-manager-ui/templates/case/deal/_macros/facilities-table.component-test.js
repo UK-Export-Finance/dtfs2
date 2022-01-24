@@ -19,7 +19,7 @@ describe(component, () => {
           },
           ukefExposure: 'GBP 1,234.00',
           coveredPercentage: '20%',
-          facilityType: 'Performance Bond',
+          type: 'Performance Bond',
           value: 'GBP 1,234',
           facilityValueExportCurrency: 'AUD 34000',
           facilityStage: 'Commitment',
@@ -189,12 +189,12 @@ describe(component, () => {
       });
     });
 
-    describe('facilityType table cell', () => {
-      it('should render facilityType when facility is bond', () => {
+    describe('type table cell', () => {
+      it('should render type when facility is bond', () => {
         const { facilitySnapshot: bond } = params.facilities.find(({ facilitySnapshot: f }) => f.facilityProduct.code === 'BSS');
 
         const cellSelector = `[data-cy="facility-${bond._id}-type"]`;
-        wrapper.expectText(cellSelector).toRead(bond.facilityType);
+        wrapper.expectText(cellSelector).toRead(bond.type);
       });
 
       it('should render a dash when facility is loan', () => {

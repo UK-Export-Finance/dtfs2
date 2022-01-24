@@ -237,7 +237,7 @@ describe('/v1/deals/:id/bond', () => {
       const dealId = postResult.body._id;
 
       const newBond = {
-        facilityType: 'Bond',
+        type: 'Bond',
         dealId,
       };
 
@@ -349,7 +349,7 @@ describe('/v1/deals/:id/bond', () => {
           status: 'Completed',
           createdDate: expect.any(Number),
           updatedAt: expect.any(Number),
-          facilityType: 'Bond',
+          type: 'Bond',
           requestedCoverStartDate: null,
           conversionRate: null,
           'conversionRateDate-day': null,
@@ -418,7 +418,7 @@ describe('/v1/deals/:id/bond', () => {
           status: 'Completed',
           createdDate: expect.any(Number),
           updatedAt: expect.any(Number),
-          facilityType: 'Bond',
+          type: 'Bond',
           hasBeenIssued: true,
           requestedCoverStartDate: null,
           'requestedCoverStartDate-day': null,
@@ -494,7 +494,7 @@ describe('/v1/deals/:id/bond', () => {
           status: 'Completed',
           createdDate: expect.any(Number),
           updatedAt: expect.any(Number),
-          facilityType: 'Bond',
+          type: 'Bond',
           hasBeenIssued: false,
           requestedCoverStartDate: null,
           'requestedCoverStartDate-day': null,
@@ -554,7 +554,7 @@ describe('/v1/deals/:id/bond', () => {
         status: 'Completed',
         createdDate: expect.any(Number),
         updatedAt: expect.any(Number),
-        facilityType: 'Bond',
+        type: 'Bond',
         requestedCoverStartDate: null,
         conversionRate: null,
         'conversionRateDate-day': null,

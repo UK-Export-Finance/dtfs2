@@ -45,7 +45,7 @@ describe('/v1/tfm/facilities', () => {
           dealId: expect.any(String),
           ukefFacilityId: expect.any(String),
           facilityId: expect.any(String),
-          facilityType: expect.any(String),
+          type: expect.any(String),
           dealType: expect.any(String),
           value: expect.any(String),
           companyName: expect.any(String),

@@ -12,7 +12,7 @@ const newDeal = {
 };
 
 const newFacility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
 };
 
 describe('/v1/tfm/deals/submit - GEF deal', () => {

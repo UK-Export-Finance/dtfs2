@@ -88,8 +88,8 @@ const facilityFieldsObj = (facility) => {
 * generateFacilityFieldListItemString
 * returns a formatted string for a single field/list item.
 */
-const generateFacilityFieldListItemString = (facilityType, fieldName, fieldValue) => {
-  const title = CONTENT_STRINGS.LIST_ITEM_TITLES[facilityType?.toUpperCase()][fieldName];
+const generateFacilityFieldListItemString = (type, fieldName, fieldValue) => {
+  const title = CONTENT_STRINGS.LIST_ITEM_TITLES[type?.toUpperCase()][fieldName];
 
   const str = generateListItemString(`${title}: ${fieldValue}`);
 
@@ -111,7 +111,7 @@ const generateFacilityFieldsListString = (facility) => {
 
     if (value) {
       singleFacilityListString += generateFacilityFieldListItemString(
-        facility.facilityType,
+        facility.type,
         fieldName,
         value,
       );

@@ -79,7 +79,7 @@ describe('portalActivityGenerator()', () => {
       expect(result.checker).toEqual(checker);
     });
 
-    it('should correctly return facilityType', () => {
+    it('should correctly return type', () => {
       expect(result.facilityType).toEqual('Cash facility');
     });
 

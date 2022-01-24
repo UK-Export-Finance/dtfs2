@@ -10,7 +10,7 @@ const facilityQuery = gql`
         facilityProduct {
           name
         },
-        facilityType,
+        type,
         facilityStage,
         facilityValueExportCurrency,
         value,

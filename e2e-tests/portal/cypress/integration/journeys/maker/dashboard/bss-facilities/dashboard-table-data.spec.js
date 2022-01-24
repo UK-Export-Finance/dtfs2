@@ -33,8 +33,8 @@ context('View a deal', () => {
     facilitiesDashboard.ukefFacilityId(bondId).should('contain', 'ukef:aDealWithOneLoanAndOneBond-bond1');
     facilitiesDashboard.ukefFacilityId(loanId).should('contain', 'ukef:aDealWithOneLoanAndOneBond-loan1');
 
-    facilitiesDashboard.facilityType(bondId).should('contain', 'Bond');
-    facilitiesDashboard.facilityType(loanId).should('contain', 'Loan');
+    facilitiesDashboard.type(bondId).should('contain', 'Bond');
+    facilitiesDashboard.type(loanId).should('contain', 'Loan');
 
     facilitiesDashboard.noticeType(bondId).should('contain', 'Automatic Inclusion Notice');
     facilitiesDashboard.noticeType(loanId).should('contain', 'Automatic Inclusion Notice');

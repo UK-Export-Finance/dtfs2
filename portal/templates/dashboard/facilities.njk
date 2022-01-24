@@ -60,8 +60,8 @@
         classes: "govuk-body-s"
       },
       {
-        text: facility.facilityType | capitalize,
-        attributes: { "data-cy": "facility__facilityType--" + facility.bankId },
+        text: facility.type | capitalize,
+        attributes: { "data-cy": "facility__type--" + facility.bankId },
         classes: "govuk-body-s"
       },
       {
@@ -107,7 +107,7 @@
       {
         text: "Facility type",
         attributes: {
-        "data-cy": "facility__facilityType--header"
+        "data-cy": "facility__type--header"
       }
       },
       {

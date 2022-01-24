@@ -2,42 +2,42 @@ const { issuedFacilities } = require('./issued-facilities');
 const CONSTANTS = require('../../constants');
 
 const issuedBondFacility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
   hasBeenIssued: true,
 };
 
 const issuedLoanFacility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
   hasBeenIssued: true,
 };
 
 const unissuedBondFacility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
   hasBeenIssued: false,
 };
 
 const unissuedLoanFacility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
   hasBeenIssued: false,
 };
 
 const issuedCashFacility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
   hasBeenIssued: true,
 };
 
 const unissuedCashFacility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
   hasBeenIssued: false,
 };
 
 const issuedContingentFacility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
   hasBeenIssued: true,
 };
 
 const unissuedContingentFacility = {
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
   hasBeenIssued: false,
 };
 

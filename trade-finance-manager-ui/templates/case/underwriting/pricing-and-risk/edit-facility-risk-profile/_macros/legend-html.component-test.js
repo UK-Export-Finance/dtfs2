@@ -10,7 +10,7 @@ describe(component, () => {
     caseId: '1234',
     facilityId: '100',
     ukefFacilityId: '100200',
-    facilityType: 'Performance bond',
+    type: 'Performance bond',
   };
 
   it('should render link with ukefFacilityId', () => {
@@ -24,11 +24,11 @@ describe(component, () => {
     );
   });
 
-  it('should render text with facilityType', () => {
+  it('should render text with type', () => {
     wrapper = render(params);
 
     const selector = '[data-cy="edit-facility-risk-profile-legend-facility-type"]';
 
-    wrapper.expectText(selector).toRead(params.facilityType);
+    wrapper.expectText(selector).toRead(params.type);
   });
 });

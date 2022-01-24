@@ -197,12 +197,12 @@ describe('/v1/portal/deals', () => {
         };
 
         const mockBond = {
-          facilityType: 'Bond',
+          type: 'Bond',
           ...mockFacility,
         };
 
         const mockLoan = {
-          facilityType: 'Loan',
+          type: 'Loan',
           ...mockFacility,
         };
 

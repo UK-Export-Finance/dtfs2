@@ -250,13 +250,13 @@ describe('/v1/deals/:id/clone', () => {
         const getDealResponse = await as(anHSBCMaker).get(`/v1/deals/${clonedDealId}`);
         const clonedDeal = getDealResponse.body.deal;
 
-        const firstOriginalBond = createdFacilities.find((f) => f.facilityType === 'Bond');
+        const firstOriginalBond = createdFacilities.find((f) => f.type === 'Bond');
         const secondOriginalBond = createdFacilities.find((f) =>
-          f.facilityType === 'Bond'
+          f.type === 'Bond'
           && f._id !== firstOriginalBond._id);
 
         const expectedFirstBondTransaction = {
-          facilityType: 'Bond',
+          type: 'Bond',
           facilityStage: firstOriginalBond.facilityStage,
           requestedCoverStartDate: firstOriginalBond.requestedCoverStartDate,
           'coverEndDate-day': firstOriginalBond['coverEndDate-day'],
@@ -274,7 +274,7 @@ describe('/v1/deals/:id/clone', () => {
           createdDate: expect.any(Number),
         };
         const expectedSecondBondTransaction = {
-          facilityType: 'Bond',
+          type: 'Bond',
           facilityStage: secondOriginalBond.facilityStage,
           requestedCoverStartDate: secondOriginalBond.requestedCoverStartDate,
           'coverEndDate-day': secondOriginalBond['coverEndDate-day'],
@@ -307,13 +307,13 @@ describe('/v1/deals/:id/clone', () => {
         const getDealResponse = await as(anHSBCMaker).get(`/v1/deals/${clonedDealId}`);
         const clonedDeal = getDealResponse.body.deal;
 
-        const firstOriginalLoan = createdFacilities.find((f) => f.facilityType === 'Loan');
+        const firstOriginalLoan = createdFacilities.find((f) => f.type === 'Loan');
         const secondOriginalLoan = createdFacilities.find((f) =>
-          f.facilityType === 'Loan'
+          f.type === 'Loan'
           && f._id !== firstOriginalLoan._id);
 
         const expectedFirstLoanTransaction = {
-          facilityType: 'Loan',
+          type: 'Loan',
           bankReferenceNumber: firstOriginalLoan.bankReferenceNumber,
           value: firstOriginalLoan.value,
           currencySameAsSupplyContractCurrency: firstOriginalLoan.currencySameAsSupplyContractCurrency,
@@ -327,7 +327,7 @@ describe('/v1/deals/:id/clone', () => {
         };
 
         const expectedSecondLoanTransaction = {
-          facilityType: 'Loan',
+          type: 'Loan',
           requestedCoverStartDate: secondOriginalLoan.requestedCoverStartDate,
           'coverEndDate-day': secondOriginalLoan['coverEndDate-day'],
           'coverEndDate-month': secondOriginalLoan['coverEndDate-month'],

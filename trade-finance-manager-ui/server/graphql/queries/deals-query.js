@@ -108,7 +108,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
               code,
               name
             }
-            facilityType
+            type
             facilityStage
             banksInterestMargin
             ukefExposure

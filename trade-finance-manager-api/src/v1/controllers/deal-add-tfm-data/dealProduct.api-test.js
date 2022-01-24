@@ -4,12 +4,12 @@ const CONSTANTS = require('../../../constants');
 describe('deal submit - add TFM data - deal product', () => {
   const mockBond = {
     _id: '1',
-    facilityType: 'Bond',
+    type: 'Bond',
   };
 
   const mockLoan = {
     _id: '2',
-    facilityType: 'Loan',
+    type: 'Loan',
   };
 
   describe('when there is only one bond facility', () => {

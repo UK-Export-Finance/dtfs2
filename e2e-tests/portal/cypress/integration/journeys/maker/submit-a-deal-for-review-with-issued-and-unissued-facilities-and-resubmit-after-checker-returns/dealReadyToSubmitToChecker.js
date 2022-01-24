@@ -168,7 +168,7 @@ const deal = {
   },
   mockFacilities: [
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Bid bond',
@@ -191,7 +191,7 @@ const deal = {
       },
     },
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Bid bond',
@@ -217,7 +217,7 @@ const deal = {
       dayCountBasis: '365',
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: now,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
@@ -235,7 +235,7 @@ const deal = {
       dayCountBasis: '365',
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: now,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,

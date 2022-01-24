@@ -2,7 +2,7 @@ const mapFacilityProduct = require('./mapFacilityProduct');
 const CONSTANTS = require('../../../../constants');
 
 describe('mapFacilityProduct', () => {
-  describe(`when facilityType is ${CONSTANTS.FACILITIES.FACILITY_TYPE.BOND}`, () => {
+  describe(`when type is ${CONSTANTS.FACILITIES.FACILITY_TYPE.BOND}`, () => {
     it('should return bond product name and code', () => {
       const result = mapFacilityProduct(CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
       expect(result).toEqual({
@@ -12,7 +12,7 @@ describe('mapFacilityProduct', () => {
     });
   });
 
-  describe(`when facilityType is ${CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN}`, () => {
+  describe(`when type is ${CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN}`, () => {
     it('should return loan product name and code', () => {
       const result = mapFacilityProduct(CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
       expect(result).toEqual({
@@ -22,7 +22,7 @@ describe('mapFacilityProduct', () => {
     });
   });
 
-  describe(`when facilityType is ${CONSTANTS.FACILITIES.FACILITY_TYPE.CASH}`, () => {
+  describe(`when type is ${CONSTANTS.FACILITIES.FACILITY_TYPE.CASH}`, () => {
     it('should return Cash product name and code', () => {
       const result = mapFacilityProduct(CONSTANTS.FACILITIES.FACILITY_TYPE.CASH);
       expect(result).toEqual({
@@ -32,7 +32,7 @@ describe('mapFacilityProduct', () => {
     });
   });
 
-  describe(`when facilityType is ${CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT}`, () => {
+  describe(`when type is ${CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT}`, () => {
     it('should return Cash product name and code', () => {
       const result = mapFacilityProduct(CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT);
       expect(result).toEqual({

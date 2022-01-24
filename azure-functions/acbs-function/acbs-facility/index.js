@@ -67,11 +67,11 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     }
 
     if (deal.dealSnapshot.dealType !== CONSTANTS.PRODUCT.TYPE.GEF) {
-      if (facility.facilitySnapshot.facilityType === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN) {
+      if (facility.facilitySnapshot.type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN) {
         facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-loan', {
           deal, facility, dealAcbsData,
         });
-      } else if (facility.facilitySnapshot.facilityType === CONSTANTS.FACILITY.FACILITY_TYPE.BOND) {
+      } else if (facility.facilitySnapshot.type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND) {
         facilityTypeSpecific = yield context.df.callSubOrchestrator('acbs-facility-bond', {
           deal, facility, dealAcbsData,
         });

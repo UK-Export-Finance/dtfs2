@@ -18,7 +18,7 @@ describe(page, () => {
     facility: {
       _id: '12345678',
       ukefFacilityId: '0040004833',
-      facilityType: 'Performance Bond',
+      type: 'Performance Bond',
       facilityStage: 'Commitment',
       hasBeenIssued: true,
       facilityProduct: {
@@ -199,7 +199,7 @@ describe(page, () => {
       const mockGefFacilityParams = {
         ...params,
         facility: {
-          facilityType: 'Cash facility',
+          type: 'Cash facility',
         },
         facilityTfm: {
           feeRecord: 12345678,
