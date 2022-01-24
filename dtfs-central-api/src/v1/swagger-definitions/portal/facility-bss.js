@@ -18,7 +18,7 @@
  *         example: '1632392646415'
  *       updatedAt:
  *         type: integer
- *         example: '1632392778918'
+ *         example: 1632392778918
  *       status:
  *         type: string
  *         example: Acknowledged by UKEF
