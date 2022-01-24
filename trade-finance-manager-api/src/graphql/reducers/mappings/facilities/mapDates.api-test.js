@@ -10,7 +10,7 @@ describe('mapDates', () => {
   };
 
   const mockFacility = {
-    issuedFacilitySubmittedToUkefTimestamp: 160690061100,
+    submittedAsIssuedDate: 160690061100,
     requestedCoverStartDate: '2021-12-08T00:00:00.000Z',
     ukefGuaranteeInMonths: '12',
     ...mockCoverEndDate,
@@ -38,10 +38,10 @@ describe('mapDates', () => {
     expect(result.inclusionNoticeReceived).toEqual(minMockDealDetails.manualInclusionNoticeSubmissionDate);
   });
 
-  it('should return bankIssueNoticeReceived as facility issuedFacilitySubmittedToUkefTimestamp;', () => {
+  it('should return bankIssueNoticeReceived as facility submittedAsIssuedDate;', () => {
     const result = mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
 
-    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.issuedFacilitySubmittedToUkefTimestamp);
+    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.submittedAsIssuedDate);
   });
 
   it('should return coverStartDate as facility requestedCoverStartDate', () => {

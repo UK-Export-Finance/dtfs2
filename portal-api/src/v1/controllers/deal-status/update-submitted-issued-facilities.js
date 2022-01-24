@@ -23,8 +23,8 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
       facility.updatedAt = now;
 
       facility.issueFacilityDetailsSubmitted = true;
-      facility.issuedFacilitySubmittedToUkefTimestamp = now;
-      facility.issuedFacilitySubmittedToUkefBy = user;
+      facility.submittedAsIssuedDate = now;
+      facility.submittedAsIssuedBy = user;
 
       if (!facility.previousFacilityStage
         && !facility.issueFacilityDetailsProvided) {

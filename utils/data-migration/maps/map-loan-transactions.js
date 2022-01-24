@@ -88,12 +88,12 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     }
 
     if (loan.Extra_fields.Date_then_issued) {
-      v2loan.issuedFacilitySubmittedToUkefTimestamp = convertV1Date(loan.Extra_fields.Date_then_issued);
+      v2loan.submittedAsIssuedDate = convertV1Date(loan.Extra_fields.Date_then_issued);
       v2loan.issueFacilityDetailsSubmitted = true;
     }
 
     if (loan.Extra_fields.User_who_issued && loan.Extra_fields.User_who_issued.username) {
-      v2loan.issuedFacilitySubmittedToUkefBy = getUserByEmail(loan.Extra_fields.User_who_issued.username);
+      v2loan.submittedAsIssuedBy = getUserByEmail(loan.Extra_fields.User_who_issued.username);
     }
 
     return v2loan;
