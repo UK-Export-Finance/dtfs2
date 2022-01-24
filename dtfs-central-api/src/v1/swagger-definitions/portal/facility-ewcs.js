@@ -61,10 +61,10 @@
  *       issueFacilityDetailsSubmitted:
  *         type: boolean
  *         example: true
- *       issuedFacilitySubmittedToUkefTimestamp:
- *         type: string
- *         example: '1632392674598'
- *       issuedFacilitySubmittedToUkefBy:
+ *       submittedAsIssuedDate:
+ *         type: integer
+ *         example: 1632392674598
+ *       submittedAsIssuedBy:
  *         $ref: '#/definitions/User'
  *       hasBeenAcknowledged:
  *         type: boolean

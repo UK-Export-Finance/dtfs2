@@ -14,7 +14,7 @@ const mapDates = (facility, facilityTfm, dealDetails) => {
   const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealDetails;
 
   dates.inclusionNoticeReceived = manualInclusionNoticeSubmissionDate || dealSubmissionDate;
-  dates.bankIssueNoticeReceived = facility.issuedFacilitySubmittedToUkefTimestamp;
+  dates.bankIssueNoticeReceived = facility.submittedAsIssuedDate;
   dates.coverStartDate = facility.requestedCoverStartDate;
   dates.coverEndDate = mapCoverEndDate(
     facility['coverEndDate-day'],

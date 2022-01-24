@@ -645,7 +645,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       };
 
       describe('any unconditional loans', () => {
-        it('should add issuedFacilitySubmittedToUkefTimestamp, issuedFacilitySubmittedToUkefBy and updatedAt', async () => {
+        it('should add submittedAsIssuedDate, submittedAsIssuedBy and updatedAt', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
@@ -661,17 +661,17 @@ describe('/v1/deals/:id/status - facilities', () => {
           unconditionalLoansThatShouldBeUpdated.forEach((loan) => {
             const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
             expect(typeof updatedLoan.updatedAt).toEqual('number');
-            expect(typeof updatedLoan.issuedFacilitySubmittedToUkefTimestamp).toEqual('number');
-            expect(updatedLoan.issuedFacilitySubmittedToUkefBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
-            expect(updatedLoan.issuedFacilitySubmittedToUkefBy.email).toEqual(expectedFacilitiesSubmittedBy.email);
-            expect(updatedLoan.issuedFacilitySubmittedToUkefBy.firstname).toEqual(expectedFacilitiesSubmittedBy.firstname);
-            expect(updatedLoan.issuedFacilitySubmittedToUkefBy.lastname).toEqual(expectedFacilitiesSubmittedBy.lastname);
+            expect(typeof updatedLoan.submittedAsIssuedDate).toEqual('number');
+            expect(updatedLoan.submittedAsIssuedBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
+            expect(updatedLoan.submittedAsIssuedBy.email).toEqual(expectedFacilitiesSubmittedBy.email);
+            expect(updatedLoan.submittedAsIssuedBy.firstname).toEqual(expectedFacilitiesSubmittedBy.firstname);
+            expect(updatedLoan.submittedAsIssuedBy.lastname).toEqual(expectedFacilitiesSubmittedBy.lastname);
           });
         });
       });
 
       describe('any issued bonds', () => {
-        it('should add issuedFacilitySubmittedToUkefTimestamp, issuedFacilitySubmittedToUkefBy and updatedAt', async () => {
+        it('should add submittedAsIssuedDate, submittedAsIssuedBy and updatedAt', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
@@ -687,11 +687,11 @@ describe('/v1/deals/:id/status - facilities', () => {
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
             expect(typeof updatedBond.updatedAt).toEqual('number');
-            expect(typeof updatedBond.issuedFacilitySubmittedToUkefTimestamp).toEqual('number');
-            expect(updatedBond.issuedFacilitySubmittedToUkefBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
-            expect(updatedBond.issuedFacilitySubmittedToUkefBy.email).toEqual(expectedFacilitiesSubmittedBy.email);
-            expect(updatedBond.issuedFacilitySubmittedToUkefBy.firstname).toEqual(expectedFacilitiesSubmittedBy.firstname);
-            expect(updatedBond.issuedFacilitySubmittedToUkefBy.lastname).toEqual(expectedFacilitiesSubmittedBy.lastname);
+            expect(typeof updatedBond.submittedAsIssuedDate).toEqual('number');
+            expect(updatedBond.submittedAsIssuedBy.username).toEqual(expectedFacilitiesSubmittedBy.username);
+            expect(updatedBond.submittedAsIssuedBy.email).toEqual(expectedFacilitiesSubmittedBy.email);
+            expect(updatedBond.submittedAsIssuedBy.firstname).toEqual(expectedFacilitiesSubmittedBy.firstname);
+            expect(updatedBond.submittedAsIssuedBy.lastname).toEqual(expectedFacilitiesSubmittedBy.lastname);
           });
         });
       });
