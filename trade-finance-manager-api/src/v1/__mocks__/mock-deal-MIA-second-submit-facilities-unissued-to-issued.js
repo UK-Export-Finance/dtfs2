@@ -212,7 +212,7 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
         ukefGuaranteeInMonths: '12',
         bankReferenceNumber: '5678',
         guaranteeFeePayableByBank: '27.0000',
-        lastEdited: 1610369832226.0,
+        updatedAt: 1610369832226.0,
         value: '1234.00',
         currencySameAsSupplyContractCurrency: 'true',
         interestMarginFee: '30',

@@ -65,7 +65,7 @@ describe('/v1/tfm/facilities', () => {
       expect(status).toEqual(200);
       expect(body._id).toEqual(newId);
 
-      expect(typeof body.facilitySnapshot.createdDate).toEqual('string');
+      expect(typeof body.facilitySnapshot.createdDate).toEqual('number');
     });
 
     it('404s requests for unknown ids', async () => {

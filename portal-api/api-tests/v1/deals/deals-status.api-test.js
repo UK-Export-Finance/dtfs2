@@ -254,7 +254,7 @@ describe('/v1/deals/:id/status', () => {
 
       expect(body.deal.comments[0]).toEqual({
         text: 'Flee!',
-        timestamp: expect.any(String),
+        timestamp: expect.any(Number),
         user: {
           _id: expect.any(String),
           bank: anHSBCMaker.bank,

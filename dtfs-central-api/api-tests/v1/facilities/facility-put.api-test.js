@@ -71,7 +71,7 @@ describe('/v1/portal/facilities', () => {
       const { body, status } = await api.put(updatedFacility).to(`/v1/portal/facilities/${createdFacility._id}`);
 
       expect(status).toEqual(200);
-      expect(typeof body.lastEdited).toEqual('string');
+      expect(typeof body.updatedAt).toEqual('number');
       expect(body.value).toEqual(updatedFacility.value);
     });
 
@@ -89,7 +89,7 @@ describe('/v1/portal/facilities', () => {
 
       const { body } = await api.get(`/v1/portal/facilities/${createdFacility._id}`);
 
-      expect(typeof body.lastEdited).toEqual('string');
+      expect(typeof body.updatedAt).toEqual('number');
       expect(body.value).toEqual(updatedFacility.value);
     });
 

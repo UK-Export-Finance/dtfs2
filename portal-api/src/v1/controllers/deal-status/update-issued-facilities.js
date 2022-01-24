@@ -1,6 +1,5 @@
 const CONSTANTS = require('../../../constants');
 const issuedDateValidationRules = require('../../validation/fields/issued-date');
-const now = require('../../../now');
 const facilitiesController = require('../facilities.controller');
 
 const facilityHasValidIssuedDate = (facility, deal) => {
@@ -102,7 +101,7 @@ const updateIssuedFacilities = async (
           shouldUpdateCount += 1;
 
           if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
-            facility.lastEdited = now();
+            facility.updatedAt = Date.now();
             facility.previousFacilityStage = facilityStage;
 
             if (shouldUpdateStatus) {
@@ -119,20 +118,21 @@ const updateIssuedFacilities = async (
             // they've been submitted
             // ...or have completed all required fields.
             facility.status = newStatus;
-            facility.lastEdited = now();
+            facility.updatedAt = Date.now();
           }
 
           if (canUpdateIssuedFacilitiesCoverStartDates
             && !facility.issueFacilityDetailsSubmitted
             && !facility.requestedCoverStartDate) {
             if (fromStatusIsApprovedStatus && isMINdeal) {
-              facility.lastEdited = now();
+              facility.updatedAt = Date.now();
               facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;
             } else if (isMIAdeal && dealHasBeenApproved) {
-              facility.lastEdited = now();
-              facility.requestedCoverStartDate = now();
+              const now = Date.now();
+              facility.updatedAt = now;
+              facility.requestedCoverStartDate = now;
             } else if (facilityHasValidIssuedDate(facility, deal)) {
-              facility.lastEdited = now();
+              facility.updatedAt = Date.now();
               facility.requestedCoverStartDate = facility.issuedDate;
             }
           }

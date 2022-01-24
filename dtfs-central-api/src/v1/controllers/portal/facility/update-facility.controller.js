@@ -2,7 +2,6 @@ const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
 const db = require('../../../../drivers/db-client');
-const now = require('../../../../now');
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
 
 const withoutId = (obj) => {
@@ -16,7 +15,7 @@ const updateFacility = async (facilityId, facilityBody, dealId, user, routePath)
 
   const update = {
     ...facilityBody,
-    lastEdited: now(),
+    updatedAt: Date.now(),
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(

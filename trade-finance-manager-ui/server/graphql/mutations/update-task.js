@@ -8,7 +8,7 @@ const updateTaskMutation = gql`
       assignedTo {
         userId
       }
-      lastEdited
+      updatedAt
       status
     }
   }

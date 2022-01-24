@@ -1,7 +1,6 @@
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const db = require('../../../../drivers/db-client');
-const now = require('../../../../now');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -17,7 +16,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
 
   const update = {
     ...existingFacility,
-    lastEdited: now(),
+    updatedAt: Date.now(),
     previousStatus,
     status,
   };

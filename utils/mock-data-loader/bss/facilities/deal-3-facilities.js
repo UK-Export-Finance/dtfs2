@@ -19,7 +19,7 @@ module.exports = [
     uniqueIdentificationNumber: 'Test Bond',
     bondBeneficiary: '',
     requestedCoverStartDate: twoMonthsTimestamp,
-    lastEdited: nowTimestamp,
+    updatedAt: nowTimestamp,
     value: '600000.00',
     currencySameAsSupplyContractCurrency: 'true',
     currency: {
