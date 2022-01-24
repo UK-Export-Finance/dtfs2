@@ -155,7 +155,7 @@ context('Portal to TFM deal submission', () => {
     });
 
     tfmPages.facilityPage.facilityBankIssueNoticeReceived().invoke('text').then((text) => {
-      // the code actually uses facility.issuedFacilitySubmittedToUkefTimestamp,
+      // the code actually uses facility.submittedAsIssuedDate,
       // but in this e2e test it will always be today so to simplify..
       const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);

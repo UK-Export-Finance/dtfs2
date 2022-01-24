@@ -200,7 +200,7 @@ const MOCK_DEAL = {
 
         dealId: '1007117',
         issueFacilityDetailsSubmitted: true,
-        issuedFacilitySubmittedToUkefBy: {
+        submittedAsIssuedBy: {
           _id: '61c0de9fa9b7dc0013f58303',
           bank: {
             companiesHouseNo: 'UKEF0001',
@@ -227,7 +227,7 @@ const MOCK_DEAL = {
           'user-status': 'active',
           username: 'BANK1_CHECKER1',
         },
-        issuedFacilitySubmittedToUkefTimestamp: '1640088932972',
+        submittedAsIssuedDate: 1640088932972,
         ukefFacilityId: '0030134209',
         previousStatus: 'Completed',
         hasBeenAcknowledged: true,
@@ -268,7 +268,7 @@ const MOCK_DEAL = {
         feeType: 'At maturity',
         dealId: '1007117',
         issueFacilityDetailsSubmitted: true,
-        issuedFacilitySubmittedToUkefBy: {
+        submittedAsIssuedBy: {
           _id: '61c0de9fa9b7dc0013f58303',
           bank: {
             companiesHouseNo: 'UKEF0001',
@@ -295,7 +295,7 @@ const MOCK_DEAL = {
           'user-status': 'active',
           username: 'BANK1_CHECKER1',
         },
-        issuedFacilitySubmittedToUkefTimestamp: '1640088932976',
+        submittedAsIssuedDate: 1640088932976,
         status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
         ukefFacilityId: '0030134210',
         previousStatus: 'Completed',
