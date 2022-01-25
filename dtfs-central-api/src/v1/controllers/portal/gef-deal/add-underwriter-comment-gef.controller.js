@@ -1,9 +1,6 @@
 const { ObjectID } = require('mongodb');
-const getUnixTime = require('date-fns/getUnixTime');
 const { findOneDeal } = require('./get-gef-deal.controller');
 const db = require('../../../../drivers/db-client');
-
-const timestamp = getUnixTime(new Date());
 
 const addComment = async (_id, commentType, comment) => {
   // get the deals collection
@@ -17,7 +14,7 @@ const addComment = async (_id, commentType, comment) => {
         [commentType]: {
           $each: [{
             ...comment,
-            timestamp,
+            timestamp: Date.now(),
           }],
           $position: 0,
         },
