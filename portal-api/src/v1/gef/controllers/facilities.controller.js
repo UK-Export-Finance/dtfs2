@@ -165,58 +165,33 @@ exports.deleteByDealId = async (req, res) => {
   res.status(200).send(response);
 };
 
-const facilitiesFilters = (user, filters = []) => {
-  const amendedFilters = [...filters];
-
-  // add the bank clause if we're not a superuser
-  if (!isSuperUser(user)) { amendedFilters.push({ 'deal.bank.id': { $eq: user.bank.id } }); }
-
-  let result = {};
-  if (amendedFilters.length === 1) {
-    [result] = amendedFilters;
-  } else if (amendedFilters.length > 1) {
-    result = {
-      $and: amendedFilters,
-    };
-  }
-
-  // GEF facilities only - TODO: for @Tony
-  const gefFacilitiesFilter = { $or: [{ type: 'Cash' }, { type: 'Contingent' }] };
-
-  result = { ...result, ...gefFacilitiesFilter };
-
-  return result;
-};
-
 exports.findFacilities = async (
   filters = {},
   sort = {},
   start = 0,
   pagesize = 0,
 ) => {
-  // const sanitisedFilters = facilitiesFilters(requestingUser, filters);
-
   const collection = await db.getCollection(facilitiesCollectionName);
 
   const doc = await collection
     .aggregate([
+      {
+        $lookup: {
+          from: 'deals',
+          localField: 'dealId',
+          foreignField: '_id',
+          as: 'deal',
+        },
+      },
+      { $unwind: '$deal' },
       { $match: filters },
-      // {
-      //   $lookup: {
-      //     from: 'deals',
-      //     localField: 'dealId',
-      //     foreignField: '_id',
-      //     as: 'deal',
-      //   },
-      // },
-      // { $unwind: '$deal' },
-
       {
         $project: {
           _id: 1,
+          dealId: '$deal._id',
+          submissionType: '$deal.submissionType',
           name: 'mock name', // what is this in BSS?
           ukefFacilityId: '$ukefFacilityId',
-          // type: '$facilityType', // need to align
           currency: '$currency',
           value: '$value',
           type: '$type',
