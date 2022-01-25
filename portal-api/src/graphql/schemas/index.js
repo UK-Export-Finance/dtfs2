@@ -68,16 +68,11 @@ input DealsInput {
   sort: [DashboardSort]
 }
 
-input FacilitiesFilters {
-  field: String
-  value: String
-  operator: String
-}
-
 input FacilitiesInput {
   start: Int
   pagesize: Int
-  filters: [FacilitiesFilters]
+  filters: [DashboardFilters]
+  sort: [DashboardSort]
 }
 
 type Exporter {

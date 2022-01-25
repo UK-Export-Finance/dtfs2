@@ -31,6 +31,13 @@ const queryAllFacilities = async (_, { params = {} }) => {
 
   const facilities = await queryFacilities(filtersObj, sort, start, pagesize);
 
+  if (!facilities.length) {
+    return {
+      facilities: [],
+      count: 0,
+    };
+  }
+
   return facilities[0];
 };
 

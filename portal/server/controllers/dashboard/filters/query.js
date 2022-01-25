@@ -22,6 +22,8 @@ const dashboardFiltersQuery = (
   const { isMaker, isChecker } = getUserRoles(user.roles);
   const filtersQuery = [];
 
+  // NOTE: this does not work for facilities.
+  // Need to seperate somehow.
   if (!isSuperUser(user)) {
     filtersQuery.push({
       field: 'bank.id',

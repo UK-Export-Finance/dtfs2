@@ -231,13 +231,4 @@ const queryAllDeals = async (
 
   return deals;
 };
-
-exports.queryAllDeals = async (req, res) => {
-  try {
-    const deals = await queryAllDeals(req.body.filters, req.body.sort, req.body.start, req.body.pagesize);
-    res.status(200).send(deals);
-  } catch (err) {
-    console.error('Error querying all deals ', err);
-    res.status(500).send(`Error: ${err}`);
-  }
-};
+exports.queryAllDeals = queryAllDeals;
