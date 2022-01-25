@@ -1,4 +1,4 @@
-const { findFacilities } = require('../../v1/gef/controllers/facilities.controller');
+const { queryAllFacilities: queryFacilities } = require('../../v1/controllers/facilities.controller');
 
 const { dbHelpers } = require('./helpers');
 
@@ -29,7 +29,7 @@ const queryAllFacilities = async (_, { params = {} }, ctx) => {
     };
   });
 
-  const facilities = await findFacilities(filtersObj, sort, start, pagesize);
+  const facilities = await queryFacilities(filtersObj, sort, start, pagesize);
 
   return facilities[0];
 };

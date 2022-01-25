@@ -39,9 +39,7 @@ const queryAllDeals = async (_, { params = {} }, ctx) => {
     };
   });
 
-  const deals = pagesize
-    ? await findAllPaginatedDeals(ctx.user, dealFiltersObj, sort, start, pagesize)
-    : await findAllDeals(ctx.user, dealFiltersObj, sort);
+  const deals = await findAllPaginatedDeals(dealFiltersObj, sort, start, pagesize);
 
   if (!deals.length) {
     return {

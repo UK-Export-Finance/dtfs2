@@ -102,61 +102,6 @@ describe(baseUrl, () => {
     await wipeDB.wipe([dealsCollectionName]);
   });
 
-  describe(`GET ${baseUrl}`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(baseUrl);
-      expect(status).toEqual(401);
-    });
-
-    it('returns list of all items', async () => {
-      await as(aMaker).post({
-        dealId: mockApplication.body._id,
-        type: FACILITY_TYPE.CASH,
-        hasBeenIssued: false,
-      }).to(baseUrl);
-
-      await as(aMaker).post({
-        dealId: mockApplication.body._id,
-        type: FACILITY_TYPE.CONTINGENT,
-        hasBeenIssued: false,
-      }).to(baseUrl);
-
-      const mockQuery = { dealId: mockApplication.body._id };
-
-      const { body, status } = await as(aChecker).get(baseUrl, mockQuery);
-
-      expect(body).toEqual({ status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
-      expect(status).toEqual(200);
-    });
-
-    it('returns list of item from the given application ID', async () => {
-      await as(aMaker).post({
-        dealId: mockApplication.body._id,
-        type: FACILITY_TYPE.CASH,
-        hasBeenIssued: false,
-      }).to(baseUrl);
-
-      await as(aMaker).post({
-        dealId: mockApplication.body._id,
-        type: FACILITY_TYPE.CONTINGENT,
-        hasBeenIssued: false,
-      }).to(baseUrl);
-
-      const { body, status } = await as(aChecker).get(`${baseUrl}?dealId=${mockApplication.body._id}`);
-
-      expect(body).toEqual({ status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
-      expect(status).toEqual(200);
-    });
-
-    it('returns a empty object if there are no records', async () => {
-      const { body } = await as(aMaker).get(`${baseUrl}?dealId=doesnotexist`);
-      expect(body).toEqual({
-        status: CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED,
-        items: [],
-      });
-    });
-  });
-
   describe(`GET ${baseUrl}/:id`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().get(`${baseUrl}/1`);
