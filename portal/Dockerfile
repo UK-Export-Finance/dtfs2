@@ -6,10 +6,10 @@ COPY . .
 RUN npm install \
      && mkdir -p /home/LogFiles /opt/startup \
      && echo "root:Docker!" | chpasswd \
-     && apk update \  
+     && apk update \
      && apk add openssh-server curl wget tcptraceroute openrc htop \
-     && rm -f /etc/ssh/sshd_config \
-     && mkdir -p /tmp \
+     && rm /etc/ssh/sshd_config \
+     && mkdir -p /tmp
 
 COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
