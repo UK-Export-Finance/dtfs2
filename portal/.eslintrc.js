@@ -16,6 +16,7 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
-    'import/no-extraneous-dependencies': ['error', {'devDependencies': ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js']}],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js'] }],
   },
+  ignorePatterns: ['**/node_modules/**'],
 };

@@ -1,4 +1,4 @@
-import { getPortalReports, getUnissuedFacilitiesReports } from '.';
+import { getPortalReports, getUnissuedFacilitiesReport } from '.';
 import api from '../../api';
 import mockResponse from '../../helpers/responseMock';
 import CONSTANTS from '../../constants';
@@ -46,7 +46,7 @@ describe('controllers/reports.controller', () => {
 
   describe('getPortalReports', () => {
     it('sets all counts to `0` when there are no unissued facilities', async () => {
-      api.getUnissuedFacilitiesReports.mockResolvedValue([]);
+      api.getUnissuedFacilitiesReport.mockResolvedValue([]);
       await getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
@@ -58,7 +58,7 @@ describe('controllers/reports.controller', () => {
       });
     });
     it('sets `allUnissuedFacilitiesCount` to `1` when one facility is unissued', async () => {
-      api.getUnissuedFacilitiesReports.mockResolvedValue([resolvedValue[0]]);
+      api.getUnissuedFacilitiesReport.mockResolvedValue([resolvedValue[0]]);
       await getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
@@ -70,7 +70,7 @@ describe('controllers/reports.controller', () => {
       });
     });
     it('sets `facilitiesThatNeedIssuingCount` to `1` when one facility needs issuing in less than 15 days', async () => {
-      api.getUnissuedFacilitiesReports.mockResolvedValue([resolvedValue[1]]);
+      api.getUnissuedFacilitiesReport.mockResolvedValue([resolvedValue[1]]);
       await getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
@@ -82,7 +82,7 @@ describe('controllers/reports.controller', () => {
       });
     });
     it('sets `pastDeadlineUnissuedFacilitiesCount` to `1` when one facility is overdue', async () => {
-      api.getUnissuedFacilitiesReports.mockResolvedValue([resolvedValue[2]]);
+      api.getUnissuedFacilitiesReport.mockResolvedValue([resolvedValue[2]]);
       await getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
@@ -95,7 +95,7 @@ describe('controllers/reports.controller', () => {
     });
 
     it('renders all (3) unissued facilities that are overdue or that need issuing in less than 15 days', async () => {
-      api.getUnissuedFacilitiesReports.mockResolvedValue(resolvedValue);
+      api.getUnissuedFacilitiesReport.mockResolvedValue(resolvedValue);
 
       await getPortalReports(req, res);
 
@@ -109,17 +109,17 @@ describe('controllers/reports.controller', () => {
     });
   });
 
-  describe('getUnissuedFacilitiesReports', () => {
+  describe('getUnissuedFacilitiesReport', () => {
     it('renders the 404 page if the api call returns `undefined` value', async () => {
-      api.getUnissuedFacilitiesReports.mockResolvedValue();
-      await getUnissuedFacilitiesReports(req, res);
+      api.getUnissuedFacilitiesReport.mockResolvedValue();
+      await getUnissuedFacilitiesReport(req, res);
 
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
 
     it('renders the unissued-facilities report page', async () => {
-      api.getUnissuedFacilitiesReports.mockResolvedValue([resolvedValue[1]]);
-      await getUnissuedFacilitiesReports(req, res);
+      api.getUnissuedFacilitiesReport.mockResolvedValue([resolvedValue[1]]);
+      await getUnissuedFacilitiesReport(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/unissued-facilities.njk', {
         facilities: [resolvedValue[1]],

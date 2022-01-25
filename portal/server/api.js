@@ -624,7 +624,7 @@ const gefFacilities = async (start, pagesize, filters, token) => {
   return response.data.gefFacilities || { count: 0, facilities: [] };
 };
 
-const getUnissuedFacilitiesReports = async (token) => {
+const getUnissuedFacilitiesReport = async (token) => {
   const response = await axios({
     method: 'get',
     url: `${portalApi}/v1/reports/unissued-facilities`,
@@ -633,6 +633,19 @@ const getUnissuedFacilitiesReports = async (token) => {
       'Content-Type': 'application/json',
     },
 
+  });
+  return response.data;
+};
+
+const getUkefDecisionReport = async (token, payload) => {
+  const response = await axios({
+    method: 'GET',
+    url: `${portalApi}/v1/reports/review-ukef-decision`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: payload,
   });
   return response.data;
 };
@@ -679,5 +692,6 @@ module.exports = {
   mga,
   downloadMga,
   gefFacilities,
-  getUnissuedFacilitiesReports,
+  getUnissuedFacilitiesReport,
+  getUkefDecisionReport,
 };

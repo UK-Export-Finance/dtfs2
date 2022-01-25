@@ -8,7 +8,7 @@ const {
   gefFacilities,
 } = require('./facilities');
 
-const { getPortalReports, getUnissuedFacilitiesReports } = require('./reports.controller');
+const { getPortalReports, getUnissuedFacilitiesReport } = require('./reports.controller');
 
 module.exports = {
   allDeals,
@@ -17,5 +17,5 @@ module.exports = {
   bssFacilities,
   gefFacilities,
   getPortalReports,
-  getUnissuedFacilitiesReports,
+  getUnissuedFacilitiesReport,
 };

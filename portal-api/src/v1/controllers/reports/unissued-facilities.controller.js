@@ -86,7 +86,7 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
     const unissuedFacilities = [];
     let facility = '';
 
-    // loop through
+    // loop through facilities
     facilities.forEach((item) => {
       facility = item;
 

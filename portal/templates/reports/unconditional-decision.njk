@@ -1,0 +1,45 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% import './_macros/ukefDecision.macro.njk' as ukefDecision %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}Manual inclusion application without conditions{% endblock %}
+
+{% block content %}
+
+  {{ govukBreadcrumbs({
+    classes: 'govuk-!-margin-top-0',
+    attributes: { "data-cy": "reports--unconditional-decision-breadcrumbs" },
+    items: [
+      {
+        text: "Reports",
+        href: "/reports"
+      },
+      {
+        text: "Manual inclusion application without conditions",
+        href: "/reports/review-unconditional-decision"
+      }
+    ]
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <h1 class="govuk-heading-l" data-cy="reports--unconditional-decision-mainHeading">Manual inclusion application without conditions</h1>
+      <p class="govuk-body">
+        The number of days left to review is an estimate. We calculate this using the date of MIA approval by UKEF and the deadline for reviewing it which is 10 days for a manual inclusion application without conditions.
+      </p>
+    </div>
+    <div class="govuk-grid-column-one-quarter govuk-!-text-align-right">
+      {{ govukButton({
+          text: "Download",
+          classes: "govuk-button--secondary",
+          href: "/reports/download-unconditional-decision-report",
+          attributes: { "data-cy": "reports--unconditional-decision-download" }
+      }) }}
+    </div>
+  </div>
+
+  {{ ukefDecision.ukefDecisionTable(deals) }}
+
+{% endblock %}
