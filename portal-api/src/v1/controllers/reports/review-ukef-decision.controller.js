@@ -8,7 +8,8 @@ const getUkefDecision = async (decision) => {
   const queryDb = await db.getCollection(dealsCollection);
 
   const query = [
-    { $match: { status: decision } },
+    { $unwind: '$ukefDecision' },
+    { $match: { 'ukefDecision.decision': decision } },
     {
       $project: {
         _id: 0,
@@ -31,21 +32,7 @@ const getUkefDecision = async (decision) => {
             ],
           },
         },
-        // dateOfApprovalEpoch: '$ukefDecision.timestamp',
-        dateOfApprovalEpoch: {
-          $switch: {
-            branches: [
-              {
-                case: { $eq: ['$dealType', 'GEF'] },
-                then: '$ukefDecision.timestamp'
-              },
-              {
-                case: { $eq: ['$dealType', 'BSS/EWCS'] },
-                then: '$specialConditions.timestamp'
-              },
-            ],
-          },
-        },
+        dateOfApprovalEpoch: '$ukefDecision.timestamp',
         submissionDateEpoch: {
           $switch: {
             branches: [
@@ -64,12 +51,6 @@ const getUkefDecision = async (decision) => {
     },
     { $sort: { dateOfApprovalEpoch: 1 } }
   ];
-
-  if (decision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
-    query.unshift({ $unwind: '$ukefDecision' });
-  } else if (decision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
-    query.unshift({ $unwind: '$specialConditions' });
-  }
 
   // return an array of objects that has the following format
   // [{
@@ -121,7 +102,7 @@ exports.reviewUkefDecisionReports = async (req, res) => {
 
         // check if the date of approval is not null
         defaultDate = item.dateOfApprovalEpoch || '';
-        setDateToMidnight = (new Date(parseInt(defaultDate, 10) * 1000)).setHours(0, 0, 1, 0);
+        setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(0, 0, 1, 0);
         // format the date DD LLL YYYY (i.e. 18 April 2022)
         deal.dateOfApproval = deal.dateOfApprovalEpoch ? format(setDateToMidnight, 'dd LLL yyyy') : '';
 
