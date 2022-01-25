@@ -18,7 +18,7 @@ exports.queryAllFacilities = async (queryParams) => {
     facility.coverEndDateEpoch = item.tfmFacilities.coverEndDate ? getUnixTime(new Date(item.tfmFacilities.coverEndDate)) : '';
     facility.currencyAndValue = `${item.tfmFacilities.currency} ${formattedNumber(defaultFacilityValue)}`;
     facility.value = parseInt(item.tfmFacilities.value, 10);
-    facility.facilityType = item.tfmFacilities.facilityType;
+    facility.type = item.tfmFacilities.type;
     facilities.push(facility);
   }
 

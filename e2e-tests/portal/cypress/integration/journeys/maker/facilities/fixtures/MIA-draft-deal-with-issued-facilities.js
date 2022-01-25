@@ -180,7 +180,7 @@ const deal = {
   },
   mockFacilities: [
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: now,
       bondIssuer: '',
       bondType: 'Advance payment guarantee',
@@ -195,7 +195,7 @@ const deal = {
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '10.8000',
-      lastEdited: now,
+      updatedAt: Date.now(),
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '12',
@@ -210,7 +210,7 @@ const deal = {
       },
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: now,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
@@ -222,7 +222,7 @@ const deal = {
       'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
       bankReferenceNumber: '1234',
       guaranteeFeePayableByBank: '21.6000',
-      lastEdited: now,
+      updatedAt: Date.now(),
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       disbursementAmount: '12.00',

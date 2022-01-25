@@ -5,21 +5,21 @@ const generateHeadingString = (heading) => `#${heading}\n\n`;
 
 const generateListItemString = (str) => `*${str}\n`;
 
-const generateFacilitiesListHeading = (facilityType) => {
+const generateFacilitiesListHeading = (type) => {
   let heading;
-  if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+  if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
     heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.LOAN;
   }
 
-  if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+  if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
     heading = CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.BOND;
   }
 
-  if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH) {
+  if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH) {
     heading = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH} facility`;
   }
 
-  if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT) {
+  if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT) {
     heading = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility`;
   }
 
@@ -53,9 +53,9 @@ const generateFacilitiesListString = (facilities) => {
   }, '');
 
   if (list.length) {
-    const { facilityType } = facilities[0];
+    const { type } = facilities[0];
 
-    const heading = generateFacilitiesListHeading(facilityType);
+    const heading = generateFacilitiesListHeading(type);
     return `${heading}${list}`;
   }
 

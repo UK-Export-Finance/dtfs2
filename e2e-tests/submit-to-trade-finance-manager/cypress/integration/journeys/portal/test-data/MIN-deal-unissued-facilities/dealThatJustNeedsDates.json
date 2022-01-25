@@ -110,11 +110,11 @@
   },
   "mockFacilities": [
     {
-      "facilityType": "Loan",
+      "type": "Loan",
       "createdDate": "1615380531878",
       "facilityStage": "Conditional",
       "hasBeenIssued": false,
-      "lastEdited": "1615380612045",
+      "updatedAt": 1615380612045,
       "ukefGuaranteeInMonths": "12",
       "conversionRate": "50",
       "coveredPercentage": "12",
@@ -135,14 +135,14 @@
       "status": "Completed"
     },
     {
-      "facilityType": "Bond",
+      "type": "Bond",
       "createdDate": "1615380491206",
       "bondBeneficiary": "",
       "bondIssuer": "",
       "bondType": "Advance payment guarantee",
       "facilityStage": "Unissued",
       "hasBeenIssued": false,
-      "lastEdited": "1615380612017",
+      "updatedAt": 1615380612017,
       "ukefGuaranteeInMonths": "12",
       "conversionRate": "100",
       "coveredPercentage": "24",

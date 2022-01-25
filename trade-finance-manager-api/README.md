@@ -178,7 +178,7 @@ Therefore in TFM, we currently need to deal with 2 different data structures for
 ```js
 {
   _id: '100',
-  facilityType: 'Bond',
+  type: 'Bond',
   requestedCoverStartDate: '1606900616652',
   coveredPercentage: '20',
   ...

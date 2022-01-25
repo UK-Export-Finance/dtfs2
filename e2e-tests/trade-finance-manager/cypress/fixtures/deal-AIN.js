@@ -168,7 +168,7 @@ const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      facilityType: CONSTANTS.FACILITY_TYPE.BOND,
+      type: CONSTANTS.FACILITY_TYPE.BOND,
       bondIssuer: 'Issuer',
       bondType: 'Advance payment guarantee',
       facilityStage: 'Issued',
@@ -194,16 +194,17 @@ const MOCK_DEAL = {
       issuedDate: '1606900616651',
       requestedCoverStartDate: '1606900616652',
       bankReferenceNumber: 'Test-123',
+      updatedAt: Date.now(),
     },
     {
-      facilityType: CONSTANTS.FACILITY_TYPE.LOAN,
+      type: CONSTANTS.FACILITY_TYPE.LOAN,
       createdDate: 1610369832226,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
       bankReferenceNumber: '5678',
       guaranteeFeePayableByBank: '27.0000',
-      lastEdited: 1610369832226,
+      updatedAt: Date.now(),
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '30',

@@ -1,5 +1,4 @@
 const db = require('../../../../drivers/db-client');
-const now = require('../../../../now');
 const { generateFacilityId } = require('../../../../utils/generate-ids');
 const getCreateFacilityErrors = require('../../../validation/create-facility');
 const { findOneDeal } = require('../deal/get-deal.controller');
@@ -14,7 +13,7 @@ const createFacility = async (facility, user, routePath) => {
   const newFacility = {
     ...facility,
     _id: facilityId,
-    createdDate: now(),
+    createdDate: Date.now(),
   };
 
   const response = await collection.insertOne(newFacility);

@@ -4,7 +4,7 @@ const getInterestOrFeeRate = (facilitySnapshot, dealType) => {
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
     return facilitySnapshot.interestPercentage;
   }
-  switch (facilitySnapshot.facilityType) {
+  switch (facilitySnapshot.type) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
       return Number(facilitySnapshot.riskMarginFee);
 

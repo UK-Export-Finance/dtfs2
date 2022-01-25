@@ -93,8 +93,8 @@ const calculate = (
 
 const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP, bonds, loans) => {
   const hasCompletedBonds = bonds.filter((b) => {
-    // if issuedFacilitySubmittedToUkefTimestamp is true, the facility has been previously completed.
-    if (b.issuedFacilitySubmittedToUkefTimestamp) {
+    // if submittedAsIssuedDate is true, the facility has been previously completed.
+    if (b.submittedAsIssuedDate) {
       return b;
     }
 
@@ -106,8 +106,8 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
   });
 
   const hasCompletedLoans = loans.filter((l) => {
-    // if issuedFacilitySubmittedToUkefTimestamp is true, the facility has been previously completed.
-    if (l.issuedFacilitySubmittedToUkefTimestamp) {
+    // if submittedAsIssuedDate is true, the facility has been previously completed.
+    if (l.submittedAsIssuedDate) {
       return l;
     }
     if (l.status !== CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED

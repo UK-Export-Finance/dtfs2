@@ -32,13 +32,13 @@ const findOneDeal = async (_id, callback) => {
           const { facilitySnapshot } = facilities.find((f) => f._id === id);
 
           if (facilitySnapshot) {
-            const { facilityType } = facilitySnapshot;
+            const { type } = facilitySnapshot;
 
-            if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+            if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
               mappedBonds.push(facilitySnapshot);
             }
 
-            if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+            if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
               mappedLoans.push(facilitySnapshot);
             }
           }

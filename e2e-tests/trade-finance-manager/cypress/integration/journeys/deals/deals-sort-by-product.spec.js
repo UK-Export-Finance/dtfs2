@@ -4,6 +4,7 @@ import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_USERS from '../../../fixtures/users';
 import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
+import CONSTANTS from '../../../fixtures/constants';
 
 context('User can view and sort deals by product', () => {
   let ALL_SUBMITTED_DEALS = [];
@@ -15,14 +16,14 @@ context('User can view and sort deals by product', () => {
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
     mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'Bond'),
+      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.BOND),
     ],
   });
 
   const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.facilityType === 'Loan'),
+      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.LOAN),
     ],
   });
 

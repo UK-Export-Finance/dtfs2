@@ -237,7 +237,7 @@ describe('/v1/deals/:id/bond', () => {
       const dealId = postResult.body._id;
 
       const newBond = {
-        facilityType: 'Bond',
+        type: 'Bond',
         dealId,
       };
 
@@ -347,9 +347,9 @@ describe('/v1/deals/:id/bond', () => {
           guaranteeFeePayableByBank: expectedGuaranteeFee,
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
-          createdDate: expect.any(String),
-          lastEdited: expect.any(String),
-          facilityType: 'Bond',
+          createdDate: expect.any(Number),
+          updatedAt: expect.any(Number),
+          type: 'Bond',
           requestedCoverStartDate: null,
           conversionRate: null,
           'conversionRateDate-day': null,
@@ -416,9 +416,9 @@ describe('/v1/deals/:id/bond', () => {
           guaranteeFeePayableByBank: expectedGuaranteeFee,
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
-          createdDate: expect.any(String),
-          lastEdited: expect.any(String),
-          facilityType: 'Bond',
+          createdDate: expect.any(Number),
+          updatedAt: expect.any(Number),
+          type: 'Bond',
           hasBeenIssued: true,
           requestedCoverStartDate: null,
           'requestedCoverStartDate-day': null,
@@ -492,9 +492,9 @@ describe('/v1/deals/:id/bond', () => {
           guaranteeFeePayableByBank: expectedGuaranteeFee,
           ukefExposure: expectedUkefExposure,
           status: 'Completed',
-          createdDate: expect.any(String),
-          lastEdited: expect.any(String),
-          facilityType: 'Bond',
+          createdDate: expect.any(Number),
+          updatedAt: expect.any(Number),
+          type: 'Bond',
           hasBeenIssued: false,
           requestedCoverStartDate: null,
           'requestedCoverStartDate-day': null,
@@ -552,9 +552,9 @@ describe('/v1/deals/:id/bond', () => {
         guaranteeFeePayableByBank: expectedGuaranteeFee,
         ukefExposure: expectedUkefExposure,
         status: 'Completed',
-        createdDate: expect.any(String),
-        lastEdited: expect.any(String),
-        facilityType: 'Bond',
+        createdDate: expect.any(Number),
+        updatedAt: expect.any(Number),
+        type: 'Bond',
         requestedCoverStartDate: null,
         conversionRate: null,
         'conversionRateDate-day': null,
@@ -672,7 +672,7 @@ describe('/v1/deals/:id/bond', () => {
       expect(body['requestedCoverStartDate-year']).toEqual(bond['requestedCoverStartDate-year']);
     });
 
-    it('should generate lastEdited timestamp', async () => {
+    it('should generate updatedAt timestamp', async () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
 
@@ -686,7 +686,7 @@ describe('/v1/deals/:id/bond', () => {
       const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
-      expect(body.lastEdited).toEqual(expect.any(String));
+      expect(body.updatedAt).toEqual(expect.any(Number));
     });
 
     it('should update the associated deal\'s facilitiesUpdated timestamp', async () => {

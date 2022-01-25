@@ -255,7 +255,7 @@ describe('tasks controller', () => {
         team: MOCK_MIA_TASKS[0].groupTasks[0].team,
         previousStatus: 'To do',
         status: tfmTaskUpdate.status,
-        lastEdited: expect.any(Number),
+        updatedAt: expect.any(Number),
         dateStarted: expect.any(Number),
         dateCompleted: expect.any(Number),
       };
@@ -414,7 +414,7 @@ describe('tasks controller', () => {
         expect(firstTaskSentToUpdateDealSpy.assignedTo).toEqual(mappedTaskObj.assignedTo);
         expect(typeof firstTaskSentToUpdateDealSpy.dateCompleted).toEqual('number');
         expect(typeof firstTaskSentToUpdateDealSpy.dateStarted).toEqual('number');
-        expect(typeof firstTaskSentToUpdateDealSpy.lastEdited).toEqual('number');
+        expect(typeof firstTaskSentToUpdateDealSpy.updatedAt).toEqual('number');
       });
     });
   });

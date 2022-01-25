@@ -6,10 +6,7 @@ const { as } = require('../../api')(app);
 
 const users = require('./test-data');
 
-const aUserWithNoRoles = users.find((user) => user.username === 'NOBODY');
 const aMaker = users.find((user) => user.username === 'MAKER');
-const aChecker = users.find((user) => user.username === 'CHECKER');
-const aMakerChecker = users.find((user) => user.username === 'MAKENCHECK');
 
 const PASSWORD_ERROR = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.' };
 
@@ -124,7 +121,6 @@ describe('a user', () => {
     expect(body.roles).toEqual(['checker', 'maker']);
   });
 
-
   it('a user can be deleted', async () => {
     const response = await as().post(aMaker).to('/v1/users');
     const createdUser = response.body.user;
@@ -153,7 +149,7 @@ describe('a user', () => {
 
   it('an unknown user cannot log in', async () => {
     const { username, password } = aMaker;
-    const { status, body } = await as().post({ username, password }).to('/v1/login');
+    const { status } = await as().post({ username, password }).to('/v1/login');
 
     expect(status).toEqual(401);
   });
@@ -211,59 +207,5 @@ describe('a user', () => {
     const { status } = await as({ token }).get('/v1/validate');
 
     expect(status).toEqual(401);
-  });
-
-  it('an uknown user cannot access a protected endpoint', async () => {
-    const { status } = await as().get('/v1/test/protected');
-    expect(status).toEqual(401);
-  });
-
-  it('a known user can access a protected endpoint', async () => {
-    const { username, password } = aUserWithNoRoles;
-    await as().post(aUserWithNoRoles).to('/v1/users');
-
-    const { body } = await as().post({ username, password }).to('/v1/login');
-    const { token } = body;
-
-    const { status } = await as({ token }).get('/v1/test/protected', token);
-    expect(status).toEqual(200);
-  });
-
-  it('an endpoint can be blocked to users without a given role', async () => {
-    const { username, password } = aChecker;
-    await as().post(aChecker).to('/v1/users');
-
-    const { body } = await as().post({ username, password }).to('/v1/login');
-    const { token } = body;
-
-    const { status } = await as({ token }).get('/v1/test/protected/maker');
-    expect(status).toEqual(401);
-  });
-
-  it('an endpoint can be opened to users with a given role', async () => {
-    const { username, password } = aMaker;
-    await as().post(aMaker).to('/v1/users');
-
-    const { body } = await as().post({ username, password }).to('/v1/login');
-    const { token } = body;
-
-    const response = await as({ token }).get('/v1/test/protected/maker');
-    const { status } = response;
-
-    expect(status).toEqual(200);
-  });
-
-  it('a user can have multiple roles', async () => {
-    const { username, password } = aMakerChecker;
-    await as().post(aMakerChecker).to('/v1/users');
-
-    const { body } = await as().post({ username, password }).to('/v1/login');
-    const { token } = body;
-
-    const makerResponse = await as({ token }).get('/v1/test/protected/maker');
-    expect(makerResponse.status).toEqual(200);
-
-    const checkerResponse = await as({ token }).get('/v1/test/protected/checker');
-    expect(makerResponse.status).toEqual(200);
   });
 });

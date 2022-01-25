@@ -167,7 +167,7 @@ const MOCK_DEAL = {
     facilities: [
       {
         _id: '1010738',
-        facilityType: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
+        type: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
         createdDate: '1640088922460',
         bankReferenceNumber: '1122444',
         'coverEndDate-day': '21',
@@ -175,7 +175,7 @@ const MOCK_DEAL = {
         'coverEndDate-year': '2022',
         facilityStage: 'Unconditional',
         hasBeenIssued: true,
-        lastEdited: '1640088967413',
+        updatedAt: 1640088967413,
         requestedCoverStartDate: 1640088922054,
         'requestedCoverStartDate-day': '10',
         'requestedCoverStartDate-month': '03',
@@ -200,7 +200,7 @@ const MOCK_DEAL = {
 
         dealId: '1007117',
         issueFacilityDetailsSubmitted: true,
-        issuedFacilitySubmittedToUkefBy: {
+        submittedAsIssuedBy: {
           _id: '61c0de9fa9b7dc0013f58303',
           bank: {
             companiesHouseNo: 'UKEF0001',
@@ -227,14 +227,14 @@ const MOCK_DEAL = {
           'user-status': 'active',
           username: 'BANK1_CHECKER1',
         },
-        issuedFacilitySubmittedToUkefTimestamp: '1640088932972',
+        submittedAsIssuedDate: 1640088932972,
         ukefFacilityId: '0030134209',
         previousStatus: 'Completed',
         hasBeenAcknowledged: true,
       },
       {
         _id: '1010739',
-        facilityType: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
+        type: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
         createdDate: '1640088922461',
         bondBeneficiary: '',
         bondIssuer: '',
@@ -244,7 +244,7 @@ const MOCK_DEAL = {
         'coverEndDate-year': '2022',
         facilityStage: 'Issued',
         hasBeenIssued: true,
-        lastEdited: '1640088967410',
+        updatedAt: 1640088967410,
         requestedCoverStartDate: 1640088922054,
         'requestedCoverStartDate-day': '10',
         'requestedCoverStartDate-month': '03',
@@ -268,7 +268,7 @@ const MOCK_DEAL = {
         feeType: 'At maturity',
         dealId: '1007117',
         issueFacilityDetailsSubmitted: true,
-        issuedFacilitySubmittedToUkefBy: {
+        submittedAsIssuedBy: {
           _id: '61c0de9fa9b7dc0013f58303',
           bank: {
             companiesHouseNo: 'UKEF0001',
@@ -295,7 +295,7 @@ const MOCK_DEAL = {
           'user-status': 'active',
           username: 'BANK1_CHECKER1',
         },
-        issuedFacilitySubmittedToUkefTimestamp: '1640088932976',
+        submittedAsIssuedDate: 1640088932976,
         status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
         ukefFacilityId: '0030134210',
         previousStatus: 'Completed',
@@ -308,7 +308,7 @@ const MOCK_DEAL = {
           _id: '12345678',
           ukefFacilityId: '0040004833',
           bondIssuer: 'Issuer',
-          facilityType: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
+          type: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
           bondType: 'Advance payment guarantee',
           facilityStage: 'Unissued',
           hasBeenIssued: false,
@@ -337,7 +337,7 @@ const MOCK_DEAL = {
       items: [
         {
           _id: '23456789',
-          facilityType: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
+          type: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
           ukefFacilityId: '0040004833',
           createdDate: 1610369832226.0,
           facilityStage: 'Conditional',
@@ -345,7 +345,7 @@ const MOCK_DEAL = {
           ukefGuaranteeInMonths: '12',
           bankReferenceNumber: '5678',
           guaranteeFeePayableByBank: '27.0000',
-          lastEdited: 1610369832226.0,
+          updatedAt: 1610369832226.0,
           value: '1234.00',
           currencySameAsSupplyContractCurrency: 'true',
           interestMarginFee: '30',

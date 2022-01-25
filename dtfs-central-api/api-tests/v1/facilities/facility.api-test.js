@@ -14,7 +14,7 @@ const mockUser = {
 };
 
 const newFacility = {
-  facilityType: 'Bond',
+  type: 'Bond',
   dealId: '123123456',
 };
 
@@ -44,7 +44,7 @@ describe('/v1/portal/facilities', () => {
     it('returns 404 when associatedDeal/dealId is not found', async () => {
       const facilityWithInvalidDealId = {
         dealId: '1234',
-        facilityType: 'Bond',
+        type: 'Bond',
       };
 
       const { status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
@@ -55,7 +55,7 @@ describe('/v1/portal/facilities', () => {
     it('returns 404 when user is not found', async () => {
       const facilityWithInvalidDealId = {
         dealId: '1234',
-        facilityType: 'Bond',
+        type: 'Bond',
       };
 
       const { status } = await api.post({ facility: facilityWithInvalidDealId }).to('/v1/portal/facilities');
@@ -78,7 +78,7 @@ describe('/v1/portal/facilities', () => {
       expect(facilityAfterCreation).toEqual({
         _id: body._id,
         ...newFacility,
-        createdDate: expect.any(String),
+        createdDate: expect.any(Number),
       });
     });
 
@@ -123,7 +123,7 @@ describe('/v1/portal/facilities', () => {
         newFacility.dealId = _id;
 
         const postBody = {
-          facilityType: '',
+          type: '',
           dealId: '',
         };
 
@@ -132,8 +132,8 @@ describe('/v1/portal/facilities', () => {
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(2);
 
-        expect(body.validationErrors.errorList.facilityType).toBeDefined();
-        expect(body.validationErrors.errorList.facilityType.text).toEqual('Enter the Facility type');
+        expect(body.validationErrors.errorList.type).toBeDefined();
+        expect(body.validationErrors.errorList.type.text).toEqual('Enter the Facility type');
 
         expect(body.validationErrors.errorList.dealId).toBeDefined();
         expect(body.validationErrors.errorList.dealId.text).toEqual('Enter the Associated deal id');
@@ -146,7 +146,7 @@ describe('/v1/portal/facilities', () => {
         newFacility.dealId = _id;
 
         const postBody = {
-          facilityType: 'invalid-facility',
+          type: 'invalid-facility',
           dealId: '123123456',
           user: {},
         };
@@ -156,8 +156,8 @@ describe('/v1/portal/facilities', () => {
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(1);
 
-        expect(body.validationErrors.errorList.facilityType).toBeDefined();
-        expect(body.validationErrors.errorList.facilityType.text).toEqual('Facility type must be Bond or Loan');
+        expect(body.validationErrors.errorList.type).toBeDefined();
+        expect(body.validationErrors.errorList.type.text).toEqual('Facility type must be Bond or Loan');
       });
     });
   });
@@ -174,7 +174,7 @@ describe('/v1/portal/facilities', () => {
 
       expect(status).toEqual(200);
       expect(body._id).toEqual(newId);
-      expect(typeof body.createdDate).toEqual('string');
+      expect(typeof body.createdDate).toEqual('number');
     });
 
     it('404s requests for unknown ids', async () => {

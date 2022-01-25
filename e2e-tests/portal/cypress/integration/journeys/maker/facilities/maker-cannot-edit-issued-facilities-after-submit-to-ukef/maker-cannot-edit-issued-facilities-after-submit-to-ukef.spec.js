@@ -1,5 +1,5 @@
 const pages = require('../../../../pages');
-const dealWithMultipleFacilityTypesReadyToSubmitToUkef = require('./deal-multiple-facility-types-ready-to-submit-to-ukef');
+const dealWithMultipletypesReadyToSubmitToUkef = require('./deal-multiple-facility-types-ready-to-submit-to-ukef');
 const mockUsers = require('../../../../../fixtures/mockUsers');
 
 const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
@@ -15,7 +15,7 @@ context('Checker submits a deal with all facility types to UKEF', () => {
 
   before(() => {
     cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(dealWithMultipleFacilityTypesReadyToSubmitToUkef, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealWithMultipletypesReadyToSubmitToUkef, { ...MAKER_LOGIN })
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
@@ -26,8 +26,8 @@ context('Checker submits a deal with all facility types to UKEF', () => {
         ];
 
         cy.createFacilities(dealId, facilitiesToCreate, MAKER_LOGIN).then((createdFacilities) => {
-          dealFacilities.bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
-          dealFacilities.loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
+          dealFacilities.bonds = createdFacilities.filter((f) => f.type === 'Bond');
+          dealFacilities.loans = createdFacilities.filter((f) => f.type === 'Loan');
         });
       });
   });

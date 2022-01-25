@@ -1,23 +1,22 @@
-const { getTime } = require('date-fns');
 const CONSTANTS = require('../../constants');
 
 /**
 * Generate timestamps:
-* - lastEdited
+* - updatedAt
 * - dateStarted
 * - dateCompleted
 * */
 const generateTaskDates = (statusFrom, statusTo) => {
   const dates = {
-    lastEdited: getTime(new Date()),
+    updatedAt: Date.now(),
   };
 
   if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO) {
-    dates.dateStarted = getTime(new Date());
+    dates.dateStarted = Date.now();
   }
 
   if (statusTo === CONSTANTS.TASKS.STATUS.COMPLETED) {
-    dates.dateCompleted = getTime(new Date());
+    dates.dateCompleted = Date.now();
   }
 
   return dates;

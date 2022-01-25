@@ -140,7 +140,7 @@ describe('deal-summary', () => {
   });
 
   describe('when a deal has relevant Supply Contract fields', () => {
-    describe('when a bond does not have a status, but has issuedFacilitySubmittedToUkefTimestamp', () => {
+    describe('when a bond does not have a status, but has submittedAsIssuedDate', () => {
       it('should return calculations', () => {
         const mockDeal = {
           submissionDetails: {
@@ -151,7 +151,7 @@ describe('deal-summary', () => {
           },
           bondTransactions: {
             items: [
-              { status: null, issuedFacilitySubmittedToUkefTimestamp: true },
+              { status: null, submittedAsIssuedDate: true },
             ],
           },
           loanTransactions: { items: [] }
@@ -161,7 +161,7 @@ describe('deal-summary', () => {
       });
     });
 
-    describe('when a loan does not have a status, but has issuedFacilitySubmittedToUkefTimestamp', () => {
+    describe('when a loan does not have a status, but has submittedAsIssuedDate', () => {
       it('should return calculations', () => {
         const mockDeal = {
           submissionDetails: {
@@ -173,7 +173,7 @@ describe('deal-summary', () => {
           bondTransactions: { items: [] },
           loanTransactions: {
             items: [
-              { status: null, issuedFacilitySubmittedToUkefTimestamp: true },
+              { status: null, submittedAsIssuedDate: true },
             ],
           },
         };

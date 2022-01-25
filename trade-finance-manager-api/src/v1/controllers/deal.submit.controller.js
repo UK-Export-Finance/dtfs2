@@ -58,7 +58,6 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
-
   console.log('UKEF IDs verified');
 
   if (!deal) {
@@ -67,31 +66,22 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   }
 
   const submittedDeal = await api.submitDeal(dealType, dealId);
-
   const mappedDeal = mapSubmittedDeal(submittedDeal);
-
   const { submissionCount } = mappedDeal;
-
   const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
 
   if (firstDealSubmission) {
     await updatePortalDealStatus(mappedDeal);
-
     const dealWithTfmData = await addTfmDealData(mappedDeal);
-
     const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData);
-
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn);
-
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
-
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
 
     if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
-
       /**
        * Current requirement only allows AIN & MIN deals to be send to ACBS
        * This calls CREATES Deal & Facility ACBS records
@@ -100,8 +90,8 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
-
       await sendDealSubmitEmails(updatedDealWithTasks);
+
       return updatedDeal;
     }
 
@@ -110,9 +100,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
   if (dealHasBeenResubmit) {
     const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
-
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
-
     /**
      * Current requirement only allows AIN & MIN deals to be send to ACBS
      * This call UPDATES facility record by updating their stage from
@@ -140,15 +128,12 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       if (dealController.canDealBeSubmittedToACBS(portalMINUpdate.submissionType)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
-
       await sendAinMinAcknowledgement(updatedDeal);
     }
-
     await updatePortalDealStatus(updatedDeal);
 
     return api.updateDeal(dealId, updatedDeal);
   }
-
   return api.updateDeal(dealId, submittedDeal);
 };
 

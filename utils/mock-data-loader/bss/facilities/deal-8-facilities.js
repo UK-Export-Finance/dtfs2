@@ -3,7 +3,7 @@ const { nowTimestamp } = require('../dates');
 module.exports = [
   {
     mockDealId: 8,
-    facilityType: 'Loan',
+    type: 'Loan',
     ukefGuaranteeInMonths: '24',
     'coverEndDate-day': null,
     'coverEndDate-month': null,
@@ -30,7 +30,7 @@ module.exports = [
     'requestedCoverStartDate-month': null,
     'requestedCoverStartDate-year': null,
     ukefExposure: '60,000.00',
-    lastEdited: nowTimestamp,
+    updatedAt: nowTimestamp,
     interestMarginFee: '2',
     coveredPercentage: '60',
     minimumQuarterlyFee: '',

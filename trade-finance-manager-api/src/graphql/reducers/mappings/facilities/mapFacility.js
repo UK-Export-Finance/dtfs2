@@ -16,18 +16,18 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
   const facility = JSON.parse(JSON.stringify(f, null, 4));
 
   const {
-    facilityType,
+    type,
     value,
     facilityStage,
     guaranteeFeePayableByBank,
     currency,
   } = facility;
 
-  facility.ukefFacilityType = facilityType;
+  facility.ukefFacilityType = type;
 
-  facility.facilityProduct = mapFacilityProduct(facilityType);
+  facility.facilityProduct = mapFacilityProduct(type);
 
-  facility.facilityType = mapFacilityType(facility);
+  facility.type = mapFacilityType(facility);
 
   const formattedFacilityValue = formattedNumber(value);
 
@@ -38,8 +38,8 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     dealId: facility.dealId,
     ukefFacilityId: facility.ukefFacilityId,
 
-    // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.
-    facilityType: facility.facilityType,
+    // TODO: DTFS2-4634 - we shouldn't need facility.type and ukefFacilityType.
+    type: facility.type,
     ukefFacilityType: facility.ukefFacilityType,
     facilityProduct: facility.facilityProduct,
     facilityStage: facility.facilityStage,

@@ -3,7 +3,7 @@ const { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } = require('..
 module.exports = [
   {
     mockDealId: 3,
-    facilityType: 'Bond',
+    type: 'Bond',
     createdDate: nowTimestamp,
     bondIssuer: '',
     bondType: 'Maintenance bond',
@@ -19,7 +19,7 @@ module.exports = [
     uniqueIdentificationNumber: 'Test Bond',
     bondBeneficiary: '',
     requestedCoverStartDate: twoMonthsTimestamp,
-    lastEdited: nowTimestamp,
+    updatedAt: nowTimestamp,
     value: '600000.00',
     currencySameAsSupplyContractCurrency: 'true',
     currency: {

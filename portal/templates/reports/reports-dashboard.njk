@@ -1,0 +1,50 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}Reports{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <h1 class="govuk-heading-l govuk-!-margin-bottom-0">Reports</h1>
+    </div>
+  </div>
+
+  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      {% if allUnissuedFacilitiesCount == 1 %}
+        <h2 class="govuk-heading-m" data-cy="reports--all-unissued-facilities">You need to issue {{ allUnissuedFacilitiesCount }} facility</h2>
+      {% elif allUnissuedFacilitiesCount > 1 %}
+        <h2 class="govuk-heading-m" data-cy="reports--all-unissued-facilities">You need to issue {{ allUnissuedFacilitiesCount }} facilities</h2>
+      {% else %}
+        <h2 class="govuk-heading-m" data-cy="reports--all-unissued-facilities">You have issued all facilities</h2>
+      {% endif %}
+
+      <h3 class="govuk-heading-m has-text-danger">Overdue</h3>
+      <p class="govuk-body" data-cy="past-deadline-unissued-facilities">You have {{ pastDeadlineUnissuedFacilitiesCount }} facilities that have past the deadline for issuing </p>
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+      <h3 class="govuk-heading-m has-text-danger">Less than 15 days left</h3>
+      {% if facilitiesThatNeedIssuingCount == 1 %}
+        <p class="govuk-body" data-cy="reports--facilities-that-need-issuing">You have {{ facilitiesThatNeedIssuingCount }} facility that needs issuing</p>
+      {% elif facilitiesThatNeedIssuingCount > 1 %}
+        <p class="govuk-body" data-cy="reports--facilities-that-need-issuing">You have {{ facilitiesThatNeedIssuingCount }} facilities that need issuing</p>
+      {% else %}
+        <p class="govuk-body" data-cy="reports--facilities-that-need-issuing">You have 0 facilities that need issuing</p>
+      {% endif %}
+
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+      {% if allUnissuedFacilitiesCount > 0 %}
+      <a class="govuk-link" href="/reports/unissued-facilities" aria-label="View unissued facilities" data-cy="reports--review-unissued-facilities">
+        Review all unissued facilities
+      </a>
+      {% endif %}
+    </div>
+
+  </div>
+{% endblock %}

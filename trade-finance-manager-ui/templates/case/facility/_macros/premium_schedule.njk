@@ -4,7 +4,7 @@
   {% set premiumFrequency = facility.feeFrequency or facility.premiumFrequency %}
   {% set user = params.user %}
 
-  {% set isGefFacility = (facility.facilityType === 'Cash facility' or facility.facilityType === 'Contingent facility') %}
+  {% set isGefFacility = (facility.type === 'Cash facility' or facility.type === 'Contingent facility') %}
 
   <div class="govuk-grid-row" data-cy="premium-schedule">
     <div class="govuk-grid-column-full">

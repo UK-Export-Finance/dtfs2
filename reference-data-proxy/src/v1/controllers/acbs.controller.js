@@ -78,7 +78,7 @@ exports.findOne = async (req, res) => {
   return res.status(500).send();
 };
 
-const issueAcbsFacility = async (id, facility, supplierName) => {
+const issueAcbsFacility = async (id, facility, dealType, supplierName) => {
   if (id) {
     const response = await axios({
       method: 'post',
@@ -86,6 +86,7 @@ const issueAcbsFacility = async (id, facility, supplierName) => {
       data: {
         facilityId: id,
         facility,
+        dealType,
         supplierName,
       },
     }).catch((err) => err);
@@ -97,8 +98,8 @@ const issueAcbsFacility = async (id, facility, supplierName) => {
 exports.issueAcbsFacilityPOST = async (req, res) => {
   if (req) {
     const { id } = req.params;
-    const { facility, supplierName } = req.body;
-    const { status, data } = await issueAcbsFacility(id, facility, supplierName);
+    const { facility, dealType, supplierName } = req.body;
+    const { status, data } = await issueAcbsFacility(id, facility, dealType, supplierName);
     return res.status(status).send(data);
   }
   return res.status(400).send();

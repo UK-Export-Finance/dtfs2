@@ -40,8 +40,8 @@ context('Portal to TFM deal submission', () => {
         const { mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
+          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+          const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
           dealFacilities.bonds = bonds;
           dealFacilities.loans = loans;
@@ -167,7 +167,7 @@ context('Portal to TFM deal submission', () => {
     });
 
     tfmPages.facilityPage.facilityBankIssueNoticeReceived().invoke('text').then((text) => {
-      // the code actually uses facility.issuedFacilitySubmittedToUkefTimestamp,
+      // the code actually uses facility.submittedAsIssuedDate,
       // but in this e2e test it will always be today so to simplify..
       const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);
@@ -215,7 +215,7 @@ context('Portal to TFM deal submission', () => {
     });
 
     tfmPages.facilityPage.facilityBankIssueNoticeReceived().invoke('text').then((text) => {
-      // the code actually uses facility.issuedFacilitySubmittedToUkefTimestamp,
+      // the code actually uses facility.submittedAsIssuedDate,
       // but in this e2e test it will always be today so to simplify..
       const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
       expect(text.trim()).to.equal(expectedDate);

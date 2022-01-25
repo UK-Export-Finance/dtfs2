@@ -30,7 +30,7 @@ exports.getAllFacilities = async (req, res) => {
   //           "facilityId": "Mock facility Id",
   //           "ukefFacilityId": "0030136443",
   //           "dealType": "GEF",
-  //           "facilityType": "Cash",
+  //           "type": "Cash",
   //           "value": 1000000,
   //           "currency": "GBP",
   //           "coverEndDate": "2021-08-12T00:00:00.000Z",
@@ -56,21 +56,8 @@ exports.getAllFacilities = async (req, res) => {
               ukefFacilityId: '$$facilities.ukefFacilityId',
               // create the `dealType` property - this is inside the `dealSnapshot` property, NOT `facilities` array
               dealType: '$dealSnapshot.dealType',
-              // create the `facilityType` property
-              facilityType: {
-                $switch: {
-                  branches: [
-                    {
-                      case: { $eq: ['$dealSnapshot.dealType', 'GEF'] },
-                      then: '$$facilities.type',
-                    },
-                    {
-                      case: { $eq: ['$dealSnapshot.dealType', 'BSS/EWCS'] },
-                      then: '$$facilities.facilityType',
-                    },
-                  ],
-                },
-              },
+              // create the `type` property
+              type: '$$facilities.type',
               // create the `value` property - this is the facility value
               value: '$$facilities.value',
               // create the `currency` property

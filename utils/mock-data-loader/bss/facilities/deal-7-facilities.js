@@ -3,7 +3,7 @@ const { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } = require('..
 module.exports = [
   {
     mockDealId: 7,
-    facilityType: 'Loan',
+    type: 'Loan',
     ukefGuaranteeInMonths: '24',
     'coverEndDate-day': null,
     'coverEndDate-month': null,
@@ -29,7 +29,7 @@ module.exports = [
     'requestedCoverStartDate-month': null,
     'requestedCoverStartDate-year': null,
     ukefExposure: '60,000.00',
-    lastEdited: nowTimestamp,
+    updatedAt: nowTimestamp,
     interestMarginFee: '2',
     coveredPercentage: '60',
     minimumQuarterlyFee: '',
@@ -40,7 +40,7 @@ module.exports = [
   },
   {
     mockDealId: 7,
-    facilityType: 'Bond',
+    type: 'Bond',
     ukefGuaranteeInMonths: null,
     facilityStage: 'Issued',
     hasBeenIssued: true,
@@ -68,7 +68,7 @@ module.exports = [
     bondType: 'Maintenance bond',
     bondBeneficiary: '',
     ukefExposure: '360,000.00',
-    lastEdited: nowTimestamp,
+    updatedAt: nowTimestamp,
     riskMarginFee: '2',
     coveredPercentage: '60',
     minimumRiskMarginFee: '',

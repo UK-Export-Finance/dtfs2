@@ -24,7 +24,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     createdAt: new Date('2021-01-03T00:00'),
     updatedAt: null,
     isInDraft: false,
-    title: 'Confirm eligiblity (mandatory criteria)',
+    title: 'Confirm eligibility (mandatory criteria)',
     introText: 'You must confirm that all the following will be true for this application on the date that cover starts.',
     criteria: [
       {
@@ -57,7 +57,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
       },
       {
         id: '7.b',
-        body: 'The bank has not made any risk ransfer(other than a permitted risk transfer) to any person in relation to the facility or any utilisation thereunder.',
+        body: 'The bank has not made any risk transfer(other than a permitted risk transfer) to any person in relation to the facility or any utilisation thereunder.',
       },
       {
         id: '8',
@@ -77,7 +77,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
       },
       {
         id: '11',
-        body: 'The facility ketter satisfies either of  the following conditions:',
+        body: 'The facility better satisfies either of  the following conditions:',
         childList: [
           'utilisations under the facility Letter are payable on demand',
           'it provides that your bank has the right to accelerate the facility if any of the circumstances set out in paragraph 9.4 of the exporter declaration occur',

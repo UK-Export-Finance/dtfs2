@@ -42,7 +42,7 @@ const createFacilityCovenant = async (context) => {
   const currencyReq = await mdmEaApi.getCurrency(acbsFacilityCovenantInput.currency);
 
   // Default currency code to GBP (O)
-  acbsFacilityCovenantInput.currency = currencyReq.status === 200 ? currencyReq.data[0].acbsCode : 'O';
+  acbsFacilityCovenantInput.currency = (currencyReq.status === 200 && currencyReq.data.length > 1) ? currencyReq.data[0].acbsCode : 'O';
 
   const missingMandatory = findMissingMandatory(acbsFacilityCovenantInput, mandatoryFields);
 

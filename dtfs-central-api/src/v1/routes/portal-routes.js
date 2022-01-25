@@ -379,12 +379,12 @@ portalRouter.route('/facilities').get(
  *           schema:
  *             type: object
  *             properties:
- *               facilityType:
+ *               type:
  *                 type: string
  *               dealId:
  *                 type: string
  *           example:
- *             facilityType: 'Bond'
+ *             type: 'Bond'
  *             dealId: '123abc'
  *     responses:
  *       200:
@@ -401,7 +401,7 @@ portalRouter.route('/facilities').get(
  *               validationErrors:
  *                 count: 2
  *                 errorList:
- *                   facilityType:
+ *                   type:
  *                     order: '1'
  *                     text: 'Facility type must be Bond or Loan'
  *                   dealId:

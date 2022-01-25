@@ -172,7 +172,7 @@ const deal = {
   },
   mockFacilities: [
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: date.valueOf(),
       bondIssuer: '',
       bondType: 'Bid bond',
@@ -204,7 +204,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      facilityType: 'Bond',
+      type: 'Bond',
       createdDate: date.valueOf(),
       bondIssuer: '',
       bondType: 'Bid bond',
@@ -219,7 +219,7 @@ const deal = {
       uniqueIdentificationNumber: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
-      lastEdited: '1597082524602',
+      updatedAt: Date.now(),
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '20',
@@ -230,7 +230,7 @@ const deal = {
       dayCountBasis: '365',
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: date.valueOf(),
       facilityStage: 'Conditional',
       hasBeenIssued: false,
@@ -260,9 +260,10 @@ const deal = {
       disbursementAmount: '1,234.00',
       bankReferenceNumber: '5678',
       status: 'Ready for check',
+      updatedAt: Date.now(),
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       createdDate: date.valueOf(),
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
@@ -274,7 +275,7 @@ const deal = {
       'coverEndDate-year': (datePlusMonth.getFullYear()).toString(),
       bankReferenceNumber: '12345678',
       guaranteeFeePayableByBank: '45.0000',
-      lastEdited: '1597082596884',
+      updatedAt: Date.now(),
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       disbursementAmount: '200.00',

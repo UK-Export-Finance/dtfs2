@@ -110,7 +110,7 @@
   },
   "mockFacilities": [
     {
-      "facilityType": "Loan",
+      "type": "Loan",
       "facilityStage": "Conditional",
       "hasBeenIssued": false,
       "ukefGuaranteeInMonths": "12",

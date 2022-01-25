@@ -11,7 +11,7 @@ describe(component, () => {
     facility: {
       _id: '12345678',
       ukefFacilityId: '0040004833',
-      facilityType: 'Performance Bond',
+      type: 'Performance Bond',
       facilityStage: 'Commitment',
       hasBeenIssued: true,
       facilityProduct: {
@@ -54,8 +54,8 @@ describe(component, () => {
       wrapper.expectText('[data-cy="facility-product"]').toRead(params.facility.facilityProduct.name);
     });
 
-    it('should render facilityType', () => {
-      wrapper.expectText('[data-cy="facility-type"]').toRead(params.facility.facilityType);
+    it('should render type', () => {
+      wrapper.expectText('[data-cy="facility-type"]').toRead(params.facility.type);
     });
 
     it('should render facilityStage', () => {
