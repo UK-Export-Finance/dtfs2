@@ -106,6 +106,7 @@ services:
       - portal-api
     ports:
       - "5000:5000"
+      - "80:2222"
     volumes:
       - ./portal/server:/app/server:ro
       - ./portal/public:/app/public:ro
