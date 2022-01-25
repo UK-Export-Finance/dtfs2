@@ -12,11 +12,12 @@ RUN mkdir -p /home/LogFiles /opt/startup \
      && rc-update add sshd \
      && mkdir -p /run/openrc/ \
      && touch /run/openrc/softlevel \
-     && mkdir -p /var/run/sshd
+     && mkdir -p /var/run/sshd \
+     && /etc/init.d/sshd start
 
 COPY sshd_config /etc/ssh/
 
-EXPOSE 2009
+EXPOSE 2222
 
 # Identifies the code in the running container
 ARG GITHUB_SHA
