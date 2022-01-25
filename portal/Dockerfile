@@ -9,11 +9,11 @@ RUN mkdir -p /home/LogFiles /opt/startup \
      && echo "root:Docker!" | chpasswd \
      && apk update \
      && apk add openssh curl wget tcptraceroute openrc htop nano \
-     && rm /etc/ssh/sshd_config \
      && rc-update add sshd \
      && mkdir -p /run/openrc/ \
      && touch /run/openrc/softlevel \
-     && mkdir -p /var/run/sshd
+     && mkdir -p /var/run/sshd \
+     && /etc/init.d/sshd start
 
 COPY sshd_config /etc/ssh/
 
