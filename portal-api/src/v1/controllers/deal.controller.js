@@ -1,17 +1,11 @@
 const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
-const getDealErrors = require('../validation/deal');
-const { isSuperUser, userHasAccessTo } = require('../users/checks');
+const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
 const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const api = require('../api');
-
-const findAllPaginatedDeals = async (filters, sort, start = 0, pagesize = 20) =>
-  queryAllDeals(filters, sort, start, pagesize);
-
-exports.findAllPaginatedDeals = findAllPaginatedDeals;
 
 /**
  * Find a deal (BSS, EWCS only)
@@ -190,7 +184,12 @@ exports.delete = async (req, res) => {
  * @param {*} pagesize Size of each page - limits list results
  * @returns combined and formatted list of deals
  */
-const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {
+const queryAllDeals = async (
+  filters = {},
+  sort = {},
+  start = 0,
+  pagesize = 0,
+) => {
   const collection = await db.getCollection('deals');
 
   const deals = await collection.aggregate([
@@ -206,7 +205,12 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
         updatedAt: '$updatedAt',
       },
     },
-    { $sort: { ...sort, updatedAt: -1 } },
+    {
+      $sort: {
+        ...sort,
+        updatedAt: -1
+      },
+    },
     {
       $facet: {
         count: [{ $count: 'total' }],

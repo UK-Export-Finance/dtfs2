@@ -1,4 +1,4 @@
-const db = require('../../drivers//db-client');
+const db = require('../../drivers/db-client');
 const api = require('../api');
 const { updateDeal } = require('./deal.controller');
 
@@ -51,7 +51,6 @@ exports.update = async (dealId, facilityId, facilityBody, user) => {
 exports.delete = async (facilityId, user) =>
   api.deleteFacility(facilityId, user);
 
-
 /**
  * Create multiple facilities (BSS, EWCS only)
  */
@@ -75,7 +74,6 @@ exports.createMultiple = async (req, res) => {
  */
 exports.createMultipleFacilities = async (facilities, dealId, user) =>
   api.createMultipleFacilities(facilities, dealId, user);
-
 
 /**
 * Queries all facilities in the facilities collection (BSS, EWCS, GEF)
@@ -121,6 +119,7 @@ exports.queryAllFacilities = async (
       },
       {
         $sort: {
+          ...sort,
           updatedAt: -1,
         },
       },

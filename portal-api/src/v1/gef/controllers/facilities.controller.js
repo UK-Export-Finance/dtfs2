@@ -6,7 +6,6 @@ const {
 } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 const { Application } = require('../models/application');
-const { isSuperUser } = require('../../users/checks');
 const {
   calculateUkefExposure,
   calculateGuaranteeFee,

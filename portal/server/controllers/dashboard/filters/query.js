@@ -22,13 +22,13 @@ const dashboardFiltersQuery = (
   const { isMaker, isChecker } = getUserRoles(user.roles);
   const filtersQuery = [];
 
-  // if (!isSuperUser(user)) {
-  //   filtersQuery.push({
-  //     field: 'bank.id',
-  //     value: user.bank.id,
-  //     operator: 'and',
-  //   });
-  // }
+  if (!isSuperUser(user)) {
+    filtersQuery.push({
+      field: 'bank.id',
+      value: user.bank.id,
+      operator: 'and',
+    });
+  }
 
   if (createdByYou) {
     filtersQuery.push({

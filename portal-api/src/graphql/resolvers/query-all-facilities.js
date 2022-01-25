@@ -2,7 +2,7 @@ const { queryAllFacilities: queryFacilities } = require('../../v1/controllers/fa
 
 const { dbHelpers } = require('./helpers');
 
-const queryAllFacilities = async (_, { params = {} }, ctx) => {
+const queryAllFacilities = async (_, { params = {} }) => {
   const {
     start = 0,
     pagesize,

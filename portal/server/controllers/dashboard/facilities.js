@@ -11,7 +11,6 @@ const {
   requestParams,
   getFlashSuccessMessage,
 } = require('../../helpers');
-const CONSTANTS = require('../../constants');
 
 const PAGESIZE = 20;
 const primaryNav = 'home';

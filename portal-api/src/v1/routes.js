@@ -123,7 +123,6 @@ authRouter.route('/deals/:id/multiple-facilities').post(validate({ role: ['maker
 
 authRouter.route('/facilities').get(validate({ role: ['maker', 'checker'] }), facilities.queryAllFacilities);
 
-
 authRouter
   .route('/deals/:id')
   .get(validate({ role: ['maker', 'checker'] }), dealsController.findOne)
