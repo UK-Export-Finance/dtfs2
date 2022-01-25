@@ -2,7 +2,7 @@ const { format, fromUnixTime } = require('date-fns');
 const db = require('../../../src/drivers/db-client');
 
 const {
-  firstSubmissionPortalActivity,
+  ukefSubmissionPortalActivity,
   submissionTypeToConstant,
   getUserInfo,
   facilityChangePortalActivity,
@@ -40,7 +40,7 @@ describe('submissionPortalActivity()', () => {
     MOCK_APPLICATION.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
     MOCK_APPLICATION.portalActivities = [];
 
-    const result = await firstSubmissionPortalActivity(MOCK_APPLICATION);
+    const result = await ukefSubmissionPortalActivity(MOCK_APPLICATION);
 
     // ensure that only 1 object added to empty array
     expect(result.length).toEqual(1);
@@ -88,7 +88,7 @@ describe('submissionPortalActivity()', () => {
     MOCK_APPLICATION.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
     MOCK_APPLICATION.portalActivities = [testObject];
 
-    const result = await firstSubmissionPortalActivity(MOCK_APPLICATION);
+    const result = await ukefSubmissionPortalActivity(MOCK_APPLICATION);
 
     // expect to add to array so length 2
     expect(result.length).toEqual(2);
