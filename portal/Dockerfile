@@ -8,16 +8,15 @@ COPY . .
 RUN mkdir -p /home/LogFiles /opt/startup \
      && echo "root:Docker!" | chpasswd \
      && apk update \
-     && apk add openssh-server curl wget tcptraceroute openrc htop \
+     && apk add openssh curl wget tcptraceroute openrc htop nano \
      && rm /etc/ssh/sshd_config \
-     && mkdir -p /tmp
+     && rc-update add sshd \
+     && mkdir -p /tmp \
+     && mkdir -p /run/openrc/ \
+     && touch /run/openrc/softlevel \
+     && mkdir -p /var/run/sshd
 
 COPY sshd_config /etc/ssh/
-COPY ssh_setup.sh /tmp
-
-RUN chmod +x /tmp/ssh_setup.sh \
-    && (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null) \
-    && rm -rf /tmp/*
 
 EXPOSE 2009
 
