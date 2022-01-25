@@ -86,7 +86,6 @@ exports.clone = async (req, res) => {
       editedBy: [],
       comments: [],
       ukefComments: [],
-      specialConditions: [],
       bondTransactions: DEFAULTS.DEAL.bondTransactions,
       loanTransactions: DEFAULTS.DEAL.loanTransactions,
       facilities: DEFAULTS.DEAL.facilities,

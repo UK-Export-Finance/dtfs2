@@ -1,7 +1,6 @@
 {% extends "index.njk" %}
 {% import './components/contract-overview-table.njk' as contractOverviewTable %}
 {% import './components/contract-tabs.njk' as contractTabs %}
-{% import './components/ukef-comments.njk' as ukefComments %}
 
 {% block pageTitle %}Comments - {{ additionalRefName }}{% endblock %}
 
@@ -19,8 +18,6 @@
 
   </div>
 
- {{ ukefComments.render(deal.status, deal.ukefComments, deal.specialConditions) }}
- 
   <h2 class="govuk-heading-s">Maker/Checker comments:</h2>
 
   {% if comments.length %}

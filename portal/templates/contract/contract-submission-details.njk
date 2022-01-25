@@ -8,7 +8,6 @@
 {% import '_macros/eligibility-documentation-preview.njk' as eligibilityDocumentation %}
 {% import 'bond/_macros/bond-submission-details.njk' as bondSubmissionDetails %}
 {% import 'loan/_macros/loan-submission-details.njk' as loanSubmissionDetails %}
-{% import './components/ukef-comments.njk' as ukefComments %}
 
 {% block pageTitle %}Check deal details - {{ deal.additionalRefName }}
 {% endblock %}
@@ -24,7 +23,6 @@
 
   <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-8">
 
-  {{ ukefComments.render(deal.status, deal.ukefComments, deal.specialConditions) }}
 
   <h2 class="govuk-heading-l">
     <span data-cy="general-deal-info-heading">General deal information</span>

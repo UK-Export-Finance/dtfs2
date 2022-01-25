@@ -644,7 +644,6 @@ const deal = {
       text: 'Approved',
     },
   ],
-  specialConditions: [],
 };
 
 module.exports = deal;

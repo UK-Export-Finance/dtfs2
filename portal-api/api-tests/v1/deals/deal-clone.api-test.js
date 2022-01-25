@@ -40,17 +40,6 @@ dealToClone.ukefComments = [
   },
 ];
 
-dealToClone.specialConditions = [
-  {
-    timestamp: '1984/12/25 00:00:00:001',
-    text: 'This is special',
-  },
-  {
-    timestamp: '1982/12/25 00:00:00:001',
-    text: 'Very special',
-  },
-];
-
 describe('/v1/deals/:id/clone', () => {
   let noRoles;
   let anHSBCMaker;
@@ -100,7 +89,7 @@ describe('/v1/deals/:id/clone', () => {
         originalDeal = dealAfterCreation.deal;
       });
 
-      it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `specialConditions`, changes `maker` to the user making the request, marks status `Draft`', async () => {
+      it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, changes `maker` to the user making the request, marks status `Draft`', async () => {
         const clonePostBody = {
           bankInternalRefName: 'new-bank-deal-id',
           additionalRefName: 'new-bank-deal-name',
@@ -130,7 +119,6 @@ describe('/v1/deals/:id/clone', () => {
         expect(cloned.deal.editedBy).toEqual([]);
         expect(cloned.deal.comments).toEqual([]);
         expect(cloned.deal.ukefComments).toEqual([]);
-        expect(cloned.deal.specialConditions).toEqual([]);
       });
 
       it('should clone eligibility', async () => {

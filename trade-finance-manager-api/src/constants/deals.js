@@ -59,7 +59,6 @@ const DEAL_STATUS_PORTAL_GEF = {
 const DEAL_COMMENT_TYPE_PORTAL = {
   UKEF_COMMENT: 'ukefComments',
   UKEF_DECISION: 'ukefDecision',
-  SPECIAL_CONDITIONS: 'specialConditions',
 };
 
 const TFM_SORT_BY = {

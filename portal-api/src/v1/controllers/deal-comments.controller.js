@@ -23,17 +23,3 @@ exports.addUkefComment = async (_id, commentToAdd, user) => {
   const value = await api.addDealComment(_id, 'ukefComments', commentToInsert);
   return value;
 };
-
-exports.addSpecialConditions = async (_id, commentToAdd, user) => {
-  if (!commentToAdd) {
-    return false;
-  }
-
-  const commentToInsert = {
-    user,
-    text: commentToAdd,
-  };
-
-  const value = await api.addDealComment(_id, 'specialConditions', commentToInsert);
-  return value;
-};
