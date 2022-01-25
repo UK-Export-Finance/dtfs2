@@ -9,6 +9,7 @@ RUN mkdir -p /home/LogFiles /opt/startup \
      && echo "root:Docker!" | chpasswd \
      && apk update \
      && apk add openssh curl wget tcptraceroute openrc htop nano \
+     && rm /etc/ssh/sshd_config \
      && rc-update add sshd \
      && mkdir -p /run/openrc/ \
      && touch /run/openrc/softlevel \
@@ -16,7 +17,7 @@ RUN mkdir -p /home/LogFiles /opt/startup \
 
 COPY sshd_config /etc/ssh/
 
-EXPOSE 2009
+EXPOSE 2222
 
 # Identifies the code in the running container
 ARG GITHUB_SHA
