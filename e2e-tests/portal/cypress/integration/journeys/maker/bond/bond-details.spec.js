@@ -182,7 +182,7 @@ context('Bond Details', () => {
       pages.bondDetails.coverEndDateDayInput().should('be.visible');
       pages.bondDetails.coverEndDateMonthInput().should('be.visible');
       pages.bondDetails.coverEndDateYearInput().should('be.visible');
-      pages.bondDetails.uniqueIdentificationNumberInput().should('be.visible');
+      pages.bondDetails.nameInput().should('be.visible');
     });
 
     describe('after form submit and navigating back to `Bond Details` page', () => {
@@ -202,7 +202,7 @@ context('Bond Details', () => {
 
         partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
         pages.bondDetails.coverEndDateInputErrorMessage().should('be.visible');
-        pages.bondDetails.uniqueIdentificationNumberInputErrorMessage().should('be.visible');
+        pages.bondDetails.nameInputErrorMessage().should('be.visible');
       });
     });
 

@@ -19,7 +19,7 @@ const CLONE_BOND_FIELDS = [
   'conversionRateDate-day',
   'conversionRateDate-month',
   'conversionRateDate-year',
-  'uniqueIdentificationNumber',
+  'name',
   'ukefGuaranteeInMonths',
 ];
 

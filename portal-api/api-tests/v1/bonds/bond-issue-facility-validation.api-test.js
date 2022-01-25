@@ -87,7 +87,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
       expect(body.validationErrors.count).toEqual(3);
       expect(body.validationErrors.errorList.issuedDate).toBeDefined();
       expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
-      expect(body.validationErrors.errorList.uniqueIdentificationNumber).toBeDefined();
+      expect(body.validationErrors.errorList.name).toBeDefined();
     });
 
     describe('issuedDate', () => {

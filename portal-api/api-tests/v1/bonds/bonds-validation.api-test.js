@@ -28,7 +28,7 @@ describe('/v1/deals/:id/bond', () => {
     facilityStage: 'Unissued',
     hasBeenIssued: false,
     ukefGuaranteeInMonths: '24',
-    uniqueIdentificationNumber: '1234',
+    name: '1234',
     bondBeneficiary: 'test',
     value: '123',
     currencySameAsSupplyContractCurrency: 'true',
@@ -518,19 +518,19 @@ describe('/v1/deals/:id/bond', () => {
         });
       });
 
-      describe('uniqueIdentificationNumber', () => {
+      describe('name', () => {
         describe('when missing', () => {
           it('should return validationError', async () => {
             const bond = {
               ...allBondFields,
               facilityStage: 'Issued',
               hasBeenIssued: true,
-              uniqueIdentificationNumber: '',
+              name: '',
             };
 
             const { validationErrors } = await updateBondInDeal(dealId, bond);
-            expect(validationErrors.errorList.uniqueIdentificationNumber).toBeDefined();
-            expect(validationErrors.errorList.uniqueIdentificationNumber.text).toEqual('Enter the Bond\'s unique identification number');
+            expect(validationErrors.errorList.name).toBeDefined();
+            expect(validationErrors.errorList.name.text).toEqual('Enter the Bond\'s unique identification number');
           });
         });
 
@@ -540,12 +540,12 @@ describe('/v1/deals/:id/bond', () => {
               ...allBondFields,
               facilityStage: 'Issued',
               hasBeenIssued: true,
-              uniqueIdentificationNumber: 'a'.repeat(31),
+              name: 'a'.repeat(31),
             };
 
             const { validationErrors } = await updateBondInDeal(dealId, bond);
-            expect(validationErrors.errorList.uniqueIdentificationNumber).toBeDefined();
-            expect(validationErrors.errorList.uniqueIdentificationNumber.text).toEqual('Bond\'s unique identification number must be 30 characters or fewer');
+            expect(validationErrors.errorList.name).toBeDefined();
+            expect(validationErrors.errorList.name.text).toEqual('Bond\'s unique identification number must be 30 characters or fewer');
           });
         });
       });

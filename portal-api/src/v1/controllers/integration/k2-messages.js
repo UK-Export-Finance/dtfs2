@@ -167,10 +167,10 @@ const generateTypeA = async (deal, fromStatus) => {
       const bondConversionRate = calculateFacilityConversionRate(bond, dealCurrencyId);
       const bondConversionDate = calculateFacilityConversionDate(bond, dealCurrencyId);
 
-      let bondUniqueIdentificationNumber;
+      let bondname;
 
-      if (bond.uniqueIdentificationNumber) {
-        bondUniqueIdentificationNumber = bond.uniqueIdentificationNumber;
+      if (bond.name) {
+        bondname = bond.name;
       }
 
       let bondUkefFacilityId;
@@ -181,7 +181,7 @@ const generateTypeA = async (deal, fromStatus) => {
       const bss = builder.createBSS()
         .BSS_portal_facility_id(bond._id) // eslint-disable-line no-underscore-dangle
         .UKEF_BSS_facility_id(bondUkefFacilityId)
-        .BSS_bank_id(bondUniqueIdentificationNumber)
+        .BSS_bank_id(bondname)
         .BSS_issuer(bond.bondIssuer)
         .BSS_type(k2Map.FACILITIES.TYPE[bond.bondType])
         .BSS_stage(k2Map.FACILITIES.STAGE_BOND[bond.facilityStage])

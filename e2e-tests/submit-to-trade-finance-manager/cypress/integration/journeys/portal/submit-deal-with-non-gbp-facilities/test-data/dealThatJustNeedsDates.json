@@ -116,7 +116,7 @@
         "facilityStage": "Unissued",
         "hasBeenIssued": false,
         "ukefGuaranteeInMonths": "24",
-        "uniqueIdentificationNumber": "1234",
+        "name": "1234",
         "bondBeneficiary": "test",
         "value": "123",
         "currencySameAsSupplyContractCurrency": "false",

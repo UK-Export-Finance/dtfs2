@@ -54,7 +54,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     ...createCoverDateFields('requestedCoverStartDate', moment().add(1, 'week')),
     ...createCoverDateFields('coverEndDate', moment().add(1, 'month')),
     ...createCoverDateFields('issuedDate', moment()),
-    uniqueIdentificationNumber: '1234',
+    name: '1234',
   };
 
   let aBarclaysMaker;
@@ -166,13 +166,13 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
         expect(body.bond.issueFacilityDetailsProvided).toEqual(false);
       });
 
-      describe('when there is no bond.uniqueIdentificationNumber', () => {
-        it('should return validationErrors, the bond with uniqueIdentificationNumberRequiredForIssuance', async () => {
+      describe('when there is no bond.name', () => {
+        it('should return validationErrors, the bond with nameRequiredForIssuance', async () => {
           const { status, body } = await putIssueFacility(dealId, bondId, incompleteIssueFacilityBody);
 
           expect(status).toEqual(400);
           expect(body.validationErrors).toBeDefined();
-          expect(body.bond.uniqueIdentificationNumberRequiredForIssuance).toEqual(true);
+          expect(body.bond.nameRequiredForIssuance).toEqual(true);
         });
       });
 
