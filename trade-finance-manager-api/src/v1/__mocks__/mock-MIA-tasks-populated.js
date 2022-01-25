@@ -32,7 +32,7 @@ const MOCK_MIA_TASKS_POPULATED = [
         id: '3',
         groupId: 1,
         title: CONSTANTS.TASKS.MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS,
-        team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
+        team: CONSTANTS.TEAMS.UNDERWRITING_SUPPORT,
         status: CONSTANTS.TASKS.STATUS.CANNOT_START,
         assignedTo: {
           userId: CONSTANTS.TASKS.UNASSIGNED,
