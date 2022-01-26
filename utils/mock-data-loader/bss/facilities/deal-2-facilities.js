@@ -48,7 +48,7 @@ module.exports = [
     'coverEndDate-day': null,
     'coverEndDate-month': null,
     'coverEndDate-year': null,
-    bankReferenceNumber: 'Test Loan',
+    name: 'Test Loan',
     requestedCoverStartDate: null,
     disbursementAmount: null,
     value: '250000.00',

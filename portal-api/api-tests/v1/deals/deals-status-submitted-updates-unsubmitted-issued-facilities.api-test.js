@@ -36,7 +36,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
-      bankReferenceNumber: '123456',
+      name: '123456',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '2,469,135.60',
       value: '12345678',

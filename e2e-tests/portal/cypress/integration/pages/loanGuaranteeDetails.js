@@ -4,13 +4,13 @@ const page = {
   facilityStageUnconditionalInput: () => cy.get('[data-cy="facility-stage-unconditional"]'),
   facilityStageErrorMessage: () => cy.get('[data-cy="facility-stage-error-message"]'),
 
-  conditionalBankReferenceNumberInput: () => cy.get('[data-cy="facilityStageConditional-bankReferenceNumber"]'),
+  conditionalNameInput: () => cy.get('[data-cy="facilityStageConditional-name"]'),
   ukefGuaranteeInMonthsInput: () => cy.get('[data-cy="ukef-guarantee-in-months"]'),
   ukefGuaranteeInMonthsErrorMessage: () => cy.get('[data-cy="ukef-guarantee-in-months-error-message"]'),
 
   // Facility stage = Unconditional specifics
-  unconditionalBankReferenceNumberInput: () => cy.get('[data-cy="facilityStageUnconditional-bankReferenceNumber"]'),
-  unconditionalBankReferenceNumberErrorMessage: () => cy.get('[data-cy="facilityStageUnconditional-bankReferenceNumber-error-message"]'),
+  unconditionalNameInput: () => cy.get('[data-cy="facilityStageUnconditional-name"]'),
+  unconditionalNameErrorMessage: () => cy.get('[data-cy="facilityStageUnconditional-name-error-message"]'),
   requestedCoverStartDateDayInput: () => cy.get('[data-cy="requestedCoverStartDate-day"]'),
   requestedCoverStartDateMonthInput: () => cy.get('[data-cy="requestedCoverStartDate-month"]'),
   requestedCoverStartDateYearInput: () => cy.get('[data-cy="requestedCoverStartDate-year"]'),

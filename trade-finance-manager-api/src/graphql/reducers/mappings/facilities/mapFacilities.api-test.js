@@ -81,7 +81,7 @@ describe('mapFacilities', () => {
 
         // fields we do not consume
         createdDate: 1610369832226.0,
-        bankReferenceNumber: '5678',
+        name: '5678',
         guaranteeFeePayableByBank: '27.0000',
         updatedAt: 1610369832226.0,
         currencySameAsSupplyContractCurrency: 'true',
@@ -90,7 +90,7 @@ describe('mapFacilities', () => {
         dayCountBasis: '365',
         disbursementAmount: '1,234.00',
         issueFacilityDetailsStarted: true,
-        bankReferenceNumberRequiredForIssuance: true,
+        nameRequiredForIssuance: true,
         issueFacilityDetailsProvided: true,
         status: 'Acknowledged',
       },
