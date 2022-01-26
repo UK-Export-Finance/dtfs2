@@ -240,7 +240,7 @@ const updateTfmTask = async (dealId, taskUpdate) => {
     );
 
     if (updateDealStage) {
-      tfmDealUpdate.tfm.stage = CONSTANTS.DEALS.DEAL_STAGE_TFM.IN_PROGRESS;
+      tfmDealUpdate.tfm.stage = CONSTANTS.DEALS.DEAL_STAGE_TFM.IN_PROGRESS_BY_UKEF;
     }
 
     /**
