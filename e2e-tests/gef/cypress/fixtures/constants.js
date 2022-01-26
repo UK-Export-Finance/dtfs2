@@ -39,7 +39,6 @@ const FACILITY_TYPE = {
 const DEAL_COMMENT_TYPE_PORTAL = {
   UKEF_COMMENT: 'ukefComments',
   UKEF_DECISION: 'ukefDecision',
-  SPECIAL_CONDITIONS: 'specialConditions',
 };
 
 module.exports = {

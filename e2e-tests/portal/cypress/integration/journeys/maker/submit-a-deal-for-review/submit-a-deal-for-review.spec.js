@@ -256,7 +256,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       contract.addLoanButton().should('not.exist');
       const aLoan = contract.loansTransactionsTable.row(dealFacilities.dealReadyToSubmitForReview.loans[0]._id);
-      aLoan.bankReferenceNumberLink().should('not.exist');
+      aLoan.nameLink().should('not.exist');
 
       // visit the comments page and prove that the comment has been added
       contract.commentsTab().click();

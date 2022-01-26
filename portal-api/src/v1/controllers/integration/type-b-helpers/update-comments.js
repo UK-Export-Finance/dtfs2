@@ -10,7 +10,7 @@ const updateComments = async (dealId, workflowDeal) => {
 
   if (dealComments.length) {
     if (actionCode === '007') {
-      await dealCommentsController.addSpecialConditions(dealId, dealComments[0], user);
+      await dealCommentsController.addUkefDecision(dealId, dealComments[0], user);
     } else {
       await dealCommentsController.addComment(dealId, dealComments[0], user);
     }

@@ -2,7 +2,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% import '_macros/date-field.njk' as dateField %}
-{% import './_macros/bank-reference-number-field.njk' as bankReferenceNumberField %}
+{% import './_macros/name-field.njk' as nameField %}
 
 {% block pageTitle %}Loan Issue Facility{% endblock %}
 
@@ -75,14 +75,14 @@
         }
       }) }}
 
-      {% set bankReferenceNumberRequiredForIssuance = loan.bankReferenceNumberRequiredForIssuance or not loan.bankReferenceNumber %}
+      {% set nameRequiredForIssuance = loan.nameRequiredForIssuance or not loan.name %}
 
-      {% if bankReferenceNumberRequiredForIssuance %}
-        {{bankReferenceNumberField.render(
-          id = 'bankReferenceNumber',
+      {% if nameRequiredForIssuance %}
+        {{nameField.render(
+          id = 'name',
           label = 'Bank reference number',
-          value = loan.bankReferenceNumber,
-          error = validationErrors.errorList.bankReferenceNumber
+          value = loan.name,
+          error = validationErrors.errorList.name
         )}}
       {% endif %}
 

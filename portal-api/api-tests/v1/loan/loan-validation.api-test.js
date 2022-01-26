@@ -172,18 +172,18 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     describe('when facilityStage is `Unconditional`', () => {
-      describe('bankReferenceNumber', () => {
+      describe('name', () => {
         describe('when is missing', () => {
           it('should return validationError', async () => {
             const loan = {
               facilityStage: 'Unconditional',
               hasBeenIssued: true,
-              bankReferenceNumber: '',
+              name: '',
             };
 
             const { validationErrors } = await updateLoanInDeal(dealId, loan);
-            expect(validationErrors.errorList.bankReferenceNumber.order).toBeDefined();
-            expect(validationErrors.errorList.bankReferenceNumber.text).toEqual('Enter the Bank reference number');
+            expect(validationErrors.errorList.name.order).toBeDefined();
+            expect(validationErrors.errorList.name.text).toEqual('Enter the Bank reference number');
           });
         });
 
@@ -192,12 +192,12 @@ describe('/v1/deals/:id/loan', () => {
             const loan = {
               facilityStage: 'Unconditional',
               hasBeenIssued: true,
-              bankReferenceNumber: 'a'.repeat(31),
+              name: 'a'.repeat(31),
             };
 
             const { validationErrors } = await updateLoanInDeal(dealId, loan);
-            expect(validationErrors.errorList.bankReferenceNumber.order).toBeDefined();
-            expect(validationErrors.errorList.bankReferenceNumber.text).toEqual('Bank reference number must be 30 characters or fewer');
+            expect(validationErrors.errorList.name.order).toBeDefined();
+            expect(validationErrors.errorList.name.text).toEqual('Bank reference number must be 30 characters or fewer');
           });
         });
       });

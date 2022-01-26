@@ -154,7 +154,7 @@ describe('/v1/deals/:id/loan', () => {
         const loan = {
           facilityStage: 'Unconditional',
           hasBeenIssued: true,
-          bankReferenceNumber: '1234',
+          name: '1234',
           ...requestedCoverStartDate(),
           ...coverEndDate(),
           disbursementAmount: '5',
@@ -295,7 +295,7 @@ describe('/v1/deals/:id/loan', () => {
         const updateToUnconditionalLoan = {
           ...conditionalLoan,
           facilityStage: 'Unconditional',
-          bankReferenceNumber: '1234',
+          name: '1234',
           ...requestedCoverStartDate(),
           ...coverEndDate(),
           disbursementAmount: '5',
@@ -310,12 +310,12 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     describe('when req.body.facilityStage is `Conditional`', () => {
-      it('should remove `Unconditional` related values from the loan (but retain bankReferenceNumber)', async () => {
+      it('should remove `Unconditional` related values from the loan (but retain name)', async () => {
         const { dealId, loanId } = await createLoan();
 
         const unconditionalLoan = {
           facilityStage: 'Unconditional',
-          bankReferenceNumber: '1234',
+          name: '1234',
           value: '100',
           currencySameAsSupplyContractCurrency: 'true',
           interestMarginFee: '10',
@@ -450,7 +450,7 @@ describe('/v1/deals/:id/loan', () => {
       const loan = {
         facilityStage: 'Unconditional',
         hasBeenIssued: true,
-        bankReferenceNumber: '1234',
+        name: '1234',
         ...requestedCoverStartDate(),
         ...coverEndDate(),
         disbursementAmount: '5',
@@ -478,7 +478,7 @@ describe('/v1/deals/:id/loan', () => {
       const loan = {
         facilityStage: 'Unconditional',
         hasBeenIssued: true,
-        bankReferenceNumber: '1234',
+        name: '1234',
       };
 
       await updateLoan(dealId, loanId, loan);

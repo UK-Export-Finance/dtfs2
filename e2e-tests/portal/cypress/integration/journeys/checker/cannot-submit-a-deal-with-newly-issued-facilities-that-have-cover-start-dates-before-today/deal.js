@@ -372,7 +372,7 @@ const deal = {
       {
         _id: '1001476',
         ukefGuaranteeInMonths: '24',
-        bankReferenceNumber: 'Date set',
+        name: 'Date set',
         value: '100000.00',
         currencySameAsSupplyContractCurrency: 'true',
         createdDate: '1606900240970',
@@ -403,7 +403,7 @@ const deal = {
         'coverEndDate-year': '2022',
         disbursementAmount: '50,000.00',
         issueFacilityDetailsStarted: true,
-        bankReferenceNumberRequiredForIssuance: true,
+        nameRequiredForIssuance: true,
         issuedDate: '1606914111885',
         issueFacilityDetailsProvided: true,
         previousFacilityStage: 'Conditional',
@@ -412,7 +412,7 @@ const deal = {
       {
         _id: '1001477',
         ukefGuaranteeInMonths: '24',
-        bankReferenceNumber: 'Default date',
+        name: 'Default date',
         value: '100000.00',
         currencySameAsSupplyContractCurrency: 'true',
         createdDate: '1606900241008',
@@ -443,7 +443,7 @@ const deal = {
         'coverEndDate-year': '2022',
         disbursementAmount: '50,000.00',
         issueFacilityDetailsStarted: true,
-        bankReferenceNumberRequiredForIssuance: true,
+        nameRequiredForIssuance: true,
         issuedDate: '1606914132468',
         issueFacilityDetailsProvided: true,
         previousFacilityStage: 'Conditional',
@@ -644,7 +644,7 @@ const deal = {
       text: 'Approved',
     },
   ],
-  specialConditions: [],
+  ukefDecision: [],
 };
 
 module.exports = deal;

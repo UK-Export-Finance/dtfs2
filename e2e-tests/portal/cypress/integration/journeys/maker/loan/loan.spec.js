@@ -57,8 +57,8 @@ context('Add a Loan to a Deal', () => {
 
       const row = pages.contract.loansTransactionsTable.row(loanId);
 
-      row.bankReferenceNumberLink().invoke('text').then((text) => {
-        expect(text.trim()).equal(LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+      row.nameLink().invoke('text').then((text) => {
+        expect(text.trim()).equal(LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
       });
 
       row.loanStatus().invoke('text').then((text) => {

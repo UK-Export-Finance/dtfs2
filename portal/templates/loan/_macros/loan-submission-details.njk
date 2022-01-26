@@ -7,13 +7,13 @@
 
     <dl class="govuk-summary-list govuk-summary-list--no-border">
 
-      {% if loan.bankReferenceNumber %}
+      {% if loan.name %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body-s">
             Bank reference number
           </dt>
           <dd class="govuk-summary-list__value govuk-body-s" data-cy="bank-reference-number">
-            {{ loan.bankReferenceNumber }}
+            {{ loan.name }}
           </dd>
         </div>
       {% endif %}

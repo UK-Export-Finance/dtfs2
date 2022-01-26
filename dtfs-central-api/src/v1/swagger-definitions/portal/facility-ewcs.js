@@ -31,7 +31,7 @@
  *       facilityStage:
  *         type: string
  *         example: Issued
- *       bankReferenceNumber:
+ *       name:
  *         type: string
  *         example: 123-reference
  *       disbursementAmount:

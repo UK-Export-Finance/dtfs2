@@ -1,16 +1,16 @@
 const mapComments = (v1Deal) => {
-  const specialConditions = v1Deal.Deal_information.Extra_fields.Special_conditions && [{
+  const ukefDecision = v1Deal.Deal_information.Extra_fields.Special_conditions && [{
     text: v1Deal.Deal_information.Extra_fields.Special_conditions,
   }];
 
   if (v1Deal.Deal_information.Extra_fields.Deal_status === 'refused') {
     return {
-      ukefComments: specialConditions,
+      ukefComments: ukefDecision,
     };
   }
 
   return {
-    specialConditions,
+    ukefDecision,
   };
 };
 

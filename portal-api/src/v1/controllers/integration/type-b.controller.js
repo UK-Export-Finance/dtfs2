@@ -112,7 +112,7 @@ const processTypeB = async ({ filename, fileContents }) => {
 
   if (dealComments.length) {
     if (actionCode === '007') {
-      await dealCommentsController.addSpecialConditions(dealId, dealComments[0], interfaceUser);
+      await dealCommentsController.addUkefDecision(dealId, dealComments[0], interfaceUser);
     } else {
       await dealCommentsController.addUkefComment(dealId, dealComments[0], interfaceUser);
     }

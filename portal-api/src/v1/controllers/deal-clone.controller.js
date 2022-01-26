@@ -25,7 +25,7 @@ const CLONE_BOND_FIELDS = [
 
 const CLONE_LOAN_FIELDS = [
   'type',
-  'bankReferenceNumber',
+  'name',
   'value',
   'currency',
   'currencySameAsSupplyContractCurrency',
@@ -86,7 +86,7 @@ exports.clone = async (req, res) => {
       editedBy: [],
       comments: [],
       ukefComments: [],
-      specialConditions: [],
+      ukefDecision: [],
       bondTransactions: DEFAULTS.DEAL.bondTransactions,
       loanTransactions: DEFAULTS.DEAL.loanTransactions,
       facilities: DEFAULTS.DEAL.facilities,

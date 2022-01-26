@@ -192,7 +192,7 @@ context('Clone a deal', () => {
       pages.contract.loansTransactionsTableRows().each((loanTableRow) => {
         const loanId = loanTableRow.attr('data-cy').split('-')[1];
         const loan = pages.contract.loansTransactionsTable.row(loanId);
-        loan.bankReferenceNumberLink().click();
+        loan.nameLink().click();
         cy.url().should('include', '/loan');
         cy.url().should('include', '/guarantee-details');
 

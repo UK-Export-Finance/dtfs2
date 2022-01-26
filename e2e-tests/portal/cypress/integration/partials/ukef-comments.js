@@ -1,7 +1,7 @@
 const ukefComments = {
-  specialCondition: {
-    title: () => cy.get('[data-cy="special-conditions-title"]'),
-    text: () => cy.get('[data-cy="special-conditions-text"]'),
+  ukefDecision: {
+    title: () => cy.get('[data-cy="ukef-decision-title"]'),
+    text: () => cy.get('[data-cy="ukef-decision-text"]'),
   },
   comments: {
     title: () => cy.get('[data-cy="ukef-comments-title"]'),

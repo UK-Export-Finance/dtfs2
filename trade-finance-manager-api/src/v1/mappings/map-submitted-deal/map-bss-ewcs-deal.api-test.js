@@ -37,7 +37,7 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       _id,
       dealType,
       submissionType,
-      bankReferenceNumber: bankInternalRefName,
+      name: bankInternalRefName,
       bankAdditionalReferenceName: additionalRefName,
       submissionCount,
       submissionDate,

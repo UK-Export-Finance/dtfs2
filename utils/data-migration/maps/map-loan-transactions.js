@@ -27,7 +27,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     const v2loan = {
       _id: loan.EWCS_Guarantee_details.EWCS_portal_facility_id,
       ukefFacilityId: formatUkefId(loan.UKEF_EWCS_facility_id),
-      bankReferenceNumber: loan.EWCS_Guarantee_details.EWCS_bank_id,
+      name: loan.EWCS_Guarantee_details.EWCS_bank_id,
       facilityStage,
       value: loan.EWCS_Financial_details.EWCS_value,
       currency: getCurrencyById(loan.EWCS_Financial_details.EWCS_currency_code),
