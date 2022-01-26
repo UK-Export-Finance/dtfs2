@@ -295,7 +295,7 @@ describe('tasks edit logic', () => {
       const mockGroup = {
         groupTasks: [
           { id: '1', groupId: 1, status: CONSTANTS.TASKS.STATUS.COMPLETED },
-          { id: '2', groupId: 1, status: CONSTANTS.TASKS.STATUS.IN_PROGRESS },
+          { id: '2', groupId: 1, status: CONSTANTS.TASKS.STATUS.IN_PROGRESS_BY_UKEF },
         ],
       };
       const mockTask = {

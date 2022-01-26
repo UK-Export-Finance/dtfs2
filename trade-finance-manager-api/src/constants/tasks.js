@@ -157,7 +157,7 @@ const MIA = {
 
 const STATUS = {
   TO_DO: 'To do',
-  IN_PROGRESS: 'In progress',
+  IN_PROGRESS_BY_UKEF: 'In progress',
   COMPLETED: 'Done',
   CANNOT_START: 'Cannot start yet',
 };
