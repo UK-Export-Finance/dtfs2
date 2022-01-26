@@ -632,7 +632,6 @@ const getUnissuedFacilitiesReport = async (token) => {
       Authorization: token,
       'Content-Type': 'application/json',
     },
-
   });
   return response.data;
 };

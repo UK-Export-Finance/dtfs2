@@ -19,4 +19,7 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js'] }],
   },
   ignorePatterns: ['**/node_modules/**'],
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
 };

@@ -5,66 +5,46 @@ const CONSTANTS = require('../../constants');
 exports.getPortalReports = async (req, res) => {
   const { userToken } = req.session;
 
-  const facilities = await api.getUnissuedFacilitiesReport(userToken);
-  const dealWithConditions = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITH_CONDITIONS });
-  const dealWithoutConditions = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS });
+  const facilities = await api.getUnissuedFacilitiesReport(userToken) || [];
+  const dealWithConditions = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITH_CONDITIONS }) || [];
+  const dealWithoutConditions = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS }) || [];
 
-  const pastDeadlineUnissuedFacilitiesCount = facilities.filter((facility) => facility.daysLeftToIssue < 0);
-  const facilitiesThatNeedIssuingCount = facilities.filter((facility) => facility.daysLeftToIssue < 15 && facility.daysLeftToIssue >= 0);
-  if (facilities) {
-    return res.render('reports/reports-dashboard.njk', {
-      allUnissuedFacilitiesCount: facilities.length,
-      pastDeadlineUnissuedFacilitiesCount: pastDeadlineUnissuedFacilitiesCount.length,
-      facilitiesThatNeedIssuingCount: facilitiesThatNeedIssuingCount.length,
-      totalUkefDecisions: dealWithConditions.length + dealWithoutConditions.length,
-      dealWithConditionsCount: dealWithConditions.length,
-      dealWithoutConditionsCount: dealWithoutConditions.length,
-      user: req.session.user,
-      primaryNav: 'reports',
-    });
-  }
-  return res.redirect('/not-found');
+  const pastDeadlineUnissuedFacilitiesCount = facilities.length ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 0) : [];
+  const facilitiesThatNeedIssuingCount = facilities.length ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 15 && daysLeftToIssue >= 0) : [];
+
+  return res.render('reports/reports-dashboard.njk', {
+    allUnissuedFacilitiesCount: facilities.length,
+    pastDeadlineUnissuedFacilitiesCount: pastDeadlineUnissuedFacilitiesCount.length,
+    facilitiesThatNeedIssuingCount: facilitiesThatNeedIssuingCount.length,
+    totalUkefDecisions: dealWithConditions.length + dealWithoutConditions.length,
+    dealWithConditionsCount: dealWithConditions.length,
+    dealWithoutConditionsCount: dealWithoutConditions.length,
+    user: req.session.user,
+    primaryNav: 'reports',
+  });
 };
 
 exports.getUnissuedFacilitiesReport = async (req, res) => {
   const { userToken } = req.session;
-
-  const facilities = await api.getUnissuedFacilitiesReport(userToken);
-
-  if (facilities) {
-    return res.render('reports/unissued-facilities.njk', { facilities, user: req.session.user, primaryNav: 'reports' });
-  }
-
-  return res.redirect('/not-found');
+  const facilities = await api.getUnissuedFacilitiesReport(userToken) || [];
+  return res.render('reports/unissued-facilities.njk', { facilities, user: req.session.user, primaryNav: 'reports' });
 };
 
 exports.getUnconditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
-
-  const deals = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS });
-
-  if (deals) {
-    return res.render('reports/unconditional-decision.njk', { deals, user: req.session.user, primaryNav: 'reports' });
-  }
-
-  return res.redirect('/not-found');
+  const deals = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS }) || [];
+  return res.render('reports/unconditional-decision.njk', { deals, user: req.session.user, primaryNav: 'reports' });
 };
 
 exports.getConditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
-
-  const deals = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITH_CONDITIONS });
-
-  if (deals) {
-    return res.render('reports/conditional-decision.njk', { deals, user: req.session.user, primaryNav: 'reports' });
-  }
-
-  return res.redirect('/not-found');
+  const deals = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITH_CONDITIONS }) || [];
+  return res.render('reports/conditional-decision.njk', { deals, user: req.session.user, primaryNav: 'reports' });
 };
 
 exports.downloadUnissuedFacilitiesReport = async (req, res) => {
   const { userToken } = req.session;
-  const facilities = await api.getUnissuedFacilitiesReport(userToken);
+  const facilities = await api.getUnissuedFacilitiesReport(userToken) || [];
 
   // not all columns are needed, in which case, the array below will specify
   // the properties that we want to add to the CSV file and the label for them
@@ -99,11 +79,7 @@ exports.downloadUnissuedFacilitiesReport = async (req, res) => {
     },
   ];
   // download the report only if we have facilities
-  if (facilities) {
-    return downloadCsv(res, 'unissued_facilities_report', columns, facilities);
-  }
-
-  return res.redirect('/not-found');
+  return downloadCsv(res, 'unissued_facilities_report', columns, facilities);
 };
 
 const downloadUkefDecisionReport = async (userToken, ukefDecision) => {

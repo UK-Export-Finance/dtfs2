@@ -1,11 +1,11 @@
-import { getPortalReports, getUnissuedFacilitiesReport } from '.';
+import { getPortalReports, getUnissuedFacilitiesReport, getUkefDecisionReport } from '.';
 import api from '../../api';
 import mockResponse from '../../helpers/responseMock';
 import CONSTANTS from '../../constants';
 
 jest.mock('../../api');
 
-const defaultApiResponse = {
+const defaultUnissuedFacilitiesReportResponse = {
   bankInternalRefName: 'A1 Test',
   companyName: 'Auto Test 1',
   currency: 'GBP',
@@ -17,24 +17,31 @@ const defaultApiResponse = {
   value: '500000.00',
 };
 
-const resolvedValue = [{
-  dealType: CONSTANTS.PRODUCT.BSS_EWCS,
-  submissionType: CONSTANTS.SUBMISSION_TYPE.AIN,
-  daysLeftToIssue: 16,
-  ...defaultApiResponse,
-},
-{
-  dealType: CONSTANTS.PRODUCT.GEF,
-  submissionType: CONSTANTS.SUBMISSION_TYPE.AIN,
-  daysLeftToIssue: 10,
-  ...defaultApiResponse,
-},
-{
-  dealType: CONSTANTS.PRODUCT.GEF,
-  submissionType: CONSTANTS.SUBMISSION_TYPE.MIN,
-  daysLeftToIssue: -10,
-  ...defaultApiResponse,
-},
+const mockUnissuedFacilitiesReportResponse = [
+  {
+    dealType: CONSTANTS.PRODUCT.BSS_EWCS,
+    submissionType: CONSTANTS.SUBMISSION_TYPE.AIN,
+    daysLeftToIssue: 16,
+    ...defaultUnissuedFacilitiesReportResponse,
+  },
+  {
+    dealType: CONSTANTS.PRODUCT.GEF,
+    submissionType: CONSTANTS.SUBMISSION_TYPE.AIN,
+    daysLeftToIssue: 10,
+    ...defaultUnissuedFacilitiesReportResponse,
+  },
+  {
+    dealType: CONSTANTS.PRODUCT.GEF,
+    submissionType: CONSTANTS.SUBMISSION_TYPE.MIN,
+    daysLeftToIssue: -10,
+    ...defaultUnissuedFacilitiesReportResponse,
+  },
+];
+
+const mockUkefDecisionReportResponse = [
+  {
+
+  },
 ];
 
 describe('controllers/reports.controller', () => {
@@ -45,57 +52,71 @@ describe('controllers/reports.controller', () => {
   });
 
   describe('getPortalReports', () => {
-    it('sets all counts to `0` when there are no unissued facilities', async () => {
+    it('sets all counts to `0` when there are no unissued facilities and no decisions from UKEF', async () => {
       api.getUnissuedFacilitiesReport.mockResolvedValue([]);
+      api.getUkefDecisionReport.mockResolvedValue([]);
       await getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 0,
         pastDeadlineUnissuedFacilitiesCount: 0,
         facilitiesThatNeedIssuingCount: 0,
+        totalUkefDecisions: 0,
+        dealWithConditionsCount: 0,
+        dealWithoutConditionsCount: 0,
         primaryNav: 'reports',
         user: req.session.user,
       });
     });
     it('sets `allUnissuedFacilitiesCount` to `1` when one facility is unissued', async () => {
-      api.getUnissuedFacilitiesReport.mockResolvedValue([resolvedValue[0]]);
+      api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[0]]);
+      api.getUkefDecisionReport.mockResolvedValue([]);
       await getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 1,
         pastDeadlineUnissuedFacilitiesCount: 0,
         facilitiesThatNeedIssuingCount: 0,
+        totalUkefDecisions: 0,
+        dealWithConditionsCount: 0,
+        dealWithoutConditionsCount: 0,
         primaryNav: 'reports',
         user: req.session.user,
       });
     });
     it('sets `facilitiesThatNeedIssuingCount` to `1` when one facility needs issuing in less than 15 days', async () => {
-      api.getUnissuedFacilitiesReport.mockResolvedValue([resolvedValue[1]]);
+      api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[1]]);
       await getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 1,
         pastDeadlineUnissuedFacilitiesCount: 0,
         facilitiesThatNeedIssuingCount: 1,
+        totalUkefDecisions: 0,
+        dealWithConditionsCount: 0,
+        dealWithoutConditionsCount: 0,
         primaryNav: 'reports',
         user: req.session.user,
       });
     });
     it('sets `pastDeadlineUnissuedFacilitiesCount` to `1` when one facility is overdue', async () => {
-      api.getUnissuedFacilitiesReport.mockResolvedValue([resolvedValue[2]]);
+      api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[2]]);
       await getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 1,
         pastDeadlineUnissuedFacilitiesCount: 1,
         facilitiesThatNeedIssuingCount: 0,
+        totalUkefDecisions: 0,
+        dealWithConditionsCount: 0,
+        dealWithoutConditionsCount: 0,
         primaryNav: 'reports',
         user: req.session.user,
       });
     });
 
     it('renders all (3) unissued facilities that are overdue or that need issuing in less than 15 days', async () => {
-      api.getUnissuedFacilitiesReport.mockResolvedValue(resolvedValue);
+      api.getUnissuedFacilitiesReport.mockResolvedValue(mockUnissuedFacilitiesReportResponse);
 
       await getPortalReports(req, res);
 
@@ -103,6 +124,9 @@ describe('controllers/reports.controller', () => {
         allUnissuedFacilitiesCount: 3,
         pastDeadlineUnissuedFacilitiesCount: 1,
         facilitiesThatNeedIssuingCount: 1,
+        totalUkefDecisions: 0,
+        dealWithConditionsCount: 0,
+        dealWithoutConditionsCount: 0,
         primaryNav: 'reports',
         user: req.session.user,
       });
@@ -118,11 +142,11 @@ describe('controllers/reports.controller', () => {
     });
 
     it('renders the unissued-facilities report page', async () => {
-      api.getUnissuedFacilitiesReport.mockResolvedValue([resolvedValue[1]]);
+      api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[1]]);
       await getUnissuedFacilitiesReport(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/unissued-facilities.njk', {
-        facilities: [resolvedValue[1]],
+        facilities: [mockUnissuedFacilitiesReportResponse[1]],
         primaryNav: 'reports',
         user: req.session.user,
       });
