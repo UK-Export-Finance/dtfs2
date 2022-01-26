@@ -1,4 +1,4 @@
-const api = require('./api');
+const api = require('../../api');
 
 const banks = {
   Barclays: {
@@ -212,7 +212,7 @@ module.exports.initialise = async (app) => {
       get, post, put, remove,
     } = api(app).as();
 
-    const currentUsersResponse = await get('/v1/users');
+    const currentUsersResponse = await get('/v1/user');
     const existingUsers = currentUsersResponse.body.users;
 
     for (const existingUser of existingUsers) {
@@ -220,15 +220,11 @@ module.exports.initialise = async (app) => {
     }
 
     for (const testUser of testUsers) {
-      await post(testUser).to('/v1/users/');
-
-      const { body } = await post({ username: testUser.username, password: testUser.password }).to('/v1/login');
-      const { token } = body;
+      const { body } = await post(testUser).to('/v1/user/');
 
       loadedUsers.push({
         ...testUser,
-        _id: body.user._id,
-        token,
+        _id: body._id,
       });
     }
 

@@ -84,7 +84,44 @@ describe('submissionPortalActivity()', () => {
     expect(portalActivityObject.facilityID).toEqual('');
   });
 
-  it('should return a populated array with facility changed if submission count above 1 and facility changed to issued', async () => {
+  it('should not return a populated array with facility changed if submission count above 1 and facility changed to issued and MIA', async () => {
+    await wipeDB.wipe([facilitiesCollectionName]);
+    await wipeDB.wipe([dealsCollectionName]);
+
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+
+    /*
+   As _id's can change for checker, need to access db and find a checker
+   These details then added to the MOCK_APPLICATION
+   */
+    const userCollection = await db.getCollection('users');
+    // finds someone with role checker only
+    const checker = await userCollection.findOne({ roles: ['checker'] });
+    MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
+    MOCK_APPLICATION_FACILITIES.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
+    MOCK_APPLICATION_FACILITIES.portalActivities = [];
+    MOCK_APPLICATION_FACILITIES._id = '61e54dd5b578247e14575882';
+
+    const req = {
+      body: {
+        type: 'Cash',
+        dealId: MOCK_APPLICATION_FACILITIES._id,
+        paymentType: 'IN_ARREARS_MONTHLY'
+      }
+    };
+
+    const res = await as(aMaker).post(req.body).to(baseUrl);
+
+    await updateFacility(res.body.details._id, mockFacilities[4]);
+
+    const result = await submissionPortalActivity(MOCK_APPLICATION_FACILITIES);
+
+    // ensure that only 1 object added to empty array
+    expect(result.length).toEqual(0);
+  });
+
+  it('should return a populated array with facility changed if submission count above 1 and facility changed to issued and AIN', async () => {
     await wipeDB.wipe([facilitiesCollectionName]);
     await wipeDB.wipe([dealsCollectionName]);
 
@@ -99,7 +136,7 @@ describe('submissionPortalActivity()', () => {
     // finds someone with role checker only
     const checker = await userCollection.findOne({ roles: ['checker'] });
     MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
-    MOCK_APPLICATION_FACILITIES.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
+    MOCK_APPLICATION_FACILITIES.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
     MOCK_APPLICATION_FACILITIES.portalActivities = [];
     MOCK_APPLICATION_FACILITIES._id = '61e54dd5b578247e14575882';
 

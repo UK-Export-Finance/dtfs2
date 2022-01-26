@@ -15,7 +15,7 @@
     "start:dev": "npx nodemon src/index.js",
     "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js ",
     "unit-test-quick": "jest --config=unit.jest.config.js --testTimeout=10000",
-    "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js ",
+    "api-test": "jest --notify --verbose --runInBand --config=api-test.jest.config.js ",
     "api-test-file": "jest --config=api-test-file.jest.config.js --runInBand --verbose --testMatch ",
     "api-test-quick": "jest --config=api-test.jest.config.js --runInBand --testTimeout=10000"
   },
@@ -53,7 +53,7 @@
     "eslint": "^8.1.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.25.2",
-    "jest": "27.3.1",
+    "jest": "27.4.3",
     "nodemon": "^2.0.14"
   }
 }

@@ -159,4 +159,9 @@ const generateMINActivities = async (req, res) => {
 
 module.exports = {
   generateMINActivities,
+  ukefSubmissionPortalActivity,
+  facilityChangePortalActivity,
+  portalActivityGenerator,
+  getUserInfo,
+  removeChangedToIssued,
 };
