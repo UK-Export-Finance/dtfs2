@@ -47,9 +47,9 @@ exports.updateLoanIssueFacility = async (req, res) => {
         modifiedLoan.issueFacilityDetailsStarted = true;
       }
 
-      const loanHasBankReferenceNumber = hasValue(loan.bankReferenceNumber);
-      if (!loanHasBankReferenceNumber) {
-        modifiedLoan.bankReferenceNumberRequiredForIssuance = true;
+      const loanHasName = hasValue(loan.name);
+      if (!loanHasName) {
+        modifiedLoan.nameRequiredForIssuance = true;
       }
 
       if (hasAllRequestedCoverStartDateValues(modifiedLoan)) {

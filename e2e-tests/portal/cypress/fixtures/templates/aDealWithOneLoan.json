@@ -103,7 +103,7 @@
       {
         "facilityStage": "Conditional",
         "hasBeenIssued": false,
-        "bankReferenceNumber": "aDealWithOneLoan-loan1",
+        "name": "aDealWithOneLoan-loan1",
         "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",

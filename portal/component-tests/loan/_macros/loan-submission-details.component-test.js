@@ -23,8 +23,8 @@ describe(component, () => {
     });
   });
 
-  it('should render bankReferenceNumber', () => {
-    wrapper.expectText('[data-cy="bank-reference-number"]').toRead(loan.bankReferenceNumber);
+  it('should render name', () => {
+    wrapper.expectText('[data-cy="bank-reference-number"]').toRead(loan.name);
   });
 
   it('should render facilityStage', () => {

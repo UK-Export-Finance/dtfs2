@@ -220,7 +220,7 @@ const deal = {
       'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
       'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
       'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
-      bankReferenceNumber: '1234',
+      name: '1234',
       guaranteeFeePayableByBank: '21.6000',
       updatedAt: Date.now(),
       value: '1234.00',

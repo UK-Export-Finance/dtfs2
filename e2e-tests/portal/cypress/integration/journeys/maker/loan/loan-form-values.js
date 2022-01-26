@@ -8,7 +8,7 @@ const GUARANTEE_DETAILS = {
   ukefGuaranteeInMonths: '12',
 
   // 'Unconditional' facility stage specifics
-  bankReferenceNumber: '123456',
+  name: '123456',
   requestedCoverStartDateDay: padDate(now.getDate()),
   requestedCoverStartDateMonth: padDate(now.getMonth() + 1),
   requestedCoverStartDateYear: now.getFullYear(),

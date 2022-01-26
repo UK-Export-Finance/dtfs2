@@ -23,7 +23,7 @@ const generateIssuedFacilitiesListString = (facilities) => {
 
 const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
   const {
-    bankReferenceNumber,
+    name,
     ukefDealId: ukefDealID,
     exporter,
     submissionType,
@@ -45,7 +45,7 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
     const emailVariables = {
       recipientName,
       exporterName: exporter.companyName,
-      bankReferenceNumber,
+      name,
       ukefDealID,
       facilitiesList: generateIssuedFacilitiesListString(updatedFacilities),
     };

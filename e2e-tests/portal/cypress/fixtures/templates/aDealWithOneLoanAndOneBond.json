@@ -133,7 +133,7 @@
       {
         "facilityStage": "Conditional",
         "hasBeenIssued": false,
-        "bankReferenceNumber": "aDealWithOneLoanAndOneBond-loan1",
+        "name": "aDealWithOneLoanAndOneBond-loan1",
         "ukefFacilityId": "ukef:aDealWithOneLoanAndOneBond-loan1",
         "value": "456",
         "disbursementAmount": "12",

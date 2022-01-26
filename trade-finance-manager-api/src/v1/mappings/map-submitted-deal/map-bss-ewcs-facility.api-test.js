@@ -52,7 +52,6 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         guaranteeFeePayableByBank,
         premiumType,
         feeFrequency,
-        bankReferenceNumber,
         name,
         disbursementAmount,
         facilityStage,
@@ -76,7 +75,6 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         feeFrequency,
         dayCountBasis: Number(dayCountBasis),
         disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
-        bankReference: bankReferenceNumber,
         name,
         tfm: mockFacility.tfm,
       };

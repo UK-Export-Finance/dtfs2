@@ -90,8 +90,8 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow.bankReferenceNumberLink().should('not.exist');
-      loanRow.bankReferenceNumber().should('be.visible');
+      loanRow.nameLink().should('not.exist');
+      loanRow.name().should('be.visible');
 
       loanRow.loanStatus().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Maker\'s input required');

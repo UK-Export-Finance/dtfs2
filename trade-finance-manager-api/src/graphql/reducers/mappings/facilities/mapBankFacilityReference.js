@@ -4,7 +4,7 @@ const mapBankFacilityReference = (facility) => {
   const { ukefFacilityType } = facility;
 
   if (ukefFacilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
-    return facility.bankReferenceNumber;
+    return facility.name;
   }
 
   if (ukefFacilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {

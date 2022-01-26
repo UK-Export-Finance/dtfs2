@@ -314,7 +314,7 @@ describe('/v1/deals/:id/clone', () => {
 
         const expectedFirstLoanTransaction = {
           type: 'Loan',
-          bankReferenceNumber: firstOriginalLoan.bankReferenceNumber,
+          name: firstOriginalLoan.name,
           value: firstOriginalLoan.value,
           currencySameAsSupplyContractCurrency: firstOriginalLoan.currencySameAsSupplyContractCurrency,
           currency: firstOriginalLoan.currency,
@@ -332,7 +332,7 @@ describe('/v1/deals/:id/clone', () => {
           'coverEndDate-day': secondOriginalLoan['coverEndDate-day'],
           'coverEndDate-month': secondOriginalLoan['coverEndDate-month'],
           'coverEndDate-year': secondOriginalLoan['coverEndDate-year'],
-          bankReferenceNumber: secondOriginalLoan.bankReferenceNumber,
+          name: secondOriginalLoan.name,
           value: secondOriginalLoan.value,
           currencySameAsSupplyContractCurrency: secondOriginalLoan.currencySameAsSupplyContractCurrency,
           currency: secondOriginalLoan.currency,
