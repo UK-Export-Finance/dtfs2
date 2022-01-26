@@ -1,25 +1,29 @@
+# Node Alpine Docker Image
 FROM node:14.18.1-alpine3.13
+
+# Variables
+ARG GITHUB_SHA
+ENV GITHUB_SHA=$GITHUB_SHA
+ENV SSH_PORT=2222
+
+# Node Setup
 WORKDIR /app
 COPY package.json .
 RUN npm install
 COPY . .
 
-######## SSH ########
-RUN mkdir -p /home/LogFiles /opt/startup \
-     && echo "root:Docker!" | chpasswd \
-     && apk update \
-     && apk add openssh curl wget tcptraceroute openrc htop nano \
-     && rc-update add sshd \
-     && mkdir -p /run/openrc/ \
-     && touch /run/openrc/softlevel \
-     && mkdir -p /var/run/sshd \
-     && /etc/init.d/sshd start
+# SSH Setup
+# 1. Artifcats
+ADD init.sh /bin/init.sh
+ADD sshd_config /etc/ssh/
+RUN chmod 755 /bin/init.sh
+# 2. Install packages
+RUN apk add --update bash openssh-keygen openrc openssh curl wget tcptraceroute htop nano \
+    && echo "root:Docker!" | chpasswd \
+    && rm -rf /var/cache/apk/* \
+    && rc-update add sshd
+#3. Expose SSH port
+EXPOSE 80 ${SSH_PORT}
 
-COPY sshd_config /etc/ssh/
-
-EXPOSE 2222
-
-# Identifies the code in the running container
-ARG GITHUB_SHA
-ENV GITHUB_SHA=$GITHUB_SHA
-CMD node server/index.js
+# Execute Script
+ENTRYPOINT ["/bin/init.sh"]
