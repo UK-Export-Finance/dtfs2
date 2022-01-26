@@ -18,7 +18,7 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
       firstname: mockSubmittedDeal.maker.firstname,
       surname: mockSubmittedDeal.maker.surname,
       exporterName: mockSubmittedDeal.exporter.companyName,
-      bankReferenceNumber: mockSubmittedDeal.bankReferenceNumber,
+      name: mockSubmittedDeal.name,
       ukefDealId: mockSubmittedDeal.ukefDealId,
       isAin: 'yes',
       isMin: 'no',

@@ -114,7 +114,7 @@ const sendMiaAcknowledgement = async (deal) => {
 const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) => {
   const {
     ukefDealId,
-    bankReferenceNumber,
+    name,
     submissionType,
     maker,
     exporter,
@@ -126,7 +126,7 @@ const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) =>
     firstname,
     surname,
     exporterName: exporter.companyName,
-    bankReferenceNumber,
+    name,
     ukefDealId,
     isAin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ? 'yes' : 'no',
     isMin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN ? 'yes' : 'no',

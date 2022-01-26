@@ -56,22 +56,22 @@ const userCanAccessLoanPreview = (user) => {
   return true;
 };
 
-const handleBankReferenceNumberField = (loanBody) => {
+const handleNameField = (loanBody) => {
   const modifiedLoan = loanBody;
   const {
     facilityStage,
-    'facilityStageConditional-bankReferenceNumber': conditionalBankReferenceNumber,
-    'facilityStageUnconditional-bankReferenceNumber': unconditionalBankReferenceNumber,
+    'facilityStageConditional-name': conditionalName,
+    'facilityStageUnconditional-name': unconditionalName,
   } = modifiedLoan;
 
   if (facilityStage === 'Conditional') {
-    modifiedLoan.bankReferenceNumber = conditionalBankReferenceNumber;
+    modifiedLoan.name = conditionalName;
   } else if (facilityStage === 'Unconditional') {
-    modifiedLoan.bankReferenceNumber = unconditionalBankReferenceNumber;
+    modifiedLoan.name = unconditionalName;
   }
 
-  delete modifiedLoan['facilityStageConditional-bankReferenceNumber'];
-  delete modifiedLoan['facilityStageUnconditional-bankReferenceNumber'];
+  delete modifiedLoan['facilityStageConditional-name'];
+  delete modifiedLoan['facilityStageUnconditional-name'];
 
   return modifiedLoan;
 };
@@ -109,7 +109,7 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const modifiedBody = handleBankReferenceNumberField(req.body);
+  const modifiedBody = handleNameField(req.body);
 
   await postToApi(
     api.updateLoan(
@@ -271,7 +271,7 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   const { _id: dealId, loanId, userToken } = requestParams(req);
   const { loan } = req.apiData.loan;
 
-  let modifiedBody = handleBankReferenceNumberField(req.body);
+  let modifiedBody = handleNameField(req.body);
   modifiedBody = premiumFrequencyField(req.body, loan);
 
   // UI form submit only has the currency code. API has a currency object.

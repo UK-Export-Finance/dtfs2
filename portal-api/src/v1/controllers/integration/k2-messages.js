@@ -243,7 +243,7 @@ const generateTypeA = async (deal, fromStatus) => {
         const ewcs = builder.createEWCS()
           .EWCS_portal_facility_id(loan._id)
           .UKEF_EWCS_facility_id(loanUkefFacilityId)
-          .EWCS_bank_id(loan.bankReferenceNumber)
+          .EWCS_bank_id(loan.name)
           .EWCS_stage(k2Map.FACILITIES.STAGE_LOAN[loan.facilityStage])
           .EWCS_value(convertCurrencyFormat(loan.value))
           .EWCS_currency_code(

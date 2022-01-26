@@ -51,7 +51,7 @@ describe('mapFacility', () => {
     currency: mockCurrency,
     value: mockFacilityValue,
     facilityStage: mockFacilityStage,
-    bankReferenceNumber: '123456',
+    name: '123456',
     bondIssuer: 'Issuer',
     bondBeneficiary: 'test',
     ukefExposure: '1,234.00',

@@ -139,7 +139,7 @@
       "type": "Loan",
       "facilityStage": "Unconditional",
       "hasBeenIssued": true,
-      "bankReferenceNumber": "123",
+      "name": "123",
       "value": "123",
       "disbursementAmount": "12",
       "ukefGuaranteeInMonths": "12",

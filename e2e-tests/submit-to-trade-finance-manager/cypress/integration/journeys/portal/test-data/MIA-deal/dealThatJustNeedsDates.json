@@ -112,7 +112,7 @@
     {
       "type": "Loan",
       "createdDate": "1615380531878",
-      "bankReferenceNumber": "1122444",
+      "name": "1122444",
       "coverEndDate-day": "12",
       "coverEndDate-month": "08",
       "coverEndDate-year": "2021",

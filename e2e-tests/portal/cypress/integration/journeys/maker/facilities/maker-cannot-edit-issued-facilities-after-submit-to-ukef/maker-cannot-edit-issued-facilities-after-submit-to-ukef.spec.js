@@ -64,8 +64,8 @@ context('Checker submits a deal with all facility types to UKEF', () => {
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow.bankReferenceNumberLink().should('not.exist');
-      loanRow.bankReferenceNumber().should('be.visible');
+      loanRow.nameLink().should('not.exist');
+      loanRow.name().should('be.visible');
 
       loanRow.deleteLink().should('not.exist');
       loanRow.issueFacilityLink().should('not.exist');

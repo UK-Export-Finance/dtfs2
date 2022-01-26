@@ -3,7 +3,7 @@ const CONSTANTS = require('../../../constants');
 const bssEmailVariables = (deal, facilityLists) => {
   const {
     ukefDealId,
-    bankReferenceNumber,
+    name,
     submissionType,
     maker,
     exporter,
@@ -15,7 +15,7 @@ const bssEmailVariables = (deal, facilityLists) => {
     firstname,
     surname,
     exporterName: exporter.companyName,
-    bankReferenceNumber,
+    name,
     ukefDealId,
     isAin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ? 'yes' : 'no',
     isMin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN ? 'yes' : 'no',

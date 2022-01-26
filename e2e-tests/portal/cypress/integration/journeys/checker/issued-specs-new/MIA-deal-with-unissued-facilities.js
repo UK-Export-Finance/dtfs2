@@ -216,7 +216,7 @@ const deal = {
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
-      bankReferenceNumber: '',
+      name: '',
       guaranteeFeePayableByBank: '18.0000',
       updatedAt: Date.now(),
       value: '1234.00',

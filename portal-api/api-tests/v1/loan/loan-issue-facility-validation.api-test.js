@@ -88,7 +88,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
       expect(body.validationErrors.errorList.issuedDate).toBeDefined();
       expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
       expect(body.validationErrors.errorList.disbursementAmount).toBeDefined();
-      expect(body.validationErrors.errorList.bankReferenceNumber).toBeDefined();
+      expect(body.validationErrors.errorList.name).toBeDefined();
     });
 
     describe('issuedDate', () => {

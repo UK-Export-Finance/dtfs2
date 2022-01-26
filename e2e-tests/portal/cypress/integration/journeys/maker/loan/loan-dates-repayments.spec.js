@@ -146,7 +146,7 @@ context('Loan Dates and Repayments', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        row.bankReferenceNumberLink().click();
+        row.nameLink().click();
         partials.taskListHeader.itemLink('dates-and-repayments').click();
 
         pages.loanDatesRepayments.premiumTypeInAdvanceInput().should('be.checked');
