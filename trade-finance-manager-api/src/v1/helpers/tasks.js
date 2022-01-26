@@ -81,7 +81,7 @@ const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, stat
 
   if (isMiaDeal
     && firstTaskInFirstGroup
-    && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS_BY_UKEF || taskCompletedImmediately)) {
+    && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately)) {
     return true;
   }
 
