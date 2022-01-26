@@ -204,7 +204,7 @@ const deal = {
         'coverEndDate-day': (nowPlusMonths(2).getDate()).toString(),
         'coverEndDate-month': (nowPlusMonths(2).getMonth() + 1).toString(),
         'coverEndDate-year': (nowPlusMonths(2).getFullYear()).toString(),
-        uniqueIdentificationNumber: '1234',
+        name: '1234',
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '18.0000',
         updatedAt: Date.now(),

@@ -151,7 +151,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     incompleteIssueFacilityBondRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${incompleteIssueFacilityBondId}/issue-facility`));
 
-    pages.bondIssueFacility.uniqueIdentificationNumber().type('1234');
+    pages.bondIssueFacility.name().type('1234');
     pages.bondIssueFacility.submit().click();
     pages.bondIssueFacility.cancelButton().click();
     cy.url().should('eq', relative(`/contract/${dealId}`));

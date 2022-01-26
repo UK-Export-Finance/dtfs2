@@ -3,8 +3,7 @@ const CONSTANTS = require('../../../constants');
 const dealStage = (status, submissionType) => {
   let tfmDealStage;
 
-  const hasSubmittedStatus = (status === CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.SUBMITTED_TO_UKEF
-    || status === CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.SUBMITTED_TO_UKEF);
+  const hasSubmittedStatus = (status === CONSTANTS.DEALS.PORTAL_DEAL_STATUS.SUBMITTED_TO_UKEF);
 
   if (hasSubmittedStatus) {
     if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {

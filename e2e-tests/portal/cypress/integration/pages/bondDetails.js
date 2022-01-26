@@ -23,8 +23,8 @@ const page = {
   coverEndDateYearInput: () => cy.get('[data-cy="coverEndDate-year"]'),
   coverEndDateInputErrorMessage: () => cy.get('[data-cy="coverEndDate-error-message"]'),
 
-  uniqueIdentificationNumberInput: () => cy.get('[data-cy="unique-identification-number"]'),
-  uniqueIdentificationNumberInputErrorMessage: () => cy.get('[data-cy="unique-identification-number-error-message"]'),
+  nameInput: () => cy.get('[data-cy="name"]'),
+  nameInputErrorMessage: () => cy.get('[data-cy="name-error-message"]'),
 
   // always present in page
   bondBeneficiaryInput: () => cy.get('[data-cy="bond-beneficiary"]'),

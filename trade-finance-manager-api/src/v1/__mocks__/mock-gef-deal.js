@@ -65,7 +65,7 @@ const MOCK_GEF_DEAL = {
     ],
   },
   mandatoryVersionId: null,
-  status: CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.SUBMITTED_TO_UKEF,
+  status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.SUBMITTED_TO_UKEF,
   ukefDealId: '123',
   updatedAt: null,
   maker: MOCK_USERS[0],
@@ -79,7 +79,7 @@ const MOCK_GEF_DEAL = {
   ],
   facilities: MOCK_CASH_CONTINGENT_FACILITIES,
   eligibility: {
-    status: CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.COMPLETED,
+    status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.COMPLETED,
     updatedAt: 1634835561860.0,
     criteria: [
       {

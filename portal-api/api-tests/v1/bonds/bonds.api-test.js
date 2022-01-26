@@ -32,7 +32,7 @@ describe('/v1/deals/:id/bond', () => {
     facilityStage: 'unissued',
     hasBeenIssued: 'false',
     ukefGuaranteeInMonths: '24',
-    uniqueIdentificationNumber: '1234',
+    name: '1234',
     bondBeneficiary: 'test',
     value: '123456.55',
     currencySameAsSupplyContractCurrency: 'true',
@@ -385,7 +385,7 @@ describe('/v1/deals/:id/bond', () => {
           facilityStage: 'Issued',
           bondIssuer: 'test',
           ...coverEndDate(),
-          uniqueIdentificationNumber: '1234',
+          name: '1234',
         };
 
         const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aBarclaysMaker).put(updatedBondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
@@ -503,7 +503,7 @@ describe('/v1/deals/:id/bond', () => {
           'coverEndDate-day': null,
           'coverEndDate-month': null,
           'coverEndDate-year': null,
-          uniqueIdentificationNumber: null,
+          name: null,
           conversionRate: null,
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,

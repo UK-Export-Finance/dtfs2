@@ -18,7 +18,7 @@ const DETAILS = {
   coverEndDateDay: padDate(coverEndDate.getDate()),
   coverEndDateMonth: padDate(coverEndDate.getMonth() + 1),
   coverEndDateYear: coverEndDate.getFullYear(),
-  uniqueIdentificationNumber: '123456',
+  name: '123456',
   bondBeneficiary: 'mock beneficiary',
 
   // 'unissued' facility stage specifics

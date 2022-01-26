@@ -52,8 +52,8 @@ describe(component, () => {
     wrapper.expectText('[data-cy="cover-end-date"]').toRead(expected);
   });
 
-  it('should render uniqueIdentificationNumber', () => {
-    wrapper.expectText('[data-cy="unique-identification-number"]').toRead(bond.uniqueIdentificationNumber);
+  it('should render name', () => {
+    wrapper.expectText('[data-cy="name"]').toRead(bond.name);
   });
 
   it('should render ukefGuaranteeInMonths', () => {

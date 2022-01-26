@@ -19,7 +19,7 @@ const details = {
     pages.bondDetails.coverEndDateDayInput().should('have.value', BOND_FORM_VALUES.DETAILS.coverEndDateDay);
     pages.bondDetails.coverEndDateMonthInput().should('have.value', BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
     pages.bondDetails.coverEndDateYearInput().should('have.value', BOND_FORM_VALUES.DETAILS.coverEndDateYear);
-    pages.bondDetails.uniqueIdentificationNumberInput().should('have.value', BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
+    pages.bondDetails.nameInput().should('have.value', BOND_FORM_VALUES.DETAILS.name);
     pages.bondDetails.bondBeneficiaryInput().should('have.value', BOND_FORM_VALUES.DETAILS.bondBeneficiary);
   },
 };

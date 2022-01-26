@@ -39,7 +39,7 @@ const sendDealDecisionEmail = async (mappedDeal) => {
       emailVariables.conditions = comments;
       break;
 
-    case CONSTANTS.DEALS.DEAL_STAGE_TFM.APPROVED_WITHOUT_CONDITIONS:
+    case CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS:
       templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.DEAL_MIA_APPROVED_WITHOUT_CONDITIONS;
       break;
 

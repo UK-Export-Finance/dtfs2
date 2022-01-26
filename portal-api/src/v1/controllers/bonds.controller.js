@@ -89,7 +89,7 @@ const facilityStageFields = (bond) => {
     modifiedBond['coverEndDate-day'] = null;
     modifiedBond['coverEndDate-month'] = null;
     modifiedBond['coverEndDate-year'] = null;
-    modifiedBond.uniqueIdentificationNumber = null;
+    modifiedBond.name = null;
     modifiedBond.hasBeenIssued = false;
   }
 
