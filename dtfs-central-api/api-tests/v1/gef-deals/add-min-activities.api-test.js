@@ -380,7 +380,7 @@ describe.only('removeChangedToIssued()', () => {
     aMaker = testUsers().withRole('maker').one();
     aChecker = testUsers().withRole('checker').one();
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put(mockApplications[0]).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    await as(aMaker).put(mockApplications[0]).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
     console.log(mockApplication.body);
   });
 
