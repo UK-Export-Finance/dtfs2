@@ -50,22 +50,22 @@
       error = validationErrors.errorList.coverEndDate
     )}}
 
-    {% set uniqueIdentificationNumberRequiredForIssuance = bond.uniqueIdentificationNumberRequiredForIssuance or not bond.uniqueIdentificationNumber %}
+    {% set nameRequiredForIssuance = bond.nameRequiredForIssuance or not bond.name %}
 
-    {% if uniqueIdentificationNumberRequiredForIssuance %}
+    {% if nameRequiredForIssuance %}
       {{ govukInput({
         label: {
           text: "Bond's unique ID"
         },
         attributes: {
-          'data-cy': 'unique-identification-number'
+          'data-cy': 'name'
         },
         classes: "govuk-!-width-one-third",
-        id: "uniqueIdentificationNumber",
-        name: "uniqueIdentificationNumber",
-        value: bond.uniqueIdentificationNumber,
-        errorMessage: validationErrors.errorList.uniqueIdentificationNumber and {
-          text: validationErrors.errorList.uniqueIdentificationNumber.text
+        id: "name",
+        name: "name",
+        value: bond.name,
+        errorMessage: validationErrors.errorList.name and {
+          text: validationErrors.errorList.name.text
         }
       }) }}
     {% endif %}

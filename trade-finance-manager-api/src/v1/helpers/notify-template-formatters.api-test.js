@@ -89,12 +89,12 @@ describe('notify-template-formatters', () => {
         {
           type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           ukefFacilityId: '1',
-          uniqueIdentificationNumber: '123',
+          name: '123',
         },
         {
           type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
           ukefFacilityId: '2',
-          uniqueIdentificationNumber: '456',
+          name: '456',
         },
       ];
 
@@ -102,8 +102,8 @@ describe('notify-template-formatters', () => {
 
       const heading = generateFacilitiesListHeading(mockFacilities[0].type);
 
-      const firstString = expectedString(mockFacilities[0], 'uniqueIdentificationNumber');
-      const secondString = expectedString(mockFacilities[1], 'uniqueIdentificationNumber');
+      const firstString = expectedString(mockFacilities[0], 'name');
+      const secondString = expectedString(mockFacilities[1], 'name');
       const strings = `${firstString}${secondString}`;
 
       const expected = `${heading}${strings}`;
@@ -111,7 +111,7 @@ describe('notify-template-formatters', () => {
       expect(result).toEqual(expected);
     });
 
-    describe('when a facility has no uniqueIdentificationNumber, but has bankReference', () => {
+    describe('when a facility has no name, but has bankReference', () => {
       it('should return string with bankReference', () => {
         const mockFacilities = [
           {
@@ -133,7 +133,7 @@ describe('notify-template-formatters', () => {
       });
     });
 
-    describe('when a facility does NOT have uniqueIdentificationNumber or bankReference', () => {
+    describe('when a facility does NOT have name or bankReference', () => {
       it('should return string', () => {
         const mockFacilities = [
           {

@@ -47,9 +47,9 @@ exports.updateBondIssueFacility = async (req, res) => {
         modifiedBond.issueFacilityDetailsStarted = true;
       }
 
-      const bondHasUniqueIdentificationNumber = hasValue(bond.uniqueIdentificationNumber);
-      if (!bondHasUniqueIdentificationNumber) {
-        modifiedBond.uniqueIdentificationNumberRequiredForIssuance = true;
+      const bondHasname = hasValue(bond.name);
+      if (!bondHasname) {
+        modifiedBond.nameRequiredForIssuance = true;
       }
 
       if (hasAllRequestedCoverStartDateValues(modifiedBond)) {

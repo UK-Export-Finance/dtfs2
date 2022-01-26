@@ -47,7 +47,7 @@ module.exports = [
     'coverEndDate-day': '22',
     'coverEndDate-month': '09',
     'coverEndDate-year': '2023',
-    uniqueIdentificationNumber: 'Test Bond',
+    name: 'Test Bond',
     requestedCoverStartDate: twoMonthsTimestamp,
     value: '600000.00',
     currencySameAsSupplyContractCurrency: 'true',

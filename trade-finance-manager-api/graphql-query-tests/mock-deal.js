@@ -250,7 +250,7 @@ const MOCK_DEAL = {
         'requestedCoverStartDate-month': '03',
         'requestedCoverStartDate-year': '2021',
         ukefGuaranteeInMonths: null,
-        uniqueIdentificationNumber: '1234',
+        name: '1234',
         conversionRate: '100',
         coveredPercentage: '24',
         currency: {
