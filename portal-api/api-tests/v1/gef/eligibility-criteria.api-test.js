@@ -7,7 +7,7 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
-const items = require('../../fixtures/gef/eligibilityCriteria.js');
+const items = require('../../fixtures/gef/eligibilityCriteria');
 
 const baseUrl = '/v1/gef/eligibility-criteria';
 
@@ -97,7 +97,6 @@ describe(baseUrl, () => {
       };
       expect(body).toEqual(expected);
     });
-
   });
 
   describe(`POST ${baseUrl}`, () => {

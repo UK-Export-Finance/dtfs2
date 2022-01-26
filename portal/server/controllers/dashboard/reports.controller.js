@@ -11,12 +11,13 @@ exports.getPortalReports = async (req, res) => {
 
   const pastDeadlineUnissuedFacilitiesCount = facilities.length ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 0) : [];
   const facilitiesThatNeedIssuingCount = facilities.length ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 15 && daysLeftToIssue >= 0) : [];
+  const totalUkefDecisions = dealWithConditions.length + dealWithoutConditions.length;
 
   return res.render('reports/reports-dashboard.njk', {
     allUnissuedFacilitiesCount: facilities.length,
     pastDeadlineUnissuedFacilitiesCount: pastDeadlineUnissuedFacilitiesCount.length,
     facilitiesThatNeedIssuingCount: facilitiesThatNeedIssuingCount.length,
-    totalUkefDecisions: dealWithConditions.length + dealWithoutConditions.length,
+    totalUkefDecisions,
     dealWithConditionsCount: dealWithConditions.length,
     dealWithoutConditionsCount: dealWithoutConditions.length,
     user: req.session.user,
@@ -123,24 +124,12 @@ const downloadUkefDecisionReport = async (userToken, ukefDecision) => {
 
 exports.downloadUnconditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
-
-  const { deals, columns } = await downloadUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS });
-  // download the report only if we have deals
-  if (deals) {
-    return downloadCsv(res, 'unconditional_decisions_report', columns, deals);
-  }
-
-  return res.redirect('/not-found');
+  const { deals, columns } = await downloadUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS }) || [];
+  return downloadCsv(res, 'unconditional_decisions_report', columns, deals);
 };
 
 exports.downloadConditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
-
-  const { deals, columns } = await downloadUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITH_CONDITIONS });
-  // download the report only if we have deals
-  if (deals) {
-    return downloadCsv(res, 'conditional_decisions_report', columns, deals);
-  }
-
-  return res.redirect('/not-found');
+  const { deals, columns } = await downloadUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITH_CONDITIONS }) || [];
+  return downloadCsv(res, 'conditional_decisions_report', columns, deals);
 };

@@ -68,6 +68,7 @@ class Application {
         'facilitiesUpdated',
         'ukefDecisionAccepted',
         'portalActivities',
+        'ukefDecision'
       ];
 
       if (req.exporter) {

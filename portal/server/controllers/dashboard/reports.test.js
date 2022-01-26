@@ -1,4 +1,4 @@
-import { getPortalReports, getUnissuedFacilitiesReport, getUkefDecisionReport } from '.';
+import { reportsController } from '.';
 import api from '../../api';
 import mockResponse from '../../helpers/responseMock';
 import CONSTANTS from '../../constants';
@@ -38,9 +38,28 @@ const mockUnissuedFacilitiesReportResponse = [
   },
 ];
 
-const mockUkefDecisionReportResponse = [
+const mockUkefConditionalDecisionReportResponse = [
   {
-
+    dealId: '1000003',
+    bankInternalRefName: 'Manual Test 2',
+    dealType: 'GEF',
+    companyName: 'Company name',
+    dateCreated: '26 Jan 2022',
+    submissionDate: '26 Jan 2022',
+    dateOfApproval: '26 Jan 2022',
+    daysToReview: 20,
+  },
+];
+const mockUkefUnconditionalDecisionReportResponse = [
+  {
+    dealId: '1000004',
+    bankInternalRefName: 'Manual Test 1',
+    dealType: 'BSS/EWCS',
+    companyName: 'Company name',
+    dateCreated: '26 Jan 2022',
+    submissionDate: '26 Jan 2022',
+    dateOfApproval: '26 Jan 2022',
+    daysToReview: 10,
   },
 ];
 
@@ -55,7 +74,7 @@ describe('controllers/reports.controller', () => {
     it('sets all counts to `0` when there are no unissued facilities and no decisions from UKEF', async () => {
       api.getUnissuedFacilitiesReport.mockResolvedValue([]);
       api.getUkefDecisionReport.mockResolvedValue([]);
-      await getPortalReports(req, res);
+      await reportsController.getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 0,
@@ -71,7 +90,7 @@ describe('controllers/reports.controller', () => {
     it('sets `allUnissuedFacilitiesCount` to `1` when one facility is unissued', async () => {
       api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[0]]);
       api.getUkefDecisionReport.mockResolvedValue([]);
-      await getPortalReports(req, res);
+      await reportsController.getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 1,
@@ -86,7 +105,7 @@ describe('controllers/reports.controller', () => {
     });
     it('sets `facilitiesThatNeedIssuingCount` to `1` when one facility needs issuing in less than 15 days', async () => {
       api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[1]]);
-      await getPortalReports(req, res);
+      await reportsController.getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 1,
@@ -101,7 +120,7 @@ describe('controllers/reports.controller', () => {
     });
     it('sets `pastDeadlineUnissuedFacilitiesCount` to `1` when one facility is overdue', async () => {
       api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[2]]);
-      await getPortalReports(req, res);
+      await reportsController.getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 1,
@@ -118,7 +137,7 @@ describe('controllers/reports.controller', () => {
     it('renders all (3) unissued facilities that are overdue or that need issuing in less than 15 days', async () => {
       api.getUnissuedFacilitiesReport.mockResolvedValue(mockUnissuedFacilitiesReportResponse);
 
-      await getPortalReports(req, res);
+      await reportsController.getPortalReports(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/reports-dashboard.njk', {
         allUnissuedFacilitiesCount: 3,
@@ -134,19 +153,38 @@ describe('controllers/reports.controller', () => {
   });
 
   describe('getUnissuedFacilitiesReport', () => {
-    it('renders the 404 page if the api call returns `undefined` value', async () => {
-      api.getUnissuedFacilitiesReport.mockResolvedValue();
-      await getUnissuedFacilitiesReport(req, res);
-
-      expect(res.redirect).toHaveBeenCalledWith('/not-found');
-    });
-
     it('renders the unissued-facilities report page', async () => {
       api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[1]]);
-      await getUnissuedFacilitiesReport(req, res);
+      await reportsController.getUnissuedFacilitiesReport(req, res);
 
       expect(res.render).toHaveBeenCalledWith('reports/unissued-facilities.njk', {
         facilities: [mockUnissuedFacilitiesReportResponse[1]],
+        primaryNav: 'reports',
+        user: req.session.user,
+      });
+    });
+  });
+
+  describe('getUnconditionalDecisionReport', () => {
+    it('renders the unconditional decision page', async () => {
+      api.getUkefDecisionReport.mockResolvedValue(mockUkefUnconditionalDecisionReportResponse);
+      await reportsController.getUnconditionalDecisionReport(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('reports/unconditional-decision.njk', {
+        deals: mockUkefUnconditionalDecisionReportResponse,
+        primaryNav: 'reports',
+        user: req.session.user,
+      });
+    });
+  });
+
+  describe('getConditionalDecisionReport', () => {
+    it('renders the conditional decision page', async () => {
+      api.getUkefDecisionReport.mockResolvedValue(mockUkefConditionalDecisionReportResponse);
+      await reportsController.getConditionalDecisionReport(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('reports/conditional-decision.njk', {
+        deals: mockUkefConditionalDecisionReportResponse,
         primaryNav: 'reports',
         user: req.session.user,
       });

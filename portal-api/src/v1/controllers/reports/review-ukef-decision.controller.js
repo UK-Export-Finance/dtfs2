@@ -7,7 +7,17 @@ const getUkefDecision = async (decision) => {
   const dealsCollection = 'deals';
   const queryDb = await db.getCollection(dealsCollection);
 
-  const query = [
+  // return an array of objects that has the following format
+  // [{
+  //    dealId: '12345678'
+  //    bankInternalRefName: "HSBC 123"
+  //    companyName: "Exporter Name"
+  //    dateCreatedEpoch: 1642762583805
+  //    dateOfApprovalEpoch: 1642753187
+  //    dealType: "GEF"
+  //    submissionDateEpoch: "1642762644833"
+  // }]
+  const deals = await queryDb.aggregate([
     { $unwind: '$ukefDecision' },
     { $match: { 'ukefDecision.decision': decision } },
     {
@@ -17,7 +27,6 @@ const getUkefDecision = async (decision) => {
         bankInternalRefName: '$bankInternalRefName',
         dealType: '$dealType',
         companyName: '$exporter.companyName',
-        // dateCreatedEpoch: '$createdAt',
         dateCreatedEpoch: {
           $switch: {
             branches: [
@@ -50,28 +59,14 @@ const getUkefDecision = async (decision) => {
       }
     },
     { $sort: { dateOfApprovalEpoch: 1 } }
-  ];
-
-  // return an array of objects that has the following format
-  // [{
-  //    dealId: '12345678'
-  //    bankInternalRefName: "HSBC 123"
-  //    companyName: "Exporter Name"
-  //    dateCreatedEpoch: 1642762583805
-  //    dateOfApprovalEpoch: 1642753187
-  //    daysToReview: 9
-  //    dealType: "GEF"
-  //    submissionDateEpoch: "1642762644833"
-  // }]
-  const deals = await queryDb.aggregate(query).toArray();
+  ]).toArray();
   return deals;
 };
 
 exports.reviewUkefDecisionReports = async (req, res) => {
   try {
-    const ukefDecision = req.body.ukefDecision || '';
+    const ukefDecision = req.body || req.query.ukefDecision || '';
     const ukefDecisions = [];
-    console.log(ukefDecision);
 
     if (ukefDecision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
      || ukefDecision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
