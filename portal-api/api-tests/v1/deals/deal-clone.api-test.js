@@ -40,7 +40,7 @@ dealToClone.ukefComments = [
   },
 ];
 
-dealToClone.specialConditions = [
+dealToClone.ukefDecision = [
   {
     timestamp: '1984/12/25 00:00:00:001',
     text: 'This is special',
@@ -100,7 +100,7 @@ describe('/v1/deals/:id/clone', () => {
         originalDeal = dealAfterCreation.deal;
       });
 
-      it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `specialConditions`, changes `maker` to the user making the request, marks status `Draft`', async () => {
+      it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `ukefDecision`, changes `maker` to the user making the request, marks status `Draft`', async () => {
         const clonePostBody = {
           bankInternalRefName: 'new-bank-deal-id',
           additionalRefName: 'new-bank-deal-name',
@@ -130,7 +130,7 @@ describe('/v1/deals/:id/clone', () => {
         expect(cloned.deal.editedBy).toEqual([]);
         expect(cloned.deal.comments).toEqual([]);
         expect(cloned.deal.ukefComments).toEqual([]);
-        expect(cloned.deal.specialConditions).toEqual([]);
+        expect(cloned.deal.ukefDecision).toEqual([]);
       });
 
       it('should clone eligibility', async () => {

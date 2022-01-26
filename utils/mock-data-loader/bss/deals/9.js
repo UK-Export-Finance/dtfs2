@@ -390,7 +390,7 @@ module.exports = {
 		"security" : "Test"
 	},
 	"ukefComments" : [ ],
-	"specialConditions" : [ ],
+	"ukefDecision" : [ ],
 	"exporter": {
 		"companyName": "Manual Test 2"
 	}
