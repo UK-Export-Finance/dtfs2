@@ -93,6 +93,7 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - SENTRY_DSN=${SENTRY_DSN}
+      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
     deploy:
       resources:
         limits:

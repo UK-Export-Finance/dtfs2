@@ -486,9 +486,10 @@ const getFunctionsAPI = async (type = 'ACBS', url = '') => {
     default:
   }
 
-  const modifiedUrl = url
-    ? url.replace(/http:\/\/localhost:[\d]*/, functionUrl)
-    : functionUrl;
+  let modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, functionUrl);
+  if (type === 'ACBS') {
+    modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, functionUrl) : functionUrl;
+  }
 
   try {
     const response = await axios({
@@ -501,9 +502,7 @@ const getFunctionsAPI = async (type = 'ACBS', url = '') => {
     return response.data;
   } catch (err) {
     console.error(`Unable to getFunctionsAPI for ${modifiedUrl}`, { err });
-    return err.response.data
-      ? err.response.data
-      : err;
+    return err?.response?.data ? err?.response?.data : err;
   }
 };
 
@@ -610,6 +609,7 @@ const updatePortalGefDeal = async (dealId, update) => {
 };
 
 const updateGefMINActivity = async (dealId) => {
+  console.log('here========', dealId);
   try {
     const response = await axios({
       method: 'put',
