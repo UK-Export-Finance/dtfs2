@@ -25,7 +25,7 @@ const CLONE_BOND_FIELDS = [
 
 const CLONE_LOAN_FIELDS = [
   'type',
-  'bankReferenceNumber',
+  'name',
   'value',
   'currency',
   'currencySameAsSupplyContractCurrency',

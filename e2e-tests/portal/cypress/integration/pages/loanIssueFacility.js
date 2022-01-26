@@ -12,7 +12,7 @@ const page = {
   coverEndDateYearInput: () => cy.get('[data-cy="coverEndDate-year"]'),
 
   disbursementAmount: () => cy.get('[data-cy="disbursement-amount"]'),
-  bankReferenceNumber: () => cy.get('[data-cy="bankReferenceNumber"]'),
+  name: () => cy.get('[data-cy="name"]'),
 
   submit: () => cy.get('[data-cy="submit-button"]'),
   cancelButton: () => cy.get('[data-cy="cancel-button"]'),

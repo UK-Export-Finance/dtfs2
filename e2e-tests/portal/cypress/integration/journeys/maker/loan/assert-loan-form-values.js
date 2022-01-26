@@ -4,13 +4,13 @@ const LOAN_FORM_VALUES = require('./loan-form-values');
 const guaranteeDetails = {
   facilityStageConditional: () => {
     pages.loanGuaranteeDetails.facilityStageConditionalInput().should('be.checked');
-    pages.loanGuaranteeDetails.conditionalBankReferenceNumberInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+    pages.loanGuaranteeDetails.conditionalNameInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
     pages.loanGuaranteeDetails.ukefGuaranteeInMonthsInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.ukefGuaranteeInMonths);
   },
   facilityStageUnconditional: () => {
     pages.loanGuaranteeDetails.facilityStageUnconditionalInput().should('be.checked');
 
-    pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+    pages.loanGuaranteeDetails.unconditionalNameInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
 
     pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay);
     pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth);

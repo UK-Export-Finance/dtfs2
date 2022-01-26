@@ -278,7 +278,7 @@ describe('/v1/deals', () => {
           emailVariables: {
             exporterName: mockDeal.exporter.companyName,
             recipientName: mockDeal.maker.firstname,
-            bankReferenceNumber: mockDeal.bankInternalRefName,
+            name: mockDeal.bankInternalRefName,
             ukefDealID: mockDeal.details.ukefDealId,
             facilitiesList: generateIssuedFacilitiesListString(allFacilities),
           },
@@ -507,7 +507,7 @@ describe('/v1/deals', () => {
           emailVariables: {
             exporterName: mockDeal.exporter.companyName,
             recipientName: mockDeal.maker.firstname,
-            bankReferenceNumber: mockDeal.bankInternalRefName,
+            name: mockDeal.bankInternalRefName,
             ukefDealID: mockDeal.details.ukefDealId,
             facilitiesList: generateIssuedFacilitiesListString(allFacilities),
           },

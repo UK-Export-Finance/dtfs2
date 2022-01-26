@@ -21,7 +21,7 @@ describe('generate AIN/MIN confirmation email variables - GEF', () => {
       surname: mockSubmittedDeal.maker.surname,
       exporterName: mockSubmittedDeal.exporter.companyName,
       ukefDealId: mockSubmittedDeal.ukefDealId,
-      bankGefDealId: mockSubmittedDeal.bankReferenceNumber,
+      bankGefDealId: mockSubmittedDeal.name,
       dealName: mockSubmittedDeal.bankAdditionalReferenceName,
       submissionDate: format(Number(mockSubmittedDeal.submissionDate), 'do MMMM yyyy'),
       exporterCompaniesHouseRegistrationNumber: mockSubmittedDeal.exporter.companiesHouseRegistrationNumber,

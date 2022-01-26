@@ -58,8 +58,8 @@ const page = {
     row: (loanId) => {
       cy.get(`[data-cy="loan-${loanId}"]`).as('row');
       return {
-        bankReferenceNumber: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-${loanId}"]`),
-        bankReferenceNumberLink: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-link-${loanId}"]`),
+        name: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-${loanId}"]`),
+        nameLink: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-link-${loanId}"]`),
         ukefFacilityId: () => cy.get('@row').get(`[data-cy="loan-ukef-facility-id-${loanId}"]`),
         loanStatus: () => cy.get('@row').get(`[data-cy="loan-status-${loanId}"]`),
         facilityValue: () => cy.get('@row').get('[data-cy="loan-facility-value"]'),

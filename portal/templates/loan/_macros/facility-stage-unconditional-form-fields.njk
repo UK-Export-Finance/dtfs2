@@ -1,13 +1,13 @@
-{% import './bank-reference-number-field.njk' as bankReferenceNumberField %}
+{% import './name-field.njk' as nameField %}
 {% import '_macros/date-field.njk' as dateField %}
 
 {% macro render(user, loan, validationErrors) %}
 
-  {{bankReferenceNumberField.render(
-    id = 'facilityStageUnconditional-bankReferenceNumber',
+  {{nameField.render(
+    id = 'facilityStageUnconditional-name',
     label = 'Bank reference number',
-    value = loan.bankReferenceNumber,
-    error = validationErrors.errorList.bankReferenceNumber
+    value = loan.name,
+    error = validationErrors.errorList.name
   )}}
 
   <div class="govuk-form-group">

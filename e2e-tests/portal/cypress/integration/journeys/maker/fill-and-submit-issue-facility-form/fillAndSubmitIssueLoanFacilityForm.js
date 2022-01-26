@@ -16,7 +16,7 @@ export const fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate = 
   pages.loanIssueFacility.coverEndDateYearInput().type(COVER_END_DATE_VALUE.getFullYear());
 
   pages.loanIssueFacility.disbursementAmount().type(DISBURSEMENT_AMOUNT_VALUE);
-  pages.loanIssueFacility.bankReferenceNumber().type('5678');
+  pages.loanIssueFacility.name().type('5678');
 
   pages.loanIssueFacility.submit().click();
 };
@@ -46,7 +46,7 @@ export const fillAndSubmitIssueLoanFacilityForm = () => {
 
   pages.loanIssueFacility.disbursementAmount().clear();
   pages.loanIssueFacility.disbursementAmount().type(DISBURSEMENT_AMOUNT_VALUE);
-  pages.loanIssueFacility.bankReferenceNumber().type('5678');
+  pages.loanIssueFacility.name().type('5678');
 
   pages.loanIssueFacility.submit().click();
 };

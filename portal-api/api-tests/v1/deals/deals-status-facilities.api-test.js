@@ -479,7 +479,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         facilityStage: 'Unconditional',
         hasBeenIssued: true,
         value: '100',
-        bankReferenceNumber: '1234',
+        name: '1234',
         ...coverEndDate(),
         disbursementAmount: '5',
         currencySameAsSupplyContractCurrency: 'true',

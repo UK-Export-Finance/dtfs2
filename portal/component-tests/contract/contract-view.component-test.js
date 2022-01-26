@@ -102,7 +102,7 @@ describe(page, () => {
       const loanId = deal.loanTransactions.items[0]._id;
 
       return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`)
-        .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, deal.loanTransactions.items[0].bankReferenceNumber));
+        .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, deal.loanTransactions.items[0].name));
     });
 
     it('renders loan transactions table', () =>

@@ -22,7 +22,7 @@ describe(component, () => {
           facilityStage: 'Conditional',
           hasBeenIssued: false,
           requestedCoverStartDate: moment().utc().valueOf(),
-          bankReferenceNumber: '1234',
+          name: '1234',
           canIssueOrEditIssueFacility: true,
         },
         {
@@ -34,7 +34,7 @@ describe(component, () => {
           facilityStage: 'Conditional',
           hasBeenIssued: false,
           requestedCoverStartDate: moment().utc().valueOf(),
-          bankReferenceNumber: '1234',
+          name: '1234',
           canIssueOrEditIssueFacility: true,
         },
       ],
