@@ -1,7 +1,6 @@
 const { format, fromUnixTime } = require('date-fns');
 
 const {
-  generateMINActivities,
   ukefSubmissionPortalActivity,
   facilityChangePortalActivity,
   portalActivityGenerator,
@@ -15,7 +14,7 @@ const applicationCollectionName = 'deals';
 const db = require('../../../src/drivers/db-client');
 
 const mockApplications = require('../../mocks/gef/gef-applications');
-const { mockFacilities, facilityWithDealId } = require('../../mocks/gef/gef-facilities');
+const { mockFacilities } = require('../../mocks/gef/gef-facilities');
 const CONSTANTS = require('../../../src/constants');
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/constants/activityConstants');
 
@@ -367,11 +366,10 @@ describe('portalActivityGenerator()', () => {
   });
 });
 
-describe.only('removeChangedToIssued()', () => {
+describe('removeChangedToIssued()', () => {
   let aMaker;
   let aChecker;
   let mockApplication;
-  let body1;
 
   beforeAll(async () => {
     await wipeDB.wipe([collectionName]);
@@ -385,10 +383,6 @@ describe.only('removeChangedToIssued()', () => {
   });
 
   beforeEach(async () => {
-
-  });
-
-  it('changes canResubmitIssuedFacilities to false', async () => {
     // posts facility with canResubmitIssuedFacilities as true
     await as(aMaker).post({
       dealId: mockApplication.body._id,
@@ -399,15 +393,19 @@ describe.only('removeChangedToIssued()', () => {
 
     const mockQuery = { dealId: mockApplication.body._id };
 
-    const { body: body2 } = await as(aChecker).get(baseUrl, mockQuery);
+    const { body } = await as(aChecker).get(baseUrl, mockQuery);
 
     // changes to false to test
-    await removeChangedToIssued(body2);
+    await removeChangedToIssued(body);
+  });
+
+  it('changes canResubmitIssuedFacilities to false', async () => {
+    const mockQuery = { dealId: mockApplication.body._id };
 
     // gets facilities from DB
     const { body } = await as(aChecker).get(baseUrl, mockQuery);
-    console.log('bodyyyyyy', body);
-    // gets value from body for changedToIssed
+
+    // gets value from body for changedToIssued
     const changedToIssuedValue = body[0].canResubmitIssuedFacilities;
 
     expect(changedToIssuedValue).toEqual(false);
