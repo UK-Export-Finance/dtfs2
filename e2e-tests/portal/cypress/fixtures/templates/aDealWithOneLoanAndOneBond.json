@@ -104,7 +104,7 @@
           "hasBeenIssued": true,
           "ukefFacilityId": "ukef:aDealWithOneLoanAndOneBond-bond1",
           "ukefGuaranteeInMonths": "24",
-          "uniqueIdentificationNumber": "aDealWithOneLoanAndOneBond-bond1",
+          "name": "aDealWithOneLoanAndOneBond-bond1",
           "bondBeneficiary": "test",
           "value": "123",
           "currencySameAsSupplyContractCurrency": "true",

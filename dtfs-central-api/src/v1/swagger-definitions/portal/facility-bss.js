@@ -96,7 +96,7 @@
  *       ukefGuaranteeInMonths:
  *         type: string
  *         example: '12'
- *       uniqueIdentificationNumber:
+ *       name:
  *         type: string
  *         example: '1234'
  *       guaranteeFeePayableByBank:

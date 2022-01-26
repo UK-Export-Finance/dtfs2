@@ -224,7 +224,7 @@ const MOCK_DEAL = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      uniqueIdentificationNumber: 'Test-321',
+      name: 'Test-321',
     },
   ],
 };

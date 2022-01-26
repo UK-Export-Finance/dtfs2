@@ -33,8 +33,8 @@ const generateFacilitiesListString = (facilities) => {
     let string = `${acc}`;
     let bankRef;
 
-    if (facility.uniqueIdentificationNumber) {
-      bankRef = facility.uniqueIdentificationNumber;
+    if (facility.name) {
+      bankRef = facility.name;
     } else if (facility.bankReference) {
       bankRef = facility.bankReference;
     }

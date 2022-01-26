@@ -47,7 +47,7 @@ const mapBssEwcsFacility = (facility) => {
     feeFrequency,
     premiumFrequency,
     bankReferenceNumber,
-    uniqueIdentificationNumber,
+    name,
     disbursementAmount,
     facilityStage,
   } = facility;
@@ -73,7 +73,7 @@ const mapBssEwcsFacility = (facility) => {
     dayCountBasis: Number(dayCountBasis),
     disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
     bankReference: bankReferenceNumber,
-    uniqueIdentificationNumber,
+    name,
     tfm: facility.tfm,
   };
 };

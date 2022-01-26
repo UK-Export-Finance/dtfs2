@@ -13,7 +13,7 @@ const details = {
     pages.bondDetails.coverEndDateDayInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
     pages.bondDetails.coverEndDateMonthInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
     pages.bondDetails.coverEndDateYearInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateYear);
-    pages.bondDetails.uniqueIdentificationNumberInput().type(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
+    pages.bondDetails.nameInput().type(BOND_FORM_VALUES.DETAILS.name);
     pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
   },
   facilityStageUnissued: () => {

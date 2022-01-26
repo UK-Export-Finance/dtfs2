@@ -14,7 +14,7 @@ export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = 
   pages.bondIssueFacility.coverEndDateMonthInput().type(COVER_END_DATE_VALUE.getMonth() + 1);
   pages.bondIssueFacility.coverEndDateYearInput().type(COVER_END_DATE_VALUE.getFullYear());
 
-  pages.bondIssueFacility.uniqueIdentificationNumber().type('1234');
+  pages.bondIssueFacility.name().type('1234');
 
   pages.bondIssueFacility.submit().click();
 };
@@ -42,7 +42,7 @@ export const fillAndSubmitIssueBondFacilityForm = () => {
   pages.bondIssueFacility.coverEndDateYearInput().clear();
   pages.bondIssueFacility.coverEndDateYearInput().type(COVER_END_DATE_VALUE.getFullYear());
 
-  pages.bondIssueFacility.uniqueIdentificationNumber().type('1234');
+  pages.bondIssueFacility.name().type('1234');
 
   pages.bondIssueFacility.submit().click();
 };

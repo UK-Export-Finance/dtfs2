@@ -11,7 +11,7 @@ const page = {
   coverEndDateMonthInput: () => cy.get('[data-cy="coverEndDate-month"]'),
   coverEndDateYearInput: () => cy.get('[data-cy="coverEndDate-year"]'),
 
-  uniqueIdentificationNumber: () => cy.get('[data-cy="unique-identification-number"]'),
+  name: () => cy.get('[data-cy="name"]'),
 
   submit: () => cy.get('[data-cy="submit-button"]'),
   cancelButton: () => cy.get('[data-cy="cancel-button"]'),

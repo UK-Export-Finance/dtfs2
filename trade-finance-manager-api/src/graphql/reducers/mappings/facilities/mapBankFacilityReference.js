@@ -8,7 +8,7 @@ const mapBankFacilityReference = (facility) => {
   }
 
   if (ukefFacilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
-    return facility.uniqueIdentificationNumber;
+    return facility.name;
   }
 
   return null;
