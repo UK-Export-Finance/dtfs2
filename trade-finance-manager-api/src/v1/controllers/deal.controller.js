@@ -187,7 +187,7 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
     submissionType,
   } = mappedDeal;
 
-  const mappedPortalStatus = mapTfmDealStageToPortalStatus(dealType, decision);
+  const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     await api.updatePortalBssDealStatus(
@@ -212,6 +212,7 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     const portalCommentObj = {
       text: comments,
+      decision: mappedPortalStatus,
     };
     api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
   }
