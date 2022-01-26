@@ -42,9 +42,9 @@ describe('deal comments controller', () => {
   });
 
   it('should update a special condition', async () => {
-    const addedComment = await dealCommentsController.addSpecialConditions(dealId, myComment, user);
+    const addedComment = await dealCommentsController.addUkefDecision(dealId, myComment, user);
 
-    expect(addedComment.specialConditions[0].text).toEqual(myComment);
-    expect(addedComment.specialConditions[0].user.username).toEqual(user.username);
+    expect(addedComment.ukefDecision[0].text).toEqual(myComment);
+    expect(addedComment.ukefDecision[0].user.username).toEqual(user.username);
   });
 });

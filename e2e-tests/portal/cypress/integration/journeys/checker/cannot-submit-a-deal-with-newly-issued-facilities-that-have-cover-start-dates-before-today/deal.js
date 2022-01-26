@@ -644,7 +644,7 @@ const deal = {
       text: 'Approved',
     },
   ],
-  specialConditions: [],
+  ukefDecision: [],
 };
 
 module.exports = deal;
