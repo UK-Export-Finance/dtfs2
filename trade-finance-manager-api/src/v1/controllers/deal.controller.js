@@ -205,8 +205,9 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
 
   let portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
 
-  if (decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS) {
-    portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.SPECIAL_CONDITIONS;
+  if (decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
+    || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+    portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
@@ -214,7 +215,7 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
       text: comments,
       decision: mappedPortalStatus,
     };
-    api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
+    await api.addPortalDealComment(dealId, portalCommentType, portalCommentObj);
   }
 
   /**

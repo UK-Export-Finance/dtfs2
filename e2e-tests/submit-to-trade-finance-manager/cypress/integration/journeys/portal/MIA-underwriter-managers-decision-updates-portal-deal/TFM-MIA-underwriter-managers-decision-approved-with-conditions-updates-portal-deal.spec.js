@@ -43,7 +43,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
-
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
@@ -85,7 +84,6 @@ context('Portal to TFM deal submission', () => {
     tfmPages.managersDecisionPage.commentsInputApproveWithConditions().type(MOCK_COMMENTS);
     tfmPages.managersDecisionPage.submitButton().click();
 
-
     //---------------------------------------------------------------
     // Go back to Portal
     //---------------------------------------------------------------
@@ -108,11 +106,11 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     portalPages.contract.commentsTab().click();
 
-    portalPartials.ukefComments.specialCondition.title().invoke('text').then((text) => {
+    portalPartials.ukefComments.ukefDecision.title().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Special Conditions:');
     });
 
-    portalPartials.ukefComments.specialCondition.text().invoke('text').then((text) => {
+    portalPartials.ukefComments.ukefDecision.text().invoke('text').then((text) => {
       expect(text.trim()).to.equal(MOCK_COMMENTS);
     });
   });

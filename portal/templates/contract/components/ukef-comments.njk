@@ -1,4 +1,4 @@
-{% macro render(dealStatus, ukefComments, specialConditions) %}
+{% macro render(dealStatus, ukefComments, ukefDecision) %}
 
   {% if dealStatus === "Rejected by UKEF" %}
 
@@ -9,19 +9,19 @@
     {% endif %}
 
     {% elif dealStatus !== "Accepted by UKEF (without conditions)" %}
-      
+
       {% if dealStatus !== "Accepted by UKEF (with conditions)" and ukefComments and ukefComments.length %}
         <p class="govuk-body govuk-!-margin-bottom-2">
           <span class="govuk-!-font-size-19 govuk-!-font-weight-bold"  data-cy="ukef-comments-title">UKEF Comments:</span> <span class="comment-wrap" data-cy="ukef-comments-text">{{ ukefComments[ukefComments.length - 1].text}}</span>
         </p>
       {% endif %}
 
-      {% if specialConditions and specialConditions.length %}
+      {% if ukefDecision and ukefDecision.length %}
         <p class="govuk-body govuk-!-margin-bottom-2">
-          <span class="govuk-!-font-size-19 govuk-!-font-weight-bold" data-cy="special-conditions-title">Special Conditions:</span> <span class="comment-wrap" data-cy="special-conditions-text">{{ specialConditions[specialConditions.length - 1].text}}</span>
+          <span class="govuk-!-font-size-19 govuk-!-font-weight-bold" data-cy="ukef-decision-title">Special Conditions:</span> <span class="comment-wrap" data-cy="ukef-decision-text">{{ ukefDecision[ukefDecision.length - 1].text}}</span>
         </p>
       {% endif %}
 
   {% endif %}
-  
+
 {% endmacro %}
