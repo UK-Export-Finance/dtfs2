@@ -52,7 +52,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     ...createCoverDateFields('requestedCoverStartDate', moment().add(1, 'week')),
     ...createCoverDateFields('coverEndDate', moment().add(1, 'month')),
     ...createCoverDateFields('issuedDate', moment()),
-    uniqueIdentificationNumber: '1234',
+    name: '1234',
   };
 
   let aBarclaysMaker;

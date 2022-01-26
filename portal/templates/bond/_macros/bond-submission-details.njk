@@ -74,13 +74,13 @@
         </div>
       {% endif %}
 
-      {% if bond.uniqueIdentificationNumber %}
+      {% if bond.name %}
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body-s">
             Bond's unique identification number
           </dt>
-          <dd class="govuk-summary-list__value govuk-body-s" data-cy="unique-identification-number">
-            {{ bond.uniqueIdentificationNumber }}
+          <dd class="govuk-summary-list__value govuk-body-s" data-cy="name">
+            {{ bond.name }}
           </dd>
         </div>
       {% endif %}

@@ -1,18 +1,18 @@
 {% macro render(params, bond) %}
   {% set dealId = params.deal._id %}
-  {% if bond.uniqueIdentificationNumber %}
+  {% if bond.name %}
     {% if params.editable %}
-      <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="unique-number-link-{{bond._id}}">{{ bond.uniqueIdentificationNumber }}</a>
+      <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="name-link-{{bond._id}}">{{ bond.name }}</a>
     {% else %}
-      <span data-cy="unique-number-{{bond._id}}">
-        {{ bond.uniqueIdentificationNumber }}
+      <span data-cy="name-{{bond._id}}">
+        {{ bond.name }}
       </span>
     {% endif %}
   {% else %}
     {% if params.editable %}
-      <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="unique-number-link-{{bond._id}}">Not entered</a>
+      <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="name-link-{{bond._id}}">Not entered</a>
     {% else %}
-    <span data-cy="unique-number-{{bond._id}}">
+    <span data-cy="name-{{bond._id}}">
         Not entered
       </span>
     {% endif %}

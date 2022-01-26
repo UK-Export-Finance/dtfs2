@@ -269,7 +269,7 @@ describe('/v1/deals/:id/clone', () => {
           'conversionRateDate-day': firstOriginalBond['conversionRateDate-day'],
           'conversionRateDate-month': firstOriginalBond['conversionRateDate-month'],
           'conversionRateDate-year': firstOriginalBond['conversionRateDate-year'],
-          uniqueIdentificationNumber: firstOriginalBond.uniqueIdentificationNumber,
+          name: firstOriginalBond.name,
           ukefGuaranteeInMonths: firstOriginalBond.ukefGuaranteeInMonths,
           createdDate: expect.any(Number),
         };
@@ -283,7 +283,7 @@ describe('/v1/deals/:id/clone', () => {
           value: secondOriginalBond.value,
           currencySameAsSupplyContractCurrency: secondOriginalBond.currencySameAsSupplyContractCurrency,
           currency: secondOriginalBond.currency,
-          uniqueIdentificationNumber: secondOriginalBond.uniqueIdentificationNumber,
+          name: secondOriginalBond.name,
           ukefGuaranteeInMonths: secondOriginalBond.ukefGuaranteeInMonths,
           createdDate: expect.any(Number),
         };

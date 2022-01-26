@@ -16,7 +16,7 @@ module.exports = () => {
   deal.bondTransactions.items[0]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
   deal.bondTransactions.items[0]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
   deal.bondTransactions.items[0].facilityStage = 'Issued';
-  deal.bondTransactions.items[0].uniqueIdentificationNumber = '1234';
+  deal.bondTransactions.items[0].name = '1234';
 
   return deal;
 };

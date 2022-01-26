@@ -53,7 +53,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         premiumType,
         feeFrequency,
         bankReferenceNumber,
-        uniqueIdentificationNumber,
+        name,
         disbursementAmount,
         facilityStage,
       } = mockFacility;
@@ -77,7 +77,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         dayCountBasis: Number(dayCountBasis),
         disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
         bankReference: bankReferenceNumber,
-        uniqueIdentificationNumber,
+        name,
         tfm: mockFacility.tfm,
       };
 

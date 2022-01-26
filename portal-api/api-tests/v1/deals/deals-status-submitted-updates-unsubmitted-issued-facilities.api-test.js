@@ -77,7 +77,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '24',
-      uniqueIdentificationNumber: '1234',
+      name: '1234',
       bondBeneficiary: 'test',
       value: '123456.55',
       currencySameAsSupplyContractCurrency: 'true',

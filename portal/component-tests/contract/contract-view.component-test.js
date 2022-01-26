@@ -87,8 +87,8 @@ describe(page, () => {
       const dealId = deal._id;
       const bondId = deal.bondTransactions.items[0]._id;
 
-      return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="unique-number-link-${bondId}"]`)
-        .toLinkTo(`/contract/${dealId}/bond/${bondId}/details`, deal.bondTransactions.items[0].uniqueIdentificationNumber));
+      return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="name-link-${bondId}"]`)
+        .toLinkTo(`/contract/${dealId}/bond/${bondId}/details`, deal.bondTransactions.items[0].name));
     });
 
     it('renders bond transactions table', () =>
@@ -137,7 +137,7 @@ describe(page, () => {
 
     it('hides the link to the bond', () => {
       const bondId = deal.bondTransactions.items[0]._id;
-      return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="unique-number-link-${bondId}"]`).notToExist());
+      return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="name-link-${bondId}"]`).notToExist());
     });
 
     it('hides the link to add a loan', () => wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="link-add-loan"]').notToExist()));

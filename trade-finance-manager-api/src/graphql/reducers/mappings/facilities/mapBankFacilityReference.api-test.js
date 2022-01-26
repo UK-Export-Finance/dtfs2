@@ -5,7 +5,7 @@ describe('mapBankFacilityReference', () => {
   const mockBond = {
     _id: '1234',
     ukefFacilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-    uniqueIdentificationNumber: 'abc123',
+    name: 'abc123',
   };
 
   const mockLoan = {
@@ -15,9 +15,9 @@ describe('mapBankFacilityReference', () => {
   };
 
   describe('when facility is bond', () => {
-    it('should return uniqueIdentificationNumber', () => {
+    it('should return name', () => {
       const result = mapBankFacilityReference(mockBond);
-      expect(result).toEqual(mockBond.uniqueIdentificationNumber);
+      expect(result).toEqual(mockBond.name);
     });
   });
 

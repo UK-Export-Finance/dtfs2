@@ -28,23 +28,23 @@
       label: {
         text: "Bond's unique identification number"
       },
-      id: 'uniqueIdentificationNumber',
-      name: 'uniqueIdentificationNumber',
-      value: bond.uniqueIdentificationNumber,
+      id: 'name',
+      name: 'name',
+      value: bond.name,
       classes: 'govuk-!-width-one-half govuk-js-character-count',
       attributes: {
         maxlength: '30',
-        'aria-describedby': 'uniqueIdentificationNumber-info',
-        'data-cy': 'unique-identification-number'
+        'aria-describedby': 'name-info',
+        'data-cy': 'name'
       },
-      errorMessage: validationErrors.errorList.uniqueIdentificationNumber.text and {
-        text: validationErrors.errorList.uniqueIdentificationNumber.text,
+      errorMessage: validationErrors.errorList.name.text and {
+        text: validationErrors.errorList.name.text,
         attributes: {
-          'data-cy': 'unique-identification-number-error-message'
+          'data-cy': 'name-error-message'
         }
       }
     }) }} 
-    <span id="uniqueIdentificationNumber-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+    <span id="name-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
       You can enter up to 30 characters
     </span>
   </div>

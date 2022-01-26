@@ -439,7 +439,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       const issuedBondFields = () => ({
         facilityStage: 'Issued',
         hasBeenIssued: true,
-        uniqueIdentificationNumber: '1234',
+        name: '1234',
         ...coverEndDate(),
       });
 
