@@ -5,7 +5,7 @@ const {
   facilityChangePortalActivity,
   portalActivityGenerator,
   getUserInfo,
-  removeChangedToIssued,
+  updateChangedToIssued,
 } = require('../../../src/v1/controllers/portal/gef-deal/add-min-activities.controller');
 
 const collectionName = 'facilities';
@@ -366,7 +366,7 @@ describe('portalActivityGenerator()', () => {
   });
 });
 
-describe('removeChangedToIssued()', () => {
+describe('updateChangedToIssued()', () => {
   let aMaker;
   let aChecker;
   let mockApplication;
@@ -396,7 +396,7 @@ describe('removeChangedToIssued()', () => {
     const { body } = await as(aChecker).get(baseUrl, mockQuery);
 
     // changes to false to test
-    await removeChangedToIssued(body);
+    await updateChangedToIssued(body);
   });
 
   it('changes canResubmitIssuedFacilities to false', async () => {

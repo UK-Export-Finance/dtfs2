@@ -10,7 +10,11 @@ const { updateFacility } = require('../gef-facility/update-facility.controller')
 
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants/activityConstants');
 
-const removeChangedToIssued = async (facilities) => {
+/**
+ * canResubmitIssuedFacilities - changes flags to false
+ * @param {Object} facilities
+ */
+const updateChangedToIssued = async (facilities) => {
   facilities.forEach(async (facility) => {
     const { _id, canResubmitIssuedFacilities } = facility;
 
@@ -45,6 +49,7 @@ const getUserInfo = async (userId) => {
   return user;
 };
 
+// creates portal activity object to store in DB
 const portalActivityGenerator = (activityParams) => {
   const {
     type,
@@ -79,6 +84,13 @@ const portalActivityGenerator = (activityParams) => {
   return portalActivityObj;
 };
 
+/**
+ * For facilities changed to issued
+ * adds to front of portalActivity array in correct format
+ * @param {Object} application
+ * @param {Array} facilities
+ * @returns {Array} portalActivities
+ */
 const facilityChangePortalActivity = async (application, facilities) => {
   const { checkerId, portalActivities } = application;
   const checker = await getUserInfo(checkerId);
@@ -107,6 +119,12 @@ const facilityChangePortalActivity = async (application, facilities) => {
   return portalActivities;
 };
 
+/**
+ * Generates activity for MIN submission to UKEF
+ * Adds to front of portalActivities array in correct format
+ * @param {Object} application
+ * @returns {Array} portalActivities
+ */
 const ukefSubmissionPortalActivity = async (application) => {
   const { portalActivities, checkerId } = application;
 
@@ -132,6 +150,13 @@ const ukefSubmissionPortalActivity = async (application) => {
   return portalActivities;
 };
 
+/**
+ * Generates MIN Activity objects for submission and changed facilities
+ * Removes flag for changedToIssued facility
+ * Returns updated deal
+ * @param {*} req
+ * @param {*} res
+ */
 const generateMINActivities = async (req, res) => {
   const dealId = req.params.id;
 
@@ -148,7 +173,7 @@ const generateMINActivities = async (req, res) => {
       portalActivities,
     };
 
-    await removeChangedToIssued(facilities);
+    await updateChangedToIssued(facilities);
 
     const updatedDeal = await updateDeal(dealId, update);
 
@@ -163,5 +188,5 @@ module.exports = {
   facilityChangePortalActivity,
   portalActivityGenerator,
   getUserInfo,
-  removeChangedToIssued,
+  updateChangedToIssued,
 };

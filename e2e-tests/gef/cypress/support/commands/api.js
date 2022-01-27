@@ -4,6 +4,11 @@ const centralApiUrl = () => {
   return url;
 };
 
+const tfmApiUrl = () => {
+  const url = `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
+  return url;
+};
+
 const login = (credentials) => {
   const { username, password } = credentials;
 
@@ -97,6 +102,42 @@ const addCommentObjToDeal = (dealId, commentType, comment) => cy.request({
   },
 }).then((res) => res);
 
+const submitDealAfterUkefIds = (dealId, dealType, checker) => cy.request({
+  url: `${tfmApiUrl()}/v1/deals/submitDealAfterUkefIds`,
+  method: 'PUT',
+  body: { dealId, dealType, checker },
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body;
+});
+
+const submitDealToTfm = (dealId, dealType) => cy.request({
+  url: `${centralApiUrl()}/v1/tfm/deals/submit`,
+  method: 'PUT',
+  body: { dealId, dealType },
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body;
+});
+
+const addUnderwriterCommentToTfm = (dealId, underwriterComment) => cy.request({
+  url: `${centralApiUrl()}/v1/tfm/deals/${dealId}`,
+  method: 'put',
+  body: { dealUpdate: underwriterComment },
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body;
+});
+
 export {
   login,
   fetchAllApplications,
@@ -107,4 +148,7 @@ export {
   createFacility,
   updateFacility,
   addCommentObjToDeal,
+  submitDealAfterUkefIds,
+  submitDealToTfm,
+  addUnderwriterCommentToTfm,
 };

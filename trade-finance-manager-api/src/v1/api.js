@@ -609,7 +609,6 @@ const updatePortalGefDeal = async (dealId, update) => {
 };
 
 const updateGefMINActivity = async (dealId) => {
-  console.log('here========', dealId);
   try {
     const response = await axios({
       method: 'put',

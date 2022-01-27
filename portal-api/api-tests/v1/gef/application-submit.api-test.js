@@ -4,7 +4,7 @@ const { FACILITY_TYPE } = require('../../../src/v1/gef/enums');
 
 const {
   submissionPortalActivity,
-  removeChangedToIssued,
+  updateChangedToIssued,
   checkCoverDateConfirmed,
 } = require('../../../src/v1/gef/controllers/application-submit');
 
@@ -198,7 +198,7 @@ describe('submissionPortalActivity()', () => {
   });
 });
 
-describe('removeChangedToIssued()', () => {
+describe('updateChangedToIssued()', () => {
   let aMaker;
   let aChecker;
   let mockApplication;
@@ -226,7 +226,7 @@ describe('removeChangedToIssued()', () => {
 
     const { body } = await as(aChecker).get(baseUrl, mockQuery);
     // changes to false to test
-    await removeChangedToIssued(body.items[0].dealId);
+    await updateChangedToIssued(body.items[0].dealId);
   });
 
   it('changes canResubmitIssuedFacilities to false', async () => {

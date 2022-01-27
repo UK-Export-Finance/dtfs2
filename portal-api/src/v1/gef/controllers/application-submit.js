@@ -87,7 +87,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
   When submitting to UKEF, have to remove the canResubmitIssuedFacilities flag
   Ensures that cannot update this facility anymore
 */
-const removeChangedToIssued = async (dealId) => {
+const updateChangedToIssued = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   facilities.forEach(async (facility) => {
@@ -198,7 +198,7 @@ const addSubmissionData = async (dealId, existingApplication) => {
   await addUkefFacilityIdToFacilities(dealId);
   // if MIA then handled by central API
   if (existingApplication.submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
-    await removeChangedToIssued(dealId);
+    await updateChangedToIssued(dealId);
   }
 
   const submissionData = {
@@ -219,6 +219,6 @@ module.exports = {
   addSubmissionData,
   submissionPortalActivity,
   addSubmissionDateToIssuedFacilities,
-  removeChangedToIssued,
+  updateChangedToIssued,
   checkCoverDateConfirmed,
 };
