@@ -78,7 +78,7 @@ context('Dashboard: Reports', () => {
 
     it('displays the `Unissued facilities` reports page', () => {
       reports.reviewAllUnissuedFacilities().click();
-      cy.url().should('eq', relative('/reports/unissued-facilities'));
+      cy.url().should('eq', relative('/reports/review-unissued-facilities'));
       reports.reportsUnissuedFacilitiesBreadcrumbs().should('exist');
       reports.reportsUnissuedFacilitiesDownload().should('exist');
 

@@ -65,7 +65,7 @@ const getUkefDecision = async (decision) => {
 
 exports.reviewUkefDecisionReports = async (req, res) => {
   try {
-    const ukefDecision = req.body || req.query.ukefDecision || '';
+    const ukefDecision = req.body.ukefDecision || req.query.ukefDecision || '';
     const ukefDecisions = [];
 
     if (ukefDecision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
@@ -76,8 +76,6 @@ exports.reviewUkefDecisionReports = async (req, res) => {
       let setDateToMidnight;
       let dateOfApproval;
       let defaultDate;
-
-      console.log(deals);
 
       // loop through deals
       deals.forEach((item) => {
@@ -116,7 +114,6 @@ exports.reviewUkefDecisionReports = async (req, res) => {
       });
     }
 
-    console.log(ukefDecisions);
     res.status(200).send(ukefDecisions);
   } catch (error) {
     console.error('Unable to retrieve ukef\'s decision', { error });
