@@ -1,0 +1,17 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <h3 class="govuk-heading-s" data-cy="reports--conditional-decision-title">Manual inclusion application with conditions </h3>
+    <h3 class="govuk-heading-m has-text-danger">Less than 20 days left</h3>
+    {% if dealWithConditionsCount > 1 %}
+      <a class="govuk-link" href="/reports/review-conditional-decision" aria-label="Review UKEF decisions" data-cy="reports--conditional-decision">
+        Review {{ dealWithConditionsCount }} UKEF decisions
+      </a>
+    {% elif dealWithConditionsCount == 1 %}
+      <a class="govuk-link" href="/reports/review-conditional-decision" aria-label="Review UKEF decision" data-cy="reports--conditional-decision">
+        Review 1 UKEF decision
+      </a>
+    {% else %}
+      <p class="govuk-body govuk-!-margin-bottom-0" data-cy="reports--conditional-decision">You have 0 UKEF decisions to review</hp>
+    {% endif %}
+  </div>
+</div>

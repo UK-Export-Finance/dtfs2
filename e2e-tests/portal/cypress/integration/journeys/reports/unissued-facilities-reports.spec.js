@@ -8,7 +8,7 @@ const { reports } = require('../../pages');
 
 const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
 
-context('Dashboard: Reports', () => {
+context('Dashboard: Unissued facilities report', () => {
   before(() => {
     cy.deleteGefApplications(BANK1_MAKER1);
 
@@ -64,14 +64,14 @@ context('Dashboard: Reports', () => {
     });
   });
 
-  describe('Reports page', () => {
+  describe('Unissued facilities Report', () => {
     beforeEach(() => {
       cy.login(BANK1_MAKER1);
       cy.visit(relative('/reports'));
     });
     it('returns the reports page with unissued facilities', () => {
       reports.allUnissuedFacilities().should('contain', 'You need to issue 3 facilities');
-      reports.pastDeadlineUnissuedFacilities().should('contain', 'You have 1 facilities that have past the deadline for issuing');
+      reports.pastDeadlineUnissuedFacilities().should('contain', 'You have 1 facility that has past the deadline for issuing');
       reports.facilitiesThatNeedIssuing().should('contain', 'You have 1 facility that needs issuing');
       reports.reviewAllUnissuedFacilities().should('exist');
     });
