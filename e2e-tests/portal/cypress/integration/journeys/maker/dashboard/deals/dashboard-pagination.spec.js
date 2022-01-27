@@ -1,4 +1,4 @@
-const { dashboard } = require('../../../../pages');
+const { dashboardDeals } = require('../../../../pages');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
 
@@ -20,32 +20,32 @@ context('Dashboard Deals pagination controls', () => {
   it('Dashboard Deals displays 20 results per page, total number of items and working First/Previous/Next/Last links', () => {
     // login and go to the dashboard
     cy.login(MAKER_LOGIN);
-    dashboard.visit();
+    dashboardDeals.visit();
 
     // deals will be shown in update order, so expect them upsidedown..
     const page1 = deals.slice(1, 21).reverse();
     const page2 = [deals[0]];
 
-    // test ininital dashboard page
-    dashboard.confirmDealsPresent(page1);
-    dashboard.totalItems().invoke('text').then((text) => {
+    // test iniital dashboard page
+    dashboardDeals.confirmDealsPresent(page1);
+    dashboardDeals.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(21 items)');
     });
 
     // prove the Next button
-    dashboard.next().click();
-    dashboard.confirmDealsPresent(page2);
+    dashboardDeals.next().click();
+    dashboardDeals.confirmDealsPresent(page2);
 
     // prove the Previous button
-    dashboard.previous().click();
-    dashboard.confirmDealsPresent(page1);
+    dashboardDeals.previous().click();
+    dashboardDeals.confirmDealsPresent(page1);
 
     // prove the Last button
-    dashboard.last().click();
-    dashboard.confirmDealsPresent(page2);
+    dashboardDeals.last().click();
+    dashboardDeals.confirmDealsPresent(page2);
 
     // prove the First button
-    dashboard.first().click();
-    dashboard.confirmDealsPresent(page1);
+    dashboardDeals.first().click();
+    dashboardDeals.confirmDealsPresent(page1);
   });
 });

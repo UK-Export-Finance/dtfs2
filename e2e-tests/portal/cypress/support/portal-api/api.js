@@ -200,6 +200,7 @@ exports.updateGefApplication = (dealId, payload, token) => cy.request({
   },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
+  console.log('udpate gef application \n', resp.body);
   return resp.body;
 });
 
@@ -212,6 +213,7 @@ module.exports.setGefApplicationStatus = (dealId, token, status) => cy.request({
     Authorization: token,
   },
 }).then((res) => res);
+
 module.exports.listGefFacilities = (token, dealId) => cy.request({
   url: `${api()}/v1/gef/facilities/?dealId=${dealId}`,
   method: 'GET',
@@ -243,5 +245,18 @@ module.exports.insertGefFacility = (deal, token) => cy.request({
   },
 }).then((resp) => {
   expect(resp.status).to.equal(201);
+  return resp.body;
+});
+
+module.exports.updateGefFacility = (facilityId, payload, token) => cy.request({
+  url: `${api()}/v1/gef/facilities/${facilityId}`,
+  method: 'PUt',
+  body: payload,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
   return resp.body;
 });

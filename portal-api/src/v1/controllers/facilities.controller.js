@@ -108,7 +108,7 @@ exports.queryAllFacilities = async (
           _id: 1,
           dealId: '$deal._id',
           submissionType: '$deal.submissionType',
-          name: 'mock name', // what is this in BSS?
+          name: '$name',
           ukefFacilityId: '$ukefFacilityId',
           currency: '$currency',
           value: '$value',

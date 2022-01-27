@@ -38,21 +38,30 @@
 
   {% set items = [] %}
   {% for facility in facilities %}
+
+    {% if facility.type === 'Cash' or facility.type === 'Contingent' %}
+      {% set url = '/gef/application-details/' + facility.dealId %}
+
+      {% else %}
+
+      {% set url = '/contract/' + facility.dealId %}
+    {% endif %}
+
     {% set linkHtml %}
       <a
-          href="{{ facility.url }}"
+          href="{{ url }}"
           class="govuk-link"
-          data-cy="facility__link--TODO"
+          data-cy="facility__name--link--{{ facility._id }}"
       >
-        TODO
+        {{ facility.name }}
       </a>
     {% endset %}
 
     {% if facility.hasBeenIssued %}
-      {% set stage  = 'Issued' %}
+      {% set stage = 'Issued' %}
 
       {% else %}
-      {% set stage  = 'Unissued' %}
+      {% set stage = 'Unissued' %}
     {% endif %}
 
     {% if facility.currency.id %}
@@ -62,37 +71,37 @@
     {% set item = [
       {
         html: linkHtml,
-        attributes: { "data-cy": "facility__bankId--" + facility.bankId  },
+        attributes: { "data-cy": "facility__bankId--" + facility._id  },
         classes: "govuk-body-s"
       },
       {
         text: facility.ukefFacilityId | dashIfEmpty,
-        attributes: { "data-cy": "facility__ukefId--" + facility.bankId },
+        attributes: { "data-cy": "facility__ukefId--" + facility._id },
         classes: "govuk-body-s"
       },
       {
         text: facility.type | dashIfEmpty,
-        attributes: { "data-cy": "facility__type--" + facility.bankId },
+        attributes: { "data-cy": "facility__type--" + facility._id },
         classes: "govuk-body-s"
       },
       {
         text: facility.submissionType | dashIfEmpty,
-        attributes: { "data-cy": "facility__submissionType--" + facility.bankId },
+        attributes: { "data-cy": "facility__noticeType--" + facility._id },
         classes: "govuk-body-s"
       },
       {
         text: currency + ' ' + facility.value | formatAsCurrency | dashIfEmpty,
-        attributes: { "data-cy": "facility__value--" + facility.bankId },
+        attributes: { "data-cy": "facility__value--" + facility._id },
         classes: "govuk-body-s"
       },
       {
         text: stage  | dashIfEmpty,
-        attributes: { "data-cy": "facility__bankStage--" + facility.bankId },
+        attributes: { "data-cy": "facility__bankStage--" + facility._id },
         classes: "govuk-body-s"
       },
       {
         text: facility.submittedAsIssuedDate | localiseTimestamp("D MMM YYYY", user.timezone) | dashIfEmpty,
-        attributes: { "data-cy": "facility__submittedAsIssued--" + facility.bankId },
+        attributes: { "data-cy": "facility__issuedDate--" + facility._id },
         classes: "govuk-body-s"
       }
     ] %}

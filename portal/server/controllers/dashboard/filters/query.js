@@ -24,13 +24,15 @@ const dashboardFiltersQuery = (
 
   // NOTE: this does not work for facilities.
   // Need to seperate somehow.
-  if (!isSuperUser(user)) {
-    filtersQuery.push({
-      field: 'bank.id',
-      value: user.bank.id,
-      operator: 'and',
-    });
-  }
+  // if (!isSuperUser(user)) {
+  //   filtersQuery.push({
+  //     field: 'bank.id',
+  //     value: user.bank.id,
+  //     operator: 'and',
+  //   });
+  // }
+
+  console.log('----filtersQuery \n', filtersQuery);
 
   if (createdByYou) {
     filtersQuery.push({

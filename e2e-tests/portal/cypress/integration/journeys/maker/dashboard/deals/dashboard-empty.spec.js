@@ -1,4 +1,4 @@
-const { dashboard, defaults } = require('../../../../pages');
+const { dashboardDeals, defaults } = require('../../../../pages');
 
 const mockUsers = require('../../../../../fixtures/mockUsers');
 
@@ -11,7 +11,7 @@ context('Dashboard deals', () => {
 
   it('Can display an empty dashboard', () => {
     cy.login(MAKER_LOGIN);
-    dashboard.visit();
+    dashboardDeals.visit();
     cy.title().should('eq', `Deals${defaults.pageTitleAppend}`);
   });
 });
