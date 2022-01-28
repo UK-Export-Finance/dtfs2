@@ -18,7 +18,7 @@
       },
       {
         text: "Unissued facilities",
-        href: "/reports/unissued-facilities"
+        href: "/reports/review-unissued-facilities"
       }
     ]
   }) }}
@@ -75,40 +75,38 @@
     {% set item = [
       {
         html: bankRefLink,
-        attributes: { "data-cy": "facility__bankRef" }
+        attributes: { "data-cy": "facility__row--bankRef" }
       },
       {
         text: facility.dealType or "-",
-        attributes: { "data-cy": "facility__product" }
+        attributes: { "data-cy": "facility__row--product" }
       },
       {
         text: facility.ukefFacilityId or "-",
-        attributes: { "data-cy": "facility__facilityId" }
+        attributes: { "data-cy": "facility__row--facilityId" }
       },
       {
         text: facility.companyName or "-",
-        attributes: { "data-cy": "facility__companyName" }
+        attributes: { "data-cy": "facility__row--companyName" }
       },
       {
         text: facility.currencyAndValue or "-",
-        attributes: { "data-cy": "facility__facilityValue" }
+        attributes: { "data-cy": "facility__row--facilityValue" }
       },
       {
         text: facility.deadlineForIssuing or "-",
-        attributes: { "data-cy": "facility__deadlineForIssuing" }
+        attributes: { "data-cy": "facility__row--deadlineForIssuing" }
       },
       {
         html: daysLeftToIssue,
-        attributes: { "data-cy": "facility__daysLeftToIssue" }
+        attributes: { "data-cy": "facility__row--daysLeftToIssue" }
       }
     ] %}
 
     {% set items = (items.push(item), items) %}
   {% endfor %}
 
-
 {{ govukTable({
-   classes: 'portal__facilities-table',
    attributes: {'data-cy': 'reports--unissued-facilities-table' },
    head: [
       {

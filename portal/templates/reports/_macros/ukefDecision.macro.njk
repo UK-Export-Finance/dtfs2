@@ -1,0 +1,107 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% macro ukefDecisionTable(deals) %}
+
+{% set items = [] %}
+  {% for deal in deals %}
+    {% set bankRefLink %}
+      {% if deal.dealType === 'GEF' %}
+        <a
+          class="govuk-link"
+          href="/gef/application-details/{{ deal.dealId }}"
+          aria-label="View deal details"
+          data-cy="reports-deal-{{ deal.dealId }}-link">
+          {{ deal.bankInternalRefName }}
+        </a>
+      {% else %}
+        <a
+          class="govuk-link"
+          href="/contract/{{ deal.dealId }}"
+          aria-label="View deal details"
+          data-cy="reports-deal-{{ deal.dealId }}-link">
+          {{ deal.bankInternalRefName }}
+        </a>
+      {% endif %}
+    {% endset %}
+
+    {% set daysToReview %}
+      {% if deal.daysToReview >= 5 %}
+        <p class="govuk-body govuk-!-margin-0">{{ deal.daysToReview }} days</p>
+      {% elif deal.daysToReview < 5 and deal.daysToReview >= 0 %}
+        <p class="has-text-danger govuk-body govuk-!-margin-0">{{ deal.daysToReview }} days left</p>
+      {% elif deal.daysToReview < 0 %}
+        <p class="has-text-danger govuk-body govuk-!-margin-0">{{ deal.daysToReview * -1 }} days overdue</p>
+      {% endif %}
+    {% endset %}
+
+    {% set item = [
+      {
+        html: bankRefLink,
+        attributes: { "data-cy": "deal__row--bankRef" }
+      },
+      {
+        text: deal.dealType or "-",
+        attributes: { "data-cy": "deal__row--product" }
+      },
+      {
+        text: deal.companyName or "-",
+        attributes: { "data-cy": "deal__row--exporter" }
+      },
+      {
+        text: deal.dateCreated or "-",
+        attributes: { "data-cy": "deal__row--date-created" }
+      },
+      {
+        text: deal.submissionDate or "-",
+        attributes: { "data-cy": "deal__row--submission-date" }
+      },
+      {
+        text: deal.dateOfApproval or "-",
+        attributes: { "data-cy": "deal__row--date-of-approval" }
+      },
+      {
+        html: daysToReview,
+        attributes: { "data-cy": "deal__row--days-to-review" }
+      }
+    ] %}
+
+    {% set items = (items.push(item), items) %}
+  {% endfor %}
+
+
+{{ govukTable({
+   classes: 'reports--ukef-decision-table',
+   attributes: {'data-cy': 'reports--ukef-decision-table' },
+   head: [
+      {
+        text: "Bank ref",
+        attributes: { "data-cy": "deal__header--bankRef" }
+      },
+      {
+        text: "Product",
+        attributes: { "data-cy": "deal__header--product"}
+      },
+      {
+        text: "Exporter",
+        attributes: { "data-cy": "deal__header--exporter" }
+      },
+      {
+        text: "Date created",
+        attributes: { "data-cy": "deal__header--date-created" }
+      },
+      {
+        text: "Submission date",
+        attributes: { "data-cy": "deal__header--submission-date" }
+      },
+      {
+        text: "Date of MIA approval by UKEF",
+        attributes: { "data-cy": "deal__header--date-of-approval" }
+      },
+      {
+        text: "Days to review",
+        attributes: { "data-cy": "deal__header--days-to-review" }
+      }
+    ],
+    rows: items
+  }) }}
+
+{% endmacro %}

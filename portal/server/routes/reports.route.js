@@ -1,10 +1,14 @@
 const express = require('express');
-const { getPortalReports, getUnissuedFacilitiesReports, downloadUnissuedFacilitiesReports } = require('../controllers/dashboard/reports.controller');
+const reportsController = require('../controllers/dashboard/reports.controller');
 
-const router = express.Router();
+const reportsRouter = express.Router();
 
-router.get('/reports', getPortalReports);
-router.get('/reports/unissued-facilities', getUnissuedFacilitiesReports);
-router.get('/reports/download-report-unissued-facilities', downloadUnissuedFacilitiesReports);
+reportsRouter.get('/reports', reportsController.getPortalReports);
+reportsRouter.get('/reports/review-unissued-facilities', reportsController.getUnissuedFacilitiesReport);
+reportsRouter.get('/reports/review-unconditional-decision', reportsController.getUnconditionalDecisionReport);
+reportsRouter.get('/reports/review-conditional-decision', reportsController.getConditionalDecisionReport);
+reportsRouter.get('/reports/download-unissued-facilities-report', reportsController.downloadUnissuedFacilitiesReport);
+reportsRouter.get('/reports/download-unconditional-decision-report', reportsController.downloadUnconditionalDecisionReport);
+reportsRouter.get('/reports/download-conditional-decision-report', reportsController.downloadConditionalDecisionReport);
 
-module.exports = router;
+module.exports = reportsRouter;
