@@ -14,7 +14,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -24,7 +24,7 @@ jobs:
 
   build:
     name: Build and push DTFS Central API
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -49,7 +49,7 @@ jobs:
     needs: [set-environment, build]
     environment:
       name: APITEST
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
       MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
@@ -66,7 +66,7 @@ jobs:
 
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-      
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
