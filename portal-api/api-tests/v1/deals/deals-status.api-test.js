@@ -9,7 +9,7 @@ const api = require('../../../src/v1/api');
 
 const { as } = require('../../api')(app);
 
-// jest.unmock('@azure/storage-file-share');
+jest.mock('../../../src/v1/controllers/deal-status/send-status-update-emails');
 
 describe('/v1/deals/:id/status', () => {
   let noRoles;
@@ -35,7 +35,6 @@ describe('/v1/deals/:id/status', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
-    sendStatusUpdateEmails.mockClear();
 
     api.tfmDealSubmit = () => Promise.resolve();
   });
@@ -284,18 +283,6 @@ describe('/v1/deals/:id/status', () => {
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
       expect(sendStatusUpdateEmails).toHaveBeenCalled();
-    });
-
-    it('does NOT send an email if the status hasn\'t changed', async () => {
-      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
-      const statusUpdate = {
-        status: completedDeal.status,
-      };
-
-      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-
-      expect(sendStatusUpdateEmails).not.toHaveBeenCalled();
     });
 
     it('does NOT add the user to `editedBy` array if a checker changes status to "Further Maker\'s input required"', async () => {
