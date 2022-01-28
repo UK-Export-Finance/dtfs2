@@ -142,6 +142,7 @@ type FacilitySnapshot {
   type: String
   ukefFacilityType: String!
   facilityStage: String!
+  hasBeenIssued: Boolean
   facilityValueExportCurrency: String!
   value: String
   currency: String

@@ -135,7 +135,7 @@ describe('mappings - map-deals', () => {
           ...mockDeal.dealSnapshot,
           bondTransactions: {},
           loanTransactions: {},
-          facilities: allFacilities.map((f) => mockFindOneFacilityResponse),
+          facilities: [mockFindOneFacilityResponse],
         },
       };
 
