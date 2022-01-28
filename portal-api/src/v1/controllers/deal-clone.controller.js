@@ -1,7 +1,7 @@
 const DEFAULTS = require('../defaults');
 const { findMandatoryCriteria } = require('./mandatoryCriteria.controller');
 const { findOneDeal, createDeal } = require('./deal.controller');
-const { getCloneDealErrors } = require('../validation/clone-deal');
+const { getCloneDealErrors } = require('../validation/clone-bss-deal');
 const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 

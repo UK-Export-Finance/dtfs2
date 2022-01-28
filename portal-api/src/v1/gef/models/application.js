@@ -52,6 +52,7 @@ class Application {
       this.updatedAt = Date.now();
 
       // Only set properties if they are part of the request otherwise they get cleared
+      // `ukefDecision` in particular should not be changed in portal/gef but rather from tfm api
       const updatable = [
         'exporter',
         'comments',
@@ -68,6 +69,7 @@ class Application {
         'facilitiesUpdated',
         'ukefDecisionAccepted',
         'portalActivities',
+        'ukefDecision'
       ];
 
       if (req.exporter) {

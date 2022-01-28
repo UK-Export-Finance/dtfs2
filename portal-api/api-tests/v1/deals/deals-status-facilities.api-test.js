@@ -9,10 +9,6 @@ const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
 
-// Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 12);
-
 describe('/v1/deals/:id/status - facilities', () => {
   let aBarclaysMaker;
   let aBarclaysChecker;
