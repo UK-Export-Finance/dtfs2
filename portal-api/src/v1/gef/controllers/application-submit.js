@@ -196,7 +196,10 @@ const addSubmissionData = async (dealId, existingApplication) => {
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
   await addSubmissionDateToIssuedFacilities(dealId);
   await addUkefFacilityIdToFacilities(dealId);
-  // if MIA then handled by central API/tfm API on submission to UKEF
+  /**
+   * If AIN or MIN, portalActivities are handled by portal-API
+   * If MIA -> MIN, then handled by tfm-API and central-API to add portalActivities
+   */
   if (existingApplication.submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
     await updateChangedToIssued(dealId);
   }

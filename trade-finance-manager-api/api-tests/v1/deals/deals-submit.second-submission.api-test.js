@@ -576,6 +576,11 @@ describe('/v1/deals', () => {
         expect(issuedFacility.tfm.feeRecord).toBeUndefined();
       });
 
+      it('calls updateGefMINActivity when deal is MIA', async () => {
+        await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
+        expect(updateGefActivitySpy).toHaveBeenCalledWith('MOCK_GEF_DEAL_SECOND_SUBMIT_MIA');
+      });
+
       it('Should update the application from MIA to MIN', async () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
 
