@@ -81,7 +81,7 @@ describe('submissionPortalActivity()', () => {
 
     expect(portalActivityObject.facilityType).toEqual('');
 
-    expect(portalActivityObject.facilityID).toEqual('');
+    expect(portalActivityObject.ukefFacilityId).toEqual('');
   });
 
   it('should not return a populated array with facility changed if submission count above 1 and facility changed to issued and MIA', async () => {
@@ -194,7 +194,7 @@ describe('submissionPortalActivity()', () => {
 
     expect(portalActivityObject.facilityType).toEqual(`${req.body.type} facility`);
 
-    expect(portalActivityObject.facilityID).toEqual(mockFacilities[4].ukefFacilityId);
+    expect(portalActivityObject.ukefFacilityId).toEqual(mockFacilities[4].ukefFacilityId);
   });
 });
 

@@ -19,7 +19,7 @@ const CONSTANTS = require('../../../src/constants');
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/constants/activityConstants');
 
 const MOCK_APPLICATION = mockApplications[0];
-const MOCK_APPLICATION_FACILITIES = mockApplications[15];
+const MOCK_APPLICATION_FACILITIES = mockApplications[1];
 
 const wipeDB = require('../../wipeDB');
 
@@ -152,7 +152,7 @@ describe('facilityChangePortalActivity()', () => {
 
     expect(portalActivityObject.facilityType).toEqual(`${mockFacilityOne[0].type} facility`);
 
-    expect(portalActivityObject.facilityID).toEqual(mockFacilityOne[0].ukefFacilityId);
+    expect(portalActivityObject.ukefFacilityId).toEqual(mockFacilityOne[0].ukefFacilityId);
   });
 
   it('should return a populated array with 2 in the issued facility activity object', async () => {
@@ -185,11 +185,11 @@ describe('facilityChangePortalActivity()', () => {
 
     // check that the first object is position 1 in mockFacilitiesArray
     const portalActivityObjectZero = result[0];
-    expect(portalActivityObjectZero.facilityID).toEqual(mockFacilitiesArray[1].ukefFacilityId);
+    expect(portalActivityObjectZero.ukefFacilityId).toEqual(mockFacilitiesArray[1].ukefFacilityId);
 
     // check that second object is position 0 in mockFacilitiesArray
     const portalActivityObjectOne = result[1];
-    expect(portalActivityObjectOne.facilityID).toEqual(mockFacilitiesArray[0].ukefFacilityId);
+    expect(portalActivityObjectOne.ukefFacilityId).toEqual(mockFacilitiesArray[0].ukefFacilityId);
   });
 });
 
@@ -226,7 +226,7 @@ describe('portalActivityGenerator()', () => {
   const activityType = 'NOTICE';
   const activityText = 'test123';
   const facility = {
-    type: 'Cash',
+    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
     ukefFacilityId: 123456,
   };
   const maker = {
@@ -298,8 +298,8 @@ describe('portalActivityGenerator()', () => {
       expect(result.facilityType).toEqual('Cash facility');
     });
 
-    it('should correctly return facilityID', () => {
-      expect(result.facilityID).toEqual(123456);
+    it('should correctly return ukefFacilityId', () => {
+      expect(result.ukefFacilityId).toEqual(123456);
     });
   });
 
@@ -360,8 +360,8 @@ describe('portalActivityGenerator()', () => {
       expect(result.facilityType).toEqual('');
     });
 
-    it('should correctly return facilityID', () => {
-      expect(result.facilityID).toEqual('');
+    it('should correctly return ukefFacilityId', () => {
+      expect(result.ukefFacilityId).toEqual('');
     });
   });
 });
@@ -379,7 +379,6 @@ describe('updateChangedToIssued()', () => {
     aChecker = testUsers().withRole('checker').one();
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
     await as(aMaker).put(mockApplications[0]).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
-    console.log(mockApplication.body);
   });
 
   beforeEach(async () => {

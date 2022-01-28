@@ -56,6 +56,7 @@ module.exports = (app) => ({
         .delete(url)
         .send(data),
   }),
+
   as: (user) => {
     const token = (user && user.token) ? user.token : '';
 
@@ -65,24 +66,6 @@ module.exports = (app) => ({
           .post(url)
           .set({ Authorization: token || '' })
           .send(data),
-      }),
-
-      postMultipartForm: (data, files = []) => ({
-        to: async (url) => {
-          const apiRequest = request(app)
-            .post(url)
-            .set({ Authorization: token || '' });
-
-          if (files.length) {
-            files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
-          }
-
-          Object.entries(data).forEach(([fieldname, value]) => {
-            apiRequest.field(fieldname, value);
-          });
-
-          return apiRequest;
-        },
       }),
 
       postEach: (list) => ({
@@ -101,24 +84,6 @@ module.exports = (app) => ({
           .put(url)
           .set({ Authorization: token || '' })
           .send(data),
-      }),
-
-      putMultipartForm: (data, files = []) => ({
-        to: async (url) => {
-          const apiRequest = request(app)
-            .put(url)
-            .set({ Authorization: token || '' });
-
-          if (files.length) {
-            files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
-          }
-
-          Object.entries(data).forEach(([fieldname, value]) => {
-            apiRequest.field(fieldname, value);
-          });
-
-          return apiRequest;
-        },
       }),
 
       get: async (url, query = {}) => request(app)

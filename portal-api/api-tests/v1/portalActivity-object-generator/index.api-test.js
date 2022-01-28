@@ -83,8 +83,8 @@ describe('portalActivityGenerator()', () => {
       expect(result.facilityType).toEqual('Cash facility');
     });
 
-    it('should correctly return facilityID', () => {
-      expect(result.facilityID).toEqual(123456);
+    it('should correctly return ukefFacilityId', () => {
+      expect(result.ukefFacilityId).toEqual(123456);
     });
   });
 
@@ -145,8 +145,8 @@ describe('portalActivityGenerator()', () => {
       expect(result.facilityType).toEqual('');
     });
 
-    it('should correctly return facilityID', () => {
-      expect(result.facilityID).toEqual('');
+    it('should correctly return ukefFacilityId', () => {
+      expect(result.ukefFacilityId).toEqual('');
     });
   });
 });

@@ -521,7 +521,7 @@ describe('/v1/deals', () => {
       });
     });
 
-    describe('GEF deal - on second submission', () => {
+    describe.only('GEF deal - on second submission', () => {
       const mockDeal = {
         ...MOCK_GEF_DEAL,
         submissionCount: 2,
@@ -559,7 +559,7 @@ describe('/v1/deals', () => {
         expect(unissuedFacility.tfm.feeRecord).toEqual(null);
       });
 
-      it('does NOT add fee record when deal is MIA', async () => {
+      it.only('does NOT add fee record when deal is MIA', async () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
 
         expect(status).toEqual(200);

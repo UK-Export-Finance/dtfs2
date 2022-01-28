@@ -25,7 +25,7 @@ describe('mapPortalActivities', () => {
     label: 'Automatic inclusion notice submitted to UKEF',
     html: '',
     facilityType: '',
-    facilityID: '',
+    ukefFacilityId: '',
     maker: '',
     checker: '',
   }];
@@ -42,7 +42,7 @@ describe('mapPortalActivities', () => {
     label: 'Bank facility stage changed',
     html: 'facility',
     facilityType: 'Cash facility',
-    facilityID: '12345',
+    ukefFacilityId: '12345',
     maker: {
       firstname: 'Joe',
       surname: 'Bloggs',
@@ -66,7 +66,7 @@ describe('mapPortalActivities', () => {
       byline: { text: 'Bob Smith' },
       html: '',
       facilityType: '',
-      facilityID: '',
+      ukefFacilityId: '',
       maker: '',
       checker: '',
     }];
@@ -85,7 +85,7 @@ describe('mapPortalActivities', () => {
       byline: { text: 'Bob Smith' },
       html: 'facility',
       facilityType: 'Cash facility',
-      facilityID: '12345',
+      ukefFacilityId: '12345',
       maker: {
         firstname: 'Joe',
         surname: 'Bloggs',
