@@ -1,10 +1,6 @@
 const api = require('../../api');
 const { dashboardFacilitiesDealFiltersQuery } = require('./filters/facilities-deal-query');
-const { dashboardFilters } = require('./filters/ui-filters');
-const {
-  submittedFiltersArray,
-  submittedFiltersObject,
-} = require('./filters/helpers');
+const { submittedFiltersArray } = require('./filters/helpers');
 const {
   getApiData,
   requestParams,
@@ -53,15 +49,12 @@ const getTemplateVariables = (
   facilities,
   count,
   currentPage,
-  filtersArray,
 ) => {
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
     currentPage: parseInt(currentPage, 10),
     totalItems: count,
   };
-
-  const filtersObj = submittedFiltersObject(filtersArray);
 
   const templateVariables = {
     user,

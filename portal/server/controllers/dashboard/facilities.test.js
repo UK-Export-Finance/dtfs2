@@ -7,10 +7,7 @@ import {
 import mockResponse from '../../helpers/responseMock';
 import { getFlashSuccessMessage } from '../../helpers';
 import api from '../../api';
-import {
-  submittedFiltersArray,
-  submittedFiltersObject,
-} from './filters/helpers';
+import { submittedFiltersArray } from './filters/helpers';
 import { dashboardFacilitiesDealFiltersQuery } from './filters/facilities-deal-query';
 import CONSTANTS from '../../constants';
 

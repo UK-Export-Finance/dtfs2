@@ -706,5 +706,6 @@ module.exports = {
   downloadFile,
   mga,
   downloadMga,
-  getUnissuedFacilitiesReports,
+  getUnissuedFacilitiesReport,
+  getUkefDecisionReport,
 };
