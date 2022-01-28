@@ -44,6 +44,8 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
+jest.mock('../../../src/v1/controllers/update-portal-deal-from-MIA-to-MIN');
+
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
   dealType: mockDeal.dealType,
