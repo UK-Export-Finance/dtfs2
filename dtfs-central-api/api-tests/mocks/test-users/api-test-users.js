@@ -114,39 +114,31 @@ const loadedUsers = [];
 const finder = () => {
   let users = [...loadedUsers];
 
-  // console.log(`initial: ${JSON.stringify(users)}`)
-
   const fluidBuilder = {
     all: () => users,
     one: () => users[0],
     withRole: (role) => {
       users = users.filter((user) => user.roles.includes(role));
-      // console.log(`withRole ${role} => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
     withMultipleRoles: (role1, role2) => {
       users = users.filter((user) => user.roles.includes(role1) && user.roles.includes(role2));
-      // console.log(`withRole ${role} => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
     withoutRole: (role) => {
       users = users.filter((user) => !user.roles.includes(role));
-      // console.log(`withoutRole ${role} => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
     withoutAnyRoles: () => {
       users = users.filter((user) => user.roles.length === 0);
-      // console.log(`withoutAnyRoles => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
     withBankName: (bankName) => {
       users = users.filter((user) => user.bank && user.bank.name === bankName);
-      // console.log(`withBankName ${bankName} => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
     superuser: () => {
       users = users.filter((user) => user.bank && user.bank.id === '*');
-      // console.log(`superuser => ${JSON.stringify(users)}`)
       return fluidBuilder;
     },
   };

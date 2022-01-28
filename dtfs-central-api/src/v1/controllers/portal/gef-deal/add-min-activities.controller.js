@@ -92,31 +92,36 @@ const portalActivityGenerator = (activityParams) => {
  * @returns {Array} portalActivities
  */
 const facilityChangePortalActivity = async (application, facilities) => {
-  const { checkerId, portalActivities } = application;
-  const checker = await getUserInfo(checkerId);
+  try {
+    const { checkerId, portalActivities } = application;
+    const checker = await getUserInfo(checkerId);
 
-  facilities.forEach(async (facility) => {
-    if (facility.canResubmitIssuedFacilities) {
+    facilities.forEach(async (facility) => {
+      if (facility.canResubmitIssuedFacilities) {
       // creates user object to add to array
-      const maker = facility.unissuedToIssuedByMaker;
-      const activityParams = {
-        type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
-        user: '',
-        activityType: PORTAL_ACTIVITY_TYPE.FACILITY_STAGE,
-        activityText: '',
-        activityHTML: 'facility',
-        facility,
-        maker,
-        checker,
-      };
-      // generates an activities object
-      const activityObj = portalActivityGenerator(activityParams);
-      // adds to beginning of portalActivities array so most recent displayed first
-      portalActivities.unshift(activityObj);
-    }
-  });
+        const maker = facility.unissuedToIssuedByMaker;
+        const activityParams = {
+          type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
+          user: '',
+          activityType: PORTAL_ACTIVITY_TYPE.FACILITY_STAGE,
+          activityText: '',
+          activityHTML: 'facility',
+          facility,
+          maker,
+          checker,
+        };
+        // generates an activities object
+        const activityObj = portalActivityGenerator(activityParams);
+        // adds to beginning of portalActivities array so most recent displayed first
+        portalActivities.unshift(activityObj);
+      }
+    });
 
-  return portalActivities;
+    return portalActivities;
+  } catch (err) {
+    console.error(`Central-API: error adding facility activity object ${err}`);
+    return err;
+  }
 };
 
 /**
@@ -126,28 +131,33 @@ const facilityChangePortalActivity = async (application, facilities) => {
  * @returns {Array} portalActivities
  */
 const ukefSubmissionPortalActivity = async (application) => {
-  const { portalActivities, checkerId } = application;
+  try {
+    const { portalActivities, checkerId } = application;
 
-  // generates the label for activity array
-  const applicationType = PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION;
-  // creates user object to add to array
-  const user = await getUserInfo(checkerId);
-  const activityParams = {
-    type: applicationType,
-    user,
-    activityType: PORTAL_ACTIVITY_TYPE.NOTICE,
-    activityText: '',
-    activityHTML: '',
-    facility: '',
-    maker: '',
-    checker: '',
-  };
-  // generates an activities object
-  const activityObj = portalActivityGenerator(activityParams);
-  // adds to beginning of portalActivities array so most recent displayed first
-  portalActivities.unshift(activityObj);
+    // generates the label for activity array
+    const applicationType = PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION;
+    // creates user object to add to array
+    const user = await getUserInfo(checkerId);
+    const activityParams = {
+      type: applicationType,
+      user,
+      activityType: PORTAL_ACTIVITY_TYPE.NOTICE,
+      activityText: '',
+      activityHTML: '',
+      facility: '',
+      maker: '',
+      checker: '',
+    };
+    // generates an activities object
+    const activityObj = portalActivityGenerator(activityParams);
+    // adds to beginning of portalActivities array so most recent displayed first
+    portalActivities.unshift(activityObj);
 
-  return portalActivities;
+    return portalActivities;
+  } catch (err) {
+    console.error(`Central-API: error adding submission activity object ${err}`);
+    return err;
+  }
 };
 
 /**
@@ -158,28 +168,33 @@ const ukefSubmissionPortalActivity = async (application) => {
  * @param {*} res
  */
 const generateMINActivities = async (req, res) => {
-  const dealId = req.params.id;
+  try {
+    const dealId = req.params.id;
 
-  const application = await findOneDeal(dealId);
+    const application = await findOneDeal(dealId);
 
-  if (application) {
-    const facilities = await findAllGefFacilitiesByDealId(dealId);
-    let { portalActivities } = application;
+    if (application) {
+      const facilities = await findAllGefFacilitiesByDealId(dealId);
+      let { portalActivities } = application;
 
-    portalActivities = await ukefSubmissionPortalActivity(application);
-    portalActivities = await facilityChangePortalActivity(application, facilities);
+      portalActivities = await ukefSubmissionPortalActivity(application);
+      portalActivities = await facilityChangePortalActivity(application, facilities);
 
-    const update = {
-      portalActivities,
-    };
+      const update = {
+        portalActivities,
+      };
 
-    await updateChangedToIssued(facilities);
+      await updateChangedToIssued(facilities);
 
-    const updatedDeal = await updateDeal(dealId, update);
+      const updatedDeal = await updateDeal(dealId, update);
 
-    res.status(200).send(updatedDeal);
+      res.status(200).send(updatedDeal);
+    }
+    res.status(404);
+  } catch (err) {
+    console.error(`Central-API - Error generating MIN activities ${err}`);
+    res.status(403);
   }
-  res.status(404);
 };
 
 module.exports = {

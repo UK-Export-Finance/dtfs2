@@ -45,9 +45,7 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
-const updateGefActivitySpy = jest.fn(() => Promise.resolve(
-  { ...MOCK_GEF_DEAL_MIN },
-));
+const updateGefActivitySpy = jest.fn(() => Promise.resolve(MOCK_GEF_DEAL_MIN));
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
@@ -89,6 +87,7 @@ describe('/v1/deals', () => {
     updatePortalFacilityStatusSpy.mockClear();
     externalApis.updatePortalFacilityStatus = updatePortalFacilityStatusSpy;
 
+    updateGefActivitySpy.mockClear();
     externalApis.updateGefMINActivity = updateGefActivitySpy;
 
     externalApis.updatePortalBssDealStatus = jest.fn();
