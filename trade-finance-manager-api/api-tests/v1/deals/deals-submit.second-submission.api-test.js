@@ -45,8 +45,6 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
-// jest.mock('../../../src/v1/controllers/update-portal-deal-from-MIA-to-MIN');
-
 const updateGefActivitySpy = jest.fn(() => Promise.resolve(
   { ...MOCK_GEF_DEAL_MIN },
 ));
