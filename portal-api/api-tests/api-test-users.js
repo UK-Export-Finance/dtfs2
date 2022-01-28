@@ -153,10 +153,7 @@ const testUsers = [
     email: 'checker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['checker'],
-    bank: {
-      ...banks.UKEF,
-      useTFM: true,
-    },
+    bank: banks.UKEF,
   },
 ];
 
@@ -205,7 +202,6 @@ const finder = () => {
 
   return fluidBuilder;
 };
-
 
 module.exports.initialise = async (app) => {
   if (notYetInitialised) {

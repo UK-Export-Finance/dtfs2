@@ -20,7 +20,6 @@ const deal = {
     username: 'CHECKER DURGA',
   },
   details: {
-    previousWorkflowStatus: 'Draft',
     checker: {
       username: 'test1',
     },

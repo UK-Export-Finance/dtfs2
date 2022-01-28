@@ -189,13 +189,13 @@ context('User can view and filter multiple deals', () => {
     pages.dealsPage.searchFormInput().type(searchString);
     pages.dealsPage.searchFormSubmitButton().click();
 
-    const dealsWithMakerTfmBank = ALL_SUBMITTED_DEALS.filter((deal) =>
+    const dealsWithMakerUkefTestBank = ALL_SUBMITTED_DEALS.filter((deal) =>
       deal.dealSnapshot.bank.name.includes(searchString));
 
-    pages.dealsPage.dealsTableRows().should('have.length', dealsWithMakerTfmBank.length);
+    pages.dealsPage.dealsTableRows().should('have.length', dealsWithMakerUkefTestBank.length);
 
     pages.dealsPage.heading().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`${dealsWithMakerTfmBank.length} results for "${searchString}"`);
+      expect(text.trim()).to.equal(`${dealsWithMakerUkefTestBank.length} results for "${searchString}"`);
     });
   });
 
