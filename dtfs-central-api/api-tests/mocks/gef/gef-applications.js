@@ -21,7 +21,7 @@ const APPLICATION = [{
 
 },
 {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
   ...baseApplication,
   submissionCount: 1,
 }];
