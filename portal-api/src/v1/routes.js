@@ -25,7 +25,7 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const mga = require('./controllers/mga.controller');
-const reportsController = require('./controllers/reports/reports.controller');
+const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
 
 const users = require('./users/routes');
 const { cleanXss, fileUpload } = require('./middleware');
@@ -211,7 +211,8 @@ openRouter.route('/users/reset-password').post(users.resetPassword);
 openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswordWithToken);
 
 // Portal reports
-authRouter.route('/reports/unissued-facilities').get(validate({ role: ['maker', 'checker'] }), reportsController.findUnissuedFacilitiesReports);
+authRouter.route('/reports/unissued-facilities').get(validate({ role: ['maker', 'checker'] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
+authRouter.route('/reports/review-ukef-decision').get(validate({ role: ['maker', 'checker'] }), ukefDecisionReport.reviewUkefDecisionReports);
 
 // token-validator
 authRouter.get('/validate', validate(), (req, res) => {

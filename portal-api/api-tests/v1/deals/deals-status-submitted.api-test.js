@@ -12,10 +12,6 @@ const { as } = require('../../api')(app);
 
 const CONSTANTS = require('../../../src/constants');
 
-// Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 12);
-
 // jest.unmock('@azure/storage-file-share');
 
 describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
@@ -124,51 +120,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       expect(dealAfterSubmission.body.deal.details.submissionCount).toEqual(1);
     });
-
-    // NOTE: Workflow integration has been disabled and replaced with TFM integration.
-    // Leaving this code here just incase we need to re-enable.
-    /*
-    it('creates type_a xml if deal successfully submitted', async () => {
-      const files = [
-        {
-          filename: 'test-file-1.txt',
-          filepath: 'api-tests/fixtures/test-file-1.txt',
-          fieldname: 'exporterQuestionnaire',
-          type: 'general_correspondence',
-        },
-        {
-          filename: 'test-file-2.txt',
-          filepath: 'api-tests/fixtures/test-file-2.txt',
-          fieldname: 'exporterQuestionnaire',
-          type: 'general_correspondence',
-        },
-        {
-          filename: 'test-file-3.txt',
-          filepath: 'api-tests/fixtures/test-file-3.txt',
-          fieldname: 'auditedFinancialStatements',
-          type: 'financials',
-        },
-      ];
-
-      const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
-
-      const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
-
-      const createdDeal = postResult.body;
-
-      // Upload supporting docs
-      await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${createdDeal._id}/eligibility-documentation`);
-
-      const statusUpdate = {
-        status: 'Submitted',
-        confirmSubmit: true,
-      };
-
-      const { status, body } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-
-      expect(body).toBeDefined();
-    });
-    */
   });
 
   describe('when the status changes to `Submitted`', () => {
@@ -288,8 +239,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
     it('return validation errors', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-      submittedDeal.details.previousWorkflowStatus = 'invalid status';
-
       const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
@@ -315,8 +264,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   describe('when the status changes to `Submitted` on a deal that has loan facilities with `ready for check` status and cover start dates that are in the past', () => {
     it('return validation errors', async () => {
       const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
-
-      submittedDeal.details.previousWorkflowStatus = 'invalid status';
 
       const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
       const dealId = postResult.body._id;
@@ -372,71 +319,6 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       expect(body.deal.details.submissionDate).toBeDefined();
       expect(body.deal.details.manualInclusionApplicationSubmissionDate).toBeDefined();
-    });
-  });
-
-  describe('when the status changes to `Ready for Checker\'s approval` on approved MIA', () => {
-    it('should add the makers details as MIN maker', async () => {
-      const dealCreatedByMaker = {
-        ...completedDeal,
-        submissionType: 'Manual Inclusion Application',
-        details: {
-          ...completedDeal.details,
-          previousWorkflowStatus: 'approved',
-        },
-      };
-
-      const postResult = await as(aBarclaysMaker).post(dealCreatedByMaker).to('/v1/deals');
-      const dealId = postResult.body._id;
-
-      await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
-
-      const statusUpdate = {
-        status: 'Ready for Checker\'s approval',
-        comments: 'Yay!',
-      };
-
-      const updatedDeal = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
-
-      expect(updatedDeal.body.details.makerMIN.username).toEqual(aBarclaysMaker.username);
-    });
-  });
-
-  describe('when the status changes to `Submitted` on approved MIA', () => {
-    it('should add MIN submissionDate and checkers details as MIN checker', async () => {
-      const dealCreatedByMaker = JSON.parse(JSON.stringify({
-        ...completedDeal,
-        submissionType: 'Manual Inclusion Application',
-        details: {
-          ...completedDeal.details,
-          maker: aBarclaysMaker,
-          previousWorkflowStatus: 'approved',
-        },
-      }));
-
-      const postResult = await as(aBarclaysMaker).post(dealCreatedByMaker).to('/v1/deals');
-      const dealId = postResult.body._id;
-
-      const mockFacilites = [
-        {
-          ...completedDeal.mockFacilities[0],
-          requestedCoverStartDate: moment().utc().valueOf(),
-        },
-      ];
-
-      await createFacilities(aBarclaysMaker, dealId, mockFacilites);
-
-      const statusUpdate = {
-        status: 'Submitted',
-        confirmSubmit: true,
-      };
-
-      const { body, status } = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
-
-      expect(status).toEqual(200);
-
-      expect(body.details.manualInclusionNoticeSubmissionDate).toBeDefined();
-      expect(body.details.checkerMIN.username).toEqual(aBarclaysChecker.username);
     });
   });
 });

@@ -20,7 +20,6 @@ const updateFacilityCoverStartDates = require('./deal-status/update-facility-cov
 const updateIssuedFacilities = require('./deal-status/update-issued-facilities');
 const updateSubmittedIssuedFacilities = require('./deal-status/update-submitted-issued-facilities');
 const createUkefIds = require('./deal-status/create-ukef-ids');
-const now = require('../../now');
 const api = require('../api');
 
 const CONSTANTS = require('../../constants');
@@ -96,24 +95,6 @@ exports.update = (req, res) => {
       const canUpdateIssuedFacilitiesCoverStartDates = true;
       const newIssuedFacilityStatus = 'Ready for check';
 
-      if (
-        ['approved', 'approved_conditions'].includes(dealAfterAllUpdates.details.previousWorkflowStatus)
-        && dealAfterAllUpdates.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-      ) {
-        // Is changing MIA to MIN
-        const minDealMakerUpdate = {
-          details: {
-            makerMIN: req.user,
-          },
-        };
-
-        dealAfterAllUpdates = await updateDeal(
-          req.params.id,
-          minDealMakerUpdate,
-          req.user,
-        );
-      }
-
       dealAfterAllUpdates = await updateIssuedFacilities(
         req.user,
         fromStatus,
@@ -163,50 +144,6 @@ exports.update = (req, res) => {
         CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
         req.user,
       );
-
-      /*
-      // NOTE: Workflow integration has been disabled and replaced with TFM integration.
-      // Leaving this code here just incase we need to re-enable.
-      //
-      // const useTFM = await (isTFMBank(user.bank && user.bank.id));
-      // if (useTFM) { ... }
-      //
-      // Integrate with workflow
-      const { previousWorkflowStatus } = deal.details;
-
-      // make sure we have the latest deal in DB with facilities populated
-      const dealLatest = await findOneDeal(deal._id); // eslint-disable-line no-underscore-dangle
-      const typeA = await createTypeA(dealLatest, previousWorkflowStatus);
-
-      if (typeA.errorCount) {
-        // Revert status
-        await updateStatus(req.params.id, toStatus, fromStatus);
-        return res.status(200).send(typeA);
-      }
-      */
-
-      if (
-        ['approved', 'approved_conditions'].includes(dealAfterAllUpdates.details.previousWorkflowStatus)
-        && dealAfterAllUpdates.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-      ) {
-        // Must be confirming acceptance of MIA so change to MIN
-        // Add 'MIN submission date'
-        const minUpdate = {
-          submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
-          details: {
-            manualInclusionNoticeSubmissionDate: now(),
-            checkerMIN: req.user,
-          },
-        };
-
-        dealAfterAllUpdates = await updateDeal(
-          req.params.id,
-          minUpdate,
-          // NOTE: intentionally NOT including req.user here.
-          // This ensures that the checker submitting
-          // ..does not get added to the 'editedBy' array.
-        );
-      }
     }
 
     // check for approvals back from UKEF and date stamp it for countdown indicator

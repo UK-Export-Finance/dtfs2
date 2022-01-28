@@ -7,13 +7,12 @@ const {
   allFacilities,
 } = require('./facilities');
 
-const { getPortalReports, getUnissuedFacilitiesReports } = require('./reports.controller');
+const reportsController = require('./reports.controller');
 
 module.exports = {
   allDeals,
   allFacilities,
   removeSingleAllDealsFilter,
   removeAllDealsFilters,
-  getPortalReports,
-  getUnissuedFacilitiesReports,
+  reportsController,
 };
