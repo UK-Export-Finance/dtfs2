@@ -16,6 +16,7 @@ const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-p
 const { MOCK_FACILITIES } = require('../../../src/v1/__mocks__/mock-facilities');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-second-submit-MIA');
+const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
 const submitDeal = require('../utils/submitDeal');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
@@ -44,7 +45,11 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
-jest.mock('../../../src/v1/controllers/update-portal-deal-from-MIA-to-MIN');
+// jest.mock('../../../src/v1/controllers/update-portal-deal-from-MIA-to-MIN');
+
+const updateGefActivitySpy = jest.fn(() => Promise.resolve(
+  { ...MOCK_GEF_DEAL_MIN },
+));
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
@@ -85,6 +90,8 @@ describe('/v1/deals', () => {
 
     updatePortalFacilityStatusSpy.mockClear();
     externalApis.updatePortalFacilityStatus = updatePortalFacilityStatusSpy;
+
+    externalApis.updateGefMINActivity = updateGefActivitySpy;
 
     externalApis.updatePortalBssDealStatus = jest.fn();
     externalApis.updatePortalGefDealStatus = jest.fn();
@@ -523,7 +530,7 @@ describe('/v1/deals', () => {
       });
     });
 
-    describe.only('GEF deal - on second submission', () => {
+    describe('GEF deal - on second submission', () => {
       const mockDeal = {
         ...MOCK_GEF_DEAL,
         submissionCount: 2,
@@ -561,7 +568,7 @@ describe('/v1/deals', () => {
         expect(unissuedFacility.tfm.feeRecord).toEqual(null);
       });
 
-      it.only('does NOT add fee record when deal is MIA', async () => {
+      it('does NOT add fee record when deal is MIA', async () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
 
         expect(status).toEqual(200);
