@@ -1,5 +1,5 @@
 const api = require('../../api');
-const { dashboardFiltersQuery } = require('./filters/query');
+const { dashboardDealsFiltersQuery } = require('./filters/deals-query');
 const { dashboardFilters } = require('./filters/ui-filters');
 const { selectedDashboardFilters } = require('./filters/ui-selected-filters');
 const {
@@ -26,7 +26,7 @@ const getAllDealsData = async (
 ) => {
   const filtersArray = submittedFiltersArray(sessionFilters);
 
-  const filtersQuery = dashboardFiltersQuery(
+  const filtersQuery = dashboardDealsFiltersQuery(
     sessionFilters.createdByYou,
     filtersArray,
     user,

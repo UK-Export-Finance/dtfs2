@@ -10,13 +10,13 @@ const CONSTANTS = require('../../../../../fixtures/constants');
 
 const {
   BANK1_MAKER1,
-  // BANK2_MAKER2,
+  BANK2_MAKER2,
 } = MOCK_USERS;
 
 const {
   BSS_DEAL,
   GEF_DEAL,
-  // GEF_DEAL_BANK_2_MAKER_2,
+  BSS_DEAL_BANK_2_MAKER_2,
 } = MOCK_DEALS;
 
 const {
@@ -38,6 +38,8 @@ const hasBeenIssuedText = (hasBeenIssued) => {
 context('View dashboard facilities as a maker', () => {
   const ALL_DEALS = [];
   let ALL_FACILITIES = [];
+  let ALL_BANK1_DEALS;
+  let ALL_BANK2_DEALS;
   let gefDeal;
   let gefFacility;
   let gefFacilityId;
@@ -54,6 +56,9 @@ context('View dashboard facilities as a maker', () => {
       BSS_DEAL.maker = maker;
     });
 
+    /*
+     * insert GEF deal and facility by bank 1, maker 1
+     */
     cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1)
       .then((gefDeal) => {
 
@@ -75,10 +80,27 @@ context('View dashboard facilities as a maker', () => {
           });
       });
 
+    /*
+     * insert BSS deal and facility by bank 1, maker 1
+     */
     cy.insertOneDeal(BSS_DEAL, BANK1_MAKER1).then((bssDeal) => {
       ALL_DEALS.push(bssDeal);
 
       cy.createFacilities(bssDeal._id, [BOND_FACILITY], BANK1_MAKER1).then((createdFacilities) => {
+        ALL_FACILITIES = [
+          ...ALL_FACILITIES,
+          ...createdFacilities,
+        ];
+      });
+    });
+
+    /*
+     * insert BSS deal and facility by bank 2, maker 2
+     */
+    cy.insertOneDeal(BSS_DEAL_BANK_2_MAKER_2, BANK2_MAKER2).then((bssDeal) => {
+      ALL_DEALS.push(bssDeal);
+
+      cy.createFacilities(bssDeal._id, [BOND_FACILITY], BANK2_MAKER2).then((createdFacilities) => {
         ALL_FACILITIES = [
           ...ALL_FACILITIES,
           ...createdFacilities,
@@ -95,7 +117,14 @@ context('View dashboard facilities as a maker', () => {
     bssFacility = ALL_FACILITIES.find((facility) => facility.name.includes('BSS'));
     bssFacilityId = bssFacility._id;
     bssDeal = ALL_DEALS.find((deal) => deal.dealType === 'BSS/EWCS');
+
+    ALL_BANK1_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK1_MAKER1.bank.id);
+    ALL_BANK2_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK2_MAKER2.bank.id);
   });
+
+  // TODO: delete deals and facilities
+  // after(() => {
+  // });
 
   it('BSS and GEF deals render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);
@@ -184,7 +213,16 @@ context('View dashboard facilities as a maker', () => {
     cy.url().should('eq', relative(expectedUrl));
   });
 
-  // it('should not show facilities created by other banks', () => {
-    // MOCK_CASH_FACILITY_BANK_2
-  // });
+  it('should not show facilities created by other banks', () => {
+    cy.login(BANK1_MAKER1);
+    dashboardFacilities.visit();
+
+    dashboardFacilities.totalItems().invoke('text').then((text) => {
+      expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
+    });
+
+    const row = cy.get('table tr');
+
+    row.find(`[data-cy="facility__name--link--${ALL_BANK2_DEALS[0]}"]`).should('not.exist');
+  });
 });

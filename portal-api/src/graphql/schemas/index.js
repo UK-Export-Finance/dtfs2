@@ -68,9 +68,19 @@ input DealsInput {
   sort: [DashboardSort]
 }
 
+input BankInput {
+  id: String
+}
+
+input DashboardFacilitiesDealFilters {
+  name: String
+  value: String
+}
+
 input FacilitiesInput {
   start: Int
   pagesize: Int
+  dealFilters: [DashboardFilters]
   filters: [DashboardFilters]
   sort: [DashboardSort]
 }

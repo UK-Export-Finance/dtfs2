@@ -18,6 +18,11 @@ const BSS_DEAL = {
   },
 };
 
+const BSS_DEAL_BANK_2_MAKER_2 = {
+  ...BSS_DEAL,
+  bank: { id: BANK2_MAKER2.bank.id },
+};
+
 const GEF_DEAL = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
   submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
@@ -43,6 +48,7 @@ const GEF_DEAL_BANK_2_MAKER_2 = {
 
 module.exports = {
   BSS_DEAL,
+  BSS_DEAL_BANK_2_MAKER_2,
   GEF_DEAL,
   GEF_DEAL_MAKER_2,
   GEF_DEAL_BANK_2_MAKER_2,

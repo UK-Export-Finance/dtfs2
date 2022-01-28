@@ -14,7 +14,7 @@ const {
  * @example ( 'true', [ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' } )
  * @returns [ { field: 'maker._id', value: ['123'] }, { field: dealType, value: ['BSS/EWCS'] } ]
  */
-const dashboardFiltersQuery = (
+const dashboardDealsFiltersQuery = (
   createdByYou,
   filters,
   user,
@@ -22,17 +22,13 @@ const dashboardFiltersQuery = (
   const { isMaker, isChecker } = getUserRoles(user.roles);
   const filtersQuery = [];
 
-  // NOTE: this does not work for facilities.
-  // Need to seperate somehow.
-  // if (!isSuperUser(user)) {
-  //   filtersQuery.push({
-  //     field: 'bank.id',
-  //     value: user.bank.id,
-  //     operator: 'and',
-  //   });
-  // }
-
-  console.log('----filtersQuery \n', filtersQuery);
+  if (!isSuperUser(user)) {
+    filtersQuery.push({
+      field: 'bank.id',
+      value: user.bank.id,
+      operator: 'and',
+    });
+  }
 
   if (createdByYou) {
     filtersQuery.push({
@@ -66,5 +62,5 @@ const dashboardFiltersQuery = (
 };
 
 module.exports = {
-  dashboardFiltersQuery,
+  dashboardDealsFiltersQuery,
 };

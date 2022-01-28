@@ -6,11 +6,15 @@ const queryAllFacilities = async (_, { params = {} }) => {
   const {
     start = 0,
     pagesize,
+    dealFilters = [],
     filters = [],
     sort = [],
   } = params;
 
-  const dbFilters = filters.map((clause) => {
+  /*
+   * create db query for deal filters
+   */
+  const dbDealFilters = dealFilters.map((clause) => {
     if (clause.operator) {
       return dbHelpers.createDbQuery(clause.operator, clause.field, clause.value);
     }
@@ -20,16 +24,44 @@ const queryAllFacilities = async (_, { params = {} }) => {
     };
   });
 
-  let filtersObj = {};
+  let dealFiltersObj = {};
 
-  dbFilters.forEach((obj) => {
-    filtersObj = {
-      ...filtersObj,
+  dbDealFilters.forEach((obj) => {
+    dealFiltersObj = {
+      ...dealFiltersObj,
       ...obj,
     };
   });
 
-  const facilities = await queryFacilities(filtersObj, sort, start, pagesize);
+  /*
+   * create db query for facility filters
+   */
+  const dbFacilityFilters = filters.map((clause) => {
+    if (clause.operator) {
+      return dbHelpers.createDbQuery(clause.operator, clause.field, clause.value);
+    }
+
+    return {
+      [clause.field]: clause.value,
+    };
+  });
+
+  let facilityFiltersObj = {};
+
+  dbFacilityFilters.forEach((obj) => {
+    facilityFiltersObj = {
+      ...facilityFiltersObj,
+      ...obj,
+    };
+  });
+
+  const facilities = await queryFacilities(
+    dealFiltersObj,
+    facilityFiltersObj,
+    sort,
+    start,
+    pagesize,
+  );
 
   if (!facilities.length) {
     return {
