@@ -8,7 +8,7 @@ const { reports } = require('../../pages');
 
 const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
 
-context('Dashboard: Reports', () => {
+context('Dashboard: Unissued facilities report', () => {
   before(() => {
     cy.deleteGefApplications(BANK1_MAKER1);
 
@@ -64,47 +64,47 @@ context('Dashboard: Reports', () => {
     });
   });
 
-  describe('Reports page', () => {
+  describe('Unissued facilities Report', () => {
     beforeEach(() => {
       cy.login(BANK1_MAKER1);
       cy.visit(relative('/reports'));
     });
     it('returns the reports page with unissued facilities', () => {
       reports.allUnissuedFacilities().should('contain', 'You need to issue 3 facilities');
-      reports.pastDeadlineUnissuedFacilities().should('contain', 'You have 1 facilities that have past the deadline for issuing');
+      reports.pastDeadlineUnissuedFacilities().should('contain', 'You have 1 facility that has past the deadline for issuing');
       reports.facilitiesThatNeedIssuing().should('contain', 'You have 1 facility that needs issuing');
       reports.reviewAllUnissuedFacilities().should('exist');
     });
 
     it('displays the `Unissued facilities` reports page', () => {
       reports.reviewAllUnissuedFacilities().click();
-      cy.url().should('eq', relative('/reports/unissued-facilities'));
+      cy.url().should('eq', relative('/reports/review-unissued-facilities'));
       reports.reportsUnissuedFacilitiesBreadcrumbs().should('exist');
       reports.reportsUnissuedFacilitiesDownload().should('exist');
 
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-      cy.get('@row1').find('[data-cy="facility__bankRef"]').should('contain', 'Draft GEF');
-      cy.get('@row1').find('[data-cy="facility__product"]').should('contain', 'GEF');
-      cy.get('@row1').find('[data-cy="facility__facilityId"]').should('contain', '0000003');
-      cy.get('@row1').find('[data-cy="facility__companyName"]').should('contain', 'Delta');
-      cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'EUR 223,344');
-      cy.get('@row1').find('[data-cy="facility__daysLeftToIssue"]').should('contain', 'days overdue');
+      cy.get('@row1').find('[data-cy="facility__row--bankRef"]').should('contain', 'Draft GEF');
+      cy.get('@row1').find('[data-cy="facility__row--product"]').should('contain', 'GEF');
+      cy.get('@row1').find('[data-cy="facility__row--facilityId"]').should('contain', '0000003');
+      cy.get('@row1').find('[data-cy="facility__row--companyName"]').should('contain', 'Delta');
+      cy.get('@row1').find('[data-cy="facility__row--facilityValue"]').should('contain', 'EUR 223,344');
+      cy.get('@row1').find('[data-cy="facility__row--daysLeftToIssue"]').should('contain', 'days overdue');
 
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-      cy.get('@row2').find('[data-cy="facility__bankRef"]').should('contain', 'Draft GEF');
-      cy.get('@row2').find('[data-cy="facility__product"]').should('contain', 'GEF');
-      cy.get('@row2').find('[data-cy="facility__facilityId"]').should('contain', '00000002');
-      cy.get('@row2').find('[data-cy="facility__companyName"]').should('contain', 'Delta');
-      cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'EUR 889,988');
-      cy.get('@row2').find('[data-cy="facility__daysLeftToIssue"]').should('contain', 'days left');
+      cy.get('@row2').find('[data-cy="facility__row--bankRef"]').should('contain', 'Draft GEF');
+      cy.get('@row2').find('[data-cy="facility__row--product"]').should('contain', 'GEF');
+      cy.get('@row2').find('[data-cy="facility__row--facilityId"]').should('contain', '00000002');
+      cy.get('@row2').find('[data-cy="facility__row--companyName"]').should('contain', 'Delta');
+      cy.get('@row2').find('[data-cy="facility__row--facilityValue"]').should('contain', 'EUR 889,988');
+      cy.get('@row2').find('[data-cy="facility__row--daysLeftToIssue"]').should('contain', 'days left');
 
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-      cy.get('@row3').find('[data-cy="facility__bankRef"]').should('contain', 'Draft GEF');
-      cy.get('@row3').find('[data-cy="facility__product"]').should('contain', 'GEF');
-      cy.get('@row3').find('[data-cy="facility__facilityId"]').should('contain', '00000001');
-      cy.get('@row3').find('[data-cy="facility__companyName"]').should('contain', 'Delta');
-      cy.get('@row3').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 123');
-      cy.get('@row3').find('[data-cy="facility__daysLeftToIssue"]').should('contain', '90 days left');
+      cy.get('@row3').find('[data-cy="facility__row--bankRef"]').should('contain', 'Draft GEF');
+      cy.get('@row3').find('[data-cy="facility__row--product"]').should('contain', 'GEF');
+      cy.get('@row3').find('[data-cy="facility__row--facilityId"]').should('contain', '00000001');
+      cy.get('@row3').find('[data-cy="facility__row--companyName"]').should('contain', 'Delta');
+      cy.get('@row3').find('[data-cy="facility__row--facilityValue"]').should('contain', 'GBP 123');
+      cy.get('@row3').find('[data-cy="facility__row--daysLeftToIssue"]').should('contain', '90 days left');
     });
   });
 });

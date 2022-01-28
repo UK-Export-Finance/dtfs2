@@ -624,17 +624,39 @@ const gefFacilities = async (start, pagesize, filters, token) => {
   return response.data.gefFacilities || { count: 0, facilities: [] };
 };
 
-const getUnissuedFacilitiesReports = async (token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${portalApi}/v1/reports/unissued-facilities`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
+const getUnissuedFacilitiesReport = async (token) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${portalApi}/v1/reports/unissued-facilities`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to return unissued facilities', { error });
+    return error;
+  }
+};
 
-  });
-  return response.data;
+const getUkefDecisionReport = async (token, payload) => {
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: `${portalApi}/v1/reports/review-ukef-decision`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      data: payload,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to return Ukef decision report', { error });
+    return error;
+  }
 };
 
 module.exports = {
@@ -679,5 +701,6 @@ module.exports = {
   mga,
   downloadMga,
   gefFacilities,
-  getUnissuedFacilitiesReports,
+  getUnissuedFacilitiesReport,
+  getUkefDecisionReport,
 };
