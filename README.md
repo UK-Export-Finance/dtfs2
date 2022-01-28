@@ -206,7 +206,7 @@ The latest deployed commit can be checked by looking at the test/dev branch, or 
 
 After deployment, manually check things are OK by submitting a deal to TFM and check that in TFM the deal has data populated.
 
-:warning: There is currently an issue where after deployment, the Number Generator Azure Function App doesn't work correctly.
+:warning: There is currently an issue where after deployment, the Number Generator Azure Function App doesn't work correctly.
 
 For a currently unknown reason - the URI's that the Number Generator Function App depends on, can generate incorrect URIs. After a deal is submitted, check the `durable-functions-log` collection Azure Portal. The URIs in any newly created document (created after a deal is submitted after deployment), should have URIs looking something like this:
 
