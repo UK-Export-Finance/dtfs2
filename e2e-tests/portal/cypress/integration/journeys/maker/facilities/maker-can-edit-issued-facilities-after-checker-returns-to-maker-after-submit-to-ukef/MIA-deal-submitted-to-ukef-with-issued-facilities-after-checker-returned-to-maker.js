@@ -55,7 +55,6 @@ const deal = {
       username: 'CHECKER',
     },
     submissionDate: now.valueOf(),
-    previousWorkflowStatus: 'approved',
     ukefDealId: '1001349',
     approvalDate: '1599048727451',
   },

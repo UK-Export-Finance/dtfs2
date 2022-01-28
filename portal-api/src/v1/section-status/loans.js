@@ -8,9 +8,7 @@ const loanStatus = (loan, loanErrors, loanIssueFacilityErrors) => {
   const hasLoanIssueFacilityErrors = (loanIssueFacilityErrors && loanIssueFacilityErrors.count !== 0);
 
   // this will be 'Not started', 'Ready for check', 'Submitted', 'Acknowledged', 'Completed'
-  // this comes from either:
-  // - the deal status changing - when submitting a deal with an issued loan, we add a status to the loan.
-  // - workflow/xml.
+  // this comes the deal status changing - when submitting a deal with an issued loan, we add a status to the loan.
   if (loan.status) {
     return loan.status;
   }

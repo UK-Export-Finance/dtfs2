@@ -52,7 +52,7 @@ describe('graphql query - allDeals', () => {
     });
 
     expect(data.allDeals.count).toEqual(MOCK_ALL_DEALS.length);
-    
+
     const expected = dealsReducer(MOCK_ALL_DEALS);
     expect(data.allDeals.deals).toEqual(expected);
   });

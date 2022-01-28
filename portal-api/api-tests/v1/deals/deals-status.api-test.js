@@ -9,12 +9,7 @@ const api = require('../../../src/v1/api');
 
 const { as } = require('../../api')(app);
 
-// Mock currency & country API calls as no currency/country data is in db during pipeline test as previous test had removed them
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-country-code-to-id', () => () => 826);
-jest.mock('../../../src/v1/controllers/integration/helpers/convert-currency-code-to-id', () => () => 12);
 jest.mock('../../../src/v1/controllers/deal-status/send-status-update-emails');
-
-// jest.unmock('@azure/storage-file-share');
 
 describe('/v1/deals/:id/status', () => {
   let noRoles;
@@ -40,7 +35,6 @@ describe('/v1/deals/:id/status', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['deals']);
     await wipeDB.wipe(['facilities']);
-    sendStatusUpdateEmails.mockClear();
 
     api.tfmDealSubmit = () => Promise.resolve();
   });
@@ -204,21 +198,6 @@ describe('/v1/deals/:id/status', () => {
       expect(body.deal.status).toEqual('Abandoned');
     });
 
-    it('updates details.previousWorkflowStatus only when relevant workflow status changed', async () => {
-      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
-      const statusUpdate = {
-        comments: 'Flee!',
-        status: 'Abandoned',
-      };
-
-      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-
-      const { body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
-
-      expect(body.deal.details.previousWorkflowStatus).toEqual('Draft');
-    });
-
     it('does NOT update previousStatus if the `from` and `to` status matches', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const dealId = postResult.body._id;
@@ -304,18 +283,6 @@ describe('/v1/deals/:id/status', () => {
       await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
 
       expect(sendStatusUpdateEmails).toHaveBeenCalled();
-    });
-
-    it('does NOT send an email if the status hasn\'t changed', async () => {
-      const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
-      const createdDeal = postResult.body;
-      const statusUpdate = {
-        status: completedDeal.status,
-      };
-
-      await as(anHSBCMaker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
-
-      expect(sendStatusUpdateEmails).not.toHaveBeenCalled();
     });
 
     it('does NOT add the user to `editedBy` array if a checker changes status to "Further Maker\'s input required"', async () => {

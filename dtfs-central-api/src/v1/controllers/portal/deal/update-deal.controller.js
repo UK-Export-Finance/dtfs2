@@ -12,9 +12,8 @@ const withoutId = (obj) => {
 const handleEditedByPortal = async (dealId, dealUpdate, user) => {
   let editedBy = [];
 
-  // sometimes we don't have a user making changes. When:
-  // - we can get new data from type-b XML/workflow.
-  // - some deal updates do not want to be marked as "edited by X user"
+  // sometimes we don't have a user making changes.
+  // some deal updates do not want to be marked as "edited by X user"
   // for example when a Checker submits a deal, they have not 'edited' the deal, only submitted it.
   if (user) {
     const {
