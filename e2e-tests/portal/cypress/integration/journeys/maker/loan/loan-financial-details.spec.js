@@ -188,7 +188,7 @@ context('Loan Financial Details', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        row.bankReferenceNumberLink().click();
+        row.nameLink().click();
         partials.taskListHeader.itemLink('loan-financial-details').click();
         cy.url().should('include', '/loan/');
         cy.url().should('include', '/financial-details');

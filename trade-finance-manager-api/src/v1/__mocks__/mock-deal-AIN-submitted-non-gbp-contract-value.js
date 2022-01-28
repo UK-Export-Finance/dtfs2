@@ -171,7 +171,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
     items: [
       {
         _id: '12345678',
-        facilityType: 'Bond',
+        type: 'Bond',
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',
         facilityStage: 'Unissued',
@@ -201,14 +201,14 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
     items: [
       {
         _id: '23456789',
-        facilityType: 'Loan',
+        type: 'Loan',
         createdDate: 1610369832226.0,
         facilityStage: 'Conditional',
         hasBeenIssued: false,
         ukefGuaranteeInMonths: '12',
-        bankReferenceNumber: '5678',
+        name: '5678',
         guaranteeFeePayableByBank: '27.0000',
-        lastEdited: 1610369832226.0,
+        updatedAt: 1610369832226.0,
         value: '1234.00',
         currencySameAsSupplyContractCurrency: 'true',
         interestMarginFee: '30',
@@ -225,7 +225,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
         'coverEndDate-year': '2020',
         disbursementAmount: '1,234.00',
         issueFacilityDetailsStarted: true,
-        bankReferenceNumberRequiredForIssuance: true,
+        nameRequiredForIssuance: true,
         requestedCoverStartDate: 1610369832226.0,
         issuedDate: 1610369832226.0,
         issueFacilityDetailsProvided: true,

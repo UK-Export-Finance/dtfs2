@@ -20,15 +20,15 @@ const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       _id: '1000210',
       createdDate: now,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
-      bankReferenceNumber: '',
+      name: '',
       guaranteeFeePayableByBank: '18.0000',
-      lastEdited: now,
+      updatedAt: Date.now(),
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '20',
@@ -39,15 +39,15 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       _id: '1000210',
       createdDate: now,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
-      bankReferenceNumber: '',
+      name: '',
       guaranteeFeePayableByBank: '18.0000',
-      lastEdited: now,
+      updatedAt: Date.now(),
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '20',
@@ -58,15 +58,15 @@ const MOCK_DEAL = {
       dayCountBasis: '365',
     },
     {
-      facilityType: 'Loan',
+      type: 'Loan',
       _id: '1000210',
       createdDate: now,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
-      bankReferenceNumber: '',
+      name: '',
       guaranteeFeePayableByBank: '18.0000',
-      lastEdited: now,
+      updatedAt: Date.now(),
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '20',
@@ -97,7 +97,7 @@ context('Delete a Loan', () => {
         const { mockFacilities } = MOCK_DEAL;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
+          const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
           dealFacilities.loans = loans;
         });

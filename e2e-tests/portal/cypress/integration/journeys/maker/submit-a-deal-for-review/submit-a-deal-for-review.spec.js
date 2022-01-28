@@ -89,8 +89,8 @@ context('A maker selects to submit a contract for review from the view-contract 
         const { mockFacilities } = dealReadyToSubmitForReview;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
+          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+          const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
           dealFacilities.dealReadyToSubmitForReview.bonds = bonds;
           dealFacilities.dealReadyToSubmitForReview.loans = loans;
@@ -106,8 +106,8 @@ context('A maker selects to submit a contract for review from the view-contract 
 
         const { mockFacilities } = dealWithNoBondCoverStartDate;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
+          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+          const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
           dealFacilities.dealWithNoBondCoverStartDate.bonds = bonds;
           dealFacilities.dealWithNoBondCoverStartDate.loans = loans;
@@ -123,8 +123,8 @@ context('A maker selects to submit a contract for review from the view-contract 
 
         const { mockFacilities } = dealWithNoLoanCoverStartDate;
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
+          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+          const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
           dealFacilities.dealWithNoLoanCoverStartDate.bonds = bonds;
           dealFacilities.dealWithNoLoanCoverStartDate.loans = loans;
@@ -256,7 +256,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       contract.addLoanButton().should('not.exist');
       const aLoan = contract.loansTransactionsTable.row(dealFacilities.dealReadyToSubmitForReview.loans[0]._id);
-      aLoan.bankReferenceNumberLink().should('not.exist');
+      aLoan.nameLink().should('not.exist');
 
       // visit the comments page and prove that the comment has been added
       contract.commentsTab().click();

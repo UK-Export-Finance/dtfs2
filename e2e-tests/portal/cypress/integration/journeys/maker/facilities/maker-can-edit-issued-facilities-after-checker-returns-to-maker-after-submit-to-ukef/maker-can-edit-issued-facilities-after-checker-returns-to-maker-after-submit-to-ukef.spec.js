@@ -25,8 +25,8 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
         const { mockFacilities } = mockDeal;
 
         cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.facilityType === 'Bond');
-          const loans = createdFacilities.filter((f) => f.facilityType === 'Loan');
+          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+          const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
           dealFacilities.bonds = bonds;
           dealFacilities.loans = loans;
@@ -90,8 +90,8 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow.bankReferenceNumberLink().should('not.exist');
-      loanRow.bankReferenceNumber().should('be.visible');
+      loanRow.nameLink().should('not.exist');
+      loanRow.name().should('be.visible');
 
       loanRow.loanStatus().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Maker\'s input required');

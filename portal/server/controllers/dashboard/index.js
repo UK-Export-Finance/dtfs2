@@ -8,10 +8,13 @@ const {
   gefFacilities,
 } = require('./facilities');
 
+const reportsController = require('./reports.controller');
+
 module.exports = {
   allDeals,
   removeSingleAllDealsFilter,
   removeAllDealsFilters,
   bssFacilities,
   gefFacilities,
+  reportsController,
 };

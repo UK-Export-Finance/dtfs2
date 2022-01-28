@@ -29,7 +29,7 @@ exports.bssFacilities = async (req, res) => {
     bankId: facility.bankFacilityId || 'Not entered',
     ukefId: facility.ukefFacilityId,
     product: PRODUCT.BSS_EWCS,
-    facilityType: facility.transactionType,
+    type: facility.transactionType,
     noticeType: facility.deal_submissionType,
     value: {
       amount: facility.value,
@@ -75,7 +75,7 @@ exports.gefFacilities = async (req, res) => {
     bankId: facility.name || 'Not entered',
     ukefId: facility.ukefFacilityId,
     product: PRODUCT.GEF,
-    facilityType: facility.type,
+    type: facility.type,
     noticeType: facility.deal.submissionType,
     value: {
       amount: facility.value || 0,

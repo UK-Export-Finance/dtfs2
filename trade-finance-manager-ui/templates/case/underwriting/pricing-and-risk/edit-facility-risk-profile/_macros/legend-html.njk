@@ -2,7 +2,7 @@
   {% set caseId = params.caseId %}
   {% set facilityId = params.facilityId %}
   {% set ukefFacilityId = params.ukefFacilityId %}
-  {% set facilityType = params.facilityType %}
+  {% set type = params.type %}
 
   <div data-cy="edit-facility-risk-profile-legend" class="govuk-!-margin-bottom-4">
 
@@ -11,7 +11,7 @@
       href="/case/{{ caseId }}/facility/{{ facilityId }}"
       data-cy="edit-facility-risk-profile-legend-link"
     >{{ ukefFacilityId }}</a>
-    &nbsp; <span data-cy="edit-facility-risk-profile-legend-facility-type">{{ facilityType }}</span>
+    &nbsp; <span data-cy="edit-facility-risk-profile-legend-facility-type">{{ type }}</span>
 
   </div>
 

@@ -154,25 +154,25 @@
           },
           items: [
             {
-              value: "in advance",
+              value: "In advance",
               text: "In advance",
               conditional: {
                 html: inAdvanceFrequencyHtml
               },
-              checked: feeType === 'in advance',
+              checked: feeType === 'In advance',
               attributes: { 'data-cy': 'fee-type-in-advance' }
             },
             {
-              value: "in arrears",
+              value: "In arrears",
               text: "In arrears",
               conditional: {
                 html: inArrearsFrequencyHtml
               },
-              checked: feeType === 'in arrears',
+              checked: feeType === 'In arrears',
               attributes: {'data-cy': 'fee-type-in-arrears'}
             },
             {
-              value: "at maturity",
+              value: "At maturity",
               text: "At maturity",
               checked: feeType === 'At maturity',
               attributes: {'data-cy': 'fee-type-at-maturity'}
@@ -204,13 +204,13 @@
             {
               value: "360",
               text: "360",
-              checked: dayCountBasis === '360',
+              checked: dayCountBasis === 360,
               attributes: { 'data-cy': 'day-count-basis-360' }
             },
             {
               value: "365",
               text: "365",
-              checked: dayCountBasis === '365',
+              checked: dayCountBasis === 365,
               attributes: {'data-cy': 'day-count-basis-365'}
             }
           ]

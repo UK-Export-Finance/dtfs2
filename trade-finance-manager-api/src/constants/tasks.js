@@ -81,7 +81,7 @@ const MIA = {
       {
         groupId: 1,
         title: MIA_GROUP_1_TASKS.FILE_ALL_DEAL_EMAILS,
-        team: TEAMS.BUSINESS_SUPPORT,
+        team: TEAMS.UNDERWRITING_SUPPORT,
       },
       {
         groupId: 1,

@@ -18,8 +18,10 @@ module.exports = {
     'implicit-arrow-linebreak': 0,
     'comma-dangle': 'off',
     'no-loop-func': 'off',
+    'no-console': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
   },
+  ignorePatterns: ['**/node_modules/**']
 };

@@ -22,7 +22,7 @@ describe(component, () => {
           facilityStage: 'Unissued',
           hasBeenIssued: false,
           requestedCoverStartDate: moment().utc().valueOf(),
-          uniqueIdentificationNumber: '1234',
+          name: '1234',
           canIssueOrEditIssueFacility: true,
         },
         {
@@ -34,7 +34,7 @@ describe(component, () => {
           facilityStage: 'Unissued',
           hasBeenIssued: false,
           requestedCoverStartDate: moment().utc().valueOf(),
-          uniqueIdentificationNumber: '1234',
+          name: '1234',
           canIssueOrEditIssueFacility: true,
         },
       ],
@@ -65,7 +65,7 @@ describe(component, () => {
       deal.bondTransactions.items.forEach((facility) => {
         const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
-        wrapper.expectElement(`${facilityIdSelector} [data-cy="unique-number-link-${facility._id}"]`).toExist();
+        wrapper.expectElement(`${facilityIdSelector} [data-cy="name-link-${facility._id}"]`).toExist();
 
         wrapper.expectText(`${facilityIdSelector} [data-cy="bond-ukef-facility-id-${facility._id}"]`).toRead(facility.ukefFacilityId);
 

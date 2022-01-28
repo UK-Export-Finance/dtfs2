@@ -6,9 +6,9 @@ const generateIssuedFacilitiesListString = (facilities) => {
   let result;
 
   facilities.forEach((facility, index) => {
-    const { facilityType, ukefFacilityId } = facility;
+    const { type, ukefFacilityId } = facility;
 
-    const fType = capitalizeFirstLetter(facilityType);
+    const fType = capitalizeFirstLetter(type);
     const listItem = `- ${fType} facility with UKEF facility reference: ${ukefFacilityId}`;
 
     if (index === 0) {
@@ -23,7 +23,7 @@ const generateIssuedFacilitiesListString = (facilities) => {
 
 const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
   const {
-    bankReferenceNumber,
+    name,
     ukefDealId: ukefDealID,
     exporter,
     submissionType,
@@ -45,7 +45,7 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
     const emailVariables = {
       recipientName,
       exporterName: exporter.companyName,
-      bankReferenceNumber,
+      name,
       ukefDealID,
       facilitiesList: generateIssuedFacilitiesListString(updatedFacilities),
     };

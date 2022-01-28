@@ -91,8 +91,8 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
 
       const expected = {
         _id,
-        ukefFacilityId: Number(ukefFacilityId),
-        facilityType: type,
+        ukefFacilityId,
+        type,
         currencyCode: currency.id,
         value,
         coverPercentage,

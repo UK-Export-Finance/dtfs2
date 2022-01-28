@@ -110,12 +110,12 @@
   },
   "mockFacilities": [
     {
-        "facilityType": "Bond",
+        "type": "Bond",
         "bondIssuer": "issuer",
         "bondType": "bond type",
         "facilityStage": "unissued",
         "ukefGuaranteeInMonths": "24",
-        "uniqueIdentificationNumber": "1234",
+        "name": "1234",
         "bondBeneficiary": "test",
         "value": "123",
         "currencySameAsSupplyContractCurrency": "true",
@@ -126,10 +126,10 @@
         "dayCountBasis": "test"
     },
     {
-      "facilityType": "Loan",
+      "type": "Loan",
       "facilityStage": "Unconditional",
       "hasBeenIssued": true,
-      "bankReferenceNumber": "123",
+      "name": "123",
       "value": "123",
       "disbursementAmount": "12",
       "ukefGuaranteeInMonths": "12",

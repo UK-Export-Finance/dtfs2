@@ -40,7 +40,7 @@ dealToClone.ukefComments = [
   },
 ];
 
-dealToClone.specialConditions = [
+dealToClone.ukefDecision = [
   {
     timestamp: '1984/12/25 00:00:00:001',
     text: 'This is special',
@@ -100,7 +100,7 @@ describe('/v1/deals/:id/clone', () => {
         originalDeal = dealAfterCreation.deal;
       });
 
-      it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `specialConditions`, changes `maker` to the user making the request, marks status `Draft`', async () => {
+      it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `ukefDecision`, changes `maker` to the user making the request, marks status `Draft`', async () => {
         const clonePostBody = {
           bankInternalRefName: 'new-bank-deal-id',
           additionalRefName: 'new-bank-deal-name',
@@ -130,7 +130,7 @@ describe('/v1/deals/:id/clone', () => {
         expect(cloned.deal.editedBy).toEqual([]);
         expect(cloned.deal.comments).toEqual([]);
         expect(cloned.deal.ukefComments).toEqual([]);
-        expect(cloned.deal.specialConditions).toEqual([]);
+        expect(cloned.deal.ukefDecision).toEqual([]);
       });
 
       it('should clone eligibility', async () => {
@@ -250,13 +250,13 @@ describe('/v1/deals/:id/clone', () => {
         const getDealResponse = await as(anHSBCMaker).get(`/v1/deals/${clonedDealId}`);
         const clonedDeal = getDealResponse.body.deal;
 
-        const firstOriginalBond = createdFacilities.find((f) => f.facilityType === 'Bond');
+        const firstOriginalBond = createdFacilities.find((f) => f.type === 'Bond');
         const secondOriginalBond = createdFacilities.find((f) =>
-          f.facilityType === 'Bond'
+          f.type === 'Bond'
           && f._id !== firstOriginalBond._id);
 
         const expectedFirstBondTransaction = {
-          facilityType: 'Bond',
+          type: 'Bond',
           facilityStage: firstOriginalBond.facilityStage,
           requestedCoverStartDate: firstOriginalBond.requestedCoverStartDate,
           'coverEndDate-day': firstOriginalBond['coverEndDate-day'],
@@ -269,12 +269,12 @@ describe('/v1/deals/:id/clone', () => {
           'conversionRateDate-day': firstOriginalBond['conversionRateDate-day'],
           'conversionRateDate-month': firstOriginalBond['conversionRateDate-month'],
           'conversionRateDate-year': firstOriginalBond['conversionRateDate-year'],
-          uniqueIdentificationNumber: firstOriginalBond.uniqueIdentificationNumber,
+          name: firstOriginalBond.name,
           ukefGuaranteeInMonths: firstOriginalBond.ukefGuaranteeInMonths,
-          createdDate: expect.any(String),
+          createdDate: expect.any(Number),
         };
         const expectedSecondBondTransaction = {
-          facilityType: 'Bond',
+          type: 'Bond',
           facilityStage: secondOriginalBond.facilityStage,
           requestedCoverStartDate: secondOriginalBond.requestedCoverStartDate,
           'coverEndDate-day': secondOriginalBond['coverEndDate-day'],
@@ -283,9 +283,9 @@ describe('/v1/deals/:id/clone', () => {
           value: secondOriginalBond.value,
           currencySameAsSupplyContractCurrency: secondOriginalBond.currencySameAsSupplyContractCurrency,
           currency: secondOriginalBond.currency,
-          uniqueIdentificationNumber: secondOriginalBond.uniqueIdentificationNumber,
+          name: secondOriginalBond.name,
           ukefGuaranteeInMonths: secondOriginalBond.ukefGuaranteeInMonths,
-          createdDate: expect.any(String),
+          createdDate: expect.any(Number),
         };
 
         expect(clonedDeal.bondTransactions.items[0]).toMatchObject(expectedFirstBondTransaction);
@@ -307,14 +307,14 @@ describe('/v1/deals/:id/clone', () => {
         const getDealResponse = await as(anHSBCMaker).get(`/v1/deals/${clonedDealId}`);
         const clonedDeal = getDealResponse.body.deal;
 
-        const firstOriginalLoan = createdFacilities.find((f) => f.facilityType === 'Loan');
+        const firstOriginalLoan = createdFacilities.find((f) => f.type === 'Loan');
         const secondOriginalLoan = createdFacilities.find((f) =>
-          f.facilityType === 'Loan'
+          f.type === 'Loan'
           && f._id !== firstOriginalLoan._id);
 
         const expectedFirstLoanTransaction = {
-          facilityType: 'Loan',
-          bankReferenceNumber: firstOriginalLoan.bankReferenceNumber,
+          type: 'Loan',
+          name: firstOriginalLoan.name,
           value: firstOriginalLoan.value,
           currencySameAsSupplyContractCurrency: firstOriginalLoan.currencySameAsSupplyContractCurrency,
           currency: firstOriginalLoan.currency,
@@ -323,16 +323,16 @@ describe('/v1/deals/:id/clone', () => {
           'coverEndDate-day': firstOriginalLoan['coverEndDate-day'],
           'coverEndDate-month': firstOriginalLoan['coverEndDate-month'],
           'coverEndDate-year': firstOriginalLoan['coverEndDate-year'],
-          createdDate: expect.any(String),
+          createdDate: expect.any(Number),
         };
 
         const expectedSecondLoanTransaction = {
-          facilityType: 'Loan',
+          type: 'Loan',
           requestedCoverStartDate: secondOriginalLoan.requestedCoverStartDate,
           'coverEndDate-day': secondOriginalLoan['coverEndDate-day'],
           'coverEndDate-month': secondOriginalLoan['coverEndDate-month'],
           'coverEndDate-year': secondOriginalLoan['coverEndDate-year'],
-          bankReferenceNumber: secondOriginalLoan.bankReferenceNumber,
+          name: secondOriginalLoan.name,
           value: secondOriginalLoan.value,
           currencySameAsSupplyContractCurrency: secondOriginalLoan.currencySameAsSupplyContractCurrency,
           currency: secondOriginalLoan.currency,
@@ -342,7 +342,7 @@ describe('/v1/deals/:id/clone', () => {
           'conversionRateDate-year': secondOriginalLoan['conversionRateDate-year'],
           disbursementAmount: secondOriginalLoan.disbursementAmount,
           ukefGuaranteeInMonths: secondOriginalLoan.ukefGuaranteeInMonths,
-          createdDate: expect.any(String),
+          createdDate: expect.any(Number),
         };
 
         expect(clonedDeal.loanTransactions.items[0]).toMatchObject(expectedFirstLoanTransaction);

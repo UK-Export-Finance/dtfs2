@@ -32,7 +32,7 @@ const mapBssEwcsFacility = (facility) => {
   const {
     _id,
     ukefFacilityId,
-    facilityType,
+    type,
     value,
     currency,
     coveredPercentage,
@@ -46,8 +46,7 @@ const mapBssEwcsFacility = (facility) => {
     premiumType,
     feeFrequency,
     premiumFrequency,
-    bankReferenceNumber,
-    uniqueIdentificationNumber,
+    name,
     disbursementAmount,
     facilityStage,
   } = facility;
@@ -57,7 +56,7 @@ const mapBssEwcsFacility = (facility) => {
   return {
     _id,
     ukefFacilityId: Number(ukefFacilityId),
-    facilityType,
+    type,
     currencyCode: currency && currency.id,
     value: Number(value.replace(/,/g, '')),
     coverPercentage: Number(coveredPercentage),
@@ -72,8 +71,7 @@ const mapBssEwcsFacility = (facility) => {
     feeFrequency: feeFrequency || premiumFrequency,
     dayCountBasis: Number(dayCountBasis),
     disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
-    bankReference: bankReferenceNumber,
-    uniqueIdentificationNumber,
+    name,
     tfm: facility.tfm,
   };
 };

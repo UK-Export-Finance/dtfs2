@@ -118,7 +118,7 @@
               "text" : "GBP - UK Sterling",
               "id" : "GBP"
           },
-          "uniqueIdentificationNumberRequiredForIssuance" : true,
+          "nameRequiredForIssuance" : true,
           "ukefFacilityId" : [
               "12345"
           ],
@@ -132,14 +132,14 @@
           "coverEndDate-day" : "17",
           "coverEndDate-month" : "10",
           "coverEndDate-year" : "2020",
-          "uniqueIdentificationNumber" : "1234",
+          "name" : "1234",
           "issueFacilityDetailsStarted" : true,
           "issuedDate" : "1600438897628",
           "issueFacilityDetailsProvided" : true,
           "status" : "Submitted",
           "issueFacilityDetailsSubmitted" : true,
-          "issuedFacilitySubmittedToUkefTimestamp" : "1600352531656",
-          "issuedFacilitySubmittedToUkefBy" : {
+          "submittedAsIssuedDate" : "1600352531656",
+          "submittedAsIssuedBy" : {
               "username" : "CHECKER",
               "roles" : [
                   "checker"

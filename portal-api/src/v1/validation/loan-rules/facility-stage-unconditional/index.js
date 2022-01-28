@@ -1,5 +1,5 @@
 const { hasValue } = require('../../../../utils/string');
-const bankReferenceNumber = require('./bank-reference-number');
+const name = require('./name');
 const requestedCoverStartDateRules = require('./requested-cover-start-date');
 const coverEndDate = require('../../fields/cover-end-date');
 const coverDates = require('../../fields/cover-dates');
@@ -13,7 +13,7 @@ module.exports = (loan, errorList, deal) => {
 
   if (hasValue(facilityStage)
     && facilityStage === 'Unconditional') {
-    newErrorList = bankReferenceNumber(loan, newErrorList);
+    newErrorList = name(loan, newErrorList);
     newErrorList = requestedCoverStartDateRules(loan, deal, newErrorList);
     newErrorList = coverEndDate(loan, newErrorList);
     newErrorList = coverDates(loan, newErrorList);

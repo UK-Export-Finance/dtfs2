@@ -1,11 +1,11 @@
 const generateTaskDates = require('./generate-task-dates');
 
 describe('generateTaskDates', () => {
-  it('should return object with lastEdited timestamp', () => {
+  it('should return object with updatedAt timestamp', () => {
     const result = generateTaskDates();
 
     const expected = {
-      lastEdited: expect.any(Number),
+      updatedAt: expect.any(Number),
     };
 
     expect(result).toEqual(expected);
@@ -16,7 +16,7 @@ describe('generateTaskDates', () => {
       const result = generateTaskDates('To do', 'In progress');
 
       const expected = {
-        lastEdited: expect.any(Number),
+        updatedAt: expect.any(Number),
         dateStarted: expect.any(Number),
       };
 
@@ -29,7 +29,7 @@ describe('generateTaskDates', () => {
       const result = generateTaskDates('To do', 'Done');
 
       const expected = {
-        lastEdited: expect.any(Number),
+        updatedAt: expect.any(Number),
         dateStarted: expect.any(Number),
         dateCompleted: expect.any(Number),
       };
@@ -43,7 +43,7 @@ describe('generateTaskDates', () => {
       const result = generateTaskDates('In progress', 'Done');
 
       const expected = {
-        lastEdited: expect.any(Number),
+        updatedAt: expect.any(Number),
         dateCompleted: expect.any(Number),
       };
 

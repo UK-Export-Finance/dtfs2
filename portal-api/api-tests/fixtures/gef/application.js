@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../../src/constants');
 
 const APPLICATION = [{
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 1',
@@ -15,7 +15,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 2',
@@ -29,7 +29,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 3',
@@ -43,7 +43,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 4',
@@ -57,7 +57,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 5',
@@ -71,7 +71,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 6',
@@ -85,7 +85,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 7',
@@ -99,7 +99,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 8',
@@ -113,7 +113,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 9',
@@ -127,7 +127,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 10',
@@ -141,7 +141,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 11',
@@ -155,7 +155,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 12',
@@ -169,7 +169,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 13',
@@ -183,7 +183,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 14',
@@ -197,7 +197,7 @@ const APPLICATION = [{
   editedBy: [null],
   facilitiesUpdated: null,
 }, {
-  dealType: 'GEF',
+  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
   bankInternalRefName: 'Bank 15',
@@ -208,6 +208,21 @@ const APPLICATION = [{
   status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
   updatedAt: null,
   submissionCount: 0,
+  editedBy: [null],
+  facilitiesUpdated: null,
+},
+{
+  dealType: 'GEF',
+  maker: {},
+  bank: {},
+  bankInternalRefName: 'Bank 1',
+  additionalRefName: 'Team 1',
+  exporter: {},
+  createdAt: '2021-01-01T00:00',
+  mandatoryVersionId: '123',
+  status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+  updatedAt: null,
+  submissionCount: 1,
   editedBy: [null],
   facilitiesUpdated: null,
 }];

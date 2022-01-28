@@ -104,7 +104,7 @@
           "hasBeenIssued": true,
           "ukefFacilityId": "ukef:aDealWithOneLoanAndOneBond-bond1",
           "ukefGuaranteeInMonths": "24",
-          "uniqueIdentificationNumber": "aDealWithOneLoanAndOneBond-bond1",
+          "name": "aDealWithOneLoanAndOneBond-bond1",
           "bondBeneficiary": "test",
           "value": "123",
           "currencySameAsSupplyContractCurrency": "true",
@@ -133,7 +133,7 @@
       {
         "facilityStage": "Conditional",
         "hasBeenIssued": false,
-        "bankReferenceNumber": "aDealWithOneLoanAndOneBond-loan1",
+        "name": "aDealWithOneLoanAndOneBond-loan1",
         "ukefFacilityId": "ukef:aDealWithOneLoanAndOneBond-loan1",
         "value": "456",
         "disbursementAmount": "12",

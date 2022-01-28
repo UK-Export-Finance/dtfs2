@@ -2,14 +2,13 @@ const db = require('../../../../drivers/db-client');
 const { generateFacilityId } = require('../../../../utils/generate-ids');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { updateDeal } = require('../deal/update-deal.controller');
-const now = require('../../../../now');
 
 const createFacilities = async (facilities, dealId) => {
   const collection = await db.getCollection('facilities');
 
   const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
     const facility = f;
-    facility.createdDate = now();
+    facility.createdDate = Date.now();
     facility._id = await generateFacilityId();
     facility.dealId = dealId;
     return facility;

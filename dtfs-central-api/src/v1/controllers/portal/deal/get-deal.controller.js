@@ -19,13 +19,13 @@ const extendDealWithFacilities = async (deal) => {
     const facilityObj = facilities.find((f) => f._id === id);
 
     if (facilityObj) {
-      const { facilityType } = facilityObj;
+      const { type } = facilityObj;
 
-      if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+      if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
         mappedBonds.push(facilityObj);
       }
 
-      if (facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+      if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
         mappedLoans.push(facilityObj);
       }
     }

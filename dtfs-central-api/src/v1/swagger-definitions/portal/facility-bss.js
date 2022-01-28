@@ -10,15 +10,15 @@
  *       dealId:
  *         type: string
  *         example: 456abc
- *       facilityType:
+ *       type:
  *         type: string
  *         example: Bond
  *       createdDate:
  *         type: string
  *         example: '1632392646415'
- *       lastEdited:
- *         type: string
- *         example: '1632392778918'
+ *       updatedAt:
+ *         type: integer
+ *         example: 1632392778918
  *       status:
  *         type: string
  *         example: Acknowledged by UKEF
@@ -55,10 +55,10 @@
  *       issueFacilityDetailsSubmitted:
  *         type: boolean
  *         example: true
- *       issuedFacilitySubmittedToUkefTimestamp:
- *         type: string
- *         example: '1632392674598'
- *       issuedFacilitySubmittedToUkefBy:
+ *       submittedAsIssuedDate:
+ *         type: integer
+ *         example: 1632392674598
+ *       submittedAsIssuedBy:
  *         $ref: '#/definitions/User'
  *       hasBeenAcknowledged:
  *         type: boolean
@@ -96,7 +96,7 @@
  *       ukefGuaranteeInMonths:
  *         type: string
  *         example: '12'
- *       uniqueIdentificationNumber:
+ *       name:
  *         type: string
  *         example: '1234'
  *       guaranteeFeePayableByBank:

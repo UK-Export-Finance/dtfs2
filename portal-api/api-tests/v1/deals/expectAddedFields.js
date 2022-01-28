@@ -32,7 +32,7 @@ const expectAddedFields = (obj) => {
     bank: expect.any(Object),
     details: {
       ...obj.details,
-      created: expect.any(String),
+      created: expect.any(Number),
     },
     editedBy: [],
     exporter: expect.any(Object),

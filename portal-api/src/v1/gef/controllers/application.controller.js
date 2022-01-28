@@ -210,8 +210,8 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
       submissionType: existingApplication.submissionType || '',
       supplierName: companyName,
       bankInternalRefName,
-      currentStatus: DEAL_STATUS[status],
-      previousStatus: DEAL_STATUS[previousStatus],
+      currentStatus: status,
+      previousStatus,
       updatedByName: `${user.firstname} ${user.surname}`,
       updatedByEmail: user.email,
     });

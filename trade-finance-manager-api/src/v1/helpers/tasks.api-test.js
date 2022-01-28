@@ -140,7 +140,7 @@ describe('helpers - tasks', () => {
       ];
 
       const result = groupHasAllTasksCompleted(mockGroupTasks);
-      
+
       expect(result).toEqual(true);
     });
 

@@ -248,7 +248,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
             MOCK_DEAL._id,
-            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.UKEF_ACKNOWLEDGED,
+            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
           );
         });
       });
@@ -259,7 +259,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
             MOCK_DEAL_MIN._id,
-            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.UKEF_ACKNOWLEDGED,
+            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
           );
         });
       });
@@ -270,7 +270,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(
             MOCK_DEAL_MIA._id,
-            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_BSS.IN_PROGRESS,
+            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
           );
         });
       });
@@ -281,7 +281,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
             MOCK_GEF_DEAL_AIN._id,
-            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.UKEF_ACKNOWLEDGED,
+            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
           );
         });
       });
@@ -292,7 +292,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
             MOCK_GEF_DEAL_MIN._id,
-            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.UKEF_ACKNOWLEDGED,
+            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
           );
         });
       });
@@ -303,7 +303,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(
             MOCK_GEF_DEAL_MIA._id,
-            CONSTANTS.DEALS.DEAL_STATUS_PORTAL_GEF.IN_PROGRESS_BY_UKEF,
+            CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
           );
         });
       });

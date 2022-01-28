@@ -10,7 +10,7 @@ const FIELDS = {
 
       // required if facilityStage is 'Issued'
       'coverEndDate',
-      'uniqueIdentificationNumber',
+      'name',
 
       // optional fields that could have validation errors
       'requestedCoverStartDate',

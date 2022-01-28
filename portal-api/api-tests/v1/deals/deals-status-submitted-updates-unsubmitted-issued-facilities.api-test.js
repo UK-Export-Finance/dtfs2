@@ -28,11 +28,11 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
     let originalFacilities;
 
     const mockUnsubmittedUnconditionalLoan = () => ({
-      facilityType: 'Loan',
+      type: 'Loan',
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
-      bankReferenceNumber: '123456',
+      name: '123456',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '2,469,135.60',
       value: '12345678',
@@ -67,13 +67,13 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
     });
 
     const unsubmittedIssuedBond = () => ({
-      facilityType: 'Bond',
+      type: 'Bond',
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '24',
-      uniqueIdentificationNumber: '1234',
+      name: '1234',
       bondBeneficiary: 'test',
       value: '123456.55',
       currencySameAsSupplyContractCurrency: 'true',
@@ -141,7 +141,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
         // NOTE: aka - unconditional loans created from Deal Draft, did not need to complete Issue Facility Form
         const unsubmittedUnconditionalLoansNotProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
-          facility.facilityType === 'Loan'
+          facility.type === 'Loan'
           && !facility.issueFacilityDetailsSubmitted
           && !facility.issueFacilityDetailsProvided);
 
@@ -154,11 +154,11 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
           const updatedLoan = deal.loanTransactions.items.find((l) => l._id === loan._id);
 
           expect(updatedLoan.issueFacilityDetailsSubmitted).toEqual(true);
-          expect(typeof updatedLoan.issuedFacilitySubmittedToUkefTimestamp).toEqual('string');
-          expect(updatedLoan.issuedFacilitySubmittedToUkefBy.username).toEqual(aBarclaysChecker.username);
-          expect(updatedLoan.issuedFacilitySubmittedToUkefBy.email).toEqual(aBarclaysChecker.email);
-          expect(updatedLoan.issuedFacilitySubmittedToUkefBy.firstname).toEqual(aBarclaysChecker.firstname);
-          expect(updatedLoan.issuedFacilitySubmittedToUkefBy.lastname).toEqual(aBarclaysChecker.lastname);
+          expect(typeof updatedLoan.submittedAsIssuedDate).toEqual('number');
+          expect(updatedLoan.submittedAsIssuedBy.username).toEqual(aBarclaysChecker.username);
+          expect(updatedLoan.submittedAsIssuedBy.email).toEqual(aBarclaysChecker.email);
+          expect(updatedLoan.submittedAsIssuedBy.firstname).toEqual(aBarclaysChecker.firstname);
+          expect(updatedLoan.submittedAsIssuedBy.lastname).toEqual(aBarclaysChecker.lastname);
           expect(updatedLoan.status).toEqual('Completed');
         });
       });
@@ -174,7 +174,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
         // NOTE: aka - issued bonds created from Deal Draft, did not need to complete Issue Facility Form
         const unsubmittedIssuedBondsNotProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
-          facility.facilityType === 'Bond'
+          facility.type === 'Bond'
           && !facility.issueFacilityDetailsSubmitted
           && !facility.issueFacilityDetailsProvided);
 
@@ -187,11 +187,11 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
           const updatedBond = deal.bondTransactions.items.find((b) => b._id === bond._id);
 
           expect(updatedBond.issueFacilityDetailsSubmitted).toEqual(true);
-          expect(typeof updatedBond.issuedFacilitySubmittedToUkefTimestamp).toEqual('string');
-          expect(updatedBond.issuedFacilitySubmittedToUkefBy.username).toEqual(aBarclaysChecker.username);
-          expect(updatedBond.issuedFacilitySubmittedToUkefBy.email).toEqual(aBarclaysChecker.email);
-          expect(updatedBond.issuedFacilitySubmittedToUkefBy.firstname).toEqual(aBarclaysChecker.firstname);
-          expect(updatedBond.issuedFacilitySubmittedToUkefBy.lastname).toEqual(aBarclaysChecker.lastname);
+          expect(typeof updatedBond.submittedAsIssuedDate).toEqual('number');
+          expect(updatedBond.submittedAsIssuedBy.username).toEqual(aBarclaysChecker.username);
+          expect(updatedBond.submittedAsIssuedBy.email).toEqual(aBarclaysChecker.email);
+          expect(updatedBond.submittedAsIssuedBy.firstname).toEqual(aBarclaysChecker.firstname);
+          expect(updatedBond.submittedAsIssuedBy.lastname).toEqual(aBarclaysChecker.lastname);
           expect(updatedBond.status).toEqual('Completed');
         });
       });
@@ -207,7 +207,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
         // NOTE: aka - unconditional loans created from Deal Draft, had to complete Issue Facility Form
         const unsubmittedUnconditionalLoansProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
-          facility.facilityType === 'Loan'
+          facility.type === 'Loan'
           && facility.issueFacilityDetailsProvided
           && facility.status === 'Ready for check'
           && !facility.issueFacilityDetailsSubmitted);
@@ -235,7 +235,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
         // NOTE: aka - unconditional bonds created from Deal Draft, had to complete Issue Facility Form
         const unsubmittedIssuedBondsProvidedIssueFacilityDetails = completedDeal.mockFacilities.filter((facility) =>
-          facility.facilityType === 'Bond'
+          facility.type === 'Bond'
           && facility.issueFacilityDetailsProvided
           && facility.status === 'Ready for check'
           && !facility.issueFacilityDetailsSubmitted);

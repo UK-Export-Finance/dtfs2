@@ -1,0 +1,144 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}Unissued facilities{% endblock %}
+
+{% block content %}
+
+  {{ govukBreadcrumbs({
+    classes: 'govuk-!-margin-top-0',
+    attributes: { "data-cy": "reports--unissued-facilities-breadcrumbs" },
+    items: [
+      {
+        text: "Reports",
+        href: "/reports"
+      },
+      {
+        text: "Unissued facilities",
+        href: "/reports/review-unissued-facilities"
+      }
+    ]
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <h1 class="govuk-heading-l" data-cy="reports--unissued-facilities-mainHeading">Unissued facilities</h1>
+      <p class="govuk-body">
+        The number of days left to issue is an estimate. We calculate this using the date of submission and the deadline for issuing a facility which is 3 months after the submission date.
+      </p>
+    </div>
+    <div class="govuk-grid-column-one-quarter govuk-!-text-align-right">
+      {{ govukButton({
+          text: "Download",
+          classes: "govuk-button--secondary",
+          href: "/reports/download-report-unissued-facilities",
+          attributes: { "data-cy": "reports--unissued-facilities-download" }
+      }) }}
+    </div>
+  </div>
+
+  {% set items = [] %}
+  {% for facility in facilities %}
+    {% set bankRefLink %}
+      {% if facility.dealType === 'GEF' %}
+        <a
+          class="govuk-link"
+          href="/gef/application-details/{{ facility.dealId }}"
+          aria-label="View deal details"
+          data-cy="reports-deal-{{ facility.dealId }}-link">
+          {{ facility.bankInternalRefName }}
+        </a>
+      {% else %}
+        <a
+          class="govuk-link"
+          href="/contract/{{ facility.dealId }}"
+          aria-label="View deal details"
+          data-cy="reports-deal-{{ facility.dealId }}-link">
+          {{ facility.bankInternalRefName }}
+        </a>
+      {% endif %}
+    {% endset %}
+
+    {% set daysLeftToIssue %}
+      {% if facility.daysLeftToIssue >= 15 %}
+        <p class="govuk-body govuk-!-margin-0">{{ facility.daysLeftToIssue }} days left</p>
+      {% elif facility.daysLeftToIssue < 15 and  facility.daysLeftToIssue >= 0 %}
+        <p class="has-text-danger govuk-body govuk-!-margin-0">{{ facility.daysLeftToIssue }} days left</p>
+      {% elif facility.daysLeftToIssue < 0 %}
+        <p class="has-text-danger govuk-body govuk-!-margin-0">{{ facility.daysLeftToIssue * -1 }} days overdue</p>
+      {% endif %}
+    {% endset %}
+
+    {% set item = [
+      {
+        html: bankRefLink,
+        attributes: { "data-cy": "facility__row--bankRef" }
+      },
+      {
+        text: facility.dealType or "-",
+        attributes: { "data-cy": "facility__row--product" }
+      },
+      {
+        text: facility.ukefFacilityId or "-",
+        attributes: { "data-cy": "facility__row--facilityId" }
+      },
+      {
+        text: facility.companyName or "-",
+        attributes: { "data-cy": "facility__row--companyName" }
+      },
+      {
+        text: facility.currencyAndValue or "-",
+        attributes: { "data-cy": "facility__row--facilityValue" }
+      },
+      {
+        text: facility.deadlineForIssuing or "-",
+        attributes: { "data-cy": "facility__row--deadlineForIssuing" }
+      },
+      {
+        html: daysLeftToIssue,
+        attributes: { "data-cy": "facility__row--daysLeftToIssue" }
+      }
+    ] %}
+
+    {% set items = (items.push(item), items) %}
+  {% endfor %}
+
+{{ govukTable({
+   attributes: {'data-cy': 'reports--unissued-facilities-table' },
+   head: [
+      {
+        text: "Bank ref",
+        attributes: { "data-cy": "facility__header--bankRef" }
+      },
+      {
+        text: "Product",
+        attributes: { "data-cy": "facility__header--product"}
+      },
+      {
+        text: "Facility ID",
+        attributes: { "data-cy": "facility__header--facilityId" }
+      },
+      {
+        text: "Exporter",
+        attributes: { "data-cy": "facility__header--exporter" }
+      },
+      {
+        text: "Value",
+        attributes: { "data-cy": "facility__header--value" }
+      },
+      {
+        text: "Deadline for issuing",
+        attributes: { "data-cy": "facility__header--deadlineForIssuing" }
+      },
+      {
+        text: "Days left to issue",
+        attributes: { "data-cy": "facility__header--daysLeftToIssue" }
+      }
+    ],
+    rows: items
+  }) }}
+
+{% endblock %}

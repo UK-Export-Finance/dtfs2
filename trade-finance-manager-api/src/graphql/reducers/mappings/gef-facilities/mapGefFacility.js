@@ -27,7 +27,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
     feeFrequency,
     hasBeenIssued,
     name,
-    type: facilityType,
+    type,
     ukefFacilityId,
     ukefExposure,
     guaranteeFee,
@@ -35,11 +35,11 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
 
   const formattedFacilityValue = formattedNumber(value);
 
-  facilitySnapshot.facilityProduct = mapFacilityProduct(facilityType);
+  facilitySnapshot.facilityProduct = mapFacilityProduct(type);
 
   facilitySnapshot.facilityStage = mapFacilityStage(hasBeenIssued);
 
-  facilitySnapshot.ukefFacilityType = facilityType;
+  facilitySnapshot.ukefFacilityType = type;
 
   const result = {
     _id: facility._id,
@@ -52,7 +52,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       dates: mapGefFacilityDates(facilitySnapshot, facilityTfm, dealSnapshot),
       facilityProduct: facilitySnapshot.facilityProduct,
       facilityStage: facilitySnapshot.facilityStage,
-      facilityType: mapFacilityType(facilitySnapshot),
+      type: mapFacilityType(facilitySnapshot),
       currency: currency.id,
       facilityValueExportCurrency: `${currency.id} ${formattedFacilityValue}`,
       value: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),
@@ -61,8 +61,8 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFee),
       dayCountBasis: facilitySnapshot.dayCountBasis,
 
-      // TODO: DTFS2-4634 - we shouldn't need facilityType and ukefFacilityType.
-      ukefFacilityType: mapGefUkefFacilityType(facilityType),
+      // TODO: DTFS2-4634 - we shouldn't need type and ukefFacilityType.
+      ukefFacilityType: mapGefUkefFacilityType(type),
       ukefFacilityId,
       ukefExposure: `${currency.id} ${ukefExposure}`,
       providedOn: mapGefFacilityProvidedOn(facilitySnapshot.details),

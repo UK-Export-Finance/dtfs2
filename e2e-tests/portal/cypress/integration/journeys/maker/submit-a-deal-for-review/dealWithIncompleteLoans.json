@@ -53,16 +53,16 @@
   },
   "mockFacilities": [
     {
-      "facilityType": "Loan"
+      "type": "Loan"
     },
     {
-      "facilityType": "Loan"
+      "type": "Loan"
     },
     {
-      "facilityType": "Loan"
+      "type": "Loan"
     },
     {
-      "facilityType": "Loan"
+      "type": "Loan"
     }
   ]
 }

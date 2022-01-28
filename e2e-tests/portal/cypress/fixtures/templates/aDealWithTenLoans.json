@@ -103,7 +103,7 @@
       {
         "facilityStage": "Conditional",
         "hasBeenIssued": false,
-        "bankReferenceNumber": "aDealWithTenLoans-loan1",
+        "name": "aDealWithTenLoans-loan1",
         "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
@@ -116,7 +116,7 @@
       {
         "facilityStage": "Conditional",
         "hasBeenIssued": false,
-        "bankReferenceNumber": "aDealWithTenLoans-loan2",
+        "name": "aDealWithTenLoans-loan2",
         "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
@@ -129,7 +129,7 @@
       {
         "facilityStage": "Conditional",
         "hasBeenIssued": false,
-        "bankReferenceNumber": "aDealWithTenLoans-loan3",
+        "name": "aDealWithTenLoans-loan3",
         "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
@@ -142,7 +142,7 @@
       {
         "facilityStage": "Conditional",
         "hasBeenIssued": false,
-        "bankReferenceNumber": "aDealWithTenLoans-loan4",
+        "name": "aDealWithTenLoans-loan4",
         "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
@@ -155,7 +155,7 @@
       {
         "facilityStage": "Conditional",
         "hasBeenIssued": false,
-        "bankReferenceNumber": "aDealWithTenLoans-loan5",
+        "name": "aDealWithTenLoans-loan5",
         "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
@@ -168,7 +168,7 @@
       {
         "facilityStage": "Unconditional",
         "hasBeenIssued": true,
-        "bankReferenceNumber": "aDealWithTenLoans-loan6",
+        "name": "aDealWithTenLoans-loan6",
         "ukefFacilityId": "ukef:aDealWithTenLoans-loan6",
         "value": "123",
         "disbursementAmount": "12",
@@ -182,7 +182,7 @@
       {
         "facilityStage": "Unconditional",
         "hasBeenIssued": true,
-        "bankReferenceNumber": "aDealWithTenLoans-loan7",
+        "name": "aDealWithTenLoans-loan7",
         "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
@@ -195,7 +195,7 @@
       {
         "facilityStage": "Unconditional",
         "hasBeenIssued": true,
-        "bankReferenceNumber": "aDealWithTenLoans-loan8",
+        "name": "aDealWithTenLoans-loan8",
         "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
@@ -208,7 +208,7 @@
       {
         "facilityStage": "Unconditional",
         "hasBeenIssued": true,
-        "bankReferenceNumber": "aDealWithTenLoans-loan9",
+        "name": "aDealWithTenLoans-loan9",
         "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",
@@ -221,7 +221,7 @@
       {
         "facilityStage": "Unconditional",
         "hasBeenIssued": true,
-        "bankReferenceNumber": "aDealWithTenLoans-loan10",
+        "name": "aDealWithTenLoans-loan10",
         "value": "123",
         "disbursementAmount": "12",
         "ukefGuaranteeInMonths": "12",

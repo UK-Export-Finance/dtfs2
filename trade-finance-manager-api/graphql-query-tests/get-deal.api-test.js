@@ -147,7 +147,7 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
           facilityProduct {
             code
           },
-          facilityType,
+          type,
           ukefFacilityType,
           facilityStage,
           facilityValueExportCurrency,

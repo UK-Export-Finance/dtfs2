@@ -192,7 +192,7 @@ const deal = {
   bondTransactions: {
     items: [
       {
-        facilityType: 'Bond',
+        type: 'Bond',
         createdDate: now,
         bondIssuer: '',
         bondType: 'Advance payment guarantee',
@@ -204,10 +204,10 @@ const deal = {
         'coverEndDate-day': (nowPlusMonths(2).getDate()).toString(),
         'coverEndDate-month': (nowPlusMonths(2).getMonth() + 1).toString(),
         'coverEndDate-year': (nowPlusMonths(2).getFullYear()).toString(),
-        uniqueIdentificationNumber: '1234',
+        name: '1234',
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '18.0000',
-        lastEdited: now,
+        updatedAt: Date.now(),
         value: '1234.00',
         currencySameAsSupplyContractCurrency: 'true',
         riskMarginFee: '20',
@@ -227,7 +227,7 @@ const deal = {
   loanTransactions: {
     items: [
       {
-        facilityType: 'Loan',
+        type: 'Loan',
         createdDate: now,
         facilityStage: 'Unconditional',
         hasBeenIssued: true,
@@ -237,9 +237,9 @@ const deal = {
         'coverEndDate-day': (nowPlusMonths(2).getDate()).toString(),
         'coverEndDate-month': (nowPlusMonths(2).getMonth() + 1).toString(),
         'coverEndDate-year': (nowPlusMonths(2).getFullYear()).toString(),
-        bankReferenceNumber: '12345678',
+        name: '12345678',
         guaranteeFeePayableByBank: '10.8000',
-        lastEdited: now,
+        updatedAt: Date.now(),
         value: '1234.00',
         currencySameAsSupplyContractCurrency: 'true',
         disbursementAmount: '123.00',

@@ -10,7 +10,7 @@ const newDeal = {
 
 const newFacility = {
   dealId: 12345,
-  facilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
 };
 
 const createDeal = async () => {

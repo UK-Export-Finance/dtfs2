@@ -1,13 +1,13 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% import './bank-reference-number-field.njk' as bankReferenceNumberField %}
+{% import './name-field.njk' as nameField %}
 
 {% macro render(loan, validationErrors) %}
 
-  {{bankReferenceNumberField.render(
-    id = 'facilityStageConditional-bankReferenceNumber',
+  {{nameField.render(
+    id = 'facilityStageConditional-name',
     label = 'Bank reference number (optional)',
-    value = loan.bankReferenceNumber,
-    error = validationErrors.errorList.bankReferenceNumber
+    value = loan.name,
+    error = validationErrors.errorList.name
   )}}
 
   {{ govukInput({

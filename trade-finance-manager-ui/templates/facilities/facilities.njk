@@ -1,6 +1,3 @@
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "moj/components/button-menu/macro.njk" import mojButtonMenu %}
-{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% import './_macros/facilities-table-search-form.njk' as facilitiesTableSearchForm %}
 
@@ -54,8 +51,8 @@
         attributes: { "data-cy": "facility__product", "data-sort-value": facility.dealType }
       },
       {
-        text: facility.facilityType or "-",
-        attributes: { "data-cy": "facility__facilityType", "data-sort-value": facility.facilityType }
+        text: facility.type or "-",
+        attributes: { "data-cy": "facility__type", "data-sort-value": facility.type }
       },
       {
         text: facility.companyName or "-",

@@ -44,7 +44,7 @@ describe('mapPremiumScheduleFacility', () => {
       maximumLiability: mockFacility.ukefExposure,
       premiumTypeId: mapPremiumTypeId(mockFacility),
       premiumFrequencyId: mapPremiumFrequencyId(mockFacility),
-      productGroup: mapProductGroup(mockFacility.facilityType),
+      productGroup: mapProductGroup(mockFacility.type),
     };
     expect(result).toEqual(expected);
   });

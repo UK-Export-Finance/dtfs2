@@ -36,7 +36,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     facilityStage: 'Unconditional',
     hasBeenIssued: true,
     previousFacilityStage: 'Unconditional',
-    bankReferenceNumber: '1234',
+    name: '1234',
     disbursementAmount: '5',
     value: '100',
     currencySameAsSupplyContractCurrency: 'true',
@@ -52,7 +52,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     ...createCoverDateFields('requestedCoverStartDate', moment().add(1, 'week')),
     ...createCoverDateFields('coverEndDate', moment().add(1, 'month')),
     ...createCoverDateFields('issuedDate', moment()),
-    uniqueIdentificationNumber: '1234',
+    name: '1234',
   };
 
   let aBarclaysMaker;
@@ -163,19 +163,19 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
         expect(body.loan.issueFacilityDetailsProvided).toEqual(false);
       });
 
-      describe('when there is no loan.bankReferenceNumber', () => {
-        it('should return validationErrors, the loan with bankReferenceNumberRequiredForIssuance', async () => {
-          // remove bankReferenceNumber
+      describe('when there is no loan.name', () => {
+        it('should return validationErrors, the loan with nameRequiredForIssuance', async () => {
+          // remove name
           await as(aBarclaysMaker).put({
             ...allLoanFields,
-            bankReferenceNumber: ''
+            name: ''
           }).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
           const { status, body } = await putIssueFacility(dealId, loanId, incompleteIssueFacilityBody);
 
           expect(status).toEqual(400);
           expect(body.validationErrors).toBeDefined();
-          expect(body.loan.bankReferenceNumberRequiredForIssuance).toEqual(true);
+          expect(body.loan.nameRequiredForIssuance).toEqual(true);
         });
       });
 

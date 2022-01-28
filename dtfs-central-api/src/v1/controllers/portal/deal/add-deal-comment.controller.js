@@ -1,5 +1,4 @@
 const db = require('../../../../drivers/db-client');
-const now = require('../../../../now');
 const { findOneDeal } = require('./get-deal.controller');
 
 const addDealComment = async (_id, commentType, comment) => {
@@ -12,7 +11,7 @@ const addDealComment = async (_id, commentType, comment) => {
         [commentType]: {
           $each: [{
             ...comment,
-            timestamp: now(),
+            timestamp: Date.now(),
           }],
           $position: 0,
         },

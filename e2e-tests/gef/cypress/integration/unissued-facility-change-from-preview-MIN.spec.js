@@ -47,7 +47,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
           });
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
@@ -142,14 +142,17 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListRowValue(3, 0).contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListRowAction(3, 0).contains('Change');
       applicationPreview.facilitySummaryListRowAction(3, 1).should('have.value', '');
-      applicationPreview.facilitySummaryListRowValue(3, 1).contains('Issued');
-      applicationPreview.facilitySummaryListRowAction(3, 2).contains('Change');
-      applicationPreview.facilitySummaryListRowValue(3, 2).contains(issuedDate);
+      applicationPreview.facilitySummaryListRowAction(3, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowValue(3, 3).contains(issuedDate);
       applicationPreview.facilitySummaryListRowAction(3, 3).contains('Change');
-      applicationPreview.facilitySummaryListRowValue(3, 3).contains(coverStart);
+      applicationPreview.facilitySummaryListRowValue(3, 4).contains(coverStart);
       applicationPreview.facilitySummaryListRowAction(3, 4).contains('Change');
-      applicationPreview.facilitySummaryListRowValue(3, 4).contains(coverEnd);
-      applicationPreview.facilitySummaryListRowAction(3, 4).contains('Change');
+      applicationPreview.facilitySummaryListRowValue(3, 5).contains(coverEnd);
+      applicationPreview.facilitySummaryListRowAction(3, 5).contains('Change');
+      applicationPreview.facilitySummaryListRowAction(3, 7).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 8).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 9).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 10).should('have.value', '');
 
       // not be able to change facility four name, but can change to issued
       applicationPreview.facilitySummaryListRowValue(0, 0).contains(MOCK_FACILITY_FOUR.name);

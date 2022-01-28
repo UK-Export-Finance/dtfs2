@@ -39,8 +39,8 @@ const page = {
     row: (bondId) => {
       cy.get(`[data-cy="bond-${bondId}"]`).as('row');
       return {
-        uniqueNumber: () => cy.get('@row').get(`[data-cy="unique-number-${bondId}"]`),
-        uniqueNumberLink: () => cy.get('@row').get(`[data-cy="unique-number-link-${bondId}"]`),
+        uniqueNumber: () => cy.get('@row').get(`[data-cy="name-${bondId}"]`),
+        uniqueNumberLink: () => cy.get('@row').get(`[data-cy="name-link-${bondId}"]`),
         ukefFacilityId: () => cy.get('@row').get(`[data-cy="bond-ukef-facility-id-${bondId}"]`),
         bondStatus: () => cy.get('@row').get(`[data-cy="bond-status-${bondId}"]`),
         facilityValue: () => cy.get('@row').get('[data-cy="bond-facility-value"]'),
@@ -58,8 +58,8 @@ const page = {
     row: (loanId) => {
       cy.get(`[data-cy="loan-${loanId}"]`).as('row');
       return {
-        bankReferenceNumber: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-${loanId}"]`),
-        bankReferenceNumberLink: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-link-${loanId}"]`),
+        name: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-${loanId}"]`),
+        nameLink: () => cy.get('@row').get(`[data-cy="loan-bank-reference-number-link-${loanId}"]`),
         ukefFacilityId: () => cy.get('@row').get(`[data-cy="loan-ukef-facility-id-${loanId}"]`),
         loanStatus: () => cy.get('@row').get(`[data-cy="loan-status-${loanId}"]`),
         facilityValue: () => cy.get('@row').get('[data-cy="loan-facility-value"]'),

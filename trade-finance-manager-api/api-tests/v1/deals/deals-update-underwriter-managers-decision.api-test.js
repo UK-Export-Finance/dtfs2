@@ -57,7 +57,7 @@ describe('update tfm underwriter managers decision', () => {
         emailVariables: {
           recipientName: MOCK_DEAL_BSS_MIA.maker.firstname,
           exporterName: MOCK_DEAL_BSS_MIA.exporter.companyName,
-          bankReferenceNumber: MOCK_DEAL_BSS_MIA.bankInternalRefName,
+          name: MOCK_DEAL_BSS_MIA.bankInternalRefName,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
           conditions: comments,
         },
@@ -90,7 +90,7 @@ describe('update tfm underwriter managers decision', () => {
         emailVariables: {
           recipientName: MOCK_DEAL_BSS_MIA.maker.firstname,
           exporterName: MOCK_DEAL_BSS_MIA.exporter.companyName,
-          bankReferenceNumber: MOCK_DEAL_BSS_MIA.bankInternalRefName,
+          name: MOCK_DEAL_BSS_MIA.bankInternalRefName,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
         },
       };
@@ -122,7 +122,7 @@ describe('update tfm underwriter managers decision', () => {
         emailVariables: {
           recipientName: MOCK_DEAL_BSS_MIA.maker.firstname,
           exporterName: MOCK_DEAL_BSS_MIA.exporter.companyName,
-          bankReferenceNumber: MOCK_DEAL_BSS_MIA.bankInternalRefName,
+          name: MOCK_DEAL_BSS_MIA.bankInternalRefName,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
           reasonForRejection: comments,
         },
@@ -141,7 +141,7 @@ describe('update tfm underwriter managers decision', () => {
     it('should call api.updatePortalBssDealStatus', async () => {
       const decision = 'Declined';
       await updateTfmUnderwriterManagersDecision(bssDealId, decision, comments, internalComments, userFullName);
-      expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(bssDealId, mapTfmDealStageToPortalStatus(CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, decision));
+      expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith(bssDealId, mapTfmDealStageToPortalStatus(decision));
     });
 
     it('should call api.addPortalDealComment', async () => {
@@ -149,7 +149,7 @@ describe('update tfm underwriter managers decision', () => {
       const ukefDecisionText = 'Application declined';
 
       await updateTfmUnderwriterManagersDecision(bssDealId, ukefDecision, ukefDecisionText, internalComments, userFullName);
-      expect(addPortalDealCommentSpy).toHaveBeenCalledWith(bssDealId, 'ukefComments', { text: 'Testing' });
+      expect(addPortalDealCommentSpy).toHaveBeenCalledWith(bssDealId, 'ukefComments', { text: 'Testing', decision: 'Rejected by UKEF' });
     });
   });
 
@@ -160,7 +160,7 @@ describe('update tfm underwriter managers decision', () => {
       const decision = 'Declined';
 
       await updateTfmUnderwriterManagersDecision(gefDealId, decision, comments, internalComments, userFullName);
-      expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(gefDealId, mapTfmDealStageToPortalStatus(CONSTANTS.DEALS.DEAL_TYPE.GEF, decision));
+      expect(updatePortalGefDealStatusSpy).toHaveBeenCalledWith(gefDealId, mapTfmDealStageToPortalStatus(decision));
     });
 
     it('should call api.addUnderwriterCommentToGefDeal', async () => {

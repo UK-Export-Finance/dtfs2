@@ -32,7 +32,7 @@ const mapBssEwcsDeal = (deal) => {
     _id,
     dealType,
     submissionType,
-    bankReferenceNumber: bankInternalRefName,
+    name: bankInternalRefName,
     bankAdditionalReferenceName: additionalRefName,
     submissionCount,
     submissionDate,

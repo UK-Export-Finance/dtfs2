@@ -1,5 +1,6 @@
 const { format } = require('date-fns');
 const {
+  mapIssuedValue,
   facilityFieldsObj,
   generateFacilityFieldListItemString,
   generateFacilityFieldsListString,
@@ -10,6 +11,7 @@ const {
   generateHeadingString,
   generateListItemString,
 } = require('../../helpers/notify-template-formatters');
+const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('./gef-facilities-content-strings');
 
 const MOCK_CASH_CONTINGENT_FACILITES = require('../../__mocks__/mock-cash-contingent-facilities');
@@ -20,8 +22,8 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     MOCK_CASH_CONTINGENT_FACILITES[0],
   );
 
-  const mockFacilityType = {
-    name: 'facilityType',
+  const mockType = {
+    name: 'type',
     value: 'Cash',
   };
 
@@ -36,10 +38,30 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
   };
 
   const mockSimpleFacility = {
-    [mockFacilityType.name]: mockFacilityType.value,
+    [mockType.name]: mockType.value,
     [mockBankReference.name]: mockBankReference.value,
     [mockDayCountBasis.name]: mockDayCountBasis.value,
   };
+
+  describe('mapIssuedValue', () => {
+    describe('when facility.hasBeenIssued is true', () => {
+      it(`should return ${CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED}`, () => {
+        const result = mapIssuedValue(true);
+        const expected = CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.ISSUED;
+
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when facility.hasBeenIssued is false', () => {
+      it(`should return ${CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED}`, () => {
+        const result = mapIssuedValue(false);
+        const expected = CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED;
+
+        expect(result).toEqual(expected);
+      });
+    });
+  });
 
   describe('facilityFieldsObj', () => {
     it('should return and format specific fields from a facility object', () => {
@@ -48,11 +70,11 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const expected = {
         ukefFacilityId: mockFacility.ukefFacilityId,
         bankReference: mockFacility.bankReference,
-        facilityStage: mockFacility.facilityStage,
+        hasBeenIssued: mapIssuedValue(mockFacility.hasBeenIssued),
         coverStartDate: format(Number(mockFacility.coverStartDate), 'do MMMM yyyy'),
         value: mockFacility.value,
         currencyCode: mockFacility.currencyCode,
-        interestPercentage: mockFacility.interestPercentage,
+        interestPercentage: `${mockFacility.interestPercentage}%`,
         coverPercentage: `${mockFacility.coverPercentage}%`,
         guaranteeFee: `${mockFacility.guaranteeFee}%`,
         ukefExposure: mockFacility.ukefExposure,
@@ -84,9 +106,9 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const mockFieldName = 'bankReference';
       const mockFieldValue = '123-test';
 
-      const result = generateFacilityFieldListItemString(mockFacilityType.value, mockFieldName, mockFieldValue);
+      const result = generateFacilityFieldListItemString(mockType.value, mockFieldName, mockFieldValue);
 
-      const expectedTitle = CONTENT_STRINGS.LIST_ITEM_TITLES[mockFacilityType.value?.toUpperCase()][mockFieldName];
+      const expectedTitle = CONTENT_STRINGS.LIST_ITEM_TITLES[mockType.value?.toUpperCase()][mockFieldName];
       const expected = generateListItemString(`${expectedTitle}: ${mockFieldValue}`);
 
       expect(result).toEqual(expected);
@@ -98,13 +120,13 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const result = generateFacilityFieldsListString(mockSimpleFacility);
 
       const formattedBankRef = generateFacilityFieldListItemString(
-        mockFacilityType.value,
+        mockType.value,
         mockBankReference.name,
         mockBankReference.value,
       );
 
       const formattedDayCountBasis = generateFacilityFieldListItemString(
-        mockFacilityType.value,
+        mockType.value,
         mockDayCountBasis.name,
         mockDayCountBasis.value,
       );
@@ -141,14 +163,14 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const mockCashFacilities = [
         {
           ...mockFacility,
-          facilityType: 'Cash',
+          type: 'Cash',
         },
       ];
 
       const mockContingentFacilities = [
         {
           ...mockFacility,
-          facilityType: 'Contingent',
+          type: 'Contingent',
         },
       ];
 

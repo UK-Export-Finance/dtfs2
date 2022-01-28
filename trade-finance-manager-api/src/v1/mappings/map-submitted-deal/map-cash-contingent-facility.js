@@ -43,8 +43,8 @@ const mapCashContingentFacility = (facility) => {
 
   const mapped = {
     _id,
-    ukefFacilityId: Number(ukefFacilityId),
-    facilityType: type,
+    ukefFacilityId,
+    type,
     currencyCode: currency.id,
     value,
     coverPercentage,

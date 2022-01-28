@@ -6,7 +6,7 @@ const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
 const CLONE_BOND_FIELDS = [
-  'facilityType',
+  'type',
   'facilityStage',
   'requestedCoverStartDate',
   'coverEndDate-day',
@@ -19,13 +19,13 @@ const CLONE_BOND_FIELDS = [
   'conversionRateDate-day',
   'conversionRateDate-month',
   'conversionRateDate-year',
-  'uniqueIdentificationNumber',
+  'name',
   'ukefGuaranteeInMonths',
 ];
 
 const CLONE_LOAN_FIELDS = [
-  'facilityType',
-  'bankReferenceNumber',
+  'type',
+  'name',
   'value',
   'currency',
   'currencySameAsSupplyContractCurrency',
@@ -86,7 +86,7 @@ exports.clone = async (req, res) => {
       editedBy: [],
       comments: [],
       ukefComments: [],
-      specialConditions: [],
+      ukefDecision: [],
       bondTransactions: DEFAULTS.DEAL.bondTransactions,
       loanTransactions: DEFAULTS.DEAL.loanTransactions,
       facilities: DEFAULTS.DEAL.facilities,
@@ -122,11 +122,11 @@ exports.clone = async (req, res) => {
         ];
 
         const strippedFacilities = facilities.map((facility) => {
-          if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+          if (facility.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
             return stripTransaction(facility, CLONE_BOND_FIELDS);
           }
 
-          if (facility.facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+          if (facility.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
             return stripTransaction(facility, CLONE_LOAN_FIELDS);
           }
           return facility;

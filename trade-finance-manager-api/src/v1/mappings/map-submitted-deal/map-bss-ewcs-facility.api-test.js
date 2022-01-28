@@ -40,7 +40,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
       const {
         _id,
         ukefFacilityId,
-        facilityType,
+        type,
         value,
         currency,
         coveredPercentage,
@@ -52,8 +52,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         guaranteeFeePayableByBank,
         premiumType,
         feeFrequency,
-        bankReferenceNumber,
-        uniqueIdentificationNumber,
+        name,
         disbursementAmount,
         facilityStage,
       } = mockFacility;
@@ -61,7 +60,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
       const expected = {
         _id,
         ukefFacilityId: Number(ukefFacilityId),
-        facilityType,
+        type,
         currencyCode: currency.id,
         value: Number(value.replace(/,/g, '')),
         coverPercentage: Number(coveredPercentage),
@@ -76,8 +75,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         feeFrequency,
         dayCountBasis: Number(dayCountBasis),
         disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
-        bankReference: bankReferenceNumber,
-        uniqueIdentificationNumber,
+        name,
         tfm: mockFacility.tfm,
       };
 

@@ -123,7 +123,7 @@ type FacilityProduct {
 
 type FacilityDates {
   inclusionNoticeReceived: String
-  bankIssueNoticeReceived: String
+  bankIssueNoticeReceived: Float
   coverStartDate: String
   coverEndDate: String
   tenor: String
@@ -139,7 +139,7 @@ type FacilitySnapshot {
   ukefFacilityId: String
   dealId: String!
   facilityProduct: FacilityProduct!
-  facilityType: String
+  type: String
   ukefFacilityType: String!
   facilityStage: String!
   facilityValueExportCurrency: String!
@@ -215,10 +215,10 @@ type TFMTask {
   team: TFMTeam
   assignedTo: TFMTaskAssignedTo
   canEdit: Boolean
-  lastEdited: String
+  updatedAt: Float
   history: [TFMTaskHistory]
-  dateStarted: String
-  dateCompleted: String
+  dateStarted: Float
+  dateCompleted: Float
 }
 
 type TFMTaskGroup {
@@ -396,7 +396,7 @@ type DealSnapshotFacility {
    facilityId: String!
    ukefFacilityId: String!
    dealType: String!
-   facilityType: String
+   type: String
    coverEndDate: String
    coverEndDateEpoch: String
    companyName: String

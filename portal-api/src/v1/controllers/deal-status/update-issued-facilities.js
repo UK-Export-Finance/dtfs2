@@ -1,6 +1,5 @@
 const CONSTANTS = require('../../../constants');
 const issuedDateValidationRules = require('../../validation/fields/issued-date');
-const now = require('../../../now');
 const facilitiesController = require('../facilities.controller');
 
 const facilityHasValidIssuedDate = (facility, deal) => {
@@ -23,11 +22,11 @@ const facilityHasValidIssuedDate = (facility, deal) => {
   return false;
 };
 
-const isLoanFacility = (facilityType) =>
-  facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN;
+const isLoanFacility = (type) =>
+  type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN;
 
-const isBondFacility = (facilityType) =>
-  facilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND;
+const isBondFacility = (type) =>
+  type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND;
 
 const loanHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
   if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
@@ -49,16 +48,16 @@ const bondHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
 };
 
 const shouldUpdateFacility = (facility) => {
-  const { facilityType, facilityStage, previousFacilityStage } = facility;
+  const { type, facilityStage, previousFacilityStage } = facility;
 
-  if (isLoanFacility(facilityType)) {
+  if (isLoanFacility(type)) {
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
       || loanHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
       return true;
     }
   }
 
-  if (isBondFacility(facilityType)) {
+  if (isBondFacility(type)) {
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
       || bondHasBeenPreviouslyIssued(facilityStage, previousFacilityStage)) {
       return true;
@@ -90,7 +89,7 @@ const updateIssuedFacilities = async (
       deal.facilities.forEach(async (facilityId) => {
         const facility = await facilitiesController.findOne(facilityId);
 
-        const { facilityStage, facilityType } = facility;
+        const { facilityStage, type } = facility;
 
         const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                     && facility.issueFacilityDetailsProvided
@@ -102,16 +101,16 @@ const updateIssuedFacilities = async (
           shouldUpdateCount += 1;
 
           if (facility.issueFacilityDetailsProvided && !facility.issueFacilityDetailsSubmitted) {
-            facility.lastEdited = now();
+            facility.updatedAt = Date.now();
             facility.previousFacilityStage = facilityStage;
 
             if (shouldUpdateStatus) {
               facility.status = newStatus;
             }
 
-            if (isLoanFacility(facilityType)) {
+            if (isLoanFacility(type)) {
               facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
-            } else if (isBondFacility(facilityType)) {
+            } else if (isBondFacility(type)) {
               facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
             }
           } else if (shouldUpdateStatus) {
@@ -119,20 +118,21 @@ const updateIssuedFacilities = async (
             // they've been submitted
             // ...or have completed all required fields.
             facility.status = newStatus;
-            facility.lastEdited = now();
+            facility.updatedAt = Date.now();
           }
 
           if (canUpdateIssuedFacilitiesCoverStartDates
             && !facility.issueFacilityDetailsSubmitted
             && !facility.requestedCoverStartDate) {
             if (fromStatusIsApprovedStatus && isMINdeal) {
-              facility.lastEdited = now();
+              facility.updatedAt = Date.now();
               facility.requestedCoverStartDate = deal.details.manualInclusionNoticeSubmissionDate;
             } else if (isMIAdeal && dealHasBeenApproved) {
-              facility.lastEdited = now();
-              facility.requestedCoverStartDate = now();
+              const now = Date.now();
+              facility.updatedAt = now;
+              facility.requestedCoverStartDate = now;
             } else if (facilityHasValidIssuedDate(facility, deal)) {
-              facility.lastEdited = now();
+              facility.updatedAt = Date.now();
               facility.requestedCoverStartDate = facility.issuedDate;
             }
           }

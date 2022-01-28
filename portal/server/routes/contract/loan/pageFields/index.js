@@ -8,12 +8,12 @@ const FIELDS = {
       'ukefGuaranteeInMonths',
 
       // required if facilityStage is 'Unconditional'
-      'bankReferenceNumber',
+      'name',
       'requestedCoverStartDate',
       'coverEndDate',
     ],
     OPTIONAL_FIELDS: [
-      'bankReferenceNumber',
+      'name',
     ],
   },
   FINANCIAL_DETAILS: {

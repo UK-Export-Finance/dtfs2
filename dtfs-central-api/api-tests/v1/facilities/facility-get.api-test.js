@@ -14,7 +14,7 @@ const mockUser = {
 };
 
 const newFacility = {
-  facilityType: 'Bond',
+  type: 'Bond',
   dealId: '123123456',
 };
 
@@ -56,7 +56,7 @@ describe('/v1/portal/facilities', () => {
 
       expect(status).toEqual(200);
       expect(body._id).toEqual(newId);
-      expect(typeof body.createdDate).toEqual('string');
+      expect(typeof body.createdDate).toEqual('number');
     });
 
     it('404s requests for unknown ids', async () => {

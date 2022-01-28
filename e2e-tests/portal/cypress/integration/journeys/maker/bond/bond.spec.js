@@ -181,7 +181,7 @@ context('Add a Bond to a Deal', () => {
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
         row.uniqueNumberLink().invoke('text').then((text) => {
-          expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.uniqueIdentificationNumber);
+          expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.name);
         });
 
         row.bondStatus().invoke('text').then((text) => {

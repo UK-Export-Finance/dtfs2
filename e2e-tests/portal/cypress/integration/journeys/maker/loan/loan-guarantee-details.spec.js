@@ -77,13 +77,13 @@ context('Loan Guarantee Details', () => {
 
       // Facility stage = Conditional
       pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
-      pages.loanGuaranteeDetails.conditionalBankReferenceNumberInput().should('be.visible');
+      pages.loanGuaranteeDetails.conditionalNameInput().should('be.visible');
       pages.loanGuaranteeDetails.ukefGuaranteeInMonthsInput().should('be.visible');
 
       // Facility stage = Unconditional
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
 
-      pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('be.visible');
+      pages.loanGuaranteeDetails.unconditionalNameInput().should('be.visible');
       assertVisibleCoverEndDateInputs();
     });
   });
@@ -100,7 +100,7 @@ context('Loan Guarantee Details', () => {
       partials.errorSummary.errorSummaryLinks().should('have.length', 1);
 
       pages.loanGuaranteeDetails.facilityStageConditionalInput().should('be.checked');
-      pages.loanGuaranteeDetails.conditionalBankReferenceNumberInput().should('be.visible');
+      pages.loanGuaranteeDetails.conditionalNameInput().should('be.visible');
 
       pages.loanGuaranteeDetails.ukefGuaranteeInMonthsInput().should('be.visible');
       pages.loanGuaranteeDetails.ukefGuaranteeInMonthsErrorMessage().should('be.visible');
@@ -121,8 +121,8 @@ context('Loan Guarantee Details', () => {
 
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().should('be.checked');
 
-      pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('be.visible');
-      pages.loanGuaranteeDetails.unconditionalBankReferenceNumberErrorMessage().should('be.visible');
+      pages.loanGuaranteeDetails.unconditionalNameInput().should('be.visible');
+      pages.loanGuaranteeDetails.unconditionalNameErrorMessage().should('be.visible');
 
       assertVisibleRequestedCoverStartDateInputs();
       assertVisibleCoverEndDateInputs();
@@ -136,10 +136,10 @@ context('Loan Guarantee Details', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        row.bankReferenceNumberLink().invoke('text').then((text) => {
+        row.nameLink().invoke('text').then((text) => {
           expect(text.trim()).equal('Not entered');
           // assert that clicking the `bank reference number` link progesses to the guarantee details page
-          row.bankReferenceNumberLink().click();
+          row.nameLink().click();
           cy.url().should('include', '/contract');
           cy.url().should('include', '/loan/');
           cy.url().should('include', '/guarantee-details');
@@ -161,8 +161,8 @@ context('Loan Guarantee Details', () => {
     // Facility stage = Unconditional
     fillLoanForm.guaranteeDetails.facilityStageUnconditional();
 
-    // assert that bankReferenceNumber value is retained
-    pages.loanGuaranteeDetails.unconditionalBankReferenceNumberInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.bankReferenceNumber);
+    // assert that name value is retained
+    pages.loanGuaranteeDetails.unconditionalNameInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
     pages.loanGuaranteeDetails.submit().click();
 
     partials.taskListHeader.itemLink('loan-guarantee-details').click();
@@ -185,7 +185,7 @@ context('Loan Guarantee Details', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        row.bankReferenceNumberLink().click();
+        row.nameLink().click();
         cy.url().should('include', '/loan/');
         cy.url().should('include', '/guarantee-details');
 
