@@ -35,7 +35,7 @@ const mapGefDeal = (deal) => {
     dealSnapshot: {
       _id,
       dealType: dealSnapshot.dealType,
-      submissionType: dealSnapshot.dealType,
+      submissionType: dealSnapshot.submissionType,
       exporter: {
         companyName: dealSnapshot.exporter.companyName,
       },
