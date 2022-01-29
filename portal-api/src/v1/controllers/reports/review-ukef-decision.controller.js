@@ -1,4 +1,6 @@
-const { format, differenceInBusinessDays, addBusinessDays } = require('date-fns');
+const {
+  format, differenceInBusinessDays, addBusinessDays, isWeekend, nextMonday
+} = require('date-fns');
 const db = require('../../../drivers/db-client');
 const CONSTANTS = require('../../../constants');
 
@@ -107,6 +109,12 @@ exports.reviewUkefDecisionReports = async (req, res) => {
           // format the date DD LLL YYYY (i.e. 18 April 2022)
           deal.dateOfApproval = deal.dateOfApprovalEpoch ? format(setDateToMidnight, 'dd LLL yyyy') : '';
 
+          // date-fns has a bug where it doesn't calculate the business days properly if the date falls during the weekend
+          // at the time of writing, we need to check whether the selected date is set over the weekend
+          // if that's `true`, then we get the next working day of the week - which is Monday
+          if (isWeekend(setDateToMidnight)) {
+            setDateToMidnight = nextMonday(setDateToMidnight);
+          }
           if (ukefDecision === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
           // add `10 business days` to the date of approval if the deal is approved without conditions - as per ticket
             dateOfApproval = addBusinessDays(setDateToMidnight, 10);
