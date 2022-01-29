@@ -42,7 +42,7 @@ describe('v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
-    // perform a GET request to retrieve the unissued facilities for reports as a MAKER
+    // perform a GET request to retrieve the reports for UKEF decision as a MAKER
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
@@ -69,7 +69,7 @@ describe('v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
-    // perform a GET request to retrieve the unissued facilities for reports as a CHECKER
+    // perform a GET request to retrieve the reports for UKEF decision as a CHECKER
     const { status: reportsStatus, body: reportsBody } = await as(aChecker).get('/v1/reports/review-ukef-decision', mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
@@ -84,7 +84,7 @@ describe('v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
-    // perform a GET request to retrieve the unissued facilities for reports as a MAKER
+    // perform a GET request to retrieve the reports for UKEF decision as a MAKER
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
@@ -111,7 +111,7 @@ describe('v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
-    // perform a GET request to retrieve the unissued facilities for reports as a CHECKER
+    // perform a GET request to retrieve the reports for UKEF decision as a CHECKER
     const { status: reportsStatus, body: reportsBody } = await as(aChecker).get('/v1/reports/review-ukef-decision', mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
@@ -126,7 +126,7 @@ describe('v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     const mockQuery = { ukefDecision: 'Unknown' };
-    // perform a GET request to retrieve the unissued facilities for reports
+    // perform a GET request to retrieve the the reports for UKEF decision
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
@@ -141,7 +141,7 @@ describe('v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED };
-    // perform a GET request to retrieve the unissued facilities for reports
+    // perform a GET request to retrieve the reports for UKEF decision
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
@@ -156,7 +156,7 @@ describe('v1/reports/review-ukef-decision', () => {
     expect(status).toEqual(200);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.ABANDONED };
-    // perform a GET request to retrieve the unissued facilities for reports
+    // perform a GET request to retrieve the reports for UKEF decision
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
@@ -165,7 +165,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
   it('retrieves an empty array if the `ukefDecision` property does not exist and the query is `UKEF_APPROVED_WITH_CONDITIONS`', async () => {
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
-    // perform a GET request to retrieve the unissued facilities for reports
+    // perform a GET request to retrieve the reports for UKEF decision
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
@@ -174,7 +174,7 @@ describe('v1/reports/review-ukef-decision', () => {
 
   it('retrieves an empty array if the `ukefDecision` property does not exist and the query is `UKEF_APPROVED_WITHOUT_CONDITIONS`', async () => {
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
-    // perform a GET request to retrieve the unissued facilities for reports
+    // perform a GET request to retrieve the reports for UKEF decision
     const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
