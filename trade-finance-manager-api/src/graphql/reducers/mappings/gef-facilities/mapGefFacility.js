@@ -52,6 +52,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       dates: mapGefFacilityDates(facilitySnapshot, facilityTfm, dealSnapshot),
       facilityProduct: facilitySnapshot.facilityProduct,
       facilityStage: facilitySnapshot.facilityStage,
+      hasBeenIssued: facilitySnapshot.hasBeenIssued,
       type: mapFacilityType(facilitySnapshot),
       currency: currency.id,
       facilityValueExportCurrency: `${currency.id} ${formattedFacilityValue}`,

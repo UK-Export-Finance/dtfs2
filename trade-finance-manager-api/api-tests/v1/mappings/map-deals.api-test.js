@@ -1,12 +1,6 @@
 const externalApis = require('../../../src/v1/api');
 const mapDeals = require('../../../src/v1/mappings/map-deals');
 
-const {
-  eligibility,
-  facilities,
-  bondTransactions,
-  loanTransactions,
-} = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_BSS_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 
@@ -17,7 +11,7 @@ describe('mappings - map-deals', () => {
   }));
 
   const mockFindOneFacilityResponse = {
-    facilitySnapshot: bondTransactions.items[0],
+    facilitySnapshot: MOCK_BSS_DEAL.bondTransactions.items[0],
     tfm: {},
   };
 
@@ -77,21 +71,11 @@ describe('mappings - map-deals', () => {
   });
 
   describe('BSS/EWCS deals', () => {
-    const mockBonds = bondTransactions.items.map(({ _id }) => ({ _id }));
-    const mockLoans = loanTransactions.items.map(({ _id }) => ({ _id }));
+    const mockBonds = MOCK_BSS_DEAL.bondTransactions.items.map(({ _id }) => ({ _id }));
+    const mockLoans = MOCK_BSS_DEAL.loanTransactions.items.map(({ _id }) => ({ _id }));
 
     const mockDeal = {
-      dealSnapshot: {
-        dealType: MOCK_BSS_DEAL.dealType,
-        eligibility,
-        facilities,
-        bondTransactions: {
-          items: mockBonds,
-        },
-        loanTransactions: {
-          items: mockLoans,
-        },
-      },
+      dealSnapshot: MOCK_BSS_DEAL,
     };
 
     const mockDeals = [
@@ -135,7 +119,10 @@ describe('mappings - map-deals', () => {
           ...mockDeal.dealSnapshot,
           bondTransactions: {},
           loanTransactions: {},
-          facilities: allFacilities.map((f) => mockFindOneFacilityResponse),
+          facilities: [
+            mockFindOneFacilityResponse,
+            mockFindOneFacilityResponse,
+          ],
         },
       };
 
