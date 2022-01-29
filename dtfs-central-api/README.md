@@ -25,7 +25,7 @@ At this point, TFM _consumes and renders_ the deal and facilities so that UKEF c
 
 ## When/Where is Central API called?
 
-1) When Portal (BSS) peforms any CRUD operation for a deal or facility
+1) When Portal (BSS) performs any CRUD operation for a deal or facility
 
 2) When TFM receives a deal
 
