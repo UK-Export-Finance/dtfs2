@@ -68,11 +68,5 @@ describe('/v1/tfm/facilities', () => {
 
       expect(typeof body.facilitySnapshot.createdDate).toEqual('number');
     });
-
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/tfm/facilities/61e54e2e532cf2027303e001');
-
-      expect(status).toEqual(404);
-    });
   });
 });

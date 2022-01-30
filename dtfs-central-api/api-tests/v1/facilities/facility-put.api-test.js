@@ -3,7 +3,7 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
 const CONSTANTS = require('../../../src/constants');
-const { MOCK_DEAL, MOCK_FACILITY } = require('../mocks/mock-data');
+const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const mockUser = {
   _id: '123456789',
@@ -47,11 +47,6 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('PUT /v1/portal/facilities/:id', () => {
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.put({ facility: newFacility, user: mockUser }).to(`/v1/portal/facilities/${MOCK_FACILITY.FACILITY_ID}`);
-      expect(status).toEqual(404);
-    });
-
     it('returns 404 when adding facility to non-existent deal', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities/61e54e2e532cf2027303ea12');

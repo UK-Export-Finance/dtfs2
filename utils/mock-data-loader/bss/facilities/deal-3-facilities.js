@@ -4,7 +4,6 @@ const {
 
 module.exports = [
   {
-    mockDealId: 3,
     type: 'Bond',
     createdDate: nowTimestamp,
     bondIssuer: '',

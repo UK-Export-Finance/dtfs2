@@ -4,7 +4,6 @@ const getDealErrors = require('../../../validation/create-deal');
 
 const createDeal = async (deal, maker) => {
   const collection = await db.getCollection('deals');
-  const time = Date.now();
 
   const { details } = deal;
 
@@ -17,7 +16,7 @@ const createDeal = async (deal, maker) => {
     details: {
       ...DEFAULTS.DEAL.details,
       ...details,
-      created: time,
+      created: Date.now(),
     },
     facilities: DEFAULTS.DEAL.facilities,
   };

@@ -53,11 +53,6 @@ describe('/v1/tfm/facilities', () => {
   });
 
   describe('PUT /v1/tfm/facilities/:id', () => {
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
-      expect(status).toEqual(404);
-    });
-
     it('returns 404 when adding facility to non-existent deal', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.put({

@@ -2,7 +2,7 @@ import premiumFrequencyField from '.';
 
 describe('premiumFrequencyField', () => {
   describe('when body.premiumType is `In advance`', () => {
-    it.only('should return feeFrequency as body.inAdvancePremiumFrequency', () => {
+    it('should return feeFrequency as body.inAdvancePremiumFrequency', () => {
       const mockBody = {
         premiumType: 'In advance',
         inAdvancePremiumFrequency: 'Monthly',
@@ -28,7 +28,7 @@ describe('premiumFrequencyField', () => {
   describe('when body.feeFrequency exists', () => {
     it('should return feeFrequency as body.feeFrequency', () => {
       const mockBody = {
-        feeFrequency: 'In arrear',
+        premiumType: 'In arrear',
       };
 
       const result = premiumFrequencyField(mockBody);
@@ -41,11 +41,11 @@ describe('premiumFrequencyField', () => {
       const mockBody = {};
       const mockExistingLoan = {
         _id: '1234',
-        feeFrequency: 'Quarterly',
+        premiumFrequency: 'Quarterly',
       };
 
       const result = premiumFrequencyField(mockBody, mockExistingLoan);
-      expect(result.premiumFrequency).toEqual(mockExistingLoan.feeFrequency);
+      expect(result.premiumFrequency).toEqual(mockExistingLoan.premiumFrequency);
     });
   });
 

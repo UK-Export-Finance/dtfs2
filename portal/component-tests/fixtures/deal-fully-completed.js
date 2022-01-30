@@ -3,7 +3,6 @@ const moment = require('moment');
 const now = moment();
 
 const deal = {
-  _id: 123456,
   updatedAt: Date.now(),
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
@@ -25,7 +24,6 @@ const deal = {
   bondTransactions: {
     items: [
       {
-        _id: '1000101',
         bondIssuer: 'my issuer',
         bondType: 'Retention bond',
         facilityStage: 'Issued',
@@ -60,7 +58,6 @@ const deal = {
         ukefExposure: '100',
       },
       {
-        _id: '1000102',
         bondIssuer: 'my issuer',
         bondType: 'Retention bond',
         facilityStage: 'Issued',

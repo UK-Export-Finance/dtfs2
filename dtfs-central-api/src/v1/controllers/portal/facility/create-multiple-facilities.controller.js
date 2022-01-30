@@ -8,14 +8,14 @@ const createFacilities = async (facilities, dealId) => {
 
   const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
     const facility = f;
+    facility._id = new ObjectId(facility._id);
     facility.createdDate = Date.now();
     facility.dealId = new ObjectId(dealId);
     return facility;
   }));
-
   const idsArray = [];
   facilitiesWithId.forEach((f) => {
-    idsArray.push(f._id);
+    idsArray.push(f._id.toHexString());
   });
 
   const result = await collection.insertMany(facilitiesWithId);

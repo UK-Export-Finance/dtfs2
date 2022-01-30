@@ -120,7 +120,7 @@ describe('/v1/portal/facilities', () => {
 
       const postBody = {
         facilities,
-        dealId: '1234',
+        dealId: '61e54dd5b578247e14575880',
       };
 
       const { status } = await api.post(postBody).to('/v1/portal/multiple-facilities');

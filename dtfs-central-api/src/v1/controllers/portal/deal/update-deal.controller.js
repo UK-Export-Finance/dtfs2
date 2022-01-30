@@ -134,7 +134,7 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
   await findOneDeal(dealId, async (deal) => {
     const { facilities } = deal;
 
-    const updatedFacilities = [...facilities, newFacilityId];
+    const updatedFacilities = [...facilities, newFacilityId.toHexString()];
     const dealUpdate = { ...deal, facilities: updatedFacilities };
 
     const updatedDeal = await updateDeal(dealId, dealUpdate, user, null, routePath);

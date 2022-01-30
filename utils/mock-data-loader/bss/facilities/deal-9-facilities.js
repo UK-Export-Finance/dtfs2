@@ -4,7 +4,6 @@ const {
 
 module.exports = [
   {
-    mockDealId: 9,
     type: 'Loan',
     ukefGuaranteeInMonths: '24',
     'coverEndDate-day': null,
@@ -41,7 +40,6 @@ module.exports = [
     dayCountBasis: '365',
   },
   {
-    mockDealId: 9,
     type: 'Bond',
     ukefGuaranteeInMonths: null,
     facilityStage: 'Issued',

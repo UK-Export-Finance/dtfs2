@@ -35,16 +35,6 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     await wipeDB.wipe(['tfm-facilities']);
   });
 
-  it('404s for an unknown id', async () => {
-    const invalidDealId = '61e54e2e532cf2027303e001';
-
-    const { status } = await api.put({
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-      dealId: invalidDealId,
-    }).to('/v1/tfm/deals/submit');
-    expect(status).toEqual(404);
-  });
-
   it('returns dealSnapshot with tfm object', async () => {
     const { body: createDealBody } = await api.post({
       deal: newDeal,

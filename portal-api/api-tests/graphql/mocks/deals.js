@@ -2,7 +2,6 @@ const CONSTANTS = require('../../../src/constants');
 
 const MOCK_ALL_DEALS = [
   {
-    _id: '1',
     status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
     bankInternalRefName: 'mock',
     exporter: 'mock company',
@@ -11,7 +10,6 @@ const MOCK_ALL_DEALS = [
     updatedAt: 123456,
   },
   {
-    _id: '2',
     status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
     bankInternalRefName: 'mock',
     exporter: 'mock company',
@@ -23,7 +21,6 @@ const MOCK_ALL_DEALS = [
 
 const MOCK_DEALS = [
   {
-    _id: '1',
     status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
     bankInternalRefName: 'mock',
     dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
@@ -32,7 +29,6 @@ const MOCK_DEALS = [
     bank: { id: '9' },
   },
   {
-    _id: '2',
     status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
     bankInternalRefName: 'mock',
     dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,

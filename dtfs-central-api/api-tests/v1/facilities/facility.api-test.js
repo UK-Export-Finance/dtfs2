@@ -177,11 +177,5 @@ describe('/v1/portal/facilities', () => {
       expect(body._id).toEqual(newId);
       expect(typeof body.createdDate).toEqual('number');
     });
-
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/portal/facilities/61e54e2e532cf2027303ea12');
-
-      expect(status).toEqual(404);
-    });
   });
 });

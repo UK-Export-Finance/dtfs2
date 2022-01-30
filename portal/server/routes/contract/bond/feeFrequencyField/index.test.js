@@ -2,7 +2,7 @@ import feeFrequencyField from '.';
 
 describe('feeFrequencyField', () => {
   describe('when body.feeType is `In advance`', () => {
-    it.only('should return feeFrequency as body.inAdvanceFeeFrequency', () => {
+    it('should return feeFrequency as body.inAdvanceFeeFrequency', () => {
       const mockBody = {
         feeType: 'In advance',
         inAdvanceFeeFrequency: 'Monthly',

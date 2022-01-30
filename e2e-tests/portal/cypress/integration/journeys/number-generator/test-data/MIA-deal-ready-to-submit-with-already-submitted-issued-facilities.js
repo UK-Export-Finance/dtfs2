@@ -1,7 +1,6 @@
 const now = new Date().valueOf();
 
 const deal = {
-  _id: '1000998',
   submissionType: 'Manual Inclusion Application',
   updatedAt: Date.now(),
   bankInternalRefName: 'test-deal',
@@ -184,7 +183,7 @@ const deal = {
   bondTransactions: {
     items: [
       {
-        _id: '12345678',
+        _id: '5f3ab3f705e6630007dcfb21',
         createdDate: now,
         bondIssuer: '',
         bondType: 'Advance payment guarantee',
@@ -223,7 +222,7 @@ const deal = {
   loanTransactions: {
     items: [
       {
-        _id: '23456789',
+        _id: '5f3ab3f705e6630007dcfb22',
         createdDate: now,
         facilityStage: 'Conditional',
         hasBeenIssued: false,

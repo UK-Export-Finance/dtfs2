@@ -7,24 +7,16 @@
   "bank": {
     "id": "9",
     "name": "UKEF test bank (Delegated)",
-    "emails": [
-      "maker@ukexportfinance.gov.uk",
-      "checker@ukexportfinance.gov.uk"
-    ]
+    "emails": ["maker@ukexportfinance.gov.uk", "checker@ukexportfinance.gov.uk"]
   },
   "maker": {
     "_id": "5f3ab3f705e6630007dcfb25",
     "username": "maker1@ukexportfinance.gov.uk",
-    "roles": [
-      "maker"
-    ],
+    "roles": ["maker"],
     "bank": {
       "id": "9",
       "name": "UKEF test bank (Delegated)",
-      "emails": [
-        "maker@ukexportfinance.gov.uk",
-        "checker@ukexportfinance.gov.uk"
-      ]
+      "emails": ["maker@ukexportfinance.gov.uk", "checker@ukexportfinance.gov.uk"]
     },
     "lastLogin": "1610710442797",
     "firstname": "Hugo",
@@ -33,108 +25,121 @@
     "timezone": "Europe/London",
     "user-status": "active"
   },
-  "details": {
-  },
-  "submissionDetails" : {
-    "indemnifier-address-country" : {
+  "details": {},
+  "submissionDetails": {
+    "indemnifier-address-country": {
       "code": "GBR",
       "name": "United Kingdom"
     },
-    "indemnifier-address-line-3" : "",
-    "indemnifier-address-line-1" : "27a",
-    "indemnifier-address-line-2" : "Maxwell Road",
-    "indemnifier-address-postcode" : "HA6 2XY",
-    "indemnifier-address-town" : "Northwood",
-    "indemnifier-companies-house-registration-number" : "08547313",
-    "indemnifier-correspondence-address-country" : {
+    "indemnifier-address-line-3": "",
+    "indemnifier-address-line-1": "27a",
+    "indemnifier-address-line-2": "Maxwell Road",
+    "indemnifier-address-postcode": "HA6 2XY",
+    "indemnifier-address-town": "Northwood",
+    "indemnifier-companies-house-registration-number": "08547313",
+    "indemnifier-correspondence-address-country": {
       "code": "GBR",
       "name": "United Kingdom"
     },
-    "indemnifier-correspondence-address-line-3" : "Essex",
-    "indemnifier-correspondence-address-line-1" : "27 Petersfield",
-    "indemnifier-correspondence-address-line-2" : "",
-    "indemnifier-correspondence-address-postcode" : "CM1 4EP",
-    "indemnifier-correspondence-address-town" : "Chelmsford",
-    "indemnifier-name" : "WATKINSON TRADING LIMITED",
-    "indemnifierCorrespondenceAddressDifferent" : "true",
+    "indemnifier-correspondence-address-line-3": "Essex",
+    "indemnifier-correspondence-address-line-1": "27 Petersfield",
+    "indemnifier-correspondence-address-line-2": "",
+    "indemnifier-correspondence-address-postcode": "CM1 4EP",
+    "indemnifier-correspondence-address-town": "Chelmsford",
+    "indemnifier-name": "WATKINSON TRADING LIMITED",
+    "indemnifierCorrespondenceAddressDifferent": "true",
     "industry-sector": {
-  "code": "1008",
-  "name": "Accommodation and food service activities"
-},
+      "code": "1008",
+      "name": "Accommodation and food service activities"
+    },
     "industry-class": {
-  "code": "56101",
-  "name": "Licensed restaurants"
-},
-    "legallyDistinct" : "true",
-    "sme-type" : "Small",
+      "code": "56101",
+      "name": "Licensed restaurants"
+    },
+    "legallyDistinct": "true",
+    "sme-type": "Small",
     "supplier-address-country": {
       "code": "GBR",
       "name": "United Kingdom"
     },
-    "supplier-address-line-3" : "London",
-    "supplier-address-line-1" : "1 Horseguards Road",
-    "supplier-address-line-2" : "",
-    "supplier-address-postcode" : "SW1A 2HQ",
-    "supplier-address-town" : "Westminster",
-    "supplier-companies-house-registration-number" : "",
+    "supplier-address-line-3": "London",
+    "supplier-address-line-1": "1 Horseguards Road",
+    "supplier-address-line-2": "",
+    "supplier-address-postcode": "SW1A 2HQ",
+    "supplier-address-town": "Westminster",
+    "supplier-companies-house-registration-number": "",
     "supplier-correspondence-address-country": {
       "code": "GBR",
       "name": "United Kingdom"
     },
-    "supplier-correspondence-address-line-3" : "Edinburgh",
-    "supplier-correspondence-address-line-1" : "2 Horseguards Road",
-    "supplier-correspondence-address-line-2" : "",
-    "supplier-correspondence-address-postcode" : "ED1 23S",
-    "supplier-correspondence-address-town" : "Eastminster",
-    "supplier-name" : "UKFS",
-    "supplier-type" : "Exporter",
-    "supplier-correspondence-address-is-different" : "true",
-    "supply-contract-description" : "Description.",
+    "supplier-correspondence-address-line-3": "Edinburgh",
+    "supplier-correspondence-address-line-1": "2 Horseguards Road",
+    "supplier-correspondence-address-line-2": "",
+    "supplier-correspondence-address-postcode": "ED1 23S",
+    "supplier-correspondence-address-town": "Eastminster",
+    "supplier-name": "UKFS",
+    "supplier-type": "Exporter",
+    "supplier-correspondence-address-is-different": "true",
+    "supply-contract-description": "Description.",
     "buyer-address-country": {
       "code": "GBR",
       "name": "United Kingdom"
     },
-    "buyer-address-line-1" : "Corner of East and Main",
-    "buyer-address-line-2" : "",
-    "buyer-address-line-3" : "The Bronx",
-    "buyer-address-postcode" : "no-idea",
-    "buyer-address-town" : "New York",
-    "buyer-name" : "Huggy Bear",
-    "destinationOfGoodsAndServices" : {
+    "buyer-address-line-1": "Corner of East and Main",
+    "buyer-address-line-2": "",
+    "buyer-address-line-3": "The Bronx",
+    "buyer-address-postcode": "no-idea",
+    "buyer-address-town": "New York",
+    "buyer-name": "Huggy Bear",
+    "destinationOfGoodsAndServices": {
       "code": "USA",
       "name": "United States"
     },
-    "viewedPreviewPage" : true,
-    "supplyContractConversionRateToGBP" : "1.123456",
-    "supplyContractCurrency" : {
-        "id" : "USD",
-        "text": "USD - US Dollars"
+    "viewedPreviewPage": true,
+    "supplyContractConversionRateToGBP": "1.123456",
+    "supplyContractCurrency": {
+      "id": "USD",
+      "text": "USD - US Dollars"
     },
-    "supplyContractValue" : "10,000"
-},
-    "eligibility": {
-      "status": "Completed",
-      "criteria": [
-      { "id": 11, "answer": true
+    "supplyContractValue": "10,000"
+  },
+  "eligibility": {
+    "status": "Completed",
+    "criteria": [{
+        "id": 11,
+        "answer": true
       },
-      { "id": 12, "answer": true
+      {
+        "id": 12,
+        "answer": true
       },
-      { "id": 13, "answer": true
+      {
+        "id": 13,
+        "answer": true
       },
-      { "id": 14, "answer": true
+      {
+        "id": 14,
+        "answer": true
       },
-      { "id": 15, "answer": true
+      {
+        "id": 15,
+        "answer": true
       },
-      { "id": 16, "answer": true
+      {
+        "id": 16,
+        "answer": true
       },
-      { "id": 17, "answer": true
+      {
+        "id": 17,
+        "answer": true
       },
-      { "id": 18, "answer": true
+      {
+        "id": 18,
+        "answer": true
       }
     ]
   },
-  "mockFacilities": [
-    {
+  "mockFacilities": [{
       "type": "Bond",
       "bondIssuer": "Issuer",
       "bondType": "Advance payment guarantee",

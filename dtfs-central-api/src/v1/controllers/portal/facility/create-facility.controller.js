@@ -1,6 +1,5 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
-const now = require('../../../../now');
 const getCreateFacilityErrors = require('../../../validation/create-facility');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { addFacilityIdToDeal } = require('../deal/update-deal.controller');

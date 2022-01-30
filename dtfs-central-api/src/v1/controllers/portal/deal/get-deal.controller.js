@@ -12,7 +12,7 @@ const extendDealWithFacilities = async (deal) => {
   const facilities = await facilitiesCollection.find({ dealId: ObjectId(deal._id) }).toArray();
 
   facilityIds.forEach((id) => {
-    const facilityObj = facilities.find((f) => f._id.toHexString() === id.toHexString());
+    const facilityObj = facilities.find((f) => f._id.toHexString() === id);
 
     if (facilityObj) {
       const { type } = facilityObj;

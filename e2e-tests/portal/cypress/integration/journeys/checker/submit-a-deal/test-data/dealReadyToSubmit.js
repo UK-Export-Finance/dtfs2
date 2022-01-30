@@ -7,7 +7,8 @@ module.exports = () => {
   // doing a complete serialize+deserialize here...
   // ran into issues destructuring things into our new object; cypress was keeping references
   // between my bits of test data, so updating 1 deal would cause the other to update..
-  const deal = JSON.parse(JSON.stringify(dealThatJustNeedsConversionDate()));
+  // const deal = JSON.parse(JSON.stringify(dealThatJustNeedsConversionDate()));
+  const deal = { ...dealThatJustNeedsConversionDate };
 
   deal.details.submissionCount = 0;
 

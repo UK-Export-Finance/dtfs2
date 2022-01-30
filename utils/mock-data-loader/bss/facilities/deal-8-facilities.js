@@ -2,7 +2,7 @@ const { nowTimestamp } = require('../dates');
 
 module.exports = [
   {
-    mockDealId: 8,
+
     type: 'Loan',
     ukefGuaranteeInMonths: '24',
     'coverEndDate-day': null,
