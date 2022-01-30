@@ -35,8 +35,6 @@
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
     "@ministryofjustice/frontend": "1.2.0",
-    "@sentry/integrations": "^6.13.2",
-    "@sentry/node": "^6.13.2",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
     "apollo-link-http": "^1.5.17",
