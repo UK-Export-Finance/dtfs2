@@ -115,7 +115,7 @@ exports.reviewUkefDecisionReports = async (req, res) => {
             dateOfApproval = addBusinessDays(setDateToMidnight, 20);
           }
 
-          deal.daysToReview = defaultDate ? (differenceInBusinessDays(todaysDate, dateOfApproval) * -1) : 0;
+          deal.daysToReview = defaultDate ? (differenceInBusinessDays(todaysDate, dateOfApproval) * -1 + 0) : 0;
 
           ukefDecisions.push(deal);
           setDateToMidnight = '';
