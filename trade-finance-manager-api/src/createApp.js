@@ -1,8 +1,6 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const compression = require('compression');
-const { CaptureConsole } = require('@sentry/integrations');
-const Sentry = require('@sentry/node');
 const swaggerUi = require('swagger-ui-express');
 // const helmet = require('helmet');
 
@@ -74,22 +72,6 @@ const rootRouter = express.Router();
 rootRouter.get('/', async (req, res) => {
   res.status(200).send();
 });
-
-rootRouter.use(Sentry.Handlers.requestHandler());
-
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-  integrations: [new CaptureConsole(
-    {
-      // array of methods that should be captured
-      // defaults to ['log', 'info', 'warn', 'error', 'debug', 'assert']
-      levels: ['error'],
-    },
-  )],
-  tracesSampleRate: 1.0,
-});
-
-rootRouter.use(Sentry.Handlers.errorHandler());
 
 rootRouter.use('/v1/api-docs', swaggerUi.serve);
 
