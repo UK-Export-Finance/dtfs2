@@ -24,6 +24,7 @@ const getGefDealController = require('../controllers/portal/gef-deal/get-gef-dea
 const updateGefDealController = require('../controllers/portal/gef-deal/update-deal.controller');
 const putGefDealStatusController = require('../controllers/portal/gef-deal/put-gef-deal.status.controller');
 const addCommentToGefDeal = require('../controllers/portal/gef-deal/add-underwriter-comment-gef.controller');
+const gefActivityController = require('../controllers/portal/gef-deal/add-min-activities.controller');
 
 const getGefFacilitiesController = require('../controllers/portal/gef-facility/get-facilities.controller');
 const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
@@ -646,6 +647,35 @@ portalRouter.route('/gef/deals/:id')
 portalRouter.route('/gef/deals/:id')
   .put(
     updateGefDealController.updateDealPut,
+  );
+
+/**
+ * @openapi
+ * /gef/deals/activity/:id:
+ *   put:
+ *     summary: Create submission and facility activities from TFM-api for MIA->MIN
+ *     tags: [Portal - GEF]
+ *     description: Create GEF portal submission and facility activities for MIA->MIN as comes from TFM-api
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to find deal and facilities and portalActivities to update
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/DealGEF'
+ *       404:
+ *         description: Not found
+ */
+portalRouter.route('/gef/deals/activity/:id')
+  .put(
+    gefActivityController.generateMINActivities,
   );
 
 /**

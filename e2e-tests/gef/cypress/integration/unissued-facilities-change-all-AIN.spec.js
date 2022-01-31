@@ -167,15 +167,15 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.issueDateDay().clear();
       aboutFacilityUnissued.issueDateMonth().clear();
       aboutFacilityUnissued.issueDateYear().clear();
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
 
       // entering cover start date before issue date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twentyEightDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twentyEightMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twentyEightYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.threeDaysDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.threeDaysMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.threeDaysYear);
       aboutFacilityUnissued.continueButton().click();
       aboutFacilityUnissued.coverStartDateError().contains('Cover start date cannot be before the issue date');
       aboutFacilityUnissued.errorSummary().contains('Cover start date cannot be before the issue date');
@@ -202,9 +202,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.twentyEightMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.twentyEightYear);
       aboutFacilityUnissued.continueButton().click();
-      aboutFacilityUnissued.coverEndDateError().contains('Cover end date cannot be before the issue date');
       aboutFacilityUnissued.errorSummary().contains('Cover end date cannot be before cover start date');
-      aboutFacilityUnissued.errorSummary().contains('Cover end date cannot be before the issue date');
     });
 
     it('the correct success messages should be displayed after changing facility to issued', () => {

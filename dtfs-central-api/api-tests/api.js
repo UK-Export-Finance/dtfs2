@@ -56,4 +56,45 @@ module.exports = (app) => ({
         .delete(url)
         .send(data),
   }),
+
+  as: (user) => {
+    const token = (user && user.token) ? user.token : '';
+
+    return {
+      post: (data) => ({
+        to: async (url) => request(app)
+          .post(url)
+          .set({ Authorization: token || '' })
+          .send(data),
+      }),
+
+      postEach: (list) => ({
+        to: async (url) => {
+          const results = list.map((data) => request(app)
+            .post(url)
+            .set({ Authorization: token || '' })
+            .send(data));
+
+          return Promise.all(results);
+        },
+      }),
+
+      put: (data) => ({
+        to: async (url) => request(app)
+          .put(url)
+          .set({ Authorization: token || '' })
+          .send(data),
+      }),
+
+      get: async (url, query = {}) => request(app)
+        .get(url)
+        .set({ Authorization: token || '' })
+        .query(query),
+
+      remove: async (url) => request(app)
+        .delete(url)
+        .set({ Authorization: token || '' })
+        .send(),
+    };
+  },
 });

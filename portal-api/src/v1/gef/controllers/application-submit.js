@@ -5,7 +5,7 @@ const {
   update: updateFacility,
 } = require('./facilities.controller');
 const {
-  firstSubmissionPortalActivity,
+  ukefSubmissionPortalActivity,
   facilityChangePortalActivity,
 } = require('./portal-activities.controller');
 
@@ -87,7 +87,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
   When submitting to UKEF, have to remove the canResubmitIssuedFacilities flag
   Ensures that cannot update this facility anymore
 */
-const removeChangedToIssued = async (dealId) => {
+const updateChangedToIssued = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
   facilities.forEach(async (facility) => {
@@ -134,15 +134,16 @@ const checkForChangedFacilities = (facilities) => {
 
 // adds to the portalActivities array for submission to UKEF events
 const submissionPortalActivity = async (application) => {
-  const { submissionCount } = application;
+  const { submissionCount, submissionType } = application;
   let { portalActivities } = application;
 
   const facilities = await getAllFacilitiesByDealId(application._id);
 
   if (!submissionCount) {
-    portalActivities = await firstSubmissionPortalActivity(application);
+    portalActivities = await ukefSubmissionPortalActivity(application);
   }
-  if (checkForChangedFacilities(facilities)) {
+  // if MIA then handled by central API
+  if (checkForChangedFacilities(facilities) && submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
     portalActivities = await facilityChangePortalActivity(application, facilities);
   }
 
@@ -195,7 +196,13 @@ const addSubmissionData = async (dealId, existingApplication) => {
   const updatedPortalActivity = await submissionPortalActivity(existingApplication);
   await addSubmissionDateToIssuedFacilities(dealId);
   await addUkefFacilityIdToFacilities(dealId);
-  await removeChangedToIssued(dealId);
+  /**
+   * If AIN or MIN, portalActivities are handled by portal-API
+   * If MIA -> MIN, then handled by tfm-API and central-API to add portalActivities
+   */
+  if (existingApplication.submissionType !== CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
+    await updateChangedToIssued(dealId);
+  }
 
   const submissionData = {
     submissionCount: count,
@@ -215,6 +222,6 @@ module.exports = {
   addSubmissionData,
   submissionPortalActivity,
   addSubmissionDateToIssuedFacilities,
-  removeChangedToIssued,
+  updateChangedToIssued,
   checkCoverDateConfirmed,
 };
