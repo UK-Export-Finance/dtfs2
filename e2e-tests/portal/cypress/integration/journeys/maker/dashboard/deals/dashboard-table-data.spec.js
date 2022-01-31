@@ -7,7 +7,7 @@ const {
   BANK1_MAKER1,
   BANK1_MAKER2,
   BANK2_MAKER2,
-  ADMIN_LOGIN,
+  ADMIN,
 } = MOCK_USERS;
 
 const {
@@ -30,8 +30,8 @@ context('View dashboard deals as a maker', () => {
   const ALL_DEALS = [];
 
   before(() => {
-    cy.deleteGefApplications(ADMIN_LOGIN);
-    cy.deleteDeals(ADMIN_LOGIN);
+    cy.deleteGefApplications(ADMIN);
+    cy.deleteDeals(ADMIN);
 
     cy.listAllUsers().then((usersInDb) => {
       const maker = usersInDb.find((user) => user.username === BANK1_MAKER1.username);
@@ -95,7 +95,6 @@ context('View dashboard deals as a maker', () => {
     dashboardDeals.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
     });
-
 
     //---------------------------------------------------------------
     // first deal should be the most recent (with our test data - GEF)

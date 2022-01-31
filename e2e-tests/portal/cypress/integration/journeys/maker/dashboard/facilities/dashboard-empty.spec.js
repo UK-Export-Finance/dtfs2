@@ -1,22 +1,27 @@
-const { dashboardFacilities, defaults } = require('../../../pages');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const { dashboardFacilities, defaults } = require('../../../../pages');
+const {
+  MOCK_DEALS,
+  MOCK_USERS,
+} = require('../fixtures');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const {
+  BANK1_MAKER1,
+  ADMIN,
+} = MOCK_USERS;
 
 context('Dashboard Transactions', () => {
   beforeEach(() => {
-    cy.deleteDeals(MAKER_LOGIN);
+    cy.deleteDeals(ADMIN);
   });
 
   it('Can display an empty dashboard', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     dashboardFacilities.visit();
     cy.title().should('eq', `Facilities${defaults.pageTitleAppend}`);
 
     dashboardFacilities.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(0 items)');
     });
-
   });
 });
 

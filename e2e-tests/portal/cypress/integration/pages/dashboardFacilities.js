@@ -1,6 +1,6 @@
 const page = {
   visit: () => cy.visit('/dashboard/facilities'),
-
+  rows: () => cy.get('.govuk-table__body .govuk-table__row'),
   row: {
     nameLink: (id) => cy.get(`[data-cy="facility__name--link--${id}"]`),
     ukefFacilityId: (id) => cy.get(`[data-cy="facility__ukefId--${id}"]`),
@@ -10,7 +10,6 @@ const page = {
     bankStage: (id) => cy.get(`[data-cy="facility__bankStage--${id}"]`),
     issuedDate: (id) => cy.get(`[data-cy="facility__issuedDate--${id}"]`),
   },
-
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),
   next: () => cy.get('[data-cy="Next"]'),
