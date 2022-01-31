@@ -107,7 +107,7 @@ const MIA = {
       {
         groupId: 2,
         title: MIA_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
-        team: TEAMS.UNDERWRITER_MANAGERS,
+        team: TEAMS.UNDERWRITERS,
       },
     ],
   },
