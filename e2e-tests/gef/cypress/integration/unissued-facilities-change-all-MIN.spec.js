@@ -113,27 +113,6 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     });
 
     it('update facility page should have correct titles and text (only name should be prepopulated', () => {
-      applicationPreview.unissuedFacilitiesReviewLink().click();
-      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-
-      aboutFacilityUnissued.mainHeading().contains('Tell us you\'ve issued this facility');
-      aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
-      aboutFacilityUnissued.facilityName().should('have.value', MOCK_FACILITY_ONE.name);
-
-      aboutFacilityUnissued.issueDateDay().should('have.value', '');
-      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
-      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
-
-      aboutFacilityUnissued.coverStartDateDay().should('have.value', '');
-      aboutFacilityUnissued.coverStartDateMonth().should('have.value', '');
-      aboutFacilityUnissued.coverStartDateYear().should('have.value', '');
-
-      aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
-      aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
-      aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
-    });
-
-    it('error messages should be correct when entering dates beyond validation limits', () => {
       // when entering no dates
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
@@ -168,15 +147,15 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.issueDateDay().clear();
       aboutFacilityUnissued.issueDateMonth().clear();
       aboutFacilityUnissued.issueDateYear().clear();
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.oneMonthDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.oneMonthMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.oneMonthYear);
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
 
       // entering cover start date before issue date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twentyEightDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twentyEightMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twentyEightYear);
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.threeDaysDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.threeDaysMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.threeDaysYear);
       aboutFacilityUnissued.continueButton().click();
       aboutFacilityUnissued.coverStartDateError().contains('Cover start date cannot be before the issue date');
       aboutFacilityUnissued.errorSummary().contains('Cover start date cannot be before the issue date');
@@ -203,9 +182,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.twentyEightMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.twentyEightYear);
       aboutFacilityUnissued.continueButton().click();
-      aboutFacilityUnissued.coverEndDateError().contains('Cover end date cannot be before the issue date');
       aboutFacilityUnissued.errorSummary().contains('Cover end date cannot be before cover start date');
-      aboutFacilityUnissued.errorSummary().contains('Cover end date cannot be before the issue date');
     });
 
     it('the correct success messages should be displayed after changing facility to issued', () => {

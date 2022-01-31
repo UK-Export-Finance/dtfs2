@@ -179,6 +179,8 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.errorInput().contains('Cover date cannot be in the past');
 
       coverStartDate.coverStartDateDay().clear();
+      console.log(dateConstants.today);
+      console.log(dateConstants.threeMonthsOneDay);
       coverStartDate.coverStartDateDay().type(dateConstants.threeMonthsOneDayDay);
       coverStartDate.coverStartDateMonth().clear();
       coverStartDate.coverStartDateMonth().type(dateConstants.threeMonthsOneDayMonth);
