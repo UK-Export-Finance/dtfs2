@@ -27,6 +27,9 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
           surname
           email
         }
+        exporter {
+          companyName
+        }
         details {
           ukefDealId
           submissionDate
@@ -42,7 +45,6 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
         submissionDetails {
           supplierType
           supplierCompaniesHouseRegistrationNumber
-          supplierName
           supplierCountry
           supplierAddressLine1
           supplierAddressLine2
@@ -103,13 +105,13 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
             bankFacilityReference
             value
             facilityStage
+            hasBeenIssued
             bondIssuer
             facilityProduct {
               code,
               name
             }
             type
-            facilityStage
             banksInterestMargin
             ukefExposure
             coveredPercentage

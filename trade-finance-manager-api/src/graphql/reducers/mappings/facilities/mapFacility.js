@@ -43,6 +43,7 @@ const mapFacility = (f, facilityTfm, dealDetails) => {
     ukefFacilityType: facility.ukefFacilityType,
     facilityProduct: facility.facilityProduct,
     facilityStage: facility.facilityStage,
+    hasBeenIssued: facility.hasBeenIssued,
     coveredPercentage: `${facility.coveredPercentage}%`,
     facilityValueExportCurrency: `${currency.id} ${formattedFacilityValue}`,
     value: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),

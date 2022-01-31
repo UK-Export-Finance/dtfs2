@@ -9,7 +9,7 @@ const { reports } = require('../../pages');
 context('Dashboard: Review UKEF Decision report', () => {
   const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
   const todayAtMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
-  let daysInThePast = sub(todayAtMidnight, { days: 15 });
+  let daysInThePast = sub(todayAtMidnight, { days: 25 });
   const dateCreated = format(todayAtMidnight, 'dd LLL yyyy');
   let submissionDate = format(todayAtMidnight, 'dd LLL yyyy');
   let dateOfApproval = format(todayAtMidnight, 'dd LLL yyyy');
@@ -84,7 +84,7 @@ context('Dashboard: Review UKEF Decision report', () => {
       cy.get('@row2').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateOfApproval);
       cy.get('@row2').find('[data-cy="deal__row--days-to-review"]').should('contain', '10 days');
 
-      daysInThePast = sub(todayAtMidnight, { days: 15 });
+      daysInThePast = sub(todayAtMidnight, { days: 25 });
       submissionDate = format(parseInt(new Date(daysInThePast).valueOf().toString(), 10), 'dd LLL yyyy');
       dateOfApproval = format(parseInt(new Date(daysInThePast).valueOf().toString(), 10), 'dd LLL yyyy');
       reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(1).as('row1');
