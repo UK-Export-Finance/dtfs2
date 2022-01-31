@@ -16,8 +16,6 @@ describe('mapGefDealDetails', () => {
 
     const expected = {
       ukefDealId: mockDeal.dealSnapshot.ukefDealId,
-      bankInternalRefName: mockDeal.dealSnapshot.bankInternalRefName,
-      additionalRefName: mockDeal.dealSnapshot.additionalRefName,
     };
 
     expect(result).toEqual(expected);
