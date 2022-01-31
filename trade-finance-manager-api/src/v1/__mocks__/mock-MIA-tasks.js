@@ -51,7 +51,7 @@ const MOCK_MIA_TASKS = [
         id: '1',
         groupId: 2,
         title: CONSTANTS.TASKS.MIA_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
-        team: CONSTANTS.TEAMS.UNDERWRITER_MANAGERS,
+        team: CONSTANTS.TEAMS.UNDERWRITERS,
       },
     ],
   },
