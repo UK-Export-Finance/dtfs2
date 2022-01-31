@@ -4,7 +4,10 @@ const pageRenderer = require('../pageRenderer');
 
 const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
-const deal = require('../fixtures/deal-fully-completed');
+const dealFullyCompleted = require('../fixtures/deal-fully-completed');
+
+const deal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
+deal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189d8';
 
 const aDealInStatus = (status) => ({
   ...deal,
@@ -108,7 +111,6 @@ describe(page, () => {
     it('renders loan transactions table', () =>
       wrappers.forEach((wrapper) => wrapper.expectElement('[data-cy="loan-transactions-table"]').toExist()));
   });
-
 
   describe('when viewed with editable=false', () => {
     const wrappers = [];

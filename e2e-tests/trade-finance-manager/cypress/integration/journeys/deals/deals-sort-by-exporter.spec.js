@@ -29,37 +29,36 @@ context('User can view and sort deals by exporter', () => {
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_DEALS, MOCK_MAKER_TFM)
-      .then((insertedDeals) => {
-        insertedDeals.forEach((deal) => {
-          const {
-            _id: dealId,
-            mockFacilities,
-          } = deal;
+    cy.insertManyDeals(MOCK_DEALS, MOCK_MAKER_TFM).then((insertedDeals) => {
+      insertedDeals.forEach((deal) => {
+        const {
+          _id: dealId,
+          mockFacilities,
+        } = deal;
 
-          cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((facilities) => {
-            ALL_FACILITIES = [
-              ...ALL_FACILITIES,
-              ...facilities,
-            ];
-          });
-        });
-
-        cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
-          // sort by ascending order
-          ALL_SUBMITTED_DEALS = submittedDeals.sort((a, b) => {
-            const dealASupplier = a.dealSnapshot.submissionDetails['supplier-name'];
-            const dealBSupplier = b.dealSnapshot.submissionDetails['supplier-name'];
-
-            return dealASupplier.localeCompare(dealBSupplier);
-          });
-
-          [dealAscending1, dealAscending2] = ALL_SUBMITTED_DEALS;
-
-          dealDescending1 = dealAscending2;
-          dealDescending2 = dealAscending1;
+        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((facilities) => {
+          ALL_FACILITIES = [
+            ...ALL_FACILITIES,
+            ...facilities,
+          ];
         });
       });
+
+      cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
+        // sort by ascending order
+        ALL_SUBMITTED_DEALS = submittedDeals.sort((a, b) => {
+          const dealASupplier = a.dealSnapshot.submissionDetails['supplier-name'];
+          const dealBSupplier = b.dealSnapshot.submissionDetails['supplier-name'];
+
+          return dealASupplier.localeCompare(dealBSupplier);
+        });
+
+        [dealAscending1, dealAscending2] = ALL_SUBMITTED_DEALS;
+
+        dealDescending1 = dealAscending2;
+        dealDescending2 = dealAscending1;
+      });
+    });
   });
 
   beforeEach(() => {
@@ -91,7 +90,6 @@ context('User can view and sort deals by exporter', () => {
     // check second row
     const row2 = pages.dealsPage.dealsTableRows().eq(1);
     row2.invoke('attr', 'data-cy').should('eq', `deal-${dealAscending2._id}`);
-
 
     pages.dealsPage.dealsTable.headings.exporter().invoke('attr', 'aria-sort').should('eq', 'ascending');
     pages.dealsPage.dealsTable.headings.exporterSortButton().invoke('attr', 'name').should('eq', 'descending');

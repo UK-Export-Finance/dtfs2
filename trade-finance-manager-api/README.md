@@ -98,7 +98,7 @@ When a deal is sent to TFM, the structure will be something like this (very simp
 
 ```js
 {
-  _id: '1234',
+  _id: '61f7a71ccf809301e78fbea3',
   submissionType: 'Automatic Inclusion Notice',
   ...
 }
@@ -108,9 +108,9 @@ When TFM creates a snapshot (and adds to the TFM collections) for it's own consu
 
 ```js
 {
-  _id: '1234',
+  _id: '61f7a71ccf809301e78fbea3',
   dealSnapshot: {
-    _id: '1234',
+    _id: '61f7a71ccf809301e78fbea3',
     submissionType: 'Automatic Inclusion Notice',
     ...
   },
@@ -148,14 +148,14 @@ Therefore in TFM, we currently need to deal with 2 different data structures for
 
 ```js
 {
-  _id: '1',
+  _id: '61f7a71ccf809301e78fbea6',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
   updatedAt: 1639580324306.0
   details: {
     submissionDate: '1606900616651',
   },
-  facilities: [ '1', '2' ],
+  facilities: [ '61f7a71ccf809301e78fbea3', '61f7a71ccf809301e78fbea3' ],
   ...
 }
 ```
@@ -177,7 +177,7 @@ Therefore in TFM, we currently need to deal with 2 different data structures for
 
 ```js
 {
-  _id: '100',
+  _id: '61f7a71ccf809301e78fbea1',
   type: 'Bond',
   requestedCoverStartDate: '1606900616652',
   coveredPercentage: '20',

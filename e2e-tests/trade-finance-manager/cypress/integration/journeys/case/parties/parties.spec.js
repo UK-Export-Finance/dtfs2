@@ -10,25 +10,22 @@ context('Parties page', () => {
   const team1User = MOCK_USERS.find((user) => user.teams.includes('TEAM1'));
   const businessSupportUser = MOCK_USERS.find((user) => user.teams.includes('BUSINESS_SUPPORT'));
 
-
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
+    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
-
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType);
+      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+
+      cy.submitDeal(dealId, dealType);
+    });
   });
 
   after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });

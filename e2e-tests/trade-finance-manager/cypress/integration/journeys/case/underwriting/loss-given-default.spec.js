@@ -10,8 +10,6 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
-
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         dealId = insertedDeal._id;
@@ -27,6 +25,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
   });
 
   after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });

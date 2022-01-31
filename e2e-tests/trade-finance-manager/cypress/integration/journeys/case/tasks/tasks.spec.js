@@ -35,8 +35,6 @@ context('Case tasks - AIN deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
-
     cy.getUser(businessSupportUser.username).then((userObj) => {
       userId = userObj._id;
     });
@@ -46,24 +44,24 @@ context('Case tasks - AIN deal', () => {
   });
 
   beforeEach(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType);
-
-        cy.login(businessSupportUser);
-        cy.visit(relative(`/case/${dealId}/deal`));
+      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+
+      cy.submitDeal(dealId, dealType);
+
+      cy.login(businessSupportUser);
+      cy.visit(relative(`/case/${dealId}/deal`));
+    });
   });
 
   after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });

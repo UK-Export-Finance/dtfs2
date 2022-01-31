@@ -43,7 +43,12 @@ context('Facility page', () => {
 
   after(() => {
     cy.deleteTfmDeals();
+    cy.deleteDeals(dealOne, MOCK_MAKER_TFM);
+    cy.deleteDeals(dealTwo, MOCK_MAKER_TFM);
     dealOneFacilities.forEach((facility) => {
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+    });
+    dealTwoFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });

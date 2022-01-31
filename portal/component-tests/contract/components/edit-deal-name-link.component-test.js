@@ -9,10 +9,12 @@ describe(component, () => {
       const user = { _id: 123, roles: ['maker'] };
       const deals = [
         {
+          _id: '61f6fbaea2460c018a4189d7',
           status: 'Draft',
           maker: { _id: 123 },
         },
         {
+          _id: '61f6fbaea2460c018a4189d8',
           status: 'Further Maker\'s input required',
           maker: { _id: 123 },
         },

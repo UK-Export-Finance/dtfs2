@@ -9,7 +9,6 @@ import {
   submitTaskComplete,
 } from './tasks-helpers';
 
-
 context('Case tasks - MIA deal', () => {
   let dealId;
   const dealFacilities = [];
@@ -20,8 +19,6 @@ context('Case tasks - MIA deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
-
     cy.getUser(businessSupportUser.username).then((userObj) => {
       userId = userObj._id;
     });
@@ -31,24 +28,24 @@ context('Case tasks - MIA deal', () => {
   });
 
   beforeEach(() => {
-    cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
+      const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType);
-
-        cy.login(businessSupportUser);
-        cy.visit(relative(`/case/${dealId}/deal`));
+      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+
+      cy.submitDeal(dealId, dealType);
+
+      cy.login(businessSupportUser);
+      cy.visit(relative(`/case/${dealId}/deal`));
+    });
   });
 
   after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });

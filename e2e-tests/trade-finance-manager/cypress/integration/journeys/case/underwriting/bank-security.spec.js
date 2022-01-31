@@ -10,8 +10,6 @@ context('Case Underwriting - Bank Security', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
-
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         dealId = insertedDeal._id;
@@ -25,6 +23,12 @@ context('Case Underwriting - Bank Security', () => {
         cy.submitDeal(dealId, dealType);
       });
   });
+  after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    dealFacilities.forEach((facility) => {
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+    });
+  });
 
   beforeEach(() => {
     const underWritingSupportUser = MOCK_USERS.find((user) =>
@@ -37,12 +41,6 @@ context('Case Underwriting - Bank Security', () => {
     partials.caseSubNavigation.underwritingLink().click();
     partials.underwritingSubNav.bankSecurityLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/bank-security`));
-  });
-
-  afterEach(() => {
-    dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
-    });
   });
 
   it('bank security page should display security details', () => {
