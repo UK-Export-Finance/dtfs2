@@ -118,6 +118,7 @@ exports.queryAllFacilities = async (
           type: '$type',
           hasBeenIssued: '$hasBeenIssued',
           submittedAsIssuedDate: '$submittedAsIssuedDate',
+          updatedAt: '$updatedAt',
         },
       },
       {

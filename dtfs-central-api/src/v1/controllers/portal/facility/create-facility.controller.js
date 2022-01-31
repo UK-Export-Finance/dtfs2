@@ -14,6 +14,7 @@ const createFacility = async (facility, user, routePath) => {
     ...facility,
     _id: facilityId,
     createdDate: Date.now(),
+    updatedAt: Date.now(),
   };
 
   const response = await collection.insertOne(newFacility);
