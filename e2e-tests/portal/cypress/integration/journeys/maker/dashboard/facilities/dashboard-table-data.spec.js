@@ -11,6 +11,7 @@ const CONSTANTS = require('../../../../../fixtures/constants');
 const {
   BANK1_MAKER1,
   BANK2_MAKER2,
+  ADMIN_LOGIN,
 } = MOCK_USERS;
 
 const {
@@ -48,8 +49,8 @@ context('View dashboard facilities as a maker', () => {
   let bssFacilityId;
 
   before(() => {
-    cy.deleteGefApplications(BANK1_MAKER1);
-    cy.deleteDeals(BANK1_MAKER1);
+    cy.deleteGefApplications(ADMIN_LOGIN);
+    cy.deleteDeals(ADMIN_LOGIN);
 
     cy.listAllUsers().then((usersInDb) => {
       const maker = usersInDb.find((user) => user.username === BANK1_MAKER1.username);
@@ -122,9 +123,10 @@ context('View dashboard facilities as a maker', () => {
     ALL_BANK2_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK2_MAKER2.bank.id);
   });
 
-  // TODO: delete deals and facilities
-  // after(() => {
-  // });
+  after(() => {
+    cy.deleteGefFacilities(gefDeal._id, ADMIN_LOGIN);
+    // TODO: delete BSS facilities
+  });
 
   it('BSS and GEF deals render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);

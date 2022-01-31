@@ -4,14 +4,16 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
 
+const ADMIN_LOGIN = mockUsers.find((user) => user.username === 'ADMIN');
+
 const twentyOneDeals = require('../../../../../fixtures/deal-dashboard-data');
 
 context('Dashboard Deals pagination controls', () => {
   let deals;
 
   before(() => {
-    cy.deleteGefApplications(MAKER_LOGIN);
-    cy.deleteDeals(MAKER_LOGIN);
+    cy.deleteGefApplications(ADMIN_LOGIN);
+    cy.deleteDeals(ADMIN_LOGIN);
 
     cy.insertManyDeals(twentyOneDeals, MAKER_LOGIN)
       .then((insertedDeals) => { deals = insertedDeals; });

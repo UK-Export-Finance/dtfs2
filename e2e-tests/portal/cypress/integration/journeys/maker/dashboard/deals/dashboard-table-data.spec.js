@@ -7,6 +7,7 @@ const {
   BANK1_MAKER1,
   BANK1_MAKER2,
   BANK2_MAKER2,
+  ADMIN_LOGIN,
 } = MOCK_USERS;
 
 const {
@@ -29,8 +30,8 @@ context('View dashboard deals as a maker', () => {
   const ALL_DEALS = [];
 
   before(() => {
-    cy.deleteGefApplications(BANK1_MAKER1);
-    cy.deleteDeals(BANK1_MAKER1);
+    cy.deleteGefApplications(ADMIN_LOGIN);
+    cy.deleteDeals(ADMIN_LOGIN);
 
     cy.listAllUsers().then((usersInDb) => {
       const maker = usersInDb.find((user) => user.username === BANK1_MAKER1.username);
