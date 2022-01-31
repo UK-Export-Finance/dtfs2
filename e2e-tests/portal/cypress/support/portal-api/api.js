@@ -200,7 +200,6 @@ exports.updateGefApplication = (dealId, payload, token) => cy.request({
   },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
-  console.log('udpate gef application \n', resp.body);
   return resp.body;
 });
 
