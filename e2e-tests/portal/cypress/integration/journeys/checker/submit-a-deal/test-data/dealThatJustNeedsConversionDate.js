@@ -1,5 +1,4 @@
-const ObjectID = require('bson-objectid');
-
+const { ObjectID } = require('bson');
 const template = require('./template.json');
 
 module.exports = () => {
