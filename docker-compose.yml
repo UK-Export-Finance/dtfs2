@@ -89,7 +89,6 @@ services:
       - UKEF_TFM_API_SYSTEM_KEY
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
-      - SENTRY_DSN=${SENTRY_DSN}
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
     deploy:
       resources:
@@ -210,7 +209,6 @@ services:
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-      - SENTRY_DSN=${SENTRY_DSN}
     entrypoint: npx nodemon src/index.js -L
 
   gef-ui:
