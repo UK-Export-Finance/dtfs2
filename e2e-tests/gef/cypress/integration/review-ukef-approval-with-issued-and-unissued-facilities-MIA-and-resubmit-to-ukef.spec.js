@@ -159,6 +159,8 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
     });
 
+    // TODO: DTFS2-5348 reenable test
+
     // it('entering cover date in past on confirm cover start date shows an error', () => {
     //   cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
     //   coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
