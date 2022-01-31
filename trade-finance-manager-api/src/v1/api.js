@@ -486,9 +486,10 @@ const getFunctionsAPI = async (type = 'ACBS', url = '') => {
     default:
   }
 
-  const modifiedUrl = url
-    ? url.replace(/http:\/\/localhost:[\d]*/, functionUrl)
-    : functionUrl;
+  let modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, functionUrl);
+  if (type === 'ACBS') {
+    modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, functionUrl) : functionUrl;
+  }
 
   try {
     const response = await axios({
@@ -501,9 +502,7 @@ const getFunctionsAPI = async (type = 'ACBS', url = '') => {
     return response.data;
   } catch (err) {
     console.error(`Unable to getFunctionsAPI for ${modifiedUrl}`, { err });
-    return err.response.data
-      ? err.response.data
-      : err;
+    return err?.response?.data ? err.response.data : err;
   }
 };
 
@@ -609,6 +608,24 @@ const updatePortalGefDeal = async (dealId, update) => {
   }
 };
 
+const updateGefMINActivity = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${centralApiUrl}/v1/portal/gef/deals/activity/${dealId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error(`TFM API - error updating GEF deal MIN activity ${dealId}`, { err });
+
+    return false;
+  }
+};
+
 const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
   try {
     const response = await axios({
@@ -678,4 +695,5 @@ module.exports = {
   updatePortalGefDealStatus,
   updatePortalGefDeal,
   addUnderwriterCommentToGefDeal,
+  updateGefMINActivity,
 };

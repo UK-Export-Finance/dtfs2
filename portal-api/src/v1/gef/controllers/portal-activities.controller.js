@@ -48,7 +48,7 @@ const submissionTypeToConstant = (submissionType) => {
   return submissionConstant;
 };
 
-const firstSubmissionPortalActivity = async (application) => {
+const ukefSubmissionPortalActivity = async (application) => {
   const { submissionType, portalActivities, checkerId } = application;
 
   // generates the label for activity array
@@ -102,7 +102,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
 };
 
 module.exports = {
-  firstSubmissionPortalActivity,
+  ukefSubmissionPortalActivity,
   submissionTypeToConstant,
   getUserInfo,
   facilityChangePortalActivity,

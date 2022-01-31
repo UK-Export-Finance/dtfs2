@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-undef */
 import 'cypress-file-upload';
 import login from './commands/login';
@@ -17,3 +18,6 @@ Cypress.Commands.add('apiCreateFacility', api.createFacility);
 Cypress.Commands.add('apiUpdateFacility', api.updateFacility);
 Cypress.Commands.add('uploadFile', uploadFile);
 Cypress.Commands.add('addCommentObjToDeal', api.addCommentObjToDeal);
+Cypress.Commands.add('submitDealAfterUkefIds', api.submitDealAfterUkefIds);
+Cypress.Commands.add('submitDealToTfm', api.submitDealToTfm);
+Cypress.Commands.add('addUnderwriterCommentToTfm', api.addUnderwriterCommentToTfm);

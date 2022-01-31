@@ -16,6 +16,7 @@ const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-p
 const { MOCK_FACILITIES } = require('../../../src/v1/__mocks__/mock-facilities');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-second-submit-MIA');
+const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
 const submitDeal = require('../utils/submitDeal');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(
@@ -43,6 +44,8 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
+
+const updateGefActivitySpy = jest.fn(() => Promise.resolve(MOCK_GEF_DEAL_MIN));
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
@@ -83,6 +86,9 @@ describe('/v1/deals', () => {
 
     updatePortalFacilityStatusSpy.mockClear();
     externalApis.updatePortalFacilityStatus = updatePortalFacilityStatusSpy;
+
+    updateGefActivitySpy.mockClear();
+    externalApis.updateGefMINActivity = updateGefActivitySpy;
 
     externalApis.updatePortalBssDealStatus = jest.fn();
     externalApis.updatePortalGefDealStatus = jest.fn();
@@ -568,6 +574,11 @@ describe('/v1/deals', () => {
           facility.hasBeenIssued);
 
         expect(issuedFacility.tfm.feeRecord).toBeUndefined();
+      });
+
+      it('calls updateGefMINActivity when deal is MIA', async () => {
+        await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
+        expect(updateGefActivitySpy).toHaveBeenCalledWith('MOCK_GEF_DEAL_SECOND_SUBMIT_MIA');
       });
 
       it('Should update the application from MIA to MIN', async () => {

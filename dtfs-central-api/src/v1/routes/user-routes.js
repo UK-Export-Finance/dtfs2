@@ -66,4 +66,9 @@ userRouter.route('/:id')
     getUserController.findOneUserGet,
   );
 
+userRouter.route('/')
+  .get(
+    getUserController.list,
+  );
+
 module.exports = userRouter;

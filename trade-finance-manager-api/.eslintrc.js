@@ -18,4 +18,7 @@ module.exports = {
     'implicit-arrow-linebreak': 0,
     'no-console': 'off',
   },
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
 };
