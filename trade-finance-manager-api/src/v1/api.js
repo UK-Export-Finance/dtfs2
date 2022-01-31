@@ -471,7 +471,7 @@ const updateACBSfacility = async (facility, dealType, supplierName) => {
   return {};
 };
 
-const getFunctionsAPI = async (type = 'ACBS', url = '') => {
+const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => {
   // Need to refer to docker internal to work on localhost
   let functionUrl;
   switch (type) {
@@ -487,7 +487,7 @@ const getFunctionsAPI = async (type = 'ACBS', url = '') => {
   }
 
   let modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, functionUrl);
-  if (type === 'ACBS') {
+  if (type === CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS) {
     modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, functionUrl) : functionUrl;
   }
 
