@@ -13,22 +13,27 @@ dotenv.config();
 const mdmEAurl: any = process.env.MULESOFT_API_UKEF_MDM_EA_URL;
 const username: any = process.env.MULESOFT_API_UKEF_MDM_EA_KEY;
 const password: any = process.env.MULESOFT_API_UKEF_MDM_EA_SECRET;
-const postPremiumSchedule = async (premiumScheduleParameters: any) => {
-  if (objectIsEmpty(premiumScheduleParameters)) {
+const postPremiumSchedule = async (premiumSchedulePayload: any) => {
+  if (objectIsEmpty(premiumSchedulePayload)) {
     return null;
   }
 
   await axios({
-    method: 'POST',
+    method: 'post',
     url: `${mdmEAurl}/premium/schedule`,
     auth: { username, password },
     headers: {
       'Content-Type': 'application/json',
     },
-    data: [premiumScheduleParameters],
+    data: [premiumSchedulePayload],
   })
     .catch((error: any) => {
-      console.error(`Error calling Post Premium schedule with facilityURN: ${premiumScheduleParameters.facilityURN} \n`, error.response);
+      console.error(
+        `Error calling POST Premium schedule with facilityURN: ${premiumSchedulePayload.facilityURN} \n`,
+        error.response.data,
+        error.response.status,
+      );
+      return { data: error.response.data, status: error.response.status };
     })
     .then((response: any) => {
       if (response?.status) {

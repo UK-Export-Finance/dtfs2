@@ -14,14 +14,15 @@ export const sendEmail = async (req: Request, res: Response) => {
 
     const personalisation = emailVariables;
 
-    const notifyResponse = await notifyClient.sendEmail(templateId, sendToEmailAddress, {
+    const notifyResponse = await notifyClient
+      .sendEmail(templateId, sendToEmailAddress, {
         personalisation,
         reference: null,
       })
       .then((response: any) => response)
-      .catch((err: any) => {
-        console.error('Error calling Notify API ', err.response.status);
-        return err.response;
+      .catch((error: any) => {
+        console.error('Error calling Notify API ', error.response.data, error.response.status);
+        return { data: error.response.data, status: error.response.status };
       });
 
     const { status, data } = notifyResponse;

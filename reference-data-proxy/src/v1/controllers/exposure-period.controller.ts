@@ -39,12 +39,12 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
   const exposurePeriodURL: any = process.env.MULESOFT_API_EXPOSURE_PERIOD_URL;
 
   const response = await axios({
-    method: 'GET',
+    method: 'get',
     url: `${exposurePeriodURL}?startdate=${startDate}&enddate=${endDate}&productgroup=${productGroup}`,
     auth: { username, password },
   }).catch((error) => {
-    console.error('Error calling Exposure Period API', error.response);
-    return error.response;
+    console.error('Error calling Exposure Period API ', error.response.data, error.response.status);
+    return { data: error.response.data, status: error.response.status };
   });
 
   const { status, data } = response;

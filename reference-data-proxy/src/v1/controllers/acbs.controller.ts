@@ -77,7 +77,7 @@ export const findOne = async (req: Request, res: Response) => {
   return res.status(500).send();
 };
 
-const issueAcbsFacility = async (id: any, facility: any, dealType: any,  supplierName: any) => {
+const issueAcbsFacility = async (id: any, facility: any, dealType: any, supplierName: any) => {
   if (id) {
     const response = await axios({
       method: 'post',

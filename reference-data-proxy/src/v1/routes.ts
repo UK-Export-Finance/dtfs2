@@ -451,7 +451,7 @@ apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.look
 
 /**
  * @openapi
- * /ordnance-survey/:OSPostCode:
+ * /ordnance-survey/:OSPostcode:
  *   get:
  *     summary: Get a list of addresses from Ordnance Survey API
  *     tags: [Ordnance Survey]
@@ -460,7 +460,7 @@ apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.look
  *       Note - Not all fields are in the response body example. See Ordnance Survey API documentation.
  *     parameters:
  *       - in: path
- *         name: OSPostCode
+ *         name: OSPostcode
  *         schema:
  *           type: string
  *           example: SW1A2JR
@@ -473,7 +473,7 @@ apiRoutes.get('/companies-house/:companyRegistrationNumber', companiesHouse.look
  *             schema:
  *               $ref: '#/definitions/OrdnanceSurveyResponseBody'
  */
-apiRoutes.get('/ordnance-survey/:OSPostCode', ordnanceSurvey.lookup);
+apiRoutes.get('/ordnance-survey/:OSPostcode', ordnanceSurvey.lookup);
 
 /**
  * @openapi
