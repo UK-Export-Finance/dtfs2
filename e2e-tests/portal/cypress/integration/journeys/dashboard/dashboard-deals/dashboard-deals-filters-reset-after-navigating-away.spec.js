@@ -4,6 +4,8 @@ const CONSTANTS = require('../../../../fixtures/constants');
 const { header, dashboardDeals } = require('../../../pages');
 const { BSS_DEAL_MIA } = require('./fixtures');
 
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+
 context('Dashboard Deals filters - reset after applying and navigating away', () => {
   const ALL_DEALS = [];
 

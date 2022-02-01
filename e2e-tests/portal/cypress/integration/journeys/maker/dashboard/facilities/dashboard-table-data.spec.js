@@ -2,11 +2,11 @@ const { format } = require('date-fns');
 const {
   MOCK_DEALS,
   MOCK_FACILITIES,
-  MOCK_USERS,
 } = require('../fixtures');
 const relative = require('../../../../relativeURL');
 const { dashboardFacilities } = require('../../../../pages');
 const CONSTANTS = require('../../../../../fixtures/constants');
+const MOCK_USERS = require('../../../../../fixtures/users');
 
 const {
   BANK1_MAKER1,
