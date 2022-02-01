@@ -249,7 +249,7 @@ module.exports.insertGefFacility = (deal, token) => cy.request({
 
 module.exports.updateGefFacility = (facilityId, payload, token) => cy.request({
   url: `${api()}/v1/gef/facilities/${facilityId}`,
-  method: 'PUt',
+  method: 'PUT',
   body: payload,
   headers: {
     'Content-Type': 'application/json',
