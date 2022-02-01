@@ -1,19 +1,19 @@
 import express from 'express';
 
 export const apiRoutes = express.Router();
-import * as countries from './controllers/countries.controller';
-import * as currencies from './controllers/currencies.controller';
-import * as industrySectors from './controllers/industry-sectors.controller';
-import * as numberGenerator from './controllers/number-generator.controller';
-import * as partyDb from './controllers/party-db.controller';
-import * as acbs from './controllers/acbs.controller';
-import * as currencyExchangeRate from './controllers/currency-exchange-rate.controller';
-import * as exposurePeriod from './controllers/exposure-period.controller';
-import * as companiesHouse from './controllers/companies-house.controller';
-import * as ordnanceSurvey from './controllers/ordnance-survey.controller';
-import * as eStore from './controllers/estore.controller';
-import * as premiumSchedule from './controllers/premium-schedule.controller';
-import * as email from './controllers/email.controller';
+import * as countries from '../controllers/countries.controller';
+import * as currencies from '../controllers/currencies.controller';
+import * as industrySectors from '../controllers/industry-sectors.controller';
+import * as numberGenerator from '../controllers/number-generator.controller';
+import * as partyDb from '../controllers/party-db.controller';
+import * as acbs from '../controllers/acbs.controller';
+import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
+import * as exposurePeriod from '../controllers/exposure-period.controller';
+import * as companiesHouse from '../controllers/companies-house.controller';
+import * as ordnanceSurvey from '../controllers/ordnance-survey.controller';
+import * as eStore from '../controllers/estore/eStore.controller';
+import * as premiumSchedule from '../controllers/premium-schedule.controller';
+import * as email from '../controllers/email.controller';
 
 /**
  * @openapi

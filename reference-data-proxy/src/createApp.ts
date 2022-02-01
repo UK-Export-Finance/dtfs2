@@ -2,9 +2,7 @@ import express from 'express';
 import compression from 'compression';
 import dotenv from 'dotenv';
 
-import { swaggerRoutes } from './v1/swagger-routes';
-import { healthcheck } from './healthcheck';
-import { apiRoutes } from './v1/routes';
+import { apiRoutes, swaggerRoutes, healthcheck } from './v1/routes';
 
 dotenv.config();
 

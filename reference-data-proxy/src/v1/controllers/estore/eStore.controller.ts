@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createExporterSite, createBuyerFolder, createDealFolder, createFacilityFolder } from '../api-estore';
+import { createExporterSite, createBuyerFolder, createDealFolder, createFacilityFolder } from './eStoreApi.controller';
 
 /* {
   exporter: NAME,

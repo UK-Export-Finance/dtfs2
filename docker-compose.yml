@@ -179,7 +179,7 @@ services:
       resources:
         limits:
           cpus: "0.1"
-          memory: 300M
+          memory: 400M
     environment:
       - PORT=5002
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -211,7 +211,7 @@ services:
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - ELASTIC_APM_ACTIVE=false
       - ELASTIC_APM_ENVIRONMENT=development
-    entrypoint: npx nodemon src/index.ts -L
+    entrypoint: npx nodemon src/index.ts -L --max-old-space-size=350
 
   gef-ui:
     build: ./gef-ui

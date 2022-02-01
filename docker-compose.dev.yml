@@ -217,7 +217,7 @@ services:
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - ELASTIC_APM_ACTIVE=false
       - ELASTIC_APM_ENVIRONMENT=development
-    entrypoint: npx nodemon src/index.ts -L
+    entrypoint: npx nodemon src/index.ts -L --max-old-space-size=300
 
   gef-ui:
     build: ./gef-ui

@@ -1,6 +1,6 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec, swaggerUiOptions } from './swagger';
+import { swaggerSpec, swaggerUiOptions } from '../../utils';
 
 export const swaggerRoutes = express.Router();
 swaggerRoutes.use('/', swaggerUi.serve);
