@@ -60,10 +60,10 @@ context('View dashboard facilities as a maker', () => {
     /*
      * insert BSS deal and facility by bank 1, maker 1
      */
-    cy.insertOneDeal(BSS_DEAL, BANK1_MAKER1).then((bssDeal) => {
-      ALL_DEALS.push(bssDeal);
+    cy.insertOneDeal(BSS_DEAL, BANK1_MAKER1).then((createdBssDeal) => {
+      ALL_DEALS.push(createdBssDeal);
 
-      cy.createFacilities(bssDeal._id, [BOND_FACILITY], BANK1_MAKER1).then((createdFacilities) => {
+      cy.createFacilities(createdBssDeal._id, [BOND_FACILITY], BANK1_MAKER1).then((createdFacilities) => {
         ALL_FACILITIES = [
           ...ALL_FACILITIES,
           ...createdFacilities,
@@ -74,10 +74,10 @@ context('View dashboard facilities as a maker', () => {
     /*
      * insert BSS deal and facility by bank 2, maker 2
      */
-    cy.insertOneDeal(BSS_DEAL_BANK_2_MAKER_2, BANK2_MAKER2).then((bssDeal) => {
-      ALL_DEALS.push(bssDeal);
+    cy.insertOneDeal(BSS_DEAL_BANK_2_MAKER_2, BANK2_MAKER2).then((createdBssDeal) => {
+      ALL_DEALS.push(createdBssDeal);
 
-      cy.createFacilities(bssDeal._id, [BOND_FACILITY], BANK2_MAKER2).then((createdFacilities) => {
+      cy.createFacilities(createdBssDeal._id, [BOND_FACILITY], BANK2_MAKER2).then((createdFacilities) => {
         ALL_FACILITIES = [
           ...ALL_FACILITIES,
           ...createdFacilities,
@@ -89,14 +89,13 @@ context('View dashboard facilities as a maker', () => {
      * insert GEF deal and facility by bank 1, maker 1
      */
     cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1)
-      .then((gefDeal) => {
-
-        cy.updateGefApplication(gefDeal._id, GEF_DEAL, BANK1_MAKER1)
+      .then((createdGefDeal) => {
+        cy.updateGefApplication(createdGefDeal._id, GEF_DEAL, BANK1_MAKER1)
           .then((updatedGefDeal) => {
-            ALL_DEALS.push(gefDeal);
+            ALL_DEALS.push(updatedGefDeal);
           });
 
-        CASH_FACILITY.dealId = gefDeal._id;
+        CASH_FACILITY.dealId = createdGefDeal._id;
 
         cy.insertOneGefFacility(CASH_FACILITY, BANK1_MAKER1)
           .then((gefFacility) => {
@@ -111,7 +110,6 @@ context('View dashboard facilities as a maker', () => {
   });
 
   beforeEach(() => {
-    console.log('ALL_FACILITIES ', ALL_FACILITIES);
     gefFacility = ALL_FACILITIES.find((facility) => facility.name.includes(CONSTANTS.DEALS.DEAL_TYPE.GEF));
     gefFacilityId = gefFacility._id;
     gefDeal = ALL_DEALS.find((deal) => deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF);
@@ -133,7 +131,7 @@ context('View dashboard facilities as a maker', () => {
     });
   });
 
-  it.only('BSS and GEF deals render on the dashboard with correct values', () => {
+  it('BSS and GEF facilities render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);
     dashboardFacilities.visit();
 
@@ -168,7 +166,7 @@ context('View dashboard facilities as a maker', () => {
     let expectedBankStage = hasBeenIssuedText(gefFacility.hasBeenIssued);
     bankStage(gefFacilityId).should('contain', expectedBankStage);
 
-    let expectedDate = format(gefFacility.submittedAsIssuedDate, 'dd MMM yyyy');
+    let expectedDate = format(gefFacility.submittedAsIssuedDate, 'd MMM yyyy');
     issuedDate(gefFacilityId).should('contain', expectedDate);
 
 
@@ -193,7 +191,7 @@ context('View dashboard facilities as a maker', () => {
     expectedBankStage = hasBeenIssuedText(bssFacility.hasBeenIssued);
     bankStage(bssFacilityId).should('contain', expectedBankStage);
 
-    expectedDate = format(bssFacility.submittedAsIssuedDate, 'dd MMM yyyy');
+    expectedDate = format(bssFacility.submittedAsIssuedDate, 'd MMM yyyy');
     issuedDate(bssFacilityId).should('contain', expectedDate);
   });
 

@@ -13,7 +13,7 @@ const CASH_FACILITY = {
   name: `mock ${CONSTANTS.DEALS.DEAL_TYPE.GEF} facility`,
   paymentType: null,
   shouldCoverStartOnSubmission: true,
-  type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH_FACILITY,
+  type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
   ukefExposure: 1481472,
   updatedAt: 1628770126497.0,
   value: 123456,
@@ -26,7 +26,7 @@ const CASH_FACILITY = {
 };
 
 const BOND_FACILITY = {
-  type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND_FACILITY,
+  type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
   bondIssuer: 'Issuer',
   bondType: 'Advance payment guarantee',
   facilityStage: 'Unissued',

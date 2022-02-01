@@ -290,9 +290,9 @@ describe('/v1/deals', () => {
 
   describe('GET /v1/deals', () => {
     it('should return count and mapped deals', async () => {
-      const postResult = await api.post({ deal: newDeal, user: aBarclaysMaker }).to('/v1/deals');
+      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
 
-      const { status, body } = await api.get('/v1/deals');
+      const { status, body } = await as(aBarclaysMaker).get('/v1/deals');
 
       expect(status).toEqual(200);
 
