@@ -1,4 +1,4 @@
-const { dashboard } = require('../../../pages');
+const { dashboardDeals } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
 const CONSTANTS = require('../../../../fixtures/constants');
@@ -72,7 +72,7 @@ context('View dashboard deals as a checker', () => {
   it('Only deals with checker status appear on the dashboard. Each deal goes to correct deal URL', () => {
     // login, go to dashboard
     cy.login(CHECKER_LOGIN);
-    dashboard.visit();
+    dashboardDeals.visit();
 
     const gefDeal = ALL_DEALS.find(({ dealType, status }) =>
       dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
@@ -90,10 +90,10 @@ context('View dashboard deals as a checker', () => {
       type,
       updated,
       link,
-    } = dashboard.row;
+    } = dashboardDeals.row;
 
     // should only see 2 deals
-    dashboard.totalItems().invoke('text').then((text) => {
+    dashboardDeals.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(2 items)');
     });
 
@@ -134,7 +134,7 @@ context('View dashboard deals as a checker', () => {
     cy.url().should('eq', relative(`/gef/application-details/${gefDealId}`));
 
     // go back to the dashboard
-    dashboard.visit();
+    dashboardDeals.visit();
 
     // second deal (BSS)
     cy.get('table tr').eq(2).as('secondRow');

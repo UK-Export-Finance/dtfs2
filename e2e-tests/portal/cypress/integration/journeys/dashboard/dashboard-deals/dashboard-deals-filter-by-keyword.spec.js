@@ -1,7 +1,7 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
-const { dashboard } = require('../../../pages');
+const { dashboardDeals } = require('../../../pages');
 const {
   BSS_DEAL_DRAFT,
   GEF_DEAL_DRAFT,
@@ -37,38 +37,38 @@ context('Dashboard Deals filters - filter by keyword', () => {
   describe('Keyword', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboard.visit();
+      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboard.filters.showHideButton().click();
+      dashboardDeals.filters.showHideButton().click();
 
       // apply filter
-      dashboard.filters.panel.form.keyword.input().type(MOCK_KEYWORD);
-      dashboard.filters.panel.form.applyFiltersButton().click();
+      dashboardDeals.filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      dashboardDeals.filters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('renders submitted keyword', () => {
       // toggle to show filters (hidden by default)
-      dashboard.filters.showHideButton().click();
+      dashboardDeals.filters.showHideButton().click();
 
-      dashboard.filters.panel.form.keyword.input().should('have.value', MOCK_KEYWORD);
+      dashboardDeals.filters.panel.form.keyword.input().should('have.value', MOCK_KEYWORD);
     });
 
     it('renders the applied keyword in the `applied filters` section', () => {
-      dashboard.filters.panel.selectedFilters.container().should('be.visible');
-      dashboard.filters.panel.selectedFilters.list().should('be.visible');
+      dashboardDeals.filters.panel.selectedFilters.container().should('be.visible');
+      dashboardDeals.filters.panel.selectedFilters.list().should('be.visible');
 
-      const firstAppliedFilterHeading = dashboard.filters.panel.selectedFilters.heading().first();
+      const firstAppliedFilterHeading = dashboardDeals.filters.panel.selectedFilters.heading().first();
 
       firstAppliedFilterHeading.should('be.visible');
       firstAppliedFilterHeading.should('have.text', 'Keyword');
 
-      const firstAppliedFilter = dashboard.filters.panel.selectedFilters.listItem().first();
+      const firstAppliedFilter = dashboardDeals.filters.panel.selectedFilters.listItem().first();
 
       firstAppliedFilter.should('be.visible');
 
@@ -77,19 +77,19 @@ context('Dashboard Deals filters - filter by keyword', () => {
     });
 
     it('renders the applied keyword in the `main container selected filters` section', () => {
-      dashboard.filters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).should('be.visible');
+      dashboardDeals.filters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).should('be.visible');
 
       const expectedText = `Remove this filter ${MOCK_KEYWORD}`;
-      dashboard.filters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).contains(expectedText);
+      dashboardDeals.filters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).contains(expectedText);
     });
 
     it(`renders only deals that have ${MOCK_KEYWORD} in a field`, () => {
       const ALL_KEYWORD_DEALS = ALL_DEALS.filter(({ exporter }) => exporter.companyName === MOCK_KEYWORD);
-      dashboard.rows().should('have.length', ALL_KEYWORD_DEALS.length);
+      dashboardDeals.rows().should('have.length', ALL_KEYWORD_DEALS.length);
 
       const firstDraftDeal = ALL_KEYWORD_DEALS[0];
 
-      dashboard.row.exporter(firstDraftDeal._id).should('have.text', MOCK_KEYWORD);
+      dashboardDeals.row.exporter(firstDraftDeal._id).should('have.text', MOCK_KEYWORD);
     });
   });
 });

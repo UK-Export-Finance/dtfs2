@@ -1,7 +1,7 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
-const { header, dashboard } = require('../../../pages');
+const { header, dashboardDeals } = require('../../../pages');
 const { BSS_DEAL_MIA } = require('./fixtures');
 
 context('Dashboard Deals filters - reset after applying and navigating away', () => {
@@ -16,30 +16,30 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
 
   before(() => {
     cy.login(BANK1_MAKER1);
-    dashboard.visit();
+    dashboardDeals.visit();
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
   it('resets filters after navigating away from the dashboard', () => {
     // toggle to show filters (hidden by default)
-    dashboard.filters.showHideButton().click();
+    dashboardDeals.filters.showHideButton().click();
 
     // apply filter 1
-    dashboard.filters.panel.form.status.draft.checkbox().click();
+    dashboardDeals.filters.panel.form.status.draft.checkbox().click();
 
     // apply filter 2
-    dashboard.filters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
 
     // submit filters
-    dashboard.filters.panel.form.applyFiltersButton().click();
+    dashboardDeals.filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // check the filters are applied
-    dashboard.filters.showHideButton().click();
+    dashboardDeals.filters.showHideButton().click();
 
-    dashboard.filters.panel.form.status.draft.checkbox().should('be.checked');
-    dashboard.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
+    dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
 
     // navigate somewhere else
     cy.visit('/dashboard/facilities');
@@ -50,7 +50,7 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // previously applied filters should not be applied
-    dashboard.filters.panel.form.status.draft.checkbox().should('not.be.checked');
-    dashboard.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
+    dashboardDeals.filters.panel.form.status.draft.checkbox().should('not.be.checked');
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
   });
 });

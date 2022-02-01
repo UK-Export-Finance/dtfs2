@@ -1,4 +1,4 @@
-const { dashboard } = require('../../../pages');
+const { dashboardDeals } = require('../../../pages');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
 const MOCK_USERS = require('../../../../fixtures/users');
@@ -23,18 +23,18 @@ context('Admin dashboard', () => {
   it('Bank column should appear for admin user', () => {
     // login and go to dashboard
     cy.login(ADMIN);
-    dashboard.visit();
+    dashboardDeals.visit();
 
     // check the fields we understand
-    expect(dashboard.tableHeader('bankRef').should('exist'));
-    expect(dashboard.row.bankRef(deal._id).should('exist'));
+    expect(dashboardDeals.tableHeader('bankRef').should('exist'));
+    expect(dashboardDeals.row.bankRef(deal._id).should('exist'));
   });
 
   // TODO: ADD lighthouse checks DTFS2-4994
   //   it('Dashboard screen should pass Lighthouse audit', () => {
   //     // login and go to dashboard
   //     cy.login(ADMIN_LOGIN);
-  //     dashboard.visit();
+  //     dashboardDeals.visit();
 
   //     cy.lighthouse({
   //       performance: 85,

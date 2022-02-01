@@ -181,7 +181,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     });
   });
 
-  it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /dashboard.', () => {
+  it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
     cy.login(CHECKER_LOGIN);
     contract.visit(goodDeal);

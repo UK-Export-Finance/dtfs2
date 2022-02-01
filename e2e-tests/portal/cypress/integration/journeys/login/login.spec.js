@@ -4,7 +4,7 @@ const {
   header,
   beforeYouStart,
   bankDetails,
-  dashboard,
+  dashboardDeals,
 } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../fixtures/users');
@@ -25,7 +25,7 @@ context('Login', () => {
     bankDetails.visit();
     cy.url().should('eq', relative('/login'));
 
-    dashboard.visit();
+    dashboardDeals.visit();
     cy.url().should('eq', relative('/login'));
   });
 

@@ -217,7 +217,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       contractReadyForReview.expectError('Comment is required when submitting a deal for review.');
     });
 
-    it('The Ready for Checkers Review button updates the deal and takes the user to /dashboard.', () => {
+    it('The Ready for Checkers Review button updates the deal and takes the user to /dashboard', () => {
       const deal = deals.dealReadyToSubmitForReview;
 
       // log in, visit a deal, select abandon
