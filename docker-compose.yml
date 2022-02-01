@@ -33,7 +33,7 @@ services:
       resources:
         limits:
           cpus: "0.1"
-          memory: 300M
+          memory: 400M
     environment:
       - PORT=5005
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
@@ -179,7 +179,7 @@ services:
       resources:
         limits:
           cpus: "0.1"
-          memory: 300M
+          memory: 400M
     environment:
       - PORT=5002
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -209,7 +209,9 @@ services:
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-    entrypoint: npx nodemon src/index.js -L
+      - ELASTIC_APM_ACTIVE=false
+      - ELASTIC_APM_ENVIRONMENT=development
+    entrypoint: npx nodemon src/index.ts -L --max-old-space-size=350
 
   gef-ui:
     build: ./gef-ui
