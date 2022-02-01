@@ -11,7 +11,6 @@ WORKDIR /app
 COPY package.json .
 RUN npm install
 COPY . .
-#COPY --from=image /app /app
 
 # SSH Setup
 # 1. Artifcats

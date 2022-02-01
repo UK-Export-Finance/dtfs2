@@ -301,7 +301,6 @@ context('Clone GEF (MIN) deal', () => {
     }).then(() => {
       cy.apiCreateApplication(MOCK_USER_MAKER, token).then(({ body }) => {
         MINdealId = body._id;
-        console.log(body);
         cy.apiUpdateApplication(MINdealId, token, MOCK_APPLICATION_MIN).then(() => {
           cy.apiCreateFacility(MINdealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
             facilityOneId = facility.body.details._id;

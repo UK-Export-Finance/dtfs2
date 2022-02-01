@@ -1,8 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-console */
-/* eslint-disable no-underscore-dangle */
-
 const portalApi = require('./api');
 const api = require('./gef/api');
 const MOCKS = require('./gef');
