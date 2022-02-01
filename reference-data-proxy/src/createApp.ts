@@ -1,6 +1,3 @@
-// @ts-ignore: Elastic search APM
-// eslint-disable-next-line no-unused-vars
-// import { elasticSearchApm } from './config';
 import express from 'express';
 import compression from 'compression';
 import dotenv from 'dotenv';

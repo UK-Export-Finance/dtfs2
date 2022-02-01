@@ -7,16 +7,16 @@ const ordnanceSurveyBaseUrl = process.env.ORDNANCE_SURVEY_API_URL;
 const ordnanceSurveyApiKey = process.env.ORDNANCE_SURVEY_API_KEY;
 
 export const lookup = async (req: Request, res: Response) => {
-  const { postcode } = req.params;
+  const { OSPostCode } = req.params;
 
   console.log('Calling Ordnance Survey API');
-  const url = `${ordnanceSurveyBaseUrl}/search/places/v1/postcode?postcode=${postcode}&key=${ordnanceSurveyApiKey}`;
+  const url = `${ordnanceSurveyBaseUrl}/search/places/v1/postcode?postcode=${OSPostCode}&key=${ordnanceSurveyApiKey}`;
   const response = await axios({
     method: 'get',
     url,
   }).catch((error: any) => {
-    console.error('Error calling Ordnance Survey API', error.response);
-    return error.response;
+    console.error('Error calling Ordnance Survey API', error.response.data, error.config.url, error.config.data);
+    return { data: error.response.data, status: error.response.status };
   });
 
   const { status, data } = response;
