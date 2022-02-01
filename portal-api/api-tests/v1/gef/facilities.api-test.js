@@ -51,7 +51,7 @@ describe(baseUrl, () => {
         monthsOfCover: null,
         details: null,
         detailsOther: null,
-        currency: { id: null },
+        currency: null,
         value: null,
         coverPercentage: null,
         interestPercentage: null,
@@ -83,7 +83,7 @@ describe(baseUrl, () => {
       monthsOfCover: 12,
       details: ['test', 'test'],
       detailsOther: null,
-      currency: 'GBP',
+      currency: { id: 'GBP' },
       value: 10000000,
       coverPercentage: 75,
       interestPercentage: 10,
@@ -137,7 +137,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(201);
     });
 
-    it('returns me a new application upon creation', async () => {
+    it('returns a new facility upon creation', async () => {
       const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       expect(body).toEqual(newFacility);
     });
@@ -158,8 +158,8 @@ describe(baseUrl, () => {
       const { details } = newFacility;
       const update = {
         hasBeenIssued: false,
-        name: 'Matt',
-        currency: 'GBP',
+        name: 'Test',
+        currency: { id: 'GBP' },
       };
       const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
@@ -170,7 +170,7 @@ describe(baseUrl, () => {
         details: {
           ...details,
           hasBeenIssued: false,
-          name: 'Matt',
+          name: 'Test',
           currency: { id: 'GBP' },
           updatedAt: expect.any(Number),
         },
@@ -220,7 +220,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: 'GBP',
+        currency: {id: 'GBP' },
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
@@ -268,7 +268,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: 'GBP',
+        currency: { id: 'GBP' },
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
