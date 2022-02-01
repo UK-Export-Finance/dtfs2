@@ -53,7 +53,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     contractDelete.expectError('Comment is required when abandoning a deal.');
   });
 
-  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard, () => {
+  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     contract.visit(deal);
