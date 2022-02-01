@@ -116,7 +116,7 @@ context('View dashboard facilities as a maker', () => {
     gefFacilityId = gefFacility._id;
     gefDeal = ALL_DEALS.find((deal) => deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF);
 
-    bssFacility = ALL_FACILITIES.find((facility) => facility.name.includes('BSS'));
+    bssFacility = ALL_FACILITIES.find((facility) => facility.name.includes(CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS));
     bssFacilityId = bssFacility._id;
     bssDeal = ALL_DEALS.find((deal) => deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
 
@@ -127,7 +127,7 @@ context('View dashboard facilities as a maker', () => {
   after(() => {
     cy.deleteGefFacilities(gefDeal._id, ADMIN);
 
-    const bssFacilities = ALL_FACILITIES.filter((facility) => facility.name.includes('BSS'));
+    const bssFacilities = ALL_FACILITIES.filter((facility) => facility.name.includes(CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS));
     bssFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, ADMIN);
     });

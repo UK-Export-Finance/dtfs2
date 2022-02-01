@@ -1,3 +1,5 @@
+const CONSTANTS = require('../../../../../fixtures/constants');
+
 const CASH_FACILITY = {
   coverEndDate: '2021-08-12T00:00:00.000Z',
   coverStartDate: '2021-10-08T00:00:00.000Z',
@@ -8,10 +10,10 @@ const CASH_FACILITY = {
   detailsOther: '',
   interestPercentage: 24,
   monthsOfCover: 10,
-  name: 'mock GEF facility',
+  name: `mock ${CONSTANTS.DEALS.DEAL_TYPE.GEF} facility`,
   paymentType: null,
   shouldCoverStartOnSubmission: true,
-  type: 'Cash',
+  type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH_FACILITY,
   ukefExposure: 1481472,
   updatedAt: 1628770126497.0,
   value: 123456,
@@ -24,7 +26,7 @@ const CASH_FACILITY = {
 };
 
 const BOND_FACILITY = {
-  type: 'Bond',
+  type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND_FACILITY,
   bondIssuer: 'Issuer',
   bondType: 'Advance payment guarantee',
   facilityStage: 'Unissued',
@@ -48,7 +50,7 @@ const BOND_FACILITY = {
   'coverEndDate-day': '20',
   'coverEndDate-month': '10',
   'coverEndDate-year': '2020',
-  name: 'mock BSS facility',
+  name: `mock ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS} facility`,
   submittedAsIssuedDate: Date.now(),
   requestedCoverStartDate: '1606900616652',
   ukefFacilityId: '123',
