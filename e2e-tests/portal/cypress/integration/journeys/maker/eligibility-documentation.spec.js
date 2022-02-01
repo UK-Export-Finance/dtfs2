@@ -46,6 +46,10 @@ context('Eligibility Documentation', () => {
 
   it('should only display upload button when a file has been chosen', () => {
     taskListHeader.itemLink('supporting-documentation').click();
+    eligibilityDocumentation.downloadMIQuestionaireLink().contains('Download Manual Inclusion Questionnaire.docx (21KB)');
+    eligibilityDocumentation.downloadMIQuestionaireLink().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal('/assets/files/Manual%20Inclusion%20Questionnaire%20v2_0.docx');
+    });
     eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
     eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
     eligibilityDocumentation.questionnaireFileInputUploadButton().should('be.visible');
