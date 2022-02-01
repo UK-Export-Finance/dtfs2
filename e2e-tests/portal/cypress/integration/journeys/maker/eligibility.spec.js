@@ -5,14 +5,14 @@ const {
   eligibilityPreview,
 } = require('../../pages');
 const partials = require('../../partials');
-const mockUsers = require('../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Eligibility', () => {
   beforeEach(() => {
     cy.createADeal({
-      ...MAKER_LOGIN,
+      ...BANK1_MAKER1,
       bankDealId: 'someDealId',
       bankDealName: 'someDealName',
     });

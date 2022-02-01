@@ -1,5 +1,5 @@
 const relative = require('../../../relativeURL');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboard } = require('../../../pages');
 const {
@@ -7,14 +7,14 @@ const {
   GEF_DEAL_DRAFT,
 } = require('./fixtures');
 
-const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Dashboard Deals filters - remove all filters', () => {
   const ALL_DEALS = [];
 
   before(() => {
-    cy.deleteGefApplications(BANK1_MAKER1);
-    cy.deleteDeals(BANK1_MAKER1);
+    cy.deleteGefApplications(ADMIN);
+    cy.deleteDeals(ADMIN);
 
     cy.insertOneDeal(BSS_DEAL_MIA, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);

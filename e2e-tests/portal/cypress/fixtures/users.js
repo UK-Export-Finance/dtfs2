@@ -1,4 +1,4 @@
-const MOCK_USERS = require('../../../../../fixtures/mockUsers');
+const MOCK_USERS = require('./mockUsers');
 
 const BANK1_MAKER1 = MOCK_USERS.find((user) =>
   (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));

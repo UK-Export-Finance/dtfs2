@@ -2,8 +2,9 @@ const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillLoanForm = require('./fill-loan-forms');
 const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
@@ -16,7 +17,7 @@ const MOCK_DEAL = {
 };
 
 const goToPage = (deal) => {
-  cy.loginGoToDealPage(MAKER_LOGIN, deal);
+  cy.loginGoToDealPage(BANK1_MAKER1, deal);
   pages.contract.addLoanButton().click();
   partials.taskListHeader.itemLink('dates-and-repayments').click();
 
@@ -35,8 +36,8 @@ context('Loan Dates and Repayments', () => {
   let deal;
 
   beforeEach(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 

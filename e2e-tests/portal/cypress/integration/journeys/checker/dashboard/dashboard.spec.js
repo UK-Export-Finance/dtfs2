@@ -98,7 +98,7 @@ context('View dashboard deals as a checker', () => {
     });
 
     //---------------------------------------------------------------
-    // first deal should be the most recent (with our test data - GEF)
+    // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
     cy.get('table tr').eq(1).as('firstRow');
     const gefDealId = gefDeal._id;

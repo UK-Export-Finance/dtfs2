@@ -1,9 +1,6 @@
 const { dashboardDeals } = require('../../../../pages');
-
-const {
-  MOCK_DEALS,
-  MOCK_USERS,
-} = require('../fixtures');
+const MOCK_USERS = require('../../../../../fixtures/users');
+const { MOCK_DEALS } = require('../fixtures');
 
 const {
   BANK1_MAKER1,

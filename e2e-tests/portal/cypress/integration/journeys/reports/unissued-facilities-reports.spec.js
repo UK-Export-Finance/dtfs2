@@ -2,15 +2,15 @@ import { sub } from 'date-fns';
 import relative from '../../relativeURL';
 
 const { GEF_DEAL_DRAFT } = require('./mocks');
-const mockUsers = require('../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../fixtures/users');
 const CONSTANTS = require('../../../fixtures/constants');
 const { reports } = require('../../pages');
 
-const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Dashboard: Unissued facilities report', () => {
   before(() => {
-    cy.deleteGefApplications(BANK1_MAKER1);
+    cy.deleteGefApplications(ADMIN);
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 90 days left

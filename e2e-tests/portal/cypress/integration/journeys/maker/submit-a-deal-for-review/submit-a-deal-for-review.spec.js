@@ -3,9 +3,9 @@ const {
 } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 // test data we want to set up + work with..
 const dealWithIncompleteBonds = require('./dealWithIncompleteBonds.json');
@@ -36,59 +36,59 @@ context('A maker selects to submit a contract for review from the view-contract 
   const allCreatedFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(dealWithIncompleteBonds, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(dealWithIncompleteBonds, BANK1_MAKER1)
       .then((insertedDeal) => {
         deals.dealWithIncompleteBonds = insertedDeal;
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteBonds;
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           allCreatedFacilities.push(...createdFacilities);
         });
       });
 
-    cy.insertOneDeal(dealWithIncompleteLoans, MAKER_LOGIN)
+    cy.insertOneDeal(dealWithIncompleteLoans, BANK1_MAKER1)
       .then((insertedDeal) => {
         deals.dealWithIncompleteLoans = insertedDeal;
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteLoans;
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           allCreatedFacilities.push(...createdFacilities);
         });
       });
 
-    cy.insertOneDeal(dealWithIncompleteAbout, MAKER_LOGIN)
+    cy.insertOneDeal(dealWithIncompleteAbout, BANK1_MAKER1)
       .then((insertedDeal) => {
         deals.dealWithIncompleteAbout = insertedDeal;
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteAbout;
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           allCreatedFacilities.push(...createdFacilities);
         });
       });
 
-    cy.insertOneDeal(dealWithIncompleteEligibility, MAKER_LOGIN)
+    cy.insertOneDeal(dealWithIncompleteEligibility, BANK1_MAKER1)
       .then((insertedDeal) => {
         deals.dealWithIncompleteEligibility = insertedDeal;
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteEligibility;
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           allCreatedFacilities.push(...createdFacilities);
         });
       });
 
-    cy.insertOneDeal(dealReadyToSubmitForReview, MAKER_LOGIN)
+    cy.insertOneDeal(dealReadyToSubmitForReview, BANK1_MAKER1)
       .then((insertedDeal) => {
         deals.dealReadyToSubmitForReview = insertedDeal;
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealReadyToSubmitForReview;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -99,13 +99,13 @@ context('A maker selects to submit a contract for review from the view-contract 
         });
       });
 
-    cy.insertOneDeal(dealWithNoBondCoverStartDate, MAKER_LOGIN)
+    cy.insertOneDeal(dealWithNoBondCoverStartDate, BANK1_MAKER1)
       .then((insertedDeal) => {
         deals.dealWithNoBondCoverStartDate = insertedDeal;
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithNoBondCoverStartDate;
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -116,13 +116,13 @@ context('A maker selects to submit a contract for review from the view-contract 
         });
       });
 
-    cy.insertOneDeal(dealWithNoLoanCoverStartDate, MAKER_LOGIN)
+    cy.insertOneDeal(dealWithNoLoanCoverStartDate, BANK1_MAKER1)
       .then((insertedDeal) => {
         deals.dealWithNoLoanCoverStartDate = insertedDeal;
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithNoLoanCoverStartDate;
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -136,13 +136,13 @@ context('A maker selects to submit a contract for review from the view-contract 
 
   after(() => {
     allCreatedFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, ADMIN);
     });
   });
 
   describe('When a deal does NOT have Eligibility with `Completed` status', () => {
     it('User cannot proceed to submit the deal for review', () => {
-      cy.login(MAKER_LOGIN);
+      cy.login(BANK1_MAKER1);
       contract.visit(deals.dealWithIncompleteEligibility);
       contract.proceedToReview().should('be.disabled');
     });
@@ -150,7 +150,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
   describe('When a deal has Bonds that are NOT `Completed`', () => {
     it('User cannot proceed to submit the deal for review', () => {
-      cy.login(MAKER_LOGIN);
+      cy.login(BANK1_MAKER1);
       contract.visit(deals.dealWithIncompleteBonds);
       contract.proceedToReview().should('be.disabled');
     });
@@ -158,7 +158,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
   describe('When a deal has Loans that are NOT `Completed`', () => {
     it('User cannot proceed to submit the deal for review', () => {
-      cy.login(MAKER_LOGIN);
+      cy.login(BANK1_MAKER1);
       contract.visit(deals.dealWithIncompleteLoans);
       contract.proceedToReview().should('be.disabled');
     });
@@ -166,7 +166,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
   describe('When a deal has About-supply-contract that is NOT `Completed`', () => {
     it('User cannot proceed to submit the deal for review', () => {
-      cy.login(MAKER_LOGIN);
+      cy.login(BANK1_MAKER1);
       contract.visit(deals.dealWithIncompleteAbout);
       contract.proceedToReview().should('be.disabled');
     });
@@ -176,7 +176,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     it('User can proceed to submit the deal for review', () => {
       const deal = deals.dealReadyToSubmitForReview;
 
-      cy.login(MAKER_LOGIN);
+      cy.login(BANK1_MAKER1);
       contract.visit(deal);
       contract.proceedToReview().should('not.be.disabled');
       contract.proceedToReview().click();
@@ -187,7 +187,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       const deal = deals.dealReadyToSubmitForReview;
 
       // log in, visit a deal, select abandon
-      cy.login(MAKER_LOGIN);
+      cy.login(BANK1_MAKER1);
       contract.visit(deal);
       contract.proceedToReview().click();
 
@@ -202,7 +202,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     it('The ReadyForCheckersApproval button generates an error if no comment has been entered.', () => {
       const deal = deals.dealReadyToSubmitForReview;
       // log in, visit a deal, select abandon
-      cy.login(MAKER_LOGIN);
+      cy.login(BANK1_MAKER1);
       contract.visit(deal);
       contract.proceedToReview().click();
 
@@ -221,7 +221,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       const deal = deals.dealReadyToSubmitForReview;
 
       // log in, visit a deal, select abandon
-      cy.login(MAKER_LOGIN);
+      cy.login(BANK1_MAKER1);
       contract.visit(deal);
       contract.proceedToReview().click();
 
@@ -264,7 +264,7 @@ context('A maker selects to submit a contract for review from the view-contract 
         expect(text.trim()).to.equal('a mandatory comment');
       });
       contractComments.row(0).commentorName().invoke('text').then((text) => {
-        expect(text.trim()).to.equal(`${MAKER_LOGIN.firstname} ${MAKER_LOGIN.surname}`);
+        expect(text.trim()).to.equal(`${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       });
     });
   });
@@ -273,7 +273,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     it('should use todays date for the Bond in Deal page', () => {
       const deal = deals.dealWithNoBondCoverStartDate;
 
-      cy.login(MAKER_LOGIN);
+      cy.login(BANK1_MAKER1);
       contract.visit(deal);
 
       contract.proceedToReview().should('not.be.disabled');
@@ -301,7 +301,7 @@ context('A maker selects to submit a contract for review from the view-contract 
     it('should use todays date for the Loan in Deal page', () => {
       const deal = deals.dealWithNoLoanCoverStartDate;
 
-      cy.login(MAKER_LOGIN);
+      cy.login(BANK1_MAKER1);
       contract.visit(deal);
 
       contract.proceedToReview().should('not.be.disabled');

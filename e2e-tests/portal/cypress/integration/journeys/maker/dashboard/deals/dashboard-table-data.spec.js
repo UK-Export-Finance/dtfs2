@@ -1,7 +1,9 @@
 const relative = require('../../../../relativeURL');
-const { MOCK_DEALS, MOCK_USERS } = require('../fixtures');
 const { dashboardDeals } = require('../../../../pages');
+// MOCK_USERS
 const CONSTANTS = require('../../../../../fixtures/constants');
+const MOCK_USERS = require('../../../../../fixtures/users');
+const { MOCK_DEALS } = require('../fixtures');
 
 const {
   BANK1_MAKER1,
@@ -97,7 +99,7 @@ context('View dashboard deals as a maker', () => {
     });
 
     //---------------------------------------------------------------
-    // first deal should be the most recent (with our test data - GEF)
+    // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
     const firstRow = cy.get('table tr').eq(1);
 

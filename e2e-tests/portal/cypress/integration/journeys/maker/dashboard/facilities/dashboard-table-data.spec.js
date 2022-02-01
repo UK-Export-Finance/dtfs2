@@ -58,30 +58,6 @@ context('View dashboard facilities as a maker', () => {
     });
 
     /*
-     * insert GEF deal and facility by bank 1, maker 1
-     */
-    cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1)
-      .then((gefDeal) => {
-
-        cy.updateGefApplication(gefDeal._id, GEF_DEAL, BANK1_MAKER1)
-          .then((updatedGefDeal) => {
-            ALL_DEALS.push(gefDeal);
-          });
-
-        CASH_FACILITY.dealId = gefDeal._id;
-
-        cy.insertOneGefFacility(CASH_FACILITY, BANK1_MAKER1)
-          .then((gefFacility) => {
-            const { _id } = gefFacility.details;
-
-            cy.updateGefFacility(_id, CASH_FACILITY, BANK1_MAKER1)
-              .then((updatedGefFacility) => {
-                ALL_FACILITIES.push(updatedGefFacility.details);
-              });
-          });
-      });
-
-    /*
      * insert BSS deal and facility by bank 1, maker 1
      */
     cy.insertOneDeal(BSS_DEAL, BANK1_MAKER1).then((bssDeal) => {
@@ -108,16 +84,41 @@ context('View dashboard facilities as a maker', () => {
         ];
       });
     });
+
+    /*
+     * insert GEF deal and facility by bank 1, maker 1
+     */
+    cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1)
+      .then((gefDeal) => {
+
+        cy.updateGefApplication(gefDeal._id, GEF_DEAL, BANK1_MAKER1)
+          .then((updatedGefDeal) => {
+            ALL_DEALS.push(gefDeal);
+          });
+
+        CASH_FACILITY.dealId = gefDeal._id;
+
+        cy.insertOneGefFacility(CASH_FACILITY, BANK1_MAKER1)
+          .then((gefFacility) => {
+            const { _id } = gefFacility.details;
+
+            cy.updateGefFacility(_id, CASH_FACILITY, BANK1_MAKER1)
+              .then((updatedGefFacility) => {
+                ALL_FACILITIES.push(updatedGefFacility.details);
+              });
+          });
+      });
   });
 
   beforeEach(() => {
-    gefFacility = ALL_FACILITIES.find((facility) => facility.name.includes('GEF'));
+    console.log('ALL_FACILITIES ', ALL_FACILITIES);
+    gefFacility = ALL_FACILITIES.find((facility) => facility.name.includes(CONSTANTS.DEALS.DEAL_TYPE.GEF));
     gefFacilityId = gefFacility._id;
-    gefDeal = ALL_DEALS.find((deal) => deal.dealType === 'GEF');
+    gefDeal = ALL_DEALS.find((deal) => deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF);
 
     bssFacility = ALL_FACILITIES.find((facility) => facility.name.includes('BSS'));
     bssFacilityId = bssFacility._id;
-    bssDeal = ALL_DEALS.find((deal) => deal.dealType === 'BSS/EWCS');
+    bssDeal = ALL_DEALS.find((deal) => deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
 
     ALL_BANK1_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK1_MAKER1.bank.id);
     ALL_BANK2_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK2_MAKER2.bank.id);
@@ -132,7 +133,7 @@ context('View dashboard facilities as a maker', () => {
     });
   });
 
-  it('BSS and GEF deals render on the dashboard with correct values', () => {
+  it.only('BSS and GEF deals render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);
     dashboardFacilities.visit();
 
@@ -147,7 +148,7 @@ context('View dashboard facilities as a maker', () => {
     } = dashboardFacilities.row;
 
     //---------------------------------------------------------------
-    // first deal should be the most recent (with our test data - GEF)
+    // first facility should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
     const firstRow = cy.get('table tr').eq(1);
 

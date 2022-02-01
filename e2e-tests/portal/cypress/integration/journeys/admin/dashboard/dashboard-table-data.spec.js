@@ -1,9 +1,9 @@
 const { dashboard } = require('../../../pages');
 
 const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Admin dashboard', () => {
   let deal;
@@ -13,16 +13,16 @@ context('Admin dashboard', () => {
   };
 
   beforeEach(() => {
-    // clear down our test users old deals, and insert a new one - updating our deal object
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(dummyDeal, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.deleteGefApplications(ADMIN);
+
+    cy.insertOneDeal(dummyDeal, BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
-    cy.deleteGefApplications(MAKER_LOGIN);
   });
 
   it('Bank column should appear for admin user', () => {
     // login and go to dashboard
-    cy.login(ADMIN_LOGIN);
+    cy.login(ADMIN);
     dashboard.visit();
 
     // check the fields we understand
