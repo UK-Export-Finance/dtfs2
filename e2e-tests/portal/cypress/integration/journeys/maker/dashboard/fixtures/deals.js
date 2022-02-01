@@ -1,5 +1,5 @@
 const CONSTANTS = require('../../../../../fixtures/constants');
-const MOCK_USERS = require('./users');
+const MOCK_USERS = require('../../../../../fixtures/users');
 
 const {
   BANK1_MAKER1,
