@@ -64,9 +64,23 @@ jobs:
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
       MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
 
+      MULESOFT_API_UKEF_ESTORE_EA_URL: ${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_URL }}
+      MULESOFT_API_UKEF_ESTORE_EA_KEY: ${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_KEY }}
+      MULESOFT_API_UKEF_ESTORE_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_SECRET }}
+
+      ORDNANCE_SURVEY_API_URL: ${{ secrets.ORDNANCE_SURVEY_API_URL }}
+      ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
+
+      MULESOFT_API_UKEF_MDM_EA_URL: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }}
+      MULESOFT_API_UKEF_MDM_EA_KEY: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}
+      MULESOFT_API_UKEF_MDM_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
+
+      COMPANIES_HOUSE_API_URL: ${{ secrets.COMPANIES_HOUSE_API_URL }}
+      COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-      
+
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
 
     steps:
@@ -88,7 +102,7 @@ jobs:
       run: |
         docker-compose exec -T reference-data-proxy npm run api-test
 
-        
+
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
