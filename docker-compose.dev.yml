@@ -215,7 +215,9 @@ services:
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-    entrypoint: npx nodemon --inspect=0.0.0.0:9229 src/index.js -L
+      - ELASTIC_APM_ACTIVE=false
+      - ELASTIC_APM_ENVIRONMENT=development
+    entrypoint: npx nodemon src/index.ts -L
 
   gef-ui:
     build: ./gef-ui
