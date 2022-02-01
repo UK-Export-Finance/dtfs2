@@ -1,12 +1,4 @@
 # Node Alpine Docker Image
-FROM node:14.18.1-alpine3.13 AS image
-
-# Node Setup
-WORKDIR /app
-COPY . .
-RUN npm install
-
-# Node Alpine Docker Image
 FROM node:14.18.1-alpine3.13
 
 # Variables
@@ -16,7 +8,10 @@ ENV SSH_PORT=2222
 
 # Node Setup
 WORKDIR /app
-COPY --from=image /app /app
+COPY package.json .
+RUN npm install
+COPY . .
+#COPY --from=image /app /app
 
 # SSH Setup
 # 1. Artifcats

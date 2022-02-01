@@ -89,8 +89,8 @@ const MOCK_MIA_TASKS = [
         "groupId": 2,
         "title": "Complete an adverse history check",
         "team": {
-          "id": "UNDERWRITER_MANAGERS",
-          "name": "Underwriter managers"
+          "id": "UNDERWRITERS",
+          "name": "Underwriters"
         },
         "status": "To do",
         "assignedTo": {

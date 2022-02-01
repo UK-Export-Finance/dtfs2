@@ -152,7 +152,7 @@ describe('task emails functions', () => {
 
       await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
 
-      const underwriterManagersTeam = api.findOneTeam(mockTask.team.id);
+      const underwritersTeam = api.findOneTeam(mockTask.team.id);
 
       const expectedEmailVars = {
         taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK),
@@ -163,7 +163,7 @@ describe('task emails functions', () => {
 
       expect(api.sendEmail).toHaveBeenCalledWith(
         CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
-        underwriterManagersTeam.email,
+        underwritersTeam.email,
         expectedEmailVars,
       );
     });

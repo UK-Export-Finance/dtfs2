@@ -26,7 +26,7 @@ const portalActivityGenerator = (activityParams) => {
     label: type,
     html: activityHTML,
     facilityType: facility ? `${facility.type} facility` : '',
-    facilityID: facility ? facility.ukefFacilityId : '',
+    ukefFacilityId: facility ? facility.ukefFacilityId : '',
     maker,
     checker,
   };

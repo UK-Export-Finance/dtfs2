@@ -499,8 +499,12 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[2].ukefFacilityId}`));
     });
 
-    it('should not contain already issued facility', () => {
+    it('should not contain already issued facility or submission messages', () => {
       applicationActivities.subNavigationBarActivities().click();
+
+      applicationActivities.activityTimeline().should('not.contain', CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION);
+      applicationActivities.activityTimeline().should('not.contain', CONSTANTS.PORTAL_ACTIVITY_LABEL.MIA_SUBMISSION);
+      applicationActivities.activityTimeline().should('not.contain', CONSTANTS.PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION);
 
       // already issued facility should not appear in the activity list
       applicationActivities.facilityActivityChangedBy(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
