@@ -13,7 +13,7 @@
     "lint:fix": "eslint ./src --ext .ts --fix",
     "start": "node src/index.ts",
     "start:dev": "npx nodemon src/index.ts",
-    "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js",
+    "api-test": "jest --notify --coverage --verbose --config=api-test.jest.config.js",
     "api-test-file": "jest --config=api-test.jest.config.js --verbose --detectOpenHandles --testMatch",
     "api-test-quick": "jest --config=api-test.jest.config.js --runInBand --testTimeout=10000"
   },
