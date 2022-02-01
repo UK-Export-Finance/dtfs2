@@ -3,7 +3,7 @@ const { taskListHeader } = require('../../partials');
 
 const mockUsers = require('../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 context('Eligibility Documentation', () => {
   beforeEach(() => {

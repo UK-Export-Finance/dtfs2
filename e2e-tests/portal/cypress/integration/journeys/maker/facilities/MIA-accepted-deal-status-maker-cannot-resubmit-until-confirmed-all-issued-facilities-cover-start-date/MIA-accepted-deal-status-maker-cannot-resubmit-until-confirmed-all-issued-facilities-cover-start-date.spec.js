@@ -5,7 +5,7 @@ const mockUsers = require('../../../../../fixtures/mockUsers');
 const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
 
 const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker')));
+const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
 
 context('Given a deal that has `Accepted` status with Issued, Unissued, Unconditional and Conditional facilities', () => {
   let deal;

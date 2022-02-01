@@ -4,9 +4,9 @@ const mockUsers = require('../../../../fixtures/mockUsers');
 const { dashboard, selectScheme } = require('../../../pages');
 
 const BANK3_GEF_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK3_GEF_MAKER1'));
-const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')) && user.username === 'BANK1_MAKER1');
 
-context('Create application as gef-only bank and other bank', () => {
+context('Create application as gef-only bank and GEF-and-BSS bank', () => {
   describe('Create application as gef-only bank', () => {
     before(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
@@ -27,7 +27,7 @@ context('Create application as gef-only bank and other bank', () => {
     });
   });
 
-  describe('Create application as all other banks', () => {
+  describe('Create application as GEF-and-BSS banks', () => {
     before(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.login(BANK1_MAKER1);

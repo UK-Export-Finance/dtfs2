@@ -2,7 +2,7 @@ const { contract, editDealName, defaults } = require('../../pages');
 const relative = require('../../relativeURL');
 const mockUsers = require('../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 context('Edit deal name', () => {
   let deal;
@@ -37,7 +37,6 @@ context('Edit deal name', () => {
     cy.login(MAKER_LOGIN);
     contract.visit(deal);
     contract.editDealName().click();
-
 
     editDealName.additionalRefName().type('{selectall}{backspace}asdfasfasf');
     editDealName.submit().click();

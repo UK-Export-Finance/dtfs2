@@ -7,7 +7,7 @@ const {
   GEF_DEAL_DRAFT,
 } = require('./fixtures');
 
-const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 context('Dashboard Deals filters', () => {
   const ALL_DEALS = [];
@@ -98,7 +98,7 @@ context('Dashboard Deals filters', () => {
       // all statuses
       dashboard.filters.panel.form.status.all.label().contains('All statuses');
       dashboard.filters.panel.form.status.all.checkbox().should('exist');
-      dashboard.filters.panel.form.status.all.checkbox()
+      dashboard.filters.panel.form.status.all.checkbox();
 
       // draft
       dashboard.filters.panel.form.status.draft.label().contains(CONSTANTS.DEALS.DEAL_STATUS.DRAFT);

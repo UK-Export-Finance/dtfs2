@@ -6,7 +6,7 @@ const mockUsers = require('../../../fixtures/mockUsers');
 const CONSTANTS = require('../../../fixtures/constants');
 const { reports } = require('../../pages');
 
-const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 context('Dashboard: Unissued facilities report', () => {
   before(() => {

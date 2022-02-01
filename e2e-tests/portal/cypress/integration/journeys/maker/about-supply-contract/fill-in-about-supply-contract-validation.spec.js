@@ -7,7 +7,7 @@ const mockUsers = require('../../../../fixtures/mockUsers');
 // test data we want to set up + work with..
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 context('about-supply-contract', () => {
   let deal;
@@ -111,7 +111,6 @@ context('about-supply-contract', () => {
 
     contractAboutPreview.expectError('Indemnifier name is required');
     contractAboutPreview.expectError('Indemnifier address line 1 is required');
-
 
     // prove the errors show on the about-supplier page
     contractAboutSupplier.visit(deal);

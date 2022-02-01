@@ -3,7 +3,7 @@ const partials = require('../../partials');
 const relative = require('../../relativeURL');
 const mockUsers = require('../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 context('Create deal', () => {
   const TOTAL_FORM_FIELDS = 2;

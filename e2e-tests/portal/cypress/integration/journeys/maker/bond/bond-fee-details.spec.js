@@ -4,7 +4,7 @@ const fillBondForm = require('./fill-bond-forms');
 const assertBondFormValues = require('./assert-bond-form-values');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
@@ -93,7 +93,6 @@ context('Bond Fee Details', () => {
       expect(text.trim()).equal('Incomplete');
     });
   });
-
 
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
     goToBondFeeDetailsPage(deal);

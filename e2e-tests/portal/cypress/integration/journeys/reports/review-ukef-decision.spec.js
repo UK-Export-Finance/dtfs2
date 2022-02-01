@@ -7,7 +7,7 @@ const CONSTANTS = require('../../../fixtures/constants');
 const { reports } = require('../../pages');
 
 context('Dashboard: Review UKEF Decision report', () => {
-  const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+  const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
   const todayAtMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
   let daysInThePast = sub(todayAtMidnight, { days: 25 });
   const dateCreated = format(todayAtMidnight, 'dd LLL yyyy');

@@ -5,7 +5,7 @@ const relative = require('../../../relativeURL');
 const fillLoanForm = require('./fill-loan-forms');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',

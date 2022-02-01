@@ -7,7 +7,7 @@ const {
   GEF_DEAL_DRAFT,
 } = require('./fixtures');
 
-const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 context('Dashboard Deals - main container selected filters - remove a filter', () => {
   const ALL_DEALS = [];
@@ -61,7 +61,7 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
   it('retains other filters when one is removed', () => {
     cy.login(BANK1_MAKER1);
     dashboard.visit();
-    
+
     // toggle to show filters (hidden by default)
     dashboard.filters.showHideButton().click();
 

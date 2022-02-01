@@ -1,7 +1,7 @@
 const { contract, contractAboutSupplier, contractAboutPreview } = require('../../../pages');
 const mockUsers = require('../../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 // test data we want to set up + work with..
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
@@ -96,7 +96,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierCorrespondenceAddress().line3().type('Broomfield');
     contractAboutSupplier.indemnifierCorrespondenceAddress().town().type('Chelmsford');
     contractAboutSupplier.indemnifierCorrespondenceAddress().postcode().type('CM1 4EP');
-
 
     contractAboutSupplier.saveAndGoBack().click();
 

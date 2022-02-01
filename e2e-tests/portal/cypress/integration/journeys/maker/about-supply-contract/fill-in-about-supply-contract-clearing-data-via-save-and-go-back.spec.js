@@ -4,7 +4,7 @@ const {
 
 const mockUsers = require('../../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 // test data we want to set up + work with..
 const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
@@ -32,7 +32,6 @@ context('about-supply-contract', () => {
     contractAboutPreview.indemnifierCorrespondenceAddress().line3().should('not.exist');
     contractAboutPreview.indemnifierCorrespondenceAddress().postcode().should('not.exist');
     contractAboutPreview.indemnifierCorrespondenceAddress().country().should('not.exist');
-
 
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.notLegallyDistinct().click();

@@ -3,8 +3,8 @@ const relative = require('../../../relativeURL');
 const mockUsers = require('../../../../fixtures/mockUsers');
 const CONSTANTS = require('../../../../fixtures/constants');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username !== 'BANK3_GEF_MAKER1'));
+const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.username !== 'BANK3_GEF_CHECKER1'));
 
 const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 

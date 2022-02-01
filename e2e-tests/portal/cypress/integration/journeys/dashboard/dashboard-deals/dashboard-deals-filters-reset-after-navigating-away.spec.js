@@ -4,7 +4,7 @@ const CONSTANTS = require('../../../../fixtures/constants');
 const { header, dashboard } = require('../../../pages');
 const { BSS_DEAL_MIA } = require('./fixtures');
 
-const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 context('Dashboard Deals filters - reset after applying and navigating away', () => {
   const ALL_DEALS = [];

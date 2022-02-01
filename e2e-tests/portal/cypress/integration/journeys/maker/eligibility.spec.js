@@ -7,7 +7,7 @@ const {
 const partials = require('../../partials');
 const mockUsers = require('../../../fixtures/mockUsers');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
 
 context('Eligibility', () => {
   beforeEach(() => {
@@ -54,7 +54,6 @@ context('Eligibility', () => {
       partials.taskListHeader.itemStatus('eligibility-criteria').invoke('text').then((text) => {
         expect(text.trim()).equal('Completed');
       });
-
 
       //---------------------------------------------------------------
       // go back to deal page, check Eligibility status is `completed`
