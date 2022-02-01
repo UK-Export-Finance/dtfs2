@@ -4,10 +4,9 @@ const {
   getTimestamp,
   getDescription,
   getAuthor,
-  add,
 } = require('./activity');
 
-const MOCK_GEF_AIN_DEAL = require('../__mocks__/mock-gef-deal');
+const MOCK_TFM_GEF_AIN_DEAL = require('../__mocks__/mock-TFM-deal-AIN-submitted');
 
 const mockDealRecord = {
   dealIdentifier: '1234',
@@ -41,5 +40,46 @@ describe('getTimestamp()', () => {
   });
   it('Shoule return epoch timestamp without milliseconds', () => {
     expect(getTimestamp(mockDealRecord)).not.toEqual(1643629694000);
+  });
+});
+
+describe('getLabel()', () => {
+  it('Should return AIN deal label', () => {
+    expect(getLabel(mockDealRecord, MOCK_TFM_GEF_AIN_DEAL)).toEqual('Automatic inclusion notice submitted');
+  });
+
+  it('Should return AIN deal label', () => {
+    expect(getLabel(mockDealRecord, MOCK_TFM_GEF_AIN_DEAL)).not.toEqual('Automatic Inclusion Notice submitted');
+  });
+
+  it('Should return facility label', () => {
+    expect(getLabel(mockFacilityRecord, MOCK_TFM_GEF_AIN_DEAL)).toEqual('Facility submitted');
+  });
+});
+
+describe('getAuthor()', () => {
+  it('Should return author object', () => {
+    const mockAuthor = {
+      firstName: 'UKEF test bank (Delegated)',
+      lastName: '9',
+      _id: '',
+    };
+    expect(getAuthor(MOCK_TFM_GEF_AIN_DEAL)).toEqual(mockAuthor);
+  });
+});
+
+describe('getDescription()', () => {
+  it('Should return checker\'s latest comment', () => {
+    expect(getDescription(mockDealRecord, MOCK_TFM_GEF_AIN_DEAL)).toEqual('123123');
+  });
+
+  it('Should return empty string as no comment has been submitted by the checker', () => {
+    const mockDealNoComments = MOCK_TFM_GEF_AIN_DEAL;
+    mockDealNoComments.dealSnapshot.comments = [];
+    expect(getDescription(mockDealRecord, mockDealNoComments)).toEqual('');
+  });
+
+  it('Should return empty string for facility record', () => {
+    expect(getDescription(mockFacilityRecord, MOCK_TFM_GEF_AIN_DEAL)).toEqual('');
   });
 });

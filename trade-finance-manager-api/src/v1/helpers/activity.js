@@ -2,7 +2,6 @@ const CONSTANTS = require('../../constants');
 const api = require('../api');
 
 let acbsResponse;
-let deal;
 
 /**
  * Returns formatted label case string
@@ -21,9 +20,10 @@ const getTimestamp = (record) => (new Date(record.receivedFromACBS).valueOf()) /
 
 /**
  * Returns activity compatible author object
+ * @param {Object} Deal Deal object
  * @returns {Object} Author object
  */
-const getAuthor = () => ({
+const getAuthor = (deal) => ({
   firstName: deal.dealSnapshot.bank.name,
   lastName: deal.dealSnapshot.bank.id,
   _id: '',
@@ -32,9 +32,10 @@ const getAuthor = () => ({
 /**
  * Returns user specific latest comment
  * @param {Object} role User role
+ * @param {Object} Deal Deal object
  * @returns {String} User specific comments
  */
-const getComments = (role) => {
+const getComments = (role, deal) => {
   if (deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS && deal.dealSnapshot.comments) {
     const comments = deal.dealSnapshot.comments.filter((comment) => comment.user.roles.includes(role));
     if (comments.length > 0) {
@@ -54,11 +55,12 @@ const getComments = (role) => {
 /**
  * Returns appropriate activity description from the checker
  * @param {Object} record ACBS response object
+ * @param {Object} Deal Deal object
  * @returns {String} Description
  */
-const getDescription = (record) => {
+const getDescription = (record, deal) => {
   if (record.dealIdentifier) {
-    return getComments(CONSTANTS.ACTIVITY.ROLE.CHECKER);
+    return getComments(CONSTANTS.ACTIVITY.ROLE.CHECKER, deal);
   }
   return '';
 };
@@ -66,9 +68,10 @@ const getDescription = (record) => {
 /**
  * Returns appropriate activity label
  * @param {Object} record ACBS response object
+ * @param {Object} Deal Deal object
  * @returns {String} Label string
  */
-const getLabel = (record) => {
+const getLabel = (record, deal) => {
   const dealType = labelCase(deal.dealSnapshot.submissionType);
 
   if (record.dealIdentifier) {
@@ -83,31 +86,33 @@ const getLabel = (record) => {
 /**
  * Constructs activity object
  * @param {Object} record ACBS response object
+ * @param {Object} Deal Deal object
  * @returns {Object} Activity object
  */
-const getObject = (record) => ({
+const getObject = (record, deal) => ({
   type: CONSTANTS.ACTIVITY.TYPE.ACTIVITY,
   timestamp: getTimestamp(record),
-  author: getAuthor(),
-  text: getDescription(record),
-  label: getLabel(record),
+  author: getAuthor(deal),
+  text: getDescription(record, deal),
+  label: getLabel(record, deal),
 });
 
 /**
  * Constructs ACBS records activities
+ * @param {Object} Deal Deal object
  * @returns {Array} An array of activites object
  */
-const getActivities = async () => {
+const getActivities = async (deal) => {
   try {
     const activites = [];
     // Add deal activity object to the array
     if (acbsResponse.deal) {
-      activites.push(getObject(acbsResponse.deal.deal));
+      activites.push(getObject(acbsResponse.deal.deal, deal));
     }
 
     // Add facility(ies) object(s) to the array
     if (acbsResponse.facilities.length > 0) {
-      acbsResponse.facilities.forEach(({ facilityMaster }) => activites.push(getObject(facilityMaster)));
+      acbsResponse.facilities.forEach(({ facilityMaster }) => activites.push(getObject(facilityMaster, deal)));
     }
     return activites;
   } catch (error) {
@@ -125,9 +130,9 @@ const getActivities = async () => {
 const add = async (acbs) => {
   if (acbs) {
     acbsResponse = acbs;
-    deal = await api.findOneDeal(acbs.portalDealId);
+    const deal = await api.findOneDeal(acbs.portalDealId);
     if (deal) {
-      return getActivities();
+      return getActivities(deal);
     }
     console.error(`Unable to get deal ${acbs.portalDealId} for activites.`);
   }
