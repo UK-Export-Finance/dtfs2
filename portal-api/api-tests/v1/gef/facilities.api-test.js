@@ -220,7 +220,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: {id: 'GBP' },
+        currency: { id: 'GBP' },
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
@@ -251,7 +251,7 @@ describe(baseUrl, () => {
         },
       };
 
-      expected.details.currency = { id: update.currency };
+      expected.details.currency = update.currency;
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);

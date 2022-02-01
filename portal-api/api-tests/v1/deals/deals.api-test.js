@@ -1,6 +1,6 @@
 const wipeDB = require('../../wipeDB');
 const aDeal = require('./deal-builder');
-
+const api = require('../../../src/v1/api');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
