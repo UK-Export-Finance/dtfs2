@@ -14,6 +14,10 @@ context('Dashboard: Unissued facilities report', () => {
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 90 days left
+      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
+      // let daysInThePast = sub(setDateToMidnight, { days: 0 });   
+      const date = new Date(setDateToMidnight).valueOf().toString();
+   
       cy.insertOneGefFacility({
         dealId: deal._id,
         ukefFacilityId: '00000001',
@@ -25,6 +29,7 @@ context('Dashboard: Unissued facilities report', () => {
       }, BANK1_MAKER1);
       cy.updateGefApplication(deal._id, {
         submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
+        submissionDate: date,
       }, BANK1_MAKER1);
     });
 
@@ -33,6 +38,7 @@ context('Dashboard: Unissued facilities report', () => {
       const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
       let daysInThePast = sub(setDateToMidnight, { days: 85 });
       daysInThePast = new Date(daysInThePast).valueOf().toString();
+
       cy.insertOneGefFacility({
         dealId: deal._id,
         ukefFacilityId: '00000002',
@@ -53,6 +59,7 @@ context('Dashboard: Unissued facilities report', () => {
       const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
       let daysInThePast = sub(setDateToMidnight, { days: 95 });
       daysInThePast = new Date(daysInThePast).valueOf().toString();
+
       cy.insertOneGefFacility({
         dealId: deal._id,
         ukefFacilityId: '0000003',
@@ -74,6 +81,7 @@ context('Dashboard: Unissued facilities report', () => {
       cy.login(BANK1_MAKER1);
       cy.visit(relative('/reports'));
     });
+
     it('returns the reports page with unissued facilities', () => {
       reports.allUnissuedFacilities().should('contain', 'You need to issue 3 facilities');
       reports.pastDeadlineUnissuedFacilities().should('contain', 'You have 1 facility that has past the deadline for issuing');
