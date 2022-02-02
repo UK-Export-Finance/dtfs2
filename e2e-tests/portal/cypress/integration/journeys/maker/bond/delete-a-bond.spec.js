@@ -123,7 +123,7 @@ context('Delete a Bond', () => {
   });
 
   it('Deleting a bond via the Deal page should remove the bond and redirect back to the Deal page with a success message', () => {
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     pages.contract.bondTransactionsTableRows().should('have.length', 3);

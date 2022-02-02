@@ -50,7 +50,7 @@ context('Maker fills in bond & loan issue facility forms without requested cover
   });
 
   it('defaults the submitted facilities requested cover start dates to the previously entered issue date', () => {
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 

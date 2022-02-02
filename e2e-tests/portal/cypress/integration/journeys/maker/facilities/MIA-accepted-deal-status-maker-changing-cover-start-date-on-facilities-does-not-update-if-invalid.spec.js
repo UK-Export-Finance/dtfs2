@@ -44,7 +44,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
   });
 
   it('When a maker clicks `confirm start date` on Issued & Unconditional facilities, enters an invalid date, the date should not be saved', () => {
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
 
     pages.contract.visit(deal);
 

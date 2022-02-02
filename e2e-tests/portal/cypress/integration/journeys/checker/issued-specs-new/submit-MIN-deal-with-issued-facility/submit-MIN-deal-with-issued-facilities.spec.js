@@ -57,7 +57,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     // maker adds Issued Facilities and submits deal for review by checker
     //---------------------------------------------------------------
 
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     // complete issue Bond facility form

@@ -112,7 +112,7 @@ context('Delete a Loan', () => {
   });
 
   it('Deleting a loan via the Deal page should remove the loan and redirect back to the Deal page with a success message', () => {
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     pages.contract.loansTransactionsTableRows().should('have.length', 3);

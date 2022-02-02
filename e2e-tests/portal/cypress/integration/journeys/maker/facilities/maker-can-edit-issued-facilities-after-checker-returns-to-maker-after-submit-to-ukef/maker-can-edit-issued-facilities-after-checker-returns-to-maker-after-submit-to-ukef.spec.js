@@ -45,7 +45,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
   });
 
   it('Maker can edit only the issued facilities details that have already been submitted to checker (but NOT submitted to UKEF)', () => {
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     pages.contract.status().invoke('text').then((text) => {

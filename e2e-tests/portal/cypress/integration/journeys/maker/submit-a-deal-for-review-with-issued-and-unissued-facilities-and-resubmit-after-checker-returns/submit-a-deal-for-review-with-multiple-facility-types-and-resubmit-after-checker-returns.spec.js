@@ -222,7 +222,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     // maker submits deal to checker
     //---------------------------------------------------------------
 
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     assertFacilityTableValuesWithDealStatusInDraft();
@@ -246,7 +246,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     // maker views deal
     //---------------------------------------------------------------
 
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     assertFacilityTableValuesWithDealStatusInFurtherMakerInputRequired();

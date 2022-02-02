@@ -44,7 +44,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
   });
 
   it('Maker can `Confirm or change start date` for Issued & Unconditional facilities and only resubmit the deal once all Issued & Unconditional facilities have had their start date confirmed', () => {
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     const issuedSubmittedBond = dealFacilities.bonds.find((b) =>

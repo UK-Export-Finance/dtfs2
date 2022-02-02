@@ -54,7 +54,7 @@ context('Check deal details', () => {
   };
 
   it('Edit links take the Maker back to the relevant form', () => {
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
 
     //---------------------------------------------------------------
     // About supplier
@@ -96,7 +96,7 @@ context('Check deal details', () => {
   });
 
   it('Should only display bond currency if different to deal', () => {
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
 
     goToCheckDealDetailsPage();
 
@@ -127,14 +127,14 @@ context('Check deal details', () => {
 
   it('Should display mandatory criteria box with given mandatory criteria', () => {
     // Older migrated v1 deals do not have mandatory criteria
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     goToCheckDealDetailsPage();
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
   });
 
   it('Should display agents address under criteria 11', () => {
     // Older migrated v1 deals do not have mandatory criteria
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     goToCheckDealDetailsPage();
     pages.eligibilityCriteria.eligibilityAgent(11).should('exist');
     pages.eligibilityCriteria.eligibilityAgent(1).should('not.exist');
@@ -174,14 +174,14 @@ context('Check deal details', () => {
 
     it('Should not display mandatory criteria box when no given mandatory criteria', () => {
       // Older migrated v1 deals do not have mandatory criteria
-      cy.loginBANK1_MAKER1;
+      cy.login(BANK1_MAKER1);
       goToCheckDealDetailsPage();
       pages.contractSubmissionDetails.mandatoryCriteriaBox().should('not.exist');
     });
 
     it('Should display agents address under criteria 1', () => {
       // Older migrated v1 deals do not have mandatory criteria
-      cy.loginBANK1_MAKER1;
+      cy.login(BANK1_MAKER1);
       goToCheckDealDetailsPage();
       pages.eligibilityCriteria.eligibilityAgent(1).should('exist');
       pages.eligibilityCriteria.eligibilityAgent(11).should('not.exist');

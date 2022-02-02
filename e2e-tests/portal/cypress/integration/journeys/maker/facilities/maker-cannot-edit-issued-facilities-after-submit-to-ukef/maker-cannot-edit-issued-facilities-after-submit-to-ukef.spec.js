@@ -49,7 +49,7 @@ context('Checker submits a deal with all facility types to UKEF', () => {
     //---------------------------------------------------------------
     // maker should not be able to edit any facilities
     //---------------------------------------------------------------
-    cy.loginBANK1_MAKER1;
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     dealFacilities.bonds.forEach((bond) => {
