@@ -288,28 +288,6 @@ describe('/v1/deals', () => {
     });
   });
 
-  describe('GET /v1/deals', () => {
-    it('should return count and mapped deals', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-
-      const { status, body } = await as(aBarclaysMaker).get('/v1/deals');
-
-      expect(status).toEqual(200);
-
-      expect(typeof body[0].count).toEqual('number');
-
-      const firstDeal = body[0].deals[0];
-
-      expect(typeof firstDeal._id).toEqual('string');
-      expect(firstDeal.bankInternalRefName).toEqual(newDeal.bankInternalRefName);
-      expect(firstDeal.status).toEqual(newDeal.status);
-      expect(firstDeal.product).toEqual(newDeal.dealType);
-      expect(firstDeal.submissionType).toEqual(newDeal.submissionType);
-      expect(firstDeal.exporter).toEqual(newDeal.exporter.companyName);
-      expect(typeof firstDeal.updatedAt).toEqual('number');
-    });
-  });
-
   describe('POST /v1/deals', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await as().post(newDeal).to('/v1/deals');
