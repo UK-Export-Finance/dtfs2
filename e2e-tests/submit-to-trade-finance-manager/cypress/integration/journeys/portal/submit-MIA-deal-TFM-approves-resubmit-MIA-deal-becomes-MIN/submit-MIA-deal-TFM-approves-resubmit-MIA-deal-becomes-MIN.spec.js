@@ -8,7 +8,7 @@ import MOCK_TFM_USERS from '../../../../../../trade-finance-manager/cypress/fixt
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
 const {
-  BANK1_BANK1_MAKER1,
+  BANK1_MAKER1,
   BANK1_CHECKER1,
   UNDERWRITER_MANAGER,
 } = MOCK_USERS;
