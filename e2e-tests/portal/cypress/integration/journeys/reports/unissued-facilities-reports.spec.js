@@ -23,8 +23,9 @@ context('Dashboard: Unissued facilities report', () => {
         value: 123,
         currency: { id: 'GBP' },
       }, BANK1_MAKER1);
-      cy.updateGefApplication(deal._id, { submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN }, BANK1_MAKER1);
-      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF, BANK1_MAKER1);
+      cy.updateGefApplication(deal._id, {
+        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
+      }, BANK1_MAKER1);
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
@@ -41,8 +42,10 @@ context('Dashboard: Unissued facilities report', () => {
         value: 889988,
         currency: { id: 'EUR' },
       }, BANK1_MAKER1);
-      cy.updateGefApplication(deal._id, { submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN, submissionDate: daysInThePast }, BANK1_MAKER1);
-      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF, BANK1_MAKER1);
+      cy.updateGefApplication(deal._id, {
+        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
+        submissionDate: daysInThePast,
+      }, BANK1_MAKER1);
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
@@ -59,8 +62,10 @@ context('Dashboard: Unissued facilities report', () => {
         value: 223344,
         currency: { id: 'EUR' },
       }, BANK1_MAKER1);
-      cy.updateGefApplication(deal._id, { submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN, submissionDate: daysInThePast }, BANK1_MAKER1);
-      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF, BANK1_MAKER1);
+      cy.updateGefApplication(deal._id, {
+        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
+        submissionDate: daysInThePast,
+      }, BANK1_MAKER1);
     });
   });
 
