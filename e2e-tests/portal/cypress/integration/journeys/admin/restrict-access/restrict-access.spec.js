@@ -3,7 +3,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 
 const validUsers = ['ADMIN', 'UKEF_OPERATIONS'];
-const invalidUsers = ['MAKER', 'CHECKER', 'EDITOR'];
+const invalidUsers = ['BANK1_MAKER1', 'BANK1_CHECKER1', 'EDITOR'];
 
 context('Only allow authorised users to access admin pages', () => {
   context('User admin', () => {

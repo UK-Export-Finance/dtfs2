@@ -13,12 +13,12 @@ context('about-buyer', () => {
   let deal;
 
   before(() => {
-    cy.insertOneDeal(aDealWithAboutBuyerComplete, MAKER_LOGIN)
+    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
 
     contractAboutBuyer.visit(deal);
     contractAboutBuyer.nextPage().click();
