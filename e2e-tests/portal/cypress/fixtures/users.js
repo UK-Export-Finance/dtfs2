@@ -1,4 +1,5 @@
 const MOCK_USERS = require('../../../../utils/mock-data-loader/portal/users');
+const MOCK_TFM_USERS = require('../../../../utils/mock-data-loader/tfm/mocks/users');
 
 const BANK1_MAKER1 = MOCK_USERS.find((user) =>
   (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
@@ -22,7 +23,7 @@ const EDITOR = MOCK_USERS.find((user) =>
   user.username === 'EDITOR');
 
 // TFM 
-const UNDERWRITER_MANAGER = MOCK_USERS.find((user) =>
+const UNDERWRITER_MANAGER = MOCK_TFM_USERS.find((user) =>
   user.teams.includes('UNDERWRITER_MANAGERS'));
 
 module.exports = {
