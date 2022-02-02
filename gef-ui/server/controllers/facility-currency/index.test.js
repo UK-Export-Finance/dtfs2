@@ -45,7 +45,7 @@ describe('GET Facility Currency', () => {
     await facilityCurrency(mockRequest, mockResponse);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-currency.njk', expect.objectContaining({
-      currency: 'EUR',
+      currencyId: 'EUR',
       facilityTypeString: 'cash',
       dealId: '123',
       facilityId: 'xyz',
@@ -68,7 +68,7 @@ describe('Update Facility Currency', () => {
     const mockResponse = MockResponse();
     const mockRequest = MockRequest();
     mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.currency = { id: 'EUR' };
+    mockRequest.body.currencyId = 'EUR';
     api.updateFacility = jest.fn();
 
     await updateFacilityCurrency(mockRequest, mockResponse);
@@ -99,7 +99,7 @@ describe('Update Facility Currency', () => {
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-currency.njk', expect.objectContaining({
       errors: expect.objectContaining({
-        errorSummary: expect.arrayContaining([{ href: '#currency', text: expect.any(String) }]),
+        errorSummary: expect.arrayContaining([{ href: '#currencyId', text: expect.any(String) }]),
       }),
     }));
   });
@@ -109,7 +109,7 @@ describe('Update Facility Currency', () => {
     const mockRequest = MockRequest();
     const updateFacilitySpy = jest.spyOn(api, 'updateFacility').mockImplementationOnce(() => Promise.resolve());
 
-    mockRequest.body.currency = { id: 'EUR' };
+    mockRequest.body.currencyId = 'EUR';
 
     await updateFacilityCurrency(mockRequest, mockResponse);
 
@@ -123,7 +123,7 @@ describe('Update Facility Currency', () => {
     const mockRequest = MockRequest();
     const mockFacilityCurrencyResponse = MockFacilityCurrencyResponse();
     mockRequest.query.status = 'change';
-    mockRequest.body.currency = { id: 'EUR' };
+    mockRequest.body.currencyId = 'EUR';
 
     api.updateFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
     await updateFacilityCurrency(mockRequest, mockResponse);
@@ -136,7 +136,7 @@ describe('Update Facility Currency', () => {
     const mockRequest = MockRequest();
     const mockFacilityCurrencyResponse = MockFacilityCurrencyResponse();
 
-    mockRequest.body.currency = { id: 'EUR' };
+    mockRequest.body.currencyId = 'EUR';
 
     api.updateFacility = () => Promise.resolve(mockFacilityCurrencyResponse);
     await updateFacilityCurrency(mockRequest, mockResponse);
@@ -146,7 +146,7 @@ describe('Update Facility Currency', () => {
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     const mockResponse = MockResponse();
     const mockRequest = MockRequest();
-    mockRequest.body.currency = { id: 'EUR' };
+    mockRequest.body.currencyId = 'EUR';
 
     api.updateFacility = () => Promise.reject();
     await updateFacilityCurrency(mockRequest, mockResponse);

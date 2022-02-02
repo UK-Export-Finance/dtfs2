@@ -1,8 +1,8 @@
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const EXPORTER = require('../../../../fixtures/mockExporter');
 
-const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 const BASE_DEAL = {
   bank: { id: BANK1_MAKER1.bank.id },

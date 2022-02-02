@@ -2,10 +2,9 @@ const {
   header, users, createUser, editUser,
 } = require('../../../pages');
 const relative = require('../../../relativeURL');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
+const { ADMIN } = MOCK_USERS;
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
@@ -18,12 +17,12 @@ context('Admin user updates an existing user', () => {
   };
 
   beforeEach(() => {
-    cy.removeUserIfPresent(userToUpdate, ADMIN_LOGIN);
+    cy.removeUserIfPresent(userToUpdate, ADMIN);
   });
 
   it('Create a user, then edit the user and change their role(s)', () => {
     // login and go to dashboard
-    cy.login(ADMIN_LOGIN);
+    cy.login(ADMIN);
     header.users().click();
 
     // add user
@@ -52,7 +51,7 @@ context('Admin user updates an existing user', () => {
     cy.url().should('eq', relative('/login'));
 
     // go back to admin user and re-activate
-    cy.login(ADMIN_LOGIN);
+    cy.login(ADMIN);
     header.users().click();
     users.row(userToUpdate).username().click();
     editUser.Activate().click();

@@ -1,9 +1,9 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('A maker is informed of a bond\'s status before submitting an issued bond facility with a deal in `Acknowledged by UKEF` status', () => {
   let deal;
@@ -13,7 +13,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
   };
 
   before(() => {
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
@@ -22,7 +22,7 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
 
         const bonds = mockFacilities.filter((f) => f.type === 'Bond');
 
-        cy.createFacilities(dealId, bonds, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.bonds = createdFacilities;
         });
       });
@@ -30,12 +30,12 @@ context('A maker is informed of a bond\'s status before submitting an issued bon
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
   it('Starting to fill in the Issue Bond Facility form should change the Bond status from `Not started` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
-    cy.login({ ...MAKER_LOGIN });
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 

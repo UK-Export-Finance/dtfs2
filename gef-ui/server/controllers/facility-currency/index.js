@@ -13,7 +13,8 @@ const facilityCurrency = async (req, res) => {
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
 
     return res.render('partials/facility-currency.njk', {
-      currency: details.currency.id,
+      // currency: details.currency.id,
+      currencyId: details.currency?.id,
       facilityType: facilityTypeConst,
       facilityTypeString,
       dealId,
@@ -28,7 +29,7 @@ const facilityCurrency = async (req, res) => {
 const updateFacilityCurrency = async (req, res) => {
   const { params, body, query } = req;
   const { dealId, facilityId } = params;
-  const { currency, facilityType } = body;
+  const { currencyId, facilityType } = body;
   const { returnToApplication, status, saveAndReturn } = query;
   const facilityTypeConst = FACILITY_TYPE[facilityType?.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
@@ -39,19 +40,21 @@ const updateFacilityCurrency = async (req, res) => {
   }
 
   if (isTrueSet(saveAndReturn)) {
-    if (!currency) {
+    if (!currencyId) {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     await api.updateFacility(facilityId, {
-      currency,
+      currency: {
+        id: currencyId,
+      },
     });
     return res.redirect(`/gef/application-details/${dealId}`);
   }
 
-  if (!currency) {
+  if (!currencyId) {
     facilityCurrencyErrors.push({
-      errRef: 'currency',
+      errRef: 'currencyId',
       errMsg: `Select a currency of your ${facilityTypeString} facility`,
     });
   }
@@ -59,7 +62,7 @@ const updateFacilityCurrency = async (req, res) => {
   if (facilityCurrencyErrors.length > 0) {
     return res.render('partials/facility-currency.njk', {
       errors: validationErrorHandler(facilityCurrencyErrors),
-      currency,
+      currencyId,
       facilityTypeString,
       dealId,
       facilityId,
@@ -69,7 +72,9 @@ const updateFacilityCurrency = async (req, res) => {
 
   try {
     await api.updateFacility(facilityId, {
-      currency,
+      currency: {
+        id: currencyId,
+      },
     });
 
     if (status === 'change') {
