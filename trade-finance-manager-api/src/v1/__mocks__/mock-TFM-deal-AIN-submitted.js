@@ -1,3 +1,5 @@
+const CONSTANTS = require('../../constants');
+
 const MOCK_TFM_DEAL_AIN_SUBMITTED = {
   _id: '61f94a2427c1a7009cde1b9d',
   dealSnapshot: {
@@ -17,7 +19,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
     bankInternalRefName: 'abc',
     checkerId: '61f29adb6851c10012604bd1',
     createdAt: 1643727396847,
-    dealType: 'GEF',
+    dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
     editedBy: ['61f29adb6851c10012604bce'],
     comments: [
       {
@@ -27,78 +29,6 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
         comment: '123123',
       },
     ],
-    eligibility: {
-      criteria: [
-        {
-          id: 12,
-          name: 'coverStart',
-          text: 'The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period.',
-          errMsg: 'Select if the Maximum Cover period has been exceeded',
-          answer: true,
-        },
-        {
-          id: 13,
-          name: 'noticeDate',
-          text: 'The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed 3 months (or such longer period as may be agreed by UK Export Finance).',
-          errMsg: 'Select if the period between the Inclusion Notice Date and the Requested Cover Start Date exceeds 3 months (or any other period agreed by UK Export Finance)',
-          answer: true,
-        },
-        {
-          id: 14,
-          name: 'facilityLimit',
-          text: 'The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency ) of the facility is not more than the lesser of:',
-          textList: [
-            'the Available Master Guarantee Limit; and',
-            "the Available Obligor's limit",
-          ],
-          errMsg: 'Select if the Covered Facility Limit is not more than the lowest of either of the 2 options',
-          answer: true,
-        },
-        {
-          id: 15,
-          name: 'exporterDeclaration',
-          text: 'The  Bank  has  received  an  Exporter  Declaration  which  confirms  that  the  Exporter  is  not involved  with  any  of  the  following  industry  sectors:  sharp  arms  defence,  nuclear radiological, biological, human cloning, pornography, gambling, tobacco, coal, oil, gas or fossil fuel energy and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect.',
-          errMsg: 'Select if the Bank has received an Exporter Declaration and the Exporter is not involved in any of the listed sectors',
-          answer: true,
-        },
-        {
-          id: 16,
-          name: 'dueDiligence',
-          text: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence  internally  to  any  Relevant  Person  for  approval  as  part  of  its  usual  Bank  Due Diligence.',
-          errMsg: 'Select if the Bank has completed its Due Diligence',
-          answer: true,
-        },
-        {
-          id: 17,
-          name: 'facilityLetter',
-          text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee:',
-          textList: [
-            "has been set in accordance with the Bank's normal pricing policies consistently applied;",
-            'has been set in accordance with the overall minimum pricing requirements, if any, most recently notified by UK Export Finance to the Bank;',
-            '(where the Covered Facility Limit in relation to the Facility is more than the Available Obligor(s) Limit) has been set in accordance with the overall pricing requirements, if any, most recently notified by UK Export Finance to the Bank for the relevant Obligor(s); and',
-            '(in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee cover the whole Cover Period of the Covered Facility',
-          ],
-          errMsg: 'Select if the Facility Letter satisfies the following conditions',
-          answer: true,
-        },
-        {
-          id: 18,
-          name: 'facilityBaseCurrency',
-          text: 'Facility Base Currency satisfies the following conditions: is denominated in an Approved Payment Currency.',
-          errMsg: 'Select if the Facility Base Currency satisfies the condition',
-          answer: true,
-        },
-        {
-          id: 19,
-          name: 'facilityPaymentCurrency',
-          text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee, is denominated in an Approved Payment Currency.',
-          errMsg: 'Select if the Facility Letter satisfies the condition',
-          answer: true,
-        },
-      ],
-      status: 'Completed',
-      updatedAt: 1643727452018,
-    },
     exporter: {
       companiesHouseRegistrationNumber: 'SC467044',
       companyName: 'SCOT ACCESS SERVICES LTD',
@@ -131,7 +61,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
       {
         _id: { $oid: '61f94a4327c1a7009cde1b9e' },
         dealId: { $oid: '61f94a2427c1a7009cde1b9d' },
-        type: 'Cash',
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         name: 'abc',
         shouldCoverStartOnSubmission: true,
@@ -201,10 +131,10 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
         checker: '',
       },
     ],
-    status: 'Submitted',
+    status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.SUBMITTED_TO_UKEF,
     submissionCount: 1,
     submissionDate: '1643727452025',
-    submissionType: 'Automatic Inclusion Notice',
+    submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
     supportingInformation: { status: 'Not started' },
     ukefDealId: '0030184099',
     updatedAt: 1643727452024,
@@ -260,7 +190,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
       indemnifier: { partyUrn: '', partyUrnRequired: false },
     },
     probabilityOfDefault: 1,
-    product: 'GEF',
+    product: CONSTANTS.DEALS.DEAL_TYPE.GEF,
     stage: 'Confirmed',
     estore: {},
     tasks: [
