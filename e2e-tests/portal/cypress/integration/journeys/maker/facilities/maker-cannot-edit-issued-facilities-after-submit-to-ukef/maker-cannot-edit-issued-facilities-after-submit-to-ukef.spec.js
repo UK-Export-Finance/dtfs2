@@ -1,9 +1,12 @@
 const pages = require('../../../../pages');
 const dealWithMultipletypesReadyToSubmitToUkef = require('./deal-multiple-facility-types-ready-to-submit-to-ukef');
-const mockUsers = require('../../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../../fixtures/users');
 
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const {
+  ADMIN,
+  BANK1_MAKER1,
+  BANK1_CHECKER1,
+} = MOCK_USERS;
 
 context('Checker submits a deal with all facility types to UKEF', () => {
   let deal;
@@ -14,8 +17,8 @@ context('Checker submits a deal with all facility types to UKEF', () => {
   };
 
   before(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(dealWithMultipletypesReadyToSubmitToUkef, { ...MAKER_LOGIN })
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(dealWithMultipletypesReadyToSubmitToUkef, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
@@ -25,7 +28,7 @@ context('Checker submits a deal with all facility types to UKEF', () => {
           ...deal.loanTransactions.items,
         ];
 
-        cy.createFacilities(dealId, facilitiesToCreate, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, facilitiesToCreate, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.bonds = createdFacilities.filter((f) => f.type === 'Bond');
           dealFacilities.loans = createdFacilities.filter((f) => f.type === 'Loan');
         });
@@ -36,7 +39,7 @@ context('Checker submits a deal with all facility types to UKEF', () => {
     //---------------------------------------------------------------
     // checker submits deal to UKEF
     //---------------------------------------------------------------
-    cy.login({ ...CHECKER_LOGIN });
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     pages.contract.proceedToSubmit().click();
@@ -46,7 +49,7 @@ context('Checker submits a deal with all facility types to UKEF', () => {
     //---------------------------------------------------------------
     // maker should not be able to edit any facilities
     //---------------------------------------------------------------
-    cy.login({ ...MAKER_LOGIN });
+    cy.loginBANK1_MAKER1;
     pages.contract.visit(deal);
 
     dealFacilities.bonds.forEach((bond) => {

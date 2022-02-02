@@ -1,10 +1,10 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 const { nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('Given a deal that has `Accepted` status with Issued, Unissued, Unconditional and Conditional facilities', () => {
   let deal;
@@ -15,15 +15,15 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
   };
 
   before(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast, { ...MAKER_LOGIN })
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
 
         const { mockFacilities } = MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -35,16 +35,16 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
   it('Maker can `Confirm or change start date` for Issued & Unconditional facilities and only resubmit the deal once all Issued & Unconditional facilities have had their start date confirmed', () => {
-    cy.login({ ...MAKER_LOGIN });
+    cy.loginBANK1_MAKER1;
     pages.contract.visit(deal);
 
     const issuedSubmittedBond = dealFacilities.bonds.find((b) =>

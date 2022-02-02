@@ -1,11 +1,11 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 const { fillAndSubmitIssueBondFacilityForm } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
 const { fillAndSubmitIssueLoanFacilityForm } = require('../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 const dealWithStatus = {
   ...dealWithNotStartedFacilityStatuses,
@@ -21,14 +21,14 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
   };
 
   before(() => {
-    cy.insertOneDeal(dealWithStatus, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealWithStatus, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
 
         const { mockFacilities } = dealWithStatus;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -40,16 +40,16 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
   it('Completing an Issue bond & Issue loan Facility form allows maker to re-submit the deal for review. Deal/facilities should be updated after submitting for review', () => {
-    cy.login({ ...MAKER_LOGIN });
+    cy.loginBANK1_MAKER1;
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('not.be.disabled');
 

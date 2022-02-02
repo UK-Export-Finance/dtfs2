@@ -1,9 +1,8 @@
 const pages = require('../../../pages');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 const dealReadyToSubmitToChecker = require('./dealReadyToSubmitToChecker');
 
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('A maker and checker can submit and re-submit a deal to each other multiple times', () => {
   let deal;
@@ -14,14 +13,14 @@ context('A maker and checker can submit and re-submit a deal to each other mult
   };
 
   before(() => {
-    cy.insertOneDeal(dealReadyToSubmitToChecker, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealReadyToSubmitToChecker, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
 
         const { mockFacilities } = dealReadyToSubmitToChecker;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -33,11 +32,11 @@ context('A maker and checker can submit and re-submit a deal to each other mult
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
@@ -223,7 +222,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     // maker submits deal to checker
     //---------------------------------------------------------------
 
-    cy.login({ ...MAKER_LOGIN });
+    cy.loginBANK1_MAKER1;
     pages.contract.visit(deal);
 
     assertFacilityTableValuesWithDealStatusInDraft();
@@ -236,7 +235,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     // checker returns deal to maker
     //---------------------------------------------------------------
 
-    cy.login({ ...CHECKER_LOGIN });
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     pages.contract.returnToMaker().click();
@@ -247,7 +246,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     // maker views deal
     //---------------------------------------------------------------
 
-    cy.login({ ...MAKER_LOGIN });
+    cy.loginBANK1_MAKER1;
     pages.contract.visit(deal);
 
     assertFacilityTableValuesWithDealStatusInFurtherMakerInputRequired();

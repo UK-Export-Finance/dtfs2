@@ -2,11 +2,9 @@ const { contract, contractDelete, defaults } = require('../../pages');
 const { successMessage } = require('../../partials');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../fixtures/users');
+const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
-
-// test data we want to set up + work with..
-const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
 
 context('A maker selects to abandon a contract from the view-contract page', () => {
   let deal;

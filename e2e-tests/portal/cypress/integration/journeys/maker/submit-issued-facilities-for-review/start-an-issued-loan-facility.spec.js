@@ -1,9 +1,9 @@
 const pages = require('../../../pages');
 const relative = require('../../../relativeURL');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('A maker is informed of a loan\'s status before submitting an issued loan facility with a deal in `Acknowledged by UKEF` status', () => {
   let deal;
@@ -13,7 +13,7 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
   };
 
   before(() => {
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
@@ -22,7 +22,7 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
 
         const loans = mockFacilities.filter((f) => f.type === 'Loan');
 
-        cy.createFacilities(dealId, loans, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, loans, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.loans = createdFacilities;
         });
       });
@@ -30,12 +30,12 @@ context('A maker is informed of a loan\'s status before submitting an issued loa
 
   after(() => {
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
   it('Starting to fill in the Issue Loan Facility form should change the Loan status from `Not started` to `Incomplete` and the Issue Facility link to `Facility issued`', () => {
-    cy.login({ ...MAKER_LOGIN });
+    cy.loginBANK1_MAKER1;
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 

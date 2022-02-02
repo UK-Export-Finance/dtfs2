@@ -2,14 +2,12 @@ const {
   contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
 } = require('../../../pages');
 const partials = require('../../../partials');
-
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
-
-// test data we want to set up + work with..
+const MOCK_USERS = require('../../../../fixtures/users');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
 const { nowPlusDays } = require('../../../../support/utils/dateFuncs');
+
+const { BANK1_MAKER1 } = MOCK_USERS;
+
 
 context('about-buyer', () => {
   let deal;

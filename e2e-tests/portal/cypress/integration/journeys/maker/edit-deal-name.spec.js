@@ -2,7 +2,7 @@ const { contract, editDealName, defaults } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../fixtures/users');
 
-const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('Edit deal name', () => {
   let deal;

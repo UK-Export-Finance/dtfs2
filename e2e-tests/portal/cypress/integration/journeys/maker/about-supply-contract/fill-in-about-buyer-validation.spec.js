@@ -2,10 +2,10 @@ const {
   contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
 } = require('../../../pages');
 const partials = require('../../../partials');
-const MOCK_USERS = require('../../../fixtures/users');
+const MOCK_USERS = require('../../../../fixtures/users');
 const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
 
-const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-buyer', () => {
   let deal;

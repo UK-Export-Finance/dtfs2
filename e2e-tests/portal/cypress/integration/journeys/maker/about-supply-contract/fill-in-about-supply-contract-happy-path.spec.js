@@ -3,11 +3,9 @@ const {
 } = require('../../../pages');
 const partials = require('../../../partials');
 const MOCK_USERS = require('../../../../fixtures/users');
+const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
-
-// test data we want to set up + work with..
-const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 context('about-supply-contract', () => {
   let deal;

@@ -4,10 +4,6 @@ const {
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
-
-const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
-
-// test data we want to set up + work with..
 const dealWithIncompleteBonds = require('./dealWithIncompleteBonds.json');
 const dealWithIncompleteLoans = require('./dealWithIncompleteLoans.json');
 const dealWithIncompleteAbout = require('./dealWithIncompleteAbout.json');
@@ -15,6 +11,8 @@ const dealWithIncompleteEligibility = require('./dealWithIncompleteEligibility.j
 const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview');
 const dealWithNoBondCoverStartDate = require('./dealWithNoBondCoverStartDate');
 const dealWithNoLoanCoverStartDate = require('./dealWithNoLoanCoverStartDate');
+
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('A maker selects to submit a contract for review from the view-contract page', () => {
   const deals = {};
