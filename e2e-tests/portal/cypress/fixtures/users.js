@@ -21,6 +21,10 @@ const UKEF_OPERATIONS = MOCK_USERS.find((user) =>
 const EDITOR = MOCK_USERS.find((user) =>
   user.username === 'EDITOR');
 
+// TFM 
+const UNDERWRITER_MANAGER = MOCK_USERS.find((user) =>
+  user.teams.includes('UNDERWRITER_MANAGERS'));
+
 module.exports = {
   BANK1_MAKER1,
   BANK1_MAKER2,
@@ -29,4 +33,5 @@ module.exports = {
   ADMIN,
   UKEF_OPERATIONS,
   EDITOR,
+  UNDERWRITER_MANAGER,
 };

@@ -7,11 +7,10 @@ import {
   fillAndSubmitIssueBondFacilityForm,
 } from '../../../../../../../portal/cypress/integration/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm';
 
-import MOCK_USERS from '../../../../../../../portal/cypress/fixtures/mockUsers';
+import MOCK_USERS from '../../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_UNISSUED_BOND_READY_TO_SUBMIT from './test-data/dealWithUnissuedBondReadyToSubmit';
 
-const MAKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
-const CHECKER_LOGIN = MOCK_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 // Cypress.config('tfmUrl') returns incorrect url...
 const tfmRootUrl = 'http://localhost:5003';
@@ -26,14 +25,14 @@ context('Portal to TFM deal submission', () => {
   before(() => {
     cy.insertManyDeals([
       MOCK_DEAL_UNISSUED_BOND_READY_TO_SUBMIT(),
-    ], MAKER_LOGIN)
+    ], BANK1_MAKER1)
       .then((insertedDeals) => {
         [deal] = insertedDeals;
         dealId = deal._id;
 
         const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
           [bond] = createdFacilities;
           bondId = bond._id;
@@ -45,7 +44,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
@@ -57,7 +56,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToSubmit().click();
 
@@ -103,7 +102,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker completes bond inssuance form
     //---------------------------------------------------------------
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
     const bondRow = portalPages.contract.bondTransactionsTable.row(bondId);
 
@@ -127,7 +126,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToSubmit().click();
 
@@ -193,7 +192,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal bond status should be updated to `Acknowledged by UKEF`
     //---------------------------------------------------------------
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
 
     bondRow.bondStatus().invoke('text').then((text) => {
