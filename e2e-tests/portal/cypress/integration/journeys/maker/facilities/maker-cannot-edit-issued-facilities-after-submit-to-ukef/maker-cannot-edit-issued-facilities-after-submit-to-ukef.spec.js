@@ -39,7 +39,7 @@ context('Checker submits a deal with all facility types to UKEF', () => {
     //---------------------------------------------------------------
     // checker submits deal to UKEF
     //---------------------------------------------------------------
-    cy.login(BANK1_MAKER1);
+    cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
 
     pages.contract.proceedToSubmit().click();

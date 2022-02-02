@@ -235,7 +235,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     // checker returns deal to maker
     //---------------------------------------------------------------
 
-    cy.login(BANK1_MAKER1);
+    cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
 
     pages.contract.returnToMaker().click();
@@ -245,7 +245,6 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     //---------------------------------------------------------------
     // maker views deal
     //---------------------------------------------------------------
-
     cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 

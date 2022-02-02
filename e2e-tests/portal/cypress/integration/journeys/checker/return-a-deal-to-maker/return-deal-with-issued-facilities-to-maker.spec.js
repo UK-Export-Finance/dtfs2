@@ -49,7 +49,7 @@ context('A checker selects to return a deal (with some issued facilities) to mak
   });
 
   it('Facilities display the correct facility statuses and after returning the deal to maker, facility statuses should be updated', () => {
-    cy.login(BANK1_MAKER1);
+    cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
 
     // expect Unissued Bonds (that need to 'Issue Facility') to have correct status

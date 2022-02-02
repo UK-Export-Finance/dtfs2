@@ -25,7 +25,7 @@ context('Checker tries to submit a deal that has changed/newly issued facilities
   });
 
   it('should throw error and not submit or redirect', () => {
-    cy.login(BANK1_MAKER1);
+    cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
 
 

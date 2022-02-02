@@ -92,7 +92,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     //---------------------------------------------------------------
     // checker submits deal to UKEF
     //---------------------------------------------------------------
-    cy.login(BANK1_MAKER1);
+    cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
 
     // check facility statuses have changed
