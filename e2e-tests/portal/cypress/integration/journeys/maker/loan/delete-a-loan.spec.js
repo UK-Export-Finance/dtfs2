@@ -3,7 +3,7 @@ const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 
-cosnt { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const now = new Date().valueOf();
 

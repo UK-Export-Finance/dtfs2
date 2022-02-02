@@ -6,7 +6,7 @@ const MOCK_USERS = require('../../../fixtures/users');
 const CONSTANTS = require('../../../fixtures/constants');
 const { reports } = require('../../pages');
 
-cosnt { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Dashboard: Review UKEF Decision report', () => {
   const todayAtMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);

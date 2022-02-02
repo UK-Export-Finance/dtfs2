@@ -9,16 +9,16 @@ const BANK1_MAKER2 = MOCK_USERS.find((user) =>
 const BANK2_MAKER2 = MOCK_USERS.find((user) =>
   (user.roles.includes('maker')) && user.username === 'BANK2_MAKER2');
 
-cosnt BANK1_CHECKER1 = MOCK_USERS.find((user) =>
+const BANK1_CHECKER1 = MOCK_USERS.find((user) =>
   (user.roles.includes('checker')) && user.username === 'BANK1_CHECKER1');
 
 const ADMIN = MOCK_USERS.find((user) =>
   user.username === 'ADMIN');
 
-cosnt UKEF_OPERATIONS = MOCK_USERS.find((user) =>
+const UKEF_OPERATIONS = MOCK_USERS.find((user) =>
   user.username === 'UKEF_OPERATIONS');
 
-cosnt EDITOR = MOCK_USERS.find((user) =>
+const EDITOR = MOCK_USERS.find((user) =>
   user.username === 'EDITOR');
 
 module.exports = {

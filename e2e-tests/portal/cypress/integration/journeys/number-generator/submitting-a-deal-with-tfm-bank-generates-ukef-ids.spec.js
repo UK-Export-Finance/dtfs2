@@ -2,7 +2,7 @@ const pages = require('../../pages');
 const MOCK_USERS = require('../../../fixtures/users');
 const dealReadyToSubmit = require('./test-data/dealReadyToSubmit');
 
-cosnt { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 // NOTE: disabled because it fails in github PR actions.
 context.skip('A TFM checker submits a deal', () => {
