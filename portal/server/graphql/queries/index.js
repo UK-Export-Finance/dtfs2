@@ -1,7 +1,7 @@
 const allDealsQuery = require('./all-deals-query');
-const gefFacilitiesQuery = require('./gef-facilities-query');
+const allFacilitiesQuery = require('./all-facilities-query');
 
 module.exports = {
   allDealsQuery,
-  gefFacilitiesQuery,
+  allFacilitiesQuery,
 };

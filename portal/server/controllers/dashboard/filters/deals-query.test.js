@@ -1,8 +1,8 @@
-import { dashboardFiltersQuery } from './query';
+import { dashboardDealsFiltersQuery } from './deals-query';
 import { STATUS } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 
-describe('controllers/dashboard/filters - query', () => {
+describe('controllers/dashboard/filters - deals query', () => {
   const mockUser = {
     _id: '123',
     roles: ['maker'],
@@ -13,7 +13,7 @@ describe('controllers/dashboard/filters - query', () => {
     const mockCreatedByYou = '';
     const mockFilters = [];
 
-    const result = dashboardFiltersQuery(
+    const result = dashboardDealsFiltersQuery(
       mockCreatedByYou,
       mockFilters,
       mockUser,
@@ -35,7 +35,7 @@ describe('controllers/dashboard/filters - query', () => {
       const mockCreatedByYou = 'true';
       const mockFilters = [];
 
-      const result = dashboardFiltersQuery(
+      const result = dashboardDealsFiltersQuery(
         mockCreatedByYou,
         mockFilters,
         mockUser,
@@ -63,7 +63,7 @@ describe('controllers/dashboard/filters - query', () => {
       const mockFilters = [];
       mockUser.roles = ['checker'];
 
-      const result = dashboardFiltersQuery(
+      const result = dashboardDealsFiltersQuery(
         mockCreatedByYou,
         mockFilters,
         mockUser,
@@ -93,7 +93,7 @@ describe('controllers/dashboard/filters - query', () => {
       mockUser.bank.id = '*';
       mockUser.roles = [];
 
-      const result = dashboardFiltersQuery(
+      const result = dashboardDealsFiltersQuery(
         mockCreatedByYou,
         mockFilters,
         mockUser,
@@ -114,7 +114,7 @@ describe('controllers/dashboard/filters - query', () => {
     mockUser.bank.id = '*';
     mockUser.roles = [];
 
-    const result = dashboardFiltersQuery(
+    const result = dashboardDealsFiltersQuery(
       mockCreatedByYou,
       mockFilters,
       mockUser,
@@ -149,7 +149,7 @@ describe('controllers/dashboard/filters - query', () => {
     mockUser.bank.id = '*';
     mockUser.roles = [];
 
-    const result = dashboardFiltersQuery(
+    const result = dashboardDealsFiltersQuery(
       mockCreatedByYou,
       mockFilters,
       mockUser,

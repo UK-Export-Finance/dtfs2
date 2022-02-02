@@ -2,18 +2,22 @@ import { sub } from 'date-fns';
 import relative from '../../relativeURL';
 
 const { GEF_DEAL_DRAFT } = require('./mocks');
-const mockUsers = require('../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../fixtures/users');
 const CONSTANTS = require('../../../fixtures/constants');
 const { reports } = require('../../pages');
 
-const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Dashboard: Unissued facilities report', () => {
   before(() => {
-    cy.deleteGefApplications(BANK1_MAKER1);
+    cy.deleteGefApplications(ADMIN);
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 90 days left
+      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
+      // let daysInThePast = sub(setDateToMidnight, { days: 0 });   
+      const date = new Date(setDateToMidnight).valueOf().toString();
+   
       cy.insertOneGefFacility({
         dealId: deal._id,
         ukefFacilityId: '00000001',
@@ -21,10 +25,12 @@ context('Dashboard: Unissued facilities report', () => {
         name: 'abc-1-def',
         hasBeenIssued: false,
         value: 123,
-        currency: 'GBP',
+        currency: { id: 'GBP' },
       }, BANK1_MAKER1);
-      cy.updateGefApplication(deal._id, { submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN }, BANK1_MAKER1);
-      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF, BANK1_MAKER1);
+      cy.updateGefApplication(deal._id, {
+        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
+        submissionDate: date,
+      }, BANK1_MAKER1);
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
@@ -32,6 +38,7 @@ context('Dashboard: Unissued facilities report', () => {
       const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
       let daysInThePast = sub(setDateToMidnight, { days: 85 });
       daysInThePast = new Date(daysInThePast).valueOf().toString();
+
       cy.insertOneGefFacility({
         dealId: deal._id,
         ukefFacilityId: '00000002',
@@ -39,10 +46,12 @@ context('Dashboard: Unissued facilities report', () => {
         name: 'abc-1-def',
         hasBeenIssued: false,
         value: 889988,
-        currency: 'EUR',
+        currency: { id: 'EUR' },
       }, BANK1_MAKER1);
-      cy.updateGefApplication(deal._id, { submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN, submissionDate: daysInThePast }, BANK1_MAKER1);
-      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF, BANK1_MAKER1);
+      cy.updateGefApplication(deal._id, {
+        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
+        submissionDate: daysInThePast,
+      }, BANK1_MAKER1);
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
@@ -50,6 +59,7 @@ context('Dashboard: Unissued facilities report', () => {
       const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
       let daysInThePast = sub(setDateToMidnight, { days: 95 });
       daysInThePast = new Date(daysInThePast).valueOf().toString();
+
       cy.insertOneGefFacility({
         dealId: deal._id,
         ukefFacilityId: '0000003',
@@ -57,10 +67,12 @@ context('Dashboard: Unissued facilities report', () => {
         name: 'abc-1-def',
         hasBeenIssued: false,
         value: 223344,
-        currency: 'EUR',
+        currency: { id: 'EUR' },
       }, BANK1_MAKER1);
-      cy.updateGefApplication(deal._id, { submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN, submissionDate: daysInThePast }, BANK1_MAKER1);
-      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF, BANK1_MAKER1);
+      cy.updateGefApplication(deal._id, {
+        submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
+        submissionDate: daysInThePast,
+      }, BANK1_MAKER1);
     });
   });
 
@@ -69,6 +81,7 @@ context('Dashboard: Unissued facilities report', () => {
       cy.login(BANK1_MAKER1);
       cy.visit(relative('/reports'));
     });
+
     it('returns the reports page with unissued facilities', () => {
       reports.allUnissuedFacilities().should('contain', 'You need to issue 3 facilities');
       reports.pastDeadlineUnissuedFacilities().should('contain', 'You have 1 facility that has past the deadline for issuing');

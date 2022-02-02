@@ -1,10 +1,8 @@
 const { contract, contractDelete, contractComments } = require('../../pages');
+const MOCK_USERS = require('../../../fixtures/users');
 
-const mockUsers = require('../../../fixtures/mockUsers');
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
-
-// test data we want to set up + work with..
 const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
 
 context('Input is cleaned to avoid Cross Site Scripting', () => {
@@ -13,15 +11,15 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
   before(() => {
     const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
 
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(aDealInStatus('Draft'), MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(aDealInStatus('Draft'), BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
 
   it('Does not allow <script> tag', () => {
     // log in, visit a deal, select abandon
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     contract.visit(deal);
     contract.abandonButton().click();
 

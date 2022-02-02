@@ -14,7 +14,7 @@ const {
  * @example ( 'true', [ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' } )
  * @returns [ { field: 'maker._id', value: ['123'] }, { field: dealType, value: ['BSS/EWCS'] } ]
  */
-const dashboardFiltersQuery = (
+const dashboardDealsFiltersQuery = (
   createdByYou,
   filters,
   user,
@@ -62,5 +62,5 @@ const dashboardFiltersQuery = (
 };
 
 module.exports = {
-  dashboardFiltersQuery,
+  dashboardDealsFiltersQuery,
 };

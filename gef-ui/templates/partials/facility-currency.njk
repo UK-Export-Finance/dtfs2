@@ -47,8 +47,8 @@
           data-cy="hidden-facility-type">
 
         {{ govukRadios({
-          idPrefix: "currency",
-          name: "currency",
+          idPrefix: "currencyId",
+          name: "currencyId",
           fieldset: {
             legend: {
               text: "Select currency of your " + facilityTypeString + " facility",
@@ -59,8 +59,8 @@
               'data-cy': 'main-heading'
             }
           },
-          errorMessage: errors and errors.fieldErrors.currency and {
-            text: errors.fieldErrors.currency.text,
+          errorMessage: errors and errors.fieldErrors.currencyId and {
+            text: errors.fieldErrors.currencyId.text,
             attributes: {
               'data-cy': 'currency-error'
             }
@@ -69,7 +69,7 @@
             {
               value: "GBP",
               text: "UK sterling (GBP)",
-              checked: currency === "GBP",
+              checked: currencyId === "GBP",
               attributes: {
                 'data-cy': 'gbp-radio-button'
               }
@@ -77,7 +77,7 @@
             {
               value: "EUR",
               text: "Euros (EUR)",
-              checked: currency === "EUR",
+              checked: currencyId === "EUR",
               attributes: {
                 'data-cy': 'eur-radio-button'
               }
@@ -85,7 +85,7 @@
             {
               value: "USD",
               text: "US dollars (USD)",
-              checked: currency === "USD",
+              checked: currencyId === "USD",
               attributes: {
                 'data-cy': 'usd-radio-button'
               }
@@ -93,7 +93,7 @@
             {
               value: "JPY",
               text: "Japanese yen (YEN)",
-              checked: currency === "JPY",
+              checked: currencyId === "JPY",
               attributes: {
                 'data-cy': 'yen-checkbox'
               }

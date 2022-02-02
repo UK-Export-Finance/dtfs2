@@ -1,10 +1,8 @@
 const pages = require('../../pages');
-const mockUsers = require('../../../fixtures/mockUsers');
-
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
-
+const MOCK_USERS = require('../../../fixtures/users');
 const dealReadyToSubmit = require('./test-data/dealReadyToSubmit');
+
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 // NOTE: disabled because it fails in github PR actions.
 context.skip('A TFM checker submits a deal', () => {
@@ -16,14 +14,14 @@ context.skip('A TFM checker submits a deal', () => {
   };
 
   before(() => {
-    cy.insertManyDeals([dealReadyToSubmit()], MAKER_LOGIN)
+    cy.insertManyDeals([dealReadyToSubmit()], BANK1_MAKER1)
       .then((insertedDeals) => {
         [deal] = insertedDeals;
         dealId = deal._id;
 
         const { mockFacilities } = dealReadyToSubmit();
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -35,16 +33,16 @@ context.skip('A TFM checker submits a deal', () => {
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
   it('TFM Checker submits a deal; UKEF deal and facility IDs are displayed', () => {
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
     pages.contract.proceedToSubmit().click();
 

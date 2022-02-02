@@ -1,10 +1,13 @@
-const { dashboard } = require('../../../pages');
+const { dashboardDeals } = require('../../../pages');
 const relative = require('../../../relativeURL');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker')));
+const {
+  ADMIN,
+  BANK1_MAKER1,
+  BANK1_CHECKER1,
+} = MOCK_USERS;
 
 const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 
@@ -34,13 +37,13 @@ context('View dashboard deals as a checker', () => {
   const GEF_DEALS = {
     DRAFT: {
       dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-      bank: { id: MAKER_LOGIN.bank.id },
+      bank: { id: BANK1_MAKER1.bank.id },
       bankInternalRefName: 'Draft GEF',
       status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
     },
     READY_FOR_CHECK: {
       dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-      bank: { id: MAKER_LOGIN.bank.id },
+      bank: { id: BANK1_MAKER1.bank.id },
       bankInternalRefName: 'Ready GEF',
       status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
       exporter: {
@@ -50,19 +53,19 @@ context('View dashboard deals as a checker', () => {
   };
 
   before(() => {
-    cy.deleteGefApplications(MAKER_LOGIN);
+    cy.deleteGefApplications(ADMIN);
 
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, BANK1_MAKER1)
       .then((bssDeal) => {
         ALL_DEALS.push(bssDeal);
       });
 
-    cy.insertOneDeal(BSS_DEALS.DRAFT, MAKER_LOGIN);
+    cy.insertOneDeal(BSS_DEALS.DRAFT, BANK1_MAKER1);
 
-    cy.insertOneGefApplication(GEF_DEALS.READY_FOR_CHECK, MAKER_LOGIN)
+    cy.insertOneGefApplication(GEF_DEALS.READY_FOR_CHECK, BANK1_MAKER1)
       .then((gefDeal) => {
-        cy.setGefApplicationStatus(gefDeal._id, GEF_DEALS.READY_FOR_CHECK.status, MAKER_LOGIN)
+        cy.setGefApplicationStatus(gefDeal._id, GEF_DEALS.READY_FOR_CHECK.status, BANK1_MAKER1)
           .then((updatedGefDeal) => {
             ALL_DEALS.push(updatedGefDeal.body);
           });
@@ -71,8 +74,8 @@ context('View dashboard deals as a checker', () => {
 
   it('Only deals with checker status appear on the dashboard. Each deal goes to correct deal URL', () => {
     // login, go to dashboard
-    cy.login(CHECKER_LOGIN);
-    dashboard.visit();
+    cy.login(BANK1_CHECKER1);
+    dashboardDeals.visit();
 
     const gefDeal = ALL_DEALS.find(({ dealType, status }) =>
       dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
@@ -90,15 +93,15 @@ context('View dashboard deals as a checker', () => {
       type,
       updated,
       link,
-    } = dashboard.row;
+    } = dashboardDeals.row;
 
     // should only see 2 deals
-    dashboard.totalItems().invoke('text').then((text) => {
+    dashboardDeals.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(2 items)');
     });
 
     //---------------------------------------------------------------
-    // first deal should be the most recent (with our test data - GEF)
+    // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
     cy.get('table tr').eq(1).as('firstRow');
     const gefDealId = gefDeal._id;
@@ -134,7 +137,7 @@ context('View dashboard deals as a checker', () => {
     cy.url().should('eq', relative(`/gef/application-details/${gefDealId}`));
 
     // go back to the dashboard
-    dashboard.visit();
+    dashboardDeals.visit();
 
     // second deal (BSS)
     cy.get('table tr').eq(2).as('secondRow');

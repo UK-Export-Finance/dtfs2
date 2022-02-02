@@ -2,24 +2,21 @@ const {
   contract, contractAboutSupplier, contractAboutBuyer, contractAboutPreview, defaults,
 } = require('../../../pages');
 const partials = require('../../../partials');
-
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
-
-// test data we want to set up + work with..
+const MOCK_USERS = require('../../../../fixtures/users');
 const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
+
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let deal;
 
   before(() => {
-    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, MAKER_LOGIN)
+    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page
     contract.visit(deal);

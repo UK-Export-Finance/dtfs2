@@ -3,7 +3,7 @@ const passport = require('passport');
 
 const { validate } = require('../role-validator');
 
-const deals = require('./controllers/deal.controller');
+const dealsController = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
 const dealStatus = require('./controllers/deal-status.controller');
 const dealSubmissionDetails = require('./controllers/deal-submission-details.controller');
@@ -20,7 +20,7 @@ const eligibilityCriteria = require('./controllers/eligibilityCriteria.controlle
 const loans = require('./controllers/loans.controller');
 const loanIssueFacility = require('./controllers/loan-issue-facility.controller');
 const bonds = require('./controllers/bonds.controller');
-const facilities = require('./controllers/facilities.controller');
+const facilitiesController = require('./controllers/facilities.controller');
 const bondIssueFacility = require('./controllers/bond-issue-facility.controller');
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
@@ -42,9 +42,7 @@ authRouter.use(passport.authenticate('jwt', { session: false }), cleanXss);
 
 authRouter.use('/gef', gef);
 
-authRouter.route('/deals').post(validate({ role: ['maker'] }), deals.create);
-
-authRouter.route('/deals/import').post(validate({ role: ['data-admin'] }), deals.import);
+authRouter.route('/deals').post(validate({ role: ['maker'] }), dealsController.create);
 
 authRouter.route('/deals/:id/status')
   .get(validate({ role: ['maker', 'checker'] }), dealStatus.findOne)
@@ -79,13 +77,15 @@ authRouter.route('/deals/:id/bond/:bondId/issue-facility').put(validate({ role: 
 
 authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validate({ role: ['maker'] }), bondChangeCoverStartDate.updateBondCoverStartDate);
 
-authRouter.route('/deals/:id/multiple-facilities').post(validate({ role: ['maker'] }), facilities.createMultiple);
+authRouter.route('/deals/:id/multiple-facilities').post(validate({ role: ['maker'] }), facilitiesController.createMultiple);
+
+authRouter.route('/facilities').get(validate({ role: ['maker', 'checker'] }), facilitiesController.queryAllFacilities);
 
 authRouter
   .route('/deals/:id')
-  .get(validate({ role: ['maker', 'checker'] }), deals.findOne)
-  .put(validate({ role: ['maker'] }), deals.update)
-  .delete(validate({ role: ['maker'] }), deals.delete);
+  .get(validate({ role: ['maker', 'checker'] }), dealsController.findOne)
+  .put(validate({ role: ['maker'] }), dealsController.update)
+  .delete(validate({ role: ['maker'] }), dealsController.delete);
 
 authRouter.route('/deals/:id/clone').post(validate({ role: ['maker'] }), dealClone.clone);
 

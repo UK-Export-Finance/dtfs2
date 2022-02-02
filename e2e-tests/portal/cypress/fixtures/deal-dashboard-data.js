@@ -1,7 +1,3 @@
-// NOTE!!
-// these objects are to be pushed straight into the portal-api,
-// so the fields need to go into the correct places in the object..
-
 const now = new Date().valueOf().toString();
 
 module.exports = [
