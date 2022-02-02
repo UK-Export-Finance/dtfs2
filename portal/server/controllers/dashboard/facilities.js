@@ -1,7 +1,6 @@
 const api = require('../../api');
-
-const { PRODUCT, STATUS } = require('../../constants');
-
+const { dashboardFacilitiesDealFiltersQuery } = require('./filters/facilities-deal-query');
+const { submittedFiltersArray } = require('./filters/helpers');
 const {
   getApiData,
   requestParams,
@@ -10,95 +9,112 @@ const {
 
 const PAGESIZE = 20;
 const primaryNav = 'home';
+const tab = 'facilities';
 
-exports.bssFacilities = async (req, res) => {
-  const tab = 'bssFacilities';
-  const { userToken } = requestParams(req);
-  const { user } = req.session;
-  const facilityFilters = [];
+const getAllFacilitiesData = async (
+  userToken,
+  user,
+  sessionFilters,
+  currentPage,
+  res,
+) => {
+  const filtersArray = submittedFiltersArray(sessionFilters);
 
-  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'status', value: STATUS.READY_FOR_APPROVAL, operator: 'eq' });
+  const dealFiltersQuery = dashboardFacilitiesDealFiltersQuery(
+    filtersArray,
+    user,
+  );
 
-  const filters = [...facilityFilters];
+  const filtersQuery = [];
 
-  const { transactions, count } = await getApiData(api.transactions(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
+  const { count, facilities } = await getApiData(api.allFacilities(
+    currentPage * PAGESIZE,
+    PAGESIZE,
+    dealFiltersQuery,
+    filtersQuery,
+    userToken,
+  ), res);
 
-  const facilities = transactions.map((facility) => ({
-    _id: facility.transaction_id,
-    dealId: facility.deal_id,
-    bankId: facility.bankFacilityId || 'Not entered',
-    ukefId: facility.ukefFacilityId,
-    product: PRODUCT.BSS_EWCS,
-    type: facility.transactionType,
-    noticeType: facility.deal_submissionType,
-    value: {
-      amount: facility.value,
-      currency: facility.currency && facility.currency.id,
-    },
-    bankStage: facility.transactionStage,
-    ukefStage: '-', // TODO: DTFS2-4518 when UKEF guarantee stage is ready it needs adding here
-    date: facility.issuedDate,
-    url: `/contract/${facility.deal_id}/${facility.transactionType.toLowerCase()}/${facility.transaction_id}/${facility.transactionType.toLowerCase() === 'bond' ? 'details' : 'guarantee-details'}`,
-  }));
-
-  const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
-    totalItems: count,
-  };
-
-  return res.render('dashboard/facilities.njk', {
+  return {
     facilities,
-    pages,
-    successMessage: getFlashSuccessMessage(req),
-    primaryNav,
-    tab,
-    user: req.session.user,
-  });
+    count,
+    filtersArray,
+  };
 };
+exports.getAllFacilitiesData = getAllFacilitiesData;
 
-exports.gefFacilities = async (req, res) => {
-  const tab = 'gefFacilities';
-  const { userToken } = requestParams(req);
-  const { user } = req.session;
-  const facilityFilters = [];
-
-  if (user.roles.every((role) => role === 'checker')) facilityFilters.push({ field: 'deal.status', value: STATUS.READY_FOR_APPROVAL, operator: 'eq' });
-
-  const filters = [...facilityFilters];
-
-  const { count, facilities: rawFacilities } = await getApiData(api.gefFacilities(req.params.page * PAGESIZE, PAGESIZE, filters, userToken), res);
-
-  const facilities = rawFacilities.map((facility) => ({
-    _id: facility._id,
-    dealId: facility.dealId,
-    bankId: facility.name || 'Not entered',
-    ukefId: facility.ukefFacilityId,
-    product: PRODUCT.GEF,
-    type: facility.type,
-    noticeType: facility.deal.submissionType,
-    value: {
-      amount: facility.value || 0,
-      currency: facility.currency.id || '',
-    },
-    bankStage: facility.hasBeenIssued ? 'Issued' : 'Unissued',
-    ukefStage: '-', // TODO: DTFS2-4518 when UKEF guarantee stage is ready it needs adding here
-    date: facility.submittedAsIssuedDate,
-    url: `/gef/application-details/${facility.dealId}/facilities/${facility._id}/`,
-  }));
-
+const getTemplateVariables = (
+  user,
+  sessionFilters,
+  facilities,
+  count,
+  currentPage,
+) => {
   const pages = {
     totalPages: Math.ceil(count / PAGESIZE),
-    currentPage: parseInt(req.params.page, 10),
+    currentPage: parseInt(currentPage, 10),
     totalItems: count,
   };
 
-  return res.render('dashboard/facilities.njk', {
-    facilities,
-    pages,
-    successMessage: getFlashSuccessMessage(req),
+  const templateVariables = {
+    user,
     primaryNav,
     tab,
-    user: req.session.user,
+    facilities,
+    pages,
+  };
+
+  return templateVariables;
+};
+exports.getTemplateVariables = getTemplateVariables;
+
+const getDataAndTemplateVariables = async (
+  userToken,
+  user,
+  sessionFilters,
+  currentPage,
+  res,
+) => {
+  const { facilities, count, filtersArray } = await getAllFacilitiesData(
+    userToken,
+    user,
+    sessionFilters,
+    currentPage,
+    res,
+  );
+
+  const templateVariables = getTemplateVariables(
+    user,
+    sessionFilters,
+    facilities,
+    count,
+    currentPage,
+    filtersArray,
+  );
+
+  return templateVariables;
+};
+exports.getDataAndTemplateVariables = getDataAndTemplateVariables;
+
+exports.allFacilities = async (req, res) => {
+  const { userToken } = requestParams(req);
+  const { user } = req.session;
+  const currentPage = req.params.page;
+
+  if (Object.keys(req.body).length) {
+    req.session.dashboardFilters = req.body;
+  }
+
+  const templateVariables = await getDataAndTemplateVariables(
+    userToken,
+    user,
+    req.session.dashboardFilters,
+    currentPage,
+    res,
+  );
+
+  return res.render('dashboard/facilities.njk', {
+    ...templateVariables,
+    successMessage: getFlashSuccessMessage(req),
   });
 };

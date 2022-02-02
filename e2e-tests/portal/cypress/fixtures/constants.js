@@ -25,6 +25,8 @@ const SUBMISSION_TYPE = {
 const FACILITY_TYPE = {
   CASH: 'Cash',
   CONTINGENT: 'Contingent',
+  BOND: 'Bond',
+  LOAN: 'Loan',
 };
 
 module.exports = {

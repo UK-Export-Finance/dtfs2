@@ -3,13 +3,15 @@ import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
-import MOCK_PORTAL_USERS from '../../../../../../portal/cypress/fixtures/mockUsers';
+import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_TFM_USERS from '../../../../../../trade-finance-manager/cypress/fixtures/users';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
-const MAKER = MOCK_PORTAL_USERS.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
-const CHECKER = MOCK_PORTAL_USERS.find((user) => (user.roles.includes('checker') && user.username === 'BANK1_CHECKER1'));
-const UNDERWRITER_MANAGER = MOCK_TFM_USERS.find((user) => user.teams.includes('UNDERWRITER_MANAGERS'));
+const {
+  BANK1_MAKER1,
+  BANK1_CHECKER1,
+  UNDERWRITER_MANAGER,
+} = MOCK_USERS;
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -21,14 +23,14 @@ context('Portal to TFM deal submission', () => {
   before(() => {
     cy.insertManyDeals([
       MOCK_MIA_DEAL_READY_TO_SUBMIT(),
-    ], MAKER)
+    ], BANK1_MAKER1)
       .then((insertedDeals) => {
         [deal] = insertedDeals;
         dealId = deal._id;
 
         const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           createdFacilities.forEach((facility) => {
             const { type } = facility;
 
@@ -44,11 +46,11 @@ context('Portal to TFM deal submission', () => {
       });
   });
 
-  it('Checker submits an MIA deal, TFM approves, maker/checker resubmit; Deal then becomes MIN', () => {
+  it('Checker submits an MIA deal, TFM approves, BANK1_MAKER1/checker resubmit; Deal then becomes MIN', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
-    cy.login(MAKER);
+    cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
@@ -72,7 +74,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
-    cy.login(CHECKER);
+    cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
 
     portalPages.contract.status().invoke('text').then((text) => {
@@ -140,9 +142,9 @@ context('Portal to TFM deal submission', () => {
     tfmPages.managersDecisionPage.submitButton().click();
 
     //---------------------------------------------------------------
-    // portal maker confirms no need to change cover start dates
+    // portal BANK1_MAKER1 confirms no need to change cover start dates
     //---------------------------------------------------------------
-    cy.login(MAKER);
+    cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
 
     const bondRow = portalPages.contract.bondTransactionsTable.row(bondId);
@@ -156,7 +158,7 @@ context('Portal to TFM deal submission', () => {
     portalPages.facilityConfirmCoverStartDate.submit().click();
 
     //---------------------------------------------------------------
-    // portal maker submits deal for review
+    // portal BANK1_MAKER1 submits deal for review
     //---------------------------------------------------------------
     portalPages.contract.proceedToReview().click();
     portalPages.contractReadyForReview.comments().type('go');
@@ -165,7 +167,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
-    cy.login(CHECKER);
+    cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
 
     portalPages.contract.proceedToSubmit().click();

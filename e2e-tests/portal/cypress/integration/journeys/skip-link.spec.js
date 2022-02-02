@@ -1,12 +1,12 @@
 const partials = require('../partials');
 const relative = require('../relativeURL');
-const mockUsers = require('../../fixtures/mockUsers');
+const MOCK_USERS = require('../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Skip link should take user to the main content of a page', () => {
   it('When a user keyboard tabs from the html body, skip link should be focused and take the user to the page\'s #main-content', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // note:

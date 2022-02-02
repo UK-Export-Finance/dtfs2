@@ -12,11 +12,6 @@ const page = {
     type: (id) => cy.get(`[data-cy="deal__submissionType--${id}"]`),
     updated: (id) => cy.get(`[data-cy="deal__updated--${id}"]`),
   },
-  confirmDealsPresent: (deals) => {
-    deals.forEach((deal) => {
-      cy.get(`[data-cy="deal__exporter--${deal._id}"]`);
-    });
-  },
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),
   next: () => cy.get('[data-cy="Next"]'),
