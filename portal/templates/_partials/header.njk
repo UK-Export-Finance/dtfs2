@@ -1,42 +1,14 @@
-{% from "govuk/components/header/macro.njk" import govukHeader %}
+{% import './header-component/header-component.njk' as headerComponent %}
+{% import './header-component/header-component-no-user.njk' as headerComponentNoUser %}
 
 {% if user %}
 
-{# set profileLink = urlencode(user._id) #}
+  {# set profileLink = urlencode(user._id) #}
 
-{{ govukHeader({
-  homepageUrl: "https://www.gov.uk",
-  serviceName: "Get a guarantee for export finance",
-  serviceUrl: "/dashboard",
-  navigation: [
-    {
-      href: "/user/" + user._id,
-      text: user.username,
-      active: true
-    },
-    {
-      href: "/user/" + user._id,
-      text: "Profile"
-    },
-    {
-      href: "/logout",
-      text: "Sign out"
-    }
-  ],
-  attributes: {
-    "data-cy": "header"
-  }
-}) }}
+  {{headerComponent.render(user)}}
 
 {% else %}
 
-{{ govukHeader({
-  homepageUrl: "https://www.gov.uk",
-  serviceName: "Get a guarantee for export finance",
-  serviceUrl: "/dashboard",
-  attributes: {
-    "data-cy": "header"
-  }
-}) }}
+  {{headerComponentNoUser.render()}}
 
 {% endif %}
