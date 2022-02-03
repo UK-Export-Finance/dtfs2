@@ -1,4 +1,5 @@
 const page = {
+  eligibilityCriteriaTitle: () => cy.get('[data-cy="eligibility"]'),
   eligibilityCriteriaItems: () => cy.get('[data-cy="eligibility-criteria-item"]'),
   eligibilityCriteriaItemsRadioButtons: {
     trueInput: () => cy.get('[data-cy="criteria-true"]'),
