@@ -258,20 +258,20 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/CLI@v1.0.0
       with:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
 
     - name: Create slot ${{ github.sha }}
-      uses: azure/cli@v1.0.0
+      uses: azure/CLI@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-trade-finance-manager-api
 
     - name: Swap slot ${{ github.sha }} into production
-      uses: azure/cli@v1.0.0
+      uses: azure/CLI@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot swap   --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }} --action swap
@@ -279,7 +279,7 @@ jobs:
     - name: Delete slot ${{ github.sha }}
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: azure/cli@v1.0.0
+      uses: azure/CLI@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }}
