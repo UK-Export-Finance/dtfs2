@@ -501,8 +501,10 @@ const getFunctionsAPI = async (type = 'ACBS', url = '') => {
     });
     return response.data;
   } catch (err) {
-    console.error(`Unable to getFunctionsAPI for ${modifiedUrl}`, { err });
-    return err?.response?.data ? err.response.data : err;
+    console.error(`Unable to getFunctionsAPI for ${modifiedUrl}`);
+    return err?.response?.data
+      ? err.response.data
+      : err;
   }
 };
 

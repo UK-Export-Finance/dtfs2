@@ -9,9 +9,6 @@
 * case err object does not have expected properties due to network connection, SSL verification or other issues.
 */
 const axios = require('axios');
-const activity = require('./helpers/activity');
-const { isHttpErrorStatus } = require('./helpers/http');
-const CONSTANTS = require('./constants');
 
 require('dotenv').config();
 
@@ -65,12 +62,6 @@ const putToACBS = async (apiRef, acbsInput, etag) => {
           : err,
       },
     }));
-
-    if (CONSTANTS.ACTIVITY.ACCEPTED_ENDPOINTS.includes(apiRef)
-    && acbsInput._id
-    && !isHttpErrorStatus(response.status)) {
-      activity.add(acbsInput._id, response, apiRef, true);
-    }
     return response;
   }
   return {};
@@ -99,12 +90,6 @@ const postToACBS = async (apiRef, acbsInput) => {
           : err,
       },
     }));
-    if (CONSTANTS.ACTIVITY.ACCEPTED_ENDPOINTS.includes(apiRef)
-    && acbsInput._id
-    && !isHttpErrorStatus(response.status)) {
-      await activity.add(acbsInput._id, response, apiRef);
-    }
-
     return response;
   }
   return {};
