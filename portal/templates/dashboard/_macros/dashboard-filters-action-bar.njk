@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% macro render(params) %}
+  {% set renderCreatedByYou = params.renderCreatedByYou %}
   {% set createdByYou = params.createdByYou %}
   {% set selectedFilters = params.selectedFilters %}
 
@@ -12,40 +13,42 @@
         <div class="moj-action-bar__filter"></div>
       </div>
     
-      <div class="govuk-grid-column-one-half">
+      {% if renderCreatedByYou %}
+        <div class="govuk-grid-column-one-half">
 
-        <form method="POST" autocomplete="off" class="created-by-you-form">
-          {{ govukCheckboxes({
-            name: "createdByYou",
-            classes: "govuk-checkboxes--small created-by-you",
-            items: [
-              {
-                value: "true",
-                text: "Created by you",
-                checked: createdByYou,
-                label: {
-                  classes: 'govuk-!-padding-right-0'
-                },
-                attributes: {
-                  "data-cy": "created-by-you-checkbox",
-                  'onChange': 'this.form.submit()'
+          <form method="POST" autocomplete="off" class="created-by-you-form">
+            {{ govukCheckboxes({
+              name: "createdByYou",
+              classes: "govuk-checkboxes--small created-by-you",
+              items: [
+                {
+                  value: "true",
+                  text: "Created by you",
+                  checked: createdByYou,
+                  label: {
+                    classes: 'govuk-!-padding-right-0'
+                  },
+                  attributes: {
+                    "data-cy": "created-by-you-checkbox",
+                    'onChange': 'this.form.submit()'
+                  }
                 }
-              }
-            ]
-          }) }}
-          <div class="moj-button-action">
-            {{ govukButton({
-              text: 'Submit',
-              classes: 'moj-js-hidden text-align-right',
-              attributes: {
-                'data-cy': 'created-by-you-submit'
-              }
+              ]
             }) }}
-          </div>
+            <div class="moj-button-action">
+              {{ govukButton({
+                text: 'Submit',
+                classes: 'moj-js-hidden text-align-right',
+                attributes: {
+                  'data-cy': 'created-by-you-submit'
+                }
+              }) }}
+            </div>
 
-        </form>
+          </form>
 
-      </div>
+        </div>
+      {% endif %}
     </div>
 
     {% if selectedFilters.length %}

@@ -1,4 +1,4 @@
-{% macro pagination(totalPages, currentPage, totalItems, paginationRoot, queryString) %}
+{% macro pagination(totalPages, currentPage, totalItems, paginationRoute, queryString) %}
 
   <div class="breadcrumbs" role="navigation">
 
@@ -11,11 +11,11 @@
 
           {% if currentPage !== 0 %}
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a data-cy="First" href="{{paginationRoot}}/0{{queryString}}" class="govuk-link">First</a>
+              <a data-cy="First" href="{{paginationRoute}}/0{{queryString}}" class="govuk-link">First</a>
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a data-cy="Previous" href="{{paginationRoot}}/{{currentPage-1}}{{queryString}}" class="govuk-link">Previous</a>
+              <a data-cy="Previous" href="{{paginationRoute}}/{{currentPage-1}}{{queryString}}" class="govuk-link">Previous</a>
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
@@ -27,7 +27,7 @@
           {% for i in range(currentPage - 5, totalPages) %}
             {% if loop.index < 10 and i + 1 > 0 %}
               <li class="govuk-body govuk-!-margin-bottom-3 {%if i === currentPage %}active{% endif %}">
-                <a data-cy="Page_{{i}}" href="{{paginationRoot}}/{{i}}{{queryString}}" class="govuk-link">{{ i + 1 }}</a>
+                <a data-cy="Page_{{i}}" href="{{paginationRoute}}/{{i}}{{queryString}}" class="govuk-link">{{ i + 1 }}</a>
               </li>
             {% endif %}
           {%- endfor %}
@@ -38,11 +38,11 @@
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a data-cy="Next" href="{{paginationRoot}}/{{currentPage+1}}{{queryString}}" class="govuk-link">Next</a>
+              <a data-cy="Next" href="{{paginationRoute}}/{{currentPage+1}}{{queryString}}" class="govuk-link">Next</a>
             </li>
 
             <li class="govuk-body govuk-!-margin-bottom-3">
-              <a data-cy="Last" href="{{paginationRoot}}/{{totalPages-1}}{{queryString}}" class="govuk-link">Last</a>
+              <a data-cy="Last" href="{{paginationRoute}}/{{totalPages-1}}{{queryString}}" class="govuk-link">Last</a>
             </li>
           {% endif %}
 
