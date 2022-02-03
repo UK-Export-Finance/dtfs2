@@ -1,17 +1,17 @@
-const relative = require('../../relativeURL');
+const relative = require('../relativeURL');
 
-import page from '../../pages/header';
+import page from '../pages/header';
 
-const { dashboard } = require('../../pages');
+const { dashboardDeals } = require('../pages');
 
-const mockUsers = require('../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../fixtures/users');
 
-const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Portal GOVUK header displays correctly', () => {
   before(() => {
     cy.login(BANK1_MAKER1);
-    dashboard.visit();
+    dashboardDeals.visit();
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 

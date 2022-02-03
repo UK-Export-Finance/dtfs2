@@ -2,7 +2,7 @@ import relative from './relativeURL';
 import CREDENTIALS from '../fixtures/credentials.json';
 import pageBanner from './pages/page-banner';
 
-context('Check GEF GOVUK banner displays correctly', () => {
+context('Check GEF GOVUK header displays correctly', () => {
   let dealId;
 
   before(() => {
