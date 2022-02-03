@@ -1,25 +1,22 @@
 const {
   contractAboutSupplier, contractAboutPreview,
 } = require('../../../pages');
-
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
-
-// test data we want to set up + work with..
+const MOCK_USERS = require('../../../../fixtures/users');
 const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
+
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let deal;
 
   before(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('A maker picks up a deal with every field filled in and starts deselecting "separate indemnifier correspondence address" etc.', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
 
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.indemnifierCorrespondenceAddressNotDifferent().click();

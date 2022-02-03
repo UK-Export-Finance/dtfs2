@@ -2,25 +2,22 @@ const {
   contractAboutBuyer, contractAboutFinancial, contractAboutPreview,
 } = require('../../../pages');
 const partials = require('../../../partials');
-
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
-
-// test data we want to set up + work with..
+const MOCK_USERS = require('../../../../fixtures/users');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
 const { nowPlusDays } = require('../../../../support/utils/dateFuncs');
+
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-buyer', () => {
   let deal;
 
   before(() => {
-    cy.insertOneDeal(aDealWithAboutBuyerComplete, MAKER_LOGIN)
+    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
 
     contractAboutBuyer.visit(deal);
     contractAboutBuyer.nextPage().click();

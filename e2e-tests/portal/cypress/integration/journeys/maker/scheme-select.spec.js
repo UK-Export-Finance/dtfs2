@@ -1,15 +1,14 @@
 const pages = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
+const MOCK_USERS = require('../../../fixtures/users');
 
-const mockUsers = require('../../../fixtures/mockUsers');
-
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Select a scheme', () => {
   beforeEach(() => {
-    cy.login(MAKER_LOGIN);
-    pages.dashboard.createNewSubmission().click();
+    cy.login(BANK1_MAKER1);
+    pages.dashboardDeals.createNewSubmission().click();
   });
 
   it('should display validation error if submitted without confirming a scheme', () => {

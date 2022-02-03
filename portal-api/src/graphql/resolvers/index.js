@@ -1,10 +1,10 @@
 const allDeals = require('./query-all-deals');
-const gefFacilities = require('./query-gef-facilities');
+const allFacilities = require('./query-all-facilities');
 
 const resolvers = {
   Query: {
     allDeals,
-    gefFacilities,
+    allFacilities,
   },
 };
 

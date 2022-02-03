@@ -1,51 +1,59 @@
-const { dashboard } = require('../../../../pages');
+const { dashboardDeals } = require('../../../../pages');
+const MOCK_USERS = require('../../../../../fixtures/users');
+const { MOCK_DEALS } = require('../fixtures');
 
-const mockUsers = require('../../../../../fixtures/mockUsers');
+const {
+  BANK1_MAKER1,
+  ADMIN,
+} = MOCK_USERS;
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const { BSS_DEAL } = MOCK_DEALS;
 
-const twentyOneDeals = require('../../../../../fixtures/deal-dashboard-data');
-
-context('Dashboard Deals pagination controls', () => {
+context('Dashboard deals pagination', () => {
   let deals;
 
   before(() => {
-    cy.deleteGefApplications(MAKER_LOGIN);
-    cy.deleteDeals(MAKER_LOGIN);
+    cy.deleteGefApplications(ADMIN);
+    cy.deleteDeals(ADMIN);
 
-    cy.insertManyDeals(twentyOneDeals, MAKER_LOGIN)
+    const twentyOneDeals = Array.from(Array(21), () => BSS_DEAL);
+
+    cy.insertManyDeals(twentyOneDeals, BANK1_MAKER1)
       .then((insertedDeals) => { deals = insertedDeals; });
   });
 
-  it('Dashboard Deals displays 20 results per page, total number of items and working First/Previous/Next/Last links', () => {
+  it('displays 20 results per page, total number of items and working First/Previous/Next/Last links', () => {
     // login and go to the dashboard
-    cy.login(MAKER_LOGIN);
-    dashboard.visit();
+    cy.login(BANK1_MAKER1);
+    dashboardDeals.visit();
 
-    // deals will be shown in update order, so expect them upsidedown..
-    const page1 = deals.slice(1, 21).reverse();
-    const page2 = [deals[0]];
+    // test amount of rows
+    dashboardDeals.rows().should('have.length', 20);
 
-    // test ininital dashboard page
-    dashboard.confirmDealsPresent(page1);
-    dashboard.totalItems().invoke('text').then((text) => {
+    // test pagination
+    dashboardDeals.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal('(21 items)');
     });
 
-    // prove the Next button
-    dashboard.next().click();
-    dashboard.confirmDealsPresent(page2);
+    dashboardDeals.first().should('not.exist');
+    dashboardDeals.previous().should('not.exist');
+    dashboardDeals.next().should('exist');
+    dashboardDeals.last().should('exist');
 
-    // prove the Previous button
-    dashboard.previous().click();
-    dashboard.confirmDealsPresent(page1);
+    // go to the next/last page
+    dashboardDeals.next().click();
 
-    // prove the Last button
-    dashboard.last().click();
-    dashboard.confirmDealsPresent(page2);
+    // test amount of rows
+    dashboardDeals.rows().should('have.length', 1);
 
-    // prove the First button
-    dashboard.first().click();
-    dashboard.confirmDealsPresent(page1);
+    // test pagination
+    dashboardDeals.totalItems().invoke('text').then((text) => {
+      expect(text.trim()).equal('(21 items)');
+    });
+
+    dashboardDeals.first().should('exist');
+    dashboardDeals.previous().should('exist');
+    dashboardDeals.next().should('not.exist');
+    dashboardDeals.last().should('not.exist');
   });
 });

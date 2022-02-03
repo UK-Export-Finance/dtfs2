@@ -1,12 +1,10 @@
 const { contract, contractDelete, defaults } = require('../../pages');
 const { successMessage } = require('../../partials');
 const relative = require('../../relativeURL');
-const mockUsers = require('../../../fixtures/mockUsers');
-
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
-
-// test data we want to set up + work with..
+const MOCK_USERS = require('../../../fixtures/users');
 const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
+
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('A maker selects to abandon a contract from the view-contract page', () => {
   let deal;
@@ -14,14 +12,14 @@ context('A maker selects to abandon a contract from the view-contract page', () 
   before(() => {
     const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
 
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(aDealInStatus('Draft'), MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(aDealInStatus('Draft'), BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     contract.visit(deal);
     contract.abandonButton().click();
 
@@ -40,7 +38,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
   it('The abandon button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     contract.visit(deal);
     contract.abandonButton().click();
 
@@ -53,9 +51,9 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     contractDelete.expectError('Comment is required when abandoning a deal.');
   });
 
-  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard.', () => {
+  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     contract.visit(deal);
     contract.abandonButton().click();
 

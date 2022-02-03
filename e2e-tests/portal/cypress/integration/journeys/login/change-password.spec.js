@@ -3,9 +3,9 @@ const {
 } = require('../../pages');
 const relative = require('../../relativeURL');
 
-const mockUsers = require('../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../fixtures/users');
 
-const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
+const { ADMIN } = MOCK_USERS;
 
 context('Admin user creates a new user; the new user updates their password.', () => {
   const userToCreate = {
@@ -18,12 +18,12 @@ context('Admin user creates a new user; the new user updates their password.', (
   };
 
   beforeEach(() => {
-    cy.removeUserIfPresent(userToCreate, ADMIN_LOGIN);
+    cy.removeUserIfPresent(userToCreate, ADMIN);
   });
 
   it('Create a user, then edit the user and change their password, triggering validation en route', () => {
     // login and go to dashboard
-    cy.login(ADMIN_LOGIN);
+    cy.login(ADMIN);
     header.users().click();
 
     // add user
@@ -43,7 +43,6 @@ context('Admin user creates a new user; the new user updates their password.', (
     // shouldn't be failing but, if this hasn't worked no point in flagging
     //  any other failure further down...
     cy.url().should('eq', relative('/admin/users/'));
-
 
     // log in as our user + try to change the password to an invalid password..
     cy.login(userToCreate);

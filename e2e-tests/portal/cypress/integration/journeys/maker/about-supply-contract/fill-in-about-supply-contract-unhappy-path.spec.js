@@ -1,10 +1,8 @@
 const { contract, contractAboutSupplier, contractAboutPreview } = require('../../../pages');
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
-
-// test data we want to set up + work with..
+const MOCK_USERS = require('../../../../fixtures/users');
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
+
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let deal;
@@ -24,13 +22,13 @@ context('about-supply-contract', () => {
       }
     };
 
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, selecting every option that requires more data.', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
     contract.visit(deal);

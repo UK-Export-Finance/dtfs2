@@ -1,10 +1,9 @@
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const now = new Date().valueOf();
 
@@ -99,15 +98,15 @@ context('Delete a Bond', () => {
   };
 
   beforeEach(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
 
         const { mockFacilities } = MOCK_DEAL;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
 
           dealFacilities.bonds = bonds;
@@ -118,13 +117,13 @@ context('Delete a Bond', () => {
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
       if (facility._id !== bondToDeleteId) {
-        cy.deleteFacility(facility._id, MAKER_LOGIN);
+        cy.deleteFacility(facility._id, BANK1_MAKER1);
       }
     });
   });
 
   it('Deleting a bond via the Deal page should remove the bond and redirect back to the Deal page with a success message', () => {
-    cy.login({ ...MAKER_LOGIN });
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     pages.contract.bondTransactionsTableRows().should('have.length', 3);

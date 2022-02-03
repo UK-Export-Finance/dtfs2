@@ -2,13 +2,12 @@ const pages = require('../../../pages');
 const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
 const fullyCompletedDeal = require('../fixtures/dealFullyCompleted');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const goToCloneDealPage = (deal) => {
-  cy.loginGoToDealPage(MAKER_LOGIN, deal);
+  cy.loginGoToDealPage(BANK1_MAKER1, deal);
   pages.contract.cloneDealLink().click();
   cy.url().should('include', '/clone/before-you-start');
 
@@ -30,15 +29,15 @@ context('Clone a deal', () => {
   };
 
   beforeEach(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(fullyCompletedDeal, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(fullyCompletedDeal, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
 
         const { mockFacilities } = fullyCompletedDeal;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -50,11 +49,11 @@ context('Clone a deal', () => {
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 

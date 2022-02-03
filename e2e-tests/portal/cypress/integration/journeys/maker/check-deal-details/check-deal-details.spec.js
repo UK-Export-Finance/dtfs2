@@ -1,10 +1,9 @@
 const relative = require('../../../relativeURL');
 const pages = require('../../../pages');
 const fullyCompletedDeal = require('../fixtures/dealFullyCompleted');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const dealInDraft = {
   ...fullyCompletedDeal,
@@ -20,15 +19,15 @@ context('Check deal details', () => {
   };
 
   beforeEach(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(dealInDraft, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(dealInDraft, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
 
         const { mockFacilities } = fullyCompletedDeal;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -40,11 +39,11 @@ context('Check deal details', () => {
 
   afterEach(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
@@ -55,7 +54,7 @@ context('Check deal details', () => {
   };
 
   it('Edit links take the Maker back to the relevant form', () => {
-    cy.login({ ...MAKER_LOGIN });
+    cy.login(BANK1_MAKER1);
 
     //---------------------------------------------------------------
     // About supplier
@@ -97,7 +96,7 @@ context('Check deal details', () => {
   });
 
   it('Should only display bond currency if different to deal', () => {
-    cy.login({ ...MAKER_LOGIN });
+    cy.login(BANK1_MAKER1);
 
     goToCheckDealDetailsPage();
 
@@ -128,14 +127,14 @@ context('Check deal details', () => {
 
   it('Should display mandatory criteria box with given mandatory criteria', () => {
     // Older migrated v1 deals do not have mandatory criteria
-    cy.login({ ...MAKER_LOGIN });
+    cy.login(BANK1_MAKER1);
     goToCheckDealDetailsPage();
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
   });
 
   it('Should display agents address under criteria 11', () => {
     // Older migrated v1 deals do not have mandatory criteria
-    cy.login({ ...MAKER_LOGIN });
+    cy.login(BANK1_MAKER1);
     goToCheckDealDetailsPage();
     pages.eligibilityCriteria.eligibilityAgent(11).should('exist');
     pages.eligibilityCriteria.eligibilityAgent(1).should('not.exist');
@@ -148,7 +147,7 @@ context('Check deal details', () => {
     };
 
     beforeEach(() => {
-      cy.insertOneDeal(dealNoMandatoryCriteria, MAKER_LOGIN)
+      cy.insertOneDeal(dealNoMandatoryCriteria, BANK1_MAKER1)
         .then((insertedDeal) => {
           const dealWithCriteria1 = {
             ...insertedDeal,
@@ -166,7 +165,7 @@ context('Check deal details', () => {
             },
           };
 
-          cy.updateDeal(insertedDeal._id, dealWithCriteria1, MAKER_LOGIN).then((updatedDeal) => {
+          cy.updateDeal(insertedDeal._id, dealWithCriteria1, BANK1_MAKER1).then((updatedDeal) => {
             deal = updatedDeal;
             dealId = deal._id;
           });
@@ -175,14 +174,14 @@ context('Check deal details', () => {
 
     it('Should not display mandatory criteria box when no given mandatory criteria', () => {
       // Older migrated v1 deals do not have mandatory criteria
-      cy.login({ ...MAKER_LOGIN });
+      cy.login(BANK1_MAKER1);
       goToCheckDealDetailsPage();
       pages.contractSubmissionDetails.mandatoryCriteriaBox().should('not.exist');
     });
 
     it('Should display agents address under criteria 1', () => {
       // Older migrated v1 deals do not have mandatory criteria
-      cy.login({ ...MAKER_LOGIN });
+      cy.login(BANK1_MAKER1);
       goToCheckDealDetailsPage();
       pages.eligibilityCriteria.eligibilityAgent(1).should('exist');
       pages.eligibilityCriteria.eligibilityAgent(11).should('not.exist');

@@ -8,9 +8,9 @@ const {
   calculateExpectedGuaranteeFee,
   calculateExpectedUkefExposure,
 } = require('../../../../support/portal/sectionCalculations');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
@@ -23,7 +23,7 @@ const MOCK_DEAL = {
 };
 
 const goToBondFinancialDetailsPage = (deal) => {
-  cy.loginGoToDealPage(MAKER_LOGIN, deal);
+  cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
   pages.contract.addBondButton().click();
   partials.taskListHeader.itemLink('financial-details').click();
@@ -36,14 +36,14 @@ context('Bond Financial Details', () => {
   let deal;
 
   beforeEach(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
     it('should render validation errors for all required fields', () => {
-      cy.loginGoToDealPage(MAKER_LOGIN, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       pages.contract.addBondButton().click();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -71,7 +71,7 @@ context('Bond Financial Details', () => {
 
   describe('when changing the `risk margin fee` field', () => {
     it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
-      cy.loginGoToDealPage(MAKER_LOGIN, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       pages.contract.addBondButton().click();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -90,7 +90,7 @@ context('Bond Financial Details', () => {
 
   describe('when changing the `bond value` or `covered percentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
-      cy.loginGoToDealPage(MAKER_LOGIN, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       pages.contract.addBondButton().click();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -114,7 +114,7 @@ context('Bond Financial Details', () => {
   });
 
   it('form submit of all required fields should render a `completed` status tag only for `Bond Financial Details` in task list header', () => {
-    cy.loginGoToDealPage(MAKER_LOGIN, deal);
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
     pages.contract.addBondButton().click();
     partials.taskListHeader.itemLink('financial-details').click();
@@ -137,7 +137,7 @@ context('Bond Financial Details', () => {
 
   describe('When a user submits the `Bond Financial Details` form', () => {
     it('should progress to `Bond Fee Details` page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(MAKER_LOGIN, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       pages.contract.addBondButton().click();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -323,7 +323,7 @@ context('Bond Financial Details', () => {
 
   describe('When a user clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and repopulate form fields when returning back to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(MAKER_LOGIN, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       pages.contract.addBondButton().click();
       partials.taskListHeader.itemLink('financial-details').click();
