@@ -44,9 +44,9 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -72,25 +72,25 @@ jobs:
         docker push ${{ env.registry_to }}/portal-ui:${{ env.tag_to }}
 
     - name: Create slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
 
     - name: Swap slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
         
@@ -107,9 +107,9 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -135,25 +135,25 @@ jobs:
         docker push ${{ env.registry_to }}/portal-api:${{ env.tag_to }}
 
     - name: Create slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
 
     - name: Swap slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
 
@@ -170,9 +170,9 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -198,25 +198,25 @@ jobs:
         docker push ${{ env.registry_to }}/reference-data-proxy:${{ env.tag_to }}
 
     - name: Create slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-reference-data-proxy
 
     - name: Swap slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }}
 
@@ -233,9 +233,9 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -261,25 +261,25 @@ jobs:
         docker push ${{ env.registry_to }}/trade-finance-manager-ui:${{ env.tag_to }}
 
     - name: Create slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-trade-finance-manager-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-trade-finance-manager-ui
 
     - name: Swap slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-trade-finance-manager-ui --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-trade-finance-manager-ui --slot ${{ github.sha }}
         
@@ -296,9 +296,9 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -324,25 +324,25 @@ jobs:
         docker push ${{ env.registry_to }}/trade-finance-manager-api:${{ env.tag_to }}
 
     - name: Create slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-trade-finance-manager-api
 
     - name: Swap slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }}
 
@@ -359,9 +359,9 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -387,25 +387,25 @@ jobs:
         docker push ${{ env.registry_to }}/dtfs-central-api:${{ env.tag_to }}
 
     - name: Create slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-dtfs-central-api
 
     - name: Swap slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-dtfs-central-api --slot ${{ github.sha }}
 
@@ -422,9 +422,9 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -450,25 +450,25 @@ jobs:
         docker push ${{ env.registry_to }}/gef-ui:${{ env.tag_to }}
 
     - name: Create slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-gef-ui
 
     - name: Swap slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot swap --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-gef-ui --slot ${{ github.sha }}
 
@@ -485,9 +485,9 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -513,25 +513,25 @@ jobs:
         docker push ${{ env.registry_to }}/azure-function-acbs:${{ env.tag_to }}
 
     - name: Create slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az functionapp deployment slot create --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-acbs
 
     - name: Swap slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az functionapp deployment slot swap --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-function-acbs --slot ${{ github.sha }}
 
@@ -548,9 +548,9 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.resource_group }}
@@ -576,25 +576,25 @@ jobs:
         docker push ${{ env.registry_to }}/azure-function-number-generator:${{ env.tag_to }}
 
     - name: Create slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az functionapp deployment slot create --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-function-number-generator
 
     - name: Swap slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az functionapp deployment slot swap --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
       if: ${{ always() }}
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 2.30.0
+        azcliversion: latest
         inlineScript: |
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-function-number-generator --slot ${{ github.sha }}
 
