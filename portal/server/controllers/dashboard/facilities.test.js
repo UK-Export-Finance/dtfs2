@@ -1,211 +1,204 @@
-import { bssFacilities, gefFacilities } from '.';
+import {
+  getAllFacilitiesData,
+  getTemplateVariables,
+  getDataAndTemplateVariables,
+  allFacilities,
+} from './facilities';
 import mockResponse from '../../helpers/responseMock';
-import { getApiData } from '../../helpers';
-import { PRODUCT, STATUS } from '../../constants';
+import { getFlashSuccessMessage } from '../../helpers';
 import api from '../../api';
+import { submittedFiltersArray } from './filters/helpers';
+import { dashboardFacilitiesDealFiltersQuery } from './filters/facilities-deal-query';
+import CONSTANTS from '../../constants';
+
+jest.mock('../../api', () => ({
+  allFacilities: jest.fn(),
+}));
+
+const mockFacilities = [
+  { _id: 'mockFacility' },
+  { _id: 'mockFacility2' },
+];
 
 jest.mock('../../helpers', () => ({
   __esModule: true,
-  getApiData: jest.fn(),
+  getApiData: jest.fn(() => ({
+    count: 2,
+    facilities: mockFacilities,
+  })),
   getFlashSuccessMessage: jest.fn(),
   requestParams: jest.fn(() => ({ userToken: 'mock-token' })),
+  isSuperUser: jest.fn((user) => {
+    if (user.bank.id === '*') {
+      return true;
+    }
+
+    return false;
+  }),
+  getUserRoles: jest.fn(() => ({ isMaker: true })),
 }));
 
-describe('controllers/facilities', () => {
-  let req;
-  let checkerReq;
-  let res;
+describe('controllers/dashboard/facilities', () => {
+  let mockReq;
+  let mockRes;
 
   beforeEach(() => {
-    req = {
-      body: {},
+    mockReq = {
       params: { page: 1 },
+      body: {},
       session: {
-        dashboardFilters: 'mock-filters',
+        dashboardFilters: CONSTANTS.DASHBOARD_FILTERS_DEFAULT,
+        userToken: '1234',
         user: {
-          id: 'mock-user',
+          _id: 'mock-user',
           roles: ['maker', 'checker'],
+          bank: { id: '9' },
         },
       },
     };
 
-    checkerReq = {
-      body: {},
-      params: { page: 1 },
-      session: {
-        dashboardFilters: 'mock-filters',
-        user: {
-          id: 'mock-user',
-          roles: ['checker'],
-        },
-      },
-    };
-
-    api.gefFacilities = jest.fn();
-    api.transactions = jest.fn();
-
-    res = mockResponse();
+    mockRes = mockResponse();
   });
 
-  describe('bssFacilities', () => {
-    beforeEach(() => {
-      getApiData.mockResolvedValue({
-        count: 2,
-        transactions: [
-          {
-            transaction_id: 'mockFacility1',
-            deal_id: 'mock-deal-1',
-            bankFacilityId: 'mock-facility',
-            transactionType: 'Bond',
-            currency: { id: 'GBP' },
-          },
-          {
-            transaction_id: 'mockFacility2',
-            deal_id: 'mock-deal-1',
-            transactionType: 'another-type',
-            currency: { id: 'GBP' },
-          },
-        ],
-      });
+  describe('getAllFacilitiesData', () => {
+    it('should calls api.allFacilities with filters query', async () => {
+      await getAllFacilitiesData(
+        'mock-token',
+        mockReq.session.user,
+        mockReq.session.dashboardFilters,
+        mockReq.params.page,
+        mockRes,
+      );
+
+      expect(api.allFacilities).toBeCalledTimes(1);
+
+      const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
+
+      const expectedDealFiltersQuery = dashboardFacilitiesDealFiltersQuery(
+        filtersArray,
+        mockReq.session.user,
+      );
+
+      const expectedFacilityFilters = [];
+
+      expect(api.allFacilities).toHaveBeenCalledWith(
+        20,
+        20,
+        expectedDealFiltersQuery,
+        expectedFacilityFilters,
+        'mock-token',
+      );
     });
 
-    afterEach(() => {
-      getApiData.mockReset();
-    });
+    it('should return an object', async () => {
+      const result = await getAllFacilitiesData(
+        'mock-token',
+        mockReq.session.user,
+        mockReq.session.dashboardFilters,
+        mockReq.params.page,
+        mockRes,
+      );
 
-    it('passes the expected filter for maker', async () => {
-      await bssFacilities(req, res);
+      const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
-      expect(api.transactions).toHaveBeenCalledWith(20, 20, [], 'mock-token');
-    });
+      const expected = {
+        facilities: mockFacilities,
+        count: mockFacilities.length,
+        filtersArray,
+      };
 
-    it('passes the expected filter for checker', async () => {
-      await bssFacilities(checkerReq, res);
-
-      expect(api.transactions).toHaveBeenCalledWith(20, 20, [{ field: 'status', operator: 'eq', value: STATUS.READY_FOR_APPROVAL }], 'mock-token');
-    });
-
-    it('renders the correct template', async () => {
-      await bssFacilities(req, res);
-
-      expect(res.render).toHaveBeenCalledWith('dashboard/facilities.njk', {
-        facilities: [
-          {
-            _id: 'mockFacility1',
-            bankId: 'mock-facility',
-            dealId: 'mock-deal-1',
-            type: 'Bond',
-            product: PRODUCT.BSS_EWCS,
-            ukefStage: '-',
-            value: { currency: 'GBP' },
-            url: '/contract/mock-deal-1/bond/mockFacility1/details',
-          },
-          {
-            _id: 'mockFacility2',
-            bankId: 'Not entered',
-            dealId: 'mock-deal-1',
-            type: 'another-type',
-            product: PRODUCT.BSS_EWCS,
-            ukefStage: '-',
-            value: { currency: 'GBP' },
-            url: '/contract/mock-deal-1/another-type/mockFacility2/guarantee-details',
-          },
-        ],
-        pages: {
-          totalPages: 1,
-          currentPage: 1,
-          totalItems: 2,
-        },
-        primaryNav: 'home',
-        tab: 'bssFacilities',
-        user: {
-          id: 'mock-user',
-          roles: ['maker', 'checker'],
-        },
-      });
+      expect(result).toEqual(expected);
     });
   });
 
-  describe('gefFacilities', () => {
-    beforeEach(() => {
-      getApiData.mockResolvedValue({
-        count: 2,
-        facilities: [
-          {
-            _id: 'mockFacility1',
-            name: 'mock-facility',
-            dealId: 'mock-deal-1',
-            type: 'mock-type',
-            hasBeenIssued: true,
-            deal: { _id: 'mock-deal-1' },
-            currency: { id: 'JPY' },
+  describe('getTemplateVariables', () => {
+    it('should return an object', () => {
+      const mockFiltersArray = [];
+
+      const result = getTemplateVariables(
+        mockReq.session.user,
+        mockReq.session.dashboardFilters,
+        mockFacilities,
+        mockFacilities.length,
+        mockReq.params.page,
+        mockFiltersArray,
+      );
+
+      const expectedPages = {
+        totalPages: Math.ceil(mockFacilities.length / 20),
+        currentPage: parseInt(mockReq.params.page, 10),
+        totalItems: mockFacilities.length,
+      };
+
+      const expected = {
+        user: mockReq.session.user,
+        primaryNav: 'home',
+        tab: 'facilities',
+        facilities: mockFacilities,
+        pages: expectedPages,
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getDataAndTemplateVariables', () => {
+    it('should return variables from getData and templateVariables functions', async () => {
+      const result = await getDataAndTemplateVariables(
+        'mock-token',
+        mockReq.session.user,
+        mockReq.session.dashboardFilters,
+        mockReq.params.page,
+        mockRes,
+      );
+
+      const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
+
+      const expected = getTemplateVariables(
+        mockReq.session.user,
+        mockReq.session.dashboardFilters,
+        mockFacilities,
+        mockFacilities.length,
+        mockReq.params.page,
+        filtersArray,
+      );
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('allFacilities', () => {
+    describe('when there is req.body', () => {
+      it('should set req.session.dashboardFilters to provided values', async () => {
+        mockReq = {
+          ...mockReq,
+          body: {
+            fieldA: 'test',
           },
-          {
-            _id: 'mockFacility2',
-            dealId: 'mock-deal-1',
-            type: 'mock-type',
-            deal: { _id: 'mock-deal-1' },
-            currency: { id: 'JPY' },
-          },
-        ],
+        };
+
+        await allFacilities(mockReq, mockRes);
+
+        const expected = mockReq.body;
+
+        expect(mockReq.session.dashboardFilters).toEqual(expected);
       });
     });
 
-    afterEach(() => {
-      getApiData.mockReset();
-    });
-
-    it('passes the expected filter for maker', async () => {
-      await gefFacilities(req, res);
-
-      expect(api.gefFacilities).toHaveBeenCalledWith(20, 20, [], 'mock-token');
-    });
-
-    it('passes the expected filter for checker', async () => {
-      await gefFacilities(checkerReq, res);
-
-      expect(api.gefFacilities).toHaveBeenCalledWith(20, 20, [{ field: 'deal.status', operator: 'eq', value: STATUS.READY_FOR_APPROVAL }], 'mock-token');
-    });
-
     it('renders the correct template', async () => {
-      await gefFacilities(req, res);
+      await allFacilities(mockReq, mockRes);
 
-      expect(res.render).toHaveBeenCalledWith('dashboard/facilities.njk', {
-        facilities: [
-          {
-            _id: 'mockFacility1',
-            bankId: 'mock-facility',
-            dealId: 'mock-deal-1',
-            type: 'mock-type',
-            bankStage: 'Issued',
-            product: PRODUCT.GEF,
-            ukefStage: '-',
-            url: '/gef/application-details/mock-deal-1/facilities/mockFacility1/',
-            value: { amount: 0, currency: 'JPY' },
-          },
-          {
-            _id: 'mockFacility2',
-            bankId: 'Not entered',
-            dealId: 'mock-deal-1',
-            type: 'mock-type',
-            bankStage: 'Unissued',
-            product: PRODUCT.GEF,
-            ukefStage: '-',
-            url: '/gef/application-details/mock-deal-1/facilities/mockFacility2/',
-            value: { amount: 0, currency: 'JPY' },
-          },
-        ],
-        pages: {
-          totalPages: 1,
-          currentPage: 1,
-          totalItems: 2,
-        },
-        primaryNav: 'home',
-        tab: 'gefFacilities',
-        user: {
-          id: 'mock-user',
-          roles: ['maker', 'checker'],
-        },
+      const expectedVariables = await getDataAndTemplateVariables(
+        'mock-token',
+        mockReq.session.user,
+        mockReq.session.dashboardFilters,
+        mockReq.params.page,
+        mockRes,
+      );
+
+      expect(mockRes.render).toHaveBeenCalledWith('dashboard/facilities.njk', {
+        ...expectedVariables,
+        successMessage: getFlashSuccessMessage(mockReq),
       });
     });
   });

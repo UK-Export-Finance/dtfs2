@@ -1,10 +1,9 @@
 const express = require('express');
 const {
-  bssFacilities,
-  gefFacilities,
   allDeals,
   removeSingleAllDealsFilter,
   removeAllDealsFilters,
+  allFacilities,
 } = require('../controllers/dashboard');
 const CONSTANTS = require('../constants');
 
@@ -28,13 +27,13 @@ router.get('/dashboard/deals/clear-all-filters', removeAllDealsFilters);
 
 router.get('/dashboard/deals/filters/remove/:fieldName/:fieldValue', removeSingleAllDealsFilter);
 
-router.get('/dashboard/facilities/gef', async (req, res) => res.redirect('/dashboard/facilities/gef/0'));
+router.get('/dashboard/facilities', async (req, res) => {
+  req.session.dashboardFilters = CONSTANTS.DASHBOARD_FILTERS_DEFAULT;
 
-router.get('/dashboard/facilities/gef/:page', gefFacilities);
+  return res.redirect('/dashboard/facilities/0');
+});
 
-router.get('/dashboard/facilities', async (req, res) => res.redirect('/dashboard/facilities/0'));
-
-router.get('/dashboard/facilities/:page', bssFacilities);
+router.get('/dashboard/facilities/:page', allFacilities);
 
 // needs to be ordered last to avoid issues with taking priority over transaction routes
 router.get('/dashboard/deals/:page', allDeals);

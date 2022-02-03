@@ -1,14 +1,14 @@
 const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../../pages');
 const { taskListHeader } = require('../../partials');
 
-const mockUsers = require('../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Eligibility Documentation', () => {
   beforeEach(() => {
     cy.createADeal({
-      ...MAKER_LOGIN,
+      ...BANK1_MAKER1,
       bankDealId: 'someDealId',
       bankDealName: 'someDealName',
     });
