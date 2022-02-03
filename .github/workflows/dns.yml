@@ -24,7 +24,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: Defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/CLI@v1
       with:
         inlineScript: |
           az configure --defaults location=uksouth
@@ -34,20 +34,20 @@ jobs:
           az extension add --name front-door
 
     - name: Zone
-      uses: azure/cli@v1.0.0
+      uses: azure/CLI@v1
       with:
         inlineScript: |
           az network dns zone create --name ${{ env.domain_name }}
 
     # - name: Front Door verification record
-    #   uses: azure/cli@v1.0.0
+    #   uses: azure/CLI@v1
     #   with:
     #     inlineScript: |
     #       az network dns record-set cname create --zone ${{ env.domain_name }} --name afdverify.${{ env.domain_name }}
     #       az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name afdverify.${{ env.domain_name }} --cname ${{ env.front_door_name }}.azurefd.net
 
     - name: Alias record for service.gov.uk domain
-      uses: azure/cli@v1.0.0
+      uses: azure/CLI@v1
       with:
         # Based on:
         #  - https://stackoverflow.com/questions/58316973/how-to-create-dns-a-record-usin-azure-cli-or-terraform
@@ -57,7 +57,7 @@ jobs:
           az network dns record-set a create --name "@" --zone-name ${{ env.domain_name }} --target-resource $front_door_id
 
     - name: Add domain name to Prod Front Door
-      uses: azure/cli@v1.0.0
+      uses: azure/CLI@v1
       with:
         inlineScript: |
           az network front-door frontend-endpoint create \
@@ -66,7 +66,7 @@ jobs:
             --host-name ${{ env.domain_name }}
 
     - name: Enable HTTPS
-      uses: azure/cli@v1.0.0
+      uses: azure/CLI@v1
       with:
         inlineScript: |
           az network front-door frontend-endpoint enable-https \
@@ -75,7 +75,7 @@ jobs:
           
 
     - name: Check domain name mapping
-      uses: azure/cli@v1.0.0
+      uses: azure/CLI@v1
       with:
         inlineScript: |
           az network front-door check-custom-domain --host-name ${{ env.domain_name }} --name ${{ env.front_door_name }}
