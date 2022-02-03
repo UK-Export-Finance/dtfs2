@@ -2,12 +2,13 @@ import { format, sub, getUnixTime } from 'date-fns';
 import relative from '../../relativeURL';
 
 const { GEF_DEAL_DRAFT } = require('./mocks');
-const mockUsers = require('../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../fixtures/users');
 const CONSTANTS = require('../../../fixtures/constants');
 const { reports } = require('../../pages');
 
+const { BANK1_MAKER1 } = MOCK_USERS;
+
 context('Dashboard: Review UKEF Decision report', () => {
-  const BANK1_MAKER1 = mockUsers.find((user) => (user.roles.includes('maker')));
   const todayAtMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
   let daysInThePast = sub(todayAtMidnight, { days: 25 });
   const dateCreated = format(todayAtMidnight, 'dd LLL yyyy');

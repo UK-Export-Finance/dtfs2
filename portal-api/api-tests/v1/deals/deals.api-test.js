@@ -1,6 +1,6 @@
 const wipeDB = require('../../wipeDB');
 const aDeal = require('./deal-builder');
-
+const api = require('../../../src/v1/api');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
@@ -134,57 +134,6 @@ describe('/v1/deals', () => {
 
       expect(status).toEqual(200);
       expect(body.deal.summary).toEqual(calculateDealSummary(body.deal));
-    });
-  });
-
-  describe('POST /v1/deals', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(newDeal).to('/v1/deals');
-
-      expect(status).toEqual(401);
-    });
-
-    it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).post(newDeal).to('/v1/deals');
-
-      expect(status).toEqual(401);
-    });
-
-    it('returns the created deal', async () => {
-      const { body: createdDeal, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-
-      expect(status).toEqual(200);
-
-      const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
-
-      expect(dealAfterCreation.deal).toEqual(expectAddedFields(newDeal));
-    });
-
-    it('creates incremental integer deal IDs', async () => {
-      const deal1 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const deal2 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const deal3 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-
-      expect(parseInt(deal1.body._id).toString()).toEqual(deal1.body._id);
-      expect(deal2.body._id - deal1.body._id).toEqual(1);
-      expect(deal3.body._id - deal2.body._id).toEqual(1);
-    });
-
-    describe('when required fields are missing', () => {
-      it('returns 400 with validation errors', async () => {
-        const postBody = {
-          bankInternalRefName: '',
-          additionalRefName: '',
-        };
-
-        const { body: dealPost, status } = await as(anHSBCMaker).post(postBody).to('/v1/deals');
-
-        expect(status).toEqual(400);
-
-        expect(dealPost.validationErrors.count).toEqual(2);
-        expect(dealPost.validationErrors.errorList.bankInternalRefName).toBeDefined();
-        expect(dealPost.validationErrors.errorList.additionalRefName).toBeDefined();
-      });
     });
   });
 
@@ -336,6 +285,57 @@ describe('/v1/deals', () => {
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
       expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 1).editedBy[0]);
       expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(expectAddedFieldsWithEditedBy(secondUpdate, anHSBCMaker, 2).editedBy[1]);
+    });
+  });
+
+  describe('POST /v1/deals', () => {
+    it('401s requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().post(newDeal).to('/v1/deals');
+
+      expect(status).toEqual(401);
+    });
+
+    it('401s requests that do not come from a user with role=maker', async () => {
+      const { status } = await as(noRoles).post(newDeal).to('/v1/deals');
+
+      expect(status).toEqual(401);
+    });
+
+    it('returns the created deal', async () => {
+      const { body: createdDeal, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+
+      expect(status).toEqual(200);
+
+      const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+
+      expect(dealAfterCreation.deal).toEqual(expectAddedFields(newDeal));
+    });
+
+    it('creates incremental integer deal IDs', async () => {
+      const deal1 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const deal2 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const deal3 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+
+      expect(parseInt(deal1.body._id).toString()).toEqual(deal1.body._id);
+      expect(deal2.body._id - deal1.body._id).toEqual(1);
+      expect(deal3.body._id - deal2.body._id).toEqual(1);
+    });
+
+    describe('when required fields are missing', () => {
+      it('returns 400 with validation errors', async () => {
+        const postBody = {
+          bankInternalRefName: '',
+          additionalRefName: '',
+        };
+
+        const { body: dealPost, status } = await as(anHSBCMaker).post(postBody).to('/v1/deals');
+
+        expect(status).toEqual(400);
+
+        expect(dealPost.validationErrors.count).toEqual(2);
+        expect(dealPost.validationErrors.errorList.bankInternalRefName).toBeDefined();
+        expect(dealPost.validationErrors.errorList.additionalRefName).toBeDefined();
+      });
     });
   });
 

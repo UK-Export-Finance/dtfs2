@@ -6,9 +6,9 @@ const {
   calculateExpectedGuaranteeFee,
   calculateExpectedUkefExposure,
 } = require('../../../../support/portal/sectionCalculations');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
@@ -21,7 +21,7 @@ const MOCK_DEAL = {
 };
 
 const goToPageWithUnconditionalFacilityStage = (deal) => {
-  cy.loginGoToDealPage(MAKER_LOGIN, deal);
+  cy.loginGoToDealPage(BANK1_MAKER1, deal);
   pages.contract.addLoanButton().click();
 
   pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
@@ -32,7 +32,7 @@ const goToPageWithUnconditionalFacilityStage = (deal) => {
 };
 
 const goToPage = (deal) => {
-  cy.loginGoToDealPage(MAKER_LOGIN, deal);
+  cy.loginGoToDealPage(BANK1_MAKER1, deal);
   pages.contract.addLoanButton().click();
   partials.taskListHeader.itemLink('loan-financial-details').click();
 
@@ -44,8 +44,8 @@ context('Loan Financial Details', () => {
   let deal;
 
   beforeEach(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 

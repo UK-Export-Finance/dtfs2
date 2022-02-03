@@ -1,14 +1,14 @@
 const { contract, contractReturnToMaker, contractComments } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
-
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
-
-// test data we want to set up + work with..
+const MOCK_USERS = require('../../../../fixtures/users');
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
+
+const {
+  ADMIN,
+  BANK1_MAKER1,
+  BANK1_CHECKER1,
+} = MOCK_USERS;
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
   let deal;
@@ -16,8 +16,8 @@ context('A checker selects to return a deal to maker from the view-contract page
   before(() => {
     const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
 
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
       });
@@ -25,7 +25,7 @@ context('A checker selects to return a deal to maker from the view-contract page
 
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     contract.visit(deal);
     contract.returnToMaker().click();
 
@@ -39,7 +39,7 @@ context('A checker selects to return a deal to maker from the view-contract page
 
   it('The Return to Maker button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     contract.visit(deal);
     contract.returnToMaker().click();
 
@@ -51,9 +51,9 @@ context('A checker selects to return a deal to maker from the view-contract page
     contractReturnToMaker.expectError('Comment is required when returning a deal to maker.');
   });
 
-  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard.', () => {
+  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     contract.visit(deal);
 
     contract.commentsTab().click();
@@ -87,7 +87,7 @@ context('A checker selects to return a deal to maker from the view-contract page
       expect(text.trim()).to.equal('to you');
     });
     contractComments.row(0).commentorName().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(`${CHECKER_LOGIN.firstname} ${CHECKER_LOGIN.surname}`);
+      expect(text.trim()).to.equal(`${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
     });
   });
 });

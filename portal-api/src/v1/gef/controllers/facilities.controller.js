@@ -6,7 +6,6 @@ const {
 } = require('./validation/facilities');
 const { Facility } = require('../models/facilities');
 const { Application } = require('../models/application');
-const { isSuperUser } = require('../../users/checks');
 const {
   calculateUkefExposure,
   calculateGuaranteeFee,
@@ -163,67 +162,4 @@ exports.deleteByDealId = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollectionName);
   const response = await collection.deleteMany({ dealId: req.query.dealId });
   res.status(200).send(response);
-};
-
-const facilitiesFilters = (user, filters = []) => {
-  const amendedFilters = [...filters];
-
-  // add the bank clause if we're not a superuser
-  if (!isSuperUser(user)) { amendedFilters.push({ 'deal.bank.id': { $eq: user.bank.id } }); }
-
-  let result = {};
-  if (amendedFilters.length === 1) {
-    [result] = amendedFilters;
-  } else if (amendedFilters.length > 1) {
-    result = {
-      $and: amendedFilters,
-    };
-  }
-
-  // GEF facilities only - TODO: for @Tony
-  const gefFacilitiesFilter = { $or: [{ type: 'Cash' }, { type: 'Contingent' }] };
-
-  result = { ...result, ...gefFacilitiesFilter };
-
-  return result;
-};
-
-exports.findFacilities = async (
-  requestingUser,
-  filters,
-  start = 0,
-  pagesize = 0,
-) => {
-  const sanitisedFilters = facilitiesFilters(requestingUser, filters);
-
-  const collection = await db.getCollection(facilitiesCollectionName);
-
-  const doc = await collection
-    .aggregate([
-      {
-        $lookup: {
-          from: 'deals',
-          localField: 'dealId',
-          foreignField: '_id',
-          as: 'deal',
-        },
-      },
-      { $unwind: '$deal' },
-      { $match: sanitisedFilters },
-      { $sort: { updatedAt: -1, createdAt: -1 } },
-      {
-        $facet: {
-          count: [{ $count: 'total' }],
-          facilities: [
-            { $skip: start },
-            ...(pagesize ? [{ $limit: pagesize }] : []),
-          ],
-        },
-      },
-      { $unwind: '$count' },
-      { $project: { count: '$count.total', facilities: 1 } },
-    ])
-    .toArray();
-
-  return doc;
 };

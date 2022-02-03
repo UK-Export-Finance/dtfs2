@@ -38,50 +38,70 @@
 
   {% set items = [] %}
   {% for facility in facilities %}
+
+    {% if facility.type === 'Cash' or facility.type === 'Contingent' %}
+      {% set url = '/gef/application-details/' + facility.dealId %}
+
+      {% else %}
+
+      {% set url = '/contract/' + facility.dealId %}
+    {% endif %}
+
     {% set linkHtml %}
       <a
-          href="{{ facility.url }}"
+          href="{{ url }}"
           class="govuk-link"
-          data-cy="facility__link--{{ facility.bankId }}"
+          data-cy="facility__name--link--{{ facility._id }}"
       >
-        {{ facility.bankId }}
+        {{ facility.name }}
       </a>
     {% endset %}
+
+    {% if facility.hasBeenIssued %}
+      {% set stage = 'Issued' %}
+
+      {% else %}
+      {% set stage = 'Unissued' %}
+    {% endif %}
+
+    {% if facility.currency.id %}
+      {% set currency = facility.currency.id %}
+    {% endif %}
 
     {% set item = [
       {
         html: linkHtml,
-        attributes: { "data-cy": "facility__bankId--" + facility.bankId  },
+        attributes: { "data-cy": "facility__bankId--" + facility._id  },
         classes: "govuk-body-s"
       },
       {
-        text: facility.ukefId | dashIfEmpty,
-        attributes: { "data-cy": "facility__ukefId--" + facility.bankId },
+        text: facility.ukefFacilityId | dashIfEmpty,
+        attributes: { "data-cy": "facility__ukefId--" + facility._id },
         classes: "govuk-body-s"
       },
       {
-        text: facility.type | capitalize,
-        attributes: { "data-cy": "facility__type--" + facility.bankId },
+        text: facility.type | dashIfEmpty,
+        attributes: { "data-cy": "facility__type--" + facility._id },
         classes: "govuk-body-s"
       },
       {
-        text: facility.noticeType | dashIfEmpty,
-        attributes: { "data-cy": "facility__noticeType--" + facility.bankId },
+        text: facility.submissionType | dashIfEmpty,
+        attributes: { "data-cy": "facility__noticeType--" + facility._id },
         classes: "govuk-body-s"
       },
       {
-        text: facility.value.currency + ' ' + (facility.value.amount | string | formatAsCurrency),
-        attributes: { "data-cy": "facility__value--" + facility.bankId },
+        text: currency + ' ' + facility.value | formatAsCurrency | dashIfEmpty,
+        attributes: { "data-cy": "facility__value--" + facility._id },
         classes: "govuk-body-s"
       },
       {
-        text: facility.bankStage,
-        attributes: { "data-cy": "facility__bankStage--" + facility.bankId },
+        text: stage  | dashIfEmpty,
+        attributes: { "data-cy": "facility__bankStage--" + facility._id },
         classes: "govuk-body-s"
       },
       {
-        text: facility.date | localiseTimestamp("D MMM YYYY", user.timezone) | dashIfEmpty,
-        attributes: { 'data-cy': 'facility__date--' + facility.bankId },
+        text: facility.submittedAsIssuedDate | localiseTimestamp("D MMM YYYY", user.timezone) | dashIfEmpty,
+        attributes: { "data-cy": "facility__issuedDate--" + facility._id },
         classes: "govuk-body-s"
       }
     ] %}
@@ -93,9 +113,9 @@
     classes: "govuk-!-margin-bottom-0",
     head: [
       {
-        text: "Bank facility ID",
+        text: "Facility name",
         attributes: {
-        "data-cy": "facility__bankId--header"
+        "data-cy": "facility__name--header"
       }
       },
       {
@@ -138,6 +158,6 @@
     rows: items
   }) }}
 
-  {{ pagination.pagination(pages.totalPages, pages.currentPage, pages.totalItems, '/dashboard/facilities' if tab === 'bssFacilities' else '/dashboard/facilities/gef') }}
+  {{ pagination.pagination(pages.totalPages, pages.currentPage, pages.totalItems, '/dashboard/facilities') }}
 
 {% endblock %}
