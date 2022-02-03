@@ -72,7 +72,7 @@ const submittedFiltersObject = (filtersArray) => {
  */
 const formatFieldValue = (fieldValue) => {
   if (fieldValue) {
-    return fieldValue.replace(/[\s/]/g, '-').replace('\'', '');
+    return String(fieldValue).replace(/[\s/]/g, '-').replace('\'', '');
   }
 
   return null;

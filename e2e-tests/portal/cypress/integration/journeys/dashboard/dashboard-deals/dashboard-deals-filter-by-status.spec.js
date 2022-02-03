@@ -182,14 +182,14 @@ context('Dashboard Deals filters - filter by status', () => {
 
       firstAppliedFilter.should('be.visible');
 
-      const expectedText = `Remove this filter ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES}`;
+      const expectedText = `Remove this filter ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES}`;
       firstAppliedFilter.should('have.text', expectedText);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
       dashboardDeals.filters.mainContainer.selectedFilters.statusAll().should('be.visible');
 
-      const expectedText = `Remove this filter ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES}`;
+      const expectedText = `Remove this filter ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES}`;
       dashboardDeals.filters.mainContainer.selectedFilters.statusAll().contains(expectedText);
     });
 
