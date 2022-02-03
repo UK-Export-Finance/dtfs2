@@ -26,7 +26,11 @@ RUN apk add --update openrc openssh curl nano \
 EXPOSE 80 ${SSH_PORT}
 
 # Execute Script
+<<<<<<< HEAD
 ENTRYPOINT ["/bin/init.sh"]
 
 # Hot reloading
 # CMD node src/index.ts
+=======
+CMD node src/index.js
+>>>>>>> b82527b0e02a34b7a824d4aa6b4a430ae13d2adb
