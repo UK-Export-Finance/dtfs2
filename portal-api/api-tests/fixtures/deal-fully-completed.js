@@ -500,7 +500,7 @@ const deal = {
       loanInGbp: '8,000',
     },
   },
-  dealFiles: {
+  supportingInformation: {
     exporterQuestionnaire: [
       {
         type: 'general_correspondence',
@@ -513,14 +513,6 @@ const deal = {
         fullPath: '1000256/exporterQuestionnaire/test-file-2.txt',
         filename: 'test-file-2.txt',
         url: 'https://dtfsmediaserver.file.core.windows.net/ukef/1000256/exporterQuestionnaire/test-file-2.txt',
-      },
-    ],
-    auditedFinancialStatements: [
-      {
-        type: 'financials',
-        fullPath: '1000256/exporterQuestionnaire/test-file-3.txt',
-        filename: 'test-file-3.txt',
-        url: 'https://dtfsmediaserver.file.core.windows.net/ukef/1000256/exporterQuestionnaire/test-file-3.txt',
       },
     ],
     security: 'security test',

@@ -19,7 +19,7 @@ const mapGefDealSnapshot = (dealSnapshot, dealTfm) => ({
   details: mapGefDealDetails(dealSnapshot),
   submissionDetails: mapGefSubmissionDetails(dealSnapshot),
   eligibility: dealSnapshot.eligibility,
-  dealFiles: {},
+  supportingInformation: {},
   facilities: mapGefFacilities(dealSnapshot, dealTfm),
   totals: mapTotals(dealSnapshot.facilities),
 });

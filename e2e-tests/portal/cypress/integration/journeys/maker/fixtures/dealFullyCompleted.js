@@ -350,33 +350,7 @@ const deal = {
       ],
     },
   ],
-  dealFiles: {
-    /*
-    exporterQuestionnaire: [
-      {
-        type: 'general_correspondence',
-        fullPath: '1000256/exporterQuestionnaire/test-file-1.txt',
-        filename: 'test-file-1.txt',
-        url: 'https://dtfsmediaserver.file.core.windows.net/ukef/1000256/exporterQuestionnaire/test-file-1.txt',
-      },
-      {
-        type: 'general_correspondence',
-        fullPath: '1000256/exporterQuestionnaire/test-file-2.txt',
-        filename: 'test-file-2.txt',
-        url: 'https://dtfsmediaserver.file.core.windows.net/ukef/1000256/exporterQuestionnaire/test-file-2.txt',
-      },
-    ],
-    auditedFinancialStatements: [
-      {
-        type: 'financials',
-        fullPath: '1000256/exporterQuestionnaire/test-file-3.txt',
-        filename: 'test-file-3.txt',
-        url: 'https://dtfsmediaserver.file.core.windows.net/ukef/1000256/exporterQuestionnaire/test-file-3.txt',
-      },
-    ],
-    security: 'security test',
-    */
-  },
+  supportingInformation: { },
 };
 
 module.exports = deal;

@@ -20,7 +20,7 @@ describe('GET underwriting - bank security', () => {
       _id: '1000023',
       dealSnapshot: {
         _id: '1000023',
-        dealFiles: {
+        supportingInformation: {
           security: 'mock security',
         },
         submissionDetails: {
