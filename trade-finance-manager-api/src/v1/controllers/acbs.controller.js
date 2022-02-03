@@ -50,9 +50,13 @@ const createACBS = async (deal) => {
 };
 
 const updateDealAcbs = async (taskOutput) => {
-  const { facilities, ...dealAcbs } = taskOutput;
-  // Add `acbs` object to tfm-deal
-  await tfmController.updateAcbs(taskOutput.portalDealId, dealAcbs);
+  const { facilities } = taskOutput;
+  /**
+   * 1. Add `acbs` object to tfm-deal
+   * 2. Add ACBS records to the TFM activites
+   */
+  await tfmController.updateAcbs(taskOutput);
+
   const facilitiesUpdates = facilities.map((facility) => {
     const { facilityId, ...acbsFacility } = facility;
     // Add `acbs` object to tfm-facilities
