@@ -25,4 +25,4 @@ RUN apk add --update bash openssh-keygen openrc openssh curl wget tcptraceroute 
 EXPOSE 80 ${SSH_PORT}
 
 # Execute Script
-ENTRYPOINT ["/bin/init.sh"]
+CMD node src/index.js
