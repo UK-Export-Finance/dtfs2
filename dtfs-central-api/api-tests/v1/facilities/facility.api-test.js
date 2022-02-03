@@ -80,6 +80,7 @@ describe('/v1/portal/facilities', () => {
         _id: body._id,
         ...newFacility,
         createdDate: expect.any(Number),
+        updatedAt: expect.any(Number),
       });
     });
 

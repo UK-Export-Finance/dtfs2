@@ -82,6 +82,7 @@ describe('/v1/portal/facilities', () => {
       expect(facilityAfterCreation.type).toEqual(newFacility.type);
       expect(facilityAfterCreation.dealId).toEqual(newFacility.dealId);
       expect(typeof facilityAfterCreation.createdDate).toEqual('number');
+      expect(typeof facilityAfterCreation.updatedAt).toEqual('number');
     });
 
     it('adds the facility id to the associated deal', async () => {

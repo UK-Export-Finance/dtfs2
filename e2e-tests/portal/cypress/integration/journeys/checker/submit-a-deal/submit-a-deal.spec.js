@@ -1,17 +1,17 @@
 const { contract, contractConfirmSubmission } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
-
-// test data we want to set up + work with..
+const MOCK_USERS = require('../../../../fixtures/users');
 const dealWithInvalidLoanCoverStartDate = require('./test-data/dealWithInvalidLoanCoverStartDate');
 const dealWithInvalidBondCoverStartDate = require('./test-data/dealWithInvalidBondCoverStartDate');
 const submittedDealWithBondCoverStartDateInThePast = require('./test-data/submittedDealWithBondCoverStartDateInThePast');
 const submittedDealWithLoanCoverStartDateInThePast = require('./test-data/submittedDealWithLoanCoverStartDateInThePast');
 const dealReadyToSubmit = require('./test-data/dealReadyToSubmit');
+
+const {
+  BANK1_MAKER1,
+  BANK1_CHECKER1,
+} = MOCK_USERS;
 
 context('A checker selects to submit a contract from the view-contract page', () => {
   let goodDeal;
@@ -27,7 +27,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
       dealWithInvalidBondCoverStartDate(),
       submittedDealWithBondCoverStartDateInThePast(),
       submittedDealWithLoanCoverStartDateInThePast(),
-    ], MAKER_LOGIN)
+    ], BANK1_MAKER1)
       .then((insertedDeals) => {
         [
           goodDeal,
@@ -42,7 +42,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
           ...goodDeal.loanTransactions.items,
         ];
 
-        cy.createFacilities(goodDeal._id, goodDealFacilities, MAKER_LOGIN);
+        cy.createFacilities(goodDeal._id, goodDealFacilities, BANK1_MAKER1);
 
         const dealBondCoverStartDateInThePastFacilities = [
           ...dealBondCoverStartDateInThePast.bondTransactions.items,
@@ -52,7 +52,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
         cy.createFacilities(
           dealBondCoverStartDateInThePast._id,
           dealBondCoverStartDateInThePastFacilities,
-          MAKER_LOGIN,
+          BANK1_MAKER1,
         );
 
         const dealLoanCoverStartDateInThePastFacilities = [
@@ -63,14 +63,14 @@ context('A checker selects to submit a contract from the view-contract page', ()
         cy.createFacilities(
           dealLoanCoverStartDateInThePast._id,
           dealLoanCoverStartDateInThePastFacilities,
-          MAKER_LOGIN,
+          BANK1_MAKER1,
         );
       });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     contract.visit(goodDeal);
     contract.proceedToSubmit().click();
 
@@ -83,7 +83,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
   it('The Accept and Submit button generates an error if the checkbox has not been ticked.', () => {
     // log in, visit a deal, select abandon
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     contract.visit(goodDeal);
     contract.proceedToSubmit().click();
 
@@ -103,7 +103,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
   it('If the deal has NOT yet been submitted and the deal contains a loan with a cover start date that is now in the past, an error should be generated.', () => {
     // log in, visit a deal, submit
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     contract.visit(badDealInvalidLoanCoverStartDate);
     contract.proceedToSubmit().click();
 
@@ -124,7 +124,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
   it('If the deal has NOT yet been submitted and the deal contains a Bond with a cover start date that is now in the past, an error should be generated.', () => {
     // log in, visit a deal, submit
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     contract.visit(badDealInvalidBondCoverStartDate);
     contract.proceedToSubmit().click();
 
@@ -146,7 +146,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
   describe('If a deal has been previously submitted and the deal contains a Bond with a cover start date that is now in the past', () => {
     it('it should successfully submit', () => {
       // log in, visit a deal, submit
-      cy.login(CHECKER_LOGIN);
+      cy.login(BANK1_CHECKER1);
       contract.visit(dealBondCoverStartDateInThePast);
       contract.proceedToSubmit().click();
 
@@ -165,7 +165,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
   describe('If a deal has been previously submitted and the deal contains a loan with a cover start date that is now in the past', () => {
     it('it should successfully submit', () => {
       // log in, visit a deal, submit
-      cy.login(CHECKER_LOGIN);
+      cy.login(BANK1_CHECKER1);
       contract.visit(dealLoanCoverStartDateInThePast);
       contract.proceedToSubmit().click();
 
@@ -181,9 +181,9 @@ context('A checker selects to submit a contract from the view-contract page', ()
     });
   });
 
-  it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /dashboard.', () => {
+  it('If the terms are accepted, the Accept and Submit button submits the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
-    cy.login(CHECKER_LOGIN);
+    cy.login(BANK1_CHECKER1);
     contract.visit(goodDeal);
     contract.proceedToSubmit().click();
 

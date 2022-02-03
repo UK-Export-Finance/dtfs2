@@ -70,7 +70,7 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('POST /v1/portal/multiple-facilities', () => {
-    it('creates multiple facilites', async () => {
+    it('creates and returns multiple facilties with createdDate and updatedAt', async () => {
       await wipeDB.wipe(['facilities']);
 
       const facilities = [
@@ -90,6 +90,12 @@ describe('/v1/portal/facilities', () => {
 
       expect(status).toEqual(200);
       expect(body.length).toEqual(4);
+
+      const facilityId = body[0];
+      const { body: facilityAfterCreation } = await api.get(`/v1/portal/facilities/${facilityId}`);
+
+      expect(typeof facilityAfterCreation.createdDate).toEqual('number');
+      expect(typeof facilityAfterCreation.updatedAt).toEqual('number');
     });
 
     it('returns 400 where user is missing', async () => {

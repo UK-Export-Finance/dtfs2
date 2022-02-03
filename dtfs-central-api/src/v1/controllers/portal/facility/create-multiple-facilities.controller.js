@@ -10,6 +10,7 @@ const createFacilities = async (facilities, dealId) => {
     const facility = f;
     facility._id = new ObjectId(facility._id);
     facility.createdDate = Date.now();
+    facility.updatedAt = Date.now();
     facility.dealId = new ObjectId(dealId);
     return facility;
   }));

@@ -13,6 +13,7 @@ const createFacility = async (facility, user, routePath) => {
     ...facility,
     dealId: new ObjectId(facility.dealId),
     createdDate: Date.now(),
+    updatedAt: Date.now(),
   };
 
   const response = await collection.insertOne(newFacility);

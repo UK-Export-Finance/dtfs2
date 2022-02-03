@@ -1,14 +1,14 @@
 const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../../pages');
 const { taskListHeader } = require('../../partials');
 
-const mockUsers = require('../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Eligibility Documentation', () => {
   beforeEach(() => {
     cy.createADeal({
-      ...MAKER_LOGIN,
+      ...BANK1_MAKER1,
       bankDealId: 'someDealId',
       bankDealName: 'someDealName',
     });
@@ -46,6 +46,10 @@ context('Eligibility Documentation', () => {
 
   it('should only display upload button when a file has been chosen', () => {
     taskListHeader.itemLink('supporting-documentation').click();
+    eligibilityDocumentation.downloadMIQuestionaireLink().contains('Download Manual Inclusion Questionnaire.docx (21KB)');
+    eligibilityDocumentation.downloadMIQuestionaireLink().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal('/assets/files/Manual%20Inclusion%20Questionnaire%20v2_0.docx');
+    });
     eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
     eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
     eligibilityDocumentation.questionnaireFileInputUploadButton().should('be.visible');

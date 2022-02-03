@@ -18,8 +18,18 @@ const cleanBanks = async (token) => {
 const cleanFacilities = async (token) => {
   console.log('cleaning ALL facilities');
 
-  for (const facility of await centralApi.listFacilities()) {
-    await centralApi.deleteFacility(facility._id, token);
+  const facilities = await centralApi.listFacilities();
+  for (const facility of facilities) {
+
+    if (facility.type === 'Bond'
+      || facility.type === 'Loan') {
+      await centralApi.deleteFacility(facility._id, token);
+    }
+
+    if (facility.type === 'Cash'
+      || facility.type === 'Contingent') {
+      await gefApi.deleteFacilities(facility, token);
+    }
   }
 };
 
@@ -38,8 +48,8 @@ const cleanDeals = async (token) => {
       // they can use the same endpoint.
       if (deal.product === 'BSS/EWCS') {
         await api.deleteDeal(deal._id, token);
-
       }
+
       if (deal.product === 'GEF') {
         await gefApi.deleteDeal(deal._id, token);
       }
@@ -81,7 +91,7 @@ const cleanAllTables = async () => {
 
   await cleanBanks(token);
   await cleanDeals(token);
-  await cleanFacilities();
+  await cleanFacilities(token);
   await cleanMandatoryCriteria(token);
   await cleanEligibilityCriteria(token);
   await cleanUsers();

@@ -1,6 +1,10 @@
+const db = require('../../drivers/db-client');
 const api = require('../api');
 const { updateDeal } = require('./deal.controller');
 
+/**
+ * Create a facility (BSS, EWCS only)
+ */
 exports.create = async (facilityBody, user) => {
   const createdFacility = await api.createFacility(facilityBody, user);
 
@@ -15,6 +19,9 @@ exports.create = async (facilityBody, user) => {
   };
 };
 
+/**
+ * Find a facility (BSS, EWCS only)
+ */
 exports.findOne = async (facilityId) =>
   api.findOneFacility(facilityId);
 
@@ -38,9 +45,15 @@ exports.update = async (dealId, facilityId, facilityBody, user) => {
   return updatedFacility;
 };
 
+/**
+ * Delete a facility (BSS, EWCS only)
+ */
 exports.delete = async (facilityId, user) =>
   api.deleteFacility(facilityId, user);
 
+/**
+ * Create multiple facilities (BSS, EWCS only)
+ */
 exports.createMultiple = async (req, res) => {
   const { facilities, dealId, user } = req.body;
 
@@ -56,5 +69,82 @@ exports.createMultiple = async (req, res) => {
   return res.status(200).send(allFacilities);
 };
 
+/**
+ * Create multiple facilities (BSS, EWCS only)
+ */
 exports.createMultipleFacilities = async (facilities, dealId, user) =>
   api.createMultipleFacilities(facilities, dealId, user);
+
+/**
+* Queries all facilities in the facilities collection (BSS, EWCS, GEF)
+* @param {*} dealFilters any filters for each deal, uses match spec
+* @param {*} filters any filters for facilities, uses match spec
+* @param {*} sort any additional sort fields for list
+* @param {*} start where list should start - part of pagination.
+* @param {*} pagesize Size of each page - limits list results
+* @returns combined and formatted list of facilities
+*/
+exports.queryAllFacilities = async (
+  dealFilters = {},
+  filters = {},
+  sort = {},
+  start = 0,
+  pagesize = 0,
+) => {
+  const collection = await db.getCollection('facilities');
+
+  const doc = await collection
+    .aggregate([
+      {
+        $lookup: {
+          from: 'deals',
+          localField: 'dealId',
+          foreignField: '_id',
+          pipeline: [{ $match: dealFilters }],
+          as: 'deal',
+        },
+      },
+      { $unwind: '$deal' },
+      { $match: filters },
+      {
+        $project: {
+          _id: 1,
+          dealId: '$deal._id',
+          submissionType: '$deal.submissionType',
+          name: '$name',
+          ukefFacilityId: '$ukefFacilityId',
+          currency: '$currency',
+          value: '$value',
+          type: '$type',
+          hasBeenIssued: '$hasBeenIssued',
+          submittedAsIssuedDate: '$submittedAsIssuedDate',
+          updatedAt: '$updatedAt',
+        },
+      },
+      {
+        $sort: {
+          ...sort,
+          updatedAt: -1,
+        },
+      },
+      {
+        $facet: {
+          count: [{ $count: 'total' }],
+          facilities: [
+            { $skip: start },
+            ...(pagesize ? [{ $limit: pagesize }] : []),
+          ],
+        },
+      },
+      { $unwind: '$count' },
+      {
+        $project: {
+          count: '$count.total',
+          facilities: 1,
+        },
+      },
+    ])
+    .toArray();
+
+  return doc;
+};

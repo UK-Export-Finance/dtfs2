@@ -1,23 +1,15 @@
 const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
-const getDealErrors = require('../validation/deal');
-const { isSuperUser, userHasAccessTo } = require('../users/checks');
+const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
 const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const api = require('../api');
 
-const findAllDeals = async (requestingUser, filters, sort) =>
-  api.queryAllDeals(filters, sort);
-
-exports.findAllDeals = findAllDeals;
-
-const findAllPaginatedDeals = async (requestingUser, filters, sort, start = 0, pagesize = 20) =>
-  api.queryAllDeals(filters, sort, start, pagesize);
-
-exports.findAllPaginatedDeals = findAllPaginatedDeals;
-
+/**
+ * Find a deal (BSS, EWCS only)
+ */
 const findOneDeal = async (_id, callback) => {
   const deal = await api.findOneDeal(_id);
 
@@ -30,6 +22,9 @@ const findOneDeal = async (_id, callback) => {
 
 exports.findOneDeal = findOneDeal;
 
+/**
+ * Update a deal.eligibility (BSS, EWCS only)
+ */
 const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteria) => {
   const matchingAnswer = answers ? answers.find((answer) => answer.id === criteria.id) : null;
   if (!matchingAnswer) {
@@ -71,6 +66,9 @@ const createDealEligibility = async (eligibility) => {
   };
 };
 
+/**
+ * Create default deal data (BSS, EWCS only)
+ */
 const createNewDealData = async (deal, maker) => {
   const newDeal = {
     ...DEFAULTS.DEAL,
@@ -84,19 +82,12 @@ const createNewDealData = async (deal, maker) => {
     eligibility: await createDealEligibility(deal.eligibility),
   };
 
-  /*
-  const validationErrors = getDealErrors(newDeal);
-
-  if (validationErrors.count) {
-    return {
-      ...newDeal,
-      validationErrors,
-    };
-  }
-*/
   return newDeal;
 };
 
+/**
+ * Create a deal (BSS, EWCS only)
+ */
 const createDeal = async (dealBody, user) => {
   const deal = await createNewDealData(dealBody, user);
   return api.createDeal(deal, user);
@@ -108,6 +99,9 @@ exports.create = async (req, res) => {
   return res.status(status).send(data);
 };
 
+/**
+ * Find a deal (BSS, EWCS only)
+ */
 exports.findOne = (req, res) => {
   findOneDeal(req.params.id, (deal) => {
     if (!deal) {
@@ -140,6 +134,9 @@ const updateDeal = async (dealId, dealUpdate, user) => {
 };
 exports.updateDeal = updateDeal;
 
+/**
+ * Update a deal (BSS, EWCS only)
+ */
 exports.update = async (req, res) => {
   const dealId = req.params.id;
 
@@ -160,6 +157,9 @@ exports.update = async (req, res) => {
   });
 };
 
+/**
+ * Delete a deal (BSS, EWCS only)
+ */
 exports.delete = async (req, res) => {
   const dealId = req.params.id;
 
@@ -175,38 +175,59 @@ exports.delete = async (req, res) => {
   });
 };
 
-const importDeal = async (req, res) => {
-  if (!isSuperUser(req.user)) {
-    res.status(401).send();
-  }
-
+/**
+ * Query all deals in the deals collection (BSS, EWCS, GEF)
+ * @param {*} filters any filters for list, uses match spec
+ * @param {*} sort any additional sort fields for list
+ * @param {*} start where list should start - part of pagination.
+ * @param {*} pagesize Size of each page - limits list results
+ * @returns combined and formatted list of deals
+ */
+const queryAllDeals = async (
+  filters = {},
+  sort = {},
+  start = 0,
+  pagesize = 0,
+) => {
   const collection = await db.getCollection('deals');
 
-  const newDeal = {
-    ...req.body,
-  };
+  const deals = await collection.aggregate([
+    { $match: filters },
+    {
+      $project: {
+        _id: 1,
+        bankInternalRefName: '$bankInternalRefName',
+        status: '$status',
+        product: '$dealType',
+        submissionType: '$submissionType',
+        exporter: '$exporter.companyName',
+        updatedAt: '$updatedAt',
+      },
+    },
+    {
+      $sort: {
+        ...sort,
+        updatedAt: -1
+      },
+    },
+    {
+      $facet: {
+        count: [{ $count: 'total' }],
+        deals: [
+          { $skip: start },
+          ...(pagesize ? [{ $limit: pagesize }] : []),
+        ],
+      },
+    },
+    { $unwind: '$count' },
+    {
+      $project: {
+        count: '$count.total',
+        deals: 1,
+      },
+    },
+  ]).toArray();
 
-  const validationErrors = getDealErrors(newDeal);
-
-  if (validationErrors.count !== 0) {
-    return res.status(400).send({
-      ...newDeal,
-      validationErrors,
-    });
-  }
-
-  const response = await collection.insertOne({
-    ...newDeal,
-  }).catch((err) => {
-    const status = err.code === 11000 ? 406 : 500;
-    return res.status(status).send(err);
-  });
-
-  const createdDeal = response.ops && response.ops[0];
-  return res.status(200).send(createdDeal);
+  return deals;
 };
-
-exports.import = async (req, res) => {
-  const result = await importDeal(req, res);
-  return result;
-};
+exports.queryAllDeals = queryAllDeals;

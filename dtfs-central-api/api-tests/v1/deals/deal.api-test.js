@@ -44,27 +44,6 @@ describe('/v1/portal/deals', () => {
     await wipeDB.wipe(['facilities']);
   });
 
-  describe('GET /v1/portal/deals', () => {
-    it('should return count and mapped deals', async () => {
-      await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-
-      const { status, body } = await api.get('/v1/portal/deals');
-
-      expect(status).toEqual(200);
-
-      expect(typeof body[0].count).toEqual('number');
-
-      const firstDeal = body[0].deals[0];
-
-      expect(typeof firstDeal._id).toEqual('string');
-      expect(firstDeal.bankInternalRefName).toEqual(newDeal.bankInternalRefName);
-      expect(firstDeal.status).toEqual(newDeal.status);
-      expect(firstDeal.product).toEqual(newDeal.dealType);
-      expect(firstDeal.submissionType).toEqual(newDeal.submissionType);
-      expect(firstDeal.exporter).toEqual(newDeal.exporter.companyName);
-      expect(typeof firstDeal.updatedAt).toEqual('number');
-    });
-  });
   describe('POST /v1/portal/deals', () => {
     it('returns the created deal with correct fields', async () => {
       const { body, status } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');

@@ -1,7 +1,7 @@
 const pages = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 const MIADealAcceptedStatusWithUnissuedFacilities = require('./MIN-deal-accepted-status-with-unissued-facilities');
-const mockUsers = require('../../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../../fixtures/users');
 const {
   fillAndSubmitIssueBondFacilityForm,
 } = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm');
@@ -9,8 +9,11 @@ const {
   fillAndSubmitIssueLoanFacilityForm,
 } = require('../../../maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const {
+  ADMIN,
+  BANK1_MAKER1,
+  BANK1_CHECKER1,
+} = MOCK_USERS;
 
 context('A maker issues facilities, submits to checker; checker submits deal to UKEF', () => {
   let deal;
@@ -21,15 +24,15 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
   };
 
   before(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(MIADealAcceptedStatusWithUnissuedFacilities, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(MIADealAcceptedStatusWithUnissuedFacilities, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
 
         const { mockFacilities } = MIADealAcceptedStatusWithUnissuedFacilities;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -41,11 +44,11 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
@@ -54,7 +57,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     // maker adds Issued Facilities and submits deal for review by checker
     //---------------------------------------------------------------
 
-    cy.login({ ...MAKER_LOGIN });
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     // complete issue Bond facility form
@@ -89,7 +92,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     //---------------------------------------------------------------
     // checker submits deal to UKEF
     //---------------------------------------------------------------
-    cy.login({ ...CHECKER_LOGIN });
+    cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
 
     // check facility statuses have changed
