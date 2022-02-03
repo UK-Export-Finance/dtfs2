@@ -18,7 +18,7 @@ ADD init.sh /bin/init.sh
 ADD sshd_config /etc/ssh/
 RUN chmod 755 /bin/init.sh
 # 2. Install packages
-RUN apk add openrc openssh curl \
+RUN apk add --update openrc openssh curl \
     && echo "root:Docker!" | chpasswd \
 
     && rc-update add sshd

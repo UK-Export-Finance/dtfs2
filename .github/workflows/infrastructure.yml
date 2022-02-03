@@ -19,20 +19,20 @@ jobs:
         creds: ${{ secrets.AZURE_DIGITAL_DEV }}
 
     - name: Defaults
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1
       with:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.DEV_RESOURCE_GROUP }}
 
     - name: App Service plan
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1
       with:
         inlineScript: |
           az appservice plan create --name dev --is-linux --sku p1v2
 
     - name: Container registry
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
@@ -47,20 +47,20 @@ jobs:
         creds: ${{ secrets.AZURE_DIGITAL_TEST }}
 
     - name: Defaults
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1
       with:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.TEST_RESOURCE_GROUP }}
 
     - name: App Service plan
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1
       with:
         inlineScript: |
           az appservice plan create --name test --is-linux --sku p1v2
 
     - name: Container registry
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
@@ -75,20 +75,20 @@ jobs:
         creds: ${{ secrets.AZURE_DIGITAL_PROD }}
 
     - name: Defaults
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1
       with:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.PROD_RESOURCE_GROUP }}
 
     - name: App Service plan
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1
       with:
         inlineScript: |
           az appservice plan create --name prod --is-linux --sku p1v2
 
     - name: Container registry
-      uses: azure/cli@v1.0.0
+      uses: Azure/cli@v1
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
