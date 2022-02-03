@@ -85,11 +85,11 @@ jobs:
     - name: Run API tests
       run: |
         docker-compose exec -T dtfs-central-api npm run api-test
-    # - uses: act10ns/slack@v1
-    #   with:
-    #     status: ${{ job.status }}
-    #     steps: ${{ toJson(steps) }}
-    #     channel: '#dtfs-github-actions'
-    #   env:
-    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    #   if: failure()
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs-github-actions'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
