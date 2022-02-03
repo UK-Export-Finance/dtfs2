@@ -13,7 +13,7 @@ import {
   submittedFiltersArray,
   submittedFiltersObject,
 } from './filters/helpers';
-import { dashboardFiltersQuery } from './filters/query';
+import { dashboardDealsFiltersQuery } from './filters/deals-query';
 import { dashboardFilters } from './filters/ui-filters';
 import { selectedDashboardFilters } from './filters/ui-selected-filters';
 import CONSTANTS from '../../constants';
@@ -55,7 +55,7 @@ jest.mock('../../helpers', () => ({
   getUserRoles: jest.fn(() => ({ isMaker: true })),
 }));
 
-describe('controllers/dashboard', () => {
+describe('controllers/dashboard/deals', () => {
   let mockReq;
   let mockRes;
 
@@ -94,7 +94,7 @@ describe('controllers/dashboard', () => {
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
-      const expectedFilters = dashboardFiltersQuery(
+      const expectedFilters = dashboardDealsFiltersQuery(
         mockReq.body.createdByYou,
         filtersArray,
         mockReq.session.user,

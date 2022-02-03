@@ -1,12 +1,12 @@
 const { listGefFacilities, logIn, deleteGefFacility } = require('./api');
 
-const deleteGefFacilities = (token, facilities) => {
+const deleteGefFacilities = (facilities, token) => {
   if (!facilities || !facilities.length) return;
   facilities.forEach(async (facility) => deleteGefFacility(token, facility));
 };
 
-module.exports = (opts, dealId) => logIn(opts).then((token) => {
+module.exports = (dealId, opts) => logIn(opts).then((token) => {
   listGefFacilities(token, dealId).then(async (facilities) => {
-    await deleteGefFacilities(token, facilities);
+    await deleteGefFacilities(facilities, token);
   });
 });

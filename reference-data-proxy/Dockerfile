@@ -1,12 +1,4 @@
 # Node Alpine Docker Image
-FROM node:14.18.1-alpine3.13 AS image
-
-# Node Setup
-WORKDIR /app
-COPY . .
-RUN npm install
-
-# Node Alpine Docker Image
 FROM node:14.18.1-alpine3.13
 
 # Variables
@@ -16,7 +8,9 @@ ENV SSH_PORT=2222
 
 # Node Setup
 WORKDIR /app
-COPY --from=image /app /app
+COPY package.json .
+RUN npm install
+COPY . .
 
 # SSH Setup
 # 1. Artifcats
@@ -24,7 +18,7 @@ ADD init.sh /bin/init.sh
 ADD sshd_config /etc/ssh/
 RUN chmod 755 /bin/init.sh
 # 2. Install packages
-RUN apk add --update bash openssh-keygen openrc openssh curl wget tcptraceroute htop nano \
+RUN apk add bash openrc openssh curl \
     && echo "root:Docker!" | chpasswd \
     && rm -rf /var/cache/apk/* \
     && rc-update add sshd

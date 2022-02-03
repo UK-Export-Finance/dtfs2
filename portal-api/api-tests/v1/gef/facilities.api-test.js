@@ -51,7 +51,7 @@ describe(baseUrl, () => {
         monthsOfCover: null,
         details: null,
         detailsOther: null,
-        currency: { id: null },
+        currency: null,
         value: null,
         coverPercentage: null,
         interestPercentage: null,
@@ -83,7 +83,7 @@ describe(baseUrl, () => {
       monthsOfCover: 12,
       details: ['test', 'test'],
       detailsOther: null,
-      currency: 'GBP',
+      currency: { id: 'GBP' },
       value: 10000000,
       coverPercentage: 75,
       interestPercentage: 10,
@@ -100,61 +100,6 @@ describe(baseUrl, () => {
   beforeEach(async () => {
     await wipeDB.wipe([facilitiesCollectionName]);
     await wipeDB.wipe([dealsCollectionName]);
-  });
-
-  describe(`GET ${baseUrl}`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get(baseUrl);
-      expect(status).toEqual(401);
-    });
-
-    it('returns list of all items', async () => {
-      await as(aMaker).post({
-        dealId: mockApplication.body._id,
-        type: FACILITY_TYPE.CASH,
-        hasBeenIssued: false,
-      }).to(baseUrl);
-
-      await as(aMaker).post({
-        dealId: mockApplication.body._id,
-        type: FACILITY_TYPE.CONTINGENT,
-        hasBeenIssued: false,
-      }).to(baseUrl);
-
-      const mockQuery = { dealId: mockApplication.body._id };
-
-      const { body, status } = await as(aChecker).get(baseUrl, mockQuery);
-
-      expect(body).toEqual({ status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
-      expect(status).toEqual(200);
-    });
-
-    it('returns list of item from the given application ID', async () => {
-      await as(aMaker).post({
-        dealId: mockApplication.body._id,
-        type: FACILITY_TYPE.CASH,
-        hasBeenIssued: false,
-      }).to(baseUrl);
-
-      await as(aMaker).post({
-        dealId: mockApplication.body._id,
-        type: FACILITY_TYPE.CONTINGENT,
-        hasBeenIssued: false,
-      }).to(baseUrl);
-
-      const { body, status } = await as(aChecker).get(`${baseUrl}?dealId=${mockApplication.body._id}`);
-
-      expect(body).toEqual({ status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS, items: [newFacility, newFacility] });
-      expect(status).toEqual(200);
-    });
-
-    it('returns a empty object if there are no records', async () => {
-      const { body } = await as(aMaker).get(`${baseUrl}?dealId=doesnotexist`);
-      expect(body).toEqual({
-        status: CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED,
-        items: [],
-      });
-    });
   });
 
   describe(`GET ${baseUrl}/:id`, () => {
@@ -192,7 +137,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(201);
     });
 
-    it('returns me a new application upon creation', async () => {
+    it('returns a new facility upon creation', async () => {
       const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       expect(body).toEqual(newFacility);
     });
@@ -213,8 +158,8 @@ describe(baseUrl, () => {
       const { details } = newFacility;
       const update = {
         hasBeenIssued: false,
-        name: 'Matt',
-        currency: 'GBP',
+        name: 'Test',
+        currency: { id: 'GBP' },
       };
       const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
@@ -225,7 +170,7 @@ describe(baseUrl, () => {
         details: {
           ...details,
           hasBeenIssued: false,
-          name: 'Matt',
+          name: 'Test',
           currency: { id: 'GBP' },
           updatedAt: expect.any(Number),
         },
@@ -275,7 +220,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: 'GBP',
+        currency: { id: 'GBP' },
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
@@ -306,7 +251,7 @@ describe(baseUrl, () => {
         },
       };
 
-      expected.details.currency = { id: update.currency };
+      expected.details.currency = update.currency;
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
@@ -323,7 +268,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: 'GBP',
+        currency: { id: 'GBP' },
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,

@@ -18,6 +18,9 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
       dealId,
       dealUpdate,
     );
+
+    // adds portal activity object for min submission and facilities changed -> issued
+    update = await api.updateGefMINActivity(dealId);
   } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     dealUpdate = {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,

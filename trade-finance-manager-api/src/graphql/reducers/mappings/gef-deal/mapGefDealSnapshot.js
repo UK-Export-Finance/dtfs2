@@ -11,6 +11,11 @@ const mapGefDealSnapshot = (dealSnapshot, dealTfm) => ({
   submissionType: dealSnapshot.submissionType,
   maker: dealSnapshot.maker,
   bank: dealSnapshot.bank,
+  exporter: {
+    companyName: dealSnapshot.exporter.companyName,
+  },
+  bankInternalRefName: dealSnapshot.bankInternalRefName,
+  additionalRefName: dealSnapshot.additionalRefName,
   details: mapGefDealDetails(dealSnapshot),
   submissionDetails: mapGefSubmissionDetails(dealSnapshot),
   eligibility: dealSnapshot.eligibility,

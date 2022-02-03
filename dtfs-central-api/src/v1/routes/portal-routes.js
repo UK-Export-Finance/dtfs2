@@ -24,6 +24,7 @@ const getGefDealController = require('../controllers/portal/gef-deal/get-gef-dea
 const updateGefDealController = require('../controllers/portal/gef-deal/update-deal.controller');
 const putGefDealStatusController = require('../controllers/portal/gef-deal/put-gef-deal.status.controller');
 const addCommentToGefDeal = require('../controllers/portal/gef-deal/add-underwriter-comment-gef.controller');
+const gefActivityController = require('../controllers/portal/gef-deal/add-min-activities.controller');
 
 const getGefFacilitiesController = require('../controllers/portal/gef-facility/get-facilities.controller');
 const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
@@ -46,47 +47,6 @@ portalRouter.route('/banks/:id')
   .get(
     getBankController.findOneBankGet,
   );
-
-/**
- * @openapi
- * /portal/deals:
- *   get:
- *     summary: Get, filter and sort multiple deals in Portal deals collection
- *     tags: [Portal - BSS]
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               filters:
- *                 type: array
- *                 items:
- *                   type: object
- *               sort:
- *                 type: object
- *               start:
- *                 type: integer
- *               pagesize:
- *                 type: integer
- *           example:
- *             sort: { lastUpdated: -1, status: 'Draft' }
- *             filters: { '$and': [ { userId: '123456' }, { bank: { id: '9' } } ] }
- *             start: 0
- *             pagesize: 10
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/definitions/DealsBSS'
- *       500:
- *         description: Error querying deals
- */
-portalRouter.route('/deals').get(
-  getDealController.queryAllDeals,
-);
 
 /**
  * @openapi
@@ -646,6 +606,35 @@ portalRouter.route('/gef/deals/:id')
 portalRouter.route('/gef/deals/:id')
   .put(
     updateGefDealController.updateDealPut,
+  );
+
+/**
+ * @openapi
+ * /gef/deals/activity/:id:
+ *   put:
+ *     summary: Create submission and facility activities from TFM-api for MIA->MIN
+ *     tags: [Portal - GEF]
+ *     description: Create GEF portal submission and facility activities for MIA->MIN as comes from TFM-api
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to find deal and facilities and portalActivities to update
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/DealGEF'
+ *       404:
+ *         description: Not found
+ */
+portalRouter.route('/gef/deals/activity/:id')
+  .put(
+    gefActivityController.generateMINActivities,
   );
 
 /**

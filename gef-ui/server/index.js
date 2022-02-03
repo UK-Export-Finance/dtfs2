@@ -13,14 +13,12 @@ require('./azure-env');
 const routes = require('./routes');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const sentry = require('./utils/sentry');
 
 const app = express();
 app.use(helmet({ contentSecurityPolicy: false }));
 
 dotenv.config();
 
-app.use(sentry);
 app.use(compression());
 const PORT = process.env.PORT || 5006;
 

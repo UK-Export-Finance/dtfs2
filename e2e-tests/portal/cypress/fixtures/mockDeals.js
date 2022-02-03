@@ -1,4 +1,4 @@
-const mockUsers = require('./mockUsers');
+const MOCK_USERS = require('./users');
 const {
   exporterOne,
   exporterTwo,
@@ -6,35 +6,33 @@ const {
   exporterFour,
 } = require('./mockExporter');
 
-// slight oddity- this test seems to need a straight 'maker'; so filtering slightly more than in other tests..
-const MAKER_LOGIN = mockUsers.find((user) =>
-  user.roles.includes('maker') && user.roles.length === 1);
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 const MOCK_DEAL_ONE = {
-  bank: { id: MAKER_LOGIN.bank.id },
+  bank: { id: BANK1_MAKER1.bank.id },
   bankInternalRefName: 'Mock1',
-  userId: MAKER_LOGIN._id,
+  userId: BANK1_MAKER1._id,
   exporter: exporterOne,
 };
 
 const MOCK_DEAL_TWO = {
-  bank: { id: MAKER_LOGIN.bank.id },
+  bank: { id: BANK1_MAKER1.bank.id },
   bankInternalRefName: 'Mock2',
-  userId: MAKER_LOGIN._id,
+  userId: BANK1_MAKER1._id,
   exporter: exporterTwo,
 };
 
 const MOCK_DEAL_THREE = {
-  bank: { id: MAKER_LOGIN.bank.id },
+  bank: { id: BANK1_MAKER1.bank.id },
   bankInternalRefName: 'Mock3',
-  userId: MAKER_LOGIN._id,
+  userId: BANK1_MAKER1._id,
   exporter: exporterThree,
 };
 
 const MOCK_DEAL_FOUR = {
-  bank: { id: MAKER_LOGIN.bank.id },
+  bank: { id: BANK1_MAKER1.bank.id },
   bankInternalRefName: 'Mock4',
-  userId: MAKER_LOGIN._id,
+  userId: BANK1_MAKER1._id,
   exporter: exporterFour,
 };
 

@@ -3,9 +3,9 @@ const partials = require('../../../partials');
 const LOAN_FORM_VALUES = require('./loan-form-values');
 const relative = require('../../../relativeURL');
 const fillLoanForm = require('./fill-loan-forms');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
@@ -21,15 +21,15 @@ context('Add a Loan to a Deal', () => {
   let deal;
 
   beforeEach(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(MOCK_DEAL, MAKER_LOGIN)
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Loan to the deal', () => {
     cy.createADeal({
-      username: MAKER_LOGIN.username,
-      password: MAKER_LOGIN.password,
+      username: BANK1_MAKER1.username,
+      password: BANK1_MAKER1.password,
       bankDealId: MOCK_DEAL.bankInternalRefName,
       bankDealName: MOCK_DEAL.additionalRefName,
     });
@@ -41,7 +41,7 @@ context('Add a Loan to a Deal', () => {
   });
 
   it('should populate Deal page with the submitted loan, with `Completed` status and link to `Loan Gurantee Details` page', () => {
-    cy.loginGoToDealPage(MAKER_LOGIN, deal);
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
     pages.contract.addLoanButton().click();
     fillLoanForm.unconditionalWithCurrencySameAsSupplyContractCurrency();
     fillLoanForm.datesRepayments.inAdvanceAnnually();
@@ -90,7 +90,7 @@ context('Add a Loan to a Deal', () => {
 
   describe('when a user submits Loan forms without completing required fields', () => {
     it('loan should display all validation errors in `Loan Preview` page and `Incomplete` status in Deal page', () => {
-      cy.loginGoToDealPage(MAKER_LOGIN, deal);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
       pages.contract.addLoanButton().click();
 
       pages.loanGuaranteeDetails.submit().click();

@@ -1,10 +1,9 @@
-node_modules
-README.md
-run.sh
+*/node_modules*
+*/generated_reports*
+*/api-tests*
+*.md
+*.yml
 LICENSE
 Dockerfile
-docker-compose.yml
-generated_reports
-.git
-.cache
-*.md
+.env.sample
+package-lock.json

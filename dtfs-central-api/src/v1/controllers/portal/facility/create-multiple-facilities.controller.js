@@ -9,6 +9,7 @@ const createFacilities = async (facilities, dealId) => {
   const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
     const facility = f;
     facility.createdDate = Date.now();
+    facility.updatedAt = Date.now();
     facility._id = await generateFacilityId();
     facility.dealId = dealId;
     return facility;

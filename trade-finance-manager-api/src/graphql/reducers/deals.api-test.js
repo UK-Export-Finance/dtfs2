@@ -83,6 +83,10 @@ describe('reducer - deals', () => {
         dealSnapshot: {
           _id: mockGefDeal._id,
           dealType: mockGefDeal.dealSnapshot.dealType,
+          submissionType: mockGefDeal.dealSnapshot.submissionType,
+          exporter: {
+            companyName: mockGefDeal.dealSnapshot.exporter.companyName,
+          },
           facilitiesUpdated: mockGefDeal.dealSnapshot.facilitiesUpdated,
           eligibility: mockGefDeal.dealSnapshot.eligibility,
           bank: mockGefDeal.dealSnapshot.bank,

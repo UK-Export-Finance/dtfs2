@@ -2,7 +2,7 @@ const { format, fromUnixTime } = require('date-fns');
 const db = require('../../../src/drivers/db-client');
 
 const {
-  firstSubmissionPortalActivity,
+  ukefSubmissionPortalActivity,
   submissionTypeToConstant,
   getUserInfo,
   facilityChangePortalActivity,
@@ -13,7 +13,7 @@ const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/v1
 const mockApplications = require('../../fixtures/gef/application');
 
 const MOCK_APPLICATION = mockApplications[0];
-const MOCK_APPLICATION_FACILITIES = mockApplications[15];
+const MOCK_APPLICATION_FACILITIES = mockApplications[1];
 
 const mockFacilities = require('../../fixtures/gef/facilities');
 
@@ -40,7 +40,7 @@ describe('submissionPortalActivity()', () => {
     MOCK_APPLICATION.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
     MOCK_APPLICATION.portalActivities = [];
 
-    const result = await firstSubmissionPortalActivity(MOCK_APPLICATION);
+    const result = await ukefSubmissionPortalActivity(MOCK_APPLICATION);
 
     // ensure that only 1 object added to empty array
     expect(result.length).toEqual(1);
@@ -88,7 +88,7 @@ describe('submissionPortalActivity()', () => {
     MOCK_APPLICATION.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
     MOCK_APPLICATION.portalActivities = [testObject];
 
-    const result = await firstSubmissionPortalActivity(MOCK_APPLICATION);
+    const result = await ukefSubmissionPortalActivity(MOCK_APPLICATION);
 
     // expect to add to array so length 2
     expect(result.length).toEqual(2);
@@ -186,7 +186,7 @@ describe('facilityChangePortalActivity()', () => {
 
     expect(portalActivityObject.facilityType).toEqual(`${mockFacilityOne[0].type} facility`);
 
-    expect(portalActivityObject.facilityID).toEqual(mockFacilityOne[0].ukefFacilityId);
+    expect(portalActivityObject.ukefFacilityId).toEqual(mockFacilityOne[0].ukefFacilityId);
   });
 
   it('should return a populated array with 2 in the issued facility activity object', async () => {
@@ -219,11 +219,11 @@ describe('facilityChangePortalActivity()', () => {
 
     // check that the first object is position 1 in mockFacilitiesArray
     const portalActivityObjectZero = result[0];
-    expect(portalActivityObjectZero.facilityID).toEqual(mockFacilitiesArray[1].ukefFacilityId);
+    expect(portalActivityObjectZero.ukefFacilityId).toEqual(mockFacilitiesArray[1].ukefFacilityId);
 
     // check that second object is position 0 in mockFacilitiesArray
     const portalActivityObjectOne = result[1];
-    expect(portalActivityObjectOne.facilityID).toEqual(mockFacilitiesArray[0].ukefFacilityId);
+    expect(portalActivityObjectOne.ukefFacilityId).toEqual(mockFacilitiesArray[0].ukefFacilityId);
   });
 });
 
