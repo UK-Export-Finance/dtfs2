@@ -4,6 +4,7 @@ const TEAMS = require('./teams');
 const TASKS = require('./tasks');
 const EMAIL_TEMPLATE_IDS = require('./email-template-ids');
 const DURABLE_FUNCTIONS = require('./durable-functions');
+const ACTIVITY = require('./activity');
 
 module.exports = {
   FACILITIES,
@@ -12,4 +13,5 @@ module.exports = {
   TASKS,
   EMAIL_TEMPLATE_IDS,
   DURABLE_FUNCTIONS,
+  ACTIVITY,
 };

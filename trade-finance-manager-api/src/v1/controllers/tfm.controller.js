@@ -1,3 +1,4 @@
+const activity = require('../helpers/activity');
 const api = require('../api');
 
 const updateTfmParty = async (dealId, tfmUpdate) => {
@@ -12,14 +13,18 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
 };
 exports.updateTfmParty = updateTfmParty;
 
-const updateAcbs = async (dealId, acbs) => {
+const updateAcbs = async (taskOutput) => {
+  const { ...dealAcbs } = taskOutput;
+  // Add various ACBS records to the TFM activites
+  const activities = await activity.add(taskOutput);
   const acbsUpdate = {
     tfm: {
-      acbs,
+      acbs: dealAcbs,
+      activities,
     },
   };
 
-  const updatedDeal = await api.updateDeal(dealId, acbsUpdate);
+  const updatedDeal = await api.updateDeal(taskOutput.portalDealId, acbsUpdate);
   return updatedDeal;
 };
 exports.updateAcbs = updateAcbs;
