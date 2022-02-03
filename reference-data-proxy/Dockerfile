@@ -18,7 +18,7 @@ ADD init.sh /bin/init.sh
 ADD sshd_config /etc/ssh/
 RUN chmod 755 /bin/init.sh
 # 2. Install packages
-RUN apk add --update bash openssh-keygen openrc openssh curl wget tcptraceroute htop nano \
+RUN apk add bash openrc openssh curl \
     && echo "root:Docker!" | chpasswd \
     && rm -rf /var/cache/apk/* \
     && rc-update add sshd
@@ -26,4 +26,4 @@ RUN apk add --update bash openssh-keygen openrc openssh curl wget tcptraceroute 
 EXPOSE 80 ${SSH_PORT}
 
 # Execute Script
-CMD node src/index.js
+ENTRYPOINT ["/bin/init.sh"]
