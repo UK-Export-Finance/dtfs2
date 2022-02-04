@@ -85,11 +85,11 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - SENTRY_DSN=${SENTRY_DSN}
-    deploy:
-      resources:
-        limits:
-          cpus: "0.2"
-          memory: 600M
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.2"
+    #       memory: 600M
     entrypoint: npx nodemon src/index.js -L
 
   portal:
