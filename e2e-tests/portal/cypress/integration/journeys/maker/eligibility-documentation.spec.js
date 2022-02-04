@@ -16,6 +16,11 @@ context('Eligibility Documentation', () => {
     contract.eligibilityCriteriaLink().click();
   });
 
+  it('should display correct title for Eligibility Documentation', () => {
+    taskListHeader.itemLink('supporting-documentation').click();
+    eligibilityDocumentation.title().contains('Add supporting documentation');
+  });
+
   it('should display validation error if Manual Inclusion Questionnaire not submitted', () => {
     taskListHeader.itemLink('supporting-documentation').click();
     eligibilityDocumentation.saveButton().click();

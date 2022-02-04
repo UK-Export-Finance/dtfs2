@@ -4,7 +4,7 @@ const bssEmailVariables = require('./bss-email-variables');
 const commonEmailVars = (deal) => {
   const {
     ukefDealId,
-    name,
+    bankInternalRefName,
     maker,
     exporter,
   } = deal;
@@ -14,7 +14,7 @@ const commonEmailVars = (deal) => {
   const base = {
     recipientName: `${firstname} ${surname}`,
     exporterName: exporter.companyName,
-    name,
+    bankReferenceNumber: bankInternalRefName,
     ukefDealId,
   };
 

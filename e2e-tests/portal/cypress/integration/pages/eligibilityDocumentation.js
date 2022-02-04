@@ -1,4 +1,5 @@
 const page = {
+  title: () => cy.get('[data-cy="eligibility"]'),
   questionnaireFileInput: () => cy.get('[data-cy="exporterQuestionnaire"]'),
   questionnaireFileInputUpload: () => cy.get('[data-cy="exporterQuestionnaire-upload"]'),
   questionnaireFileInputUploadButton: () => cy.get('[data-cy="exporterQuestionnaire-upload-button"]'),
