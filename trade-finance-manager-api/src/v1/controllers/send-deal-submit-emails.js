@@ -114,7 +114,7 @@ const sendMiaAcknowledgement = async (deal) => {
 const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) => {
   const {
     ukefDealId,
-    name,
+    bankInternalRefName,
     submissionType,
     maker,
     exporter,
@@ -126,7 +126,7 @@ const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) =>
     firstname,
     surname,
     exporterName: exporter.companyName,
-    name,
+    bankReferenceNumber: bankInternalRefName,
     ukefDealId,
     isAin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ? 'yes' : 'no',
     isMin: submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN ? 'yes' : 'no',
@@ -198,9 +198,9 @@ const sendDealSubmitEmails = async (deal) => {
     return false;
   }
 
-  const firstTaskEmail = await sendFirstTaskEmail(deal);
-  const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal);
-  const emailAcknowledgementAinMin = await sendAinMinAcknowledgement(deal);
+  const firstTaskEmail = await sendFirstTaskEmail(deal); // CHECKED
+  const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal); // CHECKED
+  const emailAcknowledgementAinMin = await sendAinMinAcknowledgement(deal); // CHECKED
 
   return {
     firstTaskEmail,
