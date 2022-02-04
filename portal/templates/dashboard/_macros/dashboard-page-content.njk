@@ -1,0 +1,62 @@
+{% import './dashboard-heading-and-tabs.njk' as dashboardHeadingAndTabs %}
+{% import './dashboard-filters-panel.njk' as dashboardFiltersPanel %}
+{% import './dashboard-filters-action-bar.njk' as dashboardFitlersActionBar %}
+
+{% import '_macros/pagination.njk' as pagination %}
+
+{% macro render(params) %}
+  {% set successMessage = params.successMessage %}
+  {% set user = params.user %}
+  {% set tab = params.tab %}
+  {% set filters = params.filters %}
+  {% set selectedFilters = params.selectedFilters %}
+  {% set keyword = params.keyword %}
+  {% set renderCreatedByYou = params.renderCreatedByYou %}
+  {% set createdByYou = params.createdByYou %}
+  {% set selectedFilters = params.selectedFilters %}
+  {% set table = params.table %}
+  {% set pages = params.pages %}
+  {% set route = params.route %}
+
+  {{dashboardHeadingAndTabs.render({
+    successMessage: successMessage,
+    user: user,
+    tab: tab
+  })}}
+
+  <div class="moj-filter-layout">
+
+    {{dashboardFiltersPanel.render({
+      filters: filters,
+      selectedFilters: selectedFilters,
+      keyword: keyword
+    })}}
+
+    <div class="moj-filter-layout__content">
+
+      {{dashboardFitlersActionBar.render({
+        renderCreatedByYou: true,
+        createdByYou: createdByYou,
+        selectedFilters: selectedFilters
+      })}}
+
+      <div class="moj-scrollable-pane">
+
+        <div class="moj-scrollable-pane__wrapper">
+
+          {{ table }}
+
+          {{ pagination.pagination(
+            totalPages = pages.totalPages,
+            currentPage = pages.currentPage,
+            totalItems = pages.totalItems,
+            paginationRoute = '/dashboard' + route
+          )}}
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endmacro %}

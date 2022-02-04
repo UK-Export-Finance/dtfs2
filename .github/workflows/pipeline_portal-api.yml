@@ -2,7 +2,7 @@ name: Portal API
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'portal-api/**'
     - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
@@ -104,7 +104,7 @@ jobs:
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |
-        docker-compose exec -T portal-api npm run api-test 
+        docker-compose exec -T portal-api npm run api-test
     # - name: Run Submit to Trade Finance Manager e2e tests
     #   env:
     #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

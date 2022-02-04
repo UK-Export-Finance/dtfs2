@@ -70,14 +70,9 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const tfmUpdateHasActivities = (tfmUpdate.activities
                                   && Object.keys(tfmUpdate.activities).length > 0);
 
-  /**
-   * Ensure tfm.activities is not wiped and avoid recursive object creation
-   * by checking .type property for the activities object.
-   * tfm.activities to be checked for submitting tfm.tasks
-   * */
   if (tfmUpdateHasActivities) {
     dealUpdate.tfm.activities = [
-      tfmUpdate.activities,
+      ...tfmUpdate.activities,
       ...existingDealActivities,
     ];
   }

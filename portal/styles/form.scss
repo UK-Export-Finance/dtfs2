@@ -18,4 +18,7 @@
 
 .created-by-you-form {
   float: right;
+  .govuk-form-group {
+    margin-bottom: govuk-spacing(3);
+  }
 }
