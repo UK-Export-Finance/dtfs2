@@ -57,7 +57,7 @@ describe('update tfm underwriter managers decision', () => {
         emailVariables: {
           recipientName: MOCK_DEAL_BSS_MIA.maker.firstname,
           exporterName: MOCK_DEAL_BSS_MIA.exporter.companyName,
-          name: MOCK_DEAL_BSS_MIA.bankInternalRefName,
+          bankReferenceNumber: MOCK_DEAL_BSS_MIA.bankInternalRefName,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
           conditions: comments,
         },
@@ -90,7 +90,7 @@ describe('update tfm underwriter managers decision', () => {
         emailVariables: {
           recipientName: MOCK_DEAL_BSS_MIA.maker.firstname,
           exporterName: MOCK_DEAL_BSS_MIA.exporter.companyName,
-          name: MOCK_DEAL_BSS_MIA.bankInternalRefName,
+          bankReferenceNumber: MOCK_DEAL_BSS_MIA.bankInternalRefName,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
         },
       };
@@ -122,7 +122,7 @@ describe('update tfm underwriter managers decision', () => {
         emailVariables: {
           recipientName: MOCK_DEAL_BSS_MIA.maker.firstname,
           exporterName: MOCK_DEAL_BSS_MIA.exporter.companyName,
-          name: MOCK_DEAL_BSS_MIA.bankInternalRefName,
+          bankReferenceNumber: MOCK_DEAL_BSS_MIA.bankInternalRefName,
           ukefDealId: MOCK_DEAL_BSS_MIA.details.ukefDealId,
           reasonForRejection: comments,
         },

@@ -249,6 +249,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
     });
 
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
+      // check correct accepting conditions message is shown
+      applicationPreview.acceptMIADecision().contains('You are proceeding with UKEF cover and accepting the following conditions:');
+
       applicationPreview.submitButtonPostApproval().click();
       applicationSubmission.submissionText().contains(`Someone at your bank must check your ${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} before they can submit it to UKEF.`);
       applicationSubmission.submitButton().click();
@@ -269,6 +272,7 @@ context('Return to maker', () => {
 
     it('should show changed facilities in task comments box with correct heading for reviewing UKEF decision', () => {
       applicationPreview.miaStageChecker().contains('Check manual inclusion application before submitting to UKEF');
+      applicationPreview.acceptMIADecision().contains('You are accepting the following conditions:');
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
     });
 

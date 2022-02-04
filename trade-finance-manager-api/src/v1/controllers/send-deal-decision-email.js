@@ -5,7 +5,7 @@ const sendDealDecisionEmail = async (mappedDeal) => {
   const { tfm } = mappedDeal;
 
   const {
-    name,
+    bankInternalRefName,
     ukefDealId,
     maker,
     exporter,
@@ -28,7 +28,7 @@ const sendDealDecisionEmail = async (mappedDeal) => {
   const emailVariables = {
     recipientName,
     exporterName: exporter.companyName,
-    name,
+    bankReferenceNumber: bankInternalRefName,
     ukefDealId,
   };
 
