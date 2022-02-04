@@ -2,13 +2,13 @@ name: GEF UI
 
 on:
   push:
-    branches: [ main ]
-    paths: 
+    branches: [ dev ]
+    paths:
     - 'gef-ui/**'
     - 'portal-api/**'
     - 'e2e-tests/gef/cypress/**'
   schedule:
-    # A weekly run to roll up any base image patches, 
+    # A weekly run to roll up any base image patches,
     # in office hours, avoiding bank holiday Mondays:
     # "At 12:00 on Tuesday." - https://crontab.guru/
     - cron: '0 12 * * 2'
@@ -41,7 +41,7 @@ jobs:
     - name: Commit hash
       run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push
-      uses: docker/build-push-action@v1
+      uses: docker/build-push-action@v2
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
