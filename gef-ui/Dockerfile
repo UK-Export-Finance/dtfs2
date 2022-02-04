@@ -27,3 +27,6 @@ EXPOSE 80 ${SSH_PORT}
 
 # Execute Script
 ENTRYPOINT ["/bin/init.sh"]
+
+# Hot reloading
+# CMD node server/index.js

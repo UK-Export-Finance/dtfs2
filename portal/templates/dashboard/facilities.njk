@@ -1,163 +1,25 @@
 {% extends "index.njk" %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{%- from "moj/components/button-menu/macro.njk" import mojButtonMenu -%}
-{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
-{%- from "govuk/components/table/macro.njk" import govukTable -%}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
-{% import '_macros/dashboard-sub-nav.njk' as dashboardSubNav %}
-{% import '_macros/date-range.njk' as dateRange %}
-{% import '_macros/pagination.njk' as pagination %}
-
-{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% import './_macros/dashboard-page-content.njk' as dashboardPageContent %}
+{% import './_macros/dashboard-facilities-table.njk' as facilitiesTable %}
 
 {% block pageTitle %}Facilities{% endblock %}
 
 {% block content %}
 
-  {% if successMessage %}
-    {{ success.message(
-      message = successMessage
-    ) }}
-  {% endif %}
-
-  {{ mojPageHeaderActions({
-    heading: {
-      html: '<h1 class="govuk-heading-xl">Applications and notices</h1>'
-    },
-    items: user.roles.includes('maker') and [{
-      text: 'Create new',
-      attributes: {"data-cy":"CreateNewSubmission"},
-      href: "/select-scheme"
-    }]
-  }) }}
-
-  {{ dashboardSubNav.subnav(selected = tab) }}
-
-  <h2 class="govuk-heading-l">Facilities</h2>
-
-  {% set items = [] %}
-  {% for facility in facilities %}
-
-    {% if facility.type === 'Cash' or facility.type === 'Contingent' %}
-      {% set url = '/gef/application-details/' + facility.dealId %}
-
-      {% else %}
-
-      {% set url = '/contract/' + facility.dealId %}
-    {% endif %}
-
-    {% set linkHtml %}
-      <a
-          href="{{ url }}"
-          class="govuk-link"
-          data-cy="facility__name--link--{{ facility._id }}"
-      >
-        {{ facility.name }}
-      </a>
-    {% endset %}
-
-    {% if facility.hasBeenIssued %}
-      {% set stage = 'Issued' %}
-
-      {% else %}
-      {% set stage = 'Unissued' %}
-    {% endif %}
-
-    {% if facility.currency.id %}
-      {% set currency = facility.currency.id %}
-    {% endif %}
-
-    {% set item = [
-      {
-        html: linkHtml,
-        attributes: { "data-cy": "facility__bankId--" + facility._id  },
-        classes: "govuk-body-s"
-      },
-      {
-        text: facility.ukefFacilityId | dashIfEmpty,
-        attributes: { "data-cy": "facility__ukefId--" + facility._id },
-        classes: "govuk-body-s"
-      },
-      {
-        text: facility.type | dashIfEmpty,
-        attributes: { "data-cy": "facility__type--" + facility._id },
-        classes: "govuk-body-s"
-      },
-      {
-        text: facility.submissionType | dashIfEmpty,
-        attributes: { "data-cy": "facility__noticeType--" + facility._id },
-        classes: "govuk-body-s"
-      },
-      {
-        text: currency + ' ' + facility.value | formatAsCurrency | dashIfEmpty,
-        attributes: { "data-cy": "facility__value--" + facility._id },
-        classes: "govuk-body-s"
-      },
-      {
-        text: stage  | dashIfEmpty,
-        attributes: { "data-cy": "facility__bankStage--" + facility._id },
-        classes: "govuk-body-s"
-      },
-      {
-        text: facility.submittedAsIssuedDate | localiseTimestamp("D MMM YYYY", user.timezone) | dashIfEmpty,
-        attributes: { "data-cy": "facility__issuedDate--" + facility._id },
-        classes: "govuk-body-s"
-      }
-    ] %}
-
-    {% set items = (items.push(item), items) %}
-  {% endfor %}
-
-  {{ govukTable({
-    classes: "govuk-!-margin-bottom-0",
-    head: [
-      {
-        text: "Facility name",
-        attributes: {
-        "data-cy": "facility__name--header"
-      }
-      },
-      {
-        text: "UKEF facility ID",
-        attributes: {
-        "data-cy": "facility__ukefId--header"
-      }
-      },
-      {
-        text: "Facility type",
-        attributes: {
-        "data-cy": "facility__type--header"
-      }
-      },
-      {
-        text: "Notice type",
-        attributes: {
-        "data-cy": "facility__noticeType--header"
-      }
-      },
-      {
-        text: "Value",
-        attributes: {
-        "data-cy": "facility__value--header"
-      }
-      },
-      {
-        text: "Bank’s facility stage",
-        attributes: {
-        "data-cy": "facility__bankStage--header"
-      }
-      },
-      {
-        text: "Issued date",
-        attributes: {
-        "data-cy": "facility__date--header"
-      }
-      }
-    ],
-    rows: items
-  }) }}
-
-  {{ pagination.pagination(pages.totalPages, pages.currentPage, pages.totalItems, '/dashboard/facilities') }}
+  {{dashboardPageContent.render({
+    successMessage: successMessage,
+    user: user,
+    tab: tab,
+    filters: filters,
+    selectedFilters: selectedFilters,
+    renderCreatedByYou: false,
+    table: facilitiesTable.render({
+      facilities: facilities,
+      userTimezone: user.timezone
+    }),
+    pages: pages,
+    route: '/facilities'
+  })}}
 
 {% endblock %}

@@ -14,8 +14,8 @@ const MOCK_GEF_DEAL = {
   createdAt: 1625827333471,
   exporter: {
     isFinanceIncreasing: true,
-    companiesHouseRegistrationNumber: '10686321',
-    companyName: 'FOUNDRY4 CONSULTING LTD',
+    companiesHouseRegistrationNumber: '123',
+    companyName: 'Test company',
     correspondenceAddress: {
       addressLine1: 'Test line 1',
       addressLine2: 'Test line 2',
@@ -38,11 +38,11 @@ const MOCK_GEF_DEAL = {
     probabilityOfDefault: 14,
     registeredAddress: {
       organisationName: null,
-      addressLine1: '7 Savoy Court',
+      addressLine1: 'First line',
       addressLine2: null,
       addressLine3: null,
       locality: 'London',
-      postalCode: 'WC2R 0EX',
+      postalCode: 'SW1A 2HQ',
       country: 'United Kingdom',
     },
     selectedIndustry: {
