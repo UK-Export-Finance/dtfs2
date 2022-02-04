@@ -24,11 +24,11 @@ services:
       - "5005:5005"
     volumes:
       - ./dtfs-central-api/src:/app/src:ro
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 300M
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.1"
+    #       memory: 300M
     environment:
       - PORT=5005
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
@@ -173,11 +173,11 @@ services:
       - "5002:5002"
     volumes:
       - ./reference-data-proxy/src:/app/src:ro
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 300M
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.1"
+    #       memory: 300M
     environment:
       - PORT=5002
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
