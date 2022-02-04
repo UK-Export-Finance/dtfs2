@@ -1,16 +1,23 @@
-const { dashboard } = require('../../../../pages');
 const relative = require('../../../../relativeURL');
-const mockUsers = require('../../../../../fixtures/mockUsers');
+const { dashboardDeals } = require('../../../../pages');
+// MOCK_USERS
 const CONSTANTS = require('../../../../../fixtures/constants');
+const MOCK_USERS = require('../../../../../fixtures/users');
+const { MOCK_DEALS } = require('../fixtures');
 
-const BANK1_MAKER1 = mockUsers.find((user) =>
-  (user.roles.includes('maker') && user.username === 'BANK1_MAKER1'));
+const {
+  BANK1_MAKER1,
+  BANK1_MAKER2,
+  BANK2_MAKER2,
+  ADMIN,
+} = MOCK_USERS;
 
-const BANK1_MAKER2 = mockUsers.find((user) =>
-  (user.roles.includes('maker')) && user.username === 'BANK1_MAKER2');
-
-const BANK2_MAKER2 = mockUsers.find((user) =>
-  (user.roles.includes('maker')) && user.username === 'BANK2_MAKER2');
+const {
+  BSS_DEAL,
+  GEF_DEAL,
+  GEF_DEAL_MAKER_2,
+  GEF_DEAL_BANK_2_MAKER_2,
+} = MOCK_DEALS;
 
 const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 
@@ -24,42 +31,9 @@ context('View dashboard deals as a maker', () => {
 
   const ALL_DEALS = [];
 
-  const BSS_DEAL = {
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-    submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
-    bankInternalRefName: 'Draft BSS',
-    additionalRefName: 'Tibettan submarine acquisition scheme',
-    status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
-    exporter: {
-      companyName: 'mock company',
-    },
-  };
-
-  const GEF_DEAL = {
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-    bank: { id: BANK1_MAKER1.bank.id },
-    bankInternalRefName: 'Draft GEF',
-    status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
-    exporter: {
-      companyName: 'mock company',
-    },
-  };
-
-  const GEF_DEAL_MAKER_2 = {
-    ...GEF_DEAL,
-    bank: { id: BANK1_MAKER2.bank.id },
-    bankInternalRefName: 'Draft GEF Bank 1 Maker 2',
-  };
-
-  const GEF_DEAL_BANK_2_MAKER_2 = {
-    ...GEF_DEAL,
-    bank: { id: BANK2_MAKER2.bank.id },
-    bankInternalRefName: 'Draft GEF Bank 2 Maker 2',
-  };
-
   before(() => {
-    cy.deleteGefApplications(BANK1_MAKER1);
-    cy.deleteDeals(BANK1_MAKER1);
+    cy.deleteGefApplications(ADMIN);
+    cy.deleteDeals(ADMIN);
 
     cy.listAllUsers().then((usersInDb) => {
       const maker = usersInDb.find((user) => user.username === BANK1_MAKER1.username);
@@ -108,7 +82,7 @@ context('View dashboard deals as a maker', () => {
 
   it('BSS and GEF deals render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);
-    dashboard.visit();
+    dashboardDeals.visit();
 
     const {
       exporter,
@@ -117,16 +91,15 @@ context('View dashboard deals as a maker', () => {
       status,
       type,
       updated,
-    } = dashboard.row;
+    } = dashboardDeals.row;
 
     // should see all deals in the maker's bank
-    dashboard.totalItems().invoke('text').then((text) => {
+    dashboardDeals.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
     });
 
-
     //---------------------------------------------------------------
-    // first deal should be the most recent (with our test data - GEF)
+    // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
     const firstRow = cy.get('table tr').eq(1);
 
@@ -190,53 +163,53 @@ context('View dashboard deals as a maker', () => {
 
   it('deal links go to correct deal page/URL depending on dealType', () => {
     cy.login(BANK1_MAKER1);
-    dashboard.visit();
+    dashboardDeals.visit();
 
     // GEF link
-    dashboard.row.link(gefDealId).click();
+    dashboardDeals.row.link(gefDealId).click();
     cy.url().should('eq', relative(`/gef/application-details/${gefDealId}`));
 
 
     // go back to the dashboard
-    dashboard.visit();
+    dashboardDeals.visit();
 
 
     // BSS link
-    dashboard.row.link(bssDealId).click();
+    dashboardDeals.row.link(bssDealId).click();
     cy.url().should('eq', relative(`/contract/${bssDealId}`));
   });
 
   it('selecting the `created by me` checkbox refreshes the page and shows only deals created by the logged in maker', () => {
     // login as Maker 2, go to dashboard
     cy.login(BANK1_MAKER2);
-    dashboard.visit();
+    dashboardDeals.visit();
 
 
     // should see all deals in bank 1
-    dashboard.totalItems().invoke('text').then((text) => {
+    dashboardDeals.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
     });
 
     // select/submit `created by you` checkbox
-    dashboard.filters.mainContainer.createdByYouCheckbox().check();
+    dashboardDeals.filters.mainContainer.createdByYouCheckbox().check();
 
 
     // should only see deals made by Maker 2.
     const DEALS_BY_MAKER_2 = ALL_BANK1_DEALS.filter(({ maker }) => maker.username === BANK1_MAKER2.username);
 
-    dashboard.totalItems().invoke('text').then((text) => {
+    dashboardDeals.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal(`(${DEALS_BY_MAKER_2.length} items)`);
     });
 
     // checkbox should be remain checked
-    dashboard.filters.mainContainer.createdByYouCheckbox().should('be.checked');
+    dashboardDeals.filters.mainContainer.createdByYouCheckbox().should('be.checked');
   });
 
   it('should not show deals created by other banks', () => {
     cy.login(BANK1_MAKER1);
-    dashboard.visit();
+    dashboardDeals.visit();
 
-    dashboard.totalItems().invoke('text').then((text) => {
+    dashboardDeals.totalItems().invoke('text').then((text) => {
       expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
     });
 

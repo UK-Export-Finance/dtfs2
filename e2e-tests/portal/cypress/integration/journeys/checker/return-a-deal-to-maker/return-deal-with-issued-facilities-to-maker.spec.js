@@ -2,10 +2,13 @@ const pages = require('../../../pages');
 const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
 const dealWithSomeIssuedFacilitiesReadyForReview = require('./dealWithSomeIssuedFacilitiesReadyForReview');
-const mockUsers = require('../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
-const CHECKER_LOGIN = mockUsers.find((user) => (user.roles.includes('checker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const {
+  ADMIN,
+  BANK1_MAKER1,
+  BANK1_CHECKER1,
+} = MOCK_USERS;
 
 context('A checker selects to return a deal (with some issued facilities) to maker from the view-contract page', () => {
   let deal;
@@ -16,16 +19,16 @@ context('A checker selects to return a deal (with some issued facilities) to mak
   };
 
   before(() => {
-    cy.deleteDeals(MAKER_LOGIN);
+    cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(dealWithSomeIssuedFacilitiesReadyForReview, { ...MAKER_LOGIN })
+    cy.insertOneDeal(dealWithSomeIssuedFacilitiesReadyForReview, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
 
         const { mockFacilities } = dealWithSomeIssuedFacilitiesReadyForReview;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -37,16 +40,16 @@ context('A checker selects to return a deal (with some issued facilities) to mak
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
   it('Facilities display the correct facility statuses and after returning the deal to maker, facility statuses should be updated', () => {
-    cy.login({ ...CHECKER_LOGIN });
+    cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
 
     // expect Unissued Bonds (that need to 'Issue Facility') to have correct status

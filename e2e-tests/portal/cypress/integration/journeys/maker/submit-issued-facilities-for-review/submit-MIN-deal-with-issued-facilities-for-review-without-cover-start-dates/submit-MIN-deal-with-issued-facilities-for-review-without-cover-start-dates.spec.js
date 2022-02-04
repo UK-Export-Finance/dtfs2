@@ -1,7 +1,7 @@
 const pages = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 const minDealWithNotStartedFacilityStatuses = require('./MINDealWithNotStartedFacilityStatuses');
-const mockUsers = require('../../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../../fixtures/users');
 const {
   fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate,
   ISSUED_BOND_DATE_VALUE,
@@ -11,7 +11,7 @@ const {
   ISSUED_LOAN_DATE_VALUE,
 } = require('../../fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Maker fills in bond & loan issue facility forms without requested cover start date and submits the deal for checker review', () => {
   let deal;
@@ -22,13 +22,13 @@ context('Maker fills in bond & loan issue facility forms without requested cover
   };
 
   before(() => {
-    cy.insertOneDeal(minDealWithNotStartedFacilityStatuses, { ...MAKER_LOGIN })
+    cy.insertOneDeal(minDealWithNotStartedFacilityStatuses, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
         const { mockFacilities } = minDealWithNotStartedFacilityStatuses;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -40,16 +40,16 @@ context('Maker fills in bond & loan issue facility forms without requested cover
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
   it('defaults the submitted facilities requested cover start dates to the previously entered issue date', () => {
-    cy.login({ ...MAKER_LOGIN });
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
     pages.contract.proceedToReview().should('be.disabled');
 

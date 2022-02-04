@@ -3,18 +3,17 @@ const {
 } = require('../../../pages');
 const partials = require('../../../partials');
 const relative = require('../../../relativeURL');
-const mockUsers = require('../../../../fixtures/mockUsers');
-// test data we want to set up + work with..
+const MOCK_USERS = require('../../../../fixtures/users');
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker')));
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let deal;
   let dealId;
 
   beforeEach(() => {
-    cy.deleteDeals(MAKER_LOGIN);
+    cy.deleteDeals(ADMIN);
 
     const aDealWithAboutSupplyContractInStatus = (status) => {
       const candidates = twentyOneDeals
@@ -29,7 +28,7 @@ context('about-supply-contract', () => {
       }
     };
 
-    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), MAKER_LOGIN)
+    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = insertedDeal._id;
@@ -37,7 +36,7 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
 
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.supplierName().clear();
@@ -151,7 +150,7 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, triggers Supplier companies house validation errors', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     contractAboutSupplier.visit(deal);
 
     //---------------------------------------------------------------
@@ -193,7 +192,7 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, fills in a field, triggers Supplier companies house validation errors', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     contractAboutSupplier.visit(deal);
 
     //---------------------------------------------------------------
@@ -237,7 +236,7 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, triggers Indemnifier companies house validation errors', () => {
-    cy.login(MAKER_LOGIN);
+    cy.login(BANK1_MAKER1);
     contractAboutSupplier.visit(deal);
 
     //---------------------------------------------------------------

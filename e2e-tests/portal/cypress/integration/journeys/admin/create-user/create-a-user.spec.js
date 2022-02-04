@@ -1,9 +1,8 @@
 const { header, users, createUser } = require('../../../pages');
 const relative = require('../../../relativeURL');
+const MOCK_USERS = require('../../../../fixtures/users');
 
-const mockUsers = require('../../../../fixtures/mockUsers');
-
-const ADMIN_LOGIN = mockUsers.find((user) => (user.roles.includes('admin')));
+const { ADMIN } = MOCK_USERS;
 
 context('Admin user creates a new user', () => {
   const validUser = {
@@ -25,13 +24,13 @@ context('Admin user creates a new user', () => {
   };
 
   beforeEach(() => {
-    cy.removeUserIfPresent(validUser, ADMIN_LOGIN);
-    cy.removeUserIfPresent(userWithInvalidPassword, ADMIN_LOGIN);
+    cy.removeUserIfPresent(validUser, ADMIN);
+    cy.removeUserIfPresent(userWithInvalidPassword, ADMIN);
   });
 
   it('Admin user adds a new user and confirms the new user works', () => {
     // login and go to dashboard
-    cy.login(ADMIN_LOGIN);
+    cy.login(ADMIN);
 
     header.users().click();
     users.user(validUser).should('not.exist');
@@ -60,7 +59,7 @@ context('Admin user creates a new user', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // prove the lastLogin timestamp
-    cy.login(ADMIN_LOGIN);
+    cy.login(ADMIN);
     cy.url().should('eq', relative('/dashboard/deals/0'));
     header.users().click();
 
@@ -71,7 +70,7 @@ context('Admin user creates a new user', () => {
 
   it('Admin user adds a new user, triggering validation errors', () => {
     // login and go to dashboard
-    cy.login(ADMIN_LOGIN);
+    cy.login(ADMIN);
 
     header.users().click();
     users.user(userWithInvalidPassword).should('not.exist');
@@ -101,7 +100,7 @@ context('Admin user creates a new user', () => {
   // TODO: ADD lighthouse checks DTFS2-4994
   //   it('Manage users screen should pass Lighthouse audit', () => {
   //     // login and go to manage users
-  //     cy.login(ADMIN_LOGIN);
+  //     cy.login(ADMIN);
   //     header.users().click();
 
   //     cy.lighthouse({
@@ -117,7 +116,7 @@ context('Admin user creates a new user', () => {
   // TODO: ADD lighthouse checks DTFS2-4994
   //   it('Add user screen should pass Lighthouse audit', () => {
   //     // login and go to add/edit user
-  //     cy.login(ADMIN_LOGIN);
+  //     cy.login(ADMIN);
   //     header.users().click();
   //     users.addUser().click();
 

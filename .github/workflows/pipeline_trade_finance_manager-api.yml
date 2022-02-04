@@ -2,7 +2,7 @@ name: Trade Finance Manager API
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'trade-finance-manager-api/**'
     - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
@@ -56,7 +56,7 @@ jobs:
     environment:
       name: APITEST
     runs-on: ubuntu-latest
-    env: 
+    env:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
     steps:
@@ -138,7 +138,7 @@ jobs:
 
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
       GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-      
+
       JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
       JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
 
@@ -164,7 +164,7 @@ jobs:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
       ESTORE_URL: ${{ secrets.ESTORE_URL }}
-      
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
@@ -284,4 +284,4 @@ jobs:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-trade-finance-manager-api --slot ${{ github.sha }}
 
-  
+

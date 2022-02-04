@@ -1,9 +1,9 @@
 const pages = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 const mockDeal = require('./MIA-deal-submitted-to-ukef-with-issued-facilities-after-checker-returned-to-maker');
-const mockUsers = require('../../../../../fixtures/mockUsers');
+const MOCK_USERS = require('../../../../../fixtures/users');
 
-const MAKER_LOGIN = mockUsers.find((user) => (user.roles.includes('maker') && user.bank.name === 'UKEF test bank (Delegated)'));
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const day = String(new Date().getDate()).padStart(2, 0);
 
@@ -16,15 +16,15 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
   };
 
   before(() => {
-    cy.deleteDeals(MAKER_LOGIN);
-    cy.insertOneDeal(mockDeal, { ...MAKER_LOGIN })
+    cy.deleteDeals(ADMIN);
+    cy.insertOneDeal(mockDeal, BANK1_MAKER1)
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
 
         const { mockFacilities } = mockDeal;
 
-        cy.createFacilities(dealId, mockFacilities, MAKER_LOGIN).then((createdFacilities) => {
+        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -36,16 +36,16 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
 
   after(() => {
     dealFacilities.bonds.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     dealFacilities.loans.forEach((facility) => {
-      cy.deleteFacility(facility._id, MAKER_LOGIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });
 
   it('Maker can edit only the issued facilities details that have already been submitted to checker (but NOT submitted to UKEF)', () => {
-    cy.login({ ...MAKER_LOGIN });
+    cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
     pages.contract.status().invoke('text').then((text) => {

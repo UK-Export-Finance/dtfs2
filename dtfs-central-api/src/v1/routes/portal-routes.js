@@ -51,47 +51,6 @@ portalRouter.route('/banks/:id')
 /**
  * @openapi
  * /portal/deals:
- *   get:
- *     summary: Get, filter and sort multiple deals in Portal deals collection
- *     tags: [Portal - BSS]
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               filters:
- *                 type: array
- *                 items:
- *                   type: object
- *               sort:
- *                 type: object
- *               start:
- *                 type: integer
- *               pagesize:
- *                 type: integer
- *           example:
- *             sort: { lastUpdated: -1, status: 'Draft' }
- *             filters: { '$and': [ { userId: '123456' }, { bank: { id: '9' } } ] }
- *             start: 0
- *             pagesize: 10
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/definitions/DealsBSS'
- *       500:
- *         description: Error querying deals
- */
-portalRouter.route('/deals').get(
-  getDealController.queryAllDeals,
-);
-
-/**
- * @openapi
- * /portal/deals:
  *   post:
  *     summary: Create a BSS deal in Portal deals collection
  *     tags: [Portal - BSS]
