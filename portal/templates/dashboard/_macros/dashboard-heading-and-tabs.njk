@@ -1,0 +1,30 @@
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+
+{% import '_macros/success-message.njk' as success %}
+{% import '_macros/dashboard-sub-nav.njk' as dashboardSubNav %}
+
+{% macro render(params) %}
+  {% set successMessage = params.successMessage %}
+  {% set user = params.user %}
+  {% set tab = params.tab %}
+
+  {% if successMessage %}
+    {{ success.message(
+      message = successMessage
+    ) }}
+  {% endif %}
+
+  {{ mojPageHeaderActions({
+    heading: {
+      html: '<h1 class="govuk-heading-xl">Applications and notices</h1>'
+    },
+    items: user.roles.includes('maker') and [{
+      text: 'Create new',
+      attributes: {"data-cy":"CreateNewSubmission"},
+      href: "/gef/mandatory-criteria" if user.bank.hasGefAccessOnly else "/select-scheme"
+    }]
+  }) }}
+
+  {{ dashboardSubNav.subnav(selected = tab) }}
+
+{% endmacro %}

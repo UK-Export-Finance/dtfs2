@@ -31,7 +31,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
     ],
     exporter: {
       companiesHouseRegistrationNumber: 'SC467044',
-      companyName: 'SCOT ACCESS SERVICES LTD',
+      companyName: 'TEST SERVICES LTD',
       industries: [
         {
           code: '1005',
@@ -42,11 +42,11 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
       isFinanceIncreasing: false,
       probabilityOfDefault: '1',
       registeredAddress: {
-        addressLine1: '58 Long Lane',
-        addressLine2: 'Broughty Ferry',
+        addressLine1: '123 Street',
+        addressLine2: 'Road',
         country: 'Scotland',
         locality: 'Dundee',
-        postalCode: 'DD5 1HH',
+        postalCode: 'DD1 1AA',
       },
       selectedIndustry: {
         class: { code: '43991', name: 'Scaffold erection' },

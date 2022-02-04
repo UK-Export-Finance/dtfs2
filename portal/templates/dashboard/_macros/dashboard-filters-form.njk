@@ -21,43 +21,64 @@
     }
   }) }}
 
-  {{ govukCheckboxes({
-    idPrefix: 'dealType',
-    name: 'dealType',
-    classes: "govuk-checkboxes--small",
-    fieldset: {
-      legend: {
-        text: 'Product',
-        classes: 'govuk-fieldset__legend--m'
-      }
-    },
-    items: filters.product
-  }) }}
+  {% if filters.product %}
+    {{ govukCheckboxes({
+      idPrefix: 'dealType',
+      name: 'dealType',
+      classes: "govuk-checkboxes--small",
+      fieldset: {
+        legend: {
+          text: 'Product',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.product
+    }) }}
+  {% endif %}
 
-  {{ govukCheckboxes({
-    idPrefix: 'submissionType',
-    name: 'submissionType',
-    classes: "govuk-checkboxes--small",
-    fieldset: {
-      legend: {
-        text: 'Notice type',
-        classes: 'govuk-fieldset__legend--m'
-      }
-    },
-    items: filters.submissionType
-  }) }}
+  {% if filters.submissionType %}
+    {{ govukCheckboxes({
+      idPrefix: 'submissionType',
+      name: 'submissionType',
+      classes: "govuk-checkboxes--small",
+      fieldset: {
+        legend: {
+          text: 'Notice type',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.submissionType
+    }) }}
+  {% endif %}
 
-  {{ govukCheckboxes({
-    idPrefix: 'status',
-    name: 'status',
-    classes: "govuk-checkboxes--small",
-    fieldset: {
-      legend: {
-        text: 'Status',
-        classes: 'govuk-fieldset__legend--m'
-      }
-    },
-    items: filters.status
-  }) }}
+  {% if filters.status %}
+    {{ govukCheckboxes({
+      idPrefix: 'status',
+      name: 'status',
+      classes: "govuk-checkboxes--small",
+      fieldset: {
+        legend: {
+          text: 'Status',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.status
+    }) }}
+  {% endif %}
+
+  {% if filters.hasBeenIssued %}
+    {{ govukCheckboxes({
+      idPrefix: 'hasBeenIssued',
+      name: 'hasBeenIssued',
+      classes: "govuk-checkboxes--small",
+      fieldset: {
+        legend: {
+          text: 'hasBeenIssued',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.hasBeenIssued
+    }) }}
+  {% endif %}
 
 {% endmacro %}
