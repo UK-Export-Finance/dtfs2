@@ -90,10 +90,10 @@ context('about-supply-contract', () => {
     // check default state
     contractAboutSupplier.indemnifierCorrespondenceAddress().country().should('have.value', '');
     // fill in form
-    contractAboutSupplier.indemnifierCorrespondenceAddress().line1().type('27 Petersfield');
+    contractAboutSupplier.indemnifierCorrespondenceAddress().line1().type('Test address');
     contractAboutSupplier.indemnifierCorrespondenceAddress().line3().type('Broomfield');
     contractAboutSupplier.indemnifierCorrespondenceAddress().town().type('Chelmsford');
-    contractAboutSupplier.indemnifierCorrespondenceAddress().postcode().type('CM1 4EP');
+    contractAboutSupplier.indemnifierCorrespondenceAddress().postcode().type('SW1A 2HQ');
 
 
     contractAboutSupplier.saveAndGoBack().click();

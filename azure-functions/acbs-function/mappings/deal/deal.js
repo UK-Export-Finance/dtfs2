@@ -21,7 +21,7 @@ const getDealSubmissionDate = require('./helpers/get-deal-submission-date');
 
 /*
 ACBS guaranteeCommencementDate algorithm
-provided by darren McGuirk 23/03/2021
+provided by DM 23/03/2021
                               ACBS Effective Date     ACBS Issued Date
 Commitment                    Portal Submission Date  (we don’t send)
 Switch Commitment to Issued   Portal Submission Date  Cover Start Date
