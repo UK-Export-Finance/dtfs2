@@ -77,19 +77,19 @@
  *             example: Joe Bloggs
  *           agentAddressLine1:
  *             type: string
- *             example: 27a
+ *             example: 1A
  *           agentAddressLine2:
  *             type: string
- *             example: Maxwell Road
+ *             example: Test Road
  *           agentAddressLine3:
  *             type: string
  *             example: 'Line 3'
  *           agentAddressTown:
  *             type: string
- *             example: Northwood
+ *             example: London
  *           agentAddressPostcode:
  *             type: string
- *             example: HA6 2XY
+ *             example: SW1A 2HQ
  *           agentAddressCountry:
  *             type: object
  *             properties:
@@ -104,19 +104,19 @@
  *         properties:
  *           indemnifier-address-line-1:
  *             type: string
- *             example: 27a
+ *             example: 1A
  *           indemnifier-address-line-2:
  *             type: string
- *             example: Maxwell Road
+ *             example: Test Road
  *           indemnifier-address-line-3:
  *             type: string
  *             example: 'Line 3'
  *           indemnifier-address-town:
  *             type: string
- *             example: Northwood
+ *             example: London
  *           indemnifier-address-postcode:
  *             type: string
- *             example: HA6 2XY
+ *             example: SW1A 2HQ
  *           indemnifier-address-country:
  *             type: object
  *             properties:
@@ -131,19 +131,19 @@
  *             example: '08547313'
  *           indemnifier-correspondence-address-line-1:
  *             type: string
- *             example: 27 Petersfield
+ *             example: Test address
  *           indemnifier-correspondence-address-line-2:
  *             type: string
- *             example: Maxwell Road
+ *             example: Test Road
  *           indemnifier-correspondence-address-line-3:
  *             type: string
  *             example: Essex
  *           indemnifier-correspondence-address-town:
  *             type: string
- *             example: Northwood
+ *             example: London
  *           indemnifier-correspondence-address-postcode:
  *             type: string
- *             example: HA6 2XY
+ *             example: SW1A 2HQ
  *           indemnifier-correspondence-address-country:
  *             type: object
  *             properties:
@@ -185,19 +185,19 @@
  *             example: Small
  *           supplier-address-line-1:
  *             type: string
- *             example: 27 Petersfield
+ *             example: Test address
  *           supplier-address-line-2:
  *             type: string
- *             example: Maxwell Road
+ *             example: Test Road
  *           supplier-address-line-3:
  *             type: string
  *             example: Essex
  *           supplier-address-town:
  *             type: string
- *             example: Northwood
+ *             example: London
  *           supplier-address-postcode:
  *             type: string
- *             example: HA6 2XY
+ *             example: SW1A 2HQ
  *           supplier-address-country:
  *             type: object
  *             properties:
@@ -212,19 +212,19 @@
  *             example: '08547313'
  *           supplier-correspondence-line-1:
  *             type: string
- *             example: 27 Petersfield
+ *             example: Test address
  *           supplier-correspondence-line-2:
  *             type: string
- *             example: Maxwell Road
+ *             example: Test Road
  *           supplier-correspondence-line-3:
  *             type: string
  *             example: Essex
  *           supplier-correspondence-town:
  *             type: string
- *             example: Northwood
+ *             example: London
  *           supplier-correspondence-postcode:
  *             type: string
- *             example: HA6 2XY
+ *             example: SW1A 2HQ
  *           supplier-correspondence-country:
  *             type: object
  *             properties:
@@ -248,19 +248,19 @@
  *             example: Mock free text
  *           buyer-address-line-1:
  *             type: string
- *             example: 27 Petersfield
+ *             example: Test address
  *           buyer-address-line-2:
  *             type: string
- *             example: Maxwell Road
+ *             example: Test Road
  *           buyer-address-line-3:
  *             type: string
  *             example: Essex
  *           buyer-address-town:
  *             type: string
- *             example: Northwood
+ *             example: London
  *           buyer-address-postcode:
  *             type: string
- *             example: HA6 2XY
+ *             example: SW1A 2HQ
  *           buyer-address-country:
  *             type: object
  *             properties:
