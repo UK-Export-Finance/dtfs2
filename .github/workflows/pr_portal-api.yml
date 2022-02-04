@@ -35,7 +35,7 @@ jobs:
     - name: Commit hash
       run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push Portal-api
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
@@ -46,7 +46,7 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
     - name: Build and push Portal-UI
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
@@ -57,7 +57,7 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
     - name: Build and push TFM-API
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
@@ -68,7 +68,7 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
     - name: Build and push TFM-UI
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
@@ -79,7 +79,7 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
     - name: Build and push reference-data-proxy
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
@@ -90,7 +90,7 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true 
     - name: Build and push Number-Generator
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
