@@ -41,17 +41,38 @@ context('manual inclusion Page', () => {
     it('displays the correct elements', () => {
       manualInclusion.headingCaption();
       manualInclusion.mainHeading();
-      manualInclusion.templateLink();
+      manualInclusion.templateLinkDocx();
+      manualInclusion.templateLinkPdf();
       manualInclusion.fileUploadComponent();
       manualInclusion.continueButton();
       manualInclusion.cancelLink();
     });
 
+    it('displays the correct text for questionnaire download', () => {
+      manualInclusion.templateLinkDocx().contains('Download Manual Inclusion Questionnaire.docx (24KB)');
+      manualInclusion.templateLinkDocx().invoke('attr', 'href').then((href) => {
+        expect(href).to.equal('/gef/assets/files/GEF%20Manual%20Inclusion%20Questionnaire%20-%20MM%20v2.docx');
+      });
+
+      manualInclusion.templateLinkPdf().contains('Download Manual Inclusion Questionnaire.pdf (87KB)');
+      manualInclusion.templateLinkPdf().invoke('attr', 'href').then((href) => {
+        expect(href).to.equal('/gef/assets/files/GEF%20Manual%20Inclusion%20Questionnaire%20-%20MM%20v2.pdf');
+      });
+    });
+
     it('has a template to download', () => {
       cy.document()
         .then((doc) => {
-          const templateUrl = doc.querySelector('[data-cy=template-link]').getAttribute('href');
-          cy.request({ url: templateUrl }).then((response) => {
+          const templateUrlDocx = doc.querySelector('[data-cy=template-link-docx]').getAttribute('href');
+          cy.request({ url: templateUrlDocx }).then((response) => {
+            expect(response.status).to.equal(200);
+          });
+        });
+
+      cy.document()
+        .then((doc) => {
+          const templateUrlPdf = doc.querySelector('[data-cy=template-link-pdf]').getAttribute('href');
+          cy.request({ url: templateUrlPdf }).then((response) => {
             expect(response.status).to.equal(200);
           });
         });

@@ -70,7 +70,7 @@ const deleteFacility = async (facilityId) => {
     },
   }).catch((err) => { console.log(`err: ${err}`); });
 
-  return response?.data;
+  return response.data;
 };
 
 module.exports = {

@@ -5,5 +5,6 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.{js,}'],
   coverageDirectory: 'generated_reports/coverage/api-test',
   testMatch: ['**/*.api-test.js'],
+  testSequencer: './api-test-sequencer.jest.js',
   ...commonSettings,
 };

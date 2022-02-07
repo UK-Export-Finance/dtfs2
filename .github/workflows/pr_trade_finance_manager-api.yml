@@ -21,7 +21,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -34,7 +34,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
     - name: Commit hash
@@ -89,8 +89,8 @@ jobs:
     needs: build
     environment:
       name: APITEST
-    runs-on: ubuntu-latest
-    env: 
+    runs-on: self-hosted
+    env:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
       AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
@@ -109,7 +109,7 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
     - name: Start Docker Compose
       run: |
-        docker-compose up -d trade-finance-manager-api
+        docker-compose -f docker-compose.gha.yml up -d trade-finance-manager-api
     - name: Run API tests
       run: |
         docker-compose exec -T trade-finance-manager-api npm run api-test
@@ -142,7 +142,7 @@ jobs:
 
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
       GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-      
+
       JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
       JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
 
@@ -168,7 +168,7 @@ jobs:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
       ESTORE_URL: ${{ secrets.ESTORE_URL }}
-      
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
