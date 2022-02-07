@@ -2,7 +2,8 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { header, dashboardDeals } = require('../../../pages');
-const { BSS_DEAL_MIA } = require('./fixtures');
+const { dashboardFilters } = require('../../../partials');
+const { BSS_DEAL_MIA } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -24,24 +25,24 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
 
   it('resets filters after navigating away from the dashboard', () => {
     // toggle to show filters (hidden by default)
-    dashboardDeals.filters.showHideButton().click();
+    dashboardFilters.showHideButton().click();
 
     // apply filter 1
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
 
     // apply filter 2
-    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardFilters.panel.form.submissionType.MIA.checkbox().click();
 
     // submit filters
-    dashboardDeals.filters.panel.form.applyFiltersButton().click();
+    dashboardFilters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // check the filters are applied
-    dashboardDeals.filters.showHideButton().click();
+    dashboardFilters.showHideButton().click();
 
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');
-    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
+    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('be.checked');
 
     // navigate somewhere else
     cy.visit('/dashboard/facilities');
@@ -53,6 +54,6 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
 
     // previously applied filters should not be applied
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('not.be.checked');
-    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
+    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
   });
 });
