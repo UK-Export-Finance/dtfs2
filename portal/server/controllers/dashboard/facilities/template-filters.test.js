@@ -13,7 +13,7 @@ import CONTENT_STRINGS from '../../../content-strings';
 import {
   generateFiltersArray,
   submissionTypeFilters,
- } from '../filters/generate-template-filters';
+} from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/facilities - template-filters', () => {
   describe('productFilters', () => {
