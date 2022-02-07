@@ -313,7 +313,7 @@ const deal = {
   ],
   summary: {},
   comments: [],
-  dealFiles: {},
+  supportingInformation: {},
 };
 
 export default deal;

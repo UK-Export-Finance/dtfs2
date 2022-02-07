@@ -93,7 +93,7 @@ const dealQuery = gql`
           ukefDealId
           submissionDate
         }
-        dealFiles {
+        supportingInformation {
           security
         }
         totals {

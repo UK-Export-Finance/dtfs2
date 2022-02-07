@@ -64,7 +64,7 @@ describe('reducer - deals', () => {
             mockBssDeal.dealSnapshot.details,
             mockBssDeal.tfm,
           ),
-          dealFiles: mockBssDeal.dealSnapshot.dealFiles,
+          supportingInformation: mockBssDeal.dealSnapshot.supportingInformation,
           eligibility: mapEligibility(mockBssDeal.dealSnapshot.eligibility),
           totals: mapTotals(mockBssDeal.dealSnapshot.facilities),
         },

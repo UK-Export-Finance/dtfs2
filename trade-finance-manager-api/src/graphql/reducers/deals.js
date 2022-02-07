@@ -17,7 +17,7 @@ const mapBssDeal = (deal) => {
       ...dealSnapshot,
       submissionDetails: mapSubmissionDetails(dealSnapshot.submissionDetails),
       facilities: mapFacilities(dealSnapshot.facilities, dealSnapshot.details, deal.tfm),
-      dealFiles: dealSnapshot.dealFiles,
+      supportingInformation: dealSnapshot.supportingInformation,
       eligibility: mapEligibility(dealSnapshot.eligibility),
       totals: mapTotals(dealSnapshot.facilities),
     },
