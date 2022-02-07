@@ -68,12 +68,23 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const existingDealActivities = (existingDeal.tfm && existingDeal.tfm.activities);
   const tfmUpdateHasActivities = (tfmUpdate.activities
                                   && Object.keys(tfmUpdate.activities).length > 0);
-
+  /**
+   * ACBS activities update are an array whereas TFM activities update is an object
+   * Checks if array, then uses spread operator
+   * else if not array, adds the object
+   */
   if (tfmUpdateHasActivities) {
-    dealUpdate.tfm.activities = [
-      ...tfmUpdate.activities,
-      ...existingDealActivities,
-    ];
+    if (Array.isArray(tfmUpdate.activities)) {
+      dealUpdate.tfm.activities = [
+        ...tfmUpdate.activities,
+        ...existingDealActivities,
+      ];
+    } else {
+      dealUpdate.tfm.activities = [
+        tfmUpdate.activities,
+        ...existingDealActivities,
+      ];
+    }
   }
 
   dealUpdate.tfm.lastUpdated = new Date().valueOf();
