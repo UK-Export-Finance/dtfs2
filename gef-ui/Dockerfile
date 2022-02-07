@@ -6,12 +6,6 @@ ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
 ENV SSH_PORT=2222
 
-# Node setup
-WORKDIR /app
-COPY package.json .
-RUN npm install
-COPY . .
-
 # SSH Setup
 # 1. Artifcats
 ADD init.sh /bin/init.sh
@@ -24,6 +18,12 @@ RUN apk add bash openrc openssh curl \
     && rc-update add sshd
 #3. Expose SSH port
 EXPOSE 80 ${SSH_PORT}
+
+# Node setup
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . .
 
 # Execute Script
 ENTRYPOINT ["/bin/init.sh"]
