@@ -29,6 +29,11 @@ const FACILITY_TYPE = {
   LOAN: 'Loan',
 };
 
+const FACILITY_STAGE = {
+  UNISSUED: 'Unissued',
+  ISSUED: 'Issued',
+}
+
 module.exports = {
   DEALS: {
     DEAL_TYPE,
@@ -37,5 +42,6 @@ module.exports = {
   },
   FACILITY: {
     FACILITY_TYPE,
+    FACILITY_STAGE,
   },
 };

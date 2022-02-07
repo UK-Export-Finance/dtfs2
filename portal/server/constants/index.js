@@ -1,5 +1,6 @@
 const DASHBOARD_FILTERS_DEFAULT = require('./dashboard-filters');
-const FACILITY_STAGE = require('./facility-stage');
+const FACILITY_HAS_BEEN_ISSUED = require('./facility-has-been-issued');
+const FACILITY_TYPE = require('./facility-type');
 const FIELD_NAMES = require('./field-names');
 const PRODUCT = require('./product');
 const STATUS = require('./status');
@@ -9,7 +10,8 @@ const TRANSACTION_TYPE = require('./transaction-type');
 
 module.exports = {
   DASHBOARD_FILTERS_DEFAULT,
-  FACILITY_STAGE,
+  FACILITY_HAS_BEEN_ISSUED,
+  FACILITY_TYPE,
   FIELD_NAMES,
   PRODUCT,
   STATUS,
