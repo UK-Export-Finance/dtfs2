@@ -97,12 +97,12 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     });
 
     it('should return 404 when deal does not exist', async () => {
-      const { status } = await putIssueFacility('1234', loanId, {});
+      const { status } = await putIssueFacility('12345678901234', loanId, {});
       expect(status).toEqual(404);
     });
 
     it('should return 404 when loan does not exist', async () => {
-      const { status } = await putIssueFacility(dealId, '1234', {});
+      const { status } = await putIssueFacility(dealId, '123456789012', {});
       expect(status).toEqual(404);
     });
 

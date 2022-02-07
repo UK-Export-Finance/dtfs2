@@ -14,6 +14,7 @@ const createFacilities = async (facilities, dealId) => {
     facility.dealId = new ObjectId(dealId);
     return facility;
   }));
+
   const idsArray = [];
   facilitiesWithId.forEach((f) => {
     idsArray.push(f._id.toHexString());
