@@ -176,5 +176,8 @@
       "feeFrequency": null,
       "feeType": "At maturity"
     }
-  ]
+  ],
+  "exporter": {
+    "companyName": "UKFS"
+  }
 }
