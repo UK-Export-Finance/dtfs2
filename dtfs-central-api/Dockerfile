@@ -1,15 +1,10 @@
 # Node Alpine Docker Image
 FROM node:14.18.1-alpine3.13
 
-# Variable
+# Variables
 ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
 ENV SSH_PORT=2222
-
-# Node
-WORKDIR /app
-COPY . .
-RUN npm install
 
 # SSH Setup
 # 1. Artifcats
@@ -23,6 +18,12 @@ RUN apk add bash openrc openssh curl \
     && rc-update add sshd
 #3. Expose SSH port
 EXPOSE 80 ${SSH_PORT}
+
+# Node setup
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . .
 
 # Execute Script
 ENTRYPOINT ["/bin/init.sh"]
