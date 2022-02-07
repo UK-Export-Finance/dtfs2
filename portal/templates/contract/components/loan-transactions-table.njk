@@ -11,80 +11,81 @@
       {% set dealStatus = params.deal.status %}
       {% set dealPreviousStatus = params.deal.previousStatus %}
       {% set loans = params.deal.loanTransactions.items %}
-
-      <table class="govuk-table contract-table contract-transactions-table govuk-!-margin-bottom-0" data-cy="loan-transactions-table">
-        <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-bank-reference-number">Bank reference number</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-ukef-facility-id">UKEF facility ID</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-status">Status</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-value">Value</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-stage">Stage</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-start-date">Start date</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-end-date">End date</th>
-            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-action">Action</th>
-          </tr>
-        </thead>
-
-        <tbody class="govuk-table__body">
-
-          {% for loan in loans %}
-            <tr class="govuk-table__row" data-cy="loan-{{ loan._id }}">
-              <td class="govuk-table__cell govuk-!-font-size-14">
-                {{ loanLink.render(params, loan) }}
-              </td>
-
-              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-ukef-facility-id-{{ loan._id }}">
-                {{ loan.ukefFacilityId }}
-              </td>
-
-              <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell" data-cy="loan-status-{{ loan._id }}">
-                {{ statusTag.render(loan.status) }}
-              </td>
-
-              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-value">
-                {{ loan.currency.id}} {{ loan.value }}
-              </td>
-
-              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-stage-{{ loan._id }}">{{ loan.facilityStage }}</td>
-
-              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-requested-cover-start-date">
-                {% if loan.requestedCoverStartDate %}
-                  {{ loan.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) }}
-                {% endif %}
-              </td>
-
-              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-cover-end-date">
-                {% if loan['coverEndDate-day'] and loan['coverEndDate-month'] and loan['coverEndDate-year'] %}
-                  {{ loan['coverEndDate-day'] }}/{{ loan['coverEndDate-month'] }}/{{ loan['coverEndDate-year'] }}
-                {% endif %}
-              </td>
-
-              <td class="govuk-table__cell govuk-!-font-size-14">
-
-                {% set dealStatusAllowsRequestedCoverDateChange = dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Further Maker's input required" and dealPreviousStatus !== "Draft" %}
-                {% set hasConfirmedCoverStartDate = params.confirmedRequestedCoverStartDates.includes(loan._id) %}
-
-                {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: loan, facilityName: 'loan', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate, facilityTableIndex: loop.index} %}
-
-                {% set userIsMaker = params.user.roles.includes('maker')%}
-
-                {% set dealSubmissionType = params.deal.submissionType %}
-
-                {% set requestedCoverDateCanEdit = userIsMaker and loan.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and loan.facilityStage === 'Unconditional' and loan.issueFacilityDetailsSubmitted %}
-
-                {% if requestedCoverDateCanEdit %}
-                  {{ requestedCoverStartDateLink.render(componentData) }}
-
-                  {% else %}
-                  {{ issueOrDeleteFacilityLink.render(componentData) }}
-                {% endif %}
-              </td>
+      <div class="table-overflow">
+        <table class="govuk-table contract-table contract-transactions-table govuk-!-margin-bottom-0" data-cy="loan-transactions-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-bank-reference-number">Bank reference number</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-ukef-facility-id">UKEF facility ID</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-status">Status</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-value">Value</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-stage">Stage</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-start-date">Start date</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-end-date">End date</th>
+              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="loans-table-header-action">Action</th>
             </tr>
+          </thead>
 
-          {% endfor %}
-        </tbody>
-      </table>
+          <tbody class="govuk-table__body">
+
+            {% for loan in loans %}
+              <tr class="govuk-table__row" data-cy="loan-{{ loan._id }}">
+                <td class="govuk-table__cell govuk-!-font-size-14">
+                  {{ loanLink.render(params, loan) }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-ukef-facility-id-{{ loan._id }}">
+                  {{ loan.ukefFacilityId }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell" data-cy="loan-status-{{ loan._id }}">
+                  {{ statusTag.render(loan.status) }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-value">
+                  {{ loan.currency.id}} {{ loan.value }}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-stage-{{ loan._id }}">{{ loan.facilityStage }}</td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-requested-cover-start-date">
+                  {% if loan.requestedCoverStartDate %}
+                    {{ loan.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) }}
+                  {% endif %}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-cover-end-date">
+                  {% if loan['coverEndDate-day'] and loan['coverEndDate-month'] and loan['coverEndDate-year'] %}
+                    {{ loan['coverEndDate-day'] }}/{{ loan['coverEndDate-month'] }}/{{ loan['coverEndDate-year'] }}
+                  {% endif %}
+                </td>
+
+                <td class="govuk-table__cell govuk-!-font-size-14">
+
+                  {% set dealStatusAllowsRequestedCoverDateChange = dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Further Maker's input required" and dealPreviousStatus !== "Draft" %}
+                  {% set hasConfirmedCoverStartDate = params.confirmedRequestedCoverStartDates.includes(loan._id) %}
+
+                  {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: loan, facilityName: 'loan', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate, facilityTableIndex: loop.index} %}
+
+                  {% set userIsMaker = params.user.roles.includes('maker')%}
+
+                  {% set dealSubmissionType = params.deal.submissionType %}
+
+                  {% set requestedCoverDateCanEdit = userIsMaker and loan.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and loan.facilityStage === 'Unconditional' and loan.issueFacilityDetailsSubmitted %}
+
+                  {% if requestedCoverDateCanEdit %}
+                    {{ requestedCoverStartDateLink.render(componentData) }}
+
+                    {% else %}
+                    {{ issueOrDeleteFacilityLink.render(componentData) }}
+                  {% endif %}
+                </td>
+              </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   {% endif %}
 {% endmacro %}

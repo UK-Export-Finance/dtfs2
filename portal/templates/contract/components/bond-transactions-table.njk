@@ -11,7 +11,7 @@
       {% set dealStatus = params.deal.status %}
       {% set dealPreviousStatus = params.deal.previousStatus %}
       {% set bonds = params.deal.bondTransactions.items %}
-
+      <div class="table-overflow">
         <table class="govuk-table contract-table contract-transactions-table govuk-!-margin-bottom-0" data-cy="bond-transactions-table">
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -85,6 +85,7 @@
             {% endfor %}
           </tbody>
         </table>
+      </div>
     </div>
   {% endif %}
 {% endmacro %}
