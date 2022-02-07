@@ -69,7 +69,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   const tfmUpdateHasActivities = (tfmUpdate.activities
                                   && Object.keys(tfmUpdate.activities).length > 0);
   /**
-   * ACBS activities update are an array whereas TFM activities update is an object
+   * ACBS activities update is an array whereas TFM activity update is an object
    * Checks if array, then uses spread operator
    * else if not array, adds the object
    */
