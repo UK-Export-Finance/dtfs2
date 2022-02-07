@@ -5,20 +5,20 @@ import {
   allDeals,
   removeSingleAllDealsFilter,
   removeAllDealsFilters,
-} from './deals';
-import mockResponse from '../../helpers/responseMock';
-import { getFlashSuccessMessage } from '../../helpers';
-import api from '../../api';
+} from '.';
+import mockResponse from '../../../helpers/responseMock';
+import { getFlashSuccessMessage } from '../../../helpers';
+import api from '../../../api';
 import {
   submittedFiltersArray,
   submittedFiltersObject,
-} from './filters/helpers';
-import { dashboardDealsFiltersQuery } from './filters/deals-query';
-import { dashboardFilters } from './filters/ui-filters';
-import { selectedDashboardFilters } from './filters/ui-selected-filters';
-import CONSTANTS from '../../constants';
+} from '../filters/helpers';
+import { dashboardDealsFiltersQuery } from './deals-filters-query';
+import { dashboardDealsFilters } from './template-filters';
+import { selectedFilters } from './selected-filters';
+import CONSTANTS from '../../../constants';
 
-jest.mock('../../api', () => ({
+jest.mock('../../../api', () => ({
   allDeals: jest.fn(),
 }));
 
@@ -37,7 +37,7 @@ const mockDeals = [
   },
 ];
 
-jest.mock('../../helpers', () => ({
+jest.mock('../../../helpers', () => ({
   __esModule: true,
   getApiData: jest.fn(() => ({
     count: 2,
@@ -156,8 +156,8 @@ describe('controllers/dashboard/deals', () => {
         tab: 'deals',
         deals: mockDeals,
         pages: expectedPages,
-        filters: dashboardFilters(expectedFiltersObj),
-        selectedFilters: selectedDashboardFilters(expectedFiltersObj),
+        filters: dashboardDealsFilters(expectedFiltersObj),
+        selectedFilters: selectedFilters(expectedFiltersObj),
         createdByYou: mockReq.session.dashboardFilters.createdByYou,
         keyword: mockReq.session.dashboardFilters.keyword,
       };

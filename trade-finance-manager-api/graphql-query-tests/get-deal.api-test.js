@@ -130,7 +130,7 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
         ukefDealId,
         submissionDate,
       }
-      dealFiles {
+      supportingInformation {
         security
       }
       totals {

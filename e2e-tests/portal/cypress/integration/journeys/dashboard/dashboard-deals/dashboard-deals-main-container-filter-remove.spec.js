@@ -1,11 +1,11 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
-const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../pages');
+const { dashboardFilters } = require('../../../partials');
 const {
   BSS_DEAL_DRAFT,
   GEF_DEAL_DRAFT,
-} = require('./fixtures');
+} = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -31,11 +31,11 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
 
   it('applies and removes a filter', () => {
     // toggle to show filters (hidden by default)
-    dashboardDeals.filters.showHideButton().click();
+    dashboardFilters.showHideButton().click();
 
     // apply filter
-    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
-    dashboardDeals.filters.panel.form.applyFiltersButton().click();
+    dashboardFilters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardFilters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
@@ -52,7 +52,7 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     dashboardDeals.filters.mainContainer.selectedFilters.noticeMIA().should('not.exist');
 
     // checkbox should be NOT be checked
-    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
+    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
     // should render all deals
     dashboardDeals.rows().should('have.length', ALL_DEALS.length);
@@ -61,14 +61,14 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
   it('retains other filters when one is removed', () => {
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
-    
+
     // toggle to show filters (hidden by default)
-    dashboardDeals.filters.showHideButton().click();
+    dashboardFilters.showHideButton().click();
 
     // apply filters
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
-    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
-    dashboardDeals.filters.panel.form.applyFiltersButton().click();
+    dashboardFilters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardFilters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
@@ -82,10 +82,10 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     dashboardDeals.filters.mainContainer.selectedFilters.noticeMIA().should('exist');
 
     // toggle to show filters (hidden by default)
-    dashboardDeals.filters.showHideButton().click();
+    dashboardFilters.showHideButton().click();
 
     // check checkboxes
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('not.be.checked');
-    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
+    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('be.checked');
   });
 });

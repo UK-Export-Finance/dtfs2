@@ -1,8 +1,9 @@
 import {
   generateSelectedFiltersObject,
-  selectedDashboardFilters,
-} from './ui-selected-filters';
-import { formatFieldValue } from './helpers';
+  selectedSubmissionTypeFilters,
+} from '../filters/generate-selected-filters';
+import { selectedFilters } from './selected-filters';
+import { formatFieldValue } from '../filters/helpers';
 import CONTENT_STRINGS from '../../../content-strings';
 import CONSTANTS from '../../../constants';
 
@@ -46,7 +47,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
     });
   });
 
-  describe('selectedDashboardFilters', () => {
+  describe('selectedFilters', () => {
     it('should return an array of objects for all selected/submitted filters', () => {
       const mockSubmittedFilters = {
         keyword: ['test'],
@@ -55,7 +56,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
         status: [CONSTANTS.STATUS.SUBMITTED],
       };
 
-      const result = selectedDashboardFilters(mockSubmittedFilters);
+      const result = selectedFilters(mockSubmittedFilters);
 
       const expected = [
         generateSelectedFiltersObject(
@@ -68,11 +69,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
           CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE,
           mockSubmittedFilters.dealType,
         ),
-        generateSelectedFiltersObject(
-          CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE,
-          CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
-          mockSubmittedFilters.submissionType,
-        ),
+        selectedSubmissionTypeFilters(mockSubmittedFilters.submissionType),
         generateSelectedFiltersObject(
           CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS,
           CONSTANTS.FIELD_NAMES.DEAL.STATUS,
@@ -85,7 +82,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
 
     describe('when there are no selected/submitted filters', () => {
       it('should return an empty array', () => {
-        const result = selectedDashboardFilters({});
+        const result = selectedFilters({});
 
         expect(result).toEqual([]);
       });

@@ -1,11 +1,11 @@
-const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../pages');
+const { dashboardFilters } = require('../../../partials');
 const {
   BSS_DEAL_DRAFT,
   GEF_DEAL_DRAFT,
-} = require('./fixtures');
+} = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -35,36 +35,36 @@ context('Dashboard Deals filters', () => {
     });
 
     it('hides filters and renders `show filter` button', () => {
-      dashboardDeals.filters.panel.container().should('not.be.visible');
+      dashboardFilters.panel.container().should('not.be.visible');
 
-      dashboardDeals.filters.showHideButton().should('be.visible');
-      dashboardDeals.filters.showHideButton().should('have.text', 'Show filter');
+      dashboardFilters.showHideButton().should('be.visible');
+      dashboardFilters.showHideButton().should('have.text', 'Show filter');
     });
   });
 
   describe('clicking `show filter` button', () => {
     it('renders all filters container', () => {
-      dashboardDeals.filters.showHideButton().click();
+      dashboardFilters.showHideButton().click();
 
-      dashboardDeals.filters.panel.container().should('be.visible');
+      dashboardFilters.panel.container().should('be.visible');
     });
 
     it('changes show/hide button text', () => {
-      dashboardDeals.filters.showHideButton().should('be.visible');
-      dashboardDeals.filters.showHideButton().should('have.text', 'Hide filter');
+      dashboardFilters.showHideButton().should('be.visible');
+      dashboardFilters.showHideButton().should('have.text', 'Hide filter');
     });
 
     it('renders `apply filters` button', () => {
-      dashboardDeals.filters.panel.form.applyFiltersButton().should('be.visible');
-      dashboardDeals.filters.panel.form.applyFiltersButton().contains('Apply filters');
+      dashboardFilters.panel.form.applyFiltersButton().should('be.visible');
+      dashboardFilters.panel.form.applyFiltersButton().contains('Apply filters');
     });
   });
 
   describe('renders all filters empty/unchecked by default', () => {
     it('keyword', () => {
-      dashboardDeals.filters.panel.form.keyword.label().contains('Keyword');
-      dashboardDeals.filters.panel.form.keyword.input().should('be.visible');
-      dashboardDeals.filters.panel.form.keyword.input().should('have.value', '');
+      dashboardFilters.panel.form.keyword.label().contains('Keyword');
+      dashboardFilters.panel.form.keyword.input().should('be.visible');
+      dashboardFilters.panel.form.keyword.input().should('have.value', '');
     });
 
     it('product/dealType', () => {
@@ -79,26 +79,26 @@ context('Dashboard Deals filters', () => {
 
     it('submissionType/notice type', () => {
       // AIN
-      dashboardDeals.filters.panel.form.submissionType.AIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.AIN);
-      dashboardDeals.filters.panel.form.submissionType.AIN.checkbox().should('exist');
-      dashboardDeals.filters.panel.form.submissionType.AIN.checkbox().should('not.be.checked');
+      dashboardFilters.panel.form.submissionType.AIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.AIN);
+      dashboardFilters.panel.form.submissionType.AIN.checkbox().should('exist');
+      dashboardFilters.panel.form.submissionType.AIN.checkbox().should('not.be.checked');
 
       // MIA
-      dashboardDeals.filters.panel.form.submissionType.MIA.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
-      dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('exist');
-      dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
+      dashboardFilters.panel.form.submissionType.MIA.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+      dashboardFilters.panel.form.submissionType.MIA.checkbox().should('exist');
+      dashboardFilters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
       // MIN
-      dashboardDeals.filters.panel.form.submissionType.MIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
-      dashboardDeals.filters.panel.form.submissionType.MIN.checkbox().should('exist');
-      dashboardDeals.filters.panel.form.submissionType.MIN.checkbox().should('not.be.checked');
+      dashboardFilters.panel.form.submissionType.MIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
+      dashboardFilters.panel.form.submissionType.MIN.checkbox().should('exist');
+      dashboardFilters.panel.form.submissionType.MIN.checkbox().should('not.be.checked');
     });
 
     it('status', () => {
       // all statuses
       dashboardDeals.filters.panel.form.status.all.label().contains('All statuses');
       dashboardDeals.filters.panel.form.status.all.checkbox().should('exist');
-      dashboardDeals.filters.panel.form.status.all.checkbox()
+      dashboardDeals.filters.panel.form.status.all.checkbox();
 
       // draft
       dashboardDeals.filters.panel.form.status.draft.label().contains(CONSTANTS.DEALS.DEAL_STATUS.DRAFT);

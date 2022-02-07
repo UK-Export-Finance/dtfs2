@@ -7,7 +7,7 @@ const {
 const { errorSummary, taskListHeader } = require('../../partials');
 const MOCK_USERS = require('../../../fixtures/users');
 
-const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 const criteriaCount = 8;
 

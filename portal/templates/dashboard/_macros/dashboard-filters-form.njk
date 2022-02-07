@@ -1,5 +1,5 @@
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from 'govuk/components/input/macro.njk' import govukInput %}
+{% from 'govuk/components/checkboxes/macro.njk' import govukCheckboxes %}
 
 {% macro render(params) %}
   {% set filters = params.filters %}
@@ -25,7 +25,7 @@
     {{ govukCheckboxes({
       idPrefix: 'dealType',
       name: 'dealType',
-      classes: "govuk-checkboxes--small",
+      classes: 'govuk-checkboxes--small',
       fieldset: {
         legend: {
           text: 'Product',
@@ -40,7 +40,7 @@
     {{ govukCheckboxes({
       idPrefix: 'submissionType',
       name: 'submissionType',
-      classes: "govuk-checkboxes--small",
+      classes: 'govuk-checkboxes--small',
       fieldset: {
         legend: {
           text: 'Notice type',
@@ -55,7 +55,7 @@
     {{ govukCheckboxes({
       idPrefix: 'status',
       name: 'status',
-      classes: "govuk-checkboxes--small",
+      classes: 'govuk-checkboxes--small',
       fieldset: {
         legend: {
           text: 'Status',
@@ -70,10 +70,10 @@
     {{ govukCheckboxes({
       idPrefix: 'hasBeenIssued',
       name: 'hasBeenIssued',
-      classes: "govuk-checkboxes--small",
+      classes: 'govuk-checkboxes--small',
       fieldset: {
         legend: {
-          text: 'hasBeenIssued',
+          text: "Bank’s facility stage",
           classes: 'govuk-fieldset__legend--m'
         }
       },

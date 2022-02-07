@@ -50,7 +50,7 @@ context('Case Underwriting - Bank Security', () => {
     });
 
     pages.underwritingBankSecurity.bankSecurityText().invoke('text').then((text) => {
-      expect(text.trim()).to.equal(MOCK_DEAL_MIA.dealFiles.security);
+      expect(text.trim()).to.equal(MOCK_DEAL_MIA.supportingInformation.security);
     });
   });
 });

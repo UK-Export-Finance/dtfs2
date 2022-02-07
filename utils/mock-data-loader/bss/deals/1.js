@@ -1,6 +1,7 @@
 const { nowTimestamp } = require('../dates');
 
 module.exports = {
+  mockId: 1,
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
   updatedAt: Date.now(),
@@ -615,7 +616,7 @@ module.exports = {
       ]
     }
   ],
-  dealFiles: {
+  supportingInformation: {
     validationErrors: {
       count: 0,
       errorList: {

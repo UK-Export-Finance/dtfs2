@@ -30,7 +30,6 @@ context('about-supply-contract', () => {
     contractAboutPreview.indemnifierCorrespondenceAddress().postcode().should('not.exist');
     contractAboutPreview.indemnifierCorrespondenceAddress().country().should('not.exist');
 
-
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.notLegallyDistinct().click();
     contractAboutSupplier.saveAndGoBack().click();

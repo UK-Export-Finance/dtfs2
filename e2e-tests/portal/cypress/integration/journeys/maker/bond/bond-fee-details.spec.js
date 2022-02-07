@@ -94,7 +94,6 @@ context('Bond Fee Details', () => {
     });
   });
 
-
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
     goToBondFeeDetailsPage(deal);
 

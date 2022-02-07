@@ -114,7 +114,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(updatedValidDeal.body.eligibility.status).toEqual('Completed');
 
       // Removing exporterQuestionnaire should change status to incomplete
-      const filePath = updatedValidDeal.body.dealFiles[fieldname][0].fullPath;
+      const filePath = updatedValidDeal.body.supportingInformation[fieldname][0].fullPath;
       const deleteFileData = {
         deleteFile: filePath,
       };
@@ -141,7 +141,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const { status, body } = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
-      expect(body.dealFiles[fieldname][0]).toMatchObject({
+      expect(body.supportingInformation[fieldname][0]).toMatchObject({
         filename,
         fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename}`,
         type,
@@ -166,10 +166,10 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       expect(status).toEqual(200);
 
-      expect(body.dealFiles[fieldname]).toBeUndefined();
+      expect(body.supportingInformation[fieldname]).toBeUndefined();
 
-      expect(body.dealFiles.validationErrors.errorList[fieldname]).toBeDefined();
-      expect(body.dealFiles.validationErrors.errorList[fieldname].text).toMatch(`${filename} could not be saved`);
+      expect(body.supportingInformation.validationErrors.errorList[fieldname]).toBeDefined();
+      expect(body.supportingInformation.validationErrors.errorList[fieldname].text).toMatch(`${filename} could not be saved`);
     });
 
     it('returns validation error if file extension is not allowed', async () => {
@@ -190,10 +190,10 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       expect(status).toEqual(200);
 
-      expect(body.dealFiles[fieldname]).toBeUndefined();
+      expect(body.supportingInformation[fieldname]).toBeUndefined();
 
-      expect(body.dealFiles.validationErrors.errorList[fieldname]).toBeDefined();
-      expect(body.dealFiles.validationErrors.errorList[fieldname].text).toMatch(`${filename} file type is not allowed`);
+      expect(body.supportingInformation.validationErrors.errorList[fieldname]).toBeDefined();
+      expect(body.supportingInformation.validationErrors.errorList[fieldname].text).toMatch(`${filename} file type is not allowed`);
     });
 
     it('uploads multiple files from same fieldname with the correct type', async () => {
@@ -226,8 +226,8 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const { status, body } = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
-      expect(body.dealFiles[fieldname].length).toEqual(files.length);
-      expect(body.dealFiles[fieldname]).toMatchObject(expectedFiles);
+      expect(body.supportingInformation[fieldname].length).toEqual(files.length);
+      expect(body.supportingInformation[fieldname]).toMatchObject(expectedFiles);
     });
 
     it('uploads files from different fieldname with the correct type', async () => {
@@ -258,11 +258,11 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const { status, body } = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
-      expect(body.dealFiles[files[0].fieldname].length).toEqual(1);
-      expect(body.dealFiles[files[0].fieldname]).toMatchObject(expectedFiles[0]);
+      expect(body.supportingInformation[files[0].fieldname].length).toEqual(1);
+      expect(body.supportingInformation[files[0].fieldname]).toMatchObject(expectedFiles[0]);
 
-      expect(body.dealFiles[files[1].fieldname].length).toEqual(1);
-      expect(body.dealFiles[files[1].fieldname]).toMatchObject(expectedFiles[1]);
+      expect(body.supportingInformation[files[1].fieldname].length).toEqual(1);
+      expect(body.supportingInformation[files[1].fieldname]).toMatchObject(expectedFiles[1]);
     });
 
     it('does not create duplicate entry if same file is reuploaded', async () => {
@@ -284,7 +284,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const { status, body } = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
-      expect(body.dealFiles[fieldname].length).toEqual(1);
+      expect(body.supportingInformation[fieldname].length).toEqual(1);
     });
 
     it('downloads an uploaded file', async () => {
@@ -405,7 +405,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       const uploadedDealRes = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
-      const filePath = uploadedDealRes.body.dealFiles[fieldname][0].fullPath;
+      const filePath = uploadedDealRes.body.supportingInformation[fieldname][0].fullPath;
 
       const deleteFileData = {
         deleteFile: filePath,
@@ -414,7 +414,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const { status, body } = await as(aBarclaysMaker).putMultipartForm(deleteFileData, []).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
-      expect(body.dealFiles[fieldname].length).toEqual(0);
+      expect(body.supportingInformation[fieldname].length).toEqual(0);
     });
 
     it('deletes multiple uploaded files', async () => {
@@ -438,12 +438,12 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       const uploadedDealRes = await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
 
-      const { dealFiles } = uploadedDealRes.body;
+      const { supportingInformation } = uploadedDealRes.body;
 
       const deleteFileData = {
         deleteFile: [
-          dealFiles.exporterQuestionnaire[0].filename,
-          dealFiles.financialStatements[0].filename,
+          supportingInformation.exporterQuestionnaire[0].filename,
+          supportingInformation.financialStatements[0].filename,
         ],
       };
 
@@ -451,7 +451,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       expect(status).toEqual(200);
       files.forEach((f) => {
-        expect(body.dealFiles[f.fieldname].length).toEqual(0);
+        expect(body.supportingInformation[f.fieldname].length).toEqual(0);
       });
     });
 
@@ -466,7 +466,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const { status, body } = await as(aBarclaysMaker).putMultipartForm(textFields).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
-      expect(body.dealFiles.security).toEqual(textFields.security);
+      expect(body.supportingInformation.security).toEqual(textFields.security);
     });
   });
 });
