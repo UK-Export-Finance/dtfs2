@@ -313,7 +313,7 @@ const deal = {
       ],
     },
   ],
-  dealFiles: {
+  supportingInformation: {
     validationErrors: {
       count: 0,
       errorList: {

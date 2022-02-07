@@ -44,7 +44,7 @@ describe('mapGefDealSnapshot', () => {
       details: mapGefDealDetails(mockDeal.dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(mockDeal.dealSnapshot),
       eligibility: MOCK_GEF_DEAL.eligibility,
-      dealFiles: {},
+      supportingInformation: {},
       facilities: mapGefFacilities(mockDeal.dealSnapshot, mockDeal.tfm),
       totals: mapTotals(mockDeal.dealSnapshot.facilities),
     };
