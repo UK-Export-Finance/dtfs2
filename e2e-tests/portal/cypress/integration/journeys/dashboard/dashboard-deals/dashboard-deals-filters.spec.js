@@ -1,4 +1,3 @@
-const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../pages');
@@ -98,7 +97,7 @@ context('Dashboard Deals filters', () => {
       // all statuses
       dashboardDeals.filters.panel.form.status.all.label().contains('All statuses');
       dashboardDeals.filters.panel.form.status.all.checkbox().should('exist');
-      dashboardDeals.filters.panel.form.status.all.checkbox()
+      dashboardDeals.filters.panel.form.status.all.checkbox();
 
       // draft
       dashboardDeals.filters.panel.form.status.draft.label().contains(CONSTANTS.DEALS.DEAL_STATUS.DRAFT);

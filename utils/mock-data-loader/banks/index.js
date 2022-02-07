@@ -21,6 +21,17 @@ const BANKS = [
     partyUrn: '00300342',
   },
   {
+    id: '999',
+    name: 'GEF Only Bank',
+    mga: ['UKEF-GEF-only-amended-and-restated-MGA-dated-31-January-2020.pdf'],
+    emails: [
+      'checker4@ukexportfinance.gov.uk',
+    ],
+    companiesHouseNo: '00010452',
+    partyUrn: '00300312',
+    hasGefAccessOnly: true,
+  },
+  {
     id: '964',
     name: 'LLOYDS',
     mga: ['UKEF-Lloyds-amended-and-restated-MGA-dated-31-January-2020.pdf'],
