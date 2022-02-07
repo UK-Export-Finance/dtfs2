@@ -42,11 +42,11 @@
 
         <fieldset class="govuk-fieldset">
 
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend" tabindex=0 aria-label="Eligibility criterion {{ criterion.id }}">
             Eligibility criterion {{ criterion.id }}
           </legend>
 
-          <p class="govuk-body govuk-hint">{{ criterion.description }}</p>
+          <p class="govuk-body govuk-hint" tabindex=0 aria-label="{{ criterion.description }}">{{ criterion.description }}</p>
           {% if hasValidationError %}
           <span class="govuk-error-message">
             <span class="govuk-visually-hidden">Error:</span> Eligibility criterion {{ criterion.id }} is required
