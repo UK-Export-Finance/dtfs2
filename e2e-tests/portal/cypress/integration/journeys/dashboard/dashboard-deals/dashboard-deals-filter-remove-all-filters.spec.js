@@ -1,6 +1,5 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
-const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../pages');
 const {
   BSS_DEAL_MIA,

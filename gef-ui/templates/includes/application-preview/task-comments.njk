@@ -35,6 +35,12 @@
           <p>{{ item.name }}</p>
         {% endfor %}
       </div>
+    {% else %}
+      {% if applicationType === "Manual Inclusion Application" %}
+        {% if status === "Ready for Checker's approval" %}
+          <h2 data-cy="update-mia-stage">Check manual inclusion application before submitting to UKEF</h2>
+        {% endif %}
+      {% endif %}
     {% endif %}
 
     {% if ukefDecisionAccepted %}
@@ -43,10 +49,9 @@
       {% elif ukefDecision[0].decision == 'Accepted by UKEF (with conditions)' %}
 
         {% if applicationStatus == "Ready for Checker\'s approval" %}
-          <strong>{{ application.maker.firstname }}
-            {{ application.maker.surname }} has accepted the following conditions</strong>
+          <strong data-cy="accept-mia-conditions">You are accepting the following conditions:</strong>
         {% else %}
-          <strong>You are proceeding with UKEF cover and accepting the following conditions:</strong>
+          <strong data-cy="accept-mia-conditions">You are proceeding with UKEF cover and accepting the following conditions:</strong>
         {% endif %}
 
         <p>{{ ukefDecision[0].text | safe }}</p>

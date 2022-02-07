@@ -111,7 +111,6 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Indemnifier name is required');
     contractAboutPreview.expectError('Indemnifier address line 1 is required');
 
-
     // prove the errors show on the about-supplier page
     contractAboutSupplier.visit(deal);
     contractAboutSupplier.expectError('Indemnifier address line 1 is require');

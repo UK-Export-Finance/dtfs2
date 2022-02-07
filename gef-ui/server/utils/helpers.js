@@ -147,6 +147,7 @@ const previewItemConditions = (previewParams) => {
   let summaryItems = [];
   const statusMIA = [
     CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL,
+    CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF,
   ];
   const statusAIN = [
     ...statusMIA,

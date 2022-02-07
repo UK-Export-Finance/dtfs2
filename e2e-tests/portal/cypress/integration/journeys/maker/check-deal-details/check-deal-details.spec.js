@@ -3,7 +3,7 @@ const pages = require('../../../pages');
 const fullyCompletedDeal = require('../fixtures/dealFullyCompleted');
 const MOCK_USERS = require('../../../../fixtures/users');
 
-const { ADMIN, BANK1_MAKER1 } = MOCK_USERS
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const dealInDraft = {
   ...fullyCompletedDeal,

@@ -86,7 +86,10 @@
 
     <div class="govuk-button-group">
       {{ govukButton({
-        text: "Continue"
+        text: "Continue",
+        attributes: {
+            'data-cy': 'continue-button'
+          }
       }) }}
 
       <a

@@ -7,7 +7,7 @@ const {
 const { errorSummary, taskListHeader } = require('../../partials');
 const MOCK_USERS = require('../../../fixtures/users');
 
-const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 const criteriaCount = 8;
 
@@ -25,6 +25,8 @@ context('Eligibility Criteria', () => {
   it('The eligibility criteria page is displayed', () => {
     cy.url().should('include', '/eligibility/criteria');
     cy.title().should('eq', `Eligibility Criteria - someDealName${defaults.pageTitleAppend}`);
+    // shows correct title
+    eligibilityCriteria.eligibilityCriteriaTitle().contains('Confirm eligibility');
   });
 
   it('should display the correct number of eligibility criteria', () => {

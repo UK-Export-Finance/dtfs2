@@ -1,6 +1,5 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
-const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../pages');
 const {
   BSS_DEAL_DRAFT,
@@ -61,7 +60,7 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
   it('retains other filters when one is removed', () => {
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
-    
+
     // toggle to show filters (hidden by default)
     dashboardDeals.filters.showHideButton().click();
 
