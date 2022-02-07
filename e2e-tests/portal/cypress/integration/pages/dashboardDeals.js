@@ -20,15 +20,8 @@ const page = {
   last: () => cy.get('[data-cy="Last"]'),
   totalItems: () => cy.get('[data-cy="totalItems"]'),
   filters: {
-    showHideButton: () => cy.get('[data-cy="filters-action-bar"] button').first(),
     panel: {
-      container: () => cy.get('[data-cy="filters-container"]'),
       form: {
-        applyFiltersButton: () => cy.get('[data-cy="filters-container"] button'),
-        keyword: {
-          label: () => cy.get('[data-cy="filter-label-keyword"]'),
-          input: () => cy.get('[data-cy="filter-input-keyword"]'),
-        },
         dealType: {
           bssEwcs: {
             label: () => cy.get('[data-cy="filter-label-dealType-BSS-EWCS"]'),
@@ -37,20 +30,6 @@ const page = {
           gef: {
             label: () => cy.get('[data-cy="filter-label-dealType-GEF"]'),
             checkbox: () => cy.get('[data-cy="filter-input-dealType-GEF"]'),
-          },
-        },
-        submissionType: {
-          AIN: {
-            label: () => cy.get('[data-cy="filter-label-submissionType-Automatic-Inclusion-Notice"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Automatic-Inclusion-Notice"]'),
-          },
-          MIA: {
-            label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Application"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Application"]'),
-          },
-          MIN: {
-            label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Notice"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Notice"]'),
           },
         },
         status: {
@@ -100,20 +79,10 @@ const page = {
           },
         },
       },
-      selectedFilters: {
-        // NOTE: at the time of writing, it is not possible to pass custom data-cy attributes to MOJ filter component.
-        container: () => cy.get('[data-cy="filters-container"] .moj-filter__selected'),
-        heading: () => cy.get('[data-cy="filters-container"] .moj-filter__selected h3'),
-        list: () => cy.get('[data-cy="filters-container"] .moj-filter__selected .moj-filter-tags'),
-        listItem: () => cy.get('[data-cy="filters-container"] .moj-filter__selected .moj-filter-tags li'),
-        clearAllLink: () => cy.get('[data-cy="filters-container"] .moj-filter__selected .moj-filter__heading-action a'),
-      },
     },
     mainContainer: {
       createdByYouCheckbox: () => cy.get('[data-cy="created-by-you-checkbox"]'),
       selectedFilters: {
-        container: () => cy.get('[data-cy="main-container-selected-filters'),
-        keyword: (keyword) => cy.get(`[data-cy="main-container-selected-filter-${keyword.replace(' ', '-')}"]`),
         noticeMIA: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Application'),
         productGEF: () => cy.get('[data-cy="main-container-selected-filter-GEF'),
 

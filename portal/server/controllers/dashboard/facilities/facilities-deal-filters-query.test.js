@@ -1,4 +1,4 @@
-import { dashboardFacilitiesDealFiltersQuery } from './facilities-deal-query';
+import { dashboardFacilitiesDealFiltersQuery } from './facilities-deal-filters-query';
 
 describe('controllers/dashboard/filters - facilities deal query', () => {
   const mockUser = {
