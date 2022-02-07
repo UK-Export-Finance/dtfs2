@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../constants');
 
-exports.getDocumentationErrors = (submissionType, dealFiles, uploadErrors = []) => {
+exports.getDocumentationErrors = (submissionType, supportingInformation, uploadErrors = []) => {
   const errorList = {};
   const uploadErrorList = {};
 
@@ -9,7 +9,7 @@ exports.getDocumentationErrors = (submissionType, dealFiles, uploadErrors = []) 
   const generateError = (fieldname, fieldText, errorText, isMandatory) => {
     if (!isMandatory) { return {}; }
 
-    if (dealFiles[fieldname] && dealFiles[fieldname].length) {
+    if (supportingInformation[fieldname] && supportingInformation[fieldname].length) {
       return {};
     }
     const text = `${fieldText} ${errorText}`;

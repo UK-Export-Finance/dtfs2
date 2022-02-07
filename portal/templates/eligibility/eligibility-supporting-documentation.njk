@@ -34,9 +34,9 @@
             fieldname = "exporterQuestionnaire",
             label = "1. Manual Inclusion Questionnaire",
             hint = 'Please upload a completed Manual Inclusion Questionnaire. You can download the template here:
-                <div> <a href="/assets/files/Manual%20Inclusion%20Questionnaire%20v2_0.docx" data-cy="download-q-link-docx">Download Manual Inclusion Questionnaire.docx (21KB)</a> </div>
-                <div> <a href="/assets/files/Manual%20Inclusion%20Questionnaire%20v2_0.pdf" data-cy="download-q-link-pdf">Download Manual Inclusion Questionnaire.pdf (129KB)</a> </div>',
-            fileList = dealFiles.exporterQuestionnaire,
+                <div class="govuk-!-margin-bottom-2"> <a href="/assets/files/Manual%20Inclusion%20Questionnaire%20v2_0.docx" data-cy="download-q-link-docx">Download Manual Inclusion Questionnaire.docx (21KB)</a> </div>
+                <div class="govuk-!-margin-bottom-2"> <a href="/assets/files/Manual%20Inclusion%20Questionnaire%20v2_0.pdf" data-cy="download-q-link-pdf">Download Manual Inclusion Questionnaire.pdf (129KB)</a> </div>',
+            fileList = supportingInformation.exporterQuestionnaire,
             validationError = validationErrors.errorList.exporterQuestionnaire,
             dealId = _id
           )
@@ -49,7 +49,7 @@
             fieldname = "auditedFinancialStatements",
             label = "2. Financial statements for the past 3 years",
             hint = "Financial statements (audited if available) for the past 3 years, including a Profit & Loss, Balance Sheet and Cash Flow Statement, (with notes, if applicable). If the company is part of a larger group, separate accounts should be provided for the company and group.",
-            fileList = dealFiles.auditedFinancialStatements,
+            fileList = supportingInformation.auditedFinancialStatements,
             validationError = validationErrors.errorList.auditedFinancialStatements,
             dealId = _id
           )
@@ -62,7 +62,7 @@
             fieldname = "yearToDateManagement",
             label = "3. Year to date management accounts",
             hint = "Including Profit & Loss, Balance Sheet and Cash Flow where available.",
-            fileList = dealFiles.yearToDateManagement,
+            fileList = supportingInformation.yearToDateManagement,
             validationError = validationErrors.errorList.yearToDateManagement,
             dealId = _id
           )
@@ -75,7 +75,7 @@
             fieldname = "financialForecasts",
             label = "4. Financial forecasts for the next 3 years",
             hint = "Including monthly cash-flow projections for the business as a whole. If unavailable provide for at least the projected facility/guarantee term. If there are any cash flow shortfalls, explain how these will be filled.",
-            fileList = dealFiles.financialForecasts,
+            fileList = supportingInformation.financialForecasts,
             validationError = validationErrors.errorList.financialForecasts,
             dealId = _id
           )
@@ -88,7 +88,7 @@
             fieldname = "financialInformationCommentary",
             label = "5. Brief commentary on the financial information",
             hint = "A brief commentary on the financial information in 2-4, with particular focus on turnover, gross and net profit, dividends (if any), debt profile including bank borrowing and net worth, and any other information with explains any exceptions, anomalies or volatility. If the company has experienced any unusual or off-trend financial performance in the last 3 years please also explain this.",
-            fileList = dealFiles.financialInformationCommentary,
+            fileList = supportingInformation.financialInformationCommentary,
             validationError = validationErrors.errorList.financialInformationCommentary,
             dealId = _id
           )
@@ -101,7 +101,7 @@
             fieldname = "corporateStructure",
             label = "6. Corporate structure diagram",
             hint = "Showing corporate structure including parent, subsidiary and associated companies.",
-            fileList = dealFiles.corporateStructure,
+            fileList = supportingInformation.corporateStructure,
             validationError = validationErrors.errorList.corporateStructure,
             dealId = _id
           )
@@ -119,7 +119,7 @@
           hint: {
              text: 'Details of the overarching general facility taken by the bank in relation to the exporter, for example debenture, fixed and floating charge, but not including any security that is specific to the Transaction.'
           },
-          value: dealFiles.security
+          value: supportingInformation.security
         }) }}
     </li>
 

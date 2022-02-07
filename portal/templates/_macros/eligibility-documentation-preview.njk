@@ -1,19 +1,19 @@
 {% import './eligibility-documentation-preview-file.njk' as eligibilityDocumentationPreviewFiles %}
 
-{% macro render(dealFiles, dealId) %}
+{% macro render(supportingInformation, dealId) %}
 
   <div data-cy="eligibility-documentation">
-  
+
     <h4 class="govuk-heading-m">Supporting documentation</h4>
 
     <ol class="govuk-list govuk-list--number">
 
-      {{ eligibilityDocumentationPreviewFiles.list('Manual Inclusion Questionnaire', 'exporterQuestionnaire', dealFiles.exporterQuestionnaire, dealId)  }}
-      {{ eligibilityDocumentationPreviewFiles.list('Financial statements for the past 3 years','auditedFinancialStatements',  dealFiles.auditedFinancialStatements, dealId)  }}
-      {{ eligibilityDocumentationPreviewFiles.list('Year to date management accounts', 'yearToDateManagement', dealFiles.yearToDateManagement, dealId)  }}
-      {{ eligibilityDocumentationPreviewFiles.list('Financial forecasts for the next 3 years', 'financialForecasts',  dealFiles.financialForecasts, dealId)  }}
-      {{ eligibilityDocumentationPreviewFiles.list('Brief commentary on the financial information', 'financialInformationCommentary', dealFiles.financialInformationCommentary, dealId)  }}
-      {{ eligibilityDocumentationPreviewFiles.list('Corporate structure diagram', 'corporateStructure', dealFiles.corporateStructure, dealId)  }}
+      {{ eligibilityDocumentationPreviewFiles.list('Manual Inclusion Questionnaire', 'exporterQuestionnaire', supportingInformation.exporterQuestionnaire, dealId)  }}
+      {{ eligibilityDocumentationPreviewFiles.list('Financial statements for the past 3 years','auditedFinancialStatements',  supportingInformation.auditedFinancialStatements, dealId)  }}
+      {{ eligibilityDocumentationPreviewFiles.list('Year to date management accounts', 'yearToDateManagement', supportingInformation.yearToDateManagement, dealId)  }}
+      {{ eligibilityDocumentationPreviewFiles.list('Financial forecasts for the next 3 years', 'financialForecasts',  supportingInformation.financialForecasts, dealId)  }}
+      {{ eligibilityDocumentationPreviewFiles.list('Brief commentary on the financial information', 'financialInformationCommentary', supportingInformation.financialInformationCommentary, dealId)  }}
+      {{ eligibilityDocumentationPreviewFiles.list('Corporate structure diagram', 'corporateStructure', supportingInformation.corporateStructure, dealId)  }}
 
       {% for documentation in supportingDocumentation %}
 
@@ -34,12 +34,12 @@
       <li class="govuk-body-s">
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-third govuk-!-font-weight-bold govuk-!-margin-bottom-1">Security</div>
-          <div class="govuk-grid-column-two-thirds">{{ dealFiles.security }}</div>
+          <div class="govuk-grid-column-two-thirds">{{ supportingInformation.security }}</div>
         </div>
       </li>
     </ol>
 
   </div>
-      
+
 {% endmacro %}
 

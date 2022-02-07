@@ -31,7 +31,7 @@ exports.update = async (req, res) => {
         res.status(401).send();
       }
 
-      const { eligibility: { criteria }, dealFiles = {} } = deal;
+      const { eligibility: { criteria }, supportingInformation = {} } = deal;
       let criteriaComplete = true;
       let criteriaAllTrue = true;
 
@@ -54,7 +54,7 @@ exports.update = async (req, res) => {
       const submissionType = criteriaAllTrue ? CONSTANTS.DEAL.SUBMISSION_TYPE.AIN : submissionTypeComplete;
 
       const validationErrors = getEligibilityErrors(updatedCriteria);
-      const documentationErrors = getDocumentationErrors(submissionType, dealFiles);
+      const documentationErrors = getDocumentationErrors(submissionType, supportingInformation);
 
       // Special case for criteria 11 - must add agents name & address if criteria 11 === false
       const criteria11 = updatedCriteria.find((c) => c.id === 11);
@@ -98,8 +98,8 @@ exports.update = async (req, res) => {
           validationErrors,
           lastUpdated: new Date().valueOf(),
         },
-        dealFiles: {
-          ...dealFiles,
+        supportingInformation: {
+          ...supportingInformation,
           validationErrors: documentationErrors.validationErrors,
         },
       };

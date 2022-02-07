@@ -313,7 +313,7 @@ const deal = {
       loansInGbp: '4,000',
     },
   },
-  dealFiles: {
+  supportingInformation: {
     exporterQuestionnaire: [
       {
         type: 'general_correspondence',

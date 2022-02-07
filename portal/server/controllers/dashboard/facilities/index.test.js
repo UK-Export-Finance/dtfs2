@@ -3,15 +3,19 @@ import {
   getTemplateVariables,
   getDataAndTemplateVariables,
   allFacilities,
-} from './facilities';
-import mockResponse from '../../helpers/responseMock';
-import { getFlashSuccessMessage } from '../../helpers';
-import api from '../../api';
-import { submittedFiltersArray } from './filters/helpers';
-import { dashboardFacilitiesDealFiltersQuery } from './filters/facilities-deal-query';
-import CONSTANTS from '../../constants';
+} from '.';
+import mockResponse from '../../../helpers/responseMock';
+import { getFlashSuccessMessage } from '../../../helpers';
+import api from '../../../api';
+import {
+  submittedFiltersArray,
+  submittedFiltersObject,
+} from '../filters/helpers';
+import { dashboardFacilitiesDealFiltersQuery } from './facilities-deal-filters-query';
+import { dashboardFacilitiesFilters } from './template-filters';
+import CONSTANTS from '../../../constants';
 
-jest.mock('../../api', () => ({
+jest.mock('../../../api', () => ({
   allFacilities: jest.fn(),
 }));
 
@@ -20,7 +24,7 @@ const mockFacilities = [
   { _id: 'mockFacility2' },
 ];
 
-jest.mock('../../helpers', () => ({
+jest.mock('../../../helpers', () => ({
   __esModule: true,
   getApiData: jest.fn(() => ({
     count: 2,
@@ -113,7 +117,7 @@ describe('controllers/dashboard/facilities', () => {
 
   describe('getTemplateVariables', () => {
     it('should return an object', () => {
-      const mockFiltersArray = [];
+      const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
       const result = getTemplateVariables(
         mockReq.session.user,
@@ -121,7 +125,7 @@ describe('controllers/dashboard/facilities', () => {
         mockFacilities,
         mockFacilities.length,
         mockReq.params.page,
-        mockFiltersArray,
+        filtersArray,
       );
 
       const expectedPages = {
@@ -130,12 +134,15 @@ describe('controllers/dashboard/facilities', () => {
         totalItems: mockFacilities.length,
       };
 
+      const expectedFiltersObj = submittedFiltersObject(filtersArray);
+
       const expected = {
         user: mockReq.session.user,
         primaryNav: 'home',
         tab: 'facilities',
         facilities: mockFacilities,
         pages: expectedPages,
+        filters: dashboardFacilitiesFilters(expectedFiltersObj),
       };
 
       expect(result).toEqual(expected);
