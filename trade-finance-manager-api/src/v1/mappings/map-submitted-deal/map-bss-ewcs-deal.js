@@ -17,6 +17,7 @@ const mapBssEwcsDeal = (deal) => {
     exporter,
     status,
     maker,
+    supportingInformation,
   } = dealSnapshot;
 
   const {
@@ -54,6 +55,7 @@ const mapBssEwcsDeal = (deal) => {
     dealValue: submissionDetails.supplyContractValue,
     destinationOfGoodsAndServices: submissionDetails.destinationOfGoodsAndServices,
     eligibility,
+    supportingInformation,
     facilities: [
       ...bonds.map((facility) => mapBssEwcsFacility(facility)),
       ...loans.map((facility) => mapBssEwcsFacility(facility)),

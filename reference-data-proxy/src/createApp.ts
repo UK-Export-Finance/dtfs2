@@ -2,7 +2,7 @@ import express from 'express';
 import compression from 'compression';
 import dotenv from 'dotenv';
 
-import { apiRoutes, swaggerRoutes, healthcheck } from './v1/routes';
+import { apiRoutes, swaggerRoutes, healthcheck, cronJob } from './v1/routes';
 
 dotenv.config();
 
@@ -16,3 +16,4 @@ app.use('/api-docs', swaggerRoutes);
 app.use(healthcheck);
 // all other API routes
 app.use(apiRoutes);
+app.use(cronJob);

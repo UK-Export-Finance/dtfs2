@@ -74,6 +74,7 @@ exports.update = async (req, res) => {
           type: getFileType(fieldname),
           fullPath: fileInfo.fullPath,
           filename: fileInfo.filename,
+          folder: `${fileInfo.folder}`,
           mimetype,
         };
       }

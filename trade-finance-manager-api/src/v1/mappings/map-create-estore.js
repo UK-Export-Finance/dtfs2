@@ -1,5 +1,6 @@
 const formatNameForSharepoint = require('../helpers/formatNameForSharepoint');
 const CONSTANTS = require('../../constants');
+const { mapUKEFDocumentsToEstore } = require('./map-ukef-documents-to-estore');
 
 const mapCreateEstore = (deal) => {
   const {
@@ -9,11 +10,13 @@ const mapCreateEstore = (deal) => {
     exporter,
     buyer,
     destinationOfGoodsAndServices,
+    supportingInformation,
   } = deal;
 
   let buyerName;
   let destinationMarket;
   let riskMarket;
+  let files;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     // default values for GEF. GEF does not have this data.
@@ -28,13 +31,19 @@ const mapCreateEstore = (deal) => {
     riskMarket = buyer.country.name;
   }
 
+  if (supportingInformation) {
+    files = mapUKEFDocumentsToEstore(supportingInformation);
+  }
+
   return {
+    dealType,
     exporterName: (exporter && exporter.companyName) ? formatNameForSharepoint(exporter.companyName) : '',
     buyerName,
     dealIdentifier: ukefDealId,
     destinationMarket,
     riskMarket,
     facilityIdentifiers: facilities.map((facility) => facility.ukefFacilityId),
+    supportingInformation: files,
   };
 };
 module.exports = mapCreateEstore;

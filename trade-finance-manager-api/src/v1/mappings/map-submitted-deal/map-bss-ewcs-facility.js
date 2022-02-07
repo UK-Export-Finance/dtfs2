@@ -1,5 +1,4 @@
 const moment = require('moment');
-const isIssued = require('../../helpers/is-issued');
 const { stripCommas } = require('../../../utils/string');
 
 const hasCoverEndDate = (day, month, year) => {
@@ -48,7 +47,7 @@ const mapBssEwcsFacility = (facility) => {
     premiumFrequency,
     name,
     disbursementAmount,
-    facilityStage,
+    hasBeenIssued,
   } = facility;
 
   const cleanUkefExposure = Number(ukefExposure.split('.')[0].replace(/,/g, ''));
@@ -62,7 +61,7 @@ const mapBssEwcsFacility = (facility) => {
     coverPercentage: Number(coveredPercentage),
     ukefExposure: cleanUkefExposure,
     ukefGuaranteeInMonths,
-    hasBeenIssued: isIssued(facilityStage),
+    hasBeenIssued,
     hasBeenAcknowledged,
     coverStartDate: requestedCoverStartDate,
     coverEndDate: mapCoverEndDate(facility),
