@@ -1,4 +1,4 @@
-eslintrc.jsmodule.exports = {
+module.exports = {
   extends: 'airbnb-base',
   env: {
     jest: true,
