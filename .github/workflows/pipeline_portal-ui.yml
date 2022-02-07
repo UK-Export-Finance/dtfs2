@@ -2,8 +2,8 @@ name: Portal UI
 
 on:
   push:
-    branches: [ main ]
-    paths: 
+    branches: [ dev ]
+    paths:
     - 'portal/**'
     - 'e2e-tests/portal/cypress/**'
   schedule:

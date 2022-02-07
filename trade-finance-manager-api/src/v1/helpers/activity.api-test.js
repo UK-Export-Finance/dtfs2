@@ -21,24 +21,24 @@ const mockFacilityRecord = {
 };
 
 describe('labelCase()', () => {
-  it('Shoule return label case for specified string', () => {
+  it('Should return label case for specified string', () => {
     expect(labelCase('facility')).toEqual('Facility');
   });
 
-  it('Shoule return label case for specified string', () => {
+  it('Should return label case for specified string', () => {
     expect(labelCase('Automatic Inclusion Notice')).toEqual('Automatic inclusion notice');
   });
 
-  it('Shoule return label case for specified string', () => {
+  it('Should return label case for specified string', () => {
     expect(labelCase('Automatic Inclusion Notice')).not.toEqual('Automatic Inclusion Notice');
   });
 });
 
 describe('getTimestamp()', () => {
-  it('Shoule return epoch timestamp without milliseconds', () => {
+  it('Should return epoch timestamp without milliseconds', () => {
     expect(getTimestamp(mockDealRecord)).toEqual(1643629694);
   });
-  it('Shoule return epoch timestamp without milliseconds', () => {
+  it('Should return epoch timestamp without milliseconds', () => {
     expect(getTimestamp(mockDealRecord)).not.toEqual(1643629694000);
   });
 });

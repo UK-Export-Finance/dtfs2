@@ -2,13 +2,13 @@ name: GEF UI
 
 on:
   push:
-    branches: [ main ]
-    paths: 
+    branches: [ dev ]
+    paths:
     - 'gef-ui/**'
     - 'portal-api/**'
     - 'e2e-tests/gef/cypress/**'
   schedule:
-    # A weekly run to roll up any base image patches, 
+    # A weekly run to roll up any base image patches,
     # in office hours, avoiding bank holiday Mondays:
     # "At 12:00 on Tuesday." - https://crontab.guru/
     - cron: '0 12 * * 2'
