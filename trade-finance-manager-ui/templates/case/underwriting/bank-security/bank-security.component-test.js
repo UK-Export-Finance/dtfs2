@@ -8,7 +8,7 @@ describe(page, () => {
   const params = {
     dealId: '1234',
     deal: {
-      dealFiles: {
+      supportingInformation: {
         security: 'mock security',
       },
     },
@@ -33,6 +33,6 @@ describe(page, () => {
 
   it('should render the security details', () => {
     const wrapper = render(params);
-    wrapper.expectText('[data-cy="bank-security-text"]').toRead(params.deal.dealFiles.security);
+    wrapper.expectText('[data-cy="bank-security-text"]').toRead(params.deal.supportingInformation.security);
   });
 });

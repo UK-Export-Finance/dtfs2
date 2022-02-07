@@ -162,7 +162,7 @@ const MOCK_DEAL = {
     agentAddressPostcode: 'CF64 5SH',
     agentAddressTown: 'City',
   },
-  dealFiles: {
+  supportingInformation: {
     security: 'Mock security details',
   },
   exporter: {

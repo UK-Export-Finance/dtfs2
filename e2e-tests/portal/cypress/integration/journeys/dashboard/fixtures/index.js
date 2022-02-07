@@ -1,5 +1,5 @@
-const MOCK_USERS = require('../../../../../fixtures/users');
-const CONSTANTS = require('../../../../../fixtures/constants');
+const MOCK_USERS = require('../../../../fixtures/users');
+const CONSTANTS = require('../../../../fixtures/constants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -46,9 +46,29 @@ const GEF_DEAL_DRAFT = {
   bankInternalRefName: 'Draft GEF',
 };
 
+const BSS_FACILITY_BOND = {
+  type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
+};
+
+const BSS_FACILITY_LOAN = {
+  type: CONSTANTS.FACILITY.FACILITY_TYPE.LOAN,
+};
+
+const GEF_FACILITY_CASH = {
+  type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
+};
+
+const GEF_FACILITY_CONTINGENT = {
+  type: CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT,
+};
+
 module.exports = {
   BSS_DEAL_DRAFT, 
   BSS_DEAL_READY_FOR_CHECK,
   BSS_DEAL_MIA,
   GEF_DEAL_DRAFT,
+  BSS_FACILITY_BOND,
+  BSS_FACILITY_LOAN,
+  GEF_FACILITY_CASH,
+  GEF_FACILITY_CONTINGENT,
 };

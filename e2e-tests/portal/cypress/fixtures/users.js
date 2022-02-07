@@ -10,6 +10,9 @@ const BANK1_MAKER2 = MOCK_USERS.find((user) =>
 const BANK2_MAKER2 = MOCK_USERS.find((user) =>
   (user.roles.includes('maker')) && user.username === 'BANK2_MAKER2');
 
+const BANK3_GEF_MAKER1 = MOCK_USERS.find((user) =>
+  (user.roles.includes('maker') && user.username === 'BANK3_GEF_MAKER1'));
+
 const BANK1_CHECKER1 = MOCK_USERS.find((user) =>
   (user.roles.includes('checker')) && user.username === 'BANK1_CHECKER1');
 
@@ -22,7 +25,7 @@ const UKEF_OPERATIONS = MOCK_USERS.find((user) =>
 const EDITOR = MOCK_USERS.find((user) =>
   user.username === 'EDITOR');
 
-// TFM 
+// TFM
 const UNDERWRITER_MANAGER = MOCK_TFM_USERS.find((user) =>
   user.teams.includes('UNDERWRITER_MANAGERS'));
 
@@ -30,6 +33,7 @@ module.exports = {
   BANK1_MAKER1,
   BANK1_MAKER2,
   BANK2_MAKER2,
+  BANK3_GEF_MAKER1,
   BANK1_CHECKER1,
   ADMIN,
   UKEF_OPERATIONS,

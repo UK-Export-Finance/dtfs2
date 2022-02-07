@@ -49,7 +49,7 @@ const dashboardDealsFiltersQuery = (
     const fieldName = Object.keys(filterObj)[0];
     const filterValue = filterObj[fieldName];
 
-    if (!filterValue.includes(CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES)) {
+    if (!filterValue.includes(CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES)) {
       filtersQuery.push({
         field: fieldName,
         value: filterValue,

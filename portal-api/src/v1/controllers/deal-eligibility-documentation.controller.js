@@ -19,14 +19,14 @@ const getFileType = (fieldname) => {
   }
 };
 
-const removeDeletedFiles = (dealFiles, deletedFilesList) => {
-  if (!deletedFilesList) return dealFiles;
+const removeDeletedFiles = (supportingInformation, deletedFilesList) => {
+  if (!deletedFilesList) return supportingInformation;
 
   const updatedDealFiles = {};
 
-  Object.keys(dealFiles).forEach((fieldname) => {
-    if (Array.isArray(dealFiles[fieldname])) {
-      updatedDealFiles[fieldname] = dealFiles[fieldname].filter(
+  Object.keys(supportingInformation).forEach((fieldname) => {
+    if (Array.isArray(supportingInformation[fieldname])) {
+      updatedDealFiles[fieldname] = supportingInformation[fieldname].filter(
         ({ filename }) => deletedFilesList.indexOf(filename) === -1,
       );
     }
@@ -89,24 +89,24 @@ exports.update = async (req, res) => {
 
     const uploadedDealFiles = await Promise.all(uploadPromises, deletePromises);
 
-    const dealFiles = {
-      ...removeDeletedFiles(deal.dealFiles, req.body.deleteFile, `${EXPORT_FOLDER}/${req.params.id}`),
+    const supportingInformation = {
+      ...removeDeletedFiles(deal.supportingInformation, req.body.deleteFile, `${EXPORT_FOLDER}/${req.params.id}`),
     };
 
     uploadedDealFiles.forEach(({ fieldname, ...rest }) => {
       if (fieldname) {
-        if (!(fieldname in dealFiles)) {
-          dealFiles[fieldname] = [];
+        if (!(fieldname in supportingInformation)) {
+          supportingInformation[fieldname] = [];
         }
-        if (!dealFiles[fieldname].some((df) => df.filename === rest.filename)) {
-          dealFiles[fieldname].push({ ...rest });
+        if (!supportingInformation[fieldname].some((df) => df.filename === rest.filename)) {
+          supportingInformation[fieldname].push({ ...rest });
         }
       }
     });
 
     const { validationErrors, validationUploadErrors } = getDocumentationErrors(
       deal.submissionType,
-      dealFiles,
+      supportingInformation,
       uploadErrors,
     );
 
@@ -124,8 +124,8 @@ exports.update = async (req, res) => {
         status,
         validationErrors: eligibilityCriteriaValidationErrors,
       },
-      dealFiles: {
-        ...dealFiles,
+      supportingInformation: {
+        ...supportingInformation,
         security: req.body.security,
         validationErrors,
       },
@@ -159,8 +159,8 @@ exports.update = async (req, res) => {
 
     const dealWithUploadErrors = {
       ...updatedDeal,
-      dealFiles: {
-        ...updatedDeal.dealFiles,
+      supportingInformation: {
+        ...updatedDeal.supportingInformation,
         ...validationPlusUploadErrors,
       },
     };
@@ -181,7 +181,7 @@ exports.downloadFile = async (req, res) => {
       return res.status(401).send();
     }
 
-    const fieldFiles = deal.dealFiles && deal.dealFiles[fieldname];
+    const fieldFiles = deal.supportingInformation && deal.supportingInformation[fieldname];
     if (!fieldFiles) {
       return res.status(404).send();
     }

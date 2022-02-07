@@ -16,7 +16,6 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
-
   it('Does not allow <script> tag', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);

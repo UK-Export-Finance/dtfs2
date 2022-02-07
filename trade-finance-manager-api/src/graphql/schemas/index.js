@@ -88,7 +88,7 @@ type DealSubmissionDetails {
   smeType: String
 }
 
-type DealFiles {
+type SupportingInformation {
   security: String
 }
 
@@ -370,7 +370,7 @@ type DealSnapshot {
   submissionDetails: DealSubmissionDetails
   isFinanceIncreasing: Boolean
   eligibility: DealEligibility
-  dealFiles: DealFiles
+  supportingInformation: SupportingInformation
   exporter: DealExporter
   facilitiesUpdated: Float
 }

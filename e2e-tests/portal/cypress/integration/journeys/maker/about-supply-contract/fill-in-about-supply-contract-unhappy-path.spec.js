@@ -95,7 +95,6 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierCorrespondenceAddress().town().type('Chelmsford');
     contractAboutSupplier.indemnifierCorrespondenceAddress().postcode().type('SW1A 2HQ');
 
-
     contractAboutSupplier.saveAndGoBack().click();
 
     contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
