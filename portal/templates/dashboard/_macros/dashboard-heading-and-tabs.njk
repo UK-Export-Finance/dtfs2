@@ -21,7 +21,7 @@
     items: user.roles.includes('maker') and [{
       text: 'Create new',
       attributes: {"data-cy":"CreateNewSubmission"},
-      href: "/select-scheme"
+      href: "/gef/mandatory-criteria" if user.bank.hasGefAccessOnly else "/select-scheme"
     }]
   }) }}
 
