@@ -71,8 +71,10 @@ const submittedFiltersObject = (filtersArray) => {
  * @returns 'Ready-for-Checkers-approval'
  */
 const formatFieldValue = (fieldValue) => {
-  if (fieldValue) {
-    return String(fieldValue).replace(/[\s/]/g, '-').replace('\'', '');
+  const str = String(fieldValue);
+
+  if (str) {
+    return str.replace(/[\s/]/g, '-').replace('\'', '');
   }
 
   return null;
