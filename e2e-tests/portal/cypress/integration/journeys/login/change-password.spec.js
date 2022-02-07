@@ -44,7 +44,6 @@ context('Admin user creates a new user; the new user updates their password.', (
     //  any other failure further down...
     cy.url().should('eq', relative('/admin/users/'));
 
-
     // log in as our user + try to change the password to an invalid password..
     cy.login(userToCreate);
     header.profile().click();

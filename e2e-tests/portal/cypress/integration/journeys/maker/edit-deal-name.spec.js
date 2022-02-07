@@ -38,7 +38,6 @@ context('Edit deal name', () => {
     contract.visit(deal);
     contract.editDealName().click();
 
-
     editDealName.additionalRefName().type('{selectall}{backspace}asdfasfasf');
     editDealName.submit().click();
 
