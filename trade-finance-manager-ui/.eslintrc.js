@@ -13,10 +13,11 @@ module.exports = {
       ignoreStrings: true,
       ignoreTemplateLiterals: true,
     }],
+    'no-console': 'off',
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
-    'import/no-extraneous-dependencies': ['error', {'devDependencies': ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js']}],
+    'import/no-extraneous-dependencies': ['error', {devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js']}],
   },
   parserOptions: {
     ecmaVersion: 2020,

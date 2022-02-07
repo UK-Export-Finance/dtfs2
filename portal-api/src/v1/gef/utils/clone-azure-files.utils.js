@@ -58,6 +58,6 @@ exports.cloneAzureFiles = async (currentDealId, newDealId) => {
       }
     }
   } catch (error) {
-    console.log('The current deal doesn\'t have any supporting information uploaded');
+    console.error('The current deal doesn\'t have any supporting information uploaded');
   }
 };

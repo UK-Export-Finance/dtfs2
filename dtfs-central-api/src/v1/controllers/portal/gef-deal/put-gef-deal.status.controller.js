@@ -5,7 +5,7 @@ const db = require('../../../../drivers/db-client');
 const updateDealStatus = async (dealId, previousStatus, newStatus) => {
   const collection = await db.getCollection('deals');
 
-  console.log(`Updating Portal GEF deal status to ${newStatus}`);
+  console.info(`Updating Portal GEF deal status to ${newStatus}`);
 
   const dealUpdate = {
     previousStatus,
@@ -21,7 +21,7 @@ const updateDealStatus = async (dealId, previousStatus, newStatus) => {
     { returnOriginal: false },
   );
 
-  console.log(`Updated Portal GEF deal status from ${previousStatus} to ${newStatus}`);
+  console.info(`Updated Portal GEF deal status from ${previousStatus} to ${newStatus}`);
 
   return findAndUpdateResponse.value;
 };

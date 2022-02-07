@@ -36,10 +36,10 @@ const getNumberFromGenerator = async (context) => {
 
   // Set the maximum number of tries in case acbsCheck is unavailable and it gets stuck in an infinite loop
   while (!numberIsAvailable && loopCount < MAX_NUMBER_OF_TRIES) {
-    console.log('Azure functions - getNumberFromGenerator - trying. Count ', loopCount);
+    console.info('Azure functions - getNumberFromGenerator - trying. Count ', loopCount);
 
     numberFromGenerator = await numberGeneratorController.callNumberGenerator(numberType);
-    console.log('Azure functions - numberFromGenerator ', numberFromGenerator);
+    console.info('Azure functions - numberFromGenerator ', numberFromGenerator);
 
 
     if (numberFromGenerator.error) {

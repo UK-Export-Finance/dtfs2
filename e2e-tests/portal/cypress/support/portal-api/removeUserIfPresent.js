@@ -1,7 +1,7 @@
 const { deleteUser, listAllUsers, logIn } = require('./api');
 
 module.exports = (userToDelete, opts) => {
-  console.log('removeUserIfPresent::');
+  console.info('removeUserIfPresent::');
 
   logIn(opts).then((token) => listAllUsers(token).then((users) => {
     const candidate = users.find((existingUser) => existingUser.username === userToDelete.username);

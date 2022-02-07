@@ -26,7 +26,7 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
     { returnOriginal: false },
   );
 
-  console.log(`Updated Portal BSS deal status from ${previousStatus} to ${status}`);
+  console.info(`Updated Portal BSS deal status from ${previousStatus} to ${status}`);
 
   return findAndUpdateResponse.value;
 };

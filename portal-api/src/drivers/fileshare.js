@@ -35,9 +35,9 @@ const getShareClient = async (fileshare) => {
   );
 
   if (process.env.AZURE_LOG_LEVEL) {
-    console.log('get Share props');
+    console.info('get Share props');
     const shareProps = await serviceClient.getProperties();
-    console.log({ shareProps });
+    console.info({ shareProps });
   }
 
   const shareClient = await serviceClient.getShareClient(FILESHARE_NAME);
@@ -81,8 +81,8 @@ const tmpTests = async () => {
 
   tests.forEach((uri) => {
     fetch('https://www.bbc.co.uk/news', { method: 'GET' })
-      .then((response) => console.log({ uri, response }))
-      .catch((err) => console.log({ uri, err }));
+      .then((response) => console.info({ uri, response }))
+      .catch((err) => console.error({ uri, err }));
   });
 };
 
