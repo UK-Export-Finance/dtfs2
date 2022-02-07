@@ -5,7 +5,8 @@ const manualInclusion = {
   headingCaption: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
 
-  templateLink: () => cy.get('[data-cy="template-link"]'),
+  templateLinkDocx: () => cy.get('[data-cy="template-link-docx"]'),
+  templateLinkPdf: () => cy.get('[data-cy="template-link-pdf"]'),
   fileUploadComponent: () => cy.get('[data-cy="file-upload-component"]'),
 
   continueButton: () => cy.get('[data-cy="continue-button"]'),
