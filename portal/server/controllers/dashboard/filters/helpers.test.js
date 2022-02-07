@@ -105,12 +105,22 @@ describe('controllers/dashboard/filters - helpers', () => {
       expect(result).toEqual(expected);
     });
 
-    it('returns a string when boolean is passed', () => {
+    it('returns a string when true boolean is passed', () => {
       const mockValue = true;
 
       const result = formatFieldValue(mockValue);
 
       const expected = String(true);
+
+      expect(result).toEqual(expected);
+    });
+
+    it('returns a string when false boolean is passed', () => {
+      const mockValue = false;
+
+      const result = formatFieldValue(mockValue);
+
+      const expected = String(false);
 
       expect(result).toEqual(expected);
     });
