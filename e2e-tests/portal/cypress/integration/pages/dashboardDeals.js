@@ -1,6 +1,8 @@
 const page = {
   visit: () => cy.visit('/dashboard/deals/0'),
   createNewSubmission: () => cy.get('[data-cy="CreateNewSubmission"]'),
+  mandatoryCriteriaYes: () => cy.get('[data-cy="mandatory-criteria-yes"]'),
+  continueButton: () => cy.get('[data-cy="continue-button"]'),
   tableHeader: (column) => cy.get(`[data-cy="deal__header--${column}"]`),
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
   row: {

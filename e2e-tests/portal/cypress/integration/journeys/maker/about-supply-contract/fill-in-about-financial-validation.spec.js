@@ -8,7 +8,6 @@ const { nowPlusDays } = require('../../../../support/utils/dateFuncs');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-
 context('about-buyer', () => {
   let deal;
 
