@@ -15,9 +15,9 @@ context('Dashboard: Unissued facilities report', () => {
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 90 days left
       const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
-      // let daysInThePast = sub(setDateToMidnight, { days: 0 });   
+      // let daysInThePast = sub(setDateToMidnight, { days: 0 });
       const date = new Date(setDateToMidnight).valueOf().toString();
-   
+
       cy.insertOneGefFacility({
         dealId: deal._id,
         ukefFacilityId: '00000001',

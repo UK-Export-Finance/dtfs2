@@ -13,8 +13,8 @@
     {% else %}
     {% set hrefRoute = '/contract/' + dealId + '/' + entityName %}
   {% endif %}
-  
-  <h1 class="govuk-heading-l">{{ title }} </h1>
+
+  <h1 class="govuk-heading-l" data-cy="{{entityName}}">{{ title }} </h1>
 
   <input type="hidden" value="{{ entityId }}" data-cy="{{ entityName }}-id"/>
 

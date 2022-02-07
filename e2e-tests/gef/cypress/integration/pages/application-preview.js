@@ -17,6 +17,8 @@ const applicationPreview = {
 
   miaStageChecker: () => cy.get('[data-cy="update-mia-stage"]'),
 
+  acceptMIADecision: () => cy.get('[data-cy="accept-mia-conditions"]'),
+
   unissuedFacilitiesHeader: () => cy.get('[data-cy="update-unissued-header"]'),
   unissuedFacilitiesReviewLink: () => cy.get('[data-cy="update-unissued-link"]'),
 

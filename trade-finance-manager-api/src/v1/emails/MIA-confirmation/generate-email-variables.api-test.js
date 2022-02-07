@@ -20,7 +20,7 @@ describe('generate AIN/MIN confirmation email variables', () => {
       const expected = {
         recipientName: `${mockDeal.maker.firstname} ${mockDeal.maker.surname}`,
         exporterName: mockDeal.exporter.companyName,
-        name: mockDeal.name,
+        bankReferenceNumber: mockDeal.bankInternalRefName,
         ukefDealId: mockDeal.ukefDealId,
       };
 

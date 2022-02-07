@@ -2,6 +2,7 @@ const BANKS = require('../banks');
 
 const UKEF_TEST_BANK_1 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated)');
 const UKEF_TEST_BANK_2 = BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
+const UKEF_GEF_ONLY_BANK = BANKS.find((bank) => bank.name === 'GEF Only Bank');
 
 const USERS = [
   {
@@ -23,6 +24,26 @@ const USERS = [
     timezone: 'Europe/London',
     roles: ['maker'],
     bank: UKEF_TEST_BANK_1,
+  },
+  {
+    username: 'BANK3_GEF_MAKER1',
+    password: 'AbC!2345',
+    firstname: 'Benito',
+    surname: 'Sutton',
+    email: 'maker2@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['maker'],
+    bank: UKEF_GEF_ONLY_BANK,
+  },
+  {
+    username: 'BANK3_GEF_CHECKER1',
+    password: 'AbC!2345',
+    firstname: 'Tony',
+    surname: 'Sheridan',
+    email: 'maker2@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['checker'],
+    bank: UKEF_GEF_ONLY_BANK,
   },
   {
     username: 'BANK1_CHECKER1',
