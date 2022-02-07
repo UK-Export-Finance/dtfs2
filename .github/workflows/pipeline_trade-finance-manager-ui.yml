@@ -2,8 +2,8 @@ name: Trade Finance Manager UI
 
 on:
   push:
-    branches: [ main ]
-    paths: 
+    branches: [ dev ]
+    paths:
     - 'trade-finance-manager-ui/**'
     - 'e2e-tests/trade-finance-manager/cypress/**'
   schedule:

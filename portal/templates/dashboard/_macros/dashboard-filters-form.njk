@@ -66,18 +66,18 @@
     }) }}
   {% endif %}
 
-  {% if filters.facilityStage %}
+  {% if filters.hasBeenIssued %}
     {{ govukCheckboxes({
       idPrefix: 'hasBeenIssued',
       name: 'hasBeenIssued',
       classes: 'govuk-checkboxes--small',
       fieldset: {
         legend: {
-          text: "Bank's facility stage",
+          text: 'hasBeenIssued',
           classes: 'govuk-fieldset__legend--m'
         }
       },
-      items: filters.facilityStage
+      items: filters.hasBeenIssued
     }) }}
   {% endif %}
 

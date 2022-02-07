@@ -306,7 +306,7 @@ apiRoutes.post('/acbs/facility/:id/issue', acbs.issueAcbsFacilityPOST);
  *         name: partyDbCompanyRegistrationNumber
  *         schema:
  *           type: string
- *           example: '10686321'
+ *           example: '1234'
  *         required: true
  *         description: Companies House Registration Number to get the UKEF Party
  *     responses:

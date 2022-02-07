@@ -2,7 +2,7 @@ name: Reference Data proxy
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'reference-data-proxy/**'
   schedule:
@@ -157,4 +157,4 @@ jobs:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }}
 
-  
+
