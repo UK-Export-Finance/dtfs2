@@ -1,4 +1,4 @@
-import { dashboardDealsFiltersQuery } from './deals-query';
+import { dashboardDealsFiltersQuery } from './deals-filters-query';
 import { STATUS } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 
@@ -141,10 +141,10 @@ describe('controllers/dashboard/filters - deals query', () => {
     expect(result).toEqual(expected);
   });
 
-  it(`should NOT add a filter to the query when the field value is ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES}`, () => {
+  it(`should NOT add a filter to the query when the field value is ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES}`, () => {
     const mockCreatedByYou = '';
     const mockFilters = [
-      { status: [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.ALL_STATUSES] },
+      { status: [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES] },
     ];
     mockUser.bank.id = '*';
     mockUser.roles = [];

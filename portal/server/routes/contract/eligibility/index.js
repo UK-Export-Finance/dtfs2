@@ -66,7 +66,7 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
 
   const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
     deal.eligibility,
-    deal.dealFiles,
+    deal.supportingInformation,
   );
 
   const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
@@ -128,22 +128,22 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
     return res.redirect('/');
   }
 
-  const { eligibility, dealFiles = {} } = deal;
+  const { eligibility, supportingInformation = {} } = deal;
 
   const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
     deal.eligibility,
-    deal.dealFiles,
+    deal.supportingInformation,
   );
   const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
-  const documentationValidationErrors = generateErrorSummary(dealFiles.validationErrors, eligibilityErrorHref);
+  const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, eligibilityErrorHref);
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk',
     {
-      _id: deal._id, // eslint-disable-line no-underscore-dangle
-      dealFiles,
+      _id: deal._id,
+      supportingInformation,
       eligibility,
       validationErrors: documentationValidationErrors,
       additionalRefName: deal.additionalRefName,
@@ -166,9 +166,9 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
     res,
   );
 
-  const { eligibility, dealFiles = {} } = updatedDeal;
+  const { eligibility, supportingInformation = {} } = updatedDeal;
 
-  const documentationValidationErrors = generateErrorSummary(dealFiles.validationErrors, errorHref);
+  const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, errorHref);
 
   if (query.stayonpage !== 'true' && documentationValidationErrors.count === 0) {
     return res.redirect(`/contract/${_id}/eligibility/check-your-answers`);
@@ -176,7 +176,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
 
   const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
     updatedDeal.eligibility,
-    updatedDeal.dealFiles,
+    updatedDeal.supportingInformation,
   );
   const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
@@ -185,7 +185,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(),
   return res.render('eligibility/eligibility-supporting-documentation.njk', {
     _id,
     eligibility,
-    dealFiles,
+    supportingInformation,
     validationErrors: documentationValidationErrors,
     additionalRefName: updatedDeal.additionalRefName,
     user: req.session.user,
@@ -198,20 +198,20 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
   const { _id, userToken } = requestParams(req);
   const { body, files } = req;
 
-  if (!submittedDocumentationMatchesOriginalData(req.body, req.files, deal.dealFiles)) {
+  if (!submittedDocumentationMatchesOriginalData(req.body, req.files, deal.supportingInformation)) {
     const updatedDeal = await getApiData(
       api.updateEligibilityDocumentation(_id, body, files, userToken),
       res,
     );
 
-    const { eligibility, dealFiles } = updatedDeal;
+    const { eligibility, supportingInformation } = updatedDeal;
 
-    if (dealFiles && dealFiles.validationErrors && dealFiles.validationErrors.uploadErrorCount) {
-      const documentationValidationErrors = generateErrorSummary(dealFiles.validationErrors, errorHref);
+    if (supportingInformation && supportingInformation.validationErrors && supportingInformation.validationErrors.uploadErrorCount) {
+      const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, errorHref);
 
       const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
         updatedDeal.eligibility,
-        updatedDeal.dealFiles,
+        updatedDeal.supportingInformation,
       );
       const validationErrors = generateErrorSummary(allEligibilityValidationErrors, errorHref);
 
@@ -220,7 +220,7 @@ router.post('/contract/:_id/eligibility/supporting-documentation/save-go-back', 
       return res.render('eligibility/eligibility-supporting-documentation.njk', {
         _id,
         eligibility,
-        dealFiles,
+        supportingInformation,
         validationErrors: documentationValidationErrors,
         additionalRefName: deal.additionalRefName,
         taskListItems: eligibilityTaskList(completedForms),
@@ -260,7 +260,7 @@ router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), asy
 
   const allEligibilityValidationErrors = mergeEligibilityValidationErrors(
     deal.eligibility,
-    deal.dealFiles,
+    deal.supportingInformation,
   );
 
   const validationErrors = generateErrorSummary(

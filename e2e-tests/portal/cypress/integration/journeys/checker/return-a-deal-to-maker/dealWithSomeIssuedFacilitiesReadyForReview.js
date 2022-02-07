@@ -289,7 +289,7 @@ const deal = {
   summary: {},
   comments: [],
   editedBy: [],
-  dealFiles: {
+  supportingInformation: {
     validationErrors: {
       count: 0,
       errorList: {

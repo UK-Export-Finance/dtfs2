@@ -91,7 +91,7 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
           agentAlias
           lastUpdated
         }
-        dealFiles {
+        supportingInformation {
           security
         }
         totals {
