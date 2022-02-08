@@ -54,12 +54,6 @@ const facilityFieldsObj = (facility) => {
     dayCountBasis,
   }))(facility);
 
-  // NOTE: we do not want to include shouldCoverStartOnSubmission in the list of fields.
-  // Otherwise, the email would split this field out, which is not required in design.
-  if (!facility.shouldCoverStartOnSubmission) {
-    fields.requestedCoverStartDate = facility.coverStartDate;
-  }
-
   // format for emails
   if (fields.hasBeenIssued) {
     fields.hasBeenIssued = mapIssuedValue(fields.hasBeenIssued);
