@@ -13,8 +13,7 @@ module.exports = async (user) => {
     },
     data: user,
   }).catch((err) => {
-    console.info('failed to create temp user');
-    console.info(`${JSON.stringify(err)}`);
+    console.error(`failed to create temp user ${JSON.stringify(err)}`);
   });
 
   console.info(`Logging in as "${user.username}"`);
