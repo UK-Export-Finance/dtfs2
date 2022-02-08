@@ -73,6 +73,8 @@ const facilityStageFields = (loan) => {
   const modifiedLoan = loan;
   const { facilityStage } = modifiedLoan;
 
+  console.log('facilityStage --> ', facilityStage);
+
   if (facilityStage === 'Conditional') {
     // remove any 'Unconditional' specific fields
     modifiedLoan.requestedCoverStartDate = null;
