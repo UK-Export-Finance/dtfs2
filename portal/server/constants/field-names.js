@@ -1,6 +1,6 @@
 const DEAL = {
   DEAL_TYPE: 'dealType',
-  SUBMISSION_TYPE: 'submissionType',
+  SUBMISSION_TYPE: 'deal.submissionType',
   STATUS: 'status',
 };
 
