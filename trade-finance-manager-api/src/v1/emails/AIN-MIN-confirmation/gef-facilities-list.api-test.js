@@ -95,8 +95,20 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
         const result = facilityFieldsObj(mockFacilityWithCoverStartOnSubmission);
 
-        expect(result.requestedCoverStartDate).toEqual(mockFacility.coverStartDate);
-        expect(result.shouldCoverStartOnSubmission).toBeUndefined();
+        expect(result.coverStartDate).toEqual(format(Number(mockFacility.coverStartDate), 'do MMMM yyyy'));
+      });
+    });
+
+    describe('when facility.shouldCoverStartOnSubmission is true', () => {
+      it('should add requestedCoverStartDate field with the coverStartDate value, and not add shouldCoverStartOnSubmission', () => {
+        const mockFacilityWithCoverStartOnSubmission = {
+          ...mockFacility,
+          shouldCoverStartOnSubmission: true,
+        };
+
+        const result = facilityFieldsObj(mockFacilityWithCoverStartOnSubmission);
+
+        expect(result.coverStartDate).toEqual(format(Number(mockFacility.coverStartDate), 'do MMMM yyyy'));
       });
     });
   });
