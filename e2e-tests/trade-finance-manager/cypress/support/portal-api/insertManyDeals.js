@@ -2,7 +2,7 @@ const { insertDeal, getDeal, logIn } = require('./api');
 const { getIdFromNumberGenerator } = require('../reference-data-api/api');
 
 module.exports = (deals, opts) => {
-  console.log('createManyDeals::');
+  console.info('createManyDeals::');
 
   logIn(opts).then((token) => {
     const persistedDeals = [];

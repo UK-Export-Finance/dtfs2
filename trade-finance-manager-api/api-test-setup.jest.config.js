@@ -14,8 +14,6 @@ jest.mock('node-cron', () => ({
   schedule: jest.fn(),
 }));
 
-console.log(`MOCKED FILES: \n${mockFiles.join('\n')}`);
-
 beforeAll(() => {
   axios.defaults.adapter = corsAdapter;
 });

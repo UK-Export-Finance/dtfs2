@@ -17,7 +17,7 @@ const getApiData = (query, res) => new Promise((resolve) =>
       // currently assuming all api GET errors are auth errors,
       // redirect to login
       // unauth handling could be middleware
-      console.log(err);
+      console.info(err);
       return res.redirect('/login');
     }));
 

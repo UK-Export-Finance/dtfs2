@@ -1,7 +1,7 @@
 const { submitDeal, submitDealAfterUkefIds } = require('./api');
 
 module.exports = (deals) => {
-  console.log('submitManyDeals::');
+  console.info('submitManyDeals::');
   const persistedDeals = [];
 
   deals.forEach((dealToInsert) => {

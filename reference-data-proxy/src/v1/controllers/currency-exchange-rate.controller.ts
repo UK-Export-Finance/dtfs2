@@ -9,7 +9,7 @@ const exchangeRateURL: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL
 export const getExchangeRate = async (req: Request, res: Response) => {
   const { source, target } = req.params;
 
-  console.log(`Calling Exchange rate API - ${source} to ${target}`);
+  console.info(`Calling Exchange rate API - ${source} to ${target}`);
 
   // API does not support XYZ to GBP conversion so we have to reverse and calculate
   let actualSource = source;

@@ -18,7 +18,7 @@ const username: any = process.env.MULESOFT_API_KEY;
 const password: any = process.env.MULESOFT_API_SECRET;
 
 export const checkDealId = async (dealId: any) => {
-  console.log(`Checking deal id ${dealId} with ACBS`);
+  console.info(`Checking deal id ${dealId} with ACBS`);
 
   const response: any = await axios({
     method: 'get',
@@ -38,7 +38,7 @@ export const checkDealId = async (dealId: any) => {
 };
 
 export const checkFacilityId = async (facilityId: any) => {
-  console.log(`Checking facility id ${facilityId} with ACBS`);
+  console.info(`Checking facility id ${facilityId} with ACBS`);
 
   const response = await axios({
     method: 'get',
@@ -62,14 +62,14 @@ export const findOne = async (req: Request, res: Response) => {
 
   if (entityType === ENTITY_TYPE.DEAL) {
     const dealIdStatus = await checkDealId(id);
-    console.log(`Checked dealId ${id} with ACBS API: ${dealIdStatus}`);
+    console.info(`Checked dealId ${id} with ACBS API: ${dealIdStatus}`);
 
     return res.status(dealIdStatus).send();
   }
 
   if (entityType === ENTITY_TYPE.FACILITY) {
     const facilityIdStatus = await checkFacilityId(id);
-    console.log(`Checked facilityId ${id} with ACBS API: ${facilityIdStatus}`);
+    console.info(`Checked facilityId ${id} with ACBS API: ${facilityIdStatus}`);
 
     return res.status(facilityIdStatus).send();
   }

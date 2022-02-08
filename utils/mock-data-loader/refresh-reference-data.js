@@ -21,11 +21,11 @@ const refreshCountries = async (token) => {
     const matchById = latestCountries.find( country => country.id === existingCountry.id );
     if (!matchById) {
       // existing currency has gone.. so we need to delete..
-      console.log(`deleting from API as no longer found in reference data: ${JSON.stringify(existingCountry)}`)
+      console.info(`deleting from API as no longer found in reference data: ${JSON.stringify(existingCountry)}`)
       await api.deleteCountry(existingCountry, token);
     } else {
       if (!matches(existingCountry, matchById)) {
-        console.log(`update: ${JSON.stringify(existingCountry)} -> ${JSON.stringify(matchById)}`);
+        console.info(`update: ${JSON.stringify(existingCountry)} -> ${JSON.stringify(matchById)}`);
         await api.updateCountry(matchById, token);
       }
     }
@@ -34,7 +34,7 @@ const refreshCountries = async (token) => {
 
   const newlyAddedCountries = latestCountries.filter( newCountry => !countriesUpdated.find(entry=>entry.id = newCountry.id) )
   for (const newCountry of newlyAddedCountries) {
-    console.log(`creating: ${JSON.stringify(newCountry)}`)
+    console.info(`creating: ${JSON.stringify(newCountry)}`)
     await api.createCountry(newCountry, token);
   }
 
@@ -47,11 +47,11 @@ const refreshCurrencies = async (token) => {
     const matchById = latestCurrencies.find( currency => currency.id === existingCurrency.id );
     if (!matchById) {
       // existing currency has gone.. so we need to delete..
-      console.log(`deleting from API as no longer found in reference data: ${JSON.stringify(existingCurrency)}`)
+      console.info(`deleting from API as no longer found in reference data: ${JSON.stringify(existingCurrency)}`)
       await api.deleteCurrency(existingCurrency, token);
     } else {
       if (!matches(existingCurrency, matchById)) {
-        console.log(`update: ${JSON.stringify(existingCurrency)} -> ${JSON.stringify(matchById)}`);
+        console.info(`update: ${JSON.stringify(existingCurrency)} -> ${JSON.stringify(matchById)}`);
         await api.updateCurrency(matchById, token);
       }
     }
@@ -60,7 +60,7 @@ const refreshCurrencies = async (token) => {
 
   const newlyAddedCurrencies = latestCurrencies.filter( newCurrency => !currenciesUpdated.find(entry=>entry.currencyId === newCurrency.currencyId) )
   for (const newCurrency of newlyAddedCurrencies) {
-    console.log(`creating: ${JSON.stringify(newCurrency)}`)
+    console.info(`creating: ${JSON.stringify(newCurrency)}`)
     await api.createCurrency(newCurrency, token);
   }
 
