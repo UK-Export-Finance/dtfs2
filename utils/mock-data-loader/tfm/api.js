@@ -13,7 +13,7 @@ const createTeam = async (team, token) => {
     },
     url: `${urlRoot}/v1/tfm/teams`,
     data: { team },
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -27,7 +27,7 @@ const listTeams = async (token) => {
       Authorization: token || '',
     },
     url: `${urlRoot}/v1/tfm/teams`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.teams;
 };
@@ -41,7 +41,7 @@ const deleteTeam = async (team, token) => {
       Authorization: token || '',
     },
     url: `${urlRoot}/v1/tfm/teams/${team.id}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -57,7 +57,7 @@ const createUser = async (user, token) => {
     },
     url: `${urlRoot}/v1/tfm/users`,
     data: { user },
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -71,7 +71,7 @@ const listUsers = async (token) => {
       Authorization: token || '',
     },
     url: `${urlRoot}/v1/tfm/users`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.users;
 };
@@ -84,7 +84,7 @@ const deleteUser = async (user) => {
       Accepts: 'application/json',
     },
     url: `${urlRoot}/v1/tfm/users/${user.username}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -93,7 +93,7 @@ const listDeals = async () => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/v1/tfm/deals`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.deals;
 };

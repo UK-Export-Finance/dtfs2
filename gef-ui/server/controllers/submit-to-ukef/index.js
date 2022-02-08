@@ -26,7 +26,7 @@ const createSubmissionToUkef = async (req, res) => {
   const { user, userToken } = req.session;
   const { dealId } = params;
   const { comment } = body;
-  console.log('GEF Application is being submitted to UKEF--TFM');
+  console.info('GEF Application is being submitted to UKEF--TFM');
   const application = await api.getApplication(dealId);
   // Fetch the application with facilities to check if unissuedToIssued
   const applicationWithFacilities = await Application.findById(dealId, user, userToken);

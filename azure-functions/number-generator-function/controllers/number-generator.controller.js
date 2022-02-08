@@ -11,7 +11,7 @@
 const api = require('../api');
 
 const callNumberGenerator = async (numberType) => {
-  console.log('Azure functions - callNumberGenerator');
+  console.info('Azure functions - callNumberGenerator');
 
   const response = await api.callNumberGenerator(numberType);
 

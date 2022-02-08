@@ -4,7 +4,7 @@ require('dotenv').config();
 const urlRoot = process.env.DEAL_API_URL;
 
 module.exports = async (user) => {
-  console.log(`Creating temp user "${user.username}"`);
+  console.info(`Creating temp user "${user.username}"`);
   await axios({
     method: 'post',
     url: `${urlRoot}/v1/users`,
@@ -13,11 +13,10 @@ module.exports = async (user) => {
     },
     data: user,
   }).catch((err) => {
-    console.log('failed to create temp user');
-    console.log(`${JSON.stringify(err)}`);
+    console.error(`failed to create temp user ${JSON.stringify(err)}`);
   });
 
-  console.log(`Logging in as "${user.username}"`);
+  console.info(`Logging in as "${user.username}"`);
   const { data } = await axios({
     method: 'post',
     url: `${urlRoot}/v1/login`,

@@ -11,10 +11,9 @@ context('about-supply-contract', () => {
   let deal;
 
   before(() => {
-    console.log(JSON.stringify(aDealWithAboutBuyerComplete, null, 4));
+    console.info(JSON.stringify(aDealWithAboutBuyerComplete, null, 4));
     cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1)
       .then((insertedDeal) => {
-        console.log({ insertedDeal });
         deal = insertedDeal;
       });
   });

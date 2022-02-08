@@ -11,7 +11,7 @@ const postToEstore = async (apiEndpoint: string, apiData: any) => {
     return false;
   }
 
-  console.log(`Calling eStore API (/${apiEndpoint})`);
+  console.info(`Calling eStore API (/${apiEndpoint})`);
 
   const response = await axios({
     method: 'post',
