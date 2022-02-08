@@ -4,4 +4,4 @@ mockFiles.forEach((mockFile) => {
   jest.mock(mockFile);
 });
 
-console.log(`MOCKED FILES: \n${mockFiles.join('\n')}`);
+console.info(`MOCKED FILES: \n${mockFiles.join('\n')}`);

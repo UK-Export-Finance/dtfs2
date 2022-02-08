@@ -7,7 +7,7 @@ const getDeal = async (dealId) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/v1/portal/deals/${dealId}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -23,7 +23,7 @@ const createFacility = async (facility, dealId, user) => {
       },
       user,
     },
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -41,7 +41,7 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
       user,
     },
 
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -54,7 +54,7 @@ const listFacilities = async () => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   if (!response) return [];
   return response.data;
@@ -68,9 +68,9 @@ const deleteFacility = async (facilityId) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
-  return response?.data;
+  return response.data;
 };
 
 module.exports = {

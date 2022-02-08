@@ -17,7 +17,7 @@ const createBank = async (bank, token) => {
     },
     url: `${portalApiUrl}/v1/banks`,
     data: bank,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -32,7 +32,7 @@ const createCurrency = async (currency, token) => {
     },
     url: `${portalApiUrl}/v1/currencies`,
     data: currency,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -47,7 +47,7 @@ const createCountry = async (country, token) => {
     },
     url: `${portalApiUrl}/v1/countries`,
     data: country,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -62,7 +62,7 @@ const createDeal = async (deal, token) => {
     },
     url: `${portalApiUrl}/v1/deals`,
     data: deal,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -76,7 +76,7 @@ const getDeal = async (dealId, token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/deals/${dealId}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -91,7 +91,7 @@ const createIndustrySector = async (industrySector, token) => {
     },
     url: `${portalApiUrl}/v1/industry-sectors`,
     data: industrySector,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -106,7 +106,7 @@ const createMandatoryCriteria = async (mandatoryCriteria, token) => {
     },
     url: `${portalApiUrl}/v1/mandatory-criteria`,
     data: mandatoryCriteria,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -121,7 +121,7 @@ const createEligibilityCriteria = async (eligibilityCriteria, token) => {
     },
     url: `${portalApiUrl}/v1/eligibility-criteria`,
     data: eligibilityCriteria,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -135,7 +135,7 @@ const createUser = async (user) => {
     },
     url: `${portalApiUrl}/v1/users`,
     data: user,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -149,7 +149,7 @@ const deleteBank = async (deal, token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/banks/${deal.id}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -163,7 +163,7 @@ const deleteCurrency = async (currency, token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/currencies/${currency.id}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -177,7 +177,7 @@ const deleteCountry = async (country, token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/countries/${country.code}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -191,7 +191,7 @@ const deleteDeal = async (dealId, token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/deals/${dealId}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -205,7 +205,7 @@ const deleteIndustrySector = async (industrySector, token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/industry-sectors/${industrySector.code}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -219,7 +219,7 @@ const deleteMandatoryCriteria = async (mandatoryCriteria, token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/mandatory-criteria/${mandatoryCriteria.id}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -233,7 +233,7 @@ const deleteEligibilityCriteria = async (eligibilityCriteria, token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/eligibility-criteria/${eligibilityCriteria.id}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -246,7 +246,7 @@ const deleteUser = async (user) => {
       Accepts: 'application/json',
     },
     url: `${portalApiUrl}/v1/users/${user._id}`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -260,7 +260,7 @@ const listBanks = async (token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/banks`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.banks;
 };
@@ -274,7 +274,7 @@ const listCurrencies = async (token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/currencies`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.currencies;
 };
@@ -288,7 +288,7 @@ const listCountries = async (token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/countries`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.countries;
 };
@@ -307,7 +307,7 @@ const listIndustrySectors = async (token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/industry-sectors`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.industrySectors;
 };
@@ -321,7 +321,7 @@ const listMandatoryCriteria = async (token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/mandatory-criteria`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.mandatoryCriteria;
 };
@@ -335,7 +335,7 @@ const listEligibilityCriteria = async (token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/eligibility-criteria`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.eligibilityCriteria;
 };
@@ -348,7 +348,7 @@ const listUsers = async () => {
       Accepts: 'application/json',
     },
     url: `${portalApiUrl}/v1/users`,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.users;
 };
@@ -363,7 +363,7 @@ const updateCurrency = async (currency, token) => {
     },
     url: `${portalApiUrl}/v1/currencies/${currency.id}`,
     data: currency,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
@@ -378,7 +378,7 @@ const updateCountry = async (country, token) => {
     },
     url: `${portalApiUrl}/v1/countries/${country.code}`,
     data: country,
-  }).catch((err) => { console.log(`err: ${err}`); });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };

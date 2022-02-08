@@ -1,7 +1,7 @@
 const { insertGefApplication, logIn, listAllUsers } = require('./api');
 
 module.exports = (deals, opts) => {
-  console.log('createManyGefApplications::');
+  console.info('createManyGefApplications::');
 
   logIn(opts).then((token) => {
     const persisted = [];

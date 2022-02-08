@@ -11,7 +11,7 @@
       {% set dealStatus = params.deal.status %}
       {% set dealPreviousStatus = params.deal.previousStatus %}
       {% set bonds = params.deal.bondTransactions.items %}
-
+      <div class="table-overflow">
         <table class="govuk-table contract-table contract-transactions-table govuk-!-margin-bottom-0" data-cy="bond-transactions-table">
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -31,32 +31,32 @@
             {% for bond in bonds %}
               <tr class="govuk-table__row" data-cy="bond-{{ bond._id }}">
                 <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ bondLink.render(params, bond) }}
+                  {{ bondLink.render(params, bond) | safe }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-ukef-facility-id-{{ bond._id }}">
-                  {{ bond.ukefFacilityId }}
+                  {{ bond.ukefFacilityId | safe }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell" data-cy="bond-status-{{ bond._id}}">
-                  {{ statusTag.render(bond.status) }}
+                  {{ statusTag.render(bond.status) | safe }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-facility-value">
-                  {{ bond.currency.id}} {{ bond.value }}
+                  {{ bond.currency.id | safe }} {{ bond.value | safe }}
                 </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="facility-stage-{{ bond._id}}">{{ bond.facilityStage }}</td>
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="facility-stage-{{ bond._id}}">{{ bond.facilityStage | safe }}</td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-requested-cover-start-date">
                   {% if bond.requestedCoverStartDate %}
-                  {{ bond.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) }}
+                  {{ bond.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) | safe }}
                 {% endif %}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date">
                   {% if bond['coverEndDate-day'] and bond['coverEndDate-month'] and bond['coverEndDate-year'] %}
-                    {{ bond['coverEndDate-day'] }}/{{ bond['coverEndDate-month'] }}/{{ bond['coverEndDate-year'] }}
+                    {{ bond['coverEndDate-day'] | safe }}/{{ bond['coverEndDate-month'] | safe }}/{{ bond['coverEndDate-year'] | safe }}
                   {% endif %}
                 </td>
 
@@ -85,6 +85,7 @@
             {% endfor %}
           </tbody>
         </table>
+      </div>
     </div>
   {% endif %}
 {% endmacro %}
