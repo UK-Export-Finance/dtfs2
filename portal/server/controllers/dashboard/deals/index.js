@@ -112,7 +112,6 @@ exports.allDeals = async (req, res) => {
   const { user } = req.session;
   const currentPage = req.params.page;
 
-
   if (Object.keys(req.body).length) {
     req.session.dashboardFilters = req.body;
   }

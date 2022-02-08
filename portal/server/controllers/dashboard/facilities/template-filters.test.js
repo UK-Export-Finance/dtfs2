@@ -25,7 +25,7 @@ describe('controllers/dashboard/facilities - template-filters', () => {
       const expectedFieldName = FIELD_NAMES.FACILITY.TYPE;
 
       const expectedFieldInputs = [
-        { text: PRODUCT.GEF, value: PRODUCT.GEF },
+        // { text: PRODUCT.GEF, value: PRODUCT.GEF },
         { text: FACILITY_TYPE.CASH, value: FACILITY_TYPE.CASH },
         { text: FACILITY_TYPE.CONTINGENT, value: FACILITY_TYPE.CONTINGENT },
         { text: FACILITY_TYPE.BOND, value: FACILITY_TYPE.BOND },

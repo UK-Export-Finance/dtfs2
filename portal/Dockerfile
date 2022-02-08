@@ -26,7 +26,7 @@ RUN apk add bash openrc openssh curl \
 EXPOSE 80 ${SSH_PORT}
 
 # Execute Script
-ENTRYPOINT ["/bin/init.sh"]
+# ENTRYPOINT ["/bin/init.sh"]
 
 # Hot reloading
-# CMD node server/index.js
+CMD node server/index.js
