@@ -1,6 +1,6 @@
 const api = require('../../../api');
 const { dashboardDealsFiltersQuery } = require('./deals-filters-query');
-const { dashboardDealsFilters } = require('./template-filters');
+const { dealsTemplateFilters: templateFilters } = require('./template-filters');
 const { selectedFilters } = require('./selected-filters');
 const {
   submittedFiltersArray,
@@ -69,7 +69,7 @@ const getTemplateVariables = (
     tab,
     deals,
     pages,
-    filters: dashboardDealsFilters(filtersObj),
+    filters: templateFilters(filtersObj),
     selectedFilters: selectedFilters(filtersObj),
     createdByYou: sessionFilters.createdByYou,
     keyword: sessionFilters.keyword,
@@ -111,6 +111,7 @@ exports.allDeals = async (req, res) => {
   const { userToken } = requestParams(req);
   const { user } = req.session;
   const currentPage = req.params.page;
+
 
   if (Object.keys(req.body).length) {
     req.session.dashboardFilters = req.body;

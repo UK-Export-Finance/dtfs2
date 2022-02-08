@@ -33,9 +33,10 @@ router.get('/dashboard/facilities', async (req, res) => {
   return res.redirect('/dashboard/facilities/0');
 });
 
-router.get('/dashboard/facilities/:page', allFacilities);
-
 // needs to be ordered last to avoid issues with taking priority over transaction routes
+router.get('/dashboard/facilities/:page', allFacilities);
+router.post('/dashboard/facilities/:page', allFacilities);
+
 router.get('/dashboard/deals/:page', allDeals);
 router.post('/dashboard/deals/:page', allDeals);
 

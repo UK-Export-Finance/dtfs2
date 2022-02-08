@@ -85,7 +85,7 @@ const statusFilters = (submittedFilters) => {
  * Create an object for all filters.
  * This will used in multiple checkboxes components.
  */
-const dashboardDealsFilters = (submittedFilters = {}) => ({
+const dealsTemplateFilters = (submittedFilters = {}) => ({
   product: productFilters(submittedFilters),
   submissionType: submissionTypeFilters(submittedFilters),
   status: statusFilters(submittedFilters),
@@ -94,5 +94,5 @@ const dashboardDealsFilters = (submittedFilters = {}) => ({
 module.exports = {
   productFilters,
   statusFilters,
-  dashboardDealsFilters,
+  dealsTemplateFilters,
 };

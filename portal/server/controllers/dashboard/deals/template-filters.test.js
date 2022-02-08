@@ -1,7 +1,7 @@
 import {
   productFilters,
   statusFilters,
-  dashboardDealsFilters,
+  dealsTemplateFilters,
 } from './template-filters';
 import {
   FIELD_NAMES,
@@ -103,9 +103,9 @@ describe('controllers/dashboard/deals - template-filters', () => {
     });
   });
 
-  describe('dashboardDealsFilters', () => {
+  describe('dealsTemplateFilters', () => {
     it('should return an object of all filters', () => {
-      const result = dashboardDealsFilters();
+      const result = dealsTemplateFilters();
 
       const expected = {
         product: productFilters({}),

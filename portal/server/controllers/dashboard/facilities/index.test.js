@@ -7,12 +7,13 @@ import {
 import mockResponse from '../../../helpers/responseMock';
 import { getFlashSuccessMessage } from '../../../helpers';
 import api from '../../../api';
+import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
 import {
   submittedFiltersArray,
   submittedFiltersObject,
 } from '../filters/helpers';
-import { dashboardFacilitiesDealFiltersQuery } from './facilities-deal-filters-query';
-import { dashboardFacilitiesFilters } from './template-filters';
+import { facilitiesTemplateFilters as templateFilters } from './template-filters';
+import { selectedFilters } from './selected-filters';
 import CONSTANTS from '../../../constants';
 
 jest.mock('../../../api', () => ({
@@ -78,18 +79,15 @@ describe('controllers/dashboard/facilities', () => {
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
-      const expectedDealFiltersQuery = dashboardFacilitiesDealFiltersQuery(
+      const expectedFilters = dashboardFacilitiesFiltersQuery(
         filtersArray,
         mockReq.session.user,
       );
 
-      const expectedFacilityFilters = [];
-
       expect(api.allFacilities).toHaveBeenCalledWith(
         20,
         20,
-        expectedDealFiltersQuery,
-        expectedFacilityFilters,
+        expectedFilters,
         'mock-token',
       );
     });
@@ -142,7 +140,8 @@ describe('controllers/dashboard/facilities', () => {
         tab: 'facilities',
         facilities: mockFacilities,
         pages: expectedPages,
-        filters: dashboardFacilitiesFilters(expectedFiltersObj),
+        filters: templateFilters(expectedFiltersObj),
+        selectedFilters: selectedFilters(expectedFiltersObj),
       };
 
       expect(result).toEqual(expected);
