@@ -69,10 +69,11 @@ exports.updateLoanIssueFacility = async (req, res) => {
         deal,
       );
 
+      modifiedLoan.hasBeenIssued = false;
+      modifiedLoan.issueFacilityDetailsProvided = false;
       if (validationErrors.count === 0) {
         modifiedLoan.issueFacilityDetailsProvided = true;
-      } else {
-        modifiedLoan.issueFacilityDetailsProvided = false;
+        modifiedLoan.hasBeenIssued = true;
       }
 
       const { status, data } = await facilitiesController.update(

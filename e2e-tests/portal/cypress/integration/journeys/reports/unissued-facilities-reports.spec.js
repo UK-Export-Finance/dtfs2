@@ -51,6 +51,7 @@ context('Dashboard: Unissued facilities report', () => {
       cy.updateGefApplication(deal._id, {
         submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
         submissionDate: daysInThePast,
+        manualInclusionNoticeSubmissionDate: daysInThePast,
       }, BANK1_MAKER1);
     });
 
@@ -72,6 +73,7 @@ context('Dashboard: Unissued facilities report', () => {
       cy.updateGefApplication(deal._id, {
         submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
         submissionDate: daysInThePast,
+        manualInclusionNoticeSubmissionDate: daysInThePast,
       }, BANK1_MAKER1);
     });
   });
