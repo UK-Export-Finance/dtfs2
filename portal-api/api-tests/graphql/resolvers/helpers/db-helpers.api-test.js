@@ -1,9 +1,35 @@
 const {
+  formatFieldValue,
   createDbQuery,
   createDbQueryKeywordDeals,
 } = require('../../../../src/graphql/resolvers/helpers/db-helpers');
 
 describe('/graphql resolvers - helpers - db-helpers', () => {
+  describe('formatFieldValue', () => {
+    it('should return a string with `false` boolean value, as a boolean', () => {
+      const mockValue = 'false';
+      const result = formatFieldValue(mockValue);
+
+      const expected = Boolean(mockValue);
+      expect(result).toEqual(expected);
+    });
+
+    it('should return a string with `true` boolean value, as a boolean', () => {
+      const mockValue = 'true';
+      const result = formatFieldValue(mockValue);
+
+      const expected = Boolean(mockValue);
+      expect(result).toEqual(expected);
+    });
+
+    it('should return a string, () => {
+      const mockValue = 'test';
+      const result = formatFieldValue(mockValue);
+
+      expect(result).toEqual(mockValue);
+    });
+  });
+
   describe('createDbQuery', () => {
     it('should return formatted db query object', () => {
       const mockOperator = 'and';
