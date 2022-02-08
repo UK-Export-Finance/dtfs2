@@ -14,7 +14,7 @@ module.exports = {
       ignoreStrings: true,
       ignoreTemplateLiterals: true,
     }],
-    'no-console': 'off',
+    'no-console': ['error', { allow: ['info', 'error'] }],
     'import/first': 'off',
     'import/order': 'off',
     'no-underscore-dangle': ['error', { allow: ['_id'] }],

@@ -48,11 +48,11 @@ redisClient.on('error', (err) => {
 });
 
 redisClient.on('ready', () => {
-  console.log('REDIS ready');
+  console.info('REDIS ready');
 });
 
 redisClient.on('connect', () => {
-  console.log('REDIS connected');
+  console.info('REDIS connected');
 });
 
 const sessionStore = new RedisStore({ client: redisClient });
@@ -91,4 +91,4 @@ app.use((err, req, res, next) => {
 
 app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
 
-app.listen(PORT, () => console.log(`GEF UI listening on port ${PORT}!`));
+app.listen(PORT, () => console.info(`GEF UI listening on port ${PORT}!`));

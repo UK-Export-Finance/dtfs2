@@ -1,7 +1,7 @@
 const { insertDeal, getDeal, logIn } = require('./api');
 
 module.exports = (deals, opts) => {
-  console.log('createManyDeals::');
+  console.info('createManyDeals::');
 
   logIn(opts).then((token) => {
     const persisted = [];

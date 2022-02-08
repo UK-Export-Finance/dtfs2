@@ -1,7 +1,7 @@
 const { logIn, createFacilities } = require('./api');
 
 module.exports = (dealId, facilities, user) => {
-  console.log('createFacilities::');
+  console.info('createFacilities::');
 
   logIn(user).then((token) => {
     createFacilities(

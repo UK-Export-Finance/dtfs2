@@ -1,7 +1,7 @@
 const { listAllUsers } = require('./api');
 
 module.exports = (id, status, opts) => {
-  console.log('listAllUsers::');
+  console.info('listAllUsers::');
 
   listAllUsers().then((users) => users);
 };

@@ -17,17 +17,17 @@ const insertMocks = async () => {
   const allUsers = await portalApi.listUsers();
   const makerUserId = allUsers.find((user) => user.username === 'BANK1_MAKER1')._id;
 
-  console.log('inserting GEF mandatory-criteria-versioned');
+  console.info('inserting GEF mandatory-criteria-versioned');
   for (const item of MOCKS.MANDATORY_CRITERIA_VERSIONED) {
     await api.createMandatoryCriteriaVersioned(item, token);
   }
 
-  console.log('inserting GEF eligibility-criteria');
+  console.info('inserting GEF eligibility-criteria');
   for (const item of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(item, token);
   }
 
-  console.log('inserting GEF deals');
+  console.info('inserting GEF deals');
   const latestEligibilityCriteria = MOCKS.ELIGIBILITY_CRITERIA.find((criteria) => criteria.version === 1.5);
 
   for (const [index, item] of MOCKS.APPLICATION.entries()) {
@@ -51,7 +51,7 @@ const insertMocks = async () => {
 
   const gefDeals = await api.listDeals(token);
 
-  console.log('inserting and updating GEF facilities');
+  console.info('inserting and updating GEF facilities');
   for (const [index, item] of MOCKS.FACILITIES.entries()) {
     // eslint-disable-next-line no-restricted-syntax
     for (const subitem of item) {

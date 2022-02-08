@@ -21,28 +21,28 @@ const insertMocks = async () => {
     ...tfmMaker,
   });
 
-  console.log('inserting Portal users');
+  console.info('inserting Portal users');
   for (const user of PORTAL_MOCKS.USERS) {
     await api.createUser(user);
   }
 
-  console.log('inserting banks');
+  console.info('inserting banks');
   for (const bank of MOCK_BANKS) {
     await api.createBank(bank, token);
   }
 
 
-  console.log('inserting BSS mandatory-criteria');
+  console.info('inserting BSS mandatory-criteria');
   for (const mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
     await api.createMandatoryCriteria(mandatoryCriteria, token);
   }
 
-  console.log('inserting BSS eligibility-criteria');
+  console.info('inserting BSS eligibility-criteria');
   for (const eligibilityCriteria of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(eligibilityCriteria, token);
   }
 
-  console.log('inserting BSS deals');
+  console.info('inserting BSS deals');
   const insertedDeals = [];
 
   for (const deal of MOCKS.DEALS) {
@@ -52,7 +52,7 @@ const insertMocks = async () => {
     insertedDeals.push(createdDeal);
   }
 
-  console.log('inserting BSS facilities');
+  console.info('inserting BSS facilities');
 
   for (const facility of MOCKS.FACILITIES) {
     const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);

@@ -13,9 +13,9 @@ const resetIdCounters = async () => {
     bank: MOCKS.BANKS.find((bank) => bank.id === '956'),
   });
 
-  console.log('resetting id counters');
+  console.info('resetting id counters');
   await api.resetIdCounters(token).catch((error) => {
-    console.log({ error });
+    console.error({ error });
   });
 };
 

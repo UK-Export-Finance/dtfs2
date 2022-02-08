@@ -14,7 +14,6 @@ context('Check GEF GOVUK header displays correctly', () => {
       })
       .then(({ body }) => {
         dealId = body.items[2]._id;
-        console.log(body.items[2]);
 
         cy.login(CREDENTIALS.MAKER);
 

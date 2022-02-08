@@ -21,13 +21,13 @@ const getAPI = async (type) => {
 };
 
 const postToAPI = async (apiEndpoint, apiData) => {
-  console.log('Azure functions - api.postToAPI');
+  console.info('Azure functions - api.postToAPI');
   if (!process.env.MULESOFT_API_UKEF_TF_EA_URL) {
     return false;
   }
 
   const url = `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiEndpoint}`;
-  console.log('Azure functions - api.postToAPI calling ', url);
+  console.info('Azure functions - api.postToAPI calling ', url);
 
   const requestConfig = {
     method: 'post',
