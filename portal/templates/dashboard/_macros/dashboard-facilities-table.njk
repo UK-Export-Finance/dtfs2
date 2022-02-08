@@ -33,8 +33,9 @@
       {% set stage = 'Unissued' %}
     {% endif %}
 
-    {% if facility.currency.id %}
+    {% if facility.currency.id and facility.value %}
       {% set currency = facility.currency.id %}
+      {% set value = currency + ' ' + facility.value %}
     {% endif %}
 
     {% set facilityRow = [
@@ -59,7 +60,7 @@
         classes: "govuk-body-s"
       },
       {
-        text: currency + ' ' + facility.value | formatAsCurrency | dashIfEmpty,
+        text: value | formatAsCurrency | dashIfEmpty,
         attributes: { "data-cy": "facility__value--" + facility._id },
         classes: "govuk-body-s"
       },
