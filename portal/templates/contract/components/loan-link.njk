@@ -5,7 +5,7 @@
       <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="loan-bank-reference-number-link-{{loan._id}}">{{ loan.name }}</a>
     {% else %}
       <span data-cy="loan-bank-reference-number-{{loan._id}}">
-        {{ loan.name }}
+        {{ loan.name | safe }}
       </span>
     {% endif %}
   {% else %}
