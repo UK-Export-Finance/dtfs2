@@ -6,7 +6,7 @@ const updateDeal = async (dealId, update) => {
   const collection = await db.getCollection('deals');
   const originalDeal = await findOneDeal(dealId);
 
-  console.log('Updating Portal GEF deal.');
+  console.info('Updating Portal GEF deal.');
 
   const dealUpdate = {
     ...originalDeal,
@@ -22,7 +22,7 @@ const updateDeal = async (dealId, update) => {
     { returnOriginal: false },
   );
 
-  console.log('Updated Portal GEF deal');
+  console.info('Updated Portal GEF deal');
 
   return findAndUpdateResponse.value;
 };

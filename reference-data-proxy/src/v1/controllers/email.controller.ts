@@ -10,7 +10,7 @@ export const sendEmail = async (req: Request, res: Response) => {
   try {
     const { templateId, sendToEmailAddress, emailVariables } = req.body;
 
-    console.log('Calling Notify API. templateId: ', templateId);
+    console.info('Calling Notify API. templateId: ', templateId);
 
     const personalisation = emailVariables;
 

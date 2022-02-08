@@ -33,7 +33,7 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
 
   const productGroup = mapProductGroup(facilityType);
 
-  console.log('Calling Exposure Period API');
+  console.info('Calling Exposure Period API');
   const username: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY;
   const password: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET;
   const exposurePeriodURL: any = process.env.MULESOFT_API_EXPOSURE_PERIOD_URL;
