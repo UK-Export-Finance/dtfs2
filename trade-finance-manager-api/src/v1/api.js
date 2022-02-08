@@ -508,7 +508,7 @@ const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url
   }
 };
 
-const createEstoreFolders = async (eStoreFolderInfo) => {
+const createEstoreFolders = async (data) => {
   try {
     const response = await axios({
       method: 'post',
@@ -516,9 +516,7 @@ const createEstoreFolders = async (eStoreFolderInfo) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {
-        eStoreFolderInfo,
-      },
+      data,
     });
     return response.data;
   } catch (err) {

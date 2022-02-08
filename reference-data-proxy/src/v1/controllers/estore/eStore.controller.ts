@@ -2,12 +2,18 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import CronJobManager from 'cron-job-manager';
+// import { CronJob } from 'cron';
 import { getCollection } from '../../../database';
+import { Estore, EstoreSite } from '../../../interfaces';
+import { ESTORE_STATUS } from '../../../constants';
 
 dotenv.config();
 const eStoreUrl: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_URL;
 const username: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_KEY;
 const password: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_SECRET;
+
+const siteCreationTimer = '5 * * * * *';
+const folderCreationTimer = '35 * * * * *';
 
 const postToEstore = async (apiEndpoint: string, apiData: any) => {
   if (!eStoreUrl) {
@@ -32,14 +38,14 @@ const postToEstore = async (apiEndpoint: string, apiData: any) => {
   return response;
 };
 
-const siteExists = async ({ ...payload }: any) => {
-  console.info('Checking if the Site exists', payload);
-  const response = await postToEstore(`site/exist`, payload);
+const siteExists = async (exporterName: EstoreSite) => {
+  console.info('Checking if the Site exists', exporterName);
+  const response = await postToEstore(`site/exist`, exporterName);
   return response;
 };
 
 // @ts-ignore
-const createExporterSite = async (exporterName: any) => {
+const createExporterSite = async (exporterName: string) => {
   console.info('Creating eStore site', exporterName);
 
   const response = await postToEstore('site', { exporterName });
@@ -99,15 +105,62 @@ const eStoreDealFolderManager = new CronJobManager(
 
 // @ts-ignore
 const eStoreSiteCreationJob = async (exporterName: string) => {
-  const response = await siteExists(exporterName);
-  console.log(response, response.siteName, response.status);
+  const response = await siteExists({ exporterName });
+  console.log(response.siteName, response.status);
   let task;
   if (response.status === 'Created') {
-    eStoreSiteManager.stop(response.siteName);
+    eStoreSiteManager.deleteJob(response.siteName);
     const collection = await getCollection('cron-job-logs');
-    task = await collection.findOneAndUpdate({ siteName: response.siteName, completionDate: Date.now() });
+    task = await collection.findOneAndUpdate({ siteName: response.siteName }, { $set: { status: 'Completed', completionDate: Date.now() } });
   }
   return task;
+};
+
+// @ts-ignore
+const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
+  console.log('eStore Deal Folder Creation Job', eStoreData);
+  // create the Deal folder
+  console.info('Cron task: Creating Deal folder');
+  await createDealFolder({
+    siteName: eStoreData.siteName,
+    exporterName: eStoreData.exporterName,
+    buyerName: eStoreData.buyerName,
+    dealIdentifier: eStoreData.dealIdentifier,
+    destinationMarket: eStoreData.destinationMarket,
+    riskMarket: eStoreData.riskMarket,
+  });
+
+  console.info('Cron task: Creating Facility folder');
+  // create Facility folders
+  await Promise.all(
+    eStoreData.facilityIdentifiers.map((facilityIdentifier: number) =>
+      createFacilityFolder({
+        siteName: eStoreData.siteName,
+        dealIdentifier: eStoreData.dealIdentifier,
+        exporterName: eStoreData.exporterName,
+        buyerName: eStoreData.buyerName,
+        facilityIdentifier: facilityIdentifier?.toString(),
+        destinationMarket: eStoreData.destinationMarket,
+        riskMarket: eStoreData.riskMarket,
+      }),
+    ),
+  );
+
+  console.info('Cron task: Uploading the supporting documents');
+  const uploadDocuments = Promise.all(
+    eStoreData.supportingInformation.map((file: any) =>
+      uploadSupportingDocuments({
+        siteName: eStoreData.siteName,
+        dealIdentifier: eStoreData.dealIdentifier,
+        buyerName: eStoreData.buyerName,
+        ...file,
+      }),
+    ),
+  );
+  uploadDocuments.then((results) => console.info('Cron task: Supporting documents uploaded successfully', results));
+  uploadDocuments.catch((e) => console.error('There was a problem uploading the documents', e));
+
+  eStoreDealFolderManager.deleteJob(eStoreData.dealIdentifier);
 };
 
 /* {
@@ -122,57 +175,48 @@ const eStoreSiteCreationJob = async (exporterName: string) => {
 export const createEstore = async (req: Request, res: Response) => {
   console.log(req.body);
   // @ts-ignore
-  const { exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket, facilityIdentifiers, supportingDocuments } = req.body;
+  const eStoreData = req.body;
 
-  // const { siteName, status } = await siteExists(exporterName);
-  // console.log(siteName, status);
-  // // check if website already exists
-  // if (status === 'Created') {
-  //   // create the Buyer folder
-  //   await createBuyerFolder({ siteName, exporterName, buyerName });
+  if (eStoreData) {
+    const { siteName, status } = await siteExists(eStoreData.exporterName);
+    console.log({ siteName }, { status });
+    // check if website already exists
+    if (status === ESTORE_STATUS.CREATED) {
+      // create the Buyer folder
+      await createBuyerFolder({
+        siteName: eStoreData.siteName,
+        exporterName: eStoreData.exporterName,
+        buyerName: eStoreData.buyerName,
+      });
 
-  //   // create the Deal folder
-  //   await createDealFolder({ siteName, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket });
+      // add a new job to the deal folder manager that runs very 35 seconds
+      eStoreDealFolderManager.add(eStoreData.dealIdentifier, folderCreationTimer, () => {
+        eStoreDealFolderCreationJob(eStoreData);
+      });
+    } else {
+      // keep track of each new site creation jobs
+      // we do this by adding a new item inside the `cron-job-logs` collection
+      const collection = await getCollection('cron-job-logs');
+      await collection.insertOne({
+        cronType: 'SITE_CREATION',
+        status: 'Running',
+        timestamp: Date.now(),
+        siteName,
+        buyerName: eStoreData.buyerName,
+        dealIdentifier: eStoreData.dealIdentifier,
+        destinationMarket: eStoreData.destinationMarket,
+        facilityIdentifiers: eStoreData.facilityIdentifiers,
+        supportingInformation: eStoreData.supportingInformation,
+      });
 
-  //   // create Facility folders
-  //   await Promise.all(
-  //     facilityIdentifiers.map((facilityIdentifier: any) =>
-  //       createFacilityFolder({
-  //         siteName,
-  //         dealIdentifier,
-  //         exporterName,
-  //         buyerName,
-  //         facilityIdentifier: facilityIdentifier?.toString(),
-  //         destinationMarket,
-  //         riskMarket,
-  //       }),
-  //     ),
-  //   );
+      // send a request to estore to start creating the eStore site
+      await createExporterSite(siteName);
+      // add a new job to the site creation manager queue that runs very 2 minutes and 15 seconds
+      eStoreSiteManager.add(siteName, siteCreationTimer, () => {
+        eStoreSiteCreationJob(siteName);
+      });
+    }
 
-  //   const uploadDocuments = Promise.all(supportingDocuments.map((file: any) => uploadSupportingDocuments({ siteName, dealIdentifier, buyerName, ...file })));
-  //   uploadDocuments.then((results) => console.info('Files uploaded', results));
-  //   uploadDocuments.catch((e) => console.error('There was a problem uploading the documents', e));
-  // } else {
-  //   // start cron task
-  //   const collection = await getCollection('cron-job-logs');
-  //   await collection.insertOne({
-  //     cronType: 'eStore site creation',
-  //     status: 'Running',
-  //     timestamp: Date.now(),
-  //     siteName,
-  //     buyerName,
-  //     dealIdentifier,
-  //     destinationMarket,
-  //     facilityIdentifiers,
-  //     supportingDocuments,
-  //   });
-
-  //   createExporterSite(siteName);
-  //   // add a new site to the cron-job queue
-  //   eStoreSiteManager.add(siteName, '5 * * * * *', () => {
-  //     eStoreSiteCreationJob(siteName);
-  //   });
-  // }
-
-  return res.status(200).send(exporterName);
+    return res.status(200);
+  }
 };
