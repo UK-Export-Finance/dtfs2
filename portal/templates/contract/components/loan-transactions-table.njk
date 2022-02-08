@@ -35,28 +35,28 @@
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-ukef-facility-id-{{ loan._id }}">
-                  {{ loan.ukefFacilityId }}
+                  {{ loan.ukefFacilityId | safe }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell" data-cy="loan-status-{{ loan._id }}">
-                  {{ statusTag.render(loan.status) }}
+                  {{ statusTag.render(loan.status) | safe }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-value">
-                  {{ loan.currency.id}} {{ loan.value }}
+                  {{ loan.currency.id | safe }} {{ loan.value | safe }}
                 </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-stage-{{ loan._id }}">{{ loan.facilityStage }}</td>
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-stage-{{ loan._id }}">{{ loan.facilityStage | safe }}</td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-requested-cover-start-date">
                   {% if loan.requestedCoverStartDate %}
-                    {{ loan.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) }}
+                    {{ loan.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) | safe }}
                   {% endif %}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-cover-end-date">
                   {% if loan['coverEndDate-day'] and loan['coverEndDate-month'] and loan['coverEndDate-year'] %}
-                    {{ loan['coverEndDate-day'] }}/{{ loan['coverEndDate-month'] }}/{{ loan['coverEndDate-year'] }}
+                    {{ loan['coverEndDate-day'] | safe }}/{{ loan['coverEndDate-month'] | safe }}/{{ loan['coverEndDate-year'] | safe }}
                   {% endif %}
                 </td>
 

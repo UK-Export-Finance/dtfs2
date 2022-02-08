@@ -28,40 +28,40 @@
       <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <td data-cy="bankInternalRefName" class="govuk-table__cell govuk-!-font-size-14">
-            {{ deal.bankInternalRefName | dashIfEmpty }}
+            {{ deal.bankInternalRefName | dashIfEmpty | safe }}
           </td>
 
           <td data-cy="ukefDealId" class="govuk-table__cell govuk-!-font-size-14">
-            {{ details.ukefDealId | dashIfEmpty}}
+            {{ details.ukefDealId | dashIfEmpty | safe }}
           </td>
 
           <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
-            {{ deal.status | dashIfEmpty }}
+            {{ deal.status | dashIfEmpty | safe }}
           </td>
 
           <td data-cy="previousStatus" class="govuk-table__cell govuk-!-font-size-14">
-            {{ deal.previousStatus | dashIfEmpty }}
+            {{ deal.previousStatus | dashIfEmpty | safe }}
           </td>
 
           <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
-              {{ deal.maker | displayName }}
+              {{ deal.maker | displayName | safe }}
           </td>
 
           <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
-            {{ details.checker | displayName }}
+            {{ details.checker | displayName | safe }}
           </td>
 
           <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">
 
           {% if deal.submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
-            {{ details.manualInclusionApplicationSubmissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
+            {{ details.manualInclusionApplicationSubmissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty | safe }}
             {% else %}
-            {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
+            {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty | safe }}
           {% endif %}
           </td>
 
           <td data-cy="updatedAt" class="govuk-table__cell govuk-!-font-size-14">
-            {{ deal.updatedAt | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
+            {{ deal.updatedAt | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty | safe }}
           </td>
 
         </tr>
