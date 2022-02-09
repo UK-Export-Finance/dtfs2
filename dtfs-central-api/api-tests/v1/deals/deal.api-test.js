@@ -61,16 +61,6 @@ describe('/v1/portal/deals', () => {
       expect(createdDeal.deal.facilities).toEqual([]);
     });
 
-    it('creates incremental integer deal IDs', async () => {
-      const deal1 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-      const deal2 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-      const deal3 = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-
-      expect(parseInt(deal1.body._id, 10).toString()).toEqual(deal1.body._id);
-      expect(deal2.body._id - deal1.body._id).toEqual(1);
-      expect(deal3.body._id - deal2.body._id).toEqual(1);
-    });
-
     describe('when user is invalid', () => {
       it('missing user returns 404', async () => {
         const postBody = {
@@ -147,12 +137,6 @@ describe('/v1/portal/deals', () => {
   });
 
   describe('GET /v1/portal/deals/:id', () => {
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/portal/deals/12345678910');
-
-      expect(status).toEqual(404);
-    });
-
     it('returns the requested resource', async () => {
       const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const dealId = postResult.body._id;
@@ -212,12 +196,6 @@ describe('/v1/portal/deals', () => {
   });
 
   describe('PUT /v1/portal/deals/:id', () => {
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.put({ dealUpdate: newDeal, user: mockUser }).to('/v1/portal/deals/123456789012');
-
-      expect(status).toEqual(404);
-    });
-
     it('returns the updated deal', async () => {
       const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
@@ -316,12 +294,6 @@ describe('/v1/portal/deals', () => {
   });
 
   describe('PUT /v1/portal/deals/:id/status', () => {
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.put({ dealUpdate: newDeal, user: mockUser }).to('/v1/portal/deals/123456789012/status');
-
-      expect(status).toEqual(404);
-    });
-
     it('Should return 400 bad request status code when the new status is same and existing application status', async () => {
       // Create a new BSS deal
       const dealWithSubmittedStatus = {
@@ -365,12 +337,6 @@ describe('/v1/portal/deals', () => {
   });
 
   describe('DELETE /v1/portal/deals/:id', () => {
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.remove({}).to('/v1/portal/deals/12345678910');
-
-      expect(status).toEqual(404);
-    });
-
     it('deletes the deal', async () => {
       const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
 

@@ -1,18 +1,17 @@
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
-const { generateFacilityId } = require('../../../../utils/generate-ids');
 const getCreateFacilityErrors = require('../../../validation/create-facility');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { addFacilityIdToDeal } = require('../deal/update-deal.controller');
 
 const createFacility = async (facility, user, routePath) => {
   const collection = await db.getCollection('facilities');
-  const facilityId = await generateFacilityId();
 
   const { dealId } = facility;
 
   const newFacility = {
     ...facility,
-    _id: facilityId,
+    dealId: new ObjectId(facility.dealId),
     createdDate: Date.now(),
     updatedAt: Date.now(),
   };
@@ -27,9 +26,7 @@ const createFacility = async (facility, user, routePath) => {
     routePath,
   );
 
-  return {
-    _id: insertedId,
-  };
+  return { _id: insertedId };
 };
 
 exports.createFacilityPost = async (req, res) => {

@@ -738,13 +738,13 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).remove('/v1/deals/12345678/bond/12345678');
+      const { status } = await as(aBarclaysMaker).remove('/v1/deals/123456789012/bond/123456789012');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown bond', async () => {
-      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/bond/12345678`);
+      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/bond/123456789012`);
 
       expect(status).toEqual(404);
     });

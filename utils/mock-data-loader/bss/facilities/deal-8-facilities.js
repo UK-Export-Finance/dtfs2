@@ -2,13 +2,13 @@ const { nowTimestamp } = require('../dates');
 
 module.exports = [
   {
-    mockDealId: 8,
+
     type: 'Loan',
     ukefGuaranteeInMonths: '24',
     'coverEndDate-day': null,
     'coverEndDate-month': null,
     'coverEndDate-year': null,
-    name: 'Test Loan',
+    name: 'Test Loan 8',
     requestedCoverStartDate: null,
     disbursementAmount: null,
     value: '100000.00',

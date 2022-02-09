@@ -41,7 +41,7 @@ tfmRouter.use((req, res, next) => {
  *               dealType:
  *                 type: string
  *             example:
- *               dealId: 123abc
+ *               dealId: 61e54dd5b578247e14575882
  *               dealType: GEF
  *     responses:
  *       200:
@@ -301,7 +301,7 @@ tfmRouter.route('/deals/:id/facilities')
  *         content:
  *           application/json:
  *             example:
- *               facilities: [ { tfmFacilities: { dealId: '123456abc', facilityId: '1234', dealType: 'GEF' } } ]
+ *               facilities: [ { tfmFacilities: { dealId: '61e54dd5b578247e14575882', facilityId: '1234', dealType: 'GEF' } } ]
  */
 tfmRouter.route('/facilities').get(tfmGetFacilitiesController.getAllFacilities);
 

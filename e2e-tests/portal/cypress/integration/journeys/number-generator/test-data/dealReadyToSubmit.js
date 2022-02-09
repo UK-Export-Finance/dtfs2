@@ -4,9 +4,6 @@ const { nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 module.exports = () => {
   const now = new Date();
 
-  // doing a complete serialize+deserialize here...
-  // ran into issues destructuring things into our new object; cypress was keeping references
-  // between my bits of test data, so updating 1 deal would cause the other to update..
   const deal = { ...dealThatJustNeedsConversionDate() };
 
   deal.submissionDetails['supplyContractConversionDate-day'] = now.getDate();

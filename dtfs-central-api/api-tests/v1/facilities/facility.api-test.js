@@ -2,6 +2,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
+const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const mockUser = {
   _id: '123456789',
@@ -15,7 +16,7 @@ const mockUser = {
 
 const newFacility = {
   type: 'Bond',
-  dealId: '123123456',
+  dealId: MOCK_DEAL.DEAL_ID,
 };
 
 const newDeal = aDeal({
@@ -43,7 +44,7 @@ describe('/v1/portal/facilities', () => {
   describe('POST /v1/portal/facilities', () => {
     it('returns 404 when associatedDeal/dealId is not found', async () => {
       const facilityWithInvalidDealId = {
-        dealId: '1234',
+        dealId: MOCK_DEAL.DEAL_ID,
         type: 'Bond',
       };
 
@@ -54,7 +55,7 @@ describe('/v1/portal/facilities', () => {
 
     it('returns 404 when user is not found', async () => {
       const facilityWithInvalidDealId = {
-        dealId: '1234',
+        dealId: MOCK_DEAL.DEAL_ID,
         type: 'Bond',
       };
 
@@ -91,9 +92,9 @@ describe('/v1/portal/facilities', () => {
       const facility2 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facility3 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
-      expect(facility1.body._id).toEqual(facility1.body._id);
-      expect(facility2.body._id - facility1.body._id).toEqual(1);
-      expect(facility3.body._id - facility2.body._id).toEqual(1);
+      expect(typeof facility1.body._id).toEqual('string');
+      expect(typeof facility2.body._id).toEqual('string');
+      expect(typeof facility3.body._id).toEqual('string');
     });
 
     it('adds the facility id to the associated deal', async () => {
@@ -148,7 +149,7 @@ describe('/v1/portal/facilities', () => {
 
         const postBody = {
           type: 'invalid-facility',
-          dealId: '123123456',
+          dealId: MOCK_DEAL.DEAL_ID,
           user: {},
         };
 
@@ -176,40 +177,6 @@ describe('/v1/portal/facilities', () => {
       expect(status).toEqual(200);
       expect(body._id).toEqual(newId);
       expect(typeof body.createdDate).toEqual('number');
-    });
-
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/portal/facilities/12345678910');
-
-      expect(status).toEqual(404);
-    });
-  });
-
-  describe('PUT /v1/tfm/facilities/:id', () => {
-    it('doesn\'t update `editedBy` in the associated deal', async () => {
-      const { _id } = await createDeal();
-      newFacility.dealId = _id;
-
-      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
-
-      expect(originalDeal.body.deal.editedBy).toEqual([]);
-
-      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities');
-
-      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
-      expect(getDealResponse.body.deal.editedBy.length).toEqual(0);
-
-      const updatedFacility = {
-        ...createdFacilityResponse.body,
-        value: 123456,
-        user: mockUser,
-      };
-
-      await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacilityResponse.body._id}`);
-
-      const { body } = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
-
-      expect(body.deal.editedBy.length).toEqual(0);
     });
   });
 });

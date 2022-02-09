@@ -77,26 +77,25 @@ context('User can view and filter multiple deals', () => {
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_DEALS, MOCK_MAKER_TFM)
-      .then((insertedDeals) => {
-        insertedDeals.forEach((deal) => {
-          const {
-            _id: dealId,
-            mockFacilities,
-          } = deal;
+    cy.insertManyDeals(MOCK_DEALS, MOCK_MAKER_TFM).then((insertedDeals) => {
+      insertedDeals.forEach((deal) => {
+        const {
+          _id: dealId,
+          mockFacilities,
+        } = deal;
 
-          cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((facilities) => {
-            ALL_FACILITIES = [
-              ...ALL_FACILITIES,
-              ...facilities,
-            ];
-          });
-        });
-
-        cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
-          ALL_SUBMITTED_DEALS = submittedDeals;
+        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((facilities) => {
+          ALL_FACILITIES = [
+            ...ALL_FACILITIES,
+            ...facilities,
+          ];
         });
       });
+
+      cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
+        ALL_SUBMITTED_DEALS = submittedDeals;
+      });
+    });
   });
 
   beforeEach(() => {

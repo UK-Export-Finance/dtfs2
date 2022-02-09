@@ -1,7 +1,7 @@
 const MOCK_FACILITIES = [
   {
-    _id: '12345678',
-    dealId: '123456789',
+    _id: '61f7a4edcf809301e78fbe53',
+    dealId: '61f7a4edcf809301e78fbe41',
     type: 'Bond',
     bondIssuer: 'Issuer',
     bondType: 'Advance payment guarantee',
@@ -32,9 +32,9 @@ const MOCK_FACILITIES = [
     ukefFacilityId: '123',
   },
   {
-    _id: '23456789',
+    _id: '61f7a4edcf809301e78fbe53',
     ukefFacilityId: '123',
-    dealId: '123456789',
+    dealId: '61f7a4edcf809301e78fbe41',
     type: 'Loan',
     createdDate: 1610369832226.0,
     facilityStage: 'Conditional',

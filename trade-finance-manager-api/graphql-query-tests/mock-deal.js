@@ -1,7 +1,7 @@
 const CONSTANTS = require('./constants');
 
 const MOCK_DEAL = {
-  _id: '1234567',
+  _id: '61f7a71ccf809301e78fbea3',
   dealSnapshot: {
     submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
     bankInternalRefName: 'Mock supply contract ID',
@@ -166,7 +166,7 @@ const MOCK_DEAL = {
     },
     facilities: [
       {
-        _id: '1010738',
+        _id: '61f7a71ccf809301e78fbea5',
         type: CONSTANTS.DEALS.FACILITY_TYPE.LOAN,
         createdDate: '1640088922460',
         name: '1122444',
@@ -233,7 +233,7 @@ const MOCK_DEAL = {
         hasBeenAcknowledged: true,
       },
       {
-        _id: '1010739',
+        _id: '61f7a71ccf809301e78fbea6',
         type: CONSTANTS.DEALS.FACILITY_TYPE.BOND,
         createdDate: '1640088922461',
         bondBeneficiary: '',
@@ -305,7 +305,7 @@ const MOCK_DEAL = {
     bondTransactions: {
       items: [
         {
-          _id: '12345678',
+          _id: '61f7a71ccf809301e78fbea3',
           ukefFacilityId: '0040004833',
           bondIssuer: 'Issuer',
           type: CONSTANTS.DEALS.FACILITY_TYPE.BOND,

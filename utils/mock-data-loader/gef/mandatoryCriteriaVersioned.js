@@ -1,25 +1,5 @@
 const MANDATORY_CRITERIA_VERSIONED = [
   {
-    version: 1.0,
-    createdAt: new Date('2021-01-01T00:00'),
-    updatedAt: null,
-    isInDraft: false,
-    title: 'test 1',
-    criteria: [
-      { id: '1', body: 'Test is a mock test' },
-    ],
-  },
-  {
-    version: 1.1,
-    createdAt: new Date('2021-01-02T00:00'),
-    updatedAt: null,
-    isInDraft: false,
-    title: 'test 2',
-    criteria: [
-      { id: '1', body: 'Test is a mock test' },
-    ],
-  },
-  {
     version: 2,
     createdAt: new Date('2021-01-03T00:00'),
     updatedAt: null,

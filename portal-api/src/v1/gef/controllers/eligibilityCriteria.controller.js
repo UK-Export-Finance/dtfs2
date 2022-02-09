@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 
 const db = require('../../../drivers/db-client');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
@@ -25,7 +25,7 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const item = await collection.findOne({ _id: new ObjectID(String(req.params.id)) });
+  const item = await collection.findOne({ _id: new ObjectId(String(req.params.id)) });
   if (item) {
     res.status(200).send(item);
   } else {
@@ -54,6 +54,6 @@ exports.create = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndDelete({ _id: new ObjectID(String(req.params.id)) });
+  const response = await collection.findOneAndDelete({ _id: new ObjectId(req.params.id) });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

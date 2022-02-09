@@ -100,12 +100,12 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     });
 
     it('should return 404 when deal does not exist', async () => {
-      const { status } = await putIssueFacility('1234', bondId, {});
+      const { status } = await putIssueFacility('123456789012', bondId, {});
       expect(status).toEqual(404);
     });
 
     it('should return 404 when bond does not exist', async () => {
-      const { status } = await putIssueFacility(dealId, '1234', {});
+      const { status } = await putIssueFacility(dealId, '123456789012', {});
       expect(status).toEqual(404);
     });
 
