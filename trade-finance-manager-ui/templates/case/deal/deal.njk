@@ -12,6 +12,54 @@
       <p class="header-label" data-cy="page-title">Deal</p>
     </div>
   </div>
+
+  <div class="govuk-grid-row" data-cy="deal-facilities">
+    <div class="govuk-grid-column-full separator-line deal">
+      <p class="ukef-heading-l" style="padding-top:30px">Facilities</p>
+
+        {% if deal.dealType == 'GEF' %}
+          {% if deal.isFinanceIncreasing %}
+              {{ govukWarningText({
+                  text: "The bank's financing to this exporter is increasing with this deal",
+                  iconFallbackText: "Warning",
+                  classes: 'ukef-warning',
+                  attributes: { 'data-cy': 'finance-increasing' }
+              }) }}
+          {% else %}
+              {{ govukWarningText({
+                  text: "The bank's financing to this exporter is not increasing with this deal",
+                  iconFallbackText: "Warning",
+                  classes: 'ukef-warning',
+                  attributes: { 'data-cy': 'finance-increasing' }
+              }) }}
+          {% endif %}
+        {% endif %}
+
+      {% set componentData = {
+        facilities: deal.facilities,
+        totals: deal.totals,
+        caseId: deal._id
+      } %}
+
+      {{ facilitiesTable.render(componentData) }}
+
+    </div>
+  </div>
+
+  {% if deal.supportingInformation.securityDetails.exporter %}
+    <div class="govuk-grid-row" data-cy="deal-bank-security-details">
+
+      <div class="govuk-grid-column-full separator-line deal">
+        <p class="ukef-heading-l" style="padding-top:30px" data-cy="bank-security-section-heading">Bank security</p>
+        <h4 class="govuk-heading-s govuk-!-padding-top-3 govuk-!-padding-bottom-0 govuk-!-margin-top-0" data-cy="bank-security-sub-heading">
+        General bank security for this exporter
+      </h4>
+
+      <p style="white-space:pre-line" data-cy="bank-security-text">{{ deal.supportingInformation.securityDetails.exporter }}</p>
+      </div>
+    </div>
+  {% endif %}
+
   <div class="govuk-grid-row" data-cy="deal-bank-details">
 
     <div class="govuk-grid-column-full separator-line deal">
@@ -61,36 +109,4 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row" data-cy="deal-facilities">
-    <div class="govuk-grid-column-full separator-line deal">
-      <p class="ukef-heading-l" style="padding-top:30px">Facilities</p>
-
-        {% if deal.dealType == 'GEF' %}
-          {% if deal.isFinanceIncreasing %}
-              {{ govukWarningText({
-                  text: "The bank's financing to this exporter is increasing with this deal",
-                  iconFallbackText: "Warning",
-                  classes: 'ukef-warning',
-                  attributes: { 'data-cy': 'finance-increasing' }
-              }) }}
-          {% else %}
-              {{ govukWarningText({
-                  text: "The bank's financing to this exporter is not increasing with this deal",
-                  iconFallbackText: "Warning",
-                  classes: 'ukef-warning',
-                  attributes: { 'data-cy': 'finance-increasing' }
-              }) }}
-          {% endif %}
-        {% endif %}
-
-      {% set componentData = {
-        facilities: deal.facilities,
-        totals: deal.totals,
-        caseId: deal._id
-      } %}
-
-      {{ facilitiesTable.render(componentData) }}
-
-    </div>
-  </div>
 {% endblock %}

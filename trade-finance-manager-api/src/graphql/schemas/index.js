@@ -89,7 +89,12 @@ type DealSubmissionDetails {
 }
 
 type SupportingInformation {
-  security: String
+  securityDetails: SecurityDetails
+}
+
+type SecurityDetails {
+  facility: String
+  exporter: String
 }
 
 type DealExporter {

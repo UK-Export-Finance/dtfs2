@@ -135,7 +135,7 @@ context('Upload files to Azure', () => {
       uploadFiles.supportingInfoSecurityDetailsButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/security-details`));
       uploadFiles.exporterSecurity().type('test');
-      uploadFiles.applicationSecurity().type('test2');
+      uploadFiles.facilitySecurity().type('test2');
       uploadFiles.continueButton().click();
     });
 

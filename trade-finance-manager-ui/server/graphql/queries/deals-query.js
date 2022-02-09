@@ -92,7 +92,10 @@ query Deals($searchString: String, $sortBy: DealsSortBy, $byField: [DealsByField
           lastUpdated
         }
         supportingInformation {
-          security
+          securityDetails {
+            facility
+            exporter
+          }
         }
         totals {
           facilitiesValueInGBP

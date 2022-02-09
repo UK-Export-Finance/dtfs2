@@ -624,7 +624,9 @@ module.exports = {
         }
       }
     },
-    security: 'TEST'
+    securityDetails: {
+      exporter: 'Test'
+    },
   },
   exporter: {
     companyName: 'Auto Test 1'

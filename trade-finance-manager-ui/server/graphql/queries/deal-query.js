@@ -94,7 +94,10 @@ const dealQuery = gql`
           submissionDate
         }
         supportingInformation {
-          security
+          securityDetails {
+            facility
+            exporter
+          }
         }
         totals {
           facilitiesValueInGBP,

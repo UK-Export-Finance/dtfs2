@@ -18,7 +18,7 @@ describe('routes - case', () => {
 
   it('should setup routes with controllers', () => {
     // GET routes
-    expect(get).toHaveBeenCalledTimes(24);
+    expect(get).toHaveBeenCalledTimes(23);
 
     expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
 
@@ -56,8 +56,6 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter', underwritingController.getLeadUnderwriter);
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.getAssignLeadUnderwriter);
-
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
 
     expect(get).toHaveBeenCalledWith('/:_id/underwriting/managers-decision', underwritingController.getUnderwriterManagersDecision);
 
