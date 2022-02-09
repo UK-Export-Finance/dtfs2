@@ -8,30 +8,30 @@ const EXPORTER_HALF_COMPLETE = {
   registeredAddress: null,
   correspondenceAddress: null,
   selectedIndustry: {
-    code: "1003",
-    name: "Manufacturing",
+    code: '1003',
+    name: 'Manufacturing',
     class: {
-      code: "25300",
-      name: "Manufacture of steam generators, except central heating hot water boilers",
+      code: '25300',
+      name: 'Manufacture of steam generators, except central heating hot water boilers',
     },
   },
   industries: [
     {
-      code: "1003",
-      name: "Manufacturing",
+      code: '1003',
+      name: 'Manufacturing',
       class: {
-        code: "25300",
-        name: "Manufacture of steam generators, except central heating hot water boilers",
+        code: '25300',
+        name: 'Manufacture of steam generators, except central heating hot water boilers',
       },
     },
   ],
-  smeType: "MEDIUM",
+  smeType: 'MEDIUM',
   probabilityOfDefault: 10,
   isFinanceIncreasing: false,
 };
 
 const EXPORTER_COMPLETED = {
-  companiesHouseRegistrationNumber: "08547313",
+  companiesHouseRegistrationNumber: '08547313',
   companyName: chance.company(),
   registeredAddress: {
     line1: chance.street({ syllables: 8 }),
@@ -42,40 +42,40 @@ const EXPORTER_COMPLETED = {
   },
   correspondenceAddress: null,
   selectedIndustry: {
-    code: "1003",
-    name: "Manufacturing",
+    code: '1003',
+    name: 'Manufacturing',
     class: {
-      code: "25620",
-      name: "Machining",
+      code: '25620',
+      name: 'Machining',
     },
   },
   industries: [
     {
-      code: "1003",
-      name: "Manufacturing",
+      code: '1003',
+      name: 'Manufacturing',
       class: {
-        code: "25300",
-        name: "Manufacture of steam generators, except central heating hot water boilers",
+        code: '25300',
+        name: 'Manufacture of steam generators, except central heating hot water boilers',
       },
     },
     {
-      code: "1003",
-      name: "Manufacturing",
+      code: '1003',
+      name: 'Manufacturing',
       class: {
-        code: "25620",
-        name: "Machining",
+        code: '25620',
+        name: 'Machining',
       },
     },
     {
-      code: "1003",
-      name: "Manufacturing",
+      code: '1003',
+      name: 'Manufacturing',
       class: {
-        code: "28110",
-        name: "Manufacture of engines and turbines, except aircraft, vehicle and cycle engines",
+        code: '28110',
+        name: 'Manufacture of engines and turbines, except aircraft, vehicle and cycle engines',
       },
     },
   ],
-  smeType: "MICRO",
+  smeType: 'MICRO',
   probabilityOfDefault: 14,
   isFinanceIncreasing: true,
 };

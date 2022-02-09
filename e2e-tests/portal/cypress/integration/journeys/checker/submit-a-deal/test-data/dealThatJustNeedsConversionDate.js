@@ -1,16 +1,11 @@
+const { ObjectID } = require('bson');
 const template = require('./template.json');
-
-let counter = 0;
-const id = () => {
-  counter += 1;
-  return counter;
-};
 
 module.exports = () => {
   const deal = { ...template };
 
-  deal.loanTransactions.items[0]._id = id();
-  deal.bondTransactions.items[0]._id = id();
+  deal.loanTransactions.items[0]._id = ObjectID();
+  deal.bondTransactions.items[0]._id = ObjectID();
 
   return deal;
 };

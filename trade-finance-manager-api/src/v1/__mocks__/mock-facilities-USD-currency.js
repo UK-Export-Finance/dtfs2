@@ -1,6 +1,6 @@
 const MOCK_FACILITIES = [
   {
-    _id: '10001',
+    _id: '61f7a4edcf809301e78fbe43',
     type: 'Bond',
     bondIssuer: 'Issuer',
     bondType: 'Advance payment guarantee',
@@ -26,7 +26,7 @@ const MOCK_FACILITIES = [
     'coverEndDate-year': '2020',
   },
   {
-    _id: '10002',
+    _id: '61f7a4edcf809301e78fbe44',
     type: 'Loan',
     createdDate: 1610369832226.0,
     facilityStage: 'Conditional',

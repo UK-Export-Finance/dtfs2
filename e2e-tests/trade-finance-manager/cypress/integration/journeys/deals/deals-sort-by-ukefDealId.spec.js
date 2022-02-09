@@ -33,39 +33,37 @@ context('User can view and sort deals by ukefDealId', () => {
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_DEALS, MOCK_MAKER_TFM)
-      .then((insertedDeals) => {
-        insertedDeals.forEach((deal) => {
-          const {
-            _id: dealId,
-            mockFacilities,
-          } = deal;
+    cy.insertManyDeals(MOCK_DEALS, MOCK_MAKER_TFM).then((insertedDeals) => {
+      insertedDeals.forEach((deal) => {
+        const {
+          _id: dealId,
+          mockFacilities,
+        } = deal;
 
-          cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((facilities) => {
-            ALL_FACILITIES = [
-              ...ALL_FACILITIES,
-              ...facilities,
-            ];
-          });
-        });
-
-        cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
-          ALL_SUBMITTED_DEALS = submittedDeals;
-
-          ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER = ALL_SUBMITTED_DEALS.sort((a, b) => {
-            const dealAUkefId = a.dealSnapshot.details.ukefDealId;
-            const dealBUkefId = b.dealSnapshot.details.ukefDealId;
-
-            return (Number(dealAUkefId) - Number(dealBUkefId));
-          });
-
-
-          [dealAscending1, dealAscending2] = ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER;
-
-          dealDescending1 = dealAscending2;
-          dealDescending2 = dealAscending1;
+        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((facilities) => {
+          ALL_FACILITIES = [
+            ...ALL_FACILITIES,
+            ...facilities,
+          ];
         });
       });
+
+      cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
+        ALL_SUBMITTED_DEALS = submittedDeals;
+
+        ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER = ALL_SUBMITTED_DEALS.sort((a, b) => {
+          const dealAUkefId = a.dealSnapshot.details.ukefDealId;
+          const dealBUkefId = b.dealSnapshot.details.ukefDealId;
+
+          return (Number(dealAUkefId) - Number(dealBUkefId));
+        });
+
+        [dealAscending1, dealAscending2] = ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER;
+
+        dealDescending1 = dealAscending2;
+        dealDescending2 = dealAscending1;
+      });
+    });
   });
 
   beforeEach(() => {

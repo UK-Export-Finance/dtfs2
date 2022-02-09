@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
 const db = require('../../../../drivers/db-client');
 
@@ -8,7 +8,7 @@ const addComment = async (_id, commentType, comment) => {
 
   // add the comment to the matching deal (based on _id)
   const addCommentToGefDeal = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectID(String(_id)) } },
+    { _id: { $eq: ObjectId(String(_id)) } },
     {
       $push: {
         [commentType]: {

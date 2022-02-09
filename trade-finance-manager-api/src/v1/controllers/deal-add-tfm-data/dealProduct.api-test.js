@@ -3,7 +3,7 @@ const CONSTANTS = require('../../../constants');
 
 describe('deal submit - add TFM data - deal product', () => {
   const mockBond = {
-    _id: '1',
+    _id: '61f6b18502ffda01b1e8f07e',
     type: 'Bond',
   };
 

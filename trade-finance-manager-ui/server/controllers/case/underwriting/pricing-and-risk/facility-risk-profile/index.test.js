@@ -16,9 +16,9 @@ const session = {
 };
 
 const mockDeal = {
-  _id: '1000023',
+  _id: '61f6ac5b02ffda01b1e8efef',
   dealSnapshot: {
-    _id: '1000023',
+    _id: '61f6ac5b02ffda01b1e8efef',
     submissionDetails: {
       supplierName: 'test supplier',
     },

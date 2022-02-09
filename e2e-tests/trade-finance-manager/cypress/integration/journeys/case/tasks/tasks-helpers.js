@@ -1,5 +1,5 @@
-import MOCK_MIA_TASKS from '../../../../fixtures/tasks-MIA';
-import pages from '../../../pages';
+const MOCK_MIA_TASKS = require('../../../../fixtures/tasks-MIA');
+const pages = require('../../../pages');
 
 const getGroup = (groupId) =>
   MOCK_MIA_TASKS.find((g) => g.id === groupId);
@@ -70,7 +70,7 @@ const assertCompleteTask = (groupId, taskId) => {
   });
 };
 
-const assertTaskStatus = (row,  expectedStatus) => {
+const assertTaskStatus = (row, expectedStatus) => {
   row.status().invoke('text').then((text) => {
     expect(text.trim()).to.equal(expectedStatus);
   });
