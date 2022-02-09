@@ -2,7 +2,8 @@ name: Trade Finance Manager UI
 
 on:
   push:
-    branches: [ dev ]
+    # Branch updates initiates deployment
+    branches: [ main ]
     paths:
     - 'trade-finance-manager-ui/**'
     - 'e2e-tests/trade-finance-manager/cypress/**'

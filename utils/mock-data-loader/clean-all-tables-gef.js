@@ -2,7 +2,7 @@ const api = require('./gef/api');
 const tokenFor = require('./temporary-token-handler');
 
 const cleanFacilities = async (token) => {
-  console.log('cleaning GEF facilities');
+  console.info('cleaning GEF facilities');
 
   for (const data of await api.listFacilities(token)) {
     await api.deleteFacilities(data, token);
@@ -10,7 +10,7 @@ const cleanFacilities = async (token) => {
 };
 
 const cleanEligibilityCriteria = async (token) => {
-  console.log('cleaning GEF eligibility-criteria');
+  console.info('cleaning GEF eligibility-criteria');
 
   for (const data of await api.listEligibilityCriteria(token)) {
     await api.deleteEligibilityCriteria(data, token);
@@ -18,7 +18,7 @@ const cleanEligibilityCriteria = async (token) => {
 };
 
 const cleanMandatoryCriteriaVersioned = async (token) => {
-  console.log('cleaning GEF mandatory-criteria-versioned');
+  console.info('cleaning GEF mandatory-criteria-versioned');
 
   for (const mandatoryCriteria of await api.listMandatoryCriteriaVersioned(token)) {
     await api.deleteMandatoryCriteriaVersioned(mandatoryCriteria, token);
@@ -26,7 +26,7 @@ const cleanMandatoryCriteriaVersioned = async (token) => {
 };
 
 const cleanDurableFunctions = async (token) => {
-  console.log('cleaning durable-functions-log');
+  console.info('cleaning durable-functions-log');
   await api.getDurableFunctions(token);
 };
 

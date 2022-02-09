@@ -22,7 +22,7 @@ const sendEmail = async (
     });
     return data;
   } catch (err) {
-    console.log(`Error sending email to ${sendToEmailAddress}: ${err}`);
+    console.error(`Error sending email to ${sendToEmailAddress}: ${err}`);
     return false;
   }
 };

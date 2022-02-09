@@ -25,7 +25,7 @@ xdescribe('fileshare', () => {
         filename,
         buffer: Buffer.from(someXML, 'utf-8'),
       }).catch((err) => {
-        console.log(err);
+        console.error(err);
       });
 
       const fileDownload = await fileshare.readFile({
@@ -171,7 +171,7 @@ xdescribe('fileshare', () => {
         filename: 'out.xml',
         buffer: Buffer.from(someXML, 'utf-8'),
       }).catch((err) => {
-        console.log(err);
+        console.error(err);
       });
 
       const fileDownload = await fileshare.readFile({
@@ -208,7 +208,7 @@ xdescribe('fileshare', () => {
       };
 
       await fileshare.uploadFile(fromFile).catch((err) => {
-        console.log(err);
+        console.error(err);
       });
 
       const copy = await fileshare.copyFile({
@@ -265,7 +265,7 @@ xdescribe('fileshare', () => {
       };
 
       await fileshare.uploadFile(fromFile).catch((err) => {
-        console.log(err);
+        console.error(err);
       });
 
       const copy = await fileshare.moveFile({

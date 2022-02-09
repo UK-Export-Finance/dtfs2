@@ -67,7 +67,11 @@ describe('v1/reports/unissued-facilities', () => {
   });
 
   it('retrieves the unissued facilities based on MIN deals', async () => {
-    const updated = { submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN };
+    const updated = {
+      submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
+      submissionDate: '1639180800000',
+      manualInclusionNoticeSubmissionDate: '1639180800000'
+    };
     // update the submissionType to MIN
     const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
     // ensure that the update is successful
@@ -92,6 +96,7 @@ describe('v1/reports/unissued-facilities', () => {
       ukefFacilityId: expect.any(String),
       value: null,
       submissionDate: expect.any(String),
+      manualInclusionNoticeSubmissionDate: expect.any(String),
       deadlineForIssuing: expect.any(String),
       daysLeftToIssue: expect.any(Number),
       currencyAndValue: expect.any(String)

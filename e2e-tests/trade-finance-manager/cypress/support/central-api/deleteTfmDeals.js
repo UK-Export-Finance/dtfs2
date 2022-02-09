@@ -10,7 +10,7 @@ const deleteAllDeals = (deals) => {
 
 
 module.exports = () => {
-  console.log('deleteTfmDeals::');
+  console.info('deleteTfmDeals::');
 
   new Cypress.Promise(() => {
     getAllTfmDeals().then((deals) => {
