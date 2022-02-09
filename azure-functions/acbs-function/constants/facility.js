@@ -152,6 +152,12 @@ const DAY_COUNT_BASIS = {
   365: '1',
 };
 
+const ACBS_INCOME_CLASS_CODE = {
+  BSS: 'BPM',
+  EWCS: 'EPM',
+  GEF: 'FGT ',
+};
+
 module.exports = {
   FACILITY_TYPE,
   FACILITY_TYPE_CODE,
@@ -179,4 +185,5 @@ module.exports = {
   FEE_TYPE,
   FEE_TYPE_ACBS_CODE,
   FEE_FREQUENCY_NUMERICAL_VALUE,
+  ACBS_INCOME_CLASS_CODE,
 };

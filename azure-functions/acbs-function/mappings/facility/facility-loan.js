@@ -15,7 +15,7 @@
 "spreadRate":                       Used for Premium Accrual Schedule. For GEF, BSS and EWCS.
 "spreadRateCTL":                    Used for Contractual Interest Accrual Schedule (CTL).
                                     For EWCS. EWCS needs two spread rates.
-"nextDueDate":
+"nextDueDate":                      guaranteeCommencementDate + Fee frequency in months
 "yearBasis":                        dayCountBasis : 360 = 5, 365 = 1
 "indexRateChangeFrequency":         feeFrequency
 "loanBillingFrequencyType":         feeType

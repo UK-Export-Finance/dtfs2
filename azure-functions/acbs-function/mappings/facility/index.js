@@ -4,6 +4,7 @@ const facilityCovenant = require('./facility-covenant');
 const facilityGuarantee = require('./facility-guarantee');
 const codeValueTransaction = require('./code-value-transaction');
 const facilityLoan = require('./facility-loan');
+const facilityFee = require('./facility-fee');
 const facilityUpdate = require('./facility-update');
 
 module.exports = {
@@ -14,4 +15,5 @@ module.exports = {
   codeValueTransaction,
   facilityLoan,
   facilityUpdate,
+  facilityFee,
 };
