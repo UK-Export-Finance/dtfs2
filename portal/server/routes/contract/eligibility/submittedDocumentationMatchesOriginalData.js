@@ -5,7 +5,7 @@ const submittedDocumentationMatchesOriginalData = (formData, formFiles, original
   const originalSecurityField = originalData.securityDetails.exporter;
   const filesSubmitted = formFiles.length > 0;
 
-  if ((originalSecurityField !== formData.securityDetails.exporter) || filesSubmitted) {
+  if ((originalSecurityField !== formData.security) || filesSubmitted) {
     return false;
   }
   return true;

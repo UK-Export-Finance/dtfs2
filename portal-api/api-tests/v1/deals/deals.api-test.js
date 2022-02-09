@@ -22,6 +22,11 @@ const newDeal = aDeal({
     text: 'Also Merry Christmas from the 80s',
   }],
   editedBy: [],
+  supportingInformation: {
+    securityDetails: {
+      exporter: null,
+    }
+  }
 });
 
 describe('/v1/deals', () => {

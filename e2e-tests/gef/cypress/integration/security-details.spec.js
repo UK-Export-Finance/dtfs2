@@ -39,7 +39,7 @@ context('Security Details Page', () => {
       securityDetails.continueButton().click();
       securityDetails.errorSummary();
       securityDetails.exporterSecurityError();
-      securityDetails.applicationSecurityError();
+      securityDetails.facilitySecurityError();
     });
 
     it('shows error message when security details are too long', () => {
@@ -51,7 +51,7 @@ context('Security Details Page', () => {
       securityDetails.continueButton().click();
       securityDetails.errorSummary();
       securityDetails.exporterSecurityError();
-      securityDetails.applicationSecurityError();
+      securityDetails.facilitySecurityError();
     });
 
     it('shows error message when security details are invalid format', () => {
@@ -63,7 +63,7 @@ context('Security Details Page', () => {
       securityDetails.continueButton().click();
       securityDetails.errorSummary();
       securityDetails.exporterSecurityError();
-      securityDetails.applicationSecurityError();
+      securityDetails.facilitySecurityError();
     });
 
     it('takes you to `Application details` page when clicking on `Continue` button', () => {
