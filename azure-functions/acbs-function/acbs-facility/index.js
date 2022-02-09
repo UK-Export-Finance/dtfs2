@@ -87,6 +87,22 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       retryOptions,
     );
 
+    // 6. Facility Loan Record - Issued & Activated facilities only
+    let facilityLoan;
+    if (acbsFacilityMasterInput.facilityStageCode === CONSTANTS.FACILITY.STAGE_CODE.ISSUED) {
+      const acbsFacilityLoanInput = mappings.facility.facilityLoan(
+        deal,
+        facility,
+        dealAcbsData,
+      );
+
+      facilityLoan = yield context.df.callActivityWithRetry(
+        'activity-create-facility-loan',
+        retryOptions,
+        { acbsFacilityLoanInput },
+      );
+    }
+
     return {
       facilityId: facility._id,
       facilityStage: helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType),
@@ -95,11 +111,11 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       facilityCovenant,
       ...facilityTypeSpecific,
       codeValueTransaction,
+      facilityLoan,
     };
-  } catch ({ message }) {
-    const [type, errorDetails] = message.split('Error: ');
-    // eslint-disable-next-line no-console
-    console.error('Facility record error\n\r', { message });
+  } catch ({ error }) {
+    const [type, errorDetails] = error.split('Error: ');
+    console.error('Facility record error: ', { error });
     return {
       error: {
         type,
