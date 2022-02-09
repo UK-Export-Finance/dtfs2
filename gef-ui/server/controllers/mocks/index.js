@@ -130,6 +130,7 @@ const MockApplicationResponseSubmitted = () => {
       text: '',
       label: 'Automatic inclusion notice submitted to UKEF',
     }],
+    manualInclusionNoticeSubmissionDate: 1644420982506,
   };
 };
 

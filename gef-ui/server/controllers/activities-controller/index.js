@@ -52,6 +52,7 @@ const getPortalActivities = async (req, res) => {
     dateCreated: deal.createdAt,
     timezone: deal.maker.timezone || 'Europe/London',
     submissionDate: deal.submissionDate,
+    manualInclusionNoticeSubmissionDate: deal?.manualInclusionNoticeSubmissionDate,
   });
 };
 
