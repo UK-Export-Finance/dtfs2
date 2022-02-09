@@ -2,7 +2,8 @@ name: Reference Data proxy
 
 on:
   push:
-    branches: [ dev ]
+    # Branch updates initiates deployment
+    branches: [ main ]
     paths:
     - 'reference-data-proxy/**'
   schedule:
