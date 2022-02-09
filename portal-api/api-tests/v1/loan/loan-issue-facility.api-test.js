@@ -68,7 +68,8 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     loanId = createLoanResponse.body.loanId;
 
-    const { status } = await as(aBarclaysMaker).put(allLoanFields).to(`/v1/deals/${dealId}/loan/${loanId}`);
+    const { status, body } = await as(aBarclaysMaker).put(allLoanFields).to(`/v1/deals/${dealId}/loan/${loanId}`);
+    expect(body.hasBeenIssued).toEqual(true);
     expect(status).toEqual(200);
   };
 
@@ -122,6 +123,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
       expect(body.status === allLoanFields.status).toEqual(false);
       expect(body.issueFacilityDetailsStarted).toEqual(true);
+      expect(body.hasBeenIssued).toEqual(true);
     });
 
     it('should remove loan status when issueFacilityDetailsStarted already exists in the loan', async () => {
@@ -146,6 +148,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
       expect(status).toEqual(200);
       expect(body.issueFacilityDetailsProvided).toEqual(true);
+      expect(body.hasBeenIssued).toEqual(true);
       expect(typeof body.requestedCoverStartDate === 'string').toEqual(true);
       expect(typeof body.issuedDate === 'string').toEqual(true);
     });

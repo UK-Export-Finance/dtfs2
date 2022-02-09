@@ -70,7 +70,8 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     bondId = createBondResponse.body.bondId;
 
-    const { status } = await as(aBarclaysMaker).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
+    const { status, body } = await as(aBarclaysMaker).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
+    expect(body.hasBeenIssued).toEqual(false);
     expect(status).toEqual(200);
   };
 
@@ -123,6 +124,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
       const { body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
 
       expect(body.status === allBondFields.status).toEqual(false);
+      expect(body.hasBeenIssued).toEqual(true);
       expect(body.status).toEqual(null);
       expect(body.issueFacilityDetailsStarted).toEqual(true);
     });
@@ -149,6 +151,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
       expect(status).toEqual(200);
       expect(body.issueFacilityDetailsProvided).toEqual(true);
+      expect(body.hasBeenIssued).toEqual(true);
       expect(typeof body.requestedCoverStartDate === 'string').toEqual(true);
       expect(typeof body.issuedDate === 'string').toEqual(true);
     });
