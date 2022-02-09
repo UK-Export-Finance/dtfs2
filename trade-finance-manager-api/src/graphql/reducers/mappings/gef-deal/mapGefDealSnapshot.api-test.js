@@ -31,6 +31,7 @@ describe('mapGefDealSnapshot', () => {
     const expected = {
       _id: MOCK_GEF_DEAL._id,
       dealType: MOCK_GEF_DEAL.dealType,
+      status: MOCK_GEF_DEAL.status,
       updatedAt: MOCK_GEF_DEAL.updatedAt,
       isFinanceIncreasing: MOCK_GEF_DEAL.exporter.isFinanceIncreasing,
       submissionType: MOCK_GEF_DEAL.submissionType,

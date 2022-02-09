@@ -91,7 +91,7 @@ exports.update = async (req, res) => {
     const uploadedDealFiles = await Promise.all(uploadPromises, deletePromises);
 
     const supportingInformation = {
-      ...removeDeletedFiles(deal.supportingInformation, req.body.deleteFile, `${EXPORT_FOLDER}/${req.params.id}`),
+      ...removeDeletedFiles(deal.supportingInformation, req.body.deleteFile),
     };
 
     uploadedDealFiles.forEach(({ fieldname, ...rest }) => {

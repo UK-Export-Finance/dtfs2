@@ -3,7 +3,7 @@ const api = require('../api');
 const now = require('../../now');
 
 const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
-  console.log('Updating Portal deal from MIA to MIN');
+  console.info('Updating Portal deal from MIA to MIN');
   let update;
   let dealUpdate;
 

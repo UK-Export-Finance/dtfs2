@@ -57,6 +57,6 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app });
 
-app.use((err) => { console.log(err); });
+app.use((err) => { console.error(err); });
 
 module.exports = app;

@@ -19,7 +19,7 @@ const facilityValue = async (req, res) => {
     const facility = await Facility.find(dealId, facilityId, status, user);
     if (!facility) {
       // eslint-disable-next-line no-console
-      console.log('Facility not found, or not authorised');
+      console.info('Facility not found, or not authorised');
       return res.redirect('/');
     }
 

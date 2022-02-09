@@ -4,68 +4,71 @@
   {% set user = params.user %}
   {% set maker = makerMIN or maker %}
   {% set checker = details.checkerMIN or details.checker %}
-  <table class="govuk-table contract-table govuk-!-margin-bottom-0" data-cy="contract-overview-table">
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank Supply Contract ID</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">UKEF Deal ID</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Previous status</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Maker</th>
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
+  <div class="table-overflow">
+    <table class="govuk-table contract-table govuk-!-margin-bottom-0" data-cy="contract-overview-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header govuk-!-font-size-14">Bank Supply Contract ID</th>
+          <th scope="col" class="govuk-table__header govuk-!-font-size-14">UKEF Deal ID</th>
+          <th scope="col" class="govuk-table__header govuk-!-font-size-14">Status</th>
+          <th scope="col" class="govuk-table__header govuk-!-font-size-14">Previous status</th>
+          <th scope="col" class="govuk-table__header govuk-!-font-size-14">Maker</th>
+          <th scope="col" class="govuk-table__header govuk-!-font-size-14">Checker</th>
 
-        {% if deal.submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
-          <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="submissionDateHeader">MIA Submission date</th>
-          {% else %}
-          <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="submissionDateHeader">Submission date</th>
-        {% endif %}
+          {% if deal.submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="submissionDateHeader">MIA Submission date</th>
+            {% else %}
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="submissionDateHeader">Submission date</th>
+          {% endif %}
 
-        <th scope="col" class="govuk-table__header govuk-!-font-size-14">Date of Last Action</th>
-      </tr>
-    </thead>
+          <th scope="col" class="govuk-table__header govuk-!-font-size-14">Date of Last Action</th>
+        </tr>
+      </thead>
 
-    <tbody class="govuk-table__body">
-      <tr class="govuk-table__row">
-        <td data-cy="bankInternalRefName" class="govuk-table__cell govuk-!-font-size-14">
-          {{ deal.bankInternalRefName | dashIfEmpty }}
-        </td>
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <td data-cy="bankInternalRefName" class="govuk-table__cell govuk-!-font-size-14">
+            {{ deal.bankInternalRefName | dashIfEmpty | safe }}
+          </td>
 
-        <td data-cy="ukefDealId" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.ukefDealId | dashIfEmpty}}
-        </td>
+          <td data-cy="ukefDealId" class="govuk-table__cell govuk-!-font-size-14">
+            {{ details.ukefDealId | dashIfEmpty | safe }}
+          </td>
 
-        <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
-          {{ deal.status | dashIfEmpty }}
-        </td>
+          <td data-cy="status" class="govuk-table__cell govuk-!-font-size-14">
+            {{ deal.status | dashIfEmpty | safe }}
+          </td>
 
-        <td data-cy="previousStatus" class="govuk-table__cell govuk-!-font-size-14">
-          {{ deal.previousStatus | dashIfEmpty }}
-        </td>
+          <td data-cy="previousStatus" class="govuk-table__cell govuk-!-font-size-14">
+            {{ deal.previousStatus | dashIfEmpty | safe }}
+          </td>
 
-        <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
-            {{ deal.maker | displayName }}
-        </td>
+          <td data-cy="maker" class="govuk-table__cell govuk-!-font-size-14">
+              {{ deal.maker | displayName | safe }}
+          </td>
 
-        <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
-          {{ details.checker | displayName }}
-        </td>
+          <td data-cy="checker" class="govuk-table__cell govuk-!-font-size-14">
+            {{ details.checker | displayName | safe }}
+          </td>
 
-        <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">
+          <td data-cy="submissionDate" class="govuk-table__cell govuk-!-font-size-14">
 
-        {% if deal.submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
-          {{ details.manualInclusionApplicationSubmissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
-          {% else %}
-          {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty }}
-        {% endif %}
-        </td>
+          {% if deal.submissionType === 'Manual Inclusion Notice' and details.manualInclusionApplicationSubmissionDate %}
+            {{ details.manualInclusionApplicationSubmissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty | safe }}
+            {% else %}
+            {{ details.submissionDate | localiseTimestamp("DD/MM/YYYY", user.timezone) | dashIfEmpty | safe }}
+          {% endif %}
+          </td>
 
-        <td data-cy="updatedAt" class="govuk-table__cell govuk-!-font-size-14">
-          {{ deal.updatedAt | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty }}
-        </td>
+          <td data-cy="updatedAt" class="govuk-table__cell govuk-!-font-size-14">
+            {{ deal.updatedAt | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) | dashIfEmpty | safe }}
+          </td>
 
-      </tr>
-    </tbody>
+        </tr>
+      </tbody>
 
-  </table>
+    </table>
+  </div>
+
 
 {% endmacro %}

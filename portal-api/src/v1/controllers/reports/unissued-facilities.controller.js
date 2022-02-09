@@ -46,6 +46,20 @@ const getUnissuedFacilities = async (bankId) => {
         ukefFacilityId: '$ukefFacilityId',
         value: '$value',
         currency: '$currency.id',
+        manualInclusionNoticeSubmissionDate: {
+          $switch: {
+            branches: [
+              {
+                case: { $eq: ['$dealsTable.dealType', 'GEF'] },
+                then: '$dealsTable.manualInclusionNoticeSubmissionDate'
+              },
+              {
+                case: { $eq: ['$dealsTable.dealType', 'BSS/EWCS'] },
+                then: '$dealsTable.details.manualInclusionApplicationSubmissionDate'
+              },
+            ],
+          },
+        },
         submissionDate: {
           $switch: {
             branches: [
@@ -87,6 +101,7 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
     const bankId = req.user.bank.id;
     const facilities = bankId ? await getUnissuedFacilities(bankId) : [];
     const unissuedFacilities = [];
+    let defaultDate;
 
     if (facilities.length) {
       let facility = '';
@@ -94,8 +109,14 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
       facilities.forEach((item) => {
         facility = item;
 
-        // check if the submission date is not null
-        const defaultDate = item.submissionDate || '';
+        // check if it's a MIN deal - this is because we need to use the timestamp when a deal was submitted as a MIN, and NOT the submission date
+        if (facility.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+          // check if the `manualInclusionNoticeSubmissionDate` is not null
+          defaultDate = item.manualInclusionNoticeSubmissionDate || '';
+        } else {
+          // check if the `submissionDate` is not null
+          defaultDate = item.submissionDate || '';
+        }
         const setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(0, 0, 1, 0);
         // add 3 months to the submission date - as per ticket
         const deadlineForIssuing = add(setDateToMidnight, { days: 90 });
