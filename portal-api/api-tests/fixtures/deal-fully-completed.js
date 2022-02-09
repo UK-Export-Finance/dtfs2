@@ -515,7 +515,9 @@ const deal = {
         url: 'https://dtfsmediaserver.file.core.windows.net/ukef/1000256/exporterQuestionnaire/test-file-2.txt',
       },
     ],
-    security: 'security test',
+    securityDetails: {
+      exporter: 'security test'
+    },
   },
 };
 

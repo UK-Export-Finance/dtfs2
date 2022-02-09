@@ -29,7 +29,7 @@ context('Security Details Page', () => {
       securityDetails.mainHeading();
       securityDetails.form();
       securityDetails.exporterSecurity();
-      securityDetails.applicationSecurity();
+      securityDetails.facilitySecurity();
       securityDetails.continueButton();
       securityDetails.cancelButton();
     });
@@ -39,7 +39,7 @@ context('Security Details Page', () => {
       securityDetails.continueButton().click();
       securityDetails.errorSummary();
       securityDetails.exporterSecurityError();
-      securityDetails.applicationSecurityError();
+      securityDetails.facilitySecurityError();
     });
 
     it('shows error message when security details are too long', () => {
@@ -47,11 +47,11 @@ context('Security Details Page', () => {
 
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type(longString);
-      securityDetails.applicationSecurity().type(longString);
+      securityDetails.facilitySecurity().type(longString);
       securityDetails.continueButton().click();
       securityDetails.errorSummary();
       securityDetails.exporterSecurityError();
-      securityDetails.applicationSecurityError();
+      securityDetails.facilitySecurityError();
     });
 
     it('shows error message when security details are invalid format', () => {
@@ -59,17 +59,17 @@ context('Security Details Page', () => {
 
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type(invalidString);
-      securityDetails.applicationSecurity().type(invalidString);
+      securityDetails.facilitySecurity().type(invalidString);
       securityDetails.continueButton().click();
       securityDetails.errorSummary();
       securityDetails.exporterSecurityError();
-      securityDetails.applicationSecurityError();
+      securityDetails.facilitySecurityError();
     });
 
     it('takes you to `Application details` page when clicking on `Continue` button', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('Valid security details');
-      securityDetails.applicationSecurity().type('Valid security details');
+      securityDetails.facilitySecurity().type('Valid security details');
       securityDetails.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });

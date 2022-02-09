@@ -222,7 +222,7 @@ context('Clone GEF (MIA) deal', () => {
       uploadFiles.supportingInfoSecurityDetailsButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/security-details`));
       uploadFiles.exporterSecurity().type('test');
-      uploadFiles.applicationSecurity().type('test2');
+      uploadFiles.facilitySecurity().type('test2');
       uploadFiles.continueButton().click();
     });
 

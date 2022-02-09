@@ -1,6 +1,9 @@
 const { format, fromUnixTime } = require('date-fns');
 const db = require('../../../src/drivers/db-client');
 
+const app = require('../../../src/createApp');
+const testUserCache = require('../../api-test-users');
+
 const {
   ukefSubmissionPortalActivity,
   submissionTypeToConstant,
@@ -28,6 +31,12 @@ describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA', async () => {
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
+
+    // adds user to db incase empty
+    const testUsers = await testUserCache.initialise(app);
+
+    testUsers().withRole('maker').one();
+    testUsers().withRole('checker').one();
     /*
    As _id's can change for checker, need to access db and find a checker
    These details then added to the MOCK_APPLICATION
