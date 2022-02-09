@@ -1,6 +1,4 @@
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
-import { STATUS } from '../../../constants';
-import CONTENT_STRINGS from '../../../content-strings';
 
 describe('controllers/dashboard/facilities - filters query', () => {
   const mockUser = {

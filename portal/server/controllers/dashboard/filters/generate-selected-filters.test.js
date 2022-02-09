@@ -93,7 +93,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
       const mockFieldName = CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED;
       const mockSubmittedFieldFilters = [
         'true',
-        'false'
+        'false',
       ];
 
       const result = selectedHasBeenIssuedFilters(

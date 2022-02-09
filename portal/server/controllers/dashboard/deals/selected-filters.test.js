@@ -3,7 +3,6 @@ import {
   selectedSubmissionTypeFilters,
 } from '../filters/generate-selected-filters';
 import { selectedFilters } from './selected-filters';
-import { formatFieldValue } from '../filters/helpers';
 import CONTENT_STRINGS from '../../../content-strings';
 import CONSTANTS from '../../../constants';
 
