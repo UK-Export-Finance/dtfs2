@@ -95,17 +95,18 @@ const postToACBS = async (apiRef, acbsInput) => {
   return {};
 };
 
-const createParty = async (acbsInput) => postToACBS('party', acbsInput);
-const createDeal = async (acbsInput) => postToACBS('deal', acbsInput);
-const createDealInvestor = async (acbsInput) => postToACBS('deal/investor', acbsInput);
-const createDealGuarantee = async (acbsInput) => postToACBS('deal/guarantee', acbsInput);
-const createFacility = async (acbsInput) => postToACBS('facility', acbsInput);
-const createFacilityInvestor = async (acbsInput) => postToACBS('facility/investor', acbsInput);
-const createFacilityCovenantId = async (acbsInput) => postToACBS('numbers', acbsInput);
-const createFacilityCovenant = async (acbsInput) => postToACBS('facility/covenant', acbsInput);
-const createFacilityGuarantee = async (acbsInput) => postToACBS('facility/guarantee', acbsInput);
-const createCodeValueTransaction = (async (acbsInput) => postToACBS('facility/codeValueTransaction', acbsInput));
-const updateFacility = async (facilityId, updateType, acbsInput, etag) => putToACBS(
+const createParty = (acbsInput) => postToACBS('party', acbsInput);
+const createDeal = (acbsInput) => postToACBS('deal', acbsInput);
+const createDealInvestor = (acbsInput) => postToACBS('deal/investor', acbsInput);
+const createDealGuarantee = (acbsInput) => postToACBS('deal/guarantee', acbsInput);
+const createFacility = (acbsInput) => postToACBS('facility', acbsInput);
+const createFacilityInvestor = (acbsInput) => postToACBS('facility/investor', acbsInput);
+const createFacilityCovenantId = (acbsInput) => postToACBS('numbers', acbsInput);
+const createFacilityCovenant = (acbsInput) => postToACBS('facility/covenant', acbsInput);
+const createFacilityGuarantee = (acbsInput) => postToACBS('facility/guarantee', acbsInput);
+const createCodeValueTransaction = (acbsInput) => postToACBS('facility/codeValueTransaction', acbsInput);
+const createFacilityLoan = (acbsInput) => postToACBS('facility/loan', acbsInput);
+const updateFacility = (facilityId, updateType, acbsInput, etag) => putToACBS(
   `facility/${facilityId}?op=${updateType}`,
   acbsInput,
   etag,
@@ -123,6 +124,7 @@ module.exports = {
   createFacilityCovenant,
   createFacilityGuarantee,
   createCodeValueTransaction,
+  createFacilityLoan,
   updateFacility,
   getFacility,
 };
