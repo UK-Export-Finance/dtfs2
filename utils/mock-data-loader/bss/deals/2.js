@@ -669,7 +669,9 @@ module.exports = {
         }
       }
     },
-    security: 'TEST'
+    securityDetails: {
+      exporter: 'Test'
+    },
   },
   ukefComments: [],
   ukefDecision: [],

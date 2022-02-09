@@ -58,7 +58,7 @@ context('Submit AIN deal and check portalActivities', () => {
       manualInclusion.uploadSuccess('upload-file-valid.doc');
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
-      securityDetails.applicationSecurity().type('test2');
+      securityDetails.facilitySecurity().type('test2');
       securityDetails.continueButton().click();
 
       applicationDetails.submitButton().click();

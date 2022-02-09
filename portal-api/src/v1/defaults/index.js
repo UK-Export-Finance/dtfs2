@@ -21,6 +21,11 @@ const DEFAULTS = {
     editedBy: [],
     facilities: [],
     exporter: {},
+    supportingInformation: {
+      securityDetails: {
+        exporter: null,
+      }
+    }
   },
 };
 
