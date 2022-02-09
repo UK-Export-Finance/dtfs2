@@ -28,6 +28,8 @@ const getFeeType = require('./get-fee-type');
 const getFeeFrequencyMonths = require('./get-fee-frequency-months');
 const getIncomeClassCode = require('./get-income-class-code');
 const getFeeRecordPeriod = require('./get-fee-record-period');
+const getFeeDates = require('./get-fee-dates');
+const getFeeAmount = require('./get-fee-amount');
 
 module.exports = {
   isIssued,
@@ -60,4 +62,6 @@ module.exports = {
   getFeeFrequencyMonths,
   getIncomeClassCode,
   getFeeRecordPeriod,
+  getFeeDates,
+  getFeeAmount,
 };
