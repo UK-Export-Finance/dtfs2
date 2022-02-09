@@ -10,8 +10,6 @@ context('User can view a case deal', () => {
   let dealFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
-
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         dealId = insertedDeal._id;
@@ -32,6 +30,7 @@ context('User can view a case deal', () => {
   });
 
   after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
     dealFacilities.forEach(({ _id }) => {
       cy.deleteFacility(_id, MOCK_MAKER_TFM);
     });
