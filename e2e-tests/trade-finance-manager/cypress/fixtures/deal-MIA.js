@@ -200,7 +200,7 @@ const MOCK_DEAL = {
     },
     {
       type: CONSTANTS.FACILITY_TYPE.LOAN,
-      createdDate: 1610369832226.0,
+      createdDate: 1610369832226,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -232,7 +232,6 @@ const MOCK_DEAL = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      name: 'Test-321',
     },
   ],
 };

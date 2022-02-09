@@ -47,7 +47,7 @@ describe('/v1/tfm/deal/:id', () => {
     };
 
     it('404s if updating an unknown id', async () => {
-      const { status } = await api.put({ dealUpdate }).to('/v1/tfm/deals/12345678');
+      const { status } = await api.put({ dealUpdate }).to('/v1/tfm/deals/61e54e2e532cf2027303e001');
       expect(status).toEqual(404);
     });
 

@@ -204,7 +204,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/12345678/loan/12345678');
+      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/123456789012/loan/123456789012');
 
       expect(status).toEqual(404);
     });
@@ -213,7 +213,7 @@ describe('/v1/deals/:id/loan', () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
 
-      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/12345678`);
+      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/123456789012`);
 
       expect(status).toEqual(404);
     });
@@ -607,13 +607,13 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).remove('/v1/deals/12345678/loan/12345678');
+      const { status } = await as(aBarclaysMaker).remove('/v1/deals/123456789012/loan/123456789012');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown loan', async () => {
-      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/loan/12345678`);
+      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/loan/123456789012`);
 
       expect(status).toEqual(404);
     });

@@ -81,12 +81,6 @@ describe('/v1/deals/:id/clone', () => {
       expect(status).toEqual(401);
     });
 
-    it('404s requests for unknown ids', async () => {
-      const { status } = await as(anHSBCMaker).post(dealToClone).to('/v1/deals/123456789012/clone');
-
-      expect(status).toEqual(404);
-    });
-
     describe('with post body', () => {
       let originalDeal;
       let createdFacilities;

@@ -1,5 +1,5 @@
 const MOCK_DEAL = {
-  _id: '123456789',
+  _id: '61f7a4edcf809301e78fbf44',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',

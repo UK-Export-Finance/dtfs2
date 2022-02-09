@@ -7,9 +7,9 @@ describe(component, () => {
   describe('when viewed a maker', () => {
     describe('with facility.canIssueOrEditIssueFacility', () => {
       const user = { roles: ['maker'] };
-      const deal = { _id: '1234' };
+      const deal = { _id: '5f3ab3f705e6630007dcfb20' };
       const facility = {
-        _id: '5678',
+        _id: '5f3ab3f705e6630007dcfb21',
         canIssueOrEditIssueFacility: true,
       };
       const facilityName = 'Loan';
@@ -39,13 +39,13 @@ describe(component, () => {
       it('should render a link to submission details page with facility anchor', () => {
         const user = { roles: ['maker'] };
         const mockFacility = {
-          _id: '5678',
+          _id: '5f3ab3f705e6630007dcfb22',
           issueFacilityDetailsProvided: true,
         };
         const facilityName = 'Loan';
 
         const deals = [
-          { _id: '1', status: 'Ready for Checker\'s approval' },
+          { _id: '5f3ab3f705e6630007dcfb20', status: 'Ready for Checker\'s approval' },
         ];
 
         deals.forEach((deal) => {
@@ -57,12 +57,12 @@ describe(component, () => {
         });
 
         const facilities = [
-          { _id: '1', status: 'Submitted', issueFacilityDetailsProvided: true },
-          { _id: '2', status: 'Ready for check', issueFacilityDetailsProvided: true },
-          { _id: '3', status: 'Acknowledged', issueFacilityDetailsProvided: true },
+          { _id: '5f3ab3f705e6630007dcfb24', status: 'Submitted', issueFacilityDetailsProvided: true },
+          { _id: '5f3ab3f705e6630007dcfb25', status: 'Ready for check', issueFacilityDetailsProvided: true },
+          { _id: '5f3ab3f705e6630007dcfb26', status: 'Acknowledged', issueFacilityDetailsProvided: true },
         ];
 
-        const deal = { _id: '1234' };
+        const deal = { _id: '5f3ab3f705e6630007dcfb22' };
 
         facilities.forEach((facility) => {
           const wrapper = render({
@@ -77,13 +77,13 @@ describe(component, () => {
     describe('when deal has not been submitted, is editable, and has `Draft` or `Further Maker\'s input required` status', () => {
       it('should render a link to delete', () => {
         const user = { roles: ['maker'] };
-        const facility = { _id: '5678' };
+        const facility = { _id: '5f3ab3f705e6630007dcfb22' };
         const facilityName = 'Loan';
         const facilityTableIndex = 1;
 
         const deals = [
-          { _id: '1', status: 'Draft' },
-          { _id: '2', status: 'Further Maker\'s input required' },
+          { _id: '5f3ab3f705e6630007dcfb21', status: 'Draft' },
+          { _id: '5f3ab3f705e6630007dcfb22', status: 'Further Maker\'s input required' },
         ];
 
         deals.forEach((deal) => {

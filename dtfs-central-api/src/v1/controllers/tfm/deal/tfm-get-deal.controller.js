@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 
@@ -5,7 +6,7 @@ const findOneDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('tfm-deals');
   const facilitiesCollection = await db.getCollection('tfm-facilities');
 
-  const deal = await dealsCollection.findOne({ _id });
+  const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
   let returnDeal = deal;
 
   if (deal) {
@@ -29,7 +30,7 @@ const findOneDeal = async (_id, callback) => {
         }).toArray();
 
         facilityIds.forEach((id) => {
-          const { facilitySnapshot } = facilities.find((f) => f._id === id);
+          const { facilitySnapshot } = facilities.find((f) => f._id.toHexString() === id.toHexString());
 
           if (facilitySnapshot) {
             const { type } = facilitySnapshot;

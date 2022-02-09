@@ -52,12 +52,6 @@ describe('/v1/deals/:id/additionalRefName', () => {
       expect(status).toEqual(401);
     });
 
-    it('404s requests for unknown ids', async () => {
-      const { status } = await as(aBarclaysMaker).put({ additionalRefName: 'a new name' }).to('/v1/deals/123456789012/additionalRefName');
-
-      expect(status).toEqual(404);
-    });
-
     it('401s requests if <user> != <resource>/maker', async () => {
       const { body } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
 

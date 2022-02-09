@@ -2,6 +2,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const CONSTANTS = require('../../../src/constants');
+const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
@@ -9,7 +10,7 @@ const newDeal = {
 };
 
 const newFacility = {
-  dealId: 12345,
+  dealId: MOCK_DEAL.DEAL_ID,
   type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
 };
 
@@ -36,7 +37,7 @@ describe('/v1/portal/gef/facilities', () => {
     it('returns 404 when the associated deal is not found', async () => {
       const facilityWithInvalidDealId = {
         ...newFacility,
-        dealId: '123456789f0ffe00219319c1',
+        dealId: MOCK_DEAL.DEAL_ID,
       };
 
       const { status } = await api.post(facilityWithInvalidDealId).to('/v1/portal/gef/facilities');

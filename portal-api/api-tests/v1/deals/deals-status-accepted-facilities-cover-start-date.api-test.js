@@ -51,6 +51,12 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
 
       submittedMinDeal = getSubmittedDealBody.deal;
 
+      completedDeal.mockFacilities.forEach((facility) => {
+        if (facility._id) {
+          delete facility._id;
+        }
+      });
+
       const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
       completedDeal.mockFacilities = createdFacilities;
@@ -127,6 +133,12 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
       const { body: getSubmittedDealBody } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
 
       submittedMinDeal = getSubmittedDealBody.deal;
+
+      completedDeal.mockFacilities.forEach((facility) => {
+        if (facility._id) {
+          delete facility._id;
+        }
+      });
 
       const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
       completedDeal.mockFacilities = createdFacilities;

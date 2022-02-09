@@ -1,8 +1,9 @@
-const { nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths } = require('../dates');
+const {
+  nowTimestamp, twoMonths, twoMonthsTimestamp, threeMonths,
+} = require('../dates');
 
 module.exports = [
   {
-    mockDealId: 11,
     type: 'Bond',
     ukefGuaranteeInMonths: null,
     facilityStage: 'Issued',
@@ -10,7 +11,7 @@ module.exports = [
     'coverEndDate-day': threeMonths.day,
     'coverEndDate-month': threeMonths.month,
     'coverEndDate-year': threeMonths.year,
-    name: 'Test Bond',
+    name: 'Test Bond 11',
     requestedCoverStartDate: twoMonthsTimestamp,
     value: '600000.00',
     currencySameAsSupplyContractCurrency: 'true',
@@ -41,13 +42,12 @@ module.exports = [
     dayCountBasis: '360',
   },
   {
-    mockDealId: 11,
     type: 'Loan',
     ukefGuaranteeInMonths: '24',
     'coverEndDate-day': null,
     'coverEndDate-month': null,
     'coverEndDate-year': null,
-    name: 'Test Loan',
+    name: 'Test Loan 11',
     requestedCoverStartDate: null,
     disbursementAmount: null,
     value: '100000.00',

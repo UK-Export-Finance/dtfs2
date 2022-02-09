@@ -2,6 +2,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
+const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const mockUser = {
   _id: '123456789',
@@ -15,7 +16,7 @@ const mockUser = {
 
 const newFacility = {
   type: 'Bond',
-  dealId: '123123456',
+  dealId: MOCK_DEAL.DEAL_ID,
 };
 
 const newDeal = aDeal({
@@ -57,12 +58,6 @@ describe('/v1/portal/facilities', () => {
       expect(status).toEqual(200);
       expect(body._id).toEqual(newId);
       expect(typeof body.createdDate).toEqual('number');
-    });
-
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/portal/facilities/12345678910');
-
-      expect(status).toEqual(404);
     });
   });
 });

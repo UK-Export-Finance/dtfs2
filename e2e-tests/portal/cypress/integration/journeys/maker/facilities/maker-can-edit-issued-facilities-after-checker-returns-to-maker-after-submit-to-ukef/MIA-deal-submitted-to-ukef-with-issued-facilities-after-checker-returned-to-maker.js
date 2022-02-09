@@ -5,7 +5,6 @@ const nowPlusMonth = nowPlusMonths(1);
 const nowPlusWeek = nowPlusDays(7).valueOf();
 
 const deal = {
-  _id: '1001349',
   submissionType: 'Manual Inclusion Application',
   updatedAt: Date.now(),
   bankInternalRefName: 'test',
