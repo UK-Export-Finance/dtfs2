@@ -2,13 +2,12 @@ const { nowTimestamp, twoMonths, twoMonthsTimestamp } = require('../dates');
 
 module.exports = [
   {
-    mockDealId: 4,
     type: 'Loan',
     ukefGuaranteeInMonths: '24',
     'coverEndDate-day': null,
     'coverEndDate-month': null,
     'coverEndDate-year': null,
-    name: 'Test Loan',
+    name: 'Test Loan 4',
     requestedCoverStartDate: null,
     disbursementAmount: null,
     value: '100000.00',
@@ -39,7 +38,6 @@ module.exports = [
     dayCountBasis: '365',
   },
   {
-    mockDealId: 4,
     type: 'Bond',
     ukefGuaranteeInMonths: null,
     facilityStage: 'Issued',
@@ -47,7 +45,7 @@ module.exports = [
     'coverEndDate-day': '22',
     'coverEndDate-month': '09',
     'coverEndDate-year': '2023',
-    name: 'Test Bond',
+    name: 'Test Bond 4',
     requestedCoverStartDate: twoMonthsTimestamp,
     value: '600000.00',
     currencySameAsSupplyContractCurrency: 'true',

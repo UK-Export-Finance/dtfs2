@@ -69,10 +69,11 @@ exports.updateBondIssueFacility = async (req, res) => {
         deal,
       );
 
+      modifiedBond.hasBeenIssued = false;
+      modifiedBond.issueFacilityDetailsProvided = false;
       if (validationErrors.count === 0) {
         modifiedBond.issueFacilityDetailsProvided = true;
-      } else {
-        modifiedBond.issueFacilityDetailsProvided = false;
+        modifiedBond.hasBeenIssued = true;
       }
 
       const { status, data } = await facilitiesController.update(

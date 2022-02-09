@@ -2,6 +2,7 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
+const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const mockUser = {
   _id: '123456789',
@@ -15,7 +16,7 @@ const mockUser = {
 
 const newFacility = {
   type: 'Bond',
-  dealId: '123123456',
+  dealId: MOCK_DEAL.DEAL_ID,
 };
 
 const newDeal = aDeal({
@@ -50,7 +51,7 @@ describe('/v1/portal/facilities', () => {
   describe('POST /v1/portal/facilities', () => {
     it('returns 404 when associatedDeal/dealId is not found', async () => {
       const facilityWithInvalidDealId = {
-        dealId: '1234',
+        dealId: MOCK_DEAL.DEAL_ID,
         type: 'Bond',
       };
 
@@ -61,7 +62,7 @@ describe('/v1/portal/facilities', () => {
 
     it('returns 404 when user is not found', async () => {
       const facilityWithInvalidDealId = {
-        dealId: '1234',
+        dealId: MOCK_DEAL.DEAL_ID,
         type: 'Bond',
       };
 
@@ -82,16 +83,6 @@ describe('/v1/portal/facilities', () => {
       expect(facilityAfterCreation.dealId).toEqual(newFacility.dealId);
       expect(typeof facilityAfterCreation.createdDate).toEqual('number');
       expect(typeof facilityAfterCreation.updatedAt).toEqual('number');
-    });
-
-    it('creates incremental integer facility IDs', async () => {
-      const facility1 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      const facility2 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      const facility3 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-
-      expect(parseInt(facility1.body._id, 10).toString()).toEqual(facility1.body._id);
-      expect(facility2.body._id - facility1.body._id).toEqual(1);
-      expect(facility3.body._id - facility2.body._id).toEqual(1);
     });
 
     it('adds the facility id to the associated deal', async () => {
@@ -149,7 +140,7 @@ describe('/v1/portal/facilities', () => {
       it('returns 400 with validation errors', async () => {
         const postBody = {
           type: 'invalid-facility',
-          dealId: '123123456',
+          dealId: MOCK_DEAL.DEAL_ID,
           user: {},
         };
 

@@ -1,5 +1,5 @@
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
-const { generateFacilityId } = require('../../../../utils/generate-ids');
 const { findOneDeal } = require('../deal/get-deal.controller');
 const { updateDeal } = require('../deal/update-deal.controller');
 
@@ -8,16 +8,16 @@ const createFacilities = async (facilities, dealId) => {
 
   const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
     const facility = f;
+    facility._id = new ObjectId(facility._id);
     facility.createdDate = Date.now();
     facility.updatedAt = Date.now();
-    facility._id = await generateFacilityId();
-    facility.dealId = dealId;
+    facility.dealId = new ObjectId(dealId);
     return facility;
   }));
 
   const idsArray = [];
   facilitiesWithId.forEach((f) => {
-    idsArray.push(f._id);
+    idsArray.push(f._id.toHexString());
   });
 
   const result = await collection.insertMany(facilitiesWithId);

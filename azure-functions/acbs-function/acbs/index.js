@@ -173,6 +173,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
       guarantee: dealGuaranteeRecord,
     };
 
+    // 5. Facility records
     const facilityTasks = deal.dealSnapshot.facilities.map((facility) =>
       context.df.callSubOrchestrator('acbs-facility', {
         deal,

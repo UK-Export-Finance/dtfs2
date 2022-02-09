@@ -68,7 +68,8 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     loanId = createLoanResponse.body.loanId;
 
-    const { status } = await as(aBarclaysMaker).put(allLoanFields).to(`/v1/deals/${dealId}/loan/${loanId}`);
+    const { status, body } = await as(aBarclaysMaker).put(allLoanFields).to(`/v1/deals/${dealId}/loan/${loanId}`);
+    expect(body.hasBeenIssued).toEqual(true);
     expect(status).toEqual(200);
   };
 
@@ -97,12 +98,12 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     });
 
     it('should return 404 when deal does not exist', async () => {
-      const { status } = await putIssueFacility('1234', loanId, {});
+      const { status } = await putIssueFacility('123456789012', loanId, {});
       expect(status).toEqual(404);
     });
 
     it('should return 404 when loan does not exist', async () => {
-      const { status } = await putIssueFacility(dealId, '1234', {});
+      const { status } = await putIssueFacility(dealId, '123456789012', {});
       expect(status).toEqual(404);
     });
 
@@ -122,6 +123,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
       expect(body.status === allLoanFields.status).toEqual(false);
       expect(body.issueFacilityDetailsStarted).toEqual(true);
+      expect(body.hasBeenIssued).toEqual(true);
     });
 
     it('should remove loan status when issueFacilityDetailsStarted already exists in the loan', async () => {
@@ -146,6 +148,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
       expect(status).toEqual(200);
       expect(body.issueFacilityDetailsProvided).toEqual(true);
+      expect(body.hasBeenIssued).toEqual(true);
       expect(typeof body.requestedCoverStartDate === 'string').toEqual(true);
       expect(typeof body.issuedDate === 'string').toEqual(true);
     });

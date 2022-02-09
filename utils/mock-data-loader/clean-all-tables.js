@@ -16,7 +16,7 @@ const cleanBanks = async (token) => {
 };
 
 const cleanFacilities = async (token) => {
-  console.info('cleaning facilities');
+  console.info('cleaning all facilities');
 
   const facilities = await centralApi.listFacilities();
   for (const facility of facilities) {

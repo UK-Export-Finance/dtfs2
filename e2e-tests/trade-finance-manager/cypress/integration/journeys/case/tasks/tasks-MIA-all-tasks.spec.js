@@ -2,29 +2,24 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import MOCK_MIA_TASKS from '../../../../fixtures/tasks-MIA';
 import MOCK_USERS from '../../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 import {
   MIA_TASKS_STRUCTURE,
   submitTaskInProgress,
   submitTaskComplete,
-  assertCompleteTask,
   assertTaskStatusAndLink,
   submitTaskCompleteAndAssertOtherTasks,
   assertTaskStatus,
   assertTaskLinkDoesNotExist,
 } from './tasks-helpers';
 
-
 context('Case tasks - MIA deal - all tasks', () => {
   let dealId;
   const dealFacilities = [];
   const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
-  const userFullName = `${businessSupportUser.firstName} ${businessSupportUser.lastName}`;
   let userId;
-  let loggedInUserTeamName;
-  let usersInTeam;
+
   const underwritingGroupId = 3;
 
   const underwritingFirstTaskId = 1;
@@ -32,41 +27,36 @@ context('Case tasks - MIA deal - all tasks', () => {
   const underwritingLastTaskId = 3;
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
-
     cy.getUser(businessSupportUser.username).then((userObj) => {
       userId = userObj._id;
     });
-
-    [loggedInUserTeamName] = businessSupportUser.teams;
-    usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
   });
 
   beforeEach(() => {
-    cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
+      const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType);
-
-        cy.login(businessSupportUser);
-        cy.visit(relative(`/case/${dealId}/deal`));
+      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+
+      cy.submitDeal(dealId, dealType);
+
+      cy.login(businessSupportUser);
+      cy.visit(relative(`/case/${dealId}/deal`));
+    });
   });
 
   after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
-  const startAndCompleteLastUnderwritingTask = (taskId) => {
+  const startAndCompleteLastUnderwritingTask = () => {
     const firstTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingFirstTaskId);
     const secondTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingSecondTaskId);
     const lastTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingLastTaskId);
@@ -100,8 +90,7 @@ context('Case tasks - MIA deal - all tasks', () => {
     secondTaskRow.link().should('exist');
   };
 
-  const startAndCompleteFirstUnderwritingTask = (taskId) => {
-    const firstTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingFirstTaskId);
+  const startAndCompleteFirstUnderwritingTask = () => {
     const secondTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingSecondTaskId);
     const lastTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingLastTaskId);
 
@@ -134,7 +123,7 @@ context('Case tasks - MIA deal - all tasks', () => {
     secondTaskRow.link().should('exist');
   };
 
-  const startAndCompleteSecondUnderwritingTask = (taskId) => {
+  const startAndCompleteSecondUnderwritingTask = () => {
     const firstTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingFirstTaskId);
     const secondTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingSecondTaskId);
     const lastTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingLastTaskId);
@@ -223,7 +212,7 @@ context('Case tasks - MIA deal - all tasks', () => {
     const group4GroupId = 4;
     const group4FirstTaskRow = pages.tasksPage.tasks.row(group4GroupId, 1);
 
-    assertTaskLinkDoesNotExist(group4FirstTaskRow)
+    assertTaskLinkDoesNotExist(group4FirstTaskRow);
     assertTaskStatus(group4FirstTaskRow, 'Cannot start yet');
 
     // Complete the remaining Underwriting tasks.

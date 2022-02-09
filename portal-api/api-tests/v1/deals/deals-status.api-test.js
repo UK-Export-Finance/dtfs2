@@ -127,12 +127,6 @@ describe('/v1/deals/:id/status', () => {
       expect(status).toEqual(401);
     });
 
-    it('404s requests for unknown ids', async () => {
-      const { status } = await as(anHSBCMaker).put(completedDeal).to('/v1/deals/123456789012/status');
-
-      expect(status).toEqual(404);
-    });
-
     it('returns the updated status', async () => {
       const postResult = await as(anHSBCMaker).post(completedDeal).to('/v1/deals');
       const createdDeal = postResult.body;

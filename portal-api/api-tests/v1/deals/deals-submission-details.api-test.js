@@ -5,7 +5,6 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
@@ -106,7 +105,6 @@ describe('/v1/deals/:id/submission-details', () => {
     });
   });
 
-
   describe('PUT /v1/deals/:id/submission-details', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put(newDeal).to('/v1/deals/123456789012/submission-details');
@@ -133,12 +131,6 @@ describe('/v1/deals/:id/submission-details', () => {
       const { status } = await as(aBarclaysMaker).put(statusUpdate).to(`/v1/deals/${body._id}/submission-details`);
 
       expect(status).toEqual(401);
-    });
-
-    it('404s requests for unknown ids', async () => {
-      const { status } = await as(anHSBCMaker).put(newDeal).to('/v1/deals/123456789012/submission-details');
-
-      expect(status).toEqual(404);
     });
 
     it('returns the updated submission-details with country fields as objects', async () => {
@@ -292,7 +284,7 @@ describe('/v1/deals/:id/submission-details', () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      const { body: dealInOriginalShape } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
 
       const submissionDetails = {
         'supplier-name': 'Mock supplier name',

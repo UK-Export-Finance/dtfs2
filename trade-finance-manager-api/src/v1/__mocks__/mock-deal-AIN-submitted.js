@@ -168,7 +168,7 @@ const MOCK_DEAL_AIN_SUBMITTED = {
   bondTransactions: {
     items: [
       {
-        _id: '12345678',
+        _id: '61f7a71ccf809301e78fbea3',
         type: 'Bond',
         bondIssuer: 'Issuer',
         bondType: 'Advance payment guarantee',

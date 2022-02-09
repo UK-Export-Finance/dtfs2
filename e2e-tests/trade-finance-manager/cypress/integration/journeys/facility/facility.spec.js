@@ -9,20 +9,17 @@ context('Facility page', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
+    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
-
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType);
+      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+
+      cy.submitDeal(dealId, dealType);
+    });
   });
 
   beforeEach(() => {
@@ -30,6 +27,7 @@ context('Facility page', () => {
   });
 
   after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });

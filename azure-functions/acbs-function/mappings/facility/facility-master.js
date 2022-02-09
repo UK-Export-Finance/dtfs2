@@ -9,7 +9,7 @@
                                     Note there may be multiple customers in ACBS with the same Party URN.
                                     Use the first record found,
   "maximumLiability":               ukef Exposure
-  "productTypeId":                  Facility Type i.e. 250 for BOND ??? What is LOAN and GEF?
+  "productTypeId":                  Facility Type i.e. 250 for BOND
   "capitalConversionFactorCode":    This field is required for GEF. Cash facility has 8, Contingent facility has 9.
   "productTypeName":                Facility Type Name/ description i.e. GEF / BSS so appropriate description can be set
   "currency":                       Facility currency code
