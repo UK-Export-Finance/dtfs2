@@ -4,11 +4,15 @@ describe('submittedDocumentationMatchesOriginalData', () => {
   describe('when the security property is different from originalData object', () => {
     it('should return false', () => {
       const formData = {
-        security: 'changed this field',
+        securityDetails: {
+          exporter: 'changed this field',
+        },
       };
       const formFiles = [];
       const originalData = {
-        security: 'hello world',
+        securityDetails: {
+          exporter: 'hello world',
+        },
       };
 
       const result = submittedDocumentationMatchesOriginalData(formData, formFiles, originalData);
@@ -19,13 +23,17 @@ describe('submittedDocumentationMatchesOriginalData', () => {
   describe('when the formFiles length is greater than 0', () => {
     it('should return false', () => {
       const formData = {
-        security: 'hello world',
+        securityDetails: {
+          exporter: 'hello world',
+        },
       };
       const formFiles = [
         { name: 'some-file.pdf' },
       ];
       const originalData = {
-        security: 'hello world',
+        securityDetails: {
+          exporter: 'hello world',
+        },
       };
 
       const result = submittedDocumentationMatchesOriginalData(formData, formFiles, originalData);

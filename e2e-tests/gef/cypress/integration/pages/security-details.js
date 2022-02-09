@@ -5,7 +5,7 @@ const securityDetails = {
   mainHeading: () => cy.get('[data-cy="main-heading"]'),
   form: () => cy.get('[data-cy="form"]'),
   exporterSecurity: () => cy.get('[data-cy="exporter-security"]'),
-  applicationSecurity: () => cy.get('[data-cy="application-security"]'),
+  facilitySecurity: () => cy.get('[data-cy="facility-security"]'),
   exporterSecurityError: () => cy.get('[data-cy="exporter-security-error"]'),
   applicationSecurityError: () => cy.get('[data-cy="application-security-error"]'),
   continueButton: () => cy.get('[data-cy="submit-button"]'),

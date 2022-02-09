@@ -304,7 +304,9 @@ const deal = {
         mimetype: 'application/pdf',
       },
     ],
-    security: '',
+    securityDetails: {
+      exporter: '',
+    },
   },
 };
 

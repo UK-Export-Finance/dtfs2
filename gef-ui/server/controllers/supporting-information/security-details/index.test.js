@@ -54,7 +54,7 @@ describe('controllers/supporting-information/security-details', () => {
       Application.findById.mockResolvedValue({
         supportingInformation: {
           securityDetails: {
-            application: 'mock applications security details',
+            facility: 'mock applications security details',
             exporter: 'mock exporter security details',
           },
         },
@@ -66,7 +66,7 @@ describe('controllers/supporting-information/security-details', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/security-details.njk', {
         dealId: 'mock-id',
         inputMaxLength: MAX_INPUT_LENGTH,
-        applicationSecurity: 'mock applications security details',
+        facilitySecurity: 'mock applications security details',
         exporterSecurity: 'mock exporter security details',
       });
     });
@@ -101,7 +101,7 @@ describe('controllers/supporting-information/security-details', () => {
         },
         body: {
           exporterSecurity: 'mock exporter security',
-          applicationSecurity: 'mock application security',
+          facilitySecurity: 'mock application security',
         },
       };
     });
@@ -117,7 +117,7 @@ describe('controllers/supporting-information/security-details', () => {
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([
             { href: '#exporterSecurity', text: expect.any(String) },
-            { href: '#applicationSecurity', text: expect.any(String) },
+            { href: '#facilitySecurity', text: expect.any(String) },
           ]),
         }),
         dealId: 'mock-id',
@@ -130,7 +130,7 @@ describe('controllers/supporting-information/security-details', () => {
 
       mockRequest.body = {
         exporterSecurity: longString,
-        applicationSecurity: longString,
+        facilitySecurity: longString,
       };
 
       await postSecurityDetails(mockRequest, mockResponse);
@@ -141,11 +141,11 @@ describe('controllers/supporting-information/security-details', () => {
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([
             { href: '#exporterSecurity', text: expect.any(String) },
-            { href: '#applicationSecurity', text: expect.any(String) },
+            { href: '#facilitySecurity', text: expect.any(String) },
           ]),
         }),
         exporterSecurity: longString,
-        applicationSecurity: longString,
+        facilitySecurity: longString,
       }));
     });
 
@@ -154,7 +154,7 @@ describe('controllers/supporting-information/security-details', () => {
 
       mockRequest.body = {
         exporterSecurity: invalidString,
-        applicationSecurity: invalidString,
+        facilitySecurity: invalidString,
       };
 
       await postSecurityDetails(mockRequest, mockResponse);
@@ -165,11 +165,11 @@ describe('controllers/supporting-information/security-details', () => {
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([
             { href: '#exporterSecurity', text: expect.any(String) },
-            { href: '#applicationSecurity', text: expect.any(String) },
+            { href: '#facilitySecurity', text: expect.any(String) },
           ]),
         }),
         exporterSecurity: invalidString,
-        applicationSecurity: invalidString,
+        facilitySecurity: invalidString,
       }));
     });
 

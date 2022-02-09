@@ -336,7 +336,9 @@ const deal = {
         mimetype: 'text/plain',
       },
     ],
-    security: 'security test',
+    securityDetails: {
+      exporter: 'security test',
+    },
   },
   mandatoryCriteria: [
     {

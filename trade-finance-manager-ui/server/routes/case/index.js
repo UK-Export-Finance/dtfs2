@@ -56,8 +56,6 @@ router.get('/:_id/underwriting/lead-underwriter', underwritingController.getLead
 router.get('/:_id/underwriting/lead-underwriter/assign', underwritingController.getAssignLeadUnderwriter);
 router.post('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
 
-router.get('/:_id/underwriting/bank-security', underwritingController.getUnderWritingBankSecurity);
-
 router.get('/:_id/underwriting/managers-decision', underwritingController.getUnderwriterManagersDecision);
 
 router.get('/:_id/underwriting/managers-decision/edit', underwritingController.getUnderwriterManagersDecisionEdit);

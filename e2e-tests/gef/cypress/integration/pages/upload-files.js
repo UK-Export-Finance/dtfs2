@@ -12,7 +12,7 @@ const uploadFIles = {
   deleteSupportingDocument: (file) => cy.get(`.moj-multi-file-upload__delete[value='${file}']`),
   uploadSuccess: (fileName) => cy.get('.moj-multi-file-upload__success').contains(fileName),
   uploadFailure: (fileName) => cy.get('.moj-multi-file-upload__error').contains(fileName),
-  applicationSecurity: () => cy.get('[data-cy="application-security"]'),
+  facilitySecurity: () => cy.get('[data-cy="facility-security"]'),
   exporterSecurityError: () => cy.get('[data-cy="exporter-security-error"]'),
   exporterSecurity: () => cy.get('[data-cy="exporter-security"]'),
   continueButton: () => cy.get('[data-cy="submit-button"]'),

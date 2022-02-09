@@ -460,13 +460,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const newId = postResult.body._id;
 
       const textFields = {
-        security: 'security text',
+        security: 'security text'
       };
 
       const { status, body } = await as(aBarclaysMaker).putMultipartForm(textFields).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
-      expect(body.supportingInformation.security).toEqual(textFields.security);
+      expect(body.supportingInformation.securityDetails.exporter).toEqual(textFields.security);
     });
   });
 });
