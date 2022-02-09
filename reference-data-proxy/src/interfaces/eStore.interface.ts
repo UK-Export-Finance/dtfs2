@@ -10,5 +10,31 @@ export interface Estore {
 }
 
 export interface EstoreSite {
-  exporterName: string;
+  readonly exporterName: string;
+}
+
+export interface EstoreTermStore {
+  readonly id: string;
+}
+
+export interface EstoreBuyer extends EstoreSite {
+  readonly buyerName: string;
+}
+
+export interface EstoreDealFolder extends EstoreBuyer {
+  readonly dealIdentifier: string;
+  readonly destinationMarket: string;
+  readonly riskMarket: string;
+}
+
+export interface EstoreFacilityFolder extends EstoreBuyer {
+  readonly facilityIdentifier: string;
+  readonly destinationMarket: string;
+  readonly riskMarket: string;
+}
+
+export interface EstoreDealFiles {
+  readonly documentType: string;
+  readonly fileName: string;
+  readonly fileLocationPath: string;
 }
