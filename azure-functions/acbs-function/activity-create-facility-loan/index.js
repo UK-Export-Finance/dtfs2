@@ -27,7 +27,6 @@ const mandatoryFields = [
   'spreadRate',
   'nextDueDate',
   'yearBasis',
-  'indexRateChangeFrequency',
   'loanBillingFrequencyType',
 ];
 

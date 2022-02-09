@@ -46,7 +46,6 @@ const facilityLoan = (deal, facility, acbsData) => {
     spreadRate: facility.facilitySnapshot.guaranteeFee,
     nextDueDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
     yearBasis: helpers.getYearBasis(facility),
-    indexRateChangeFrequency: helpers.getFeeFrequency(facility),
     loanBillingFrequencyType: helpers.getFeeType(facility),
   };
 
@@ -65,6 +64,7 @@ const facilityLoan = (deal, facility, acbsData) => {
     loanRecord = {
       ...loanRecord,
       spreadRateCTL: helpers.getInterestPercentage(facility),
+      indexRateChangeFrequency: helpers.getFeeFrequency(facility),
     };
   }
 
