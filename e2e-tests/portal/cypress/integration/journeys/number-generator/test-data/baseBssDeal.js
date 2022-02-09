@@ -34,7 +34,7 @@ exports.BASE_DEAL = {
     'indemnifier-address-line-3': '',
     'indemnifier-address-line-1': '27a',
     'indemnifier-address-line-2': 'Maxwell Road',
-    'indemnifier-address-postcode': 'HA6 2XY',
+    'indemnifier-address-postcode': 'test',
     'indemnifier-address-town': 'Northwood',
     'indemnifier-companies-house-registration-number': '08547313',
     'indemnifier-correspondence-address-country': {
@@ -46,7 +46,7 @@ exports.BASE_DEAL = {
     'indemnifier-correspondence-address-line-2': '',
     'indemnifier-correspondence-address-postcode': 'CM1 4EP',
     'indemnifier-correspondence-address-town': 'Chelmsford',
-    'indemnifier-name': 'WATKINSON TRADING LIMITED',
+    'indemnifier-name': 'TEST TRADING LIMITED',
     indemnifierCorrespondenceAddressDifferent: 'true',
     'industry-sector': {
       code: '1008',
