@@ -12,8 +12,7 @@ const getReturnToMaker = async (req, res) => {
   const { status } = await getApplication(dealId);
 
   if (status !== CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL) {
-    // eslint-disable-next-line no-console
-    console.log('Incorrect status or permissions, redirecting to dashboard');
+    console.error('Incorrect status or permissions, redirecting to dashboard');
     return res.redirect('/dashboard');
   }
 

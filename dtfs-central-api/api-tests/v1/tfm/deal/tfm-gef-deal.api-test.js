@@ -18,11 +18,6 @@ describe('/v1/tfm/deal/:id', () => {
   });
 
   describe('GET /v1/tfm/deal/:id', () => {
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.get('/v1/tfm/deals/12345678910');
-      expect(status).toEqual(404);
-    });
-
     it('returns the requested resource', async () => {
       const postResult = await api.post(newDeal).to('/v1/portal/gef/deals');
       const dealId = postResult.body._id;
@@ -41,7 +36,7 @@ describe('/v1/tfm/deal/:id', () => {
 
   describe('PUT /v1/tfm/deal/:id/snapshot', () => {
     it('404s if updating an unknown id', async () => {
-      const { status } = await api.put({}).to('/v1/tfm/deals/12345678/snapshot');
+      const { status } = await api.put({}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(404);
     });
 

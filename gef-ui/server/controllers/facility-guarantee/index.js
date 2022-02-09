@@ -13,8 +13,7 @@ const facilityGuarantee = async (req, res) => {
   try {
     const facility = await Facility.find(dealId, facilityId, status, user, userToken);
     if (!facility) {
-      // eslint-disable-next-line no-console
-      console.log('Facility not found, or not authorised');
+      console.error('Facility not found, or not authorised');
       return res.redirect('/');
     }
     return res.render('partials/facility-guarantee.njk', {

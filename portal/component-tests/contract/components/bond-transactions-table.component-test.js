@@ -14,7 +14,7 @@ describe(component, () => {
     bondTransactions: {
       items: [
         {
-          _id: '1',
+          _id: '5f3ab3f705e6630007dcfb21',
           ukefFacilityId: '5678',
           status: 'Incomplete',
           value: '100',
@@ -26,7 +26,7 @@ describe(component, () => {
           canIssueOrEditIssueFacility: true,
         },
         {
-          _id: '2',
+          _id: '5f3ab3f705e6630007dcfb22',
           ukefFacilityId: '5678',
           status: 'Incomplete',
           value: '100',

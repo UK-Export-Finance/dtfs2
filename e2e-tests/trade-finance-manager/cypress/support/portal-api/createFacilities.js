@@ -2,7 +2,7 @@ const { logIn, createFacilities } = require('./api');
 const { getIdFromNumberGenerator } = require('../reference-data-api/api');
 
 module.exports = (dealId, facilities, user) => {
-  console.log('createFacilities::');
+  console.info('createFacilities::');
 
   logIn(user).then((token) => {
     const facilitiesWithUkefIds = [];

@@ -12,54 +12,51 @@ context('Users can create and submit comments', () => {
   const dealFacilities = [];
   const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
   const userFullName = `${businessSupportUser.firstName} ${businessSupportUser.lastName}`;
-  let userId;
-  let loggedInUserTeamName;
-  let usersInTeam;
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
+    cy.getUser(businessSupportUser.username);
 
-    cy.getUser(businessSupportUser.username).then((userObj) => {
-      userId = userObj._id;
-    });
+    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-    [loggedInUserTeamName] = businessSupportUser.teams;
-    usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
-
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType);
-        // adds a non-comment type
-        const otherActivity = {
-          tfm: {
-            activities: {
-              type: 'OTHER',
-              timestamp: 13345665,
-              text: 'Not a comment',
-              author: {
-                firstName: 'tester',
-                lastName: 'smith',
-                _id: 12243343242342,
-              },
-              label: 'Other',
-            },
-          },
-        };
-        cy.updateTFMDeal(dealId, otherActivity);
-        cy.login(businessSupportUser);
+      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+
+      cy.submitDeal(dealId, dealType);
+      // adds a non-comment type
+      const otherActivity = {
+        tfm: {
+          activities: {
+            type: 'OTHER',
+            timestamp: 13345665,
+            text: 'Not a comment',
+            author: {
+              firstName: 'tester',
+              lastName: 'smith',
+              _id: 12243343242342,
+            },
+            label: 'Other',
+          },
+        },
+      };
+      cy.updateTFMDeal(dealId, otherActivity);
+      cy.login(businessSupportUser);
+    });
   });
 
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('connect.sid');
     cy.visit(relative(`/case/${dealId}/activity`));
+  });
+
+  after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    dealFacilities.forEach((facility) => {
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+    });
   });
 
   describe('add a comment', () => {

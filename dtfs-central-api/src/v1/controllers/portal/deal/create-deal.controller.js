@@ -1,17 +1,13 @@
 const db = require('../../../../drivers/db-client');
 const DEFAULTS = require('../../../defaults');
 const getDealErrors = require('../../../validation/create-deal');
-const { generateDealId } = require('../../../../utils/generate-ids');
 
 const createDeal = async (deal, maker) => {
   const collection = await db.getCollection('deals');
-  const dealId = await generateDealId();
-  const time = Date.now();
 
   const { details } = deal;
 
   const newDeal = {
-    _id: dealId,
     ...DEFAULTS.DEAL,
     ...deal,
     updatedAt: Date.now(),
@@ -20,7 +16,7 @@ const createDeal = async (deal, maker) => {
     details: {
       ...DEFAULTS.DEAL.details,
       ...details,
-      created: time,
+      created: Date.now(),
     },
     facilities: DEFAULTS.DEAL.facilities,
   };
@@ -49,10 +45,7 @@ exports.createDealPost = async (req, res) => {
     return res.status(404).send();
   }
 
-  const {
-    validationErrors,
-    _id,
-  } = await createDeal(req.body.deal, user);
+  const { validationErrors, _id } = await createDeal(req.body.deal, user);
 
   if (validationErrors) {
     return res.status(400).send({

@@ -7,20 +7,27 @@ import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 
 context('User can login', () => {
   let dealId;
+  const dealFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
-
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         dealId = insertedDeal._id;
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM);
+        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+          dealFacilities.push(...createdFacilities);
+        });
 
         cy.submitDeal(dealId, dealType);
       });
+  });
+  after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    dealFacilities.forEach((facility) => {
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+    });
   });
 
   it('should login, redirect to /deals. Header displays user\'s first and last name and logout link', () => {

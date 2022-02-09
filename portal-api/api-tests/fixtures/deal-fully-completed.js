@@ -412,7 +412,7 @@ const deal = {
     'indemnifier-address-line-3': '',
     'indemnifier-address-line-1': '1A',
     'indemnifier-address-line-2': 'Test Road',
-    'indemnifier-address-postcode': 'SW1A 2HQ',
+    'indemnifier-address-postcode': 'test',
     'indemnifier-address-town': 'London',
     'indemnifier-companies-house-registration-number': '08547313',
     'indemnifier-correspondence-address-country': {
@@ -422,7 +422,7 @@ const deal = {
     'indemnifier-correspondence-address-line-3': 'Essex',
     'indemnifier-correspondence-address-line-1': 'Test address',
     'indemnifier-correspondence-address-line-2': '',
-    'indemnifier-correspondence-address-postcode': 'SW1A 2HQ',
+    'indemnifier-correspondence-address-postcode': 'test',
     'indemnifier-correspondence-address-town': 'Chelmsford',
     'indemnifier-name': 'Test Trading Limited',
     indemnifierCorrespondenceAddressDifferent: 'true',
@@ -443,7 +443,7 @@ const deal = {
     'supplier-address-line-3': 'London',
     'supplier-address-line-1': '1 Horseguards Road',
     'supplier-address-line-2': '',
-    'supplier-address-postcode': 'SW1A 2HQ',
+    'supplier-address-postcode': 'test',
     'supplier-address-town': 'Westminster',
     'supplier-companies-house-registration-number': '',
     'supplier-correspondence-address-country': {

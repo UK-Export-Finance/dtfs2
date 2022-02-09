@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
@@ -15,11 +16,12 @@ const updateFacility = async (facilityId, facilityBody, dealId, user, routePath)
 
   const update = {
     ...facilityBody,
+    dealId: ObjectId(dealId),
     updatedAt: Date.now(),
   };
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: facilityId },
+    { _id: ObjectId(facilityId) },
     $.flatten(withoutId(update)),
     { returnOriginal: false },
   );

@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
 const db = require('../../../../drivers/db-client');
@@ -9,7 +10,7 @@ const withoutId = (obj) => {
 };
 
 const updateDealStatus = async (dealId, status, existingDeal) => {
-  const collection = await db.getCollection('deals');
+  const dealsCollection = await db.getCollection('deals');
 
   const previousStatus = existingDeal.status;
 
@@ -20,13 +21,13 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
     previousStatus,
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: dealId },
+  const findAndUpdateResponse = await dealsCollection.findOneAndUpdate(
+    { _id: ObjectId(dealId) },
     $.flatten(withoutId(modifiedDeal)),
     { returnOriginal: false },
   );
 
-  console.log(`Updated Portal BSS deal status from ${previousStatus} to ${status}`);
+  console.info(`Updated Portal BSS deal status from ${previousStatus} to ${status}`);
 
   return findAndUpdateResponse.value;
 };

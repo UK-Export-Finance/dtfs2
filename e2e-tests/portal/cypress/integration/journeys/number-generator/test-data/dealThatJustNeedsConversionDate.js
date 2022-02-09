@@ -1,4 +1,4 @@
-const template = require('./template.json');
+const template = require('./baseBssDeal');
 
 module.exports = () => {
   const deal = { ...template };

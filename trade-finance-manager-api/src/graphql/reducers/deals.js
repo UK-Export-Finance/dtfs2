@@ -34,6 +34,8 @@ const mapGefDeal = (deal) => {
     _id,
     dealSnapshot: {
       _id,
+      bankInternalRefName: dealSnapshot.bankInternalRefName,
+      additionalRefName: dealSnapshot.additionalRefName,
       dealType: dealSnapshot.dealType,
       submissionType: dealSnapshot.submissionType,
       exporter: {

@@ -12,12 +12,12 @@ const insertMocks = async () => {
     roles: ['data-admin'],
   });
 
-  console.log('inserting TFM teams');
+  console.info('inserting TFM teams');
   for (team of MOCKS.TEAMS) {
     await api.createTeam(team, token);
   }
 
-  console.log('inserting TFM users');
+  console.info('inserting TFM users');
   for (user of MOCKS.USERS) {
     await api.createUser(user, token);
   }

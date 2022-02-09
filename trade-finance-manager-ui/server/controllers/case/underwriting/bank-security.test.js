@@ -17,9 +17,9 @@ const session = {
 describe('GET underwriting - bank security', () => {
   describe('when deal exists', () => {
     const mockDeal = {
-      _id: '1000023',
+      _id: '61f6ac5b02ffda01b1e8efef',
       dealSnapshot: {
-        _id: '1000023',
+        _id: '61f6ac5b02ffda01b1e8efef',
         supportingInformation: {
           security: 'mock security',
         },

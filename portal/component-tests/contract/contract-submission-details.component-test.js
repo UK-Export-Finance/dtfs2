@@ -1,5 +1,9 @@
 const pageRenderer = require('../pageRenderer');
-const deal = require('../fixtures/deal-fully-completed');
+const dealFullyCompleted = require('../fixtures/deal-fully-completed');
+
+const deal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
+deal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189e1';
+deal.bondTransactions.items[1]._id = '61f6fbaea2460c018a4189e2';
 
 const page = 'contract/contract-submission-details.njk';
 

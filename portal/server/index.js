@@ -30,7 +30,7 @@ const sessionOptions = {
   saveUninitialized: true,
 };
 
-console.log(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
+console.info(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
 
 let redisOptions = {};
 
@@ -48,11 +48,11 @@ redisClient.on('error', (err) => {
 });
 
 redisClient.on('ready', () => {
-  console.log('REDIS ready');
+  console.info('REDIS ready');
 });
 
 redisClient.on('connect', () => {
-  console.log('REDIS connected');
+  console.info('REDIS connected');
 });
 
 const sessionStore = new RedisStore({ client: redisClient });
@@ -90,6 +90,6 @@ app.use(
 
 app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
-console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
+console.info(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
 
-app.listen(PORT, () => console.log(`BSS app listening on port ${PORT}!`)); // eslint-disable-line no-console
+app.listen(PORT, () => console.info(`BSS app listening on port ${PORT}!`)); // eslint-disable-line no-console

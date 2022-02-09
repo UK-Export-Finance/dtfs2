@@ -2,7 +2,7 @@ const api = require('./api');
 const tokenFor = require('../temporary-token-handler');
 
 const cleanTeams = async (token) => {
-  console.log('cleaning TFM teams');
+  console.info('cleaning TFM teams');
 
   for (team of await api.listTeams(token)) {
     await api.deleteTeam(team, token);
@@ -10,7 +10,7 @@ const cleanTeams = async (token) => {
 };
 
 const cleanUsers = async (token) => {
-  console.log('cleaning TFM users');
+  console.info('cleaning TFM users');
 
   for (user of await api.listUsers(token)) {
     await api.deleteUser(user, token);
@@ -18,7 +18,7 @@ const cleanUsers = async (token) => {
 };
 
 const cleanTfmDeals = async (token) => {
-  console.log('cleaning TFM deals and facilities');
+  console.info('cleaning TFM deals and facilities');
 
   const tfmDeals = await api.listDeals(token);
 

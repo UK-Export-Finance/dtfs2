@@ -4,7 +4,7 @@ const centralApi = require('./centralApi');
 const tokenFor = require('./temporary-token-handler');
 
 const cleanBanks = async (token) => {
-  console.log('cleaning banks');
+  console.info('cleaning banks');
 
   const banks = await api.listBanks(token);
 
@@ -16,7 +16,7 @@ const cleanBanks = async (token) => {
 };
 
 const cleanFacilities = async (token) => {
-  console.log('cleaning facilities');
+  console.info('cleaning all facilities');
 
   const facilities = await centralApi.listFacilities();
   for (const facility of facilities) {
@@ -34,7 +34,7 @@ const cleanFacilities = async (token) => {
 };
 
 const cleanDeals = async (token) => {
-  console.log('cleaning Portal deals');
+  console.info('cleaning Portal deals');
 
   const deals = await api.listDeals(token);
 
@@ -58,7 +58,7 @@ const cleanDeals = async (token) => {
 };
 
 const cleanMandatoryCriteria = async (token) => {
-  console.log('cleaning BSS mandatory-criteria');
+  console.info('cleaning BSS mandatory-criteria');
 
   for (const mandatoryCriteria of await api.listMandatoryCriteria(token)) {
     await api.deleteMandatoryCriteria(mandatoryCriteria, token);
@@ -66,7 +66,7 @@ const cleanMandatoryCriteria = async (token) => {
 };
 
 const cleanEligibilityCriteria = async (token) => {
-  console.log('cleaning BSS eligibility-criteria');
+  console.info('cleaning BSS eligibility-criteria');
 
   for (const eligibilityCriteria of await api.listEligibilityCriteria(token)) {
     await api.deleteEligibilityCriteria(eligibilityCriteria, token);
@@ -74,7 +74,7 @@ const cleanEligibilityCriteria = async (token) => {
 };
 
 const cleanUsers = async () => {
-  console.log('cleaning Portal users');
+  console.info('cleaning Portal users');
 
   for (const user of await api.listUsers()) {
     await api.deleteUser(user);

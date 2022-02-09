@@ -258,6 +258,12 @@ describe('/v1/deals/:id/status - facilities', () => {
           createdDeal = postResult.body;
           dealId = createdDeal._id;
 
+          completedDeal.mockFacilities.forEach((facility) => {
+            if (facility._id) {
+              delete facility._id;
+            }
+          });
+
           createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
           completedDeal.mockFacilities = createdFacilities;
@@ -331,6 +337,12 @@ describe('/v1/deals/:id/status - facilities', () => {
         createdDeal = postResult.body;
 
         dealId = createdDeal._id;
+
+        completedDeal.mockFacilities.forEach((facility) => {
+          if (facility._id) {
+            delete facility._id;
+          }
+        });
 
         const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
 
@@ -613,6 +625,12 @@ describe('/v1/deals/:id/status - facilities', () => {
         dealId = createdDeal._id;
 
         api.tfmDealSubmit = () => Promise.resolve();
+
+        completedDeal.mockFacilities.forEach((facility) => {
+          if (facility._id) {
+            delete facility._id;
+          }
+        });
 
         const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
 
