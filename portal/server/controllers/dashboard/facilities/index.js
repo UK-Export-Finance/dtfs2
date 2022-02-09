@@ -26,7 +26,7 @@ const getAllFacilitiesData = async (
   const filtersArray = submittedFiltersArray(sessionFilters);
 
   const filtersQuery = dashboardFacilitiesFiltersQuery(
-    filtersArray, 
+    filtersArray,
     user,
   );
 

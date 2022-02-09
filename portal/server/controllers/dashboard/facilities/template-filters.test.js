@@ -7,7 +7,6 @@ import {
   FIELD_NAMES,
   FACILITY_HAS_BEEN_ISSUED,
   FACILITY_TYPE,
-  PRODUCT,
 } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import {

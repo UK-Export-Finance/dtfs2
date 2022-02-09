@@ -2,7 +2,6 @@ const {
   FIELD_NAMES,
   FACILITY_HAS_BEEN_ISSUED,
   FACILITY_TYPE,
-  PRODUCT,
 } = require('../../../constants');
 const CONTENT_STRINGS = require('../../../content-strings');
 const {

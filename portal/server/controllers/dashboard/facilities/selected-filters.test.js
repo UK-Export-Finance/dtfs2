@@ -7,34 +7,28 @@ import { formatFieldValue } from '../filters/helpers';
 import CONTENT_STRINGS from '../../../content-strings';
 import CONSTANTS from '../../../constants';
 
-describe('controllers/dashboard/deals - selected-filters', () => {
+describe('controllers/dashboard/facilities - selected-filters', () => {
   describe('selectedFilters', () => {
     it('should return an array of objects for all selected/submitted filters', () => {
       const mockSubmittedFilters = {
-        keyword: ['test'],
-        dealType: [CONSTANTS.PRODUCT.GEF, CONSTANTS.PRODUCT.BSS_EWCS],
+        type: [CONSTANTS.FACILITY_TYPE.BOND, CONSTANTS.FACILITY_TYPE.LOAN],
         'deal.submissionType': [CONSTANTS.SUBMISSION_TYPE.AIN],
-        status: [CONSTANTS.STATUS.SUBMITTED],
+        hasBeenIssued: ['true'],
       };
 
       const result = selectedFilters(mockSubmittedFilters);
 
       const expected = [
         generateSelectedFiltersObject(
-          CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.KEYWORD,
-          'keyword',
-          mockSubmittedFilters.keyword,
-        ),
-        generateSelectedFiltersObject(
           CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT,
-          CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE,
-          mockSubmittedFilters.dealType,
+          CONSTANTS.FIELD_NAMES.FACILITY.TYPE,
+          mockSubmittedFilters.type,
         ),
         selectedSubmissionTypeFilters(mockSubmittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]),
         generateSelectedFiltersObject(
-          CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS,
-          CONSTANTS.FIELD_NAMES.DEAL.STATUS,
-          mockSubmittedFilters.status,
+          CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE,
+          CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED,
+          mockSubmittedFilters.hasBeenIssued,
         ),
       ];
 
