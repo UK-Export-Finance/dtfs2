@@ -5,7 +5,8 @@
 "expirationDate":               Facility expiry date
 "nextDueDate":                  guaranteeCommencementDate + Fee frequency in months
 "nextAccrueToDate":             Same as nextDueDate
-"period":                       TFM Exposure period in months
+"period":                       TFM Premium schedule, `01` for GEF month count
+                                `01`, `02`.. for EWCS/BSS
 "currency":                     Facility currency code
 "lenderTypeCode":               Set lender to 100, this will trigger automatic 500 record creation
 "incomeClassCode":              ACBS income class code
@@ -27,7 +28,7 @@ const facilityFee = (deal, facility) => {
     expirationDate: guaranteeExpiryDate,
     nextDueDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
     nextAccrueToDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
-    period: facility.tfm.exposurePeriodInMonths,
+    period: helpers.getFeeRecordPeriod(facility, deal.dealSnapshot.dealType),
     currency: facility.facilitySnapshot.currency.id,
     lenderTypeCode: CONSTANTS.FACILITY.LENDER_TYPE.TYPE1,
     incomeClassCode: helpers.getIncomeClassCode(facility, deal.dealSnapshot.dealType),

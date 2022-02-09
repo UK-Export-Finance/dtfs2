@@ -155,7 +155,7 @@ const DAY_COUNT_BASIS = {
 const ACBS_INCOME_CLASS_CODE = {
   BSS: 'BPM',
   EWCS: 'EPM',
-  GEF: 'FGT ',
+  GEF: 'FGT',
 };
 
 module.exports = {
