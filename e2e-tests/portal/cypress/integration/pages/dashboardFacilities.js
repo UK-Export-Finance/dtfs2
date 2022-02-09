@@ -19,10 +19,10 @@ const page = {
     panel: {
       form: {
         type: {
-          gef: {
-            label: () => cy.get('[data-cy="filter-label-type-GEF"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-type-GEF"]'),
-          },
+          // gef: {
+          //   label: () => cy.get('[data-cy="filter-label-type-GEF"]'),
+          //   checkbox: () => cy.get('[data-cy="filter-input-type-GEF"]'),
+          // },
           cash: {
             label: () => cy.get('[data-cy="filter-label-type-Cash"]'),
             checkbox: () => cy.get('[data-cy="filter-input-type-Cash"]'),
@@ -50,6 +50,14 @@ const page = {
             checkbox: () => cy.get('[data-cy="filter-input-hasBeenIssued-false"]'),
           },
         },
+      },
+    },
+    mainContainer: {
+      selectedFilters: {
+        typeCash: () => cy.get('[data-cy="main-container-selected-filter-Cash'),
+        typeContingent: () => cy.get('[data-cy="main-container-selected-filter-Contingent'),
+        typeBond: () => cy.get('[data-cy="main-container-selected-filter-Bond'),
+        typeLoan: () => cy.get('[data-cy="main-container-selected-filter-Loan'),
       },
     },
   },
