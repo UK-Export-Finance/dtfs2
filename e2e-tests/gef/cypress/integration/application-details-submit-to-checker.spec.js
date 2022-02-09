@@ -6,6 +6,7 @@ import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 const dealIds = [];
+let maker;
 
 context('Application Details Submission', () => {
   before(() => {
@@ -17,6 +18,7 @@ context('Application Details Submission', () => {
       })
       .then(({ body }) => {
         body.items.forEach((item) => {
+          maker = item.maker;
           dealIds.push(item._id);
         });
       });
@@ -97,6 +99,7 @@ context('Application Details Submission', () => {
 
     it('updates status in application banner', () => {
       statusBanner.bannerStatus().contains('Ready for Checker\'s approval');
+      statusBanner.bannerCreatedBy().should('have.text', `${maker.firstname} ${maker.surname}`);
     });
   });
 });
