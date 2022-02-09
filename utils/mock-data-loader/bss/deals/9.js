@@ -387,7 +387,9 @@ module.exports = {
         }
       }
     },
-    security: 'Test'
+    securityDetails: {
+      exporter: 'Test'
+    },
   },
   ukefComments: [],
   ukefDecision: [],

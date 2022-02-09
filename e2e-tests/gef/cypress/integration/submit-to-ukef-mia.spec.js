@@ -54,7 +54,7 @@ context('Submit MIA to UKEF', () => {
       manualInclusion.continueButton().click();
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
-      securityDetails.applicationSecurity().type('test2');
+      securityDetails.facilitySecurity().type('test2');
       securityDetails.continueButton().click();
       securityDetails.visit(dealId);
       securityDetails.cancelButton().click();

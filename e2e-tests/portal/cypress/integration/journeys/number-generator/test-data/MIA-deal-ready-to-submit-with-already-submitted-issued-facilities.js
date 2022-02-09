@@ -369,7 +369,9 @@ const deal = {
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       },
     ],
-    security: '',
+    securityDetails: {
+      exporter: '',
+    },
   },
 };
 

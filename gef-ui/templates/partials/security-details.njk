@@ -52,9 +52,9 @@
         }) }}
 
         {{ govukCharacterCount({
-          name: "applicationSecurity",
-          id: "applicationSecurity",
-          value: applicationSecurity,
+          name: "facilitySecurity",
+          id: "facilitySecurity",
+          value: facilitySecurity,
           maxlength: inputMaxLength,
           rows: "8",
           classes: "govuk-!-width-three-quarters",
@@ -66,13 +66,13 @@
             text: "Give details of the specific security  your bank holds, or will ask for, to secure only the facilities listed in this application. This is also known as ‘facility credit support’ in the MGA."
           },
           errorMessage: errors and {
-            text: errors.fieldErrors.applicationSecurity.text,
+            text: errors.fieldErrors.facilitySecurity.text,
             attributes: {
-              'data-cy': 'application-security-error'
+              'data-cy': 'facility-security-error'
             }
           },
           attributes: {
-            'data-cy': 'application-security'
+            'data-cy': 'facility-security'
           }
         }) }}
 

@@ -163,7 +163,9 @@ const MOCK_DEAL = {
     agentAddressTown: 'City',
   },
   supportingInformation: {
-    security: 'Mock security details',
+    securityDetails: {
+      exporter: 'Mock security details',
+    },
   },
   exporter: {
     companyName: 'Test Company',

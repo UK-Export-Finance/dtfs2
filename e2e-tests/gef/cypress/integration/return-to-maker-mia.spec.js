@@ -50,7 +50,7 @@ context('Return to Maker as MIA', () => {
       manualInclusion.uploadSuccess('upload-file-valid.doc');
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
-      securityDetails.applicationSecurity().type('test2');
+      securityDetails.facilitySecurity().type('test2');
       securityDetails.continueButton().click();
 
       applicationDetails.submitButton().click();
@@ -135,7 +135,7 @@ context('Return to Maker as MIA', () => {
     it('can change security details comments', () => {
       securityDetails.securityDetailsChangeCta().click();
       securityDetails.exporterSecurity().type(' test3');
-      securityDetails.applicationSecurity().type('test4');
+      securityDetails.facilitySecurity().type('test4');
       securityDetails.continueButton().click();
     });
 

@@ -57,6 +57,15 @@ context('User can view a case deal', () => {
     pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
   });
 
+  describe('Bank security section', () => {
+    it('bank security section should not be displayed as AIN', () => {
+      pages.caseDealPage.bankSecuritySection().should('not.exist');
+      pages.caseDealPage.bankSecuritySectionHeading().should('not.exist');
+      pages.caseDealPage.bankSecuritySubHeading().should('not.exist');
+      pages.caseDealPage.bankSecurityText().should('not.exist');
+    });
+  });
+
   describe('facilities table', () => {
     it('clicking `Facility ID` link should take user to facility details page', () => {
       const facilityId = dealFacilities[0]._id;
