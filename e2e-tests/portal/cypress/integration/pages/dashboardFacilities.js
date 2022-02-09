@@ -58,6 +58,8 @@ const page = {
         typeContingent: () => cy.get('[data-cy="main-container-selected-filter-Contingent'),
         typeBond: () => cy.get('[data-cy="main-container-selected-filter-Bond'),
         typeLoan: () => cy.get('[data-cy="main-container-selected-filter-Loan'),
+        typeIssued: () => cy.get('[data-cy="main-container-selected-filter-Issued'),
+        typeUnissued: () => cy.get('[data-cy="main-container-selected-filter-Unissued'),
       },
     },
   },

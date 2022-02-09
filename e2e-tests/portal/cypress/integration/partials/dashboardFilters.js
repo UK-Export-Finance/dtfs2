@@ -10,16 +10,16 @@ const partial = {
       },
       submissionType: {
         AIN: {
-          label: () => cy.get('[data-cy="filter-label-submissionType-Automatic-Inclusion-Notice"]'),
-          checkbox: () => cy.get('[data-cy="filter-input-submissionType-Automatic-Inclusion-Notice"]'),
+          label: () => cy.get('[data-cy="filter-label-deal.submissionType-Automatic-Inclusion-Notice"]'),
+          checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Automatic-Inclusion-Notice"]'),
         },
         MIA: {
-          label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Application"]'),
-          checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Application"]'),
+          label: () => cy.get('[data-cy="filter-label-deal.submissionType-Manual-Inclusion-Application"]'),
+          checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Manual-Inclusion-Application"]'),
         },
         MIN: {
-          label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Notice"]'),
-          checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Notice"]'),
+          label: () => cy.get('[data-cy="filter-label-deal.submissionType-Manual-Inclusion-Notice"]'),
+          checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Manual-Inclusion-Notice"]'),
         },
       },
     },
@@ -36,6 +36,9 @@ const partial = {
     selectedFilters: {
       container: () => cy.get('[data-cy="main-container-selected-filters'),
       keyword: (keyword) => cy.get(`[data-cy="main-container-selected-filter-${keyword.replace(' ', '-')}"]`),
+      noticeAIN: () => cy.get('[data-cy="main-container-selected-filter-Automatic-Inclusion-Notice'),
+      noticeMIN: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Notice'),
+      noticeMIA: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Application'),
     },
   },
 };
