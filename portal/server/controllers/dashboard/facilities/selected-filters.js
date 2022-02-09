@@ -1,6 +1,7 @@
 const {
   generateSelectedFiltersObject,
   selectedSubmissionTypeFilters,
+  selectedHasBeenIssuedFilters,
 } = require('../filters/generate-selected-filters');
 const CONTENT_STRINGS = require('../../../content-strings');
 const CONSTANTS = require('../../../constants');
@@ -29,7 +30,7 @@ const selectedFilters = (submittedFilters) => {
   }
 
   if (submittedFilters[CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]) {
-    selected.push(generateSelectedFiltersObject(
+    selected.push(selectedHasBeenIssuedFilters(
       CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE,
       CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED,
       submittedFilters.hasBeenIssued,

@@ -1,9 +1,9 @@
 import {
   generateSelectedFiltersObject,
   selectedSubmissionTypeFilters,
+  selectedHasBeenIssuedFilters,
 } from '../filters/generate-selected-filters';
 import { selectedFilters } from './selected-filters';
-import { formatFieldValue } from '../filters/helpers';
 import CONTENT_STRINGS from '../../../content-strings';
 import CONSTANTS from '../../../constants';
 
@@ -25,7 +25,7 @@ describe('controllers/dashboard/facilities - selected-filters', () => {
           mockSubmittedFilters.type,
         ),
         selectedSubmissionTypeFilters(mockSubmittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]),
-        generateSelectedFiltersObject(
+        selectedHasBeenIssuedFilters(
           CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE,
           CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED,
           mockSubmittedFilters.hasBeenIssued,
