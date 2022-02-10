@@ -6,7 +6,6 @@ const gefEmailVariables = (deal, facilityLists) => {
     submissionType,
     maker,
     exporter,
-    name,
     bankInternalRefName,
     additionalRefName,
     submissionDate,
