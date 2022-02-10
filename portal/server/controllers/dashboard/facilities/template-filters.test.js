@@ -75,7 +75,10 @@ describe('controllers/dashboard/facilities - template-filters', () => {
 
       const expected = {
         type: typeFilters({}),
-        submissionType: submissionTypeFilters({}),
+        'deal.submissionType': submissionTypeFilters(
+          `deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`,
+          {},
+        ),
         hasBeenIssued: hasBeenIssuedFilters({}),
       };
 

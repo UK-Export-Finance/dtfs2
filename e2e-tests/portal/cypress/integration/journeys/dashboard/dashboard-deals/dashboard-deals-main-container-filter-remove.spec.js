@@ -34,7 +34,7 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     dashboardFilters.showHideButton().click();
 
     // apply filter
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
     dashboardFilters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -52,7 +52,7 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     dashboardDeals.filters.mainContainer.selectedFilters.noticeMIA().should('not.exist');
 
     // checkbox should be NOT be checked
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
     // should render all deals
     dashboardDeals.rows().should('have.length', ALL_DEALS.length);
@@ -67,7 +67,7 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
 
     // apply filters
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
     dashboardFilters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -86,6 +86,6 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
 
     // check checkboxes
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('not.be.checked');
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('be.checked');
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
   });
 });

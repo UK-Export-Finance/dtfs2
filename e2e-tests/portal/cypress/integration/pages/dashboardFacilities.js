@@ -36,6 +36,20 @@ const page = {
             checkbox: () => cy.get('[data-cy="filter-input-type-Loan"]'),
           },
         },
+        submissionType: {
+          AIN: {
+            label: () => cy.get('[data-cy="filter-label-deal.submissionType-Automatic-Inclusion-Notice"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Automatic-Inclusion-Notice"]'),
+          },
+          MIA: {
+            label: () => cy.get('[data-cy="filter-label-deal.submissionType-Manual-Inclusion-Application"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Manual-Inclusion-Application"]'),
+          },
+          MIN: {
+            label: () => cy.get('[data-cy="filter-label-deal.submissionType-Manual-Inclusion-Notice"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Manual-Inclusion-Notice"]'),
+          },
+        },
         hasBeenIssued: {
           issued: {
             label: () => cy.get('[data-cy="filter-label-hasBeenIssued-true"]'),

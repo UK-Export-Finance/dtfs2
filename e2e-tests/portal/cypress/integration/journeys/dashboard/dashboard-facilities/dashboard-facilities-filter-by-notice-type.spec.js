@@ -54,14 +54,14 @@ context('Dashboard Facilities filters - filter by deal notice type', () => {
       // toggle to show filters (hidden by default)
       dashboardFilters.showHideButton().click();
 
-      submitRedirectsToDashboard(dashboardFilters.panel.form.submissionType.AIN.checkbox());
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox());
     });
 
     it('renders checked checkbox', () => {
       // toggle to show filters (hidden by default)
       dashboardFilters.showHideButton().click();
 
-      shouldRenderCheckedCheckbox(dashboardFilters.panel.form.submissionType.AIN.checkbox());
+      shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {

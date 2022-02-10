@@ -47,11 +47,26 @@
           classes: 'govuk-fieldset__legend--m'
         }
       },
-      items: filters.product
+      items: filters.type
     }) }}
   {% endif %}
 
   {% if filters.submissionType %}
+    {{ govukCheckboxes({
+      idPrefix: 'submissionType',
+      name: 'submissionType',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Notice type',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.submissionType
+    }) }}
+  {% endif %}
+
+  {% if filters['deal.submissionType'] %}
     {{ govukCheckboxes({
       idPrefix: 'deal.submissionType',
       name: 'deal.submissionType',
@@ -62,7 +77,7 @@
           classes: 'govuk-fieldset__legend--m'
         }
       },
-      items: filters.submissionType
+      items: filters['deal.submissionType']
     }) }}
   {% endif %}
 

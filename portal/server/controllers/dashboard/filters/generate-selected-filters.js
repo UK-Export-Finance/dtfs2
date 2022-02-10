@@ -1,6 +1,5 @@
 const { formatFieldValue } = require('./helpers');
 const CONTENT_STRINGS = require('../../../content-strings');
-const CONSTANTS = require('../../../constants');
 
 /**
  * Create an object for a single, selected filter
@@ -35,14 +34,15 @@ const generateSelectedFiltersObject = (
  * Create an object for all selected submissionType filters.
  * This will used in mojFilter component - selectedFilters.categories.
  *
+ * @param {string} field name
  * @param {object} submitted submissionType filters
  * @example ( ['Automatic Inclusion Notice', 'Manual Inclusion Notice'] )
  * @returns generateSelectedFiltersObject('Notice Type', 'submissionType', ['Automatic Inclusion Notice', 'Manual Inclusion Notice'])
  */
-const selectedSubmissionTypeFilters = (submittedFilters) =>
+const selectedSubmissionTypeFilters = (fieldName, submittedFilters) =>
   generateSelectedFiltersObject(
     CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE,
-    CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
+    fieldName,
     submittedFilters,
   );
 

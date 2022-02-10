@@ -12,7 +12,7 @@ describe('controllers/dashboard/deals - selected-filters', () => {
       const mockSubmittedFilters = {
         keyword: ['test'],
         dealType: [CONSTANTS.PRODUCT.GEF, CONSTANTS.PRODUCT.BSS_EWCS],
-        'deal.submissionType': [CONSTANTS.SUBMISSION_TYPE.AIN],
+        submissionType: [CONSTANTS.SUBMISSION_TYPE.AIN],
         status: [CONSTANTS.STATUS.SUBMITTED],
       };
 
@@ -29,7 +29,10 @@ describe('controllers/dashboard/deals - selected-filters', () => {
           CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE,
           mockSubmittedFilters.dealType,
         ),
-        selectedSubmissionTypeFilters(mockSubmittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]),
+        selectedSubmissionTypeFilters(
+          CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
+          mockSubmittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE],
+        ),
         generateSelectedFiltersObject(
           CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.STATUS,
           CONSTANTS.FIELD_NAMES.DEAL.STATUS,

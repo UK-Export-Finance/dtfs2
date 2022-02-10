@@ -38,7 +38,7 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
       dashboardFilters.showHideButton().click();
 
       // apply filter
-      dashboardFilters.panel.form.submissionType.MIA.checkbox().click();
+      dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
       dashboardFilters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -48,7 +48,7 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
       // toggle to show filters (hidden by default)
       dashboardFilters.showHideButton().click();
 
-      dashboardFilters.panel.form.submissionType.MIA.checkbox().should('be.checked');
+      dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
     });
 
     it('renders the applied filter in the `applied filters` section', () => {

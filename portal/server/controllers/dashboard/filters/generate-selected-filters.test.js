@@ -55,7 +55,10 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
         CONSTANTS.SUBMISSION_TYPE.MIN,
       ];
 
-      const result = selectedSubmissionTypeFilters(mockSubmittedFieldFilters);
+      const result = selectedSubmissionTypeFilters(
+        CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
+        mockSubmittedFieldFilters,
+      );
 
       const expected = generateSelectedFiltersObject(
         CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE,

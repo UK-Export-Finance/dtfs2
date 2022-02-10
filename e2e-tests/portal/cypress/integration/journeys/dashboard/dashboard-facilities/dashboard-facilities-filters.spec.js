@@ -82,11 +82,6 @@ context('Dashboard Deals filters', () => {
     });
 
     it('product/facility type', () => {
-      // GEF
-      dashboardFacilities.filters.panel.form.type.gef.label().contains(CONSTANTS.DEALS.DEAL_TYPE.GEF);
-      dashboardFacilities.filters.panel.form.type.gef.checkbox().should('exist');
-      dashboardFacilities.filters.panel.form.type.gef.checkbox().should('not.be.checked');
-
       // Cash
       dashboardFacilities.filters.panel.form.type.cash.label().contains(CONSTANTS.FACILITY.FACILITY_TYPE.CASH);
       dashboardFacilities.filters.panel.form.type.cash.checkbox().should('exist');

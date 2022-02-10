@@ -87,7 +87,10 @@ const statusFilters = (submittedFilters) => {
  */
 const dealsTemplateFilters = (submittedFilters = {}) => ({
   dealType: dealTypeFilters(submittedFilters),
-  submissionType: submissionTypeFilters(submittedFilters),
+  submissionType: submissionTypeFilters(
+    FIELD_NAMES.DEAL.SUBMISSION_TYPE,
+    submittedFilters,
+  ),
   status: statusFilters(submittedFilters),
 });
 

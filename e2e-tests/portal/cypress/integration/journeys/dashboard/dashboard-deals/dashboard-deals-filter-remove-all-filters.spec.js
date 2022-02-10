@@ -43,7 +43,7 @@ context('Dashboard Deals filters - remove all filters', () => {
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
 
     // apply filter 2
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
 
     // submit filters
     dashboardFilters.panel.form.applyFiltersButton().click();
@@ -55,7 +55,7 @@ context('Dashboard Deals filters - remove all filters', () => {
 
     // check filters are applied
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('be.checked');
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
 
     // click `clear all` button
     dashboardFilters.panel.selectedFilters.clearAllLink().should('be.visible');
@@ -77,7 +77,7 @@ context('Dashboard Deals filters - remove all filters', () => {
 
     // checkbox should be NOT be checked
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('not.be.checked');
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
     // should render all deals
     dashboardDeals.rows().should('have.length', ALL_DEALS.length);

@@ -53,7 +53,10 @@ const hasBeenIssuedFilters = (submittedFilters) => {
  */
 const facilitiesTemplateFilters = (submittedFilters = {}) => ({
   type: typeFilters(submittedFilters),
-  submissionType: submissionTypeFilters(submittedFilters),
+  'deal.submissionType': submissionTypeFilters(
+    `deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`,
+    submittedFilters,
+  ),
   hasBeenIssued: hasBeenIssuedFilters(submittedFilters),
 });
 

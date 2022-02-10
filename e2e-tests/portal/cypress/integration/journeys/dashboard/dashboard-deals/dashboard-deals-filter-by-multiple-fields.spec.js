@@ -44,7 +44,7 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
 
     // apply filter 2
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
 
     // submit filters
     dashboardFilters.panel.form.applyFiltersButton().click();
@@ -57,7 +57,7 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
     dashboardFilters.showHideButton().click();
 
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('be.checked');
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
   });
 
   it('renders the applied filters in the `applied filters` section', () => {

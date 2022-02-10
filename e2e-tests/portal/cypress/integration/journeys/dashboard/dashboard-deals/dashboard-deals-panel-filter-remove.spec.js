@@ -34,7 +34,7 @@ context('Dashboard Deals - panel selected filters - remove a filter', () => {
     dashboardFilters.showHideButton().click();
 
     // apply filter
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
     dashboardFilters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -61,7 +61,7 @@ context('Dashboard Deals - panel selected filters - remove a filter', () => {
     dashboardFilters.panel.selectedFilters.list().should('not.exist');
 
     // checkbox should be NOT be checked
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
     // should render all deals
     dashboardDeals.rows().should('have.length', ALL_DEALS.length);

@@ -29,6 +29,20 @@ const page = {
             checkbox: () => cy.get('[data-cy="filter-input-dealType-GEF"]'),
           },
         },
+        submissionType: {
+          AIN: {
+            label: () => cy.get('[data-cy="filter-label-submissionType-Automatic-Inclusion-Notice"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Automatic-Inclusion-Notice"]'),
+          },
+          MIA: {
+            label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Application"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Application"]'),
+          },
+          MIN: {
+            label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Notice"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Notice"]'),
+          },
+        },
         status: {
           all: {
             label: () => cy.get('[data-cy="filter-label-status-All-statuses"]'),

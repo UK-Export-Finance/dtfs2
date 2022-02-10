@@ -24,7 +24,10 @@ describe('controllers/dashboard/facilities - selected-filters', () => {
           CONSTANTS.FIELD_NAMES.FACILITY.TYPE,
           mockSubmittedFilters.type,
         ),
-        selectedSubmissionTypeFilters(mockSubmittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]),
+        selectedSubmissionTypeFilters(
+          `deal.${CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE}`,
+          mockSubmittedFilters[`deal.${CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE}`],
+        ),
         selectedHasBeenIssuedFilters(
           CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE,
           CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED,

@@ -45,7 +45,7 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
     dashboardFacilities.filters.panel.form.type.bond.checkbox().click();
 
     // apply filter 2
-    dashboardFilters.panel.form.submissionType.AIN.checkbox().click();
+    dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
 
     // submit filters
     dashboardFilters.panel.form.applyFiltersButton().click();
@@ -56,7 +56,7 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
     dashboardFilters.showHideButton().click();
 
     dashboardFacilities.filters.panel.form.type.bond.checkbox().should('be.checked');
-    dashboardFilters.panel.form.submissionType.AIN.checkbox().should('be.checked');
+    dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().should('be.checked');
     // navigate somewhere else
     cy.visit('/dashboard/deals');
     cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -67,6 +67,6 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
 
     // previously applied filters should not be applied
     dashboardFacilities.filters.panel.form.type.bond.checkbox().should('not.be.checked');
-    dashboardFilters.panel.form.submissionType.AIN.checkbox().should('not.be.checked');
+    dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().should('not.be.checked');
   });
 });

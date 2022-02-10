@@ -24,8 +24,11 @@ const selectedFilters = (submittedFilters) => {
     ));
   }
 
-  if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]) {
-    const obj = selectedSubmissionTypeFilters(submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]);
+  if (submittedFilters[`deal.${CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE}`]) {
+    const obj = selectedSubmissionTypeFilters(
+      `deal.${CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE}`,
+      submittedFilters[`deal.${CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE}`],
+    );
     selected.push(obj);
   }
 

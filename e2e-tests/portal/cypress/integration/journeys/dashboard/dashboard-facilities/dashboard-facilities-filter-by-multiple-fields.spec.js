@@ -68,7 +68,7 @@ context('Dashboard Facilities filters - filter by multiple fields', () => {
     dashboardFilters.showHideButton().click();
 
     // apply filter 1
-    dashboardFilters.panel.form.submissionType.AIN.checkbox().click();
+    dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
 
     // apply filter 2
     dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
@@ -84,7 +84,7 @@ context('Dashboard Facilities filters - filter by multiple fields', () => {
     dashboardFilters.showHideButton().click();
 
     dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('be.checked');
-    dashboardFilters.panel.form.submissionType.AIN.checkbox().should('be.checked');
+    dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().should('be.checked');
   });
 
   it('renders the applied filters in the `applied filters` section', () => {

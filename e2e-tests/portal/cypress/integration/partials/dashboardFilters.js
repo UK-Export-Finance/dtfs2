@@ -8,20 +8,6 @@ const partial = {
         label: () => cy.get('[data-cy="filter-label-keyword"]'),
         input: () => cy.get('[data-cy="filter-input-keyword"]'),
       },
-      submissionType: {
-        AIN: {
-          label: () => cy.get('[data-cy="filter-label-deal.submissionType-Automatic-Inclusion-Notice"]'),
-          checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Automatic-Inclusion-Notice"]'),
-        },
-        MIA: {
-          label: () => cy.get('[data-cy="filter-label-deal.submissionType-Manual-Inclusion-Application"]'),
-          checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Manual-Inclusion-Application"]'),
-        },
-        MIN: {
-          label: () => cy.get('[data-cy="filter-label-deal.submissionType-Manual-Inclusion-Notice"]'),
-          checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Manual-Inclusion-Notice"]'),
-        },
-      },
     },
     selectedFilters: {
       // NOTE: at the time of writing, it is not possible to pass custom data-cy attributes to MOJ filter component.
