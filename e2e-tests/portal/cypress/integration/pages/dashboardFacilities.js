@@ -19,10 +19,6 @@ const page = {
     panel: {
       form: {
         type: {
-          // gef: {
-          //   label: () => cy.get('[data-cy="filter-label-type-GEF"]'),
-          //   checkbox: () => cy.get('[data-cy="filter-input-type-GEF"]'),
-          // },
           cash: {
             label: () => cy.get('[data-cy="filter-label-type-Cash"]'),
             checkbox: () => cy.get('[data-cy="filter-input-type-Cash"]'),
