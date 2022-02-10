@@ -13,7 +13,7 @@ const {
  * Create filters array for the 'dealType' (or 'product') field.
  * This will used in the checkboxes component 'items' array.
  */
-const productFilters = (submittedFilters) => {
+const dealTypeFilters = (submittedFilters) => {
   const fieldName = FIELD_NAMES.DEAL.DEAL_TYPE;
 
   const fieldInputs = [
@@ -86,13 +86,13 @@ const statusFilters = (submittedFilters) => {
  * This will used in multiple checkboxes components.
  */
 const dealsTemplateFilters = (submittedFilters = {}) => ({
-  product: productFilters(submittedFilters),
+  dealType: dealTypeFilters(submittedFilters),
   submissionType: submissionTypeFilters(submittedFilters),
   status: statusFilters(submittedFilters),
 });
 
 module.exports = {
-  productFilters,
+  dealTypeFilters,
   statusFilters,
   dealsTemplateFilters,
 };

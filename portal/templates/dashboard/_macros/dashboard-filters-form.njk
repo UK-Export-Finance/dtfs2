@@ -21,7 +21,22 @@
     }
   }) }}
 
-  {% if filters.product %}
+  {% if filters.dealType %}
+    {{ govukCheckboxes({
+      idPrefix: 'dealType',
+      name: 'dealType',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Product',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.dealType
+    }) }}
+  {% endif %}
+
+  {% if filters.type %}
     {{ govukCheckboxes({
       idPrefix: 'type',
       name: 'type',

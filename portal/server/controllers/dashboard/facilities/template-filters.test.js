@@ -1,5 +1,5 @@
 import {
-  productFilters,
+  typeFilters,
   hasBeenIssuedFilters,
   facilitiesTemplateFilters,
 } from './template-filters';
@@ -15,16 +15,15 @@ import {
 } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/facilities - template-filters', () => {
-  describe('productFilters', () => {
+  describe('typeFilters', () => {
     it('should return generateFiltersArray with all possible `product` field inputs', () => {
       const mockSubmittedFilters = {};
 
-      const result = productFilters(mockSubmittedFilters);
+      const result = typeFilters(mockSubmittedFilters);
 
       const expectedFieldName = FIELD_NAMES.FACILITY.TYPE;
 
       const expectedFieldInputs = [
-        // { text: PRODUCT.GEF, value: PRODUCT.GEF },
         { text: FACILITY_TYPE.CASH, value: FACILITY_TYPE.CASH },
         { text: FACILITY_TYPE.CONTINGENT, value: FACILITY_TYPE.CONTINGENT },
         { text: FACILITY_TYPE.BOND, value: FACILITY_TYPE.BOND },
@@ -75,7 +74,7 @@ describe('controllers/dashboard/facilities - template-filters', () => {
       const result = facilitiesTemplateFilters();
 
       const expected = {
-        product: productFilters({}),
+        product: typeFilters({}),
         submissionType: submissionTypeFilters({}),
         hasBeenIssued: hasBeenIssuedFilters({}),
       };
