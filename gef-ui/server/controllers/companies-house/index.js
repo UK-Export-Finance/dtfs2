@@ -63,6 +63,9 @@ const validateCompaniesHouse = async (req, res) => {
       exporter: {
         ...exporter,
         ...companiesHouseDetails,
+        smeType: '',
+        probabilityOfDefault: '',
+        isFinanceIncreasing: '',
       },
     };
 
