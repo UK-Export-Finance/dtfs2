@@ -47,6 +47,7 @@ const mapGefDeal = (deal) => {
       details: mapGefDealDetails(dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(dealSnapshot),
       facilities: mapGefFacilities(dealSnapshot, deal.tfm),
+      supportingInformation: dealSnapshot.supportingInformation,
       totals: mapTotals(dealSnapshot.facilities),
     },
     tfm: mapDealTfm(deal),
