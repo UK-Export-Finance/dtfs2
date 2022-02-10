@@ -162,6 +162,7 @@ describe('getPortalActivities()', () => {
         dateCreated: mockApplicationResponse.createdAt,
         timezone: mockApplicationResponse.maker.timezone || 'Europe/London',
         submissionDate: mockApplicationResponse.submissionDate,
+        manualInclusionNoticeSubmissionDate: mockApplicationResponse.manualInclusionNoticeSubmissionDate,
       });
   });
 });
