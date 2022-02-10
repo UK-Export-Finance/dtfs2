@@ -59,10 +59,17 @@ const validateCompaniesHouse = async (req, res) => {
     }
 
     // no errors so we can safely update the application.
+    /**
+     * added smeType, probabilityOfDefault, isFinanceIncreasing as blank strings
+     * enables to be added to database so shows on application-details page if not exited without saving
+    */
     const applicationExporterUpdate = {
       exporter: {
         ...exporter,
         ...companiesHouseDetails,
+        smeType: '',
+        probabilityOfDefault: '',
+        isFinanceIncreasing: null,
       },
     };
 
