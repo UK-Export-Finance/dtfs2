@@ -19,6 +19,8 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
   const {
     deal, facility, dealAcbsData, acbsReference,
   } = context.df.getInput();
+  let facilityLoan;
+  let facilityFee;
 
   try {
     // 1. Facility Master
@@ -87,8 +89,6 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       retryOptions,
     );
 
-    let facilityLoan;
-    let facilityFee;
     // Records only created for `Issued` and `Activated` facilities only
     if (acbsFacilityMasterInput.facilityStageCode === CONSTANTS.FACILITY.STAGE_CODE.ISSUED) {
       // 6. Facility loan record

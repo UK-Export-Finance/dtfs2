@@ -10,7 +10,7 @@ const CONSTANTS = require('../../../constants');
 const getFeeAmount = (facility, dealType) => {
   // GEF
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    return facility.tfm.ukefExposure;
+    return Math.round(facility.tfm.feeRecord);
   }
 
   // EWCS/BSS
