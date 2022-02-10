@@ -9,6 +9,7 @@
                                 `01`, `02`.. for EWCS/BSS
 "currency":                     Facility currency code
 "lenderTypeCode":               Set lender to 100, this will trigger automatic 500 record creation
+                                thus creating minimum two records.
 "incomeClassCode":              ACBS income class code
 "spreadToInvestorsIndicator":   True (Added in 11/2021)
 */
