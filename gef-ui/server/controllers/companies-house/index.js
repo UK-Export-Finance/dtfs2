@@ -69,7 +69,7 @@ const validateCompaniesHouse = async (req, res) => {
         ...companiesHouseDetails,
         smeType: '',
         probabilityOfDefault: '',
-        isFinanceIncreasing: '',
+        isFinanceIncreasing: null,
       },
     };
 
