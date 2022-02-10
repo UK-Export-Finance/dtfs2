@@ -74,7 +74,7 @@ describe('controllers/dashboard/facilities - template-filters', () => {
       const result = facilitiesTemplateFilters();
 
       const expected = {
-        product: typeFilters({}),
+        type: typeFilters({}),
         submissionType: submissionTypeFilters({}),
         hasBeenIssued: hasBeenIssuedFilters({}),
       };

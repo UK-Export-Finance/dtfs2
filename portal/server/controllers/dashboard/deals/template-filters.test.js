@@ -108,7 +108,7 @@ describe('controllers/dashboard/deals - template-filters', () => {
       const result = dealsTemplateFilters();
 
       const expected = {
-        product: dealTypeFilters({}),
+        dealType: dealTypeFilters({}),
         submissionType: submissionTypeFilters({}),
         status: statusFilters({}),
       };
