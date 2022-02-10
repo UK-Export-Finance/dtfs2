@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+const { MongoClient } = require('mongodb'); // eslint-disable-line @typescript-eslint/no-var-requires
 import { dbName, url } from '../config';
 
 let client: any;
