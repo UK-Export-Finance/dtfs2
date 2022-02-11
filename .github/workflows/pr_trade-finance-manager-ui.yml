@@ -3,7 +3,7 @@ name: PR tests - Trade Finance Manager UI
 on:
   pull_request:
     branches: [ main ]
-    paths: 
+    paths:
     - 'trade-finance-manager-ui/**'
     - 'e2e-tests/trade-finance-manager/cypress/**'
     - 'utils/mock-data-loader/**'
@@ -87,7 +87,7 @@ jobs:
         path: reference-data-proxy
         tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
-        add_git_labels: true 
+        add_git_labels: true
     - name: Build and push Number-Generator
       uses: docker/build-push-action@v1
       with:
@@ -148,7 +148,7 @@ jobs:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
       ESTORE_URL: ${{ secrets.ESTORE_URL }}
-      
+
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
@@ -186,7 +186,7 @@ jobs:
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
-        npm install
+        npm install --legacy-peer-deps
         node ./re-insert-mocks.js
         pwd
     - name: Wake up Azure Function
@@ -199,7 +199,7 @@ jobs:
       run: |
         pwd
         cd $GITHUB_WORKSPACE
-        npm install
+        npm install --legacy-peer-deps
         cd e2e-tests/trade-finance-manager
         npx cypress run --config video=false --record --parallel --browser=chrome
     - name: Save Cypress screenshots
