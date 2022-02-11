@@ -22,7 +22,7 @@ describe('/graphql resolvers - helpers - db-helpers', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return a string, () => {
+    it('should return a string', () => {
       const mockValue = 'test';
       const result = formatFieldValue(mockValue);
 
