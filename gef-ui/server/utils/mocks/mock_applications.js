@@ -21,7 +21,6 @@ const commonDealItems = {
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
-  submissionCount: 1,
   submissionDate: '1638363716309',
   supportingInformation: {
     manualInclusion: [],
@@ -121,6 +120,7 @@ const MOCK_AIN_APPLICATION = {
       },
     ],
   },
+  submissionCount: 1,
   ...commonDealItems,
 };
 
@@ -198,6 +198,7 @@ const MOCK_AIN_APPLICATION_CHECKER = {
       },
     ],
   },
+  submissionCount: 1,
   ...commonDealItems,
 };
 
@@ -275,6 +276,7 @@ const MOCK_AIN_APPLICATION_RETURN_MAKER = {
       },
     ],
   },
+  submissionCount: 1,
   ...commonDealItems,
 };
 
@@ -320,6 +322,7 @@ const MOCK_AIN_APPLICATION_UNISSUED_ONLY = {
       },
     ],
   },
+  submissionCount: 1,
   ...commonDealItems,
 };
 
@@ -365,6 +368,7 @@ const MOCK_MIA_APPLICATION_UNISSUED_ONLY = {
       },
     ],
   },
+  submissionCount: 1,
   ...commonDealItems,
 };
 
@@ -410,6 +414,7 @@ const MOCK_AIN_APPLICATION_ISSUED_ONLY = {
       },
     ],
   },
+  submissionCount: 1,
   ...commonDealItems,
 };
 
@@ -462,6 +467,7 @@ const MOCK_AIN_APPLICATION_FALSE_COMMENTS = {
       },
     ],
   },
+  submissionCount: 1,
   ...commonDealItems,
 };
 
@@ -663,6 +669,85 @@ const MOCK_AIN_APPLICATION_GENERATOR = (status, type) => ({
       },
     ],
   },
+  submissionCount: 1,
+  ...commonDealItems,
+});
+
+const MOCK_APPLICATION_GENERATOR_SUBCOUNT = (status, type, submissionCounter) => ({
+  status,
+  submissionType: type,
+  previousStatus: CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF,
+  facilities: {
+    status: CONSTANTS.DEAL_STATUS.COMPLETED,
+    items: [
+      {
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
+        details: {
+          _id: '61a771cc2ae62b0013dae68a',
+          dealId: '61a7710b2ae62b0013dae687',
+          type: CONSTANTS.FACILITY_TYPE.CASH,
+          hasBeenIssued: false,
+          name: 'Facility two',
+          shouldCoverStartOnSubmission: true,
+          coverStartDate: 1638403200000,
+          coverEndDate: '2030-01-01T00:00:00.000Z',
+          monthsOfCover: null,
+          details: [],
+          detailsOther: '',
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 80,
+          interestPercentage: 1,
+          paymentType: 'IN_ADVANCE_MONTHLY',
+          createdAt: 1638363596947,
+          updatedAt: 1638442632540,
+          ukefExposure: 1600,
+          guaranteeFee: 0.9,
+          submittedAsIssuedDate: '1638363717231',
+          ukefFacilityId: '0030113305',
+          feeType: 'in advance',
+          feeFrequency: 'Monthly',
+          dayCountBasis: 365,
+          coverDateConfirmed: false,
+        },
+        validation: { required: [] },
+      },
+      {
+        status: CONSTANTS.DEAL_STATUS.COMPLETED,
+        details: {
+          _id: '61a771cc2ae62b0013dae69a',
+          dealId: '61a7710b2ae62b0013dae687',
+          type: CONSTANTS.FACILITY_TYPE.CASH,
+          hasBeenIssued: true,
+          name: 'Facility one',
+          shouldCoverStartOnSubmission: true,
+          coverStartDate: 1638403200000,
+          coverEndDate: '2030-01-01T00:00:00.000Z',
+          monthsOfCover: null,
+          details: [],
+          detailsOther: '',
+          currency: 'GBP',
+          value: 2000,
+          coverPercentage: 80,
+          interestPercentage: 1,
+          paymentType: 'IN_ADVANCE_MONTHLY',
+          createdAt: 1638363596947,
+          updatedAt: 1638442632540,
+          ukefExposure: 1600,
+          guaranteeFee: 0.9,
+          submittedAsIssuedDate: '1638363717231',
+          ukefFacilityId: '0030113305',
+          feeType: 'in advance',
+          feeFrequency: 'Monthly',
+          dayCountBasis: 365,
+          coverDateConfirmed: true,
+          canResubmitIssuedFacilities: true,
+        },
+        validation: { required: [] },
+      },
+    ],
+  },
+  submissionCount: submissionCounter,
   ...commonDealItems,
 });
 
@@ -678,4 +763,5 @@ module.exports = {
   MOCK_AIN_APPLICATION_SUPPORTING_INFO,
   RES_MOCK_AIN_APPLICATION_CHECKER,
   MOCK_AIN_APPLICATION_GENERATOR,
+  MOCK_APPLICATION_GENERATOR_SUBCOUNT,
 };
