@@ -84,14 +84,14 @@ context('Dashboard Deals filters', () => {
       dashboardDeals.filters.panel.form.submissionType.AIN.checkbox().should('not.be.checked');
 
       // MIA
-      dashboardDeals.filters.form.submissionType.MIA.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
-      dashboardDeals.filters.form.submissionType.MIA.checkbox().should('exist');
-      dashboardDeals.filters.form.submissionType.MIA.checkbox().should('not.be.checked');
+      dashboardDeals.filters.panel.form.submissionType.MIA.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+      dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('exist');
+      dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
       // MIN
-      dashboardDeals.filters.form.submissionType.MIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
-      dashboardDeals.filters.form.submissionType.MIN.checkbox().should('exist');
-      dashboardDeals.filters.form.submissionType.MIN.checkbox().should('not.be.checked');
+      dashboardDeals.filters.panel.form.submissionType.MIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
+      dashboardDeals.filters.panel.form.submissionType.MIN.checkbox().should('exist');
+      dashboardDeals.filters.panel.form.submissionType.MIN.checkbox().should('not.be.checked');
     });
 
     it('status', () => {
