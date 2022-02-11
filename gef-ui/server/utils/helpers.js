@@ -23,6 +23,11 @@ const userToken = (req) => {
 // Checks to see if an element is an object or not
 const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceof Array);
 
+const isMIAWithoutChangedToIssuedFacilities = (app) =>
+  app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED
+  && app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA
+  && app.submissionCount > 0;
+
 // Converts Api errors into more manageable objects
 const apiErrorHandler = ({ code, response }) => {
   if (code === 'ECONNABORTED') {
@@ -194,12 +199,19 @@ const detailItemConditions = (params) => {
     isCoverStartOnSubmission,
     item,
     value,
+    app,
   } = params;
 
   let summaryItems = [];
 
   // if facilities have been canResubmitIssuedFacilities (when returning to maker)
   if (hasChangedFacilities) {
+    summaryItems = previewItemConditions(params);
+  } else if (isMIAWithoutChangedToIssuedFacilities(app)) {
+    /**
+     * edge case for returning to maker for MIA when accepting UKEF conditions but not issuing unissued facilities
+     * allows for locked application details page for this condition
+     */
     summaryItems = previewItemConditions(params);
   } else {
     // for all other application details page
@@ -509,4 +521,5 @@ module.exports = {
   futureDateInRange,
   displayChangeSupportingInfo,
   canUpdateUnissuedFacilitiesCheck,
+  isMIAWithoutChangedToIssuedFacilities,
 };

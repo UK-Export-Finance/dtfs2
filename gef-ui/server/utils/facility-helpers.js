@@ -60,6 +60,7 @@ const areUnissuedFacilitiesPresent = (application) => {
     CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+    CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
   ];
   const acceptableApplicationType = [
     CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
@@ -71,6 +72,14 @@ const areUnissuedFacilitiesPresent = (application) => {
     return false;
   }
   if (!acceptableStatuses.includes(application.status)) {
+    return false;
+  }
+  /**
+   * accounts for edge case
+   * when MIA -> MIN and returned to maker without issuing facilities (must be able to see unissued facilities link)
+   * does not work if not MIA (ie AIN first submission)
+   */
+  if (application.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED && application.submissionCount < 1) {
     return false;
   }
 
