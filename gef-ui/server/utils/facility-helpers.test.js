@@ -19,6 +19,7 @@ import {
   MOCK_AIN_APPLICATION_CHECKER,
   MOCK_AIN_APPLICATION_GENERATOR,
   MOCK_MIA_APPLICATION_UNISSUED_ONLY,
+  MOCK_APPLICATION_GENERATOR_SUBCOUNT,
 } from './mocks/mock_applications';
 
 import {
@@ -146,6 +147,22 @@ describe('areUnissuedFacilitiesPresent', () => {
 
     expect(areUnissuedFacilitiesPresent(MOCK_AIN_APPLICATION_GENERATOR(CONSTANTS.DEAL_STATUS.IN_PROGRESS_BY_UKEF,
       CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)))
+      .toEqual(false);
+
+    expect(areUnissuedFacilitiesPresent(MOCK_APPLICATION_GENERATOR_SUBCOUNT(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.AIN, 0)))
+      .toEqual(false);
+  });
+
+  it('should return `TRUE` application status is either CHANGES_REQUIRED and is MIA with submission count 1', () => {
+    expect(areUnissuedFacilitiesPresent(MOCK_APPLICATION_GENERATOR_SUBCOUNT(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.MIA, 1)))
+      .toEqual(true);
+  });
+
+  it('should return `FALSE` application status is either CHANGES_REQUIRED and is MIA with submission count 0', () => {
+    expect(areUnissuedFacilitiesPresent(MOCK_APPLICATION_GENERATOR_SUBCOUNT(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED,
+      CONSTANTS.DEAL_SUBMISSION_TYPE.MIA, 0)))
       .toEqual(false);
   });
 
