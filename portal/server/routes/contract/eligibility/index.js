@@ -75,7 +75,8 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
-  return res.render('eligibility/eligibility-criteria.njk',
+  return res.render(
+    'eligibility/eligibility-criteria.njk',
     {
       _id: deal._id, // eslint-disable-line no-underscore-dangle
       countries: formatCountriesForGDSComponent(
@@ -88,7 +89,8 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
       additionalRefName: deal.additionalRefName,
       user: req.session.user,
       taskListItems: eligibilityTaskList(completedForms),
-    });
+    },
+  );
 });
 
 router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
@@ -140,7 +142,8 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
 
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
-  return res.render('eligibility/eligibility-supporting-documentation.njk',
+  return res.render(
+    'eligibility/eligibility-supporting-documentation.njk',
     {
       _id: deal._id,
       supportingInformation,
@@ -149,7 +152,8 @@ router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]
       additionalRefName: deal.additionalRefName,
       user: req.session.user,
       taskListItems: eligibilityTaskList(completedForms),
-    });
+    },
+  );
 });
 
 router.post('/contract/:_id/eligibility/supporting-documentation', upload.any(), async (req, res) => {
