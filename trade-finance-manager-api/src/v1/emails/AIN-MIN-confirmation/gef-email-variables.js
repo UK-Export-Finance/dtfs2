@@ -1,6 +1,18 @@
 const { format } = require('date-fns');
 const { generateAddressString } = require('../../helpers/generate-address-string');
 
+/**
+ * If `MIN` relevant submission date is returned else standard `Appliction` submision date.
+ * Date retuned in EPOCH format.
+ * @param {Object} Deal deal object decapsulating `manualInclusionNoticeSubmissionDate` and `submissionDate`
+ * @returns {Integer} EPOCH
+ */
+const getSubmissionDate = ({ manualInclusionNoticeSubmissionDate, submissionDate }) => (
+  manualInclusionNoticeSubmissionDate
+    ? Number(manualInclusionNoticeSubmissionDate)
+    : Number(submissionDate)
+);
+
 const gefEmailVariables = (deal, facilityLists) => {
   const {
     submissionType,
@@ -8,7 +20,6 @@ const gefEmailVariables = (deal, facilityLists) => {
     exporter,
     bankInternalRefName,
     additionalRefName,
-    submissionDate,
     ukefDealId,
   } = deal;
 
@@ -22,7 +33,7 @@ const gefEmailVariables = (deal, facilityLists) => {
     ukefDealId,
     bankGefDealId: bankInternalRefName,
     dealName: additionalRefName,
-    submissionDate: format(Number(submissionDate), 'do MMMM yyyy'),
+    submissionDate: format(getSubmissionDate(deal), 'do MMMM yyyy'),
     exporterCompaniesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
     exporterAddress: generateAddressString(exporter.registeredAddress),
     industrySector: exporter.selectedIndustry.name,
