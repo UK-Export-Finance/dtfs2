@@ -139,11 +139,13 @@ router.post('/contract/:_id/delete', async (req, res) => {
 router.get('/contract/:_id/ready-for-review', provide([DEAL]), async (req, res) => {
   const { deal } = req.apiData;
 
-  return res.render('contract/contract-ready-for-review.njk',
+  return res.render(
+    'contract/contract-ready-for-review.njk',
     {
       deal,
       user: req.session.user,
-    });
+    },
+  );
 });
 
 router.post('/contract/:_id/ready-for-review', provide([DEAL]), async (req, res) => {
@@ -380,10 +382,12 @@ router.post('/contract/:_id/clone/before-you-start', async (req, res) => {
   return res.redirect('/unable-to-proceed');
 });
 
-router.use('/',
+router.use(
+  '/',
   aboutRoutes,
   loanRoutes,
   bondRoutes,
-  eligibilityRoutes);
+  eligibilityRoutes,
+);
 
 module.exports = router;

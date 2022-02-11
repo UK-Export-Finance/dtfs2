@@ -7,7 +7,9 @@ const router = express.Router();
 
 router.use('/user/*', validateToken);
 
-router.use('/user/',
-  userProfileRoutes);
+router.use(
+  '/user/',
+  userProfileRoutes,
+);
 
 module.exports = router;
