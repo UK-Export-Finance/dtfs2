@@ -24,7 +24,9 @@ const userToken = (req) => {
 const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceof Array);
 
 const isMIAWithoutChangedToIssuedFacilities = (app) =>
-  app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED && app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA && app.submissionCount > 0;
+  app.status === CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED
+  && app.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA
+  && app.submissionCount > 0;
 
 // Converts Api errors into more manageable objects
 const apiErrorHandler = ({ code, response }) => {
