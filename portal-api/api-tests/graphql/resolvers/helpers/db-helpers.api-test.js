@@ -10,16 +10,14 @@ describe('/graphql resolvers - helpers - db-helpers', () => {
       const mockValue = 'false';
       const result = formatFieldValue(mockValue);
 
-      const expected = Boolean(mockValue);
-      expect(result).toEqual(expected);
+      expect(result).toEqual(false);
     });
 
     it('should return a string with `true` boolean value, as a boolean', () => {
       const mockValue = 'true';
       const result = formatFieldValue(mockValue);
 
-      const expected = Boolean(mockValue);
-      expect(result).toEqual(expected);
+      expect(result).toEqual(true);
     });
 
     it('should return a string', () => {
