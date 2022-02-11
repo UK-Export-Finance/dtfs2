@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import dotenv from 'dotenv';
-const { NotifyClient } = require('notifications-node-client');
+const { NotifyClient } = require('notifications-node-client'); // eslint-disable-line @typescript-eslint/no-var-requires
+
 dotenv.config();
 
 const notifyKey: any = process.env.GOV_NOTIFY_API_KEY;

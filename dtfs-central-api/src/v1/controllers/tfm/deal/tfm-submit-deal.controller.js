@@ -95,6 +95,7 @@ const createFacilitiesSnapshot = async (deal) => {
     return updatedFacilities;
   }
 
+  return null;
 };
 
 const submitDeal = async (deal) => {
