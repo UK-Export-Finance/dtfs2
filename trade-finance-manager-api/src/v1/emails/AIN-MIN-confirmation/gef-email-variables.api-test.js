@@ -2,6 +2,7 @@ const { format } = require('date-fns');
 const gefEmailVariables = require('./gef-email-variables');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
 const { generateAddressString } = require('../../helpers/generate-address-string');
+const getSubmissionDate = require('../../helpers/get-submission-date');
 const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
 
 describe('generate AIN/MIN confirmation email variables - GEF', () => {
@@ -23,7 +24,7 @@ describe('generate AIN/MIN confirmation email variables - GEF', () => {
       ukefDealId: mockSubmittedDeal.ukefDealId,
       bankGefDealId: mockSubmittedDeal.bankInternalRefName,
       dealName: mockSubmittedDeal.additionalRefName,
-      submissionDate: format(Number(mockSubmittedDeal.submissionDate), 'do MMMM yyyy'),
+      submissionDate: format(getSubmissionDate(mockSubmittedDeal), 'do MMMM yyyy'),
       exporterCompaniesHouseRegistrationNumber: mockSubmittedDeal.exporter.companiesHouseRegistrationNumber,
       exporterAddress: generateAddressString(mockSubmittedDeal.exporter.registeredAddress),
       industrySector: mockSubmittedDeal.exporter.selectedIndustry.name,
