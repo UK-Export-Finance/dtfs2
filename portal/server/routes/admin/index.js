@@ -8,8 +8,10 @@ const router = express.Router();
 
 router.use('/admin/*', validateToken);
 
-router.use('/admin/',
+router.use(
+  '/admin/',
   validate({ role: ['admin', 'ukef_operations'] }),
-  userRoutes);
+  userRoutes,
+);
 
 module.exports = router;
