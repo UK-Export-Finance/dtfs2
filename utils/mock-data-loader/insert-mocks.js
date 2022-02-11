@@ -31,7 +31,6 @@ const insertMocks = async () => {
     await api.createBank(bank, token);
   }
 
-
   console.info('inserting BSS mandatory-criteria');
   for (const mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
     await api.createMandatoryCriteria(mandatoryCriteria, token);
@@ -53,17 +52,14 @@ const insertMocks = async () => {
   }
 
   console.info('inserting BSS facilities');
-
-  for (const facility of MOCKS.FACILITIES) {
+  MOCKS.FACILITIES.forEach(async (facility) => {
     const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
-
     const facilityToInsert = {
       ...facility,
       dealId: associatedDeal._id,
     };
-
     await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, tfmMakerToken);
-  }
+  });
 };
 
 module.exports = insertMocks;

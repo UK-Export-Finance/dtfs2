@@ -100,22 +100,6 @@ module.exports = {
     validationErrors: {
       count: 0,
       errorList: {
-        11: {
-        },
-        12: {
-        },
-        13: {
-        },
-        14: {
-        },
-        15: {
-        },
-        16: {
-        },
-        17: {
-        },
-        18: {
-        },
         agentName: {
         },
         agentAddressCountry: {
@@ -223,96 +207,6 @@ module.exports = {
       },
       userId: '60f7d72654f99900074c0a6d'
     },
-    {
-      date: '1626972856914',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626972866532',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626972880019',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626972889598',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626972897929',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626972898324',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    }
   ],
   mandatoryCriteria: [
     {
