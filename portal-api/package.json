@@ -9,7 +9,7 @@
     "start": "node src/index.js",
     "start:dev": "npx nodemon src/index.js",
     "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js ",
-    "api-test": "jest --notify --coverage --verbose --runInBand --forceExit --clearMocks --detectOpenHandles --config=api-test.jest.config.js",
+    "api-test": "jest --notify --coverage --verbose --runInBand --forceExit --clearMocks --config=api-test.jest.config.js",
     "api-test-file": "jest --config=api-test-file.jest.config.js --runInBand --verbose --testMatch"
   },
   "repository": {
