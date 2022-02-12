@@ -6,7 +6,7 @@ const findBanks = async (callback) => {
   const collection = await db.getCollection('banks');
 
   collection.find({}).toArray((err, result) => {
-    assert.equal(err, null);
+    assert.strictEqual(err, null);
     callback(result);
   });
 };
@@ -19,7 +19,7 @@ const findOneBank = async (id, callback) => {
   }
 
   return collection.findOne({ id }, (err, result) => {
-    assert.equal(err, null);
+    assert.strictEqual(err, null);
     callback(result);
   });
 };

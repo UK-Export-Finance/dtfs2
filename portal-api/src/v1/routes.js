@@ -28,7 +28,7 @@ const mga = require('./controllers/mga.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
 
 const users = require('./users/routes');
-const { cleanXss, fileUpload } = require('./middleware');
+const { cleanXss, fileUpload, validateBank } = require('./middleware');
 
 const gef = require('./gef/routes');
 
@@ -176,5 +176,8 @@ authRouter.route('/reports/review-ukef-decision').get(validate({ role: ['maker',
 authRouter.get('/validate', validate(), (req, res) => {
   res.status(200).send();
 });
+
+// bank-validator
+authRouter.get('/validate/bank', (req, res) => validateBank(req, res));
 
 module.exports = { authRouter, openRouter, authRouterAllowXss };
