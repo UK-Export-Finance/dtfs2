@@ -1,7 +1,7 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const { dashboardDeals } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters: filters } = require('../../../partials');
 const {
   BSS_DEAL_DRAFT,
   GEF_DEAL_DRAFT,
@@ -31,11 +31,11 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
 
   it('applies and removes a filter', () => {
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
+    filters.showHideButton().click();
 
     // apply filter
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
-    dashboardFilters.panel.form.applyFiltersButton().click();
+    filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
@@ -63,12 +63,12 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     dashboardDeals.visit();
 
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
+    filters.showHideButton().click();
 
     // apply filters
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
-    dashboardFilters.panel.form.applyFiltersButton().click();
+    filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
@@ -82,7 +82,7 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     dashboardDeals.filters.mainContainer.selectedFilters.noticeMIA().should('exist');
 
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
+    filters.showHideButton().click();
 
     // check checkboxes
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('not.be.checked');

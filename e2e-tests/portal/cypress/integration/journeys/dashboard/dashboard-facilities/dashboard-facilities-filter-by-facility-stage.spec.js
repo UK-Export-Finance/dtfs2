@@ -2,7 +2,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters: filters } = require('../../../partials');
 const {
   BSS_DEAL_AIN,
   BSS_FACILITY_BOND_ISSUED,
@@ -50,14 +50,14 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
     });
 
     it('renders checked checkbox', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
     });
@@ -87,14 +87,14 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
     });
 
     it('renders checked checkbox', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
     });

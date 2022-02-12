@@ -1,7 +1,7 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const { dashboardDeals } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters: filters } = require('../../../partials');
 const {
   BSS_DEAL_DRAFT,
   GEF_DEAL_DRAFT,
@@ -31,19 +31,19 @@ context('Dashboard Deals - panel selected filters - remove a filter', () => {
 
   it('applies and removes a filter', () => {
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
+    filters.showHideButton().click();
 
     // apply filter
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
-    dashboardFilters.panel.form.applyFiltersButton().click();
+    filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
+    filters.showHideButton().click();
 
     // check the filter is in the applied filters section
-    const firstAppliedFilter = dashboardFilters.panel.selectedFilters.listItem().first();
+    const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
     firstAppliedFilter.should('be.visible');
 
     // click remove button
@@ -53,12 +53,12 @@ context('Dashboard Deals - panel selected filters - remove a filter', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
-    dashboardFilters.panel.container().should('be.visible');
+    filters.showHideButton().click();
+    filters.panel.container().should('be.visible');
 
     // should have empty applied filters
-    dashboardFilters.panel.selectedFilters.container().should('not.exist');
-    dashboardFilters.panel.selectedFilters.list().should('not.exist');
+    filters.panel.selectedFilters.container().should('not.exist');
+    filters.panel.selectedFilters.list().should('not.exist');
 
     // checkbox should be NOT be checked
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');

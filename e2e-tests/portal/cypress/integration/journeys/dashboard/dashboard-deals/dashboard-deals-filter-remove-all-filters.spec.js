@@ -1,7 +1,7 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const { dashboardDeals } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters: filters } = require('../../../partials');
 const {
   BSS_DEAL_MIA,
   GEF_DEAL_DRAFT,
@@ -37,7 +37,7 @@ context('Dashboard Deals filters - remove all filters', () => {
 
   it('removes all applied filters by clicking `clear filters` button', () => {
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
+    filters.showHideButton().click();
 
     // apply filter 1
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
@@ -46,34 +46,34 @@ context('Dashboard Deals filters - remove all filters', () => {
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
 
     // submit filters
-    dashboardFilters.panel.form.applyFiltersButton().click();
+    filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
+    filters.showHideButton().click();
 
     // check filters are applied
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
 
     // click `clear all` button
-    dashboardFilters.panel.selectedFilters.clearAllLink().should('be.visible');
-    dashboardFilters.panel.selectedFilters.clearAllLink().click();
+    filters.panel.selectedFilters.clearAllLink().should('be.visible');
+    filters.panel.selectedFilters.clearAllLink().click();
 
     // should be redirected
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
-    dashboardFilters.panel.container().should('be.visible');
+    filters.showHideButton().click();
+    filters.panel.container().should('be.visible');
 
     // should have empty panel applied filters
-    dashboardFilters.panel.selectedFilters.container().should('not.exist');
-    dashboardFilters.panel.selectedFilters.list().should('not.exist');
+    filters.panel.selectedFilters.container().should('not.exist');
+    filters.panel.selectedFilters.list().should('not.exist');
 
     // should have empty main container applied filters
-    dashboardFilters.mainContainer.selectedFilters.container().should('not.exist');
+    filters.mainContainer.selectedFilters.container().should('not.exist');
 
     // checkbox should be NOT be checked
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('not.be.checked');

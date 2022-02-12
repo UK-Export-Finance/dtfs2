@@ -2,7 +2,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters: filters } = require('../../../partials');
 const {
   BSS_DEAL_MIA,
   GEF_DEAL_DRAFT,
@@ -38,7 +38,7 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
 
   it('submits the filters and redirects to the dashboard', () => {
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
+    filters.showHideButton().click();
 
     // apply filter 1
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
@@ -47,30 +47,30 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
 
     // submit filters
-    dashboardFilters.panel.form.applyFiltersButton().click();
+    filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
   it('renders checked checkboxes', () => {
     // toggle to show filters (hidden by default)
-    dashboardFilters.showHideButton().click();
+    filters.showHideButton().click();
 
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
   });
 
   it('renders the applied filters in the `applied filters` section', () => {
-    dashboardFilters.panel.selectedFilters.container().should('be.visible');
-    dashboardFilters.panel.selectedFilters.list().should('be.visible');
+    filters.panel.selectedFilters.container().should('be.visible');
+    filters.panel.selectedFilters.list().should('be.visible');
 
     // applied filter 1
-    const firstAppliedFilterHeading = dashboardFilters.panel.selectedFilters.heading().eq(0);
+    const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().eq(0);
 
     firstAppliedFilterHeading.should('be.visible');
     firstAppliedFilterHeading.should('have.text', 'Notice Type');
 
-    const firstAppliedFilter = dashboardFilters.panel.selectedFilters.listItem().eq(0);
+    const firstAppliedFilter = filters.panel.selectedFilters.listItem().eq(0);
 
     firstAppliedFilter.should('be.visible');
 
@@ -78,12 +78,12 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
     firstAppliedFilter.should('have.text', expectedText);
 
     // applied filter 2
-    const secondAppliedFilterHeading = dashboardFilters.panel.selectedFilters.heading().eq(1);
+    const secondAppliedFilterHeading = filters.panel.selectedFilters.heading().eq(1);
 
     secondAppliedFilterHeading.should('be.visible');
     secondAppliedFilterHeading.should('have.text', 'Status');
 
-    const secondAppliedFilter = dashboardFilters.panel.selectedFilters.listItem().eq(1);
+    const secondAppliedFilter = filters.panel.selectedFilters.listItem().eq(1);
 
     secondAppliedFilter.should('be.visible');
 

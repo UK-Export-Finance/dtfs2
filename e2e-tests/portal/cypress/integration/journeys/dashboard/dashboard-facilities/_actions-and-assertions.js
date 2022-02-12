@@ -1,6 +1,6 @@
 const relative = require('../../../relativeURL');
 const { dashboardFacilities } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters: filters } = require('../../../partials');
 
 // UI actions and assertions for each filter test.
 // just need to pass in relevant field type/value/heading etc to each function.
@@ -19,15 +19,15 @@ const shouldRenderCheckedCheckbox = (cypressElementSelector) => {
 };
 
 const shouldRenderAppliedFilterInPanelSelectedFilters = (expectedHeading, expectedValue) => {
-  dashboardFilters.panel.selectedFilters.container().should('be.visible');
-  dashboardFilters.panel.selectedFilters.list().should('be.visible');
+  filters.panel.selectedFilters.container().should('be.visible');
+  filters.panel.selectedFilters.list().should('be.visible');
 
-  const firstAppliedFilterHeading = dashboardFilters.panel.selectedFilters.heading().first();
+  const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().first();
 
   firstAppliedFilterHeading.should('be.visible');
   firstAppliedFilterHeading.should('have.text', expectedHeading);
 
-  const firstAppliedFilter = dashboardFilters.panel.selectedFilters.listItem().first();
+  const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
 
   firstAppliedFilter.should('be.visible');
 

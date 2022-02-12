@@ -2,7 +2,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters: filters } = require('../../../partials');
 const {
   BSS_DEAL_AIN,
   BSS_FACILITY_BOND,
@@ -52,14 +52,14 @@ context('Dashboard Facilities filters - filter by deal notice type', () => {
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox());
     });
 
     it('renders checked checkbox', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox());
     });
@@ -70,7 +70,7 @@ context('Dashboard Facilities filters - filter by deal notice type', () => {
 
     it('renders the applied filter in the `main container selected filters` section', () => {
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
-        dashboardFilters.mainContainer.selectedFilters.noticeAIN(),
+        filters.mainContainer.selectedFilters.noticeAIN(),
         CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
       );
     });

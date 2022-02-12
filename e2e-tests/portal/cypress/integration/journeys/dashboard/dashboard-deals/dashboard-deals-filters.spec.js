@@ -1,7 +1,7 @@
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters: filters } = require('../../../partials');
 const {
   BSS_DEAL_DRAFT,
   GEF_DEAL_DRAFT,
@@ -35,36 +35,36 @@ context('Dashboard Deals filters', () => {
     });
 
     it('hides filters and renders `show filter` button', () => {
-      dashboardFilters.panel.container().should('not.be.visible');
+      filters.panel.container().should('not.be.visible');
 
-      dashboardFilters.showHideButton().should('be.visible');
-      dashboardFilters.showHideButton().should('have.text', 'Show filter');
+      filters.showHideButton().should('be.visible');
+      filters.showHideButton().should('have.text', 'Show filter');
     });
   });
 
   describe('clicking `show filter` button', () => {
     it('renders all filters container', () => {
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
-      dashboardFilters.panel.container().should('be.visible');
+      filters.panel.container().should('be.visible');
     });
 
     it('changes show/hide button text', () => {
-      dashboardFilters.showHideButton().should('be.visible');
-      dashboardFilters.showHideButton().should('have.text', 'Hide filter');
+      filters.showHideButton().should('be.visible');
+      filters.showHideButton().should('have.text', 'Hide filter');
     });
 
     it('renders `apply filters` button', () => {
-      dashboardFilters.panel.form.applyFiltersButton().should('be.visible');
-      dashboardFilters.panel.form.applyFiltersButton().contains('Apply filters');
+      filters.panel.form.applyFiltersButton().should('be.visible');
+      filters.panel.form.applyFiltersButton().contains('Apply filters');
     });
   });
 
   describe('renders all filters empty/unchecked by default', () => {
     it('keyword', () => {
-      dashboardFilters.panel.form.keyword.label().contains('Keyword');
-      dashboardFilters.panel.form.keyword.input().should('be.visible');
-      dashboardFilters.panel.form.keyword.input().should('have.value', '');
+      filters.panel.form.keyword.label().contains('Keyword');
+      filters.panel.form.keyword.input().should('be.visible');
+      filters.panel.form.keyword.input().should('have.value', '');
     });
 
     it('product/dealType', () => {
