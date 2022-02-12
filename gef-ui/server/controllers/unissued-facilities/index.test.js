@@ -199,20 +199,23 @@ describe('postChangeUnissuedFacility()', () => {
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
-    expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-      coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-      coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
-      issueDate: format(now, 'MMMM d, yyyy'),
-      shouldCoverStartOnSubmission: null,
-      monthsOfCover: null,
-      name: 'UKEF123',
-      hasBeenIssued: true,
-      canResubmitIssuedFacilities: true,
-      coverDateConfirmed: true,
-      unissuedToIssuedByMaker: maker,
-    },
-    { message: 'UKEF123 is updated' },
-    '/gef/application-details/123/unissued-facilities');
+    expect(api.updateFacility).toHaveBeenCalledWith(
+      'xyz',
+      {
+        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
+        issueDate: format(now, 'MMMM d, yyyy'),
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: null,
+        name: 'UKEF123',
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+        coverDateConfirmed: true,
+        unissuedToIssuedByMaker: maker,
+      },
+      { message: 'UKEF123 is updated' },
+      '/gef/application-details/123/unissued-facilities',
+    );
   });
 
   it('should not update facility if issue date before submissionDate', async () => {
@@ -248,19 +251,22 @@ describe('postChangeUnissuedFacility()', () => {
     }));
 
     // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalledWith(MOCKS.MockRequestUnissued.facilityId, {
-      coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-      coverStartDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
-      issueDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
-      shouldCoverStartOnSubmission: null,
-      monthsOfCover: null,
-      name: 'UKEF123',
-      hasBeenIssued: true,
-      canResubmitIssuedFacilities: true,
-      coverDateConfirmed: true,
-    },
-    { message: 'UKEF123 is updated' },
-    '/gef/application-details/123/unissued-facilities');
+    expect(api.updateFacility).not.toHaveBeenCalledWith(
+      MOCKS.MockRequestUnissued.facilityId,
+      {
+        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
+        issueDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: null,
+        name: 'UKEF123',
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+        coverDateConfirmed: true,
+      },
+      { message: 'UKEF123 is updated' },
+      '/gef/application-details/123/unissued-facilities',
+    );
   });
 
   it('posts and returns correct message and url if submission date in past and issue date on same day of submission', async () => {
@@ -281,20 +287,23 @@ describe('postChangeUnissuedFacility()', () => {
 
     await postChangeUnissuedFacility(mockRequest, mockResponse);
 
-    expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-      coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-      coverStartDate: format(yesterday, 'MMMM d, yyyy'),
-      issueDate: format(yesterday, 'MMMM d, yyyy'),
-      shouldCoverStartOnSubmission: null,
-      monthsOfCover: null,
-      name: 'UKEF123',
-      hasBeenIssued: true,
-      canResubmitIssuedFacilities: true,
-      coverDateConfirmed: true,
-      unissuedToIssuedByMaker: maker,
-    },
-    { message: 'UKEF123 is updated' },
-    '/gef/application-details/123/unissued-facilities');
+    expect(api.updateFacility).toHaveBeenCalledWith(
+      'xyz',
+      {
+        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(yesterday, 'MMMM d, yyyy'),
+        issueDate: format(yesterday, 'MMMM d, yyyy'),
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: null,
+        name: 'UKEF123',
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+        coverDateConfirmed: true,
+        unissuedToIssuedByMaker: maker,
+      },
+      { message: 'UKEF123 is updated' },
+      '/gef/application-details/123/unissued-facilities',
+    );
   });
 
   it('should not update facility if no name or dates', async () => {
@@ -332,19 +341,22 @@ describe('postChangeUnissuedFacility()', () => {
     }));
 
     // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalledWith(MOCKS.MockRequestUnissued.facilityId, {
-      coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-      coverStartDate: format(oneYearFromNow, 'MMMM d, yyyy'),
-      issueDate: format(tomorrow, 'MMMM d, yyyy'),
-      shouldCoverStartOnSubmission: null,
-      monthsOfCover: null,
-      name: 'UKEF123',
-      hasBeenIssued: true,
-      canResubmitIssuedFacilities: true,
-      coverDateConfirmed: true,
-    },
-    { message: 'UKEF123 is updated' },
-    '/gef/application-details/123/unissued-facilities');
+    expect(api.updateFacility).not.toHaveBeenCalledWith(
+      MOCKS.MockRequestUnissued.facilityId,
+      {
+        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(oneYearFromNow, 'MMMM d, yyyy'),
+        issueDate: format(tomorrow, 'MMMM d, yyyy'),
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: null,
+        name: 'UKEF123',
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+        coverDateConfirmed: true,
+      },
+      { message: 'UKEF123 is updated' },
+      '/gef/application-details/123/unissued-facilities',
+    );
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
@@ -411,19 +423,22 @@ describe('postChangeUnissuedFacilityPreview()', () => {
 
     await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
 
-    expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-      coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-      coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
-      issueDate: format(now, 'MMMM d, yyyy'),
-      shouldCoverStartOnSubmission: null,
-      monthsOfCover: null,
-      name: 'UKEF123',
-      hasBeenIssued: true,
-      canResubmitIssuedFacilities: true,
-      coverDateConfirmed: true,
-      unissuedToIssuedByMaker: maker,
-    },
-    '/gef/application-details/123');
+    expect(api.updateFacility).toHaveBeenCalledWith(
+      'xyz',
+      {
+        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
+        issueDate: format(now, 'MMMM d, yyyy'),
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: null,
+        name: 'UKEF123',
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+        coverDateConfirmed: true,
+        unissuedToIssuedByMaker: maker,
+      },
+      '/gef/application-details/123',
+    );
   });
 
   it('should not update facility if no name or dates', async () => {
@@ -459,19 +474,22 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       },
     }));
     // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalledWith('xyz', {
-      coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-      coverStartDate: format(oneYearFromNow, 'MMMM d, yyyy'),
-      issueDate: format(tomorrow, 'MMMM d, yyyy'),
-      shouldCoverStartOnSubmission: null,
-      monthsOfCover: null,
-      name: 'UKEF123',
-      hasBeenIssued: true,
-      canResubmitIssuedFacilities: true,
-      coverDateConfirmed: true,
-    },
-    { message: 'UKEF123 is updated' },
-    '/gef/application-details/123/unissued-facilities');
+    expect(api.updateFacility).not.toHaveBeenCalledWith(
+      'xyz',
+      {
+        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(oneYearFromNow, 'MMMM d, yyyy'),
+        issueDate: format(tomorrow, 'MMMM d, yyyy'),
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: null,
+        name: 'UKEF123',
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+        coverDateConfirmed: true,
+      },
+      { message: 'UKEF123 is updated' },
+      '/gef/application-details/123/unissued-facilities',
+    );
   });
 
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {

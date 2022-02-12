@@ -19,22 +19,26 @@ router.get('/:_id', async (req, res) => {
     res,
   );
 
-  return res.render('user/profile.njk',
+  return res.render(
+    'user/profile.njk',
     {
       _id,
       user,
-    });
+    },
+  );
 });
 
 router.get('/:_id/change-password', async (req, res) => {
   const { _id } = requestParams(req);
 
-  return res.render('user/change-password.njk',
+  return res.render(
+    'user/change-password.njk',
     {
       _id,
       user: req.session.user,
       requireCurrentPassword: true,
-    });
+    },
+  );
 });
 
 router.post('/:_id/change-password', async (req, res) => {
@@ -51,13 +55,15 @@ router.post('/:_id/change-password', async (req, res) => {
     errorHref,
   );
 
-  return res.render('user/change-password.njk',
+  return res.render(
+    'user/change-password.njk',
     {
       _id,
       user: req.session.user,
       validationErrors: formattedValidationErrors,
       requireCurrentPassword: true,
-    });
+    },
+  );
 });
 
 module.exports = router;

@@ -5,10 +5,14 @@
   "scripts": {
     "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js "
   },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=6.0.0"
+  },
   "dependencies": {
-    "axios": "^0.21.1",
-    "dotenv": "^8.2.0",
-    "durable-functions": "^1.4.6"
+    "axios": "^0.25.0",
+    "dotenv": "^16.0.0",
+    "durable-functions": "^1.5.4"
   },
   "devDependencies": {}
 }

@@ -141,11 +141,13 @@ describe('controllers/submit-to-ukef', () => {
       await submitToUkef(mockRequest, mockResponse);
 
       expect(mockResponse.render)
-        .toHaveBeenCalledWith('partials/submit-to-ukef.njk',
+        .toHaveBeenCalledWith(
+          'partials/submit-to-ukef.njk',
           expect.objectContaining({
             dealId: expect.any(String),
             maxCommentLength: expect.any(Number),
-          }));
+          }),
+        );
     });
   });
 });
