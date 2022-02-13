@@ -103,7 +103,7 @@ describe(baseUrl, () => {
       expect(body).toEqual({ dealId: expect.any(String) });
     });
 
-    it.only('returns a `404` status if the maker belongs to a different bank', async () => {
+    it('returns a `404` status if the maker belongs to a different bank', async () => {
       const mockDeal = await as(aMaker).post({
         dealType: 'GEF',
         maker: aMaker,

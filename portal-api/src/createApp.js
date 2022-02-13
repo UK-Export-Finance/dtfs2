@@ -6,6 +6,7 @@ const compression = require('compression');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
+const morgan = require('morgan');
 // const helmet = require('helmet');
 
 const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
@@ -31,6 +32,7 @@ app.use(healthcheck);
 app.use(passport.initialize());
 app.use(express.json());
 app.use(compression());
+app.use(morgan('combined'));
 
 app.use(cors({
   origin: CORS_ORIGIN,

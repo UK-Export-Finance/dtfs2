@@ -1,4 +1,4 @@
-const { userRoleIsValid } = require('../../role-validator');
+const { userRoleIsValid } = require('../../utils/role-validator.util');
 
 const validateUserMiddleware = {
   Query: {
