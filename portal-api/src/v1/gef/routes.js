@@ -18,8 +18,7 @@ router.route('/application')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getAll)
   .post(validate({ role: ['maker', 'data-admin'] }), application.create);
 
-router.route('/application/clone')
-  .post(validate({ role: ['maker', 'data-admin'] }), cloneApplication.clone);
+router.route('/application/clone').post(validate({ role: ['maker'] }), cloneApplication.clone);
 
 router.route('/application/:id')
   .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getById)

@@ -16,7 +16,7 @@ const validate = (opts) => {
     if (userRoleIsValid(requiredRoles, req.session.user)) {
       next();
     } else {
-      res.render('/');
+      res.redirect('/');
     }
   };
 };
