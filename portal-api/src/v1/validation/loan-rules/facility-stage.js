@@ -1,5 +1,5 @@
-const { hasValue } = require('../../../utils/string');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+const { hasValue } = require('../../../utils/string.util');
+const { orderNumber } = require('../../../utils/error-list-order-number.util');
 
 const isValid = (str) => {
   if (!hasValue(str)) {

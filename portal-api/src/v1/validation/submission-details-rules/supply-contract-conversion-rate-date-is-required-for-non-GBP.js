@@ -1,7 +1,7 @@
 const moment = require('moment');
 
-const { orderNumber } = require('../../../utils/error-list-order-number');
-const { hasValue } = require('../../../utils/string');
+const { orderNumber } = require('../../../utils/error-list-order-number.util');
+const { hasValue } = require('../../../utils/string.util');
 
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };

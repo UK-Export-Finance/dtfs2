@@ -5,7 +5,7 @@ require('moment-timezone');// monkey-patch to provide moment().tz()
 
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
-const now = require('../../now');
+const now = require('../../utils/now.util');
 const sendEmail = require('../email');
 
 const findFeedbacks = async (callback) => {

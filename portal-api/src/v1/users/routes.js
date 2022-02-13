@@ -1,4 +1,4 @@
-const utils = require('../../crypto/utils');
+const utils = require('../../utils/crypto.util');
 const login = require('./login.controller');
 const {
   userNotFound, userIsBlocked, incorrectPassword, userIsDisabled,

@@ -3,7 +3,7 @@ const {
   dateHasAllValues,
   dateValidationText,
 } = require('../date');
-const { orderNumber } = require('../../../../utils/error-list-order-number');
+const { orderNumber } = require('../../../../utils/error-list-order-number.util');
 
 module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };

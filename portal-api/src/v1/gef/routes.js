@@ -1,7 +1,7 @@
 const express = require('express');
-const { validate } = require('../../role-validator');
+const { validate } = require('../../utils/role-validator.util');
 
-const fileUpload = require('./middleware/fileUpload');
+const fileUpload = require('./middleware/fileUpload.middleware');
 
 const application = require('./controllers/application.controller');
 const cloneApplication = require('./controllers/clone-gef-deal.controller');

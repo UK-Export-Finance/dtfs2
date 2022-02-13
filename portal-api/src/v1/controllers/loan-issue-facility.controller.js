@@ -7,7 +7,7 @@ const {
 const { hasAllIssuedDateValues } = require('../facility-dates/issued-date');
 const { createTimestampFromSubmittedValues } = require('../facility-dates/timestamp');
 const loanIssueFacilityValidationErrors = require('../validation/loan-issue-facility');
-const { hasValue } = require('../../utils/string');
+const { hasValue } = require('../../utils/string.util');
 const canIssueFacility = require('../facility-issuance');
 const facilitiesController = require('./facilities.controller');
 

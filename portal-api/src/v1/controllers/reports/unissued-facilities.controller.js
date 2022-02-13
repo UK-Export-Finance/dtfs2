@@ -1,6 +1,6 @@
 const { format, add, differenceInCalendarDays } = require('date-fns');
 const db = require('../../../drivers/db-client');
-const { formattedNumber } = require('../../../utils/number');
+const { formattedNumber } = require('../../../utils/number.util');
 const CONSTANTS = require('../../../constants');
 
 // helper function to retrieve the unissued facilities for MIN/AIN deals

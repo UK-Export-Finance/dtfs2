@@ -1,4 +1,4 @@
-const utils = require('../../utils/array');
+const utils = require('../../utils/array.util');
 const refDataApi = require('../../reference-data/api');
 
 const findOneCurrency = async (id) => refDataApi.currencies.getCurrency(id);

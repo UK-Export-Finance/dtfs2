@@ -6,7 +6,7 @@ const { cloneDealValidateMandatoryCriteria, cloneDealNameApplication, cloneDealC
 
 const router = express.Router();
 
-router.get('/application-details/:dealId/clone', [validateToken, validateRole.validate({ role: ['maker'] })], getMandatoryCriteria);
+router.get('/application-details/:dealId/clone', [validateToken, validateRole.validate({ role: ['maker'] }), validateBank], getMandatoryCriteria);
 router.post('/application-details/:dealId/clone', [validateToken, validateRole.validate({ role: ['maker'] })], cloneDealValidateMandatoryCriteria);
 router.get('/application-details/:dealId/clone/name-application', [validateToken, validateRole.validate({ role: ['maker'] })], cloneDealNameApplication);
 router.post('/application-details/:dealId/clone/name-application', [validateToken, validateRole.validate({ role: ['maker'] })], cloneDealCreateApplication);

@@ -11,7 +11,7 @@ const {
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
 } = require('../facility-dates/requested-cover-start-date');
-const { sanitizeCurrency } = require('../../utils/number');
+const { sanitizeCurrency } = require('../../utils/number.util');
 const facilitiesController = require('./facilities.controller');
 
 exports.create = async (req, res) => {

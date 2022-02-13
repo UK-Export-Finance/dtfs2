@@ -1,10 +1,10 @@
-const { hasValue } = require('../../../../utils/string');
+const { hasValue } = require('../../../../utils/string.util');
 const {
   isNumeric,
   isInteger,
   decimalsCount,
-} = require('../../../../utils/number');
-const { orderNumber } = require('../../../../utils/error-list-order-number');
+} = require('../../../../utils/number.util');
+const { orderNumber } = require('../../../../utils/error-list-order-number.util');
 
 const MAX_CHARACTERS = 12;
 

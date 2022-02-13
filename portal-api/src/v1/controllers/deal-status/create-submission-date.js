@@ -1,5 +1,5 @@
 const { updateDeal } = require('../deal.controller');
-const now = require('../../../now');
+const now = require('../../../utils/now.util');
 
 const createSubmissionDate = async (dealId, user) => {
   const modifiedDeal = {

@@ -4,9 +4,9 @@ const fs = require('fs');
 const filesize = require('filesize');
 
 const db = require('../../../drivers/db-client');
-const utils = require('../utils.service');
+const utils = require('../utils/service.util');
 const File = require('../models/files');
-const { userHasAccess } = require('../utils.service');
+const { userHasAccess } = require('../utils/service.util');
 const fileshare = require('../../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../../utils');
 

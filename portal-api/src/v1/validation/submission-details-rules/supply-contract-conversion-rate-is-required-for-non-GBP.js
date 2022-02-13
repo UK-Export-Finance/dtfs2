@@ -1,5 +1,5 @@
-const { orderNumber } = require('../../../utils/error-list-order-number');
-const { hasValue } = require('../../../utils/string');
+const { orderNumber } = require('../../../utils/error-list-order-number.util');
+const { hasValue } = require('../../../utils/string.util');
 
 const A_NUMBER_WITH_UP_TO_SIX_DECIMAL_PLACES = /^[0-9]*(\.{0,1}[0-9]{0,6})$/;
 

@@ -3,22 +3,20 @@ const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
-// const helmet = require('helmet');
-
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
-const healthcheck = require('./healthcheck');
+// const helmet = require('helmet');
 
 const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 const { validateUserMiddleware } = require('./graphql/middleware');
+const configurePassport = require('./v1/users/passport');
+const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
+const healthcheck = require('./healthcheck');
 
 dotenv.config();
 
 const { CORS_ORIGIN } = process.env;
-
-const configurePassport = require('./v1/users/passport');
-const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
 
 configurePassport(passport);
 

@@ -1,7 +1,7 @@
 const { findOneDeal, updateDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const validateSubmissionDetails = require('../validation/submission-details');
-const { sanitizeCurrency } = require('../../utils/number');
+const { sanitizeCurrency } = require('../../utils/number.util');
 const { findOneCountry } = require('./countries.controller');
 const { getCurrencyObject } = require('../section-currency');
 

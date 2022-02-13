@@ -1,5 +1,5 @@
-const formatFilenameForSharepoint = require('./formatFilenameForSharepoint');
-const arrayUtils = require('./array');
+const formatFilenameForSharepoint = require('./formatFilenameForSharepoint.util');
+const arrayUtils = require('./array.util');
 
 module.exports = {
   formatFilenameForSharepoint,

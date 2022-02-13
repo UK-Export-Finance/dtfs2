@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+const { orderNumber } = require('../../../utils/error-list-order-number.util');
 const {
   dateHasAllValues,
 } = require('./date');

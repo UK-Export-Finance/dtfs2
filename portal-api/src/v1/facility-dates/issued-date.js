@@ -1,4 +1,4 @@
-const { hasValue } = require('../../utils/string');
+const { hasValue } = require('../../utils/string.util');
 
 exports.hasAllIssuedDateValues = (facility) => {
   const {

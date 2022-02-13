@@ -1,9 +1,9 @@
-const { hasValue } = require('../../../utils/string');
+const { hasValue } = require('../../../utils/string.util');
 const {
   isNumeric,
   decimalsCount,
-} = require('../../../utils/number');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+} = require('../../../utils/number.util');
+const { orderNumber } = require('../../../utils/error-list-order-number.util');
 
 const isInRange = (value) => value >= 0 && value <= 999;
 

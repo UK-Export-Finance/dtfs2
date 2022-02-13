@@ -1,10 +1,10 @@
-const { hasValue } = require('../../../utils/string');
+const { hasValue } = require('../../../utils/string.util');
 const {
   isNumeric,
   decimalsCount,
   stripDecimals,
-} = require('../../../utils/number');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+} = require('../../../utils/number.util');
+const { orderNumber } = require('../../../utils/error-list-order-number.util');
 
 const MIN_VALUE = 0;
 const MAX_DECIMALS = 2;

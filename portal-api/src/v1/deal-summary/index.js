@@ -3,8 +3,8 @@ const {
   roundNumber,
   formattedNumber,
   sanitizeCurrency,
-} = require('../../utils/number');
-const { hasValue } = require('../../utils/string');
+} = require('../../utils/number.util');
+const { hasValue } = require('../../utils/string.util');
 
 const CONSTANTS = require('../../constants');
 

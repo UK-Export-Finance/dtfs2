@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+const { orderNumber } = require('../../../utils/error-list-order-number.util');
 const { formattedTimestamp } = require('../../facility-dates/timestamp');
 const CONSTANTS = require('../../../constants');
 

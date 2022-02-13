@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { hasValue } = require('../../utils/string');
+const { hasValue } = require('../../utils/string.util');
 
 const getRequestedCoverStartDateValues = (facility) => {
   const {

@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 
-const { validate } = require('../role-validator');
+const { validate } = require('../utils/role-validator.util');
 
 const dealsController = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
@@ -28,7 +28,7 @@ const mga = require('./controllers/mga.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
 
 const users = require('./users/routes');
-const { cleanXss, fileUpload, validateBank } = require('./middleware');
+const { cleanXss, fileUpload } = require('./middleware');
 
 const gef = require('./gef/routes');
 
@@ -178,6 +178,6 @@ authRouter.get('/validate', validate(), (req, res) => {
 });
 
 // bank-validator
-authRouter.get('/validate/bank', (req, res) => validateBank(req, res));
+authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
 module.exports = { authRouter, openRouter, authRouterAllowXss };

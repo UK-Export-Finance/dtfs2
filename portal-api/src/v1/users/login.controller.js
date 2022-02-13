@@ -1,4 +1,4 @@
-const utils = require('../../crypto/utils');
+const utils = require('../../utils/crypto.util');
 const {
   userNotFound, userIsBlocked, incorrectPassword, userIsDisabled,
 } = require('../../constants/login-results');

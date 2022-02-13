@@ -1,7 +1,7 @@
 const {
   decimalsCount,
   roundNumber,
-} = require('../../../utils/number');
+} = require('../../../utils/number.util');
 
 const calculateUkefExposure = (requestedUpdate, existingFacility) => {
   let ukefExposure;

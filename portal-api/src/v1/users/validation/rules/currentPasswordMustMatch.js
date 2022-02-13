@@ -1,4 +1,4 @@
-const utils = require('../../../../crypto/utils');
+const utils = require('../../../../utils/crypto.util');
 
 module.exports = (user, change) => {
   const { password, currentPassword, resetPwdToken } = change;

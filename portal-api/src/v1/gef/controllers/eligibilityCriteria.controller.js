@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 
 const db = require('../../../drivers/db-client');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
-const utils = require('../utils.service');
+const utils = require('../utils/service.util');
 
 const collectionName = 'gef-eligibilityCriteria';
 

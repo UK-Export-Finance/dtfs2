@@ -1,4 +1,4 @@
-const { hasValue } = require('../../../../utils/string');
+const { hasValue } = require('../../../../utils/string.util');
 const currency = require('./currency');
 const conversionRate = require('./conversion-rate');
 const conversionRateDate = require('./conversion-rate-date');

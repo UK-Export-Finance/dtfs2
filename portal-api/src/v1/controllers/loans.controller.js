@@ -11,7 +11,7 @@ const {
   updateRequestedCoverStartDate,
 } = require('../facility-dates/requested-cover-start-date');
 const { loanStatus } = require('../section-status/loans');
-const { sanitizeCurrency } = require('../../utils/number');
+const { sanitizeCurrency } = require('../../utils/number.util');
 const facilitiesController = require('./facilities.controller');
 
 exports.create = async (req, res) => {

@@ -1,9 +1,4 @@
-const cleanXss = require('./clean-xss');
+const cleanXss = require('./clean-xss.middleware');
 const fileUpload = require('./file-upload.middleware');
-const validateBank = require('./validate-bank.middleware');
 
-module.exports = {
-  cleanXss,
-  fileUpload,
-  validateBank
-};
+module.exports = { cleanXss, fileUpload };

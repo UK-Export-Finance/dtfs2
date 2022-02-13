@@ -1,10 +1,10 @@
-const { hasValue } = require('../../utils/string');
+const { hasValue } = require('../../utils/string.util');
 const {
   isNumeric,
   decimalsCount,
   roundNumber,
   formattedNumber,
-} = require('../../utils/number');
+} = require('../../utils/number.util');
 
 exports.calculateGuaranteeFee = (riskMarginFee) => {
   if (hasValue(riskMarginFee)) {

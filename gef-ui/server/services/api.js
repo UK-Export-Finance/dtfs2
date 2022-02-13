@@ -14,11 +14,11 @@ const validateToken = async (token) => {
 
 const validateBank = async (dealId, bankId) => {
   try {
-    const { data } = await Axios.get('/validate/bank', { dealId, bankId });
+    const { data } = await Axios.get('/validate/bank', { data: { dealId, bankId } });
     return data;
   } catch (err) {
-    console.error(err);
-    return false;
+    console.error('Unable to validate the bank', { err });
+    return { isValid: false };
   }
 };
 

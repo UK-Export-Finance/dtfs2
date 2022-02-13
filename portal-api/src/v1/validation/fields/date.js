@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { hasValue } = require('../../../utils/string');
+const { hasValue } = require('../../../utils/string.util');
 
 exports.dateHasAllValues = (day, month, year) => {
   const hasDay = hasValue(day);

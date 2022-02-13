@@ -1,4 +1,4 @@
-const now = require('../../../now');
+const now = require('../../../utils/now.util');
 const refDataApi = require('../../../reference-data/api');
 const {
   getAllFacilitiesByDealId,

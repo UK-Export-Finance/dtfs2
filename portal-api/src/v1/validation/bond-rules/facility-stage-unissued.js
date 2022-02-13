@@ -1,4 +1,4 @@
-const { hasValue } = require('../../../utils/string');
+const { hasValue } = require('../../../utils/string.util');
 const ukefGuaranteeInMonths = require('../fields/ukef-guarantee-in-months');
 
 module.exports = (bond, errorList) => {

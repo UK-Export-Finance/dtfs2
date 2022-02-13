@@ -22,4 +22,5 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
   },
+  ignorePatterns: ['node_modules/'],
 };

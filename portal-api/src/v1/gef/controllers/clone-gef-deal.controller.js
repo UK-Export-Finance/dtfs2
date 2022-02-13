@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 
-const { cloneAzureFiles } = require('../utils/clone-azure-files.utils');
+const { cloneAzureFiles } = require('../utils/clone-azure-files.util');
 const { validateApplicationReferences } = require('./validation/application');
 const { exporterStatus } = require('./validation/exporter');
 const CONSTANTS = require('../../../constants');

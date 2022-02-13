@@ -1,5 +1,5 @@
-const { orderNumber } = require('../../../utils/error-list-order-number');
-const { hasValue } = require('../../../utils/string');
+const { orderNumber } = require('../../../utils/error-list-order-number.util');
+const { hasValue } = require('../../../utils/string.util');
 const { countryIsDisabled } = require('../fields/country');
 
 module.exports = (submissionDetails, errorList) => {

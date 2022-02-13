@@ -3,7 +3,7 @@ const { ObjectID } = require('mongodb');
 
 const db = require('../../../drivers/db-client');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');
-const utils = require('../utils.service');
+const utils = require('../utils/service.util');
 
 const collectionName = 'gef-mandatoryCriteriaVersioned';
 

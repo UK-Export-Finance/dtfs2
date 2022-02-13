@@ -1,6 +1,6 @@
 const { ObjectID } = require('mongodb');
 const db = require('../../../drivers/db-client');
-const utils = require('../utils.service');
+const utils = require('../utils/service.util');
 const {
   facilitiesValidation, facilitiesStatus, facilitiesOverallStatus, facilitiesCheckEnums,
 } = require('./validation/facilities');

@@ -1,6 +1,6 @@
-const { orderNumber } = require('../../../utils/error-list-order-number');
-const { hasValue } = require('../../../utils/string');
-const { sanitizeCurrency } = require('../../../utils/number');
+const { orderNumber } = require('../../../utils/error-list-order-number.util');
+const { hasValue } = require('../../../utils/string.util');
+const { sanitizeCurrency } = require('../../../utils/number.util');
 
 module.exports = (submissionDetails, errorList) => {
   const newErrorList = { ...errorList };

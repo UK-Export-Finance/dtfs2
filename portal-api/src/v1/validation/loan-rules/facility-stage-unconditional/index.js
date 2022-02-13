@@ -1,4 +1,4 @@
-const { hasValue } = require('../../../../utils/string');
+const { hasValue } = require('../../../../utils/string.util');
 const name = require('./name');
 const requestedCoverStartDateRules = require('./requested-cover-start-date');
 const coverEndDate = require('../../fields/cover-end-date');

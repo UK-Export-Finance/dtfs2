@@ -1,11 +1,11 @@
 const { ObjectID } = require('mongodb');
-const now = require('../../now');
+const now = require('../../utils/now.util');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const businessRules = require('../../config/businessRules');
 const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
-const utils = require('../../crypto/utils');
+const utils = require('../../utils/crypto.util');
 
 const createPasswordToken = async (email) => {
   const collection = await db.getCollection('users');
