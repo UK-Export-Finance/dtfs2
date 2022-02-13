@@ -2,7 +2,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
-const { dashboardFilters: filters } = require('../../../partials');
+const { dashboardFilters } = require('../../../partials');
 const {
   BSS_DEAL_AIN,
   BSS_FACILITY_BOND,
@@ -17,6 +17,8 @@ const {
 } = require('./_actions-and-assertions');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+
+const filters = dashboardFilters;
 
 context('Dashboard Facilities filters - filter by deal notice type', () => {
   const AIN_FACILITIES = [];

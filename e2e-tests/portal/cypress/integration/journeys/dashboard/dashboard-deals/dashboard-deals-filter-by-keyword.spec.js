@@ -1,13 +1,15 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const { dashboardDeals } = require('../../../pages');
-const { dashboardFilters: filters } = require('../../../partials');
+const { dashboardFilters } = require('../../../partials');
 const {
   BSS_DEAL_DRAFT,
   GEF_DEAL_DRAFT,
 } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+
+const filters = dashboardFilters;
 
 context('Dashboard Deals filters - filter by keyword', () => {
   const MOCK_KEYWORD = 'Special exporter';

@@ -1,9 +1,11 @@
 const relative = require('../../../relativeURL');
 const { dashboardFacilities } = require('../../../pages');
-const { dashboardFilters: filters } = require('../../../partials');
+const { dashboardFilters } = require('../../../partials');
 
 // UI actions and assertions for each filter test.
 // just need to pass in relevant field type/value/heading etc to each function.
+
+const filters = dashboardFilters;
 
 const submitRedirectsToDashboard = (cypressElementSelector) => {
   // apply filter
