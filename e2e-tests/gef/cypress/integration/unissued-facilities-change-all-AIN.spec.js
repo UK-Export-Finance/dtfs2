@@ -67,6 +67,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       applicationPreview.submitButtonPostApproval().should('not.exist');
       applicationPreview.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
       applicationPreview.automaticCoverSummaryList().contains('Yes - submit as an automatic inclusion notice');
+      applicationPreview.automaticCoverCriteria().should('exist');
     });
 
     /* application preview should not have unlocked ability to change unissued facilities until
