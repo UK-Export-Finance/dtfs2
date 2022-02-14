@@ -24,6 +24,10 @@ const tomorrow = add(today, { days: 1 });
 const tomorrowDay = format(tomorrow, 'dd');
 const tomorrowMonth = format(tomorrow, 'M');
 const tomorrowYear = format(tomorrow, 'yyyy');
+const threeMonths = add(today, { months: 3 });
+const threeMonthsDay = format(threeMonths, 'dd');
+const threeMonthsMonth = format(threeMonths, 'M');
+const threeMonthsYear = format(threeMonths, 'yyyy');
 const threeMonthsOneDay = add(today, { months: 3, days: 1 });
 const threeMonthsOneDayDay = format(threeMonthsOneDay, 'dd');
 const threeMonthsOneDayMonth = format(threeMonthsOneDay, 'M');
@@ -38,6 +42,13 @@ const threeDaysAgoUnix = getUnixTime(threeDaysAgo).toString();
 const threeDaysDay = format(threeDaysAgo, 'dd');
 const threeDaysMonth = format(threeDaysAgo, 'M');
 const threeDaysYear = format(threeDaysAgo, 'yyyy');
+
+const threeDaysAgoPlusMonth = add(threeDaysAgo, { months: 3 });
+
+const todayUnix = getUnixTime(today).toString();
+const todayUnixDay = format(threeDaysAgo, 'dd');
+const todayUnixMonth = format(threeDaysAgo, 'M');
+const todayUnixYear = format(threeDaysAgo, 'yyyy');
 
 export default {
   today,
@@ -60,6 +71,10 @@ export default {
   twoMonthsDay,
   twoMonthsMonth,
   twoMonthsYear,
+  threeMonths,
+  threeMonthsDay,
+  threeMonthsMonth,
+  threeMonthsYear,
   threeMonthsOneDay,
   threeMonthsOneDayDay,
   threeMonthsOneDayMonth,
@@ -73,4 +88,9 @@ export default {
   threeDaysDay,
   threeDaysMonth,
   threeDaysYear,
+  todayUnix,
+  todayUnixDay,
+  todayUnixMonth,
+  todayUnixYear,
+  threeDaysAgoPlusMonth,
 };
