@@ -70,6 +70,8 @@ const applicationDetails = {
   submitButton: () => cy.get('[data-cy="submit-button"]'),
   submitValidationText: () => cy.get('[data-cy="submit-validation-text"]'),
   supportingInfoList: () => cy.get('[data-cy="supportingInfo-summary-list"]'),
+
+  comments: () => cy.get('[data-cy="latest-comment"]'),
 };
 
 export default applicationDetails;

@@ -252,6 +252,9 @@ const MockSubmissionRequest = () => ({
     userToken: '',
     user: {
       username: 'maker',
+      firstname: 'Bob',
+      surname: 'Smith',
+      email: 'test@test.com',
       bank: { id: 'BANKID' },
       roles: ['maker'],
       _id: 1235,
