@@ -11,7 +11,11 @@
   </div>
 </div>
 
-{% set captionText = "Yes - submit as an automatic inclusion notice" %}
+{% if (isAutomaticCover === true) %}
+  {% set captionText = "Yes - submit as an automatic inclusion notice"  %}
+{% else %}
+  {% set captionText = "No - submit as a manual inclusion application"  %}
+{% endif %}
 
 {{ govukSummaryList({
   rows: [{ key: { text: "Eligible for automatic cover?" },
