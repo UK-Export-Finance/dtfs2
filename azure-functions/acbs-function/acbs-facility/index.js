@@ -82,7 +82,6 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
 
     // 5. Bundle creation + Facility activation
     const acbsCodeValueTransactionInput = mappings.facility.codeValueTransaction(deal, facility);
-
     const codeValueTransaction = yield context.df.callActivity(
       'activity-create-code-value-transaction',
       { acbsCodeValueTransactionInput },
@@ -97,7 +96,6 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
         facility,
         dealAcbsData,
       );
-
       facilityLoan = yield context.df.callActivityWithRetry(
         'activity-create-facility-loan',
         retryOptions,
@@ -110,11 +108,16 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
         facility,
       );
 
-      facilityLoan = yield context.df.callActivityWithRetry(
-        'activity-create-facility-fee',
-        retryOptions,
-        { acbsFacilityFeeInput },
-      );
+      if (Array.isArray(acbsFacilityFeeInput)) {
+        facilityFee = [];
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
+          const input = acbsFacilityFeeInput[i];
+          facilityFee.push(yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { acbsFacilityFeeInput: input }));
+        }
+      } else {
+        facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { acbsFacilityFeeInput });
+      }
     }
 
     return {

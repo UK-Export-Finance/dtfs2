@@ -17,7 +17,7 @@
 const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
-const facilityFee = (deal, facility) => {
+const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
   const { effectiveDate } = facility.tfm.facilityGuaranteeDates
     ? facility.tfm.facilityGuaranteeDates
     : '';
@@ -25,21 +25,38 @@ const facilityFee = (deal, facility) => {
     expirationDate,
     nextDueDate,
     nextAccrueToDate,
-  } = helpers.getFeeDates(facility, deal.dealSnapshot.dealType);
+  } = helpers.getFeeDates(facility, deal.dealSnapshot.dealType, premiumScheduleIndex);
 
   return {
     facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     effectiveDate,
-    amount: helpers.getFeeAmount(facility, deal.dealSnapshot.dealType),
+    amount: helpers.getFeeAmount(facility, deal.dealSnapshot.dealType, premiumScheduleIndex),
     expirationDate,
     nextDueDate,
     nextAccrueToDate,
-    period: helpers.getFeeRecordPeriod(facility, deal.dealSnapshot.dealType),
+    period: helpers.getFeeRecordPeriod(facility, deal.dealSnapshot.dealType, premiumScheduleIndex),
     currency: facility.facilitySnapshot.currency.id,
     lenderTypeCode: CONSTANTS.FACILITY.LENDER_TYPE.TYPE1,
     incomeClassCode: helpers.getIncomeClassCode(facility, deal.dealSnapshot.dealType),
     spreadToInvestorsIndicator: true,
   };
+};
+
+const facilityFee = (deal, facility) => {
+  let feeRecord;
+  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
+    // Singular GEF fixed fee record - Object
+    feeRecord = constructFeeRecord(deal, facility);
+  } else {
+  // Multiple EWCS/BSS Fee records as per premium schedule - Array
+    feeRecord = [];
+    if (facility.tfm.premiumSchedule) {
+      facility.tfm.premiumSchedule.forEach((premiumSchedule, index) => {
+        feeRecord.push(constructFeeRecord(deal, facility, index));
+      });
+    }
+  }
+  return feeRecord;
 };
 
 module.exports = facilityFee;

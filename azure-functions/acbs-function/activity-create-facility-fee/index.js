@@ -30,7 +30,6 @@ const mandatoryFields = [
 const createFacilityFee = async (context) => {
   const { acbsFacilityFeeInput } = context.bindingData;
   const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
-
   if (missingMandatory.length) {
     return Promise.resolve({ missingMandatory });
   }
