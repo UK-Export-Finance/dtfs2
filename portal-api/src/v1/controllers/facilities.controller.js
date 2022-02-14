@@ -77,15 +77,13 @@ exports.createMultipleFacilities = async (facilities, dealId, user) =>
 
 /**
 * Queries all facilities in the facilities collection (BSS, EWCS, GEF)
-* @param {*} dealFilters any filters for each deal, uses match spec
-* @param {*} filters any filters for facilities, uses match spec
+* @param {*} filters any filters for deals or facilities, uses match spec
 * @param {*} sort any additional sort fields for list
 * @param {*} start where list should start - part of pagination.
 * @param {*} pagesize Size of each page - limits list results
 * @returns combined and formatted list of facilities
 */
 exports.queryAllFacilities = async (
-  dealFilters = {},
   filters = {},
   sort = {},
   start = 0,
@@ -100,7 +98,6 @@ exports.queryAllFacilities = async (
           from: 'deals',
           localField: 'dealId',
           foreignField: '_id',
-          pipeline: [{ $match: dealFilters }],
           as: 'deal',
         },
       },

@@ -11,6 +11,8 @@ const {
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
+const filters = dashboardFilters;
+
 context('Dashboard Deals filters - filter by status', () => {
   const ALL_DEALS = [];
 
@@ -36,32 +38,32 @@ context('Dashboard Deals filters - filter by status', () => {
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       // apply filter
       dashboardDeals.filters.panel.form.status.draft.checkbox().click();
-      dashboardFilters.panel.form.applyFiltersButton().click();
+      filters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('renders checked checkbox', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
-      dashboardFilters.panel.selectedFilters.container().should('be.visible');
-      dashboardFilters.panel.selectedFilters.list().should('be.visible');
+      filters.panel.selectedFilters.container().should('be.visible');
+      filters.panel.selectedFilters.list().should('be.visible');
 
-      const firstAppliedFilterHeading = dashboardFilters.panel.selectedFilters.heading().first();
+      const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().first();
 
       firstAppliedFilterHeading.should('be.visible');
       firstAppliedFilterHeading.should('have.text', 'Status');
 
-      const firstAppliedFilter = dashboardFilters.panel.selectedFilters.listItem().first();
+      const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
 
       firstAppliedFilter.should('be.visible');
 
@@ -95,32 +97,32 @@ context('Dashboard Deals filters - filter by status', () => {
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       // apply filter
       dashboardDeals.filters.panel.form.status.readyForChecker.checkbox().click();
-      dashboardFilters.panel.form.applyFiltersButton().click();
+      filters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('renders checked checkbox', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       dashboardDeals.filters.panel.form.status.readyForChecker.checkbox().should('be.checked');
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
-      dashboardFilters.panel.selectedFilters.container().should('be.visible');
-      dashboardFilters.panel.selectedFilters.list().should('be.visible');
+      filters.panel.selectedFilters.container().should('be.visible');
+      filters.panel.selectedFilters.list().should('be.visible');
 
-      const firstAppliedFilterHeading = dashboardFilters.panel.selectedFilters.heading().first();
+      const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().first();
 
       firstAppliedFilterHeading.should('be.visible');
       firstAppliedFilterHeading.should('have.text', 'Status');
 
-      const firstAppliedFilter = dashboardFilters.panel.selectedFilters.listItem().first();
+      const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
 
       firstAppliedFilter.should('be.visible');
 
@@ -154,32 +156,32 @@ context('Dashboard Deals filters - filter by status', () => {
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       // apply filter
       dashboardDeals.filters.panel.form.status.all.checkbox().click();
-      dashboardFilters.panel.form.applyFiltersButton().click();
+      filters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('renders checked checkbox', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       dashboardDeals.filters.panel.form.status.all.checkbox().should('be.checked');
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
-      dashboardFilters.panel.selectedFilters.container().should('be.visible');
-      dashboardFilters.panel.selectedFilters.list().should('be.visible');
+      filters.panel.selectedFilters.container().should('be.visible');
+      filters.panel.selectedFilters.list().should('be.visible');
 
-      const firstAppliedFilterHeading = dashboardFilters.panel.selectedFilters.heading().first();
+      const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().first();
 
       firstAppliedFilterHeading.should('be.visible');
       firstAppliedFilterHeading.should('have.text', 'Status');
 
-      const firstAppliedFilter = dashboardFilters.panel.selectedFilters.listItem().first();
+      const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
 
       firstAppliedFilter.should('be.visible');
 

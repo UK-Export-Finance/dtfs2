@@ -113,9 +113,12 @@ describe('controllers/dashboard/filters - ui-filters', () => {
     it('should return generateFiltersArray with all possible `product` field inputs', () => {
       const mockSubmittedFilters = {};
 
-      const result = submissionTypeFilters(mockSubmittedFilters);
+      const expectedFieldName = `deal.${CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE}`;
 
-      const expectedFieldName = CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE;
+      const result = submissionTypeFilters(
+        expectedFieldName,
+        mockSubmittedFilters,
+      );
 
       const expectedFieldInputs = [
         { text: CONSTANTS.SUBMISSION_TYPE.AIN, value: CONSTANTS.SUBMISSION_TYPE.AIN },

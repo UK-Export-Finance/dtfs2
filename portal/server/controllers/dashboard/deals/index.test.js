@@ -14,7 +14,7 @@ import {
   submittedFiltersObject,
 } from '../filters/helpers';
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
-import { dashboardDealsFilters } from './template-filters';
+import { dealsTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
 import CONSTANTS from '../../../constants';
 
@@ -156,7 +156,7 @@ describe('controllers/dashboard/deals', () => {
         tab: 'deals',
         deals: mockDeals,
         pages: expectedPages,
-        filters: dashboardDealsFilters(expectedFiltersObj),
+        filters: templateFilters(expectedFiltersObj),
         selectedFilters: selectedFilters(expectedFiltersObj),
         createdByYou: mockReq.session.dashboardFilters.createdByYou,
         keyword: mockReq.session.dashboardFilters.keyword,

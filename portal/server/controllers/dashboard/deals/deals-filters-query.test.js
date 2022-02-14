@@ -2,7 +2,7 @@ import { dashboardDealsFiltersQuery } from './deals-filters-query';
 import { STATUS } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 
-describe('controllers/dashboard/filters - deals query', () => {
+describe('controllers/dashboard/deals - filters query', () => {
   const mockUser = {
     _id: '123',
     roles: ['maker'],

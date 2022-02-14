@@ -1,13 +1,12 @@
 import {
-  productFilters,
+  typeFilters,
   hasBeenIssuedFilters,
-  dashboardFacilitiesFilters,
+  facilitiesTemplateFilters,
 } from './template-filters';
 import {
   FIELD_NAMES,
   FACILITY_HAS_BEEN_ISSUED,
   FACILITY_TYPE,
-  PRODUCT,
 } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import {
@@ -16,16 +15,15 @@ import {
 } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/facilities - template-filters', () => {
-  describe('productFilters', () => {
+  describe('typeFilters', () => {
     it('should return generateFiltersArray with all possible `product` field inputs', () => {
       const mockSubmittedFilters = {};
 
-      const result = productFilters(mockSubmittedFilters);
+      const result = typeFilters(mockSubmittedFilters);
 
       const expectedFieldName = FIELD_NAMES.FACILITY.TYPE;
 
       const expectedFieldInputs = [
-        { text: PRODUCT.GEF, value: PRODUCT.GEF },
         { text: FACILITY_TYPE.CASH, value: FACILITY_TYPE.CASH },
         { text: FACILITY_TYPE.CONTINGENT, value: FACILITY_TYPE.CONTINGENT },
         { text: FACILITY_TYPE.BOND, value: FACILITY_TYPE.BOND },
@@ -71,13 +69,16 @@ describe('controllers/dashboard/facilities - template-filters', () => {
     });
   });
 
-  describe('dashboardFacilitiesFilters', () => {
+  describe('facilitiesTemplateFilters', () => {
     it('should return an object of all filters', () => {
-      const result = dashboardFacilitiesFilters();
+      const result = facilitiesTemplateFilters();
 
       const expected = {
-        product: productFilters({}),
-        submissionType: submissionTypeFilters({}),
+        type: typeFilters({}),
+        'deal.submissionType': submissionTypeFilters(
+          `deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`,
+          {},
+        ),
         hasBeenIssued: hasBeenIssuedFilters({}),
       };
 

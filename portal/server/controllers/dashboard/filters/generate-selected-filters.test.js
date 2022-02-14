@@ -1,6 +1,8 @@
 import {
   generateSelectedFiltersObject,
   selectedSubmissionTypeFilters,
+  mapIssuedValueToText,
+  selectedHasBeenIssuedFilters,
 } from './generate-selected-filters';
 import { formatFieldValue } from './helpers';
 import CONTENT_STRINGS from '../../../content-strings';
@@ -53,12 +55,63 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
         CONSTANTS.SUBMISSION_TYPE.MIN,
       ];
 
-      const result = selectedSubmissionTypeFilters(mockSubmittedFieldFilters);
+      const result = selectedSubmissionTypeFilters(
+        CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
+        mockSubmittedFieldFilters,
+      );
 
       const expected = generateSelectedFiltersObject(
         CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.NOTICE_TYPE,
         CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
         mockSubmittedFieldFilters,
+      );
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('mapIssuedValueToText', () => {
+    it(`should return ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED} when true string is passed`, () => {
+      const mockValue = 'true';
+
+      const result = mapIssuedValueToText(mockValue);
+
+      const expected = CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED;
+      expect(result).toEqual(expected);
+    });
+
+    it(`should return ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED} when false string is passed`, () => {
+      const mockValue = 'false';
+
+      const result = mapIssuedValueToText(mockValue);
+
+      const expected = CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED;
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('selectedHasBeenIssuedFilters', () => {
+    it('should return result of generateSelectedFiltersObject with mapped hasBeenIssuedValues', () => {
+      const mockHeading = CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE;
+      const mockFieldName = CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED;
+      const mockSubmittedFieldFilters = [
+        'true',
+        'false',
+      ];
+
+      const result = selectedHasBeenIssuedFilters(
+        mockHeading,
+        mockFieldName,
+        mockSubmittedFieldFilters,
+      );
+
+      const mappedSubmittedFieldFilters = mockSubmittedFieldFilters.map((value) =>
+        mapIssuedValueToText(value));
+
+      const expected = generateSelectedFiltersObject(
+        mockHeading,
+        mockFieldName,
+        mappedSubmittedFieldFilters,
       );
 
       expect(result).toEqual(expected);

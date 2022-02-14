@@ -1,6 +1,7 @@
 const api = require('../../../api');
-const { dashboardFacilitiesDealFiltersQuery } = require('./facilities-deal-filters-query');
-const { dashboardFacilitiesFilters } = require('./template-filters');
+const { dashboardFacilitiesFiltersQuery } = require('./facilities-filters-query');
+const { facilitiesTemplateFilters: templateFilters } = require('./template-filters');
+const { selectedFilters } = require('./selected-filters');
 const {
   submittedFiltersArray,
   submittedFiltersObject,
@@ -24,17 +25,14 @@ const getAllFacilitiesData = async (
 ) => {
   const filtersArray = submittedFiltersArray(sessionFilters);
 
-  const dealFiltersQuery = dashboardFacilitiesDealFiltersQuery(
+  const filtersQuery = dashboardFacilitiesFiltersQuery(
     filtersArray,
     user,
   );
 
-  const filtersQuery = [];
-
   const { count, facilities } = await getApiData(api.allFacilities(
     currentPage * PAGESIZE,
     PAGESIZE,
-    dealFiltersQuery,
     filtersQuery,
     userToken,
   ), res);
@@ -69,7 +67,8 @@ const getTemplateVariables = (
     tab,
     facilities,
     pages,
-    filters: dashboardFacilitiesFilters(filtersObj),
+    filters: templateFilters(filtersObj),
+    selectedFilters: selectedFilters(filtersObj),
   };
 
   return templateVariables;
