@@ -90,6 +90,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
+      unissuedFacilityTable.rows().contains(format(dateConstants.threeMonths, 'dd MMM yyyy'));
       statusBanner.applicationBanner().should('exist');
     });
 
@@ -233,9 +234,11 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
+
+      // testing if MIN submission date so can do 3months
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.threeMonthsDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.threeMonthsMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.threeMonthsYear);
 
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
@@ -264,7 +267,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     it('facility table should have change links on the changed to issued facilities', () => {
       // to check date format
       const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
-      const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
+      const coverStartThreeMonths = format(dateConstants.threeMonths, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       // should be able to change facility four as changed to issued
@@ -275,7 +278,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       applicationPreview.facilitySummaryListRowAction(0, 2).should('have.value', '');
       applicationPreview.facilitySummaryListRowValue(0, 3).contains(issuedDate);
       applicationPreview.facilitySummaryListRowAction(0, 3).contains('Change');
-      applicationPreview.facilitySummaryListRowValue(0, 4).contains(coverStart);
+      applicationPreview.facilitySummaryListRowValue(0, 4).contains(coverStartThreeMonths);
       applicationPreview.facilitySummaryListRowAction(0, 4).contains('Change');
       applicationPreview.facilitySummaryListRowValue(0, 5).contains(coverEnd);
       applicationPreview.facilitySummaryListRowAction(0, 5).contains('Change');
