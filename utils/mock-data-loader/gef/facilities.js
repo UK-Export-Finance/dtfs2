@@ -1,5 +1,3 @@
-// Please note: do not include application ID in these mocks as this will processed as a new facility and contain null fields
-
 const {
   FACILITY_PROVIDED_DETAILS, FACILITY_TYPE, CURRENCY,
 } = require('../../../portal-api/src/v1/gef/enums');

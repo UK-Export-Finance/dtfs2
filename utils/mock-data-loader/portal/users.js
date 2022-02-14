@@ -56,7 +56,7 @@ const USERS = [
     bank: UKEF_TEST_BANK_1,
   },
   {
-    username: 'BANK1_MAKENCHECK1',
+    username: 'BANK1_MAKER_CHECKER1',
     password: 'AbC!2345',
     firstname: 'Vladimir',
     surname: 'Scorpius',
