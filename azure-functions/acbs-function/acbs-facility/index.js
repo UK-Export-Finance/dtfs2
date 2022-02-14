@@ -19,6 +19,8 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
   const {
     deal, facility, dealAcbsData, acbsReference,
   } = context.df.getInput();
+  let facilityLoan;
+  let facilityFee;
 
   try {
     // 1. Facility Master
@@ -80,27 +82,42 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
 
     // 5. Bundle creation + Facility activation
     const acbsCodeValueTransactionInput = mappings.facility.codeValueTransaction(deal, facility);
-
     const codeValueTransaction = yield context.df.callActivity(
       'activity-create-code-value-transaction',
       { acbsCodeValueTransactionInput },
       retryOptions,
     );
 
-    // 6. Facility Loan Record - Issued & Activated facilities only
-    let facilityLoan;
+    // Records only created for `Issued` and `Activated` facilities only
     if (acbsFacilityMasterInput.facilityStageCode === CONSTANTS.FACILITY.STAGE_CODE.ISSUED) {
+      // 6. Facility loan record
       const acbsFacilityLoanInput = mappings.facility.facilityLoan(
         deal,
         facility,
         dealAcbsData,
       );
-
       facilityLoan = yield context.df.callActivityWithRetry(
         'activity-create-facility-loan',
         retryOptions,
         { acbsFacilityLoanInput },
       );
+
+      // 7. Facility fee record
+      const acbsFacilityFeeInput = mappings.facility.facilityFee(
+        deal,
+        facility,
+      );
+
+      if (Array.isArray(acbsFacilityFeeInput)) {
+        facilityFee = [];
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
+          const input = acbsFacilityFeeInput[i];
+          facilityFee.push(yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { acbsFacilityFeeInput: input }));
+        }
+      } else {
+        facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { acbsFacilityFeeInput });
+      }
     }
 
     return {
@@ -112,6 +129,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       ...facilityTypeSpecific,
       codeValueTransaction,
       facilityLoan,
+      facilityFee,
     };
   } catch ({ error }) {
     const [type, errorDetails] = error.split('Error: ');

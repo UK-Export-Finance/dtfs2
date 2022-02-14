@@ -106,6 +106,7 @@ const createFacilityCovenant = (acbsInput) => postToACBS('facility/covenant', ac
 const createFacilityGuarantee = (acbsInput) => postToACBS('facility/guarantee', acbsInput);
 const createCodeValueTransaction = (acbsInput) => postToACBS('facility/codeValueTransaction', acbsInput);
 const createFacilityLoan = (acbsInput) => postToACBS('facility/loan', acbsInput);
+const createFacilityFee = (acbsInput) => postToACBS('facility/fixedFee', acbsInput);
 const updateFacility = (facilityId, updateType, acbsInput, etag) => putToACBS(
   `facility/${facilityId}?op=${updateType}`,
   acbsInput,
@@ -125,6 +126,7 @@ module.exports = {
   createFacilityGuarantee,
   createCodeValueTransaction,
   createFacilityLoan,
+  createFacilityFee,
   updateFacility,
   getFacility,
 };

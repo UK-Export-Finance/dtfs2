@@ -15,7 +15,7 @@
 "spreadRate":                       Used for Premium Accrual Schedule. For GEF, BSS and EWCS.
 "spreadRateCTL":                    Used for Contractual Interest Accrual Schedule (CTL).
                                     For EWCS. EWCS needs two spread rates.
-"nextDueDate":
+"nextDueDate":                      guaranteeCommencementDate + Fee frequency in months
 "yearBasis":                        dayCountBasis : 360 = 5, 365 = 1
 "indexRateChangeFrequency":         feeFrequency
 "loanBillingFrequencyType":         feeType
@@ -43,7 +43,7 @@ const facilityLoan = (deal, facility, acbsData) => {
     amount: facility.tfm.ukefExposure,
     issueDate,
     expiryDate: guaranteeExpiryDate,
-    spreadRate: facility.facilitySnapshot.guaranteeFee,
+    spreadRate: facility.facilitySnapshot.guaranteeFee || facility.facilitySnapshot.guaranteeFeePayableByBank,
     nextDueDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
     yearBasis: helpers.getYearBasis(facility),
     loanBillingFrequencyType: helpers.getFeeType(facility),

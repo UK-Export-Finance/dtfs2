@@ -472,7 +472,6 @@ const updateACBSfacility = async (facility, dealType, supplierName) => {
 };
 
 const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => {
-  // Need to refer to docker internal to work on localhost
   let functionUrl;
   switch (type) {
     case CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS:
@@ -501,7 +500,7 @@ const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url
     });
     return response.data;
   } catch (err) {
-    console.error(`Unable to getFunctionsAPI for ${modifiedUrl}`);
+    console.error(`Unable to getFunctionsAPI for ${modifiedUrl}`, { err });
     return err?.response?.data
       ? err.response.data
       : err;
