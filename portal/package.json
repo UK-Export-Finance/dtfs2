@@ -35,9 +35,6 @@
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
     "@ministryofjustice/frontend": "1.2.0",
-    "apollo-cache-inmemory": "^1.6.5",
-    "apollo-client": "^2.6.8",
-    "apollo-link-http": "^1.5.17",
     "axios": "^0.25.0",
     "connect-flash": "0.1.1",
     "connect-redis": "^5.0.0",
@@ -47,8 +44,6 @@
     "express-session": "1.17.0",
     "form-data": "3.0.0",
     "govuk-frontend": "4.0.1",
-    "graphql": "^15.0.0",
-    "graphql-tag": "^2.10.3",
     "helmet": "^5.0.2",
     "imask": "^6.0.5",
     "jquery": "^3.6.0",

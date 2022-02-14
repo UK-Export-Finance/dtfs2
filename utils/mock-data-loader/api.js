@@ -1,8 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const { QUERY, apollo } = require('./graphql');
-
 const { gef } = require('./gef/api');
 
 const portalApiUrl = process.env.DEAL_API_URL;
@@ -294,8 +292,19 @@ const listCountries = async (token) => {
 };
 
 const listDeals = async (token) => {
-  const response = await apollo('GET', QUERY.dealsQuery, {}, token);
-  return response.data.allDeals.deals;
+  // const response = await apollo('GET', QUERY.dealsQuery, {}, token);
+
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${portalApiUrl}/v1/deals`,
+  }).catch((err) => { console.error(`err: ${err}`); });
+
+  return response.data.deals;
 };
 
 const listIndustrySectors = async (token) => {
