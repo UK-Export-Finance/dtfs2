@@ -9,6 +9,8 @@ const {
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
+const filters = dashboardFilters;
+
 context('Dashboard Deals filters - filter by keyword', () => {
   const MOCK_KEYWORD = 'Special exporter';
 
@@ -43,32 +45,32 @@ context('Dashboard Deals filters - filter by keyword', () => {
 
     it('submits the filter and redirects to the dashboard', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
       // apply filter
-      dashboardFilters.panel.form.keyword.input().type(MOCK_KEYWORD);
-      dashboardFilters.panel.form.applyFiltersButton().click();
+      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      filters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('renders submitted keyword', () => {
       // toggle to show filters (hidden by default)
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
-      dashboardFilters.panel.form.keyword.input().should('have.value', MOCK_KEYWORD);
+      filters.panel.form.keyword.input().should('have.value', MOCK_KEYWORD);
     });
 
     it('renders the applied keyword in the `applied filters` section', () => {
-      dashboardFilters.panel.selectedFilters.container().should('be.visible');
-      dashboardFilters.panel.selectedFilters.list().should('be.visible');
+      filters.panel.selectedFilters.container().should('be.visible');
+      filters.panel.selectedFilters.list().should('be.visible');
 
-      const firstAppliedFilterHeading = dashboardFilters.panel.selectedFilters.heading().first();
+      const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().first();
 
       firstAppliedFilterHeading.should('be.visible');
       firstAppliedFilterHeading.should('have.text', 'Keyword');
 
-      const firstAppliedFilter = dashboardFilters.panel.selectedFilters.listItem().first();
+      const firstAppliedFilter = filters.panel.selectedFilters.listItem().first();
 
       firstAppliedFilter.should('be.visible');
 
@@ -77,10 +79,10 @@ context('Dashboard Deals filters - filter by keyword', () => {
     });
 
     it('renders the applied keyword in the `main container selected filters` section', () => {
-      dashboardFilters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).should('be.visible');
+      filters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).should('be.visible');
 
       const expectedText = `Remove this filter ${MOCK_KEYWORD}`;
-      dashboardFilters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).contains(expectedText);
+      filters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).contains(expectedText);
     });
 
     it(`renders only deals that have ${MOCK_KEYWORD} in a field`, () => {

@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const axios = require('axios');
 require('dotenv').config();
 

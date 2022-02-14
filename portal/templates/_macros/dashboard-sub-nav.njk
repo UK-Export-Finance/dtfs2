@@ -6,13 +6,19 @@
       id: 'deals',
       href: '/dashboard/deals',
       text: 'Deals',
-      active: 'deals' === selected
+      active: 'deals' === selected,
+      attributes: {
+        'data-cy': 'dashboard-sub-nav-link-deals'
+      }
     },
     {
       id: 'facilities',
       href: '/dashboard/facilities',
       text: 'Facilities',
-      active: 'facilities' === selected
+      active: 'facilities' === selected,
+      attributes: {
+        'data-cy': 'dashboard-sub-nav-link-facilities'
+      }
     }
   ] %}
 

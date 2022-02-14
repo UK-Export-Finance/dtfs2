@@ -10,33 +10,27 @@ module.exports = {
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
-    emails: [
-      'checker@ukexportfinance.gov.uk'
-    ]
+    emails: ['checker@ukexportfinance.gov.uk'],
   },
   details: {
     status: 'Draft',
     maker: {
       _id: '60f7d72654f99900074c0a6d',
       username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
+      roles: ['maker'],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
+        emails: ['checker@ukexportfinance.gov.uk'],
       },
       lastLogin: '1626968154830',
       firstname: 'Hugo',
       surname: 'Drax',
       email: 'maker1@ukexportfinance.gov.uk',
       timezone: 'Europe/London',
-      'user-status': 'active'
+      'user-status': 'active',
     },
-    created: nowTimestamp
+    created: nowTimestamp,
   },
   eligibility: {
     status: 'Completed',
@@ -44,51 +38,58 @@ module.exports = {
       {
         _id: '60f7d72854f99900074c0a91',
         id: 11,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
-        answer: true
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
+        answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a92',
         id: 12,
-        description: 'The cover period for each Transaction does not exceed 5 years, or such other period approved by UKEF (that has not lapsed or been withdrawn) in relation to bonds and/or loans for this Obligor.',
-        answer: true
+        description:
+          'The cover period for each Transaction does not exceed 5 years, or such other period approved by UKEF (that has not lapsed or been withdrawn) in relation to bonds and/or loans for this Obligor.',
+        answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a93',
         id: 13,
-        description: 'The total UKEF exposure, across all short-term schemes (including bond support and export working capital transactions), for this Obligor (including this Transaction) does not exceed £2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).',
-        answer: true
+        description:
+          'The total UKEF exposure, across all short-term schemes (including bond support and export working capital transactions), for this Obligor (including this Transaction) does not exceed £2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).',
+        answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a94',
         id: 14,
-        description: 'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
-        answer: true
+        description:
+          'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
+        answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a95',
         id: 15,
         description: 'The Requested Cover Start Date is no more than three months from the date of submission.',
-        answer: true
+        answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a96',
         id: 16,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco or gambling, and the Bank is not aware that any of the information contained within it is inaccurate.',
-        answer: true
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco or gambling, and the Bank is not aware that any of the information contained within it is inaccurate.',
+        answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a97',
         id: 17,
-        description: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
-        answer: true
+        description:
+          'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
+        answer: true,
       },
       {
         _id: '60f7d72854f99900074c0a98',
         id: 18,
-        description: 'The fees and/or interest apply to the whole Cover Period, and have been set in accordance with the Bank’s normal pricing policies and, if any, minimum or overall pricing requirements set by UKEF.',
-        answer: true
-      }
+        description:
+          'The fees and/or interest apply to the whole Cover Period, and have been set in accordance with the Bank’s normal pricing policies and, if any, minimum or overall pricing requirements set by UKEF.',
+        answer: true,
+      },
     ],
     agentName: '',
     agentAddressCountry: '',
@@ -100,34 +101,13 @@ module.exports = {
     validationErrors: {
       count: 0,
       errorList: {
-        11: {
-        },
-        12: {
-        },
-        13: {
-        },
-        14: {
-        },
-        15: {
-        },
-        16: {
-        },
-        17: {
-        },
-        18: {
-        },
-        agentName: {
-        },
-        agentAddressCountry: {
-        },
-        agentAddressLine1: {
-        },
-        agentAddressPostcode: {
-        },
-        agentAddressTown: {
-        }
-      }
-    }
+        agentName: {},
+        agentAddressCountry: {},
+        agentAddressLine1: {},
+        agentAddressPostcode: {},
+        agentAddressTown: {},
+      },
+    },
   },
   submissionDetails: {
     status: 'Incomplete',
@@ -136,7 +116,7 @@ module.exports = {
     'supplier-name': 'Auto Test 1',
     'supplier-address-country': {
       name: 'Australia',
-      code: 'AUS'
+      code: 'AUS',
     },
     'supplier-address-line-1': 'TEST',
     'supplier-address-line-2': 'TEST',
@@ -144,8 +124,7 @@ module.exports = {
     'supplier-address-town': 'TEST',
     'supplier-address-postcode': 'TEST',
     'supplier-correspondence-address-is-different': 'false',
-    'supplier-correspondence-address-country': {
-    },
+    'supplier-correspondence-address-country': {},
     'supplier-correspondence-address-line-1': '',
     'supplier-correspondence-address-line-2': '',
     'supplier-correspondence-address-line-3': '',
@@ -153,26 +132,24 @@ module.exports = {
     'supplier-correspondence-address-postcode': '',
     'industry-sector': {
       code: '1005',
-      name: 'Construction'
+      name: 'Construction',
     },
     'industry-class': {
       code: '42910',
-      name: 'Construction of water projects'
+      name: 'Construction of water projects',
     },
     'sme-type': 'Medium',
     'supply-contract-description': 'TEST',
     legallyDistinct: 'false',
     'indemnifier-companies-house-registration-number': '',
     'indemnifier-name': '',
-    'indemnifier-address-country': {
-    },
+    'indemnifier-address-country': {},
     'indemnifier-address-line-1': '',
     'indemnifier-address-line-2': '',
     'indemnifier-address-line-3': '',
     'indemnifier-address-town': '',
     'indemnifier-address-postcode': '',
-    'indemnifier-correspondence-address-country': {
-    },
+    'indemnifier-correspondence-address-country': {},
     'indemnifier-correspondence-address-line-1': '',
     'indemnifier-correspondence-address-line-2': '',
     'indemnifier-correspondence-address-line-3': '',
@@ -182,7 +159,7 @@ module.exports = {
     'buyer-name': 'A1 Test',
     'buyer-address-country': {
       name: 'United Kingdom',
-      code: 'GBR'
+      code: 'GBR',
     },
     'buyer-address-line-1': 'TEST',
     'buyer-address-line-2': 'TEST',
@@ -191,353 +168,44 @@ module.exports = {
     'buyer-address-postcode': 'TEST',
     destinationOfGoodsAndServices: {
       name: 'United Arab Emirates',
-      code: 'ARE'
+      code: 'ARE',
     },
     supplyContractValue: '5000000.00',
     supplyContractCurrency: {
       text: 'GBP - UK Sterling',
       id: 'GBP',
-      currencyId: 12
+      currencyId: 12,
     },
     supplyContractConversionRateToGBP: '',
     'supplyContractConversionDate-day': '',
     'supplyContractConversionDate-month': '',
-    'supplyContractConversionDate-year': ''
+    'supplyContractConversionDate-year': '',
   },
-  summary: {
-  },
+  summary: {},
   comments: [],
   editedBy: [
     {
       date: '1626968578071',
       username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
+      roles: ['maker'],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
+        emails: ['checker@ukexportfinance.gov.uk'],
       },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626968675391',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626968755949',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626968816191',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626968840563',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626968855765',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626968868294',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969025776',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969142751',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969191175',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969205082',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969299384',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969324332',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969349993',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969363015',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969419609',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969439808',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626969627987',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626970961503',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626971002410',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
-    },
-    {
-      date: '1626971039476',
-      username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
-      bank: {
-        id: '9',
-        name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
-      },
-      userId: '60f7d72654f99900074c0a6d'
+      userId: '60f7d72654f99900074c0a6d',
     },
     {
       date: '1626971072253',
       username: 'maker1@ukexportfinance.gov.uk',
-      roles: [
-        'maker'
-      ],
+      roles: ['maker'],
       bank: {
         id: '9',
         name: 'UKEF test bank (Delegated)',
-        emails: [
-          'checker@ukexportfinance.gov.uk'
-        ]
+        emails: ['checker@ukexportfinance.gov.uk'],
       },
-      userId: '60f7d72654f99900074c0a6d'
-    }
+      userId: '60f7d72654f99900074c0a6d',
+    },
   ],
   mandatoryCriteria: [
     {
@@ -547,17 +215,17 @@ module.exports = {
       items: [
         {
           id: 1,
-          copy: 'The Supplier has provided the Bank with a duly completed Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate.'
+          copy: 'The Supplier has provided the Bank with a duly completed Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate.',
         },
         {
           id: 2,
-          copy: 'The Bank has complied with its policies and procedures in relation to the Transaction.'
+          copy: 'The Bank has complied with its policies and procedures in relation to the Transaction.',
         },
         {
           id: 3,
-          copy: 'Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate. (Conditional for UK Supplier)'
-        }
-      ]
+          copy: 'Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate. (Conditional for UK Supplier)',
+        },
+      ],
     },
     {
       _id: '60f7d72854f99900074c0a8d',
@@ -566,9 +234,9 @@ module.exports = {
       items: [
         {
           id: 4,
-          copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href>Eligible Person spreadsheet</a>'
-        }
-      ]
+          copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href>Eligible Person spreadsheet</a>',
+        },
+      ],
     },
     {
       _id: '60f7d72854f99900074c0a8e',
@@ -577,9 +245,9 @@ module.exports = {
       items: [
         {
           id: 5,
-          copy: 'The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one- year probability of default of less than 14.1%.'
-        }
-      ]
+          copy: 'The Bank Customer (to include both the Supplier and any UK Parent Obligor) has a one- year probability of default of less than 14.1%.',
+        },
+      ],
     },
     {
       _id: '60f7d72854f99900074c0a8f',
@@ -588,9 +256,9 @@ module.exports = {
       items: [
         {
           id: 6,
-          copy: 'The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland.'
-        }
-      ]
+          copy: 'The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland.',
+        },
+      ],
     },
     {
       _id: '60f7d72854f99900074c0a90',
@@ -599,36 +267,35 @@ module.exports = {
       items: [
         {
           id: 7,
-          copy: 'The Bank is the sole and beneficial owner of, and has legal title to, the Transaction.'
+          copy: 'The Bank is the sole and beneficial owner of, and has legal title to, the Transaction.',
         },
         {
           id: 8,
-          copy: 'The Bank has not made a Disposal (other than a Permitted Disposal) or a Risk Transfer (other than a Permitted Risk Transfer) in relation to the Transaction.'
+          copy: 'The Bank has not made a Disposal (other than a Permitted Disposal) or a Risk Transfer (other than a Permitted Risk Transfer) in relation to the Transaction.',
         },
         {
           id: 9,
-          copy: 'The Bank’s right, title and interest in relation to the Transaction is clear of any Security and Quasi-Security (other than Permitted Security) and is freely assignable without the need to obtain consent of any Obligor or any other person.'
+          copy: 'The Bank’s right, title and interest in relation to the Transaction is clear of any Security and Quasi-Security (other than Permitted Security) and is freely assignable without the need to obtain consent of any Obligor or any other person.',
         },
         {
           id: 10,
-          copy: 'The Bank is not restricted or prevented by any agreement with an Obligor from providing information and records relating to the Transaction.'
-        }
-      ]
-    }
+          copy: 'The Bank is not restricted or prevented by any agreement with an Obligor from providing information and records relating to the Transaction.',
+        },
+      ],
+    },
   ],
   supportingInformation: {
     validationErrors: {
       count: 0,
       errorList: {
-        exporterQuestionnaire: {
-        }
-      }
+        exporterQuestionnaire: {},
+      },
     },
     securityDetails: {
-      exporter: 'Test'
+      exporter: 'Test',
     },
   },
   exporter: {
-    companyName: 'Auto Test 1'
-  }
+    companyName: 'Auto Test 1',
+  },
 };

@@ -1,7 +1,7 @@
 import {
-  productFilters,
+  dealTypeFilters,
   statusFilters,
-  dashboardDealsFilters,
+  dealsTemplateFilters,
 } from './template-filters';
 import {
   FIELD_NAMES,
@@ -15,11 +15,11 @@ import {
 } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/deals - template-filters', () => {
-  describe('productFilters', () => {
+  describe('dealTypeFilters', () => {
     it('should return generateFiltersArray with all possible `product` field inputs', () => {
       const mockSubmittedFilters = {};
 
-      const result = productFilters(mockSubmittedFilters);
+      const result = dealTypeFilters(mockSubmittedFilters);
 
       const expectedFieldName = FIELD_NAMES.DEAL.DEAL_TYPE;
 
@@ -103,13 +103,16 @@ describe('controllers/dashboard/deals - template-filters', () => {
     });
   });
 
-  describe('dashboardDealsFilters', () => {
+  describe('dealsTemplateFilters', () => {
     it('should return an object of all filters', () => {
-      const result = dashboardDealsFilters();
+      const result = dealsTemplateFilters();
 
       const expected = {
-        product: productFilters({}),
-        submissionType: submissionTypeFilters({}),
+        dealType: dealTypeFilters({}),
+        submissionType: submissionTypeFilters(
+          FIELD_NAMES.DEAL.SUBMISSION_TYPE,
+          {},
+        ),
         status: statusFilters({}),
       };
 

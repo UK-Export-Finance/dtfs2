@@ -8,20 +8,6 @@ const partial = {
         label: () => cy.get('[data-cy="filter-label-keyword"]'),
         input: () => cy.get('[data-cy="filter-input-keyword"]'),
       },
-      submissionType: {
-        AIN: {
-          label: () => cy.get('[data-cy="filter-label-submissionType-Automatic-Inclusion-Notice"]'),
-          checkbox: () => cy.get('[data-cy="filter-input-submissionType-Automatic-Inclusion-Notice"]'),
-        },
-        MIA: {
-          label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Application"]'),
-          checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Application"]'),
-        },
-        MIN: {
-          label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Notice"]'),
-          checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Notice"]'),
-        },
-      },
     },
     selectedFilters: {
       // NOTE: at the time of writing, it is not possible to pass custom data-cy attributes to MOJ filter component.
@@ -36,6 +22,9 @@ const partial = {
     selectedFilters: {
       container: () => cy.get('[data-cy="main-container-selected-filters'),
       keyword: (keyword) => cy.get(`[data-cy="main-container-selected-filter-${keyword.replace(' ', '-')}"]`),
+      noticeAIN: () => cy.get('[data-cy="main-container-selected-filter-Automatic-Inclusion-Notice'),
+      noticeMIN: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Notice'),
+      noticeMIA: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Application'),
     },
   },
 };

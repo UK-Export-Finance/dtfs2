@@ -1,3 +1,15 @@
+const formatFieldValue = (value) => {
+  if (value === 'true') {
+    return true;
+  }
+
+  if (value === 'false') {
+    return false;
+  }
+
+  return value;
+};
+
 const createDbQuery = (operator, field, value) => {
   const query = {
     [`$${operator}`]: [],
@@ -5,7 +17,7 @@ const createDbQuery = (operator, field, value) => {
 
   value.forEach((fieldValue) => {
     query[`$${operator}`].push({
-      [field]: fieldValue,
+      [field]: formatFieldValue(fieldValue),
     });
   });
 
@@ -23,6 +35,7 @@ const createDbQueryKeywordDeals = (keyword) => ({
 });
 
 module.exports = {
+  formatFieldValue,
   createDbQuery,
   createDbQueryKeywordDeals,
 };

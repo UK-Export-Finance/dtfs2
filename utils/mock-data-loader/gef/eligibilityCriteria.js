@@ -51,7 +51,7 @@ const ELIGIBILITY_CRITERIA = [
         id: 17,
         name: 'facilityLetter',
         text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee:',
-        textList: [        
+        textList: [
           'has been set in accordance with the Bank\'s normal pricing policies consistently applied;',
           'has been set in accordance with the overall minimum pricing requirements, if any, most recently notified by UK Export Finance to the Bank;',
           '(where the Covered Facility Limit in relation to the Facility is more than the Available Obligor(s) Limit) has been set in accordance with the overall pricing requirements, if any, most recently notified by UK Export Finance to the Bank for the relevant Obligor(s); and',

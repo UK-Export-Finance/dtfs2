@@ -12,6 +12,8 @@ const {
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
+const filters = dashboardFilters;
+
 context('Dashboard Deals filters', () => {
   const ALL_FACILITIES = [];
 
@@ -49,44 +51,39 @@ context('Dashboard Deals filters', () => {
     });
 
     it('hides filters and renders `show filter` button', () => {
-      dashboardFilters.panel.container().should('not.be.visible');
+      filters.panel.container().should('not.be.visible');
 
-      dashboardFilters.showHideButton().should('be.visible');
-      dashboardFilters.showHideButton().should('have.text', 'Show filter');
+      filters.showHideButton().should('be.visible');
+      filters.showHideButton().should('have.text', 'Show filter');
     });
   });
 
   describe('clicking `show filter` button', () => {
     it('renders all filters container', () => {
-      dashboardFilters.showHideButton().click();
+      filters.showHideButton().click();
 
-      dashboardFilters.panel.container().should('be.visible');
+      filters.panel.container().should('be.visible');
     });
 
     it('changes show/hide button text', () => {
-      dashboardFilters.showHideButton().should('be.visible');
-      dashboardFilters.showHideButton().should('have.text', 'Hide filter');
+      filters.showHideButton().should('be.visible');
+      filters.showHideButton().should('have.text', 'Hide filter');
     });
 
     it('renders `apply filters` button', () => {
-      dashboardFilters.panel.form.applyFiltersButton().should('be.visible');
-      dashboardFilters.panel.form.applyFiltersButton().contains('Apply filters');
+      filters.panel.form.applyFiltersButton().should('be.visible');
+      filters.panel.form.applyFiltersButton().contains('Apply filters');
     });
   });
 
   describe('renders all filters empty/unchecked by default', () => {
     it('keyword', () => {
-      dashboardFilters.panel.form.keyword.label().contains('Keyword');
-      dashboardFilters.panel.form.keyword.input().should('be.visible');
-      dashboardFilters.panel.form.keyword.input().should('have.value', '');
+      filters.panel.form.keyword.label().contains('Keyword');
+      filters.panel.form.keyword.input().should('be.visible');
+      filters.panel.form.keyword.input().should('have.value', '');
     });
 
     it('product/facility type', () => {
-      // GEF
-      dashboardFacilities.filters.panel.form.type.gef.label().contains(CONSTANTS.DEALS.DEAL_TYPE.GEF);
-      dashboardFacilities.filters.panel.form.type.gef.checkbox().should('exist');
-      dashboardFacilities.filters.panel.form.type.gef.checkbox().should('not.be.checked');
-
       // Cash
       dashboardFacilities.filters.panel.form.type.cash.label().contains(CONSTANTS.FACILITY.FACILITY_TYPE.CASH);
       dashboardFacilities.filters.panel.form.type.cash.checkbox().should('exist');
@@ -110,19 +107,19 @@ context('Dashboard Deals filters', () => {
 
     it('submissionType/notice type', () => {
       // AIN
-      dashboardFilters.panel.form.submissionType.AIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.AIN);
-      dashboardFilters.panel.form.submissionType.AIN.checkbox().should('exist');
-      dashboardFilters.panel.form.submissionType.AIN.checkbox().should('not.be.checked');
+      dashboardFacilities.filters.panel.form.submissionType.AIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.AIN);
+      dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().should('exist');
+      dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().should('not.be.checked');
 
       // MIA
-      dashboardFilters.panel.form.submissionType.MIA.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
-      dashboardFilters.panel.form.submissionType.MIA.checkbox().should('exist');
-      dashboardFilters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
+      dashboardFacilities.filters.panel.form.submissionType.MIA.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+      dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().should('exist');
+      dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
       // MIN
-      dashboardFilters.panel.form.submissionType.MIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
-      dashboardFilters.panel.form.submissionType.MIN.checkbox().should('exist');
-      dashboardFilters.panel.form.submissionType.MIN.checkbox().should('not.be.checked');
+      dashboardFacilities.filters.panel.form.submissionType.MIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
+      dashboardFacilities.filters.panel.form.submissionType.MIN.checkbox().should('exist');
+      dashboardFacilities.filters.panel.form.submissionType.MIN.checkbox().should('not.be.checked');
     });
 
     it('bank facility stage/hasBeenIssued', () => {
