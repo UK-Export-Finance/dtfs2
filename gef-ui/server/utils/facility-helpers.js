@@ -104,7 +104,7 @@ const areUnissuedFacilitiesPresent = (application) => {
 const facilityIssueDeadline = (submissionDate) => {
   if (submissionDate) {
   // converts to timestamp from epoch - '+' to convert from str to int
-    const date = new Date(+submissionDate);
+    const date = new Date(parseInt(submissionDate, 10));
     const deadlineDate = add(new Date(date), { months: 3 });
 
     return format(deadlineDate, 'dd MMM yyyy');
@@ -116,14 +116,17 @@ const facilityIssueDeadline = (submissionDate) => {
 /* govukTable mapping function to return array of facilities which are
    not yet issued for the cover-start-date.njk template.
 */
-const getUnissuedFacilitiesAsArray = (facilities, submissionDate) =>
+const getUnissuedFacilitiesAsArray = (facilities, application) =>
   facilities.items
     .filter(({ details }) => !details.hasBeenIssued)
     .map(({ details }, index) => [
       { text: details.name },
       { text: details.ukefFacilityId },
       { text: `${details.currency.id} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
-      { text: facilityIssueDeadline(submissionDate) },
+      {
+        text: application.manualInclusionNoticeSubmissionDate ? facilityIssueDeadline(application.manualInclusionNoticeSubmissionDate)
+          : facilityIssueDeadline(application.submissionDate),
+      },
       {
         html: `<a href = '/gef/application-details/${details.dealId}/unissued-facilities/${details._id}/about' class='govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-facility-button-${index}'>Update</a>`,
       },

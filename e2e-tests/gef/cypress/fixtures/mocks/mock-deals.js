@@ -205,6 +205,7 @@ export const MOCK_APPLICATION_MIN = {
     requiredFields: ['manualInclusion'],
   },
   ukefDecision: [],
+  manualInclusionNoticeSubmissionDate: `${dateConstants.todayUnix}503`,
   ...commonApplicationDetails,
 };
 

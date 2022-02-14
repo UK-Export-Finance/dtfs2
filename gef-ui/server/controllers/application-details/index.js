@@ -229,7 +229,7 @@ const applicationDetails = async (req, res, next) => {
       } else if (url === 'confirm-cover-start-date') {
         facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
       } else if (url === 'unissued-facilities') {
-        facility = getUnissuedFacilitiesAsArray(await api.getFacilities(dealId), application.submissionDate);
+        facility = getUnissuedFacilitiesAsArray(await api.getFacilities(dealId), application);
       }
     }
 
