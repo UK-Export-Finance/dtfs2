@@ -83,7 +83,7 @@ exports.createMultipleFacilities = async (facilities, dealId, user) =>
 * @param {*} pagesize Size of each page - limits list results
 * @returns combined and formatted list of facilities
 */
-exports.queryAllFacilities = async (
+const queryAllFacilities = async (
   filters = {},
   sort = {},
   start = 0,
@@ -91,7 +91,7 @@ exports.queryAllFacilities = async (
 ) => {
   const collection = await db.getCollection('facilities');
 
-  const doc = await collection
+  const results = await collection
     .aggregate([
       {
         $lookup: {
@@ -143,5 +143,31 @@ exports.queryAllFacilities = async (
     ])
     .toArray();
 
-  return doc;
+  const {
+    count,
+    facilities,
+  } = results[0];
+
+  return {
+    count,
+    facilities,
+  };
+};
+
+exports.getQueryAllFacilities = async (req, res) => {
+  const {
+    start,
+    pagesize,
+    filters,
+    sort,
+  } = req.body;
+
+  const results = await queryAllFacilities(
+    filters,
+    sort,
+    start,
+    pagesize,
+  );
+
+  return res.status(200).send(results);
 };

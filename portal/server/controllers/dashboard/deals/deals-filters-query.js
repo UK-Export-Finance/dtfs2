@@ -12,7 +12,7 @@ const {
  * @param {array} custom filters
  * @param {object} user
  * @example ( 'true', [ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' } )
- * @returns [ { field: 'maker._id', value: ['123'] }, { field: 'dealType', value: ['BSS/EWCS'] } ]
+ * @returns { $and: [ { 'bank.id': '9'} ], $or: [{ dealType: 'BSS/EWCS' }] }
  */
 const dashboardDealsFiltersQuery = (
   createdByYou,
@@ -20,45 +20,86 @@ const dashboardDealsFiltersQuery = (
   user,
 ) => {
   const { isMaker, isChecker } = getUserRoles(user.roles);
-  const filtersQuery = [];
+
+  const query = {};
 
   if (!isSuperUser(user)) {
-    filtersQuery.push({
-      field: 'bank.id',
-      value: user.bank.id,
-      operator: 'and',
-    });
+    query.$and = [
+      { 'bank.id': user.bank.id },
+    ];
   }
 
   if (createdByYou) {
-    filtersQuery.push({
-      field: 'maker._id',
-      value: user._id,
+    query.$and.push({
+      'maker._id': user._id,
     });
   }
 
   if (isChecker && !isMaker) {
-    filtersQuery.push({
-      field: 'status',
-      value: CONSTANTS.STATUS.READY_FOR_APPROVAL,
-      operator: 'and',
+    query.$and.push({
+      [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.READY_FOR_APPROVAL,
     });
   }
 
-  filters.forEach((filterObj) => {
-    const fieldName = Object.keys(filterObj)[0];
-    const filterValue = filterObj[fieldName];
+  if (filters.length) {
+    query.$or = [];
 
-    if (!filterValue.includes(CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES)) {
-      filtersQuery.push({
-        field: fieldName,
-        value: filterValue,
-        operator: 'or',
-      });
-    }
-  });
+    filters.forEach((filterObj) => {
+      const fieldName = Object.keys(filterObj)[0];
+      const filterValue = filterObj[fieldName];
 
-  return filtersQuery;
+      const isKeywordField = (fieldName === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD);
+
+      const hasAllStatusesFilterValue = filterValue.includes(CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES);
+
+      if (isKeywordField) {
+        const keywordValue = filterValue[0];
+
+        const keywordFilters = [
+          {
+            [CONSTANTS.FIELD_NAMES.DEAL.BANK_INTERNAL_REF_NAME]: {
+              $regex: keywordValue, $options: 'i',
+            },
+          },
+          {
+            [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: {
+              $regex: keywordValue, $options: 'i',
+            },
+          },
+          {
+            [CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE]: {
+              $regex: keywordValue, $options: 'i',
+            },
+          },
+          {
+            [CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]: {
+              $regex: keywordValue, $options: 'i',
+            },
+          },
+          {
+            [CONSTANTS.FIELD_NAMES.DEAL.EXPORTER_COMPANY_NAME]: {
+              $regex: keywordValue, $options: 'i',
+            },
+          },
+        ];
+
+        query.$or = [
+          ...query.$or,
+          ...keywordFilters,
+        ];
+      }
+
+      if (!isKeywordField && !hasAllStatusesFilterValue) {
+        filterValue.forEach((value) => {
+          query.$or.push({
+            [fieldName]: value,
+          });
+        });
+      }
+    });
+  }
+
+  return query;
 };
 
 module.exports = {

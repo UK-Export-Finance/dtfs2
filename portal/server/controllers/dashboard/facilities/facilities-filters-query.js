@@ -4,32 +4,34 @@
  * @param {object} user
  * @param {array} custom filters
  * @example ( { _id: '1234', bank: { id: '9' } }, [ type: ['Bond'] ] )
- * @returns [ { field: 'deal.bank._id', value: '9', operator: 'and' }, { field: 'type', value: ['Bond'], operator: 'or' } ]
+ * @returns { $and: [ { 'deal.bank.id': '9'} ], $or: [{ hasBeenIssued: true }, { type: 'Bond' } ] }
  */
 const dashboardFacilitiesFiltersQuery = (
   filters,
   user,
 ) => {
-  const filtersQuery = [];
+  const query = {
+    $and: [
+      { 'deal.bank.id': user.bank.id },
+    ],
+  };
 
-  filtersQuery.push({
-    field: 'deal.bank.id',
-    value: user.bank.id,
-    operator: 'and',
-  });
+  if (filters.length) {
+    query.$or = [];
 
-  filters.forEach((filterObj) => {
-    const fieldName = Object.keys(filterObj)[0];
-    const filterValue = filterObj[fieldName];
+    filters.forEach((filterObj) => {
+      const fieldName = Object.keys(filterObj)[0];
+      const filterValue = filterObj[fieldName];
 
-    filtersQuery.push({
-      field: fieldName,
-      value: filterValue,
-      operator: 'or',
+      filterValue.forEach((value) => {
+        query.$or.push({
+          [fieldName]: value,
+        });
+      });
     });
-  });
+  }
 
-  return filtersQuery;
+  return query;
 };
 
 module.exports = {

@@ -1,10 +1,9 @@
 const allDeals = require('./query-all-deals');
-const allFacilities = require('./query-all-facilities');
 
 const resolvers = {
   Query: {
+    // NOTE: this graphQL query is only used in E2E tests.
     allDeals,
-    allFacilities,
   },
 };
 

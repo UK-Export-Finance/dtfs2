@@ -36,8 +36,8 @@ module.exports.listAllDeals = (token) => {
   };
 
   return cy.request({
-    url: `${api()}/graphql`,
-    method: 'POST',
+    url: `${api()}/v1/deals`,
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Authorization: token,
@@ -45,7 +45,7 @@ module.exports.listAllDeals = (token) => {
     body: JSON.stringify(body),
   }).then((resp) => {
     expect(resp.status).to.equal(200);
-    return resp.body.data.allDeals.deals;
+    return resp.body.deals;
   });
 };
 

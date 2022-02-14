@@ -1,64 +1,32 @@
 const { queryAllDeals: queryDeals } = require('../../v1/controllers/deal.controller');
-const { dbHelpers } = require('./helpers');
-const dealsReducer = require('../reducers/deals');
 
+// NOTE: this graphQL resolver is only used in E2E tests.
 const queryAllDeals = async (_, { params = {} }) => {
   const {
     start = 0,
     pagesize,
-    filters = [],
+    filters = {},
     sort = [],
   } = params;
 
-  const dbFilters = filters.map((clause) => {
-    if (clause.field === 'keyword') {
-      return dbHelpers.createDbQueryKeywordDeals(clause.value[0]);
-    }
+  const queryResults = await queryDeals(filters, sort, start, pagesize);
 
-    if (clause.field === 'maker._id') {
-      return {
-        [clause.field]: clause.value[0],
-      };
-    }
-
-    if (clause.operator) {
-      return dbHelpers.createDbQuery(clause.operator, clause.field, clause.value);
-    }
-
-    return {
-      [clause.field]: clause.value,
-    };
-  });
-
-  let dealFiltersObj = {};
-
-  dbFilters.forEach((obj) => {
-    dealFiltersObj = {
-      ...dealFiltersObj,
-      ...obj,
-    };
-  });
-
-  const deals = await queryDeals(dealFiltersObj, sort, start, pagesize);
-
-  if (!deals.length) {
+  if (!queryResults.length) {
     return {
       deals: [],
       count: 0,
     };
   }
 
-  const dealsObj = deals[0];
+  const dealsObj = queryResults[0];
 
   const {
-    deals: dealsArray,
+    deals,
     count,
   } = dealsObj;
 
-  const reducedDeals = dealsReducer(dealsArray);
-
   return {
-    deals: reducedDeals,
+    deals,
     count,
   };
 };
