@@ -202,7 +202,7 @@ jobs:
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
-        npm install
+        npm install --legacy-peer-deps
         node ./re-insert-mocks.js
         pwd
     - name: Run e2e tests
@@ -211,7 +211,7 @@ jobs:
       run: |
         pwd
         cd $GITHUB_WORKSPACE
-        npm install
+        npm install --legacy-peer-deps
         cd e2e-tests/submit-to-trade-finance-manager
         npx cypress run --config video=false --browser=chrome
     - name: Save Cypress screenshots

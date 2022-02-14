@@ -113,8 +113,10 @@ const validateAboutFacility = async (req, res) => {
       } else if (coverStartDateIsFullyComplete) {
         const now = new Date();
         const threeMonthsFromNow = add(now, { months: 3 });
-        const startDate = set(new Date(),
-          { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay });
+        const startDate = set(
+          new Date(),
+          { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay },
+        );
 
         if (isBefore(startDate, now)) {
           aboutFacilityErrors.push({
@@ -185,13 +187,17 @@ const validateAboutFacility = async (req, res) => {
   }
 
   if (coverStartDateIsFullyComplete) {
-    coverStartDate = set(new Date(),
-      { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay });
+    coverStartDate = set(
+      new Date(),
+      { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay },
+    );
   }
 
   if (coverEndDateIsFullyComplete) {
-    coverEndDate = set(new Date(),
-      { year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay });
+    coverEndDate = set(
+      new Date(),
+      { year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay },
+    );
   }
 
   if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete) {

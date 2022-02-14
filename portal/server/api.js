@@ -80,12 +80,12 @@ const allDeals = async (start, pagesize, filters, token, sort) => {
   return response.data.allDeals;
 };
 
-const allFacilities = async (start, pagesize, dealFilters, filters, token) => {
+const allFacilities = async (start, pagesize, filters, token, sort) => {
   const params = {
     start,
     pagesize,
-    dealFilters,
     filters,
+    sort,
   };
 
   const response = await apollo('GET', allFacilitiesQuery, params, token);

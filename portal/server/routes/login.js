@@ -100,10 +100,12 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
   );
 
   if (formattedValidationErrors && formattedValidationErrors.count > 0) {
-    return res.render('user/change-password.njk',
+    return res.render(
+      'user/change-password.njk',
       {
         validationErrors: formattedValidationErrors,
-      });
+      },
+    );
   }
 
   return res.redirect('/?passwordupdated=1');
