@@ -35,6 +35,7 @@ const applicationPreview = {
 
   automaticCoverHeading: () => cy.get('[data-cy="automatic-cover-heading"]'),
   automaticCoverSummaryList: () => cy.get('[data-cy="automatic-cover-summary-list"]'),
+  automaticCoverCriteria: () => cy.get('[data-cy="automatic-cover-criteria"]'),
 
   facilityHeading: () => cy.get('[data-cy="facility-heading"]'),
   facilitySummaryList: () => cy.get('[data-cy="facility-summary-list"]'),
