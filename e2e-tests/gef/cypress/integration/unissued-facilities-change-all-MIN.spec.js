@@ -67,6 +67,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
       applicationPreview.submitButtonPostApproval().should('not.exist');
       applicationPreview.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN);
+      applicationPreview.automaticCoverSummaryList().contains('No - submit as a manual inclusion application');
     });
 
     /* application preview should not have unlocked ability to change unissued facilities until
