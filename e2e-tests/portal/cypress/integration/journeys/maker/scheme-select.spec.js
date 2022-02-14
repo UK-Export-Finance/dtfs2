@@ -8,7 +8,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 context('Select a scheme', () => {
   beforeEach(() => {
     cy.login(BANK1_MAKER1);
-    pages.dashboardDeals.createNewSubmission().click();
+    pages.dashboard.createNewSubmission().click();
   });
 
   it('should display validation error if submitted without confirming a scheme', () => {

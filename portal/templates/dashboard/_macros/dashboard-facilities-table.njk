@@ -33,8 +33,17 @@
       {% set stage = 'Unissued' %}
     {% endif %}
 
-    {% if facility.currency.id %}
+
+  
+    {# {% if facility.currency.id and facility.value %}
       {% set currency = facility.currency.id %}
+      {% set value = currency + ' ' + facility.value %}
+    {% endif %} #}
+    {% set currencyAndValue = '-' %}
+
+    {% if facility.currency.id and facility.value %}
+      {% set formattedValue = facility.value | formatAsCurrency %}
+      {% set currencyAndValue = facility.currency.id + ' ' + formattedValue %}
     {% endif %}
 
     {% set facilityRow = [
@@ -59,7 +68,7 @@
         classes: "govuk-body-s"
       },
       {
-        text: currency + ' ' + facility.value | formatAsCurrency | dashIfEmpty,
+        text: currencyAndValue,
         attributes: { "data-cy": "facility__value--" + facility._id },
         classes: "govuk-body-s"
       },

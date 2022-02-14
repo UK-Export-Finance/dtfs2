@@ -21,7 +21,7 @@
     }
   }) }}
 
-  {% if filters.product %}
+  {% if filters.dealType %}
     {{ govukCheckboxes({
       idPrefix: 'dealType',
       name: 'dealType',
@@ -32,7 +32,22 @@
           classes: 'govuk-fieldset__legend--m'
         }
       },
-      items: filters.product
+      items: filters.dealType
+    }) }}
+  {% endif %}
+
+  {% if filters.type %}
+    {{ govukCheckboxes({
+      idPrefix: 'type',
+      name: 'type',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Product',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.type
     }) }}
   {% endif %}
 
@@ -48,6 +63,21 @@
         }
       },
       items: filters.submissionType
+    }) }}
+  {% endif %}
+
+  {% if filters['deal.submissionType'] %}
+    {{ govukCheckboxes({
+      idPrefix: 'deal.submissionType',
+      name: 'deal.submissionType',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Notice type',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters['deal.submissionType']
     }) }}
   {% endif %}
 

@@ -6,11 +6,12 @@
  * @example { fieldA: 'value', fieldB: ['a', 'b'] }
  * @returns [ { fieldA: ['value'] }, { fieldB: ['a', 'b'] } ]
  */
-const submittedFiltersArray = (allSubmittedFilters) => {
-  const {
-    createdByYou,
-    ...submittedFilters
-  } = allSubmittedFilters;
+const submittedFiltersArray = (allSubmittedFilters = {}) => {
+  const submittedFilters = allSubmittedFilters;
+
+  if (submittedFilters.createdByYou) {
+    delete submittedFilters.createdByYou;
+  }
 
   const consistentArray = [];
 

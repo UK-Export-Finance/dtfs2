@@ -35,7 +35,10 @@ const selectedFilters = (submittedFilters) => {
   }
 
   if (submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]) {
-    const obj = selectedSubmissionTypeFilters(submittedFilters.submissionType);
+    const obj = selectedSubmissionTypeFilters(
+      CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
+      submittedFilters[CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE],
+    );
     selected.push(obj);
   }
 

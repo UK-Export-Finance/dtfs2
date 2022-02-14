@@ -1,8 +1,8 @@
 const gql = require('graphql-tag');
 
 const allFacilitiesQuery = gql`
-query allFacilities($start: Int, $pagesize: Int, $dealFilters: [DashboardFilters], $filters: [DashboardFilters]){
-  allFacilities(params: {start: $start, pagesize: $pagesize, dealFilters: $dealFilters, filters: $filters}) {
+query allFacilities($start: Int, $pagesize: Int, $filters: [DashboardFilters]){
+  allFacilities(params: {start: $start, pagesize: $pagesize, filters: $filters}) {
     count
     facilities {
       _id

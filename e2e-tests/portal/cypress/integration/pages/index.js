@@ -20,6 +20,7 @@ module.exports = {
   contractConfirmSubmission: require('./contract/contract-confirmSubmission'),
   contractSubmissionDetails: require('./contractSubmissionDetails'),
   editDealName: require('./contract/contract-edit-name'),
+  dashboard: require('./dashboard'),
   dashboardDeals: require('./dashboardDeals'),
   dashboardFacilities: require('./dashboardFacilities'),
   cloneDeal: require('./cloneDeal'),
