@@ -50,7 +50,13 @@ const postApplicationSubmission = async (req, res, next) => {
 
     if (comment) {
       const commentObj = {
-        roles: user.roles, userName: user.username, createdAt: Date.now(), comment,
+        roles: user.roles,
+        userName: user.username,
+        firstname: user.firstname,
+        surname: user.surname,
+        email: user.email,
+        createdAt: Date.now(),
+        comment,
       };
       const comments = application.comments || [];
       comments.push(commentObj);
