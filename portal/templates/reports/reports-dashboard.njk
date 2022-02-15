@@ -39,10 +39,10 @@
   <div class="separator-line"></div>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-      {% if totalUkefDecisions > 1 %}
-        <h3 class="govuk-heading-m" data-cy="reports--review-ukef-decision-title">You need to review {{ totalUkefDecisions }} UKEF decisions</h3>
-      {% else %}
+      {% if totalUkefDecisions == 0 %}
         <h3 class="govuk-heading-m" data-cy="reports--review-ukef-decision-title">You have reviewed all UKEF decisions</h3>
+      {% else %}
+        <h3 class="govuk-heading-m" data-cy="reports--review-ukef-decision-title">You need to review {{ totalUkefDecisions }} UKEF decisions</h3>
       {% endif %}
     </div>
   </div>

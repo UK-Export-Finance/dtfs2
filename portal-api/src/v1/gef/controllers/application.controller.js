@@ -230,7 +230,6 @@ exports.changeStatus = async (req, res) => {
   const existingApplication = await collection.findOne({
     _id: ObjectId(String(dealId)),
   });
-
   if (!existingApplication) {
     return res.status(404)
       .send();
