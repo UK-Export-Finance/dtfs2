@@ -78,7 +78,6 @@ export const findOne = async (req: Request, res: Response) => {
 };
 
 const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
-  console.log({ id }, { facility }, { deal });
   if (id) {
     const response = await axios({
       method: 'post',
