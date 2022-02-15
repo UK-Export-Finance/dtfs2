@@ -6,6 +6,7 @@ const {
   displayTaskComments,
   displayChangeSupportingInfo,
   canUpdateUnissuedFacilitiesCheck,
+  isMIAWithoutChangedToIssuedFacilities,
 } = require('../../utils/helpers');
 const {
   areUnissuedFacilitiesPresent,
@@ -133,6 +134,7 @@ function buildBody(app, previewMode, user) {
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
     canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
+    MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
   };
 
   return appBody;
@@ -227,7 +229,7 @@ const applicationDetails = async (req, res, next) => {
       } else if (url === 'confirm-cover-start-date') {
         facility = getFacilityCoverStartDate(await api.getFacility(facilityId));
       } else if (url === 'unissued-facilities') {
-        facility = getUnissuedFacilitiesAsArray(await api.getFacilities(dealId), application.submissionDate);
+        facility = getUnissuedFacilitiesAsArray(await api.getFacilities(dealId), application);
       }
     }
 

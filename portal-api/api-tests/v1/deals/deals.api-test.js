@@ -22,6 +22,11 @@ const newDeal = aDeal({
     text: 'Also Merry Christmas from the 80s',
   }],
   editedBy: [],
+  supportingInformation: {
+    securityDetails: {
+      exporter: null,
+    }
+  }
 });
 
 describe('/v1/deals', () => {
@@ -163,12 +168,6 @@ describe('/v1/deals', () => {
       expect(status).toEqual(401);
     });
 
-    it('404s requests for unknown ids', async () => {
-      const { status } = await as(anHSBCMaker).put(newDeal).to('/v1/deals/123456789012');
-
-      expect(status).toEqual(404);
-    });
-
     it('accepts requests if <user>.bank.id == *', async () => {
       const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
@@ -180,7 +179,7 @@ describe('/v1/deals', () => {
         },
       };
 
-      const { status, body } = await as(aSuperuser).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
+      const { status } = await as(aSuperuser).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
     });
@@ -311,14 +310,14 @@ describe('/v1/deals', () => {
       expect(dealAfterCreation.deal).toEqual(expectAddedFields(newDeal));
     });
 
-    it('creates incremental integer deal IDs', async () => {
+    it('creates unique deal IDs', async () => {
       const deal1 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const deal2 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       const deal3 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
 
-      expect(parseInt(deal1.body._id).toString()).toEqual(deal1.body._id);
-      expect(deal2.body._id - deal1.body._id).toEqual(1);
-      expect(deal3.body._id - deal2.body._id).toEqual(1);
+      expect(deal1.body._id).toEqual(deal1.body._id);
+      expect(deal1.body._id).not.toEqual(deal2.body._id);
+      expect(deal1.body._id).not.toEqual(deal3.body._id);
     });
 
     describe('when required fields are missing', () => {

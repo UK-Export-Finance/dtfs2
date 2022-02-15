@@ -1,5 +1,4 @@
 const deal = {
-  _id: '1000908',
   submissionType: 'Manual Inclusion Notice',
   updatedAt: Date.now(),
   bankInternalRefName: 'DTFS2-2815 MIN - pre submit',
@@ -280,7 +279,7 @@ const deal = {
   bondTransactions: {
     items: [
       {
-        _id: '1001475',
+        _id: '5f3ab3f705e6630007dcfb21',
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '24',
@@ -323,7 +322,7 @@ const deal = {
         status: 'Ready for check',
       },
       {
-        _id: '1001474',
+        _id: '5f3ab3f705e6630007dcfb22',
         facilityStage: 'Issued',
         hasBeenIssued: true,
         ukefGuaranteeInMonths: '24',
@@ -369,7 +368,7 @@ const deal = {
   loanTransactions: {
     items: [
       {
-        _id: '1001476',
+        _id: '5f3ab3f705e6630007dcfb23',
         ukefGuaranteeInMonths: '24',
         name: 'Date set',
         value: '100000.00',
@@ -409,7 +408,7 @@ const deal = {
         status: 'Ready for check',
       },
       {
-        _id: '1001477',
+        _id: '5f3ab3f705e6630007dcfb24',
         ukefGuaranteeInMonths: '24',
         name: 'Default date',
         value: '100000.00',
@@ -624,7 +623,9 @@ const deal = {
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       },
     ],
-    security: '',
+    securityDetails: {
+      exporter: '',
+    },
   },
   ukefComments: [
     {

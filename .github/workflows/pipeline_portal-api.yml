@@ -2,7 +2,8 @@ name: Portal API
 
 on:
   push:
-    branches: [ dev ]
+    # Branch updates initiates deployment
+    branches: [ main ]
     paths:
     - 'portal-api/**'
     - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
@@ -100,7 +101,7 @@ jobs:
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
-        npm install
+        npm install --legacy-peer-deps
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |

@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const db = require('../../../../drivers/db-client');
 const {
@@ -49,7 +50,7 @@ const createDealSnapshot = async (deal) => {
   }
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: String(deal._id) },
+    { _id: { $eq: ObjectId(deal._id) } },
     $.flatten(withoutId(dealObj)),
     { returnOriginal: false, upsert: true },
   );
@@ -85,7 +86,7 @@ const createFacilitiesSnapshot = async (deal) => {
   if (dealFacilities) {
     const updatedFacilities = Promise.all(
       dealFacilities.map(async (facility) => collection.findOneAndUpdate(
-        { _id: String(facility._id) },
+        { _id: { $eq: ObjectId(facility._id) } },
         $.flatten({ facilitySnapshot: facility, ...tfmInit }),
         { returnOriginal: false, upsert: true },
       )),
@@ -94,7 +95,7 @@ const createFacilitiesSnapshot = async (deal) => {
     return updatedFacilities;
   }
 
-  return dealFacilities;
+  return null;
 };
 
 const submitDeal = async (deal) => {

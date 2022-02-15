@@ -131,7 +131,7 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
         submissionDate,
       }
       supportingInformation {
-        security
+        securityDetails
       }
       totals {
         facilitiesValueInGBP,

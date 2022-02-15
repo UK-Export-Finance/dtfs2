@@ -11,7 +11,7 @@ const defaultUnissuedFacilitiesReportResponse = {
   currency: 'GBP',
   currencyAndValue: 'GBP 500,000.00',
   deadlineForIssuing: '18 Apr 2022',
-  dealId: '1000000',
+  dealId: '61e54dd5b578247e14575881',
   submissionDate: '1642514270823',
   ukefFacilityId: '0030163787',
   value: '500000.00',
@@ -40,7 +40,7 @@ const mockUnissuedFacilitiesReportResponse = [
 
 const mockUkefConditionalDecisionReportResponse = [
   {
-    dealId: '1000003',
+    dealId: '61e54dd5b578247e14575882',
     bankInternalRefName: 'Manual Test 2',
     dealType: 'GEF',
     companyName: 'Company name',
@@ -52,7 +52,7 @@ const mockUkefConditionalDecisionReportResponse = [
 ];
 const mockUkefUnconditionalDecisionReportResponse = [
   {
-    dealId: '1000004',
+    dealId: '61e54dd5b578247e14575883',
     bankInternalRefName: 'Manual Test 1',
     dealType: 'BSS/EWCS',
     companyName: 'Company name',

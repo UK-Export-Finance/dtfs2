@@ -1,21 +1,21 @@
 {
-  "name": "",
+  "name": "acbs-function",
   "version": "",
   "description": "",
   "engineStrict": true,
   "engines": {
-    "node": ">=14.0.0 <15.0.0",
-    "npm": ">=6.0.0 <7.0.0"
+    "node": ">=16.0.0",
+    "npm": ">=6.0.0"
   },
   "scripts": {
     "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js "
   },
   "author": "",
   "dependencies": {
-    "axios": "^0.21.1",
-    "dotenv": "^8.2.0",
-    "durable-functions": "^1.5.2",
+    "axios": "^0.25.0",
+    "dotenv": "^16.0.0",
+    "durable-functions": "^1.5.4",
     "moment": "^2.29.1",
-    "date-fns": "^2.25.0"
+    "date-fns": "^2.28.0"
   }
 }

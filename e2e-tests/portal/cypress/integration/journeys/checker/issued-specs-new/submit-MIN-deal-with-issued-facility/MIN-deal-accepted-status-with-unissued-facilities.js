@@ -1,5 +1,4 @@
 const deal = {
-  _id: '1000324',
   submissionType: 'Manual Inclusion Notice',
   updatedAt: Date.now(),
   bankInternalRefName: 'test',
@@ -421,7 +420,9 @@ const deal = {
         mimetype: 'application/pdf',
       },
     ],
-    security: '',
+    securityDetails: {
+      exporter: '',
+    },
   },
 };
 

@@ -26,8 +26,6 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   const underwriterFullName = `${underwriter.firstName} ${underwriter.lastName}`;
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_MIA._id, ADMIN_LOGIN);
-
     cy.getUser(underwriterManager1.username).then((userObj) => {
       underwriterManager1UserId = userObj._id;
     });
@@ -55,6 +53,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   });
 
   after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });

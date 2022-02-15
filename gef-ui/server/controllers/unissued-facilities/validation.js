@@ -143,7 +143,16 @@ const facilityValidation = async (body, query, params) => {
     } else if (coverStartDateIsFullyComplete) {
       // set to midnight to stop mismatch if submission date in past so set to midnight of past date
       const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
-      const threeMonthsFromSubmission = add(submissionDate, { months: 3 });
+
+      let threeMonthsFromSubmission;
+
+      if (application.manualInclusionNoticeSubmissionDate) {
+        const minSubmissionDate = (new Date(Number(application.manualInclusionNoticeSubmissionDate))).setHours(0, 0, 0, 0);
+        threeMonthsFromSubmission = add(minSubmissionDate, { months: 3 });
+      } else {
+        threeMonthsFromSubmission = add(submissionDate, { months: 3 });
+      }
+
       const startDate = (set(new Date(), { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay })).setHours(0, 0, 0, 0);
 
       if (isBefore(startDate, submissionDate)) {

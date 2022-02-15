@@ -2,7 +2,6 @@ const {
   FIELD_NAMES,
   FACILITY_HAS_BEEN_ISSUED,
   FACILITY_TYPE,
-  PRODUCT,
 } = require('../../../constants');
 const CONTENT_STRINGS = require('../../../content-strings');
 const {
@@ -14,11 +13,10 @@ const {
  * Create filters array for the 'type' (or 'product') field.
  * This will used in the checkboxes component 'items' array.
  */
-const productFilters = (submittedFilters) => {
+const typeFilters = (submittedFilters) => {
   const fieldName = FIELD_NAMES.FACILITY.TYPE;
 
   const fieldInputs = [
-    { text: PRODUCT.GEF, value: PRODUCT.GEF },
     { text: FACILITY_TYPE.CASH, value: FACILITY_TYPE.CASH },
     { text: FACILITY_TYPE.CONTINGENT, value: FACILITY_TYPE.CONTINGENT },
     { text: FACILITY_TYPE.BOND, value: FACILITY_TYPE.BOND },
@@ -53,14 +51,17 @@ const hasBeenIssuedFilters = (submittedFilters) => {
  * Create an object for all filters.
  * This will used in multiple checkboxes components.
  */
-const dashboardFacilitiesFilters = (submittedFilters = {}) => ({
-  product: productFilters(submittedFilters),
-  submissionType: submissionTypeFilters(submittedFilters),
+const facilitiesTemplateFilters = (submittedFilters = {}) => ({
+  type: typeFilters(submittedFilters),
+  'deal.submissionType': submissionTypeFilters(
+    `deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`,
+    submittedFilters,
+  ),
   hasBeenIssued: hasBeenIssuedFilters(submittedFilters),
 });
 
 module.exports = {
-  productFilters,
+  typeFilters,
   hasBeenIssuedFilters,
-  dashboardFacilitiesFilters,
+  facilitiesTemplateFilters,
 };

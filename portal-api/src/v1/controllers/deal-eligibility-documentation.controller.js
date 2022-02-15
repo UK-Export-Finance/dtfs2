@@ -127,7 +127,9 @@ exports.update = async (req, res) => {
       },
       supportingInformation: {
         ...supportingInformation,
-        security: req.body.security,
+        securityDetails: {
+          exporter: req.body.security,
+        },
         validationErrors,
       },
     };

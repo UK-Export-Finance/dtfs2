@@ -6,6 +6,7 @@ import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 const dealIds = [];
+let maker;
 
 context('Application Details Submission', () => {
   before(() => {
@@ -17,6 +18,7 @@ context('Application Details Submission', () => {
       })
       .then(({ body }) => {
         body.items.forEach((item) => {
+          maker = item.maker;
           dealIds.push(item._id);
         });
       });
@@ -95,8 +97,14 @@ context('Application Details Submission', () => {
       applicationDetails.abandonLink().should('not.exist');
     });
 
+    it('it shows the latest comment with the firstname and lastname', () => {
+      applicationDetails.comments().contains(`Comments from (${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname})`);
+      applicationDetails.comments().contains('test');
+    });
+
     it('updates status in application banner', () => {
       statusBanner.bannerStatus().contains('Ready for Checker\'s approval');
+      statusBanner.bannerCreatedBy().should('have.text', `${maker.firstname} ${maker.surname}`);
     });
   });
 });

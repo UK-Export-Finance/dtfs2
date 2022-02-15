@@ -1,7 +1,13 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
-const { header, dashboardDeals } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const {
+  header,
+  dashboardDeals,
+} = require('../../../pages');
+const {
+  dashboardSubNavigation,
+  dashboardFilters,
+} = require('../../../partials');
 const { BSS_DEAL_MIA } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
@@ -30,7 +36,7 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
 
     // apply filter 2
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
 
     // submit filters
     dashboardFilters.panel.form.applyFiltersButton().click();
@@ -41,10 +47,10 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
     dashboardFilters.showHideButton().click();
 
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('be.checked');
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
 
     // navigate somewhere else
-    cy.visit('/dashboard/facilities');
+    dashboardSubNavigation.facilities().click();
     cy.url().should('eq', relative('/dashboard/facilities/0'));
 
     // go back to dashboard
@@ -53,6 +59,6 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
 
     // previously applied filters should not be applied
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('not.be.checked');
-    dashboardFilters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
   });
 });

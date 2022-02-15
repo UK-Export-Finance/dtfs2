@@ -80,7 +80,6 @@ input DashboardFacilitiesDealFilters {
 input FacilitiesInput {
   start: Int
   pagesize: Int
-  dealFilters: [DashboardFilters]
   filters: [DashboardFilters]
   sort: [DashboardSort]
 }

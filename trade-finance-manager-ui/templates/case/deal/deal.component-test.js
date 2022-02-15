@@ -1,9 +1,9 @@
+const Chance = require('chance');
+
 const pageRenderer = require('../../../component-tests/pageRenderer');
 
 const page = '../templates/case/deal/deal.njk';
 const render = pageRenderer(page);
-
-const Chance = require('chance');
 
 const chance = new Chance();
 
@@ -26,6 +26,11 @@ const params = {
     submissionDetails: {
       supplierName: chance.name(),
       buyerName: chance.name(),
+    },
+    supportingInformation: {
+      securityDetails: {
+        exporter: 'mock security',
+      },
     },
   },
 };
@@ -76,8 +81,12 @@ describe(`${page} when deal is BSS`, () => {
   it('should NOT render bank\'s financing to exporter', () => {
     wrapper.expectElement('[data-cy="finance-increasing"]').notToExist();
   });
-});
 
+  it('should render bank\'s security details', () => {
+    wrapper.expectElement('[data-cy="deal-bank-security-details"]').toExist();
+    wrapper.expectElement('[data-cy="bank-security-text"]').toExist();
+  });
+});
 
 describe(`${page} when deal is GEF`, () => {
   let wrapper;
@@ -122,5 +131,10 @@ describe(`${page} when deal is GEF`, () => {
 
   it('should render bank\'s financing to exporter', () => {
     wrapper.expectElement('[data-cy="finance-increasing"]').toExist();
+  });
+
+  it('should render bank\'s security details', () => {
+    wrapper.expectElement('[data-cy="deal-bank-security-details"]').toExist();
+    wrapper.expectElement('[data-cy="bank-security-text"]').toExist();
   });
 });

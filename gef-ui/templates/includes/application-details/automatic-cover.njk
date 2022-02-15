@@ -20,46 +20,46 @@
     }) }}
   </div>
 </div>
-{%if not previewMode %}
-  {% if eligibility.status.code === 'Not started' or eligibility.status.code === 'In progress' %}
-    <a class="govuk-link" href="/gef/application-details/{{dealId}}/automatic-cover" data-cy="automatic-cover-details-link">
-      Check if you're eligible for automatic cover
-    </a>
+
+{% if eligibility.status.code === 'Not started' or eligibility.status.code === 'In progress' %}
+  <a class="govuk-link" href="/gef/application-details/{{dealId}}/automatic-cover" data-cy="automatic-cover-details-link">
+    Check if you're eligible for automatic cover
+  </a>
+{% else %}
+  {% if (isAutomaticCover === true) %}
+    {% set captionText = "Yes - submit as an automatic inclusion notice"  %}
   {% else %}
-    {% if (isAutomaticCover === true) %}
-      {% set captionText = "Yes - submit as an automatic inclusion notice"  %}
-    {% else %}
-      {% set captionText = "No - submit as a manual inclusion application"  %}
-    {% endif %}
-    {{ govukSummaryList({
-      rows: [{ key: { text: "Eligible for automatic cover?" },
-        value: { text: captionText },
-        actions: {
-          items: [] if previewMode or hasChangedFacilities else [{
-            href: dealId + '/automatic-cover',
-            text: "Change",
-            visuallyHiddenText: "automatic cover"
-          }]
-        }
-      }],
-      attributes: {
-        'data-cy': 'automatic-cover-summary-list'
-      }
-    }) }}
-
-    {% set componentData = {
-      eligibilityCriteria: application.eligibility.criteria
-    } %}
-
-    {{ govukDetails({
-      summaryText: "Eligibility criteria",
-      html: eligibilityCriteriaAnswers.render(componentData),
-      attributes: {
-        'data-cy': 'automatic-cover-criteria'
-      }
-    }) }}
-
+    {% set captionText = "No - submit as a manual inclusion application"  %}
   {% endif %}
- {% endif %}
+  {{ govukSummaryList({
+    rows: [{ key: { text: "Eligible for automatic cover?" },
+      value: { text: captionText },
+      actions: {
+        items: [] if previewMode or hasChangedFacilities or MIAReturnToMaker else [{
+          href: dealId + '/automatic-cover',
+          text: "Change",
+          visuallyHiddenText: "automatic cover"
+        }]
+      }
+    }],
+    attributes: {
+      'data-cy': 'automatic-cover-summary-list'
+    }
+  }) }}
+
+  {% set componentData = {
+    eligibilityCriteria: application.eligibility.criteria
+  } %}
+
+  {{ govukDetails({
+    summaryText: "Eligibility criteria",
+    html: eligibilityCriteriaAnswers.render(componentData),
+    attributes: {
+      'data-cy': 'automatic-cover-criteria'
+    }
+  }) }}
+
+{% endif %}
+
 
 <hr class="govuk-section-break govuk-section-break--bold govuk-section-break--l govuk-section-break--visible">

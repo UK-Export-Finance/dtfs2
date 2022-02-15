@@ -7,9 +7,6 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
-    volumes:
-      - ./dtfs-submissions-data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-      # - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
     ports:
       - "27017-27019:27017-27019"
 
@@ -48,11 +45,11 @@ services:
       - ./trade-finance-manager-ui/server:/app/server:ro
       - ./trade-finance-manager-ui/public:/app/public:ro
       - ./trade-finance-manager-ui/templates:/app/templates:ro
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 300M
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.1"
+    #       memory: 300M
     environment:
       - PORT=5003
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
@@ -130,11 +127,11 @@ services:
       - "5001:5001"
     volumes:
       - ./portal-api/src:/app/src:ro
-    deploy:
-      resources:
-        limits:
-          cpus: "0.25"
-          memory: 950M
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.25"
+    #       memory: 950M
     environment:
       - PORT=5001
       - CORS_ORIGIN=http://localhost:5000

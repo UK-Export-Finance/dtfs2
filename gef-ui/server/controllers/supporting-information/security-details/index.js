@@ -24,7 +24,7 @@ const getSecurityDetails = async (req, res) => {
       dealId,
       inputMaxLength: MAX_INPUT_LENGTH,
       exporterSecurity: securityDetails.exporter,
-      applicationSecurity: securityDetails.application,
+      facilitySecurity: securityDetails.facility,
     });
   } catch (err) {
     console.error(`Error getting security details ${err}`);
@@ -34,7 +34,7 @@ const getSecurityDetails = async (req, res) => {
 
 const postSecurityDetails = async (req, res) => {
   const {
-    body: { exporterSecurity = '', applicationSecurity = '' },
+    body: { exporterSecurity = '', facilitySecurity = '' },
     params: { dealId },
     session: { user, userToken },
   } = req;
@@ -49,8 +49,8 @@ const postSecurityDetails = async (req, res) => {
         description: 'details about the general security your bank holds',
       },
       {
-        id: 'applicationSecurity',
-        content: applicationSecurity,
+        id: 'facilitySecurity',
+        content: facilitySecurity,
         description: 'details about the specific security for facilities your bank holds',
       },
     ].forEach(({ id, content, description }) => {
@@ -86,13 +86,13 @@ const postSecurityDetails = async (req, res) => {
         dealId,
         inputMaxLength: MAX_INPUT_LENGTH,
         exporterSecurity,
-        applicationSecurity,
+        facilitySecurity,
       });
     }
 
     const securityDetails = {
       exporter: exporterSecurity,
-      application: applicationSecurity,
+      facility: facilitySecurity,
     };
 
     const application = await Application.findById(dealId, user, userToken);

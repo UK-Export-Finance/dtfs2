@@ -1,8 +1,5 @@
 const page = {
   visit: () => cy.visit('/dashboard/deals/0'),
-  createNewSubmission: () => cy.get('[data-cy="CreateNewSubmission"]'),
-  mandatoryCriteriaYes: () => cy.get('[data-cy="mandatory-criteria-yes"]'),
-  continueButton: () => cy.get('[data-cy="continue-button"]'),
   tableHeader: (column) => cy.get(`[data-cy="deal__header--${column}"]`),
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
   row: {
@@ -30,6 +27,20 @@ const page = {
           gef: {
             label: () => cy.get('[data-cy="filter-label-dealType-GEF"]'),
             checkbox: () => cy.get('[data-cy="filter-input-dealType-GEF"]'),
+          },
+        },
+        submissionType: {
+          AIN: {
+            label: () => cy.get('[data-cy="filter-label-submissionType-Automatic-Inclusion-Notice"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Automatic-Inclusion-Notice"]'),
+          },
+          MIA: {
+            label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Application"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Application"]'),
+          },
+          MIN: {
+            label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Notice"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Notice"]'),
           },
         },
         status: {

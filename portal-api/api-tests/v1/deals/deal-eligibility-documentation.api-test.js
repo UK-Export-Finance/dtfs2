@@ -346,7 +346,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       }];
 
       await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
-      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/otherDealId/eligibility-documentation/${fieldname}/${filename}`);
+      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/123456789012/eligibility-documentation/${fieldname}/${filename}`);
 
       expect(status).toEqual(404);
       expect(header['content-disposition']).toBeUndefined();
@@ -460,13 +460,13 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const newId = postResult.body._id;
 
       const textFields = {
-        security: 'security text',
+        security: 'security text'
       };
 
       const { status, body } = await as(aBarclaysMaker).putMultipartForm(textFields).to(`/v1/deals/${newId}/eligibility-documentation`);
 
       expect(status).toEqual(200);
-      expect(body.supportingInformation.security).toEqual(textFields.security);
+      expect(body.supportingInformation.securityDetails.exporter).toEqual(textFields.security);
     });
   });
 });

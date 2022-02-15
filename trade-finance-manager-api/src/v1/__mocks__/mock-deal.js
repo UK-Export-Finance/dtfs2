@@ -1,7 +1,7 @@
 const { MOCK_FACILITIES } = require('./mock-facilities');
 
 const MOCK_DEAL = {
-  _id: '123456789',
+  _id: '61f7a4edcf809301e78fbq43',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',
@@ -168,7 +168,7 @@ const MOCK_DEAL = {
   bondTransactions: {
     items: [
       {
-        _id: '12345678',
+        _id: '61f7a4edcf809301e78fbe53',
         ukefFacilityId: '65431',
         type: 'Bond',
         createdDate: 1610369832226.0,
@@ -200,7 +200,7 @@ const MOCK_DEAL = {
   loanTransactions: {
     items: [
       {
-        _id: '23456789',
+        _id: '61f7a4edcf809301e78fbe53',
         type: 'Loan',
         createdDate: 1610369832226.0,
         facilityStage: 'Conditional',

@@ -3,6 +3,7 @@ const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const aDeal = require('../deal-builder');
 const CONSTANTS = require('../../../src/constants');
+const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const mockUser = {
   _id: '123456789',
@@ -16,7 +17,7 @@ const mockUser = {
 
 const newFacility = {
   type: 'Bond',
-  dealId: '123123456',
+  dealId: MOCK_DEAL.DEAL_ID,
 };
 
 const newDeal = aDeal({
@@ -46,14 +47,9 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('PUT /v1/portal/facilities/:id', () => {
-    it('404s requests for unknown ids', async () => {
-      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities/123456789012');
-      expect(status).toEqual(404);
-    });
-
-    it('returns 404 when adding facility to non-existant deal', async () => {
+    it('returns 404 when adding facility to non-existent deal', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities/111111}');
+      const { status } = await api.put({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities/61e54e2e532cf2027303ea12');
 
       expect(status).toEqual(404);
     });
@@ -138,36 +134,8 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('PUT /v1/tfm/facilities/:id', () => {
-    it('does NOT update `editedBy` in the associated deal', async () => {
-      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
-
-      expect(originalDeal.body.deal.editedBy).toEqual([]);
-
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
-
-      const createdFacilityResponse = await api.post({ facility: newFacility, user: mockUser }).to('/v1/tfm/facilities');
-
-      const getDealResponse = await api.get(`/v1/tfm/deals/${newFacility.dealId}`);
-      expect(getDealResponse.body.deal.dealSnapshot.editedBy.length).toEqual(0);
-
-      const updatedFacility = {
-        ...createdFacilityResponse.body,
-        value: 123456,
-        user: mockUser,
-      };
-
-      await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacilityResponse.body._id}`);
-
-      const { body } = await api.get(`/v1/tfm/deals/${newFacility.dealId}`);
-
-      expect(body.deal.dealSnapshot.editedBy.length).toEqual(0);
-    });
-
     it('returns 404 when facility does not exist', async () => {
-      const { status } = await api.put({}).to('/v1/tfm/facilities/1234');
+      const { status } = await api.put({}).to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
 
       expect(status).toEqual(404);
     });
@@ -217,7 +185,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 404 when facility does not exist', async () => {
-      const { status } = await api.put(updateFacilityStatusBody).to('/v1/portal/facilities/1234/status');
+      const { status } = await api.put(updateFacilityStatusBody).to('/v1/portal/facilities/61e54e2e532cf2027303e011/status');
 
       expect(status).toEqual(404);
     });

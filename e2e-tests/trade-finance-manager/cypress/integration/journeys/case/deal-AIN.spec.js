@@ -10,20 +10,17 @@ context('User can view a case deal', () => {
   let dealFacilities = [];
 
   before(() => {
-    cy.deleteDeals(MOCK_DEAL_AIN._id, ADMIN_LOGIN);
+    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
-
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities = createdFacilities;
-        });
-
-        cy.submitDeal(dealId, dealType);
+      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities = createdFacilities;
       });
+
+      cy.submitDeal(dealId, dealType);
+    });
   });
 
   beforeEach(() => {
@@ -32,8 +29,9 @@ context('User can view a case deal', () => {
   });
 
   after(() => {
-    dealFacilities.forEach(({ _id }) => {
-      cy.deleteFacility(_id, MOCK_MAKER_TFM);
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    dealFacilities.forEach((facility) => {
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
@@ -57,6 +55,15 @@ context('User can view a case deal', () => {
 
   it('should render correct MGA version', () => {
     pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
+  });
+
+  describe('Bank security section', () => {
+    it('bank security section should not be displayed as AIN', () => {
+      pages.caseDealPage.bankSecuritySection().should('not.exist');
+      pages.caseDealPage.bankSecuritySectionHeading().should('not.exist');
+      pages.caseDealPage.bankSecuritySubHeading().should('not.exist');
+      pages.caseDealPage.bankSecurityText().should('not.exist');
+    });
   });
 
   describe('facilities table', () => {

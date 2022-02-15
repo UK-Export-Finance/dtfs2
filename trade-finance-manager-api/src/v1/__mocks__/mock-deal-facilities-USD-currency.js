@@ -1,7 +1,6 @@
 const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 
 const MOCK_DEAL = {
-  _id: '234567891',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',

@@ -25,9 +25,9 @@ describe('controllers - case - parties', () => {
   describe('GET case parties', () => {
     describe('when deal exists', () => {
       const mockDeal = {
-        _id: '1000023',
+        _id: '61f6ac5b02ffda01b1e8efef',
         dealSnapshot: {
-          _id: '1000023',
+          _id: '61f6ac5b02ffda01b1e8efef',
         },
         mock: true,
       };
@@ -80,9 +80,9 @@ describe('controllers - case - parties', () => {
   describe('GET exporter edit', () => {
     describe('when deal exists', () => {
       const mockDeal = {
-        _id: '1000023',
+        _id: '61f6ac5b02ffda01b1e8efef',
         dealSnapshot: {
-          _id: '1000023',
+          _id: '61f6ac5b02ffda01b1e8efef',
           submissionDetails: {
             supplierName: 'test supplier',
           },
@@ -162,9 +162,9 @@ describe('controllers - case - parties', () => {
   describe('GET bond issuer edit', () => {
     describe('when deal exists', () => {
       const mockDeal = {
-        _id: '1000023',
+        _id: '61f6ac5b02ffda01b1e8efef',
         dealSnapshot: {
-          _id: '1000023',
+          _id: '61f6ac5b02ffda01b1e8efef',
           submissionDetails: {
             supplierName: 'test supplier',
           },
@@ -245,9 +245,9 @@ describe('controllers - case - parties', () => {
   describe('GET bond beneficiary edit', () => {
     describe('when deal exists', () => {
       const mockDeal = {
-        _id: '1000023',
+        _id: '61f6ac5b02ffda01b1e8efef',
         dealSnapshot: {
-          _id: '1000023',
+          _id: '61f6ac5b02ffda01b1e8efef',
           submissionDetails: {
             supplierName: 'test supplier',
           },
@@ -328,7 +328,7 @@ describe('controllers - case - parties', () => {
   describe('POST party edit', () => {
     describe('when deal exists', () => {
       const mockDeal = {
-        _id: '1000023',
+        _id: '61f6ac5b02ffda01b1e8efef',
         mock: true,
       };
 

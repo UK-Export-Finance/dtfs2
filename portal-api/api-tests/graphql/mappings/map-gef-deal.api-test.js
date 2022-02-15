@@ -4,7 +4,6 @@ const CONSTANTS = require('../../../src/constants');
 describe('/graphql mappings - map-gef-deal', () => {
   const mockDeal = {
     dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-    _id: '1',
     status: 'SUBMITTED',
     submissionType: 'Automatic inclusion notice',
     additionalRefName: 'Test',

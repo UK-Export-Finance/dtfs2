@@ -11,6 +11,12 @@ const FACILITY_TYPE_CODE = {
   GEF: '280',
 };
 
+const PRODUCT_TYPE_GROUP = {
+  EWCS: 'EW',
+  BSS: 'BS',
+  GEF: 'GM',
+};
+
 const FACILITIES_STAGE = {
   LOAN: {
     CONDITIONAL: 'Conditional',
@@ -23,10 +29,42 @@ const FACILITIES_STAGE = {
 };
 
 const FEE_FREQUENCY = {
+  WEEKLY: 'Weekly',
+  BI_WEEKLY: 'Bi-Weekly',
   MONTHLY: 'Monthly',
+  BI_MONTHLY: 'Bi-Monthly',
   QUARTERLY: 'Quarterly',
   SEMI_ANNUALLY: 'Semi-annually',
   ANNUALLY: 'Annually',
+  BI_ANNUALLY: 'Bi-annually',
+};
+
+const FEE_FREQUENCY_ACBS_CODE = {
+  WEEKLY: 'A',
+  BI_WEEKLY: 'B',
+  MONTHLY: 'C',
+  BI_MONTHLY: 'D',
+  QUARTERLY: 'E',
+  SEMI_ANNUALLY: 'F',
+  ANNUALLY: 'G',
+  BI_ANNUALLY: 'H',
+};
+
+const FEE_FREQUENCY_NUMERICAL_VALUE = {
+  MONTHLY: 1,
+  QUARTERLY: 3,
+  SEMI_ANNUALLY: 6,
+  ANNUALLY: 12,
+};
+
+const FEE_TYPE = {
+  IN_ADVANCE: 'In advance',
+  IN_ARREARS: 'In arrears',
+  AT_MATURITY: 'At maturity',
+};
+
+const FEE_TYPE_ACBS_CODE = {
+  AT_MATURITY: 'G',
 };
 
 const COVENANT_TYPE = {
@@ -104,6 +142,22 @@ const BANK_IDENTIFIER = {
   DEFAULT: '00000000',
 };
 
+const CURRENCY_EXCHANGE_RATE_OPERATION = {
+  DIVIDE: 'D',
+  MULTIPLY: 'M',
+};
+
+const DAY_COUNT_BASIS = {
+  360: '5',
+  365: '1',
+};
+
+const ACBS_INCOME_CLASS_CODE = {
+  BSS: 'BPM',
+  EWCS: 'EPM',
+  GEF: 'FGT',
+};
+
 module.exports = {
   FACILITY_TYPE,
   FACILITY_TYPE_CODE,
@@ -124,4 +178,12 @@ module.exports = {
   RISK,
   API_USER,
   BANK_IDENTIFIER,
+  CURRENCY_EXCHANGE_RATE_OPERATION,
+  PRODUCT_TYPE_GROUP,
+  DAY_COUNT_BASIS,
+  FEE_FREQUENCY_ACBS_CODE,
+  FEE_TYPE,
+  FEE_TYPE_ACBS_CODE,
+  FEE_FREQUENCY_NUMERICAL_VALUE,
+  ACBS_INCOME_CLASS_CODE,
 };

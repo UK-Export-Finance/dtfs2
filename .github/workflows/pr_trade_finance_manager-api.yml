@@ -196,13 +196,13 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose up -d
+        docker-compose -f docker-compose.gha.yml up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
-        npm install
+        npm install --legacy-peer-deps
         node ./re-insert-mocks.js
         pwd
     - name: Run e2e tests
@@ -211,7 +211,7 @@ jobs:
       run: |
         pwd
         cd $GITHUB_WORKSPACE
-        npm install
+        npm install --legacy-peer-deps
         cd e2e-tests/submit-to-trade-finance-manager
         npx cypress run --config video=false --browser=chrome
     - name: Save Cypress screenshots

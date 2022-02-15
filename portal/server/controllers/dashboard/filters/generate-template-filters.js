@@ -1,8 +1,5 @@
 const { formatFieldValue } = require('./helpers');
-const {
-  FIELD_NAMES,
-  SUBMISSION_TYPE,
-} = require('../../../constants');
+const { SUBMISSION_TYPE } = require('../../../constants');
 
 /**
  * Generate an object to be consumed by GOVUK component.
@@ -76,9 +73,7 @@ const generateFiltersArray = (fieldName, fieldInputs, submittedFilters) => {
  * Create filters array for the 'submissionType' (or 'Notice type') field.
  * This will used in the checkboxes component 'items' array.
  */
-const submissionTypeFilters = (submittedFilters) => {
-  const fieldName = FIELD_NAMES.DEAL.SUBMISSION_TYPE;
-
+const submissionTypeFilters = (fieldName, submittedFilters) => {
   const fieldInputs = [
     { text: SUBMISSION_TYPE.AIN, value: SUBMISSION_TYPE.AIN },
     { text: SUBMISSION_TYPE.MIA, value: SUBMISSION_TYPE.MIA },

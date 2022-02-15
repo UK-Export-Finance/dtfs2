@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
 const db = require('../../../../drivers/db-client');
@@ -63,7 +64,7 @@ const updateDealEditedByPortal = async (dealId, user) => {
   const editedBy = await handleEditedByPortal(dealId, {}, user);
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: dealId },
+    { _id: ObjectId(dealId) },
     $.flatten(withoutId({ editedBy })),
     { returnOriginal: false },
   );
@@ -120,7 +121,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
   }
 
   const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: dealId },
+    { _id: ObjectId(dealId) },
     $.flatten(withoutId(update)),
     { returnOriginal: false },
   );
@@ -133,23 +134,10 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
   await findOneDeal(dealId, async (deal) => {
     const { facilities } = deal;
 
-    const updatedFacilities = [
-      ...facilities,
-      newFacilityId,
-    ];
+    const updatedFacilities = [...facilities, newFacilityId.toHexString()];
+    const dealUpdate = { ...deal, facilities: updatedFacilities };
 
-    const dealUpdate = {
-      ...deal,
-      facilities: updatedFacilities,
-    };
-
-    const updatedDeal = await updateDeal(
-      dealId,
-      dealUpdate,
-      user,
-      null,
-      routePath,
-    );
+    const updatedDeal = await updateDeal(dealId, dealUpdate, user, null, routePath);
 
     return updatedDeal;
   });
@@ -169,13 +157,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
         facilities: updatedFacilities,
       };
 
-      const updatedDeal = await updateDeal(
-        dealId,
-        dealUpdate,
-        user,
-        null,
-        routePath,
-      );
+      const updatedDeal = await updateDeal(dealId, dealUpdate, user, null, routePath);
 
       return updatedDeal;
     }

@@ -60,6 +60,7 @@ class Application {
   static async findById(id, user, userToken) {
     try {
       const application = await getApplication(id);
+
       if (application.bank.id !== user.bank.id) {
         return null;
       }
@@ -94,9 +95,6 @@ class Application {
         && !application.editedBy.includes(user._id)
         && user.roles.includes('checker');
 
-      if (![DEAL_STATUS.DRAFT].includes(application.status)) {
-        application.maker = await getUserDetails(application.userId, userToken);
-      }
       if (application.checkerId) {
         application.checker = await getUserDetails(application.checkerId, userToken);
       }

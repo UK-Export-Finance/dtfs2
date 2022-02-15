@@ -8,7 +8,9 @@ describe('submittedDocumentationMatchesOriginalData', () => {
       };
       const formFiles = [];
       const originalData = {
-        security: 'hello world',
+        securityDetails: {
+          exporter: 'hello world',
+        },
       };
 
       const result = submittedDocumentationMatchesOriginalData(formData, formFiles, originalData);
@@ -25,7 +27,9 @@ describe('submittedDocumentationMatchesOriginalData', () => {
         { name: 'some-file.pdf' },
       ];
       const originalData = {
-        security: 'hello world',
+        securityDetails: {
+          exporter: 'hello world',
+        },
       };
 
       const result = submittedDocumentationMatchesOriginalData(formData, formFiles, originalData);

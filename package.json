@@ -24,16 +24,17 @@
   },
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
+    "bson": "^4.6.1",
     "chance": "^1.1.8",
-    "date-fns": "^2.27.0",
-    "dotenv": "^11.0.0"
+    "date-fns": "^2.28.0",
+    "dotenv": "^16.0.0"
   },
   "devDependencies": {
     "cypress": "^8.7.0",
     "cypress-audit": "^1.1.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
-    "eslint": "^8.4.1",
+    "eslint": "^8.8.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.25.3",
