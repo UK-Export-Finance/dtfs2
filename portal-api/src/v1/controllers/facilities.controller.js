@@ -143,14 +143,21 @@ const queryAllFacilities = async (
     ])
     .toArray();
 
-  const {
-    count,
-    facilities,
-  } = results[0];
+  if (results.length) {
+    const {
+      count,
+      facilities,
+    } = results[0];
+
+    return {
+      count,
+      facilities,
+    };
+  }
 
   return {
-    count,
-    facilities,
+    facilities: [],
+    count: 0,
   };
 };
 
