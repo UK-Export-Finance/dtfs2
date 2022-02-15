@@ -122,7 +122,16 @@ const issueAcbsFacilities = async (deal) => {
     // Only concerned with issued facilities on Portal that aren't issued on ACBS
     const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
     return !isIssued(facilityStageInAcbs) && !facility.tfm.acbs.issuedFacilityMaster && isIssued(facility.facilityStage);
-  }).map((facility) => api.updateACBSfacility(facility, deal.dealType, deal.exporter.companyName));
+  }).map((facility) => api.updateACBSfacility(facility, {
+    dealSnapshot: {
+      dealType: deal.dealType,
+      submissionType: deal.submissionType,
+      submissionDate: deal.submissionDate,
+    },
+    exporter: {
+      ...deal.exporter,
+    },
+  }));
 
   const acbsIssuedFacilities = await Promise.all(acbsIssuedFacilitiesPromises);
 
