@@ -228,14 +228,21 @@ const queryAllDeals = async (
     },
   ]).toArray();
 
-  const {
-    count,
-    deals,
-  } = results[0];
+  if (results.length) {
+    const {
+      count,
+      deals,
+    } = results[0];
+
+    return {
+      count,
+      deals,
+    };
+  }
 
   return {
-    count,
-    deals,
+    deals: [],
+    count: 0,
   };
 };
 
