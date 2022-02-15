@@ -17,6 +17,7 @@ context('Facility page', () => {
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
       dealOne = insertedDeal;
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+      mockFacilities[0].value = '1234567890.1';
 
       cy.createFacilities(dealOne._id, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
         dealOneFacilities.push(...createdFacilities);
@@ -66,7 +67,7 @@ context('Facility page', () => {
     page.facilitiesPage.facilityStageColumn().should('contain', 'Facility stage');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000006');
+    cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000');
     cy.get('@row1').find('[data-cy="facility__product"]').should('contain', dealTwo.dealType);
     cy.get('@row1').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[1].type);
     cy.get('@row1').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
@@ -75,11 +76,11 @@ context('Facility page', () => {
     cy.get('@row1').find('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000005');
+    cy.get('@row2').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000');
     cy.get('@row2').find('[data-cy="facility__product"]').should('contain', dealTwo.dealType);
     cy.get('@row2').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[0].type);
     cy.get('@row2').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
-    cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 12,345.00');
+    cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
     cy.get('@row2').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2020');
     cy.get('@row2').find('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
   });
@@ -103,11 +104,11 @@ context('Facility page', () => {
   it('performs a search query based on Facility ID', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities'));
-    const searchString = '10000000002';
+    const searchString = '10000000';
     page.facilitiesPage.searchFormInput().type(searchString);
     page.facilitiesPage.searchFormSubmitButton().click();
 
-    page.facilitiesPage.dealsTableRows().should('have.length', 1);
+    page.facilitiesPage.dealsTableRows().should('have.length', 4);
   });
 
   it('performs a search query based on AIN Export name', () => {
@@ -221,10 +222,10 @@ context('Facility page', () => {
     cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 12,345.00');
+    cy.get('@row3').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 12,345.00');
+    cy.get('@row4').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
   });
 
   it('sorts all columns based on Value column (DESC)', () => {
@@ -234,10 +235,10 @@ context('Facility page', () => {
     page.facilitiesPage.valueColumn().find('button').dblclick();
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 12,345.00');
+    cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 12,345.00');
+    cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
     cy.get('@row3').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
