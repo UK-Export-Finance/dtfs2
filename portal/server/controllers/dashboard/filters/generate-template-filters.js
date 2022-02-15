@@ -23,7 +23,7 @@ const generateFilterObject = (
 
   if (hasSubmittedFilters) {
     const filterHasBeenSubmitted = (submittedFilters[field]
-      && submittedFilters[field].includes(String(value)));
+      && String(submittedFilters[field]).includes(String(value)));
 
     if (filterHasBeenSubmitted) {
       checked = true;
