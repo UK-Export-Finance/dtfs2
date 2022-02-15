@@ -34,12 +34,15 @@ describe('v1/reports/review-ukef-decision', () => {
     mockApplication = await as(aMaker).post({ ...mockApplications[0], bank: { id: aMaker.bank.id } }).to(gefDealUrl);
   });
 
-  it('retrieves all deals with a status `UKEF_APPROVED_WITHOUT_CONDITIONS` (Maker)', async () => {
+  it('retrieves all deals with a ukefDecision status set to `UKEF_APPROVED_WITHOUT_CONDITIONS` (Maker)', async () => {
     mockPayload.ukefDecision[0].decision = CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
     // update the GEF deal
-    const { status } = await as(aMaker).put(mockPayload).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    const { status, body } = await as(aMaker).put(mockPayload).to(`${gefDealUrl}/${mockApplication.body._id}`);
     // ensure that the update was successful
     expect(status).toEqual(200);
+
+    // update the `status` to 'UKEF_APPROVED_WITHOUT_CONDITIONS'
+    await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS }).to(`${gefDealUrl}/status/${body._id}`);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a MAKER
@@ -50,6 +53,7 @@ describe('v1/reports/review-ukef-decision', () => {
       dealId: expect.any(String),
       bankInternalRefName: expect.any(String),
       dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+      status: expect.any(String),
       companyName: expect.any(String),
       dateCreatedEpoch: expect.any(Number),
       dateOfApprovalEpoch: expect.any(Number),
@@ -76,12 +80,33 @@ describe('v1/reports/review-ukef-decision', () => {
     expect(reportsBody).toEqual([]);
   });
 
-  it('retrieves all deals with a status `UKEF_APPROVED_WITH_CONDITIONS` (Maker)', async () => {
-    mockPayload.ukefDecision[0].decision = CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
+  it('should return an empty array if the status is `Completed` and ukefDecision `UKEF_APPROVED_WITHOUT_CONDITIONS`', async () => {
+    mockPayload.ukefDecision[0].decision = CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS;
     // update the GEF deal
-    const { status } = await as(aMaker).put(mockPayload).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    const { status, body } = await as(aMaker).put(mockPayload).to(`${gefDealUrl}/${mockApplication.body._id}`);
     // ensure that the update was successful
     expect(status).toEqual(200);
+
+    // update the `status` to 'COMPLETED'
+    await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.COMPLETED }).to(`${gefDealUrl}/status/${body._id}`);
+
+    const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS };
+    // perform a GET request to retrieve the reports for UKEF decision as a MAKER
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    expect(reportsStatus).toEqual(200);
+    // ensure that the body has the following format:
+    expect(reportsBody).toEqual([]);
+  });
+
+  it('retrieves all deals with a ukefDecision status set to `UKEF_APPROVED_WITH_CONDITIONS` (Maker)', async () => {
+    mockPayload.ukefDecision[0].decision = CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
+    // update the GEF deal
+    const { status, body } = await as(aMaker).put(mockPayload).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    // ensure that the update was successful
+    expect(status).toEqual(200);
+
+    // update the `status` to 'UKEF_APPROVED_WITH_CONDITIONS'
+    await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS }).to(`${gefDealUrl}/status/${body._id}`);
 
     const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
     // perform a GET request to retrieve the reports for UKEF decision as a MAKER
@@ -92,6 +117,7 @@ describe('v1/reports/review-ukef-decision', () => {
       dealId: expect.any(String),
       bankInternalRefName: expect.any(String),
       dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+      status: expect.any(String),
       companyName: expect.any(String),
       dateCreatedEpoch: expect.any(Number),
       dateOfApprovalEpoch: expect.any(Number),
@@ -101,6 +127,24 @@ describe('v1/reports/review-ukef-decision', () => {
       dateOfApproval: expect.any(String),
       daysToReview: 20 // key difference between UKEF_APPROVED_WITH_CONDITIONS and UKEF_APPROVED_WITHOUT_CONDITIONS
     }]);
+  });
+
+  it('should return an empty array if the status is `Completed` and ukefDecision `UKEF_APPROVED_WITH_CONDITIONS`', async () => {
+    mockPayload.ukefDecision[0].decision = CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
+    // update the GEF deal
+    const { status, body } = await as(aMaker).put(mockPayload).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    // ensure that the update was successful
+    expect(status).toEqual(200);
+
+    // update the `status` to 'COMPLETED'
+    await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.COMPLETED }).to(`${gefDealUrl}/status/${body._id}`);
+
+    const mockQuery = { ukefDecision: CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS };
+    // perform a GET request to retrieve the reports for UKEF decision as a MAKER
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/review-ukef-decision', mockQuery);
+    expect(reportsStatus).toEqual(200);
+    // ensure that the body has the following format:
+    expect(reportsBody).toEqual([]);
   });
 
   it('should return an empty array if the user belongs to a different bank `UKEF_APPROVED_WITH_CONDITIONS`', async () => {
