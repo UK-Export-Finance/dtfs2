@@ -438,6 +438,29 @@ describe('/v1/deals/:id/loan', () => {
             expect(body.validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date cannot be before Requested Cover Start Date');
           });
         });
+
+        describe('when is same as requestedCoverStartDate', () => {
+          it('should return validationError', async () => {
+            const date = moment();
+            const requestedCoverStartDate = date;
+            const coverEndDate = date;
+
+            const loan = {
+              facilityStage: 'Unconditional',
+              hasBeenIssued: true,
+              'requestedCoverStartDate-day': moment(requestedCoverStartDate).format('DD'),
+              'requestedCoverStartDate-month': moment(requestedCoverStartDate).format('MM'),
+              'requestedCoverStartDate-year': moment(requestedCoverStartDate).format('YYYY'),
+              'coverEndDate-day': moment(coverEndDate).format('DD'),
+              'coverEndDate-month': moment(coverEndDate).format('MM'),
+              'coverEndDate-year': moment(coverEndDate).format('YYYY'),
+            };
+
+            const body = await updateLoanInDeal(dealId, loan);
+            expect(body.validationErrors.errorList.coverEndDate).toBeDefined();
+            expect(body.validationErrors.errorList.coverEndDate.text).toEqual('Cover End Date must be after the Requested Cover Start Date');
+          });
+        });
       });
 
       describe('disbursementAmount', () => {

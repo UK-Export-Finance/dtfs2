@@ -40,6 +40,13 @@ module.exports = (submittedValues, errorList) => {
         order: orderNumber(newErrorList),
       };
     }
+
+    if (moment(coverEndDate).isSame(requestedCoverStartDate)) {
+      newErrorList.coverEndDate = {
+        text: 'Cover End Date must be after the Requested Cover Start Date',
+        order: orderNumber(newErrorList),
+      };
+    }
   }
 
   return newErrorList;
