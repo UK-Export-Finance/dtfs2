@@ -1,7 +1,8 @@
 const { nowPlusMonths, nowPlusDays } = require('../../../../../support/utils/dateFuncs');
 
 const now = new Date();
-const nowPlusMonth = nowPlusMonths(1);
+const nowPlus1Month = nowPlusMonths(1);
+const nowPlus2Months = nowPlusMonths(2);
 const nowPlusWeek = nowPlusDays(7).valueOf();
 
 const deal = {
@@ -214,13 +215,13 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': (nowPlus2Months.getDate()).toString(),
+      'coverEndDate-month': (nowPlus2Months.getMonth() + 1).toString(),
+      'coverEndDate-year': (nowPlus2Months.getFullYear()).toString(),
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
-      requestedCoverStartDate: nowPlusMonth.valueOf(),
+      requestedCoverStartDate: nowPlus1Month.valueOf(),
       issuedDate: nowPlusWeek,
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
@@ -252,9 +253,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': (nowPlus2Months.getDate()).toString(),
+      'coverEndDate-month': (nowPlus2Months.getMonth() + 1).toString(),
+      'coverEndDate-year': (nowPlus2Months.getFullYear()).toString(),
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -262,7 +263,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
       previousFacilityStage: 'Conditional',
-      requestedCoverStartDate: nowPlusMonth.valueOf(),
+      requestedCoverStartDate: nowPlus1Month.valueOf(),
     },
   ],
   summary: {},
