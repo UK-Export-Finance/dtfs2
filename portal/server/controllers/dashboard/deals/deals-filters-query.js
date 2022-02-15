@@ -4,6 +4,7 @@ const {
   getUserRoles,
   isSuperUser,
 } = require('../../../helpers');
+const keywordQuery = require('./deals-filters-keyword-query');
 
 /**
  * Generates an array of objects to be sent to API (for DB query)
@@ -67,34 +68,7 @@ const dashboardDealsFiltersQuery = (
 
       if (isKeywordField) {
         const keywordValue = filterValue[0];
-
-        const keywordFilters = [
-          {
-            [CONSTANTS.FIELD_NAMES.DEAL.BANK_INTERNAL_REF_NAME]: {
-              $regex: keywordValue, $options: 'i',
-            },
-          },
-          {
-            [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: {
-              $regex: keywordValue, $options: 'i',
-            },
-          },
-          {
-            [CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE]: {
-              $regex: keywordValue, $options: 'i',
-            },
-          },
-          {
-            [CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE]: {
-              $regex: keywordValue, $options: 'i',
-            },
-          },
-          {
-            [CONSTANTS.FIELD_NAMES.DEAL.EXPORTER_COMPANY_NAME]: {
-              $regex: keywordValue, $options: 'i',
-            },
-          },
-        ];
+        const keywordFilters = keywordQuery(keywordValue);
 
         query.$or = [
           ...query.$or,
