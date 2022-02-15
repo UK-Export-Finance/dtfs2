@@ -40,17 +40,17 @@
 const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
-const facilityUpdate = (facility, acbsFacility, obligorName, dealType) => ({
+const facilityUpdate = (facility, acbsFacility, deal) => ({
   ...acbsFacility,
-  exposurePeriod: String(helpers.getExposurePeriod(facility, dealType)),
-  description: helpers.getDescription(facility, dealType),
+  exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
+  description: helpers.getDescription(facility, deal.dealSnapshot.dealType),
   capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
   issueDate: helpers.getIssueDate(facility, acbsFacility.effectiveDate),
   facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
   foreCastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
   guaranteePercentage: CONSTANTS.FACILITY.GUARANTEE_PERCENTAGE.ISSUED,
-  productTypeName: dealType,
-  obligorName: obligorName.substring(0, 35),
+  productTypeName: deal.dealSnapshot.dealType,
+  obligorName: deal.exporter.companyName.substring(0, 35),
 });
 
 module.exports = facilityUpdate;
