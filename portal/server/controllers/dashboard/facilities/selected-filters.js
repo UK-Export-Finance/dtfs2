@@ -16,6 +16,16 @@ const CONSTANTS = require('../../../constants');
 const selectedFilters = (submittedFilters) => {
   const selected = [];
 
+  const hasKeyword = (submittedFilters.keyword && submittedFilters.keyword[0].length);
+
+  if (hasKeyword) {
+    selected.push(generateSelectedFiltersObject(
+      CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.KEYWORD,
+      CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD,
+      submittedFilters.keyword,
+    ));
+  }
+
   if (submittedFilters[CONSTANTS.FIELD_NAMES.FACILITY.TYPE]) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT,

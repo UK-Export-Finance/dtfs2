@@ -11,6 +11,7 @@ const {
   requestParams,
   getFlashSuccessMessage,
 } = require('../../../helpers');
+const { sanitiseBody } = require('./sanitise-body');
 
 const PAGESIZE = 20;
 const primaryNav = 'home';
@@ -69,6 +70,7 @@ const getTemplateVariables = (
     pages,
     filters: templateFilters(filtersObj),
     selectedFilters: selectedFilters(filtersObj),
+    keyword: sessionFilters.keyword,
   };
 
   return templateVariables;
@@ -109,7 +111,9 @@ exports.allFacilities = async (req, res) => {
   const currentPage = req.params.page;
 
   if (Object.keys(req.body).length) {
-    req.session.dashboardFilters = req.body;
+    const sanitisedBody = sanitiseBody(req.body);
+
+    req.session.dashboardFilters = sanitisedBody;
   }
 
   const templateVariables = await getDataAndTemplateVariables(

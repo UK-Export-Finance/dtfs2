@@ -22,7 +22,8 @@ const submittedFiltersArray = (allSubmittedFilters = {}) => {
       const submittedValue = submittedFilters[field];
       const fieldHasMultipleValues = Array.isArray(submittedValue);
 
-      if (submittedValue) {
+      // NOTE: some filter values can have a value of false.
+      if (submittedValue || submittedValue === false) {
         if (fieldHasMultipleValues) {
           consistentArray.push(
             { [field]: [...submittedValue] },

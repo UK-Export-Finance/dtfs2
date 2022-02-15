@@ -6,8 +6,11 @@ const DASHBOARD_FILTERS = {
     STATUS: 'Status',
     FACILITY_STAGE: 'Bank\'s facility stage',
   },
-  // bespoke filter values are values that
+  // bespoke filter names and values that
   // do not exist in the data.
+  BESPOKE_FIELD_NAMES: {
+    KEYWORD: 'keyword',
+  },
   BESPOKE_FILTER_VALUES: {
     DEALS: {
       ALL_STATUSES: 'All statuses',

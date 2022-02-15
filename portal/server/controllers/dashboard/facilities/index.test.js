@@ -15,6 +15,7 @@ import {
 import { facilitiesTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
 import CONSTANTS from '../../../constants';
+import { sanitiseBody } from './sanitise-body';
 
 jest.mock('../../../api', () => ({
   allFacilities: jest.fn(),
@@ -142,6 +143,7 @@ describe('controllers/dashboard/facilities', () => {
         pages: expectedPages,
         filters: templateFilters(expectedFiltersObj),
         selectedFilters: selectedFilters(expectedFiltersObj),
+        keyword: mockReq.session.dashboardFilters.keyword,
       };
 
       expect(result).toEqual(expected);
@@ -175,7 +177,7 @@ describe('controllers/dashboard/facilities', () => {
 
   describe('allFacilities', () => {
     describe('when there is req.body', () => {
-      it('should set req.session.dashboardFilters to provided values', async () => {
+      it('should set req.session.dashboardFilters to provided values with sanitised body', async () => {
         mockReq = {
           ...mockReq,
           body: {
@@ -185,7 +187,7 @@ describe('controllers/dashboard/facilities', () => {
 
         await allFacilities(mockReq, mockRes);
 
-        const expected = mockReq.body;
+        const expected = sanitiseBody(mockReq.body);
 
         expect(mockReq.session.dashboardFilters).toEqual(expected);
       });
