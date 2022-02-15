@@ -23,6 +23,7 @@ const getUkefDecision = async (decision, bankId) => {
     {
       $project: {
         _id: 0,
+        status: '$status',
         dealId: '$_id',
         bankInternalRefName: '$bankInternalRefName',
         dealType: '$dealType',
@@ -57,6 +58,14 @@ const getUkefDecision = async (decision, bankId) => {
           },
         },
       }
+    },
+    {
+      $match: {
+        // show only deals that have the `UKEF_APPROVED_WITHOUT_CONDITIONS` and `UKEF_APPROVED_WITH_CONDITIONS` status
+        status: {
+          $in: [CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS],
+        },
+      },
     },
     { $sort: { dateOfApprovalEpoch: 1 } }
   ]).toArray();

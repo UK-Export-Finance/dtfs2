@@ -1,6 +1,6 @@
 const { format, add, differenceInCalendarDays } = require('date-fns');
+const commaNumber = require('comma-number');
 const db = require('../../../drivers/db-client');
-const { formattedNumber } = require('../../../utils/number');
 const CONSTANTS = require('../../../constants');
 
 // helper function to retrieve the unissued facilities for MIN/AIN deals
@@ -55,7 +55,7 @@ const getUnissuedFacilities = async (bankId) => {
               },
               {
                 case: { $eq: ['$dealsTable.dealType', 'BSS/EWCS'] },
-                then: '$dealsTable.details.manualInclusionApplicationSubmissionDate'
+                then: '$dealsTable.details.manualInclusionNoticeSubmissionDate'
               },
             ],
           },
@@ -127,12 +127,13 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
         const todaysDate = new Date();
         facility.daysLeftToIssue = defaultDate ? differenceInCalendarDays(todaysDate, deadlineForIssuing) * -1 + 0 : 0;
 
-        const defaultFacilityValue = item.value ? parseInt(item.value, 10) : 0;
-        facility.currencyAndValue = item.value ? `${item.currency} ${formattedNumber(defaultFacilityValue)}` : '';
+        facility.currencyAndValue = item.value ? `${item.currency} ${commaNumber(item.value)}` : '';
         unissuedFacilities.push(facility);
       });
     }
 
+    // sort the facilities based on `daysLeftToIssue` property with the most urgent item at the top
+    unissuedFacilities.sort((a, b) => (a.daysLeftToIssue > b.daysLeftToIssue ? 1 : -1));
     res.status(200).send(unissuedFacilities);
   } catch (error) {
     console.error('Unable to retrieve unissued facilities', { error });

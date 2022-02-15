@@ -45,7 +45,7 @@ context('Dashboard: Unissued facilities report', () => {
         type: CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT,
         name: 'abc-1-def',
         hasBeenIssued: false,
-        value: 889988,
+        value: 1234567890.1,
         currency: { id: 'EUR' },
       }, BANK1_MAKER1);
       cy.updateGefApplication(deal._id, {
@@ -110,7 +110,7 @@ context('Dashboard: Unissued facilities report', () => {
       cy.get('@row2').find('[data-cy="facility__row--product"]').should('contain', 'GEF');
       cy.get('@row2').find('[data-cy="facility__row--facilityId"]').should('contain', '00000002');
       cy.get('@row2').find('[data-cy="facility__row--companyName"]').should('contain', 'Delta');
-      cy.get('@row2').find('[data-cy="facility__row--facilityValue"]').should('contain', 'EUR 889,988');
+      cy.get('@row2').find('[data-cy="facility__row--facilityValue"]').should('contain', 'EUR 1,234,567,890.1');
       cy.get('@row2').find('[data-cy="facility__row--daysLeftToIssue"]').should('contain', 'days left');
 
       reports.reportsUnissuedFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
