@@ -128,7 +128,6 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
         facility.daysLeftToIssue = defaultDate ? differenceInCalendarDays(todaysDate, deadlineForIssuing) * -1 + 0 : 0;
 
         facility.currencyAndValue = item.value ? `${item.currency} ${commaNumber(item.value)}` : '';
-
         unissuedFacilities.push(facility);
       });
     }
