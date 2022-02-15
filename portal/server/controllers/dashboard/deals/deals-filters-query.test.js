@@ -1,5 +1,9 @@
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
-import { STATUS } from '../../../constants';
+import {
+  STATUS,
+  SUBMISSION_TYPE,
+  FIELD_NAMES,
+} from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 
 describe('controllers/dashboard/deals - filters query', () => {
@@ -19,13 +23,11 @@ describe('controllers/dashboard/deals - filters query', () => {
       mockUser,
     );
 
-    const expected = [
-      {
-        field: 'bank.id',
-        value: mockUser.bank.id,
-        operator: 'and',
-      },
-    ];
+    const expected = {
+      $and: [
+        { 'bank.id': mockUser.bank.id },
+      ],
+    };
 
     expect(result).toEqual(expected);
   });
@@ -41,17 +43,12 @@ describe('controllers/dashboard/deals - filters query', () => {
         mockUser,
       );
 
-      const expected = [
-        {
-          field: 'bank.id',
-          value: mockUser.bank.id,
-          operator: 'and',
-        },
-        {
-          field: 'maker._id',
-          value: mockUser._id,
-        },
-      ];
+      const expected = {
+        $and: [
+          { 'bank.id': mockUser.bank.id },
+          { 'maker._id': mockUser._id },
+        ],
+      };
 
       expect(result).toEqual(expected);
     });
@@ -69,18 +66,12 @@ describe('controllers/dashboard/deals - filters query', () => {
         mockUser,
       );
 
-      const expected = [
-        {
-          field: 'bank.id',
-          value: mockUser.bank.id,
-          operator: 'and',
-        },
-        {
-          field: 'status',
-          value: STATUS.READY_FOR_APPROVAL,
-          operator: 'and',
-        },
-      ];
+      const expected = {
+        $and: [
+          { 'bank.id': mockUser.bank.id },
+          { status: STATUS.READY_FOR_APPROVAL },
+        ],
+      };
 
       expect(result).toEqual(expected);
     });
@@ -99,7 +90,7 @@ describe('controllers/dashboard/deals - filters query', () => {
         mockUser,
       );
 
-      const expected = [];
+      const expected = {};
 
       expect(result).toEqual(expected);
     });
@@ -108,8 +99,8 @@ describe('controllers/dashboard/deals - filters query', () => {
   it('should add multiple custom filters to the query', () => {
     const mockCreatedByYou = '';
     const mockFilters = [
-      { dealType: ['BSS', 'EWCS'] },
-      { submissionType: ['Automatic Inclusion Notice'] },
+      { [FIELD_NAMES.DEAL.DEAL_TYPE]: ['BSS', 'EWCS'] },
+      { [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: [SUBMISSION_TYPE.AIN] },
     ];
     mockUser.bank.id = '*';
     mockUser.roles = [];
@@ -120,23 +111,62 @@ describe('controllers/dashboard/deals - filters query', () => {
       mockUser,
     );
 
-    const expected = [
-      {
-        field: 'dealType',
-        value: [
-          mockFilters[0].dealType[0],
-          mockFilters[0].dealType[1],
-        ],
-        operator: 'or',
-      },
-      {
-        field: 'submissionType',
-        value: [
-          mockFilters[1].submissionType[0],
-        ],
-        operator: 'or',
-      },
+    const expected = {
+      $or: [
+        { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] },
+        { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] },
+        { [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] },
+      ],
+    };
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should add multiple keyword filters with the same value', () => {
+    const mockCreatedByYou = '';
+    const mockFilters = [
+      { keyword: ['Mock'] },
     ];
+    mockUser.bank.id = '*';
+    mockUser.roles = [];
+
+    const result = dashboardDealsFiltersQuery(
+      mockCreatedByYou,
+      mockFilters,
+      mockUser,
+    );
+
+    const expectedKeywordValue = mockFilters[0].keyword[0];
+
+    const expected = {
+      $or: [
+        {
+          [FIELD_NAMES.DEAL.BANK_INTERNAL_REF_NAME]: {
+            $regex: expectedKeywordValue, $options: 'i',
+          },
+        },
+        {
+          [FIELD_NAMES.DEAL.STATUS]: {
+            $regex: expectedKeywordValue, $options: 'i',
+          },
+        },
+        {
+          [FIELD_NAMES.DEAL.DEAL_TYPE]: {
+            $regex: expectedKeywordValue, $options: 'i',
+          },
+        },
+        {
+          [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: {
+            $regex: expectedKeywordValue, $options: 'i',
+          },
+        },
+        {
+          [FIELD_NAMES.DEAL.EXPORTER_COMPANY_NAME]: {
+            $regex: expectedKeywordValue, $options: 'i',
+          },
+        },
+      ],
+    };
 
     expect(result).toEqual(expected);
   });
@@ -155,7 +185,7 @@ describe('controllers/dashboard/deals - filters query', () => {
       mockUser,
     );
 
-    const expected = [];
+    const expected = {};
 
     expect(result).toEqual(expected);
   });

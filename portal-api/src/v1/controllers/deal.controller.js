@@ -191,7 +191,7 @@ const queryAllDeals = async (
 ) => {
   const collection = await db.getCollection('deals');
 
-  const deals = await collection.aggregate([
+  const results = await collection.aggregate([
     { $match: filters },
     {
       $project: {
@@ -228,6 +228,38 @@ const queryAllDeals = async (
     },
   ]).toArray();
 
-  return deals;
+  if (results.length) {
+    const {
+      count,
+      deals,
+    } = results[0];
+
+    return {
+      count,
+      deals,
+    };
+  }
+
+  return {
+    deals: [],
+    count: 0,
+  };
 };
-exports.queryAllDeals = queryAllDeals;
+
+exports.getQueryAllDeals = async (req, res) => {
+  const {
+    start,
+    pagesize,
+    filters,
+    sort,
+  } = req.body;
+
+  const results = await queryAllDeals(
+    filters,
+    sort,
+    start,
+    pagesize,
+  );
+
+  return res.status(200).send(results);
+};

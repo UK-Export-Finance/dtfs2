@@ -72,7 +72,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
 
   describe('mapIssuedValueToText', () => {
     it(`should return ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED} when true string is passed`, () => {
-      const mockValue = 'true';
+      const mockValue = true;
 
       const result = mapIssuedValueToText(mockValue);
 
@@ -81,7 +81,7 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
     });
 
     it(`should return ${CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED} when false string is passed`, () => {
-      const mockValue = 'false';
+      const mockValue = false;
 
       const result = mapIssuedValueToText(mockValue);
 
