@@ -1,7 +1,8 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
-import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
+import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
+import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
 import MOCK_USERS from '../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 
@@ -10,17 +11,15 @@ context('User can view a case deal', () => {
   let dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM)
+    cy.insertOneGefDeal(MOCK_APPLICATION_MIA, MOCK_MAKER_TFM)
       .then((insertedDeal) => {
         dealId = insertedDeal._id;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_MIA;
-
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities = createdFacilities;
         });
 
-        cy.submitDeal(dealId, dealType);
+        cy.submitDeal(dealId, insertedDeal.dealType);
       });
   });
 
@@ -46,11 +45,11 @@ context('User can view a case deal', () => {
 
   it('should render case summary fields', () => {
     partials.caseSummary.dealSubmissionType().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(MOCK_DEAL_MIA.submissionType);
+      expect(text.trim()).to.contain(MOCK_APPLICATION_MIA.submissionType);
     });
 
     partials.caseSummary.exporterName().invoke('text').then((text) => {
-      expect(text.trim()).to.contain(MOCK_DEAL_MIA.exporter.companyName);
+      expect(text.trim()).to.contain(MOCK_APPLICATION_MIA.exporter.companyName);
     });
   });
 

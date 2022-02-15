@@ -56,7 +56,7 @@
         </h4>
 
         <p style="white-space:pre-line" data-cy="bank-security-text">{{ deal.supportingInformation.securityDetails.exporter }}</p>
-        {% if deal.supportingInformation.securityDetails.facility %}
+        {% if deal.dealType === 'GEF' and deal.supportingInformation.securityDetails.facility %}
           <h4 class="govuk-heading-s govuk-!-padding-top-3 govuk-!-padding-bottom-0 govuk-!-margin-top-0" data-cy="bank-security-facility-sub-heading">
           Specific bank security for the facilities listed in this application
           </h4>
