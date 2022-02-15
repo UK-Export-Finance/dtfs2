@@ -27,8 +27,17 @@ describe('controllers/dashboard/facilities - filters query', () => {
 
   it('should add multiple custom filters to the query', () => {
     const mockFilters = [
-      { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: ['Cash', 'Bond'] },
-      { [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [true] },
+      {
+        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [
+          CONSTANTS.FACILITY_TYPE.CASH,
+          CONSTANTS.FACILITY_TYPE.BOND,
+        ],
+      },
+      {
+        [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [
+          true,
+        ],
+      },
     ];
 
     const result = dashboardFacilitiesFiltersQuery(
