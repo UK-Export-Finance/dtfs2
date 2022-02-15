@@ -157,6 +157,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(0, 8).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 9).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 10).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(0, 11).should('not.exist');
 
       // second facility
       applicationPreview.facilitySummaryListRowAction(1, 0).should('not.exist');
@@ -170,6 +171,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(1, 8).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 9).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 10).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(1, 11).should('not.exist');
 
       // third facility
       applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
@@ -182,6 +184,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(2, 7).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 8).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 9).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 10).should('not.exist');
 
       // forth facility table - shorter as not yet issued
       applicationPreview.facilitySummaryListRowAction(3, 0).should('not.exist');
@@ -193,6 +196,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(3, 6).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 7).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 8).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(3, 9).should('not.exist');
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
@@ -232,16 +236,17 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.deleteFacilityLink().should('not.exist');
 
       // the already issued so cannot change anything
-      applicationDetails.facilitySummaryListRowAction(2, 0).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 1).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 3).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 4).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 5).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 6).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 7).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 8).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 9).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 1).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 2).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 3).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 4).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 5).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 6).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 7).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 8).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 9).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 10).should('not.exist');
 
       // 1st facility table - makes sure no action buttons exist (change or add)
       applicationDetails.facilitySummaryListRowAction(0, 0).contains('Change');
@@ -255,6 +260,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListRowAction(0, 8).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(0, 9).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(0, 10).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(0, 11).should('have.value', '');
 
       // second facility
       applicationDetails.facilitySummaryListRowAction(1, 0).contains('Change');
@@ -268,6 +274,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListRowAction(1, 8).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(1, 9).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(1, 10).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(1, 11).should('have.value', '');
 
       // forth facility table only has change as not yet issued
       applicationDetails.facilitySummaryListRowAction(3, 0).should('have.value', '');
@@ -279,6 +286,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListRowAction(3, 6).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(3, 7).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(3, 8).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(3, 9).should('have.value', '');
 
       // should not be able to edit exporter table
       applicationDetails.exporterSummaryListRowAction(0, 0).should('have.value', '');
@@ -392,6 +400,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(0, 8).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 9).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 10).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(0, 11).should('not.exist');
 
       // second facility
       applicationPreview.facilitySummaryListRowAction(1, 0).should('not.exist');
@@ -405,6 +414,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(1, 8).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 9).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(1, 10).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(1, 11).should('not.exist');
 
       // third facility
       applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
@@ -417,6 +427,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(2, 7).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 8).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 9).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 10).should('not.exist');
 
       // forth facility table
       applicationPreview.facilitySummaryListRowAction(3, 0).should('not.exist');
@@ -430,6 +441,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListRowAction(3, 8).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 9).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(3, 10).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(3, 11).should('not.exist');
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {

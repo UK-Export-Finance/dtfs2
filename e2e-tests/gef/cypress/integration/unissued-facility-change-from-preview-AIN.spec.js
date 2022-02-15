@@ -152,6 +152,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListRowAction(3, 8).should('have.value', '');
       applicationPreview.facilitySummaryListRowAction(3, 9).should('have.value', '');
       applicationPreview.facilitySummaryListRowAction(3, 10).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 11).should('have.value', '');
 
       // not be able to change facility four name, but can change to issued
       applicationPreview.facilitySummaryListRowValue(0, 0).contains(MOCK_FACILITY_FOUR.name);
