@@ -70,6 +70,7 @@ const getTemplateVariables = (
     pages,
     filters: templateFilters(filtersObj),
     selectedFilters: selectedFilters(filtersObj),
+    keyword: sessionFilters.keyword,
   };
 
   return templateVariables;
