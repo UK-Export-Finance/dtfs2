@@ -447,8 +447,8 @@ const createACBS = async (deal, bank) => {
   return {};
 };
 
-const updateACBSfacility = async (facility, dealType, supplierName) => {
-  if (!!facility && !!dealType && !!supplierName) {
+const updateACBSfacility = async (facility, deal) => {
+  if (!!facility && !!deal) {
     try {
       const response = await axios({
         method: 'post',
@@ -458,8 +458,7 @@ const updateACBSfacility = async (facility, dealType, supplierName) => {
         },
         data: {
           facility,
-          dealType,
-          supplierName,
+          deal,
         },
       });
       return response.data;
