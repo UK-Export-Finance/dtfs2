@@ -185,7 +185,7 @@ describe('controllers/dashboard/deals - filters query', () => {
       mockUser,
     );
 
-    const expected = { $or: [] };
+    const expected = {};
 
     expect(result).toEqual(expected);
   });

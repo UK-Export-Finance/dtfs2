@@ -42,7 +42,20 @@ const dashboardDealsFiltersQuery = (
   }
 
   if (filters.length) {
-    query.$or = [];
+    // Do NOT create $or array if the only passed filter is 'all statuses'.
+    // This filter value does require anything to be added to the query.
+    // Therefore, we don't want to create an empty $or array. Otherwise the query will fail.
+
+    const statusFilterObj = filters.find((obj) => obj[CONSTANTS.FIELD_NAMES.DEAL.STATUS]);
+    const statusFilterValues = (statusFilterObj && statusFilterObj[CONSTANTS.FIELD_NAMES.DEAL.STATUS]);
+
+    const hasOnlyStatusFilter = (statusFilterValues?.length === 1 && statusFilterValues);
+    const hasOnlyAllStatusesFilterValue = (hasOnlyStatusFilter
+        && statusFilterValues[0] === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES);
+
+    if (!hasOnlyAllStatusesFilterValue) {
+      query.$or = [];
+    }
 
     filters.forEach((filterObj) => {
       const fieldName = Object.keys(filterObj)[0];
