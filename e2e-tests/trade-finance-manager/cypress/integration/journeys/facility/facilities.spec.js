@@ -13,6 +13,7 @@ context('Facility page', () => {
   const dealTwoFacilities = [];
 
   before(() => {
+    cy.deleteTfmDeals();
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
       dealOne = insertedDeal;
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
@@ -66,7 +67,7 @@ context('Facility page', () => {
     page.facilitiesPage.facilityStageColumn().should('contain', 'Facility stage');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000006');
+    cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000');
     cy.get('@row1').find('[data-cy="facility__product"]').should('contain', dealTwo.dealType);
     cy.get('@row1').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[1].type);
     cy.get('@row1').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
@@ -75,7 +76,7 @@ context('Facility page', () => {
     cy.get('@row1').find('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000005');
+    cy.get('@row2').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000');
     cy.get('@row2').find('[data-cy="facility__product"]').should('contain', dealTwo.dealType);
     cy.get('@row2').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[0].type);
     cy.get('@row2').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
@@ -103,11 +104,11 @@ context('Facility page', () => {
   it('performs a search query based on Facility ID', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities'));
-    const searchString = '10000000002';
+    const searchString = '10000000';
     page.facilitiesPage.searchFormInput().type(searchString);
     page.facilitiesPage.searchFormSubmitButton().click();
 
-    page.facilitiesPage.dealsTableRows().should('have.length', 1);
+    page.facilitiesPage.dealsTableRows().should('have.length', 4);
   });
 
   it('performs a search query based on AIN Export name', () => {
