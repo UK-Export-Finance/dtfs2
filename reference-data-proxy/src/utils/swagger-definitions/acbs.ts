@@ -36,9 +36,9 @@
  *       facility:
  *         type: object
  *         example: { allFacilityFields: true }
- *       supplierName:
- *         type: string
- *         example: 'The Supplier'
+ *       deal:
+ *         type: object
+ *         example: { submissionType: 'GEF', submissionDate: 123, exporter: {} }
  *   ACBSIssueFacilityResponseBody:
  *     type: object
  *     properties:
