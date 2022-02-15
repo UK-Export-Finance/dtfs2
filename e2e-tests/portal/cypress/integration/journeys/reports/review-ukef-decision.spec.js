@@ -24,6 +24,7 @@ context('Dashboard: Review UKEF Decision report', () => {
         },
         submissionDate: new Date().valueOf().toString(),
       }, BANK1_MAKER1);
+      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, BANK1_MAKER1);
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
@@ -31,8 +32,10 @@ context('Dashboard: Review UKEF Decision report', () => {
         ukefDecision: {
           decision: CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS, timestamp: Date.now(),
         },
+        status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
         submissionDate: new Date().valueOf().toString(),
       }, BANK1_MAKER1);
+      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS, BANK1_MAKER1);
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
@@ -44,6 +47,7 @@ context('Dashboard: Review UKEF Decision report', () => {
         submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
         submissionDate: new Date(daysInThePast).valueOf().toString(),
       }, BANK1_MAKER1);
+      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, BANK1_MAKER1);
     });
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       daysInThePast = sub(todayAtMidnight, { days: 35 });
@@ -55,6 +59,7 @@ context('Dashboard: Review UKEF Decision report', () => {
         submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
         submissionDate: new Date(daysInThePast).valueOf().toString(),
       }, BANK1_MAKER1);
+      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS, BANK1_MAKER1);
     });
   });
 

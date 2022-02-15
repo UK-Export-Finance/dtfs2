@@ -12,7 +12,6 @@ exports.getPortalReports = async (req, res) => {
   const pastDeadlineUnissuedFacilitiesCount = facilities.length ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 0) : [];
   const facilitiesThatNeedIssuingCount = facilities.length ? facilities.filter(({ daysLeftToIssue }) => daysLeftToIssue < 15 && daysLeftToIssue >= 0) : [];
   const totalUkefDecisions = dealWithConditions.length + dealWithoutConditions.length;
-
   return res.render('reports/reports-dashboard.njk', {
     allUnissuedFacilitiesCount: facilities.length,
     pastDeadlineUnissuedFacilitiesCount: pastDeadlineUnissuedFacilitiesCount.length,
@@ -46,6 +45,17 @@ exports.getConditionalDecisionReport = async (req, res) => {
 exports.downloadUnissuedFacilitiesReport = async (req, res) => {
   const { userToken } = req.session;
   const facilities = await api.getUnissuedFacilitiesReport(userToken) || [];
+  const mappedFacilities = [];
+  if (facilities.length) {
+    // `json2csv` library strips out the leading `00` from the ukefFacility ID
+    // we have to convert it to a string instead if we want to keep the leading `00`
+    facilities.forEach((facility) => {
+      const item = facility;
+      item.ukefFacilityId = `'${item.ukefFacilityId}'`;
+
+      mappedFacilities.push(item);
+    });
+  }
 
   // not all columns are needed, in which case, the array below will specify
   // the properties that we want to add to the CSV file and the label for them
@@ -80,7 +90,7 @@ exports.downloadUnissuedFacilitiesReport = async (req, res) => {
     },
   ];
   // download the report only if we have facilities
-  return downloadCsv(res, 'unissued_facilities_report', columns, facilities);
+  return downloadCsv(res, 'unissued_facilities_report', columns, mappedFacilities);
 };
 
 const downloadUkefDecisionReport = async (userToken, ukefDecision) => {
