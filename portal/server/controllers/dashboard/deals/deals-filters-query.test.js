@@ -5,6 +5,7 @@ import {
   FIELD_NAMES,
 } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
+import keywordQuery from './deals-filters-keyword-query';
 
 describe('controllers/dashboard/deals - filters query', () => {
   const mockUser = {
@@ -98,9 +99,15 @@ describe('controllers/dashboard/deals - filters query', () => {
 
   it('should add multiple custom filters to the query', () => {
     const mockCreatedByYou = '';
+    const mockKeyword = 'test';
     const mockFilters = [
       { [FIELD_NAMES.DEAL.DEAL_TYPE]: ['BSS', 'EWCS'] },
       { [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: [SUBMISSION_TYPE.AIN] },
+      {
+        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [
+          mockKeyword,
+        ],
+      },
     ];
     mockUser.bank.id = '*';
     mockUser.roles = [];
@@ -116,55 +123,7 @@ describe('controllers/dashboard/deals - filters query', () => {
         { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] },
         { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] },
         { [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] },
-      ],
-    };
-
-    expect(result).toEqual(expected);
-  });
-
-  it('should add multiple keyword filters with the same value', () => {
-    const mockCreatedByYou = '';
-    const mockFilters = [
-      { keyword: ['Mock'] },
-    ];
-    mockUser.bank.id = '*';
-    mockUser.roles = [];
-
-    const result = dashboardDealsFiltersQuery(
-      mockCreatedByYou,
-      mockFilters,
-      mockUser,
-    );
-
-    const expectedKeywordValue = mockFilters[0].keyword[0];
-
-    const expected = {
-      $or: [
-        {
-          [FIELD_NAMES.DEAL.BANK_INTERNAL_REF_NAME]: {
-            $regex: expectedKeywordValue, $options: 'i',
-          },
-        },
-        {
-          [FIELD_NAMES.DEAL.STATUS]: {
-            $regex: expectedKeywordValue, $options: 'i',
-          },
-        },
-        {
-          [FIELD_NAMES.DEAL.DEAL_TYPE]: {
-            $regex: expectedKeywordValue, $options: 'i',
-          },
-        },
-        {
-          [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: {
-            $regex: expectedKeywordValue, $options: 'i',
-          },
-        },
-        {
-          [FIELD_NAMES.DEAL.EXPORTER_COMPANY_NAME]: {
-            $regex: expectedKeywordValue, $options: 'i',
-          },
-        },
+        ...keywordQuery(mockKeyword),
       ],
     };
 

@@ -143,6 +143,7 @@ describe('controllers/dashboard/facilities', () => {
         pages: expectedPages,
         filters: templateFilters(expectedFiltersObj),
         selectedFilters: selectedFilters(expectedFiltersObj),
+        keyword: mockReq.session.dashboardFilters.keyword,
       };
 
       expect(result).toEqual(expected);

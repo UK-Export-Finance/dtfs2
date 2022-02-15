@@ -9,6 +9,11 @@ const DEAL = {
 const FACILITY = {
   TYPE: 'type',
   HAS_BEEN_ISSUED: 'hasBeenIssued',
+  NAME: 'name',
+  UKEF_FACILITY_ID: 'ukefFacilityId',
+  CURRENCY: 'currency',
+  VALUE: 'value',
+  DEAL_SUBMISSION_TYPE: 'deal.submissionType',
 };
 
 module.exports = {
