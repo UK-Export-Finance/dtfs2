@@ -127,8 +127,8 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
         const todaysDate = new Date();
         facility.daysLeftToIssue = defaultDate ? differenceInCalendarDays(todaysDate, deadlineForIssuing) * -1 + 0 : 0;
 
-        const defaultFacilityValue = item.value;
-        facility.currencyAndValue = item.value ? `${item.currency} ${commaNumber(defaultFacilityValue)}` : '';
+        facility.currencyAndValue = item.value ? `${item.currency} ${commaNumber(item.value)}` : '';
+
         unissuedFacilities.push(facility);
       });
     }
