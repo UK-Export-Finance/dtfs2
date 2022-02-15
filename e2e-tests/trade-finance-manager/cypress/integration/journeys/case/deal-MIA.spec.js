@@ -64,6 +64,8 @@ context('User can view a case deal', () => {
       pages.caseDealPage.bankSecuritySectionHeading().contains('Bank security');
       pages.caseDealPage.bankSecuritySubHeading().contains('General bank security for this exporter');
       pages.caseDealPage.bankSecurityText().contains('Mock security details');
+      pages.caseDealPage.bankSecurityFacilitySubHeading().contains('Specific bank security for the facilities listed in this application');
+      pages.caseDealPage.bankSecurityFacilityText().contains('Mock facility details');
     });
   });
 

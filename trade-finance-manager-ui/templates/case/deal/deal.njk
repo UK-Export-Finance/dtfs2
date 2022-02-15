@@ -53,9 +53,16 @@
         <p class="ukef-heading-l" style="padding-top:30px" data-cy="bank-security-section-heading">Bank security</p>
         <h4 class="govuk-heading-s govuk-!-padding-top-3 govuk-!-padding-bottom-0 govuk-!-margin-top-0" data-cy="bank-security-sub-heading">
         General bank security for this exporter
-      </h4>
+        </h4>
 
-      <p style="white-space:pre-line" data-cy="bank-security-text">{{ deal.supportingInformation.securityDetails.exporter }}</p>
+        <p style="white-space:pre-line" data-cy="bank-security-text">{{ deal.supportingInformation.securityDetails.exporter }}</p>
+        {% if deal.supportingInformation.securityDetails.facility %}
+          <h4 class="govuk-heading-s govuk-!-padding-top-3 govuk-!-padding-bottom-0 govuk-!-margin-top-0" data-cy="bank-security-facility-sub-heading">
+          Specific bank security for the facilities listed in this application
+          </h4>
+
+          <p style="white-space:pre-line" data-cy="bank-security-facility-text">{{ deal.supportingInformation.securityDetails.facility }}</p>
+        {% endif %}
       </div>
     </div>
   {% endif %}
