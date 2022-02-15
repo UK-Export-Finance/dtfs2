@@ -55,7 +55,7 @@ const getUnissuedFacilities = async (bankId) => {
               },
               {
                 case: { $eq: ['$dealsTable.dealType', 'BSS/EWCS'] },
-                then: '$dealsTable.details.manualInclusionApplicationSubmissionDate'
+                then: '$dealsTable.details.manualInclusionNoticeSubmissionDate'
               },
             ],
           },
