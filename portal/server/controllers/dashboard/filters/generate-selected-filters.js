@@ -47,14 +47,14 @@ const selectedSubmissionTypeFilters = (fieldName, submittedFilters) =>
   );
 
 /**
- * Map true/false string to Issued/Unissued string.
+ * Map true/false boolean to Issued/Unissued string.
  *
- * @param {string} the submitted filter value
- * @example ( 'true' )
+ * @param {boolean} the submitted filter value
+ * @example ( true )
  * @returns 'Issued'
  */
 const mapIssuedValueToText = (hasBeenIssued) => {
-  if (hasBeenIssued === 'true') {
+  if (hasBeenIssued) {
     return CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED;
   }
 
@@ -66,7 +66,7 @@ const mapIssuedValueToText = (hasBeenIssued) => {
  * This will used in mojFilter component - selectedFilters.categories.
  *
  * @param {object} submitted hasBeenIssued filters
- * @example ( ['true', 'false'] )
+ * @example ( [true, false] )
  * @returns generateSelectedFiltersObject('Facility stage', 'hasBeenIssued', ['Issued', 'Unissued'])
  */
 const selectedHasBeenIssuedFilters = (
@@ -77,11 +77,13 @@ const selectedHasBeenIssuedFilters = (
   const mappedFilters = submittedFilters.map((value) =>
     mapIssuedValueToText(value));
 
-  return generateSelectedFiltersObject(
+  const selectedFiltersObj = generateSelectedFiltersObject(
     heading,
     fieldName,
     mappedFilters,
   );
+
+  return selectedFiltersObj;
 };
 
 module.exports = {

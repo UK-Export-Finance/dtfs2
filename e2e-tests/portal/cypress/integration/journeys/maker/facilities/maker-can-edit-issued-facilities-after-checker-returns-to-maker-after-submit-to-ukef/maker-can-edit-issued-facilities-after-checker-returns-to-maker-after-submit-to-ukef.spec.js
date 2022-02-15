@@ -1,11 +1,14 @@
+import { format } from 'date-fns';
 const pages = require('../../../../pages');
 const relative = require('../../../../relativeURL');
 const mockDeal = require('./MIA-deal-submitted-to-ukef-with-issued-facilities-after-checker-returned-to-maker');
 const MOCK_USERS = require('../../../../../fixtures/users');
+const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
-const day = String(new Date().getDate()).padStart(2, 0);
+const nowPlusMonth = nowPlusMonths(1);
+const issuedDateDay = format(nowPlusMonth, 'dd');
 
 context('Given an MIA deal that has been submitted to UKEF, maker has issued facilities and a checker has returned the deal to maker', () => {
   let deal;
@@ -82,7 +85,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       bondRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
       pages.bondIssueFacility.issuedDateDayInput().clear();
-      pages.bondIssueFacility.issuedDateDayInput().type(day);
+      pages.bondIssueFacility.issuedDateDayInput().type(issuedDateDay);
       pages.bondIssueFacility.submit().click();
     });
 
@@ -104,7 +107,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       loanRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
       pages.loanIssueFacility.issuedDateDayInput().clear();
-      pages.loanIssueFacility.issuedDateDayInput().type(day);
+      pages.loanIssueFacility.issuedDateDayInput().type(issuedDateDay);
       pages.bondIssueFacility.submit().click();
     });
 
