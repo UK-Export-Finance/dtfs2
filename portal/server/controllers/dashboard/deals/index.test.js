@@ -13,6 +13,7 @@ import {
   submittedFiltersArray,
   submittedFiltersObject,
 } from '../filters/helpers';
+import { removeSessionFilter } from '../filters/remove-filter-from-session';
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
 import { dealsTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
@@ -67,7 +68,7 @@ describe('controllers/dashboard/deals', () => {
       },
       params: { page: 1 },
       session: {
-        dashboardFilters: CONSTANTS.DASHBOARD_FILTERS_DEFAULT,
+        dashboardFilters: CONSTANTS.DASHBOARD.DEFAULT_FILTERS,
         userToken: '1234',
         user: {
           _id: 'mock-user',
@@ -101,8 +102,8 @@ describe('controllers/dashboard/deals', () => {
       );
 
       expect(api.allDeals).toHaveBeenCalledWith(
-        20,
-        20,
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
         expectedFilters,
         'mock-token',
       );
@@ -145,15 +146,15 @@ describe('controllers/dashboard/deals', () => {
       const expectedFiltersObj = submittedFiltersObject(filtersArray);
 
       const expectedPages = {
-        totalPages: Math.ceil(mockDeals.length / 20),
+        totalPages: Math.ceil(mockDeals.length / CONSTANTS.DASHBOARD.PAGE_SIZE),
         currentPage: parseInt(mockReq.params.page, 10),
         totalItems: mockDeals.length,
       };
 
       const expected = {
         user: mockReq.session.user,
-        primaryNav: 'home',
-        tab: 'deals',
+        primaryNav: CONSTANTS.DASHBOARD.PRIMARY_NAV,
+        tab: CONSTANTS.DASHBOARD.TABS.DEALS,
         deals: mockDeals,
         pages: expectedPages,
         filters: templateFilters(expectedFiltersObj),
@@ -228,7 +229,7 @@ describe('controllers/dashboard/deals', () => {
   });
 
   describe('removeSingleAllDealsFilter', () => {
-    it('should remove a single filter from mockReq.session.dashboardFilters', async () => {
+    it('should call removeSessionFilter and redirect to `/dashboard/deals/0`', async () => {
       mockReq = {
         ...mockReq,
         session: {
@@ -246,67 +247,15 @@ describe('controllers/dashboard/deals', () => {
 
       await removeSingleAllDealsFilter(mockReq, mockRes);
 
-      const expected = {
-        fieldA: ['valueA'],
-        fieldB: ['valueB2'],
-      };
+      const expected = removeSessionFilter(mockReq);
 
       expect(mockReq.session.dashboardFilters).toEqual(expected);
-    });
-
-    it('should remove a single filter from mockReq.session.dashboardFilters when value is NOT an array', async () => {
-      mockReq = {
-        ...mockReq,
-        session: {
-          ...mockReq.session,
-          dashboardFilters: {
-            fieldA: 'valueA',
-          },
-        },
-        params: {
-          fieldName: 'fieldA',
-          fieldValue: 'valueA',
-        },
-      };
-
-      await removeSingleAllDealsFilter(mockReq, mockRes);
-
-      const expected = {};
-
-      expect(mockReq.session.dashboardFilters).toEqual(expected);
-    });
-
-    it('should NOT remove a single filter if the filter/field name does not exist in the session', async () => {
-      mockReq = {
-        ...mockReq,
-        session: {
-          ...mockReq.session,
-          dashboardFilters: {
-            fieldA: ['valueA'],
-          },
-        },
-        params: {
-          fieldName: 'fieldX',
-          fieldValue: 'test',
-        },
-      };
-
-      const originalSession = mockReq.session.dashboardFilters;
-
-      await removeSingleAllDealsFilter(mockReq, mockRes);
-
-      expect(mockReq.session.dashboardFilters).toEqual(originalSession);
-    });
-
-    it('should redirect to `/dashboard/deals/0`', async () => {
-      await removeSingleAllDealsFilter(mockReq, mockRes);
-
       expect(mockRes.redirect).toHaveBeenCalledWith('/dashboard/deals/0');
     });
   });
 
   describe('removeAllDealsFilters', () => {
-    it('should reset all session filters', async () => {
+    it('should reset all session filters and redirect to `/dashboard/deals/0', async () => {
       mockReq = {
         ...mockReq,
         session: {
@@ -317,7 +266,7 @@ describe('controllers/dashboard/deals', () => {
 
       await removeAllDealsFilters(mockReq, mockRes);
 
-      expect(mockReq.session.dashboardFilters).toEqual(CONSTANTS.DASHBOARD_FILTERS_DEFAULT);
+      expect(mockReq.session.dashboardFilters).toEqual(CONSTANTS.DASHBOARD.DEFAULT_FILTERS);
     });
   });
 });

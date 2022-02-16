@@ -1,10 +1,54 @@
 const {
   generateSelectedFiltersObject,
+  generateSelectedFiltersObjectWithMappedValues,
   selectedSubmissionTypeFilters,
-  selectedHasBeenIssuedFilters,
 } = require('../filters/generate-selected-filters');
 const CONTENT_STRINGS = require('../../../content-strings');
 const CONSTANTS = require('../../../constants');
+
+/**
+ * Map true/false boolean to Issued/Unissued string.
+ *
+ * @param {boolean} the submitted filter value
+ * @example ( true )
+ * @returns 'Issued'
+ */
+const mapIssuedValueToText = (hasBeenIssued) => {
+  if (hasBeenIssued) {
+    return CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED;
+  }
+
+  return CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED;
+};
+
+/**
+ * Create an object for all selected hasBeenIssued filters.
+ * This will used in mojFilter component - selectedFilters.categories.
+ *
+ * @param {string} field heading
+ * @param {string} field name
+ * @param {object} submitted hasBeenIssued filters
+ * @example ( 'Bank facility stage', 'hasBeenIssued', [ true, false ] )
+ * @returns generateSelectedFiltersObjectWithMappedValues('Facility stage', 'hasBeenIssued', [ {value: true, mappedValue: 'Issued' }])
+ */
+const selectedHasBeenIssuedFilters = (
+  heading,
+  fieldName,
+  submittedFilters,
+) => {
+  const mappedFilters = submittedFilters.map((value) => ({
+    value,
+    mappedValue: mapIssuedValueToText(value),
+  }));
+
+  const selectedFiltersObj = generateSelectedFiltersObjectWithMappedValues(
+    heading,
+    fieldName,
+    mappedFilters,
+  );
+
+  return selectedFiltersObj;
+};
 
 /**
  * Create an array of objects for all selected filters.
@@ -54,5 +98,7 @@ const selectedFilters = (submittedFilters) => {
 };
 
 module.exports = {
+  mapIssuedValueToText,
   selectedFilters,
+  selectedHasBeenIssuedFilters,
 };

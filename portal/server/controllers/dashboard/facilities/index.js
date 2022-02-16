@@ -6,16 +6,16 @@ const {
   submittedFiltersArray,
   submittedFiltersObject,
 } = require('../filters/helpers');
+const { removeSessionFilter } = require('../filters/remove-filter-from-session');
 const {
   getApiData,
   requestParams,
   getFlashSuccessMessage,
 } = require('../../../helpers');
 const { sanitiseBody } = require('./sanitise-body');
+const CONSTANTS = require('../../../constants');
 
-const PAGESIZE = 20;
-const primaryNav = 'home';
-const tab = 'facilities';
+const { PAGE_SIZE } = CONSTANTS.DASHBOARD;
 
 const getAllFacilitiesData = async (
   userToken,
@@ -32,8 +32,8 @@ const getAllFacilitiesData = async (
   );
 
   const { count, facilities } = await getApiData(api.allFacilities(
-    currentPage * PAGESIZE,
-    PAGESIZE,
+    currentPage * PAGE_SIZE,
+    PAGE_SIZE,
     filtersQuery,
     userToken,
   ), res);
@@ -55,7 +55,7 @@ const getTemplateVariables = (
   filtersArray,
 ) => {
   const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
+    totalPages: Math.ceil(count / PAGE_SIZE),
     currentPage: parseInt(currentPage, 10),
     totalItems: count,
   };
@@ -64,8 +64,8 @@ const getTemplateVariables = (
 
   const templateVariables = {
     user,
-    primaryNav,
-    tab,
+    primaryNav: CONSTANTS.DASHBOARD.PRIMARY_NAV,
+    tab: CONSTANTS.DASHBOARD.TABS.FACILITIES,
     facilities,
     pages,
     filters: templateFilters(filtersObj),
@@ -128,4 +128,16 @@ exports.allFacilities = async (req, res) => {
     ...templateVariables,
     successMessage: getFlashSuccessMessage(req),
   });
+};
+
+exports.removeSingleAllFacilitiesFilter = async (req, res) => {
+  removeSessionFilter(req);
+
+  return res.redirect('/dashboard/facilities/0');
+};
+
+exports.removeAllFacilitiesFilters = (req, res) => {
+  req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+
+  return res.redirect('/dashboard/facilities/0');
 };

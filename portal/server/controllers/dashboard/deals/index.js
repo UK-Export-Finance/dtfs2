@@ -6,6 +6,7 @@ const {
   submittedFiltersArray,
   submittedFiltersObject,
 } = require('../filters/helpers');
+const { removeSessionFilter } = require('../filters/remove-filter-from-session');
 const {
   getApiData,
   requestParams,
@@ -13,9 +14,7 @@ const {
 } = require('../../../helpers');
 const CONSTANTS = require('../../../constants');
 
-const PAGESIZE = 20;
-const primaryNav = 'home';
-const tab = 'deals';
+const { PAGE_SIZE } = CONSTANTS.DASHBOARD;
 
 const getAllDealsData = async (
   userToken,
@@ -33,8 +32,8 @@ const getAllDealsData = async (
   );
 
   const { count, deals } = await getApiData(api.allDeals(
-    currentPage * PAGESIZE,
-    PAGESIZE,
+    currentPage * PAGE_SIZE,
+    PAGE_SIZE,
     filtersQuery,
     userToken,
   ), res);
@@ -56,7 +55,7 @@ const getTemplateVariables = (
   filtersArray,
 ) => {
   const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
+    totalPages: Math.ceil(count / PAGE_SIZE),
     currentPage: parseInt(currentPage, 10),
     totalItems: count,
   };
@@ -65,8 +64,8 @@ const getTemplateVariables = (
 
   const templateVariables = {
     user,
-    primaryNav,
-    tab,
+    primaryNav: CONSTANTS.DASHBOARD.PRIMARY_NAV,
+    tab: CONSTANTS.DASHBOARD.TABS.DEALS,
     deals,
     pages,
     filters: templateFilters(filtersObj),
@@ -131,26 +130,13 @@ exports.allDeals = async (req, res) => {
 };
 
 exports.removeSingleAllDealsFilter = async (req, res) => {
-  const currentFilters = req.session.dashboardFilters;
-
-  const filter = currentFilters[req.params.fieldName];
-
-  if (filter) {
-    if (Array.isArray(filter)) {
-      const modifiedFilter = currentFilters[req.params.fieldName].filter((value) =>
-        value !== req.params.fieldValue);
-
-      req.session.dashboardFilters[req.params.fieldName] = modifiedFilter;
-    } else {
-      delete req.session.dashboardFilters[req.params.fieldName];
-    }
-  }
+  removeSessionFilter(req);
 
   return res.redirect('/dashboard/deals/0');
 };
 
 exports.removeAllDealsFilters = (req, res) => {
-  req.session.dashboardFilters = CONSTANTS.DASHBOARD_FILTERS_DEFAULT;
+  req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
 
   return res.redirect('/dashboard/deals/0');
 };
