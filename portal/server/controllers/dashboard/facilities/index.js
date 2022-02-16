@@ -6,12 +6,14 @@ const {
   submittedFiltersArray,
   submittedFiltersObject,
 } = require('../filters/helpers');
+const removeSessionFilter = require('../filters/remove-filter-from-session');
 const {
   getApiData,
   requestParams,
   getFlashSuccessMessage,
 } = require('../../../helpers');
 const { sanitiseBody } = require('./sanitise-body');
+const CONSTANTS = require('../../../constants');
 
 const PAGESIZE = 20;
 const primaryNav = 'home';
@@ -128,4 +130,16 @@ exports.allFacilities = async (req, res) => {
     ...templateVariables,
     successMessage: getFlashSuccessMessage(req),
   });
+};
+
+exports.removeSingleAllFacilitiesFilter = async (req, res) => {
+  removeSessionFilter(req);
+
+  return res.redirect('/dashboard/facilities/0');
+};
+
+exports.removeAllFacilitiesFilters = (req, res) => {
+  req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+
+  return res.redirect('/dashboard/facilities/0');
 };

@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
     if (success) {
       req.session.userToken = token;
       req.session.user = user;
-      req.session.dashboardFilters = CONSTANTS.DASHBOARD_FILTERS_DEFAULT;
+      req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
     } else {
       loginErrors.push(emailError);
       loginErrors.push(passwordError);
