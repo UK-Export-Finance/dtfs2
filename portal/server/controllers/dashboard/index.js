@@ -5,14 +5,17 @@ const {
 } = require('./deals');
 const {
   allFacilities,
+  removeSingleAllFacilitiesFilter,
+  removeAllFacilitiesFilters,
 } = require('./facilities');
-
 const reportsController = require('./reports.controller');
 
 module.exports = {
   allDeals,
-  allFacilities,
   removeSingleAllDealsFilter,
   removeAllDealsFilters,
+  allFacilities,
+  removeSingleAllFacilitiesFilter,
+  removeAllFacilitiesFilters,
   reportsController,
 };
