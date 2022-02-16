@@ -1,14 +1,13 @@
 const mapCreateEstore = require('../mappings/map-create-estore');
 
-// const api = require('../api');
+const api = require('../api');
 
 const createEstoreFolders = async (deal) => {
   const eStoreInput = mapCreateEstore(deal);
 
   console.log(eStoreInput);
-  // TODO: DTFS2-5099 Update eStore API calls to use cron jobs
-  // const estore2 = await api.createEstoreFolders(eStoreInput);
-  const estore = {};
+
+  const estore = await api.createEstoreFolders(eStoreInput);
   return {
     ...deal,
     tfm: {

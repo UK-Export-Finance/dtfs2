@@ -29,7 +29,8 @@ const gefActivityController = require('../controllers/portal/gef-deal/add-min-ac
 const getGefFacilitiesController = require('../controllers/portal/gef-facility/get-facilities.controller');
 const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
 
-const durableFunctionsController = require('../controllers/durable-functions/durable-functions-controller');
+const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
+const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
 
 const { PORTAL_ROUTE } = require('../../constants/routes');
 
@@ -806,5 +807,21 @@ portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFaci
  *
  */
 portalRouter.route('/durable-functions').delete(durableFunctionsController.deleteAllDurableFunctions);
+
+/**
+ * @openapi
+ * /cron-jobs:
+ *   delete:
+ *     summary: Delete all logs from cron-job-logs collection
+ *     tags: [cron-job]
+ *     description: Delete all logs from cron-job-logs collection, primarily eStore jobs
+ *     responses:
+ *       200:
+ *         description: OK
+ *       500:
+ *         description: Fail
+ *
+ */
+portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
 
 module.exports = portalRouter;
