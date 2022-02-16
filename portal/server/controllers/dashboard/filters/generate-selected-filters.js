@@ -23,7 +23,7 @@ const generateSelectedFiltersObject = (
     const formattedValue = formatFieldValue(fieldValue);
 
     return {
-      text: formattedValue,
+      text: fieldValue,
       href: `filters/remove/${fieldName}/${formattedValue}`,
       formattedValue,
     };
