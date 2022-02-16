@@ -14,9 +14,7 @@ const {
 } = require('../../../helpers');
 const CONSTANTS = require('../../../constants');
 
-const PAGESIZE = 20;
-const primaryNav = 'home';
-const tab = 'deals';
+const { PAGE_SIZE } = CONSTANTS.DASHBOARD;
 
 const getAllDealsData = async (
   userToken,
@@ -34,8 +32,8 @@ const getAllDealsData = async (
   );
 
   const { count, deals } = await getApiData(api.allDeals(
-    currentPage * PAGESIZE,
-    PAGESIZE,
+    currentPage * PAGE_SIZE,
+    PAGE_SIZE,
     filtersQuery,
     userToken,
   ), res);
@@ -57,7 +55,7 @@ const getTemplateVariables = (
   filtersArray,
 ) => {
   const pages = {
-    totalPages: Math.ceil(count / PAGESIZE),
+    totalPages: Math.ceil(count / PAGE_SIZE),
     currentPage: parseInt(currentPage, 10),
     totalItems: count,
   };
@@ -66,8 +64,8 @@ const getTemplateVariables = (
 
   const templateVariables = {
     user,
-    primaryNav,
-    tab,
+    primaryNav: CONSTANTS.DASHBOARD.PRIMARY_NAV,
+    tab: CONSTANTS.DASHBOARD.TABS.DEALS,
     deals,
     pages,
     filters: templateFilters(filtersObj),

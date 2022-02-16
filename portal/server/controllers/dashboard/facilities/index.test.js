@@ -89,8 +89,8 @@ describe('controllers/dashboard/facilities', () => {
       );
 
       expect(api.allFacilities).toHaveBeenCalledWith(
-        20,
-        20,
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
         expectedFilters,
         'mock-token',
       );
@@ -131,7 +131,7 @@ describe('controllers/dashboard/facilities', () => {
       );
 
       const expectedPages = {
-        totalPages: Math.ceil(mockFacilities.length / 20),
+        totalPages: Math.ceil(mockFacilities.length / CONSTANTS.DASHBOARD.PAGE_SIZE),
         currentPage: parseInt(mockReq.params.page, 10),
         totalItems: mockFacilities.length,
       };
@@ -140,8 +140,8 @@ describe('controllers/dashboard/facilities', () => {
 
       const expected = {
         user: mockReq.session.user,
-        primaryNav: 'home',
-        tab: 'facilities',
+        primaryNav: CONSTANTS.DASHBOARD.PRIMARY_NAV,
+        tab: CONSTANTS.DASHBOARD.TABS.FACILITIES,
         facilities: mockFacilities,
         pages: expectedPages,
         filters: templateFilters(expectedFiltersObj),
@@ -215,7 +215,7 @@ describe('controllers/dashboard/facilities', () => {
   });
 
   describe('removeSingleAllFacilitiesFilter', () => {
-    it('should remove a filter and redirect to `/dashboard/facilities/0`', async () => {
+    it('should call removeSessionFilter and redirect to `/dashboard/facilities/0`', async () => {
       mockReq = {
         ...mockReq,
         session: {

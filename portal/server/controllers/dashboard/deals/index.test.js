@@ -102,8 +102,8 @@ describe('controllers/dashboard/deals', () => {
       );
 
       expect(api.allDeals).toHaveBeenCalledWith(
-        20,
-        20,
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
         expectedFilters,
         'mock-token',
       );
@@ -146,15 +146,15 @@ describe('controllers/dashboard/deals', () => {
       const expectedFiltersObj = submittedFiltersObject(filtersArray);
 
       const expectedPages = {
-        totalPages: Math.ceil(mockDeals.length / 20),
+        totalPages: Math.ceil(mockDeals.length / CONSTANTS.DASHBOARD.PAGE_SIZE),
         currentPage: parseInt(mockReq.params.page, 10),
         totalItems: mockDeals.length,
       };
 
       const expected = {
         user: mockReq.session.user,
-        primaryNav: 'home',
-        tab: 'deals',
+        primaryNav: CONSTANTS.DASHBOARD.PRIMARY_NAV,
+        tab: CONSTANTS.DASHBOARD.TABS.DEALS,
         deals: mockDeals,
         pages: expectedPages,
         filters: templateFilters(expectedFiltersObj),
@@ -229,7 +229,7 @@ describe('controllers/dashboard/deals', () => {
   });
 
   describe('removeSingleAllDealsFilter', () => {
-    it('should remove a filter and redirect to `/dashboard/deals/0`', async () => {
+    it('should call removeSessionFilter and redirect to `/dashboard/deals/0`', async () => {
       mockReq = {
         ...mockReq,
         session: {

@@ -52,8 +52,14 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
       const mockHeading = CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.FACILITY_STAGE;
       const mockFieldName = CONSTANTS.FIELD_NAMES.FACILITY_HAS_BEEN_ISSUED;
       const mockSubmittedFieldFilters = [
-        CONSTANTS.FACILITY_HAS_BEEN_ISSUED.ISSUED,
-        CONSTANTS.FACILITY_HAS_BEEN_ISSUED.UNISSUED,
+        {
+          value: CONSTANTS.FACILITY_HAS_BEEN_ISSUED.ISSUED,
+          mappedValue: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
+        },
+        {
+          value: CONSTANTS.FACILITY_HAS_BEEN_ISSUED.UNISSUED,
+          mappedValue: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED,
+        },
       ];
 
       const result = generateSelectedFiltersObjectWithMappedValues(
@@ -71,14 +77,14 @@ describe('controllers/dashboard/filters - ui-selected-filters', () => {
         },
         items: [
           {
-            text: expectedTextValue(mockSubmittedFieldFilters[0]),
-            href: expectedHref(mockFieldName, mockSubmittedFieldFilters[0]),
-            formattedValue: expectedTextValue(mockSubmittedFieldFilters[0]),
+            text: expectedTextValue(mockSubmittedFieldFilters[0].mappedValue),
+            href: expectedHref(mockFieldName, mockSubmittedFieldFilters[0].value),
+            formattedValue: expectedTextValue(mockSubmittedFieldFilters[0].mappedValue),
           },
           {
-            text: expectedTextValue(mockSubmittedFieldFilters[1]),
-            href: expectedHref(mockFieldName, mockSubmittedFieldFilters[1]),
-            formattedValue: expectedTextValue(mockSubmittedFieldFilters[1]),
+            text: expectedTextValue(mockSubmittedFieldFilters[1].mappedValue),
+            href: expectedHref(mockFieldName, mockSubmittedFieldFilters[1].value),
+            formattedValue: expectedTextValue(mockSubmittedFieldFilters[1].mappedValue),
           },
         ],
       };
