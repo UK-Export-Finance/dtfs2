@@ -21,7 +21,7 @@ describe('controllers/dashboard/deals - selected-filters', () => {
       const expected = [
         generateSelectedFiltersObject(
           CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.KEYWORD,
-          'keyword',
+          CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD,
           mockSubmittedFilters.keyword,
         ),
         generateSelectedFiltersObject(

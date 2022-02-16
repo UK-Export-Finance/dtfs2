@@ -94,6 +94,7 @@ const page = {
     mainContainer: {
       createdByYouCheckbox: () => cy.get('[data-cy="created-by-you-checkbox"]'),
       selectedFilters: {
+        noticeAIN: () => cy.get('[data-cy="main-container-selected-filter-Automatic-Inclusion-Notice'),
         noticeMIA: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Application'),
         productGEF: () => cy.get('[data-cy="main-container-selected-filter-GEF'),
 

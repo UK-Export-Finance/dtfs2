@@ -11,6 +11,7 @@ describe('controllers/dashboard/facilities - selected-filters', () => {
   describe('selectedFilters', () => {
     it('should return an array of objects for all selected/submitted filters', () => {
       const mockSubmittedFilters = {
+        keyword: ['Testing'],
         type: [CONSTANTS.FACILITY_TYPE.BOND, CONSTANTS.FACILITY_TYPE.LOAN],
         'deal.submissionType': [CONSTANTS.SUBMISSION_TYPE.AIN],
         hasBeenIssued: ['true'],
@@ -19,6 +20,11 @@ describe('controllers/dashboard/facilities - selected-filters', () => {
       const result = selectedFilters(mockSubmittedFilters);
 
       const expected = [
+        generateSelectedFiltersObject(
+          CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.KEYWORD,
+          CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD,
+          mockSubmittedFilters.keyword,
+        ),
         generateSelectedFiltersObject(
           CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.PRODUCT,
           CONSTANTS.FIELD_NAMES.FACILITY.TYPE,

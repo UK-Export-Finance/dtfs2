@@ -21,7 +21,7 @@ const selectedFilters = (submittedFilters) => {
   if (hasKeyword) {
     selected.push(generateSelectedFiltersObject(
       CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.KEYWORD,
-      'keyword',
+      CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD,
       submittedFilters.keyword,
     ));
   }

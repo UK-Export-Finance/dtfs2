@@ -1,4 +1,7 @@
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
+import CONSTANTS from '../../../constants';
+import CONTENT_STRINGS from '../../../content-strings';
+import keywordQuery from './facilities-filters-keyword-query';
 
 describe('controllers/dashboard/facilities - filters query', () => {
   const mockUser = {
@@ -15,21 +18,34 @@ describe('controllers/dashboard/facilities - filters query', () => {
       mockUser,
     );
 
-    const expected = [
-      {
-        field: 'deal.bank.id',
-        value: mockUser.bank.id,
-        operator: 'and',
-      },
-    ];
+    const expected = {
+      $and: [
+        { 'deal.bank.id': mockUser.bank.id },
+      ],
+    };
 
     expect(result).toEqual(expected);
   });
 
   it('should add multiple custom filters to the query', () => {
+    const mockKeyword = 'test';
     const mockFilters = [
-      { type: ['Cash', 'Bond'] },
-      { hasBeenIssued: ['true'] },
+      {
+        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [
+          CONSTANTS.FACILITY_TYPE.CASH,
+          CONSTANTS.FACILITY_TYPE.BOND,
+        ],
+      },
+      {
+        [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [
+          true,
+        ],
+      },
+      {
+        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [
+          mockKeyword,
+        ],
+      },
     ];
 
     const result = dashboardFacilitiesFiltersQuery(
@@ -37,28 +53,17 @@ describe('controllers/dashboard/facilities - filters query', () => {
       mockUser,
     );
 
-    const expected = [
-      {
-        field: 'deal.bank.id',
-        value: mockUser.bank.id,
-        operator: 'and',
-      },
-      {
-        field: 'type',
-        value: [
-          mockFilters[0].type[0],
-          mockFilters[0].type[1],
-        ],
-        operator: 'or',
-      },
-      {
-        field: 'hasBeenIssued',
-        value: [
-          mockFilters[1].hasBeenIssued[0],
-        ],
-        operator: 'or',
-      },
-    ];
+    const expected = {
+      $and: [
+        { 'deal.bank.id': mockUser.bank.id },
+      ],
+      $or: [
+        { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[0] },
+        { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[1] },
+        { [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: mockFilters[1].hasBeenIssued[0] },
+        ...keywordQuery(mockKeyword),
+      ],
+    };
 
     expect(result).toEqual(expected);
   });

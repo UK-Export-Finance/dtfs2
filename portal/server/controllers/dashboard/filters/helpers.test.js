@@ -22,6 +22,22 @@ describe('controllers/dashboard/filters - helpers', () => {
       });
     });
 
+    describe('when submittedFilters object has a field value of false', () => {
+      it('should return an array of objects with the single value in an array', () => {
+        const mockSubmittedFilters = {
+          hasBeenIssued: false,
+        };
+
+        const result = submittedFiltersArray(mockSubmittedFilters);
+
+        const expected = [
+          { hasBeenIssued: [false] },
+        ];
+
+        expect(result).toEqual(expected);
+      });
+    });
+
     describe('when submittedFilters object has a field with multiple values', () => {
       it('should return an array of objects with the values in an array', () => {
         const mockSubmittedFilters = {

@@ -1,12 +1,6 @@
 const axios = require('axios');
 const FormData = require('form-data');
 
-const apollo = require('./graphql/apollo');
-const {
-  allDealsQuery,
-  allFacilitiesQuery,
-} = require('./graphql/queries');
-
 require('dotenv').config();
 
 const portalApi = process.env.DEAL_API_URL;
@@ -64,37 +58,45 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
 };
 
 const allDeals = async (start, pagesize, filters, token, sort) => {
-  const params = {
+  const payload = {
     start,
     pagesize,
     filters,
     sort,
   };
 
-  const response = await apollo('GET', allDealsQuery, params, token);
+  const response = await axios({
+    method: 'get',
+    url: `${portalApi}/v1/deals`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: payload,
+  });
 
-  if (response.errors) {
-    console.error('Portal UI - GraphQL error querying all deals ', response.errors);
-  }
-
-  return response.data.allDeals;
+  return response.data;
 };
 
 const allFacilities = async (start, pagesize, filters, token, sort) => {
-  const params = {
+  const payload = {
     start,
     pagesize,
     filters,
     sort,
   };
 
-  const response = await apollo('GET', allFacilitiesQuery, params, token);
+  const response = await axios({
+    method: 'get',
+    url: `${portalApi}/v1/facilities`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    data: payload,
+  });
 
-  if (response.errors) {
-    console.error('Portal UI - GraphQL error querying all facilities ', response.errors);
-  }
-
-  return response.data.allFacilities;
+  return response.data;
 };
 
 const createDeal = async (deal, token) => {
