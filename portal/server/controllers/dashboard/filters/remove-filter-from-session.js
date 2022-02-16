@@ -1,8 +1,16 @@
+const sanitiseFieldValue = (value) => {
+  if (value === 'true') {
+    return true;
+  }
+  if (value === 'false') {
+    return false;
+  }
+
+  return value;
+};
+
 const removeSessionFilter = (req) => {
   const sessionFilters = req.session.dashboardFilters;
-
-  // console.log('---------removeSessionFilter - sessionFilters\n', sessionFilters);
-  // console.log('---------removeSessionFilter req.params\n', req.params);
 
   const {
     fieldName,
@@ -11,12 +19,18 @@ const removeSessionFilter = (req) => {
 
   const filter = sessionFilters[fieldName];
 
+  const sanitisedFieldValue = sanitiseFieldValue(fieldValue);
+
   if (filter) {
     if (Array.isArray(filter)) {
       const modifiedFilter = sessionFilters[fieldName].filter((value) =>
-        value !== fieldValue);
+        value !== sanitisedFieldValue);
 
-      req.session.dashboardFilters[fieldName] = modifiedFilter;
+      if (!modifiedFilter.length) {
+        delete req.session.dashboardFilters[fieldName];
+      } else {
+        req.session.dashboardFilters[fieldName] = modifiedFilter;
+      }
     } else {
       delete req.session.dashboardFilters[fieldName];
     }
@@ -25,4 +39,7 @@ const removeSessionFilter = (req) => {
   return req.session.dashboardFilters;
 };
 
-module.exports = removeSessionFilter;
+module.exports = {
+  sanitiseFieldValue,
+  removeSessionFilter,
+};

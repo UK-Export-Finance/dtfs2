@@ -14,7 +14,7 @@ import {
   submittedFiltersArray,
   submittedFiltersObject,
 } from '../filters/helpers';
-import removeSessionFilter from '../filters/remove-filter-from-session';
+import { removeSessionFilter } from '../filters/remove-filter-from-session';
 import { facilitiesTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
 import CONSTANTS from '../../../constants';

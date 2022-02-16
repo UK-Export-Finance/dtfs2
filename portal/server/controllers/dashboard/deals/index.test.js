@@ -13,7 +13,7 @@ import {
   submittedFiltersArray,
   submittedFiltersObject,
 } from '../filters/helpers';
-import removeSessionFilter from '../filters/remove-filter-from-session';
+import { removeSessionFilter } from '../filters/remove-filter-from-session';
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
 import { dealsTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';

@@ -6,7 +6,7 @@ const {
   submittedFiltersArray,
   submittedFiltersObject,
 } = require('../filters/helpers');
-const removeSessionFilter = require('../filters/remove-filter-from-session');
+const { removeSessionFilter } = require('../filters/remove-filter-from-session');
 const {
   getApiData,
   requestParams,
