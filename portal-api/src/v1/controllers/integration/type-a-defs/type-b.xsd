@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="Deal">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="UKEF_deal_id"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="Deal_status"/>
+        <xs:element ref="Deal_comments"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="BSSFacilities"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="EWCSFacilities"/>
+      </xs:sequence>
+      <xs:attribute name="bank_deal_id" use="required" type="xs:string"/>
+      <xs:attribute name="portal_deal_id" use="required" type="xs:integer"/>
+      <xs:attribute name="Message_Type" use="required" type="xs:NCName" fixed="B"/>
+      <xs:attribute name="Action_Code" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="002" />
+            <xs:enumeration value="004" />
+            <xs:enumeration value="006" />
+            <xs:enumeration value="007" />
+            <xs:enumeration value="008" />
+            <xs:enumeration value="011" />
+            <xs:enumeration value="017" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="destination" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <!-- V1 is for Drupal Portal -->
+            <xs:enumeration value="V1" />
+            <!-- V2 is for Node.js Portal -->
+            <xs:enumeration value="V2" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UKEF_deal_id" type="xs:string"/>
+  <xs:element name="Deal_status">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="draft"/>
+        <xs:enumeration value="submitted"/>
+        <xs:enumeration value="submission_acknowledged"/>
+        <xs:enumeration value="approved"/>
+        <xs:enumeration value="approved_conditions"/>
+        <xs:enumeration value="refused"/>
+        <xs:enumeration value="confirmed_by_bank"/>
+        <xs:enumeration value="confirmation_acknowledged"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="Deal_comments" type="xs:string"/>
+  <xs:element name="BSSFacilities">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="BSS_portal_facility_id"/>
+        <xs:element ref="BSS_ukef_facility_id"/>
+        <xs:element ref="BSS_status"/>
+        <xs:element ref="BSS_comments"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="BSS_portal_facility_id" type="xs:integer"/>
+  <xs:element name="BSS_ukef_facility_id" type="xs:string"/>
+  <xs:element name="BSS_status">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value=""/>
+        <xs:enumeration value="Issued acknowledged"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="BSS_comments" type="xs:string"/>
+  <xs:element name="EWCSFacilities">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="EWCS_portal_facility_id"/>
+        <xs:element ref="EWCS_ukef_facility_id"/>
+        <xs:element ref="EWCS_status"/>
+        <xs:element ref="EWCS_comments"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EWCS_portal_facility_id" type="xs:integer"/>
+  <xs:element name="EWCS_ukef_facility_id" type="xs:string"/>
+  <xs:element name="EWCS_status">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value=""/>
+        <xs:enumeration value="Issued acknowledged"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="EWCS_comments" type="xs:string"/>
+</xs:schema>
