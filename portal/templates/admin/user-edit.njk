@@ -89,7 +89,10 @@
     {% else %}
 
       {{ govukInput({
-        attributes: {"data-cy": "username"},
+        attributes: {
+          "data-cy": "username",
+          "autocapitalize": "off"
+          },
         label: {
           text: "Email address"
         },
@@ -143,7 +146,10 @@
         {# {% include "../_partials/password-create.njk" %} #}
         <div class="govuk-form-group">
             {{ govukInput({
-              attributes: {"data-cy": "password"},
+              attributes: {
+                "data-cy": "password",
+                "autocomplete": "off"
+                },
               label: {
                 text: "New password"
               },
@@ -157,7 +163,10 @@
             }) }}
 
             {{ govukInput({
-              attributes: {"data-cy": "confirm-password"},
+              attributes: {
+                "data-cy": "confirm-password",
+                "autocomplete": "off"
+                },
               label: {
                 text: "Confirm password"
               },
