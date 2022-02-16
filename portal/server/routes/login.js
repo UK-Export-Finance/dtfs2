@@ -87,7 +87,12 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
-router.get('/reset-password/:pwdResetToken', (req, res) => res.render('user/change-password.njk'));
+router.get('/reset-password/:pwdResetToken', (req, res) => res.render(
+  'user/change-password.njk',
+  {
+    requireCurrentPassword: true,
+  },
+));
 
 router.post('/reset-password/:pwdResetToken', async (req, res) => {
   const { pwdResetToken } = requestParams(req);
@@ -103,6 +108,7 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
     return res.render(
       'user/change-password.njk',
       {
+        requireCurrentPassword: true,
         validationErrors: formattedValidationErrors,
       },
     );
