@@ -25,7 +25,7 @@ Grabs deals from an Azure fileshare (that would contain deals from Workflow) and
 This was built initially with the v1 data structure of BSS. Facilities were initially part of a deal document, all in the `deals` MongoDB collection. Now, facilities are seperated and a BSS deal contains an array of facility ids.
 
 ```shell
-node migrate-users.js --file=./path/to/user.json
+node migrate-deals.js --file=./path/to/deal.json
 ```
 
 ## Moving fowrards

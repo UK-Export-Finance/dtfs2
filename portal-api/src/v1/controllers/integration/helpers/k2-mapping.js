@@ -23,7 +23,7 @@ const DEAL = {
     corporateStructure: 'Corporate_structure',
   },
 
-  DEAL_STATUS: {
+  STATUS: {
     [CONSTANTS.DEAL.DEAL_STATUS.DRAFT]: 'draft',
     [CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF]: 'submitted',
     [CONSTANTS.DEAL.DEAL_STATUS.UKEF_ACKNOWLEDGED]: ['submission_acknowledged', 'confirmation_acknowledged'],
@@ -36,7 +36,6 @@ const DEAL = {
     [CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL]: 'ready_for_approval',
     [CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED]: 'further_input_required',
   },
-
 };
 
 const FACILITIES = {

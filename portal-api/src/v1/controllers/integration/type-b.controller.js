@@ -3,6 +3,8 @@
 // const xml2js = require('xml2js');
 const xml2js = { parseStringPromise: () => {} };
 
+// TODO: probably can delete this
+
 const dealController = require('../deal.controller');
 const dealCommentsController = require('../deal-comments.controller');
 const {
@@ -93,7 +95,6 @@ const processTypeB = async ({ filename, fileContents }) => {
   const updatedDealInfo = {
     details: {
       ukefDealId: workflowDeal.UKEF_deal_id[0],
-      previousWorkflowStatus: workflowDeal.Deal_status[0],
     },
   };
 
