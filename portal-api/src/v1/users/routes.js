@@ -6,7 +6,7 @@ const {
 const {
   create, update, remove, list, findOne, disable,
 } = require('./controller');
-const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
+const { sendPasswordUpdateEmail, resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
@@ -202,7 +202,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
       errors: {
         count: 1,
         errorList: {
-          password: {
+          currentPassword: {
             text: 'Password reset link is not valid',
           },
         },
@@ -220,7 +220,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
       errors: {
         count: 1,
         errorList: {
-          password: {
+          currentPassword: {
             text: 'Password reset link has expired',
           },
         },
@@ -246,10 +246,14 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     ...req.body,
     resetPwdToken: '',
     resetPwdTimestamp: '',
+    currentPassword: '',
     loginFailureCount: 0,
+    passwordUpdatedAt: `${Date.now()}`,
   };
 
-  return update(user._id, updateData, (updateErr) => { // eslint-disable-line no-underscore-dangle
+  sendPasswordUpdateEmail(user.email, updateData.passwordUpdatedAt);
+
+  return update(user._id, updateData, (updateErr) => {
     if (updateErr) {
       next(updateErr);
     } else {
