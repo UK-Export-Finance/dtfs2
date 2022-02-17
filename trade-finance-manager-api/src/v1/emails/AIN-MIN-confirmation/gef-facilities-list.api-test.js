@@ -136,7 +136,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
       const expectedHeading = generateHeadingString(mockHeading);
       const expectedFacilityFields = generateFacilityFieldsListString(mockSimpleFacility);
 
-      const expectedFacilityString = `${expectedHeading}${expectedFacilityFields}`;
+      const expectedFacilityString = `\n\n${expectedHeading}${expectedFacilityFields}`;
 
       const expected = `${expectedFacilityString}${expectedFacilityString}`;
 

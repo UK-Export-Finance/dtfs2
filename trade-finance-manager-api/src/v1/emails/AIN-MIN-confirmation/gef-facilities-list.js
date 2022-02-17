@@ -125,7 +125,7 @@ const generateFacilitiesListString = (heading, facilities) => {
   let listString = '';
 
   facilities.forEach((facility) => {
-    listString += formattedHeading;
+    listString += `\n\n${formattedHeading}`;
     listString += generateFacilityFieldsListString(facility);
   });
 
