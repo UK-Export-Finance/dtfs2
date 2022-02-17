@@ -246,6 +246,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     ...req.body,
     resetPwdToken: '',
     resetPwdTimestamp: '',
+    currentPassword: '',
     loginFailureCount: 0,
     passwordUpdatedAt: `${Date.now()}`,
   };
