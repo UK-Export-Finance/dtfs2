@@ -43,8 +43,8 @@ const mapDealRoot = (portalDealId, v1Deal) => {
 
   dealRoot.maker = maker;
 
-  if (!dealRoot.dataMigrationInfo.v1_ID,
-    || !dealRoot.dealType,
+  if (!dealRoot.dataMigrationInfo.v1_ID
+    || !dealRoot.dealType
     || !dealRoot.status
     || !dealRoot.previousStatus
     || !dealRoot.bank
