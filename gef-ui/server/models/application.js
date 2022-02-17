@@ -7,9 +7,9 @@ const { status } = require('../utils/deal-helpers');
 const { DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../constants');
 
 const termToSupportDocuments = {
-  coverStart: ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
+  coverStart: ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
   noticeDate: ['manualInclusion'],
-  facilityLimit: ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
+  facilityLimit: ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
   exporterDeclaration: ['manualInclusion', 'exportLicence'],
   dueDiligence: ['manualInclusion'],
   facilityLetter: ['manualInclusion'],

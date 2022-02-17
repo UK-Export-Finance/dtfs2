@@ -1,6 +1,6 @@
 exports.docType = {
   'management-accounts': {
-    fieldName: 'yearToDateManagement',
+    fieldName: 'managementAccounts',
     title: 'Add year-to-date management accounts',
     path: 'management-accounts',
   },
@@ -10,7 +10,7 @@ exports.docType = {
     path: 'manual-inclusion-questionnaire',
   },
   'financial-statements': {
-    fieldName: 'auditedFinancialStatements',
+    fieldName: 'financialStatements',
     title: 'Add financial statements for the last 3 years',
     path: 'financial-statements',
   },
@@ -20,7 +20,7 @@ exports.docType = {
     path: 'financial-forecasts',
   },
   'financial-commentary': {
-    fieldName: 'financialInformationCommentary',
+    fieldName: 'financialCommentary',
     title: 'Add a brief commentary on the financial information',
     path: 'financial-commentary',
   },
