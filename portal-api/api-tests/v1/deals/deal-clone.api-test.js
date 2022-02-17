@@ -94,7 +94,7 @@ describe('/v1/deals/:id/clone', () => {
         originalDeal = dealAfterCreation.deal;
       });
 
-      it('clones a deal with only specific properties in `details`. Wipes `previousStatus`, `comments`, `editedBy` `ukefComments`, `ukefDecision`, changes `maker` to the user making the request, marks status `Draft`', async () => {
+      it('clones a deal with only specific properties in `details`, wipes `comments`, `editedBy` `ukefComments`, `ukefDecision`, changes `maker` to the user making the request, marks status `Draft`', async () => {
         const clonePostBody = {
           bankInternalRefName: 'new-bank-deal-id',
           additionalRefName: 'new-bank-deal-name',
@@ -121,7 +121,6 @@ describe('/v1/deals/:id/clone', () => {
 
         expect(cloned.deal.bank).toEqual(aBarclaysMaker.bank);
         expect(cloned.deal.status).toEqual('Draft');
-        expect(cloned.deal.previousStatus).toBeUndefined();
         expect(cloned.deal.editedBy).toEqual([]);
         expect(cloned.deal.comments).toEqual([]);
         expect(cloned.deal.ukefComments).toEqual([]);

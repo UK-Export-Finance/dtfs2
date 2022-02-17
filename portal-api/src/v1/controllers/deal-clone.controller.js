@@ -69,10 +69,10 @@ exports.clone = async (req, res) => {
       cloneTransactions,
     } = req.body;
 
-    const { _id, previousStatus, tfm, ...existingDealWithoutCertainFields } = existingDeal;
+    const { _id, tfm, ...existingDealWithoutId } = existingDeal;
 
     const modifiedDeal = {
-      ...existingDealWithoutCertainFields,
+      ...existingDealWithoutId,
       status: DEFAULTS.DEAL.status,
       submissionType: existingDeal.submissionType,
       updatedAt: existingDeal.updatedAt,
