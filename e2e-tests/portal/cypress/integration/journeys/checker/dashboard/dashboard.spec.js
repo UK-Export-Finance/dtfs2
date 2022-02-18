@@ -7,12 +7,13 @@ const {
   ADMIN,
   BANK1_MAKER1,
   BANK1_CHECKER1,
+  BANK2_MAKER2,
 } = MOCK_USERS;
 
 const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 
 context('View dashboard deals as a checker', () => {
-  const ALL_DEALS = [];
+  const BANK1_DEALS = [];
 
   const BSS_DEALS = {
     DRAFT: {
@@ -57,31 +58,35 @@ context('View dashboard deals as a checker', () => {
 
     cy.deleteDeals(ADMIN);
     cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, BANK1_MAKER1)
-      .then((bssDeal) => {
-        ALL_DEALS.push(bssDeal);
+      .then((createdDeal) => {
+        BANK1_DEALS.push(createdDeal);
       });
 
-    cy.insertOneDeal(BSS_DEALS.DRAFT, BANK1_MAKER1);
-
+    cy.insertOneDeal(BSS_DEALS.DRAFT, BANK1_MAKER1).then((createdDeal) => {
+      BANK1_DEALS.push(createdDeal);
+    });;
+    
     cy.insertOneGefApplication(GEF_DEALS.READY_FOR_CHECK, BANK1_MAKER1)
       .then((gefDeal) => {
         cy.setGefApplicationStatus(gefDeal._id, GEF_DEALS.READY_FOR_CHECK.status, BANK1_MAKER1)
           .then((updatedGefDeal) => {
-            ALL_DEALS.push(updatedGefDeal.body);
+            BANK1_DEALS.push(updatedGefDeal.body);
           });
       });
+
+    cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, BANK2_MAKER2);
   });
 
-  it('Only deals with checker status appear on the dashboard. Each deal goes to correct deal URL', () => {
+  it('Only deals with checker status that belong to the checker\'s bank appear on the dashboard. Each deal goes to correct deal URL', () => {
     // login, go to dashboard
     cy.login(BANK1_CHECKER1);
     dashboardDeals.visit();
 
-    const gefDeal = ALL_DEALS.find(({ dealType, status }) =>
+    const gefDeal = BANK1_DEALS.find(({ dealType, status }) =>
       dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
       && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
 
-    const bssDeal = ALL_DEALS.find(({ dealType, status }) =>
+    const bssDeal = BANK1_DEALS.find(({ dealType, status }) =>
       dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS
       && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
 
@@ -95,9 +100,12 @@ context('View dashboard deals as a checker', () => {
       link,
     } = dashboardDeals.row;
 
-    // should only see 2 deals
+    // should only see 2 deals - ready for check and in Bank 1
+    const EXPECTED_DEALS = BANK1_DEALS.filter((deal) =>
+      deal.status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
+
     dashboardDeals.totalItems().invoke('text').then((text) => {
-      expect(text.trim()).equal('(2 items)');
+      expect(text.trim()).equal(`(${EXPECTED_DEALS.length} items)`);
     });
 
     //---------------------------------------------------------------
