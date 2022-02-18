@@ -154,7 +154,7 @@ const facilityItems = (facilityUrl, {
     },
     {
       label: 'Frequency your bank will pay the UKEF guarantee fee',
-      id: feeType === AT_MATURITY ? 'feeType' : 'frequency',
+      id: feeType === AT_MATURITY ? 'feeType' : 'feeFrequency',
       href: `${facilityUrl}/facility-guarantee?status=change`,
       suffix: feeType === AT_MATURITY ? '' : `, ${feeType}`,
     },

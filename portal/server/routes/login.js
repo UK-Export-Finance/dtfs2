@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
     if (success) {
       req.session.userToken = token;
       req.session.user = user;
-      req.session.dashboardFilters = CONSTANTS.DASHBOARD_FILTERS_DEFAULT;
+      req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
     } else {
       loginErrors.push(emailError);
       loginErrors.push(passwordError);
@@ -87,7 +87,12 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
-router.get('/reset-password/:pwdResetToken', (req, res) => res.render('user/change-password.njk'));
+router.get('/reset-password/:pwdResetToken', (req, res) => res.render(
+  'user/change-password.njk',
+  {
+    requireCurrentPassword: true,
+  },
+));
 
 router.post('/reset-password/:pwdResetToken', async (req, res) => {
   const { pwdResetToken } = requestParams(req);
@@ -103,6 +108,7 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
     return res.render(
       'user/change-password.njk',
       {
+        requireCurrentPassword: true,
         validationErrors: formattedValidationErrors,
       },
     );

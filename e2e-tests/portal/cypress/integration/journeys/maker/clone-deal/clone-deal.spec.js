@@ -112,6 +112,15 @@ context('Clone a deal', () => {
         expect(text.trim()).equal(`Copy of ${deal.additionalRefName}-cloned`);
       });
 
+      // confirm deal status and previous status are wiped
+      pages.contract.status().invoke('text').then((text) => {
+        expect(text.trim()).equal('Draft');
+      });
+
+      pages.contract.previousStatus().invoke('text').then((text) => {
+        expect(text.trim()).equal('-');
+      });
+
       // confirm About the Supply Contract is retained
       pages.contract.aboutSupplierDetailsStatus().invoke('text').then((text) => {
         expect(text.trim()).equal('Completed');

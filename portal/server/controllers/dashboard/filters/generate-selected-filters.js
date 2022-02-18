@@ -8,8 +8,8 @@ const CONTENT_STRINGS = require('../../../content-strings');
  * @param {string} field heading
  * @param {string} field name
  * @param {array} submitted filters
- * @example ( 'Mock heading', 'dealType', [ 'BSS/EWCS', 'GEF' ] )
- * @returns { heading: { text: 'Mock heading' }, items: [ { text: 'BSS-EWCS', href: `filters/remove/dealType/BSS-EWCS`, value: 'BSS-EWCS' } ] }
+ * @example ( 'Deal type', 'dealType', ['BSS/EWCS', 'GEF'] )
+ * @returns { heading: { text: 'Deal type' }, items: [ { text: 'BSS-EWCS', href: `filters/remove/dealType/BSS-EWCS`, value: 'BSS-EWCS' } ] }
  */
 const generateSelectedFiltersObject = (
   heading,
@@ -20,12 +20,45 @@ const generateSelectedFiltersObject = (
     text: heading,
   },
   items: submittedFieldFilters.map((fieldValue) => {
-    const formattedFieldValue = formatFieldValue(fieldValue);
+    const formattedValue = formatFieldValue(fieldValue);
 
     return {
       text: fieldValue,
-      href: `filters/remove/${fieldName}/${formattedFieldValue}`,
-      formattedFieldValue,
+      href: `filters/remove/${fieldName}/${formattedValue}`,
+      formattedValue,
+    };
+  }),
+});
+
+/**
+ * Create an object for a single, selected filter
+ * With differentiation between text value and actual field value.
+ * This will used in mojFilter component - selectedFilters.categories.
+ *
+ * @param {string} field heading
+ * @param {string} field name
+ * @param {array} submitted filters
+ * @example ( 'Bank facility stage', 'hasBeenIssued', [true] )
+ * @returns { heading: { text: 'Deal type' }, items: [ { text: 'Issued', href: `filters/remove/hasBeenIssued/true`, value: true } ] }
+ */
+const generateSelectedFiltersObjectWithMappedValues = (
+  heading,
+  fieldName,
+  submittedFieldFilters,
+) => ({
+  heading: {
+    text: heading,
+  },
+  items: submittedFieldFilters.map(({
+    value,
+    mappedValue,
+  }) => {
+    const textValue = formatFieldValue(mappedValue);
+
+    return {
+      text: textValue,
+      href: `filters/remove/${fieldName}/${value}`,
+      formattedValue: textValue,
     };
   }),
 });
@@ -46,47 +79,8 @@ const selectedSubmissionTypeFilters = (fieldName, submittedFilters) =>
     submittedFilters,
   );
 
-/**
- * Map true/false string to Issued/Unissued string.
- *
- * @param {string} the submitted filter value
- * @example ( 'true' )
- * @returns 'Issued'
- */
-const mapIssuedValueToText = (hasBeenIssued) => {
-  if (hasBeenIssued === 'true') {
-    return CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED;
-  }
-
-  return CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED;
-};
-
-/**
- * Create an object for all selected hasBeenIssued filters.
- * This will used in mojFilter component - selectedFilters.categories.
- *
- * @param {object} submitted hasBeenIssued filters
- * @example ( ['true', 'false'] )
- * @returns generateSelectedFiltersObject('Facility stage', 'hasBeenIssued', ['Issued', 'Unissued'])
- */
-const selectedHasBeenIssuedFilters = (
-  heading,
-  fieldName,
-  submittedFilters,
-) => {
-  const mappedFilters = submittedFilters.map((value) =>
-    mapIssuedValueToText(value));
-
-  return generateSelectedFiltersObject(
-    heading,
-    fieldName,
-    mappedFilters,
-  );
-};
-
 module.exports = {
   generateSelectedFiltersObject,
+  generateSelectedFiltersObjectWithMappedValues,
   selectedSubmissionTypeFilters,
-  mapIssuedValueToText,
-  selectedHasBeenIssuedFilters,
 };

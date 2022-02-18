@@ -10,7 +10,7 @@ describe('controllers/dashboard/filters - ui-filters', () => {
   describe('generateFilterObject', () => {
     const mockField = 'hasBeenIssued';
     const mockText = 'Issued';
-    const mockValue = 'true';
+    const mockValue = true;
 
     it('should return an object with mapped properties', () => {
       const mockSubmittedFilters = {};

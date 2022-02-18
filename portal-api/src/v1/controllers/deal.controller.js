@@ -1,11 +1,12 @@
 const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
-const { userHasAccessTo } = require('../users/checks');
+const { isSuperUser, userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
 const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const api = require('../api');
+const getDealErrors = require('../validation/deal');
 
 /**
  * Find a deal (BSS, EWCS only)
@@ -191,7 +192,7 @@ const queryAllDeals = async (
 ) => {
   const collection = await db.getCollection('deals');
 
-  const deals = await collection.aggregate([
+  const results = await collection.aggregate([
     { $match: filters },
     {
       $project: {
@@ -228,6 +229,74 @@ const queryAllDeals = async (
     },
   ]).toArray();
 
-  return deals;
+  if (results.length) {
+    const {
+      count,
+      deals,
+    } = results[0];
+
+    return {
+      count,
+      deals,
+    };
+  }
+
+  return {
+    deals: [],
+    count: 0,
+  };
 };
-exports.queryAllDeals = queryAllDeals;
+
+exports.getQueryAllDeals = async (req, res) => {
+  const {
+    start,
+    pagesize,
+    filters,
+    sort,
+  } = req.body;
+
+  const results = await queryAllDeals(
+    filters,
+    sort,
+    start,
+    pagesize,
+  );
+
+  return res.status(200).send(results);
+};
+
+const importDeal = async (req, res) => {
+  if (!isSuperUser(req.user)) {
+    res.status(401).send();
+  }
+
+  const collection = await db.getCollection('deals');
+
+  const newDeal = {
+    ...req.body,
+  };
+
+  const validationErrors = getDealErrors(newDeal);
+
+  if (validationErrors.count !== 0) {
+    return res.status(400).send({
+      ...newDeal,
+      validationErrors,
+    });
+  }
+
+  const response = await collection.insertOne({
+    ...newDeal,
+  }).catch((err) => {
+    const status = err.code === 11000 ? 406 : 500;
+    return res.status(status).send(err);
+  });
+
+  const createdDeal = response.ops && response.ops[0];
+  return res.status(200).send(createdDeal);
+};
+
+exports.import = async (req, res) => {
+  const result = await importDeal(req, res);
+  return result;
+};

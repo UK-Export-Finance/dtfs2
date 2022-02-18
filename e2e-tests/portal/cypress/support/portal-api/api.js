@@ -3,8 +3,6 @@ const api = () => {
   return url;
 };
 
-const { QUERIES } = require('../../graphql');
-
 module.exports.logIn = (opts) => {
   const { username, password } = opts;
 
@@ -31,21 +29,16 @@ module.exports.deleteDeal = (token, deal) => cy.request({
 }).then((resp) => expect(resp.status).to.equal(200));
 
 module.exports.listAllDeals = (token) => {
-  const body = {
-    query: QUERIES.dealsQuery,
-  };
-
   return cy.request({
-    url: `${api()}/graphql`,
-    method: 'POST',
+    url: `${api()}/v1/deals`,
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Authorization: token,
     },
-    body: JSON.stringify(body),
   }).then((resp) => {
     expect(resp.status).to.equal(200);
-    return resp.body.data.allDeals.deals;
+    return resp.body.deals;
   });
 };
 

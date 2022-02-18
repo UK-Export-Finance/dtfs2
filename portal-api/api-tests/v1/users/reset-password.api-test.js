@@ -11,7 +11,8 @@ const aMaker = users.find((user) => user.username === 'MAKER_WITH_EMAIL');
 jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
 
-const reserPasswordEmailTemplateId = '6935e539-1a0c-4eca-a6f3-f239402c0987';
+const resetPasswordEmailTemplateId = '6935e539-1a0c-4eca-a6f3-f239402c0987';
+const passwordUpdateConfirmationTemplateId = '41235821-7e52-4d63-a773-fa147362c5f0';
 
 describe('password reset', () => {
   beforeEach(async () => {
@@ -31,7 +32,7 @@ describe('password reset', () => {
   it('should return success=true and sendEmail for existing email', async () => {
     const reset = await resetPassword(aMaker.email);
     expect(reset).toMatchObject({ success: true });
-    expect(sendEmail).toHaveBeenCalledWith(reserPasswordEmailTemplateId, aMaker.email, {
+    expect(sendEmail).toHaveBeenCalledWith(resetPasswordEmailTemplateId, aMaker.email, {
       resetToken: expect.any(String),
     });
   });
@@ -67,7 +68,7 @@ describe('password reset', () => {
         const { status, body } = await as().post({ email: aMaker.email }).to('/v1/users/reset-password');
         expect(status).toEqual(200);
         expect(body).toMatchObject({ success: true });
-        expect(sendEmail).toHaveBeenCalledWith(reserPasswordEmailTemplateId, aMaker.email, {
+        expect(sendEmail).toHaveBeenCalledWith(resetPasswordEmailTemplateId, aMaker.email, {
           resetToken: expect.any(String),
         });
       });
@@ -77,7 +78,7 @@ describe('password reset', () => {
       it('should return error for invalid token', async () => {
         const { body } = await as().post({ password: 'newPassword', passwordConfirm: 'newPassword' }).to('/v1/users/reset-password/madeuptoken123');
         expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password.text).toEqual('Password reset link is not valid');
+        expect(body.errors.errorList.currentPassword.text).toEqual('Password reset link is not valid');
       });
 
       it('should reset the users password when using correct reset token', async () => {
@@ -86,7 +87,9 @@ describe('password reset', () => {
         const { status, body } = await as().post({ password: newPassword, passwordConfirm: newPassword }).to(`/v1/users/reset-password/${resetToken}`);
         expect(status).toEqual(200);
         expect(body.success).toEqual(true);
-
+        expect(sendEmail).toHaveBeenCalledWith(passwordUpdateConfirmationTemplateId, aMaker.email, {
+          timestamp: expect.any(String),
+        });
         const login = await as().post({ username: aMaker.username, password: newPassword }).to('/v1/login');
         expect(login.body).toMatchObject(
           {

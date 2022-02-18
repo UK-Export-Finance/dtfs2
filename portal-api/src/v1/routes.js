@@ -42,7 +42,10 @@ authRouter.use(passport.authenticate('jwt', { session: false }), cleanXss);
 
 authRouter.use('/gef', gef);
 
+authRouter.route('/deals/import').post(validate({ role: ['data-admin'] }), dealsController.import);
+
 authRouter.route('/deals').post(validate({ role: ['maker'] }), dealsController.create);
+authRouter.route('/deals').get(validate({ role: ['maker', 'checker', 'admin'] }), dealsController.getQueryAllDeals);
 
 authRouter.route('/deals/:id/status')
   .get(validate({ role: ['maker', 'checker'] }), dealStatus.findOne)
@@ -79,7 +82,7 @@ authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validate
 
 authRouter.route('/deals/:id/multiple-facilities').post(validate({ role: ['maker'] }), facilitiesController.createMultiple);
 
-authRouter.route('/facilities').get(validate({ role: ['maker', 'checker'] }), facilitiesController.queryAllFacilities);
+authRouter.route('/facilities').get(validate({ role: ['maker', 'checker', 'admin'] }), facilitiesController.getQueryAllFacilities);
 
 authRouter
   .route('/deals/:id')
