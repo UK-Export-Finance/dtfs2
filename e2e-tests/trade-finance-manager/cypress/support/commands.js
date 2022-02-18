@@ -10,6 +10,7 @@ Cypress.Commands.add('insertOneGefDeal', require('./portal-api/insertOneGefDeal'
 Cypress.Commands.add('insertManyGefDeals', require('./portal-api/insertManyGefDeals'));
 Cypress.Commands.add('deleteDeals', require('./portal-api/deleteDeals'));
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
+Cypress.Commands.add('createGefFacilities', require('./portal-api/createGefFacility'));
 
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
 Cypress.Commands.add('deleteTfmDeals', require('./central-api/deleteTfmDeals'));

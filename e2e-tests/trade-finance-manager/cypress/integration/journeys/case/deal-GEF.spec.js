@@ -15,7 +15,7 @@ context('User can view a case deal', () => {
       .then((insertedDeal) => {
         dealId = insertedDeal._id;
 
-        cy.createFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities = createdFacilities;
         });
 
@@ -28,12 +28,12 @@ context('User can view a case deal', () => {
     cy.visit(relative(`/case/${dealId}/deal`));
   });
 
-  after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
-    dealFacilities.forEach(({ _id }) => {
-      cy.deleteFacility(_id, MOCK_MAKER_TFM);
-    });
-  });
+  // after(() => {
+  //   cy.deleteDeals(dealId, ADMIN_LOGIN);
+  //   dealFacilities.forEach(({ _id }) => {
+  //     cy.deleteFacility(_id, MOCK_MAKER_TFM);
+  //   });
+  // });
 
   it('should render case deal components', () => {
     pages.caseDealPage.caseSummary().should('exist');
