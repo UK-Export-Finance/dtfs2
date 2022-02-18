@@ -48,6 +48,12 @@ const createSubmitBody = (mockDeal) => ({
   dealType: mockDeal.dealType,
 });
 
+jest.mock('../../../src/v1/api');
+
+const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(
+  { ...facilityUpdate },
+));
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
@@ -61,6 +67,9 @@ describe('/v1/deals', () => {
     updatePortalGefDealStatusSpy.mockClear();
     externalApis.updatePortalBssDealStatus = updatePortalBssDealStatusSpy;
     externalApis.updatePortalGefDealStatus = updatePortalGefDealStatusSpy;
+
+    updateGefFacilitySpy.mockClear();
+    externalApis.updateGefFacility = updateGefFacilitySpy;
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -238,6 +247,19 @@ describe('/v1/deals', () => {
       it('should return 200', async () => {
         const { status } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
         expect(status).toEqual(200);
+      });
+
+      it('should call updateGefFacility', async () => {
+        const { body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
+
+        const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
+
+        expect(updateGefFacilitySpy).toHaveBeenCalledWith(
+          facilityId,
+          {
+            hasBeenIssuedAndAcknowledged: true,
+          },
+        );
       });
     });
 

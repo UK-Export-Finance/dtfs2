@@ -26,6 +26,12 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
+jest.mock('../../../src/v1/api');
+
+const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(
+  { ...facilityUpdate },
+));
+
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
   dealType: mockDeal.dealType,
@@ -42,6 +48,9 @@ describe('/v1/deals', () => {
 
     externalApis.updatePortalBssDealStatus = jest.fn();
     externalApis.updatePortalGefDealStatus = jest.fn();
+
+    updateGefFacilitySpy.mockClear();
+    externalApis.updateGefFacility = updateGefFacilitySpy;
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -282,6 +291,34 @@ describe('/v1/deals', () => {
 
             expect(issuedFacility.tfm.feeRecord).toBeUndefined();
           });
+        });
+      });
+    });
+
+    describe('hasBeenIssuedAndAcknowledged', () => {
+      describe('when facility/dealType is GEF', () => {
+        it('sets hasBeenIssuedAndAcknowledged to true for issued facilities', async () => {
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
+
+          expect(status).toEqual(200);
+
+          const issuedFacility = body.facilities.find((facility) =>
+            facility.hasBeenIssued);
+
+          expect(issuedFacility.hasBeenIssuedAndAcknowledged).toEqual(true);
+        });
+      });
+
+      describe('when facility/dealType is BSS', () => {
+        it('sets hasBeenIssuedAndAcknowledged to true for issued facilities', async () => {
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES));
+
+          expect(status).toEqual(200);
+
+          const issuedFacility = body.facilities.find((facility) =>
+            facility.hasBeenIssued);
+
+          expect(issuedFacility.hasBeenIssuedAndAcknowledged).toEqual(true);
         });
       });
     });

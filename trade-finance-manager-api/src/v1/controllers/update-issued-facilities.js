@@ -25,9 +25,15 @@ const updatedIssuedFacilities = async (deal) => {
     const {
       _id: facilityId,
       hasBeenIssued,
+      hasBeenIssuedAndAcknowledged,
     } = facility;
 
-    if (hasBeenIssued) {
+    /**
+     * if hasBeenIssued and hasBeenIssuedAndAcknowledged
+     * ensures tasks only done once and email only sent once for each issued facility
+     * hasBeenIssuedAndAcknowledged only set by tfm-api during this step
+    */
+    if (hasBeenIssued && !hasBeenIssuedAndAcknowledged) {
       let facilityPremiumSchedule;
       let feeRecord;
       let facilityUpdate;
@@ -41,11 +47,14 @@ const updatedIssuedFacilities = async (deal) => {
 
         const portalFacilityUpdate = {
           hasBeenAcknowledged: true,
+          hasBeenIssuedAndAcknowledged: true,
         };
 
         const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
         facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
+        facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
         facility.status = facilityStatusUpdate;
+
         facilityUpdate = {
           ...portalFacilityUpdate,
         };
@@ -68,6 +77,14 @@ const updatedIssuedFacilities = async (deal) => {
       } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
       // Fee record is only valid for GEF facilities
         if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+          // update for gef facilities collection
+          const facilityUpdatePortal = {
+            hasBeenIssuedAndAcknowledged: true,
+          };
+
+          const updatedPortalFacility = await api.updateGefFacility(facilityId, facilityUpdatePortal);
+          facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+
           feeRecord = calculateGefFacilityFeeRecord(facility);
           facilityUpdate = {
             feeRecord,

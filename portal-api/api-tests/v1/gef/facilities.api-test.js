@@ -68,7 +68,8 @@ describe(baseUrl, () => {
         coverDateConfirmed: null,
         canResubmitIssuedFacilities: null,
         issueDate: null,
-        unissuedToIssuedByMaker: expect.any(Object)
+        unissuedToIssuedByMaker: expect.any(Object),
+        hasBeenIssuedAndAcknowledged: null,
       },
       validation: {
         required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
@@ -94,6 +95,7 @@ describe(baseUrl, () => {
       coverDateConfirmed: true,
       ukefFacilityId: 1234,
       issueDate: null,
+      hasBeenIssuedAndAcknowledged: true,
     };
   });
 

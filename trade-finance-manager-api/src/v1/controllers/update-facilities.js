@@ -19,10 +19,58 @@ const updateFacilities = async (deal) => {
 
   modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
     const facility = f;
-    const { _id: facilityId } = facility;
+
+    const {
+      _id: facilityId,
+      hasBeenIssued,
+    } = facility;
+
     let facilityUpdate;
     let facilityPremiumSchedule;
     let feeRecord;
+
+    /**
+     * If facility hasBeenIssued
+     * Check if gef or bss
+     * Adds hasBeenIssuedAndAcknowledged and/or hasBeenAcknowledged parameter
+     * Updates the facility collection with flags and tfm facilities collection
+    */
+    if (hasBeenIssued) {
+      let portalFacilityUpdate;
+
+      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+        portalFacilityUpdate = {
+          hasBeenIssuedAndAcknowledged: true,
+        };
+
+        // updates GEF facility collection
+        const updatedPortalFacility = await api.updateGefFacility(facilityId, portalFacilityUpdate);
+
+        facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+      } else {
+        const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
+
+        await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
+
+        portalFacilityUpdate = {
+          hasBeenIssuedAndAcknowledged: true,
+          hasBeenAcknowledged: true,
+        };
+
+        // updates BSS facility collection
+        const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
+
+        facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
+        facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+        facility.status = facilityStatusUpdate;
+      }
+
+      facilityUpdate = {
+        ...portalFacilityUpdate,
+      };
+
+      await api.updateFacility(facilityId, facilityUpdate);
+    }
 
     const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
     const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);

@@ -45,7 +45,13 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
+jest.mock('../../../src/v1/api');
+
 const updateGefActivitySpy = jest.fn(() => Promise.resolve(MOCK_GEF_DEAL_MIN));
+
+const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(
+  { ...facilityUpdate },
+));
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
@@ -89,6 +95,9 @@ describe('/v1/deals', () => {
 
     updateGefActivitySpy.mockClear();
     externalApis.updateGefMINActivity = updateGefActivitySpy;
+
+    updateGefFacilitySpy.mockClear();
+    externalApis.updateGefFacility = updateGefFacilitySpy;
 
     externalApis.updatePortalBssDealStatus = jest.fn();
     externalApis.updatePortalGefDealStatus = jest.fn();
@@ -167,7 +176,10 @@ describe('/v1/deals', () => {
 
           expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
             bondId,
-            { hasBeenAcknowledged: true },
+            {
+              hasBeenAcknowledged: true,
+              hasBeenIssuedAndAcknowledged: true,
+            },
           );
         });
 
@@ -177,6 +189,14 @@ describe('/v1/deals', () => {
           const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
           expect(updatedBond.hasBeenAcknowledged).toEqual(true);
+        });
+
+        it('should add bond.hasBeenIssuedAndAcknowledged', async () => {
+          const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+          const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+
+          expect(updatedBond.hasBeenIssuedAndAcknowledged).toEqual(true);
         });
       });
 
@@ -254,7 +274,10 @@ describe('/v1/deals', () => {
 
           expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
             loanId,
-            { hasBeenAcknowledged: true },
+            {
+              hasBeenAcknowledged: true,
+              hasBeenIssuedAndAcknowledged: true,
+            },
           );
         });
 
@@ -264,6 +287,14 @@ describe('/v1/deals', () => {
           const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
           expect(updatedLoan.hasBeenAcknowledged).toEqual(true);
+        });
+
+        it('should add loan.hasBeenAcknowledged', async () => {
+          const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+          const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+
+          expect(updatedLoan.hasBeenIssuedAndAcknowledged).toEqual(true);
         });
       });
 
@@ -539,6 +570,19 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
 
         expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
+      });
+
+      it('should call updateGefFacility', async () => {
+        const { body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
+
+        const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
+
+        expect(updateGefFacilitySpy).toHaveBeenCalledWith(
+          facilityId,
+          {
+            hasBeenIssuedAndAcknowledged: true,
+          },
+        );
       });
 
       it('adds fee record to issued facilities', async () => {

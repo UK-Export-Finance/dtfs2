@@ -47,7 +47,7 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
       exporterName: exporter.companyName,
       bankReferenceNumber: bankInternalRefName,
       ukefDealID,
-      facilitiesList: generateIssuedFacilitiesListString(updatedFacilities),
+      facilitiesList: generateIssuedFacilitiesListString(updatedFacilities) || '',
     };
 
     const emailResponse = await sendTfmEmail(
