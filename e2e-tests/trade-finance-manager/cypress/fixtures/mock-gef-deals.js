@@ -168,7 +168,7 @@ const commonApplicationDetails = {
 };
 
 export const MOCK_APPLICATION_AIN = {
-  status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
+  status: DEAL_STATUS.DRAFT,
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
   submissionCount: 1,
   eligibility: eligibilityCriteria(true),
