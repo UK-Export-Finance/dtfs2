@@ -10,7 +10,9 @@ exports.MOCK_FACILITY_ONE = {
   monthsOfCover: 20,
   details: ['TERM', 'RESOLVING', 'COMMITTED', 'UNCOMMITTED', 'ON_DEMAND', 'FACTORING', 'OTHER'],
   detailsOther: 'Other',
-  currency: 'GBP',
+  currency: {
+    id: 'GBP',
+  },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,

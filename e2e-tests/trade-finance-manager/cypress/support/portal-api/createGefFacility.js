@@ -1,12 +1,10 @@
-const { logIn, createGefFacilities } = require('./api');
+const { logIn, createGefFacilities, updateGefFacilities } = require('./api');
 const { getIdFromNumberGenerator } = require('../reference-data-api/api');
 
 module.exports = (dealId, facilities, user) => {
   console.info('createGEFFacilities::');
 
   logIn(user).then((token) => {
-    const facilitiesWithUkefIds = [];
-
     facilities.forEach((facilityToInsert) => {
       const ukefId = getIdFromNumberGenerator();
       const facilityWithId = {
@@ -16,11 +14,14 @@ module.exports = (dealId, facilities, user) => {
 
       createGefFacilities(
         dealId,
-        facilitiesWithUkefIds,
+        facilityWithId,
         facilityWithId.type,
         user,
         token,
-      ).then((createdFacilities) => createdFacilities);
+      ).then((createdFacilities) => {
+        const facilityId = createdFacilities.details._id;
+        updateGefFacilities(facilityId, facilityToInsert, token).then((updated) => updated);
+      });
     });
   //  return Promise.resolve(facilitiesWithUkefIds);
   });

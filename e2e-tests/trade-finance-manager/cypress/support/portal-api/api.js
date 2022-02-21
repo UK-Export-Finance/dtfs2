@@ -42,8 +42,44 @@ module.exports.insertDeal = (deal, token) => cy.request({
   return resp.body;
 });
 
+module.exports.insertGefDeal = (deal, userDetails, token) => cy.request({
+  url: `${api()}/v1/gef/application`,
+  method: 'POST',
+  body: deal,
+  user: userDetails,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(201);
+  return resp.body;
+});
+
+module.exports.updateGefDeal = (dealId, update, token) => cy.request({
+  url: `${api()}/v1/gef/application/${dealId}`,
+  method: 'PUT',
+  body: update,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body;
+});
+
 module.exports.getDeal = (dealId, token) => cy.request({
   url: `${api()}/v1/deals/${dealId}`,
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => resp.body);
+
+module.exports.getGefDeal = (dealId, token) => cy.request({
+  url: `${api()}/v1/gef/application/${dealId}`,
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
@@ -69,7 +105,7 @@ module.exports.createFacilities = (dealId, facilities, user, token) => cy.reques
 });
 
 module.exports.createGefFacilities = (dealId, facility, type, user, token) => cy.request({
-  url: `${api()}/v1/gef/facilities/`,
+  url: `${api()}/v1/gef/facilities`,
   method: 'POST',
   body: {
     facility,
@@ -77,6 +113,19 @@ module.exports.createGefFacilities = (dealId, facility, type, user, token) => cy
     user,
     type,
   },
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(201);
+  return resp.body;
+});
+
+module.exports.updateGefFacilities = (facilityId, facility, token) => cy.request({
+  url: `${api()}/v1/gef/facilities/${facilityId}`,
+  method: 'PUT',
+  body: facility,
   headers: {
     'Content-Type': 'application/json',
     Authorization: token,
