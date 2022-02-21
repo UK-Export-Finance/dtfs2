@@ -5,6 +5,7 @@ import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_AIN } from '../../../fixtures/mo
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
 import MOCK_USERS from '../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import { DEAL_TYPE } from '../../../fixtures/constants';
 
 context('User can view a GEF MIA case deal', () => {
   let dealId;
@@ -22,7 +23,7 @@ context('User can view a GEF MIA case deal', () => {
           dealFacilities = createdFacilities.details;
         });
 
-        cy.submitDeal(dealId, 'GEF');
+        cy.submitDeal(dealId, DEAL_TYPE.GEF);
       });
   });
 
@@ -96,7 +97,7 @@ context('User can view a GEF AIN case deal', () => {
           dealFacilities = createdFacilities.details;
         });
 
-        cy.submitDeal(dealId, 'GEF');
+        cy.submitDeal(dealId, DEAL_TYPE.GEF);
       });
   });
 
