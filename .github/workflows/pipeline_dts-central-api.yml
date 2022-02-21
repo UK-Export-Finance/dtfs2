@@ -87,7 +87,7 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api dtfs/dtfs-central-api
     - name: Start Docker Compose
       run: |
-        docker-compose up -d dtfs-central-api
+        docker-compose -f docker-compose.gha.yml up -d dtfs-central-api
     - name: Run API tests
       run: |
         docker-compose exec -T dtfs-central-api npm run api-test
