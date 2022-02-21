@@ -7,6 +7,7 @@ const calculateDealSummary = require('../deal-summary');
 const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const api = require('../api');
 const getDealErrors = require('../validation/deal');
+const { createMultipleFacilities } = require('./facilities.controller');
 
 /**
  * Find a deal (BSS, EWCS only)
@@ -265,7 +266,7 @@ exports.getQueryAllDeals = async (req, res) => {
   return res.status(200).send(results);
 };
 
-const importDeal = async (req, res) => {
+const importDealAndFacilities = async (req, res) => {
   if (!isSuperUser(req.user)) {
     res.status(401).send();
   }
@@ -293,10 +294,22 @@ const importDeal = async (req, res) => {
   });
 
   const createdDeal = response.ops && response.ops[0];
+
+  const facilities = [
+    ...createdDeal.bondTransactions.items,
+    ...createdDeal.loanTransactions.items,
+  ];
+
+  const createdFacilities = await createMultipleFacilities(facilities, createdDeal._id, req.user);
+
+  if (createdFacilities.status !== 200) {
+    return res.status(400).send(`Error importing facilities for V1 deal id: ${createdDeal.dataMigrationInfo.v1_ID}`);
+  }
+  
   return res.status(200).send(createdDeal);
 };
 
 exports.import = async (req, res) => {
-  const result = await importDeal(req, res);
+  const result = await importDealAndFacilities(req, res);
   return result;
 };
