@@ -88,7 +88,7 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy dtfs/reference-data-proxy
     - name: Start Docker Compose
       run: |
-        docker-compose up -d reference-data-proxy
+        docker-compose -f docker-compose.gha.yml up -d reference-data-proxy
     - name: Run API tests
       run: |
         docker-compose exec -T reference-data-proxy npm run api-test
