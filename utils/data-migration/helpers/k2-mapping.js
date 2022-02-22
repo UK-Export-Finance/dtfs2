@@ -1,4 +1,4 @@
-const CONSTANTS = require('../../../../constants');
+const CONSTANTS = require('../../../portal-api/src/constants');
 
 const DEAL = {
   SME_TYPE: {
