@@ -23,6 +23,5 @@ module.exports = (dealId, facilities, user) => {
         updateGefFacilities(facilityId, facilityToInsert, token).then((updated) => updated);
       });
     });
-  //  return Promise.resolve(facilitiesWithUkefIds);
   });
 };
