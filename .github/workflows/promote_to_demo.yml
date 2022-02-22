@@ -23,7 +23,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -33,7 +33,7 @@ jobs:
 
   portal-ui:
     name: Promote Portal UI
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -96,7 +96,7 @@ jobs:
         
   portal-api:
     name: Promote Portal API
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -159,7 +159,7 @@ jobs:
 
   reference-data-proxy:
     name: Promote Reference Data Proxy
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -222,7 +222,7 @@ jobs:
 
   trade-finance-manager-ui:
     name: Promote TFM UI
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -285,7 +285,7 @@ jobs:
         
   trade-finance-manager-api:
     name: Promote TFM API
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -348,7 +348,7 @@ jobs:
 
   dtfs-central-api:
     name: Promote DTFS Central API
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -411,7 +411,7 @@ jobs:
 
   gef-ui:
     name: Promote GEF UI
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -473,7 +473,7 @@ jobs:
   
   acbs-functions:
     name: Promote ACBS Functions
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -536,7 +536,7 @@ jobs:
 
   number-generator-function:
     name: Promote Number Generator Functions
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
