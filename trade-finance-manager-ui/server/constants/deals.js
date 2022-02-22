@@ -4,7 +4,7 @@ const TFM_SORT_BY = {
 };
 
 const TFM_SORT_BY_DEFAULT = {
-  field: 'dealSnapshot.details.submissionDate',
+  field: 'tfm.dateReceived',
   order: TFM_SORT_BY.DESCENDING,
 };
 
