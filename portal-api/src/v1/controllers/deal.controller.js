@@ -292,9 +292,9 @@ const importDealAndFacilities = async (req, res) => {
     return res.status(400).send(`Error importing deal for V1 deal id: ${newDeal.dataMigrationInfo.v1_ID}`);
   }
 
-  const { insertedId: dealId } = response;
+  const { insertedId: dealId } = deal;
 
-  const createdDeal = response.ops && response.ops[0];
+  const createdDeal = deal.ops && deal.ops[0];
 
   const facilities = [
     ...newDeal.bondTransactions.items,
