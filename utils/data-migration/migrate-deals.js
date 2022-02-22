@@ -1,4 +1,3 @@
-const fs = require('fs');
 const xml2js = require('xml2js');
 const fileshare = require('./helpers/fileshare');
 require('dotenv').config();
