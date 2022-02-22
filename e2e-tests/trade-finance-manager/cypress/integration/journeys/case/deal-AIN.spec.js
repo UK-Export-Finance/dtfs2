@@ -63,6 +63,8 @@ context('User can view a case deal', () => {
       pages.caseDealPage.bankSecuritySectionHeading().should('not.exist');
       pages.caseDealPage.bankSecuritySubHeading().should('not.exist');
       pages.caseDealPage.bankSecurityText().should('not.exist');
+      pages.caseDealPage.bankSecurityFacilitySubHeading().should('not.exist');
+      pages.caseDealPage.bankSecurityFacilityText().should('not.exist');
     });
   });
 
