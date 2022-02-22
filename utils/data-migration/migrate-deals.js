@@ -98,10 +98,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
     ...comments,
     editedBy: [],
     mandatoryCriteria,
-    exporter
-    // TODO:
-    // ukefDecision
-    // ukefComments
+    exporter,
   };
 
   return mappedV2;
