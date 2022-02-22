@@ -165,6 +165,7 @@ const MOCK_DEAL = {
   supportingInformation: {
     securityDetails: {
       exporter: 'Mock security details',
+      facility: 'Mock facility details',
     },
   },
   exporter: {
