@@ -18,7 +18,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -28,7 +28,7 @@ jobs:
         
   build:
     name: Build and push ACBS Azure Function
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -53,7 +53,7 @@ jobs:
     needs: [set-environment, build]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     env:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
