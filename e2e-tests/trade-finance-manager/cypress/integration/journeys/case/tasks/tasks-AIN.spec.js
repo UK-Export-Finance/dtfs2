@@ -53,8 +53,8 @@ context('Case tasks - AIN deal', () => {
 
     pages.tasksPage.filterRadioAllTasks().click();
 
-    const TOTAL_AIN_GROUPS = 1;
-    pages.tasksPage.taskGroupTable().should('have.length', TOTAL_AIN_GROUPS);
+    const TOTAL_AIN_TASK_GROUPS = 1;
+    pages.tasksPage.taskGroupTable().should('have.length', TOTAL_AIN_TASK_GROUPS);
 
     const TOTAL_AIN_TASKS = 2;
     pages.tasksPage.tasksTableRows().should('have.length', TOTAL_AIN_TASKS);
