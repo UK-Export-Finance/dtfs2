@@ -9,7 +9,7 @@ import {
   submitTaskComplete,
 } from './tasks-helpers';
 
-context('Case tasks - MIA deal', () => {
+context('Case tasks - MIA deal - EC 11 false', () => {
   let dealId;
   const dealFacilities = [];
   const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
