@@ -310,7 +310,7 @@ const importDealAndFacilities = async (req, res) => {
   if (createdFacilities.status !== 200) {
     return res.status(400).send(`Error importing facilities for V1 deal id: ${newDeal.dataMigrationInfo.v1_ID}`);
   }
-  
+
   return res.status(200).send(createdDeal);
 };
 
