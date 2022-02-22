@@ -151,7 +151,8 @@ exports.update = async (req, res) => {
     const updatedDeal = await updateDeal(
       dealId,
       req.body,
-      req.user
+      req.user,
+      deal,
     );
 
     return res.status(200).json(updatedDeal);
