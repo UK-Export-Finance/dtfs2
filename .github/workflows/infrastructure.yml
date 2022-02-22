@@ -12,7 +12,7 @@ jobs:
 
   dev-rg:
     name: Dev resource group
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: azure/login@v1
       with:
@@ -40,7 +40,7 @@ jobs:
 
   test-rg:
     name: Test resource group
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: azure/login@v1
       with:
@@ -68,7 +68,7 @@ jobs:
 
   prod-rg:
     name: Prod resource group
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: azure/login@v1
       with:

@@ -17,7 +17,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -33,7 +33,7 @@ jobs:
     defaults:
       run:
         working-directory:  gef-ui
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
@@ -106,7 +106,7 @@ jobs:
     needs: build
     environment:
       name: E2ETEST
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
@@ -189,7 +189,7 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose up -d
+        docker-compose -f docker-compose.gha.yml up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
