@@ -82,6 +82,8 @@ const mapV2 = async (portalDealId, v1Deal) => {
     || bondTransactionsError
     || loanTransactionsError
   ) {
+    console.error(portalDealId, `Error mapping v1 ${portalDealId} to v2.`);
+    log.addError(portalDealId, `Error mapping v1 ${portalDealId} to v2.`);
     return false;
   }
 
@@ -149,6 +151,9 @@ const importSingleDeal = async (dealId) =>
       });
       return success;
     }
+
+    console.error(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
+    log.addError(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
     return false;
   }));
 

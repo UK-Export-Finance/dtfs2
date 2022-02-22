@@ -273,9 +273,7 @@ const importDealAndFacilities = async (req, res) => {
 
   const collection = await db.getCollection('deals');
 
-  const newDeal = {
-    ...req.body,
-  };
+  const newDeal = req.body;
 
   const validationErrors = getDealErrors(newDeal);
 
@@ -286,24 +284,31 @@ const importDealAndFacilities = async (req, res) => {
     });
   }
 
-  const response = await collection.insertOne({
+  const deal = await collection.insertOne({
     ...newDeal,
-  }).catch((err) => {
-    const status = err.code === 11000 ? 406 : 500;
-    return res.status(status).send(err);
   });
+
+  if (!deal.insertedId) {
+    return res.status(400).send(`Error importing deal for V1 deal id: ${newDeal.dataMigrationInfo.v1_ID}`);
+  }
+
+  const { insertedId: dealId } = response;
 
   const createdDeal = response.ops && response.ops[0];
 
   const facilities = [
-    ...createdDeal.bondTransactions.items,
-    ...createdDeal.loanTransactions.items,
+    ...newDeal.bondTransactions.items,
+    ...newDeal.loanTransactions.items,
   ];
 
-  const createdFacilities = await createMultipleFacilities(facilities, createdDeal._id, req.user);
+  const createdFacilities = await createMultipleFacilities(
+    facilities,
+    dealId,
+    req.user,
+  );
 
   if (createdFacilities.status !== 200) {
-    return res.status(400).send(`Error importing facilities for V1 deal id: ${createdDeal.dataMigrationInfo.v1_ID}`);
+    return res.status(400).send(`Error importing facilities for V1 deal id: ${newDeal.dataMigrationInfo.v1_ID}`);
   }
   
   return res.status(200).send(createdDeal);
