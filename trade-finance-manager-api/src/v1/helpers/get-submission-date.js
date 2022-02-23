@@ -1,5 +1,5 @@
 /**
- * If `MIN` relevant submission date is returned else standard `Appliction` submision date.
+ * If `MIN` relevant submission date is returned else standard `Appliction` submission date.
  * Date retuned in EPOCH format.
  * @param {Object} Deal deal object decapsulating `manualInclusionNoticeSubmissionDate` and `submissionDate`
  * @returns {Integer} EPOCH
