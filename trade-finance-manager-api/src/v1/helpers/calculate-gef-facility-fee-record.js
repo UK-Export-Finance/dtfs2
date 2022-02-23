@@ -7,7 +7,10 @@ const { differenceInDays } = require('date-fns');
  */
 
 // NOTE: if the start date is passed first, we get a minus result.
-const calculateDaysOfCover = (coverStartDate, coverEndDate) => differenceInDays(new Date(Number(coverEndDate)), new Date(Number(coverStartDate)));
+const calculateDaysOfCover = (coverStartDate, coverEndDate) => differenceInDays(
+  new Date(Number(coverEndDate)),
+  new Date(Number(coverStartDate)),
+);
 
 /* Business logic:
  * (Facility Amount * UKEF Cover (fractional percentage)) * 10%
@@ -18,7 +21,8 @@ const calculateDrawnAmount = (facilityValue, coverPercentage) => (facilityValue 
  * (Drawn Amount * Days Of Cover * Interst rate) / day basis
  * Logic has been updated based on feedback from Mulesoft team (AV) - 10/02/2022
  */
-const calculateFeeAmount = (drawnAmount, daysOfCover, dayBasis, interestPercentage) => ((drawnAmount * daysOfCover * (interestPercentage / 100)) / dayBasis);
+const calculateFeeAmount = (drawnAmount, daysOfCover, dayBasis, interestPercentage) =>
+  ((drawnAmount * daysOfCover * (interestPercentage / 100)) / dayBasis);
 
 const calculateGefFacilityFeeRecord = (facility) => {
   if (facility.hasBeenIssued) {
