@@ -57,8 +57,11 @@ const createSubmissionToUkef = async (req, res) => {
 
     if (comment.length > 0) {
       const commentObj = {
-        role: 'checker',
+        roles: checker.roles,
         userName: checker.username,
+        firstname: checker.firstname,
+        surname: checker.surname,
+        email: checker.email,
         createdAt: Date.now(),
         comment,
       };
