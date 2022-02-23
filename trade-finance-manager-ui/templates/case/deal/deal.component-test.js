@@ -93,6 +93,7 @@ describe(`${page} when deal is GEF`, () => {
 
   beforeEach(() => {
     params.deal.dealType = 'GEF';
+    params.deal.supportingInformation.securityDetails.facility = 'test';
     wrapper = render(params);
   });
 
@@ -135,6 +136,9 @@ describe(`${page} when deal is GEF`, () => {
 
   it('should render bank\'s security details', () => {
     wrapper.expectElement('[data-cy="deal-bank-security-details"]').toExist();
+    wrapper.expectElement('[data-cy="bank-security-sub-heading"]').toExist();
     wrapper.expectElement('[data-cy="bank-security-text"]').toExist();
+    wrapper.expectElement('[data-cy="bank-security-facility-sub-heading"]').toExist();
+    wrapper.expectElement('[data-cy="bank-security-facility-text"]').toExist();
   });
 });

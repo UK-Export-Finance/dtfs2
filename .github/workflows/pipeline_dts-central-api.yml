@@ -20,7 +20,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -30,7 +30,7 @@ jobs:
 
   build:
     name: Build and push DTFS Central API
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -55,7 +55,7 @@ jobs:
     needs: [set-environment, build]
     environment:
       name: APITEST
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     env:
       MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
       MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
@@ -87,7 +87,7 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api dtfs/dtfs-central-api
     - name: Start Docker Compose
       run: |
-        docker-compose up -d dtfs-central-api
+        docker-compose -f docker-compose.gha.yml up -d dtfs-central-api
     - name: Run API tests
       run: |
         docker-compose exec -T dtfs-central-api npm run api-test
@@ -105,7 +105,7 @@ jobs:
     needs: [set-environment, test]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - name: Log in to Dev container registry
       uses: azure/docker-login@v1
@@ -126,7 +126,7 @@ jobs:
     needs: [set-environment, promote]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: azure/login@v1
       with:

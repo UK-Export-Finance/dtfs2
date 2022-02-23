@@ -57,8 +57,8 @@ context('Case tasks - MIA deal', () => {
 
     pages.tasksPage.filterRadioAllTasks().click();
 
-    const TOTAL_AIN_GROUPS = 4;
-    pages.tasksPage.taskGroupTable().should('have.length', TOTAL_AIN_GROUPS);
+    const TOTAL_MIA_TASK_GROUPS = 4;
+    pages.tasksPage.taskGroupTable().should('have.length', TOTAL_MIA_TASK_GROUPS);
 
     const TOTAL_MIA_TASKS = 12;
     pages.tasksPage.tasksTableRows().should('have.length', TOTAL_MIA_TASKS);

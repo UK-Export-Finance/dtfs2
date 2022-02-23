@@ -36,7 +36,6 @@ const sendTfmEmail = async (
 
   const tfmDealUpdate = {
     tfm: {
-      ...deal.tfm,
       history: updatedHistory,
     },
   };
