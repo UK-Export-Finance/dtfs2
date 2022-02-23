@@ -285,7 +285,7 @@ type TFMDealData {
   history: TFMDealHistory
   underwriterManagersDecision: TFMDealDecision
   dateReceived: String
-  dateReceivedTimestamp: Float
+  dateReceivedTimestamp: Int
   estore: TFMEstore
   leadUnderwriter: String
   activities: [TFMActivity]
