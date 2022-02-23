@@ -4,7 +4,7 @@ const TFM_SORT_BY = {
 };
 
 const TFM_SORT_BY_DEFAULT = {
-  field: 'tfm.dateReceived',
+  field: 'tfm.dateReceivedTimestamp',
   order: TFM_SORT_BY.DESCENDING,
 };
 
