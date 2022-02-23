@@ -16,6 +16,7 @@ const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-p
 const { MOCK_FACILITIES } = require('../../../src/v1/__mocks__/mock-facilities');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-second-submit-MIA');
+const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
 const submitDeal = require('../utils/submitDeal');
 
@@ -609,8 +610,8 @@ describe('/v1/deals', () => {
         expect(unissuedFacility.tfm.feeRecord).toEqual(null);
       });
 
-      it('does NOT add fee record when deal is MIA', async () => {
-        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
+      it('does NOT add fee record when deal is MIA on 1st submission', async () => {
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
         expect(status).toEqual(200);
 
@@ -618,6 +619,19 @@ describe('/v1/deals', () => {
           facility.hasBeenIssued);
 
         expect(issuedFacility.tfm.feeRecord).toBeUndefined();
+      });
+
+      it('does add fee record when deal is MIA on 2nd submission', async () => {
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
+
+        expect(status).toEqual(200);
+
+        const issuedFacility = body.facilities.find((facility) =>
+          facility.hasBeenIssued);
+
+        const expected = calculateGefFacilityFeeRecord(issuedFacility);
+
+        expect(issuedFacility.tfm.feeRecord).toEqual(expected);
       });
 
       it('calls updateGefMINActivity when deal is MIA', async () => {

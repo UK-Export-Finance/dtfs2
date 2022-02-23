@@ -42,12 +42,15 @@ const updateFacilities = async (deal) => {
         portalFacilityUpdate = {
           hasBeenIssuedAndAcknowledged: true,
         };
+        // only changes flag if AIN or MIA
+        if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+          // updates GEF facility collection
+          const updatedPortalFacility = await api.updateGefFacility(facilityId, portalFacilityUpdate);
 
-        // updates GEF facility collection
-        const updatedPortalFacility = await api.updateGefFacility(facilityId, portalFacilityUpdate);
-
-        facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+          facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+        }
       } else {
+        // If BSS/EWCS
         const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
 
         await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
