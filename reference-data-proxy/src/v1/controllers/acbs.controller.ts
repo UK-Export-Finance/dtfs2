@@ -5,7 +5,7 @@
 // 2) ACBS API tells us if the deal/facility IDs are already in use.
 
 import axios from 'axios';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { ENTITY_TYPE } from '../../constants';
 
