@@ -205,9 +205,6 @@ describe('/v1/deals', () => {
 
       expect(status).toEqual(200);
 
-      // const utc = moment(parseInt(MOCK_DEAL_AIN_SUBMITTED.details.submissionDate, 10));
-      // const localisedTimestamp = utc.tz('Europe/London');
-
       const expectedDateReceived = generateDateReceived().dateReceived;
       expect(body.tfm.dateReceived).toEqual(expectedDateReceived);
       expect(body.tfm.dateReceivedTimestamp).toBeDefined();
