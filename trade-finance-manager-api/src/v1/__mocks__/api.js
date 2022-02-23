@@ -191,6 +191,9 @@ module.exports = {
     };
     return Promise.resolve(updatedFacility);
   },
+  updateGefFacility: (facilityId, facilityUpdate) => Promise.resolve(
+    { ...facilityUpdate },
+  ),
   addPortalDealComment: (dealId) => {
     const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
 

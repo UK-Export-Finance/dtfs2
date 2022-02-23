@@ -48,11 +48,7 @@ const createSubmitBody = (mockDeal) => ({
   dealType: mockDeal.dealType,
 });
 
-jest.mock('../../../src/v1/api');
-
-const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(
-  { ...facilityUpdate },
-));
+const updateGefFacilitySpy = jest.fn(() => Promise.resolve({}));
 
 describe('/v1/deals', () => {
   beforeEach(() => {

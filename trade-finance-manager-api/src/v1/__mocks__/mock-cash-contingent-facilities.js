@@ -56,6 +56,7 @@ const MOCK_CASH_CONTINGENT_FACILIIES = [
     ...MOCK_CASH_FACILITY,
     hasBeenIssued: true,
     submittedAsIssuedDate: 1641054981000,
+    hasBeenIssuedAndAcknowledged: true,
   },
   {
     _id: 'MOCK_CONTINGENT_FACILITY_ISSUED',

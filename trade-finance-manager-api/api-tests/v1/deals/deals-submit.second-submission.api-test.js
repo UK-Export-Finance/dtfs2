@@ -46,12 +46,10 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   submitACBSIfAllPartiesHaveUrn: jest.fn(),
 }));
 
-jest.mock('../../../src/v1/api');
-
 const updateGefActivitySpy = jest.fn(() => Promise.resolve(MOCK_GEF_DEAL_MIN));
 
 const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(
-  { ...facilityUpdate },
+  facilityUpdate,
 ));
 
 const createSubmitBody = (mockDeal) => ({
@@ -627,7 +625,7 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
 
         const issuedFacility = body.facilities.find((facility) =>
-          facility.hasBeenIssued);
+          facility.tfm);
 
         const expected = calculateGefFacilityFeeRecord(issuedFacility);
 
