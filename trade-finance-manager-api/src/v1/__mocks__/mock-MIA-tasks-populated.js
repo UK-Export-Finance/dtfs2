@@ -27,7 +27,6 @@ const MOCK_MIA_TASKS_POPULATED = [
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
       },
-
       {
         id: '3',
         groupId: 1,
