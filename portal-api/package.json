@@ -34,6 +34,9 @@
   },
   "dependencies": {
     "@azure/storage-file-share": "12.8.0",
+    "@graphql-tools/schema": "^8.3.1",
+    "apollo-server-express": "2.18.2",
+    "apollo-server-testing": "^2.25.3",
     "axios": "^0.25.0",
     "comma-number": "^2.1.0",
     "compression": "^1.7.4",
@@ -42,6 +45,8 @@
     "dotenv": "16.0.0",
     "express": "4.17.2",
     "filesize": "^8.0.7",
+    "graphql": "^15.8.0",
+    "graphql-middleware": "^4.0.2",
     "helmet": "^5.0.2",
     "jsonwebtoken": "8.5.1",
     "moment": "2.29.1",

@@ -8,7 +8,9 @@ const caseDealPage = {
   bankSecuritySection: () => cy.get('[data-cy="deal-bank-security-details"]'),
   bankSecuritySectionHeading: () => cy.get('[data-cy="bank-security-section-heading"]'),
   bankSecuritySubHeading: () => cy.get('[data-cy="bank-security-sub-heading"]'),
+  bankSecurityFacilitySubHeading: () => cy.get('[data-cy="bank-security-facility-sub-heading"]'),
   bankSecurityText: () => cy.get('[data-cy="bank-security-text"]'),
+  bankSecurityFacilityText: () => cy.get('[data-cy="bank-security-facility-text"]'),
 
   dealFacilitiesTable: {
     row: (facilityId) => {

@@ -98,6 +98,7 @@ const queryAllFacilities = async (
           from: 'deals',
           localField: 'dealId',
           foreignField: '_id',
+          pipeline: [{ $match: filters }],
           as: 'deal',
         },
       },

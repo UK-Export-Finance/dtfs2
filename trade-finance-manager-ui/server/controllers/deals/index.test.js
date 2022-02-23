@@ -39,7 +39,7 @@ describe('controllers - deals', () => {
           activePrimaryNavigation: 'all deals',
           activeSubNavigation: 'deal',
           user: mockReq.session.user,
-          activeSortByField: 'dealSnapshot.details.submissionDate',
+          activeSortByField: 'tfm.dateReceived',
           activeSortByOrder: 'descending',
         });
       });
