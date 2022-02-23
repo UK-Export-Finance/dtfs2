@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 const ordnanceSurveyBaseUrl = process.env.ORDNANCE_SURVEY_API_URL;
