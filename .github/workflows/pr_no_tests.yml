@@ -10,6 +10,6 @@ on:
 jobs:
   test:
     name: Run PR tests
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
