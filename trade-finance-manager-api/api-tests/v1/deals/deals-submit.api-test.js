@@ -5,6 +5,7 @@ const submitDeal = require('../utils/submitDeal');
 const mapSubmittedDeal = require('../../../src/v1/mappings/map-submitted-deal');
 const addTfmDealData = require('../../../src/v1/controllers/deal-add-tfm-data');
 const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
+const generateDateReceived = require('../../../src/v1/controllers/deal-add-tfm-data/dateReceived');
 
 const CONSTANTS = require('../../../src/constants');
 
@@ -200,17 +201,17 @@ describe('/v1/deals', () => {
       });
     });
 
-    it('adds dateReceived to deal.tfm from deal submissionDate', async () => {
+    it('adds dateReceived to deal.tfm', async () => {
       const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
 
       expect(status).toEqual(200);
 
-      const utc = moment(parseInt(MOCK_DEAL_AIN_SUBMITTED.details.submissionDate, 10));
-      const localisedTimestamp = utc.tz('Europe/London');
+      // const utc = moment(parseInt(MOCK_DEAL_AIN_SUBMITTED.details.submissionDate, 10));
+      // const localisedTimestamp = utc.tz('Europe/London');
 
-      const expectedDateReceived = localisedTimestamp.format('DD-MM-YYYY');
-
+      const expectedDateReceived = generateDateReceived().dateReceived;
       expect(body.tfm.dateReceived).toEqual(expectedDateReceived);
+      expect(body.tfm.dateReceivedTimestamp).toBeDefined();
     });
 
     it('adds empty TFM history to deal', async () => {

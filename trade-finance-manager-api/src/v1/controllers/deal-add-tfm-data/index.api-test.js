@@ -1,6 +1,6 @@
 const addTfmDealData = require('.');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
-const { dateReceived: addDateReceived } = require('./dateReceived');
+const generateDateReceived = require('./dateReceived');
 const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
@@ -19,7 +19,7 @@ describe('deal submit - add TFM data', () => {
     const expected = {
       ...mockDeal,
       tfm: {
-        dateReceived: addDateReceived(mockDeal.submissionDate),
+        ...generateDateReceived(),
         history: DEFAULTS.HISTORY,
         parties: {},
         activities: [],
