@@ -23,6 +23,7 @@ EXPOSE 80 ${SSH_PORT}
 WORKDIR /app
 COPY package.json .
 RUN npm install --legacy-peer-deps
+RUN npm install -g typescript
 COPY . .
 
 # Execute Script
