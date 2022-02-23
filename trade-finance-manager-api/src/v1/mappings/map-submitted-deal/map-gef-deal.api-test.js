@@ -26,6 +26,7 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
       submissionCount: dealSnapshot.submissionCount,
       submissionType: dealSnapshot.submissionType,
       submissionDate: dealSnapshot.submissionDate,
+      manualInclusionNoticeSubmissionDate: dealSnapshot.manualInclusionNoticeSubmissionDate,
       status: dealSnapshot.status,
       ukefDealId: dealSnapshot.ukefDealId,
       exporter: {
