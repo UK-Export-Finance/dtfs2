@@ -12,7 +12,6 @@ const addTfmDealData = async (deal) => {
 
   const {
     _id: dealId,
-    submissionDate,
     submissionType,
     status,
     tfm,

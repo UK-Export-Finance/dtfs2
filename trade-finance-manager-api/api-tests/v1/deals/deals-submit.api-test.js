@@ -1,4 +1,3 @@
-const moment = require('moment');
 const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const submitDeal = require('../utils/submitDeal');
