@@ -98,7 +98,7 @@ context('Submit to UKEF', () => {
         statusBanner.bannerUkefDealId();
         statusBanner.bannerDateCreated().contains(todayFormatted);
 
-        applicationDetails.comments().contains(`Comments from (${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname})`);
+        applicationDetails.comments().contains(`Comments from ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
         applicationDetails.comments().contains('Test comment');
       });
     });
