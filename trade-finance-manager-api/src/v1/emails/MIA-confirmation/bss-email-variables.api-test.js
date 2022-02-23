@@ -28,9 +28,7 @@ describe('generate MIA confirmation email variables - BSS', () => {
 
     const expected = {
       bssList: facilityLists.bssList,
-      showBssHeader: 'yes',
       ewcsList: facilityLists.ewcsList,
-      showEwcsHeader: 'yes',
     };
 
     expect(result).toEqual(expected);
@@ -48,7 +46,6 @@ describe('generate MIA confirmation email variables - BSS', () => {
 
       const result = bssEmailVariables(mockSubmittedDeal);
 
-      expect(result.showBssHeader).toEqual('no');
       expect(result.showEwcsHeader).toEqual('no');
     });
   });
