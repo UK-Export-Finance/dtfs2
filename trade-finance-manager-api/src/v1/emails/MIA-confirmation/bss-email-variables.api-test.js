@@ -28,28 +28,9 @@ describe('generate MIA confirmation email variables - BSS', () => {
 
     const expected = {
       bssList: facilityLists.bssList,
-      showBssHeader: 'yes',
       ewcsList: facilityLists.ewcsList,
-      showEwcsHeader: 'yes',
     };
 
     expect(result).toEqual(expected);
-  });
-
-  describe('when there are no issued or unissued facilities', () => {
-    it('should return correct `show issued/unissued header` properties', () => {
-      const mockDealWithNoFacilities = {
-        ...MOCK_BSS_DEAL,
-        bondTransactions: { items: [] },
-        loanTransactions: { items: [] },
-      };
-
-      const mockSubmittedDeal = mapSubmittedDeal({ dealSnapshot: mockDealWithNoFacilities });
-
-      const result = bssEmailVariables(mockSubmittedDeal);
-
-      expect(result.showBssHeader).toEqual('no');
-      expect(result.showEwcsHeader).toEqual('no');
-    });
   });
 });

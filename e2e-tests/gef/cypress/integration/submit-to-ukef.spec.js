@@ -90,13 +90,16 @@ context('Submit to UKEF', () => {
     });
 
     describe('After submission', () => {
-      it('application banner displays the submission date, pending UKEF deal ID and updated status', () => {
+      it('application banner displays the submission date, pending UKEF deal ID and updated status and contains comment in correct format', () => {
         cy.visit(relative(`/gef/application-details/${dealId}`));
         const todayFormatted = format(new Date(), 'dd MMM yyyy');
 
         statusBanner.bannerDateSubmitted().contains(todayFormatted);
         statusBanner.bannerUkefDealId();
         statusBanner.bannerDateCreated().contains(todayFormatted);
+
+        applicationDetails.comments().contains(`Comments from ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
+        applicationDetails.comments().contains('Test comment');
       });
     });
   });

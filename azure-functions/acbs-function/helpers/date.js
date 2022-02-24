@@ -1,7 +1,8 @@
 const moment = require('moment');
 
 const isDate = (dateStr) => moment(dateStr, 'YYYY-MM-DD', true).isValid();
-const isString = (dateStr) => typeof dateStr === 'string';
+const isEpoch = (epoch) => moment(epoch, 'x', true).isValid() || moment(epoch, 'X', true).isValid();
+const isString = (dateStr) => typeof dateStr === 'string' && !isEpoch(dateStr);
 const now = () => moment().format('YYYY-MM-DD');
 
 const formatYear = (year) => (year < 1000 ? (2000 + parseInt(year, 10)).toString() : year && year.toString());
@@ -14,6 +15,7 @@ const addYear = (date, years) => moment(date).add({ years }).format('YYYY-MM-DD'
 
 module.exports = {
   isDate,
+  isEpoch,
   isString,
   now,
   formatDate,

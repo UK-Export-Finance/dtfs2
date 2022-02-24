@@ -5,7 +5,7 @@
 // 2) Premium Schedule Segments gets the segments by facilityURN
 
 import axios from 'axios';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { objectIsEmpty } from '../../utils';
 dotenv.config();

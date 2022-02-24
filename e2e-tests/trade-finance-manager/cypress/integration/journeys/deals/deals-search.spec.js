@@ -53,11 +53,8 @@ context('User can view and filter multiple deals', () => {
 
   // NOTE: searching by date queries multiple fields.
   // Therefore we need to set all of these fields to yesterday.
-  const DEAL_SUBMITTED_YESTERDAY = createMockDeal({
-    testId: 'DEAL_SUBMITTED_YESTERDAY',
-    details: {
-      submissionDate: yesterday.valueOf().toString(),
-    },
+  const DEAL_COMPLETED_YESTERDAY = createMockDeal({
+    testId: 'DEAL_COMPLETED_YESTERDAY',
     eligibility: {
       lastUpdated: yesterday.valueOf().toString(),
     },
@@ -71,7 +68,7 @@ context('User can view and filter multiple deals', () => {
     DEAL_WITH_TEST_MIA_SUBMISSION_TYPE,
     DEAL_WITH_ONLY_1_FACILITY_BOND,
     DEAL_WITH_ONLY_1_FACILITY_LOAN,
-    DEAL_SUBMITTED_YESTERDAY,
+    DEAL_COMPLETED_YESTERDAY,
   ];
 
   before(() => {
@@ -299,9 +296,9 @@ context('User can view and filter multiple deals', () => {
 
     const searchString = todayFormatted;
 
-    const ALL_DEALS_SUBMITTED_TODAY = MOCK_DEALS.filter((deal) => deal.testId !== 'DEAL_SUBMITTED_YESTERDAY');
-
-    const expectedResultsLength = ALL_DEALS_SUBMITTED_TODAY.length;
+    // Note: Date received is generated on submission.
+    // all deals in this test are submitted at the same time.
+    const expectedResultsLength = ALL_SUBMITTED_DEALS.length;
 
     pages.dealsPage.searchFormInput().type(searchString);
     pages.dealsPage.searchFormSubmitButton().click();
@@ -318,10 +315,9 @@ context('User can view and filter multiple deals', () => {
 
     const searchString = todayFormatted;
 
-    const ALL_DEALS_SUBMITTED_TODAY = MOCK_DEALS.filter((deal) =>
-      deal.testId !== 'DEAL_SUBMITTED_YESTERDAY');
-
-    const expectedResultsLength = ALL_DEALS_SUBMITTED_TODAY.length;
+    // Note: Date received is generated on submission.
+    // all deals in this test are submitted at the same time.
+    const expectedResultsLength = ALL_SUBMITTED_DEALS.length;
 
     pages.dealsPage.searchFormInput().type(searchString);
     pages.dealsPage.searchFormSubmitButton().click();

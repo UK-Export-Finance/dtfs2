@@ -1,5 +1,5 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 const postToEstore = async (apiEndpoint: string, apiData: any) => {

@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 export const healthcheck = express.Router();

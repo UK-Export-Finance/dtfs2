@@ -12,9 +12,7 @@ const bssEmailVariables = (deal) => {
 
   const emailVariables = {
     bssList: facilityLists.bssList,
-    showBssHeader: facilityLists.bssList ? 'yes' : 'no',
     ewcsList: facilityLists.ewcsList,
-    showEwcsHeader: facilityLists.ewcsList ? 'yes' : 'no',
   };
 
   return emailVariables;

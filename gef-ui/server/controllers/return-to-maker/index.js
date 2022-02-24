@@ -43,8 +43,11 @@ const postReturnToMaker = async (req, res, next) => {
       application.comments = [
         ...(application.comments || []),
         {
-          role: 'checker',
+          roles: checker.roles,
           userName: checker.username,
+          firstname: checker.firstname,
+          surname: checker.surname,
+          email: checker.email,
           createdAt: Date.now(),
           comment,
         },
