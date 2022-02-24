@@ -139,7 +139,7 @@ const findOneDeal = async (dealId) => {
     });
     return response.data.deal;
   } catch ({ response }) {
-    console.error(`TFM API - error finding BSS deal ${dealId}`);
+    console.error(`TFM API - error finding deal ${dealId}`);
 
     return false;
   }

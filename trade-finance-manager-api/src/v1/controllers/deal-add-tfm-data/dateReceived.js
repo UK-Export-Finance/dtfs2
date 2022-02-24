@@ -1,17 +1,8 @@
-const moment = require('moment');
-require('moment-timezone'); // monkey-patch to provide moment().tz()
+const { getUnixTime, format } = require('date-fns');
 
-const generateDateFromSubmissionDate = (submissionDate) => {
-  const utc = moment(parseInt(submissionDate, 10));
-  const localisedTimestamp = utc.tz('Europe/London');
+const generateDateReceived = () => ({
+  dateReceived: format(new Date(), 'dd-MM-yyyy'),
+  dateReceivedTimestamp: getUnixTime(new Date()),
+});
 
-  return localisedTimestamp.format('DD-MM-YYYY');
-};
-
-const dateReceived = (submissionDate) =>
-  generateDateFromSubmissionDate(submissionDate);
-
-module.exports = {
-  generateDateFromSubmissionDate,
-  dateReceived,
-};
+module.exports = generateDateReceived;

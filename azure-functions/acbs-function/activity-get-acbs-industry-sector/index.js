@@ -13,7 +13,8 @@ const mdmEaApi = require('../api-ukef-mdm-ea');
 const getAcbsIndustrySector = async (context) => {
   const { industry } = context.bindingData;
   const { status, data } = await mdmEaApi.getACBSIndustrySector(industry);
-  return (status === 200 && data.length > 1) ? data[0].acbsIndustryId : '0001';
+  // ACBS Industry code `1001` = Information and communication
+  return (status === 200 && data.length > 1) ? data[0].acbsIndustryId : '1001';
 };
 
 module.exports = getAcbsIndustrySector;
