@@ -36,10 +36,9 @@ const mapDealRoot = (portalDealId, v1Deal) => {
     updatedAt: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_updated),
   };
 
-  const makerUsername = 'BANK1_MAKER1';
-
   const minUsername = v1Deal.Deal_information.Extra_fields.MIN_Maker.username;
-  const maker = minUsername ? getUserByEmail(minUsername) : getUserByEmail(makerUsername);
+
+  const maker = minUsername ? getUserByEmail(minUsername) : getUserByEmail(v1Deal.Application_owner_email);
 
   dealRoot.maker = maker;
 
