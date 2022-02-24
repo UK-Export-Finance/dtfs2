@@ -38,7 +38,11 @@ const mapDealRoot = (portalDealId, v1Deal) => {
 
   const minUsername = v1Deal.Deal_information.Extra_fields.MIN_Maker.username;
 
-  const maker = minUsername ? getUserByEmail(minUsername) : getUserByEmail(v1Deal.Application_owner_email);
+  const makerUsername = Array.isArray(v1Deal.Deal_information.Extra_fields.All_Makers.Maker)
+    ? v1Deal.Deal_information.Extra_fields.All_Makers.Maker[0].username
+    : v1Deal.Deal_information.Extra_fields.All_Makers.Maker.username;
+
+  const maker = minUsername ? getUserByEmail(minUsername) : getUserByEmail(makerUsername);
 
   dealRoot.maker = maker;
 
