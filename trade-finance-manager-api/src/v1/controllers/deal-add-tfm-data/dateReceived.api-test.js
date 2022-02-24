@@ -1,34 +1,13 @@
-const moment = require('moment');
-require('moment-timezone'); // monkey-patch to provide moment().tz(;
-
-const {
-  generateDateFromSubmissionDate,
-  dateReceived,
-} = require('./dateReceived');
+const { format } = require('date-fns');
+const generateDateReceived = require('./dateReceived');
 
 describe('deal submit - add TFM data - date received', () => {
-  const mockSubmissionDate = '1623411666338';
+  it('should return a formatted date and timestamp', () => {
+    const result = generateDateReceived();
 
-  const expectedSubmissionDate = (date) => {
-    const utc = moment(parseInt(date, 10));
-    const localisedTimestamp = utc.tz('Europe/London');
+    const expectedDateReceived = format(new Date(), 'dd-MM-yyyy');
+    expect(result.dateReceived).toEqual(expectedDateReceived);
 
-    return localisedTimestamp.format('DD-MM-YYYY');
-  };
-
-  describe('generateDateFromSubmissionDate', () => {
-    it('should return formatted date', () => {
-      const result = generateDateFromSubmissionDate(mockSubmissionDate);
-
-      expect(result).toEqual(expectedSubmissionDate(mockSubmissionDate));
-    });
-  });
-
-  it('should return timestmap', async () => {
-    const result = await dateReceived(mockSubmissionDate);
-
-    const expected = generateDateFromSubmissionDate(mockSubmissionDate);
-
-    expect(result).toEqual(expected);
+    expect(typeof result.dateReceivedTimestamp).toEqual('number');
   });
 });
