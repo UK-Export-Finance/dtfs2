@@ -10,6 +10,7 @@ const dealSubmissionDetails = require('./controllers/deal-submission-details.con
 const dealClone = require('./controllers/deal-clone.controller');
 const dealEligibilityCriteria = require('./controllers/deal-eligibility-criteria.controller');
 const dealEligibilityDocumentation = require('./controllers/deal-eligibility-documentation.controller');
+const dealImportController = require('./controllers/deal-import.controller');
 const banks = require('./controllers/banks.controller');
 const currencies = require('./controllers/currencies.controller');
 const countries = require('./controllers/countries.controller');
@@ -42,7 +43,7 @@ authRouter.use(passport.authenticate('jwt', { session: false }), cleanXss);
 
 authRouter.use('/gef', gef);
 
-authRouter.route('/deals/import').post(validate({ role: ['data-admin'] }), dealsController.import);
+authRouter.route('/deals/import').post(validate({ role: ['data-admin'] }), dealImportController.import);
 
 authRouter.route('/deals').post(validate({ role: ['maker'] }), dealsController.create);
 authRouter.route('/deals').get(validate({ role: ['maker', 'checker', 'admin'] }), dealsController.getQueryAllDeals);
