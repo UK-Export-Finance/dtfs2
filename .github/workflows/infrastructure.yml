@@ -3,7 +3,7 @@ name: Supporting infrastructure for environments
 on:
   push:
     branches: [ main ]
-    paths: 
+    paths:
     - '.github/workflows/infrastructure.yml'
 
 jobs:
@@ -25,11 +25,17 @@ jobs:
           az configure --defaults location=uksouth
           az configure --defaults group=${{ secrets.DEV_RESOURCE_GROUP }}
 
-    - name: App Service plan
+    - name: DEV App Service plan
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az appservice plan create --name dev --is-linux --sku p1v2
+          az appservice plan create --name dev --is-linux --sku p3v2
+
+    - name: DEMO App Service plan
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az appservice plan create --name demo --is-linux --sku p3v2
 
     - name: Container registry
       uses: azure/cli@v1.0.0
@@ -37,6 +43,7 @@ jobs:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
           az acr create --name tfsdev --sku Standard --admin-enabled true
+          az acr create --name tfsdemo --sku Standard --admin-enabled true
 
   test-rg:
     name: Test resource group
@@ -57,7 +64,7 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az appservice plan create --name test --is-linux --sku p1v2
+          az appservice plan create --name test --is-linux --sku p3v2
 
     - name: Container registry
       uses: azure/cli@v1.0.0
@@ -85,7 +92,7 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az appservice plan create --name prod --is-linux --sku p1v2
+          az appservice plan create --name prod --is-linux --sku p3v2
 
     - name: Container registry
       uses: azure/cli@v1.0.0
