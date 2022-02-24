@@ -64,10 +64,9 @@ const updateFacilities = async (deal) => {
       }
 
       facilityUpdate = {
+        ...facilityUpdate,
         ...portalFacilityUpdate,
       };
-
-      await api.updateFacility(facilityId, facilityUpdate);
     }
 
     const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
@@ -89,6 +88,7 @@ const updateFacilities = async (deal) => {
       if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
         feeRecord = calculateGefFacilityFeeRecord(facility);
         facilityUpdate = {
+          ...facilityUpdate,
           feeRecord,
         };
       }

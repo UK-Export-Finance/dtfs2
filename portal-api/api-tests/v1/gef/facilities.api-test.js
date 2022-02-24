@@ -12,12 +12,11 @@ const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 
 const baseUrl = '/v1/gef/facilities';
-const facilitiesCollectionName = 'facilities';
 const mockFacilities = require('../../fixtures/gef/facilities');
 
-const dealsCollectionName = 'deals';
 const applicationBaseUrl = '/v1/gef/application';
 const mockApplications = require('../../fixtures/gef/application');
+
 const {
   calculateUkefExposure,
   calculateGuaranteeFee,
@@ -26,7 +25,6 @@ const { roundNumber } = require('../../../src/utils/number');
 
 describe(baseUrl, () => {
   let aMaker;
-  let aChecker;
   let mockApplication;
   let newFacility;
   let completeUpdate;
@@ -34,7 +32,6 @@ describe(baseUrl, () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole('maker').one();
-    aChecker = testUsers().withRole('checker').one();
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
     newFacility = {
@@ -100,8 +97,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await wipeDB.wipe(['facilities', 'deals']);
   });
 
   describe(`GET ${baseUrl}/:id`, () => {
@@ -147,8 +143,7 @@ describe(baseUrl, () => {
 
   describe(`PUT ${baseUrl}/:id`, () => {
     beforeEach(async () => {
-      await wipeDB.wipe([facilitiesCollectionName]);
-      await wipeDB.wipe([dealsCollectionName]);
+      await wipeDB.wipe(['facilities', 'deals']);
     });
 
     it('rejects requests that do not present a valid Authorization token', async () => {
