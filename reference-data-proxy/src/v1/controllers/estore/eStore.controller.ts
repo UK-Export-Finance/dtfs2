@@ -32,11 +32,12 @@ const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
         }),
     ),
   );
-  console.log('facilityFoldersResponse', facilityFoldersResponse);
   if (facilityFoldersResponse[0].status === 201) {
     console.info('Cron task completed: Facility folder was successfully created');
     // stop and the delete the cron job - this in order to release the memory
     eStoreCronJobManager.deleteJob(`F${eStoreData.dealIdentifier}`);
+
+    console.log(`I got the current jobs: ${eStoreCronJobManager}`);
     console.info('Task started: Upload the supporting documents');
     const uploadDocuments = Promise.all(
       eStoreData.supportingInformation.map(
@@ -50,8 +51,6 @@ const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
 };
 
 const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
-  console.info('eStore Deal Folder Creation Job', eStoreData);
-
   // create the Deal folder
   console.info('Cron task started: Create the Deal folder');
   const dealFolderResponse = await createDealFolder(eStoreData.siteName, {
@@ -126,7 +125,7 @@ export const createEstore = async (req: Request, res: Response) => {
         dealIdentifier: eStoreData.dealIdentifier,
         destinationMarket: eStoreData.destinationMarket,
         riskMarket: eStoreData.riskMarket,
-        facilityIdentifiers: eStoreData?.facilityIdentifiers,
+        facilityIdentifiers: eStoreData.facilityIdentifiers,
         supportingInformation: eStoreData.supportingInformation,
       });
 
@@ -134,19 +133,22 @@ export const createEstore = async (req: Request, res: Response) => {
 
       // add facilityIds to TermStore
       console.info('Step 1 started: Add facilityId to TermStore');
-      const termStoreResponse = await Promise.all(eStoreData.facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id?.toString() })));
-      console.log('termStoreResponse', termStoreResponse);
-      // create the Buyer folder
-      console.info('Step 2 started: Create the Buyer folder');
-      const buyerFolderResponse = await createBuyerFolder(eStoreData.siteName, { exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName });
-      if (buyerFolderResponse.status === 201 && buyerFolderResponse.statusText === ESTORE_SITE_STATUS.CREATED) {
-        console.info('Step 2 completed: Buyer folder was successfully created');
-        // add a new job to the deal folder manager that runs very 35 seconds
-        // in general, the folder creation should take between 20 to 30 seconds
-        eStoreCronJobManager.add(`D${eStoreData.dealIdentifier}`, folderCreationTimer, async () => {
-          await eStoreDealFolderCreationJob(eStoreData);
-        });
-        eStoreCronJobManager.start(`D${eStoreData.dealIdentifier}`);
+      const termStoreResponse: any = await Promise.all(eStoreData.facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id?.toString() })));
+      if (termStoreResponse[0].status === 201) {
+        console.info('Step 1 completed: FacilityId added to TermStore successfully');
+
+        console.info('Step 2 started: Create the Buyer folder');
+        // create the Buyer folder
+        const buyerFolderResponse = await createBuyerFolder(eStoreData.siteName, { exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName });
+        if (buyerFolderResponse.status === 201 && buyerFolderResponse.statusText === ESTORE_SITE_STATUS.CREATED) {
+          console.info('Step 2 completed: Buyer folder was successfully created');
+          // add a new job to the deal folder manager that runs very 35 seconds
+          // in general, the folder creation should take between 20 to 30 seconds
+          eStoreCronJobManager.add(`D${eStoreData.dealIdentifier}`, folderCreationTimer, async () => {
+            await eStoreDealFolderCreationJob(eStoreData);
+          });
+          eStoreCronJobManager.start(`D${eStoreData.dealIdentifier}`);
+        }
       }
     } else {
       // keep track of each new site creation jobs
@@ -160,7 +162,7 @@ export const createEstore = async (req: Request, res: Response) => {
         dealIdentifier: eStoreData.dealIdentifier,
         destinationMarket: eStoreData.destinationMarket,
         riskMarket: eStoreData.riskMarket,
-        facilityIdentifiers: eStoreData?.facilityIdentifiers,
+        facilityIdentifiers: eStoreData.facilityIdentifiers,
         supportingInformation: eStoreData.supportingInformation,
       });
 
