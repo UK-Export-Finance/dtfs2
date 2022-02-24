@@ -146,10 +146,11 @@ const importSingleDeal = async (dealId) =>
         return success;
       });
       return success;
+    } else {
+      console.error(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
+      log.addError(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
     }
 
-    console.error(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
-    log.addError(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
     return false;
   }));
 
