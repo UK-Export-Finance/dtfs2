@@ -27,12 +27,7 @@ describe('calculate-gef-facility-fee-record', () => {
         mockInterestPercentage,
       );
 
-      const fractionalCoverPercentage = `0.${mockCoverPercentage}`;
-      const valueAndCover = (mockFacilityValue * fractionalCoverPercentage);
-
-      const drawnAmount = (valueAndCover * mockInterestPercentage);
-
-      const expected = drawnAmount;
+      const expected = (mockFacilityValue * (mockCoverPercentage / 100) * 0.1);
 
       expect(result).toEqual(expected);
     });
@@ -71,11 +66,10 @@ describe('calculate-gef-facility-fee-record', () => {
         drawnAmount,
         daysOfCover,
         mockDayBasis,
+        mockInterestPercentage,
       );
 
-      const drawnAmountAndDays = (drawnAmount * daysOfCover);
-
-      const expected = (drawnAmountAndDays * daysOfCover * (0.1 / mockDayBasis));
+      const expected = ((drawnAmount * daysOfCover * (mockInterestPercentage / 100)) / mockDayBasis);
 
       expect(result).toEqual(expected);
     });
@@ -110,6 +104,7 @@ describe('calculate-gef-facility-fee-record', () => {
         drawnAmount,
         daysOfCover,
         mockFacility.dayCountBasis,
+        mockInterestPercentage,
       );
 
       expect(result).toEqual(expected);
