@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 dotenv.config();
 const username: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY;
 const password: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET;
