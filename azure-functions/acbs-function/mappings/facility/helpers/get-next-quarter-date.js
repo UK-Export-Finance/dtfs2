@@ -10,8 +10,8 @@ https://ukef-dtfs.atlassian.net/browse/DTFS2-3845
 const moment = require('moment');
 
 const getNextQuarterDate = (issuedDate) => {
-  let mmdd; let
-    year;
+  let mmdd;
+  let year;
 
   if (issuedDate) {
     mmdd = moment(issuedDate).format('MM-DD');
