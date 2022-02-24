@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { FACILITY_TYPE, PRODUCT_GROUP } from '../../constants';
 dotenv.config();
 
