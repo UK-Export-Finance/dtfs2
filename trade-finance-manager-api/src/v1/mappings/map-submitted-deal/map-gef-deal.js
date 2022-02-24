@@ -11,6 +11,7 @@ const mapGefDeal = (deal) => {
     submissionCount,
     submissionType,
     submissionDate,
+    manualInclusionNoticeSubmissionDate,
     status,
     ukefDealId,
     exporter,
@@ -28,6 +29,7 @@ const mapGefDeal = (deal) => {
     submissionCount,
     submissionType,
     submissionDate,
+    manualInclusionNoticeSubmissionDate,
     status,
     ukefDealId,
     exporter: {

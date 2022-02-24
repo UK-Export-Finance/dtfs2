@@ -3,6 +3,8 @@ import {
   getTemplateVariables,
   getDataAndTemplateVariables,
   allFacilities,
+  removeSingleAllFacilitiesFilter,
+  removeAllFacilitiesFilters,
 } from '.';
 import mockResponse from '../../../helpers/responseMock';
 import { getFlashSuccessMessage } from '../../../helpers';
@@ -12,6 +14,7 @@ import {
   submittedFiltersArray,
   submittedFiltersObject,
 } from '../filters/helpers';
+import { removeSessionFilter } from '../filters/remove-filter-from-session';
 import { facilitiesTemplateFilters as templateFilters } from './template-filters';
 import { selectedFilters } from './selected-filters';
 import CONSTANTS from '../../../constants';
@@ -53,7 +56,7 @@ describe('controllers/dashboard/facilities', () => {
       params: { page: 1 },
       body: {},
       session: {
-        dashboardFilters: CONSTANTS.DASHBOARD_FILTERS_DEFAULT,
+        dashboardFilters: CONSTANTS.DASHBOARD.DEFAULT_FILTERS,
         userToken: '1234',
         user: {
           _id: 'mock-user',
@@ -86,8 +89,8 @@ describe('controllers/dashboard/facilities', () => {
       );
 
       expect(api.allFacilities).toHaveBeenCalledWith(
-        20,
-        20,
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
         expectedFilters,
         'mock-token',
       );
@@ -128,7 +131,7 @@ describe('controllers/dashboard/facilities', () => {
       );
 
       const expectedPages = {
-        totalPages: Math.ceil(mockFacilities.length / 20),
+        totalPages: Math.ceil(mockFacilities.length / CONSTANTS.DASHBOARD.PAGE_SIZE),
         currentPage: parseInt(mockReq.params.page, 10),
         totalItems: mockFacilities.length,
       };
@@ -137,8 +140,8 @@ describe('controllers/dashboard/facilities', () => {
 
       const expected = {
         user: mockReq.session.user,
-        primaryNav: 'home',
-        tab: 'facilities',
+        primaryNav: CONSTANTS.DASHBOARD.PRIMARY_NAV,
+        tab: CONSTANTS.DASHBOARD.TABS.FACILITIES,
         facilities: mockFacilities,
         pages: expectedPages,
         filters: templateFilters(expectedFiltersObj),
@@ -208,6 +211,48 @@ describe('controllers/dashboard/facilities', () => {
         ...expectedVariables,
         successMessage: getFlashSuccessMessage(mockReq),
       });
+    });
+  });
+
+  describe('removeSingleAllFacilitiesFilter', () => {
+    it('should call removeSessionFilter and redirect to `/dashboard/facilities/0`', async () => {
+      mockReq = {
+        ...mockReq,
+        session: {
+          ...mockReq.session,
+          dashboardFilters: {
+            fieldA: ['valueA'],
+            fieldB: ['valueB1', 'valueB2'],
+          },
+        },
+        params: {
+          fieldName: 'fieldB',
+          fieldValue: 'valueB1',
+        },
+      };
+
+      await removeSingleAllFacilitiesFilter(mockReq, mockRes);
+
+      const expected = removeSessionFilter(mockReq);
+
+      expect(mockReq.session.dashboardFilters).toEqual(expected);
+      expect(mockRes.redirect).toHaveBeenCalledWith('/dashboard/facilities/0');
+    });
+  });
+
+  describe('removeAllDealsFilters', () => {
+    it('should reset all session filters and redirect to `/dashboard/facilities/0', async () => {
+      mockReq = {
+        ...mockReq,
+        session: {
+          ...mockReq.session,
+          dashboardFilters: { fieldA: ['valueA'] },
+        },
+      };
+
+      await removeAllFacilitiesFilters(mockReq, mockRes);
+
+      expect(mockReq.session.dashboardFilters).toEqual(CONSTANTS.DASHBOARD.DEFAULT_FILTERS);
     });
   });
 });

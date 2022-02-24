@@ -84,6 +84,11 @@ const MIA = {
         team: TEAMS.UNDERWRITING_SUPPORT,
       },
       {
+        title: MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
+        team: TEAMS.UNDERWRITING_SUPPORT,
+        isConditional: true,
+      },
+      {
         groupId: 1,
         title: MIA_GROUP_1_TASKS.CREATE_CREDIT_ANALYSIS_DOCUMENT,
         team: TEAMS.UNDERWRITING_SUPPORT,
@@ -92,11 +97,6 @@ const MIA = {
         groupId: 1,
         title: MIA_GROUP_1_TASKS.ASSIGN_AN_UNDERWRITER,
         team: TEAMS.UNDERWRITER_MANAGERS,
-      },
-      {
-        title: MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
-        team: TEAMS.UNDERWRITERS,
-        isConditional: true,
       },
     ],
   },

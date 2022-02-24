@@ -21,7 +21,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -34,7 +34,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: actions/checkout@v2
     - name: Commit hash
@@ -56,7 +56,7 @@ jobs:
     needs: build
     environment:
       name: APITEST
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     env:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
@@ -74,7 +74,7 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api dtfs/trade-finance-manager-api
     - name: Start Docker Compose
       run: |
-        docker-compose up -d trade-finance-manager-api
+        docker-compose -f docker-compose.gha.yml up -d trade-finance-manager-api
     - name: Run API tests
       run: |
         docker-compose exec -T trade-finance-manager-api npm run api-test
@@ -124,7 +124,7 @@ jobs:
     needs: build
     environment:
       name: E2ETEST
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
       AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
@@ -193,7 +193,7 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose up -d
+        docker-compose -f docker-compose.gha.yml up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
@@ -231,7 +231,7 @@ jobs:
     needs: [set-environment, test, test-submit-e2e]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - name: Log in to Dev container registry
       uses: azure/docker-login@v1
@@ -252,7 +252,7 @@ jobs:
     needs: [set-environment, promote]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: azure/login@v1
       with:

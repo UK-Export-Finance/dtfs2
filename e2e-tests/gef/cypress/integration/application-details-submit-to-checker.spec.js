@@ -98,7 +98,7 @@ context('Application Details Submission', () => {
     });
 
     it('it shows the latest comment with the firstname and lastname', () => {
-      applicationDetails.comments().contains(`Comments from (${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname})`);
+      applicationDetails.comments().contains(`Comments from ${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
       applicationDetails.comments().contains('test');
     });
 

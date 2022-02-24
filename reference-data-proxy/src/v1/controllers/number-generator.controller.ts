@@ -7,7 +7,7 @@
 // 3) Create a scheduled job to keep checking the Azure function status
 
 import axios from 'axios';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import * as durableFunctionsLogController from './durable-functions-log.controller';
 

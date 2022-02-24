@@ -60,7 +60,7 @@
 
   <div class="govuk-!-margin-top-3" data-cy="latest-comment">
     {% for comment in comments %}
-      <strong>Comments from {{ comment.role }} ({{ comment.firstname }} {{ comment.surname }})</strong>
+      <strong>Comments from {{ comment.firstname }} {{ comment.surname }}</strong>
       <p>{{ comment.createdAt | localiseTimestamp('DD MMM YYYY h:mma', timezone) }}</p>
       <p>{{ comment.comment | safe }}</p>
     {% endfor %}
