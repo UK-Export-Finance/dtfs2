@@ -12,4 +12,5 @@ export const ESTORE_CRON_TYPE = {
 export const ESTORE_CRON_STATUS = {
   RUNNING: 'Running',
   COMPLETED: 'Completed',
+  FAILED: 'Failed',
 };

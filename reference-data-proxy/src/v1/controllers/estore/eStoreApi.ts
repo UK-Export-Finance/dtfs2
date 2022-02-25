@@ -26,7 +26,7 @@ const postToEstore = async (
     data,
     timeout: 1000 * 50, // 20 seconds timeout to handle long timeouts
   }).catch((error: any) => {
-    console.error(`Error calling eStore API (/${apiEndpoint}): ${error?.response?.status} \n`, error);
+    console.error(`Error calling eStore API (/${apiEndpoint}): ${error?.response?.status} \n`, { error });
     return error.response.data;
   });
 
@@ -62,5 +62,6 @@ export const createFacilityFolder = async (siteName: string, dealIdentifier: str
 };
 
 export const uploadSupportingDocuments = async (siteName: string, dealIdentifier: string, buyerName: string, file: EstoreDealFiles) => {
-  await postToEstore(`site/${siteName}/deal/${dealIdentifier}/documents?buyerName=${buyerName}`, [file]);
+  const response = await postToEstore(`site/${siteName}/deal/${dealIdentifier}/documents?buyerName=${buyerName}`, [file]);
+  return response;
 };
