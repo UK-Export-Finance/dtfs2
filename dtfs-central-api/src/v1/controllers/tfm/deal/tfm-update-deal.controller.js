@@ -76,15 +76,21 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
    */
   if (tfmUpdateHasActivities) {
     if (Array.isArray(tfmUpdate.activities)) {
-      dealUpdate.tfm.activities = [
+      const updatedActivities = [
         ...tfmUpdate.activities,
         ...existingDealActivities,
       ];
+      // ensures that duplicate entries are not added to activities by comparing timestamp and label
+      dealUpdate.tfm.activities = updatedActivities.filter((value, index, arr) =>
+        arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
     } else {
-      dealUpdate.tfm.activities = [
+      const updatedActivities = [
         tfmUpdate.activities,
         ...existingDealActivities,
       ];
+      // ensures that duplicate entries are not added to activities by comparing timestamp and label
+      dealUpdate.tfm.activities = updatedActivities.filter((value, index, arr) =>
+        arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
     }
   }
 
