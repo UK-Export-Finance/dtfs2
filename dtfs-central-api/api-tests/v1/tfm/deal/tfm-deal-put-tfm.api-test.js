@@ -419,5 +419,98 @@ describe('/v1/tfm/deal/:id', () => {
       expect(secondCommentUpdate.deal.tfm.activities).toEqual([commentObj]);
       expect(secondCommentUpdate.deal.tfm.activities.length).toEqual(1);
     });
+
+    it('should not add duplicated activity objects when adding multiple duplicate activities with different labels', async () => {
+      const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const dealId = portalDeal._id;
+
+      await api.put({
+        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealId,
+      }).to('/v1/tfm/deals/submit');
+
+      const tfmObject = {
+        tfm: {
+          activities: [],
+        },
+      };
+
+      await api.put({ dealUpdate: tfmObject }).to(`/v1/tfm/deals/${dealId}`);
+
+      const MOCK_AUTHOR = {
+        firstName: 'tester',
+        lastName: 'smith',
+        _id: 12243343242342,
+      };
+
+      const commentOne = {
+        type: 'COMMENT',
+        timestamp: 13345665,
+        text: 'test1',
+        author: MOCK_AUTHOR,
+        label: 'Comment added',
+      };
+
+      const commentTwo = {
+        type: 'COMMENT',
+        timestamp: 13345668,
+        text: 'test1',
+        author: MOCK_AUTHOR,
+        label: 'Comment added',
+      };
+
+      const commentObj = [commentOne, commentTwo];
+
+      const singleCommentActivity = {
+        tfm: {
+          activities: commentObj,
+        },
+      };
+
+      await api.put({ dealUpdate: singleCommentActivity }).to(`/v1/tfm/deals/${dealId}`);
+
+      const { body: firstCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      expect(firstCommentUpdate.deal.tfm.activities).toEqual([commentOne, commentTwo]);
+
+      const commentThree = {
+        type: 'COMMENT',
+        timestamp: 13345445,
+        text: 'test1',
+        author: MOCK_AUTHOR,
+        label: 'Comment',
+      };
+
+      const commentFour = {
+        type: 'COMMENT',
+        timestamp: 13345445,
+        text: 'test1',
+        author: MOCK_AUTHOR,
+        label: 'Comment',
+      };
+
+      const commentFive = {
+        type: 'COMMENT',
+        timestamp: 13345566,
+        text: 'test1',
+        author: MOCK_AUTHOR,
+        label: 'Activity',
+      };
+
+      const secondCommentObj = [commentOne, commentTwo, commentThree, commentFour, commentFive];
+
+      const secondCommentActivity = {
+        tfm: {
+          activities: secondCommentObj,
+        },
+      };
+
+      await api.put({ dealUpdate: secondCommentActivity }).to(`/v1/tfm/deals/${dealId}`);
+
+      const { body: secondCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+
+      expect(secondCommentUpdate.deal.tfm.activities).toEqual([commentOne, commentTwo, commentFour, commentFive]);
+      expect(secondCommentUpdate.deal.tfm.activities.length).toEqual(4);
+    });
   });
 });
