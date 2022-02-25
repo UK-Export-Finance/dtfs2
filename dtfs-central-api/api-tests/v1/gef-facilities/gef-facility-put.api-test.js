@@ -34,7 +34,7 @@ describe('PUT updateGefFacilities', () => {
   it('returns 401 if facility does not exist', async () => {
     const { status, text } = await as().put({}).to(`${baseUrl}/6215fed9a216070012c365af`);
 
-    expect(status).toEqual(401);
+    expect(status).toEqual(404);
     expect(text).toEqual('The facility ID doesn\'t exist');
   });
 

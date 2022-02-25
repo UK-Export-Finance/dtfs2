@@ -42,5 +42,5 @@ exports.updateFacilityPut = async (req, res) => {
     return res.status(200).json(updatedFacility);
   }
 
-  return res.status(401).send('The facility ID doesn\'t exist');
+  return res.status(404).send('The facility ID doesn\'t exist');
 };
