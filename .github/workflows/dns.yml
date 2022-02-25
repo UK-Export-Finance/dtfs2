@@ -16,7 +16,7 @@ jobs:
 
   zone:
     name: Create service.gov.uk zone
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
 
     - uses: azure/login@v1
