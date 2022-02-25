@@ -1,9 +1,6 @@
 const wipeDB = require('../../wipeDB');
 const CONSTANTS = require('../../../src/constants');
 
-const facilitiesCollectionName = 'facilities';
-const dealsCollectionName = 'deals';
-
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 
@@ -31,8 +28,7 @@ describe('PUT updateGefFacilities', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await wipeDB.wipe(['facilities', 'deals']);
   });
 
   it('returns 404 if facility does not exist', async () => {
