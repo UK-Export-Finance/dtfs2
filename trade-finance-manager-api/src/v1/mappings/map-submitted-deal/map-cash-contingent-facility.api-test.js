@@ -87,6 +87,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         dayCountBasis,
         interestPercentage,
         shouldCoverStartOnSubmission,
+        hasBeenIssuedAndAcknowledged,
       } = mockFacility;
 
       const expected = {
@@ -111,6 +112,7 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         shouldCoverStartOnSubmission,
         facilityStage: mapFacilityStage(hasBeenIssued),
         tfm: mockFacility.tfm,
+        hasBeenIssuedAndAcknowledged,
       };
 
       expect(result).toEqual(expected);

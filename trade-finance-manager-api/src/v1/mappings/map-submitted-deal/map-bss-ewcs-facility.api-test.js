@@ -55,6 +55,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         name,
         disbursementAmount,
         facilityStage,
+        hasBeenIssuedAndAcknowledged,
       } = mockFacility;
 
       const expected = {
@@ -77,6 +78,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
         name,
         tfm: mockFacility.tfm,
+        hasBeenIssuedAndAcknowledged,
       };
 
       expect(result).toEqual(expected);

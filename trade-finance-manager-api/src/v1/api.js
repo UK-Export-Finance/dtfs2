@@ -254,6 +254,23 @@ const updateFacility = async (facilityId, facilityUpdate) => {
   }
 };
 
+const updateGefFacility = async (facilityId, facilityUpdate) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${centralApiUrl}/v1/portal/gef/facilities/${facilityId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: facilityUpdate,
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
 const queryDeals = async ({
   queryParams,
   start = 0,
@@ -676,6 +693,7 @@ module.exports = {
   findOneFacility,
   findFacilitesByDealId,
   updateFacility,
+  updateGefFacility,
   queryDeals,
   getPartyDbInfo,
   findUser,
