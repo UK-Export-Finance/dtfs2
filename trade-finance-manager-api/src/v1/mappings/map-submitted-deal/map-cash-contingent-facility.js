@@ -38,6 +38,7 @@ const mapCashContingentFacility = (facility) => {
     paymentType,
     feeFrequency,
     dayCountBasis,
+    hasBeenIssuedAndAcknowledged,
     tfm,
   } = facility;
 
@@ -58,6 +59,7 @@ const mapCashContingentFacility = (facility) => {
     feeType: mapGefFacilityFeeType(paymentType),
     feeFrequency,
     dayCountBasis,
+    hasBeenIssuedAndAcknowledged,
     tfm,
   };
 

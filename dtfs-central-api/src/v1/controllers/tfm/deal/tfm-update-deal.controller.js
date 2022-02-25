@@ -125,25 +125,30 @@ exports.updateDealPut = async (req, res) => {
 };
 
 const updateDealSnapshot = async (deal, snapshotChanges) => {
-  const collection = await db.getCollection('tfm-deals');
+  try {
+    const collection = await db.getCollection('tfm-deals');
 
-  const update = {
-    ...deal,
-    dealSnapshot: {
-      ...deal.dealSnapshot,
-      ...snapshotChanges,
-    },
-  };
+    const update = {
+      ...deal,
+      dealSnapshot: {
+        ...deal.dealSnapshot,
+        ...snapshotChanges,
+      },
+    };
 
-  const dealId = deal._id;
+    const dealId = deal._id;
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(dealId)) } },
-    $.flatten(withoutId(update)),
-    { returnOriginal: false, upsert: true },
-  );
+    const findAndUpdateResponse = await collection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(String(dealId)) } },
+      $.flatten(withoutId(update)),
+      { returnOriginal: false, upsert: true },
+    );
 
-  return findAndUpdateResponse.value;
+    return findAndUpdateResponse.value;
+  } catch (err) {
+    console.error('Error updating TFM dealSnapshot', { err });
+    return err;
+  }
 };
 
 exports.updateDealSnapshotPut = async (req, res) => {

@@ -16,6 +16,7 @@ const MOCK_PREMIUM_SCHEUDLE_RESPONSE = require('../../../src/v1/__mocks__/mock-p
 const { MOCK_FACILITIES } = require('../../../src/v1/__mocks__/mock-facilities');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-second-submit-MIA');
+const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
 const submitDeal = require('../utils/submitDeal');
 
@@ -46,6 +47,10 @@ jest.mock('../../../src/v1/controllers/deal.controller', () => ({
 }));
 
 const updateGefActivitySpy = jest.fn(() => Promise.resolve(MOCK_GEF_DEAL_MIN));
+
+const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(
+  facilityUpdate,
+));
 
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
@@ -89,6 +94,9 @@ describe('/v1/deals', () => {
 
     updateGefActivitySpy.mockClear();
     externalApis.updateGefMINActivity = updateGefActivitySpy;
+
+    updateGefFacilitySpy.mockClear();
+    externalApis.updateGefFacility = updateGefFacilitySpy;
 
     externalApis.updatePortalBssDealStatus = jest.fn();
     externalApis.updatePortalGefDealStatus = jest.fn();
@@ -167,7 +175,10 @@ describe('/v1/deals', () => {
 
           expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
             bondId,
-            { hasBeenAcknowledged: true },
+            {
+              hasBeenAcknowledged: true,
+              hasBeenIssuedAndAcknowledged: true,
+            },
           );
         });
 
@@ -177,6 +188,14 @@ describe('/v1/deals', () => {
           const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
           expect(updatedBond.hasBeenAcknowledged).toEqual(true);
+        });
+
+        it('should add bond.hasBeenIssuedAndAcknowledged', async () => {
+          const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+          const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+
+          expect(updatedBond.hasBeenIssuedAndAcknowledged).toEqual(true);
         });
       });
 
@@ -254,7 +273,10 @@ describe('/v1/deals', () => {
 
           expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
             loanId,
-            { hasBeenAcknowledged: true },
+            {
+              hasBeenAcknowledged: true,
+              hasBeenIssuedAndAcknowledged: true,
+            },
           );
         });
 
@@ -264,6 +286,14 @@ describe('/v1/deals', () => {
           const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
           expect(updatedLoan.hasBeenAcknowledged).toEqual(true);
+        });
+
+        it('should add loan.hasBeenAcknowledged', async () => {
+          const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
+
+          const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+
+          expect(updatedLoan.hasBeenIssuedAndAcknowledged).toEqual(true);
         });
       });
 
@@ -541,6 +571,19 @@ describe('/v1/deals', () => {
         expect(externalApis.getPremiumSchedule).not.toHaveBeenCalled();
       });
 
+      it('should call updateGefFacility', async () => {
+        const { body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
+
+        const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
+
+        expect(updateGefFacilitySpy).toHaveBeenCalledWith(
+          facilityId,
+          {
+            hasBeenIssuedAndAcknowledged: true,
+          },
+        );
+      });
+
       it('adds fee record to issued facilities', async () => {
         const { status, body } = await submitDeal(createSubmitBody(mockDeal));
 
@@ -565,8 +608,8 @@ describe('/v1/deals', () => {
         expect(unissuedFacility.tfm.feeRecord).toEqual(null);
       });
 
-      it('does NOT add fee record when deal is MIA', async () => {
-        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
+      it('does NOT add fee record when deal is MIA on 1st submission', async () => {
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIA));
 
         expect(status).toEqual(200);
 
@@ -574,6 +617,19 @@ describe('/v1/deals', () => {
           facility.hasBeenIssued);
 
         expect(issuedFacility.tfm.feeRecord).toBeUndefined();
+      });
+
+      it('does add fee record when deal is MIA on 2nd submission', async () => {
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
+
+        expect(status).toEqual(200);
+
+        const issuedFacility = body.facilities.find((facility) =>
+          facility.tfm);
+
+        const expected = calculateGefFacilityFeeRecord(issuedFacility);
+
+        expect(issuedFacility.tfm.feeRecord).toEqual(expected);
       });
 
       it('calls updateGefMINActivity when deal is MIA', async () => {

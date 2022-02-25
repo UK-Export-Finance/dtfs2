@@ -101,6 +101,16 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
   if (dealHasBeenResubmit) {
     const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
+
+    /**
+     * checks if can update to MIN
+     * if it can, changes mappedDeal to show MIN to allow gef fee record to be calculated
+     * isUpdatingToMIN then also used to update deal to MIN
+    */
+    const isUpdatingToMIN = shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal);
+    if (isUpdatingToMIN) {
+      mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
+    }
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
     /**
      * Current requirement only allows AIN & MIN deals to be send to ACBS
@@ -111,7 +121,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
-    if (shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal)) {
+    if (isUpdatingToMIN) {
       const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker);
 
       // NOTE: this is the one and only time that TFM updates a snapshot.

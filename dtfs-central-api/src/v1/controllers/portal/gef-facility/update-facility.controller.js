@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
-exports.updateFacility = async (id, updateBody) => {
+const updateFacility = async (id, updateBody) => {
   try {
     const facilitiesCollection = await db.getCollection('facilities');
     const dealsCollection = await db.getCollection('deals');
@@ -29,4 +29,18 @@ exports.updateFacility = async (id, updateBody) => {
     console.error('Unable to update the facility', { e });
     return e;
   }
+};
+exports.updateFacility = updateFacility;
+
+exports.updateFacilityPut = async (req, res) => {
+  const facilityId = req.params.id;
+  const facilityUpdate = req.body;
+
+  const updatedFacility = await updateFacility(facilityId, facilityUpdate);
+
+  if (updatedFacility) {
+    return res.status(200).json(updatedFacility);
+  }
+
+  return res.status(404).send({ status: 404, message: 'The facility ID doesn\'t exist' });
 };
