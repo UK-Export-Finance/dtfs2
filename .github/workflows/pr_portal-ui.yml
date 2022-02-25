@@ -16,7 +16,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -32,7 +32,7 @@ jobs:
     defaults:
       run:
         working-directory:  portal
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
@@ -94,7 +94,7 @@ jobs:
     needs: build
     environment:
       name: E2ETEST
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes

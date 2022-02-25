@@ -16,7 +16,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -29,7 +29,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: actions/checkout@v2
     - name: Commit hash
@@ -106,7 +106,7 @@ jobs:
     needs: build
     environment:
       name: APITEST
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
       AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
@@ -170,7 +170,7 @@ jobs:
     needs: build
     environment:
       name: E2ETEST
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes

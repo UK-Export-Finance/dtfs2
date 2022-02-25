@@ -21,7 +21,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -34,7 +34,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: actions/checkout@v2
     - name: Commit hash
@@ -56,7 +56,7 @@ jobs:
     needs: build
     environment:
       name: APITEST
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     env:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
@@ -124,7 +124,7 @@ jobs:
     needs: build
     environment:
       name: E2ETEST
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
       AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
@@ -231,7 +231,7 @@ jobs:
     needs: [set-environment, test, test-submit-e2e]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - name: Log in to Dev container registry
       uses: azure/docker-login@v1
@@ -252,7 +252,7 @@ jobs:
     needs: [set-environment, promote]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
