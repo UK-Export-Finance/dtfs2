@@ -68,7 +68,7 @@ class Facility {
         this.hasBeenIssued = Boolean(req.hasBeenIssued);
       }
 
-      if (req.hasBeenIssuedAndAcknowledged != null) {
+      if (req.hasBeenIssuedAndAcknowledged) {
         this.hasBeenIssuedAndAcknowledged = Boolean(req.hasBeenIssuedAndAcknowledged);
       }
 
