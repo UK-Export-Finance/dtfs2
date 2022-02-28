@@ -109,7 +109,7 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
     - name: Start Docker Compose
       run: |
-        docker-compose -f docker-compose.gha.yml up -d trade-finance-manager-api
+        docker-compose -f docker-compose.yml up -d trade-finance-manager-api
     - name: Run API tests
       run: |
         docker-compose exec -T trade-finance-manager-api npm run api-test
@@ -196,7 +196,7 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose -f docker-compose.gha.yml up -d
+        docker-compose -f docker-compose.yml up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
