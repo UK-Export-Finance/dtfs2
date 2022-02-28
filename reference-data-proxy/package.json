@@ -40,7 +40,7 @@
     "express": "4.17.2",
     "helmet": "^5.0.2",
     "joi": "^17.6.0",
-    "mongodb": "~4.0.0",
+    "mongodb": "4.0.0",
     "node-cron": "^3.0.0",
     "node-notifier": "^10.0.0",
     "notifications-node-client": "^5.1.1",
