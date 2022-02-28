@@ -44,7 +44,7 @@
     "helmet": "^5.0.2",
     "moment": "^2.29.1",
     "mongo-dot-notation": "2.0.0",
-    "mongodb": "4.0.0",
+    "mongodb": "~3.6.12",
     "node-notifier": "^10.0.1",
     "supertest": "6.2.2",
     "swagger-jsdoc": "^6.1.0",
