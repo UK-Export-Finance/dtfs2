@@ -7,7 +7,6 @@ const calculateDealSummary = require('../deal-summary');
 const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const api = require('../api');
 const getDealErrors = require('../validation/deal');
-const { createMultipleFacilities } = require('./facilities.controller');
 
 /**
  * Find a deal (BSS, EWCS only)
