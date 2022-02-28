@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getCollection } from '../../../database';
-import { Estore, TermStoreResponse, BuyerFolderResponse } from '../../../interfaces';
+import { Estore, TermStoreResponse, BuyerFolderResponse, SiteExistsResponse } from '../../../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_TYPE, ESTORE_CRON_STATUS, DEAL_TYPE } from '../../../constants';
 import { eStoreCronJobManager } from '../../../cronJobs';
 import {
@@ -129,35 +129,33 @@ const eStoreSiteCreationJob = async (exporterName: string) => {
   const cronJobLogsCollection = await getCollection('cron-job-logs');
 
   console.info('API Call (Cron Job): Checking if the site exists');
-  const response = await siteExists({ exporterName });
+  const siteExistsResponse: SiteExistsResponse = await siteExists({ exporterName });
 
   // check if the site has been created
-  if (response?.data?.status === ESTORE_SITE_STATUS.CREATED) {
-    console.info('Cron job: eStore Site has been created: ', response.data.siteName);
+  if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
+    console.info('Cron job: eStore Site has been created: ', siteExistsResponse.data.siteName);
     // stop and delete the cron job, to release the memory
-    eStoreCronJobManager.deleteJob(response.data.siteName);
+    eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteName);
     // update the record inside `cron-job-logs` collection to indicate that the cron job completed successfully
     const eStoreData = await cronJobLogsCollection.findOneAndUpdate(
-      { siteName: response.data.siteName, cronType: ESTORE_CRON_TYPE.SITE_CREATION },
+      { siteName: siteExistsResponse.data.siteName, cronType: ESTORE_CRON_TYPE.SITE_CREATION },
       { $set: { cronStatus: ESTORE_CRON_STATUS.COMPLETED, completionTimestamp: Date.now() } },
     );
-    eStoreData.siteName = response.data.siteName;
+    eStoreData.siteName = siteExistsResponse.data.siteName;
 
-    // keep track of each new deal folder creation jobs
-    // we do this by adding a new item inside the `cron-job-logs` collection
-    await cronJobLogsCollection.insertOne({
-      exporterName: eStoreData.exporterName,
-      siteName: eStoreData.siteName,
-      cronType: ESTORE_CRON_TYPE.DEAL_FOLDER_CREATION,
-      cronStatus: ESTORE_CRON_STATUS.RUNNING,
-      creationTimestamp: Date.now(),
-      buyerName: eStoreData.buyerName,
-      dealIdentifier: eStoreData.dealIdentifier,
-      destinationMarket: eStoreData.destinationMarket,
-      riskMarket: eStoreData.riskMarket,
-      facilityIdentifiers: eStoreData.facilityIdentifiers,
-      supportingInformation: eStoreData.supportingInformation,
-    });
+    // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
+    await cronJobLogsCollection.updateOne(
+      { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
+      {
+        $set: {
+          siteName: siteExistsResponse.data.siteName,
+          'siteCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
+          'siteCronJob.completionDate': Date.now(),
+          'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING,
+          'dealCronJob.startDate': Date.now(),
+        },
+      },
+    );
 
     // add a new job to the `Cron Job Manager` queue to create a Deal Folder
     eStoreCronJobManager.add(`D${eStoreData.dealIdentifier}`, folderCreationTimer, async () => {
@@ -165,17 +163,17 @@ const eStoreSiteCreationJob = async (exporterName: string) => {
     });
     console.info('Cron job started: Create the Deal folder');
     eStoreCronJobManager.start(`D${eStoreData.dealIdentifier}`);
-  } else if (response?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
+  } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
     console.info('Cron job continues: eStore Site Creation Cron Job continues to run');
   } else {
+    console.error(`API Call (Cron Job) failed: Unable to create a new site for ${exporterName}`, siteExistsResponse);
     // stop and delete the cron job - this to release the memory
-    eStoreCronJobManager.deleteJob(response.data.siteName);
+    eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteName);
     // update the record inside `cron-job-logs` collection
     await cronJobLogsCollection.findOneAndUpdate(
-      { siteName: response.data.siteName, cronType: ESTORE_CRON_TYPE.SITE_CREATION },
-      { $set: { cronStatus: ESTORE_CRON_STATUS.FAILED, completionTimestamp: Date.now() } },
+      { exporterName },
+      { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': Date.now() } },
     );
-    console.error(`API Call (Cron Job) failed: Unable to create a new site for ${exporterName}`, response);
   }
 };
 
