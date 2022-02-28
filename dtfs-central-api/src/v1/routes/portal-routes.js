@@ -28,6 +28,7 @@ const gefActivityController = require('../controllers/portal/gef-deal/add-min-ac
 
 const getGefFacilitiesController = require('../controllers/portal/gef-facility/get-facilities.controller');
 const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
+const updateGefFacilityController = require('../controllers/portal/gef-facility/update-facility.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions-controller');
 
@@ -790,6 +791,46 @@ portalRouter.route('/gef/facilities').post(createGefFacilityController.createFac
  *                $ref: '#/definitions/FacilityGEF'
  */
 portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFacilities);
+
+/**
+ * @openapi
+ * /gef/facilities/:id:
+ *   put:
+ *     summary: Update a Portal GEF facility
+ *     tags: [Portal - GEF]
+ *     description: Update a Portal GEF facility
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example: { aNewField: true }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/FacilityBSS'
+ *                 - type: object
+ *                   properties:
+ *                     aNewField:
+ *                       example: true
+ *       404:
+ *         description: Not found
+ */
+portalRouter.route('/gef/facilities/:id').put(
+  updateGefFacilityController.updateFacilityPut,
+);
 
 /**
  * @openapi
