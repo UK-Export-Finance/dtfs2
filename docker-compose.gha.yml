@@ -7,9 +7,6 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
-    volumes:
-      - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
-    user: "${UID}:${GID}"
     ports:
       - "27017-27019:27017-27019"
 
@@ -24,7 +21,6 @@ services:
       - "5005:5005"
     volumes:
       - ./dtfs-central-api/src:/app/src:ro
-    user: "${UID}:${GID}"
     environment:
       - PORT=5005
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
@@ -44,7 +40,6 @@ services:
       - ./trade-finance-manager-ui/server:/app/server:ro
       - ./trade-finance-manager-ui/public:/app/public:ro
       - ./trade-finance-manager-ui/templates:/app/templates:ro
-    user: "${UID}:${GID}"
     environment:
       - PORT=5003
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
@@ -65,7 +60,6 @@ services:
       - "5004:5004"
     volumes:
       - ./trade-finance-manager-api/src:/app/src:ro
-    user: "${UID}:${GID}"
     environment:
       - PORT=5004
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
@@ -93,7 +87,6 @@ services:
       - ./portal/server:/app/server:ro
       - ./portal/public:/app/public:ro
       - ./portal/templates:/app/templates:ro
-    user: "${UID}:${GID}"
     deploy:
       resources:
         limits:
@@ -119,7 +112,6 @@ services:
       - "5001:5001"
     volumes:
       - ./portal-api/src:/app/src:ro
-    user: "${UID}:${GID}"
     environment:
       - PORT=5001
       - CORS_ORIGIN=http://localhost:5000
@@ -158,7 +150,6 @@ services:
       - "5002:5002"
     volumes:
       - ./reference-data-proxy/src:/app/src:ro
-    user: "${UID}:${GID}"
     environment:
       - PORT=5002
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -204,7 +195,6 @@ services:
       - ./gef-ui/server:/app/server:ro
       - ./gef-ui/public:/app/public:ro
       - ./gef-ui/templates:/app/templates:ro
-    user: "${UID}:${GID}"
     deploy:
       resources:
         limits:
