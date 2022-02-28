@@ -1,6 +1,21 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { Estore, EstoreSite, EstoreBuyer, EstoreDealFolder, EstoreFacilityFolder, EstoreDealFiles, EstoreTermStore } from '../../../interfaces';
+import {
+  Estore,
+  EstoreSite,
+  EstoreBuyer,
+  EstoreDealFolder,
+  EstoreFacilityFolder,
+  EstoreDealFiles,
+  EstoreTermStore,
+  SiteCreationResponse,
+  SiteExistsResponse,
+  BuyerFolderResponse,
+  DealFolderResponse,
+  FacilityFolderResponse,
+  UploadDocumentsResponse,
+  TermStoreResponse,
+} from '../../../interfaces';
 
 dotenv.config();
 const eStoreUrl: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_URL;
@@ -12,10 +27,6 @@ const postToEstore = async (
   apiEndpoint: string,
   data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
 ) => {
-  if (!eStoreUrl) {
-    return false;
-  }
-
   console.info('Calling eStore endpoint ', apiEndpoint, data);
 
   const response = await axios({
@@ -26,42 +37,47 @@ const postToEstore = async (
     data,
     timeout: 1000 * 50, // 20 seconds timeout to handle long timeouts
   }).catch((error: any) => {
-    console.error(`Error calling eStore API (/${apiEndpoint}): ${error?.response?.status} \n`, { error });
-    return error.response.data;
+    console.error(`Error calling eStore API (/${apiEndpoint}): ${error?.response?.status} \n`, error.response.data);
+    return { data: error?.response?.data, status: error?.response?.status };
   });
 
-  return response;
+  return { data: response.data, status: response.status };
 };
 
-export const siteExists = async (exporterName: EstoreSite) => {
+export const siteExists = async (exporterName: EstoreSite): Promise<SiteExistsResponse> => {
   const response = await postToEstore(`site/exist`, [exporterName]);
   return response;
 };
 
-export const createExporterSite = async (exporterName: EstoreSite) => {
+export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse> => {
   const response = await postToEstore('site', [exporterName]);
   return response;
 };
 
-export const addFacilityToTermStore = async (facilityId: EstoreTermStore) => {
+export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse> => {
   const response = await postToEstore(`term/facility`, facilityId);
   return response;
 };
 
-export const createBuyerFolder = async (siteName: string, buyerName: EstoreBuyer) => {
+export const createBuyerFolder = async (siteName: string, buyerName: EstoreBuyer): Promise<BuyerFolderResponse> => {
   const response = await postToEstore(`site/${siteName}/buyer`, [buyerName]);
   return response;
 };
-export const createDealFolder = async (siteName: string, data: EstoreDealFolder) => {
+export const createDealFolder = async (siteName: string, data: EstoreDealFolder): Promise<DealFolderResponse> => {
   const response = await postToEstore(`site/${siteName}/deal`, [data]);
   return response;
 };
-export const createFacilityFolder = async (siteName: string, dealIdentifier: string, data: EstoreFacilityFolder) => {
+export const createFacilityFolder = async (siteName: string, dealIdentifier: string, data: EstoreFacilityFolder): Promise<FacilityFolderResponse> => {
   const response = await postToEstore(`site/${siteName}/deal/${dealIdentifier}/facility`, [data]);
   return response;
 };
 
-export const uploadSupportingDocuments = async (siteName: string, dealIdentifier: string, buyerName: string, file: EstoreDealFiles) => {
+export const uploadSupportingDocuments = async (
+  siteName: string,
+  dealIdentifier: string,
+  buyerName: string,
+  file: EstoreDealFiles,
+): Promise<UploadDocumentsResponse> => {
   const response = await postToEstore(`site/${siteName}/deal/${dealIdentifier}/documents?buyerName=${buyerName}`, [file]);
   return response;
 };
