@@ -21,6 +21,7 @@ services:
       - "5005:5005"
     volumes:
       - ./dtfs-central-api/src:/app/src:ro
+    user: "${UID}:${GID}"
     # deploy:
     #   resources:
     #     limits:
@@ -45,6 +46,7 @@ services:
       - ./trade-finance-manager-ui/server:/app/server:ro
       - ./trade-finance-manager-ui/public:/app/public:ro
       - ./trade-finance-manager-ui/templates:/app/templates:ro
+    user: "${UID}:${GID}"
     # deploy:
     #   resources:
     #     limits:
@@ -70,6 +72,7 @@ services:
       - "5004:5004"
     volumes:
       - ./trade-finance-manager-api/src:/app/src:ro
+    user: "${UID}:${GID}"
     environment:
       - PORT=5004
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
@@ -102,6 +105,7 @@ services:
       - ./portal/server:/app/server:ro
       - ./portal/public:/app/public:ro
       - ./portal/templates:/app/templates:ro
+    user: "${UID}:${GID}"
     deploy:
       resources:
         limits:
@@ -127,6 +131,7 @@ services:
       - "5001:5001"
     volumes:
       - ./portal-api/src:/app/src:ro
+    user: "${UID}:${GID}"
     # deploy:
     #   resources:
     #     limits:
@@ -170,6 +175,7 @@ services:
       - "5002:5002"
     volumes:
       - ./reference-data-proxy/src:/app/src:ro
+    user: "${UID}:${GID}"
     # deploy:
     #   resources:
     #     limits:
@@ -220,6 +226,7 @@ services:
       - ./gef-ui/server:/app/server:ro
       - ./gef-ui/public:/app/public:ro
       - ./gef-ui/templates:/app/templates:ro
+    user: "${UID}:${GID}"
     deploy:
       resources:
         limits:
