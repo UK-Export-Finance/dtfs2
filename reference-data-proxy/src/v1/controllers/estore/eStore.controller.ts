@@ -59,7 +59,7 @@ const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       uploadDocuments.catch((e) => console.error('Task failed: There was a problem uploading the documents', { e }));
     } else {
       // stop and delete the cron job - this to release the memory
-      eStoreCronJobManager.deleteJob(`F${eStoreData.dealIdentifier}`);
+      eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealIdentifier}`);
       console.error(`Unable to create the Facility Folders for ${eStoreData.dealIdentifier} deal`, facilityFoldersResponse);
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.findOneAndUpdate(
@@ -69,7 +69,7 @@ const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
     }
   } else {
     // stop and delete the cron job - this to release the memory
-    eStoreCronJobManager.deleteJob(`F${eStoreData.dealIdentifier}`);
+    eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealIdentifier}`);
     console.error(
       `Unable to create the Facility Folders for ${eStoreData.dealIdentifier} deal. The current deal does not have any facility identifiers`,
       eStoreData?.facilityIdentifiers,
@@ -116,13 +116,12 @@ const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
   } else {
     console.error(`API Call failed: Unable to create a Deal Folder for ${eStoreData.dealIdentifier}`, { dealFolderResponse });
     // stop and delete the cron job - this to release the memory
-    eStoreCronJobManager.deleteJob(`D${eStoreData.dealIdentifier}`);
+    eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealIdentifier}`);
     // update the record inside `cron-job-logs` collection to indicate that the cron job failed
     await cronJobLogsCollection.findOneAndUpdate(
       { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
       { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.completionDate': Date.now() } },
     );
-    sendEmail();
   }
 };
 
@@ -159,11 +158,11 @@ const eStoreSiteCreationJob = async (exporterName: string) => {
     );
 
     // add a new job to the `Cron Job Manager` queue to create a Deal Folder
-    eStoreCronJobManager.add(`D${eStoreData.dealIdentifier}`, folderCreationTimer, async () => {
+    eStoreCronJobManager.add(`Deal${eStoreData.dealIdentifier}`, folderCreationTimer, async () => {
       await eStoreDealFolderCreationJob(eStoreData);
     });
     console.info('Cron job started: Create the Deal folder');
-    eStoreCronJobManager.start(`D${eStoreData.dealIdentifier}`);
+    eStoreCronJobManager.start(`Deal${eStoreData.dealIdentifier}`);
   } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
     console.info('Cron job continues: eStore Site Creation Cron Job continues to run');
   } else {
@@ -234,7 +233,7 @@ export const createEstore = async (req: Request, res: Response) => {
           console.info(`API Call finished: The Buyer folder for ${eStoreData.buyerName} was successfully created`);
           // add a new job to the `Cron Job manager` queue that runes every 35 seconds
           // in general, the folder creation should take between 20 to 30 seconds
-          eStoreCronJobManager.add(`D${eStoreData.dealIdentifier}`, folderCreationTimer, async () => {
+          eStoreCronJobManager.add(`Deal${eStoreData.dealIdentifier}`, folderCreationTimer, async () => {
             await eStoreDealFolderCreationJob(eStoreData);
           });
           // update the database to indicate that the deal cron job started
@@ -243,7 +242,7 @@ export const createEstore = async (req: Request, res: Response) => {
             { $set: { 'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'dealCronJob.startDate': Date.now() } },
           );
           console.info('Cron job started: eStore Deal folder Cron Job started');
-          eStoreCronJobManager.start(`D${eStoreData.dealIdentifier}`);
+          eStoreCronJobManager.start(`Deal${eStoreData.dealIdentifier}`);
         } else {
           console.error(`API Call failed: Unable to create the buyer folder for ${eStoreData.buyerName}`, buyerFolderResponse);
           // update the database to indicate that there was an issue creating the buyer Folder
