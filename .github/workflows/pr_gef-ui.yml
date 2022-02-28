@@ -17,7 +17,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -33,7 +33,7 @@ jobs:
     defaults:
       run:
         working-directory:  gef-ui
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
@@ -106,7 +106,7 @@ jobs:
     needs: build
     environment:
       name: E2ETEST
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
@@ -114,7 +114,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        machines: [ 1 ]
+        machines: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
       AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}

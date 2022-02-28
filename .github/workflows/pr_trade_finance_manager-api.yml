@@ -21,7 +21,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -34,7 +34,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Commit hash
@@ -89,7 +89,7 @@ jobs:
     needs: build
     environment:
       name: APITEST
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     env:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
@@ -127,7 +127,7 @@ jobs:
     needs: build
     environment:
       name: E2ETEST
-    runs-on: [[self-hosted, linux], linux]
+    runs-on: [ubuntu-latest, linux]
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
       AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
