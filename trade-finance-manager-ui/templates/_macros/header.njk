@@ -2,55 +2,42 @@
 
 {% macro render(params) %}
 
-  {% if params.user %}
+<header class="moj-header" role="banner">
 
-    {{ mojHeader({
-      organisationLabel: {
-        text: 'UK Export Finance',
-        href: '#'
-      },
-      serviceLabel: {
-        text: 'Trade Finance Manager',
-        href: '#'
-      },
-      navigation: {
-        label: 'Account navigation',
-        items: [
-          {
-            text: params.user.firstName + ' ' + params.user.lastName,
-            href: '#',
-            attributes: {
-              'data-cy': 'header-user-link'
-            }
-          },
-          {
-            text: 'Sign out',
-            href: '/logout',
-            attributes: {
-              'data-cy': 'header-sign-out-link'
-            }
-          }
-        ]
-      }
-    }) }}
+  <div class="moj-header__container">
 
-  {% else %}
+    <div class="moj-header__logo header-link">
 
-    {{ mojHeader({
-      organisationLabel: {
-        text: 'UK Export Finance',
-        href: '#'
-      },
-      serviceLabel: {
-        text: 'Trade Finance Manager',
-        href: '#'
-      }
-    }) }}
+      <img src="/assets/images/UK-Export-Finance-logo.svg" class="moj-header__logotype-crest-fallback-image ukef-header-logo" height="59" width="47">
+      <a class="moj-header__link moj-header__link--organisation-name" href="#"></a>
 
-  {% endif %}
+      <a class="moj-header__link moj-header__link--service-name" href="#">Trade Finance Manager</a>
+    </div>
 
+    {% if params.user %}
 
-  {% include "_partials/primary-navigation.njk" %}
+      <div class="moj-header__content">
 
+        <nav class="moj-header__navigation" aria-label="Account navigation">
+
+          <ul class="moj-header__navigation-list header-right">
+            <li class="moj-header__navigation-item">
+              <a class="moj-header__navigation-link" href="#" aria-current="page" data-cy="header-user-link">{{params.user.firstName + ' ' + params.user.lastName}}</a>
+            </li>
+
+            <li class="moj-header__navigation-item">
+              <a class="moj-header__navigation-link" href="/logout" data-cy="header-sign-out-link">Sign out</a>
+            </li>
+          </ul>
+
+        </nav>
+
+      </div>
+
+    {% endif %}
+
+  </div>
+
+</header>
 
 {% endmacro %}

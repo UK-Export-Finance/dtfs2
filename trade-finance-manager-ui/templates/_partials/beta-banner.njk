@@ -1,0 +1,13 @@
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+
+<div class="moj-header__container">
+  {{ govukPhaseBanner({
+    tag: {
+      text: "beta"
+    },
+    attributes: {
+      "data-cy": "beta-banner"
+    },
+    html: 'This is a new service – your <a class="govuk-link" data-cy="beta-feedback-link" href="#">feedback</a> will help us to improve it.'
+  }) }}
+</div>
