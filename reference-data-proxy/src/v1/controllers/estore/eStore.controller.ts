@@ -227,7 +227,6 @@ const eStoreSiteCreationJob = async (eStoreData: any) => {
 
 export const createEstore = async (req: Request, res: Response) => {
   const eStoreData = req.body;
-  console.log('🚀 ~ file: eStore.controller.ts ~ line 198 ~ createEstore ~ eStoreData', eStoreData);
 
   // check if the body is not empty
   if (Object.keys(eStoreData).length) {
