@@ -1,0 +1,178 @@
+{
+    "drupal_id": 42832,
+    "type": {
+        "target_id": "ukef_tf_product_gef",
+        "target_type": "node_type"
+    },
+    "bank_deal_name": "23568 Accepted without",
+    "owner": {
+        "target_id": 652,
+        "target_type": "user",
+        "url": "\/user\/652",
+        "bank": "UKEF test bank (Delegated)",
+        "email": "maker1@ukexportfinance.gov.uk"
+    },
+    "created": "2020-10-02T07:49:41",
+    "changed": "2020-10-02T07:53:28",
+    "field_all_csv_s_downloaded_at": [],
+    "field_api_acbs_bank_party_id": [],
+    "field_api_acbs_deal_start_date": [],
+    "field_api_acbs_exporter_party_id": [],
+    "field_bank_deal_id": "23568 Accepted without",
+    "field_date_of_mia_approval": "2020-10-01T23:00:00",
+    "field_deal_status": "approved",
+    "field_deal_value_calculated": [],
+    "field_export_status": [],
+    "field_exporter_ukef_party_urn": [],
+    "field_i_agree_with_conditions": false,
+    "field_i_agree_with_special_cond": false,
+    "field_initial_checker": {
+        "target_id": 748,
+        "target_type": "user",
+        "url": "\/user\/748",
+        "bank": "UKEF test bank (Delegated)",
+        "email": "checker1@ukexportfinance.gov.uk"
+    },
+    "field_makers": {
+        "target_id": 652,
+        "target_type": "user",
+        "url": "\/user\/652",
+        "bank": "UKEF test bank (Delegated)",
+        "email": "maker1@ukexportfinance.gov.uk"
+    },
+    "field_min_checker": [],
+    "field_min_checker_date": [],
+    "field_min_maker": [],
+    "field_min_maker_date": [],
+    "field_previous_deal_status": "in_progress_by_ukef",
+    "field_special_conditions": [],
+    "field_submission_date": "2020-10-02T06:50:52",
+    "field_submission_type": "atp",
+    "field_ukef_deal_id": "4234242342",
+    "children": {
+        "general_info": {
+            "companies_house_registration": "",
+            "exporter_address_composite": {
+                "address": "Address line 1",
+                "address_2": "",
+                "address_3": "",
+                "city": "",
+                "country": "GBR",
+                "postal_code": "SF8 7GD"
+            },
+            "exporter_is_the_correspondence_address_different": "No",
+            "exporter_name": "Exporter name",
+            "financing_increasing": "False",
+            "industry_class": {
+                "readable_value": "Accounting and auditing activities",
+                "system_value": "69201"
+            },
+            "industry_sector": {
+                "readable_value": "Professional, scientific and technical activities",
+                "system_value": "1012"
+            },
+            "probability_of_default": "14",
+            "sme_type": {
+                "system_value": "2",
+                "readable_value": "Small"
+            }
+        },
+        "eligiblity": {
+            "ec_facility_base_currency_18": {
+                "answer": true,
+                "question_label": "Eligibility criterion 18",
+                "question_text": "Facility Base Currency satisfies the following conditions: is denominated in an Approved Payment Currency."
+            },
+            "ec_facility_letter_19": {
+                "answer": true,
+                "question_label": "Eligibility criterion 19",
+                "question_text": "Facility Letter satisfies the following conditions: in relation to which, any upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee, is denominated in an Approved Payment Currency."
+            },
+            "ec_requested_cover_start_date": {
+                "answer": true,
+                "question_label": "Eligibility criterion 16",
+                "question_text": "The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence internally to any Relevant Person for approval as part of its usual Bank Due Diligence."
+            },
+            "file_1": [
+                {
+                    "target_id": "29126",
+                    "target_type": "file",
+                    "url": "private:\/\/webform\/ukef_tf_product_gef_elig\/42909\/File One.docx"
+                }
+            ],
+            "question_1": {
+                "answer": true,
+                "question_label": "Eligibility criterion 12",
+                "question_text": "The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period."
+            },
+            "question_2": {
+                "answer": false,
+                "question_label": "Eligibility criterion 13",
+                "question_text": "The period between the Inclusion Notice Date and the Requested Cover Start Date does not exceed three Months (or such longer period as may be agreed by UK Export Finance)."
+            },
+            "question_3": {
+                "answer": true,
+                "question_label": "Eligibility criterion 14",
+                "question_text": "The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency) of the Facility is not more than the lesser of:<br \/>\n(i) &nbsp;&nbsp; &nbsp;the Available Master Guarantee Limit; and<br \/>\n(ii) &nbsp;&nbsp; &nbsp;the Available Obligor(s) Limit.\n"
+            },
+            "question_4": {
+                "answer": true,
+                "question_label": "Eligibility criterion 15",
+                "question_text": "The Bank has received an Exporter Declaration which confirms that the Exporter is not involved with any of the following industry sectors: sharp arms defence, nuclear radiological, biological, human cloning, pornography, gambling, tobacco, coal, oil, gas or fossil fuel energy and the Bank Team is not aware that any information contained in that Exporter Declaration is inaccurate in any material respect."
+            },
+            "question_5": {
+                "answer": true,
+                "question_label": "Eligibility criterion 17",
+                "question_text": "Facility Letter satisfies the following conditions: in relation to which, any upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee:<br \/>\n(i)&nbsp;&nbsp; &nbsp;has been set in accordance with the Bank&#39;s normal pricing policies consistently applied; &nbsp;<br \/>\n(ii)&nbsp;&nbsp; &nbsp;has been set in accordance with the overall minimum pricing requirements, if any, most recently notified by UK Export Finance to the Bank;&nbsp;<br \/>\n(iii) &nbsp;&nbsp; &nbsp;(where the Covered Facility Limit in relation to the Facility is more than the Available Obligor(s) Limit) has been set in accordance with the overall pricing requirements, if any, most recently notified by UK Export Finance to the Bank for the relevant Obligor(s); and<br \/>\n(iv)&nbsp;&nbsp; &nbsp;(in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee cover the whole Cover Period of the Covered Facility.\n"
+            },
+            "security": "",
+            "system_red_line_revision_id": "34",
+            "system_revision_id": ""
+        },
+        "facilities": [
+            {
+                "drupal_facility_id": "42910",
+                "facility_type": "CONTINGENT",
+                "amount": "100000.00",
+                "bank_facility_number": "",
+                "commitment_date": "",
+                "currency": "GBP",
+                "day_basis": {
+                    "system_value": "2",
+                    "readable_value": "365"
+                },
+                "exposure_period": "24",
+                "facility_stage": {
+                    "system_value": "2",
+                    "readable_value": "Unissued"
+                },
+                "facility_characteristics": [
+                    {
+                        "system_value": "4",
+                        "readable_value": "a facility provided on an uncommitted basis"
+                    }
+                ],
+                "guarantee_": "80",
+                "guarantee_expiry_date": "",
+                "guarantee_fee_": "1.8000",
+                "interest_rate": "2",
+                "issue_date": "",
+                "maximum_liability": "80000.00",
+                "minimum_quarterly_fee": "0.00",
+                "premium_frequency": "",
+                "premium_type": {
+                    "system_value": "3",
+                    "readable_value": "At maturity"
+                },
+                "stage_issued_acknowledged": "",
+                "stage_issued_acknowledged_date": "",
+                "system_change_requested_cover_start_date": "",
+                "system_commitment_date_new": "",
+                "system_commitment_date_old": "",
+                "system_commitment_to_issued_date": "",
+                "system_commitment_to_issued_user": "",
+                "ukef_facility_id": "6356464654"
+            }
+        ]
+    }
+}
