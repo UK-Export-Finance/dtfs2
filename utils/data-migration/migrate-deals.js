@@ -2,6 +2,7 @@ const xml2js = require('xml2js');
 const fileshare = require('./helpers/fileshare');
 require('dotenv').config();
 const {
+  mapDealRoot,
   mapDetails,
   mapEligibility,
   mapSubmissionDetails,
@@ -10,6 +11,7 @@ const {
   mapLoanTransactions,
   mapComments,
   mapMandatoryCriteria,
+  mapExporter,
 } = require('./maps');
 const { initBanks } = require('./helpers/banks');
 const { initUsers } = require('./helpers/users');
@@ -59,7 +61,8 @@ const teardown = async () => {
 const convertHtmlEntities = (value) => entities.decode(value);
 
 const mapV2 = async (portalDealId, v1Deal) => {
-  const [details, detailsError] = mapDetails(portalDealId, v1Deal);
+  const [dealRoot, dealRootError] = mapDealRoot(portalDealId, v1Deal);
+  const [details, detailsError] = mapDetails(portalDealId, v1Deal, dealRoot.submissionType);
   const [eligibility, eligibilityError] = mapEligibility(portalDealId, v1Deal);
   const [submissionDetails, submissionDetailsError] = mapSubmissionDetails(portalDealId, v1Deal);
   const [dealFiles, dealFilesError] = await mapDealFiles(portalDealId, v1Deal);
@@ -67,27 +70,24 @@ const mapV2 = async (portalDealId, v1Deal) => {
   const [loanTransactions, loanTransactionsError] = mapLoanTransactions(portalDealId, v1Deal);
   const comments = mapComments(v1Deal);
   const mandatoryCriteria = mapMandatoryCriteria(v1Deal);
+  const exporter = mapExporter(v1Deal);
 
   if (
-    detailsError
+    dealRootError
+    || detailsError
     || eligibilityError
     || submissionDetailsError
     || dealFilesError
     || bondTransactionsError
     || loanTransactionsError
   ) {
+    console.error(portalDealId, `Error mapping v1 ${portalDealId} to v2.`);
+    log.addError(portalDealId, `Error mapping v1 ${portalDealId} to v2.`);
     return false;
   }
 
   const mappedV2 = {
-    dataMigrationInfo: {
-      v1_ID: portalDealId,
-    },
-    _id: portalDealId,
-    bank: v1Deal.Application_bank,
-    updatedAt: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_updated),
-    bankInternalRefName: v1Deal.General_information.Bank_deal_id,
-    additionalRefName: v1Deal.General_information.Deal_name,
+    ...dealRoot,
     details,
     eligibility,
     submissionDetails,
@@ -97,6 +97,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
     ...comments,
     editedBy: [],
     mandatoryCriteria,
+    exporter,
   };
 
   return mappedV2;
@@ -145,7 +146,11 @@ const importSingleDeal = async (dealId) =>
         return success;
       });
       return success;
+    } else {
+      console.error(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
+      log.addError(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
     }
+
     return false;
   }));
 
