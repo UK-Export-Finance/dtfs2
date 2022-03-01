@@ -19,10 +19,55 @@ const updateFacilities = async (deal) => {
 
   modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
     const facility = f;
-    const { _id: facilityId } = facility;
+
+    const {
+      _id: facilityId,
+      hasBeenIssued,
+    } = facility;
+
     let facilityUpdate;
     let facilityPremiumSchedule;
     let feeRecord;
+
+    /**
+     * If facility hasBeenIssued
+     * Check if gef or bss
+     * Adds hasBeenIssuedAndAcknowledged and/or hasBeenAcknowledged parameter
+     * Updates the facility collection with flags and tfm facilities collection
+    */
+    if (hasBeenIssued) {
+      const portalFacilityUpdate = {
+        hasBeenIssuedAndAcknowledged: true,
+      };
+
+      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+        // only changes flag if AIN or MIA
+        if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+          // updates GEF facility collection
+          const updatedPortalFacility = await api.updateGefFacility(facilityId, portalFacilityUpdate);
+
+          facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+        }
+      } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+        const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
+
+        await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
+
+        portalFacilityUpdate.hasBeenAcknowledged = true;
+
+        // updates BSS facility collection
+        const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
+
+        facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
+        facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
+        facility.status = facilityStatusUpdate;
+      }
+
+      facilityUpdate = {
+        ...facilityUpdate,
+        ...portalFacilityUpdate,
+      };
+    }
 
     const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
     const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
@@ -43,6 +88,7 @@ const updateFacilities = async (deal) => {
       if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
         feeRecord = calculateGefFacilityFeeRecord(facility);
         facilityUpdate = {
+          ...facilityUpdate,
           feeRecord,
         };
       }

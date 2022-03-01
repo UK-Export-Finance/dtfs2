@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 
 const checkType = (type) => {
   if (type) {
@@ -18,7 +18,7 @@ class Facility {
   constructor(req) {
     if (req.dealId) {
       // new facility
-      this.dealId = req.dealId ? new ObjectID(req.dealId) : null;
+      this.dealId = req.dealId ? ObjectId(req.dealId) : null;
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
       if (req.hasBeenIssued != null) {
@@ -47,6 +47,10 @@ class Facility {
       this.feeFrequency = null;
       this.dayCountBasis = null;
       this.coverDateConfirmed = null;
+      this.hasBeenIssuedAndAcknowledged = null;
+      if (req.hasBeenIssuedAndAcknowledged != null) {
+        this.hasBeenIssuedAndAcknowledged = Boolean(req.hasBeenIssuedAndAcknowledged);
+      }
       /**
        * canResubmitIssuedFacilities used temporarily once unissued facility changed to issued after first UKEF submission
        * used to populate change links on facility table and show which facilities changed to issued
@@ -62,6 +66,10 @@ class Facility {
       // update facility
       if (req.hasBeenIssued != null) {
         this.hasBeenIssued = Boolean(req.hasBeenIssued);
+      }
+
+      if (req.hasBeenIssuedAndAcknowledged) {
+        this.hasBeenIssuedAndAcknowledged = Boolean(req.hasBeenIssuedAndAcknowledged);
       }
 
       if (req.name != null) {

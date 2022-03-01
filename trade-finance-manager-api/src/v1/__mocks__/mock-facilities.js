@@ -70,6 +70,7 @@ const MOCK_FACILITIES = [
     },
     feeType: 'At maturity',
     feeFrequency: '12',
+    hasBeenIssuedAndAcknowledged: true,
   },
   {
     _id: 'MOCK_DEAL_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED_BOND',
