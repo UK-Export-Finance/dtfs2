@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 
 const db = require('../../../drivers/db-client');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');
@@ -24,7 +24,7 @@ exports.findMandatoryCriteria = findMandatoryCriteria;
 
 const findOneMandatoryCriteria = async (id, callback) => {
   const collection = await db.getCollection(collectionName);
-  collection.findOne({ _id: new ObjectID(String(id)) }, (err, result) => {
+  collection.findOne({ _id: ObjectId(String(id)) }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
@@ -71,7 +71,7 @@ exports.update = async (req, res) => {
   const update = req.body;
   update.updatedAt = Date.now();
   const response = await collection.findOneAndUpdate(
-    { _id: ObjectID(req.params.id) },
+    { _id: ObjectId(req.params.id) },
     { $set: update },
     { returnOriginal: false },
   );
@@ -81,7 +81,7 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndDelete({ _id: new ObjectID(String(req.params.id)) });
+  const response = await collection.findOneAndDelete({ _id: ObjectId(String(req.params.id)) });
 
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

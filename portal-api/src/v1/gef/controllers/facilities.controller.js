@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const {
@@ -24,7 +24,7 @@ exports.create = async (req, res) => {
       const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
 
       const facility = await facilitiesQuery.findOne({
-        _id: ObjectID(createdFacility.insertedId),
+        _id: ObjectId(createdFacility.insertedId),
       });
 
       const response = {
@@ -44,7 +44,7 @@ const getAllFacilitiesByDealId = async (dealId) => {
   let find = {};
 
   if (dealId) {
-    find = { dealId: ObjectID(dealId) };
+    find = { dealId: ObjectId(dealId) };
   }
 
   const doc = await collection.find(find).toArray();
@@ -80,7 +80,7 @@ exports.getAllGET = async (req, res) => {
 
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  const doc = await collection.findOne({ _id: ObjectID(String(req.params.id)) });
+  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
   if (doc) {
     res.status(200).send({
       status: facilitiesStatus(doc),
@@ -97,7 +97,7 @@ const update = async (id, updateBody) => {
     const collection = await db.getCollection(facilitiesCollectionName);
     const dbQuery = await db.getCollection(dealsCollectionName);
 
-    const facilityId = ObjectID(String(id));
+    const facilityId = ObjectId(String(id));
     const existingFacility = await collection.findOne({ _id: facilityId });
     const facilityUpdate = new Facility({
       ...updateBody,
@@ -119,7 +119,7 @@ const update = async (id, updateBody) => {
       const dealUpdate = new Application(dealUpdateObj);
 
       await dbQuery.findOneAndUpdate(
-        { _id: { $eq: ObjectID(existingFacility.dealId) } },
+        { _id: { $eq: ObjectId(existingFacility.dealId) } },
         { $set: dealUpdate },
         { returnOriginal: false },
       );
@@ -154,7 +154,7 @@ exports.updatePUT = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.findOneAndDelete({ _id: ObjectID(req.params.id) });
+  const response = await collection.findOneAndDelete({ _id: ObjectId(req.params.id) });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };
 

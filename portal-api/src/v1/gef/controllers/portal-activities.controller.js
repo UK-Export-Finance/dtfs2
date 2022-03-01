@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../portalActivity-object-generator/activityConstants');
@@ -15,7 +15,7 @@ const getUserInfo = async (userId) => {
     firstname,
     surname = '',
   } = userId
-    ? await userCollection.findOne({ _id: new ObjectID(String(userId)) })
+    ? await userCollection.findOne({ _id: ObjectId(String(userId)) })
     : {};
 
   // creates user object which can be used

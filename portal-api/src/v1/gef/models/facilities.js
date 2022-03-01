@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 
 const checkType = (type) => {
   if (type) {
@@ -18,7 +18,7 @@ class Facility {
   constructor(req) {
     if (req.dealId) {
       // new facility
-      this.dealId = req.dealId ? new ObjectID(req.dealId) : null;
+      this.dealId = req.dealId ? ObjectId(req.dealId) : null;
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
       if (req.hasBeenIssued != null) {
