@@ -69,7 +69,9 @@ exports.clone = async (req, res) => {
       cloneTransactions,
     } = req.body;
 
-    const { _id, previousStatus, tfm, ...existingDealWithoutCertainFields } = existingDeal;
+    const {
+      _id, previousStatus, tfm, ...existingDealWithoutCertainFields
+    } = existingDeal;
 
     const modifiedDeal = {
       ...existingDealWithoutCertainFields,
