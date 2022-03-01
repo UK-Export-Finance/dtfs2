@@ -4,14 +4,13 @@
   "description": "DTFS2",
   "engineStrict": true,
   "engines": {
-    "node": ">=14.0.0 <15.0.0",
-    "npm": ">=6.0.0 <7.0.0"
+    "node": ">=16.0.0",
+    "npm": ">=6.0.0"
   },
   "scripts": {
     "pipeline": "./bin/pipeline.sh",
     "lint": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src",
-    "lint:fix": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint:fix": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src --fix"
   },
   "repository": {
     "type": "git",
@@ -34,10 +33,10 @@
     "cypress-audit": "^1.1.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
-    "eslint": "^8.8.0",
+    "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.12.1",
-    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-import": "^2.25.4",
     "prettier": "2.5.1"
   }
 }

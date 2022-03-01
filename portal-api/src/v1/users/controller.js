@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const now = require('../../now');
 const db = require('../../drivers/db-client');
 const sendEmail = require('../email');
@@ -80,7 +80,7 @@ exports.list = async (callback) => {
 exports.findOne = async (_id, callback) => {
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: new ObjectID(_id) }, callback);
+  collection.findOne({ _id: ObjectId(_id) }, callback);
 };
 
 exports.findByUsername = async (username, callback) => {
@@ -123,7 +123,7 @@ exports.update = async (_id, update, callback) => {
   const userUpdate = { ...update };
   const collection = await db.getCollection('users');
 
-  collection.findOne({ _id: new ObjectID(_id) }, async (err, existingUser) => {
+  collection.findOne({ _id: ObjectId(_id) }, async (err, existingUser) => {
     // --- this section could (/should?) have been done as a separate endpoints for the actions
     //  of blocking+unblocking.. we've done that elsewhere... but seemed overkill here
     if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
@@ -155,7 +155,7 @@ exports.update = async (_id, update, callback) => {
       userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
     }
 
-    await collection.updateOne({ _id: { $eq: new ObjectID(_id) } }, { $set: userUpdate }, {});
+    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
 
     callback(null, userUpdate);
   });
@@ -169,7 +169,7 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
     sessionIdentifier,
   };
   await collection.updateOne(
-    { _id: { $eq: new ObjectID(user._id) } }, // eslint-disable-line no-underscore-dangle
+    { _id: { $eq: ObjectId(user._id) } }, // eslint-disable-line no-underscore-dangle
     { $set: update },
     {},
   );
@@ -189,7 +189,7 @@ exports.incrementFailedLoginCount = async (user) => {
   };
 
   await collection.updateOne(
-    { _id: { $eq: new ObjectID(user._id) } }, // eslint-disable-line no-underscore-dangle
+    { _id: { $eq: ObjectId(user._id) } }, // eslint-disable-line no-underscore-dangle
     { $set: update },
     {},
   );
@@ -201,19 +201,19 @@ exports.incrementFailedLoginCount = async (user) => {
 
 exports.disable = async (_id, callback) => {
   const collection = await db.getCollection('users');
-  // const status = await collection.deleteOne({ _id: new ObjectID(_id) });
+  // const status = await collection.deleteOne({ _id: ObjectId(_id) });
   const userUpdate = {
     disabled: true,
   };
 
-  const status = await collection.updateOne({ _id: { $eq: new ObjectID(_id) } }, { $set: userUpdate }, {});
+  const status = await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
 
   callback(null, status);
 };
 
 exports.remove = async (_id, callback) => {
   const collection = await db.getCollection('users');
-  const status = await collection.deleteOne({ _id: new ObjectID(_id) });
+  const status = await collection.deleteOne({ _id: ObjectId(_id) });
 
   callback(null, status);
 };
