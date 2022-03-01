@@ -18,7 +18,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -28,7 +28,7 @@ jobs:
 
   build:
     name: Build and push Number Generator Azure Function
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     needs: set-environment
     environment:
       name: E2ETEST
@@ -53,7 +53,7 @@ jobs:
     needs: [set-environment, build]
     environment:
       name: E2ETEST
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     env:
       AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
       AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
@@ -75,7 +75,7 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose -f docker-compose.gha.yml up -d number-generator-function
+        docker-compose -f docker-compose.yml up -d number-generator-function
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Temporary debugs
