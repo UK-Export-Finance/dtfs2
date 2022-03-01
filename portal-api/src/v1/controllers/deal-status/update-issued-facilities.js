@@ -153,6 +153,7 @@ const updateIssuedFacilities = async (
         return facility;
       });
     }
+    // eslint-disable-next-line no-promise-executor-return
     return resolve(deal);
   });
 };
