@@ -225,6 +225,24 @@ const eStoreSiteCreationJob = async (eStoreData: any) => {
   }
 };
 
+const checkExistingCronJobs = async () => {
+  const cronJobLogsCollection = await getCollection('cron-job-logs');
+  console.info('Cron Job: Checking for running CronJobs');
+  const runningCronJobs = await cronJobLogsCollection.find({ 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING }).toArray();
+
+  if (runningCronJobs.length) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const job of runningCronJobs) {
+      eStoreCronJobManager.add(job.siteName, siteCreationTimer, async () => {
+        await eStoreSiteCreationJob(job);
+      });
+      eStoreCronJobManager.start(job.siteName);
+    }
+  }
+};
+
+checkExistingCronJobs();
+
 export const createEstore = async (req: Request, res: Response) => {
   const eStoreData = req.body;
 
