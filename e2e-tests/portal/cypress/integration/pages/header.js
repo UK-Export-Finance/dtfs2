@@ -16,6 +16,9 @@ const page = {
   userNameLink: () => cy.get('[data-cy="username-header"]'),
   profileLink: () => cy.get('[data-cy="profile-header"]'),
   logoutLink: () => cy.get('[data-cy="logout-header"]'),
+
+  betaBanner: () => cy.get('[data-cy="beta-banner"]'),
+  betaBannerHref: () => cy.get('[data-cy="beta-feedback-link"]'),
 };
 
 module.exports = page;

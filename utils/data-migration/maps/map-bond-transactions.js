@@ -25,7 +25,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     const facilityStage = findPortalValue(bond.BSS_Guarantee_details.BSS_stage, 'BSS_stage', 'FACILITIES', 'STAGE_BOND', logError);
 
     const v2bond = {
-      _id: bond.BSS_Guarantee_details.BSS_portal_facility_id,
+      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
       ukefFacilityId: formatUkefId(bond.UKEF_BSS_facility_id),
       name: bond.BSS_Guarantee_details.BSS_bank_id,
       bondIssuer: bond.BSS_Guarantee_details.BSS_issuer,
@@ -100,7 +100,6 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
 
     return v2bond;
   };
-
 
   const { Facilities: { BSS: bond } } = v1Deal;
 
