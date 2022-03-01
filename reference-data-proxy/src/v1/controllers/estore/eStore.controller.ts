@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { getCollection } from '../../../database';
 import { Estore, TermStoreResponse, BuyerFolderResponse, SiteExistsResponse } from '../../../interfaces';
-import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, DEAL_TYPE } from '../../../constants';
+import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
 import { eStoreCronJobManager } from '../../../cronJobs';
 import {
   createFacilityFolder,
@@ -13,7 +13,7 @@ import {
   uploadSupportingDocuments,
 } from './eStoreApi';
 
-const siteCreationTimer = '40 * * * * *';
+const siteCreationTimer = '50 * * * * *';
 const folderCreationTimer = '30 * * * * *';
 const facilityCreationTimer = '30 * * * * *';
 
@@ -94,6 +94,13 @@ const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
     // stop and the delete the cron job to release the memory
     eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealIdentifier}`);
 
+    // update the `tfm-deals` collection once the buyer and deal folders have been created
+    const tfmDealsCollection = await getCollection('tfm-deals');
+    tfmDealsCollection.updateOne(
+      { 'dealSnapshot.ukefDealId': eStoreData.dealIdentifier },
+      { $set: { 'tfm.eStore': { buyerName: eStoreData.buyerName, folderName: dealFolderResponse.data.foldername, siteName: eStoreData.siteName } } },
+    );
+
     // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
     await cronJobLogsCollection.updateOne(
       { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
@@ -136,14 +143,11 @@ const eStoreFolders = async (eStoreData: any) => {
     console.info('API Call finished: The facilityIds were added to TermStore successfully');
 
     console.info('API Call started: Create the Buyer folder for ', eStoreData.buyerName);
-    let buyerFolderResponse: BuyerFolderResponse;
-    if (eStoreData.dealType === DEAL_TYPE.GEF) {
-      // GEF deals do NOT have a buyer. In that case, we don't need to call the `createBuyerFolder` endpoint
-      buyerFolderResponse = { status: 201, data: { buyerName: eStoreData.buyerName } };
-    } else {
-      // create the Buyer folder
-      buyerFolderResponse = await createBuyerFolder(eStoreData.siteName, { exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName });
-    }
+    // create the Buyer folder
+    const buyerFolderResponse: BuyerFolderResponse = await createBuyerFolder(eStoreData.siteName, {
+      exporterName: eStoreData.exporterName,
+      buyerName: eStoreData.buyerName,
+    });
 
     if (buyerFolderResponse.status === 201) {
       console.info(`API Call finished: The Buyer folder for ${eStoreData.buyerName} was successfully created`);
@@ -263,51 +267,36 @@ export const createEstore = async (req: Request, res: Response) => {
         { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
         { $set: { siteCronJob: { status: ESTORE_CRON_STATUS.PENDING } } },
       );
-      // add facilityIds to TermStore
-      console.info('API Call started: Add facilityIds to TermStore');
-      const termStoreResponse: TermStoreResponse[] = await Promise.all(
-        eStoreData.facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id?.toString() })),
-      );
 
-      if (termStoreResponse.every((term) => term.status === 201)) {
-        console.info('API Call finished: The facilityIds were added to TermStore successfully');
-        // send a request to eStore to start creating the eStore site
-        console.info('API Call started: Create a new eStore site for ', eStoreData.exporterName);
-        const siteCreationResponse = await createExporterSite({ exporterName: eStoreData.exporterName });
+      // send a request to eStore to start creating the eStore site
+      console.info('API Call started: Create a new eStore site for ', eStoreData.exporterName);
+      const siteCreationResponse = await createExporterSite({ exporterName: eStoreData.exporterName });
 
-        // check if the siteCreation endpoint returns a siteName - this is usually a number (i.e. 12345)
-        if (siteCreationResponse?.data?.siteName) {
-          // update the database with the new siteName
-          await cronJobLogsCollection.updateOne(
-            { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-            { $set: { siteName: siteCreationResponse.data.siteName } },
-          );
-          // add a new job to the `Cron Job Manager` queue that runs every 40 seconds
-          // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
-          eStoreCronJobManager.add(siteCreationResponse.data.siteName, siteCreationTimer, async () => {
-            await eStoreSiteCreationJob(eStoreData);
-          });
-          console.info('Cron job started: eStore Site Creation Cron Job started ', siteCreationResponse.data.siteName);
-          // update the database to indicate that the `site cron job` started
-          await cronJobLogsCollection.updateOne(
-            { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-            { $set: { 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'siteCronJob.startDate': Date.now() } },
-          );
-          eStoreCronJobManager.start(siteCreationResponse.data.siteName);
-        } else {
-          console.error('API Call failed: Unable to create a new site in eStore', { siteCreationResponse });
-          // update the database to indicate that the API call failed
-          await cronJobLogsCollection.updateOne(
-            { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-            { $set: siteCreationResponse },
-          );
-        }
+      // check if the siteCreation endpoint returns a siteName - this is usually a number (i.e. 12345)
+      if (siteCreationResponse?.data?.siteName) {
+        // update the database with the new siteName
+        await cronJobLogsCollection.updateOne(
+          { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
+          { $set: { siteName: siteCreationResponse.data.siteName } },
+        );
+        // add a new job to the `Cron Job Manager` queue that runs every 40 seconds
+        // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
+        eStoreCronJobManager.add(siteCreationResponse.data.siteName, siteCreationTimer, async () => {
+          await eStoreSiteCreationJob(eStoreData);
+        });
+        console.info('Cron job started: eStore Site Creation Cron Job started ', siteCreationResponse.data.siteName);
+        // update the database to indicate that the `site cron job` started
+        await cronJobLogsCollection.updateOne(
+          { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
+          { $set: { 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'siteCronJob.startDate': Date.now() } },
+        );
+        eStoreCronJobManager.start(siteCreationResponse.data.siteName);
       } else {
-        console.error('API Call failed: Unable to add the facilityIds to TermStore', { termStoreResponse });
+        console.error('API Call failed: Unable to create a new site in eStore', { siteCreationResponse });
         // update the database to indicate that the API call failed
         await cronJobLogsCollection.updateOne(
           { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-          { $set: { termStoreResponse } },
+          { $set: siteCreationResponse },
         );
       }
     } else {

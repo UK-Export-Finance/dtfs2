@@ -5,8 +5,6 @@ const api = require('../api');
 const createEstoreFolders = async (deal) => {
   const eStoreInput = mapCreateEstore(deal);
 
-  console.log(eStoreInput);
-
   const estore = await api.createEstoreFolders(eStoreInput);
   return {
     ...deal,

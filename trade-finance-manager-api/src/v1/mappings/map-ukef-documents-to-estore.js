@@ -41,7 +41,6 @@ const eStoreMap = {
 
 const mapUKEFDocumentsToEstore = (files) => {
   const documents = [];
-  console.log('🚀 ~ file: map-ukef-documents-to-estore.js ~ line 34 ~ mapUKEFDocumentsToEstore ~ files', files);
 
   const nonDocuments = ['validationErrors', 'security', 'status', 'securityDetails'];
   Object.keys(files).forEach((file) => {

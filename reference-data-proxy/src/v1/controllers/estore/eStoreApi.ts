@@ -16,28 +16,45 @@ import {
   UploadDocumentsResponse,
   TermStoreResponse,
 } from '../../../interfaces';
+import { sendEmail } from '../sendEmail.controller';
+import { getCollection } from '../../../database';
+
+import { EMAIL_TEMPLATES } from '../../../constants';
 
 dotenv.config();
 const eStoreUrl: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_URL;
 const username: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_KEY;
 const password: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_SECRET;
 
-// ensure that the `data` parameter has only these types
+// ensure that the `apiPayload` parameter has only these types
 const postToEstore = async (
   apiEndpoint: string,
-  data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
+  apiPayload: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
 ) => {
-  console.info('Calling eStore endpoint ', apiEndpoint, data);
+  console.info('Calling eStore endpoint ', apiEndpoint, apiPayload);
 
   const response = await axios({
     method: 'post',
     url: `${eStoreUrl}/${apiEndpoint}`,
     auth: { username, password },
     headers: { 'Content-Type': 'application/json' },
-    data,
-    timeout: 1000 * 50, // 20 seconds timeout to handle long timeouts
-  }).catch((error: any) => {
+    data: apiPayload,
+    timeout: 1000 * 50, // 50 seconds timeout to handle long timeouts
+  }).catch(async (error: any) => {
     console.error(`Error calling eStore API (/${apiEndpoint}): ${error?.response?.status} \n`, error.response.data);
+    const tfmUserCollection = await getCollection('tfm-users');
+    const tfmDevUser = await tfmUserCollection.aggregate([{ $match: { teams: { $in: ['DEVELOPERS'] } } }, { $project: { _id: 0, email: 1 } }]).toArray();
+
+    if (tfmDevUser) {
+      const data = {
+        apiEndpoint,
+        apiPayload,
+        apiResponse: { data: error?.response?.data, status: error?.response?.status },
+      };
+      // send an email to the DEV team to indicate that one of the eStore endpoints has failed
+      await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, tfmDevUser[0].email, data);
+    }
+
     return { data: error?.response?.data, status: error?.response?.status };
   });
 

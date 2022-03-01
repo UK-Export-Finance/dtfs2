@@ -1,14 +1,10 @@
-const axios = require('axios');
-const dotenv = require('dotenv');
+import axios from 'axios';
+import dotenv from 'dotenv';
 
 dotenv.config();
 const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 
-const sendEmail = async (
-  templateId,
-  sendToEmailAddress,
-  emailVariables,
-) => {
+export const sendEmail = async (templateId: string, sendToEmailAddress: string, emailVariables: object) => {
   try {
     const { data } = await axios({
       method: 'post',
@@ -24,9 +20,7 @@ const sendEmail = async (
     });
     return data;
   } catch (err) {
-    console.error(`Error sending email to ${sendToEmailAddress}: ${err}`);
+    console.error(`Unable to send the email: ${err}`);
     return false;
   }
 };
-
-module.exports = sendEmail;

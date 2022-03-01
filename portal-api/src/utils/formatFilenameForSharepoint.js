@@ -14,7 +14,7 @@ https://ukef-dtfs.atlassian.net/jira/software/projects/DTFS2/boards/2?assignee=5
 const formatFilenameForSharepoint = (filenameWithExtension) => {
   const [extension] = filenameWithExtension.match(/\.[^/.]+/g).reverse();
   const filenameWithoutExtension = filenameWithExtension.replace(/\.[^/.]+$/, '');
-  const sanitisedFilename = filenameWithoutExtension.replace(/[^0-9a-zA-Z_-\S]/g, '_');
+  const sanitisedFilename = filenameWithoutExtension.replace(/[^0-9a-zA-Z_-\S]|,/g, '_');
 
   return `${sanitisedFilename}${extension}`;
 };

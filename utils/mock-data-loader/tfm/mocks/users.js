@@ -135,4 +135,12 @@ module.exports = [
     firstName: 'Caroline-Test',
     lastName: 'O’Test Taylor',
   },
+  {
+    username: 'DEV',
+    email: 'dev@dev-team.co.uk',
+    teams: ['DEVELOPERS', 'UNDERWRITER_MANAGERS'],
+    timezone: 'Europe/London',
+    firstName: 'DEV',
+    lastName: 'DEV',
+  },
 ];
