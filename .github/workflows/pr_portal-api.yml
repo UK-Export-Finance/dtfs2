@@ -264,7 +264,7 @@ jobs:
         cd $GITHUB_WORKSPACE
         npm install --legacy-peer-deps
         cd e2e-tests/submit-to-trade-finance-manager
-        npx cypress run --config video=false --record --parallel --browser=chrome
+        npx cypress run --config video=false --record --browser=chrome
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
