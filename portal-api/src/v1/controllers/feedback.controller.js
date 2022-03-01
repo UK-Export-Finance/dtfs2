@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const assert = require('assert');
 const moment = require('moment');
 require('moment-timezone');// monkey-patch to provide moment().tz()
@@ -20,7 +20,7 @@ const findFeedbacks = async (callback) => {
 const findOneFeedback = async (id, callback) => {
   const collection = await db.getCollection('feedback');
 
-  collection.findOne({ _id: new ObjectID(id) }, (err, result) => {
+  collection.findOne({ _id: ObjectId(id) }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
@@ -110,7 +110,7 @@ exports.delete = async (req, res) => {
       return res.status(404).send();
     }
     const collection = await db.getCollection('feedback');
-    const status = await collection.deleteOne({ _id: new ObjectID(req.params.id) });
+    const status = await collection.deleteOne({ _id: ObjectId(req.params.id) });
     return res.status(200).send(status);
   });
 };
