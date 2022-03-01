@@ -16,34 +16,22 @@ Field mapping based on email from Gareth Ashby 15/03/2021
   */
 
 const exporter = ({ deal, acbsReference }) => {
-  // Get Product Type i.e. GEF, BSS/ECWS
-  const product = deal.dealSnapshot.dealType;
   const countryCode = acbsReference.country.supplierAcbsCountryCode
     ? acbsReference.country.supplierAcbsCountryCode
     : acbsReference.country;
-
-  // Get Deal's Snapshot
-  const submissionDetails = product === CONSTANTS.PRODUCT.TYPE.GEF
-    ? deal.dealSnapshot
-    : deal.dealSnapshot.submissionDetails;
-
-  const dealCountry = product === CONSTANTS.PRODUCT.TYPE.GEF ? 'GB' : 'GBR';
-
-  const citizenshipClass = countryCode === dealCountry
+  const sme = deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
+    ? deal.dealSnapshot.exporter.smeType
+    : deal.dealSnapshot.submissionDetails['sme-type'];
+  const citizenshipClass = countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT
     ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
     : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
-
   const partyNames = getPartyNames(deal.dealSnapshot.exporter.companyName);
 
   return {
     alternateIdentifier: deal.tfm.parties.exporter.partyUrn.substring(0, 20),
     industryClassification: acbsReference.supplierAcbsIndustryCode,
     ...partyNames,
-    smeType: getSmeType(
-      product === CONSTANTS.PRODUCT.TYPE.GEF
-        ? submissionDetails.exporter.smeType
-        : submissionDetails['sme-type'],
-    ),
+    smeType: getSmeType(sme),
     citizenshipClass,
     officerRiskDate: now(),
     countryCode,
