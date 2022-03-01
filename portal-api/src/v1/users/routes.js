@@ -91,7 +91,7 @@ module.exports.create = (req, res, next) => {
 };
 
 module.exports.findById = (req, res, next) => {
-  findOne(req.params._id, (err, user) => { // eslint-disable-line no-underscore-dangle
+  findOne(req.params._id, (err, user) => {
     if (err) {
       next(err);
     } else if (user) {
@@ -103,7 +103,7 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
-  findOne(req.params._id, (err, user) => { // eslint-disable-line no-underscore-dangle
+  findOne(req.params._id, (err, user) => {
     if (err) {
       next(err);
     } else if (user) {
@@ -118,7 +118,7 @@ module.exports.updateById = (req, res, next) => {
           },
         });
       } else {
-        update(req.params._id, req.body, (updateErr, updatedUser) => { // eslint-disable-line no-underscore-dangle
+        update(req.params._id, req.body, (updateErr, updatedUser) => {
           if (updateErr) {
             next(updateErr);
           } else {
@@ -133,7 +133,7 @@ module.exports.updateById = (req, res, next) => {
 };
 
 module.exports.disable = (req, res, next) => {
-  disable(req.params._id, (err, status) => { // eslint-disable-line no-underscore-dangle
+  disable(req.params._id, (err, status) => {
     if (err) {
       next(err);
     } else {
@@ -143,7 +143,7 @@ module.exports.disable = (req, res, next) => {
 };
 
 module.exports.remove = (req, res, next) => {
-  remove(req.params._id, (err, status) => { // eslint-disable-line no-underscore-dangle
+  remove(req.params._id, (err, status) => {
     if (err) {
       next(err);
     } else {
@@ -193,6 +193,66 @@ module.exports.resetPassword = async (req, res) => {
 
 module.exports.resetPasswordWithToken = async (req, res, next) => {
   const { resetPwdToken } = req.params;
+  const { currentPassword, password, passwordConfirm} = req.body;
+
+  if (currentPassword.trim() === '') {
+    return res.status(200).json({
+      success: false,
+      errors: {
+        count: 1,
+        errorList: {
+          currentPassword: {
+            text: 'Empty password',
+          },
+        },
+      },
+    });
+  }
+
+  if (password.trim() === '') {
+    return res.status(200).json({
+      success: false,
+      errors: {
+        count: 1,
+        errorList: {
+          password: {
+            text: 'Empty password',
+          },
+        },
+      },
+    });
+  }
+
+  if (passwordConfirm.trim() === '') {
+    return res.status(200).json({
+      success: false,
+      errors: {
+        count: 1,
+        errorList: {
+          passwordConfirm: {
+            text: 'Empty password',
+          },
+        },
+      },
+    });
+  }
+
+  if (password.trim() !== passwordConfirm.trim()) {
+    return res.status(200).json({
+      success: false,
+      errors: {
+        count: 1,
+        errorList: {
+          password: {
+            text: 'Password do not match',
+          },
+          passwordConfirm: {
+            text: 'Password do not match',
+          },
+        },
+      },
+    });
+  }
 
   const user = await getUserByPasswordToken(resetPwdToken, req.body);
 
