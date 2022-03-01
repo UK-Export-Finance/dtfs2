@@ -78,8 +78,8 @@ const mapEligibility = (v1Eligibility) => {
 
 const mapV2 = (v1Deal) => {
   const mapped = {
-    dataMigrationInfo: {
-      v1_ID: v1Deal.drupal_id,
+    dataMigration: {
+      drupalDealId: v1Deal.drupal_id,
     },
     bankInternalRefName: v1Deal.bank_deal_name,
     additionalRefName: v1Deal.field_bank_deal_id, // TODO: is this correct?
