@@ -25,7 +25,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     const facilityStage = findPortalValue(loan.EWCS_Guarantee_details.EWCS_stage, 'EWCS_stage', 'FACILITIES', 'STAGE_LOAN', logError);
 
     const v2loan = {
-      _id: loan.EWCS_Guarantee_details.EWCS_portal_facility_id,
+      type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
       ukefFacilityId: formatUkefId(loan.UKEF_EWCS_facility_id),
       name: loan.EWCS_Guarantee_details.EWCS_bank_id,
       facilityStage,
