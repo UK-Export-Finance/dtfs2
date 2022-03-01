@@ -23,7 +23,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
     editedBy: ['61f29adb6851c10012604bce'],
     comments: [
       {
-        role: 'checker',
+        roles: ['checker'],
         userName: 'BANK1_CHECKER1',
         createdAt: 1643735218306,
         comment: '123123',

@@ -21,11 +21,6 @@ services:
       - "5005:5005"
     volumes:
       - ./dtfs-central-api/src:/app/src:ro
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: "0.1"
-    #       memory: 300M
     environment:
       - PORT=5005
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
@@ -45,11 +40,6 @@ services:
       - ./trade-finance-manager-ui/server:/app/server:ro
       - ./trade-finance-manager-ui/public:/app/public:ro
       - ./trade-finance-manager-ui/templates:/app/templates:ro
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: "0.1"
-    #       memory: 300M
     environment:
       - PORT=5003
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
@@ -82,11 +72,6 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - SENTRY_DSN=${SENTRY_DSN}
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: "0.2"
-    #       memory: 600M
     entrypoint: npx nodemon src/index.js -L
 
   portal:
@@ -127,11 +112,6 @@ services:
       - "5001:5001"
     volumes:
       - ./portal-api/src:/app/src:ro
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: "0.25"
-    #       memory: 950M
     environment:
       - PORT=5001
       - CORS_ORIGIN=http://localhost:5000
@@ -170,11 +150,6 @@ services:
       - "5002:5002"
     volumes:
       - ./reference-data-proxy/src:/app/src:ro
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: "0.1"
-    #       memory: 300M
     environment:
       - PORT=5002
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk

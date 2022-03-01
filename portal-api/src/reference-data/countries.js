@@ -10,7 +10,7 @@ const getCountries = async () => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => {
-    console.error('Error retrieving countries from Reference Data API. ', err)
+    console.error('Error retrieving countries from Reference Data API. ', err);
     return err;
   });
 
@@ -25,7 +25,7 @@ const getCountry = async (code) => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => {
-    console.error('Error retrieving country from Reference Data API. ', err)
+    console.error('Error retrieving country from Reference Data API. ', err);
 
     return err;
   });

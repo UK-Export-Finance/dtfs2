@@ -66,7 +66,10 @@ const updateDealAcbs = async (taskOutput) => {
 };
 
 const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster }) =>
-  tfmController.updateFacilityAcbs(facilityId, { issuedFacilityMaster });
+  tfmController.updateFacilityAcbs(facilityId, {
+    facilityStage: CONSTANTS.FACILITIES.ACBS_FACILITY_STAGE.ISSUED,
+    issuedFacilityMaster,
+  });
 
 const checkAzureAcbsFunction = async () => {
   try {
