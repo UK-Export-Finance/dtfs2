@@ -1,5 +1,6 @@
 const fs = require('fs');
 const args = require('minimist')(process.argv.slice(2));
+const { initUsers } = require('../helpers/users');
 const mapDeal = require('./map-deal');
 const mapFacilities = require('./map-facilities');
 const api = require('../api');
@@ -7,9 +8,11 @@ const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 
 const { file } = args;
 let token;
+let v2Users;
 
 const init = async () => {
   token = await getToken();
+  v2Users = await initUsers(token);
 };
 
 const teardown = async () => {
@@ -24,7 +27,7 @@ const loadDealFromFile = () => {
 const mapToV2 = () => {
   const v1Deal = loadDealFromFile();
 
-  const v2Deal = mapDeal(v1Deal);
+  const v2Deal = mapDeal(v1Deal, v2Users);
 
   const v1Facilities = v1Deal.children.facilities;
   const v2Facilities = mapFacilities(v1Facilities, v2Deal.submissionDate);  

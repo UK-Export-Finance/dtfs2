@@ -14,7 +14,7 @@ const {
   mapExporter,
 } = require('./maps');
 const { initBanks } = require('./helpers/banks');
-const { initUsers } = require('./helpers/users');
+const { initUsers } = require('../helpers/users');
 const { initCountries } = require('./helpers/countries');
 const { initCurrencies } = require('./helpers/currencies');
 const { initIndustrySectors } = require('./helpers/industry-sectors');

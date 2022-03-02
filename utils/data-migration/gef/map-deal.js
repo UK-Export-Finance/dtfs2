@@ -1,4 +1,5 @@
 const MIGRATION_MAP = require('./migration-map');
+const { getUserByEmail } = require('../helpers/users');
 
 const mapExporterIndustry = (v1DealExporter) => ({
   code: v1DealExporter.industry_sector.system_value,
@@ -76,7 +77,7 @@ const mapEligibility = (v1Eligibility) => {
   return mapped;
 };
 
-const mapV2 = (v1Deal) => {
+const mapV2 = (v1Deal, v2Users) => {
   const mapped = {
     dataMigration: {
       drupalDealId: v1Deal.drupal_id,
@@ -111,10 +112,22 @@ const mapV2 = (v1Deal) => {
     // supportingInformation
 
 
-    maker: '', // owner
     checkerId: '', // field_initial_checker || field_min_checker
     // TODO: do we have checker object?
   };
+
+  if (v1Deal.field_min_maker) {
+    mapped.maker = getUserByEmail(v2Users, v1Deal.owner.email);
+  } else {
+     // TODO: is owner correct?
+    mapped.maker = getUserByEmail(v2Users, v1Deal.owner.email);
+  }
+
+  if (v1Deal.field_min_checker.length) {
+    mapped.checkerId = getUserByEmail(v2Users, v1Deal.field_min_checker[0].email)._id;
+  } else {
+    mapped.checkerId = getUserByEmail(v2Users, v1Deal.field_initial_checker.email)._id;
+  }
 
   return mapped;
 };
