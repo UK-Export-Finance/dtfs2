@@ -193,10 +193,10 @@ module.exports.resetPassword = async (req, res) => {
 
 module.exports.resetPasswordWithToken = async (req, res, next) => {
   const { resetPwdToken } = req.params;
-  const { currentPassword, password, passwordConfirm} = req.body;
+  const { currentPassword, password, passwordConfirm } = req.body;
 
   if (currentPassword.trim() === '') {
-    return res.status(200).json({
+    return res.status(400).json({
       success: false,
       errors: {
         count: 1,
@@ -210,7 +210,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   }
 
   if (password.trim() === '') {
-    return res.status(200).json({
+    return res.status(400).json({
       success: false,
       errors: {
         count: 1,
@@ -224,7 +224,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   }
 
   if (passwordConfirm.trim() === '') {
-    return res.status(200).json({
+    return res.status(400).json({
       success: false,
       errors: {
         count: 1,
@@ -238,7 +238,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   }
 
   if (password.trim() !== passwordConfirm.trim()) {
-    return res.status(200).json({
+    return res.status(400).json({
       success: false,
       errors: {
         count: 1,
@@ -257,7 +257,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   const user = await getUserByPasswordToken(resetPwdToken, req.body);
 
   if (!user) {
-    return res.status(200).json({
+    return res.status(400).json({
       success: false,
       errors: {
         count: 1,
@@ -275,7 +275,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     : 9999;
 
   if (hoursSincePasswordResetRequest > 24) {
-    return res.status(200).json({
+    return res.status(400).json({
       success: false,
       errors: {
         count: 1,
@@ -294,7 +294,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   });
 
   if (errors.length) {
-    return res.status(200).json({
+    return res.status(400).json({
       success: false,
       errors: {
         count: errors.length,

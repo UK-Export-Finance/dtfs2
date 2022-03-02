@@ -42,19 +42,26 @@ const resetPassword = async (email) => {
 };
 
 const resetPasswordFromToken = async (resetPwdToken, formData) => {
-  const response = await axios({
-    method: 'post',
-    url: `${portalApi}/v1/users/reset-password/${resetPwdToken}`,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: formData,
-  });
-
-  return {
-    status: response.status,
-    data: response.data,
-  };
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${portalApi}/v1/users/reset-password/${resetPwdToken}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: formData,
+    });
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error('Reset password failed', { error });
+    return {
+      status: error.response.status,
+      data: error.response.data,
+    };
+  }
 };
 
 const allDeals = async (start, pagesize, filters, token, sort) => {
