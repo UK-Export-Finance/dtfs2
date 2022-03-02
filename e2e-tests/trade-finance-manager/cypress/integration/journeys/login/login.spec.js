@@ -44,10 +44,56 @@ context('User can login', () => {
     partials.header.signOutLink().should('exist');
   });
 
+  it('should login, and show relevant header information', () => {
+    pages.landingPage.visit();
+    pages.landingPage.email().type(MOCK_USERS[0].username);
+    pages.landingPage.submitButton().click();
+    cy.url().should('eq', relative('/deals'));
+
+    partials.header.ukefLogo().should('exist');
+    partials.header.headerName().should('exist');
+    partials.header.headerName().contains('Trade Finance Manager');
+
+    partials.header.headerName().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal('/deals');
+    });
+
+    partials.header.userLink().should('exist');
+    partials.header.signOutLink().should('exist');
+
+    partials.primaryNavigation.allDealsLink().should('exist');
+    partials.primaryNavigation.allFacilitiesLink().should('exist');
+  });
+
+  it('displays the beta banner correctly', () => {
+    partials.header.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
+    partials.header.betaBanner().contains('beta');
+    partials.header.betaBannerHref().contains('feedback');
+    partials.header.betaBannerHref().invoke('attr', 'href').then((href) => {
+      expect(href).to.equal('#');
+    });
+  });
+
   it('should not login and redirect to /deals with invalid email/username', () => {
     pages.landingPage.visit();
     pages.landingPage.email().type('wrongUser');
     pages.landingPage.submitButton().click();
     cy.url().should('eq', relative('/'));
+  });
+
+  it('should show relevant header items when logged out', () => {
+    pages.landingPage.visit();
+
+    partials.header.ukefLogo().should('exist');
+    partials.header.headerName().should('exist');
+    partials.header.headerName().contains('Trade Finance Manager');
+
+    partials.header.userLink().should('not.exist');
+    partials.header.signOutLink().should('not.exist');
+
+    partials.header.betaBanner().should('exist');
+
+    partials.primaryNavigation.allDealsLink().should('not.exist');
+    partials.primaryNavigation.allFacilitiesLink().should('not.exist');
   });
 });
