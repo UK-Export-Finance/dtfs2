@@ -50,4 +50,20 @@ describe('mapCoverEndDate', () => {
       expect(yearResult).toEqual('2021');
     });
   });
+
+  describe('when cover end date is invalid', () => {
+    it('should return 4 digit year', () => {
+      const mockCoverEndDate = {
+        day: 'Invalid Date',
+        month: 'Invalid Date',
+        year: 'Invalid Date',
+      };
+
+      const { day, month, year } = mockCoverEndDate;
+
+      const result = mapCoverEndDate(day, month, year);
+
+      expect(result).toEqual(undefined);
+    });
+  });
 });

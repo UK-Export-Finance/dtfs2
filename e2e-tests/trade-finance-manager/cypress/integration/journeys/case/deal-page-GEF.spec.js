@@ -70,6 +70,13 @@ context('User can view a GEF MIA case deal', () => {
   });
 
   describe('facilities table', () => {
+    it('facility coverEndDate should be a dash', () => {
+      const facilityId = dealFacilities._id;
+      const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
+
+      facilityRow.facilityEndDate().contains('-');
+    });
+
     it('clicking `Facility ID` link should take user to facility details page', () => {
       const facilityId = dealFacilities._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
@@ -144,6 +151,13 @@ context('User can view a GEF AIN case deal', () => {
   });
 
   describe('facilities table', () => {
+    it('facility coverEndDate should be a dash', () => {
+      const facilityId = dealFacilities._id;
+      const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
+
+      facilityRow.facilityEndDate().contains('-');
+    });
+
     it('clicking `Facility ID` link should take user to facility details page', () => {
       const facilityId = dealFacilities._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
