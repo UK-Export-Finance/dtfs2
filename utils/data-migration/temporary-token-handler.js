@@ -43,6 +43,8 @@ module.exports.getToken = async () => {
     console.info(`${JSON.stringify(err)}`);
   });
 
+  console.log('------ user \n', user);
+
   migrationUserId = user._id;
 
   const { data } = await axios({

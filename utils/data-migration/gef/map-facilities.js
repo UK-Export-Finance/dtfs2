@@ -1,5 +1,5 @@
 const MIGRATION_MAP = require('./migration-map');
-const V2_CONSTANTS = require('../../portal-api/src/constants');
+const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { convertDateToTimestamp } = require('./helpers');
 
 // TODO:

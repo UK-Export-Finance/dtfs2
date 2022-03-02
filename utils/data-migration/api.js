@@ -17,7 +17,7 @@ const createUser = async (user) => {
   return response.data;
 };
 
-const importDeal = async (deal, token) => {
+const importBssEwcsDeal = async (deal, token) => {
   const response = await axios({
     method: 'post',
     headers: {
@@ -25,7 +25,25 @@ const importDeal = async (deal, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/deals/import`,
+    url: `${urlRoot}/v1/deals/import/BSS-EWCS`,
+    data: deal,
+  }).catch(({ response: data }) => ({ error: true, data: data.data }));
+
+  return {
+    success: !response.error,
+    deal: response.data,
+  };
+};
+
+const importGefDeal = async (deal, token) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/deals/import/GEF`,
     data: deal,
   }).catch(({ response: data }) => ({ error: true, data: data.data }));
 
@@ -107,7 +125,8 @@ const listIndustrySectors = async (token) => {
 
 module.exports = {
   createUser,
-  importDeal,
+  importBssEwcsDeal,
+  importGefDeal,
   listUsers,
   listBanks,
   listCountries,

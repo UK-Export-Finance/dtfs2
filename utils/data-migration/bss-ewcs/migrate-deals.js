@@ -22,7 +22,7 @@ const { convertV1Date } = require('./helpers/date-helpers');
 const consoleLogColor = require('./helpers/console-log-colour');
 
 const log = require('./helpers/log');
-const { getToken, removeMigrationUser } = require('./temporary-token-handler');
+const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 const api = require('../api');
 
 const Entities = require('html-entities').AllHtmlEntities;
@@ -133,7 +133,7 @@ const processXml = async (dealId) => {
 const importSingleDeal = async (dealId) =>
   processXml(dealId).then(async (workflowDeal) => mapV2(dealId, workflowDeal).then(async (v2Deal) => {
     if (v2Deal) {
-      const success = await api.importDeal(v2Deal, token).then(async ({ success, deal }) => {
+      const success = await api.importBssEwcsDeal(v2Deal, token).then(async ({ success, deal }) => {
         if (success) {
           log.addSuccess(dealId);
         } else if (deal.validationErrors) {

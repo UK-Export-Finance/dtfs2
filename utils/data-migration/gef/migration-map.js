@@ -1,4 +1,4 @@
-const V2_CONSTANTS = require('../../portal-api/src/constants');
+const V2_CONSTANTS = require('../../../portal-api/src/constants');
 
 const DEAL_STATUS = {
   draft: V2_CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
