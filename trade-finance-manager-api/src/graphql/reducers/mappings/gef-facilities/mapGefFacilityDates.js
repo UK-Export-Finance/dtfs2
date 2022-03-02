@@ -26,6 +26,7 @@ const mapGefFacilityDates = (facilitySnapsot, facilityTfm, dealSnapshot) => {
       exposurePeriodInMonths,
     ),
   };
+
   // only set coverEndDate if not null, else is undefined
   if (coverEndDate) {
     mapped.coverEndDate = mapCoverEndDate(
