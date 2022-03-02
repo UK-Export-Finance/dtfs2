@@ -4,6 +4,7 @@
  * @param {Object} facility Facility object
  * @returns {Integer} Facility interest percentage
  */
-const getInterestPercentage = (facility) => Number(facility.facilitySnapshot.interestPercentage);
+const getInterestPercentage = (facility) => Number(facility.facilitySnapshot.interestPercentage)
+|| Number(facility.facilitySnapshot.riskMarginFee);
 
 module.exports = getInterestPercentage;

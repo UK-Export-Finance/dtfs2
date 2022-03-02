@@ -465,6 +465,7 @@ const createACBS = async (deal, bank) => {
 };
 
 const updateACBSfacility = async (facility, deal) => {
+  console.log('===', { deal }, { facility });
   if (!!facility && !!deal) {
     try {
       const response = await axios({

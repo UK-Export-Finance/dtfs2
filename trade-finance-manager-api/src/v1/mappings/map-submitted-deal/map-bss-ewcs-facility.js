@@ -56,7 +56,7 @@ const mapBssEwcsFacility = (facility) => {
 
   return {
     _id,
-    ukefFacilityId: Number(ukefFacilityId),
+    ukefFacilityId,
     type,
     currencyCode: currency && currency.id,
     value: Number(value.replace(/,/g, '')),

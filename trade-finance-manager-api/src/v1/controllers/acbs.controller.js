@@ -122,9 +122,9 @@ const issueAcbsFacilities = async (deal) => {
   }
 
   const acbsIssuedFacilitiesPromises = deal.facilities.filter((facility) => {
-    // Only concerned with issued facilities on Portal that aren't issued on ACBS
+    // Only concerned with issued facilities on Portal that are not issued on ACBS
     const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
-    return !isIssued(facilityStageInAcbs) && !facility.tfm.acbs.issuedFacilityMaster && isIssued(facility.facilityStage);
+    return !isIssued(facilityStageInAcbs) && !facility.tfm.acbs.issuedFacilityMaster && facility.hasBeenIssued;
   }).map((facility) => api.updateACBSfacility(facility, {
     dealSnapshot: {
       dealType: deal.dealType,

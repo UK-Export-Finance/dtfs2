@@ -43,7 +43,7 @@ const facilityLoan = (deal, facility, acbsData) => {
     amount: facility.tfm.ukefExposure,
     issueDate,
     expiryDate: guaranteeExpiryDate,
-    spreadRate: facility.facilitySnapshot.guaranteeFee || facility.facilitySnapshot.guaranteeFeePayableByBank,
+    spreadRate: facility.facilitySnapshot.guaranteeFee || Number(facility.facilitySnapshot.guaranteeFeePayableByBank),
     nextDueDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
     yearBasis: helpers.getYearBasis(facility),
     loanBillingFrequencyType: helpers.getFeeType(facility),
@@ -59,8 +59,7 @@ const facilityLoan = (deal, facility, acbsData) => {
   }
 
   // BSS/EWCS deals only fields
-  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS
-    || deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.EWCS) {
+  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS_EWCS) {
     loanRecord = {
       ...loanRecord,
       spreadRateCTL: helpers.getInterestPercentage(facility),

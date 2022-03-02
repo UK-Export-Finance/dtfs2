@@ -90,24 +90,12 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
 
     // Records only created for `Issued` and `Activated` facilities only
     if (acbsFacilityMasterInput.facilityStageCode === CONSTANTS.FACILITY.STAGE_CODE.ISSUED) {
-      // 6. Facility loan record
-      const acbsFacilityLoanInput = mappings.facility.facilityLoan(
-        deal,
-        facility,
-        dealAcbsData,
-      );
-      facilityLoan = yield context.df.callActivityWithRetry(
-        'activity-create-facility-loan',
-        retryOptions,
-        { acbsFacilityLoanInput },
-      );
-
-      // 7. Facility fee record
+      // 6. Facility fee record
       const acbsFacilityFeeInput = mappings.facility.facilityFee(
         deal,
         facility,
       );
-
+      console.log({ acbsFacilityFeeInput });
       if (Array.isArray(acbsFacilityFeeInput)) {
         facilityFee = [];
         // eslint-disable-next-line no-plusplus
@@ -118,6 +106,18 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       } else {
         facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { acbsFacilityFeeInput });
       }
+
+      // 7. Facility loan record
+      const acbsFacilityLoanInput = mappings.facility.facilityLoan(
+        deal,
+        facility,
+        dealAcbsData,
+      );
+      facilityLoan = yield context.df.callActivityWithRetry(
+        'activity-create-facility-loan',
+        retryOptions,
+        { acbsFacilityLoanInput },
+      );
     }
 
     return {
