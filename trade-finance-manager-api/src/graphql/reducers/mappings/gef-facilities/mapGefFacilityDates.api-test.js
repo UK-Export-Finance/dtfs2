@@ -71,4 +71,11 @@ describe('mapGefFacilityDates', () => {
 
     expect(result.tenor).toEqual(expected);
   });
+
+  it('should return object with undefined coverEndDate if coverEndDate is null', () => {
+    mockFacility.coverEndDate = null;
+    const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
+    // undefined as not set in function
+    expect(result.coverEndDate).toEqual(undefined);
+  });
 });

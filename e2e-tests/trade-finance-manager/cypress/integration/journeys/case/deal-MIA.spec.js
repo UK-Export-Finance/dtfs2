@@ -1,3 +1,4 @@
+import format from 'date-fns/format';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
@@ -70,6 +71,18 @@ context('User can view a case deal', () => {
   });
 
   describe('facilities table', () => {
+    it('should show a cover end date', () => {
+      const facilityId = dealFacilities[0]._id;
+      const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
+
+      // constructs date
+      const coverEndDateRaw = new Date(dealFacilities[0]['coverEndDate-year'], dealFacilities[0]['coverEndDate-month'] - 1, dealFacilities[0]['coverEndDate-day']);
+      // formats to correct format in table
+      const coverEndDate = format(coverEndDateRaw, 'dd MMMM yyyy');
+
+      facilityRow.facilityEndDate().contains(coverEndDate);
+    });
+
     it('clicking `Facility ID` link should take user to facility details page', () => {
       const facilityId = dealFacilities[0]._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
