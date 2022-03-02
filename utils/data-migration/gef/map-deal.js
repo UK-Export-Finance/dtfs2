@@ -13,7 +13,6 @@ const mapExporterIndustry = (v1DealExporter) => ({
 });
 
 const mapAddress = (v1Address) => ({
-  // organisationName: 'TODO',
   addressLine1: v1Address.address,
   addressLine2: v1Address.address_2,
   addressLine3: v1Address.address_3,
@@ -26,7 +25,7 @@ const mapExporter = (v1Exporter) => {
   const mapped = {
     isFinanceIncreasing: Boolean(v1Exporter.financing_increasing),
     companiesHouseRegistrationNumber: v1Exporter.companies_house_registration,
-    companyName: v1Exporter.exporter_name, //  TODO: confirm if exporter_name is correct.
+    companyName: v1Exporter.exporter_name,
 
     // TODO: check if V1 deal can have multiple industries
     industries: [
@@ -48,20 +47,7 @@ const mapExporter = (v1Exporter) => {
 };
 
 const mapEligibility = (v1Eligibility) => {
-  // TODO:
-  // - security
-  // - EC revision?
-
-  const v1CriteriaFieldNames = [
-    'question_1',
-    'question_2',
-    'question_3',
-    'question_4',
-    'ec_requested_cover_start_date',
-    'question_5',
-    'ec_facility_base_currency_18',
-    'ec_facility_letter_19',
-  ];
+  const v1CriteriaFieldNames = Object.getOwnPropertyNames(MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA);
 
   const mappedCriteria = v1CriteriaFieldNames.map((criterion) => ({
     id: MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA[criterion].id,
@@ -69,7 +55,6 @@ const mapEligibility = (v1Eligibility) => {
     text: v1Eligibility[criterion].question_text,
     answer: v1Eligibility[criterion].question_answer,
   }));
-
 
   const mapped = {
     criteria: mappedCriteria,
@@ -91,7 +76,9 @@ const mapSubmissionCount = (submissionType) => {
   return 0;
 };
 
-const mapV2 = (v1Deal, v2Users) => {
+// TODO: default any empty fields to null/V2 model
+// otherwise will be an empty string
+const mapV1Deal = (v1Deal, v2Users) => {
   const submissionType = MIGRATION_MAP.DEAL.SUBMISSION_TYPE[v1Deal.field_submission_type];
 
   const mapped = {
@@ -99,7 +86,7 @@ const mapV2 = (v1Deal, v2Users) => {
       drupalDealId: v1Deal.drupal_id,
     },
     bankInternalRefName: v1Deal.bank_deal_name,
-    additionalRefName: v1Deal.field_bank_deal_id, // TODO: is this correct?
+    additionalRefName: v1Deal.field_bank_deal_id,
     createdAt: convertDateToTimestamp(v1Deal.created),
     updatedAt: convertDateToTimestamp(v1Deal.changed),
     submissionType,
@@ -107,28 +94,26 @@ const mapV2 = (v1Deal, v2Users) => {
     submissionDate: convertDateToTimestamp(v1Deal.field_submission_date),
     ukefDealId: v1Deal.field_ukef_deal_id,
     exporter: mapExporter(v1Deal.children.general_info),
-    mandatoryVersionId: v1Deal.children.eligiblity.system_red_line_revision_id,
     eligibility: mapEligibility(v1Deal.children.eligiblity),
     submissionCount: mapSubmissionCount(submissionType),
     portalActivities: [],
 
-    // not in json data
-    // comments: '',
+    // TODO: (not in json data, waiting confirmation)
+    // organisationName
+    // comments
+    // - mandatory criteria in deal / other collection
+    //   - need mandatory criteria version - full data
+    // - ecRevision
+    // ukefDecisionAccepted
+    // ukefDecision: []
+    // manualInclusionNoticeSubmissionDate: '',
 
-    // supportingInformation // TODO: examples with multiple files please. Also, how to link these files.
-    // is this inn eligibility? will it be file_1, file_2?
+    // TODO: investigate.
+    // supportingInformation / deal files.
 
-    // need confirmation of what field(s) should be used
-    // ukefDecisionAccepted: '',
-    // ukefDecision: '',
-    // manualInclusionNoticeSubmissionDate: '', 
-
-    // ukefDecision: [
-    //   {
-    //     decision: CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-    //     timestamp: Date.now(),
-    //   }
-    // ]
+    // facilities:
+    // - issueDate
+    // - submittedAsIssuedDate
   };
 
   if (v1Deal.field_min_maker) {
@@ -148,4 +133,4 @@ const mapV2 = (v1Deal, v2Users) => {
 };
 
 
-module.exports = mapV2;
+module.exports = mapV1Deal;

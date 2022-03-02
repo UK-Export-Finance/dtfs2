@@ -3,9 +3,8 @@ const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { convertDateToTimestamp } = require('./helpers');
 
 // TODO:
-// paymentType: 'IN_ADVANCE_MONTHLY',
-// issueDate
-// submittedAsIssuedDate: '1638363717231', // TODO: is there a flag for this in the DB?
+// paymentType: 'IN_ADVANCE_MONTHLY', // ??
+
 
 const mapHasBeenIssued = (v1Stage) => {
   if (v1Stage === 'Issued') {
@@ -56,7 +55,7 @@ const mapShouldCoverStartOnSubmission = (
 
 // TODO: default any empty fields to null/V2 model
 // otherwise will be an empty string
-const mapFacilities = (
+const mapV1Facilities = (
   v1Facilities,
   v2DealSubmissionDate,
 ) => {
@@ -102,7 +101,6 @@ const mapFacilities = (
     };
 
     if (details === V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.OTHER) {
-      // TODO: check if facility_type_text is the correct field
       mapped.detailsOther = v1Facility.facility_type_text;
     }
 
@@ -112,4 +110,4 @@ const mapFacilities = (
   return v2Facilities;
 };
 
-module.exports = mapFacilities;
+module.exports = mapV1Facilities;
