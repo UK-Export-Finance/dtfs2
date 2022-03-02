@@ -75,8 +75,33 @@ describe('password reset', () => {
     });
 
     describe('/v1/users/reset-password/:token', () => {
+      it('should return error for empty current password field', async () => {
+        const { body } = await as().post({ currentPassword: '', password: '1', passwordConfirm: '1' }).to('/v1/users/reset-password/madeuptoken123');
+        expect(body.success).toEqual(false);
+        expect(body.errors.errorList.currentPassword.text).toEqual('Empty password');
+      });
+
+      it('should return error for empty new password field', async () => {
+        const { body } = await as().post({ currentPassword: '1', password: '', passwordConfirm: '1' }).to('/v1/users/reset-password/madeuptoken123');
+        expect(body.success).toEqual(false);
+        expect(body.errors.errorList.password.text).toEqual('Empty password');
+      });
+
+      it('should return error for empty new confirm password field', async () => {
+        const { body } = await as().post({ currentPassword: '1', password: '1', passwordConfirm: '' }).to('/v1/users/reset-password/madeuptoken123');
+        expect(body.success).toEqual(false);
+        expect(body.errors.errorList.passwordConfirm.text).toEqual('Empty password');
+      });
+
+      it('should return error for new passwords do not match', async () => {
+        const { body } = await as().post({ currentPassword: '123', password: '1', passwordConfirm: '2' }).to('/v1/users/reset-password/madeuptoken123');
+        expect(body.success).toEqual(false);
+        expect(body.errors.errorList.password.text).toEqual('Password do not match');
+        expect(body.errors.errorList.passwordConfirm.text).toEqual('Password do not match');
+      });
+
       it('should return error for invalid token', async () => {
-        const { body } = await as().post({ password: 'newPassword', passwordConfirm: 'newPassword' }).to('/v1/users/reset-password/madeuptoken123');
+        const { body } = await as().post({ currentPassword: 'currentPassword', password: 'newPassword', passwordConfirm: 'newPassword' }).to('/v1/users/reset-password/madeuptoken123');
         expect(body.success).toEqual(false);
         expect(body.errors.errorList.currentPassword.text).toEqual('Password reset link is not valid');
       });
@@ -84,7 +109,7 @@ describe('password reset', () => {
       it('should reset the users password when using correct reset token', async () => {
         const newPassword = 'XyZ!2345';
         const { resetToken } = await resetPassword(aMaker.email);
-        const { status, body } = await as().post({ password: newPassword, passwordConfirm: newPassword }).to(`/v1/users/reset-password/${resetToken}`);
+        const { status, body } = await as().post({ currentPassword: aMaker.password, password: newPassword, passwordConfirm: newPassword }).to(`/v1/users/reset-password/${resetToken}`);
         expect(status).toEqual(200);
         expect(body.success).toEqual(true);
         expect(sendEmail).toHaveBeenCalledWith(passwordUpdateConfirmationTemplateId, aMaker.email, {
