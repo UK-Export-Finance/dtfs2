@@ -16,21 +16,26 @@ const mapGefFacilityDates = (facilitySnapsot, facilityTfm, dealSnapshot) => {
 
   const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealSnapshot;
 
-  return {
+  const mapped = {
     inclusionNoticeReceived: manualInclusionNoticeSubmissionDate || dealSubmissionDate,
     bankIssueNoticeReceived: submittedAsIssuedDate,
     coverStartDate: convertDateToTimestamp(coverStartDate),
-    coverEndDate: mapCoverEndDate(
-      moment(coverEndDate).format('DD'),
-      moment(coverEndDate).format('MM'),
-      moment(coverEndDate).format('YYYY'),
-    ),
     tenor: mapTenorDate(
       facilityStage,
       ukefGuaranteeInMonths,
       exposurePeriodInMonths,
     ),
   };
+  // only set coverEndDate if not null, else is undefined
+  if (coverEndDate) {
+    mapped.coverEndDate = mapCoverEndDate(
+      moment(coverEndDate).format('DD'),
+      moment(coverEndDate).format('MM'),
+      moment(coverEndDate).format('YYYY'),
+    );
+  }
+
+  return mapped;
 };
 
 module.exports = mapGefFacilityDates;

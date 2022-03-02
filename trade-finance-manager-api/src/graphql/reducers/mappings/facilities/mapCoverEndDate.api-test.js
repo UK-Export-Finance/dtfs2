@@ -51,12 +51,12 @@ describe('mapCoverEndDate', () => {
     });
   });
 
-  describe('when cover end date is invalid', () => {
-    it('should return 4 digit year', () => {
+  describe('when cover end date is null', () => {
+    it('should return undefined as date is null', () => {
       const mockCoverEndDate = {
-        day: 'Invalid Date',
-        month: 'Invalid Date',
-        year: 'Invalid Date',
+        day: null,
+        month: null,
+        year: null,
       };
 
       const { day, month, year } = mockCoverEndDate;
