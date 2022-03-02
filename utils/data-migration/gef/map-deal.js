@@ -1,5 +1,7 @@
 const MIGRATION_MAP = require('./migration-map');
+const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { getUserByEmail } = require('../helpers/users');
+const { convertDateToTimestamp } = require('./helpers');
 
 const mapExporterIndustry = (v1DealExporter) => ({
   code: v1DealExporter.industry_sector.system_value,
@@ -47,7 +49,6 @@ const mapExporter = (v1Exporter) => {
 
 const mapEligibility = (v1Eligibility) => {
   // TODO:
-  // - file(s).
   // - security
   // - EC revision?
 
@@ -77,43 +78,57 @@ const mapEligibility = (v1Eligibility) => {
   return mapped;
 };
 
+const mapSubmissionCount = (submissionType) => {
+  if (submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
+    || submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
+    return 1;
+  }
+
+  if (submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+    return 2;
+  }
+
+  return 0;
+};
+
 const mapV2 = (v1Deal, v2Users) => {
+  const submissionType = MIGRATION_MAP.DEAL.SUBMISSION_TYPE[v1Deal.field_submission_type];
+
   const mapped = {
     dataMigration: {
       drupalDealId: v1Deal.drupal_id,
     },
     bankInternalRefName: v1Deal.bank_deal_name,
     additionalRefName: v1Deal.field_bank_deal_id, // TODO: is this correct?
-    createdAt: v1Deal.created, // TODO: align date format
-    updatedAt: v1Deal.changed, // TODO: align date format
-    submissionType: MIGRATION_MAP.DEAL.SUBMISSION_TYPE[v1Deal.field_submission_type],
+    createdAt: convertDateToTimestamp(v1Deal.created),
+    updatedAt: convertDateToTimestamp(v1Deal.changed),
+    submissionType,
     status: MIGRATION_MAP.DEAL.DEAL_STATUS[v1Deal.field_deal_status],
-    submissionDate: v1Deal.field_submission_date, // TODO: align date format
+    submissionDate: convertDateToTimestamp(v1Deal.field_submission_date),
     ukefDealId: v1Deal.field_ukef_deal_id,
     exporter: mapExporter(v1Deal.children.general_info),
     mandatoryVersionId: v1Deal.children.eligiblity.system_red_line_revision_id,
     eligibility: mapEligibility(v1Deal.children.eligiblity),
+    submissionCount: mapSubmissionCount(submissionType),
+    portalActivities: [],
 
-    // probably don't need these?
-    // submissionCount: '',
-    // portalActivities: '',
-
-    // confirm with James
-    // - comments
-    //
-
-    // not in json data OR need confirmation of what field(s) are called
-    //
+    // not in json data
     // comments: '',
-    // mandatoryVersionId: '' // is this system_red_line_revision_id?
+
+    // supportingInformation // TODO: examples with multiple files please. Also, how to link these files.
+    // is this inn eligibility? will it be file_1, file_2?
+
+    // need confirmation of what field(s) should be used
     // ukefDecisionAccepted: '',
     // ukefDecision: '',
-    // manualInclusionNoticeSubmissionDate: '',
-    // supportingInformation
+    // manualInclusionNoticeSubmissionDate: '', 
 
-
-    checkerId: '', // field_initial_checker || field_min_checker
-    // TODO: do we have checker object?
+    // ukefDecision: [
+    //   {
+    //     decision: CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+    //     timestamp: Date.now(),
+    //   }
+    // ]
   };
 
   if (v1Deal.field_min_maker) {
