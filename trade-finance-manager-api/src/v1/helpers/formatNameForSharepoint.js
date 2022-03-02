@@ -11,5 +11,5 @@ see
 https://ukef-dtfs.atlassian.net/jira/software/projects/DTFS2/boards/2?assignee=5e42c0d090dfb70c9e60741b&selectedIssue=DTFS2-509 // eslint-disable-line max-len
 */
 
-const formatNameForSharepoint = (name) => name.replace(/[^0-9a-zA-Z_-\S]|,/g, '_');
+const formatNameForSharepoint = (name) => name.replace(/[^0-9a-zA-Z_-\S]|, /g, ' ');
 module.exports = formatNameForSharepoint;
