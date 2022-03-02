@@ -238,6 +238,8 @@ const checkExistingCronJobs = async () => {
       });
       eStoreCronJobManager.start(job.siteName);
     }
+  } else {
+    console.info('Cron Job: There are no active CronJobs');
   }
 };
 
@@ -248,6 +250,8 @@ export const createEstore = async (req: Request, res: Response) => {
 
   // check if the body is not empty
   if (Object.keys(eStoreData).length) {
+    // send a response back to tfm-api
+    res.status(200).send();
     const cronJobLogsCollection = await getCollection('cron-job-logs');
 
     // keep track of new submissions
@@ -296,7 +300,7 @@ export const createEstore = async (req: Request, res: Response) => {
           { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
           { $set: { siteName: siteCreationResponse.data.siteName } },
         );
-        // add a new job to the `Cron Job Manager` queue that runs every 40 seconds
+        // add a new job to the `Cron Job Manager` queue that runs every 50 seconds
         // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
         eStoreCronJobManager.add(siteCreationResponse.data.siteName, siteCreationTimer, async () => {
           await eStoreSiteCreationJob(eStoreData);
@@ -324,9 +328,8 @@ export const createEstore = async (req: Request, res: Response) => {
         { $set: { siteExistsResponse } },
       );
     }
-
-    return res.status(200).send();
+  } else {
+    console.error('eStore body is empty', { eStoreData });
+    res.status(400).send({ message: 'eStore body is empty', status: 400 });
   }
-  console.error('eStore body is empty', { eStoreData });
-  return res.status(400).send({ message: 'eStore body is empty', status: 400 });
 };

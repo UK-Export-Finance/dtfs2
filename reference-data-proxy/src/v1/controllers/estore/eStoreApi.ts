@@ -16,7 +16,7 @@ import {
   UploadDocumentsResponse,
   TermStoreResponse,
 } from '../../../interfaces';
-import { sendEmail } from '../sendEmail.controller';
+import { sendEmail } from '../email.controller';
 import { getCollection } from '../../../database';
 
 import { EMAIL_TEMPLATES } from '../../../constants';

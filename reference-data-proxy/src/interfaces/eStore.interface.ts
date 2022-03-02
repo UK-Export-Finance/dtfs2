@@ -40,51 +40,51 @@ export interface EstoreDealFiles {
 }
 
 export interface SiteCreationResponse {
-  status: number;
-  data: {
+  readonly status: number;
+  readonly data: {
     siteName: string;
   };
 }
 
 export interface SiteExistsResponse {
-  status: number;
-  data: {
+  readonly status: number;
+  readonly data: {
     status: string;
     siteName: string;
   };
 }
 
 export interface BuyerFolderResponse {
-  status: number;
-  data: {
+  readonly status: number;
+  readonly data: {
     buyerName: string;
   };
 }
 
 export interface DealFolderResponse {
-  status: number;
-  data: {
+  readonly status: number;
+  readonly data: {
     foldername: string;
   };
 }
 
 export interface FacilityFolderResponse {
-  status: number;
-  data: {
+  readonly status: number;
+  readonly data: {
     foldername: string;
   };
 }
 
 export interface UploadDocumentsResponse {
-  status: number;
-  data: {
+  readonly status: number;
+  readonly data: {
     fileUpload: string;
   };
 }
 
 export interface TermStoreResponse {
-  status: number;
-  data: {
+  readonly status: number;
+  readonly data: {
     message: string;
   };
 }

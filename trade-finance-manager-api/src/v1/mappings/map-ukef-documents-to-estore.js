@@ -42,15 +42,17 @@ const eStoreMap = {
 const mapUKEFDocumentsToEstore = (files) => {
   const documents = [];
 
-  const nonDocuments = ['validationErrors', 'security', 'status', 'securityDetails'];
+  const nonDocuments = ['validationErrors', 'security', 'status', 'securityDetails', 'requiredFields'];
   Object.keys(files).forEach((file) => {
     if (!nonDocuments.includes(file)) {
       Object.values(files[file]).forEach((val) => {
-        documents.push({
-          documentType: eStoreMap[file].eStoreName,
-          fileName: val.filename,
-          fileLocationPath: val.folder ? `files/${val.folder}` : `files/portal_storage/${val._id}/${val.documentPath}/`,
-        });
+        if (eStoreMap[file]?.eStoreName) {
+          documents.push({
+            documentType: eStoreMap[file].eStoreName,
+            fileName: val.filename,
+            fileLocationPath: val.folder ? `files/${val.folder}` : `files/portal_storage/${val._id}/${val.documentPath}/`,
+          });
+        }
       });
     }
   });
