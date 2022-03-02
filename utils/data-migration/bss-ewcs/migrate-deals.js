@@ -23,7 +23,7 @@ const consoleLogColor = require('./helpers/console-log-colour');
 
 const log = require('./helpers/log');
 const { getToken, removeMigrationUser } = require('./temporary-token-handler');
-const api = require('./api');
+const api = require('../api');
 
 const Entities = require('html-entities').AllHtmlEntities;
 
