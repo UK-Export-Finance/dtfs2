@@ -35,7 +35,7 @@ const importBssEwcsDeal = async (deal, token) => {
   };
 };
 
-const importGefDeal = async (deal, token) => {
+const importGefDeal = async (deal, facilities, token) => {
   const response = await axios({
     method: 'post',
     headers: {
@@ -44,12 +44,15 @@ const importGefDeal = async (deal, token) => {
       Authorization: token || '',
     },
     url: `${urlRoot}/v1/deals/import/GEF`,
-    data: deal,
+    data: {
+      deal,
+      facilities,
+    },
   }).catch(({ response: data }) => ({ error: true, data: data.data }));
 
   return {
     success: !response.error,
-    deal: response.data,
+    data: response.data,
   };
 };
 

@@ -1,5 +1,6 @@
 const db = require('../../drivers/db-client');
 const { isSuperUser } = require('../users/checks');
+const { importFacilities } = require('./facilities-import-gef.controller');
 
 const importDealAndFacilities = async (req, res) => {
   if (!isSuperUser(req.user)) {
@@ -8,19 +9,31 @@ const importDealAndFacilities = async (req, res) => {
 
   const collection = await db.getCollection('deals');
 
-  const newDeal = req.body;
+  const {
+    deal,
+    facilities,
+  } = req.body;
 
-  const deal = await collection.insertOne({ ...newDeal });
+  const createdDeal = await collection.insertOne({ ...deal });
 
-  if (!deal.insertedId) {
-    return res.status(400).send(`Error importing V1 GEF deal with id: ${newDeal.dataMigration.drupalDealId}`);
+  const { insertedId: dealId } = createdDeal;
+
+  if (!dealId) {
+    return res.status(400).send(`Error importing V1 GEF deal with id: ${deal.dataMigration.drupalDealId}`);
   }
 
-  const { insertedId: dealId } = deal;
+  const dealData = createdDeal.ops && createdDeal.ops[0];
 
-  const createdDeal = deal.ops && deal.ops[0];
+  const createdFacilities = await importFacilities(facilities);
 
-  return res.status(200).send(createdDeal);
+  if (!createdFacilities) {
+    return res.status(400).send(`Error importing V1 GEF facilities with deal id: ${deal.dataMigration.drupalDealId}`);
+  }
+
+  return res.status(200).send({
+    deal: dealData,
+    facilities: createdFacilities,
+  });
 };
 
 exports.import = async (req, res) => {

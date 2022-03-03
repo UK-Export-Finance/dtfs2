@@ -10,8 +10,6 @@ const dealSubmissionDetails = require('./controllers/deal-submission-details.con
 const dealClone = require('./controllers/deal-clone.controller');
 const dealEligibilityCriteria = require('./controllers/deal-eligibility-criteria.controller');
 const dealEligibilityDocumentation = require('./controllers/deal-eligibility-documentation.controller');
-const dealImportBssEwcsController = require('./controllers/deal-import-bss-ewcs.controller');
-const dealImportGefController = require('./controllers/deal-import-gef.controller');
 const banks = require('./controllers/banks.controller');
 const currencies = require('./controllers/currencies.controller');
 const countries = require('./controllers/countries.controller');
@@ -28,6 +26,8 @@ const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const mga = require('./controllers/mga.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
+const dealImportBssEwcsController = require('./controllers/deal-import-bss-ewcs.controller');
+const dealImportGefController = require('./controllers/deal-import-gef.controller');
 
 const users = require('./users/routes');
 const { cleanXss, fileUpload } = require('./middleware');

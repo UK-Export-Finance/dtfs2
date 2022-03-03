@@ -38,11 +38,11 @@ const mapToV2 = () => {
   };
 };
 
-const addToDatabase = async (v2Deal) => {
-  await api.importGefDeal(v2Deal, token).then(async ({ success, deal }) => {
-    console.log('add to db - -----  success ', success);
-    console.log('add to db - -----  deal \n', deal);
-    if (v2Deal && success) {
+const addToDatabase = async (v2Deal, v2Facilities) => {
+  await api.importGefDeal(v2Deal, v2Facilities, token).then(async ({ success, data }) => {
+    const { deal, facilities } = data;
+
+    if (success && deal && facilities) {
       console.info(`Migrated v1 GEF deal ${v2Deal.dataMigration.drupalDealId} to v2`);
     } else {
       console.error(`Error Migrating v1 GEF deal ${v2Deal.dataMigration.drupalDealId} to v2`);
@@ -58,7 +58,11 @@ const doMigration = async () => {
     v2Facilities,
   } = mapToV2();
 
-  await addToDatabase(v2Deal);
+  await addToDatabase(
+    v2Deal,
+    v2Facilities,
+  );
+
   await teardown();
 };
 
