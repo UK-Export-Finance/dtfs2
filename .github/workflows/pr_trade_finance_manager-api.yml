@@ -201,7 +201,7 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose up -d
+        docker-compose -f docker-compose.gha.yml up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
