@@ -2,7 +2,13 @@
   {% set dealId = params.deal._id %}
   {% if loan.name %}
     {% if params.editable %}
-      <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details" class="govuk-link" data-cy="loan-bank-reference-number-link-{{loan._id}}">{{ loan.name }}</a>
+      <a href="/contract/{{ dealId }}/loan/{{ loan._id}}/guarantee-details"
+         class="govuk-link"
+         data-cy="loan-bank-reference-number-link-{{loan._id}}"
+         title="Loan {{loan.name}}"
+         aria-label="Loan {{loan.name}}">
+         {{ loan.name | safe }}
+      </a>
     {% else %}
       <span data-cy="loan-bank-reference-number-{{loan._id}}">
         {{ loan.name | safe }}

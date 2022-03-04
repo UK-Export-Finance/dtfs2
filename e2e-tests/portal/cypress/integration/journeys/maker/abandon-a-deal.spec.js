@@ -21,7 +21,10 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     contract.visit(deal);
-    contract.abandonLink().contains(`Abandon ${deal.bankInternalRefName}`);
+    contract.abandonLink().contains('Abandon');
+    contract.abandonLink().invoke('attr', 'aria-label').then((label) => {
+      expect(label).to.equal(`Abandon Deal ${deal.bankInternalRefName}`);
+    });
     contract.abandonButton().click();
 
     cy.title().should('eq', `Abandon Deal${defaults.pageTitleAppend}`);
@@ -41,7 +44,10 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     contract.visit(deal);
-    contract.abandonLink().contains(`Abandon ${deal.bankInternalRefName}`);
+    contract.abandonLink().contains('Abandon');
+    contract.abandonLink().invoke('attr', 'aria-label').then((label) => {
+      expect(label).to.equal(`Abandon Deal ${deal.bankInternalRefName}`);
+    });
     contract.abandonButton().click();
 
     // submit without a comment
@@ -57,7 +63,10 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     contract.visit(deal);
-    contract.abandonLink().contains(`Abandon ${deal.bankInternalRefName}`);
+    contract.abandonLink().contains('Abandon');
+    contract.abandonLink().invoke('attr', 'aria-label').then((label) => {
+      expect(label).to.equal(`Abandon Deal ${deal.bankInternalRefName}`);
+    });
     contract.abandonButton().click();
 
     // submit with a comment
