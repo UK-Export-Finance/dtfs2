@@ -35,7 +35,7 @@ context('User can login', () => {
     pages.landingPage.signInHeading().contains('Sign in');
     pages.landingPage.emailHeading().contains('Email address');
     pages.landingPage.passwordHeading().contains('Password');
-    pages.landingPage.submitButton().contains('Continue');
+    pages.landingPage.submitButton().contains('Sign in');
   });
 
   it('should login, redirect to /deals. Header displays user\'s first and last name and logout link', () => {
