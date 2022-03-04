@@ -16,4 +16,4 @@ echo "cd /home" >> /etc/profile
 rc-service sshd start
 
 echo "Intialising Node..."
-node server/index.js
+node server/index.js --max-old-space-size=700
