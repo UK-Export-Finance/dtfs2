@@ -51,6 +51,7 @@ const mapUKEFDocumentsToEstore = (files) => {
             documentType: eStoreMap[file].eStoreName,
             fileName: val.filename,
             fileLocationPath: val.folder ? `files/${val.folder}` : `files/portal_storage/${val._id}/${val.documentPath}/`,
+            parentId: val.parentId,
           });
         }
       });

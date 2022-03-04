@@ -4,6 +4,7 @@ const CONSTANTS = require('../../constants');
 
 describe('mapCreateEstore', () => {
   const mockBssDeal = {
+    _id: '6221ee3e14a7efbadb431798',
     dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
     buyer: {
       name: 'Test',
@@ -30,7 +31,7 @@ describe('mapCreateEstore', () => {
       securityDetails: { exporter: 'Test' },
       exporterQuestionnaire: [
         {
-          type: 'general_correspondence',
+          parentId: '6221d67cff7e6100a511c9a9',
           fullPath: 'portal_storage/621f41e23ce31d0012c36afe/file2.png',
           filename: 'file2.png',
           folder: 'portal_storage/621f41e23ce31d0012c36afe',
@@ -38,6 +39,7 @@ describe('mapCreateEstore', () => {
       ],
       auditedFinancialStatements: [
         {
+          parentId: '6221d67cff7e6100a511c9a9',
           fullPath: 'portal_storage/621f41e23ce31d0012c36afe/file4.png',
           filename: 'file4.png',
           folder: 'portal_storage/621f41e23ce31d0012c36afe',
@@ -45,6 +47,7 @@ describe('mapCreateEstore', () => {
       ],
       yearToDateManagement: [
         {
+          parentId: '6221d67cff7e6100a511c9a9',
           fullPath: 'portal_storage/621f41e23ce31d0012c36afe/file7.png',
           filename: 'file7.png',
           folder: 'portal_storage/621f41e23ce31d0012c36afe',
@@ -52,6 +55,7 @@ describe('mapCreateEstore', () => {
       ],
       corporateStructure: [
         {
+          parentId: '6221d67cff7e6100a511c9a9',
           fullPath: 'portal_storage/621f41e23ce31d0012c36afe/file8.png',
           filename: 'file8.png',
           folder: 'portal_storage/621f41e23ce31d0012c36afe',
@@ -59,6 +63,7 @@ describe('mapCreateEstore', () => {
       ],
       financialInformationCommentary: [
         {
+          parentId: '6221d67cff7e6100a511c9a9',
           fullPath: 'portal_storage/621f41e23ce31d0012c36afe/file5.png',
           filename: 'file5.png',
           folder: 'portal_storage/621f41e23ce31d0012c36afe',
@@ -66,6 +71,7 @@ describe('mapCreateEstore', () => {
       ],
       financialForecasts: [
         {
+          parentId: '6221d67cff7e6100a511c9a9',
           fullPath: 'portal_storage/621f41e23ce31d0012c36afe/cats8.png',
           filename: 'cats8.png',
           folder: 'portal_storage/621f41e23ce31d0012c36afe',
@@ -75,6 +81,7 @@ describe('mapCreateEstore', () => {
   };
 
   const mockGefDeal = {
+    _id: '6221edcff154ec00136fcfef',
     dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
     exporter: {
       companyName: 'Testing',
@@ -88,7 +95,7 @@ describe('mapCreateEstore', () => {
       manualInclusion: [
         {
           _id: '621f4501827574001e0ebf6d',
-
+          parentId: '6221d87ceee25648b62aa043',
           filename: 'file1.png',
           documentPath: 'manualInclusion',
         },
@@ -96,6 +103,7 @@ describe('mapCreateEstore', () => {
       yearToDateManagement: [
         {
           _id: '621f4506827574001e0ebf6e',
+          parentId: '6221d87ceee25648b62aa043',
           filename: 'file2.png',
           documentPath: 'yearToDateManagement',
         },
@@ -103,6 +111,7 @@ describe('mapCreateEstore', () => {
       auditedFinancialStatements: [
         {
           _id: '621f450a827574001e0ebf6f',
+          parentId: '6221d87ceee25648b62aa043',
           filename: 'file3.png',
           documentPath: 'auditedFinancialStatements',
         },
@@ -110,6 +119,7 @@ describe('mapCreateEstore', () => {
       financialForecasts: [
         {
           _id: '621f450e827574001e0ebf70',
+          parentId: '6221d87ceee25648b62aa043',
           filename: 'file4.png',
           documentPath: 'financialForecasts',
         },
@@ -117,6 +127,7 @@ describe('mapCreateEstore', () => {
       financialInformationCommentary: [
         {
           _id: '621f4513827574001e0ebf71',
+          parentId: '6221d87ceee25648b62aa043',
           filename: 'file5.png',
           documentPath: 'financialInformationCommentary',
         },
@@ -124,6 +135,7 @@ describe('mapCreateEstore', () => {
       corporateStructure: [
         {
           _id: '621f4518827574001e0ebf72',
+          parentId: '6221d87ceee25648b62aa043',
           filename: 'file6.png',
           documentPath: 'corporateStructure',
         },
@@ -131,6 +143,7 @@ describe('mapCreateEstore', () => {
       debtorAndCreditorReports: [
         {
           _id: '621f452b827574001e0ebf75',
+          parentId: '6221d87ceee25648b62aa043',
           filename: 'file8.png',
           documentPath: 'debtorAndCreditorReports',
         },
@@ -138,6 +151,7 @@ describe('mapCreateEstore', () => {
       exportLicence: [
         {
           _id: '621f4521827574001e0ebf74',
+          parentId: '6221d87ceee25648b62aa043',
           filename: 'file7.png',
           documentPath: 'exportLicence',
         },
@@ -165,6 +179,7 @@ describe('mapCreateEstore', () => {
       const result = mapCreateEstore(mockBssDeal);
 
       const expected = {
+        dealId: '6221ee3e14a7efbadb431798',
         exporterName: formatNameForSharepoint(mockBssDeal.exporter.companyName),
         buyerName: formatNameForSharepoint(mockBssDeal.buyer.name),
         dealIdentifier: mockBssDeal.ukefDealId,
@@ -174,31 +189,37 @@ describe('mapCreateEstore', () => {
         dealType: mockBssDeal.dealType,
         supportingInformation: [
           {
+            parentId: '6221d67cff7e6100a511c9a9',
             documentType: 'Exporter_questionnaire',
             fileLocationPath: `files/${mockBssDeal.supportingInformation.exporterQuestionnaire[0].folder}`,
             fileName: mockBssDeal.supportingInformation.exporterQuestionnaire[0].filename,
           },
           {
+            parentId: '6221d67cff7e6100a511c9a9',
             documentType: 'Audited_financial_statements',
             fileLocationPath: `files/${mockBssDeal.supportingInformation.auditedFinancialStatements[0].folder}`,
             fileName: mockBssDeal.supportingInformation.auditedFinancialStatements[0].filename,
           },
           {
+            parentId: '6221d67cff7e6100a511c9a9',
             documentType: 'Year_to_date_management',
             fileLocationPath: `files/${mockBssDeal.supportingInformation.yearToDateManagement[0].folder}`,
             fileName: mockBssDeal.supportingInformation.yearToDateManagement[0].filename,
           },
           {
+            parentId: '6221d67cff7e6100a511c9a9',
             documentType: 'Corporate_structure',
             fileLocationPath: `files/${mockBssDeal.supportingInformation.corporateStructure[0].folder}`,
             fileName: mockBssDeal.supportingInformation.corporateStructure[0].filename,
           },
           {
+            parentId: '6221d67cff7e6100a511c9a9',
             documentType: 'Financial_information_commentary',
             fileLocationPath: `files/${mockBssDeal.supportingInformation.financialInformationCommentary[0].folder}`,
             fileName: mockBssDeal.supportingInformation.financialInformationCommentary[0].filename,
           },
           {
+            parentId: '6221d67cff7e6100a511c9a9',
             documentType: 'Financial_forecasts',
             fileLocationPath: `files/${mockBssDeal.supportingInformation.financialForecasts[0].folder}`,
             fileName: mockBssDeal.supportingInformation.financialForecasts[0].filename,
@@ -215,6 +236,7 @@ describe('mapCreateEstore', () => {
       const result = mapCreateEstore(mockGefDeal);
 
       const expected = {
+        dealId: '6221edcff154ec00136fcfef',
         exporterName: formatNameForSharepoint(mockGefDeal.exporter.companyName),
         buyerName: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealIdentifier: mockGefDeal.ukefDealId,
@@ -224,41 +246,49 @@ describe('mapCreateEstore', () => {
         dealType: mockGefDeal.dealType,
         supportingInformation: [
           {
+            parentId: '6221d87ceee25648b62aa043',
             documentType: 'Exporter_questionnaire',
             fileLocationPath: `files/portal_storage/${mockGefDeal.supportingInformation.manualInclusion[0]._id}/${mockGefDeal.supportingInformation.manualInclusion[0].documentPath}/`,
             fileName: mockGefDeal.supportingInformation.manualInclusion[0].filename,
           },
           {
+            parentId: '6221d87ceee25648b62aa043',
             documentType: 'Year_to_date_management',
             fileLocationPath: `files/portal_storage/${mockGefDeal.supportingInformation.yearToDateManagement[0]._id}/${mockGefDeal.supportingInformation.yearToDateManagement[0].documentPath}/`,
             fileName: mockGefDeal.supportingInformation.yearToDateManagement[0].filename,
           },
           {
+            parentId: '6221d87ceee25648b62aa043',
             documentType: 'Audited_financial_statements',
             fileLocationPath: `files/portal_storage/${mockGefDeal.supportingInformation.auditedFinancialStatements[0]._id}/${mockGefDeal.supportingInformation.auditedFinancialStatements[0].documentPath}/`,
             fileName: mockGefDeal.supportingInformation.auditedFinancialStatements[0].filename,
           },
           {
+            parentId: '6221d87ceee25648b62aa043',
             documentType: 'Financial_forecasts',
             fileLocationPath: `files/portal_storage/${mockGefDeal.supportingInformation.financialForecasts[0]._id}/${mockGefDeal.supportingInformation.financialForecasts[0].documentPath}/`,
             fileName: mockGefDeal.supportingInformation.financialForecasts[0].filename,
           },
           {
+            parentId: '6221d87ceee25648b62aa043',
             documentType: 'Financial_information_commentary',
             fileLocationPath: `files/portal_storage/${mockGefDeal.supportingInformation.financialInformationCommentary[0]._id}/${mockGefDeal.supportingInformation.financialInformationCommentary[0].documentPath}/`,
             fileName: mockGefDeal.supportingInformation.financialInformationCommentary[0].filename,
           },
           {
+            parentId: '6221d87ceee25648b62aa043',
             documentType: 'Corporate_structure',
             fileLocationPath: `files/portal_storage/${mockGefDeal.supportingInformation.corporateStructure[0]._id}/${mockGefDeal.supportingInformation.corporateStructure[0].documentPath}/`,
             fileName: mockGefDeal.supportingInformation.corporateStructure[0].filename,
           },
           {
+            parentId: '6221d87ceee25648b62aa043',
             documentType: 'Audited_financial_statements',
             fileLocationPath: `files/portal_storage/${mockGefDeal.supportingInformation.debtorAndCreditorReports[0]._id}/${mockGefDeal.supportingInformation.debtorAndCreditorReports[0].documentPath}/`,
             fileName: mockGefDeal.supportingInformation.debtorAndCreditorReports[0].filename,
           },
           {
+            parentId: '6221d87ceee25648b62aa043',
             documentType: 'Financial_information_commentary',
             fileLocationPath: `files/portal_storage/${mockGefDeal.supportingInformation.exportLicence[0]._id}/${mockGefDeal.supportingInformation.exportLicence[0].documentPath}/`,
             fileName: mockGefDeal.supportingInformation.exportLicence[0].filename,

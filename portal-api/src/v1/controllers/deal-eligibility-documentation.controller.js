@@ -70,6 +70,7 @@ exports.update = async (req, res) => {
         }
 
         return {
+          parentId: req.params.id,
           fieldname,
           type: getFileType(fieldname),
           fullPath: fileInfo.fullPath,

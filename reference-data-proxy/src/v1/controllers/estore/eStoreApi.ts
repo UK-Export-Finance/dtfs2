@@ -46,7 +46,7 @@ const postToEstore = async (
     const tfmUserCollection = await getCollection('tfm-users');
     const tfmDevUser = await tfmUserCollection.aggregate([{ $match: { teams: { $in: ['DEVELOPERS'] } } }, { $project: { _id: 0, email: 1 } }]).toArray();
 
-    if (tfmDevUser) {
+    if (tfmDevUser && error?.response?.status !== 404) {
       const data = {
         apiEndpoint,
         apiPayload,

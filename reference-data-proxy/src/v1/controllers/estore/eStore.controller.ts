@@ -213,6 +213,22 @@ const eStoreSiteCreationJob = async (eStoreData: any) => {
     eStoreFolders(data);
   } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
     console.info('Cron job continues: eStore Site Creation Cron Job continues to run');
+    // increment the siteCreationRetries by 1
+    const response = await cronJobLogsCollection.findOneAndUpdate(
+      { dealIdentifier: data.dealIdentifier, exporterName: data.exporterName, buyerName: data.buyerName },
+      { $inc: { siteCreationRetries: 1 } },
+      { returnDocument: 'after' },
+    );
+    // stop the siteCreation Cron Job after 50 retries
+    if (response.value.siteCreationRetries === 50) {
+      // stop and delete the cron job - this to release the memory
+      eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteName);
+      // update the record inside `cron-job-logs` collection
+      await cronJobLogsCollection.findOneAndUpdate(
+        { exporterName: eStoreData.exporterName },
+        { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': Date.now() } },
+      );
+    }
   } else {
     console.error(`API Call (Cron Job) failed: Unable to create a new site for ${eStoreData.exporterName}`, siteExistsResponse);
     // stop and delete the cron job - this to release the memory
