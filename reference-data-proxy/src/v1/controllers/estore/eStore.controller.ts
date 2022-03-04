@@ -220,7 +220,7 @@ const eStoreSiteCreationJob = async (eStoreData: any) => {
       { returnDocument: 'after' },
     );
     // stop the siteCreation Cron Job after 50 retries
-    if (response.value.siteCreationRetries === 50) {
+    if (response?.value?.siteCreationRetries === 50) {
       // stop and delete the cron job - this to release the memory
       eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteName);
       // update the record inside `cron-job-logs` collection
