@@ -30,6 +30,14 @@ context('User can login', () => {
     });
   });
 
+  it('login page should contain correct components and text', () => {
+    pages.landingPage.visit();
+    pages.landingPage.signInHeading().contains('Sign in');
+    pages.landingPage.emailHeading().contains('Email address');
+    pages.landingPage.passwordHeading().contains('Password');
+    pages.landingPage.submitButton().contains('Continue');
+  });
+
   it('should login, redirect to /deals. Header displays user\'s first and last name and logout link', () => {
     pages.landingPage.visit();
     pages.landingPage.email().type(MOCK_USERS[0].username);
