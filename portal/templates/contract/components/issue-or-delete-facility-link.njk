@@ -28,9 +28,9 @@
 
     {% elseif (userIsMaker and dealIsEditable) and (dealStatus === "Draft" or dealStatus === "Further Maker's input required") and not dealSubmissionDate %}
       {% if facility.name %}
-        <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete {{ facilityName }} {{ facility.name }}">Delete {{ facility.name }}</a>
+        <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete {{ facility.type }} {{ facilityTableIndex }}">Delete {{ facility.name }}</a>
       {% else %}
-        <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete {{ facilityName }} {{ facilityTableIndex }}">Delete {{ facilityName }}</a>
+        <a href="/contract/{{ dealId }}/{{ facilityName }}/{{ facility._id}}/delete" class="govuk-link" data-cy="{{ facilityName }}-delete-{{ facility._id }}" aria-label="Delete {{ facility.type }} {{ facilityTableIndex }}">Delete {{ facility.type | lower | safe }}</a>
       {% endif %}
   {% endif %}
 
