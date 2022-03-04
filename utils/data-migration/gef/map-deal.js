@@ -83,7 +83,7 @@ const mapV1Deal = (v1Deal, v2Users) => {
 
   const mapped = {
     dataMigration: {
-      drupalDealId: v1Deal.drupal_id,
+      drupalDealId: String(v1Deal.drupal_id),
     },
     bankInternalRefName: v1Deal.bank_deal_name,
     additionalRefName: v1Deal.field_bank_deal_id,

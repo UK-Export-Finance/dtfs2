@@ -70,7 +70,7 @@ const mapV1Facilities = (
 
     const mapped = {
       dataMigration: {
-        drupalFacilityId: v1Facility.drupal_facility_id,
+        drupalFacilityId: String(v1Facility.drupal_facility_id),
       },
       type: MIGRATION_MAP.FACILITIES.TYPE[v1Facility.facility_type],
       ukefFacilityId: v1Facility.ukef_facility_id,
