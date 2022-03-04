@@ -96,9 +96,7 @@ router.get('/reset-password/:pwdResetToken', (req, res) => res.render(
 
 router.post('/reset-password/:pwdResetToken', async (req, res) => {
   const { pwdResetToken } = requestParams(req);
-
   const { data } = await api.resetPasswordFromToken(pwdResetToken, req.body);
-
   const formattedValidationErrors = generateErrorSummary(
     data.errors,
     errorHref,
