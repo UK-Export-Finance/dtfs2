@@ -8,6 +8,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const goToCloneDealPage = (deal) => {
   cy.loginGoToDealPage(BANK1_MAKER1, deal);
+  pages.contract.cloneDealLink().contains(`Clone ${deal.bankInternalRefName}`);
   pages.contract.cloneDealLink().click();
   cy.url().should('include', '/clone/before-you-start');
 

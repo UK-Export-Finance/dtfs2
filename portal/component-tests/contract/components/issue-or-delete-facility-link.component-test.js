@@ -91,7 +91,7 @@ describe(component, () => {
             user, deal, facility, facilityName, facilityTableIndex, editable: true,
           });
           wrapper.expectLink(`[data-cy="${facilityName}-delete-${facility._id}"]`)
-            .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, 'Delete');
+            .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, 'Delete Loan');
 
           wrapper.expectAriaLabel(`[data-cy="${facilityName}-delete-${facility._id}"]`)
             .toEqual(`Delete ${facilityName} ${facilityTableIndex}`);

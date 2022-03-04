@@ -10,10 +10,10 @@
     {% endif %}
   {% else %}
     {% if params.editable %}
-      <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="name-link-{{bond._id}}">Not entered</a>
+      <a href="/contract/{{ dealId }}/bond/{{ bond._id}}/details" class="govuk-link" data-cy="name-link-{{bond._id}}">Bond’s reference number not entered</a>
     {% else %}
-    <span data-cy="name-{{bond._id}}">
-        Not entered
+      <span data-cy="name-{{bond._id}}">
+          Bond’s reference number not entered
       </span>
     {% endif %}
   {% endif %}

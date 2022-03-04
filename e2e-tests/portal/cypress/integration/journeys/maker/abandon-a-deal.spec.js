@@ -21,6 +21,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     contract.visit(deal);
+    contract.abandonLink().contains(`Abandon ${deal.bankInternalRefName}`);
     contract.abandonButton().click();
 
     cy.title().should('eq', `Abandon Deal${defaults.pageTitleAppend}`);
@@ -40,6 +41,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     contract.visit(deal);
+    contract.abandonLink().contains(`Abandon ${deal.bankInternalRefName}`);
     contract.abandonButton().click();
 
     // submit without a comment
@@ -55,6 +57,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     contract.visit(deal);
+    contract.abandonLink().contains(`Abandon ${deal.bankInternalRefName}`);
     contract.abandonButton().click();
 
     // submit with a comment
@@ -66,7 +69,6 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     successMessage.successMessageListItem().invoke('text').then((text) => {
       expect(text.trim()).to.match(/Supply Contract abandoned./);
     });
-
 
     // visit the deal and confirm the updates have been made
     contract.visit(deal);
