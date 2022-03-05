@@ -1,10 +1,6 @@
 import express from 'express';
 import compression from 'compression';
-import * as dotenv from 'dotenv';
-
-import { apiRoutes, swaggerRoutes, healthcheck, cronJob } from './v1/routes';
-
-dotenv.config();
+import { apiRoutes, swaggerRoutes, healthcheck } from './v1/routes';
 
 export const app: any = express();
 app.use(express.json());
@@ -16,4 +12,3 @@ app.use('/api-docs', swaggerRoutes);
 app.use(healthcheck);
 // all other API routes
 app.use(apiRoutes);
-app.use(cronJob);

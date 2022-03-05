@@ -525,7 +525,7 @@ const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url
 
 const createEstoreFolders = async (data) => {
   try {
-    await axios({
+    const response = await axios({
       method: 'post',
       url: `${refDataUrl}/estore`,
       headers: {
@@ -533,8 +533,10 @@ const createEstoreFolders = async (data) => {
       },
       data,
     });
+    return response.data;
   } catch (err) {
     console.error({ err });
+    return {};
   }
 };
 

@@ -42,7 +42,7 @@ const postToEstore = async (
     data: apiPayload,
     timeout,
   }).catch(async (error: any) => {
-    console.error(`Error calling eStore API (/${apiEndpoint}): ${error?.response?.status} \n`, error.response.data);
+    console.error(`Error calling eStore API (/${apiEndpoint}): ${error?.response?.status} \n`, error?.response?.data);
     const tfmUserCollection = await getCollection('tfm-users');
     const tfmDevUser = await tfmUserCollection.aggregate([{ $match: { teams: { $in: ['DEVELOPERS'] } } }, { $project: { _id: 0, email: 1 } }]).toArray();
 
@@ -56,7 +56,7 @@ const postToEstore = async (
       await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, tfmDevUser[0].email, data);
     }
 
-    return { data: error?.response?.data, status: error?.response?.status };
+    return { data: error?.response?.data || {}, status: error?.response?.status || {} };
   });
 
   return { data: response.data, status: response.status };

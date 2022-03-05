@@ -13,7 +13,7 @@ const mockResponse = {
 
 jest.mock('notifications-node-client', () => {
   class MockNotifyClient {
-    sendEmail: () => Promise<{ status: number; data: { content: { body: object }; id: string; template: object } }>;
+    sendEmail: () => Promise<{ status: number; data: { content: { body: {} }; id: string; template: {} } }>;
 
     constructor() {
       this.sendEmail = async () => Promise.resolve(mockResponse);

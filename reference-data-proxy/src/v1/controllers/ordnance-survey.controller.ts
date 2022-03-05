@@ -13,9 +13,9 @@ export const lookup = async (req: Request, res: Response) => {
   const response = await axios({
     method: 'get',
     url,
-  }).catch((error: any) => {
-    console.error('Error calling Ordnance Survey API', error.response.data, error.config.url, error.config.data);
-    return { data: error.response.data, status: error.response.status };
+  }).catch((catchErr) => {
+    console.error('Error calling Ordnance Survey API');
+    return catchErr.response;
   });
 
   const { status, data } = response;
