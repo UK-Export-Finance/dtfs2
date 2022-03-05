@@ -30,7 +30,7 @@ const facilityLoan = (deal, facility, acbsData) => {
   const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
   const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
     ? facility.tfm.facilityGuaranteeDates
-    : '';
+    : facility.update;
 
   let loanRecord = {
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
@@ -40,7 +40,7 @@ const facilityLoan = (deal, facility, acbsData) => {
     productTypeId: helpers.getProductTypeId(facility, deal.dealSnapshot.dealType),
     productTypeGroup: helpers.getProductTypeGroup(facility, deal.dealSnapshot.dealType),
     currency: facility.facilitySnapshot.currency.id,
-    amount: facility.tfm.ukefExposure,
+    amount: facility.tfm.ukefExposure || facility.facilitySnapshot.ukefExposure,
     issueDate,
     expiryDate: guaranteeExpiryDate,
     spreadRate: facility.facilitySnapshot.guaranteeFee || Number(facility.facilitySnapshot.guaranteeFeePayableByBank),
@@ -62,7 +62,7 @@ const facilityLoan = (deal, facility, acbsData) => {
   if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS_EWCS) {
     loanRecord = {
       ...loanRecord,
-      spreadRateCTL: helpers.getInterestPercentage(facility),
+      spreadRateCTL: helpers.getInterestOrFeeRate(facility),
       indexRateChangeFrequency: helpers.getFeeFrequency(facility),
     };
   }

@@ -90,24 +90,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
 
     // Records only created for `Issued` and `Activated` facilities only
     if (acbsFacilityMasterInput.facilityStageCode === CONSTANTS.FACILITY.STAGE_CODE.ISSUED) {
-      // 6. Facility fee record
-      const acbsFacilityFeeInput = mappings.facility.facilityFee(
-        deal,
-        facility,
-      );
-      console.log({ acbsFacilityFeeInput });
-      if (Array.isArray(acbsFacilityFeeInput)) {
-        facilityFee = [];
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
-          const input = acbsFacilityFeeInput[i];
-          facilityFee.push(yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { acbsFacilityFeeInput: input }));
-        }
-      } else {
-        facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { acbsFacilityFeeInput });
-      }
-
-      // 7. Facility loan record
+      // 6. Facility loan record
       const acbsFacilityLoanInput = mappings.facility.facilityLoan(
         deal,
         facility,
@@ -118,6 +101,23 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
         retryOptions,
         { acbsFacilityLoanInput },
       );
+      console.log('---2', { facilityLoan });
+      // 7. Facility fee record
+      const acbsFacilityFeeInput = mappings.facility.facilityFee(
+        deal,
+        facility,
+      );
+      console.log('---3', { acbsFacilityFeeInput });
+      if (Array.isArray(acbsFacilityFeeInput)) {
+        facilityFee = [];
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < acbsFacilityFeeInput.length; i++) {
+          const input = acbsFacilityFeeInput[i];
+          facilityFee.push(yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { acbsFacilityFeeInput: input }));
+        }
+      } else {
+        facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { acbsFacilityFeeInput });
+      }
     }
 
     return {

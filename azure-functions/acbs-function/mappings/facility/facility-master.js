@@ -66,7 +66,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     guaranteeExpiryDate,
     nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
     delegationType: helpers.getDelegationType(deal.dealSnapshot.submissionType),
-    intrestOrFeeRate: helpers.getInterestOrFeeRate(facility.facilitySnapshot, deal.dealSnapshot.dealType),
+    intrestOrFeeRate: helpers.getInterestOrFeeRate(facility),
     facilityStageCode,
     exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
     creditRatingCode: CONSTANTS.FACILITY.CREDIT_RATING.CODE14,

@@ -3,7 +3,6 @@ const $ = require('mongo-dot-notation');
 const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
-const isIssued = require('../helpers/is-issued');
 const CONSTANTS = require('../../constants');
 
 const addToACBSLog = async ({
@@ -120,12 +119,14 @@ const issueAcbsFacilities = async (deal) => {
      */
     return false;
   }
+  /**
+   * ACBS verification has been removed due to an ongoing bug of not receiving
+   * the `acbs` object imperative data thus preventing maker from issuing the facility.
+   * !isIssued(facilityStageInAcbs) && !facility.tfm.acbs.issuedFacilityMaster
+   * const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
+   */
 
-  const acbsIssuedFacilitiesPromises = deal.facilities.filter((facility) => {
-    // Only concerned with issued facilities on Portal that are not issued on ACBS
-    const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
-    return !isIssued(facilityStageInAcbs) && !facility.tfm.acbs.issuedFacilityMaster && facility.hasBeenIssued;
-  }).map((facility) => api.updateACBSfacility(facility, {
+  const acbsIssuedFacilitiesPromises = deal.facilities.filter((facility) => facility.hasBeenIssued).map((facility) => api.updateACBSfacility(facility, {
     dealSnapshot: {
       dealType: deal.dealType,
       submissionType: deal.submissionType,

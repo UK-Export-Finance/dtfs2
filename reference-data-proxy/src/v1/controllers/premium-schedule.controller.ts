@@ -15,10 +15,17 @@ const username: any = process.env.MULESOFT_API_UKEF_MDM_EA_KEY;
 const password: any = process.env.MULESOFT_API_UKEF_MDM_EA_SECRET;
 
 const postPremiumSchedule = async (premiumSchedulePayload: any) => {
+  const premiumSchedulePayloadFormatted = premiumSchedulePayload;
+
   if (objectIsEmpty(premiumSchedulePayload)) {
     return null;
   }
-  console.log(premiumSchedulePayload);
+
+  // Convert UKEF Facility ID to number else Mulesoft will throw 400
+  if (premiumSchedulePayload.facilityURN) {
+    premiumSchedulePayloadFormatted.facilityURN = Number(premiumSchedulePayload.facilityURN);
+  }
+
   const response = await axios({
     method: 'post',
     url: `${mdmEAurl}/premium/schedule`,
@@ -26,13 +33,17 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    data: [premiumSchedulePayload],
+    data: [premiumSchedulePayloadFormatted],
   }).catch((error: any) => {
-    console.error(`Error calling POST Premium schedule with facilityURN: ${premiumSchedulePayload.facilityURN} \n`, error.response.data, error.response.status);
+    console.error(
+      `Error calling POST Premium schedule with facilityURN: ${premiumSchedulePayloadFormatted.facilityURN} \n`,
+      error.response.data,
+      error.response.status,
+    );
     return { data: error?.response?.data, status: error?.response?.status };
   });
 
-  console.info(`Premium schedule successfully created for ${premiumSchedulePayload.facilityURN}`);
+  console.info(`Premium schedule successfully created for ${premiumSchedulePayloadFormatted.facilityURN}`);
   return response.status ? response.status : response;
 };
 
