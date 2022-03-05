@@ -49,7 +49,7 @@ jobs:
         add_git_labels: true
 
   test:
-    name: "Run PR tests"
+    name: "Run Central-API tests"
     needs: [set-environment, build]
     environment:
       name: APITEST
