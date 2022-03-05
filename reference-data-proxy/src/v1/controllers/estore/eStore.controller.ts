@@ -37,7 +37,7 @@ const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
 
       // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
       await cronJobLogsCollection.updateOne(
-        { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
+        { dealId: eStoreData.dealId },
         {
           $set: {
             'facilityCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
@@ -62,18 +62,15 @@ const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealIdentifier}`);
       console.error(`Unable to create the Facility Folders for ${eStoreData.dealIdentifier} deal`, facilityFoldersResponse);
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
-      await cronJobLogsCollection.findOneAndUpdate(
-        { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
+      await cronJobLogsCollection.updateOne(
+        { dealId: eStoreData.dealId },
         { $set: { facilityFoldersResponse, 'facilityCronJob.status': ESTORE_CRON_STATUS.FAILED, 'facilityCronJob.completionDate': Date.now() } },
       );
     }
   } else {
     // stop and delete the cron job - this to release the memory
     eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealIdentifier}`);
-    console.error(
-      `Unable to create the Facility Folders for ${eStoreData.dealIdentifier} deal. The current deal does not have any facility identifiers`,
-      eStoreData?.facilityIdentifiers,
-    );
+    console.error(`The current deal does not have any facility identifiers`, eStoreData?.facilityIdentifiers);
   }
 };
 
@@ -103,7 +100,7 @@ const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
 
     // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
     await cronJobLogsCollection.updateOne(
-      { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
+      { dealId: eStoreData.dealId },
       {
         $set: {
           'dealCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
@@ -125,8 +122,8 @@ const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
     // stop and delete the cron job - this to release the memory
     eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealIdentifier}`);
     // update the record inside `cron-job-logs` collection to indicate that the cron job failed
-    await cronJobLogsCollection.findOneAndUpdate(
-      { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
+    await cronJobLogsCollection.updateOne(
+      { dealId: eStoreData.dealId },
       { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.completionDate': Date.now() } },
     );
   }
@@ -158,7 +155,7 @@ const eStoreFolders = async (eStoreData: any) => {
       });
       // update the database to indicate that the deal cron job started
       await cronJobLogsCollection.updateOne(
-        { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
+        { dealId: eStoreData.dealId },
         { $set: { 'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'dealCronJob.startDate': Date.now() } },
       );
       console.info('Cron job started: eStore Deal folder Cron Job started');
@@ -166,18 +163,12 @@ const eStoreFolders = async (eStoreData: any) => {
     } else {
       console.error(`API Call failed: Unable to create the buyer folder for ${eStoreData.buyerName}`, buyerFolderResponse);
       // update the database to indicate that there was an issue creating the buyer Folder
-      await cronJobLogsCollection.updateOne(
-        { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-        { $set: { buyerFolderResponse } },
-      );
+      await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { buyerFolderResponse } });
     }
   } else {
     console.error('API Call failed: Unable to add the facilityIds to TermStore', { termStoreResponse });
     // update the database to indicate that there was an issue adding the facilityIds to TermStore
-    await cronJobLogsCollection.updateOne(
-      { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-      { $set: { termStoreResponse } },
-    );
+    await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { termStoreResponse } });
   }
 };
 
@@ -220,11 +211,12 @@ const eStoreSiteCreationJob = async (eStoreData: any) => {
       { returnDocument: 'after' },
     );
     // stop the siteCreation Cron Job after 50 retries
+    // this is to prevent it from running forever
     if (response?.value?.siteCreationRetries === 50) {
       // stop and delete the cron job - this to release the memory
       eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteName);
       // update the record inside `cron-job-logs` collection
-      await cronJobLogsCollection.findOneAndUpdate(
+      await cronJobLogsCollection.updateOne(
         { exporterName: eStoreData.exporterName },
         { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': Date.now() } },
       );
@@ -234,7 +226,7 @@ const eStoreSiteCreationJob = async (eStoreData: any) => {
     // stop and delete the cron job - this to release the memory
     eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteName);
     // update the record inside `cron-job-logs` collection
-    await cronJobLogsCollection.findOneAndUpdate(
+    await cronJobLogsCollection.updateOne(
       { exporterName: eStoreData.exporterName },
       { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': Date.now() } },
     );
@@ -262,11 +254,12 @@ const checkExistingCronJobs = async () => {
 checkExistingCronJobs();
 
 export const createEstore = async (req: Request, res: Response) => {
-  const eStoreData = req.body;
+  const eStoreData: Estore = req.body;
 
   // check if the body is not empty
   if (Object.keys(eStoreData).length) {
     // send a response back to tfm-api
+    // this is because we are not waiting for the cron-jobs to finish
     res.status(200).send();
     const cronJobLogsCollection = await getCollection('cron-job-logs');
 
@@ -289,10 +282,7 @@ export const createEstore = async (req: Request, res: Response) => {
     // check if site exists in eStore
     if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
       // update the database to indicate that the site exists in eStore
-      await cronJobLogsCollection.updateOne(
-        { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-        { $set: { siteExists: true, siteName: siteExistsResponse.data.siteName } },
-      );
+      await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteExists: true, siteName: siteExistsResponse.data.siteName } });
 
       eStoreData.siteName = siteExistsResponse.data.siteName;
 
@@ -300,10 +290,7 @@ export const createEstore = async (req: Request, res: Response) => {
       eStoreFolders(eStoreData);
     } else if (siteExistsResponse?.status === 404 && siteExistsResponse?.data?.siteName === '') {
       // update the database to indicate that a new cron job needs to be created to add a new site to Sharepoint
-      await cronJobLogsCollection.updateOne(
-        { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-        { $set: { siteCronJob: { status: ESTORE_CRON_STATUS.PENDING } } },
-      );
+      await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteCronJob: { status: ESTORE_CRON_STATUS.PENDING } } });
 
       // send a request to eStore to start creating the eStore site
       console.info('API Call started: Create a new eStore site for ', eStoreData.exporterName);
@@ -312,10 +299,7 @@ export const createEstore = async (req: Request, res: Response) => {
       // check if the siteCreation endpoint returns a siteName - this is usually a number (i.e. 12345)
       if (siteCreationResponse?.data?.siteName) {
         // update the database with the new siteName
-        await cronJobLogsCollection.updateOne(
-          { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-          { $set: { siteName: siteCreationResponse.data.siteName } },
-        );
+        await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteName: siteCreationResponse.data.siteName } });
         // add a new job to the `Cron Job Manager` queue that runs every 50 seconds
         // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
         eStoreCronJobManager.add(siteCreationResponse.data.siteName, siteCreationTimer, async () => {
@@ -324,25 +308,19 @@ export const createEstore = async (req: Request, res: Response) => {
         console.info('Cron job started: eStore Site Creation Cron Job started ', siteCreationResponse.data.siteName);
         // update the database to indicate that the `site cron job` started
         await cronJobLogsCollection.updateOne(
-          { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
+          { dealId: eStoreData.dealId },
           { $set: { 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'siteCronJob.startDate': Date.now() } },
         );
         eStoreCronJobManager.start(siteCreationResponse.data.siteName);
       } else {
         console.error('API Call failed: Unable to create a new site in eStore', { siteCreationResponse });
         // update the database to indicate that the API call failed
-        await cronJobLogsCollection.updateOne(
-          { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-          { $set: siteCreationResponse },
-        );
+        await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: siteCreationResponse });
       }
     } else {
       console.error('API Call failed: Unable to check if a site exists', { siteExistsResponse });
       // update the database to indicate that the API call failed
-      await cronJobLogsCollection.updateOne(
-        { dealIdentifier: eStoreData.dealIdentifier, exporterName: eStoreData.exporterName, buyerName: eStoreData.buyerName },
-        { $set: { siteExistsResponse } },
-      );
+      await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteExistsResponse } });
     }
   } else {
     console.error('eStore body is empty', { eStoreData });

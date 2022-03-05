@@ -1,4 +1,5 @@
 export interface Estore {
+  dealId: string;
   siteName: string;
   facilityIdentifiers: number[];
   supportingInformation: string[];
