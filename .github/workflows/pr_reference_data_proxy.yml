@@ -45,7 +45,7 @@ jobs:
         add_git_labels: true
 
   test:
-    name: "Run PR tests"
+    name: "Run Third Party API tests"
     needs: [set-environment, build]
     environment:
       name: APITEST
@@ -101,7 +101,6 @@ jobs:
     - name: Run API tests
       run: |
         docker-compose exec -T reference-data-proxy npm run api-test
-
 
     - uses: act10ns/slack@v1
       with:

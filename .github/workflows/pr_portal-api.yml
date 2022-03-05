@@ -105,7 +105,7 @@ jobs:
         add_git_labels: true
 
   test:
-    name: "Run PR tests"
+    name: "Run Portal API tests"
     needs: build
     environment:
       name: APITEST
@@ -174,6 +174,14 @@ jobs:
     environment:
       name: E2ETEST
     runs-on: ubuntu-latest
+    strategy:
+      # when one test fails, DO NOT cancel the other
+      # containers, because this will kill Cypress processes
+      # leaving the Dashboard hanging ...
+      # https://github.com/cypress-io/github-action/issues/48
+      fail-fast: false
+      matrix:
+        machines: [ 1, 2, 3, 4 ]
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
       AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
