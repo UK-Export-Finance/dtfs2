@@ -1,4 +1,4 @@
-name: `Development` environment deployment
+name: Development environment deployment
 
 on:
   push:

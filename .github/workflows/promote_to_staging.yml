@@ -1,4 +1,4 @@
-name: `Staging` environment deployment
+name: Staging environment deployment
 
 on:
   push:
