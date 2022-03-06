@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { ObjectId } = require('mongodb');
 import { getCollection } from '../../../database';
 import { Estore, TermStoreResponse, BuyerFolderResponse, SiteExistsResponse } from '../../../interfaces';
-import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
+import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, UKEF_ID } from '../../../constants';
 import { eStoreCronJobManager } from '../../../cronJobs';
 import {
   createFacilityFolder,
@@ -19,6 +21,7 @@ const facilityCreationTimer = '30 * * * * *';
 
 const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
   const cronJobLogsCollection = await getCollection('cron-job-logs');
+  // check if there are any facilityIds
   if (eStoreData.facilityIdentifiers.length) {
     // create the Facility folders
     const facilityFoldersResponse: any = await Promise.all(
@@ -47,19 +50,22 @@ const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       );
 
       // stop and the delete the cron job - this in order to release the memory
-      eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealIdentifier}`);
+      eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
 
-      console.info('Task started: Upload the supporting documents');
-      const uploadDocuments = Promise.all(
-        eStoreData.supportingInformation.map((file: any) =>
-          uploadSupportingDocuments(eStoreData.siteName, eStoreData.dealIdentifier, eStoreData.buyerName, { ...file }),
-        ),
-      );
-      uploadDocuments.then((response) => console.info('Task completed: Supporting documents uploaded successfully', response[0].data));
-      uploadDocuments.catch((e) => console.error('Task failed: There was a problem uploading the documents', { e }));
+      // check if there are any supporting documents
+      if (eStoreData.supportingInformation.length) {
+        console.info('Task started: Upload the supporting documents');
+        const uploadDocuments = Promise.all(
+          eStoreData.supportingInformation.map((file: any) =>
+            uploadSupportingDocuments(eStoreData.siteName, eStoreData.dealIdentifier, eStoreData.buyerName, { ...file }),
+          ),
+        );
+        uploadDocuments.then((response) => console.info('Task completed: Supporting documents uploaded successfully', response[0].data));
+        uploadDocuments.catch((e) => console.error('Task failed: There was a problem uploading the documents', { e }));
+      }
     } else {
       // stop and delete the cron job - this to release the memory
-      eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealIdentifier}`);
+      eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
       console.error(`Unable to create the Facility Folders for ${eStoreData.dealIdentifier} deal`, facilityFoldersResponse);
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
@@ -69,106 +75,143 @@ const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
     }
   } else {
     // stop and delete the cron job - this to release the memory
-    eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealIdentifier}`);
+    eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
     console.error(`The current deal does not have any facility identifiers`, eStoreData?.facilityIdentifiers);
+    // update the record inside `cron-job-logs` collection to indicate that the cron job failed
+    await cronJobLogsCollection.updateOne(
+      { dealId: eStoreData.dealId },
+      { $set: { 'facilityCronJob.status': ESTORE_CRON_STATUS.COMPLETED, 'facilityCronJob.completionDate': Date.now() } },
+    );
   }
 };
 
 const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
   const cronJobLogsCollection = await getCollection('cron-job-logs');
-  // create the Deal folder
-  console.info('API Call started: Create the Deal folder for ', eStoreData.dealIdentifier);
-  const dealFolderResponse = await createDealFolder(eStoreData.siteName, {
-    exporterName: eStoreData.exporterName,
-    buyerName: eStoreData.buyerName,
-    dealIdentifier: eStoreData.dealIdentifier,
-    destinationMarket: eStoreData.destinationMarket,
-    riskMarket: eStoreData.riskMarket,
-  });
-  // check if the API call was successful
-  if (dealFolderResponse.status === 201) {
-    console.info('API Call finished: The Deal folder was successfully created');
-    // stop and the delete the cron job to release the memory
-    eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealIdentifier}`);
+  const tfmDealsCollection = await getCollection('tfm-deals');
+  let { dealIdentifier } = eStoreData;
+  if (dealIdentifier === UKEF_ID.PENDING) {
+    console.info('Deal Identifier Cron Job: DealIdentifier is set to PENDING');
+    const identifier = tfmDealsCollection.findOne({ _id: ObjectId(eStoreData.dealId) });
+    dealIdentifier = identifier.dealSnapshot.ukefDealId;
+  }
 
-    // update the `tfm-deals` collection once the buyer and deal folders have been created
-    const tfmDealsCollection = await getCollection('tfm-deals');
-    tfmDealsCollection.updateOne(
-      { 'dealSnapshot.ukefDealId': eStoreData.dealIdentifier },
-      { $set: { 'tfm.eStore': { buyerName: eStoreData.buyerName, folderName: dealFolderResponse.data.foldername, siteName: eStoreData.siteName } } },
-    );
-
-    // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
-    await cronJobLogsCollection.updateOne(
-      { dealId: eStoreData.dealId },
-      {
-        $set: {
-          'dealCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
-          'dealCronJob.completionDate': Date.now(),
-          'facilityCronJob.status': ESTORE_CRON_STATUS.RUNNING,
-          'facilityCronJob.startDate': Date.now(),
-        },
-      },
-    );
-
-    // add a new job to the `Cron Job Manager` to create the Facility Folders for the current Deal
-    eStoreCronJobManager.add(`Facility${eStoreData.dealIdentifier}`, facilityCreationTimer, async () => {
-      await eStoreFacilityFolderCreationJob(eStoreData);
+  // check if the dealIdentifier is set - this needs to be generated by the number-generator
+  if (dealIdentifier && dealIdentifier !== UKEF_ID.PENDING) {
+    // create the Deal folder
+    console.info('API Call started: Create the Deal folder for ', eStoreData.dealIdentifier);
+    const dealFolderResponse = await createDealFolder(eStoreData.siteName, {
+      exporterName: eStoreData.exporterName,
+      buyerName: eStoreData.buyerName,
+      dealIdentifier: eStoreData.dealIdentifier,
+      destinationMarket: eStoreData.destinationMarket,
+      riskMarket: eStoreData.riskMarket,
     });
-    console.info('Cron task started: Create the Facility folder');
-    eStoreCronJobManager.start(`Facility${eStoreData.dealIdentifier}`);
+    // check if the API call was successful
+    if (dealFolderResponse.status === 201) {
+      console.info('API Call finished: The Deal folder was successfully created');
+      // stop and the delete the cron job to release the memory
+      eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
+
+      // update the `tfm-deals` collection once the buyer and deal folders have been created
+      tfmDealsCollection.updateOne(
+        { _id: ObjectId(eStoreData.dealId) },
+        { $set: { 'tfm.eStore': { buyerName: eStoreData.buyerName, folderName: dealFolderResponse.data.foldername, siteName: eStoreData.siteName } } },
+      );
+
+      // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
+      await cronJobLogsCollection.updateOne(
+        { dealId: eStoreData.dealId },
+        {
+          $set: {
+            'dealCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
+            'dealCronJob.completionDate': Date.now(),
+            'facilityCronJob.status': ESTORE_CRON_STATUS.RUNNING,
+            'facilityCronJob.startDate': Date.now(),
+          },
+        },
+      );
+
+      // add a new job to the `Cron Job Manager` to create the Facility Folders for the current Deal
+      eStoreCronJobManager.add(`Facility${eStoreData.dealId}`, facilityCreationTimer, async () => {
+        await eStoreFacilityFolderCreationJob(eStoreData);
+      });
+      console.info('Cron task started: Create the Facility folder');
+      eStoreCronJobManager.start(`Facility${eStoreData.dealId}`);
+    } else {
+      console.error(`API Call failed: Unable to create a Deal Folder for ${eStoreData.dealIdentifier}`, { dealFolderResponse });
+      // stop and delete the cron job - this to release the memory
+      eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
+      // update the record inside `cron-job-logs` collection to indicate that the cron job failed
+      await cronJobLogsCollection.updateOne(
+        { dealId: eStoreData.dealId },
+        { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.completionDate': Date.now() } },
+      );
+    }
   } else {
-    console.error(`API Call failed: Unable to create a Deal Folder for ${eStoreData.dealIdentifier}`, { dealFolderResponse });
-    // stop and delete the cron job - this to release the memory
-    eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealIdentifier}`);
-    // update the record inside `cron-job-logs` collection to indicate that the cron job failed
-    await cronJobLogsCollection.updateOne(
+    console.info('Cron job continues: eStore Deal Folder Cron Job continues to run');
+    // increment the dealFolderCreationRetries by 1
+    const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: eStoreData.dealId },
-      { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.completionDate': Date.now() } },
+      { $inc: { dealFolderCreationRetries: 1 } },
+      { returnDocument: 'after' },
     );
+    // stop the Deal Folder Cron Job after 10 retries
+    // this is to prevent it from running forever
+    if (response?.value?.dealFolderCreationRetries === 10) {
+      // stop and delete the cron job - this to release the memory
+      eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
+      // update the record inside `cron-job-logs` collection
+      await cronJobLogsCollection.updateOne(
+        { dealId: eStoreData.dealId },
+        { $set: { 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.completionDate': Date.now() } },
+      );
+    }
   }
 };
 
 const eStoreFolders = async (eStoreData: any) => {
   const cronJobLogsCollection = await getCollection('cron-job-logs');
-  // add facilityIds to TermStore
-  console.info('API Call started: Add facilityIds to TermStore');
-  const termStoreResponse: TermStoreResponse[] = await Promise.all(
-    eStoreData.facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id?.toString() })),
-  );
-  if (termStoreResponse.every((term) => term.status === 201)) {
-    console.info('API Call finished: The facilityIds were added to TermStore successfully');
-
-    console.info('API Call started: Create the Buyer folder for ', eStoreData.buyerName);
-    // create the Buyer folder
-    const buyerFolderResponse: BuyerFolderResponse = await createBuyerFolder(eStoreData.siteName, {
-      exporterName: eStoreData.exporterName,
-      buyerName: eStoreData.buyerName,
-    });
-
-    if (buyerFolderResponse.status === 201) {
-      console.info(`API Call finished: The Buyer folder for ${eStoreData.buyerName} was successfully created`);
-      // add a new job to the `Cron Job manager` queue that runes every 35 seconds
-      // in general, the folder creation should take between 20 to 30 seconds
-      eStoreCronJobManager.add(`Deal${eStoreData.dealIdentifier}`, folderCreationTimer, async () => {
-        await eStoreDealFolderCreationJob(eStoreData);
-      });
-      // update the database to indicate that the deal cron job started
-      await cronJobLogsCollection.updateOne(
-        { dealId: eStoreData.dealId },
-        { $set: { 'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'dealCronJob.startDate': Date.now() } },
-      );
-      console.info('Cron job started: eStore Deal folder Cron Job started');
-      eStoreCronJobManager.start(`Deal${eStoreData.dealIdentifier}`);
+  // check if there are any facilityIds
+  if (eStoreData.facilityIdentifiers.length) {
+    // add facilityIds to TermStore
+    console.info('API Call started: Add facilityIds to TermStore');
+    const termStoreResponse: TermStoreResponse[] = await Promise.all(
+      eStoreData.facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id.toString() })),
+    );
+    if (termStoreResponse.every((term) => term.status === 201)) {
+      console.info('API Call finished: The facilityIds were added to TermStore successfully');
     } else {
-      console.error(`API Call failed: Unable to create the buyer folder for ${eStoreData.buyerName}`, buyerFolderResponse);
-      // update the database to indicate that there was an issue creating the buyer Folder
-      await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { buyerFolderResponse } });
+      console.error('API Call failed: Unable to add the facilityIds to TermStore', { termStoreResponse });
+      // update the database to indicate that there was an issue adding the facilityIds to TermStore
+      await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { termStoreResponse } });
     }
+  }
+
+  console.info('API Call started: Create the Buyer folder for ', eStoreData.buyerName);
+  // create the Buyer folder
+  const buyerFolderResponse: BuyerFolderResponse = await createBuyerFolder(eStoreData.siteName, {
+    exporterName: eStoreData.exporterName,
+    buyerName: eStoreData.buyerName,
+  });
+
+  if (buyerFolderResponse.status === 201) {
+    console.info(`API Call finished: The Buyer folder for ${eStoreData.buyerName} was successfully created`);
+    // add a new job to the `Cron Job manager` queue that runes every 35 seconds
+    // in general, the folder creation should take between 20 to 30 seconds
+    eStoreCronJobManager.add(`Deal${eStoreData.dealId}`, folderCreationTimer, async () => {
+      await eStoreDealFolderCreationJob(eStoreData);
+    });
+    // update the database to indicate that the deal cron job started
+    await cronJobLogsCollection.updateOne(
+      { dealId: eStoreData.dealId },
+      { $set: { 'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'dealCronJob.startDate': Date.now() } },
+    );
+    console.info('Cron job started: eStore Deal folder Cron Job started');
+    eStoreCronJobManager.start(`Deal${eStoreData.dealId}`);
   } else {
-    console.error('API Call failed: Unable to add the facilityIds to TermStore', { termStoreResponse });
-    // update the database to indicate that there was an issue adding the facilityIds to TermStore
-    await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { termStoreResponse } });
+    console.error(`API Call failed: Unable to create the buyer folder for ${eStoreData.buyerName}`, buyerFolderResponse);
+    // update the database to indicate that there was an issue creating the buyer Folder
+    await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { buyerFolderResponse } });
   }
 };
 
@@ -188,7 +231,7 @@ const eStoreSiteCreationJob = async (eStoreData: any) => {
 
     // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
     await cronJobLogsCollection.updateOne(
-      { dealIdentifier: data.dealIdentifier, exporterName: data.exporterName, buyerName: data.buyerName },
+      { dealId: eStoreData.dealId },
       {
         $set: {
           siteName: siteExistsResponse.data.siteName,
@@ -206,7 +249,7 @@ const eStoreSiteCreationJob = async (eStoreData: any) => {
     console.info('Cron job continues: eStore Site Creation Cron Job continues to run');
     // increment the siteCreationRetries by 1
     const response = await cronJobLogsCollection.findOneAndUpdate(
-      { dealIdentifier: data.dealIdentifier, exporterName: data.exporterName, buyerName: data.buyerName },
+      { dealId: eStoreData.dealId },
       { $inc: { siteCreationRetries: 1 } },
       { returnDocument: 'after' },
     );
