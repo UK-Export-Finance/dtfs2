@@ -9,7 +9,7 @@ on:
 jobs:
 
   dev-rg:
-    name: 1. 'Dev' resource group
+    name: 1. Dev resource group
     runs-on: [self-hosted, linux]
     steps:
     - uses: azure/login@v1
@@ -37,12 +37,12 @@ jobs:
           az acr create --name tfsdev --sku Standard --admin-enabled true
 
   staging-rg:
-    name: 2. 'Staging' resource group
+    name: 2. Staging resource group
     runs-on: [self-hosted, linux]
     steps:
     - uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_DIGITAL_STAGING }}
+        creds: ${{ secrets.AZURE_DIGITAL_TEST }}
 
     - name: Defaults
       uses: azure/cli@v1.0.0
@@ -65,7 +65,7 @@ jobs:
           az acr create --name tfsstaging --sku Standard --admin-enabled true
 
   prod-rg:
-    name: 3. 'Production' resource group
+    name: 3. Production resource group
     runs-on: [self-hosted, linux]
     steps:
     - uses: azure/login@v1
@@ -90,5 +90,5 @@ jobs:
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
-          az acr create --name tfsprod --sku Standard --admin-enabled true
+          az acr create --name tfsproduction --sku Standard --admin-enabled true
 
