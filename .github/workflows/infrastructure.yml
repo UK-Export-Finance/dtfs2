@@ -1,4 +1,4 @@
-name: Setup infrastructure for `Dev`, `Staging` and `Production` environments.  
+name: Setup infrastructure for Dev, Staging and Production environments.  
 
 on:
   push:
