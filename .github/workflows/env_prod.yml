@@ -1,4 +1,4 @@
-name: `Production` environment complete infrastructure setup
+name: Production environment complete infrastructure setup
 
 on:
   push:
