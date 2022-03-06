@@ -73,3 +73,10 @@ The current Azure infrastructure for development consists of:
 NB: when creating a container registry, the "admin user" currently needs to be enabled. Work has started to enable use of Service Identities: https://feedback.azure.com/forums/169385-web-apps/suggestions/36145444-web-app-for-containers-acr-access-requires-admin
 
 NB: App Service for containers currently passes a `PORT` of 80 to the container. This means containers are running as root, rather than as a non-privileged user, which adds some risk.
+
+Currently testing an ACR task as follows:
+
+PURGE_CMD="acr purge --filter 'portal:untagged' --filter 'portal-api:untagged' --ago 1d"
+az acr task create --name purgeUntagged --cmd "$PURGE_CMD" --schedule "0 0 * * *" --registry dtfsdev --context /dev/null
+
+ - based on: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auto-purge
