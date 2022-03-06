@@ -1,8 +1,8 @@
-name: Dev environment infrastructure
+name: `Development` environment complete infrastructure setup
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - '.github/workflows/env_dev.yml'
 

@@ -1,11 +1,11 @@
-name: Deploy demo
+name: `Development` environment deployment
 
 on:
   push:
-    branches: [ demo ]
+    branches: [ dev ]
 
 env:
-  environment: demo
+  environment: dev
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
 
   # From
@@ -15,10 +15,10 @@ env:
   tag_from: dev
 
   # To
-  registry_to: ${{ secrets.ACR_REGISTRY_DEMO }}
-  registry_to_username: ${{ secrets.ACR_USERNAME_DEMO }}
-  registry_to_password: ${{ secrets.ACR_PASSWORD_DEMO }}
-  tag_to: demo
+  registry_to: ${{ secrets.ACR_REGISTRY_DEV }}
+  registry_to_username: ${{ secrets.ACR_USERNAME_DEV }}
+  registry_to_password: ${{ secrets.ACR_PASSWORD_DEV }}
+  tag_to: dev
 
 jobs:
   set-environment:
