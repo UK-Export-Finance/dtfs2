@@ -10,7 +10,7 @@ jobs:
 
   dev-rg:
     name: 1. Dev resource group
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment, infra]
     steps:
     - uses: azure/login@v1
       with:
@@ -38,7 +38,7 @@ jobs:
 
   staging-rg:
     name: 2. Staging resource group
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment, infra]
     steps:
     - uses: azure/login@v1
       with:
@@ -66,7 +66,7 @@ jobs:
 
   prod-rg:
     name: 3. Production resource group
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment, infra]
     steps:
     - uses: azure/login@v1
       with:
