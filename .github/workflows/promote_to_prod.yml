@@ -1,4 +1,4 @@
-name: `Production` environment deployment
+name: Production environment deployment
 
 on:
   push:
