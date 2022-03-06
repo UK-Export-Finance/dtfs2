@@ -1,6 +1,0 @@
-Currently testing an ACR task as follows:
-
-PURGE_CMD="acr purge --filter 'portal:untagged' --filter 'portal-api:untagged' --ago 1d"
-az acr task create --name purgeUntagged --cmd "$PURGE_CMD" --schedule "0 0 * * *" --registry dtfsdev --context /dev/null
-
- - based on: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auto-purge

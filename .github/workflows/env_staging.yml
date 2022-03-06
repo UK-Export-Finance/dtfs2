@@ -1,4 +1,4 @@
-name: Staging environment infrastructure
+name: `Staging` environment complete infrastructure setup
 
 on:
   push:

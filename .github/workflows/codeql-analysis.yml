@@ -1,13 +1,12 @@
-name: "CodeQL"
+name: "CodeQL - Code Quality checkup"
 
 on:
   push:
     branches: [ main ]
   pull_request:
-    # The branches below must be a subset of the branches above
     branches: [ main ]
   schedule:
-    - cron: '26 9 * * 6'
+    - cron: '00 00 * * *'
 
 jobs:
   analyze:
