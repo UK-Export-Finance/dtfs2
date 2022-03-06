@@ -129,7 +129,7 @@ jobs:
       if: failure()
 
   test-submit-e2e:
-    name: "Run `Submit to TFM E2E` tests"
+    name: "Run Submit to TFM E2E tests"
     needs: build
     environment:
       name: E2ETEST
