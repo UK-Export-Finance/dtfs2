@@ -1,9 +1,9 @@
-name: Deploy ACBS Number Generator Function App
+name: Dev - Deploy ACBS Number Generator Function App
 
 on:
   push:
     # Branch updates initiates deployment
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'azure-functions/number-generator-function/**'
   schedule:
