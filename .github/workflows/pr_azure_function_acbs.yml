@@ -45,7 +45,7 @@ jobs:
         repository: azure-function-acbs
         context: azure-functions/acbs-function
         tags: ${{ github.sha }}
-        build_args: GITHUB_SHA=${{ github.sha }}
+        build-args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
   test:
