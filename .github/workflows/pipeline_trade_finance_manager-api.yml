@@ -1,9 +1,9 @@
-name: Trade Finance Manager API
+name: Dev - Trade Finance Manager API
 
 on:
   push:
     # Branch updates initiates deployment
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'trade-finance-manager-api/**'
     - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
