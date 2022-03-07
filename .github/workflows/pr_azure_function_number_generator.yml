@@ -78,10 +78,3 @@ jobs:
         docker-compose -f docker-compose.yml up -d number-generator-function
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
-    - name: Temporary debugs
-      run: |
-        docker ps
-        echo "Wait 60 secs"
-        sleep 60
-        echo "Try POST to end point"
-        curl "http://localhost:7072/api/orchestrators/numbergenerator" --verbose -d '{ "entityType":"facility", "entityId":"12211" }'

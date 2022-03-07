@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 resource_group=Digital-Dev
-environments=(dev demo)
+environments=(dev)
 app_service_plan=dev
 
 az configure --defaults group=$resource_group
 
 #!/usr/bin/env bash
 
-resource_group=Digital-Test
-environments=(test staging)
-app_service_plan=test
+resource_group=Digital-Staging
+environments=(staging)
+app_service_plan=staging
 
 az configure --defaults group=$resource_group
 

@@ -2,10 +2,10 @@
 
 At a high-level, the pipeline works by building container images and promoting them between registries:
 
- * code is pushed to main
- * container images are built and pushed to the dev registry
- * api tests and e2e tests are run
- * if tests pass, the images are deployed to the dev environment
+ * Code is pushed to the `main` branch.
+ * Container images are built.
+ * API tests and E2E tests are then executed, E2E tests are executed on multiple machines.
+ * If the tests passes, then the images are deployed to respective environments.
  * merging to the `test`, or `demo` branches promotes the current `dev` images to these environments
  * merging to the `prod` branch promotest the current `test` image to the production environment
  * merging to the `infrastructure` branch triggers a refresh of supporting infrastructure (e.g. container registries)
@@ -44,3 +44,39 @@ Additionally you'll need:
  * The Front Door extension: `az extension add --name front-door`
  
 
+ # Infrastructure summary 
+
+## Subscriptions
+
+There are two subscriptions, to manage costs:
+
+ * Dev/Test
+ * Prod
+
+## Environments
+
+There are three environments, represented by resource groups:
+
+ * Dev
+ * Test
+ * Prod
+
+## Components
+
+The current Azure infrastructure for development consists of:
+
+ * Azure Container Registry
+ * Azure App Service for Containers: Portal
+ * Azure App Service for containers: Deal API
+ * Cosmos DB for MongoDB API
+
+NB: when creating a container registry, the "admin user" currently needs to be enabled. Work has started to enable use of Service Identities: https://feedback.azure.com/forums/169385-web-apps/suggestions/36145444-web-app-for-containers-acr-access-requires-admin
+
+NB: App Service for containers currently passes a `PORT` of 80 to the container. This means containers are running as root, rather than as a non-privileged user, which adds some risk.
+
+Currently testing an ACR task as follows:
+
+PURGE_CMD="acr purge --filter 'portal:untagged' --filter 'portal-api:untagged' --ago 1d"
+az acr task create --name purgeUntagged --cmd "$PURGE_CMD" --schedule "0 0 * * *" --registry dtfsdev --context /dev/null
+
+ - based on: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auto-purge
