@@ -1,9 +1,9 @@
-name: Deploy ACBS Function App
+name: Dev - Deploy ACBS Function App
 
 on:
   push:
     # Branch updates initiates deployment
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'azure-functions/acbs-function/**'
   schedule:
