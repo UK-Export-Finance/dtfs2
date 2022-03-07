@@ -173,7 +173,7 @@ jobs:
 
   promote:
     name: Promote container images to Dev
-    needs: [set-environment, test, test-submit-e2e]
+    needs: [set-environment, test]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
