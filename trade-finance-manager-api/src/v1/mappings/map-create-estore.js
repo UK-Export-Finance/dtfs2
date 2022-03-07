@@ -16,7 +16,7 @@ const mapCreateEstore = (deal) => {
   let buyerName;
   let destinationMarket;
   let riskMarket;
-  let files;
+  let files = [];
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
     // default values for GEF. GEF does not have this data.
