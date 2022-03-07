@@ -29,7 +29,7 @@ then
 ############### INFRA ###############
 destination=infrastructure
 ############### INFRA ###############
-if [ "$selection" = "1" ]
+elif [ "$selection" = "1" ]
 then
 ############### DEV ###############
 destination=dev
@@ -45,7 +45,6 @@ then
 destination=prod
 ############### PRODUCTION ###############
 fi
-
 
 # Deploy
 git checkout -b $destination
