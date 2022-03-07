@@ -1,3 +1,4 @@
+const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const {
   hasValue,
   isNumber,
@@ -32,6 +33,18 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
   }
   if (!isNumber(v2Deal.submissionCount)) {
     errors.push('submissionCount');
+  }
+  if (!isNumber(v2Deal.mandatoryVersionId)) {
+    errors.push('mandatoryVersionId');
+  }
+  if (!isNumber(v2Deal.eligibilityVersionId)) {
+    errors.push('eligibilityVersionId');
+  }
+
+  if (v2Deal.status === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+    if (!isNumber(v2Deal.manualInclusionNoticeSubmissionDate)) {
+      errors.push('manualInclusionNoticeSubmissionDate');
+    }
   }
 
   if (errors.length) {
@@ -86,12 +99,12 @@ const facilityMappingErrors = (v2Facility) => {
   if (!isNumber(v2Facility.monthsOfCover)) {
     errors.push('monthsOfCover');
   }
-  // if (!v2Facility.coverStartDate) {
-  //   errors.push('coverStartDate');
-  // }
-  // if (!v2Facility.coverEndDate) {
-  //   errors.push('coverEndDate');
-  // }
+  if (!isNumber(v2Facility.coverStartDate)) {
+    errors.push('coverStartDate');
+  }
+  if (!isNumber(v2Facility.coverEndDate)) {
+    errors.push('coverEndDate');
+  }
   if (!hasBooleanValue(v2Facility.coverDateConfirmed)) {
     errors.push('coverDateConfirmed');
   }
@@ -100,6 +113,15 @@ const facilityMappingErrors = (v2Facility) => {
   }
   if (!hasBooleanValue(v2Facility.hasBeenIssuedAndAcknowledged)) {
     errors.push('hasBeenIssuedAndAcknowledged');
+  }
+
+  if (v2Facility.hasBeenIssued) {
+    if (!isNumber(v2Facility.issuedDate)) {
+      errors.push('issuedDate');
+    }
+    if (!isNumber(v2Facility.submittedAsIssuedDate)) {
+      errors.push('submittedAsIssuedDate');
+    }
   }
 
   return errors;

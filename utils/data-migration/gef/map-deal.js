@@ -14,8 +14,8 @@ const mapExporterIndustry = (v1DealExporter) => ({
 
 const mapAddress = (v1Address) => ({
   addressLine1: v1Address.address,
-  addressLine2: v1Address.address_2,
-  addressLine3: v1Address.address_3,
+  addressLine2: v1Address.address_2 || null,
+  addressLine3: v1Address.address_3 || null,
   locality: v1Address.locality,
   postalCode: v1Address.postal_code,
   country: v1Address.country,
@@ -23,18 +23,19 @@ const mapAddress = (v1Address) => ({
 
 const mapExporter = (v1Exporter) => {
   const mapped = {
-    isFinanceIncreasing: Boolean(v1Exporter.financing_increasing),
-    companiesHouseRegistrationNumber: v1Exporter.companies_house_registration,
+    organisationName: v1Exporter.exporter_name,
+    companiesHouseRegistrationNumber: v1Exporter.companies_house_registration || null,
     companyName: v1Exporter.exporter_name,
 
     // TODO: check if V1 deal can have multiple industries
     industries: [
       mapExporterIndustry(v1Exporter),
     ],
-    probabilityOfDefault: v1Exporter.probability_of_default,
+    probabilityOfDefault: Number(v1Exporter.probability_of_default),
     registeredAddress: mapAddress(v1Exporter.exporter_address_composite),
     selectedIndustry: mapExporterIndustry(v1Exporter),
     smeType: v1Exporter.sme_type.readable_value,
+    isFinanceIncreasing: Boolean(v1Exporter.financing_increasing.toLowerCase()),
   };
 
   const correspondenceAddress = v1Exporter.exporter_correspondence_address_composite;
@@ -76,44 +77,64 @@ const mapSubmissionCount = (submissionType) => {
   return 0;
 };
 
-// TODO: default any empty fields to null/V2 model
-// otherwise will be an empty string
+const mapUkefDecision = (v1Deal, status) => {
+  if (status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED) {
+    return [
+      {
+        decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED,
+        // text: field_special_conditions, // TODO
+      },
+    ];
+  }
+
+  if (v1Deal.field_special_conditions.length) {
+    return [
+      {
+        decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+        text: field_special_conditions
+      },
+    ];
+  }
+
+  return [
+    {
+      decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    },
+  ];
+};
+
 const mapV1Deal = (v1Deal, v2Users) => {
   const submissionType = MIGRATION_MAP.DEAL.SUBMISSION_TYPE[v1Deal.field_submission_type];
+  const status = MIGRATION_MAP.DEAL.DEAL_STATUS[v1Deal.field_deal_status];
 
   const mapped = {
     dataMigration: {
       drupalDealId: String(v1Deal.drupal_id),
     },
-    bankInternalRefName: v1Deal.bank_deal_name,
-    additionalRefName: v1Deal.field_bank_deal_id,
+    bankInternalRefName: v1Deal.field_bank_deal_id,
+    additionalRefName: v1Deal.bank_deal_name,
     createdAt: convertDateToTimestamp(v1Deal.created),
     updatedAt: convertDateToTimestamp(v1Deal.changed),
+    mandatoryVersionId: v1Deal.children.eligiblity.system_red_line_revision_id,
     submissionType,
-    status: MIGRATION_MAP.DEAL.DEAL_STATUS[v1Deal.field_deal_status],
+    status,
     submissionDate: convertDateToTimestamp(v1Deal.field_submission_date),
     ukefDealId: v1Deal.field_ukef_deal_id,
     exporter: mapExporter(v1Deal.children.general_info),
     eligibility: mapEligibility(v1Deal.children.eligiblity),
+    eligibilityVersionId: v1Deal.children.eligiblity.system_revision_id,
     submissionCount: mapSubmissionCount(submissionType),
     portalActivities: [],
+    manualInclusionNoticeSubmissionDate: convertDateToTimestamp(v1Deal.field_min_checker_date),
 
-    // TODO: (not in json data, waiting confirmation)
-    // organisationName
+    // TODO: (not in json data, waiting)
     // comments
     // - mandatory criteria in deal / other collection
     //   - need mandatory criteria version - full data
     // - ecRevision
-    // ukefDecisionAccepted
-    // ukefDecision: []
-    // manualInclusionNoticeSubmissionDate: '',
 
     // TODO: investigate.
     // supportingInformation / deal files.
-
-    // facilities:
-    // - issueDate
-    // - submittedAsIssuedDate
   };
 
   if (v1Deal.field_min_maker) {
@@ -128,6 +149,12 @@ const mapV1Deal = (v1Deal, v2Users) => {
   } else {
     mapped.checkerId = getUserByEmail(v2Users, v1Deal.field_initial_checker.email)._id;
   }
+
+  if (v1Deal.field_min_checker_date) {
+    mapped.manualInclusionNoticeSubmissionDate = convertDateToTimestamp(v1Deal.field_min_checker_date);
+  }
+
+  mapped.ukefDecision = mapUkefDecision(v1Deal, status);
 
   return mapped;
 };

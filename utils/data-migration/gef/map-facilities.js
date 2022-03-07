@@ -1,3 +1,8 @@
+const {
+  fromUnixTime,
+  getUnixTime,
+  add,
+} = require('date-fns');
 const MIGRATION_MAP = require('./migration-map');
 const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { convertDateToTimestamp } = require('./helpers');
@@ -43,7 +48,7 @@ const mapCoverDateConfirmed = (issued) => {
 };
 
 const mapShouldCoverStartOnSubmission = (
-  v2CoverStartDate,
+    v2CoverStartDate,
   v2DealSubmissionDate
 ) => {
   if (v2CoverStartDate === v2DealSubmissionDate) {
@@ -51,6 +56,15 @@ const mapShouldCoverStartOnSubmission = (
   }
 
   return false;
+};
+
+
+const mapCoverEndDate = (coverStartDate, exposurePeriod) => {
+  const date = add(new Date(fromUnixTime(coverStartDate)), {
+    months: exposurePeriod,
+  });
+
+  return getUnixTime(date);
 };
 
 // TODO: default any empty fields to null/V2 model
@@ -61,12 +75,8 @@ const mapV1Facilities = (
 ) => {
   const v2Facilities = v1Facilities.map((v1Facility) => {
     const hasBeenIssued = mapHasBeenIssued(v1Facility.facility_stage);
-
     const details = mapBasisDetails(v1Facility.facility_characteristics);
-
-    // TODO: cover dates are empty for some GEF facilities. What field should be used?
-    const coverStartDate = convertDateToTimestamp(v1Facility.commitment_date) || null;
-    const coverEndDate = convertDateToTimestamp(v1Facility.guarantee_expiry_date) || null;
+    const coverStartDate = v2DealSubmissionDate;
 
     const mapped = {
       dataMigration: {
@@ -91,7 +101,7 @@ const mapV1Facilities = (
       monthsOfCover: Number(v1Facility.exposure_period),
 
       coverStartDate,
-      coverEndDate,
+      coverEndDate: mapCoverEndDate(coverStartDate, Number(v1Facility.exposure_period)),
       coverDateConfirmed: mapCoverDateConfirmed(hasBeenIssued),
       shouldCoverStartOnSubmission: mapShouldCoverStartOnSubmission(
         coverStartDate,
@@ -102,6 +112,11 @@ const mapV1Facilities = (
 
     if (details === V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.OTHER) {
       mapped.detailsOther = v1Facility.facility_type_text;
+    }
+
+    if (hasBeenIssued) {
+      mapped.issuedDate = convertDateToTimestamp(v1Facility.issue_date);
+      mapped.submittedAsIssuedDate = convertDateToTimestamp(v1Facility.system_commitment_to_issued_date);
     }
 
     return mapped;
