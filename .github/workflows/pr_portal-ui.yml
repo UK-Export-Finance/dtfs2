@@ -105,7 +105,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        machines: [ 1, 2, 3, 4, 5, 6, 7 ]
+        machines: [ 1, 2, 3, 4 ]
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
       AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
@@ -174,7 +174,7 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose up -d
+        docker-compose -f docker-compose.gha.yml up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data

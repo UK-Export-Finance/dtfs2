@@ -87,11 +87,6 @@ services:
       - ./portal/server:/app/server:ro
       - ./portal/public:/app/public:ro
       - ./portal/templates:/app/templates:ro
-    deploy:
-      resources:
-        limits:
-          cpus: "0.2"
-          memory: 700M
     environment:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -195,11 +190,6 @@ services:
       - ./gef-ui/server:/app/server:ro
       - ./gef-ui/public:/app/public:ro
       - ./gef-ui/templates:/app/templates:ro
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 300M
     environment:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -233,11 +223,6 @@ services:
     restart: always
     ports:
       - "7072:80"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 300M
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - FUNCTIONS_WORKER_RUNTIME=node
