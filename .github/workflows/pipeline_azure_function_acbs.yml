@@ -38,38 +38,38 @@ jobs:
     - name: Commit hash
       run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
         password: ${{ secrets.ACR_PASSWORD_DEV }}
         repository: azure-function-acbs
-        context: azure-functions/acbs-function
+        path: azure-functions/acbs-function
         tags: latest
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
-  test:
-    name: Test ACBS Azure Functions
-    needs: [set-environment, build]
-    environment:
-      name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux, deployment]
-    env:
-      UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
-      UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-    steps:
-    - uses: actions/checkout@v2
-    # Pull the latest images to run with so we don't need to build them
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
-        username: ${{ secrets.ACR_USERNAME_DEV }}
-        password: ${{ secrets.ACR_PASSWORD_DEV }}
-    - name: Pull ACBS Function
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs dtfs/azure-function-acbs
+  # test:
+  #   name: Test ACBS Azure Functions
+  #   needs: [set-environment, build]
+  #   environment:
+  #     name: ${{ needs.set-environment.outputs.environment }}
+  #   runs-on: [self-hosted, linux, deployment]
+  #   env:
+  #     UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+  #     UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   # Pull the latest images to run with so we don't need to build them
+  #   - uses: azure/docker-login@v1
+  #     with:
+  #       login-server: ${{ secrets.ACR_REGISTRY_DEV }}
+  #       username: ${{ secrets.ACR_USERNAME_DEV }}
+  #       password: ${{ secrets.ACR_PASSWORD_DEV }}
+  #   - name: Pull ACBS Function
+  #     run: |
+  #       docker pull ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs
+  #       docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-acbs dtfs/azure-function-acbs
 
   promote:
     name: Promote container images to Dev
