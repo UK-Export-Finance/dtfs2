@@ -74,7 +74,7 @@ jobs:
   promote:
     name: Promote container images to Dev
     runs-on: [self-hosted, linux, deployment]
-    needs: [set-environment, test]
+    needs: [set-environment]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     steps:
