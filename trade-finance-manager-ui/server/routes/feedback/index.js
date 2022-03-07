@@ -1,15 +1,16 @@
 const express = require('express');
-const api = require('../api');
-const { generateErrorSummary } = require('../helpers');
+
+const api = require('../../api');
+const generateErrorSummary = require('../../helpers/generateErrorSummary');
 
 const router = express.Router();
 
 const errorHref = (id) => `#${id}`;
 
-router.get('/feedback', (req, res) =>
+router.get('/', (req, res) =>
   res.render('feedback/feedback-form.njk'));
 
-router.post('/feedback', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const response = await api.createFeedback(req.body);
     if (response) {

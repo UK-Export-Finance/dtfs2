@@ -5,7 +5,6 @@ require('moment-timezone');// monkey-patch to provide moment().tz()
 
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
-const now = require('../../now');
 const sendEmail = require('../email');
 
 const findFeedbacks = async (callback) => {
@@ -38,18 +37,14 @@ exports.create = async (req, res) => {
 
   const modifiedFeedback = {
     ...req.body,
-    submittedBy: req.user.username,
-    created: now(),
+    created: new Date(),
   };
 
   const collection = await db.getCollection('feedback');
   const createdFeedback = await collection.insertOne(modifiedFeedback);
 
   // get formatted date from created timestamp, to display in email
-  const targetTimezone = req.user.timezone;
-  const utc = moment(parseInt(modifiedFeedback.created, 10));
-  const localisedTimestamp = utc.tz(targetTimezone);
-  const formattedCreated = localisedTimestamp.format('DD/MM/YYYY HH:mm');
+  const formattedCreated = moment(modifiedFeedback.created).format('DD/MM/YYYY HH:mm');
 
   const {
     role,
@@ -60,7 +55,6 @@ exports.create = async (req, res) => {
     clearlyExplained,
     satisfied,
     howCanWeImprove,
-    submittedBy,
     emailAddress,
   } = modifiedFeedback;
 
@@ -73,7 +67,6 @@ exports.create = async (req, res) => {
     clearlyExplained,
     satisfied,
     howCanWeImprove,
-    submittedBy,
     emailAddress,
     created: formattedCreated,
   };

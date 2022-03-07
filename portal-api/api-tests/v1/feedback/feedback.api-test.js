@@ -38,14 +38,14 @@ describe('/v1/feedback', () => {
   };
 
   describe('POST /v1/feedback', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post({}).to('/v1/feedback');
-      expect(status).toEqual(401);
+    it('200s requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().post(feedbackFormBody).to('/v1/feedback');
+      expect(status).toEqual(200);
     });
 
-    it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(noRoles).post({}).to('/v1/feedback');
-      expect(status).toEqual(401);
+    it('200s requests that do not come from a user with role=maker || role=checker', async () => {
+      const { status } = await as(noRoles).post(feedbackFormBody).to('/v1/feedback');
+      expect(status).toEqual(200);
     });
 
     it('accepts requests from a user with role=maker', async () => {
@@ -61,13 +61,13 @@ describe('/v1/feedback', () => {
 
     it('does not create a feedback when there are validation errors', async () => {
       await as(aBarclaysMaker).post({}).to('/v1/feedback');
-      const { status, body } = await as(aDataAdmin).get(`/v1/feedback`);
+      const { status, body } = await as(aDataAdmin).get('/v1/feedback');
       expect(status).toEqual(200);
       expect(body).toEqual([]);
     });
 
     describe('when all required fields provided', () => {
-      it('creates a new feedback, adding `created` and `submittedBy` field', async () => {
+      it('creates a new feedback, adding `created` field', async () => {
         const { status, body: createdFeedback } = await postFeedback();
 
         expect(status).toEqual(200);
@@ -78,7 +78,6 @@ describe('/v1/feedback', () => {
         expect(feedback).toEqual({
           ...feedbackFormBody,
           _id: expect.any(String), // eslint-disable-line no-underscore-dangle
-          submittedBy: aBarclaysMaker.username,
           created: expect.any(String),
         });
       });
@@ -158,7 +157,6 @@ describe('/v1/feedback', () => {
         ...feedbackFormBody,
         _id: expect.any(String), // eslint-disable-line no-underscore-dangle
         created: expect.any(String),
-        submittedBy: aBarclaysMaker.username,
       });
     });
   });
@@ -186,7 +184,7 @@ describe('/v1/feedback', () => {
       const { status } = await as(aDataAdmin).remove('/v1/feedback/123456789012');
       expect(status).toEqual(404);
     });
-    
+
     it('deletes feedback', async () => {
       const createdFeedback = await postFeedback();
       const { _id } = createdFeedback.body; // eslint-disable-line no-underscore-dangle

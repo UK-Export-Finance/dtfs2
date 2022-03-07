@@ -11,7 +11,7 @@ describe(page, () => {
   });
 
   it('should render page heading', () => {
-    wrapper.expectText('[data-cy="heading"]').toRead('Feedback');
+    wrapper.expectText('[data-cy="thank-you-heading"]').toRead('Feedback');
   });
 
   it('should render thank you copy', () => {
