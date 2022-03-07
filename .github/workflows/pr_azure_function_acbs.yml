@@ -51,7 +51,7 @@ jobs:
         username: ${{ secrets.ACR_USERNAME_DEV }}
         password: ${{ secrets.ACR_PASSWORD_DEV }}
         repository: azure-function-acbs
-        path: azure-functions/acbs-function
+        context: azure-functions/acbs-function
         tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
