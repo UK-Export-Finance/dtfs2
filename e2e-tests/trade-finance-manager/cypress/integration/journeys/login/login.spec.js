@@ -78,7 +78,7 @@ context('User can login', () => {
     partials.header.betaBanner().contains('beta');
     partials.header.betaBannerHref().contains('feedback');
     partials.header.betaBannerHref().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal('#');
+      expect(href).to.equal('/feedback');
     });
   });
 
