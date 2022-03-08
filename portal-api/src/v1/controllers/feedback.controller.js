@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const assert = require('assert');
-const moment = require('moment');
+const { format, getUnixTime, fromUnixTime } = require('date-fns');
 
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
@@ -36,7 +36,7 @@ exports.create = async (req, res) => {
 
   const modifiedFeedback = {
     ...req.body,
-    created: moment().unix(),
+    created: getUnixTime(new Date()),
     submittedBy: req.query ? req.query.username : null
   };
 
@@ -44,7 +44,7 @@ exports.create = async (req, res) => {
   const createdFeedback = await collection.insertOne(modifiedFeedback);
 
   // get formatted date from created timestamp, to display in email
-  const formattedCreated = moment.unix(modifiedFeedback.created).format('DD/MM/YYYY HH:mm');
+  const formattedCreated = format(fromUnixTime(modifiedFeedback.created), 'dd/MM/yyyy HH:mm');
 
   const {
     role,
