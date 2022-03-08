@@ -21,6 +21,7 @@ context('Edit deal name', () => {
   it('rejects an empty field', () => {
     cy.login(BANK1_MAKER1);
     contract.visit(deal);
+    contract.editDealName().contains('Edit deal name');
     contract.editDealName().click();
 
     cy.title().should('eq', `Change name - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
@@ -36,6 +37,7 @@ context('Edit deal name', () => {
   it('updates deal.additionalRefName', () => {
     cy.login(BANK1_MAKER1);
     contract.visit(deal);
+    contract.editDealName().contains('Edit deal name');
     contract.editDealName().click();
 
     editDealName.additionalRefName().type('{selectall}{backspace}asdfasfasf');

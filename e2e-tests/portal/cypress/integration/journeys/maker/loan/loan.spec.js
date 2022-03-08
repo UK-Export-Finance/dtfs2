@@ -6,6 +6,7 @@ const fillLoanForm = require('./fill-loan-forms');
 const MOCK_USERS = require('../../../../fixtures/users');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+import { GUARANTEE_DETAILS } from './loan-form-values';
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
@@ -38,6 +39,28 @@ context('Add a Loan to a Deal', () => {
     cy.url().should('include', '/check-your-answers');
 
     pages.loanPreview.submissionDetails().should('be.visible');
+
+    pages.loanPreview.saveGoBackButton().click();
+  });
+
+  it('should show relevant details on application details page', () => {
+    cy.createADeal({
+      username: BANK1_MAKER1.username,
+      password: BANK1_MAKER1.password,
+      bankDealId: MOCK_DEAL.bankInternalRefName,
+      bankDealName: MOCK_DEAL.additionalRefName,
+    });
+    cy.addLoanToDeal();
+
+    partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
+      const loanId = loanIdHiddenInput[0].value;
+      pages.loanPreview.saveGoBackButton().click();
+
+      // checks that edit name link and delete link contain name as has been set
+      const loanRow = pages.contract.loansTransactionsTable.row(loanId);
+      loanRow.nameLink().contains(GUARANTEE_DETAILS.name);
+      loanRow.deleteLink().contains(`Delete ${GUARANTEE_DETAILS.name}`);
+    });
   });
 
   it('should populate Deal page with the submitted loan, with `Completed` status and link to `Loan Gurantee Details` page', () => {
@@ -114,6 +137,10 @@ context('Add a Loan to a Deal', () => {
         row.loanStatus().invoke('text').then((text) => {
           expect(text.trim()).equal('Incomplete');
         });
+
+        // check has has generic message on name and delete as name not set
+        row.nameLink().contains('Loan’s reference number not entered');
+        row.deleteLink().contains('Delete loan');
       });
     });
   });
