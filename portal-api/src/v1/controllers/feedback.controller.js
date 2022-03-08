@@ -37,7 +37,8 @@ exports.create = async (req, res) => {
   const modifiedFeedback = {
     ...req.body,
     created: getUnixTime(new Date()),
-    submittedBy: req.query ? req.query.username : null
+    submittedByUserName: req.body.user.username,
+    submittedByUserEmail: req.body.user.email,
   };
 
   const collection = await db.getCollection('feedback');
@@ -56,7 +57,8 @@ exports.create = async (req, res) => {
     satisfied,
     howCanWeImprove,
     emailAddress,
-    submittedBy,
+    submittedByUserName,
+    submittedByUserEmail,
   } = modifiedFeedback;
 
   const emailVariables = {
@@ -70,7 +72,8 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     created: formattedCreated,
-    submittedBy,
+    submittedByUserName,
+    submittedByUserEmail,
   };
 
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';

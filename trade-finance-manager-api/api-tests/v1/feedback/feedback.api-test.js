@@ -10,6 +10,10 @@ describe('/feedback', () => {
     satisfied: 'Very satisfied',
     howCanWeImprove: 'Devs are doing a great job already',
     emailAddress: 'test@testing.com',
+    user: {
+      username: 'Tester',
+      email: 'test@test.test',
+    },
   };
 
   describe('POST /v1/feedback', () => {

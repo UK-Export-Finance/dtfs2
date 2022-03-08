@@ -19,6 +19,10 @@ describe('/v1/feedback', () => {
     satisfied: 'Very satisfied',
     howCanWeImprove: 'Devs are doing a great job already',
     emailAddress: 'test@testing.com',
+    user: {
+      username: 'Tester',
+      email: 'test@test.test',
+    }
   };
 
   beforeAll(async () => {
@@ -79,7 +83,8 @@ describe('/v1/feedback', () => {
           ...feedbackFormBody,
           _id: expect.any(String), // eslint-disable-line no-underscore-dangle
           created: expect.any(Number),
-          submittedBy: null,
+          submittedByUserName: 'Tester',
+          submittedByUserEmail: 'test@test.test'
         });
       });
     });
@@ -158,7 +163,8 @@ describe('/v1/feedback', () => {
         ...feedbackFormBody,
         _id: expect.any(String), // eslint-disable-line no-underscore-dangle
         created: expect.any(Number),
-        submittedBy: null,
+        submittedByUserName: 'Tester',
+        submittedByUserEmail: 'test@test.test'
       });
     });
   });
