@@ -72,7 +72,7 @@ describe('mapGefFacilityDates', () => {
     expect(result.tenor).toEqual(expected);
   });
 
-  it('could just say should not map coverEndDate when date is null', () => {
+  it('should not map coverEndDate when date is null', () => {
     mockFacility.coverEndDate = null;
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
     // undefined as not set in function
