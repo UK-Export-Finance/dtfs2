@@ -23,7 +23,7 @@ describe(component, () => {
       for (const deal of deals) {
         const wrapper = render({ user, deal });
         wrapper.expectLink('[data-cy="EditDealName"]')
-          .toLinkTo(`/contract/${deal._id}/edit-name`, 'Edit');
+          .toLinkTo(`/contract/${deal._id}/edit-name`, 'Edit deal name');
       }
     });
 

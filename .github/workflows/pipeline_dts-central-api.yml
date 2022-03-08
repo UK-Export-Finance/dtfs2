@@ -1,9 +1,9 @@
-name: DTFS Central API
+name: Dev - DTFS Central API
 
 on:
   push:
     # Branch updates initiates deployment
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'dtfs-central-api/**'
   schedule:

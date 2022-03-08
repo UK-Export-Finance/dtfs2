@@ -1,4 +1,4 @@
-name: Deploy staging
+name: Staging environment deployment
 
 on:
   push:
@@ -9,10 +9,10 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
 
   # From
-  registry_from: ${{ secrets.ACR_REGISTRY_TEST }}
-  registry_from_username: ${{ secrets.ACR_USERNAME_TEST }}
-  registry_from_password: ${{ secrets.ACR_PASSWORD_TEST }}
-  tag_from: test
+  registry_from: ${{ secrets.ACR_REGISTRY_DEV }}
+  registry_from_username: ${{ secrets.ACR_USERNAME_DEV }}
+  registry_from_password: ${{ secrets.ACR_PASSWORD_DEV }}
+  tag_from: dev
 
   # To
   registry_to: ${{ secrets.ACR_REGISTRY_STAGING }}
