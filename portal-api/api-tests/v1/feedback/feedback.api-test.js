@@ -78,7 +78,8 @@ describe('/v1/feedback', () => {
         expect(feedback).toEqual({
           ...feedbackFormBody,
           _id: expect.any(String), // eslint-disable-line no-underscore-dangle
-          created: expect.any(String),
+          created: expect.any(Number),
+          submittedBy: null,
         });
       });
     });
@@ -156,7 +157,8 @@ describe('/v1/feedback', () => {
       expect(body).toEqual({
         ...feedbackFormBody,
         _id: expect.any(String), // eslint-disable-line no-underscore-dangle
-        created: expect.any(String),
+        created: expect.any(Number),
+        submittedBy: null,
       });
     });
   });

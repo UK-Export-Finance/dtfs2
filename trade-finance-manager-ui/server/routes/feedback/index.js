@@ -1,18 +1,16 @@
 const express = require('express');
 
 const api = require('../../api');
-const generateErrorSummary = require('../../helpers/generateErrorSummary');
+const generateValidationErrors = require('../../helpers/validation');
 
 const router = express.Router();
-
-const errorHref = (id) => `#${id}`;
 
 router.get('/', (req, res) =>
   res.render('feedback/feedback-form.njk'));
 
 router.post('/', async (req, res) => {
   try {
-    const response = await api.createFeedback(req.body);
+    const response = await api.createFeedback(req.body, req.session.user);
     if (response) {
       return res.render('feedback/feedback-thankyou.njk', {
         user: req.session.user,
@@ -21,10 +19,15 @@ router.post('/', async (req, res) => {
   } catch (catchErr) {
     const { data } = catchErr.response;
 
-    const validationErrors = generateErrorSummary(
-      data.validationErrors,
-      errorHref,
-    );
+    let validationErrors;
+
+    // maps through errorlist
+    Object.keys(data.validationErrors.errorList).forEach((errorName) => {
+      // get error by its key (errorName)
+      const error = data.validationErrors.errorList[errorName];
+      // generate errors
+      validationErrors = generateValidationErrors(errorName, error.text, data.validationErrors.count, validationErrors);
+    });
 
     return res.render('feedback/feedback-form.njk', {
       feedback: data.feedback,

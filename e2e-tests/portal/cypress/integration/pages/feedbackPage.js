@@ -32,8 +32,8 @@ const feedbackPage = {
   submitButton: () => cy.get('[data-cy="submit-button"]'),
 
   // thank you page
-  ThankYouPageHeading: () => cy.get('[data-cy="thank-you-heading"]'),
-  ThankYouPageText: () => cy.get('[data-cy="thankyou-copy"]'),
+  thankYouPageHeading: () => cy.get('[data-cy="thank-you-heading"]'),
+  thankYouPageText: () => cy.get('[data-cy="thankyou-copy"]'),
 };
 
 module.exports = feedbackPage;

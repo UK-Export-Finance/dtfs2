@@ -1,7 +1,6 @@
 const { ObjectId } = require('mongodb');
 const assert = require('assert');
 const moment = require('moment');
-require('moment-timezone');// monkey-patch to provide moment().tz()
 
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
@@ -37,14 +36,15 @@ exports.create = async (req, res) => {
 
   const modifiedFeedback = {
     ...req.body,
-    created: new Date(),
+    created: moment().unix(),
+    submittedBy: req.query ? req.query.username : null
   };
 
   const collection = await db.getCollection('feedback');
   const createdFeedback = await collection.insertOne(modifiedFeedback);
 
   // get formatted date from created timestamp, to display in email
-  const formattedCreated = moment(modifiedFeedback.created).format('DD/MM/YYYY HH:mm');
+  const formattedCreated = moment.unix(modifiedFeedback.created).format('DD/MM/YYYY HH:mm');
 
   const {
     role,
@@ -56,6 +56,7 @@ exports.create = async (req, res) => {
     satisfied,
     howCanWeImprove,
     emailAddress,
+    submittedBy,
   } = modifiedFeedback;
 
   const emailVariables = {
@@ -69,6 +70,7 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     created: formattedCreated,
+    submittedBy,
   };
 
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';

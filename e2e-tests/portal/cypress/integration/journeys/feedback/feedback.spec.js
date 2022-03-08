@@ -75,7 +75,7 @@ context('User submit feedback on portal', () => {
 
     cy.url().should('eq', relative('/feedback'));
 
-    feedbackPage.ThankYouPageHeading().contains('Feedback');
-    feedbackPage.ThankYouPageText().contains('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
+    feedbackPage.thankYouPageHeading().contains('Feedback');
+    feedbackPage.thankYouPageText().contains('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
   });
 });

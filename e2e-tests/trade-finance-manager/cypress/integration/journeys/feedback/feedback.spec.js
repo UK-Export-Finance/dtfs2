@@ -67,7 +67,7 @@ context('User submit feedback on TFM', () => {
 
     cy.url().should('eq', relative('/feedback'));
 
-    pages.feedbackPage.ThankYouPageHeading().contains('Feedback');
-    pages.feedbackPage.ThankYouPageText().contains('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
+    pages.feedbackPage.thankYouPageHeading().contains('Feedback');
+    pages.feedbackPage.thankYouPageText().contains('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
   });
 });

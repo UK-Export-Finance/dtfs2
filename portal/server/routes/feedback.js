@@ -11,7 +11,7 @@ router.get('/feedback', (req, res) =>
 
 router.post('/feedback', async (req, res) => {
   try {
-    const response = await api.createFeedback(req.body);
+    const response = await api.createFeedback(req.body, req.session.user);
     if (response) {
       return res.render('feedback/feedback-thankyou.njk', {
         user: req.session.user,
