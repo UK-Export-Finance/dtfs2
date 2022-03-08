@@ -15,12 +15,6 @@
 
 {% block content %}
 
-<script type="text/javascript">
-  function onChangeRadioButton(element, shouldShow) {
-    DTFS.main.changeScreenVisibilityOfElement(element, shouldShow);
-  }
-</script>
-
   <h1 class="govuk-heading-l">
     {% if _id %}
       Edit user {{ displayedUser.username }}
@@ -120,7 +114,6 @@
               text: "Yes",
               attributes: {
                 "data-cy": "autoCreatePassword-true",
-                "onClick": "onChangeRadioButton('manuallyCreatePassword', false)"
               },
               checked: displayedUser.autoCreatePassword !== 'true'
             },
@@ -129,7 +122,6 @@
               text: "No",
               attributes: {
                 "data-cy": "autoCreatePassword-false",
-                "onClick": "onChangeRadioButton('manuallyCreatePassword', true)"
               },
               checked: displayedUser.autoCreatePassword === 'false'
             }

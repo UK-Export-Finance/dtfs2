@@ -26,42 +26,5 @@
     }
   }) }}
 
-  <script type="text/javascript">
-    /*
-      calculate UKEF Exposure from Facility Value and Covered Percentage
-    */
-
-    var facilityValueInput = document.getElementById('facilityValue');
-    var coveredPercentageInput = document.getElementById('coveredPercentage');
-    var ukefExposureInput = document.getElementById('ukefExposure');
-
-    function calculateUkefExposure() {
-      var value = facilityValueInput.value.replace(/,/g, ''); // remove commas
-
-      var calculation = value * (coveredPercentageInput.value / 100);
-
-      if (DTFS.main.isNumeric(calculation)) {
-        var result;
-        var totalDecimals = DTFS.main.decimalsCount(calculation);
-        if (totalDecimals > 2)  {
-          result = DTFS.main.roundNumber(calculation, 2);
-        } else {
-          result = calculation;
-        }
-
-        var formattedResult = result.toLocaleString('en', { minimumFractionDigits: 2 });
-
-        ukefExposureInput.value = formattedResult;
-      }
-    }
-
-    if (facilityValueInput && coveredPercentageInput) {
-      [facilityValueInput, coveredPercentageInput].forEach(function(element) {
-        element.addEventListener('blur', function(event) {
-          calculateUkefExposure();
-        });
-      });
-    }
-  </script>
-
+<script src="/assets/js/ukefexposure.js" type="text/javascript"></script>
 {% endmacro %}
