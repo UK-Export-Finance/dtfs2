@@ -10,7 +10,6 @@ const { convertDateToTimestamp } = require('./helpers');
 // TODO:
 // paymentType: 'IN_ADVANCE_MONTHLY', // ??
 
-
 const mapHasBeenIssued = (v1Stage) => {
   if (v1Stage === 'Issued') {
     return true;
@@ -67,8 +66,6 @@ const mapCoverEndDate = (coverStartDate, exposurePeriod) => {
   return getUnixTime(date);
 };
 
-// TODO: default any empty fields to null/V2 model
-// otherwise will be an empty string
 const mapV1Facilities = (
   v1Facilities,
   v2DealSubmissionDate,

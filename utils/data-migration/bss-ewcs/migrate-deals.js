@@ -21,7 +21,7 @@ const { initIndustrySectors } = require('./helpers/industry-sectors');
 const { convertV1Date } = require('./helpers/date-helpers');
 const consoleLogColor = require('./helpers/console-log-colour');
 
-const log = require('./helpers/log');
+const log = require('../logs');
 const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 const api = require('../api');
 
@@ -147,7 +147,6 @@ const importSingleDeal = async (dealId) =>
       });
       return success;
     } else {
-      console.error(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
       log.addError(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
     }
 
