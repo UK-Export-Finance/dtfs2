@@ -1,9 +1,9 @@
-name: Portal API
+name: Dev - Portal API
 
 on:
   push:
     # Branch updates initiates deployment
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'portal-api/**'
     - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'

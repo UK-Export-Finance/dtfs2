@@ -1,9 +1,9 @@
-name: Portal UI
+name: Dev - Portal UI
 
 on:
   push:
     # Branch updates initiates deployment
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'portal/**'
     - 'e2e-tests/portal/cypress/**'
