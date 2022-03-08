@@ -93,6 +93,7 @@ describe(baseUrl, () => {
               answer: null,
             })),
           },
+          eligibilityVersion: expect.any(Number),
           editedBy: expect.any(Array),
           createdAt: expect.any(Number),
           updatedAt: expect.any(Number),
@@ -142,6 +143,7 @@ describe(baseUrl, () => {
           })),
           status: CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED,
         },
+        eligibilityVersion: expect.any(Number),
         status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
         editedBy: expect.any(Array),
         createdAt: expect.any(Number),
@@ -224,6 +226,7 @@ describe(baseUrl, () => {
             answer: null,
           })),
         },
+        eligibilityVersion: expect.any(Number),
       };
       expect(body).toEqual({
         ...expectMongoId(expected),
