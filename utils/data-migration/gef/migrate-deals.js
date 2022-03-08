@@ -6,30 +6,20 @@ const {
   addToDatabase,
   teardown,
 } = require('./migrate');
-
+const log = require('../logs');
 
 const doMigration = async () => {
   const { path } = args;
 
   const { v2Users } = await init();
 
-  const v1Deals = fs.readdirSync('gef/dump');
+  const v1Deals = fs.readdirSync(path);
 
-  console.log('v1Deals ', v1Deals);
-
-  // for each...
+  const totalV1Deals = v1Deals.length;
 
   v1Deals.forEach(async (fileName) => {
-
-    console.log('fileName ', fileName);
-
-    // const jsonBuffer = fs.readFileSync(file);
-    // const jsonBuffer = fs.readFileSync(`gef/dump/${file}`);
-
-    // const jsonBuffer = fs.readFileSync(__dirname + '/dump' + '/' + fileName); // works
     const jsonBuffer = fs.readFileSync(path + '/' + fileName);
     const v1DealJson = JSON.parse(jsonBuffer);
-    console.log('v1DealJson \n', v1DealJson);
 
     const {
       mappingErrors,
@@ -38,12 +28,23 @@ const doMigration = async () => {
     } = mapToV2(v1DealJson, v2Users);
 
     if (!mappingErrors) {
-      await addToDatabase(
+      const imported = await addToDatabase(
         v2Deal,
         v2Facilities,
       );
     }
   });
+
+  const errorCount = log.getErrorCount();
+  const successCount = log.getSuccessCount();
+
+  if (errorCount !== 0) {
+    log.addInfo(`Error migrating ${errorCount} of ${totalV1Deals} V1 deals.`);
+  }
+
+  if (successCount > 0) {
+    log.addInfo(`Successfully migrated ${successCount} of ${totalV1Deals} V1 deals.`);
+  }
 
   await teardown();
 };

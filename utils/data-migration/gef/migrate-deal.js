@@ -1,99 +1,47 @@
 const fs = require('fs');
 const args = require('minimist')(process.argv.slice(2));
-const { initUsers } = require('../helpers/users');
-const log = require('../logs');
-const mapDeal = require('./map-deal');
-const mapFacilities = require('./map-facilities');
-const api = require('../api');
-const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 const {
-  dealMappingErrors,
-  facilitiesMappingErrors,
-} = require('./mapping-errors');
+  init,
+  mapToV2,
+  addToDatabase,
+  teardown,
+} = require('./migrate');
+const log = require('../logs');
 
 const { file } = args;
-let token;
-let v2Users;
-let logFile;
-
-const init = async () => {
-  token = await getToken();
-  v2Users = await initUsers(token);
-  logFile = log.init('migrate-deals-GEF');
-};
-
-const teardown = async () => {
-  await removeMigrationUser();
-  console.info(`Log file: ${logFile}`);
-};
 
 const loadDealFromFile = () => {
   const jsonBuffer = fs.readFileSync(file);
   return JSON.parse(jsonBuffer);
 };
 
-const mapToV2 = () => {
-  const v1Deal = loadDealFromFile();
-  const v2Deal = mapDeal(v1Deal, v2Users);
-
-  const v1Facilities = v1Deal.children.facilities;
-  const v2Facilities = mapFacilities(v1Facilities, v2Deal.submissionDate);  
-
-  const v1DealId = v2Deal.dataMigration.drupalDealId;
-
-  const dealErrors = dealMappingErrors(v2Deal, v1DealId);
-  const facilitiesErrors = facilitiesMappingErrors(v2Facilities, v1DealId);
-
-  let mappingErrors;
-  const hasMappingErrors = (dealErrors || facilitiesErrors);
-
-  if (hasMappingErrors) {
-    mappingErrors = {};
-  }
-
-  if (dealErrors) {
-    mappingErrors.deal = dealErrors;
-  }
-
-  if (facilitiesErrors) {
-    mappingErrors.facilities = facilitiesErrors;
-  }
-
-  return {
-    mappingErrors,
-    v2Deal,
-    v2Facilities,
-  };
-};
-
-const addToDatabase = async (v2Deal, v2Facilities) => {
-  const v1DealId = v2Deal.dataMigration.drupalDealId;
-
-  await api.importGefDeal(v2Deal, v2Facilities, token).then(async ({ success, data }) => {
-    const { deal, facilities } = data;
-
-    if (success && deal && facilities) {
-      log.addSuccess(v1DealId, `Successfully migrated v1 GEF deal`);
-    } else {
-      log.addError(v1DealId, `Error migrating v1 GEF deal`);
-    }
-  });
-};
-
 const doMigration = async () => {
-  await init();
+  const { v2Users } = await init();
+
+  const v1Deal = loadDealFromFile();
 
   const {
     mappingErrors,
     v2Deal,
     v2Facilities,
-  } = mapToV2();
+  } = mapToV2(v1Deal, v2Users);
 
   if (!mappingErrors) {
     await addToDatabase(
       v2Deal,
       v2Facilities,
     );
+  }
+
+  const errorCount = log.getErrorCount();
+  const successCount = log.getSuccessCount();
+
+  if (errorCount !== 0) {
+    log.addInfo(`Error migrating deal ${v2Deal.dataMigration.drupalDealId}}`);
+  }
+
+  if (successCount > 0) {
+    log.addInfo(`Successfully migrated deal ${v2Deal.dataMigration.drupalDealId}`);
   }
 
   await teardown();
