@@ -1,9 +1,9 @@
-name: GEF UI
+name: Dev - GEF UI
 
 on:
   push:
     # Branch updates initiates deployment
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'gef-ui/**'
     - 'portal-api/**'
