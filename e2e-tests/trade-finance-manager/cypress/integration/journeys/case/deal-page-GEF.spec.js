@@ -151,7 +151,7 @@ context('User can view a GEF AIN case deal', () => {
   });
 
   describe('facilities table', () => {
-    it('facility coverEndDate should be a dash when date doesn\'t exist', () => {
+    it('facility coverEndDate should be a dash', () => {
       const facilityId = dealFacilities._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 

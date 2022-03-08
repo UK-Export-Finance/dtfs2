@@ -8,7 +8,8 @@
         href="/contract/{{ params.deal._id }}/clone/before-you-start"
         class="govuk-link govuk-!-font-size-14"
         data-cy="clone-deal-link"
-        aria-label="Clone Deal"
+        title="Clone Deal {{ params.deal.bankInternalRefName }}"
+        aria-label="Clone Deal {{ params.deal.bankInternalRefName }}"
       >Clone</a>
     {% endif %}
 
