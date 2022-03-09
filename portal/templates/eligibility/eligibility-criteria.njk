@@ -11,12 +11,6 @@
 
 {% block content %}
 
-  <script type="text/javascript">
-    function onChangeRadioButton(element, shouldShow) {
-      DTFS.main.showHideElement(element, shouldShow);
-    }
-  </script>
-
     {% if validationErrors.count %}
     {{
       govukErrorSummary({
@@ -62,7 +56,6 @@
                       type="radio"
                       value="true"
                       {% if criterion.answer %}checked{% endif %}
-                      {% if criterion.id == "11" %}onClick="onChangeRadioButton('criterion-group-additional-{{ criterion.id }}', false)"{% endif %}
                       data-cy="criteria-true"
                       data-id="criteria-{{ criterion.id }}-true"
               >
@@ -78,7 +71,6 @@
                       type="radio"
                       value="false"
                       {% if criterion.answer === false %}checked{% endif %}
-                      {% if criterion.id == "11" %}onClick="onChangeRadioButton('criterion-group-additional-{{ criterion.id }}', true)"{% endif %}
                       data-cy="criteria-false"
                       data-id="criteria-{{ criterion.id }}-false"
               >

@@ -1,4 +1,4 @@
-name: Supporting infrastructure for environments
+name: Setup infrastructure for Dev, Staging and Production environments.  
 
 on:
   push:
@@ -8,11 +8,9 @@ on:
 
 jobs:
 
-  # Todo: add auto-scaling to App Service plans, although it's unlikely there'll be enough traffic to need it.
-
   dev-rg:
-    name: Dev resource group
-    runs-on: [self-hosted, linux]
+    name: 1. Dev resource group
+    runs-on: [self-hosted, linux, deployment, infra]
     steps:
     - uses: azure/login@v1
       with:
@@ -29,7 +27,7 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az appservice plan create --name dev --is-linux --sku p1v2
+          az appservice plan create --name dev --is-linux --sku p2v2
 
     - name: Container registry
       uses: azure/cli@v1.0.0
@@ -38,9 +36,9 @@ jobs:
           # Admin needs to be enabled for App Service continuous deployment
           az acr create --name tfsdev --sku Standard --admin-enabled true
 
-  test-rg:
-    name: Test resource group
-    runs-on: [self-hosted, linux]
+  staging-rg:
+    name: 2. Staging resource group
+    runs-on: [self-hosted, linux, deployment, infra]
     steps:
     - uses: azure/login@v1
       with:
@@ -51,24 +49,24 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=uksouth
-          az configure --defaults group=${{ secrets.TEST_RESOURCE_GROUP }}
+          az configure --defaults group=${{ secrets.STAGING_RESOURCE_GROUP }}
 
     - name: App Service plan
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az appservice plan create --name test --is-linux --sku p1v2
+          az appservice plan create --name staging --is-linux --sku p2v2
 
     - name: Container registry
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
-          az acr create --name tfstest --sku Standard --admin-enabled true
+          az acr create --name tfsstaging --sku Standard --admin-enabled true
 
   prod-rg:
-    name: Prod resource group
-    runs-on: [self-hosted, linux]
+    name: 3. Production resource group
+    runs-on: [self-hosted, linux, deployment, infra]
     steps:
     - uses: azure/login@v1
       with:
@@ -85,12 +83,12 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az appservice plan create --name prod --is-linux --sku p1v2
+          az appservice plan create --name prod --is-linux --sku p3v2
 
     - name: Container registry
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
-          az acr create --name tfsprod --sku Standard --admin-enabled true
+          az acr create --name tfsproduction --sku Standard --admin-enabled true
 

@@ -77,7 +77,7 @@ describe(component, () => {
     describe('when deal has not been submitted, is editable, and has `Draft` or `Further Maker\'s input required` status', () => {
       it('should render a link to delete', () => {
         const user = { roles: ['maker'] };
-        const facility = { _id: '5f3ab3f705e6630007dcfb22' };
+        const facility = { _id: '5f3ab3f705e6630007dcfb22', type: 'Loan' };
         const facilityName = 'Loan';
         const facilityTableIndex = 1;
 
@@ -91,7 +91,7 @@ describe(component, () => {
             user, deal, facility, facilityName, facilityTableIndex, editable: true,
           });
           wrapper.expectLink(`[data-cy="${facilityName}-delete-${facility._id}"]`)
-            .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, 'Delete');
+            .toLinkTo(`/contract/${deal._id}/${facilityName}/${facility._id}/delete`, 'Delete loan');
 
           wrapper.expectAriaLabel(`[data-cy="${facilityName}-delete-${facility._id}"]`)
             .toEqual(`Delete ${facilityName} ${facilityTableIndex}`);

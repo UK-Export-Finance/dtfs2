@@ -17,11 +17,13 @@ const mapGefDeal = (deal) => {
     exporter,
     maker,
     facilities,
+    supportingInformation,
   } = dealSnapshot;
 
   const mapped = {
     _id,
     dealType,
+    supportingInformation,
     bankInternalRefName,
     additionalRefName,
     submissionCount,

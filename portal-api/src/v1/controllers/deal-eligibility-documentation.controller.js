@@ -70,10 +70,12 @@ exports.update = async (req, res) => {
         }
 
         return {
+          parentId: req.params.id,
           fieldname,
           type: getFileType(fieldname),
           fullPath: fileInfo.fullPath,
           filename: fileInfo.filename,
+          folder: `${fileInfo.folder}`,
           mimetype,
         };
       }

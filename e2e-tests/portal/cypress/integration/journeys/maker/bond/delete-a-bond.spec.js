@@ -131,6 +131,7 @@ context('Delete a Bond', () => {
     bondToDeleteId = dealFacilities.bonds[0]._id;
     const bondToDeleteRow = pages.contract.bondTransactionsTable.row(bondToDeleteId);
 
+    bondToDeleteRow.deleteLink().contains('Delete bond');
     bondToDeleteRow.deleteLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondToDeleteId}/delete`));
 

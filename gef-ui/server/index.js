@@ -15,7 +15,7 @@ const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 
 const app = express();
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet());
 
 dotenv.config();
 
