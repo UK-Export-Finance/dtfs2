@@ -61,7 +61,7 @@ const cleanMandatoryCriteria = async (token) => {
   console.info('cleaning BSS mandatory-criteria');
 
   for (const mandatoryCriteria of await api.listMandatoryCriteria(token)) {
-    await api.deleteMandatoryCriteria(mandatoryCriteria, token);
+    await api.deleteMandatoryCriteria(mandatoryCriteria.version, token);
   }
 };
 
