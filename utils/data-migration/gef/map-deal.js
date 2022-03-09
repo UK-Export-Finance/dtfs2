@@ -115,14 +115,14 @@ const mapV1Deal = (v1Deal, v2Users) => {
     additionalRefName: v1Deal.bank_deal_name,
     createdAt: convertDateToTimestamp(v1Deal.created),
     updatedAt: convertDateToTimestamp(v1Deal.changed),
-    mandatoryVersionId: v1Deal.children.eligiblity.system_red_line_revision_id,
+    mandatoryVersionId: Number(v1Deal.children.eligiblity.system_red_line_revision_id),
     submissionType,
     status,
     submissionDate: convertDateToTimestamp(v1Deal.field_submission_date),
     ukefDealId: v1Deal.field_ukef_deal_id,
     exporter: mapExporter(v1Deal.children.general_info),
     eligibility: mapEligibility(v1Deal.children.eligiblity),
-    eligibilityVersionId: v1Deal.children.eligiblity.system_revision_id,
+    eligibilityVersionId: Number(v1Deal.children.eligiblity.system_revision_id),
     submissionCount: mapSubmissionCount(submissionType),
     portalActivities: [],
     manualInclusionNoticeSubmissionDate: convertDateToTimestamp(v1Deal.field_min_checker_date),
@@ -155,6 +155,14 @@ const mapV1Deal = (v1Deal, v2Users) => {
   }
 
   mapped.ukefDecision = mapUkefDecision(v1Deal, status);
+
+  if (mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
+    mapped.ukefDecisionAccepted = v1Deal.field_i_agree_with_special_cond;
+  }
+
+  if (mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+    mapped.ukefDecisionAccepted = v1Deal.field_i_agree_with_conditions;
+  }
 
   return mapped;
 };

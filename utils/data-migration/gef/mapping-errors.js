@@ -41,9 +41,16 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
     errors.push('eligibilityVersionId');
   }
 
-  if (v2Deal.status === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+  if (v2Deal.submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
     if (!isNumber(v2Deal.manualInclusionNoticeSubmissionDate)) {
       errors.push('manualInclusionNoticeSubmissionDate');
+    }
+  }
+
+  if (mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
+    || mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+    if (!hasBooleanValue(v2Deal.ukefDecisionAccepted)) {
+      errors.push('ukefDecisionAccepted');
     }
   }
 
