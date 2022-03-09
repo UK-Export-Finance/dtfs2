@@ -10,12 +10,19 @@ router.get('/feedback', (req, res) =>
   res.render('feedback/feedback-form.njk'));
 
 router.post('/feedback', async (req, res) => {
+  const userDetails = {
+    username: null,
+    email: null,
+  };
+
   try {
-    // generates the user object from session if logged in, else null and adds to body
-    const userDetails = {
-      username: req.session.user ? req.session.user.username : null,
-      email: req.session.user ? req.session.user.email : null,
-    };
+    // generates the user object from session if logged in, else null
+    if (req.session.user) {
+      const { username, email } = req.session.user;
+
+      userDetails.username = username;
+      userDetails.email = email;
+    }
 
     const feedbackBody = req.body;
     feedbackBody.userDetails = userDetails;
