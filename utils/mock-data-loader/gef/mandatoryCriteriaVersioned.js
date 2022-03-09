@@ -1,6 +1,6 @@
 const MANDATORY_CRITERIA_VERSIONED = [
   {
-    version: 2,
+    version: 33,
     createdAt: new Date('2021-01-03T00:00'),
     updatedAt: null,
     isInDraft: false,
