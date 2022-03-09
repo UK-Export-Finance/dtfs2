@@ -1,0 +1,2 @@
+var DTFS;!function(){var n=document.getElementById("bss-print-button");n&&n.addEventListener("click",(function(){window.print()})),(DTFS=void 0===DTFS?{}:DTFS).printPage={}}();
+//# sourceMappingURL=printPage.js.map

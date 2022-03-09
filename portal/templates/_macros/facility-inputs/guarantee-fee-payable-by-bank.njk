@@ -26,32 +26,5 @@
       'data-cy': "guarantee-fee-payable-by-bank"
     }
   }) }}
-
-  <script type="text/javascript">
-    /*
-      calculate Guarantee fee from a Margin Fee Input value.
-      For a Bond, uses Risk Margin Fee.
-      For a Loan, uses Interest Margin Fee.
-    */
-
-    var riskMarginFeeInput = document.getElementById('riskMarginFee');
-    var interestMarginFeeInput = document.getElementById('interestMarginFee');
-    var guaranteeFeeInput = document.getElementById('guaranteeFeePayableByBank');
-
-    var marginFeeInput = riskMarginFeeInput || interestMarginFeeInput;
-
-    function calculateGuaranteeFee() {
-      var result = marginFeeInput.value * 0.9;
-      var formattedResult = result.toLocaleString('en', { minimumFractionDigits: 4 });
-
-      guaranteeFeeInput.value = formattedResult;
-    }
-
-    if (marginFeeInput) {
-      marginFeeInput.addEventListener('blur', function(event) {
-        calculateGuaranteeFee();
-      });
-    }
-  </script>
-    
+<script src="/assets/js/guaranteeFeePayableByBank.js" type="text/javascript"></script>
 {% endmacro %}
