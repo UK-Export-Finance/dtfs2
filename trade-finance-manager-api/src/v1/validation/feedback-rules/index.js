@@ -17,8 +17,9 @@ const rules = [
 module.exports = (feedback) => {
   let errorList = {};
 
-  for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](feedback, errorList);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const eachRule of rules) {
+    errorList = eachRule(feedback, errorList);
   }
 
   return errorList;

@@ -4,6 +4,10 @@ const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendTfmEmail = require('./send-tfm-email');
 
+const CONSTANTS = require('../../constants');
+
+require('dotenv').config();
+
 exports.create = async (req, res) => {
   const validationErrors = validateFeedback(req.body);
 
@@ -52,7 +56,7 @@ exports.create = async (req, res) => {
     submittedByUserEmail,
   };
 
-  const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';
+  const EMAIL_TEMPLATE_ID = CONSTANTS.EMAIL_TEMPLATE_IDS.TFM_FEEDBACK_RECEIVED;
   const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
   await sendTfmEmail(

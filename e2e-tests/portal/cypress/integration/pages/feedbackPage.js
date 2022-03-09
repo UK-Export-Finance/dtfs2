@@ -33,7 +33,7 @@ const feedbackPage = {
 
   // thank you page
   thankYouPageHeading: () => cy.get('[data-cy="thank-you-heading"]'),
-  thankYouPageText: () => cy.get('[data-cy="thankyou-copy"]'),
+  thankYouPageText: () => cy.get('[data-cy="thank-you-copy"]'),
 };
 
 module.exports = feedbackPage;
