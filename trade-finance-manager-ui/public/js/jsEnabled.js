@@ -1,2 +1,2 @@
-var jsEnabled;document.body.className=document.body.className?"".concat(document.body.className," js-enabled"):"js-enabled",jsEnabled={};
+var jsEnabled;!function(){document.body.className=document.body.className?"".concat(document.body.className," js-enabled"):"js-enabled";var e=document.getElementById("tasks-filters");e&&(e.className="js-enabled"),jsEnabled={}}();
 //# sourceMappingURL=jsEnabled.js.map
