@@ -63,10 +63,7 @@ In one Central API endpoint, it will create the following structure with an addi
     dealType: 'BSS/EWCS',
   },
   tfm: {
-    history: {
-      tasks: [],
-      emails: [],
-    },
+    dateReceived: '20-12-2021',
   },
 }
 ```

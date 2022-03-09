@@ -7,7 +7,6 @@ const {
   shouldUpdateDealStage,
 } = require('../helpers/tasks');
 const mapTaskObject = require('../tasks/map-task-object');
-const mapTaskHistoryObject = require('../tasks/map-task-history-object');
 const {
   previousTaskIsComplete,
   taskCanBeEditedWithoutPreviousTaskComplete,
@@ -150,7 +149,6 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
  * - Maps over all tasks in every group and updates their status/canEdit flag.
  * - If previous task is complete, a sendEmail flag for that task is returned.
  * - Sends emails ('task is ready to start') for any tasks that return sendEmail flag.
- * - Updates tfm.history.tasks.
  * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task)
  * - Updates the deal.
  * */
@@ -201,27 +199,10 @@ const updateTfmTask = async (dealId, taskUpdate) => {
     );
 
     /**
-     * Update TFM history.tasks
-     * */
-    const tfmHistoryUpdate = {
-      tasks: [
-        mapTaskHistoryObject({
-          taskId: taskIdToUpdate,
-          groupId,
-          statusFrom,
-          statusTo,
-          assignedUserId: assignedTo.userId,
-          updatedBy,
-        }),
-      ],
-    };
-
-    /**
      * Construct TFM update object
      * */
     const tfmDealUpdate = {
       tfm: {
-        history: tfmHistoryUpdate,
         tasks: modifiedTasksWithEditStatus,
       },
     };

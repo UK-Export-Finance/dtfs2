@@ -393,17 +393,6 @@ describe('tasks controller', () => {
 
         expect(updateDealSpy.mock.calls[0][0]).toEqual(dealId);
 
-        // check first task in history.tasks array
-        const firstTaskInHistorySentToUpdateDealSpy = updateDealSpy.mock.calls[0][1].tfm.history.tasks[0];
-
-        expect(firstTaskInHistorySentToUpdateDealSpy.taskId).toEqual(tfmTaskUpdate.id);
-        expect(firstTaskInHistorySentToUpdateDealSpy.groupId).toEqual(tfmTaskUpdate.groupId);
-        expect(firstTaskInHistorySentToUpdateDealSpy.statusFrom).toEqual('To do');
-        expect(firstTaskInHistorySentToUpdateDealSpy.statusTo).toEqual(tfmTaskUpdate.status);
-        expect(firstTaskInHistorySentToUpdateDealSpy.assignedUserId).toEqual(tfmTaskUpdate.assignedTo.userId);
-        expect(firstTaskInHistorySentToUpdateDealSpy.updatedBy).toEqual(tfmTaskUpdate.updatedBy);
-        expect(typeof firstTaskInHistorySentToUpdateDealSpy.timestamp).toEqual('number');
-
         // check first task in tasks array
         const firstTaskSentToUpdateDealSpy = updateDealSpy.mock.calls[0][1].tfm.tasks[0].groupTasks[0];
 

@@ -49,10 +49,6 @@ describe('send-deal-submit-emails - TFM tasks', () => {
             ],
           },
         ],
-        history: {
-          tasks: [],
-          emails: [],
-        },
       },
     };
   });

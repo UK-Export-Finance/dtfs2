@@ -18,9 +18,7 @@ describe('task emails functions', () => {
     exporter: {
       companyName: MOCK_DEAL_MIA_SUBMITTED.exporter.companyName,
     },
-    tfm: {
-      history: { emails: [] },
-    },
+    tfm: {},
   };
 
   describe('sendUpdatedTaskEmail', () => {

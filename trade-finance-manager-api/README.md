@@ -115,9 +115,7 @@ When TFM creates a snapshot (and adds to the TFM collections) for it's own consu
     ...
   },
   tfm: {
-    dateReceived: '12-12-2021',
-    tasks: [],
-    history: [],
+    dateReceived: '20-12-2021',
     ...
   },
 }

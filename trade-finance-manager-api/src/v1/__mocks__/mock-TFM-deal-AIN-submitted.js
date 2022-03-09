@@ -140,21 +140,6 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
     updatedAt: 1643727452024,
   },
   tfm: {
-    history: {
-      emails: [
-        {
-          recipient: 'maker1@ukexportfinance.gov.uk',
-          templateId: 'e98df53c-0645-49b4-b87e-ac6d9b6ee357',
-          timestamp: '1643727487596',
-        },
-        {
-          recipient: 'maker1@ukexportfinance.gov.uk',
-          templateId: 'dae1e902-5dc9-4ec4-aad7-9a161c96146f',
-          timestamp: '1643727487831',
-        },
-      ],
-      tasks: [],
-    },
     activities: [
       {
         type: 'ACTIVITY',
