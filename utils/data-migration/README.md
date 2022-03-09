@@ -2,6 +2,8 @@
 
 Scripts to migrate Portal V1 deals, facilities, users and banks (BSS/EWCS, GEF) to Portal V2.
 
+:warning: To import any deals (BSS/EWCS/GEF), the database must have all Mandatory Criteria and Eligibility Criteria versions. These are stored in mock-data-loader.
+
 ## Setup
 
 ```shell
@@ -65,3 +67,4 @@ node gef/migrate-deal.js --file=./gef/dump/12345.json
 ```
 
 The V1 deal will be mapped to V2 structure and added to the deals collection. Facilities, will be added to the facilities collection.
+
