@@ -28,7 +28,7 @@ router.get('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) 
     res.redirect('/');
   } else {
     res.render('before-you-start/before-you-start.njk', {
-      mandatoryCriteria,
+      mandatoryCriteria: mandatoryCriteria.data,
       user: req.session.user,
     });
   }

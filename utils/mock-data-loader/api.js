@@ -208,7 +208,7 @@ const deleteIndustrySector = async (industrySector, token) => {
   return response.data;
 };
 
-const deleteMandatoryCriteria = async (mandatoryCriteria, token) => {
+const deleteMandatoryCriteria = async (version, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
@@ -216,7 +216,7 @@ const deleteMandatoryCriteria = async (mandatoryCriteria, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${portalApiUrl}/v1/mandatory-criteria/${mandatoryCriteria.id}`,
+    url: `${portalApiUrl}/v1/mandatory-criteria/${version}`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
