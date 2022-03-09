@@ -525,4 +525,4 @@ apiRoutes.post('/estore/', eStore.createEstore);
  *             schema:
  *               $ref: '#/definitions/NotifyResponseBody'
  */
-apiRoutes.post('/email', email.sendEmail);
+apiRoutes.post('/email', email.emailNotification);

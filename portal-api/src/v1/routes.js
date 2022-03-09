@@ -155,7 +155,11 @@ authRouterAllowXss
   .post(validate({ role: ['editor'] }), mandatoryCriteria.create);
 
 authRouterAllowXss
-  .route('/mandatory-criteria/:id')
+  .route('/mandatory-criteria/latest')
+  .get(mandatoryCriteria.findLatest)
+
+authRouterAllowXss
+  .route('/mandatory-criteria/:version')
   .get(mandatoryCriteria.findOne)
   .put(validate({ role: ['editor'] }), mandatoryCriteria.update)
   .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);

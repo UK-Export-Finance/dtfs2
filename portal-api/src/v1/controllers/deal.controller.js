@@ -1,12 +1,11 @@
 const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
-const { isSuperUser, userHasAccessTo } = require('../users/checks');
+const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
 const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const api = require('../api');
-const getDealErrors = require('../validation/deal');
 
 /**
  * Find a deal (BSS, EWCS only)

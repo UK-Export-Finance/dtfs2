@@ -67,41 +67,41 @@
           text: "Year-to-date management accounts"
         },
         value: {
-          text: "Required" if not supportingInfo.managementAccounts[0],
-          classes: "has-text-danger" if not supportingInfo.managementAccounts[0],
-          html: fileList(supportingInfo.managementAccounts, "/files/") if supportingInfo.managementAccounts[0]
+          text: "Required" if not supportingInfo.yearToDateManagement[0],
+          classes: "has-text-danger" if not supportingInfo.yearToDateManagement[0],
+          html: fileList(supportingInfo.yearToDateManagement, "/files/") if supportingInfo.yearToDateManagement[0]
         },
         actions: {
           items: [
             {
               href: "/gef/application-details/" + dealId + "/supporting-information/management-accounts",
-              text: "Change" if supportingInfo.managementAccounts[0] else "Add",
+              text: "Change" if supportingInfo.yearToDateManagement[0] else "Add",
               visuallyHiddenText: "security details",
               attributes: { 'data-cy': 'supportingInfo__management-accounts-cta' }
             }
           ] if displayChangeSupportingInfo
         }
-      } if supportingInfo.requiredFields.includes('managementAccounts'),
+      } if supportingInfo.requiredFields.includes('yearToDateManagement'),
       {
         key: {
           text: "Financial statements for the past 3 years"
         },
         value: {
-          text: "Required" if not supportingInfo.financialStatements[0],
-          classes: "has-text-danger" if not supportingInfo.financialStatements[0],
-          html: fileList(supportingInfo.financialStatements, "/files/") if supportingInfo.financialStatements[0]
+          text: "Required" if not supportingInfo.auditedFinancialStatements[0],
+          classes: "has-text-danger" if not supportingInfo.auditedFinancialStatements[0],
+          html: fileList(supportingInfo.auditedFinancialStatements, "/files/") if supportingInfo.auditedFinancialStatements[0]
         },
         actions: {
           items: [
             {
               href: "/gef/application-details/" + dealId + "/supporting-information/financial-statements",
-              text: "Change" if supportingInfo.financialStatements[0] else "Add",
+              text: "Change" if supportingInfo.auditedFinancialStatements[0] else "Add",
               visuallyHiddenText: "financial statements",
               attributes: { 'data-cy': 'supportingInfo__financial-statements-cta' }
             }
           ] if displayChangeSupportingInfo
         }
-      } if supportingInfo.requiredFields.includes('financialStatements'),
+      } if supportingInfo.requiredFields.includes('auditedFinancialStatements'),
       {
         key: {
           text: "Financial forecasts"
@@ -127,21 +127,21 @@
           text: "Brief commentary on the financial information"
         },
         value: {
-          text: "Required" if not supportingInfo.financialCommentary[0],
-          classes: "has-text-danger" if not supportingInfo.financialCommentary[0],
-          html: fileList(supportingInfo.financialCommentary, "/files/") if supportingInfo.financialCommentary[0]
+          text: "Required" if not supportingInfo.financialInformationCommentary[0],
+          classes: "has-text-danger" if not supportingInfo.financialInformationCommentary[0],
+          html: fileList(supportingInfo.financialInformationCommentary, "/files/") if supportingInfo.financialInformationCommentary[0]
         },
         actions: {
           items: [
             {
               href: "/gef/application-details/" + dealId + "/supporting-information/financial-commentary",
-              text: "Change" if supportingInfo.financialCommentary[0] else "Add",
+              text: "Change" if supportingInfo.financialInformationCommentary[0] else "Add",
               visuallyHiddenText: "financial commentary",
               attributes: { 'data-cy': 'supportingInfo__financial-commentary-cta' }
             }
           ] if displayChangeSupportingInfo
         }
-      } if supportingInfo.requiredFields.includes('financialCommentary'),
+      } if supportingInfo.requiredFields.includes('financialInformationCommentary'),
       {
         key: {
           text: "Corporate structure diagram"

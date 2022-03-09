@@ -1,7 +1,7 @@
 const { DEAL_TYPE, DEAL_STATUS } = require('../enums');
 
 class Application {
-  constructor(req, eligibilityTerms) {
+  constructor(req, eligibilityTerms, eligibilityVersion) {
     const editedBy = [];
 
     if (eligibilityTerms) {
@@ -31,6 +31,8 @@ class Application {
           answer: null,
         })),
       };
+
+      this.eligibilityVersion = eligibilityVersion;
 
       this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;
       this.mandatoryVersionId = req.mandatoryVersionId ? String(req.mandatoryVersionId) : null;
