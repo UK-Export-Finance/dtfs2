@@ -23,6 +23,7 @@ const postFeedback = async (req, res) => {
     feedbackBody.submittedBy = userDetails;
 
     const response = await api.createFeedback(feedbackBody);
+
     if (response) {
       return res.render('feedback/feedback-thankyou.njk', {
         user: req.session.user,
@@ -49,7 +50,7 @@ const postFeedback = async (req, res) => {
   }
 
   return res.render('feedback/feedback-form.njk', {
-    feedack: req.body,
+    feedback: req.body,
     user: req.session.user,
   });
 };
