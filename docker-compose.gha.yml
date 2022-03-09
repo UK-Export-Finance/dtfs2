@@ -72,8 +72,6 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - SENTRY_DSN=${SENTRY_DSN}
-      - GOV_NOTIFY_API_KEY
-      - GOV_NOTIFY_EMAIL_RECIPIENT
     entrypoint: npx nodemon src/index.js -L
 
   portal:

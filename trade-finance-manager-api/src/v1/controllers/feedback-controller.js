@@ -21,8 +21,6 @@ exports.create = async (req, res) => {
   const modifiedFeedback = {
     ...req.body.formData,
     created: getUnixTime(new Date()),
-    submittedByUserName: req.body.userDetails.username,
-    submittedByUserEmail: req.body.userDetails.email,
   };
 
   const collection = await db.getCollection('tfm-feedback');
@@ -39,8 +37,7 @@ exports.create = async (req, res) => {
     satisfied,
     howCanWeImprove,
     emailAddress,
-    submittedByUserName,
-    submittedByUserEmail,
+    submittedBy,
   } = modifiedFeedback;
 
   const emailVariables = {
@@ -52,8 +49,7 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     created: formattedCreated,
-    submittedByUserName,
-    submittedByUserEmail,
+    submittedBy,
   };
 
   const EMAIL_TEMPLATE_ID = CONSTANTS.EMAIL_TEMPLATE_IDS.TFM_FEEDBACK_RECEIVED;

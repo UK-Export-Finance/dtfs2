@@ -1,15 +1,10 @@
-const express = require('express');
-const api = require('../api');
-const { generateErrorSummary } = require('../helpers');
+const api = require('../../api');
+const generateValidationErrors = require('../../helpers/validation');
 
-const router = express.Router();
+const getFeedback = async (req, res) =>
+  res.render('feedback/feedback-form.njk');
 
-const errorHref = (id) => `#${id}`;
-
-router.get('/feedback', (req, res) =>
-  res.render('feedback/feedback-form.njk'));
-
-router.post('/feedback', async (req, res) => {
+const postFeedback = async (req, res) => {
   const userDetails = {
     username: null,
     email: null,
@@ -36,10 +31,15 @@ router.post('/feedback', async (req, res) => {
   } catch (catchErr) {
     const { data } = catchErr.response;
 
-    const validationErrors = generateErrorSummary(
-      data.validationErrors,
-      errorHref,
-    );
+    let validationErrors;
+
+    // maps through errorlist
+    Object.keys(data.validationErrors.errorList).forEach((errorName) => {
+      // get error by its key (errorName)
+      const error = data.validationErrors.errorList[errorName];
+      // generate errors
+      validationErrors = generateValidationErrors(errorName, error.text, data.validationErrors.count, validationErrors);
+    });
 
     return res.render('feedback/feedback-form.njk', {
       feedback: data.feedback,
@@ -52,6 +52,9 @@ router.post('/feedback', async (req, res) => {
     feedack: req.body,
     user: req.session.user,
   });
-});
+};
 
-module.exports = router;
+module.exports = {
+  getFeedback,
+  postFeedback,
+};

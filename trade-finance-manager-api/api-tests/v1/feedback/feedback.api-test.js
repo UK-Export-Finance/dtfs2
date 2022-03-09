@@ -10,7 +10,7 @@ describe('/feedback', () => {
     satisfied: 'Very satisfied',
     howCanWeImprove: 'Devs are doing a great job already',
     emailAddress: 'test@testing.com',
-    userDetails: {
+    submittedBy: {
       username: 'Tester',
       email: 'test@test.test',
     },
