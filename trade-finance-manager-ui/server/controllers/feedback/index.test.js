@@ -31,7 +31,7 @@ describe('controllers - feedback', () => {
     });
 
     const mockReq = {
-      session: { user: {} },
+      session: { user: { username: 'Tester', email: 'test@test.test' } },
       body: {
         role: 'computers',
         team: 'Test ltd',
@@ -47,10 +47,39 @@ describe('controllers - feedback', () => {
       },
     };
 
-    it('should call api and render template for thank you page on successful creation', async () => {
+    it('should call api and render template for thank you page on successful creation with a user object', async () => {
       await caseController.postFeedback(mockReq, res);
+
+      expect(createFeedbackSpy).toHaveBeenCalled();
+
       expect(res.render).toHaveBeenCalledWith('feedback/feedback-thankyou.njk', {
         user: mockReq.session.user,
+      });
+    });
+
+    it('should call api and render template for thank you page on successful creation without a user object', async () => {
+      const mockReqNoUser = {
+        session: { user: {} },
+        body: {
+          role: 'computers',
+          team: 'Test ltd',
+          whyUsingService: 'test',
+          easyToUse: 'Very good',
+          satisfied: 'Very satisfied',
+          howCanWeImprove: 'Devs are doing a great job already',
+          emailAddress: 'test@testing.com',
+          submittedBy: {
+            username: null,
+            email: null,
+          },
+        },
+      };
+      await caseController.postFeedback(mockReqNoUser, res);
+
+      expect(createFeedbackSpy).toHaveBeenCalled();
+
+      expect(res.render).toHaveBeenCalledWith('feedback/feedback-thankyou.njk', {
+        user: {},
       });
     });
   });
@@ -65,13 +94,14 @@ describe('controllers - feedback', () => {
       api.createFeedback = createFeedbackSpy;
     });
 
-    it('should render template with errors no feedback body', async () => {
+    it('should render feedback-form.njk if feedback body is null', async () => {
       const mockReqErrors = {
         session: { user: {} },
         body: {},
       };
 
       await caseController.postFeedback(mockReqErrors, res);
+
       expect(res.render).toHaveBeenCalledWith('feedback/feedback-form.njk', {
         feedback: {
           submittedBy: {
