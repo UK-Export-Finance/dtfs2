@@ -52,10 +52,10 @@ const get = async (dataType, req) => {
     req.apiData[CURRENCIES] = currencies;
     return;
   } if (MANDATORY_CRITERIA === dataType) {
-    const { mandatoryCriteria } = await api.getMandatoryCriteria(token).catch(
+    const mandatoryCriteria = await api.getLatestMandatoryCriteria(token).catch(
       (err) => {
-        console.error(`api-data-provider: querying for mandatory criteria => ${err}`);
-        return { mandatoryCriteria: [] };
+        console.error(`api-data-provider: querying for latest mandatory criteria => ${err}`);
+        return {};
       },
     );
 
