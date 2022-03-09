@@ -4,7 +4,7 @@ const getInterestOrFeeRate = (facility) => {
   /**
    * Facility record update
    */
-  if (facility.update.intrestOrFeeRate) {
+  if (facility.update) {
     return facility.update.intrestOrFeeRate;
   }
 

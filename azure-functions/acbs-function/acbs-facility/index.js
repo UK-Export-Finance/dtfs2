@@ -101,13 +101,13 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
         retryOptions,
         { acbsFacilityLoanInput },
       );
-      console.log('---2', { facilityLoan });
+
       // 7. Facility fee record
       const acbsFacilityFeeInput = mappings.facility.facilityFee(
         deal,
         facility,
       );
-      console.log('---3', { acbsFacilityFeeInput });
+
       if (Array.isArray(acbsFacilityFeeInput)) {
         facilityFee = [];
         // eslint-disable-next-line no-plusplus
