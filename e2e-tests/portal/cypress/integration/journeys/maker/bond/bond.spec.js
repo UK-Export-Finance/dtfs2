@@ -5,6 +5,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+import { DETAILS } from './bond-form-values';
 
 const MOCK_DEAL = {
   bankInternalRefName: 'someDealId',
@@ -40,6 +41,16 @@ context('Add a Bond to a Deal', () => {
     cy.url().should('include', '/contract');
     cy.url().should('include', '/bond/');
     cy.url().should('include', '/check-your-answers');
+
+    partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
+      const bondId = bondIdHiddenInput[0].value;
+
+      pages.bondDetails.saveGoBackButton().click();
+
+      const bondRow = pages.contract.bondTransactionsTable.row(bondId);
+      bondRow.uniqueNumberLink().contains(DETAILS.name);
+      bondRow.deleteLink().contains(`Delete ${DETAILS.name}`);
+    });
   });
 
   describe('when a user submits all Bond forms without completing any fields', () => {
@@ -86,6 +97,8 @@ context('Add a Bond to a Deal', () => {
         row.bondStatus().invoke('text').then((text) => {
           expect(text.trim()).equal('Incomplete');
         });
+        row.uniqueNumberLink().contains('Bond’s reference number not entered');
+        row.deleteLink().contains('Delete bond');
       });
     });
 

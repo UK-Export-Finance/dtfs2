@@ -200,7 +200,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const fieldname = 'financialStatements';
+      const fieldname = 'auditedFinancialStatements';
 
       const files = [
         {
@@ -244,7 +244,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         {
           filename: 'test-file-2.txt',
           filepath: 'api-tests/fixtures/test-file-2.txt',
-          fieldname: 'financialStatements',
+          fieldname: 'auditedFinancialStatements',
           type: 'financials',
         },
       ];
@@ -431,7 +431,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         {
           filename: 'test-file-2.txt',
           filepath: 'api-tests/fixtures/test-file-2.txt',
-          fieldname: 'financialStatements',
+          fieldname: 'auditedFinancialStatements',
           type: 'financials',
         },
       ];
@@ -443,7 +443,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const deleteFileData = {
         deleteFile: [
           supportingInformation.exporterQuestionnaire[0].filename,
-          supportingInformation.financialStatements[0].filename,
+          supportingInformation.auditedFinancialStatements[0].filename,
         ],
       };
 

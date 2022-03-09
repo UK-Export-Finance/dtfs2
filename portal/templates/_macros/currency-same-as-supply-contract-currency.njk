@@ -13,7 +13,7 @@
     name: "currencySameAsSupplyContractCurrency",
     fieldset: {
       legend: {
-        text: radioFieldsetText 
+        text: radioFieldsetText
       }
     },
     items: [
@@ -22,8 +22,7 @@
         text: "Yes",
         checked: facility.currencySameAsSupplyContractCurrency === "true",
         attributes: {
-          'data-cy': 'currency-same-as-supply-contract-currency-yes',
-          onClick: "showAdditionalFields(false)"
+          'data-cy': 'currency-same-as-supply-contract-currency-yes'
         }
       },
       {
@@ -31,8 +30,7 @@
         text: "No",
         checked: facility.currencySameAsSupplyContractCurrency === "false",
         attributes: {
-          'data-cy': 'currency-same-as-supply-contract-currency-no',
-          onClick: "showAdditionalFields(true)"
+          'data-cy': 'currency-same-as-supply-contract-currency-no'
         }
       }
     ],
@@ -106,17 +104,4 @@
 
   </div>
 
-  <script type="text/javascript">
-    function showAdditionalFields(bool) {
-      var additionalFormFields = document.getElementById('additional-form-fields');
-
-      if (bool) {
-        additionalFormFields.className = '';
-      } else {
-        additionalFormFields.className = 'govuk-visually-hidden';
-      }
-    }
-  </script>
-
 {% endmacro %}
-  

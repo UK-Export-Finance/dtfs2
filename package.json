@@ -8,7 +8,6 @@
     "npm": ">=6.0.0"
   },
   "scripts": {
-    "pipeline": "./bin/pipeline.sh",
     "lint": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src",
     "lint:fix": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src --fix"
   },
@@ -29,7 +28,7 @@
     "dotenv": "^16.0.0"
   },
   "devDependencies": {
-    "cypress": "^8.7.0",
+    "cypress": "^9.5.1",
     "cypress-audit": "^1.1.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
