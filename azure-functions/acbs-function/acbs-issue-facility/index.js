@@ -66,6 +66,7 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
         facilitySnapshot,
         acbsParties,
       );
+
       // 3.2. Create facility loan record
       const facilityLoan = yield context.df.callActivityWithRetry(
         'activity-create-facility-loan',
@@ -78,6 +79,7 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
         deal,
         facilitySnapshot,
       );
+
       // 4.2. Facility fixed-fee record(s) creation
       if (Array.isArray(acbsFacilityFeeInput)) {
         facilityFee = [];
