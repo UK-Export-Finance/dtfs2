@@ -16,9 +16,8 @@ router.post('/feedback', async (req, res) => {
       username: req.session.user ? req.session.user.username : null,
       email: req.session.user ? req.session.user.email : null,
     };
-    req.body.user = userDetails;
 
-    const response = await api.createFeedback(req.body);
+    const response = await api.createFeedback(req.body, userDetails);
     if (response) {
       return res.render('feedback/feedback-thankyou.njk', {
         user: req.session.user,

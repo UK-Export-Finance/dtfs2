@@ -625,14 +625,17 @@ const downloadMga = async (filename, token) => {
   return response.data;
 };
 
-const createFeedback = async (formData) => {
+const createFeedback = async (formData, userDetails) => {
   const response = await axios({
     method: 'post',
     url: `${portalApi}/v1/feedback`,
     headers: {
       'Content-Type': 'application/json',
     },
-    data: formData,
+    data: {
+      formData,
+      userDetails,
+    },
   });
   return response.data;
 };

@@ -10,16 +10,18 @@ describe('/v1/feedback', () => {
   let aBarclaysChecker;
 
   const feedbackFormBody = {
-    role: 'computers',
-    organisation: 'Test ltd',
-    reasonForVisiting: 'Other',
-    reasonForVisitingOther: 'My other reason',
-    easyToUse: 'Very good',
-    clearlyExplained: 'Good',
-    satisfied: 'Very satisfied',
-    howCanWeImprove: 'Devs are doing a great job already',
-    emailAddress: 'test@testing.com',
-    user: {
+    formData: {
+      role: 'computers',
+      organisation: 'Test ltd',
+      reasonForVisiting: 'Other',
+      reasonForVisitingOther: 'My other reason',
+      easyToUse: 'Very good',
+      clearlyExplained: 'Good',
+      satisfied: 'Very satisfied',
+      howCanWeImprove: 'Devs are doing a great job already',
+      emailAddress: 'test@testing.com',
+    },
+    userDetails: {
       username: 'Tester',
       email: 'test@test.test',
     }
@@ -64,7 +66,7 @@ describe('/v1/feedback', () => {
     });
 
     it('does not create a feedback when there are validation errors', async () => {
-      await as(aBarclaysMaker).post({}).to('/v1/feedback');
+      await as(aBarclaysMaker).post({ formData: {}, userDetails: {} }).to('/v1/feedback');
       const { status, body } = await as(aDataAdmin).get('/v1/feedback');
       expect(status).toEqual(200);
       expect(body).toEqual([]);
@@ -80,7 +82,7 @@ describe('/v1/feedback', () => {
         const { body: feedback } = await as(aDataAdmin).get(`/v1/feedback/${createdFeedback._id}`); // eslint-disable-line no-underscore-dangle
 
         expect(feedback).toEqual({
-          ...feedbackFormBody,
+          ...feedbackFormBody.formData,
           _id: expect.any(String), // eslint-disable-line no-underscore-dangle
           created: expect.any(Number),
           submittedByUserName: 'Tester',
@@ -160,7 +162,7 @@ describe('/v1/feedback', () => {
       expect(status).toEqual(200);
 
       expect(body).toEqual({
-        ...feedbackFormBody,
+        ...feedbackFormBody.formData,
         _id: expect.any(String), // eslint-disable-line no-underscore-dangle
         created: expect.any(Number),
         submittedByUserName: 'Tester',
