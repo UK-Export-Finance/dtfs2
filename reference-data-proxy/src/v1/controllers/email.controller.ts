@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
 const { NotifyClient } = require('notifications-node-client'); // eslint-disable-line @typescript-eslint/no-var-requires
+import axios from 'axios';
 
 dotenv.config();
 
+const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
 const notifyKey: any = process.env.GOV_NOTIFY_API_KEY;
 const notifyClient = new NotifyClient(notifyKey);
 
-export const sendEmail = async (req: Request, res: Response) => {
+export const emailNotification = async (req: Request, res: Response) => {
   try {
     const { templateId, sendToEmailAddress, emailVariables } = req.body;
 
@@ -33,4 +35,24 @@ export const sendEmail = async (req: Request, res: Response) => {
     console.error('Unable to send email', { e });
   }
   return res.status(422);
+};
+
+export const sendEmail = async (templateId: string, sendToEmailAddress: string, emailVariables: object) => {
+  try {
+    const { data } = await axios({
+      method: 'post',
+      url: `${referenceProxyUrl}/email`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        templateId,
+        sendToEmailAddress,
+        emailVariables,
+      },
+    });
+    return data;
+  } catch (err) {
+    console.error(`Unable to send the email: ${err}`);
+  }
 };

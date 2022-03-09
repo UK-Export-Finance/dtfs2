@@ -39,7 +39,7 @@ context('about-supply-contract', () => {
     contract.aboutSupplierDetailsLink().click();
 
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierName().clear().type('UKFS');
+    contractAboutSupplier.supplierName().clear().type('UKEF');
     contractAboutSupplier.supplierAddress().country().select('GBR');
     contractAboutSupplier.supplierAddress().line1().type('1 Horseguards Road');
     contractAboutSupplier.supplierAddress().line3().type('Westminster');
