@@ -469,22 +469,30 @@ describe('controllers/supporting-documents', () => {
   describe('next supporting document', () => {
     const application = {
       supportingInformation: {
-        requiredFields: ['manualInclusion', 'managementAccounts', 'financialStatements', 'financialForecasts', 'financialCommentary', 'corporateStructure', 'debtorAndCreditorReports', 'exportLicence'],
+        requiredFields: [
+          'manualInclusion',
+          'yearToDateManagement',
+          'auditedFinancialStatements',
+          'financialForecasts',
+          'financialInformationCommentary',
+          'corporateStructure',
+          'debtorAndCreditorReports',
+          'exportLicence'],
       },
     };
     const dealId = 1234;
 
     it('moves to the financial statements page', () => {
-      expect(nextDocument(application, dealId, 'managementAccounts')).toContain('/financial-statements');
+      expect(nextDocument(application, dealId, 'yearToDateManagement')).toContain('/financial-statements');
     });
     it('moves to the financial forecasts page', () => {
-      expect(nextDocument(application, dealId, 'financialStatements')).toContain('/financial-forecasts');
+      expect(nextDocument(application, dealId, 'auditedFinancialStatements')).toContain('/financial-forecasts');
     });
     it('moves to the Brief commentary on the financial information page', () => {
       expect(nextDocument(application, dealId, 'financialForecasts')).toContain('/financial-commentary');
     });
     it('moves to the Corporate structure diagram page', () => {
-      expect(nextDocument(application, dealId, 'financialCommentary')).toContain('/corporate-structure');
+      expect(nextDocument(application, dealId, 'financialInformationCommentary')).toContain('/corporate-structure');
     });
     it('moves to the Aged debtor and aged creditor listing page', () => {
       expect(nextDocument(application, dealId, 'corporateStructure')).toContain('/debtor-creditor-reports');
@@ -497,8 +505,8 @@ describe('controllers/supporting-documents', () => {
     });
 
     it('skips the management accounts page and moves to the financial forecasts page', () => {
-      application.supportingInformation.requiredFields = ['manualInclusion', 'financialStatements', 'financialForecasts'];
-      expect(nextDocument(application, dealId, 'financialStatements')).toContain('/financial-forecasts');
+      application.supportingInformation.requiredFields = ['manualInclusion', 'auditedFinancialStatements', 'financialForecasts'];
+      expect(nextDocument(application, dealId, 'auditedFinancialStatements')).toContain('/financial-forecasts');
     });
     it('returns to the main applications page', () => {
       application.supportingInformation = {};

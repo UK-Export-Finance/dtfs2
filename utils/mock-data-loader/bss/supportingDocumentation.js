@@ -6,13 +6,13 @@ const SUPPORTING_DOCUMENTATION = [
     inputType: 'file'
   },
   {
-    fieldName: 'financialStatements',
+    fieldName: 'auditedFinancialStatements',
     title: 'Financial statements for the past 3 years',
     description: 'Financial statements (audited if available) for the past 3 years, including a Profit & Loss, Balance Sheet and Cash Flow Statement, (with notes, if applicable). If the company is part of a larger group, separate accounts should be provided for the company and group.',
     inputType: 'file'
   },
   {
-    fieldName: 'managementAccounts',
+    fieldName: 'yearToDateManagement',
     title: 'Year to date management accounts',
     description: 'Including Profit & Loss, Balance Sheet and Cash Flow where available.',
     inputType: 'file'

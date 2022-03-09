@@ -77,7 +77,7 @@ exports.BASE_DEAL = {
     'supplier-correspondence-address-line-2': '',
     'supplier-correspondence-address-postcode': 'ED1 23S',
     'supplier-correspondence-address-town': 'Eastminster',
-    'supplier-name': 'UKFS',
+    'supplier-name': 'UKEF',
     'supplier-type': 'Exporter',
     'supplier-correspondence-address-is-different': 'true',
     'supply-contract-description': 'Description.',

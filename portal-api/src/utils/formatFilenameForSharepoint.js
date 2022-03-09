@@ -6,7 +6,6 @@ valid characters listed below:
 2. numeric characters 0 through 9
 3. -
 4. _
-5. space
 
 see
 https://ukef-dtfs.atlassian.net/jira/software/projects/DTFS2/boards/2?assignee=5e42c0d090dfb70c9e60741b&selectedIssue=DTFS2-509 // eslint-disable-line max-len
@@ -15,7 +14,7 @@ https://ukef-dtfs.atlassian.net/jira/software/projects/DTFS2/boards/2?assignee=5
 const formatFilenameForSharepoint = (filenameWithExtension) => {
   const [extension] = filenameWithExtension.match(/\.[^/.]+/g).reverse();
   const filenameWithoutExtension = filenameWithExtension.replace(/\.[^/.]+$/, '');
-  const sanitisedFilename = filenameWithoutExtension.replace(/[^0-9a-zA-Z_-\s]/g, '_');
+  const sanitisedFilename = filenameWithoutExtension.replace(/[^0-9a-zA-Z_-\S]|,/g, '_');
 
   return `${sanitisedFilename}${extension}`;
 };
