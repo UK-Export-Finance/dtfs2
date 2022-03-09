@@ -220,6 +220,19 @@ const getDurableFunctions = async (token) => {
   return response;
 };
 
+const deleteCronJobs = async (token) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${centralApi}/v1/portal/cron-jobs`
+  }).catch((err) => { console.error(`err: ${err}`); });
+  return response;
+};
+
 module.exports = {
   createApplication,
   updateApplication,
@@ -236,4 +249,5 @@ module.exports = {
   deleteMandatoryCriteriaVersioned,
   listMandatoryCriteriaVersioned,
   getDurableFunctions,
+  deleteCronJobs
 };

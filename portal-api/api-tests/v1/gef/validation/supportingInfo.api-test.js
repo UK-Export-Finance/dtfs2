@@ -53,15 +53,15 @@ describe(`should return ${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED} if no document
   });
 
   it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.COMPLETED} if all required documents (5 in total) have been uploaded`, () => {
-    mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialCommentary'];
-    mockObject.financialCommentary = [{ }];
+    mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialInformationCommentary'];
+    mockObject.financialInformationCommentary = [{ }];
 
     const result = supportingInfoStatus(mockObject);
     expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.COMPLETED);
   });
 
   it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.COMPLETED} if all required documents (6 in total) have been uploaded`, () => {
-    mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialCommentary', 'financialForecasts'];
+    mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialInformationCommentary', 'financialForecasts'];
     mockObject.financialForecasts = [{ }];
 
     const result = supportingInfoStatus(mockObject);
@@ -69,16 +69,16 @@ describe(`should return ${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED} if no document
   });
 
   it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.COMPLETED} if all required documents (7 in total) have been uploaded`, () => {
-    mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialCommentary', 'financialForecasts', 'financialStatements'];
-    mockObject.financialStatements = [{ }];
+    mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialInformationCommentary', 'financialForecasts', 'auditedFinancialStatements'];
+    mockObject.auditedFinancialStatements = [{ }];
 
     const result = supportingInfoStatus(mockObject);
     expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.COMPLETED);
   });
 
   it(`should return ${CONSTANTS.DEAL.DEAL_STATUS.COMPLETED} if all required documents (8 in total) have been uploaded`, () => {
-    mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialCommentary', 'financialForecasts', 'financialStatements', 'managementAccounts'];
-    mockObject.managementAccounts = [{ }];
+    mockObject.requiredFields = ['manualInclusion', 'exporterLicence', 'debtorAndCreditorReports', 'corporateStructure', 'financialInformationCommentary', 'financialForecasts', 'auditedFinancialStatements', 'yearToDateManagement'];
+    mockObject.yearToDateManagement = [{ }];
 
     const result = supportingInfoStatus(mockObject);
     expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.COMPLETED);
