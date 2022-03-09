@@ -19,9 +19,9 @@ const findEligibilityCriteria = (callback) => new Promise((resolve) => {
 });
 exports.findEligibilityCriteria = findEligibilityCriteria;
 
-const findOneEligibilityCriteria = async (id, callback) => {
+const findOneEligibilityCriteria = async (version, callback) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  collection.findOne({ id: parseInt(id, 10) }, (err, result) => {
+  collection.findOne({ version }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
@@ -44,19 +44,31 @@ exports.findAll = (req, res) => (
 
 exports.findOne = (req, res) => (
   findOneEligibilityCriteria(
-    req.params.id,
+    Number(req.params.version),
     (eligibilityCriteria) => res.status(200).send(eligibilityCriteria),
   )
 );
 
+const findLatest = async () => {
+  const collection = await db.getCollection('eligibilityCriteria');
+  const latest = await collection.find({}).sort({ version: -1 }).limit(1).toArray();
+  return latest[0];
+};
+exports.findLatest = findLatest;
+
+exports.findLatestGET = async (req, res) => {
+  const latest = await findLatest();
+  return res.status(200).send(latest);
+};
+
 exports.update = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.updateOne({ id: { $eq: parseInt(req.params.id, 10) } }, { $set: req.body }, {});
+  const status = await collection.updateOne({ version: Number(req.params.version)}, { $set: { criteria: req.body.criteria } }, {});
   res.status(200).send(status);
 };
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.deleteOne({ id: parseInt(req.params.id, 10) });
+  const status = await collection.deleteOne({ version: Number(req.params.version)});
   res.status(200).send(status);
 };

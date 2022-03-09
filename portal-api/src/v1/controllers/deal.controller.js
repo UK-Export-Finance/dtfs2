@@ -4,7 +4,7 @@ const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
-const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
+const { findLatest: findLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const api = require('../api');
 
 /**
@@ -38,13 +38,13 @@ const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteri
 
 const createDealEligibility = async (eligibility) => {
   const beingGivenEligibility = (eligibility && eligibility.criteria);
-  const eligibilityCriteria = await findEligibilityCriteria();
+  const latestEligibility = await findLatestEligibilityCriteria();
 
   // if we're being asked to create a deal and being given an eligibility block
   // use details out of the eligibility block over the details we get from the API
   const eligibilityCriteriaWithAnswers = beingGivenEligibility
-    ? fillInEligibilityCriteria(eligibilityCriteria, eligibility.criteria)
-    : eligibilityCriteria;
+    ? fillInEligibilityCriteria(latestEligibility.criteria, eligibility.criteria)
+    : latestEligibility;
 
   const eligibilityStatus = eligibility && eligibility.status
     ? eligibility.status

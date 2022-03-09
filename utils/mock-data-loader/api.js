@@ -230,7 +230,7 @@ const deleteEligibilityCriteria = async (eligibilityCriteria, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${portalApiUrl}/v1/eligibility-criteria/${eligibilityCriteria.id}`,
+    url: `${portalApiUrl}/v1/eligibility-criteria/${eligibilityCriteria.version}`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
