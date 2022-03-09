@@ -11,6 +11,9 @@ module.exports = {
     jsEnabled: './scripts/js-enabled.js',
     fileUpload: './scripts/file-upload.js',
     correspondenceAddress: './scripts/correspondence-address.js',
+    ukefexposure: './scripts/ukef-exposure.js',
+    guaranteeFeePayableByBank: './scripts/guarantee-fee-payable-by-bank.js',
+    printPage: './scripts/print-page.js',
     mojFilters: './scripts/moj-filters.js',
   },
   output: {

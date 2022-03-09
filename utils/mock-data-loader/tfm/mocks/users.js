@@ -135,4 +135,12 @@ module.exports = [
     firstName: 'Caroline-Test',
     lastName: 'O’Test Taylor',
   },
+  {
+    username: 'ESTORE',
+    email: 'test@testing.com',
+    teams: ['ESTORE'],
+    timezone: 'Europe/London',
+    firstName: 'ESTORE',
+    lastName: 'ESTORE',
+  },
 ];
