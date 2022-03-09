@@ -87,7 +87,7 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
         deal,
         facilitySnapshot,
       );
-      console.log({ acbsFacilityFeeInput });
+
       // 4.2. Facility fixed-fee record(s) creation
       if (Array.isArray(acbsFacilityFeeInput)) {
         facilityFee = [];
