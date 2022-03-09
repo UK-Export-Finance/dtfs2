@@ -133,7 +133,7 @@ context('Bond Details', () => {
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
         row.uniqueNumberLink().invoke('text').then((text) => {
-          expect(text.trim()).equal('Not entered');
+          expect(text.trim()).equal('Bond’s reference number not entered');
         });
 
         row.facilityStage().invoke('text').then((text) => {
