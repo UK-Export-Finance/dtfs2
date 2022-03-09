@@ -38,9 +38,9 @@ describe('tasks controller', () => {
   describe('updateTask', () => {
     it('should update a single task in a group', () => {
       const mockGroup1Tasks = [
-        { id: '1', groupId: 1, status: 'Done' },
-        { id: '2', groupId: 1, status: 'In progress' },
-        { id: '3', groupId: 1, status: 'To do' },
+        { id: '1', groupId: 1, status: CONSTANTS.TASKS.STATUS.COMPLETED, history: [] },
+        { id: '2', groupId: 1, status: CONSTANTS.TASKS.STATUS.IN_PROGRESS, history: [] },
+        { id: '3', groupId: 1, status: CONSTANTS.TASKS.STATUS.TO_DO, history: [] },
       ];
 
       const mockTasks = [
@@ -100,6 +100,7 @@ describe('tasks controller', () => {
         MOCK_MIA_TASKS,
         tfmTaskUpdate.groupId,
         tfmTaskUpdate,
+        CONSTANTS.TASKS.STATUS.TO_DO,
         MOCK_DEAL_MIA_SUBMITTED,
       );
 
@@ -158,6 +159,7 @@ describe('tasks controller', () => {
           tasksWithAdverseHistoryTaskComplete,
           tfmTaskUpdate.groupId,
           tfmTaskUpdate,
+          CONSTANTS.TASKS.STATUS.TO_DO,
           MOCK_DEAL_MIA_SUBMITTED,
           mockUrlOrigin,
         );
@@ -165,13 +167,13 @@ describe('tasks controller', () => {
         const underwritingGroup = result.find((group) =>
           group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
 
-        expect(underwritingGroup.groupTasks[0].status).toEqual('To do');
+        expect(underwritingGroup.groupTasks[0].status).toEqual(CONSTANTS.TASKS.STATUS.TO_DO);
         expect(underwritingGroup.groupTasks[0].canEdit).toEqual(true);
 
-        expect(underwritingGroup.groupTasks[1].status).toEqual('To do');
+        expect(underwritingGroup.groupTasks[1].status).toEqual(CONSTANTS.TASKS.STATUS.TO_DO);
         expect(underwritingGroup.groupTasks[1].canEdit).toEqual(true);
 
-        expect(underwritingGroup.groupTasks[2].status).toEqual('To do');
+        expect(underwritingGroup.groupTasks[2].status).toEqual(CONSTANTS.TASKS.STATUS.TO_DO);
         expect(underwritingGroup.groupTasks[2].canEdit).toEqual(true);
       });
 
@@ -182,6 +184,7 @@ describe('tasks controller', () => {
           tasksWithAdverseHistoryTaskComplete,
           tfmTaskUpdate.groupId,
           tfmTaskUpdate,
+          CONSTANTS.TASKS.STATUS.TO_DO,
           MOCK_DEAL_MIA_SUBMITTED,
           mockUrlOrigin,
         );
@@ -253,11 +256,12 @@ describe('tasks controller', () => {
           userFullName: `${firstName} ${lastName}`,
         },
         team: MOCK_MIA_TASKS[0].groupTasks[0].team,
-        previousStatus: 'To do',
+        previousStatus: CONSTANTS.TASKS.STATUS.TO_DO,
         status: tfmTaskUpdate.status,
         updatedAt: expect.any(Number),
         dateStarted: expect.any(Number),
         dateCompleted: expect.any(Number),
+        history: expect.any(Array),
       };
 
       expect(result).toEqual(expectedUpdatedTask);
@@ -322,7 +326,7 @@ describe('tasks controller', () => {
           assignedTo: {
             userId,
           },
-          status: 'To do',
+          status: CONSTANTS.TASKS.STATUS.TO_DO,
           updatedBy: userId,
         };
 
