@@ -124,7 +124,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
         body: 'The Exporter is the only borrower under the relevant Facility Letter.',
       },
     ],
-  }
+  },
   {
     version: 0.1,
     createdAt: new Date('2021-01-04T00:00'),
