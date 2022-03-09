@@ -212,17 +212,14 @@ const login = async (username) => {
   }
 };
 
-const createFeedback = async (formData, userDetails) => {
+const createFeedback = async (formData) => {
   const response = await axios({
     method: 'post',
     url: `${tfmAPIurl}/v1/feedback`,
     headers: {
       'Content-Type': 'application/json',
     },
-    data: {
-      formData,
-      userDetails,
-    },
+    data: formData,
   });
   return response.data;
 };

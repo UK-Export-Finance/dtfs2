@@ -5,11 +5,11 @@ const validateFeedback = require('../validation/feedback');
 const sendTfmEmail = require('./send-tfm-email');
 
 exports.create = async (req, res) => {
-  const validationErrors = validateFeedback(req.body.formData);
+  const validationErrors = validateFeedback(req.body);
 
   if (validationErrors.count !== 0) {
     return res.status(400).send({
-      feedback: req.body.formData,
+      feedback: req.body,
       validationErrors,
     });
   }

@@ -25,17 +25,17 @@ const findOneFeedback = async (id, callback) => {
 };
 
 exports.create = async (req, res) => {
-  const validationErrors = validateFeedback(req.body.formData);
+  const validationErrors = validateFeedback(req.body);
 
   if (validationErrors.count !== 0) {
     return res.status(400).send({
-      feedback: req.body.formData,
+      feedback: req.body,
       validationErrors,
     });
   }
 
   const modifiedFeedback = {
-    ...req.body.formData,
+    ...req.body,
     created: getUnixTime(new Date()),
     submittedByUserName: req.body.userDetails.username,
     submittedByUserEmail: req.body.userDetails.email,
