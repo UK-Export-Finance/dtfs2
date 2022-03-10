@@ -51,4 +51,5 @@ module.exports = {
   footer: require('./footer'),
   selectScheme: require('./selectScheme'),
   reports: require('./reports'),
+  feedbackPage: require('./feedbackPage'),
 };

@@ -10,6 +10,12 @@ const page = {
   saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
   downloadMIQuestionaireLinkDoc: () => cy.get('[data-cy="download-q-link-docx"]'),
   downloadMIQuestionaireLinkPdf: () => cy.get('[data-cy="download-q-link-pdf"]'),
+  securityText: () => cy.get('[data-cy="security-text"]'),
+  financialStatements: () => cy.get('[data-cy="auditedFinancialStatements"]'),
+  yearToDate: () => cy.get('[data-cy="yearToDateManagement"]'),
+  financialForecast: () => cy.get('[data-cy="financialForecasts"]'),
+  financialCommentary: () => cy.get('[data-cy="financialInformationCommentary"]'),
+  corporateStructure: () => cy.get('[data-cy="corporateStructure"]'),
 };
 
 module.exports = page;
