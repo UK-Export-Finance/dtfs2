@@ -12,7 +12,7 @@ const getProductTypeGroup = (facility, dealType) => {
     return CONSTANTS.FACILITY.PRODUCT_TYPE_GROUP.GEF;
   }
 
-  switch (facility.facilitySnapshot.type) {
+  switch (facility.type || facility.facilitySnapshot.type) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
       return CONSTANTS.FACILITY.PRODUCT_TYPE_GROUP.BSS;
 

@@ -1,15 +1,28 @@
 const CONSTANTS = require('../../../constants');
 
-const getInterestOrFeeRate = (facilitySnapshot, dealType) => {
-  if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    return facilitySnapshot.interestPercentage;
+const getInterestOrFeeRate = (facility) => {
+  /**
+   * Facility record update
+   */
+  if (facility.update) {
+    return facility.update.intrestOrFeeRate;
   }
-  switch (facilitySnapshot.type) {
+
+  /**
+   * Facility record creation
+   */
+  // GEF
+  if (facility.facilitySnapshot.interestPercentage) {
+    return facility.facilitySnapshot.interestPercentage;
+  }
+
+  // EWCS/BSS
+  switch (facility.facilitySnapshot.type) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
-      return Number(facilitySnapshot.riskMarginFee);
+      return Number(facility.facilitySnapshot.riskMarginFee);
 
     case CONSTANTS.FACILITY.FACILITY_TYPE.LOAN:
-      return Number(facilitySnapshot.interestMarginFee);
+      return Number(facility.facilitySnapshot.interestMarginFee);
 
     default:
       return '';
