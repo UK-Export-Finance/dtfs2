@@ -3,8 +3,6 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
-{% import './_macros/reason-for-visiting-other.njk' as reasonForVisitingOther %}
 
 {% block pageTitle %}Feedback{% endblock %}
 
@@ -15,14 +13,14 @@
       govukErrorSummary({
         titleText: "There is a problem",
         errorList: validationErrors.summary,
-         attributes: {
+        attributes: {
           'data-cy': 'error-summary'
         }
       })
     }}
   {% endif %}
 
-  <h1 class="govuk-heading-l" data-cy="heading">Feedback</h1>
+  <h1 class="govuk-heading-l govuk-!-padding-top-5" data-cy="heading">Feedback</h1>
 
   <form method="POST" autocomplete="off">
 
@@ -50,82 +48,44 @@
 
     {{ govukInput({
       label: {
-        text: "Which organisation do you work for?",
+        text: "Which team do you work in?",
         attributes: {
-          'data-cy': 'organisation-heading'
+          'data-cy': 'team-heading'
         }
       },
-      id: "organisation",
-      name: "organisation",
-
-      value: feedback.organisation,
+      id: "team",
+      name: "team",
+      value: feedback.team,
       classes: "govuk-input--width-20",
       attributes: {
-        'data-cy': 'organisation'
+        'data-cy': 'team'
       },
-      errorMessage: validationErrors.errorList.organisation.text and {
-        text: validationErrors.errorList.organisation.text,
+      errorMessage: validationErrors.errorList.team.text and {
+        text: validationErrors.errorList.team.text,
         attributes: {
-          'data-cy': 'organisation-error-message'
+          'data-cy': 'team-error-message'
         }
       }
     }) }}
 
-    {{ govukRadios({
-      idPrefix: "reasonForVisiting",
-      name: "reasonForVisiting",
-      attributes: {
-        'data-cy': 'reason-for-visiting'
-      },
-      fieldset: {
-        legend: {
-          text: "What was your reason for visiting this service today?"
-        }
-      },
-      items: [
-        {
-          value: "Submit an automatic inclusion notice",
-          text: "Submit an automatic inclusion notice",
-          checked: feedback.reasonForVisiting === "Submit an automatic inclusion notice",
-          attributes: {
-            'data-cy': 'reason-for-visiting-automatic-inclusion-notice'
-          }
-        },
-        {
-          value: "Submit a manual inclusion application",
-          text: "Submit a manual inclusion application",
-          checked: feedback.reasonForVisiting === "Submit a manual inclusion application",
-          attributes: {
-            'data-cy': 'reason-for-visiting-manual-inclusion-application'
-          }
-        },
-        {
-          value: "Submit a manual inclusion notice",
-          text: "Submit a manual inclusion notice",
-          checked: feedback.reasonForVisiting === "Submit a manual inclusion notice",
-          attributes: {
-            'data-cy': 'reason-for-visiting-manual-inclusion-notice'
-          }
-        },
-        {
-          value: "Other",
-          text: "Other",
-          checked: feedback.reasonForVisiting === "Other",
-          attributes: {
-            'data-cy': 'reason-for-visiting-other'
-          },
-          conditional: {
-            html: reasonForVisitingOther.render({
-              value: feedback.reasonForVisitingOther,
-              validationError: validationErrors.errorList.reasonForVisitingOther
-            })
-          }
-        }
-      ],
-      errorMessage: validationErrors.errorList.reasonForVisiting.text and {
-        text: validationErrors.errorList.reasonForVisiting.text,
+    {{ govukTextarea({
+      name: "whyUsingService",
+      id: "whyUsingService",
+      label: {
+        text: "Why were you using the service today?",
         attributes: {
-          'data-cy': 'reason-for-visiting-error-message'
+          'data-cy': 'why-using-service-heading'
+        }
+      },
+      value: feedback.whyUsingService,
+      classes: "govuk-input--width-20",
+      attributes: {
+        'data-cy': 'why-using-service'
+      },
+      errorMessage: validationErrors.errorList.whyUsingService.text and {
+        text: validationErrors.errorList.whyUsingService.text,
+        attributes: {
+          'data-cy': 'why-using-service-error-message'
         }
       }
     }) }}
@@ -197,75 +157,6 @@
         text: validationErrors.errorList.easyToUse.text,
         attributes: {
           'data-cy': 'easy-to-use-error-message'
-        }
-      }
-    }) }}
-
-    {{ govukRadios({
-      idPrefix: "clearlyExplained",
-      name: "clearlyExplained",
-      attributes: {
-        'data-cy': 'clearly-explained'
-      },
-      fieldset: {
-        legend: {
-          text: "Is it clearly explained what information you need to provide?"
-        }
-      },
-      items: [
-        {
-          value: "Very good",
-          text: "Very good",
-          checked: feedback.clearlyExplained === "Very good",
-          attributes: {
-            'data-cy': 'clearly-explained-very-good'
-          }
-        },
-        {
-          value: "Good",
-          text: "Good",
-          checked: feedback.clearlyExplained === "Good",
-          attributes: {
-            'data-cy': 'clearly-explained-good'
-          }
-        },
-        {
-          value: "Neither good nor poor",
-          text: "Neither good nor poor",
-          checked: feedback.clearlyExplained === "Neither good nor poor",
-          attributes: {
-            'data-cy': 'clearly-explained-neither-good-nor-poor'
-          }
-        },
-        {
-          value: "Poor",
-          text: "Poor",
-          checked: feedback.clearlyExplained === "Poor",
-          attributes: {
-            'data-cy': 'clearly-explained-poor'
-          }
-        },
-        {
-          value: "Very poor",
-          text: "Very poor",
-          checked: feedback.clearlyExplained === "Very poor",
-          attributes: {
-            'data-cy': 'clearly-explained-very-poor'
-          }
-        },
-        {
-          value: "I don't know",
-          text: "I don't know",
-          checked: feedback.clearlyExplained === "I don't know",
-          attributes: {
-            'data-cy': 'clearly-explained-dont-know'
-          }
-        }
-      ],
-      errorMessage: validationErrors.errorList.clearlyExplained.text and {
-        text: validationErrors.errorList.clearlyExplained.text,
-        attributes: {
-          'data-cy': 'clearly-explained-error-message'
         }
       }
     }) }}
@@ -343,8 +234,8 @@
       name: "howCanWeImprove",
       id: "howCanWeImprove",
       label: {
-        text: "How can we improve this service? (optional)",
-         attributes: {
+        text: "How can we improve the service? (optional)",
+        attributes: {
           'data-cy': 'how-can-we-improve-heading'
         }
       },
@@ -357,13 +248,13 @@
 
     {{ govukInput({
       label: {
-        text: "Help us make this service better (optional)",
+        text: "Email address (optional)",
         attributes: {
           'data-cy': 'email-address-heading'
         }
       },
       hint: {
-        text: "Leave your email address if you want to help with our user research.",
+        text: "We will use it to contact you to participate in research and testing to help us improve the service.",
         attributes: {
           'data-cy': 'email-address-hint'
         }
