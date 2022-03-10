@@ -128,3 +128,4 @@ However it's important to note that currently, BSS and GEF are misaligned. Event
 This has not been thought about as a team. What's the best, most scalable approach?
 
 Just to be clear - Both BSS and GEF submit to TFM directly. The TFM submission handling works the same for both product types (i.e TFM always calls Central API to create snapshots).
+
