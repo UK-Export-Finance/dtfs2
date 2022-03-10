@@ -9,7 +9,7 @@ const SME_TYPE = {
   SMALL: 'small',
   MEDIUM: 'medium',
   NON_SME: 'non-sme',
-  NOT_SME: 'non-sme',
+  NOT_SME: 'not sme',
   NOT_KNOWN: 'not known',
 };
 
