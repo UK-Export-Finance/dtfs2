@@ -58,7 +58,8 @@
                       {% if criterion.answer %}checked{% endif %}
                       data-cy="criteria-true"
                       data-id="criteria-{{ criterion.id }}-true"
-              >
+                      aria-label="Eligibility criterion {{ criterion.id }} {{ criterion.description }} true"
+                      >
               <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}">
                 True
               </label>
@@ -73,7 +74,8 @@
                       {% if criterion.answer === false %}checked{% endif %}
                       data-cy="criteria-false"
                       data-id="criteria-{{ criterion.id }}-false"
-              >
+                      aria-label="Eligibility criterion {{ criterion.id }}  {{ criterion.description }} false"
+                      >
               <label class="govuk-label govuk-radios__label" for="criterion-{{ criterion.id }}-2">
                 False
               </label>

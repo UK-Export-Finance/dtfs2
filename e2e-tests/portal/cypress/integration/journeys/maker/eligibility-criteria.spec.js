@@ -53,6 +53,9 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.eligibilityCriteria11ExtraInfo().should('not.be.visible');
 
     eligibilityCriteria.eligibilityCriteria11False().click();
+    eligibilityCriteria.eligibilityCriteria11False().invoke('attr', 'aria-label').then((label) => {
+      expect(label).to.contain('Eligibility criterion 11');
+    });
     eligibilityCriteria.eligibilityCriteria11ExtraInfo().should('be.visible');
 
     eligibilityCriteria.eligibilityCriteria11True().click();
