@@ -11,7 +11,7 @@ const getProductTypeId = (facility, dealType) => {
     return CONSTANTS.FACILITY.FACILITY_TYPE_CODE.GEF;
   }
 
-  switch (facility.facilitySnapshot.type) {
+  switch (facility.type || facility.facilitySnapshot.type) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
       return CONSTANTS.FACILITY.FACILITY_TYPE_CODE.BSS;
 
