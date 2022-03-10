@@ -581,7 +581,7 @@ const getLatestMandatoryCriteria = async (token) => {
     },
   });
 
-  return response;
+  return response.data;
 };
 
 const downloadFile = async (id, fieldname, filename, token) => {
