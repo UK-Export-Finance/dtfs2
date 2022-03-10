@@ -92,7 +92,7 @@ exports.getAddressesByPostcode = async (req, res) => {
     const response = [{
       errCode: 'ERROR',
       errRef: 'postcode',
-      errMsg: err.response.data.error.message,
+      errMsg: err?.response?.data?.error?.message || {},
     }];
     let { status } = err.response;
     if (status >= 400 && status < 500) {

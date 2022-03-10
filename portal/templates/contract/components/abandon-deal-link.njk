@@ -9,7 +9,8 @@
           data-cy="AbandonLink"
           href="/contract/{{ params.deal._id }}/delete"
           class="govuk-link govuk-!-font-size-14 govuk-!-margin-left-2"
-          aria-label="Abandon Deal"
+          title="Abandon Deal {{ params.deal.bankInternalRefName }}"
+          aria-label="Abandon Deal {{ params.deal.bankInternalRefName }}"
         >Abandon</a>
       {% endif %}
 

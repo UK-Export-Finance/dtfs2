@@ -8,10 +8,16 @@ const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allMandatoryCriteria = require('../../fixtures/mandatoryCriteria');
 const newMandatoryCriteria = allMandatoryCriteria[0];
+const oldMandatoryCriteria = allMandatoryCriteria[1];
 const updatedMandatoryCriteria = {
   ...newMandatoryCriteria,
-  title: 'Updated mandatory criteria',
-}
+  criteria: [
+    ...newMandatoryCriteria.criteria,
+    {
+      title: 'Updated mandatory criteria',
+    },
+  ],
+};
 
 describe('/v1/mandatory-criteria', () => {
   let noRoles;
@@ -43,20 +49,41 @@ describe('/v1/mandatory-criteria', () => {
     it('returns a list of mandatory-criteria sorted by id', async () => {
       await as(anEditor).post(allMandatoryCriteria[0]).to('/v1/mandatory-criteria');
       await as(anEditor).post(allMandatoryCriteria[1]).to('/v1/mandatory-criteria');
-      await as(anEditor).post(allMandatoryCriteria[2]).to('/v1/mandatory-criteria');
-      await as(anEditor).post(allMandatoryCriteria[3]).to('/v1/mandatory-criteria');
-      await as(anEditor).post(allMandatoryCriteria[4]).to('/v1/mandatory-criteria');
 
       const { body } = await as(noRoles).get(`/v1/mandatory-criteria`);
 
       expect(body).toEqual({
-        count: 5,
+        count: allMandatoryCriteria.length,
         mandatoryCriteria: expectMongoIds(allMandatoryCriteria),
       });
     });
   });
 
-  describe('GET /v1/mandatory-criteria/:id', () => {
+  describe('GET /v1/mandatory-criteria/latest', () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().get('/v1/mandatory-criteria/latest');
+
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that do present a valid Authorization token', async () => {
+      const { status } = await as(noRoles).get('/v1/mandatory-criteria/latest');
+
+      expect(status).toEqual(200);
+    });
+
+    it('returns the latest mandatory criteria', async () => {
+      await as(anEditor).post(oldMandatoryCriteria).to('/v1/mandatory-criteria');
+      await as(anEditor).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
+
+      const { status, body } = await as(anEditor).get('/v1/mandatory-criteria/latest');
+
+      expect(status).toEqual(200);
+      expect(body).toEqual(expectMongoId(newMandatoryCriteria));
+    });
+  });
+
+  describe('GET /v1/mandatory-criteria/:version', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().get('/v1/mandatory-criteria/1');
 
@@ -72,7 +99,7 @@ describe('/v1/mandatory-criteria', () => {
     it('returns a mandatory-criteria', async () => {
       await as(anEditor).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
 
-      const { status, body } = await as(anEditor).get('/v1/mandatory-criteria/1');
+      const { status, body } = await as(anEditor).get(`/v1/mandatory-criteria/${newMandatoryCriteria.version}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newMandatoryCriteria));
@@ -99,7 +126,7 @@ describe('/v1/mandatory-criteria', () => {
     });
   });
 
-  describe('PUT /v1/mandatory-criteria/:id', () => {
+  describe('PUT /v1/mandatory-criteria/:version', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put(updatedMandatoryCriteria).to('/v1/mandatory-criteria/1');
 
@@ -122,95 +149,28 @@ describe('/v1/mandatory-criteria', () => {
       expect(status).toEqual(200);
     });
 
-    describe('updating the mandatory-criteria', () => {
-      it('works for title field', async () => {
-        const mandatoryCriteria = allMandatoryCriteria[1];
-        const titleUpdate = {
-          title: 'new title',
-        };
+    it('updates a mandatory criteria', async () => {
+      const mandatoryCriteria = allMandatoryCriteria[0];
+      const update = {
+        criteria: [
+          { title: 'new title' },
+        ],
+      };
 
-        await as(anEditor).post(mandatoryCriteria).to('/v1/mandatory-criteria');
-        await as(anEditor).put(titleUpdate).to(`/v1/mandatory-criteria/${mandatoryCriteria.id}`);
+      await as(anEditor).post(mandatoryCriteria).to('/v1/mandatory-criteria');
+      await as(anEditor).put(update).to(`/v1/mandatory-criteria/${mandatoryCriteria.version}`);
 
-        const { status, body } = await as(anEditor).get(`/v1/mandatory-criteria/${mandatoryCriteria.id}`);
+      const { status, body } = await as(anEditor).get(`/v1/mandatory-criteria/${mandatoryCriteria.version}`);
 
-        expect(status).toEqual(200);
-        expect(body).toEqual(expectMongoId({
-          ...mandatoryCriteria,
-          ...titleUpdate,
-        }));
-      });
-
-      it('works for items', async () => {
-        const mandatoryCriteria = allMandatoryCriteria[2];
-        const itemUpdate = {
-          items: [
-            {
-              id: 5,
-              copy: 'The Bank Customer (blah blah).'
-            }
-          ]
-        };
-
-        await as(anEditor).post(mandatoryCriteria).to('/v1/mandatory-criteria');
-        await as(anEditor).put(itemUpdate).to(`/v1/mandatory-criteria/${mandatoryCriteria.id}`);
-
-        const { status, body } = await as(anEditor).get(`/v1/mandatory-criteria/${mandatoryCriteria.id}`);
-
-        expect(status).toEqual(200);
-        expect(body).toEqual(expectMongoId({
-          ...mandatoryCriteria,
-          ...itemUpdate,
-        }));
-      });
-
-      it('reflects properly in the list view', async () => {
-        const update = {
-          title: 'bananas go here',
-          items: [
-            {
-              id: 5,
-              copy: 'The Bank Customer (blah blah).'
-            }
-          ]
-        };
-
-        await as(anEditor).post(allMandatoryCriteria[0]).to('/v1/mandatory-criteria');
-        await as(anEditor).post(allMandatoryCriteria[1]).to('/v1/mandatory-criteria');
-        await as(anEditor).post(allMandatoryCriteria[2]).to('/v1/mandatory-criteria');
-        await as(anEditor).post(allMandatoryCriteria[3]).to('/v1/mandatory-criteria');
-        await as(anEditor).post(allMandatoryCriteria[4]).to('/v1/mandatory-criteria');
-
-        const { body: beforeUpdate } = await as(anEditor).get(`/v1/mandatory-criteria`);
-
-        expect(beforeUpdate).toEqual({
-          count: 5,
-          mandatoryCriteria: expectMongoIds(allMandatoryCriteria),
-        });
-
-        await as(anEditor).put(update).to(`/v1/mandatory-criteria/${allMandatoryCriteria[2].id}`);
-
-        const { body: afterUpdate } = await as(anEditor).get(`/v1/mandatory-criteria`);
-
-        expect(afterUpdate).toEqual({
-          count: 5,
-          mandatoryCriteria: expectMongoIds([
-            allMandatoryCriteria[0],
-            allMandatoryCriteria[1],
-            {
-              ...allMandatoryCriteria[2],
-              ...update,
-            },
-            allMandatoryCriteria[3],
-            allMandatoryCriteria[4],
-          ]),
-        });
-      });
-
-    })
+      expect(status).toEqual(200);
+      expect(body).toEqual(expectMongoId({
+        ...mandatoryCriteria,
+        criteria: update.criteria,
+      }));
+    });
   });
 
-  describe('DELETE /v1/mandatory-criteria/:id', () => {
+  describe('DELETE /v1/mandatory-criteria/:version', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().remove('/v1/mandatory-criteria/1');
 

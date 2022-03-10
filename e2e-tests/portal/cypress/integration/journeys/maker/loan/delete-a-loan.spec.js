@@ -120,6 +120,7 @@ context('Delete a Loan', () => {
     loanToDeleteId = dealFacilities.loans[1]._id;
     const loanToDeleteRow = pages.contract.loansTransactionsTable.row(loanToDeleteId);
 
+    loanToDeleteRow.deleteLink().contains('Delete loan');
     loanToDeleteRow.deleteLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanToDeleteId}/delete`));
 
