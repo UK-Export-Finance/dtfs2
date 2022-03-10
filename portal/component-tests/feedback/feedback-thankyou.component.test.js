@@ -11,10 +11,10 @@ describe(page, () => {
   });
 
   it('should render page heading', () => {
-    wrapper.expectText('[data-cy="heading"]').toRead('Feedback');
+    wrapper.expectText('[data-cy="thank-you-heading"]').toRead('Feedback');
   });
 
   it('should render thank you copy', () => {
-    wrapper.expectText('[data-cy="thankyou-copy"]').toRead('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
+    wrapper.expectText('[data-cy="thank-you-copy"]').toRead('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');
   });
 });
