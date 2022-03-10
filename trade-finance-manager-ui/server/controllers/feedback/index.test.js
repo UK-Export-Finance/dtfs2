@@ -40,7 +40,6 @@ describe('controllers - feedback', () => {
         satisfied: 'Very satisfied',
         howCanWeImprove: 'Devs are doing a great job already',
         emailAddress: 'test@testing.com',
-
       },
     };
 
