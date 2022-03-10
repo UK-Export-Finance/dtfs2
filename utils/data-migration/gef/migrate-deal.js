@@ -16,7 +16,10 @@ const loadDealFromFile = () => {
 };
 
 const doMigration = async () => {
-  const { v2Users } = await init();
+  const {
+    v2Banks,
+    v2Users,
+  } = await init();
 
   const v1Deal = loadDealFromFile();
 
@@ -24,7 +27,7 @@ const doMigration = async () => {
     mappingErrors,
     v2Deal,
     v2Facilities,
-  } = mapToV2(v1Deal, v2Users);
+  } = mapToV2(v1Deal, v2Banks, v2Users);
 
   if (!mappingErrors) {
     await addToDatabase(

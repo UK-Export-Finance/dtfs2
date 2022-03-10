@@ -1,6 +1,7 @@
 const MIGRATION_MAP = require('./migration-map');
 const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { getUserByEmail } = require('../helpers/users');
+const { getBankByName } = require('../helpers/banks');
 const { convertDateToTimestamp } = require('./helpers');
 
 const mapExporterIndustry = (v1DealExporter) => ({
@@ -118,7 +119,7 @@ const mapComments = (v1Comments, v2Users) => {
   return mapped;
 };
 
-const mapV1Deal = (v1Deal, v2Users) => {
+const mapV1Deal = (v1Deal, v2Banks, v2Users) => {
   const submissionType = MIGRATION_MAP.DEAL.SUBMISSION_TYPE[v1Deal.field_submission_type];
   const status = MIGRATION_MAP.DEAL.DEAL_STATUS[v1Deal.field_deal_status];
 
@@ -126,10 +127,12 @@ const mapV1Deal = (v1Deal, v2Users) => {
     dataMigration: {
       drupalDealId: String(v1Deal.drupal_id),
     },
+    dealType: V2_CONSTANTS.DEAL.DEAL_TYPE.GEF,
     bankInternalRefName: v1Deal.field_bank_deal_id,
     additionalRefName: v1Deal.bank_deal_name,
     createdAt: convertDateToTimestamp(v1Deal.created),
     updatedAt: convertDateToTimestamp(v1Deal.changed),
+    bank: getBankByName(v2Banks, v1Deal.owner.bank),
     mandatoryVersionId: Number(v1Deal.children.eligiblity.system_red_line_revision_id),
     submissionType,
     status,

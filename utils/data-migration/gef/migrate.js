@@ -1,3 +1,4 @@
+const { initBanks } = require('../helpers/banks');
 const { initUsers } = require('../helpers/users');
 const log = require('../logs');
 const mapDeal = require('./map-deal');
@@ -13,21 +14,24 @@ const {
 } = require('./mapping-errors');
 
 let token;
+let v2Banks;
 let v2Users;
 let logFile;
 
 const init = async () => {
   token = await getToken();
+  v2Banks = await initBanks(token);
   v2Users = await initUsers(token);
   logFile = log.init('migrate-deals-GEF');
 
   return {
-    v2Users
-  }
+    v2Banks,
+    v2Users,
+  };
 };
 
-const mapToV2 = (v1Deal, v2Users,) => {
-  const v2Deal = mapDeal(v1Deal, v2Users);
+const mapToV2 = (v1Deal, v2Banks, v2Users) => {
+  const v2Deal = mapDeal(v1Deal, v2Banks, v2Users);
 
   const v1Facilities = v1Deal.children.facilities;
   const v2Facilities = mapFacilities(v1Facilities, v2Deal.submissionDate);
