@@ -50,7 +50,7 @@ describe('controllers - feedback', () => {
     it('should call api and render template for thank you page on successful creation with a user object', async () => {
       await caseController.postFeedback(mockReq, res);
 
-      expect(createFeedbackSpy).toHaveBeenCalled();
+      expect(createFeedbackSpy).toHaveBeenCalledWith(mockReq.body);
 
       expect(res.render).toHaveBeenCalledWith('feedback/feedback-thankyou.njk', {
         user: mockReq.session.user,
@@ -76,7 +76,7 @@ describe('controllers - feedback', () => {
       };
       await caseController.postFeedback(mockReqNoUser, res);
 
-      expect(createFeedbackSpy).toHaveBeenCalled();
+      expect(createFeedbackSpy).toHaveBeenCalledWith(mockReqNoUser.body);
 
       expect(res.render).toHaveBeenCalledWith('feedback/feedback-thankyou.njk', {
         user: {},
