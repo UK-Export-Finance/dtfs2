@@ -11,7 +11,7 @@ const log = require('../logs');
 const doMigration = async () => {
   const { path } = args;
 
-  const { v2Users } = await init();
+  const { v2Banks, v2Users } = await init();
 
   const v1Deals = fs.readdirSync(path);
 
@@ -25,7 +25,7 @@ const doMigration = async () => {
       mappingErrors,
       v2Deal,
       v2Facilities,
-    } = mapToV2(v1DealJson, v2Users);
+    } = mapToV2(v1DealJson, v2Banks, v2Users);
 
     if (!mappingErrors) {
       const imported = await addToDatabase(

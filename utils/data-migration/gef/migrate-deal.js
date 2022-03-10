@@ -16,10 +16,7 @@ const loadDealFromFile = () => {
 };
 
 const doMigration = async () => {
-  const {
-    v2Banks,
-    v2Users,
-  } = await init();
+  const { v2Banks, v2Users } = await init();
 
   const v1Deal = loadDealFromFile();
 
