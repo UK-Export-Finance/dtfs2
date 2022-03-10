@@ -20,7 +20,6 @@ const getBaseCurrency = require('./get-base-currency');
 const getCoverStartDate = require('./get-cover-start-date');
 const hasFacilityBeenIssued = require('./get-facility-issue-status');
 const getCurrencyExchangeRate = require('./get-facility-currency-exchange-rate');
-const getInterestPercentage = require('./get-interest-percentage');
 const getNextDueDate = require('./get-next-due-date');
 const getYearBasis = require('./get-year-basis');
 const getFeeFrequency = require('./get-fee-frequency');
@@ -54,7 +53,6 @@ module.exports = {
   getCoverStartDate,
   hasFacilityBeenIssued,
   getCurrencyExchangeRate,
-  getInterestPercentage,
   getNextDueDate,
   getYearBasis,
   getFeeFrequency,
