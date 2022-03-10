@@ -26,8 +26,6 @@ const mapExporter = (v1Exporter) => {
     organisationName: v1Exporter.exporter_name,
     companiesHouseRegistrationNumber: v1Exporter.companies_house_registration || null,
     companyName: v1Exporter.exporter_name,
-
-    // TODO: check if V1 deal can have multiple industries
     industries: [
       mapExporterIndustry(v1Exporter),
     ],
@@ -82,7 +80,7 @@ const mapUkefDecision = (v1Deal, status) => {
     return [
       {
         decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED,
-        // text: field_special_conditions, // TODO
+        text: field_deal_comments,
       },
     ];
   }
@@ -144,21 +142,14 @@ const mapV1Deal = (v1Deal, v2Users) => {
     portalActivities: [],
     manualInclusionNoticeSubmissionDate: convertDateToTimestamp(v1Deal.field_min_checker_date),
     comments: mapComments(v1Deal.children.comments_maker_checker, v2Users),
-
-    // TODO: (not in json data, waiting)
-    // comments
-    // - mandatory criteria in deal / other collection
-    //   - need mandatory criteria version - full data
-    // - ecRevision
-
+    ukefDecision: mapUkefDecision(v1Deal, status);
     // TODO: investigate.
     // supportingInformation / deal files.
   };
 
   if (v1Deal.field_min_maker) {
-    mapped.maker = getUserByEmail(v2Users, v1Deal.owner.email);
+    mapped.maker = getUserByEmail(v2Users, v1Deal.field_min_maker);
   } else {
-     // TODO: is owner correct?
     mapped.maker = getUserByEmail(v2Users, v1Deal.owner.email);
   }
 
@@ -172,8 +163,6 @@ const mapV1Deal = (v1Deal, v2Users) => {
     mapped.manualInclusionNoticeSubmissionDate = convertDateToTimestamp(v1Deal.field_min_checker_date);
   }
 
-  mapped.ukefDecision = mapUkefDecision(v1Deal, status);
-
   if (mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
     mapped.ukefDecisionAccepted = v1Deal.field_i_agree_with_special_cond;
   }
@@ -184,6 +173,5 @@ const mapV1Deal = (v1Deal, v2Users) => {
 
   return mapped;
 };
-
 
 module.exports = mapV1Deal;
