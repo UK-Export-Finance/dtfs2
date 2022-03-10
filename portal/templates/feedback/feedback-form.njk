@@ -14,7 +14,10 @@
     {{
       govukErrorSummary({
         titleText: "There is a problem",
-        errorList: validationErrors.summary
+        errorList: validationErrors.summary,
+         attributes: {
+          'data-cy': 'error-summary'
+        }
       })
     }}
   {% endif %}
@@ -25,7 +28,10 @@
 
     {{ govukInput({
       label: {
-        text: "What is your role?"
+        text: "What is your role?",
+        attributes: {
+          'data-cy': 'role-heading'
+        }
       },
       id: "role",
       name: "role",
@@ -44,10 +50,14 @@
 
     {{ govukInput({
       label: {
-        text: "Which organisation do you work for?"
+        text: "Which organisation do you work for?",
+        attributes: {
+          'data-cy': 'organisation-heading'
+        }
       },
       id: "organisation",
       name: "organisation",
+
       value: feedback.organisation,
       classes: "govuk-input--width-20",
       attributes: {
@@ -64,6 +74,9 @@
     {{ govukRadios({
       idPrefix: "reasonForVisiting",
       name: "reasonForVisiting",
+      attributes: {
+        'data-cy': 'reason-for-visiting'
+      },
       fieldset: {
         legend: {
           text: "What was your reason for visiting this service today?"
@@ -122,6 +135,9 @@
     {{ govukRadios({
       idPrefix: "easyToUse",
       name: "easyToUse",
+      attributes: {
+        'data-cy': 'easy-to-use'
+      },
       fieldset: {
         legend: {
           text: "Easy to use"
@@ -188,6 +204,9 @@
     {{ govukRadios({
       idPrefix: "clearlyExplained",
       name: "clearlyExplained",
+      attributes: {
+        'data-cy': 'clearly-explained'
+      },
       fieldset: {
         legend: {
           text: "Is it clearly explained what information you need to provide?"
@@ -254,6 +273,9 @@
     {{ govukRadios({
       idPrefix: "satisfied",
       name: "satisfied",
+      attributes: {
+        'data-cy': 'satisfied'
+      },
       fieldset: {
         legend: {
           text: "Overall, were you satisfied with the service?"
@@ -321,7 +343,10 @@
       name: "howCanWeImprove",
       id: "howCanWeImprove",
       label: {
-        text: "How can we improve this service? (optional)"
+        text: "How can we improve this service? (optional)",
+         attributes: {
+          'data-cy': 'how-can-we-improve-heading'
+        }
       },
       value: feedback.howCanWeImprove,
       classes: "govuk-input--width-20",
@@ -332,10 +357,16 @@
 
     {{ govukInput({
       label: {
-        text: "Help us make this service better (optional)"
+        text: "Help us make this service better (optional)",
+        attributes: {
+          'data-cy': 'email-address-heading'
+        }
       },
       hint: {
-        text: "Leave your email address if you want to help with our user research."
+        text: "Leave your email address if you want to help with our user research.",
+        attributes: {
+          'data-cy': 'email-address-hint'
+        }
       },
       id: "emailAddress",
       name: "emailAddress",

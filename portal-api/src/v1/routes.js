@@ -122,8 +122,11 @@ authRouter.route('/countries/:code').get(countries.findOne);
 
 authRouter
   .route('/feedback')
-  .get(validate({ role: ['data-admin'] }), feedback.findAll)
-  .post(validate({ role: ['maker', 'checker'] }), feedback.create);
+  .get(validate({ role: ['data-admin'] }), feedback.findAll);
+
+openRouter
+  .route('/feedback')
+  .post(feedback.create);
 
 authRouter
   .route('/feedback/:id')
@@ -155,7 +158,11 @@ authRouterAllowXss
   .post(validate({ role: ['editor'] }), mandatoryCriteria.create);
 
 authRouterAllowXss
-  .route('/mandatory-criteria/:id')
+  .route('/mandatory-criteria/latest')
+  .get(mandatoryCriteria.findLatest)
+
+authRouterAllowXss
+  .route('/mandatory-criteria/:version')
   .get(mandatoryCriteria.findOne)
   .put(validate({ role: ['editor'] }), mandatoryCriteria.update)
   .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);

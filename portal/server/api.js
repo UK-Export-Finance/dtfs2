@@ -571,20 +571,17 @@ const getDeal = async (id, token) => {
   };
 };
 
-const getMandatoryCriteria = async (token) => {
+const getLatestMandatoryCriteria = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${portalApi}/v1/mandatory-criteria`,
+    url: `${portalApi}/v1/mandatory-criteria/latest`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
     },
   });
 
-  return {
-    status: response.status,
-    mandatoryCriteria: response.data.mandatoryCriteria,
-  };
+  return response.data;
 };
 
 const downloadFile = async (id, fieldname, filename, token) => {
@@ -625,12 +622,11 @@ const downloadMga = async (filename, token) => {
   return response.data;
 };
 
-const createFeedback = async (formData, token) => {
+const createFeedback = async (formData) => {
   const response = await axios({
     method: 'post',
     url: `${portalApi}/v1/feedback`,
     headers: {
-      Authorization: token,
       'Content-Type': 'application/json',
     },
     data: formData,
@@ -711,7 +707,7 @@ module.exports = {
   getDeal,
   getLoan,
   getIndustrySectors,
-  getMandatoryCriteria,
+  getLatestMandatoryCriteria,
   downloadFile,
   mga,
   downloadMga,

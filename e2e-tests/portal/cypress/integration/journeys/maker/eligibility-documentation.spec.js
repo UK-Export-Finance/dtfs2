@@ -41,6 +41,17 @@ context('Eligibility Documentation', () => {
     eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 0);
   });
 
+  it('should show optional for optional supporting documentations', () => {
+    eligibilityCriteria.nextPageButton().click();
+    eligibilityDocumentation.questionnaireFileInput().should('not.contain', '(optional)');
+    eligibilityDocumentation.financialStatements().contains('Financial statements for the past 3 years (optional)');
+    eligibilityDocumentation.yearToDate().contains('Year to date management accounts (optional)');
+    eligibilityDocumentation.financialForecast().contains('Financial forecasts for the next 3 years (optional)');
+    eligibilityDocumentation.financialCommentary().contains('Brief commentary on the financial information (optional)');
+    eligibilityDocumentation.corporateStructure().contains('Corporate structure diagram (optional)');
+    eligibilityDocumentation.securityText().contains('Security (optional)');
+  });
+
   it('should redirect to preview page if no validation errors', () => {
     eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
     eligibilityCriteria.nextPageButton().click();

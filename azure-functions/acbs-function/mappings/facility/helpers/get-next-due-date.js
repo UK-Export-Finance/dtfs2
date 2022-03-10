@@ -9,7 +9,10 @@ const { addMonth } = require('../../../helpers/date');
  */
 
 const getNextDueDate = (facility) => {
-  const { guaranteeCommencementDate, guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
+  const { guaranteeCommencementDate, guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
+    ? facility.tfm.facilityGuaranteeDates
+    : facility.update;
+
   const months = getFeeFrequencyMonths(facility);
 
   if (facility.facilitySnapshot.feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY) {

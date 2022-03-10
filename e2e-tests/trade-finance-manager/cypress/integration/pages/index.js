@@ -20,6 +20,7 @@ import leadUnderwriterPage from './underwriting/leadUnderwriterPage';
 import managersDecisionPage from './underwriting/managersDecisionPage';
 import facilityRiskProfilePage from './underwriting/facilityRiskProfilePage';
 import facilitiesPage from './facilitiesPage';
+import feedbackPage from './feedbackPage';
 
 export default {
   landingPage,
@@ -44,4 +45,5 @@ export default {
   managersDecisionPage,
   facilityRiskProfilePage,
   facilitiesPage,
+  feedbackPage,
 };
