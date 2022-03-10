@@ -17,7 +17,8 @@ const password: any = process.env.MULESOFT_API_UKEF_MDM_EA_SECRET;
 const postPremiumSchedule = async (premiumSchedulePayload: any) => {
   const premiumSchedulePayloadFormatted = premiumSchedulePayload;
 
-  if (objectIsEmpty(premiumSchedulePayload)) {
+  if (objectIsEmpty(premiumSchedulePayload) || premiumSchedulePayload.facilityURN === 'PENDING') {
+    console.error('Unable to create premium schedule.', { premiumSchedulePayload });
     return null;
   }
 
