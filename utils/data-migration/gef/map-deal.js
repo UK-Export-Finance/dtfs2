@@ -148,6 +148,7 @@ const mapV1Deal = (v1Deal, v2Banks, v2Users) => {
     ukefDecision: mapUkefDecision(v1Deal, status),
     // TODO: investigate.
     // supportingInformation / deal files.
+    supportingInformation: {},
   };
 
   if (v1Deal.field_min_maker) {

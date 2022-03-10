@@ -24,7 +24,12 @@ const importDealAndFacilities = async (req, res) => {
 
   const dealData = createdDeal.ops && createdDeal.ops[0];
 
-  const createdFacilities = await importFacilities(facilities);
+  const facilitiesWithDealId = facilities.map((facility) => ({
+    ...facility,
+    dealId,
+  }));
+
+  const createdFacilities = await importFacilities(facilitiesWithDealId);
 
   if (!createdFacilities) {
     return res.status(400).send(`Error importing V1 GEF facilities with deal id: ${deal.dataMigration.drupalDealId}`);
