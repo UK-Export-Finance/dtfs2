@@ -80,7 +80,7 @@ const mapUkefDecision = (v1Deal, status) => {
     return [
       {
         decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED,
-        text: field_deal_comments,
+        text: v1Deal.field_deal_comments,
       },
     ];
   }
@@ -89,7 +89,7 @@ const mapUkefDecision = (v1Deal, status) => {
     return [
       {
         decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-        text: field_special_conditions
+        text: v1Deal.field_special_conditions
       },
     ];
   }
@@ -142,13 +142,13 @@ const mapV1Deal = (v1Deal, v2Users) => {
     portalActivities: [],
     manualInclusionNoticeSubmissionDate: convertDateToTimestamp(v1Deal.field_min_checker_date),
     comments: mapComments(v1Deal.children.comments_maker_checker, v2Users),
-    ukefDecision: mapUkefDecision(v1Deal, status);
+    ukefDecision: mapUkefDecision(v1Deal, status),
     // TODO: investigate.
     // supportingInformation / deal files.
   };
 
   if (v1Deal.field_min_maker) {
-    mapped.maker = getUserByEmail(v2Users, v1Deal.field_min_maker);
+    mapped.maker = getUserByEmail(v2Users, v1Deal.field_min_maker.email);
   } else {
     mapped.maker = getUserByEmail(v2Users, v1Deal.owner.email);
   }
