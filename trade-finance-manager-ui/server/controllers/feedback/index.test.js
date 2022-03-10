@@ -40,15 +40,18 @@ describe('controllers - feedback', () => {
         satisfied: 'Very satisfied',
         howCanWeImprove: 'Devs are doing a great job already',
         emailAddress: 'test@testing.com',
-        submittedBy: {
-          username: 'Tester',
-          email: 'test@test.test',
-        },
+
       },
     };
 
     it('should call api and render template for thank you page on successful creation with a user object', async () => {
       await caseController.postFeedback(mockReq, res);
+
+      // checks body has submitted by in right format from user
+      mockReq.body.submittedBy = {
+        username: 'Tester',
+        email: 'test@test.test',
+      };
 
       expect(createFeedbackSpy).toHaveBeenCalledWith(mockReq.body);
 
@@ -68,13 +71,15 @@ describe('controllers - feedback', () => {
           satisfied: 'Very satisfied',
           howCanWeImprove: 'Devs are doing a great job already',
           emailAddress: 'test@testing.com',
-          submittedBy: {
-            username: null,
-            email: null,
-          },
         },
       };
       await caseController.postFeedback(mockReqNoUser, res);
+
+      // checks body has in right format
+      mockReqNoUser.body.submittedBy = {
+        username: null,
+        email: null,
+      };
 
       expect(createFeedbackSpy).toHaveBeenCalledWith(mockReqNoUser.body);
 
