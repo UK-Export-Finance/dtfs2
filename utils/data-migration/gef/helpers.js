@@ -1,7 +1,5 @@
-const { getUnixTime } = require('date-fns');
-
 const convertDateToTimestamp = (v1Date) =>
-  getUnixTime(new Date(v1Date));
+  new Date(v1Date).valueOf()}
 
 module.exports = {
   convertDateToTimestamp,
