@@ -27,15 +27,19 @@ const mapFeeFrequency = (v1Frequency) => {
 };
 
 const mapBasisDetails = (v1Basis) => {
-  const mapped = v1Basis.map((v1) => {
-    if (MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]) {
-      return MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value];
-    }
+  if (v1Basis) {
+    const mapped = v1Basis.map((v1) => {
+      if (MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]) {
+        return MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value];
+      }
 
-    return V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.OTHER;
-  });
-  
-  return mapped;
+      return V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.OTHER;
+    });
+    
+    return mapped;
+  }
+
+  return V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.OTHER;
 };
 
 const mapCoverDateConfirmed = (issued) => {

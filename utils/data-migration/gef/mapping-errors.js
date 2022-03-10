@@ -40,6 +40,9 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
   if (!isNumber(v2Deal.eligibilityVersionId)) {
     errors.push('eligibilityVersionId');
   }
+  if (!hasValue(v2Deal.comments)) {
+    errors.push('comments');
+  }
 
   if (v2Deal.submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
     if (!isNumber(v2Deal.manualInclusionNoticeSubmissionDate)) {
@@ -47,8 +50,8 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
     }
   }
 
-  if (mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
-    || mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+  if (v2Deal.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
+    || v2Deal.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
     if (!hasBooleanValue(v2Deal.ukefDecisionAccepted)) {
       errors.push('ukefDecisionAccepted');
     }

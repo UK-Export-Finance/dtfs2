@@ -37,7 +37,7 @@ const doMigration = async () => {
   const successCount = log.getSuccessCount();
 
   if (errorCount !== 0) {
-    log.addInfo(`Error migrating deal ${v2Deal.dataMigration.drupalDealId}}`);
+    log.addInfo(`Error migrating deal ${v2Deal.dataMigration.drupalDealId}`);
   }
 
   if (successCount > 0) {

@@ -11,7 +11,7 @@ const initUsers = async (token) => {
 const getUserByEmail = (users, email) => {
   if (!email) return {};
 
-  const user = users.find((b) => b.username.toLowerCase() === email.toLowerCase());
+  const user = users.find((u) => u.email?.toLowerCase() === email.toLowerCase());
   if (!user) return {};
 
   return {
@@ -20,6 +20,7 @@ const getUserByEmail = (users, email) => {
     firstname: user.firstname,
     surname: user.surname,
     email: user.email,
+    roles: user.roles,
     bank: {
       id: user.bank.id,
       name: user.bank.name,

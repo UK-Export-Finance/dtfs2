@@ -103,6 +103,23 @@ const mapUkefDecision = (v1Deal, status) => {
   ];
 };
 
+const mapComments = (v1Comments, v2Users) => {
+  const mapped = v1Comments.map((v1Comment) => {
+    const user = getUserByEmail(v2Users, v1Comment.user_email);
+
+    return {
+      email: user.email,
+      roles: user.roles,
+      userName: user.username,
+      firstname: user.firstname,
+      surname: user.surname,
+      comment: v1Comment.comment,
+    };
+  });
+
+  return mapped;
+};
+
 const mapV1Deal = (v1Deal, v2Users) => {
   const submissionType = MIGRATION_MAP.DEAL.SUBMISSION_TYPE[v1Deal.field_submission_type];
   const status = MIGRATION_MAP.DEAL.DEAL_STATUS[v1Deal.field_deal_status];
@@ -126,6 +143,7 @@ const mapV1Deal = (v1Deal, v2Users) => {
     submissionCount: mapSubmissionCount(submissionType),
     portalActivities: [],
     manualInclusionNoticeSubmissionDate: convertDateToTimestamp(v1Deal.field_min_checker_date),
+    comments: mapComments(v1Deal.children.comments_maker_checker, v2Users),
 
     // TODO: (not in json data, waiting)
     // comments
