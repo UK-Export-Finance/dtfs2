@@ -53,7 +53,7 @@ const MOCK_GEF_DEAL = {
         name: 'Information technology consultancy activities',
       },
     },
-    smeType: 'MEDIUM',
+    smeType: 'Medium',
     updatedAt: 162582748022,
   },
   bank: {

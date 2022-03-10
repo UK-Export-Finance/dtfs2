@@ -35,13 +35,6 @@ const FACILITY_TYPE = {
   CONTINGENT: 'Contingent',
 };
 
-const SME_TYPE = {
-  MICRO: 'Micro',
-  SMALL: 'Small',
-  MEDIUM: 'Medium',
-  NOT_SME: 'Not an SME',
-};
-
 const BOOLEAN = {
   YES: 'Yes',
   NO: 'No',
@@ -86,7 +79,6 @@ module.exports = {
   DEAL_STATUS,
   DEAL_TYPE,
   FACILITY_TYPE,
-  SME_TYPE,
   BOOLEAN,
   STAGE,
   FACILITY_PROVIDED_DETAILS,
