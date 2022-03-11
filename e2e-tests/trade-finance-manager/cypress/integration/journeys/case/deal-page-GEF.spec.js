@@ -6,6 +6,7 @@ import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
 import MOCK_USERS from '../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 import { DEAL_TYPE } from '../../../fixtures/constants';
+import facilityPage from '../../pages/facilityPage';
 
 context('User can view a GEF MIA case deal', () => {
   let dealId;
@@ -165,6 +166,16 @@ context('User can view a GEF AIN case deal', () => {
       facilityRow.facilityId().click();
 
       cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}`));
+    });
+
+    it('coverStartDate and coverEndDate should be a dash on the facility details page', () => {
+      const facilityId = dealFacilities._id;
+      const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
+
+      facilityRow.facilityId().click();
+
+      facilityPage.facilityCoverStartDate().contains('-');
+      facilityPage.facilityCoverEndDate().contains('-');
     });
   });
 });
