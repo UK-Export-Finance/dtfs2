@@ -23,7 +23,13 @@ dotenv.config();
 initScheduler();
 
 const app = express();
-// app.use(helmet());
+
+// Global middleware set headers
+app.use((req, res, next) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
+  next();
+});
+
 app.use(express.json());
 app.use(compression());
 
