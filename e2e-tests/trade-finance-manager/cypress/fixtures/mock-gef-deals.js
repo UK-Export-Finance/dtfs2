@@ -126,7 +126,7 @@ const commonApplicationDetails = {
         },
       },
     ],
-    smeType: 'MICRO',
+    smeType: 'Micro',
     probabilityOfDefault: 14,
     isFinanceIncreasing: true,
     status: 'Completed',

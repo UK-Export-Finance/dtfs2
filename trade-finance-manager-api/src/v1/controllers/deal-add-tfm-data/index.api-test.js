@@ -5,7 +5,6 @@ const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
 const MOCK_DEAL_AIN = require('../../__mocks__/mock-deal');
-const DEFAULTS = require('../../defaults');
 
 describe('deal submit - add TFM data', () => {
   it('returns an object with results from multiple functions', async () => {
@@ -20,7 +19,6 @@ describe('deal submit - add TFM data', () => {
       ...mockDeal,
       tfm: {
         ...generateDateReceived(),
-        history: DEFAULTS.HISTORY,
         parties: {},
         activities: [],
         product: addDealProduct(mockDeal),

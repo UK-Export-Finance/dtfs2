@@ -32,8 +32,8 @@ context('Upload files to Azure', () => {
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
-      cy.uploadFile('file1.png', `${manualInclusion.url(dealId)}/upload`);
-      manualInclusion.uploadSuccess('file1.png');
+      cy.uploadFile('test.pdf', `${manualInclusion.url(dealId)}/upload`);
+      manualInclusion.uploadSuccess('test.pdf');
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/manual-inclusion-questionnaire`));
 
       cy.visit(relative(`/gef/application-details/${dealId}`));
@@ -41,7 +41,7 @@ context('Upload files to Azure', () => {
       uploadFiles.supportingInfoStatus().should('contain', 'In progress');
 
       uploadFiles.supportingInfoManualInclusionButton().parent().parent().find('.govuk-summary-list__value .govuk-link')
-        .should('contain', 'file1.png');
+        .should('contain', 'test.pdf (47 kB)');
       uploadFiles.supportingInfoManagementAccountsButton().parent().parent().find('.govuk-summary-list__value')
         .should('contain', 'Required');
       uploadFiles.supportingInfoFinancialStatementsButton().parent().parent().find('.govuk-summary-list__value')
@@ -67,7 +67,7 @@ context('Upload files to Azure', () => {
       uploadFiles.uploadSuccess('file1.png');
       cy.visit(relative(`/gef/application-details/${dealId}`));
       uploadFiles.supportingInfoManagementAccountsButton().parent().parent().find('.govuk-summary-list__value')
-        .should('contain', 'file1.png');
+        .should('contain', 'file1.png (1 kB)');
     });
 
     it('should delete one of the documents', () => {

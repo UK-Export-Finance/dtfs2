@@ -19,13 +19,16 @@ const mapGefFacilityDates = (facilitySnapsot, facilityTfm, dealSnapshot) => {
   const mapped = {
     inclusionNoticeReceived: manualInclusionNoticeSubmissionDate || dealSubmissionDate,
     bankIssueNoticeReceived: submittedAsIssuedDate,
-    coverStartDate: convertDateToTimestamp(coverStartDate),
     tenor: mapTenorDate(
       facilityStage,
       ukefGuaranteeInMonths,
       exposurePeriodInMonths,
     ),
   };
+
+  if (coverStartDate) {
+    mapped.coverStartDate = convertDateToTimestamp(coverStartDate);
+  }
 
   // only set coverEndDate if not null, else is undefined
   if (coverEndDate) {

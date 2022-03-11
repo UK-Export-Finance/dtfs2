@@ -243,7 +243,7 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
   });
 
   files.forEach((file) => {
-    formData.append(file.fieldname, file.buffer, file.originalname);
+    formData.append(file.fieldname, file.buffer, file.originalname, file.size);
   });
 
   const formHeaders = formData.getHeaders();
