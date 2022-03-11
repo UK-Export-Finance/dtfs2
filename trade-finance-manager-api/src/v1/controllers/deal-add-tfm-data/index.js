@@ -3,7 +3,6 @@ const generateDateReceived = require('./dateReceived');
 const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
-const DEFAULTS = require('../../defaults');
 
 const addTfmDealData = async (deal) => {
   if (!deal) {
@@ -21,7 +20,6 @@ const addTfmDealData = async (deal) => {
     tfm: {
       ...tfm,
       ...generateDateReceived(),
-      history: DEFAULTS.HISTORY,
       parties: {},
       activities: [],
       product: addDealProduct(deal),

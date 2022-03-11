@@ -32,38 +32,6 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   }
 
   /**
-   * History helper variables
-   * */
-  const existingDealHistory = (existingDeal.tfm && existingDeal.tfm.history);
-  const tfmUpdateHasHistory = tfmUpdate.history;
-  const tfmUpdateHasHistoryTasks = (tfmUpdateHasHistory
-                                    && tfmUpdate.history.tasks
-                                    && Object.keys(tfmUpdate.history.tasks).length > 0);
-  const tfmUpdateHasHistoryEmails = (tfmUpdateHasHistory
-                                     && tfmUpdate.history.emails
-                                     && Object.keys(tfmUpdate.history.emails).length > 0);
-
-  /**
-   * Ensure tfm.history is not wiped and avoid recursive object creation
-   * by checking that history.tasks and history.emails is not empty
-   * */
-  if (existingDealHistory) {
-    if (tfmUpdateHasHistoryTasks) {
-      dealUpdate.tfm.history.tasks = [
-        ...existingDeal.tfm.history.tasks,
-        ...tfmUpdate.history.tasks,
-      ];
-    }
-
-    if (tfmUpdateHasHistoryEmails) {
-      dealUpdate.tfm.history.emails = [
-        ...existingDeal.tfm.history.emails,
-        ...tfmUpdate.history.emails,
-      ];
-    }
-  }
-
-  /**
    * Activities helper variables
    * */
   const existingDealActivities = (existingDeal.tfm && existingDeal.tfm.activities);
