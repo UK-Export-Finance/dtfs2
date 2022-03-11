@@ -70,7 +70,7 @@
  *           $ref: '#/definitions/GEFIndustry'
  *       smeType:
  *         type: string
- *         example: MICRO
+ *         example: Micro
  *       probabilityOfDefault:
  *         type: integer
  *         example: 45.5

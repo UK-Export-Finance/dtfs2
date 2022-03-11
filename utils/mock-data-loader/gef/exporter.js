@@ -25,7 +25,7 @@ const EXPORTER_HALF_COMPLETE = {
       },
     },
   ],
-  smeType: 'MEDIUM',
+  smeType: 'Medium',
   probabilityOfDefault: 10,
   isFinanceIncreasing: false,
 };
@@ -75,7 +75,7 @@ const EXPORTER_COMPLETED = {
       },
     },
   ],
-  smeType: 'MICRO',
+  smeType: 'Micro',
   probabilityOfDefault: 14,
   isFinanceIncreasing: true,
 };

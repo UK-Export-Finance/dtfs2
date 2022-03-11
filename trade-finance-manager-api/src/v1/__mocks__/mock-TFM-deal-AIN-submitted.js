@@ -53,7 +53,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
         code: '1005',
         name: 'Construction',
       },
-      smeType: 'MICRO',
+      smeType: 'Micro',
       status: 'Completed',
       updatedAt: 1643727452018,
     },

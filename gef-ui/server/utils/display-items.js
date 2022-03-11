@@ -1,7 +1,7 @@
 const moment = require('moment');
 const { isTrueSet } = require('./helpers');
 const {
-  SME_TYPE, BOOLEAN, STAGE, FACILITY_TYPE,
+  BOOLEAN, STAGE, FACILITY_TYPE,
 } = require('../constants');
 
 const exporterItems = (exporterUrl, options = {}) => [
@@ -33,7 +33,7 @@ const exporterItems = (exporterUrl, options = {}) => [
     label: 'SME type',
     id: 'smeType',
     href: `${exporterUrl}/about-exporter?status=change`,
-    method: (callback) => SME_TYPE[callback],
+    method: (callback) => callback,
   },
   {
     label: 'Probability of default',
