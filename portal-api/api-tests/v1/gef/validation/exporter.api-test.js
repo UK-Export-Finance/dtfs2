@@ -5,7 +5,6 @@ const {
   exporterStatus,
 } = require('../../../../src/v1/gef/controllers/validation/exporter');
 const CONSTANTS = require('../../../../src/constants');
-const { SME_TYPE } = require('../../../../src/v1/gef/enums');
 
 describe('GEF controllers validation - exporter', () => {
   const mockAnswersValid = {
@@ -68,52 +67,6 @@ describe('GEF controllers validation - exporter', () => {
         const result = exporterStatus(mockAnswersValid);
 
         expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.COMPLETED);
-      });
-    });
-  });
-
-  describe('exporterCheckEnums', () => {
-    describe('when a valid smeType is passed', () => {
-      it('should return null', () => {
-        const result = exporterCheckEnums({
-          smeType: SME_TYPE.MICRO,
-        });
-
-        expect(result).toEqual(null);
-      });
-    });
-
-    describe('when a null smeType is passed', () => {
-      it('should return null', () => {
-        const result = exporterCheckEnums({
-          smeType: null,
-        });
-
-        expect(result).toEqual(null);
-      });
-    });
-
-    describe('when smeType is passed as undefined', () => {
-      it('should return null', () => {
-        const result = exporterCheckEnums({
-          smeType: undefined,
-        });
-
-        expect(result).toEqual(null);
-      });
-    });
-
-    describe('when an invalid smeType is passed', () => {
-      it('should return an error array', () => {
-        const result = exporterCheckEnums({
-          smeType: 'INVALID',
-        });
-
-        const expected = [
-          { errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'smeType' }
-        ];
-
-        expect(result).toEqual(expected);
       });
     });
   });

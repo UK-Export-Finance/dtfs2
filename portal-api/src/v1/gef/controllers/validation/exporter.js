@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 
 const CONSTANTS = require('../../../../constants');
-const { SME_TYPE } = require('../../enums');
 
 const TOTAL_REQUIRED = 8;
 
@@ -54,23 +53,6 @@ const exporterStatus = (answers) => {
   return CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS;
 };
 
-const exporterCheckEnums = (doc) => {
-  const enumErrors = [];
-  switch (doc.smeType) {
-    case SME_TYPE.MICRO:
-    case SME_TYPE.SMALL:
-    case SME_TYPE.MEDIUM:
-    case SME_TYPE.NOT_SME:
-    case null:
-    case undefined:
-      break;
-    default:
-      enumErrors.push({ errCode: 'ENUM_ERROR', errMsg: 'Unrecognised enum', errRef: 'smeType' });
-      break;
-  }
-  return enumErrors.length === 0 ? null : enumErrors;
-};
-
 const exporterValidation = (doc) => ({
   required: unansweredFields(doc),
 });
@@ -78,6 +60,5 @@ const exporterValidation = (doc) => ({
 module.exports = {
   unansweredFields,
   exporterStatus,
-  exporterCheckEnums,
   exporterValidation,
 };

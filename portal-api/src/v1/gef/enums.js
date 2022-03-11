@@ -1,12 +1,5 @@
 const DEAL_TYPE = 'GEF';
 
-const SME_TYPE = {
-  MICRO: 'MICRO',
-  SMALL: 'SMALL',
-  MEDIUM: 'MEDIUM',
-  NOT_SME: 'NOT_SME',
-};
-
 const FACILITY_TYPE = {
   CASH: 'Cash',
   CONTINGENT: 'Contingent',
@@ -64,7 +57,6 @@ const CURRENCY = {
 
 module.exports = {
   DEAL_TYPE,
-  SME_TYPE,
   FACILITY_TYPE,
   DEAL_STATUS,
   ERROR,

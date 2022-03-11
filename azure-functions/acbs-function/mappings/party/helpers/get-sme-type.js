@@ -17,6 +17,9 @@ const getSmeType = (smeType) => {
     case CONSTANTS.DEAL.SME_TYPE.NON_SME:
       return '20';
 
+    case CONSTANTS.DEAL.SME_TYPE.NOT_SME:
+      return '20';
+
     default:
       return '70';
   }
