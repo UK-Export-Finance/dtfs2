@@ -21,12 +21,13 @@ const {
 } = require('./v1/routes');
 
 const app = express();
-// TODO re-enable Helmet (Jira - 4998)
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: false,
-//   }),
-// );
+
+// Global middleware set headers
+app.use((req, res, next) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
+  next();
+});
+
 app.use(healthcheck);
 app.use(express.json());
 app.use(compression());
