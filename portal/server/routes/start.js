@@ -22,13 +22,14 @@ const userCanCreateADeal = (user) => user && user.roles.includes('maker');
 
 router.get('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) => {
   const { mandatoryCriteria } = req.apiData;
+
   const { user } = req.session;
 
   if (!userCanCreateADeal(user)) {
     res.redirect('/');
   } else {
     res.render('before-you-start/before-you-start.njk', {
-      mandatoryCriteria: mandatoryCriteria.data,
+      mandatoryCriteria,
       user: req.session.user,
     });
   }
