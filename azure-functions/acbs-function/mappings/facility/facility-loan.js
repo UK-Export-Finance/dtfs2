@@ -37,7 +37,7 @@ const facilityLoan = (deal, facility, acbsData) => {
     postingDate: date.now(),
     facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     borrowerPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
-    productTypeId: helpers.getProductTypeId(facility, deal.dealSnapshot.dealType),
+    productTypeId: helpers.getProductTypeId(facility),
     productTypeGroup: helpers.getProductTypeGroup(facility, deal.dealSnapshot.dealType),
     currency: facility.facilitySnapshot.currency.id,
     amount: facility.tfm.ukefExposure || facility.facilitySnapshot.ukefExposure,
