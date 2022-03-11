@@ -30,6 +30,13 @@ app.use((req, res, next) => {
   next();
 });
 
+// TODO: re-enable Helmet (Jira - 4998)
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: false,
+//   }),
+// );
+
 app.use(healthcheck);
 app.use(passport.initialize());
 app.use(express.json());
