@@ -119,9 +119,58 @@ const mapComments = (v1Comments, v2Users) => {
   return mapped;
 };
 
+const mapSupportingInformation = (v1Eligibility) => {
+  const mapped = {
+    manualInclusion: [],
+  };
+
+  if (v1Eligibility.file_1) {
+    mapped.manualInclusion.push({
+      // encoding: '',
+      // size: '',
+      // etc
+      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_1,
+    })    
+  }
+
+  if (v1Eligibility.file_2) {
+    mapped.manualInclusion.push({
+      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_2,
+    })
+  }
+
+  if (v1Eligibility.file_3) {
+    mapped.manualInclusion.push({
+      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_3,
+    })
+  }
+
+  if (v1Eligibility.file_4) {
+    mapped.manualInclusion.push({
+      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_4,
+    })
+  }
+
+  if (v1Eligibility.file_5) {
+    mapped.manualInclusion.push({
+      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_5,
+    })
+  }
+
+  if (v1Eligibility.file_6) {
+    mapped.manualInclusion.push({
+      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_6,
+    })
+  }
+
+  return mapped;
+};
+
 const mapV1Deal = (v1Deal, v2Banks, v2Users) => {
   const submissionType = MIGRATION_MAP.DEAL.SUBMISSION_TYPE[v1Deal.field_submission_type];
   const status = MIGRATION_MAP.DEAL.DEAL_STATUS[v1Deal.field_deal_status];
+  const isManualSubmission = (submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
+                            || submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
 
   const mapped = {
     dataMigration: {
@@ -146,9 +195,9 @@ const mapV1Deal = (v1Deal, v2Banks, v2Users) => {
     manualInclusionNoticeSubmissionDate: convertDateToTimestamp(v1Deal.field_min_checker_date),
     comments: mapComments(v1Deal.children.comments_maker_checker, v2Users),
     ukefDecision: mapUkefDecision(v1Deal, status),
-    // TODO: investigate.
-    // supportingInformation / deal files.
+    // TODO: supportingInformation / deal files.
     supportingInformation: {},
+    },
   };
 
   if (v1Deal.field_min_maker) {
@@ -173,6 +222,10 @@ const mapV1Deal = (v1Deal, v2Banks, v2Users) => {
 
   if (mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
     mapped.ukefDecisionAccepted = v1Deal.field_i_agree_with_conditions;
+  }
+
+  if (isManualSubmission) {
+    mapped.supportingInformation = mapSupportingInformation(v2Deal.eligiblity);
   }
 
   return mapped;
