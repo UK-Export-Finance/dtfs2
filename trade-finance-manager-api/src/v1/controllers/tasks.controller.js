@@ -47,7 +47,14 @@ const updateTask = (allTaskGroups, taskUpdate) =>
  * Update all tasks canEdit flag and status
  * Depending on what task has been changed.
  * */
-const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigin) => {
+const updateAllTasks = async (
+  allTaskGroups,
+  groupId,
+  taskUpdate,
+  statusFrom,
+  deal,
+  urlOrigin,
+) => {
   const taskEmailsToSend = [];
 
   let taskGroups = allTaskGroups.map((tGroup) => {
@@ -71,6 +78,17 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
           task,
           isTaskThatIsBeingUpdated,
         );
+
+        if (isTaskThatIsBeingUpdated) {
+          updatedTask.history.push(mapTaskHistoryObject({
+            taskId: task.id,
+            groupId: task.groupId,
+            statusFrom,
+            statusTo: taskUpdate.status,
+            assignedUserId: taskUpdate.assignedTo.userId,
+            updatedBy: taskUpdate.updatedBy,
+          }));
+        }
 
         if (sendEmail) {
           taskEmailsToSend.push(updatedTask);
@@ -149,8 +167,8 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
  * - Finds the group the task belongs to and updates the task in that group.
  * - Maps over all tasks in every group and updates their status/canEdit flag.
  * - If previous task is complete, a sendEmail flag for that task is returned.
+ * - If the task is the task that is being updated (by user), task.history is updated.
  * - Sends emails ('task is ready to start') for any tasks that return sendEmail flag.
- * - Updates tfm.history.tasks.
  * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task)
  * - Updates the deal.
  * */
@@ -196,32 +214,16 @@ const updateTfmTask = async (dealId, taskUpdate) => {
       modifiedTasks,
       groupId,
       updatedTask,
+      statusFrom,
       deal,
       urlOrigin,
     );
-
-    /**
-     * Update TFM history.tasks
-     * */
-    const tfmHistoryUpdate = {
-      tasks: [
-        mapTaskHistoryObject({
-          taskId: taskIdToUpdate,
-          groupId,
-          statusFrom,
-          statusTo,
-          assignedUserId: assignedTo.userId,
-          updatedBy,
-        }),
-      ],
-    };
 
     /**
      * Construct TFM update object
      * */
     const tfmDealUpdate = {
       tfm: {
-        history: tfmHistoryUpdate,
         tasks: modifiedTasksWithEditStatus,
       },
     };

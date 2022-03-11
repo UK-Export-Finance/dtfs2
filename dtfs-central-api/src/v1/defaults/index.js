@@ -16,10 +16,6 @@ const DEFAULTS = {
     exporter: {},
   },
   DEAL_TFM: {
-    history: {
-      tasks: [],
-      emails: [],
-    },
   },
   FACILITY_TFM: {},
 };
