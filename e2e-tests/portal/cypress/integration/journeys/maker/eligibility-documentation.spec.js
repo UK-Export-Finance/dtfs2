@@ -75,18 +75,18 @@ context('Eligibility Documentation', () => {
     eligibilityDocumentation.questionnaireFileInputUploadButton().should('be.visible');
   });
 
-  //   TODO - figure out why this test keeps failing on github and not locally
-  //   it('should list the uploaded files and remove them', () => {
-  //     taskListHeader.itemLink('supporting-documentation').click();
-  //     eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
-  //     eligibilityDocumentation.questionnaireFileInputUploadButton().click();
-  //     eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
+  it('should list the uploaded files and remove them', () => {
+    taskListHeader.itemLink('supporting-documentation').click();
+    eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
+    eligibilityDocumentation.questionnaireFileInputUploadButton().click();
+    eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
 
-  //     eligibilityDocumentation.questionnaireFileUploaded().should('have.length', 1);
-  //     eligibilityDocumentation.questionnaireFileUploadedRemove().should('have.length', 1);
+    eligibilityDocumentation.questionnaireFileUploaded().should('have.length', 1);
+    eligibilityDocumentation.questionnaireFileUploaded().contains('test-upload.txt (16 B)');
+    eligibilityDocumentation.questionnaireFileUploadedRemove().should('have.length', 1);
 
-  //     eligibilityDocumentation.questionnaireFileUploadedRemove().click();
-  //     eligibilityDocumentation.questionnaireFileUploaded().should('not.exist');
-  //     eligibilityDocumentation.questionnaireFileUploadedRemove().should('not.exist');
-  //   });
+    eligibilityDocumentation.questionnaireFileUploadedRemove().click();
+    eligibilityDocumentation.questionnaireFileUploaded().should('not.exist');
+    eligibilityDocumentation.questionnaireFileUploadedRemove().should('not.exist');
+  });
 });
