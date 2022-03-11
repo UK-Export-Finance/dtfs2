@@ -39,7 +39,7 @@ const validateProvidedFacility = async (req, res) => {
   if (!isTrueSet(saveAndReturn)) {
     if (!body.details) {
       providedFacilityErrors.push({
-        errRef: '',
+        errRef: 'details',
         errMsg: 'You must select at least one option',
       });
     }

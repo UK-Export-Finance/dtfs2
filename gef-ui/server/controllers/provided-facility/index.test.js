@@ -78,7 +78,7 @@ describe('controllers/provided-facility', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
         errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#', text: expect.any(String) }]),
+          errorSummary: expect.arrayContaining([{ href: '#details', text: expect.any(String) }]),
         }),
       }));
     });
