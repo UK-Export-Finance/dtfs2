@@ -15,6 +15,7 @@ const MOCK_MIA_TASKS_POPULATED = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
       {
         id: '2',
@@ -26,6 +27,7 @@ const MOCK_MIA_TASKS_POPULATED = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
       {
         id: '3',
@@ -37,6 +39,7 @@ const MOCK_MIA_TASKS_POPULATED = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
     ],
   },
@@ -54,6 +57,7 @@ const MOCK_MIA_TASKS_POPULATED = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
     ],
   },
@@ -71,6 +75,7 @@ const MOCK_MIA_TASKS_POPULATED = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
       {
         id: '2',
@@ -82,6 +87,7 @@ const MOCK_MIA_TASKS_POPULATED = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
       {
         id: '3',
@@ -93,6 +99,7 @@ const MOCK_MIA_TASKS_POPULATED = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
     ],
   },
@@ -110,6 +117,7 @@ const MOCK_MIA_TASKS_POPULATED = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
       {
         id: '2',
@@ -121,6 +129,7 @@ const MOCK_MIA_TASKS_POPULATED = [
           userId: CONSTANTS.TASKS.UNASSIGNED,
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
+        history: [],
       },
     ],
   },
