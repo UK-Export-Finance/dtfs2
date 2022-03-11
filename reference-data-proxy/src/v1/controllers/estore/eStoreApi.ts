@@ -22,9 +22,6 @@ import { getCollection } from '../../../database';
 import { EMAIL_TEMPLATES } from '../../../constants';
 
 dotenv.config();
-const eStoreUrl: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_URL;
-const username: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_KEY;
-const password: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_SECRET;
 
 // ensure that the `apiPayload` parameter has only these types
 const postToEstore = async (
@@ -32,13 +29,16 @@ const postToEstore = async (
   apiPayload: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
   timeout = 0,
 ) => {
+  const eStoreUrl: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_URL;
+  const username: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_KEY;
+  const password: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_SECRET;
   console.info('Calling eStore endpoint ', apiEndpoint, apiPayload);
 
   const response = await axios({
     method: 'post',
     url: `${eStoreUrl}/${apiEndpoint}`,
     auth: { username, password },
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
     data: apiPayload,
     timeout,
   }).catch(async (error: any) => {
