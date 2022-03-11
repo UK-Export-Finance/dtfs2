@@ -28,7 +28,7 @@
     {% if fileList | length %}
       {% for file in fileList %}
             <div class="govuk-!-margin-top-2">
-              <a download="{{file.filename}}" class="govuk-link file-upload-link" href="/contract/{{dealId}}/eligibility-documentation/{{fieldname}}/{{file.filename}}" data-cy="{{ fieldname }}-file-uploaded">{{file.filename}}</a>
+              <a download="{{file.filename}}" class="govuk-link file-upload-link" href="/contract/{{dealId}}/eligibility-documentation/{{fieldname}}/{{file.filename}}" data-cy="{{ fieldname }}-file-uploaded">{{file.filename}} ({{file.size}})</a>
               <button formAction="?stayonpage=true&removefile={{ file.filename }}" type="submit" class="govuk-link govuk-!-font-size-19 govuk-!-margin-bottom-0 button-as-link" data-cy="{{ fieldname }}-file-uploaded-remove">Remove</button>
             </div>
       {% endfor %}

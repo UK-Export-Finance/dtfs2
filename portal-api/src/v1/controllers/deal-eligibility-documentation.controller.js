@@ -1,4 +1,6 @@
 const stream = require('stream');
+const filesize = require('filesize');
+
 const fileshare = require('../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
@@ -77,6 +79,7 @@ exports.update = async (req, res) => {
           filename: fileInfo.filename,
           folder: `${fileInfo.folder}`,
           mimetype,
+          size: filesize(size, { round: 0 })
         };
       }
 
