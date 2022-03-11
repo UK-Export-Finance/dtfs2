@@ -59,7 +59,7 @@ describe('controllers/facilities', () => {
     it('renders the `Facilities` template when there is no facility ID provided', async () => {
       await facilities(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-        facilityType: 'cash',
+        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
         dealId: '123',
         status: undefined,
       }));
@@ -72,7 +72,7 @@ describe('controllers/facilities', () => {
       await facilities(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-        facilityType: 'cash',
+        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
         dealId: '123',
         hasBeenIssued: 'true',
         status: 'change',
@@ -93,7 +93,7 @@ describe('controllers/facilities', () => {
       await createFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-        facilityType: 'cash',
+        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#hasBeenIssued', text: expect.any(String) }]),
         }),
