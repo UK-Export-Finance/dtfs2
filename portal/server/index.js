@@ -3,7 +3,8 @@ const morgan = require('morgan');
 const session = require('express-session');
 const redis = require('redis');
 const helmet = require('helmet');
-
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
 const flash = require('connect-flash');
 const path = require('path');
 require('./azure-env');
@@ -14,6 +15,7 @@ const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
 
 const configureNunjucks = require('./nunjucks-configuration');
+const csrfToken = require('./routes/middleware/csrf-token.middleware');
 
 const app = express();
 
@@ -79,6 +81,9 @@ configureNunjucks({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(csrf());
+app.use(csrfToken());
 
 app.use(morgan('dev', {
   skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
@@ -97,6 +102,15 @@ app.use(
 
 app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
-console.info(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
+// error handler
+app.use((err, req, res, next) => {
+  if (err.code === 'EBADCSRFTOKEN') {
+    // handle CSRF token errors here
+    res.status(err.statusCode || 500);
+    res.redirect('/');
+  } else {
+    next(err);
+  }
+});
 
 app.listen(PORT, () => console.info(`BSS app listening on port ${PORT}!`));

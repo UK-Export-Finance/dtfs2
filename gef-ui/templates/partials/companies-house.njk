@@ -40,6 +40,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
       <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ govukInput({
           label: {
             text: "The correct format has 8 characters, for example, 8989898 or SC907816."

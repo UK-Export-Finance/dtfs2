@@ -39,9 +39,8 @@
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
     <div class="govuk-grid-column-one-half">
-      <form
-        method="post"
-        data-cy="form">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {% if industries.length <= 1 %}
           <p class="govuk-body" data-cy="industry-title"><strong>Industry</strong></p>

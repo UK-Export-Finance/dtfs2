@@ -6,7 +6,7 @@
 {% extends "index.njk" %}
 
 {% block content %}
-  <section class="govuk-!-margin-top-9"> 
+  <section class="govuk-!-margin-top-9">
 
     {% if validationErrors.count %}
       {{
@@ -25,6 +25,7 @@
       <div class="govuk-grid-column-two-thirds">
 
         <form method="POST" autocomplete="off">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
           {% set labelText = 'What’s the loss given default (LGD) for ' + deal.submissionDetails.supplierName %}
 
           {{ govukInput({

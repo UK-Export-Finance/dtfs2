@@ -36,6 +36,7 @@
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
     <div class="govuk-grid-column-three-quarters">
       <form method="post" data-cy="form" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {% if formHeaderFragment %}{% include 'includes/supporting-documents/'+ formHeaderFragment +'.njk'  %}{% endif %}
 
         {% if files.length %}

@@ -27,7 +27,7 @@
   })}}
 
   <form method="POST" autocomplete="off">
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
       {{ govukInput({
         label: {

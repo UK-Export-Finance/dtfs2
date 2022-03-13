@@ -3,13 +3,10 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
-
 {% block pageTitle %}
   Abandon application
 {% endblock %}
-
 {% block content %}
-
   {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
@@ -19,25 +16,19 @@
       }
     }) }}
   {% endif %}
-
   <div class="govuk-grid-row" data-cy="application-submit-page">
     <div class="govuk-grid-column-two-thirds-from-desktop">
-
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="main-heading">
         Confirm that you want to abandon
       </h1>
-
       <p class="govuk-body govuk-!-margin-bottom-6">
-        You’ll still be able to find this deal in the abandoned folder. 
+        You’ll still be able to find this deal in the abandoned folder.
       </p>
     </div>
-
     <div class="govuk-grid-column-one-half-from-desktop">
-      <form
-        method="post"
-        data-cy="form">
-
-        <p class="govuk-button-group govuk-!-margin-top-7">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <div class="govuk-button-group govuk-!-margin-top-7">
           {{ govukButton({
             text: "Yes, abandon",
             attributes: {
@@ -53,9 +44,8 @@
             classes: "govuk-button--secondary govuk-!-margin-right-6",
             href: "/gef/application-details/"+application._id
           }) }}
-        </p>
+        </div>
       </form>
     </div>
   </div>
-
 {% endblock %}

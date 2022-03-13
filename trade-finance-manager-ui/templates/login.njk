@@ -10,7 +10,7 @@
     <div class="govuk-grid-column-one-third">
 
       <form method="POST" autocomplete="off">
-
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <div class="govuk-form-group">
           <label class="govuk-label" for="email" data-cy="email-heading">
             Email address

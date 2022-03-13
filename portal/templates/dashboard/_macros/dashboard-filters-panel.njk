@@ -9,7 +9,7 @@
   <div class="moj-filter-layout__filter">
 
     <form method="POST" autocomplete="off">
-
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {% if selectedFilters.length %}
         {{ mojFilter({
           heading: {

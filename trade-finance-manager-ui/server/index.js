@@ -3,6 +3,8 @@ const compression = require('compression');
 const session = require('express-session');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
 
 const path = require('path');
 const routes = require('./routes');
@@ -10,8 +12,8 @@ require('./azure-env');
 
 const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
-
 const healthcheck = require('./healthcheck');
+const csrfToken = require('./middleware/csrf-token.middleware');
 
 const app = express();
 
@@ -32,9 +34,14 @@ configureNunjucks({
   watch: true,
 });
 
-app.use(express.urlencoded());
 app.use(session(sessionOptions()));
 app.use(compression());
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(csrf());
+app.use(csrfToken());
 
 app.use(morgan('dev', {
   skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
@@ -49,8 +56,16 @@ app.use(
   express.static(path.join(__dirname, '..', 'public')),
 );
 
-app.get('/not-found', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
-
 app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
+// error handler
+app.use((err, req, res, next) => {
+  if (err.code === 'EBADCSRFTOKEN') {
+    // handle CSRF token errors here
+    res.status(err.statusCode || 500);
+    res.redirect('/');
+  } else {
+    next(err);
+  }
+});
 
-app.listen(PORT, () => console.info(`TFM UI app listening on port ${PORT}!`)); // eslint-disable-line no-console
+app.listen(PORT, () => console.info(`TFM UI app listening on port ${PORT}!`));

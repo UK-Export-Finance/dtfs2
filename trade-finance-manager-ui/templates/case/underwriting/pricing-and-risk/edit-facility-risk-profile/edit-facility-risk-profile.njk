@@ -27,6 +27,7 @@
         <h1 class="govuk-heading-l govuk-!-margin-bottom-3" data-cy="edit-facility-risk-profile-heading">What’s the risk profile for this facility?</h1>
 
         <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {% set legendHtmlComponentData = {
           caseId: dealId,

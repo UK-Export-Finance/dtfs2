@@ -1,9 +1,10 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% macro render(params) %}
+{% macro render(csrfToken) %}
 
   <form method="post" autocomplete="off" class="ukef-search-form" data-cy="ukef-search-form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukInput({
       id: 'search',
       name: 'search',

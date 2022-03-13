@@ -8,11 +8,14 @@ const path = require('path');
 const RedisStore = require('connect-redis')(session);
 const helmet = require('helmet');
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
 
 require('./azure-env');
 const routes = require('./routes');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
+const csrfToken = require('./middleware/csrf');
 
 const app = express();
 
@@ -68,6 +71,10 @@ sessionOptions.store = sessionStore;
 
 app.set('trustproxy', true);
 app.use(session(sessionOptions));
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(csrf());
+app.use(csrfToken());
 
 app.use(flash());
 
@@ -92,8 +99,13 @@ app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  res.status(err.statusCode || 500);
-  res.render('partials/problem-with-service.njk', { user: req.session.user, error: err });
+  if (err.code === 'EBADCSRFTOKEN') {
+    // handle CSRF token errors here
+    res.status(err.statusCode || 500);
+    res.redirect('/');
+  } else {
+    res.render('partials/problem-with-service.njk', { user: req.session.user, error: err });
+  }
 });
 
 app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));

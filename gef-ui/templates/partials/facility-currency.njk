@@ -35,9 +35,8 @@
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
     <div class="govuk-grid-column-three-quarters">
-      <form
-        method="post"
-        data-cy="form">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <input
           class="govuk-visually-hidden"
           id="facilityType"
