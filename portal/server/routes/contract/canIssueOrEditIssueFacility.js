@@ -15,7 +15,6 @@ const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
 
   const {
     status: facilityStatus,
-    previousFacilityStage,
   } = facility;
 
   if (dealStatus === 'Ready for Checker\'s approval'
