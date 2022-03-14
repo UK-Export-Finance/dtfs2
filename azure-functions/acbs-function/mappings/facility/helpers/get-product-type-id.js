@@ -1,22 +1,23 @@
 const CONSTANTS = require('../../../constants');
 
 /**
- * Return facility product type ID
+ * Return ACBS facility type code
  * @param {Object} facility Facility object
- * @param {String} dealType Deal type i.e. GEF, BSS, EWCS
- * @returns {String} Facility product type ID
+ * @returns {String} ACBS facility type code
  */
-const getProductTypeId = (facility, dealType) => {
-  if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    return CONSTANTS.FACILITY.FACILITY_TYPE_CODE.GEF;
-  }
-
+const getProductTypeId = (facility) => {
   switch (facility.type || facility.facilitySnapshot.type) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
       return CONSTANTS.FACILITY.FACILITY_TYPE_CODE.BSS;
 
     case CONSTANTS.FACILITY.FACILITY_TYPE.LOAN:
       return CONSTANTS.FACILITY.FACILITY_TYPE_CODE.EWCS;
+
+    case CONSTANTS.FACILITY.FACILITY_TYPE.CASH:
+      return CONSTANTS.FACILITY.FACILITY_TYPE_CODE.CASH;
+
+    case CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT:
+      return CONSTANTS.FACILITY.FACILITY_TYPE_CODE.CONTINGENT;
 
     default:
       return '';

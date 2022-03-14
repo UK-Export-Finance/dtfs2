@@ -16,6 +16,13 @@ const uploadTest = require('./upload-test');
 const configureNunjucks = require('./nunjucks-configuration');
 
 const app = express();
+
+// Global middleware set headers
+app.use((req, res, next) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
+  next();
+});
+
 app.use(helmet({ contentSecurityPolicy: false }));
 
 const PORT = process.env.PORT || 5000;
@@ -92,4 +99,4 @@ app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.
 
 console.info(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
 
-app.listen(PORT, () => console.info(`BSS app listening on port ${PORT}!`)); // eslint-disable-line no-console
+app.listen(PORT, () => console.info(`BSS app listening on port ${PORT}!`));

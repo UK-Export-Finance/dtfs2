@@ -15,6 +15,13 @@ const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 
 const app = express();
+
+// Global middleware set headers
+app.use((req, res, next) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
+  next();
+});
+
 app.use(helmet());
 
 dotenv.config();
