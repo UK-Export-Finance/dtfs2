@@ -107,12 +107,6 @@ const updateIssuedFacilities = async (
             if (shouldUpdateStatus) {
               facility.status = newStatus;
             }
-
-            if (isLoanFacility(type)) {
-              facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
-            } else if (isBondFacility(type)) {
-              facility.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
-            }
           } else if (shouldUpdateStatus) {
             // update all issued facilities regardless of if
             // they've been submitted

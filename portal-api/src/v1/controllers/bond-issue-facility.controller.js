@@ -76,6 +76,7 @@ exports.updateBondIssueFacility = async (req, res) => {
       if (validationErrors.count === 0) {
         modifiedBond.issueFacilityDetailsProvided = true;
         modifiedBond.hasBeenIssued = true;
+        modifiedBond.previousFacilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED;
         modifiedBond.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
       }
 

@@ -76,6 +76,7 @@ exports.updateLoanIssueFacility = async (req, res) => {
       if (validationErrors.count === 0) {
         modifiedLoan.issueFacilityDetailsProvided = true;
         modifiedLoan.hasBeenIssued = true;
+        modifiedLoan.previousFacilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL;
         modifiedLoan.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
       }
 

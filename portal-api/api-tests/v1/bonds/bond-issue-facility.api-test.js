@@ -147,12 +147,13 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
       expect(body.status).toEqual(null);
     });
 
-    it('should return 200 with updated bond, add issueFacilityDetailsProvided, hasBeenIssued, facilityStage and timestamps', async () => {
+    it('should return 200 with updated bond, add issueFacilityDetailsProvided, hasBeenIssued, facilityStage, previousFacilityStage and timestamps', async () => {
       const { status, body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
 
       expect(status).toEqual(200);
       expect(body.issueFacilityDetailsProvided).toEqual(true);
       expect(body.hasBeenIssued).toEqual(true);
+      expect(body.previousFacilityStage).toEqual(CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED);
       expect(body.facilityStage).toEqual(CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED);
       expect(typeof body.requestedCoverStartDate === 'string').toEqual(true);
       expect(typeof body.issuedDate === 'string').toEqual(true);
