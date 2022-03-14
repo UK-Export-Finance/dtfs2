@@ -7,6 +7,9 @@
   {% set successMessage = params.successMessage %}
   {% set user = params.user %}
   {% set tab = params.tab %}
+  {% set selectedFilters = params.selectedFilters %}
+  {% set selectedFiltersString = params.selectedFiltersString %}
+
 
   {% if successMessage %}
     {{ success.message(
@@ -25,6 +28,10 @@
     }]
   }) }}
 
-  {{ dashboardSubNav.subnav(selected = tab) }}
+  {{ dashboardSubNav.render({
+      selected: tab,
+      selectedFiltersString: selectedFiltersString
+    })
+  }}
 
 {% endmacro %}

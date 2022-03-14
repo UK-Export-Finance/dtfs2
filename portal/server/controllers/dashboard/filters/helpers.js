@@ -80,8 +80,29 @@ const formatFieldValue = (fieldValue) => {
   return null;
 };
 
+const filtersToText = (filters) => {
+  let filterString = 'Filters selected: ';
+  if (filters.length > 0) {
+  /* eslint-disable no-restricted-syntax */
+    for (const filter of filters) {
+      filterString = filterString.concat(', ');
+      filterString = filterString.concat(filter.heading.text);
+      filterString = filterString.concat(': ');
+      for (const item of filter.items) {
+        filterString = filterString.concat(', ');
+        filterString = filterString.concat(item.text);
+      }
+    }
+  } else {
+    filterString = filterString.concat('none');
+  }
+
+  return filterString;
+};
+
 module.exports = {
   submittedFiltersArray,
   submittedFiltersObject,
   formatFieldValue,
+  filtersToText,
 };
