@@ -93,7 +93,7 @@ describe('controllers/facilities', () => {
       await createFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-        facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
+        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#hasBeenIssued', text: expect.any(String) }]),
         }),
@@ -109,7 +109,7 @@ describe('controllers/facilities', () => {
       expect(api.createFacility).toHaveBeenCalledWith({
         dealId: '123',
         hasBeenIssued: true,
-        type: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
+        type: CONSTANTS.FACILITY_TYPE.CASH,
       });
     });
 

@@ -43,14 +43,14 @@ const createFacility = async (req, res) => {
   const hasBeenIssuedErrors = [];
   let facility;
   facilityType = facilityType || FACILITY_TYPE.CASH;
-  facilityType = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
+  const facilityTypeString = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
 
   try {
     // Don't validate form if user clicks on 'return to application` button
     if (!body.hasBeenIssued) {
       hasBeenIssuedErrors.push({
         errRef: 'hasBeenIssued',
-        errMsg: `Select if your bank has already issued this ${facilityType} facility`,
+        errMsg: `Select if your bank has already issued this ${facilityTypeString} facility`,
       });
 
       return res.render('partials/facilities.njk', {
