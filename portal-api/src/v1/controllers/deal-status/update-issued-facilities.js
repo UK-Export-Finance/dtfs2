@@ -89,7 +89,7 @@ const updateIssuedFacilities = async (
       deal.facilities.forEach(async (facilityId) => {
         const facility = await facilitiesController.findOne(facilityId);
 
-        const { facilityStage, type } = facility;
+        const { facilityStage } = facility;
 
         const shouldUpdateStatus = (facility.issueFacilityDetailsStarted
                                     && facility.issueFacilityDetailsProvided
