@@ -7,8 +7,8 @@ const mapTotals = (facilities) => {
   const facilitiesValue = facilities.map((facility) => {
     const { facilitySnapshot, tfm } = facility;
 
-    if (tfm.facilityValueInGBP) {
-      return Number(tfm.facilityValueInGBP);
+    if (tfm.valueInGBP) {
+      return Number(tfm.valueInGBP);
     }
 
     // NOTE:

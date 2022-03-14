@@ -8,7 +8,7 @@ describe('mapFacilityTfm', () => {
     const mockFacilityTfm = {
       bondIssuerPartyUrn: '123',
       bondBeneficiaryPartyUrn: '456',
-      facilityValueInGBP: '789',
+      valueInGBP: '789',
       ukefExposure: '10',
     };
 

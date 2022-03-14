@@ -11,7 +11,7 @@ describe('mapGefDealSnapshot', () => {
     {
       facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
       tfm: {
-        facilityValueInGBP: '123,45.00',
+        valueInGBP: '123,45.00',
       },
     },
   ];

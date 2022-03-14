@@ -18,12 +18,12 @@ const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
       midPrice: exchangeRate,
     } = currencyExchange;
 
-    // TODO: DTFS2-4703 - rename to valueInGBP
-    const facilityValueInGBP = value * exchangeRate;
+    const valueInGBP = value * exchangeRate;
 
     facilityUpdate = {
-      facilityValueInGBP,
-      ...calculateUkefExposure(facilityValueInGBP, coverPercentage),
+      exchangeRate,
+      valueInGBP,
+      ...calculateUkefExposure(valueInGBP, coverPercentage),
     };
   } else {
     facilityUpdate = {

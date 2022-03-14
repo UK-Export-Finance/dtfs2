@@ -11,13 +11,13 @@ describe('mapDealSnapshot', () => {
       {
         facilitySnapshot: MOCK_DEAL.bondTransactions.items[0],
         tfm: {
-          facilityValueInGBP: '123,45.00',
+          valueInGBP: '123,45.00',
         },
       },
       {
         facilitySnapshot: MOCK_DEAL.loanTransactions.items[0],
         tfm: {
-          facilityValueInGBP: '123,45.00',
+          valueInGBP: '123,45.00',
         },
       },
     ];

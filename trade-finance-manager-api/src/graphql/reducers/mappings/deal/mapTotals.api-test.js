@@ -9,7 +9,7 @@ describe('mapTotals', () => {
       },
       tfm: {
         ukefExposure: 80000.00,
-        facilityValueInGBP: 2117.4290881821,
+        valueInGBP: 2117.4290881821,
       },
     },
     {
@@ -18,7 +18,7 @@ describe('mapTotals', () => {
       },
       tfm: {
         ukefExposure: 23000.00,
-        facilityValueInGBP: 1034.7800881821,
+        valueInGBP: 1034.7800881821,
       },
     },
     {
@@ -27,7 +27,7 @@ describe('mapTotals', () => {
       },
       tfm: {
         ukefExposure: 8000.00,
-        facilityValueInGBP: 3200.567,
+        valueInGBP: 3200.567,
       },
     },
     {
@@ -66,7 +66,7 @@ describe('mapTotals', () => {
         currency: { id: 'USD' },
       },
       tfm: {
-        facilityValueInGBP: 3200.567,
+        valueInGBP: 3200.567,
       },
     },
   ];
@@ -75,9 +75,9 @@ describe('mapTotals', () => {
     it('should return formatted total of all facility values', async () => {
       const result = mapTotals(mockBondAndLoanFacilities);
 
-      const totalValue = Number(mockBondAndLoanFacilities[0].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[1].tfm.facilityValueInGBP)
-        + Number(mockBondAndLoanFacilities[2].tfm.facilityValueInGBP)
+      const totalValue = Number(mockBondAndLoanFacilities[0].tfm.valueInGBP)
+        + Number(mockBondAndLoanFacilities[1].tfm.valueInGBP)
+        + Number(mockBondAndLoanFacilities[2].tfm.valueInGBP)
         + Number(mockBondAndLoanFacilities[3].facilitySnapshot.value);
 
       const expected = `GBP ${formattedNumber(totalValue)}`;
@@ -91,7 +91,7 @@ describe('mapTotals', () => {
 
       const totalValue = Number(mockCashAndContingentFacilities[0].facilitySnapshot.value)
         + Number(mockCashAndContingentFacilities[1].facilitySnapshot.value)
-        + Number(mockCashAndContingentFacilities[2].tfm.facilityValueInGBP);
+        + Number(mockCashAndContingentFacilities[2].tfm.valueInGBP);
 
       const expected = `GBP ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);

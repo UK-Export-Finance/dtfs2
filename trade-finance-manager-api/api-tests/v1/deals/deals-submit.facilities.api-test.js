@@ -46,7 +46,7 @@ describe('/v1/deals', () => {
 
   describe('PUT /v1/deals/:dealId/submit', () => {
     describe('facilities', () => {
-      it('adds facilityValueInGBP to all facilities that are NOT in GBP', async () => {
+      it('adds valueInGBP to all facilities that are NOT in GBP', async () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_FACILITIES_USD_CURRENCY));
 
         expect(status).toEqual(200);
@@ -54,14 +54,14 @@ describe('/v1/deals', () => {
         const bond = body.facilities.find(({ type }) =>
           type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-        expect(bond.tfm.facilityValueInGBP).toEqual(
+        expect(bond.tfm.valueInGBP).toEqual(
           Number(bond.value) * MOCK_CURRENCY_EXCHANGE_RATE,
         );
 
         const loan = body.facilities.find(({ type }) =>
           type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
-        expect(loan.tfm.facilityValueInGBP).toEqual(
+        expect(loan.tfm.valueInGBP).toEqual(
           Number(loan.value) * MOCK_CURRENCY_EXCHANGE_RATE,
         );
       });
@@ -75,10 +75,10 @@ describe('/v1/deals', () => {
           const bond = body.facilities.find(({ type }) =>
             type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
 
-          const facilityValueInGBP = Number(bond.value) * MOCK_CURRENCY_EXCHANGE_RATE;
+          const valueInGBP = Number(bond.value) * MOCK_CURRENCY_EXCHANGE_RATE;
 
           const calculatedUkefExposureObj = calculateUkefExposure(
-            facilityValueInGBP,
+            valueInGBP,
             bond.coverPercentage,
           );
 
@@ -96,10 +96,10 @@ describe('/v1/deals', () => {
           const loan = body.facilities.find(({ type }) =>
             type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
-          const facilityValueInGBP = Number(loan.value) * MOCK_CURRENCY_EXCHANGE_RATE;
+          const valueInGBP = Number(loan.value) * MOCK_CURRENCY_EXCHANGE_RATE;
 
           const calculatedUkefExposureObj = calculateUkefExposure(
-            facilityValueInGBP,
+            valueInGBP,
             loan.coverPercentage,
           );
 

@@ -299,7 +299,8 @@ type PremiumScheduleData {
 type TFMFacilityData {
   bondIssuerPartyUrn: String
   bondBeneficiaryPartyUrn: String
-  facilityValueInGBP: String
+  exchnageRate: Float
+  valueInGBP: String
   exposurePeriodInMonths: Int
   ukefExposure: FacilityUkefExposure
   creditRating: String

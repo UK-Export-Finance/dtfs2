@@ -17,13 +17,13 @@ describe('reducer - deal', () => {
           {
             facilitySnapshot: MOCK_DEAL_AIN_SUBMITTED.bondTransactions.items[0],
             tfm: {
-              facilityValueInGBP: '12,345.00',
+              valueInGBP: '12,345.00',
             },
           },
           {
             facilitySnapshot: MOCK_DEAL_AIN_SUBMITTED.loanTransactions.items[0],
             tfm: {
-              facilityValueInGBP: '12,345.00',
+              valueInGBP: '12,345.00',
             },
           },
         ],

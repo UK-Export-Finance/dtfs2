@@ -264,7 +264,7 @@ module.exports = {
         ukefExposure: '1,234.00',
         ukefExposureCalculationTimestamp: '1606900616651',
         // exposurePeriodInMonths: '12',
-        facilityValueInGBP: '123,45.00',
+        valueInGBP: '123,45.00',
         bondIssuerPartyUrn: '456-test',
         bondBeneficiaryPartyUrn: '123-test',
         acbs: {

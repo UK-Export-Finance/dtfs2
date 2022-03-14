@@ -21,14 +21,14 @@ describe('mapFacilityValue', () => {
   });
 
   describe('when facility currency is NOT GBP', () => {
-    it('should return formatted facilityValueInGBP', () => {
+    it('should return formatted valueInGBP', () => {
       const mockFacility = {
         currency: { id: 'USD' },
         value: '42000',
       };
 
       const mockTfmFacility = {
-        facilityValueInGBP: '22000',
+        valueInGBP: '22000',
       };
 
       const result = mapFacilityValue(
@@ -37,7 +37,7 @@ describe('mapFacilityValue', () => {
         mockTfmFacility,
       );
 
-      const expected = `GBP ${formattedNumber(mockTfmFacility.facilityValueInGBP)}`;
+      const expected = `GBP ${formattedNumber(mockTfmFacility.valueInGBP)}`;
       expect(result).toEqual(expected);
     });
   });

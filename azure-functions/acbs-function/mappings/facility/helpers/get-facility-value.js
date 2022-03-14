@@ -3,8 +3,8 @@ const getFacilityValue = (facility) => {
     return Number(facility.facilitySnapshot.value) / Number(facility.facilitySnapshot.conversionRate);
   }
 
-  if (facility.tfm.facilityValueInGBP) {
-    return facility.tfm.facilityValueInGBP;
+  if (facility.tfm.valueInGBP) {
+    return facility.tfm.valueInGBP;
   }
 
   return Number(facility.facilitySnapshot.value);

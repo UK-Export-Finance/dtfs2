@@ -18,7 +18,7 @@ describe('reducer - facility', () => {
       _id: MOCK_DEAL_AIN_SUBMITTED.bondTransactions.items[0]._id,
       facilitySnapshot: MOCK_DEAL_AIN_SUBMITTED.bondTransactions.items[0],
       tfm: {
-        facilityValueInGBP: '12,345.00',
+        valueInGBP: '12,345.00',
       },
     };
 
@@ -48,7 +48,7 @@ describe('reducer - facility', () => {
         _id: MOCK_CASH_CONTINGENT_FACILIIES[0]._id,
         facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
         tfm: {
-          facilityValueInGBP: '12,345.00',
+          valueInGBP: '12,345.00',
         },
       };
 

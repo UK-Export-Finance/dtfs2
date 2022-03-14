@@ -4,10 +4,10 @@ const {
   roundNumber,
 } = require('./number');
 
-const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
+const calculateUkefExposure = (valueInGBP, coverPercentage) => {
   let ukefExposure;
 
-  const calculation = facilityValueInGBP * (coverPercentage / 100);
+  const calculation = valueInGBP * (coverPercentage / 100);
   const totalDecimals = decimalsCount(calculation);
 
   if (totalDecimals > 2) {

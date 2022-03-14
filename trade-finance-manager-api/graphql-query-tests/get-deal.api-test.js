@@ -167,7 +167,8 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
         tfm {
           bondIssuerPartyUrn,
           bondBeneficiaryPartyUrn,
-          facilityValueInGBP,
+          exchangeRate,
+          valueInGBP,
           exposurePeriodInMonths,
           ukefExposure {
             exposure,

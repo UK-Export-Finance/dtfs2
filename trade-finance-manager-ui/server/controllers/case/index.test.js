@@ -584,7 +584,7 @@ describe('controllers - case', () => {
         },
         tfm: {
           ukefExposure: { exposure: 'GBP 57.21', timestamp: '1614954617041' },
-          facilityValueInGBP: 238.39322963227846,
+          valueInGBP: 238.39322963227846,
         },
       };
 
