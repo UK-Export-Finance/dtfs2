@@ -4,6 +4,7 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
+const CONSTANTS = require('../../../src/constants');
 
 describe('/v1/deals/:id/loan/:id/issue-facility', () => {
   const newDeal = aDeal({

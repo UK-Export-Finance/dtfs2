@@ -299,7 +299,7 @@ describe('canIssueOrEditIssueFacility', () => {
     });
   });
 
-  describe('when facility.facilityStage is `Unconditional`', () => {
+  describe('when facility.facilityStage is `Unconditional` with issueFacilityDetailsSubmitted', () => {
     it('should return false', () => {
       const mockDeal = {
         submissionType: 'Manual Inclusion Notice',
@@ -312,6 +312,7 @@ describe('canIssueOrEditIssueFacility', () => {
       const mockLoan = {
         facilityStage: 'Unconditional',
         hasBeenIssued: true,
+        issueFacilityDetailsSubmitted: true,
       };
 
       expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(false);
@@ -329,6 +330,7 @@ describe('canIssueOrEditIssueFacility', () => {
       const mockBond = {
         facilityStage: 'Issued',
         hasBeenIssued: true,
+        issueFacilityDetailsSubmitted: true,
       };
 
       expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(false);
