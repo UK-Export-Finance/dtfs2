@@ -18,6 +18,7 @@ const facilityReducer = require('../src/graphql/reducers/facility');
 const mockFacilityTfm = {
   ukefExposure: '1,234.00',
   ukefExposureCalculationTimestamp: '1606900616651',
+  exchangeRate: 1.23,
   facilityValueInGBP: '123,45.00',
   bondIssuerPartyUrn: '456-test',
   bondBeneficiaryPartyUrn: '123-test',
