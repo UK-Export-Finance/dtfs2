@@ -20,7 +20,7 @@ const mappedActivities = (activities) => activities.map((activity) => ({
 }));
 
 const getActivity = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
 
   const { user } = req.session;
 
@@ -43,7 +43,7 @@ const getActivity = async (req, res) => {
     activeSubNavigation: 'activity',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     user,
     selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
     activities,
@@ -51,7 +51,7 @@ const getActivity = async (req, res) => {
 };
 
 const filterActivities = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
 
   const { filterType } = req.body;
 
@@ -74,7 +74,7 @@ const filterActivities = async (req, res) => {
     activeSubNavigation: 'activity',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     user,
     selectedActivityFilter: filterType,
     activities,
@@ -82,7 +82,7 @@ const filterActivities = async (req, res) => {
 };
 
 const getCommentBox = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -100,7 +100,7 @@ const getCommentBox = async (req, res) => {
 
 const postComment = async (req, res) => {
   const { params, session, body } = req;
-  const dealId = params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = params._id;
   const { user } = session;
   const { comment } = body;
 

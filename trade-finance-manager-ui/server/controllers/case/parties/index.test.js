@@ -350,7 +350,6 @@ describe('controllers - case - parties', () => {
         };
 
         await partiesController.postExporterPartyDetails(req, res);
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
       });
     });

@@ -5,7 +5,7 @@ const {
 const CONSTANTS = require('../../../../../constants');
 
 const getUnderWritingProbabilityOfDefault = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
@@ -21,13 +21,13 @@ const getUnderWritingProbabilityOfDefault = async (req, res) => {
     activeSideNavigation: 'pricing and risk',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     user: req.session.user,
   });
 };
 
 const postUnderWritingProbabilityOfDefault = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
@@ -75,7 +75,7 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
         ...deal.tfm,
         probabilityOfDefault,
       },
-      dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+      dealId: deal.dealSnapshot._id,
       user: req.session.user,
       validationErrors,
     });

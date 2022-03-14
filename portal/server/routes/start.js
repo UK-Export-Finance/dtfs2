@@ -98,7 +98,7 @@ router.post('/before-you-start/bank-deal', provide([MANDATORY_CRITERIA]), async 
     });
   }
 
-  return res.redirect(`/contract/${apiResponse._id}`); // eslint-disable-line no-underscore-dangle
+  return res.redirect(`/contract/${apiResponse._id}`);
 });
 
 router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk', {

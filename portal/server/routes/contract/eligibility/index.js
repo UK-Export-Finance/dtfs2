@@ -78,7 +78,7 @@ router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), as
   return res.render(
     'eligibility/eligibility-criteria.njk',
     {
-      _id: deal._id, // eslint-disable-line no-underscore-dangle
+      _id: deal._id,
       countries: formatCountriesForGDSComponent(
         countries,
         deal.eligibility.agentAddressCountry && deal.eligibility.agentAddressCountry.code,
@@ -270,7 +270,7 @@ router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), asy
   const validationErrors = generateErrorSummary(
     elgibilityCheckYourAnswersValidationErrors(
       allEligibilityValidationErrors,
-      deal._id, // eslint-disable-line no-underscore-dangle
+      deal._id,
     ),
   );
 

@@ -65,7 +65,7 @@ const createDealTasks = async (deal) => {
   }
 
   const {
-    _id: dealId, // eslint-disable-line no-underscore-dangle
+    _id: dealId,
     submissionType,
     tfm,
   } = deal;
