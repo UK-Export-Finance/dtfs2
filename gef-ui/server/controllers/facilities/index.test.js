@@ -93,7 +93,7 @@ describe('controllers/facilities', () => {
       await createFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/facilities.njk', expect.objectContaining({
-        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
+        facilityType: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#hasBeenIssued', text: expect.any(String) }]),
         }),

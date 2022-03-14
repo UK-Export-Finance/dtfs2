@@ -54,7 +54,7 @@ const createFacility = async (req, res) => {
       });
 
       return res.render('partials/facilities.njk', {
-        facilityType,
+        facilityType: facilityTypeString,
         errors: validationErrorHandler(hasBeenIssuedErrors),
         dealId,
         status,
