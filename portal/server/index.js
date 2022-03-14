@@ -86,7 +86,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/', eligibilityRoutes);
 app.use('/', feedbackRoutes);
-app.use(csrf());
+app.use(csrf({ cookie: true }));
 app.use(csrfToken());
 
 app.use(morgan('dev', {
