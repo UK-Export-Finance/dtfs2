@@ -13,6 +13,7 @@ const csrf = require('csurf');
 
 require('./azure-env');
 const routes = require('./routes');
+const supportingDocuments = require('./routes/supporting-documents.route');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 const csrfToken = require('./middleware/csrf');
@@ -73,9 +74,9 @@ app.set('trustproxy', true);
 app.use(session(sessionOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use('/', supportingDocuments);
 app.use(csrf());
 app.use(csrfToken());
-
 app.use(flash());
 
 configureNunjucks({
@@ -84,8 +85,6 @@ configureNunjucks({
   noCache: true,
   watch: true,
 });
-
-app.use(express.urlencoded());
 
 app.use(morgan('dev', {
   skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),

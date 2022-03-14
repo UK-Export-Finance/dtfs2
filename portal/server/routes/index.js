@@ -7,7 +7,6 @@ const miscRoutes = require('./misc');
 const adminRoutes = require('./admin');
 const userRoutes = require('./user');
 const mgaRoutes = require('./mga');
-const feedbackRoutes = require('./feedback');
 const schemeTypeRoutes = require('./schemeType');
 const portalRoutes = require('./reports.route');
 
@@ -21,7 +20,6 @@ router.use('/', miscRoutes);
 router.use('/', adminRoutes);
 router.use('/', userRoutes);
 router.use('/', mgaRoutes);
-router.use('/', feedbackRoutes);
 router.use('/', schemeTypeRoutes);
 router.use('/', portalRoutes);
 

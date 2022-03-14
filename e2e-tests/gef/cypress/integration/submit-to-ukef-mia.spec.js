@@ -49,7 +49,7 @@ context('Submit MIA to UKEF', () => {
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
-      cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(dealId)}/upload`);
+      cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload-file-valid.doc');
       manualInclusion.continueButton().click();
       securityDetails.visit(dealId);

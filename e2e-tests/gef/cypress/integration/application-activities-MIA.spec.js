@@ -53,8 +53,8 @@ context('Submit AIN deal and check portalActivities', () => {
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
       automaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/manual-inclusion-questionnaire`));
-      cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(dealId)}/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
+      cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload-file-valid.doc');
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');

@@ -17,6 +17,7 @@
   {% set table = params.table %}
   {% set pages = params.pages %}
   {% set route = params.route %}
+  {% set csrfToken = params.csrfToken %}
 
   {{dashboardHeadingAndTabs.render({
     successMessage: successMessage,
@@ -29,7 +30,8 @@
     {{dashboardFiltersPanel.render({
       filters: filters,
       selectedFilters: selectedFilters,
-      keyword: keyword
+      keyword: keyword,
+      csrfToken: csrfToken
     })}}
 
     <div class="moj-filter-layout__content">
@@ -37,7 +39,8 @@
       {{dashboardFitlersActionBar.render({
         renderCreatedByYou: renderCreatedByYou,
         createdByYou: createdByYou,
-        selectedFilters: selectedFilters
+        selectedFilters: selectedFilters,
+        csrfToken: csrfToken
       })}}
 
       <div class="moj-scrollable-pane">

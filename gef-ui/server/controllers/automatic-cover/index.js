@@ -34,6 +34,8 @@ const validateAutomaticCover = async (req, res, next) => {
     const application = await api.getApplication(dealId);
     const { eligibility } = application;
 
+    delete body._csrf;
+
     const automaticCoverErrors = getValidationErrors(body, eligibility.criteria);
     const coverType = deriveCoverType(body, eligibility.criteria);
 

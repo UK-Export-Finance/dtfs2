@@ -54,7 +54,7 @@ const nextDocument = (application, dealId, fieldName) => {
     });
   }
 
-  let nextDoc = `/gef/application-details/${dealId}/supporting-information/${supportingDocument}`;
+  let nextDoc = `/gef/application-details/${dealId}/supporting-information/document/${supportingDocument}`;
   if (!application.supportingInformation?.requiredFields?.length
       || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
     nextDoc = `/gef/application-details/${dealId}`;
