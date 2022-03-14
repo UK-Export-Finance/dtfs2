@@ -20,7 +20,8 @@ const CONSTANTS = require('../../constants');
 const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
   const { effectiveDate } = facility.tfm.facilityGuaranteeDates
     ? facility.tfm.facilityGuaranteeDates
-    : '';
+    : facility.update;
+
   const {
     expirationDate,
     nextDueDate,

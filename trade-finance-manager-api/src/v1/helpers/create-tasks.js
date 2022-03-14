@@ -7,6 +7,7 @@ const NEW_TASK = ({
     userFullName: CONSTANTS.TASKS.UNASSIGNED,
   },
   canEdit: false,
+  history: [],
 });
 
 const createGroupTasks = (

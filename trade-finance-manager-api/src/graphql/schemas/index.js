@@ -243,17 +243,6 @@ type TFMTaskHistory {
   timestamp: String
 }
 
-type TFMEmailHistory {
-  recipient: String
-  templateId: String
-  timestamp: String
-}
-
-type TFMDealHistory {
-  tasks: [TFMTaskHistory]
-  emails: [TFMEmailHistory]
-}
-
 type TFMDealDecision  {
   decision: String
   comments: String
@@ -282,7 +271,6 @@ type TFMDealData {
   stage: String
   lossGivenDefault: Int
   probabilityOfDefault: Float
-  history: TFMDealHistory
   underwriterManagersDecision: TFMDealDecision
   dateReceived: String
   dateReceivedTimestamp: Int

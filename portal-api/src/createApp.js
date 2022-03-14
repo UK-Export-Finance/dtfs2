@@ -23,12 +23,20 @@ const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
 configurePassport(passport);
 
 const app = express();
+
+// Global middleware set headers
+app.use((req, res, next) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
+  next();
+});
+
 // TODO: re-enable Helmet (Jira - 4998)
 // app.use(
 //   helmet({
 //     contentSecurityPolicy: false,
 //   }),
 // );
+
 app.use(healthcheck);
 app.use(passport.initialize());
 app.use(express.json());

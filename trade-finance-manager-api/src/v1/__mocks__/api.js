@@ -62,16 +62,8 @@ module.exports = {
   findOneDeal: (dealId) => {
     const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
-    let tfmHistory = { tasks: [], emails: [] };
     let tfmStage;
     let tfmProduct;
-
-    if (mockDeal && mockDeal.tfm && mockDeal.tfm.history) {
-      tfmHistory = {
-        ...tfmHistory,
-        ...mockDeal.tfm.history,
-      };
-    }
 
     if (mockDeal && mockDeal.tfm && mockDeal.tfm.stage) {
       tfmStage = mockDeal.tfm.stage;
@@ -95,7 +87,6 @@ module.exports = {
         },
         bondIssuerPartyUrn: '',
         bondBeneficiaryPartyUrn: '',
-        history: tfmHistory,
         stage: tfmStage,
         product: tfmProduct,
       },
@@ -201,10 +192,9 @@ module.exports = {
   updateDeal: (dealId, updatedTfmDealData) => {
     let deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
 
-    // if history or stage is updated, add to the mock deal.
+    // if stage is updated, add to the mock deal.
     if (updatedTfmDealData.tfm) {
-      if (updatedTfmDealData.tfm.history
-        || updatedTfmDealData.tfm.stage) {
+      if (updatedTfmDealData.tfm.stage) {
         const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
 
         deal = {
@@ -212,7 +202,6 @@ module.exports = {
           tfm: {
             ...updatedTfmDealData.tfm,
             tasks: updatedTfmDealData.tfm.tasks,
-            history: updatedTfmDealData.tfm.history,
           },
         };
 
@@ -258,14 +247,8 @@ module.exports = {
   },
   submitDeal: (dealType, dealId) => ({
     _id: dealId,
-    // eslint-disable-next-line no-underscore-dangle
     dealSnapshot: ALL_MOCK_DEALS.find((d) => d._id === dealId),
-    tfm: {
-      history: {
-        tasks: [],
-        emails: [],
-      },
-    },
+    tfm: {},
   }),
   findOneFacility: (facilityId) => {
     const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle

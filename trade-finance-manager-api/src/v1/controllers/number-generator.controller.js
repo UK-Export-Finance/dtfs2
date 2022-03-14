@@ -50,8 +50,10 @@ const checkAzureNumberGeneratorFunction = async () => {
     type: CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR,
   }).toArray();
 
-  // eslint-disable-next-line max-len
-  const taskResults = runningTasks.map(({ numberGeneratorFunctionUrls = {} }) => api.getFunctionsAPI(CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR, numberGeneratorFunctionUrls.statusQueryGetUri));
+  const taskResults = runningTasks.map(({ numberGeneratorFunctionUrls = {} }) => api.getFunctionsAPI(
+    CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR,
+    numberGeneratorFunctionUrls.statusQueryGetUri,
+  ));
 
   const taskResultsList = await Promise.all(taskResults);
 

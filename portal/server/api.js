@@ -243,7 +243,7 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
   });
 
   files.forEach((file) => {
-    formData.append(file.fieldname, file.buffer, file.originalname);
+    formData.append(file.fieldname, file.buffer, file.originalname, file.size);
   });
 
   const formHeaders = formData.getHeaders();
@@ -622,12 +622,11 @@ const downloadMga = async (filename, token) => {
   return response.data;
 };
 
-const createFeedback = async (formData, token) => {
+const createFeedback = async (formData) => {
   const response = await axios({
     method: 'post',
     url: `${portalApi}/v1/feedback`,
     headers: {
-      Authorization: token,
       'Content-Type': 'application/json',
     },
     data: formData,

@@ -1,0 +1,281 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% block pageTitle %}Feedback{% endblock %}
+
+{% block content %}
+
+  {% if validationErrors.count %}
+    {{
+      govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: validationErrors.summary,
+        attributes: {
+          'data-cy': 'error-summary'
+        }
+      })
+    }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l govuk-!-padding-top-5" data-cy="heading">Feedback</h1>
+
+  <form method="POST" autocomplete="off">
+
+    {{ govukInput({
+      label: {
+        text: "What is your role?",
+        attributes: {
+          'data-cy': 'role-heading'
+        }
+      },
+      id: "role",
+      name: "role",
+      value: feedback.role,
+      classes: "govuk-input--width-20",
+      attributes: {
+        'data-cy': 'role'
+      },
+      errorMessage: validationErrors.errorList.role.text and {
+        text: validationErrors.errorList.role.text,
+        attributes: {
+          'data-cy': 'role-error-message'
+        }
+      }
+    }) }}
+
+    {{ govukInput({
+      label: {
+        text: "Which team do you work in?",
+        attributes: {
+          'data-cy': 'team-heading'
+        }
+      },
+      id: "team",
+      name: "team",
+      value: feedback.team,
+      classes: "govuk-input--width-20",
+      attributes: {
+        'data-cy': 'team'
+      },
+      errorMessage: validationErrors.errorList.team.text and {
+        text: validationErrors.errorList.team.text,
+        attributes: {
+          'data-cy': 'team-error-message'
+        }
+      }
+    }) }}
+
+    {{ govukTextarea({
+      name: "whyUsingService",
+      id: "whyUsingService",
+      label: {
+        text: "Why were you using the service today?",
+        attributes: {
+          'data-cy': 'why-using-service-heading'
+        }
+      },
+      value: feedback.whyUsingService,
+      classes: "govuk-input--width-20",
+      attributes: {
+        'data-cy': 'why-using-service'
+      },
+      errorMessage: validationErrors.errorList.whyUsingService.text and {
+        text: validationErrors.errorList.whyUsingService.text,
+        attributes: {
+          'data-cy': 'why-using-service-error-message'
+        }
+      }
+    }) }}
+
+    <h2 class="govuk-heading-m" data-cy="rating-heading">How would you rate this service?</h2>
+
+    {{ govukRadios({
+      idPrefix: "easyToUse",
+      name: "easyToUse",
+      attributes: {
+        'data-cy': 'easy-to-use'
+      },
+      fieldset: {
+        legend: {
+          text: "Easy to use"
+        }
+      },
+      items: [
+        {
+          value: "Very good",
+          text: "Very good",
+          checked: feedback.easyToUse === "Very good",
+          attributes: {
+            'data-cy': 'easy-to-use-very-good'
+          }
+        },
+        {
+          value: "Good",
+          text: "Good",
+          checked: feedback.easyToUse === "Good",
+          attributes: {
+            'data-cy': 'easy-to-use-good'
+          }
+        },
+        {
+          value: "Neither good nor poor",
+          text: "Neither good nor poor",
+          checked: feedback.easyToUse === "Neither good nor poor",
+          attributes: {
+            'data-cy': 'easy-to-use-neither-good-nor-poor'
+          }
+        },
+        {
+          value: "Poor",
+          text: "Poor",
+          checked: feedback.easyToUse === "Poor",
+          attributes: {
+            'data-cy': 'easy-to-use-poor'
+          }
+        },
+        {
+          value: "Very poor",
+          text: "Very poor",
+          checked: feedback.easyToUse === "Very poor",
+          attributes: {
+            'data-cy': 'easy-to-use-very-poor'
+          }
+        },
+        {
+          value: "I don't know",
+          text: "I don't know",
+          checked: feedback.easyToUse === "I don't know",
+          attributes: {
+            'data-cy': 'easy-to-use-dont-know'
+          }
+        }
+      ],
+      errorMessage: validationErrors.errorList.easyToUse.text and {
+        text: validationErrors.errorList.easyToUse.text,
+        attributes: {
+          'data-cy': 'easy-to-use-error-message'
+        }
+      }
+    }) }}
+
+    {{ govukRadios({
+      idPrefix: "satisfied",
+      name: "satisfied",
+      attributes: {
+        'data-cy': 'satisfied'
+      },
+      fieldset: {
+        legend: {
+          text: "Overall, were you satisfied with the service?"
+        }
+      },
+      items: [
+        {
+          value: "Very satisfied",
+          text: "Very satisfied",
+          checked: feedback.satisfied === "Very satisfied",
+          attributes: {
+            'data-cy': 'were-you-satisfied-very-satisfied'
+          }
+        },
+        {
+          value: "Satisfied",
+          text: "Satisfied",
+          checked: feedback.satisfied === "Satisfied",
+          attributes: {
+            'data-cy': 'were-you-satisfied-satisfied'
+          }
+        },
+        {
+          value: "Neither satisfied not dissatisfied",
+          text: "Neither satisfied not dissatisfied",
+          checked: feedback.satisfied === "Neither satisfied not dissatisfied",
+          attributes: {
+            'data-cy': 'were-you-satisfied-neither-satisfied-not-dissatisfied'
+          }
+        },
+        {
+          value: "Dissatisfied",
+          text: "Dissatisfied",
+          checked: feedback.satisfied === "Dissatisfied",
+          attributes: {
+            'data-cy': 'were-you-satisfied-dissatisfied'
+          }
+        },
+        {
+          value: "Very dissatisfied",
+          text: "Very dissatisfied",
+          checked: feedback.satisfied === "Very dissatisfied",
+          attributes: {
+            'data-cy': 'were-you-satisfied-very-dissatisfied'
+          }
+        },
+        {
+          value: "I don't know",
+          text: "I don't know",
+          checked: feedback.satisfied === "I don't know",
+          attributes: {
+            'data-cy': 'were-you-satisfied-dont-know'
+          }
+        }
+      ],
+      errorMessage: validationErrors.errorList.satisfied.text and {
+        text: validationErrors.errorList.satisfied.text,
+        attributes: {
+          'data-cy': 'satisfied-error-message'
+        }
+      }
+    }) }}
+
+    {{ govukTextarea({
+      name: "howCanWeImprove",
+      id: "howCanWeImprove",
+      label: {
+        text: "How can we improve the service? (optional)",
+        attributes: {
+          'data-cy': 'how-can-we-improve-heading'
+        }
+      },
+      value: feedback.howCanWeImprove,
+      classes: "govuk-input--width-20",
+      attributes: {
+        'data-cy': 'how-can-we-improve'
+      }
+    }) }}
+
+    {{ govukInput({
+      label: {
+        text: "Email address (optional)",
+        attributes: {
+          'data-cy': 'email-address-heading'
+        }
+      },
+      hint: {
+        text: "We will use it to contact you to participate in research and testing to help us improve the service.",
+        attributes: {
+          'data-cy': 'email-address-hint'
+        }
+      },
+      id: "emailAddress",
+      name: "emailAddress",
+      value: feedback.emailAddress,
+      classes: "govuk-input--width-20",
+      attributes: {
+        'data-cy': 'email-address'
+      },
+      errorMessage: validationErrors.errorList.emailAddress.text and {
+        text: validationErrors.errorList.emailAddress.text,
+        attributes: {
+          'data-cy': 'email-address-error-message'
+        }
+      }
+    }) }}
+
+    <button class="govuk-button" data-module="govuk-button" data-cy="submit-button">Submit</button>
+
+  </form>
+
+{% endblock %}

@@ -122,8 +122,11 @@ authRouter.route('/countries/:code').get(countries.findOne);
 
 authRouter
   .route('/feedback')
-  .get(validate({ role: ['data-admin'] }), feedback.findAll)
-  .post(validate({ role: ['maker', 'checker'] }), feedback.create);
+  .get(validate({ role: ['data-admin'] }), feedback.findAll);
+
+openRouter
+  .route('/feedback')
+  .post(feedback.create);
 
 authRouter
   .route('/feedback/:id')

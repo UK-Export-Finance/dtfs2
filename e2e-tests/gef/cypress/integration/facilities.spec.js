@@ -68,8 +68,9 @@ context('Facilities Page', () => {
     it('validates form', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.continueButton().click();
-      facilities.errorSummary();
-      facilities.hasBeenIssuedError();
+      facilities.hasBeenIssuedHeading().contains('Has your bank already issued this cash facility to the exporter?');
+      facilities.errorSummary().contains('Select if your bank has already issued this cash facility');
+      facilities.hasBeenIssuedError().contains('Select if your bank has already issued this cash facility');
     });
 
     it('takes you to `about facility` page when selecting one of the radio buttons', () => {

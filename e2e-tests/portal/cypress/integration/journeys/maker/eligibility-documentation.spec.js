@@ -41,6 +41,17 @@ context('Eligibility Documentation', () => {
     eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 0);
   });
 
+  it('should show optional for optional supporting documentations', () => {
+    eligibilityCriteria.nextPageButton().click();
+    eligibilityDocumentation.questionnaireFileInput().should('not.contain', '(optional)');
+    eligibilityDocumentation.financialStatements().contains('Financial statements for the past 3 years (optional)');
+    eligibilityDocumentation.yearToDate().contains('Year to date management accounts (optional)');
+    eligibilityDocumentation.financialForecast().contains('Financial forecasts for the next 3 years (optional)');
+    eligibilityDocumentation.financialCommentary().contains('Brief commentary on the financial information (optional)');
+    eligibilityDocumentation.corporateStructure().contains('Corporate structure diagram (optional)');
+    eligibilityDocumentation.securityText().contains('Security (optional)');
+  });
+
   it('should redirect to preview page if no validation errors', () => {
     eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
     eligibilityCriteria.nextPageButton().click();
@@ -64,18 +75,18 @@ context('Eligibility Documentation', () => {
     eligibilityDocumentation.questionnaireFileInputUploadButton().should('be.visible');
   });
 
-  //   TODO - figure out why this test keeps failing on github and not locally
-  //   it('should list the uploaded files and remove them', () => {
-  //     taskListHeader.itemLink('supporting-documentation').click();
-  //     eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
-  //     eligibilityDocumentation.questionnaireFileInputUploadButton().click();
-  //     eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
+  it('should list the uploaded files and remove them', () => {
+    taskListHeader.itemLink('supporting-documentation').click();
+    eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
+    eligibilityDocumentation.questionnaireFileInputUploadButton().click();
+    eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
 
-  //     eligibilityDocumentation.questionnaireFileUploaded().should('have.length', 1);
-  //     eligibilityDocumentation.questionnaireFileUploadedRemove().should('have.length', 1);
+    eligibilityDocumentation.questionnaireFileUploaded().should('have.length', 1);
+    eligibilityDocumentation.questionnaireFileUploaded().contains('test-upload.txt (16 B)');
+    eligibilityDocumentation.questionnaireFileUploadedRemove().should('have.length', 1);
 
-  //     eligibilityDocumentation.questionnaireFileUploadedRemove().click();
-  //     eligibilityDocumentation.questionnaireFileUploaded().should('not.exist');
-  //     eligibilityDocumentation.questionnaireFileUploadedRemove().should('not.exist');
-  //   });
+    eligibilityDocumentation.questionnaireFileUploadedRemove().click();
+    eligibilityDocumentation.questionnaireFileUploaded().should('not.exist');
+    eligibilityDocumentation.questionnaireFileUploadedRemove().should('not.exist');
+  });
 });
