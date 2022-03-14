@@ -10,6 +10,7 @@ const loanIssueFacilityValidationErrors = require('../validation/loan-issue-faci
 const { hasValue } = require('../../utils/string');
 const canIssueFacility = require('../facility-issuance');
 const facilitiesController = require('./facilities.controller');
+const CONSTANTS = require('../../constants');
 
 exports.updateLoanIssueFacility = async (req, res) => {
   const {
@@ -71,9 +72,11 @@ exports.updateLoanIssueFacility = async (req, res) => {
 
       modifiedLoan.hasBeenIssued = false;
       modifiedLoan.issueFacilityDetailsProvided = false;
+
       if (validationErrors.count === 0) {
         modifiedLoan.issueFacilityDetailsProvided = true;
         modifiedLoan.hasBeenIssued = true;
+        modifiedLoan.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
       }
 
       const { status, data } = await facilitiesController.update(

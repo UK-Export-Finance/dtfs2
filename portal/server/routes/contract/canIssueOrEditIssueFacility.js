@@ -35,10 +35,10 @@ const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
                                     && (acceptedByUkefDealStatus || dealStatus === 'Further Maker\'s input required'));
 
   const allowedBondFacilityStage = facility.facilityStage === 'Unissued'
-                                   || (facility.facilityStage === 'Issued' && (previousFacilityStage === 'Unissued' || previousFacilityStage === 'Issued'));
+                                   || (facility.facilityStage === 'Issued' && !facility.issueFacilityDetailsSubmitted);
 
   const allowedLoanFacilityStage = facility.facilityStage === 'Conditional'
-                                   || (facility.facilityStage === 'Unconditional' && (previousFacilityStage === 'Conditional' || previousFacilityStage === 'Unconditional'));
+                                   || (facility.facilityStage === 'Unconditional' && !facility.issueFacilityDetailsSubmitted);
 
   const allowedFacilityStage = (allowedLoanFacilityStage || allowedBondFacilityStage);
 

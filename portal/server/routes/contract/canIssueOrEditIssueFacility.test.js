@@ -176,7 +176,7 @@ describe('canIssueOrEditIssueFacility', () => {
     });
   });
 
-  describe('when deal is AIN with facility.facilityStage is `Issued` with `Unissued` previousFacilityStage', () => {
+  describe('when deal is AIN with facility.facilityStage is `Issued` with false issueFacilityDetailsSubmitted', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
@@ -189,14 +189,14 @@ describe('canIssueOrEditIssueFacility', () => {
       const mockBond = {
         facilityStage: 'Issued',
         hasBeenIssued: true,
-        previousFacilityStage: 'Unissued',
+        issueFacilityDetailsSubmitted: false,
       };
 
       expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(true);
     });
   });
 
-  describe('when deal is AIN with facility.facilityStage is `Issued` with `Issued` previousFacilityStage', () => {
+  describe('when deal is AIN with facility.facilityStage is `Unissued` with false issueFacilityDetailsSubmitted', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
@@ -207,16 +207,16 @@ describe('canIssueOrEditIssueFacility', () => {
       };
 
       const mockBond = {
-        facilityStage: 'Issued',
+        facilityStage: 'Unissued',
         hasBeenIssued: true,
-        previousFacilityStage: 'Issued',
+        issueFacilityDetailsSubmitted: false,
       };
 
       expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockBond)).toEqual(true);
     });
   });
 
-  describe('when deal is AIN with facility.facilityStage is `Conditional` with `Unconditional` previousFacilityStage', () => {
+  describe('when deal is AIN with facility.facilityStage is `Conditional` with false issueFacilityDetailsSubmitted', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
@@ -229,14 +229,14 @@ describe('canIssueOrEditIssueFacility', () => {
       const mockLoan = {
         facilityStage: 'Conditional',
         hasBeenIssued: false,
-        previousFacilityStage: 'Unconditional',
+        issueFacilityDetailsSubmitted: false,
       };
 
       expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
     });
   });
 
-  describe('when deal is AIN with facility.facilityStage is `Conditional` with `Conditional` previousFacilityStage', () => {
+  describe('when deal is AIN with facility.facilityStage is `Conditional` with false issueFacilityDetailsSubmitted', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
@@ -249,7 +249,7 @@ describe('canIssueOrEditIssueFacility', () => {
       const mockLoan = {
         facilityStage: 'Conditional',
         hasBeenIssued: false,
-        previousFacilityStage: 'Conditional',
+        issueFacilityDetailsSubmitted: false,
       };
 
       expect(canIssueOrEditIssueFacility(mockUserRoles, mockDeal, mockLoan)).toEqual(true);
