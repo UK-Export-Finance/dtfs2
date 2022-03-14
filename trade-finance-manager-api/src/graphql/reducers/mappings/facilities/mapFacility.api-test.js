@@ -105,7 +105,7 @@ describe('mapFacility', () => {
     );
 
     const expected = {
-      _id: mockFacility._id, // eslint-disable-line no-underscore-dangle
+      _id: mockFacility._id,
       dealId: mockFacility.dealId,
       ukefFacilityId: mockFacility.ukefFacilityId,
       type: expectedType,

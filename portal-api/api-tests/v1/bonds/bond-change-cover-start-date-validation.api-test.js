@@ -46,7 +46,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
   const createDealAndBond = async () => {
     const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
-    dealId = deal._id; // eslint-disable-line no-underscore-dangle
+    dealId = deal._id; 
 
     const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     const { bondId: _id } = createBondResponse.body;
