@@ -22,6 +22,7 @@ const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
     const facilityValueInGBP = value * exchangeRate;
 
     facilityUpdate = {
+      exchangeRate,
       facilityValueInGBP,
       ...calculateUkefExposure(facilityValueInGBP, coverPercentage),
     };

@@ -4,6 +4,6 @@
  * @param {Object} facility Facility object
  * @returns {Integer} Facility exchange rate
  */
-const getCurrencyExchangeRate = (facility) => Number(facility.facilitySnapshot.conversionRate);
+const getCurrencyExchangeRate = (facility) => Number(facility.facilitySnapshot.exchangeRate);
 
 module.exports = getCurrencyExchangeRate;
