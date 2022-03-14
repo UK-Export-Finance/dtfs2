@@ -32,7 +32,7 @@ exports.create = async (req, res) => {
 
     return res.status(status).send({
       ...data,
-      bondId: data._id, // eslint-disable-line no-underscore-dangle
+      bondId: data._id,
     });
   });
 };

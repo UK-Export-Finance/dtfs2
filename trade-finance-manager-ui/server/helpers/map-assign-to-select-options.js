@@ -5,13 +5,12 @@ const {
 const { mapTeamMembersSelectOptions } = require('./team');
 
 const mapAssignToSelectOptions = (assignedToUserId, currentUser, allTeamMembers) => {
-  // eslint-disable-next-line no-underscore-dangle
   const isCurrentlyAssignedToUser = isAssignedToUser(assignedToUserId, currentUser._id);
 
   const currentUserFullName = userFullName(currentUser);
   const assignToMeCopy = `${currentUserFullName} (Assign to me)`;
 
-  const currentUserId = currentUser._id; // eslint-disable-line no-underscore-dangle
+  const currentUserId = currentUser._id;
 
   const mappedTeamMembersSelectOptions = mapTeamMembersSelectOptions(
     allTeamMembers,

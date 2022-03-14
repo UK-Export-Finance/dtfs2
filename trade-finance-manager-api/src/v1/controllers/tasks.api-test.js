@@ -38,9 +38,15 @@ describe('tasks controller', () => {
   describe('updateTask', () => {
     it('should update a single task in a group', () => {
       const mockGroup1Tasks = [
-        { id: '1', groupId: 1, status: CONSTANTS.TASKS.STATUS.COMPLETED, history: [] },
-        { id: '2', groupId: 1, status: CONSTANTS.TASKS.STATUS.IN_PROGRESS, history: [] },
-        { id: '3', groupId: 1, status: CONSTANTS.TASKS.STATUS.TO_DO, history: [] },
+        {
+          id: '1', groupId: 1, status: CONSTANTS.TASKS.STATUS.COMPLETED, history: [],
+        },
+        {
+          id: '2', groupId: 1, status: CONSTANTS.TASKS.STATUS.IN_PROGRESS, history: [],
+        },
+        {
+          id: '3', groupId: 1, status: CONSTANTS.TASKS.STATUS.TO_DO, history: [],
+        },
       ];
 
       const mockTasks = [

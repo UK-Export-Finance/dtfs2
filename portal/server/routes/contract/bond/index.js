@@ -283,7 +283,7 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
   if (bond.currency && bond.currency.id) {
     mappedOriginalData.currency = bond.currency.id;
   }
-  delete mappedOriginalData._id; // eslint-disable-line no-underscore-dangle
+  delete mappedOriginalData._id;
   delete mappedOriginalData.status;
 
   if (!formDataMatchesOriginalData(modifiedBody, mappedOriginalData)) {
@@ -298,7 +298,7 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
     );
   }
 
-  const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
+  const redirectUrl = `/contract/${req.params._id}`;
   return res.redirect(redirectUrl);
 });
 
@@ -490,7 +490,7 @@ router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), async (r
     });
   }
 
-  const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
+  const redirectUrl = `/contract/${req.params._id}`;
   return res.redirect(redirectUrl);
 });
 

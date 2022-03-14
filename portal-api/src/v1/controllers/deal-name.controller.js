@@ -35,7 +35,7 @@ exports.update = (req, res) => {
     }
 
     const dealAfterAllUpdates = await updateName(
-      deal._id, // eslint-disable-line no-underscore-dangle
+      deal._id,
       additionalRefName,
       req.user,
     );
