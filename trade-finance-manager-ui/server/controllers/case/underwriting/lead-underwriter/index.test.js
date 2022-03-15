@@ -76,7 +76,7 @@ describe('GET underwriting - lead underwriter', () => {
         activeSideNavigation: 'lead underwriter',
         deal: MOCK_DEAL.dealSnapshot,
         tfm: MOCK_DEAL.tfm,
-        dealId: MOCK_DEAL.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+        dealId: MOCK_DEAL.dealSnapshot._id,
         user: session.user,
         currentLeadUnderWriter: MOCK_USER_UNDERWRITER_MANAGER,
       });
@@ -133,7 +133,7 @@ describe('GET underwriting - lead underwriter', () => {
         activeSideNavigation: 'lead underwriter',
         deal: MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER.dealSnapshot,
         tfm: MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER.tfm,
-        dealId: MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+        dealId: MOCK_DEAL_UNASSIGNED_LEAD_UNDERWRITER.dealSnapshot._id,
         user: session.user,
         currentLeadUnderWriter: undefined,
       });
@@ -204,7 +204,7 @@ describe('GET underwriting - assign lead underwriter', () => {
         activeSideNavigation: 'lead underwriter',
         deal: MOCK_DEAL.dealSnapshot,
         tfm: MOCK_DEAL.tfm,
-        dealId: MOCK_DEAL.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+        dealId: MOCK_DEAL.dealSnapshot._id,
         user: session.user,
         assignToSelectOptions: expectedAssignToSelectOptions,
       });

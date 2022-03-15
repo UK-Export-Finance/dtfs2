@@ -28,12 +28,12 @@ module.exports = (deal) => {
   validationErrors.submissionDetailsErrors = submissionDetailsRules(deal.submissionDetails);
 
   deal.bondTransactions.items.filter((bond) => {
-    validationErrors.bondErrors[bond._id] = bondRules(bond, deal);// eslint-disable-line no-underscore-dangle
+    validationErrors.bondErrors[bond._id] = bondRules(bond, deal);
     return true;
   });
 
   deal.loanTransactions.items.filter((loan) => {
-    validationErrors.loanErrors[loan._id] = loanRules(loan, deal);// eslint-disable-line no-underscore-dangle
+    validationErrors.loanErrors[loan._id] = loanRules(loan, deal);
     return true;
   });
 

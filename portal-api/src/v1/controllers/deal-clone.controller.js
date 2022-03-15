@@ -111,7 +111,7 @@ exports.clone = async (req, res) => {
       data: createdDeal,
     } = await createDeal(modifiedDeal, req.user);
 
-    const createdDealId = createdDeal._id; // eslint-disable-line no-underscore-dangle
+    const createdDealId = createdDeal._id;
 
     if (cloneTransactions === 'true') {
       const hasBonds = existingDeal.bondTransactions.items.length > 0;

@@ -58,7 +58,7 @@ describe('GET underwriting - underwriting managers decision', () => {
         activeSideNavigation: 'underwriter managers decision',
         deal: mockDeal.dealSnapshot,
         tfm: mockDeal.tfm,
-        dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+        dealId: mockDeal.dealSnapshot._id,
         user: session.user,
       });
     });
@@ -105,7 +105,7 @@ describe('GET underwriting - underwriting managers decision edit', () => {
         activeSideNavigation: 'underwriter managers decision',
         deal: mockDeal.dealSnapshot,
         tfm: mockDeal.tfm,
-        dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+        dealId: mockDeal.dealSnapshot._id,
         user: session.user,
       });
     });
@@ -207,7 +207,7 @@ describe('POST underwriting - underwriting managers decision edit', () => {
         activeSideNavigation: 'underwriter managers decision',
         deal: mockDeal.dealSnapshot,
         tfm: mockDeal.tfm,
-        dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+        dealId: mockDeal.dealSnapshot._id,
         user: session.user,
         submittedValues: {
           decision: 'Approve with conditions',

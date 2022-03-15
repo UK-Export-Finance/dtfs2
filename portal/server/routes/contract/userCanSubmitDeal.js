@@ -5,14 +5,14 @@ const userCanSubmitDeal = (deal, user) => {
     return false;
   }
 
-  const userCreatedTheDeal = (deal.maker._id === user._id); // eslint-disable-line no-underscore-dangle
+  const userCreatedTheDeal = (deal.maker._id === user._id);
 
   if (userCreatedTheDeal) {
     return false;
   }
 
   const userEditedTheDeal = deal.editedBy.find((edited) =>
-    edited.userId === user._id); // eslint-disable-line no-underscore-dangle
+    edited.userId === user._id);
 
   if (userEditedTheDeal) {
     return false;
