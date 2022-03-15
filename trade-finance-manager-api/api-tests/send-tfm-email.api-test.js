@@ -1,6 +1,4 @@
 const sendTfmEmail = require('../src/v1/controllers/send-tfm-email');
-const app = require('../src/createApp');
-const api = require('./api')(app);
 const externalApis = require('../src/v1/api');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../src/v1/__mocks__/mock-notify-email-response');
 
