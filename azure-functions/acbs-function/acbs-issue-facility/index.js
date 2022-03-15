@@ -49,7 +49,8 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
 
     if (acbsFacility && etag) {
       // 2.1. Create updated facility master record object
-      const acbsFacilityMasterInput = mappings.facility.facilityUpdate(facility, acbsFacility, deal);
+      const acbsFacilityMasterInput = mappings.facility.facilityUpdate(facilitySnapshot, acbsFacility, deal);
+
       // 2.2. PUT updated facility master record object
       const issuedFacilityMaster = yield context.df.callActivityWithRetry(
         'activity-update-facility-master',
