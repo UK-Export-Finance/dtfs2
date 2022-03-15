@@ -109,7 +109,7 @@ describe('controllers/facilities', () => {
       expect(api.createFacility).toHaveBeenCalledWith({
         dealId: '123',
         hasBeenIssued: true,
-        type: CONSTANTS.FACILITY_TYPE.CASH.toLowerCase(),
+        type: CONSTANTS.FACILITY_TYPE.CASH,
       });
     });
 

@@ -129,7 +129,7 @@ router.post('/contract/:_id/delete', async (req, res) => {
 
   req.flash('successMessage', {
     text: 'Supply Contract abandoned.',
-    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    href: `/contract/${_id}`,
     hrefText: 'View abandoned Supply Contract',
   });
 
@@ -175,7 +175,7 @@ router.post('/contract/:_id/ready-for-review', provide([DEAL]), async (req, res)
 
   req.flash('successMessage', {
     text: 'Supply Contract submitted for review.',
-    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    href: `/contract/${_id}`,
     hrefText: 'View Supply Contract',
   });
 
@@ -211,7 +211,7 @@ router.post('/contract/:_id/edit-name', async (req, res) => {
 
   req.flash('successMessage', {
     text: `Supply Contract renamed: ${additionalRefName}`,
-    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    href: `/contract/${_id}`,
     hrefText: 'View Supply Contract',
   });
 
@@ -254,7 +254,7 @@ router.post('/contract/:_id/return-to-maker', async (req, res) => {
 
   req.flash('successMessage', {
     text: 'Supply Contract returned to maker.',
-    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    href: `/contract/${_id}`,
     hrefText: 'View Supply Contract',
   });
 
@@ -310,7 +310,7 @@ router.post('/contract/:_id/confirm-submission', provide([DEAL]), async (req, re
 
   req.flash('successMessage', {
     text: 'Supply Contract submitted to UKEF.',
-    href: `/contract/${_id}`, // eslint-disable-line no-underscore-dangle
+    href: `/contract/${_id}`,
     hrefText: 'View Supply Contract',
   });
 
@@ -357,7 +357,7 @@ router.post('/contract/:_id/clone', async (req, res) => {
 
   req.flash('successMessage', {
     text: 'Supply Contract cloned successfully. We have cleared some values to ensure data quality. Please complete.',
-    href: `/contract/${apiResponse._id}`, // eslint-disable-line no-underscore-dangle
+    href: `/contract/${apiResponse._id}`,
     hrefText: 'View cloned Supply Contract',
   });
 

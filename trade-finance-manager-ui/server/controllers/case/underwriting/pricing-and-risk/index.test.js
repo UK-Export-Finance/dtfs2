@@ -59,7 +59,7 @@ describe('GET underwriting - pricing and risk', () => {
           activeSideNavigation: 'pricing and risk',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          dealId: mockDeal.dealSnapshot._id,
           user: session.user,
         },
       );
@@ -108,7 +108,7 @@ describe('GET underwriting - pricing and risk edit', () => {
           activeSideNavigation: 'pricing and risk',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
-          dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+          dealId: mockDeal.dealSnapshot._id,
           user: session.user,
         },
       );
@@ -178,7 +178,6 @@ describe('POST underwriting - pricing and risk edit', () => {
 
       await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
 
-      // eslint-disable-next-line no-underscore-dangle
       expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
     });
 
@@ -210,7 +209,6 @@ describe('POST underwriting - pricing and risk edit', () => {
           }],
         };
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.render).toHaveBeenCalledWith(
           'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
           {
@@ -222,7 +220,7 @@ describe('POST underwriting - pricing and risk edit', () => {
               ...mockDeal.tfm,
               ...req.body,
             },
-            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            dealId: mockDeal.dealSnapshot._id,
             user: session.user,
             validationErrors: expectedValidationErrors,
           },
@@ -259,7 +257,6 @@ describe('POST underwriting - pricing and risk edit', () => {
           }],
         };
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.render).toHaveBeenCalledWith(
           'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
           {
@@ -271,7 +268,7 @@ describe('POST underwriting - pricing and risk edit', () => {
               ...mockDeal.tfm,
               exporterCreditRating: req.body.exporterCreditRating,
             },
-            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            dealId: mockDeal.dealSnapshot._id,
             user: session.user,
             validationErrors: expectedValidationErrors,
           },
@@ -308,7 +305,6 @@ describe('POST underwriting - pricing and risk edit', () => {
           }],
         };
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.render).toHaveBeenCalledWith(
           'case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk',
           {
@@ -320,7 +316,7 @@ describe('POST underwriting - pricing and risk edit', () => {
               ...mockDeal.tfm,
               exporterCreditRating: req.body.exporterCreditRatingOther,
             },
-            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            dealId: mockDeal.dealSnapshot._id,
             user: session.user,
             validationErrors: expectedValidationErrors,
           },
@@ -343,7 +339,6 @@ describe('POST underwriting - pricing and risk edit', () => {
 
         await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
       });
     });

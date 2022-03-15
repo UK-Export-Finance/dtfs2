@@ -23,7 +23,6 @@ const createPasswordToken = async (email) => {
     resetPwdTimestamp: `${Date.now()}`,
   };
 
-  // eslint-disable-next-line no-underscore-dangle
   await collection.updateOne({ _id: user._id }, { $set: userUpdate }, {});
 
   return hash;
@@ -169,7 +168,7 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
     sessionIdentifier,
   };
   await collection.updateOne(
-    { _id: { $eq: ObjectId(user._id) } }, // eslint-disable-line no-underscore-dangle
+    { _id: { $eq: ObjectId(user._id) } },
     { $set: update },
     {},
   );
@@ -189,7 +188,7 @@ exports.incrementFailedLoginCount = async (user) => {
   };
 
   await collection.updateOne(
-    { _id: { $eq: ObjectId(user._id) } }, // eslint-disable-line no-underscore-dangle
+    { _id: { $eq: ObjectId(user._id) } },
     { $set: update },
     {},
   );

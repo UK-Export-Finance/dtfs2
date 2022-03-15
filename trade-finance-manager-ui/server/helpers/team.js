@@ -2,13 +2,12 @@ const { userFullName } = require('./user');
 
 const getTeamMembersWithoutCurrentUser = (teamMembers, currentUserId) =>
   teamMembers.filter((teamMember) =>
-    teamMember._id !== currentUserId); // eslint-disable-line no-underscore-dangle
+    teamMember._id !== currentUserId);
 
 const mapTeamMembersSelectOptions = (members, assignedToUserId, currentUserId) => {
   const membersWithoutCurrentUser = getTeamMembersWithoutCurrentUser(members, currentUserId);
 
   return membersWithoutCurrentUser.map((member) => {
-    // eslint-disable-next-line no-underscore-dangle
     const { _id: memberId } = member;
 
     return {

@@ -139,7 +139,7 @@ exports.update = async (req, res) => {
     };
 
     const updatedDeal = await updateDeal(
-      deal._id, // eslint-disable-line no-underscore-dangle
+      deal._id,
       updatedDealData,
       req.user,
     );

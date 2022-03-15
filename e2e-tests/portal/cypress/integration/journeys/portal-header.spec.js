@@ -35,7 +35,7 @@ context('Portal GOVUK header displays correctly', () => {
     });
 
     it('displays the navigation correctly', () => {
-      page.userNameLink().contains(BANK1_MAKER1.username);
+      page.userNameLink().contains(`${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       page.profileLink().contains('Profile');
       page.logoutLink().contains('Sign out');
       page.logoutLink().invoke('attr', 'href').then((href) => {

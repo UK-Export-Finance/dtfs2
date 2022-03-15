@@ -4,7 +4,7 @@ const { userCanEditGeneral } = require('../helpers');
 
 const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   const {
-    _id: dealId, // eslint-disable-line no-underscore-dangle
+    _id: dealId,
     facilityId,
   } = req.params;
 
@@ -28,7 +28,7 @@ const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
 
 const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   const {
-    _id: dealId, // eslint-disable-line no-underscore-dangle
+    _id: dealId,
     facilityId,
   } = req.params;
 

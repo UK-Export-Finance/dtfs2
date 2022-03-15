@@ -2,7 +2,7 @@ const api = require('../../../api');
 const userCanEdit = require('./helpers');
 
 const getCaseParties = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -36,7 +36,7 @@ const getPartyDetails = (partyType) => (
       return res.redirect('/not-found');
     }
 
-    const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+    const dealId = req.params._id;
     const deal = await api.getDeal(dealId);
 
     if (!deal) {
@@ -72,7 +72,7 @@ const getBondIssuerPartyDetails = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -99,7 +99,7 @@ const getBondBeneficiaryPartyDetails = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -126,7 +126,7 @@ const postPartyDetails = (partyType) => (
       return res.redirect('/not-found');
     }
 
-    const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+    const dealId = req.params._id;
 
     const deal = await api.getDeal(dealId);
 

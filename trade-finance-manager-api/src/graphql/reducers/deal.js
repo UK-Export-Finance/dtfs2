@@ -9,7 +9,7 @@ const dealReducer = (deal) => {
   }
 
   return {
-    _id: deal._id, // eslint-disable-line no-underscore-dangle
+    _id: deal._id,
     dealSnapshot: mapDealSnapshot(deal),
     tfm: mapDealTfm(deal),
   };
