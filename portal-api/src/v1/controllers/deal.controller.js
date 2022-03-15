@@ -38,31 +38,19 @@ const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteri
 
 const createDealEligibility = async (eligibility) => {
   const beingGivenEligibility = (eligibility && eligibility.criteria);
+
+  if (beingGivenEligibility) {
+    return {
+      ...eligibility,
+      lastUpdated: null,
+    };
+  }
+
   const latestEligibility = await findLatestEligibilityCriteria();
 
-  // if we're being asked to create a deal and being given an eligibility block
-  // use details out of the eligibility block over the details we get from the API
-  const eligibilityCriteriaWithAnswers = beingGivenEligibility
-    ? fillInEligibilityCriteria(latestEligibility.criteria, eligibility.criteria)
-    : latestEligibility;
-
-  const eligibilityStatus = eligibility && eligibility.status
-    ? eligibility.status
-    : DEFAULTS.DEAL.eligibility.status;
-
-  const eligibilityCriteria11AgentDetails = () => {
-    if (beingGivenEligibility) {
-      const { criteria, status, ...eligibilityAgentDetails } = eligibility;
-      return eligibilityAgentDetails;
-    }
-    return null;
-  };
-
   return {
-    status: eligibilityStatus,
-    ...eligibilityCriteriaWithAnswers,
-    ...eligibilityCriteria11AgentDetails(),
-    lastUpdated: null,
+    ...latestEligibility,
+    status: DEFAULTS.DEAL.eligibility.status,
   };
 };
 
