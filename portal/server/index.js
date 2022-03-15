@@ -12,7 +12,6 @@ require('./azure-env');
 const RedisStore = require('connect-redis')(session);
 const routes = require('./routes');
 const eligibilityRoutes = require('./routes/contract/eligibility');
-const feedbackRoutes = require('./routes/feedback');
 const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
 
@@ -85,7 +84,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/', eligibilityRoutes);
-app.use('/', feedbackRoutes);
 app.use(csrf({ cookie: true }));
 app.use(csrfToken());
 

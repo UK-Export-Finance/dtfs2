@@ -7,6 +7,10 @@ const {
 } = require('../../pages');
 
 context('User submit feedback on portal', () => {
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
+    Cypress.Cookies.preserveOnce('_csrf');
+  });
   it('feedback should contain correct components and text', () => {
     login.visit();
     header.betaBannerHref().should('have.attr', 'target', '_blank');

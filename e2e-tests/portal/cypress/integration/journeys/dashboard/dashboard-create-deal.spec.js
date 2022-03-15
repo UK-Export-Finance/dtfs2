@@ -1,5 +1,6 @@
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../fixtures/users');
+const page = require('../../pages/header');
 
 const {
   dashboard,
@@ -13,8 +14,11 @@ const { BANK3_GEF_MAKER1, BANK1_MAKER1 } = MOCK_USERS;
 context('Create application as gef-only bank and GEF-and-BSS bank', () => {
   describe('from deals dashboard page', () => {
     describe('Create application as gef-only bank', () => {
-      before(() => {
+      beforeEach(() => {
         Cypress.Cookies.preserveOnce('connect.sid');
+        Cypress.Cookies.preserveOnce('_csrf');
+      });
+      before(() => {
         cy.login(BANK3_GEF_MAKER1);
         dashboardDeals.visit();
         cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -33,8 +37,11 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
     });
 
     describe('Create application as GEF-and-BSS banks', () => {
-      before(() => {
+      beforeEach(() => {
         Cypress.Cookies.preserveOnce('connect.sid');
+        Cypress.Cookies.preserveOnce('_csrf');
+      });
+      before(() => {
         cy.login(BANK1_MAKER1);
         dashboardDeals.visit();
         cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -55,8 +62,11 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
 
   describe('from facilities dashboard page', () => {
     describe('Create application as gef-only bank', () => {
-      before(() => {
+      beforeEach(() => {
         Cypress.Cookies.preserveOnce('connect.sid');
+        Cypress.Cookies.preserveOnce('_csrf');
+      });
+      before(() => {
         cy.login(BANK3_GEF_MAKER1);
         dashboardFacilities.visit();
         cy.url().should('eq', relative('/dashboard/facilities/0'));
@@ -75,8 +85,11 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
     });
 
     describe('Create application as GEF-and-BSS banks', () => {
-      before(() => {
+      beforeEach(() => {
         Cypress.Cookies.preserveOnce('connect.sid');
+        Cypress.Cookies.preserveOnce('_csrf');
+      });
+      before(() => {
         cy.login(BANK1_MAKER1);
         dashboardFacilities.visit();
         cy.url().should('eq', relative('/dashboard/facilities/0'));
