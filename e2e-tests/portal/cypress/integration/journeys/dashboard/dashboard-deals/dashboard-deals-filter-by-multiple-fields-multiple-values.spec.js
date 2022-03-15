@@ -2,7 +2,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters, dashboardSubNavigation } = require('../../../partials');
 const {
   BSS_DEAL_MIA,
   BSS_DEAL_AIN,
@@ -161,5 +161,15 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
     dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
+  });
+
+  it('renders the correct aria-labels based on filter selected', () => {
+    dashboardSubNavigation.deals().invoke('attr', 'aria-label').then((label) => {
+      expect(label).to.equal('deals: ,Filters selected: , Notice Type: , Automatic Inclusion Notice, Manual Inclusion Application, Status: , Draft, Ready for Checker\'s approval');
+    });
+
+    dashboardSubNavigation.facilities().invoke('attr', 'aria-label').then((label) => {
+      expect(label).to.equal('');
+    });
   });
 });
