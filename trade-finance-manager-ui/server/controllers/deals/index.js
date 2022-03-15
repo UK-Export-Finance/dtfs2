@@ -29,6 +29,8 @@ const queryDeals = async (req, res) => {
   let activeSortByField = '';
   let searchString = '';
 
+  delete req.body._csrf;
+
   if (req.body.search) {
     searchString = req.body.search;
   }

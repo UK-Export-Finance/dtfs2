@@ -38,6 +38,7 @@ const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   if (!deal || !facility || !userCanEditGeneral(req.session.user)) {
     return res.redirect('/not-found');
   }
+  delete req.body._csrf;
 
   const validationErrors = validateSubmittedValues(req.body);
 

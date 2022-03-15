@@ -202,7 +202,9 @@ const getCaseDocuments = async (req, res) => {
 
 const postTfmFacility = async (req, res) => {
   const { facilityId, ...facilityUpdateFields } = req.body;
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
+  delete req.body._csrf;
+  delete facilityUpdateFields._csrf;
 
   const deal = await api.getDeal(dealId);
 

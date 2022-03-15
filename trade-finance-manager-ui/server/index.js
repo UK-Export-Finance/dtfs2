@@ -8,6 +8,7 @@ const csrf = require('csurf');
 
 const path = require('path');
 const routes = require('./routes');
+const feedbackRoutes = require('./routes/feedback');
 require('./azure-env');
 
 const configureNunjucks = require('./nunjucks-configuration');
@@ -40,6 +41,7 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use('/', feedbackRoutes);
 app.use(csrf({ cookie: true }));
 app.use(csrfToken());
 

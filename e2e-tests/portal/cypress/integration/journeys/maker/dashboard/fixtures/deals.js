@@ -14,7 +14,7 @@ const BSS_DEAL = {
   additionalRefName: 'Tibettan submarine acquisition scheme',
   status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
   exporter: {
-    companyName: 'mock company',
+    companyName: 'Mock company name',
   },
 };
 
@@ -30,7 +30,7 @@ const GEF_DEAL = {
   bankInternalRefName: 'Draft GEF',
   status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
   exporter: {
-    companyName: 'mock company',
+    companyName: 'Mock company name',
   },
 };
 
