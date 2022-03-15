@@ -53,7 +53,6 @@ const getPartyDetails = (partyType) => (
       tfm: deal.tfm,
       dealId,
       user: req.session.user,
-      csrfToken: req.csrfToken(),
     });
   }
 );

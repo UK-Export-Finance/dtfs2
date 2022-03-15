@@ -3,7 +3,6 @@ import loginRoutes from './login';
 import caseRoutes from './case';
 import dealsRoutes from './deals';
 import facilitiesRoutes from './facilities';
-import feedbackRoutes from './feedback';
 import { validateUser } from '../middleware/user-validation';
 
 describe('routes index', () => {
@@ -16,11 +15,10 @@ describe('routes index', () => {
   });
 
   it('should setup all routes', () => {
-    expect(use).toHaveBeenCalledTimes(5);
+    expect(use).toHaveBeenCalledTimes(4);
     expect(use).toHaveBeenCalledWith('/', loginRoutes);
     expect(use).toHaveBeenCalledWith('/case', validateUser, caseRoutes);
     expect(use).toHaveBeenCalledWith('/deals', validateUser, dealsRoutes);
     expect(use).toHaveBeenCalledWith('/facilities', validateUser, facilitiesRoutes);
-    expect(use).toHaveBeenCalledWith('/feedback', feedbackRoutes);
   });
 });

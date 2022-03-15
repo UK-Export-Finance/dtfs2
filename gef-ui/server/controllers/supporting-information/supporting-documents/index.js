@@ -120,6 +120,7 @@ const getSupportingDocuments = async (req, res, next) => {
 };
 
 const postSupportingDocuments = async (req, res, next) => {
+  delete req.body?._csrf;
   const {
     body: { delete: fileToDelete, submit },
     files,
