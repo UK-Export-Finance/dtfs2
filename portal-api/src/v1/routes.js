@@ -162,7 +162,7 @@ authRouterAllowXss
 
 authRouterAllowXss
   .route('/mandatory-criteria/latest')
-  .get(mandatoryCriteria.findLatest)
+  .get(mandatoryCriteria.findLatest);
 
 authRouterAllowXss
   .route('/mandatory-criteria/:version')

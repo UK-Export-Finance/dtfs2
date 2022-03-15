@@ -61,7 +61,7 @@ router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) 
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
 
-  const redirectUrl = `/contract/${req.params._id}/about/check-your-answers`; // eslint-disable-line no-underscore-dangle
+  const redirectUrl = `/contract/${req.params._id}/about/check-your-answers`;
   return res.redirect(redirectUrl);
 });
 

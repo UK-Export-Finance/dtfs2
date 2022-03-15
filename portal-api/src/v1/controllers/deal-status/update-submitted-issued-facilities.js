@@ -30,7 +30,7 @@ const updateSubmittedIssuedFacilities = async (user, deal) => {
         && !facility.issueFacilityDetailsProvided) {
         // Facility has been issued at the Deal draft stage. Therefore:
         // - no need for Maker to Issue the facility from Issue Facility Form
-        // - won't get 'Submitted' status (declared below when Issue Facility Form details provided)
+        // - won't get 'Submitted to UKEF' status (declared below when Issue Facility Form details provided)
         //
         // At this point, the facility status should not change - it's already been issued.
         // So, we 'lock' the status - everything is completed for this facility.

@@ -108,12 +108,12 @@ describe('mapFacilities', () => {
 
     const expected = [
       {
-        _id: MOCK_FACILITIES[0]._id, // eslint-disable-line no-underscore-dangle
+        _id: MOCK_FACILITIES[0]._id,
         facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails) },
         tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM),
       },
       {
-        _id: MOCK_FACILITIES[1]._id, // eslint-disable-line no-underscore-dangle
+        _id: MOCK_FACILITIES[1]._id,
         facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails) },
         tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM),
       },
