@@ -11,7 +11,7 @@ const {
 } = require('./helpers');
 
 const getUnderWritingPricingAndRisk = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -27,13 +27,13 @@ const getUnderWritingPricingAndRisk = async (req, res) => {
     activeSideNavigation: 'pricing and risk',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     user,
   });
 };
 
 const getUnderWritingPricingAndRiskEdit = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
@@ -50,13 +50,13 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
     activeSideNavigation: 'pricing and risk',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     user: req.session.user,
   });
 };
 
 const postUnderWritingPricingAndRisk = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
@@ -147,7 +147,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
         ...deal.tfm,
         exporterCreditRating: submittedValue,
       },
-      dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+      dealId: deal.dealSnapshot._id,
       user: req.session.user,
       validationErrors,
     });

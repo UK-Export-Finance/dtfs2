@@ -11,7 +11,6 @@ const addToACBSLog = async ({
   const collection = await db.getCollection('durable-functions-log');
 
   const acbsLog = await collection.insertOne({
-    // eslint-disable-next-line no-underscore-dangle
     type: 'ACBS',
     dealId: deal._id,
     deal,

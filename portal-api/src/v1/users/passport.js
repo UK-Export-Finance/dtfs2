@@ -24,7 +24,7 @@ const sanitize = (user) => ({
   email: user.email,
   timezone: user.timezone,
   'user-status': user['user-status'],
-  _id: user._id, // eslint-disable-line no-underscore-dangle
+  _id: user._id,
 });
 
 module.exports = (passport) => {
