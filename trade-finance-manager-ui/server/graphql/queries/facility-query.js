@@ -40,6 +40,7 @@ const facilityQuery = gql`
       tfm {
         bondIssuerPartyUrn,
         bondBeneficiaryPartyUrn,
+        exchangeRate,
         facilityValueInGBP,
         ukefExposure {
           exposure,

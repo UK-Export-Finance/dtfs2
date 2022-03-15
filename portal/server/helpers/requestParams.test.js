@@ -17,7 +17,7 @@ describe('requestParams', () => {
     };
 
     expect(requestParams(mockReq)).toEqual({
-      _id: mockReq.params._id, // eslint-disable-line no-underscore-dangle
+      _id: mockReq.params._id,
       bondId: mockReq.params.bondId,
       userToken: mockReq.session.userToken,
     });

@@ -5,7 +5,7 @@ const canUserEditLeadUnderwriter = require('./helpers');
 const { sortArrayOfObjectsAlphabetically } = require('../../../../helpers/array');
 
 const getLeadUnderwriter = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -34,14 +34,14 @@ const getLeadUnderwriter = async (req, res) => {
     activeSideNavigation: 'lead underwriter',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     user,
     currentLeadUnderWriter,
   });
 };
 
 const getAssignLeadUnderwriter = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -77,14 +77,14 @@ const getAssignLeadUnderwriter = async (req, res) => {
     activeSideNavigation: 'lead underwriter',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     user,
     assignToSelectOptions: mapAssignToSelectOptions(currentLeadUnderWriterUserId, user, alphabeticalTeamMembers),
   });
 };
 
 const postAssignLeadUnderwriter = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {

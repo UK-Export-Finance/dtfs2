@@ -281,7 +281,7 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   if (loan.currency && loan.currency.id) {
     mappedOriginalData.currency = loan.currency.id;
   }
-  delete mappedOriginalData._id; // eslint-disable-line no-underscore-dangle
+  delete mappedOriginalData._id;
   delete mappedOriginalData.status;
 
   if (!formDataMatchesOriginalData(modifiedBody, mappedOriginalData)) {
@@ -295,7 +295,7 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
     );
   }
 
-  const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
+  const redirectUrl = `/contract/${req.params._id}`;
   return res.redirect(redirectUrl);
 });
 
@@ -473,7 +473,7 @@ router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (r
     });
   }
 
-  const redirectUrl = `/contract/${req.params._id}`; // eslint-disable-line no-underscore-dangle
+  const redirectUrl = `/contract/${req.params._id}`;
   return res.redirect(redirectUrl);
 });
 

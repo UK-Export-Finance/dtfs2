@@ -22,7 +22,7 @@ const userHasAccessTo = (user, resource) => {
 };
 
 const userOwns = (user, resource) =>
-  user._id.toString() === resource.maker._id.toString();// eslint-disable-line no-underscore-dangle
+  user._id.toString() === resource.maker._id.toString();
 
 module.exports = {
   isSuperUser,

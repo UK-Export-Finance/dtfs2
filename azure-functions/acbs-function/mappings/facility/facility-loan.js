@@ -50,7 +50,7 @@ const facilityLoan = (deal, facility, acbsData) => {
   };
 
   // If facility is not in GBP, then set following fields
-  if (facility.facilitySnapshot.conversionRate) {
+  if (facility.tfm.exchangeRate) {
     loanRecord = {
       ...loanRecord,
       dealCustomerUsageRate: helpers.getCurrencyExchangeRate(facility),

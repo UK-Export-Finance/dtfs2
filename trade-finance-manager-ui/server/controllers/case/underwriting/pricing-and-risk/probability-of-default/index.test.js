@@ -141,7 +141,6 @@ describe('POST underwriting - probability of default', () => {
 
       await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
 
-      // eslint-disable-next-line no-underscore-dangle
       expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
     });
 
@@ -173,7 +172,6 @@ describe('POST underwriting - probability of default', () => {
           }],
         };
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.render).toHaveBeenCalledWith(
           'case/underwriting/pricing-and-risk/probability-of-default.njk',
           {
@@ -185,7 +183,7 @@ describe('POST underwriting - probability of default', () => {
               ...mockDeal.tfm,
               ...req.body,
             },
-            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            dealId: mockDeal.dealSnapshot._id,
             user: session.user,
             validationErrors: expectedValidationErrors,
           },
@@ -221,7 +219,6 @@ describe('POST underwriting - probability of default', () => {
           }],
         };
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.render).toHaveBeenCalledWith(
           'case/underwriting/pricing-and-risk/probability-of-default.njk',
           {
@@ -233,7 +230,7 @@ describe('POST underwriting - probability of default', () => {
               ...mockDeal.tfm,
               probabilityOfDefault: req.body.probabilityOfDefault,
             },
-            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            dealId: mockDeal.dealSnapshot._id,
             user: session.user,
             validationErrors: expectedValidationErrors,
           },

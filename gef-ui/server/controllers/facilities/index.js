@@ -30,7 +30,7 @@ const facilities = async (req, res) => {
       status,
     });
   } catch (err) {
-    console.error(err);
+    console.error('Facilities error', { err });
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -77,9 +77,9 @@ const createFacility = async (req, res) => {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    // eslint-disable-next-line no-underscore-dangle
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facility.details._id}/about-facility`);
   } catch (err) {
+    console.error('Error creating a facility', { err });
     return res.render('partials/problem-with-service.njk');
   }
 };

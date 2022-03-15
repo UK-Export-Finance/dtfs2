@@ -95,7 +95,6 @@ const createFacility = async (payload) => {
     const { data } = await Axios.post('/gef/facilities', payload);
     return data;
   } catch (err) {
-    console.error('Error creating a facility', { err });
     return apiErrorHandler(err);
   }
 };

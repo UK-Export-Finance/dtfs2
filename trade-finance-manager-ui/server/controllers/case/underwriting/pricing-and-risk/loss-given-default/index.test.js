@@ -119,7 +119,6 @@ describe('POST underwriting - loss given default', () => {
         { lossGivenDefault: Number(req.body.lossGivenDefault) },
       );
 
-      // eslint-disable-next-line no-underscore-dangle
       expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
     });
 
@@ -151,7 +150,6 @@ describe('POST underwriting - loss given default', () => {
           }],
         };
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.render).toHaveBeenCalledWith(
           'case/underwriting/pricing-and-risk/loss-given-default.njk',
           {
@@ -163,7 +161,7 @@ describe('POST underwriting - loss given default', () => {
               ...mockDeal.tfm,
               ...req.body,
             },
-            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            dealId: mockDeal.dealSnapshot._id,
             user: session.user,
             validationErrors: expectedValidationErrors,
           },
@@ -199,7 +197,6 @@ describe('POST underwriting - loss given default', () => {
           }],
         };
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.render).toHaveBeenCalledWith(
           'case/underwriting/pricing-and-risk/loss-given-default.njk',
           {
@@ -211,7 +208,7 @@ describe('POST underwriting - loss given default', () => {
               ...mockDeal.tfm,
               lossGivenDefault: req.body.lossGivenDefault,
             },
-            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            dealId: mockDeal.dealSnapshot._id,
             user: session.user,
             validationErrors: expectedValidationErrors,
           },
@@ -247,7 +244,6 @@ describe('POST underwriting - loss given default', () => {
           }],
         };
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.render).toHaveBeenCalledWith(
           'case/underwriting/pricing-and-risk/loss-given-default.njk',
           {
@@ -259,7 +255,7 @@ describe('POST underwriting - loss given default', () => {
               ...mockDeal.tfm,
               lossGivenDefault: req.body.lossGivenDefault,
             },
-            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            dealId: mockDeal.dealSnapshot._id,
             user: session.user,
             validationErrors: expectedValidationErrors,
           },
@@ -295,7 +291,6 @@ describe('POST underwriting - loss given default', () => {
           }],
         };
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.render).toHaveBeenCalledWith(
           'case/underwriting/pricing-and-risk/loss-given-default.njk',
           {
@@ -307,7 +302,7 @@ describe('POST underwriting - loss given default', () => {
               ...mockDeal.tfm,
               lossGivenDefault: req.body.lossGivenDefault,
             },
-            dealId: mockDeal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+            dealId: mockDeal.dealSnapshot._id,
             user: session.user,
             validationErrors: expectedValidationErrors,
           },

@@ -140,7 +140,7 @@ exports.update = (req, res) => {
       }
 
       await api.tfmDealSubmit(
-        deal._id, // eslint-disable-line no-underscore-dangle
+        deal._id,
         CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
         req.user,
       );
@@ -157,7 +157,7 @@ exports.update = (req, res) => {
     }
 
     // make sure we have the latest deal in DB with bonds and loans populated
-    const dealLatest = await findOneDeal(deal._id); // eslint-disable-line no-underscore-dangle
+    const dealLatest = await findOneDeal(deal._id);
 
     return res.status(200).send(dealLatest);
   });
