@@ -4,6 +4,7 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
+const CONSTANTS = require('../../../src/constants');
 
 describe('/v1/deals/:id/loan/:id/issue-facility', () => {
   const newDeal = aDeal({
@@ -138,12 +139,14 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
       expect(body.status).toEqual(null);
     });
 
-    it('should return 200 with updated loan, add issueFacilityDetailsProvided and generate timestamps', async () => {
+    it('should return 200 with updated loan, add issueFacilityDetailsProvided, hasBeenIssued, facilityStage, previousFacilityStage and timestamps', async () => {
       const { status, body } = await putIssueFacility(dealId, loanId, issueFacilityBody);
 
       expect(status).toEqual(200);
       expect(body.issueFacilityDetailsProvided).toEqual(true);
       expect(body.hasBeenIssued).toEqual(true);
+      expect(body.previousFacilityStage).toEqual(CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL);
+      expect(body.facilityStage).toEqual(CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL);
       expect(typeof body.requestedCoverStartDate === 'string').toEqual(true);
       expect(typeof body.issuedDate === 'string').toEqual(true);
     });

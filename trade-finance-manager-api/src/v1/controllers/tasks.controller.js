@@ -181,9 +181,7 @@ const updateTfmTask = async (dealId, taskUpdate) => {
   const {
     id: taskIdToUpdate,
     groupId,
-    assignedTo,
     status: statusTo,
-    updatedBy,
     urlOrigin,
   } = taskUpdate;
 
