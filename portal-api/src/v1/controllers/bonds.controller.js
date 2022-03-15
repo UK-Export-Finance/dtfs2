@@ -13,6 +13,7 @@ const {
 } = require('../facility-dates/requested-cover-start-date');
 const { sanitizeCurrency } = require('../../utils/number');
 const facilitiesController = require('./facilities.controller');
+const CONSTANTS = require('../../constants');
 
 exports.create = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
@@ -74,13 +75,13 @@ const facilityStageFields = (bond) => {
   const modifiedBond = bond;
   const { facilityStage } = modifiedBond;
 
-  if (facilityStage === 'Issued') {
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED) {
     // remove any `Unissued Facility Stage` specific fields/values
     modifiedBond.ukefGuaranteeInMonths = null;
     modifiedBond.hasBeenIssued = true;
   }
 
-  if (facilityStage === 'Unissued') {
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
     // remove any `Issued Facility Stage` specific fields/values
     modifiedBond.requestedCoverStartDate = null;
     modifiedBond['requestedCoverStartDate-day'] = null;
