@@ -4,7 +4,7 @@ const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-opt
 const CONSTANTS = require('../../constants');
 
 const getCaseDeal = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
 
   const deal = await api.getDeal(dealId);
 
@@ -23,9 +23,9 @@ const getCaseDeal = async (req, res) => {
 };
 
 const getCaseTasks = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
 
-  const userId = req.session.user._id; // eslint-disable-line no-underscore-dangle
+  const userId = req.session.user._id;
 
   // default filter
   const tasksFilters = {
@@ -52,13 +52,13 @@ const getCaseTasks = async (req, res) => {
 };
 
 const filterCaseTasks = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
 
   const { filterType } = req.body;
 
   const userTeamId = req.session.user.teams[0];
 
-  const userId = req.session.user._id; // eslint-disable-line no-underscore-dangle
+  const userId = req.session.user._id;
 
   const tasksFilters = {
     filterType,
@@ -85,7 +85,7 @@ const filterCaseTasks = async (req, res) => {
 };
 
 const getCaseTask = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const { groupId, taskId } = req.params;
   const { user } = req.session;
 
@@ -126,7 +126,7 @@ const getCaseTask = async (req, res) => {
 };
 
 const putCaseTask = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
 
   const { groupId, taskId } = req.params;
 
@@ -148,7 +148,7 @@ const putCaseTask = async (req, res) => {
     assignedTo: {
       userId: assignedToValue,
     },
-    updatedBy: req.session.user._id, // eslint-disable-line no-underscore-dangle
+    updatedBy: req.session.user._id,
     urlOrigin: req.headers.origin,
   };
 
@@ -171,7 +171,7 @@ const getCaseFacility = async (req, res) => {
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     facility: facility.facilitySnapshot,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'facility',
@@ -182,7 +182,7 @@ const getCaseFacility = async (req, res) => {
 };
 
 const getCaseDocuments = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -202,7 +202,7 @@ const getCaseDocuments = async (req, res) => {
 
 const postTfmFacility = async (req, res) => {
   const { facilityId, ...facilityUpdateFields } = req.body;
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
 
   const deal = await api.getDeal(dealId);
 

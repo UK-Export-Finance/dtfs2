@@ -4,7 +4,7 @@ const { validateSubmittedValues } = require('./validateSubmittedValues');
 const { mapDecisionObject } = require('./mapDecisionObject');
 
 const getUnderwriterManagersDecision = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
@@ -26,13 +26,13 @@ const getUnderwriterManagersDecision = async (req, res) => {
     activeSideNavigation: 'underwriter managers decision',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     user,
   });
 };
 
 const getUnderwriterManagersDecisionEdit = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
@@ -57,13 +57,13 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
     activeSideNavigation: 'underwriter managers decision',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     user,
   });
 };
 
 const postUnderwriterManagersDecision = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
@@ -105,7 +105,7 @@ const postUnderwriterManagersDecision = async (req, res) => {
       activeSideNavigation: 'underwriter managers decision',
       deal: deal.dealSnapshot,
       tfm: deal.tfm,
-      dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+      dealId: deal.dealSnapshot._id,
       user,
       submittedValues,
       validationErrors,

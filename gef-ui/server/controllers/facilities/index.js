@@ -30,7 +30,7 @@ const facilities = async (req, res) => {
       status,
     });
   } catch (err) {
-    console.error(err);
+    console.error('Facilities error', { err });
     return res.render('partials/problem-with-service.njk');
   }
 };
@@ -43,18 +43,18 @@ const createFacility = async (req, res) => {
   const hasBeenIssuedErrors = [];
   let facility;
   facilityType = facilityType || FACILITY_TYPE.CASH;
-  facilityType = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
+  const facilityTypeString = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
 
   try {
     // Don't validate form if user clicks on 'return to application` button
     if (!body.hasBeenIssued) {
       hasBeenIssuedErrors.push({
         errRef: 'hasBeenIssued',
-        errMsg: `Select if your bank has already issued this ${facilityType} facility`,
+        errMsg: `Select if your bank has already issued this ${facilityTypeString} facility`,
       });
 
       return res.render('partials/facilities.njk', {
-        facilityType,
+        facilityType: facilityTypeString,
         errors: validationErrorHandler(hasBeenIssuedErrors),
         dealId,
         status,
@@ -77,9 +77,9 @@ const createFacility = async (req, res) => {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    // eslint-disable-next-line no-underscore-dangle
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facility.details._id}/about-facility`);
   } catch (err) {
+    console.error('Error creating a facility', { err });
     return res.render('partials/problem-with-service.njk');
   }
 };

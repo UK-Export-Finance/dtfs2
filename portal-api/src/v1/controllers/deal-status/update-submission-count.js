@@ -1,7 +1,7 @@
 const { updateDeal } = require('../deal.controller');
 
 const updateSubmissionCount = async (deal, user) => {
-  const dealId = deal._id; // eslint-disable-line no-underscore-dangle
+  const dealId = deal._id;
 
   let submissionCount = 1;
   if (deal.details.submissionCount) {

@@ -6,9 +6,9 @@ export const app: any = express();
 
 // Global middleware set headers
 app.use((req: any, res: any, next: any) => {
-    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
-    next();
-  });
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
+  next();
+});
 
 app.use(express.json());
 app.use(compression());

@@ -5,7 +5,7 @@ const {
 const CONSTANTS = require('../../../../../constants');
 
 const getUnderWritingLossGivenDefault = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
@@ -21,13 +21,13 @@ const getUnderWritingLossGivenDefault = async (req, res) => {
     activeSideNavigation: 'pricing and risk',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+    dealId: deal.dealSnapshot._id,
     user: req.session.user,
   });
 };
 
 const postUnderWritingLossGivenDefault = async (req, res) => {
-  const dealId = req.params._id; // eslint-disable-line no-underscore-dangle
+  const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
   const { user } = req.session;
@@ -77,7 +77,7 @@ const postUnderWritingLossGivenDefault = async (req, res) => {
         ...deal.tfm,
         lossGivenDefault,
       },
-      dealId: deal.dealSnapshot._id, // eslint-disable-line no-underscore-dangle
+      dealId: deal.dealSnapshot._id,
       user: req.session.user,
       validationErrors,
     });

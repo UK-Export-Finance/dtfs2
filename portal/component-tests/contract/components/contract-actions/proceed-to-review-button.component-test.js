@@ -72,7 +72,7 @@ describe(component, () => {
       }
     });
 
-    it('should be enabled for deals in status=`Accepted by UKEF (with conditions)`, `Accepted by UKEF (without conditions)`,and all facility start dates confirmed', () => {
+    it('should be enabled for deals in status=`Accepted by UKEF (with conditions)`, `Accepted by UKEF (without conditions)` and all facility start dates confirmed', () => {
       const user = { roles: ['maker'] };
       const deals = [
         { _id: 1, status: 'Accepted by UKEF (with conditions)' },
@@ -82,6 +82,37 @@ describe(component, () => {
       for (const deal of deals) {
         const wrapper = render({
           user, deal, dealFormsCompleted: true, allRequestedCoverStartDatesConfirmed: true,
+        });
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
+          .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');
+      }
+    });
+
+    it('should not be enabled for deals in status=`Accepted by UKEF (with conditions)`, `Accepted by UKEF (without conditions)` and no dealHasIssuedFacilitiesToSubmit', () => {
+      const user = { roles: ['maker'] };
+      const deals = [
+        { _id: 1, status: 'Accepted by UKEF (with conditions)' },
+        { _id: 2, status: 'Accepted by UKEF (without conditions)' },
+      ];
+
+      for (const deal of deals) {
+        const wrapper = render({
+          user, deal, dealFormsCompleted: true, allRequestedCoverStartDatesConfirmed: false,
+        });
+        wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]').toBeDisabled();
+      }
+    });
+
+    it('should be enabled for deals in status=`Accepted by UKEF (with conditions)`, `Accepted by UKEF (without conditions)` and dealHasIssuedFacilitiesToSubmit', () => {
+      const user = { roles: ['maker'] };
+      const deals = [
+        { _id: 1, status: 'Accepted by UKEF (with conditions)' },
+        { _id: 2, status: 'Accepted by UKEF (without conditions)' },
+      ];
+
+      for (const deal of deals) {
+        const wrapper = render({
+          user, deal, dealFormsCompleted: true, dealHasIssuedFacilitiesToSubmit: true,
         });
         wrapper.expectPrimaryButton('[data-cy="ProceedToReview"]')
           .toLinkTo(`/contract/${deal._id}/ready-for-review`, 'Proceed to review');

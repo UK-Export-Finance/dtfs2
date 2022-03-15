@@ -121,11 +121,11 @@ module.exports = {
     return mockDeal ? Promise.resolve(deal) : Promise.reject();
   },
   findOnePortalDeal: (dealId) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
   findOneGefDeal: (dealId) => {
-    const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const mockDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
     const deal = {
       _id: dealId,
@@ -135,7 +135,7 @@ module.exports = {
     return deal ? Promise.resolve(deal) : Promise.reject();
   },
   updatePortalDeal: (dealId, update) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
     const updatedDeal = {
       ...deal,
@@ -145,7 +145,7 @@ module.exports = {
     return Promise.resolve(updatedDeal);
   },
   updatePortalGefDeal: (dealId, update) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
     const updatedDeal = {
       ...deal,
@@ -155,7 +155,7 @@ module.exports = {
     return Promise.resolve(updatedDeal);
   },
   updatePortalDealStatus: (dealId, statusUpdate) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
     const updatedDeal = {
       ...deal,
       status: statusUpdate,
@@ -164,7 +164,7 @@ module.exports = {
     return Promise.resolve(updatedDeal);
   },
   updatePortalFacility: (facilityId, facilityUpdate) => {
-    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
+    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
 
     const updatedFacility = {
       ...facility,
@@ -174,7 +174,7 @@ module.exports = {
     return updatedFacility;
   },
   updatePortalFacilityStatus: (facilityId, statusUpdate) => {
-    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
+    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
     const updatedFacility = {
       ...facility,
       previousStatus: facility.status,
@@ -184,18 +184,18 @@ module.exports = {
   },
   updateGefFacility: (facilityId, facilityUpdate) => Promise.resolve(facilityUpdate),
   addPortalDealComment: (dealId) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
     return Promise.resolve(deal);
   },
   queryDeals: () => ALL_MOCK_DEALS,
   updateDeal: (dealId, updatedTfmDealData) => {
-    let deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    let deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
     // if stage is updated, add to the mock deal.
     if (updatedTfmDealData.tfm) {
       if (updatedTfmDealData.tfm.stage) {
-        const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+        const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId);
 
         deal = {
           ...deal,
@@ -217,9 +217,9 @@ module.exports = {
     };
   },
   updateDealSnapshot: (dealId, snapshotUpdate) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
-    const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId);
 
     const updatedDeal = {
       ...deal,
@@ -231,7 +231,7 @@ module.exports = {
     return updatedDeal;
   },
   resetDealForApiTest: (dealId) => {
-    const existingDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const existingDeal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
 
     const resetDeal = {
       _id: dealId,
@@ -239,7 +239,7 @@ module.exports = {
       tfm: {},
     };
 
-    const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const dealIndex = ALL_MOCK_DEALS.findIndex((d) => d._id === dealId);
 
     ALL_MOCK_DEALS[dealIndex] = resetDeal;
 
@@ -251,7 +251,7 @@ module.exports = {
     tfm: {},
   }),
   findOneFacility: (facilityId) => {
-    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
+    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
 
     return {
       _id: facilityId,
@@ -289,7 +289,7 @@ module.exports = {
     return mapped;
   },
   updateFacility: (facilityId, tfmUpdate) => {
-    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId); // eslint-disable-line no-underscore-dangle
+    const facility = ALL_MOCK_FACILITIES.find((f) => f._id === facilityId);
 
     // for some reason 2 api tests act differently if tfmUpdate is *not* included in both
     // root object and in tfm object.
@@ -303,7 +303,7 @@ module.exports = {
     };
   },
   updatePortalBssDealStatus: (dealId, statusUpdate) => {
-    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId); // eslint-disable-line no-underscore-dangle
+    const deal = ALL_MOCK_DEALS.find((d) => d._id === dealId);
     const updatedDeal = {
       ...deal,
       status: statusUpdate,
@@ -331,7 +331,7 @@ module.exports = {
     return MOCK_USERS.find((user) => user.username === username);
   },
   findUserById: (userId) =>
-    MOCK_USERS.find((user) => user._id === userId), // eslint-disable-line no-underscore-dangle
+    MOCK_USERS.find((user) => user._id === userId),
   findTeamMembers: (teamId) =>
     MOCK_USERS.filter((user) => user.teams.includes(teamId)),
   findOneTeam: (teamId) =>

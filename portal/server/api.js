@@ -123,7 +123,7 @@ const createDeal = async (deal, token) => {
 const updateDeal = async (deal, token) => {
   const response = await axios({
     method: 'put',
-    url: `${portalApi}/v1/deals/${deal._id}`, // eslint-disable-line no-underscore-dangle
+    url: `${portalApi}/v1/deals/${deal._id}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
