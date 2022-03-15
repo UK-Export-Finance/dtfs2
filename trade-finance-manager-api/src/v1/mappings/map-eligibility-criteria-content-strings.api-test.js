@@ -10,22 +10,24 @@ describe('mapEligibilityCriteriaContentStrings', () => {
 
   describe(`when dealType is ${dealTypeBSS}`, () => {
     it(`should map eligibility.criteria to ${dealTypeBSS} content strings`, () => {
-      const mockCriteria = MOCK_BSS_DEAL.eligibility.criteria;
+      const mockEligibility = MOCK_BSS_DEAL.eligibility;
 
       const result = mapEligibilityCriteriaContentStrings(
-        mockCriteria,
+        mockEligibility,
         dealTypeBSS,
       );
 
-      const bssEligibilityCriteriaContentStrings = CONTENT_STRINGS.DEAL.ELIGIBILITY_CRITERIA[dealTypeBSS];
 
-      const expected = mockCriteria.map((criterion) => {
+      const eligibilityVersion = mockEligibility.version;
+      const contentStrings = CONTENT_STRINGS.DEAL.ELIGIBILITY_CRITERIA[dealTypeBSS][eligibilityVersion];
+
+      const expected = mockEligibility.criteria.map((criterion) => {
         const { id } = criterion;
 
         return {
           ...criterion,
-          text: bssEligibilityCriteriaContentStrings[id].text,
-          textList: bssEligibilityCriteriaContentStrings[id].textList,
+          text: contentStrings[id].text,
+          textList: contentStrings[id].textList,
         };
       });
 
@@ -35,22 +37,23 @@ describe('mapEligibilityCriteriaContentStrings', () => {
 
   describe(`when dealType is ${dealTypeGEF}`, () => {
     it(`should map eligibility.criteria to ${dealTypeGEF} content strings`, () => {
-      const mockCriteria = MOCK_GEF_DEAL.eligibility.criteria;
+      const mockEligibility = MOCK_GEF_DEAL.eligibility;
 
       const result = mapEligibilityCriteriaContentStrings(
-        mockCriteria,
+        mockEligibility,
         dealTypeGEF,
       );
 
-      const gefEligibilityCriteriaContentStrings = CONTENT_STRINGS.DEAL.ELIGIBILITY_CRITERIA[dealTypeGEF];
+      const eligibilityVersion = mockEligibility.version;
+      const contentStrings = CONTENT_STRINGS.DEAL.ELIGIBILITY_CRITERIA[dealTypeGEF][eligibilityVersion];
 
-      const expected = mockCriteria.map((criterion) => {
+      const expected = mockEligibility.criteria.map((criterion) => {
         const { id } = criterion;
 
         return {
           ...criterion,
-          text: gefEligibilityCriteriaContentStrings[id].text,
-          textList: gefEligibilityCriteriaContentStrings[id].textList,
+          text: contentStrings[id].text,
+          textList: contentStrings[id].textList,
         };
       });
 
