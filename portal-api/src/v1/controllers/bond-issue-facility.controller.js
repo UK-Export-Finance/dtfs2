@@ -10,6 +10,7 @@ const bondIssueFacilityValidationErrors = require('../validation/bond-issue-faci
 const { hasValue } = require('../../utils/string');
 const canIssueFacility = require('../facility-issuance');
 const facilitiesController = require('./facilities.controller');
+const CONSTANTS = require('../../constants');
 
 exports.updateBondIssueFacility = async (req, res) => {
   const {
@@ -47,8 +48,8 @@ exports.updateBondIssueFacility = async (req, res) => {
         modifiedBond.issueFacilityDetailsStarted = true;
       }
 
-      const bondHasname = hasValue(bond.name);
-      if (!bondHasname) {
+      const bondHasName = hasValue(bond.name);
+      if (!bondHasName) {
         modifiedBond.nameRequiredForIssuance = true;
       }
 
@@ -71,9 +72,12 @@ exports.updateBondIssueFacility = async (req, res) => {
 
       modifiedBond.hasBeenIssued = false;
       modifiedBond.issueFacilityDetailsProvided = false;
+
       if (validationErrors.count === 0) {
         modifiedBond.issueFacilityDetailsProvided = true;
         modifiedBond.hasBeenIssued = true;
+        modifiedBond.previousFacilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED;
+        modifiedBond.facilityStage = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
       }
 
       const { status, data } = await facilitiesController.update(
