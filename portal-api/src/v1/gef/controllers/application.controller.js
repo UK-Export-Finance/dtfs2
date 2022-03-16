@@ -51,7 +51,6 @@ exports.create = async (req, res) => {
   } else {
     const eligibility = await getLatestEligibilityCriteria();
 
-    console.log('controller eligibility \n', eligibility);
     if (newDeal.exporter) {
       newDeal.exporter.status = exporterStatus(newDeal.exporter);
 

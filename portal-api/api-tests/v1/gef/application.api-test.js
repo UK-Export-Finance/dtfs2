@@ -29,10 +29,7 @@ const baseUrl = '/v1/gef/application';
 const facilitiesUrl = '/v1/gef/facilities';
 const collectionName = 'deals';
 
-const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
-  criteria.version === 1.5);
-
-console.log('--- mockEligibilityCriteriaLatestVersion \n', mockEligibilityCriteriaLatestVersion);
+const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 1.5);
 
 describe(baseUrl, () => {
   let aMaker;
@@ -90,6 +87,9 @@ describe(baseUrl, () => {
           },
           maker: expect.any(Object),
           eligibility: {
+            _id: expect.any(String),
+            createdAt: expect.any(Number),
+            isInDraft: false,
             version: expect.any(Number),
             criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
               ...criterion,
@@ -128,7 +128,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it.only('returns an individual item', async () => {
+    it('returns an individual item', async () => {
       const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       const expected = {
@@ -139,6 +139,9 @@ describe(baseUrl, () => {
         },
         maker: expect.any(Object),
         eligibility: {
+          _id: expect.any(String),
+          createdAt: expect.any(Number),
+          isInDraft: false,
           version: expect.any(Number),
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
             ...criterion,
@@ -224,6 +227,9 @@ describe(baseUrl, () => {
         portalActivities: [],
         eligibility: {
           version: expect.any(Number),
+          _id: expect.any(String),
+          createdAt: expect.any(Number),
+          isInDraft: false,
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
             ...criterion,
             answer: null,
@@ -334,7 +340,6 @@ describe(baseUrl, () => {
         errMsg: 'Unrecognised enum',
       }]);
     });
-
 
     describe('status update emails', () => {
       const expectedEmailVariables = (maker, updatedByUser, deal, newStatus) => ({

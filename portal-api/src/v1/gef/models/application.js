@@ -24,7 +24,6 @@ class Application {
       this.exporter = req.exporter ? req.exporter : {
         status: DEAL_STATUS.NOT_STARTED,
       };
-      console.log('MODEL - eligibility \n', eligibility);
 
       this.eligibility = {
         ...eligibility,
