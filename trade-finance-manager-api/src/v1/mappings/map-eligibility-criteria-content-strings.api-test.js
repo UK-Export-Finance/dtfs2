@@ -17,7 +17,6 @@ describe('mapEligibilityCriteriaContentStrings', () => {
         dealTypeBSS,
       );
 
-
       const eligibilityVersion = mockEligibility.version;
       const contentStrings = CONTENT_STRINGS.DEAL.ELIGIBILITY_CRITERIA[dealTypeBSS][eligibilityVersion];
 
