@@ -26,10 +26,18 @@ const createDealEligibility = async (eligibility) => {
   const beingGivenEligibility = (eligibility && eligibility.criteria);
 
   if (beingGivenEligibility) {
-    return {
+    const eligibilityObj = {
       ...eligibility,
       lastUpdated: null,
     };
+
+    if (eligibility.status) {
+      eligibilityObj.status = eligibility.status;
+    } else {
+      eligibilityObj.status = DEFAULTS.DEAL.eligibility.status;
+    }
+
+    return eligibilityObj;
   }
 
   const latestEligibility = await findLatestEligibilityCriteria();
