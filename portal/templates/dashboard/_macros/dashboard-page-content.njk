@@ -14,6 +14,7 @@
   {% set renderCreatedByYou = params.renderCreatedByYou %}
   {% set createdByYou = params.createdByYou %}
   {% set selectedFilters = params.selectedFilters %}
+  {% set selectedFiltersString = params.selectedFiltersString %}
   {% set table = params.table %}
   {% set pages = params.pages %}
   {% set route = params.route %}
@@ -21,7 +22,9 @@
   {{dashboardHeadingAndTabs.render({
     successMessage: successMessage,
     user: user,
-    tab: tab
+    tab: tab,
+    selectedFilters: selectedFilters,
+    selectedFiltersString: selectedFiltersString
   })}}
 
   <div class="moj-filter-layout">
