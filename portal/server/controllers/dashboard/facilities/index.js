@@ -2,7 +2,11 @@ const api = require('../../../api');
 const { dashboardFacilitiesFiltersQuery } = require('./facilities-filters-query');
 const { facilitiesTemplateFilters: templateFilters } = require('./template-filters');
 const { selectedFilters } = require('./selected-filters');
-const { submittedFiltersArray, submittedFiltersObject } = require('../filters/helpers');
+const {
+  submittedFiltersArray,
+  submittedFiltersObject,
+  filtersToText,
+} = require('../filters/helpers');
 const { removeSessionFilter } = require('../filters/remove-filter-from-session');
 const { getApiData, requestParams, getFlashSuccessMessage } = require('../../../helpers');
 const { sanitiseBody } = require('./sanitise-body');
@@ -76,6 +80,7 @@ exports.allFacilities = async (req, res) => {
   return res.render('dashboard/facilities.njk', {
     ...templateVariables,
     successMessage: getFlashSuccessMessage(req),
+    selectedFiltersString: filtersToText(templateVariables.selectedFilters),
   });
 };
 

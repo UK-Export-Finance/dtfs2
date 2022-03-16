@@ -1,7 +1,7 @@
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters, dashboardSubNavigation } = require('../../../partials');
 const {
   BSS_DEAL_DRAFT,
   GEF_DEAL_DRAFT,
@@ -138,6 +138,16 @@ context('Dashboard Deals filters', () => {
       dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.label().contains(CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED);
       dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('exist');
       dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('not.be.checked');
+    });
+
+    it('contains the correct aria-label for no facility filters selected', () => {
+      dashboardSubNavigation.facilities().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal('facilities: ,Filters selected: none');
+      });
+
+      dashboardSubNavigation.deals().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal('');
+      });
     });
   });
 });

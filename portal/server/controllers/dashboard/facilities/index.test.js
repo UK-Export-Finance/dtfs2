@@ -211,6 +211,7 @@ describe('controllers/dashboard/facilities', () => {
       expect(mockRes.render).toHaveBeenCalledWith('dashboard/facilities.njk', {
         ...expectedVariables,
         successMessage: getFlashSuccessMessage(mockReq),
+        selectedFiltersString: 'Filters selected: none',
       });
     });
   });
