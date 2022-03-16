@@ -43,22 +43,26 @@
   {% set items = [] %}
   {% for facility in facilities %}
     {% set bankRefLink %}
-      {% if facility.dealType === 'GEF' %}
-        <a
-          class="govuk-link"
-          href="/gef/application-details/{{ facility.dealId }}"
-          aria-label="View deal details"
-          data-cy="reports-deal-{{ facility.dealId }}-link">
-          {{ facility.bankInternalRefName }}
-        </a>
+      {% if not isChecker %}
+        {% if facility.dealType === 'GEF' %}
+          <a
+            class="govuk-link"
+            href="/gef/application-details/{{ facility.dealId }}"
+            aria-label="View deal details"
+            data-cy="reports-deal-link">
+            {{ facility.bankInternalRefName }}
+          </a>
+        {% else %}
+          <a
+            class="govuk-link"
+            href="/contract/{{ facility.dealId }}"
+            aria-label="View deal details"
+            data-cy="reports-deal-link">
+            {{ facility.bankInternalRefName }}
+          </a>
+        {% endif %}
       {% else %}
-        <a
-          class="govuk-link"
-          href="/contract/{{ facility.dealId }}"
-          aria-label="View deal details"
-          data-cy="reports-deal-{{ facility.dealId }}-link">
-          {{ facility.bankInternalRefName }}
-        </a>
+        <span data-cy="reports-deal-link-text"> {{ facility.bankInternalRefName }} </span>
       {% endif %}
     {% endset %}
 
