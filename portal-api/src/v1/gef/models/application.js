@@ -1,10 +1,10 @@
 const { DEAL_TYPE, DEAL_STATUS } = require('../enums');
 
 class Application {
-  constructor(req, eligibilityTerms, eligibilityVersion) {
+  constructor(req, eligibility) {
     const editedBy = [];
 
-    if (eligibilityTerms) {
+    if (eligibility) {
       // New Application
       this.dealType = DEAL_TYPE;
 
@@ -24,15 +24,15 @@ class Application {
       this.exporter = req.exporter ? req.exporter : {
         status: DEAL_STATUS.NOT_STARTED,
       };
+      console.log('MODEL - eligibility \n', eligibility);
 
       this.eligibility = {
-        criteria: eligibilityTerms.map((term) => ({
+        ...eligibility,
+        criteria: eligibility.criteria.map((term) => ({
           ...term,
           answer: null,
         })),
       };
-
-      this.eligibilityVersion = eligibilityVersion;
 
       this.bankInternalRefName = req.bankInternalRefName ? String(req.bankInternalRefName) : null;
       this.mandatoryVersionId = req.mandatoryVersionId ? String(req.mandatoryVersionId) : null;

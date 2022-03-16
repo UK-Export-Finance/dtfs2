@@ -32,6 +32,8 @@ const collectionName = 'deals';
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
   criteria.version === 1.5);
 
+console.log('--- mockEligibilityCriteriaLatestVersion \n', mockEligibilityCriteriaLatestVersion);
+
 describe(baseUrl, () => {
   let aMaker;
   let aChecker;
@@ -88,12 +90,12 @@ describe(baseUrl, () => {
           },
           maker: expect.any(Object),
           eligibility: {
-            criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
+            version: expect.any(Number),
+            criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
               ...criterion,
               answer: null,
             })),
           },
-          eligibilityVersion: expect.any(Number),
           editedBy: expect.any(Array),
           createdAt: expect.any(Number),
           updatedAt: expect.any(Number),
@@ -126,7 +128,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('returns an individual item', async () => {
+    it.only('returns an individual item', async () => {
       const item = await as(aMaker).post(mockApplications[0]).to(baseUrl);
       const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       const expected = {
@@ -137,13 +139,13 @@ describe(baseUrl, () => {
         },
         maker: expect.any(Object),
         eligibility: {
-          criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
+          version: expect.any(Number),
+          criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
             ...criterion,
             answer: null,
           })),
           status: CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED,
         },
-        eligibilityVersion: expect.any(Number),
         status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
         editedBy: expect.any(Array),
         createdAt: expect.any(Number),
@@ -221,12 +223,12 @@ describe(baseUrl, () => {
         checkerId: null,
         portalActivities: [],
         eligibility: {
-          criteria: mockEligibilityCriteriaLatestVersion.terms.map((criterion) => ({
+          version: expect.any(Number),
+          criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
             ...criterion,
             answer: null,
           })),
         },
-        eligibilityVersion: expect.any(Number),
       };
       expect(body).toEqual({
         ...expectMongoId(expected),

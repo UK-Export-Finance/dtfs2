@@ -62,7 +62,7 @@ describe(baseUrl, () => {
       expect(body).toEqual(expect.objectContaining({
         ...expectMongoId(items[1]),
         createdAt: expect.any(Number),
-        terms: expect.any(Array),
+        criteria: expect.any(Array),
       }));
     });
   });
@@ -93,7 +93,7 @@ describe(baseUrl, () => {
         version: expect.any(Number),
         isInDraft: expect.any(Boolean),
         createdAt: expect.any(Number),
-        terms: expect.any(Array),
+        criteria: expect.any(Array),
       };
       expect(body).toEqual(expected);
     });

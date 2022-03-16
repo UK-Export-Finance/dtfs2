@@ -17,7 +17,7 @@ const automaticCover = async (req, res) => {
     const { eligibility } = application;
 
     return res.render('partials/automatic-cover.njk', {
-      terms: eligibility.criteria,
+      criteria: eligibility.criteria,
       dealId,
     });
   } catch (err) {
@@ -38,7 +38,7 @@ const validateAutomaticCover = async (req, res, next) => {
     const coverType = deriveCoverType(body, eligibility.criteria);
 
     if (!saveAndReturn && automaticCoverErrors.length > 0) {
-      const mappedTerms = eligibility.criteria.map((answerObj) => {
+      const mappedCriteria = eligibility.criteria.map((answerObj) => {
         const submittedAnswer = body[String(answerObj.id)];
 
         return {
@@ -49,7 +49,7 @@ const validateAutomaticCover = async (req, res, next) => {
 
       return res.render('partials/automatic-cover.njk', {
         errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
-        terms: mappedTerms,
+        criteria: mappedCriteria,
         dealId,
       });
     }
