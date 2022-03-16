@@ -40,8 +40,12 @@ const validateFileQuestion = (application, field, errRef) => {
 
 const nextDocument = (application, dealId, fieldName) => {
   let supportingDocument = 'manual-inclusion-questionnaire'; // default page
-  const currentIndex = application.supportingInformation?.requiredFields?.indexOf(fieldName);
+  let currentIndex = 0;
   if (application.supportingInformation?.requiredFields?.length > 0) {
+    // append the security details to the requiredFields
+    application.supportingInformation.requiredFields.push('securityDetails');
+    currentIndex = application.supportingInformation?.requiredFields?.indexOf(fieldName);
+
     const allDocTypes = docType;
     const nextIndex = (currentIndex + 1) % application.supportingInformation.requiredFields.length;
 
@@ -52,11 +56,14 @@ const nextDocument = (application, dealId, fieldName) => {
         supportingDocument = value.path;
       }
     });
+    if (nextItem === 'securityDetails') {
+      supportingDocument = 'security-details';
+    }
   }
 
   let nextDoc = `/gef/application-details/${dealId}/supporting-information/${supportingDocument}`;
-  if (!application.supportingInformation?.requiredFields?.length
-      || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
+  // check if there are no required fields or check if we reached the end of the required fields
+  if (!application.supportingInformation?.requiredFields?.length || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
     nextDoc = `/gef/application-details/${dealId}`;
   }
 
