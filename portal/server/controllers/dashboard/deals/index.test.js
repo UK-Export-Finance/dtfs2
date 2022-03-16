@@ -223,6 +223,7 @@ describe('controllers/dashboard/deals', () => {
 
       expect(mockRes.render).toHaveBeenCalledWith('dashboard/deals.njk', {
         ...expectedVariables,
+        selectedFiltersString: 'Filters selected: none',
         successMessage: getFlashSuccessMessage(mockReq),
       });
     });

@@ -1,23 +1,26 @@
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 
-{% macro subnav(selected) %}
+{% macro render(params) %}
+
   {% set items = [
     {
       id: 'deals',
       href: '/dashboard/deals',
       text: 'Deals',
-      active: 'deals' === selected,
+      active: 'deals' === params.selected,
       attributes: {
-        'data-cy': 'dashboard-sub-nav-link-deals'
+        'data-cy': 'dashboard-sub-nav-link-deals',
+        'aria-label': 'deals: ,' + params.selectedFiltersString if 'deals' === params.selected
       }
     },
     {
       id: 'facilities',
       href: '/dashboard/facilities',
       text: 'Facilities',
-      active: 'facilities' === selected,
+      active: 'facilities' === params.selected,
       attributes: {
-        'data-cy': 'dashboard-sub-nav-link-facilities'
+        'data-cy': 'dashboard-sub-nav-link-facilities',
+        'aria-label': 'facilities: ,' + params.selectedFiltersString if 'facilities' === params.selected
       }
     }
   ] %}
