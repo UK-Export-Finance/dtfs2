@@ -12,6 +12,8 @@ const expectAddedFields = (obj) => {
     status: 'Draft',
     eligibility: {
       status: 'Not started',
+      _id: expect.any(String),
+      version: expect.any(Number),
       criteria: expect.any(Array),
       lastUpdated: expect.toBeNumberOrNull(eligibilityLastUpdated),
     },
