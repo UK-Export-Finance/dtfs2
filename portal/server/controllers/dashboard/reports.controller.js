@@ -1,6 +1,7 @@
 const downloadCsv = require('../../utils/downloadCsv');
 const api = require('../../api');
 const CONSTANTS = require('../../constants');
+const { isChecker } = require('../../helpers/isChecker.helper');
 
 exports.getPortalReports = async (req, res) => {
   const { userToken } = req.session;
@@ -27,19 +28,37 @@ exports.getPortalReports = async (req, res) => {
 exports.getUnissuedFacilitiesReport = async (req, res) => {
   const { userToken } = req.session;
   const facilities = await api.getUnissuedFacilitiesReport(userToken) || [];
-  return res.render('reports/unissued-facilities.njk', { facilities, user: req.session.user, primaryNav: 'reports' });
+
+  return res.render('reports/unissued-facilities.njk', {
+    facilities,
+    user: req.session.user,
+    primaryNav: 'reports',
+    isChecker: isChecker(req?.session?.user?.roles),
+  });
 };
 
 exports.getUnconditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
   const deals = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS }) || [];
-  return res.render('reports/unconditional-decision.njk', { deals, user: req.session.user, primaryNav: 'reports' });
+
+  return res.render('reports/unconditional-decision.njk', {
+    deals,
+    user: req.session.user,
+    primaryNav: 'reports',
+    isChecker: isChecker(req?.session?.user?.roles),
+  });
 };
 
 exports.getConditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
   const deals = await api.getUkefDecisionReport(userToken, { ukefDecision: CONSTANTS.STATUS.UKEF_APPROVED_WITH_CONDITIONS }) || [];
-  return res.render('reports/conditional-decision.njk', { deals, user: req.session.user, primaryNav: 'reports' });
+
+  return res.render('reports/conditional-decision.njk', {
+    deals,
+    user: req.session.user,
+    primaryNav: 'reports',
+    isChecker: isChecker(req?.session?.user?.roles),
+  });
 };
 
 exports.downloadUnissuedFacilitiesReport = async (req, res) => {

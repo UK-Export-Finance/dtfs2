@@ -2,41 +2,21 @@ const api = require('../../../api');
 const { dashboardFacilitiesFiltersQuery } = require('./facilities-filters-query');
 const { facilitiesTemplateFilters: templateFilters } = require('./template-filters');
 const { selectedFilters } = require('./selected-filters');
-const {
-  submittedFiltersArray,
-  submittedFiltersObject,
-} = require('../filters/helpers');
+const { submittedFiltersArray, submittedFiltersObject } = require('../filters/helpers');
 const { removeSessionFilter } = require('../filters/remove-filter-from-session');
-const {
-  getApiData,
-  requestParams,
-  getFlashSuccessMessage,
-} = require('../../../helpers');
+const { getApiData, requestParams, getFlashSuccessMessage } = require('../../../helpers');
 const { sanitiseBody } = require('./sanitise-body');
 const CONSTANTS = require('../../../constants');
+const { isChecker } = require('../../../helpers/isChecker.helper');
 
 const { PAGE_SIZE } = CONSTANTS.DASHBOARD;
 
-const getAllFacilitiesData = async (
-  userToken,
-  user,
-  sessionFilters,
-  currentPage,
-  res,
-) => {
+const getAllFacilitiesData = async (userToken, user, sessionFilters, currentPage, res) => {
   const filtersArray = submittedFiltersArray(sessionFilters);
 
-  const filtersQuery = dashboardFacilitiesFiltersQuery(
-    filtersArray,
-    user,
-  );
+  const filtersQuery = dashboardFacilitiesFiltersQuery(filtersArray, user);
 
-  const { count, facilities } = await getApiData(api.allFacilities(
-    currentPage * PAGE_SIZE,
-    PAGE_SIZE,
-    filtersQuery,
-    userToken,
-  ), res);
+  const { count, facilities } = await getApiData(api.allFacilities(currentPage * PAGE_SIZE, PAGE_SIZE, filtersQuery, userToken), res);
 
   return {
     facilities,
@@ -46,14 +26,7 @@ const getAllFacilitiesData = async (
 };
 exports.getAllFacilitiesData = getAllFacilitiesData;
 
-const getTemplateVariables = (
-  user,
-  sessionFilters,
-  facilities,
-  count,
-  currentPage,
-  filtersArray,
-) => {
+const getTemplateVariables = (user, sessionFilters, facilities, count, currentPage, filtersArray) => {
   const pages = {
     totalPages: Math.ceil(count / PAGE_SIZE),
     currentPage: parseInt(currentPage, 10),
@@ -71,35 +44,17 @@ const getTemplateVariables = (
     filters: templateFilters(filtersObj),
     selectedFilters: selectedFilters(filtersObj),
     keyword: sessionFilters.keyword,
+    isChecker: isChecker(user.roles),
   };
 
   return templateVariables;
 };
 exports.getTemplateVariables = getTemplateVariables;
 
-const getDataAndTemplateVariables = async (
-  userToken,
-  user,
-  sessionFilters,
-  currentPage,
-  res,
-) => {
-  const { facilities, count, filtersArray } = await getAllFacilitiesData(
-    userToken,
-    user,
-    sessionFilters,
-    currentPage,
-    res,
-  );
+const getDataAndTemplateVariables = async (userToken, user, sessionFilters, currentPage, res) => {
+  const { facilities, count, filtersArray } = await getAllFacilitiesData(userToken, user, sessionFilters, currentPage, res);
 
-  const templateVariables = getTemplateVariables(
-    user,
-    sessionFilters,
-    facilities,
-    count,
-    currentPage,
-    filtersArray,
-  );
+  const templateVariables = getTemplateVariables(user, sessionFilters, facilities, count, currentPage, filtersArray);
 
   return templateVariables;
 };
@@ -116,13 +71,7 @@ exports.allFacilities = async (req, res) => {
     req.session.dashboardFilters = sanitisedBody;
   }
 
-  const templateVariables = await getDataAndTemplateVariables(
-    userToken,
-    user,
-    req.session.dashboardFilters,
-    currentPage,
-    res,
-  );
+  const templateVariables = await getDataAndTemplateVariables(userToken, user, req.session.dashboardFilters, currentPage, res);
 
   return res.render('dashboard/facilities.njk', {
     ...templateVariables,
