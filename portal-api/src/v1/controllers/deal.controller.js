@@ -22,20 +22,6 @@ const findOneDeal = async (_id, callback) => {
 
 exports.findOneDeal = findOneDeal;
 
-/**
- * Update a deal.eligibility (BSS, EWCS only)
- */
-const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteria) => {
-  const matchingAnswer = answers ? answers.find((answer) => answer.id === criteria.id) : null;
-  if (!matchingAnswer) {
-    return criteria;
-  }
-  return {
-    ...criteria,
-    ...matchingAnswer,
-  };
-});
-
 const createDealEligibility = async (eligibility) => {
   const beingGivenEligibility = (eligibility && eligibility.criteria);
 
@@ -53,6 +39,8 @@ const createDealEligibility = async (eligibility) => {
     status: DEFAULTS.DEAL.eligibility.status,
   };
 };
+
+exports.createDealEligibility = createDealEligibility;
 
 /**
  * Create default deal data (BSS, EWCS only)

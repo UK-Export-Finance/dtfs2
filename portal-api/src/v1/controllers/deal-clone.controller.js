@@ -1,6 +1,10 @@
 const DEFAULTS = require('../defaults');
 const { findMandatoryCriteria } = require('./mandatoryCriteria.controller');
-const { findOneDeal, createDeal } = require('./deal.controller');
+const {
+  findOneDeal,
+  createDeal,
+  createDealEligibility,
+} = require('./deal.controller');
 const { getCloneDealErrors } = require('../validation/clone-bss-deal');
 const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
@@ -85,6 +89,7 @@ exports.clone = async (req, res) => {
         maker: req.user,
       },
       mandatoryCriteria: await getCurrentMandatoryCriteria(),
+      eligibility: await createDealEligibility(existingDeal.eligibility),
       editedBy: [],
       comments: [],
       ukefComments: [],
