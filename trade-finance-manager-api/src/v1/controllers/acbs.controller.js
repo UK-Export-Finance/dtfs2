@@ -121,6 +121,7 @@ const issueAcbsFacilities = async (deal) => {
   /**
    * ACBS verification has been removed due to an ongoing bug of not receiving
    * the `acbs` object imperative data thus preventing maker from issuing the facility.
+   * TO-DO:
    * !isIssued(facilityStageInAcbs) && !facility.tfm.acbs.issuedFacilityMaster
    * const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
    */
