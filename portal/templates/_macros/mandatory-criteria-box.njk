@@ -1,16 +1,16 @@
 {% macro render(params) %}
-  
+
   {% if params.mandatoryCriteria | length %}
     <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-4 govuk-!-margin-bottom-6 box" data-cy="mandatory-criteria-box">
 
       <div class="govuk-grid-column-full">
-      
+
         <h4 class="govuk-heading-m">Mandatory criteria</h4>
         <h5 class="govuk-heading-s">This deal meets all UKEF’s mandatory criteria.</h5>
 
         <p class="govuk-body-s">You have affirmed that all the following mandatory criteria are or will be true for this deal on the date that cover starts.</p>
 
-        {% for group in params.mandatoryCriteria %}
+        {% for group in params.mandatoryCriteria.criteria %}
           <h6 class="govuk-heading-s">{{ group.title }}</h6>
 
           <ol class="govuk-list govuk-list--number">
@@ -20,9 +20,9 @@
           </ol>
 
         {% endfor %}
-        
+
       </div>
     </div>
   {% endif %}
-   
+
 {% endmacro %}

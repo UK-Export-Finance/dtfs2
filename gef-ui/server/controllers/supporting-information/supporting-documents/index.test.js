@@ -500,8 +500,8 @@ describe('controllers/supporting-documents', () => {
     it('moves to the Exporter licence page', () => {
       expect(nextDocument(application, dealId, 'debtorAndCreditorReports')).toContain('/export-licence');
     });
-    it('moves to the main application page when user reaches the final step', () => {
-      expect(nextDocument(application, dealId, 'exportLicence')).toBe(`/gef/application-details/${dealId}`);
+    it('moves to the Security details page', () => {
+      expect(nextDocument(application, dealId, 'exportLicence')).toContain('/security-details');
     });
 
     it('skips the management accounts page and moves to the financial forecasts page', () => {
