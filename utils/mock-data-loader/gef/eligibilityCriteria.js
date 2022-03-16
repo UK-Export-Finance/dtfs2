@@ -9,7 +9,7 @@ const ELIGIBILITY_CRITERIA = [
     }],
   },
   {
-    version: 2,
+    version: 1.5,
     isInDraft: false,
     createdAt: '2021-01-02T00:00',
     terms: [
