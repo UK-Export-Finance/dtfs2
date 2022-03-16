@@ -49,9 +49,14 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
 };
 
 const validateEnterExportersCorrespondenceAddress = async (req, res) => {
-  const { params, body, query } = req;
+  const {
+    params, body, query, session,
+  } = req;
   const { saveAndReturn, status } = query;
   const { dealId } = params;
+  const { user } = session;
+  const { _id } = user;
+
   const addressErrors = [];
 
   if (!isTrueSet(saveAndReturn)) {
@@ -90,6 +95,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
         ...exporter,
         correspondenceAddress: body,
       },
+      editorId: _id,
     };
 
     await api.updateApplication(dealId, applicationExporterUpdate);

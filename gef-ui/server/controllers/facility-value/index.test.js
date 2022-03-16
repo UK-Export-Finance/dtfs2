@@ -20,6 +20,7 @@ const MockRequest = (saveAndReturn = false) => {
     user: {
       bank: { id: 'BANK_ID' },
       roles: ['MAKER'],
+      _id: '12345',
     },
     userToken: 'secret-token',
   };
@@ -48,6 +49,7 @@ describe('controllers/facility-value', () => {
   let mockResponse;
   let mockRequest;
   let mockFacilityValueResponse;
+  const updateApplicationSpy = jest.fn();
 
   beforeEach(() => {
     mockResponse = MockResponse();
@@ -57,6 +59,7 @@ describe('controllers/facility-value', () => {
     api.getApplication.mockResolvedValue(MockApplicationResponse());
     api.getFacility.mockResolvedValue(mockFacilityValueResponse);
     api.updateFacility.mockResolvedValue(mockFacilityValueResponse);
+    api.updateApplication = updateApplicationSpy;
   });
 
   afterEach(() => {
@@ -224,6 +227,20 @@ describe('controllers/facility-value', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith(FACILITY_GUARANTEE_URL);
     });
 
+    it('calls api.updateApplication with editorId', async () => {
+      mockRequest.body.coverPercentage = '79';
+      mockRequest.body.interestPercentage = '10';
+      mockRequest.body.value = '1000';
+
+      await updateFacilityValue(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
+    });
+
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
       mockRequest.body.currency = { id: 'EUR' };
       mockRequest.body.coverPercentage = '79';
@@ -378,6 +395,18 @@ describe('controllers/facility-value', () => {
       });
 
       expect(mockResponse.redirect).toHaveBeenCalledWith(APPLICATION_URL);
+    });
+
+    it('calls api.updateApplication with editorId', async () => {
+      mockRequest.body.interestPercentage = '10';
+
+      await updateFacilityValue(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

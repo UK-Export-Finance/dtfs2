@@ -111,6 +111,7 @@ const changeUnissuedFacilityPreview = async (req, res) => {
 const postChangeUnissuedFacility = async (req, res) => {
   const { body, query, params } = req;
   const { user } = req.session;
+  const { _id } = user;
 
   const {
     issueDate,
@@ -172,6 +173,13 @@ const postChangeUnissuedFacility = async (req, res) => {
       }),
       (req.url = `/gef/application-details/${dealId}/unissued-facilities`),
     );
+
+    // updates application with editorId
+    const applicationUpdate = {
+      editorId: _id,
+    };
+    await api.updateApplication(dealId, applicationUpdate);
+
     // TODO: DTFS2-5227 change redirect
     return applicationDetails(req, res);
   } catch (err) {
@@ -189,6 +197,7 @@ const postChangeUnissuedFacility = async (req, res) => {
 const postChangeUnissuedFacilityPreview = async (req, res) => {
   const { body, query, params } = req;
   const { user } = req.session;
+  const { _id } = user;
 
   const {
     issueDate,
@@ -248,6 +257,12 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
       (req.url = `/gef/application-details/${dealId}`),
     );
 
+    // updates application with editorId
+    const applicationUpdate = {
+      editorId: _id,
+    };
+
+    await api.updateApplication(dealId, applicationUpdate);
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
     console.error('Cannot update unissued facility from application preview', { err });

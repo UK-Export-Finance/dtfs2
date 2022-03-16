@@ -36,9 +36,13 @@ const facilities = async (req, res) => {
 };
 
 const createFacility = async (req, res) => {
-  const { body, params, query } = req;
+  const {
+    body, params, query, session,
+  } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
+  const { user } = session;
+  const { _id } = user;
   let { facilityType } = query;
   const hasBeenIssuedErrors = [];
   let facility;
@@ -72,6 +76,12 @@ const createFacility = async (req, res) => {
         hasBeenIssued: isTrueSet(body.hasBeenIssued),
       });
     }
+
+    // updates application with editorId
+    const applicationUpdate = {
+      editorId: _id,
+    };
+    await api.updateApplication(dealId, applicationUpdate);
 
     if (status && status === 'change') {
       return res.redirect(`/gef/application-details/${dealId}`);

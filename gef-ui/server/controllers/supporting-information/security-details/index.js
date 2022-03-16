@@ -38,6 +38,7 @@ const postSecurityDetails = async (req, res) => {
     params: { dealId },
     session: { user, userToken },
   } = req;
+  const { _id } = user;
 
   const securityDetailsErrors = [];
 
@@ -106,6 +107,8 @@ const postSecurityDetails = async (req, res) => {
       ...application.supportingInformation,
       securityDetails,
     };
+    // adds editorId to application
+    application.editorId = _id;
 
     await updateApplication(dealId, application);
 

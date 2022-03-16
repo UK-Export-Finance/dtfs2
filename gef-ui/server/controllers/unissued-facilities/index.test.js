@@ -148,6 +148,7 @@ describe('postChangeUnissuedFacility()', () => {
   let mockUserResponse;
   let mockFacilityResponse;
   let mockFacilitiesResponse;
+  const updateApplicationSpy = jest.fn();
 
   beforeEach(() => {
     mockResponse = MOCKS.MockResponseUnissued();
@@ -162,6 +163,7 @@ describe('postChangeUnissuedFacility()', () => {
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.updateFacility.mockResolvedValue({});
+    api.updateApplication = updateApplicationSpy;
   });
 
   afterEach(() => {
@@ -216,6 +218,31 @@ describe('postChangeUnissuedFacility()', () => {
       { message: 'UKEF123 is updated' },
       '/gef/application-details/123/unissued-facilities',
     );
+  });
+
+  it('calls api.updateApplication with editorId if successfully updates facility', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+    await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+    const expectedUpdateObj = {
+      editorId: '12345',
+    };
+
+    expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
   });
 
   it('should not update facility if issue date before submissionDate', async () => {
@@ -375,6 +402,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
   let mockFacilityResponse;
   let mockFacilitiesResponse;
   let mockUserResponse;
+  const updateApplicationSpy = jest.fn();
 
   beforeEach(() => {
     mockResponse = MOCKS.MockResponseUnissued();
@@ -388,6 +416,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.updateFacility.mockResolvedValue({});
+    api.updateApplication = updateApplicationSpy;
   });
 
   afterEach(() => {
@@ -439,6 +468,32 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       },
       '/gef/application-details/123',
     );
+  });
+
+  it('calls api.updateApplication with editorId if successfully updates facility', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+    await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
+
+    const expectedUpdateObj = {
+      editorId: '12345',
+    };
+
+    expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
   });
 
   it('should not update facility if no name or dates', async () => {

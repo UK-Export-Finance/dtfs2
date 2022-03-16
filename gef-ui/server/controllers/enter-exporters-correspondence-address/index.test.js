@@ -9,7 +9,11 @@ const MockRequest = () => {
   req.query = {};
   req.params = {};
   req.params.dealId = '123';
-  req.session = {};
+  req.session = {
+    user: {
+      _id: '12345',
+    },
+  };
   req.body = {};
   req.get = () => '/url';
   return req;
@@ -132,7 +136,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
       }));
     });
 
-    it(`calls api with country defaulted to ${DEFAULT_COUNTRY}`, async () => {
+    it(`calls api with country defaulted to ${DEFAULT_COUNTRY} and editorId`, async () => {
       mockRequest.body.addressLine1 = 'Line1';
       mockRequest.body.postalCode = 'sa1 7fr';
 
@@ -145,6 +149,7 @@ describe('controllers/enter-exporters-correspondence-address', () => {
             country: DEFAULT_COUNTRY,
           },
         },
+        editorId: '12345',
       };
 
       expect(api.updateApplication).toHaveBeenCalledWith(

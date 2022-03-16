@@ -15,8 +15,13 @@ const setError = (field, message) => validationErrorHandler({
   errMsg: message,
 });
 
-const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverStartOnSubmission }) => {
+const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverStartOnSubmission }, dealId, _id) => {
   try {
+    const applicationUpdate = {
+      editorId: _id,
+    };
+    await api.updateApplication(dealId, applicationUpdate);
+
     return api.updateFacility(facilityId, {
       coverStartDate,
       shouldCoverStartOnSubmission,
@@ -30,6 +35,8 @@ const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverSta
 
 const processCoverStartDate = async (req, res) => {
   const { dealId, facilityId } = req.params;
+  const { user } = req.session;
+  const { _id } = user;
   const {
     ukefCoverStartDate,
     day,
@@ -48,10 +55,10 @@ const processCoverStartDate = async (req, res) => {
          * checker will submit the application to the UKEF.
          * Please do not update the coverStartDate value.
          */
-      facility = updateCoverStartDate(facilityId, {
+      facility = await updateCoverStartDate(facilityId, {
         coverStartDate: null,
         shouldCoverStartOnSubmission: true,
-      });
+      }, dealId, _id);
     } else if (ukefCoverStartDate === 'false') {
       /**
          * Facility cover start will be set to the
@@ -70,10 +77,10 @@ const processCoverStartDate = async (req, res) => {
         req.errors = setError('ukefCoverStartDateInput', 'Cover date must be within 3 months');
       } else {
         // Update facility's cover start date
-        facility = updateCoverStartDate(facilityId, {
+        facility = await updateCoverStartDate(facilityId, {
           coverStartDate: format(getEpoch({ day, month, year }), CONSTANTS.DATE_FORMAT.COVER),
           shouldCoverStartOnSubmission: false,
-        });
+        }, dealId, _id);
       }
     }
 

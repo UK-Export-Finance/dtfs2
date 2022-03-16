@@ -21,7 +21,7 @@ const uploadAndSaveToDeal = async (files, field, dealId, token, user, maxFileSiz
     const document = { ...file };
 
     if (!document.error) {
-      await updateSupportingInformation(dealId, document, field);
+      await updateSupportingInformation(dealId, document, field, user);
     }
 
     return document;
@@ -36,7 +36,7 @@ const uploadAndSaveToDeal = async (files, field, dealId, token, user, maxFileSiz
  * @param {*} deal application/deal object
  * @param {*} token
  */
-const removeFileFromDeal = async (filename, field, deal, token) => {
+const removeFileFromDeal = async (filename, field, deal, token, user) => {
   const existingFiles = deal.supportingInformation?.[field];
 
   const fileToDelete = existingFiles.find((file) => file.filename === filename);
@@ -47,7 +47,7 @@ const removeFileFromDeal = async (filename, field, deal, token) => {
 
     const updatedDeal = { ...deal };
     updatedDeal.supportingInformation[field] = existingFiles.filter((file) => file._id !== fileToDelete._id);
-
+    updatedDeal.editorId = user._id;
     await updateApplication(updatedDeal._id, updatedDeal);
   }
 };

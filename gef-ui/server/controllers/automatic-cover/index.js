@@ -28,11 +28,18 @@ const automaticCover = async (req, res) => {
 
 const validateAutomaticCover = async (req, res, next) => {
   try {
-    const { body, params, query } = req;
+    const {
+      body,
+      params,
+      query,
+      session,
+    } = req;
     const { dealId } = params;
     const { saveAndReturn } = query;
+    const { user } = session;
     const application = await api.getApplication(dealId);
     const { eligibility } = application;
+    const { _id } = user;
 
     const automaticCoverErrors = getValidationErrors(body, eligibility.criteria);
     const coverType = deriveCoverType(body, eligibility.criteria);
@@ -69,6 +76,7 @@ const validateAutomaticCover = async (req, res, next) => {
       eligibility: {
         criteria: newAnswers,
       },
+      editorId: _id,
     };
 
     await api.updateApplication(dealId, applicationUpdate);

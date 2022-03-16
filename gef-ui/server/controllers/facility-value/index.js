@@ -34,7 +34,11 @@ const facilityValue = async (req, res) => {
 };
 
 const updateFacilityValue = async (req, res) => {
-  const { params, body, query } = req;
+  const {
+    params, body, query, session,
+  } = req;
+  const { user } = session;
+  const { _id } = user;
   const { dealId, facilityId } = params;
   const {
     value, interestPercentage, coverPercentage, facilityType, currency,
@@ -51,6 +55,13 @@ const updateFacilityValue = async (req, res) => {
         interestPercentage: interestPercentage || null,
         value: value ? value.replace(/,/g, '') : null,
       });
+
+      // updates application with editorId
+      const applicationUpdate = {
+        editorId: _id,
+      };
+      await api.updateApplication(dealId, applicationUpdate);
+
       if (saveAndReturn) {
         return res.redirect(`/gef/application-details/${dealId}`);
       }

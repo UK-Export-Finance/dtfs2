@@ -57,9 +57,9 @@ const updateApplication = async (dealId, application) => {
   }
 };
 
-const updateSupportingInformation = async (dealId, application, field) => {
+const updateSupportingInformation = async (dealId, application, field, user) => {
   try {
-    const { data } = await Axios.put(`/gef/application/supporting-information/${dealId}`, { application, field });
+    const { data } = await Axios.put(`/gef/application/supporting-information/${dealId}`, { application, field, user });
     return data;
   } catch (err) {
     return apiErrorHandler(err);
