@@ -109,9 +109,6 @@ const postSecurityDetails = async (req, res) => {
 
     await updateApplication(dealId, application);
 
-    if (application.supportingInformation?.requiredFields?.includes('exportLicence')) {
-      return res.redirect('export-licence');
-    }
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
     console.error(`Error updating security details ${err}`);

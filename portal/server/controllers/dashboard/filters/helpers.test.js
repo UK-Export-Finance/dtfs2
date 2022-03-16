@@ -2,6 +2,7 @@ import {
   submittedFiltersArray,
   submittedFiltersObject,
   formatFieldValue,
+  filtersToText,
 } from './helpers';
 
 describe('controllers/dashboard/filters - helpers', () => {
@@ -145,6 +146,50 @@ describe('controllers/dashboard/filters - helpers', () => {
       const result = formatFieldValue();
 
       expect(result).toEqual(null);
+    });
+  });
+
+  describe('filtersToText()', () => {
+    it('returns aria label with none if empty filters array passed', () => {
+      const result = filtersToText([]);
+
+      const expected = 'Filters selected: none';
+
+      expect(result).toEqual(expected);
+    });
+
+    it('returns aria label with filters selected if user adds filters on dashboard', () => {
+      const filters = [
+        {
+          heading: { text: 'Product' },
+          items: [{
+            text: 'BSS/EWCS',
+            href: 'filters/remove/dealType/BSS-EWCS',
+            formattedValue: 'BSS-EWCS',
+          }],
+        },
+        {
+          heading: { text: 'Notice Type' },
+          items: [{
+            text: 'Automatic Inclusion Notice',
+            href: 'filters/remove/dealType/BSS-EWCS',
+            formattedValue: 'BSS-EWCS',
+          }],
+        },
+        {
+          heading: { text: 'Status' },
+          items: [{
+            text: 'Draft',
+            href: 'filters/remove/status/Draft',
+            formattedValue: 'Draft',
+          }],
+        },
+      ];
+      const result = filtersToText(filters);
+
+      const expected = 'Filters selected: , Product: , BSS/EWCS, Notice Type: , Automatic Inclusion Notice, Status: , Draft';
+
+      expect(result).toEqual(expected);
     });
   });
 });
