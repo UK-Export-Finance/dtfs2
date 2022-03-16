@@ -2,6 +2,7 @@ const page = {
   visit: () => cy.visit('/dashboard/facilities'),
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
   row: {
+    nameText: (id) => cy.get(`[data-cy="facility__name--text--${id}"]`),
     nameLink: (id) => cy.get(`[data-cy="facility__name--link--${id}"]`),
     ukefFacilityId: (id) => cy.get(`[data-cy="facility__ukefId--${id}"]`),
     type: (id) => cy.get(`[data-cy="facility__type--${id}"]`),

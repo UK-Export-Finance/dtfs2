@@ -9,7 +9,7 @@ const {
   GEF_FACILITY_CONTINGENT,
 } = require('../fixtures');
 
-const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
@@ -20,16 +20,14 @@ context('Dashboard Deals filters', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      /// facility...
-    });
+    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1);
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       const { _id: dealId } = deal;
 
       const facilities = [
-        { ...GEF_FACILITY_CASH, dealId },
-        { ...GEF_FACILITY_CONTINGENT, dealId },
+        { ...GEF_FACILITY_CASH, dealId, name: 'Cash Facility name' },
+        { ...GEF_FACILITY_CONTINGENT, dealId, name: 'Contingent Facility name' },
       ];
 
       cy.insertManyGefFacilities(facilities, BANK1_MAKER1).then((insertedFacilities) => {
@@ -41,11 +39,20 @@ context('Dashboard Deals filters', () => {
   });
 
   describe('by default', () => {
-    it('renders all facilities', () => {
+    it('renders all facilities (Checker)', () => {
+      cy.login(BANK1_CHECKER1);
+      dashboardFacilities.visit();
+      dashboardFacilities.rows().should('be.visible');
+      dashboardFacilities.row.nameText(ALL_FACILITIES[0]._id).should('exist');
+      dashboardFacilities.row.nameText(ALL_FACILITIES[1]._id).should('exist');
+      dashboardFacilities.rows().should('have.length', ALL_FACILITIES.length);
+    });
+    it('renders all facilities (Maker)', () => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
-
       dashboardFacilities.rows().should('be.visible');
+      dashboardFacilities.row.nameLink(ALL_FACILITIES[0]._id).should('exist');
+      dashboardFacilities.row.nameLink(ALL_FACILITIES[1]._id).should('exist');
       dashboardFacilities.rows().should('have.length', ALL_FACILITIES.length);
     });
 

@@ -1,25 +1,29 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{% macro ukefDecisionTable(deals) %}
+{% macro ukefDecisionTable(deals, isChecker) %}
 
 {% set items = [] %}
   {% for deal in deals %}
     {% set bankRefLink %}
-      {% if deal.dealType === 'GEF' %}
-        <a
-          class="govuk-link"
-          href="/gef/application-details/{{ deal.dealId }}"
-          aria-label="View deal details"
-          data-cy="reports-deal-{{ deal.dealId }}-link">
-          {{ deal.bankInternalRefName }}
-        </a>
+    {% if not isChecker %}
+        {% if deal.dealType === 'GEF' %}
+          <a
+            class="govuk-link"
+            href="/gef/application-details/{{ deal.dealId }}"
+            aria-label="View deal details"
+            data-cy="reports-deal-link">
+            {{ deal.bankInternalRefName }}
+          </a>
+        {% else %}
+          <a
+            class="govuk-link"
+            href="/contract/{{ deal.dealId }}"
+            aria-label="View deal details"
+            data-cy="reports-deal-link">
+            {{ deal.bankInternalRefName }}
+          </a>
+        {% endif %}
       {% else %}
-        <a
-          class="govuk-link"
-          href="/contract/{{ deal.dealId }}"
-          aria-label="View deal details"
-          data-cy="reports-deal-{{ deal.dealId }}-link">
-          {{ deal.bankInternalRefName }}
-        </a>
+        <span data-cy="reports-deal-link-text"> {{ deal.bankInternalRefName }} </span>
       {% endif %}
     {% endset %}
 
