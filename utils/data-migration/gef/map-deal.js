@@ -3,6 +3,7 @@ const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { getUserByEmail } = require('../helpers/users');
 const { getBankByName } = require('../helpers/banks');
 const { convertDateToTimestamp } = require('./helpers');
+const api = require('../api');
 
 const mapExporterIndustry = (v1DealExporter) => ({
   code: v1DealExporter.industry_sector.system_value,
@@ -46,17 +47,29 @@ const mapExporter = (v1Exporter) => {
   return mapped;
 };
 
-const mapEligibility = (v1Eligibility) => {
+const mapEligibility = async (token, v1Eligibility) => {
+  // NOTE: at the time of writing, GEF only has one eligibility criteria version.
+  // v1Eligibility.system_revision_id could be used, but this can be empty.
+  const version = v1Eligibility.system_revision_id ? v1Eligibility.system_revision_id : 1.5;
+
+  const { criteria: latestCriteria } = await api.getGefEligibilityCriteriaVersion(token, version);
   const v1CriteriaFieldNames = Object.getOwnPropertyNames(MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA);
 
-  const mappedCriteria = v1CriteriaFieldNames.map((criterion) => ({
-    id: MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA[criterion].id,
-    name: MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA[criterion].name,
-    text: v1Eligibility[criterion].question_text,
-    answer: v1Eligibility[criterion].question_answer,
-  }));
+  const mappedCriteria = v1CriteriaFieldNames.map((v1Criterion) => {
+    const id = MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA[v1Criterion].id;
+
+    const text = latestCriteria.find((c) => c.id === id).text;
+
+    return {
+      id,
+      name: MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA[v1Criterion].name,
+      text,
+      answer: v1Eligibility[v1Criterion].answer,
+    };
+  });
 
   const mapped = {
+    version,
     criteria: mappedCriteria,
   };
 
@@ -126,47 +139,60 @@ const mapSupportingInformation = (v1Eligibility) => {
 
   if (v1Eligibility.file_1) {
     mapped.manualInclusion.push({
+      // documentPath
       // encoding: '',
       // size: '',
       // etc
-      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_1,
+      dataMigration: {
+        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_1,
+      },
     })    
   }
 
   if (v1Eligibility.file_2) {
     mapped.manualInclusion.push({
-      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_2,
+      dataMigration: {
+        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_2,
+      },
     })
   }
 
   if (v1Eligibility.file_3) {
     mapped.manualInclusion.push({
-      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_3,
+      dataMigration: {
+        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_3,
+      },
     })
   }
 
   if (v1Eligibility.file_4) {
     mapped.manualInclusion.push({
-      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_4,
+      dataMigration: {
+        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_4,
+      },
     })
   }
 
   if (v1Eligibility.file_5) {
     mapped.manualInclusion.push({
-      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_5,
+      dataMigration: {
+        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_5,
+      },
     })
   }
 
   if (v1Eligibility.file_6) {
     mapped.manualInclusion.push({
-      documentPath: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_6,
+      dataMigration: {
+        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_6,
+      },
     })
   }
 
   return mapped;
 };
 
-const mapV1Deal = (v1Deal, v2Banks, v2Users) => {
+const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
   const submissionType = MIGRATION_MAP.DEAL.SUBMISSION_TYPE[v1Deal.field_submission_type];
   const status = MIGRATION_MAP.DEAL.DEAL_STATUS[v1Deal.field_deal_status];
   const isManualSubmission = (submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
@@ -188,16 +214,13 @@ const mapV1Deal = (v1Deal, v2Banks, v2Users) => {
     submissionDate: convertDateToTimestamp(v1Deal.field_submission_date),
     ukefDealId: v1Deal.field_ukef_deal_id,
     exporter: mapExporter(v1Deal.children.general_info),
-    eligibility: mapEligibility(v1Deal.children.eligiblity),
-    eligibilityVersionId: Number(v1Deal.children.eligiblity.system_revision_id),
+    eligibility: await mapEligibility(token, v1Deal.children.eligiblity),
     submissionCount: mapSubmissionCount(submissionType),
     portalActivities: [],
     manualInclusionNoticeSubmissionDate: convertDateToTimestamp(v1Deal.field_min_checker_date),
     comments: mapComments(v1Deal.children.comments_maker_checker, v2Users),
     ukefDecision: mapUkefDecision(v1Deal, status),
-    // TODO: supportingInformation / deal files.
     supportingInformation: {},
-    },
   };
 
   if (v1Deal.field_min_maker) {
@@ -225,7 +248,7 @@ const mapV1Deal = (v1Deal, v2Banks, v2Users) => {
   }
 
   if (isManualSubmission) {
-    mapped.supportingInformation = mapSupportingInformation(v2Deal.eligiblity);
+    mapped.supportingInformation = mapSupportingInformation(v1Deal.children.eligiblity);
   }
 
   return mapped;

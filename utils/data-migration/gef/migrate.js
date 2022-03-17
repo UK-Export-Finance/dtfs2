@@ -12,6 +12,7 @@ const {
   dealMappingErrors,
   facilitiesMappingErrors,
 } = require('./mapping-errors');
+// const migrateDealFiles = require('./migrate-deal-files');
 
 let token;
 let v2Banks;
@@ -30,8 +31,8 @@ const init = async () => {
   };
 };
 
-const mapToV2 = (v1Deal, v2Banks, v2Users) => {
-  const v2Deal = mapDeal(v1Deal, v2Banks, v2Users);
+const mapToV2 = async (v1Deal, v2Banks, v2Users) => {
+  const v2Deal = await mapDeal(token, v1Deal, v2Banks, v2Users);
 
   const v1Facilities = v1Deal.children.facilities;
   const v2Facilities = mapFacilities(v1Facilities, v2Deal.submissionDate);
@@ -63,7 +64,6 @@ const mapToV2 = (v1Deal, v2Banks, v2Users) => {
   };
 };
 
-
 const addToDatabase = async (v2Deal, v2Facilities) => {
   const v1DealId = v2Deal.dataMigration.drupalDealId;
 
@@ -73,8 +73,24 @@ const addToDatabase = async (v2Deal, v2Facilities) => {
     if (success && deal && facilities) {
       log.addSuccess(v1DealId, `Successfully migrated v1 GEF deal`);
     } else {
-      log.addError(v1DealId, `Error migrating v1 GEF deal`);
+      log.addError(v1DealId, `Error adding v1 GEF deal to database.`);
     }
+
+      // const dealHasFilesToUpload = v2Deal.supportingInformation.manualInclusion.length;
+
+      // if (dealHasFilesToUpload) {
+      //   await migrateDealFiles(
+      //     v2Deal._id,
+      //     v2Deal.supportingInformation.manualInclusion,
+      //   );
+
+      // } else {
+      //   log.addSuccess(v1DealId, `Successfully migrated v1 GEF deal`);
+      // }
+    // } else {
+    //   log.addError(v1DealId, `Error adding v1 GEF deal to database.`); 
+    // }
+
   });
 };
 

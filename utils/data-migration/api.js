@@ -126,6 +126,20 @@ const listIndustrySectors = async (token) => {
   return response.data.industrySectors;
 };
 
+const getGefEligibilityCriteriaVersion = async (token, version) => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${urlRoot}/v1/gef/eligibility-criteria/${version}`,
+  }).catch((err) => { console.info(`err: ${err}`); });
+
+  return response.data;
+};
+
 module.exports = {
   createUser,
   importBssEwcsDeal,
@@ -135,4 +149,5 @@ module.exports = {
   listCountries,
   listCurrencies,
   listIndustrySectors,
+  getGefEligibilityCriteriaVersion,
 };

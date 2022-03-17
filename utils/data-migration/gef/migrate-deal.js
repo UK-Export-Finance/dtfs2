@@ -24,7 +24,7 @@ const doMigration = async () => {
     mappingErrors,
     v2Deal,
     v2Facilities,
-  } = mapToV2(v1Deal, v2Banks, v2Users);
+  } = await mapToV2(v1Deal, v2Banks, v2Users);
 
   if (!mappingErrors) {
     await addToDatabase(
