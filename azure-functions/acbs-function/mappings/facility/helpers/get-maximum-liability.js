@@ -4,10 +4,12 @@
  * @returns {Float} Facility UKEF exposure amount
  */
 const getMaximumLiability = (facility) => {
-  const ukefExposure = facility.tfm.ukefExposure || facility.facilitySnapshot.ukefExposure;
+  const { ukefExposure } = facility.facilitySnapshot;
 
-  return typeof ukefExposure !== 'number'
+  const amount = typeof ukefExposure !== 'number'
     ? Number(ukefExposure.replace(/,/g, ''))
     : ukefExposure;
+
+  return Number(amount.toFixed(2));
 };
 module.exports = getMaximumLiability;
