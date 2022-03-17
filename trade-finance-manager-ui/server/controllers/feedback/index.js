@@ -4,6 +4,10 @@ const generateValidationErrors = require('../../helpers/validation');
 const getFeedback = async (req, res) =>
   res.render('feedback/feedback-form.njk');
 
+// thank you page once feedback posted
+const thankYouFeedback = async (req, res) =>
+  res.render('feedback/feedback-thankyou.njk');
+
 const postFeedback = async (req, res) => {
   const userDetails = {
     username: null,
@@ -25,9 +29,7 @@ const postFeedback = async (req, res) => {
     const response = await api.createFeedback(feedbackBody);
 
     if (response) {
-      return res.render('feedback/feedback-thankyou.njk', {
-        user: req.session.user,
-      });
+      return res.redirect('/thank-you-feedback');
     }
   } catch (catchErr) {
     const { data } = catchErr.response;
@@ -58,4 +60,5 @@ const postFeedback = async (req, res) => {
 module.exports = {
   getFeedback,
   postFeedback,
+  thankYouFeedback,
 };
