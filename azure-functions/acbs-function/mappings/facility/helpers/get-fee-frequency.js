@@ -6,7 +6,7 @@ const CONSTANTS = require('../../../constants');
  * @returns {String} ACBS day basis code
  */
 const getFeeFrequency = (facility) => {
-  switch (facility.facilitySnapshot.feeFrequency) {
+  switch (facility.facilitySnapshot.feeFrequency || facility.facilitySnapshot.premiumFrequency) {
     case CONSTANTS.FACILITY.FEE_FREQUENCY.WEEKLY:
       return CONSTANTS.FACILITY.FEE_FREQUENCY_ACBS_CODE.WEEKLY;
 

@@ -7,10 +7,12 @@ const getFeeFrequency = require('./get-fee-frequency');
  * @param {Object} facility Facility object
  * @returns {String} ACBS fee type code
  */
-const getFeeType = (facility) => (
-  facility.facilitySnapshot.feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY
+const getFeeType = (facility) => {
+  const feeType = facility.facilitySnapshot.feeType || facility.facilitySnapshot.premiumType;
+
+  return feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY
     ? CONSTANTS.FACILITY.FEE_TYPE_ACBS_CODE.AT_MATURITY
-    : getFeeFrequency(facility)
-);
+    : getFeeFrequency(facility);
+};
 
 module.exports = getFeeType;
