@@ -67,7 +67,7 @@ exports.create = async (req, res) => {
     clearlyExplained,
     satisfied,
     howCanWeImprove,
-    emailAddress,
+    emailAddressForContact: emailAddress,
     created: formattedCreated,
     submittedBy
   };

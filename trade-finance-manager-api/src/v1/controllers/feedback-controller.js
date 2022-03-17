@@ -19,7 +19,7 @@ exports.create = async (req, res) => {
   }
 
   const modifiedFeedback = {
-    ...req.body.formData,
+    ...req.body,
     created: getUnixTime(new Date()),
   };
 
@@ -47,7 +47,7 @@ exports.create = async (req, res) => {
     easyToUse,
     satisfied,
     howCanWeImprove,
-    emailAddress,
+    emailAddressForContact: emailAddress,
     created: formattedCreated,
     submittedBy,
   };
