@@ -40,8 +40,8 @@ exports.create = async (req, res) => {
     submittedBy,
   } = modifiedFeedback;
 
-  if (submittedBy.username === null) {
-    submittedBy.username = 'N/A - not logged in';
+  if (!submittedBy.username) {
+    submittedBy.username = 'N/A';
   }
 
   const emailVariables = {
