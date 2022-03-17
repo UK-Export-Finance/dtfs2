@@ -65,7 +65,7 @@ const mockUkefUnconditionalDecisionReportResponse = [
 
 describe('controllers/reports.controller', () => {
   let res;
-  const req = { session: { token: 'mock-token', user: '' } };
+  const req = { session: { token: 'mock-token', user: { roles: ['maker'] } } };
   beforeEach(() => {
     res = mockResponse();
   });
@@ -153,7 +153,7 @@ describe('controllers/reports.controller', () => {
   });
 
   describe('getUnissuedFacilitiesReport', () => {
-    it('renders the unissued-facilities report page', async () => {
+    it('renders the unissued-facilities report page (Maker)', async () => {
       api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[1]]);
       await reportsController.getUnissuedFacilitiesReport(req, res);
 
@@ -161,12 +161,27 @@ describe('controllers/reports.controller', () => {
         facilities: [mockUnissuedFacilitiesReportResponse[1]],
         primaryNav: 'reports',
         user: req.session.user,
+        isChecker: false,
+      });
+    });
+
+    it('renders the unissued-facilities report page (Checker)', async () => {
+      req.session.user.roles = ['checker'];
+      api.getUnissuedFacilitiesReport.mockResolvedValue([mockUnissuedFacilitiesReportResponse[1]]);
+      await reportsController.getUnissuedFacilitiesReport(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('reports/unissued-facilities.njk', {
+        facilities: [mockUnissuedFacilitiesReportResponse[1]],
+        primaryNav: 'reports',
+        user: req.session.user,
+        isChecker: true,
       });
     });
   });
 
   describe('getUnconditionalDecisionReport', () => {
-    it('renders the unconditional decision page', async () => {
+    it('renders the unconditional decision page (Maker)', async () => {
+      req.session.user.roles = ['maker'];
       api.getUkefDecisionReport.mockResolvedValue(mockUkefUnconditionalDecisionReportResponse);
       await reportsController.getUnconditionalDecisionReport(req, res);
 
@@ -174,12 +189,27 @@ describe('controllers/reports.controller', () => {
         deals: mockUkefUnconditionalDecisionReportResponse,
         primaryNav: 'reports',
         user: req.session.user,
+        isChecker: false,
+      });
+    });
+
+    it('renders the unconditional decision page (Checker)', async () => {
+      req.session.user.roles = ['checker'];
+      api.getUkefDecisionReport.mockResolvedValue(mockUkefUnconditionalDecisionReportResponse);
+      await reportsController.getUnconditionalDecisionReport(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('reports/unconditional-decision.njk', {
+        deals: mockUkefUnconditionalDecisionReportResponse,
+        primaryNav: 'reports',
+        user: req.session.user,
+        isChecker: true,
       });
     });
   });
 
   describe('getConditionalDecisionReport', () => {
-    it('renders the conditional decision page', async () => {
+    it('renders the conditional decision page (Maker)', async () => {
+      req.session.user.roles = ['maker'];
       api.getUkefDecisionReport.mockResolvedValue(mockUkefConditionalDecisionReportResponse);
       await reportsController.getConditionalDecisionReport(req, res);
 
@@ -187,6 +217,20 @@ describe('controllers/reports.controller', () => {
         deals: mockUkefConditionalDecisionReportResponse,
         primaryNav: 'reports',
         user: req.session.user,
+        isChecker: false,
+      });
+    });
+
+    it('renders the conditional decision page (Checker)', async () => {
+      req.session.user.roles = ['checker'];
+      api.getUkefDecisionReport.mockResolvedValue(mockUkefConditionalDecisionReportResponse);
+      await reportsController.getConditionalDecisionReport(req, res);
+
+      expect(res.render).toHaveBeenCalledWith('reports/conditional-decision.njk', {
+        deals: mockUkefConditionalDecisionReportResponse,
+        primaryNav: 'reports',
+        user: req.session.user,
+        isChecker: true,
       });
     });
   });
