@@ -6,6 +6,8 @@ const api = require('../../services/api');
 const acceptUkefDecision = async (req, res) => {
   const { dealId } = req.params;
   const { decision } = req.body;
+  const { user } = req.session;
+  const { _id: editorId } = user;
 
   try {
     if (decision) {
@@ -13,6 +15,7 @@ const acceptUkefDecision = async (req, res) => {
       const facilities = await api.getFacilities(dealId);
 
       application.ukefDecisionAccepted = true;
+      application.editorId = editorId;
       await api.updateApplication(dealId, application);
       /**
        * If issued facilities available then redirect user to

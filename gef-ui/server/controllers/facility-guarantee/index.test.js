@@ -20,6 +20,7 @@ const MockRequest = () => {
     user: {
       bank: { id: 'BANK_ID' },
       roles: ['MAKER'],
+      _id: '12345',
     },
     userToken: 'secret-token',
   };
@@ -48,6 +49,7 @@ describe('controllers/facility-guarantee', () => {
   let mockResponse;
   let mockRequest;
   let mockFacilityResponse;
+  const updateApplicationSpy = jest.fn();
 
   beforeEach(() => {
     mockResponse = MockResponse();
@@ -57,6 +59,7 @@ describe('controllers/facility-guarantee', () => {
     api.getApplication.mockResolvedValue(MockApplicationResponse());
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue(mockFacilityResponse);
+    api.updateApplication = updateApplicationSpy;
   });
 
   afterEach(() => {
@@ -135,6 +138,20 @@ describe('controllers/facility-guarantee', () => {
       });
 
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    });
+
+    it('calls api.updateApplication with editorId', async () => {
+      mockRequest.body.feeType = CONSTANTS.FACILITY_PAYMENT_TYPE.IN_ADVANCE;
+      mockRequest.body.dayCountBasis = '365';
+      mockRequest.body.inAdvanceFrequency = 'Monthly';
+
+      await updateFacilityGuarantee(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {

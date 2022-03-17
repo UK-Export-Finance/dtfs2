@@ -9,6 +9,11 @@ const MockRequest = () => {
   req.query = {};
   req.params.dealId = '123';
   req.body = {};
+  req.session = {
+    user: {
+      _id: '12345',
+    },
+  };
   return req;
 };
 
@@ -39,11 +44,14 @@ describe('controllers/about-exporter', () => {
   let mockResponse;
   let mockApplicationResponse;
 
+  const updateApplicationSpy = jest.fn();
+
   beforeEach(() => {
     mockRequest = MockRequest();
     mockResponse = MockResponse();
     mockApplicationResponse = MockApplicationResponse();
 
+    api.updateApplication = updateApplicationSpy;
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getCompaniesHouseDetails.mockResolvedValue(MockCHResponse());
   });
@@ -123,6 +131,24 @@ describe('controllers/about-exporter', () => {
       mockRequest.body.regNumber = '123';
       await validateCompaniesHouse(mockRequest, mockResponse);
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    });
+
+    it('calls api.updateApplication with editorId and exporter object', async () => {
+      mockRequest.query.status = 'change';
+      mockRequest.body.regNumber = '123';
+      await validateCompaniesHouse(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        editorId: '12345',
+        exporter: {
+          isFinanceIncreasing: null,
+          probabilityOfDefault: '',
+          smeType: '',
+          status: 200,
+        },
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
     });
 
     it('redirects user to `problem with service` page if there is an issue with any of the api', async () => {

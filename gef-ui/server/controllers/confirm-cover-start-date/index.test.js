@@ -16,7 +16,7 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.body = {
-    ukefCoverStartDate: true,
+    ukefCoverStartDate: 'true',
     day: 1,
     month: 12,
     year: 2021,
@@ -32,6 +32,7 @@ const MockRequest = () => {
     user: {
       bank: { id: 'BANKID' },
       roles: ['MAKER'],
+      _id: '12345',
     },
     userToken: 'TEST',
   };
@@ -85,6 +86,8 @@ describe('controller/ukef-cover-start-date', () => {
   let mockUserResponse;
   let mockEligibilityCriteriaResponse;
 
+  const updateApplicationSpy = jest.fn();
+
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
@@ -97,6 +100,7 @@ describe('controller/ukef-cover-start-date', () => {
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
     api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
+    api.updateApplication = updateApplicationSpy;
   });
 
   afterEach(() => {
@@ -111,6 +115,15 @@ describe('controller/ukef-cover-start-date', () => {
         .toHaveBeenCalledWith('partials/cover-start-date.njk', expect.objectContaining({
           applicationStatus: mockApplicationResponse.status,
         }));
+    });
+
+    it('calls api.updateApplication with editorId if successfully updates facility', async () => {
+      await processCoverStartDate(mockRequest, mockResponse);
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
     });
   });
 });

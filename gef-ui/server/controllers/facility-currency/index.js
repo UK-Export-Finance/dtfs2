@@ -27,10 +27,14 @@ const facilityCurrency = async (req, res) => {
 };
 
 const updateFacilityCurrency = async (req, res) => {
-  const { params, body, query } = req;
+  const {
+    params, body, query, session,
+  } = req;
   const { dealId, facilityId } = params;
   const { currencyId, facilityType } = body;
   const { returnToApplication, status, saveAndReturn } = query;
+  const { user } = session;
+  const { _id: editorId } = user;
   const facilityTypeConst = FACILITY_TYPE[facilityType?.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const facilityCurrencyErrors = [];
@@ -49,6 +53,13 @@ const updateFacilityCurrency = async (req, res) => {
         id: currencyId,
       },
     });
+
+    // updates application with editorId
+    const applicationUpdate = {
+      editorId,
+    };
+    await api.updateApplication(dealId, applicationUpdate);
+
     return res.redirect(`/gef/application-details/${dealId}`);
   }
 
@@ -76,6 +87,12 @@ const updateFacilityCurrency = async (req, res) => {
         id: currencyId,
       },
     });
+
+    // updates application with editorId
+    const applicationUpdate = {
+      editorId,
+    };
+    await api.updateApplication(dealId, applicationUpdate);
 
     if (status === 'change') {
       return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/facility-value?status=change`);

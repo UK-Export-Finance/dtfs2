@@ -18,6 +18,11 @@ const MockRequest = () => {
   req.body = {};
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
+  req.session = {
+    user: {
+      _id: '12345',
+    },
+  };
   return req;
 };
 
@@ -31,6 +36,7 @@ describe('controllers/provided-facility', () => {
   let mockResponse;
   let mockRequest;
   let mockProvidedFacilityResponse;
+  const updateApplicationSpy = jest.fn();
 
   beforeEach(() => {
     mockResponse = MockResponse();
@@ -40,6 +46,7 @@ describe('controllers/provided-facility', () => {
     // api.getApplication.mockResolvedValue();
     api.getFacility.mockResolvedValue(mockProvidedFacilityResponse);
     api.updateFacility.mockResolvedValue(mockProvidedFacilityResponse);
+    api.updateApplication = updateApplicationSpy;
   });
 
   afterEach(() => {
@@ -132,6 +139,19 @@ describe('controllers/provided-facility', () => {
         details: ['TERMS', 'RESOLVING'],
         detailsOther: undefined,
       });
+    });
+
+    it('calls api.updateApplication with editorId if successfully updates facility', async () => {
+      mockRequest.body.details = ['TERMS', 'RESOLVING'];
+      mockRequest.body.type = CONSTANTS.FACILITY_TYPE.CASH;
+
+      await validateProvidedFacility(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
