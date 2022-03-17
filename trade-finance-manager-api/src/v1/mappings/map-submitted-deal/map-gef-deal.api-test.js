@@ -42,6 +42,7 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
         smeType: dealSnapshot.exporter.smeType,
       },
       maker: dealSnapshot.maker,
+      supportingInformation: dealSnapshot.supportingInformation,
       facilities: dealSnapshot.facilities.map((facility) => mapCashContingentFacility(facility)),
       bank: {
         emails: dealSnapshot.bank.emails,
