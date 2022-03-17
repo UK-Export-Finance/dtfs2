@@ -60,7 +60,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
 
       const expected = {
         _id,
-        ukefFacilityId: Number(ukefFacilityId),
+        ukefFacilityId: String(ukefFacilityId),
         type,
         currencyCode: currency.id,
         value: Number(value.replace(/,/g, '')),
