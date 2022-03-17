@@ -15,10 +15,10 @@ const setError = (field, message) => validationErrorHandler({
   errMsg: message,
 });
 
-const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverStartOnSubmission }, dealId, _id) => {
+const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverStartOnSubmission }, dealId, editorId) => {
   try {
     const applicationUpdate = {
-      editorId: _id,
+      editorId,
     };
     await api.updateApplication(dealId, applicationUpdate);
 

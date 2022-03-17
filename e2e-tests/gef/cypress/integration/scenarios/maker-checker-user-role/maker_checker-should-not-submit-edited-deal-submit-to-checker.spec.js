@@ -28,7 +28,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
     Cypress.Cookies.preserveOnce('connect.sid');
   });
 
-  describe('DTFS2-4698 MAKER_CHECKER should not be able to submit own edited deals', () => {
+  describe('DTFS2-4698 MAKER_CHECKER should not be able to submit own edited deals when submitting to checker as MAKER_CHECKER', () => {
     it('does not allow a MAKER_CHECKER to submit own edited deals', () => {
       // login as a MAKER and submit
       cy.login(CREDENTIALS.MAKER);
