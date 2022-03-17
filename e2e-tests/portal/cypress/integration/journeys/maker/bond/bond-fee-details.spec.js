@@ -72,6 +72,15 @@ context('Bond Fee Details', () => {
     });
   });
 
+  it('should display the correct title for bond fee details', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+
+    pages.contract.addBondButton().click();
+    partials.taskListHeader.itemLink('fee-details').click();
+
+    pages.bondFeeDetails.title().contains('Add fee details');
+  });
+
   it('form submit of all required fields should render a `completed` status tag only for `Bond Fee Details` in task list header', () => {
     cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
