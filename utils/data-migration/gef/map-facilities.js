@@ -27,19 +27,24 @@ const mapFeeFrequency = (v1Frequency) => {
 };
 
 const mapBasisDetails = (v1Basis) => {
-  if (v1Basis) {
-    const mapped = v1Basis.map((v1) => {
-      if (MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]) {
-        return MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value];
-      }
+  const mapped = {
+    details: [],
+    detailsOther: null,
+  };
 
-      return V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.OTHER;
-    });
-    
-    return mapped;
+  if (v1Basis) {
+    v1Basis.forEach((v1) => {
+      if (MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]) {
+        // return MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value];
+        mapped.details.push(MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]);
+      } else {
+        mapped.details.push(V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.OTHER);
+        mapped.detailsOther = v1.system_value;
+      }
+    }); 
   }
 
-  return V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.OTHER;
+  return mapped;
 };
 
 const mapCoverDateConfirmed = (issued) => {
@@ -76,7 +81,7 @@ const mapV1Facilities = (
 ) => {
   const v2Facilities = v1Facilities.map((v1Facility) => {
     const hasBeenIssued = mapHasBeenIssued(v1Facility.facility_stage);
-    const details = mapBasisDetails(v1Facility.facility_characteristics);
+    const { details, detailsOther } = mapBasisDetails(v1Facility.facility_characteristics);
     const coverStartDate = v2DealSubmissionDate;
 
     const mapped = {
@@ -97,6 +102,7 @@ const mapV1Facilities = (
       dayCountBasis: Number(v1Facility.day_basis.readable_value),
 
       details,
+      detailsOther,
       ukefExposure: Number(v1Facility.maximum_liability),
       guaranteeFee: Number(v1Facility.guarantee_fee_),
       monthsOfCover: Number(v1Facility.exposure_period),
@@ -110,10 +116,6 @@ const mapV1Facilities = (
       ),
       hasBeenIssuedAndAcknowledged: Boolean(v1Facility.stage_issued_acknowledged),
     };
-
-    if (details === V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.OTHER) {
-      mapped.detailsOther = v1Facility.facility_type_text;
-    }
 
     if (hasBeenIssued) {
       mapped.issuedDate = convertDateToTimestamp(v1Facility.issue_date);

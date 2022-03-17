@@ -28,6 +28,9 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
   if (!hasObjectValues(v2Deal.exporter)) {
     errors.push('exporter');
   }
+  if (!isNumber(v2Deal.eligibility.version)) {
+    errors.push('eligibility.version');
+  }
   if (!hasValue(v2Deal.eligibility.criteria)) {
     errors.push('eligibility.criteria');
   }
@@ -36,9 +39,6 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
   }
   if (!isNumber(v2Deal.mandatoryVersionId)) {
     errors.push('mandatoryVersionId');
-  }
-  if (!isNumber(v2Deal.eligibilityVersionId)) {
-    errors.push('eligibilityVersionId');
   }
   if (!hasValue(v2Deal.comments)) {
     errors.push('comments');
@@ -96,9 +96,6 @@ const facilityMappingErrors = (v2Facility) => {
   }
   if (!isNumber(v2Facility.dayCountBasis)) {
     errors.push('dayCountBasis');
-  }
-  if (!hasValue(v2Facility.details)) {
-    errors.push('details');
   }
   if (!isNumber(v2Facility.ukefExposure)) {
     errors.push('ukefExposure');
