@@ -58,6 +58,10 @@ exports.create = async (req, res) => {
     submittedBy
   } = modifiedFeedback;
 
+  if (submittedBy.username === null) {
+    submittedBy.username = 'N/A - not logged in';
+  }
+
   const emailVariables = {
     role,
     organisation,
@@ -69,7 +73,7 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddressForContact: emailAddress,
     created: formattedCreated,
-    submittedBy
+    submittedBy: submittedBy.username,
   };
 
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';

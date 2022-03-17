@@ -40,6 +40,10 @@ exports.create = async (req, res) => {
     submittedBy,
   } = modifiedFeedback;
 
+  if (submittedBy.username === null) {
+    submittedBy.username = 'N/A - not logged in';
+  }
+
   const emailVariables = {
     role,
     team,
@@ -49,7 +53,7 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddressForContact: emailAddress,
     created: formattedCreated,
-    submittedBy,
+    submittedBy: submittedBy.username,
   };
 
   const EMAIL_TEMPLATE_ID = CONSTANTS.EMAIL_TEMPLATE_IDS.TFM_FEEDBACK_RECEIVED;
