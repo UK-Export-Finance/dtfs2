@@ -49,6 +49,14 @@ context('Bond Details', () => {
     });
   });
 
+  it('should display the correct title for bond details', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+
+    pages.contract.addBondButton().click();
+
+    pages.bondDetails.title().contains('Bond');
+  });
+
   it('form submit of all required fields should display a `completed` status tag only for `Bond Details` in task list header', () => {
     cy.loginGoToDealPage(BANK1_MAKER1, deal);
 

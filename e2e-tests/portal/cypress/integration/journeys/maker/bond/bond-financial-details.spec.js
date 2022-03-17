@@ -113,6 +113,15 @@ context('Bond Financial Details', () => {
     });
   });
 
+  it('should display the correct title for bond financial details', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+
+    pages.contract.addBondButton().click();
+    partials.taskListHeader.itemLink('financial-details').click();
+
+    pages.bondFinancialDetails.title().contains('Add financial details');
+  });
+
   it('form submit of all required fields should render a `completed` status tag only for `Bond Financial Details` in task list header', () => {
     cy.loginGoToDealPage(BANK1_MAKER1, deal);
 

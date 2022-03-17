@@ -7,6 +7,8 @@ const date = (prefix) => ({
 const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}/about/financial`),
 
+  title: () => cy.get('[data-cy="about"]'),
+
   supplyContractValue: () => cy.get('[data-cy="supplyContractValue"]'),
   supplyContractCurrency: () => cy.get('[data-cy="supplyContractCurrency"]'),
   supplyContractConversionRateToGBP: () => cy.get('[data-cy="supplyContractConversionRateToGBP"]'),
