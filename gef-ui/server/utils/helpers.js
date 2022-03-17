@@ -329,10 +329,10 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) =>
       Object.values(val).forEach((value) => {
         if (value) {
           if (options.isDetails) {
-            if (value === 'OTHER') {
-              list.push(`<li>${CONSTANTS.FACILITY_PROVIDED_DETAILS[value]} ${detailsOther ? '-' : ''} ${detailsOther}</li>`);
+            if (value === CONSTANTS.FACILITY_PROVIDED_DETAILS.OTHER) {
+              list.push(`<li>${value} ${detailsOther ? ` - ${detailsOther} ` : '-'}</li>`);
             } else {
-              list.push(`<li>${CONSTANTS.FACILITY_PROVIDED_DETAILS[value]}</li>`);
+              list.push(`<li>${value}</li>`);
             }
           } else {
             list.push(`<li>${value}</li>`);
