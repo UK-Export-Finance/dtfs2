@@ -36,7 +36,7 @@ const updateCoverStartDate = async (facilityId, { coverStartDate, shouldCoverSta
 const processCoverStartDate = async (req, res) => {
   const { dealId, facilityId } = req.params;
   const { user } = req.session;
-  const { _id } = user;
+  const { _id: editorId } = user;
   const {
     ukefCoverStartDate,
     day,
@@ -58,7 +58,7 @@ const processCoverStartDate = async (req, res) => {
       facility = await updateCoverStartDate(facilityId, {
         coverStartDate: null,
         shouldCoverStartOnSubmission: true,
-      }, dealId, _id);
+      }, dealId, editorId);
     } else if (ukefCoverStartDate === 'false') {
       /**
          * Facility cover start will be set to the
@@ -80,7 +80,7 @@ const processCoverStartDate = async (req, res) => {
         facility = await updateCoverStartDate(facilityId, {
           coverStartDate: format(getEpoch({ day, month, year }), CONSTANTS.DATE_FORMAT.COVER),
           shouldCoverStartOnSubmission: false,
-        }, dealId, _id);
+        }, dealId, editorId);
       }
     }
 

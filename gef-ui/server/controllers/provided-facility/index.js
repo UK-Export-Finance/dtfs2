@@ -34,7 +34,7 @@ const validateProvidedFacility = async (req, res) => {
   const { facilityType, detailsOther } = body;
   const { saveAndReturn, status } = query;
   const { user } = session;
-  const { _id } = user;
+  const { _id: editorId } = user;
   const providedFacilityErrors = [];
   const facilityTypeConst = FACILITY_TYPE[body.facilityType?.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
@@ -77,7 +77,7 @@ const validateProvidedFacility = async (req, res) => {
 
     // updates application with editorId
     const applicationUpdate = {
-      editorId: _id,
+      editorId,
     };
     await api.updateApplication(dealId, applicationUpdate);
 

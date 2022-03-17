@@ -169,12 +169,12 @@ exports.updateSupportingInformation = async (req, res) => {
 
   const { application, field, user } = req.body;
   const { id: dealId } = req.params;
-  const { _id } = user;
+  const { _id: editorId } = user;
 
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(dealId) } },
     {
-      $addToSet: { editedBy: _id },
+      $addToSet: { editedBy: editorId },
       // set the updatedAt property to the current time in EPOCH format
       $set: { updatedAt: Date.now() },
       // insert new documents into the supportingInformation object -> array. i.e. supportingInformation.manualInclusion

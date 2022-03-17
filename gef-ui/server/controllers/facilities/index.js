@@ -42,7 +42,7 @@ const createFacility = async (req, res) => {
   const { dealId, facilityId } = params;
   const { status } = query;
   const { user } = session;
-  const { _id } = user;
+  const { _id: editorId } = user;
   let { facilityType } = query;
   const hasBeenIssuedErrors = [];
   let facility;
@@ -79,7 +79,7 @@ const createFacility = async (req, res) => {
 
     // updates application with editorId
     const applicationUpdate = {
-      editorId: _id,
+      editorId,
     };
     await api.updateApplication(dealId, applicationUpdate);
 

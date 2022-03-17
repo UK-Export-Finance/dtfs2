@@ -36,7 +36,7 @@ const updateFacilityGuarantee = async (req, res) => {
   } = req;
   const { dealId, facilityId } = params;
   const { user } = session;
-  const { _id } = user;
+  const { _id: editorId } = user;
   const {
     feeType, inAdvanceFrequency, inArrearsFrequency, dayCountBasis,
   } = body;
@@ -71,7 +71,7 @@ const updateFacilityGuarantee = async (req, res) => {
       await api.updateFacility(facilityId, facilityUpdate);
       // updates application with editorId
       const applicationUpdate = {
-        editorId: _id,
+        editorId,
       };
       await api.updateApplication(dealId, applicationUpdate);
 

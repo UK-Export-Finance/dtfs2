@@ -55,7 +55,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   const { saveAndReturn, status } = query;
   const { dealId } = params;
   const { user } = session;
-  const { _id } = user;
+  const { _id: editorId } = user;
 
   const addressErrors = [];
 
@@ -95,7 +95,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
         ...exporter,
         correspondenceAddress: body,
       },
-      editorId: _id,
+      editorId,
     };
 
     await api.updateApplication(dealId, applicationExporterUpdate);

@@ -38,7 +38,7 @@ const updateFacilityValue = async (req, res) => {
     params, body, query, session,
   } = req;
   const { user } = session;
-  const { _id } = user;
+  const { _id: editorId } = user;
   const { dealId, facilityId } = params;
   const {
     value, interestPercentage, coverPercentage, facilityType, currency,
@@ -58,7 +58,7 @@ const updateFacilityValue = async (req, res) => {
 
       // updates application with editorId
       const applicationUpdate = {
-        editorId: _id,
+        editorId,
       };
       await api.updateApplication(dealId, applicationUpdate);
 

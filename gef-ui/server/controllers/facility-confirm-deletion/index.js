@@ -23,14 +23,14 @@ const deleteFacility = async (req, res) => {
   const { params, session } = req;
   const { dealId, facilityId } = params;
   const { user } = session;
-  const { _id } = user;
+  const { _id: editorId } = user;
 
   try {
     await api.deleteFacility(facilityId);
 
     // updates application with editorId
     const applicationUpdate = {
-      editorId: _id,
+      editorId,
     };
     await api.updateApplication(dealId, applicationUpdate);
 

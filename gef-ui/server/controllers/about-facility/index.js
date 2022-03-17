@@ -49,7 +49,7 @@ const validateAboutFacility = async (req, res) => {
   const { saveAndReturn, status } = query;
   const { dealId, facilityId } = params;
   const { user } = session;
-  const { _id } = user;
+  const { _id: editorId } = user;
 
   const aboutFacilityErrors = [];
   const coverStartDateDay = body['cover-start-date-day'];
@@ -267,7 +267,7 @@ const validateAboutFacility = async (req, res) => {
 
     // updates application with editorId
     const applicationUpdate = {
-      editorId: _id,
+      editorId,
     };
     await api.updateApplication(dealId, applicationUpdate);
 

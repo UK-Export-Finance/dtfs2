@@ -43,7 +43,7 @@ const validateAboutExporter = async (req, res) => {
   const { user } = session;
   const aboutExporterErrors = [];
   const { saveAndReturn, status } = query;
-  const { _id } = user;
+  const { _id: editorId } = user;
 
   try {
     const { exporter } = await api.getApplication(dealId);
@@ -113,7 +113,7 @@ const validateAboutExporter = async (req, res) => {
         probabilityOfDefault: body.probabilityOfDefault,
         isFinanceIncreasing: isTrueSet(body.isFinanceIncreasing),
       },
-      editorId: _id,
+      editorId,
     };
 
     await api.updateApplication(dealId, applicationExporterUpdate);

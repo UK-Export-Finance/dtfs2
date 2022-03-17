@@ -111,7 +111,7 @@ const changeUnissuedFacilityPreview = async (req, res) => {
 const postChangeUnissuedFacility = async (req, res) => {
   const { body, query, params } = req;
   const { user } = req.session;
-  const { _id } = user;
+  const { _id: editorId } = user;
 
   const {
     issueDate,
@@ -176,7 +176,7 @@ const postChangeUnissuedFacility = async (req, res) => {
 
     // updates application with editorId
     const applicationUpdate = {
-      editorId: _id,
+      editorId,
     };
     await api.updateApplication(dealId, applicationUpdate);
 
@@ -197,7 +197,7 @@ const postChangeUnissuedFacility = async (req, res) => {
 const postChangeUnissuedFacilityPreview = async (req, res) => {
   const { body, query, params } = req;
   const { user } = req.session;
-  const { _id } = user;
+  const { _id: editorId } = user;
 
   const {
     issueDate,
@@ -259,7 +259,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
 
     // updates application with editorId
     const applicationUpdate = {
-      editorId: _id,
+      editorId,
     };
 
     await api.updateApplication(dealId, applicationUpdate);

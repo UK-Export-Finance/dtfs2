@@ -34,7 +34,7 @@ const updateFacilityCurrency = async (req, res) => {
   const { currencyId, facilityType } = body;
   const { returnToApplication, status, saveAndReturn } = query;
   const { user } = session;
-  const { _id } = user;
+  const { _id: editorId } = user;
   const facilityTypeConst = FACILITY_TYPE[facilityType?.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
   const facilityCurrencyErrors = [];
@@ -56,7 +56,7 @@ const updateFacilityCurrency = async (req, res) => {
 
     // updates application with editorId
     const applicationUpdate = {
-      editorId: _id,
+      editorId,
     };
     await api.updateApplication(dealId, applicationUpdate);
 
@@ -90,7 +90,7 @@ const updateFacilityCurrency = async (req, res) => {
 
     // updates application with editorId
     const applicationUpdate = {
-      editorId: _id,
+      editorId,
     };
     await api.updateApplication(dealId, applicationUpdate);
 
