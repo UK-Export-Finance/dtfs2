@@ -51,13 +51,13 @@ jobs:
       with:
         inlineScript: |
           az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name www --cname ${{ env.portal_ui }}.azurewebsites.net
-          az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name www --cname ${{ env.gef_ui }}.azurewebsites.net
+          # az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name www --cname ${{ env.gef_ui }}.azurewebsites.net
 
     - name: Custom domains ownership records
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network dns record-set txt create --name asuid.www --zone-name ${{ env.domain_name }} 
+          az network dns record-set txt add-record --record-set-name asuid.www --value ${{ secrets.PROD_DNS_VERIFICATION }} --zone-name ${{ env.domain_name }}
 
     - name: Alias record for service.gov.uk domain
       uses: azure/cli@v1.0.0
