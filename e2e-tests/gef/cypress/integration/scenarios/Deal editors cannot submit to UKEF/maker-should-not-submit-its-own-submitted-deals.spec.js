@@ -30,7 +30,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
 
   describe('DTFS2-4698 MAKER_CHECKER should not be able to submit own edited deals', () => {
     it('does not allow a MAKER_CHECKER to submit own edited deals', () => {
-      // login as a maker and submit
+      // login as a MAKER and submit
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
