@@ -17,6 +17,11 @@ const MockRequest = () => {
   req.params = {};
   req.query = {};
   req.body = {};
+  req.session = {
+    user: {
+      _id: '12345',
+    },
+  };
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
   return req;
@@ -41,6 +46,8 @@ describe('controllers/about-facility', () => {
   let mockRequest;
   let mockFacilityResponse;
 
+  const updateApplicationSpy = jest.fn();
+
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
@@ -49,6 +56,7 @@ describe('controllers/about-facility', () => {
     api.getApplication.mockResolvedValue({});
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue({});
+    api.updateApplication = updateApplicationSpy;
   });
 
   afterEach(() => {
@@ -122,6 +130,26 @@ describe('controllers/about-facility', () => {
         name: undefined,
         coverDateConfirmed: null,
       });
+    });
+
+    it('calls api.updateApplication with editorId if successfully updates facility', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
     });
 
     it('shows error message if month of cover is not a number', async () => {

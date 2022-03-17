@@ -20,11 +20,19 @@ const facilityConfirmDeletion = async (req, res) => {
 };
 
 const deleteFacility = async (req, res) => {
-  const { params } = req;
+  const { params, session } = req;
   const { dealId, facilityId } = params;
+  const { user } = session;
+  const { _id: editorId } = user;
 
   try {
     await api.deleteFacility(facilityId);
+
+    // updates application with editorId
+    const applicationUpdate = {
+      editorId,
+    };
+    await api.updateApplication(dealId, applicationUpdate);
 
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {

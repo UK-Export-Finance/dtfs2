@@ -16,6 +16,11 @@ const MockRequest = () => {
   req.params = {};
   req.query = {};
   req.body = {};
+  req.session = {
+    user: {
+      _id: '12345',
+    },
+  };
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
   return req;
@@ -116,6 +121,24 @@ describe('Update Facility Currency', () => {
     expect(updateFacilitySpy).toHaveBeenCalledWith('xyz', {
       currency: { id: 'EUR' },
     });
+  });
+
+  it('calls api.updateApplication with editorId', async () => {
+    const mockResponse = MockResponse();
+    const mockRequest = MockRequest();
+
+    const updateApplicationSpy = jest.fn();
+    api.updateApplication = updateApplicationSpy;
+
+    mockRequest.body.currencyId = 'EUR';
+
+    await updateFacilityCurrency(mockRequest, mockResponse);
+
+    const expectedUpdateObj = {
+      editorId: '12345',
+    };
+
+    expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
   });
 
   it('redirects user to facility value page with correct query if query status is equal to `change`', async () => {
