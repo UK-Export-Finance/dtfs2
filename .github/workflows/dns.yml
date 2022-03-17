@@ -47,9 +47,6 @@ jobs:
     - name: Alias record for service.gov.uk domain
       uses: azure/cli@v1.0.0
       with:
-        # Based on:
-        #  - https://stackoverflow.com/questions/58316973/how-to-create-dns-a-record-usin-azure-cli-or-terraform
-        #  - https://github.com/Azure/azure-cli/issues/14200
         inlineScript: |
           front_door_id=$(az network front-door show --name ${{ env.front_door_name }} --query id -o tsv)
           az network dns record-set a create --name "@" --zone-name ${{ env.domain_name }} --target-resource $front_door_id
