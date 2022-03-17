@@ -57,7 +57,7 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name asuid.www --txt '-' 
+          az network dns record-set txt create --name asuid.www --zone-name ${{ env.domain_name }} 
 
     - name: Alias record for service.gov.uk domain
       uses: azure/cli@v1.0.0
