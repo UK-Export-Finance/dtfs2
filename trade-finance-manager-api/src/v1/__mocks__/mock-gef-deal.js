@@ -81,6 +81,7 @@ const MOCK_GEF_DEAL = {
   supportingInformation: {
     securityDetails: {
       exporter: 'mock security',
+      facility: 'mock facility security',
     },
   },
   eligibility: {

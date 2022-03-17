@@ -17,6 +17,7 @@ describe('defaults - tasks creation', () => {
           userFullName: CONSTANTS.TASKS.UNASSIGNED,
         },
         canEdit: false,
+        history: [],
       };
 
       expect(NEW_TASK).toEqual(expected);
