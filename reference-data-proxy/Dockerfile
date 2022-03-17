@@ -1,18 +1,10 @@
 # Node Alpine Docker Image
-FROM node:14.18.1-alpine3.13
+FROM node:17-alpine3.14
 
 # Variables
 ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
 ENV SSH_PORT=2222
-
-# Node Setup
-WORKDIR /app
-COPY package.json .
-RUN npm install
-RUN npm install -g typescript
-RUN npm install typescript
-COPY . .
 
 # SSH Setup
 # 1. Artifcats
@@ -27,9 +19,15 @@ RUN apk add bash openrc openssh curl \
 #3. Expose SSH port
 EXPOSE 80 ${SSH_PORT}
 
+# Node Setup
+WORKDIR /app
+COPY package.json .
+RUN npm install
+RUN npm install -g typescript
+COPY . .
+
 # Execute Script
 ENTRYPOINT ["/bin/init.sh"]
 
 # Hot reloading
-# CMD node src/index.ts 
-
+# CMD node src/index.ts
