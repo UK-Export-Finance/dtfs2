@@ -50,10 +50,10 @@ describe('controllers/provided-facility', () => {
     it('renders the `Provided Facility` template', async () => {
       mockRequest.query.status = 'change';
       mockProvidedFacilityResponse.details.details = [
-        CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, 
+        CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM,
         CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING,
       ];
-    
+
       mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
 
       api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
