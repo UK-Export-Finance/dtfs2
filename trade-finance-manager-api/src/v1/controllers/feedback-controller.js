@@ -19,7 +19,7 @@ exports.create = async (req, res) => {
   }
 
   const modifiedFeedback = {
-    ...req.body.formData,
+    ...req.body,
     created: getUnixTime(new Date()),
   };
 
@@ -40,6 +40,10 @@ exports.create = async (req, res) => {
     submittedBy,
   } = modifiedFeedback;
 
+  if (!submittedBy.username) {
+    submittedBy.username = 'N/A';
+  }
+
   const emailVariables = {
     role,
     team,
@@ -47,9 +51,9 @@ exports.create = async (req, res) => {
     easyToUse,
     satisfied,
     howCanWeImprove,
-    emailAddress,
+    emailAddressForContact: emailAddress,
     created: formattedCreated,
-    submittedBy,
+    submittedBy: submittedBy.username,
   };
 
   const EMAIL_TEMPLATE_ID = CONSTANTS.EMAIL_TEMPLATE_IDS.TFM_FEEDBACK_RECEIVED;
