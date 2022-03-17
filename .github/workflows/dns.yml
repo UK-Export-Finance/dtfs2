@@ -9,7 +9,7 @@ on:
 env:
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
-  domain_name: "get-guarantee-for-export-finance.service.gov.uk"
+  domain_name: "get-a-guarantee-for-export-finance.service.gov.uk"
   front_door_name: tfs-prod-fd
 
 jobs:
@@ -29,8 +29,6 @@ jobs:
         inlineScript: |
           az configure --defaults location=uksouth
           az configure --defaults group=${{ env.resource_group }}
-
-          # Front door requires an extension to the az cli:
           az extension add --name front-door
 
     - name: Zone
@@ -39,12 +37,12 @@ jobs:
         inlineScript: |
           az network dns zone create --name ${{ env.domain_name }}
 
-    # - name: Front Door verification record
-    #   uses: azure/cli@v1.0.0
-    #   with:
-    #     inlineScript: |
-    #       az network dns record-set cname create --zone ${{ env.domain_name }} --name afdverify.${{ env.domain_name }}
-    #       az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name afdverify.${{ env.domain_name }} --cname ${{ env.front_door_name }}.azurefd.net
+    - name: Front Door verification record
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network dns record-set cname create --zone ${{ env.domain_name }} --name afdverify.${{ env.domain_name }}
+          az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name afdverify.${{ env.domain_name }} --cname ${{ env.front_door_name }}.azurefd.net
 
     - name: Alias record for service.gov.uk domain
       uses: azure/cli@v1.0.0
