@@ -330,7 +330,7 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) =>
         if (value) {
           if (options.isDetails) {
             if (value === CONSTANTS.FACILITY_PROVIDED_DETAILS.OTHER) {
-              list.push(`<li>${value} ${detailsOther ? ` - ${detailsOther} ` : '-'}</li>`);
+              list.push(`<li>${value} ${detailsOther ? `- ${detailsOther}` : '-'}</li>`);
             } else {
               list.push(`<li>${value}</li>`);
             }
