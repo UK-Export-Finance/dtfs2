@@ -43,6 +43,7 @@ jobs:
         inlineScript: |
           az network dns record-set cname create --zone ${{ env.domain_name }} --name afdverify.${{ env.domain_name }}
           az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name afdverify.${{ env.domain_name }} --cname ${{ env.front_door_name }}.azurefd.net
+          az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name ${{ env.domain_name }} --cname ${{ env.front_door_name }}.azurefd.net
 
     - name: Alias record for service.gov.uk domain
       uses: azure/cli@v1.0.0
