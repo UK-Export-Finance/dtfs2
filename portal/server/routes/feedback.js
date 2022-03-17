@@ -29,9 +29,7 @@ router.post('/feedback', async (req, res) => {
 
     const response = await api.createFeedback(feedbackBody);
     if (response) {
-      return res.render('feedback/feedback-thankyou.njk', {
-        user: req.session.user,
-      });
+      return res.redirect('/thank-you-feedback');
     }
   } catch (catchErr) {
     const { data } = catchErr.response;
@@ -53,5 +51,8 @@ router.post('/feedback', async (req, res) => {
     user: req.session.user,
   });
 });
+
+router.get('/thank-you-feedback', (req, res) =>
+  res.render('feedback/feedback-thankyou.njk'));
 
 module.exports = router;
