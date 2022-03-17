@@ -6,7 +6,7 @@ const MOCK_USERS = require('../../../fixtures/users');
 const CONSTANTS = require('../../../fixtures/constants');
 const { reports } = require('../../pages');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('Dashboard: Review UKEF Decision report', () => {
   const todayAtMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
@@ -63,7 +63,7 @@ context('Dashboard: Review UKEF Decision report', () => {
     });
   });
 
-  describe('Review UKEF decision', () => {
+  describe('Review UKEF decision (Maker)', () => {
     beforeEach(() => {
       cy.login(BANK1_MAKER1);
       cy.visit(relative('/reports'));
@@ -82,6 +82,77 @@ context('Dashboard: Review UKEF Decision report', () => {
       reports.reportsUnconditionalDecisionDownload().should('exist');
 
       reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(2).as('row2');
+      cy.get('@row2').find('[data-cy="deal__row--bankRef"]').should('contain', 'Draft GEF');
+      cy.get('@row2').find('[data-cy="reports-deal-link"]').should('exist');
+      cy.get('@row2').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
+      cy.get('@row2').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
+      cy.get('@row2').find('[data-cy="deal__row--date-created"]').should('contain', dateCreated);
+      cy.get('@row2').find('[data-cy="deal__row--submission-date"]').should('contain', submissionDate);
+      cy.get('@row2').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateOfApproval);
+      cy.get('@row2').find('[data-cy="deal__row--days-to-review"]').should('contain', '10 days');
+
+      daysInThePast = sub(todayAtMidnight, { days: 25 });
+      submissionDate = format(parseInt(new Date(daysInThePast).valueOf().toString(), 10), 'dd LLL yyyy');
+      dateOfApproval = format(parseInt(new Date(daysInThePast).valueOf().toString(), 10), 'dd LLL yyyy');
+      reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(1).as('row1');
+      cy.get('@row1').find('[data-cy="deal__row--bankRef"]').should('contain', 'Draft GEF');
+      cy.get('@row1').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
+      cy.get('@row1').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
+      cy.get('@row1').find('[data-cy="deal__row--date-created"]').should('contain', dateCreated);
+      cy.get('@row1').find('[data-cy="deal__row--submission-date"]').should('contain', submissionDate);
+      cy.get('@row1').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateOfApproval);
+      cy.get('@row1').find('[data-cy="deal__row--days-to-review"]').should('contain', 'days overdue');
+    });
+
+    it('redirects to the `Manual inclusion application with conditions` reports page', () => {
+      reports.reportsConditionalDecision().click();
+      cy.url().should('eq', relative('/reports/review-conditional-decision'));
+      reports.reportsConditionalDecisionBreadcrumbs().should('exist');
+      reports.reportsConditionalDecisionDownload().should('exist');
+
+      submissionDate = format(todayAtMidnight, 'dd LLL yyyy');
+      dateOfApproval = format(todayAtMidnight, 'dd LLL yyyy');
+
+      reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(2).as('row2');
+      cy.get('@row2').find('[data-cy="reports-deal-link"]').should('exist');
+      cy.get('@row2').find('[data-cy="deal__row--bankRef"]').should('contain', 'Draft GEF');
+      cy.get('@row2').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
+      cy.get('@row2').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
+      cy.get('@row2').find('[data-cy="deal__row--date-created"]').should('contain', dateCreated);
+      cy.get('@row2').find('[data-cy="deal__row--submission-date"]').should('contain', submissionDate);
+      cy.get('@row2').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateOfApproval);
+      cy.get('@row2').find('[data-cy="deal__row--days-to-review"]').should('contain', '20 days');
+
+      daysInThePast = sub(todayAtMidnight, { days: 35 });
+      submissionDate = format(parseInt(new Date(daysInThePast).valueOf().toString(), 10), 'dd LLL yyyy');
+      dateOfApproval = format(parseInt(new Date(daysInThePast).valueOf().toString(), 10), 'dd LLL yyyy');
+      reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(1).as('row1');
+      cy.get('@row1').find('[data-cy="deal__row--bankRef"]').should('contain', 'Draft GEF');
+      cy.get('@row1').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
+      cy.get('@row1').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
+      cy.get('@row1').find('[data-cy="deal__row--date-created"]').should('contain', dateCreated);
+      cy.get('@row1').find('[data-cy="deal__row--submission-date"]').should('contain', submissionDate);
+      cy.get('@row1').find('[data-cy="deal__row--date-of-approval"]').should('contain', dateOfApproval);
+      cy.get('@row1').find('[data-cy="deal__row--days-to-review"]').should('contain', 'days overdue');
+    });
+  });
+
+  describe('Review UKEF decision (Checker)', () => {
+    beforeEach(() => {
+      cy.login(BANK1_CHECKER1);
+      cy.visit(relative('/reports'));
+    });
+
+    it('redirects to the `Manual inclusion application without conditions` reports page', () => {
+      reports.reportsUnconditionalDecision().click();
+      cy.url().should('eq', relative('/reports/review-unconditional-decision'));
+      reports.reportsUnconditionalDecisionBreadcrumbs().should('exist');
+      reports.reportsUnconditionalDecisionDownload().should('exist');
+
+      submissionDate = format(todayAtMidnight, 'dd LLL yyyy');
+      dateOfApproval = format(todayAtMidnight, 'dd LLL yyyy');
+      reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(2).as('row2');
+      cy.get('@row2').find('[data-cy="reports-deal-link-text"]').should('exist');
       cy.get('@row2').find('[data-cy="deal__row--bankRef"]').should('contain', 'Draft GEF');
       cy.get('@row2').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
       cy.get('@row2').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
@@ -113,6 +184,7 @@ context('Dashboard: Review UKEF Decision report', () => {
       dateOfApproval = format(todayAtMidnight, 'dd LLL yyyy');
 
       reports.reportsUkefDecisionTable().find('.govuk-table__row').eq(2).as('row2');
+      cy.get('@row2').find('[data-cy="reports-deal-link-text"]').should('exist');
       cy.get('@row2').find('[data-cy="deal__row--bankRef"]').should('contain', 'Draft GEF');
       cy.get('@row2').find('[data-cy="deal__row--product"]').should('contain', 'GEF');
       cy.get('@row2').find('[data-cy="deal__row--exporter"]').should('contain', 'Delta');
