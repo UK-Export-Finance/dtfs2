@@ -124,7 +124,6 @@ const update = async (id, updateBody) => {
         { returnOriginal: false },
       );
     }
-
     return updatedFacility;
   } catch (e) {
     console.error('Unable to update the facility', { e });
