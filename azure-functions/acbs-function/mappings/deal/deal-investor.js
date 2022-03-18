@@ -1,8 +1,10 @@
-const { to2Decimals } = require('../../helpers/currency');
-const { getDealEffectiveDate, getDealValue, getDealId } = require('./helpers');
+const {
+  getDealEffectiveDate,
+  getDealValue,
+  getDealId,
+  getDealCurrency,
+} = require('./helpers');
 const CONSTANTS = require('../../constants');
-
-const GEF_CURRENCY = 'GBP';
 
 /*
 "dealIdentifier":     Deal ACBS ID
@@ -16,12 +18,8 @@ const dealInvestor = (deal) => ({
   dealIdentifier: getDealId(deal),
   expiryDate: CONSTANTS.DEAL.EXPIRATION_DATE.NONE,
   effectiveDate: getDealEffectiveDate(deal),
-  currency:
-    deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF
-      ? GEF_CURRENCY
-      : deal.dealSnapshot.submissionDetails.supplyContractCurrency
-      && deal.dealSnapshot.submissionDetails.supplyContractCurrency.id,
-  maximumLiability: to2Decimals(getDealValue(deal)),
+  currency: getDealCurrency(deal),
+  maximumLiability: getDealValue(deal),
 });
 
 module.exports = dealInvestor;

@@ -1,19 +1,22 @@
+/**
+ * Maps free frequency across any product.
+ * @param {Object} facilitySnapshot Facility snapshot
+ * @returns {String} Fee frequency else `null`
+ */
 const mapFeeFrequency = (facilitySnapshot) => {
-  let feeFrequency;
-
   if (facilitySnapshot.frequency) {
-    feeFrequency = facilitySnapshot.frequency;
+    return facilitySnapshot.frequency;
   }
 
   if (facilitySnapshot.feeFrequency) {
-    feeFrequency = facilitySnapshot.feeFrequency;
+    return facilitySnapshot.feeFrequency;
   }
 
   if (facilitySnapshot.premiumFrequency) {
-    feeFrequency = facilitySnapshot.premiumFrequency;
+    return facilitySnapshot.premiumFrequency;
   }
 
-  return feeFrequency;
+  return null;
 };
 
 module.exports = mapFeeFrequency;

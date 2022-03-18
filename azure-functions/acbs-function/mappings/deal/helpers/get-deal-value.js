@@ -1,12 +1,16 @@
-const { getFacilityValue } = require('../../facility/helpers');
+const {
+  getFacilityValue,
+  getBaseCurrency,
+} = require('../../facility/helpers');
 
+/**
+ * Returns total of deal's facilities amount.
+ * @param {Object} deal Deal Obkect
+ * @returns {Float} amount Deal value
+ */
 const getDealValue = (deal) => {
-  let total = 0;
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < deal.dealSnapshot.facilities.length; i++) {
-    total += getFacilityValue(deal.dealSnapshot.facilities[i]);
-  }
-  return total;
+  const currency = getBaseCurrency(deal.dealSnapshot.facilities);
+  return deal.dealSnapshot.facilities.reduce((total, facility) => total + getFacilityValue(facility, currency), 0);
 };
 
 module.exports = getDealValue;

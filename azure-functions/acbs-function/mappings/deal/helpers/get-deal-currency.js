@@ -1,18 +1,16 @@
 const CONSTANTS = require('../../../constants');
 const { getBaseCurrency } = require('../../facility/helpers');
 
+/**
+ * Evaluates deal's currency.
+ * `GEF` = Base currency else `GBP`
+ * `BSS/EWCS`= Base currency else `GBP`
+ * @param {Object} deal Deal currency
+ * @returns {String} Currency ID `GBP`, `USD`.
+ */
 const getDealCurrency = (deal) => {
-  // GEF
-  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    let currency = getBaseCurrency(deal.dealSnapshot.facilities);
-    currency = currency.id ? currency.id : currency;
-    return !currency ? CONSTANTS.DEAL.CURRENCY.DEFAULT : currency;
-  }
-  // BSS/ECWS
-  return (
-    deal.dealSnapshot.submissionDetails.supplyContractCurrency
-    && deal.dealSnapshot.submissionDetails.supplyContractCurrency.id
-  );
+  const currency = getBaseCurrency(deal.dealSnapshot.facilities);
+  return currency || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 };
 
 module.exports = getDealCurrency;

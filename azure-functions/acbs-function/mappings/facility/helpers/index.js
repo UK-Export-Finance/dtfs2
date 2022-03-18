@@ -16,6 +16,7 @@ const getFacilityValue = require('./get-facility-value');
 const getMaximumLiability = require('./get-maximum-liability');
 const getLoanMaximumLiability = require('./get-loan-maximum-liability');
 const mapFeeFrequency = require('./map-fee-frequency');
+const mapFeeType = require('./map-fee-type');
 const getInsuredPercentage = require('./get-insured-percentage');
 const getBaseCurrency = require('./get-base-currency');
 const getCoverStartDate = require('./get-cover-start-date');
@@ -50,6 +51,7 @@ module.exports = {
   getMaximumLiability,
   getLoanMaximumLiability,
   mapFeeFrequency,
+  mapFeeType,
   getInsuredPercentage,
   getBaseCurrency,
   getCoverStartDate,
