@@ -3,14 +3,11 @@ const { getBaseCurrency } = require('../../facility/helpers');
 
 /**
  * Evaluates deal's currency.
- * `GEF` = Base currency else `GBP`
- * `BSS/EWCS`= Base currency else `GBP`
+ * `GEF`, `BSS`, `EWCS` = Base currency else `GBP`
  * @param {Object} deal Deal currency
- * @returns {String} Currency ID `GBP`, `USD`.
+ * @returns {String} Currency ID `GBP`, `USD` else `GBP`
  */
-const getDealCurrency = (deal) => {
-  const currency = getBaseCurrency(deal.dealSnapshot.facilities);
-  return currency || CONSTANTS.DEAL.CURRENCY.DEFAULT;
-};
+const getDealCurrency = (deal) =>
+  getBaseCurrency(deal.dealSnapshot.facilities) || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
 module.exports = getDealCurrency;

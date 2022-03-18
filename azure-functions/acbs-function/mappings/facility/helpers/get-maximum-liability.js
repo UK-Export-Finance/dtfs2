@@ -1,5 +1,5 @@
 /**
- * Returns facility UKEF exposure amount, if `loan` then 10% of the UKEF exposure amount.
+ * Returns facility's amount
  * @param {Object} facility Facility object
  * @param {Boolean} overallAmount Facility's overall amount being loaned to exporter by the bank
  * @returns {Float} Facility UKEF exposure amount

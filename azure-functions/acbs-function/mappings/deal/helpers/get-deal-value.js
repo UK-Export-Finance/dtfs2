@@ -4,9 +4,9 @@ const {
 } = require('../../facility/helpers');
 
 /**
- * Returns total of deal's facilities amount.
+ * Return deal's total facilities amount.
  * @param {Object} deal Deal Obkect
- * @returns {Float} amount Deal value
+ * @returns {Float} Deal value
  */
 const getDealValue = (deal) => {
   const currency = getBaseCurrency(deal.dealSnapshot.facilities);
