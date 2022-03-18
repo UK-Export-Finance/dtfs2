@@ -18,7 +18,7 @@
     {% set linkHtml %}
       {% if not isChecker %}
         <a href="{{ url }}" class="govuk-link" data-cy="facility__name--link--{{ facility._id }}">
-          {{ facility.name }}
+          {{ facility.name if facility.name else 'Not entered'}}
         </a>
       {% else %}
         <span data-cy="facility__name--text--{{ facility._id }}"> {{ facility.name }} </span>
