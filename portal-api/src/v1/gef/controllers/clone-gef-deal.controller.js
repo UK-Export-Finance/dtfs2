@@ -89,6 +89,7 @@ const cloneFacilities = async (currentDealId, newDealId) => {
       // reset coverDateConfirmed to null
       allFacilities[val].unissuedToIssuedByMaker = {};
       allFacilities[val].hasBeenIssuedAndAcknowledged = null;
+      allFacilities[val].submittedAsIssuedDate = null;
 
       const currentTime = new Date();
       currentTime.setHours(0, 0, 0, 0);
