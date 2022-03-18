@@ -126,7 +126,7 @@ const listIndustrySectors = async (token) => {
   return response.data.industrySectors;
 };
 
-const getGefEligibilityCriteriaVersion = async (token, version) => {
+const getLatestGefEligibilityCriteria = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
@@ -134,7 +134,7 @@ const getGefEligibilityCriteriaVersion = async (token, version) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/gef/eligibility-criteria/${version}`,
+    url: `${urlRoot}/v1/gef/eligibility-criteria/latest`,
   }).catch((err) => { console.info(`err: ${err}`); });
 
   return response.data;
@@ -149,5 +149,5 @@ module.exports = {
   listCountries,
   listCurrencies,
   listIndustrySectors,
-  getGefEligibilityCriteriaVersion,
+  getLatestGefEligibilityCriteria,
 };

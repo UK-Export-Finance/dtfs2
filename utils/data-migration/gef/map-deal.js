@@ -51,15 +51,14 @@ const mapExporter = (v1Exporter) => {
 const mapEligibility = async (token, v1Eligibility) => {
   // NOTE: at the time of writing, GEF only has one eligibility criteria version.
   // v1Eligibility.system_revision_id could be used, but this can be empty.
-  const version = v1Eligibility.system_revision_id ? v1Eligibility.system_revision_id : 1.5;
 
-  const { criteria: latestCriteria } = await api.getGefEligibilityCriteriaVersion(token, version);
+  const latestCriteria = await api.getLatestGefEligibilityCriteria(token);
   const v1CriteriaFieldNames = Object.getOwnPropertyNames(MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA);
 
   const mappedCriteria = v1CriteriaFieldNames.map((v1Criterion) => {
     const id = MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA[v1Criterion].id;
 
-    const text = latestCriteria.find((c) => c.id === id).text;
+    const text = latestCriteria.terms.find((c) => c.id === id).text;
 
     return {
       id,
@@ -70,7 +69,7 @@ const mapEligibility = async (token, v1Eligibility) => {
   });
 
   const mapped = {
-    version,
+    version: latestCriteria.version,
     criteria: mappedCriteria,
   };
 
