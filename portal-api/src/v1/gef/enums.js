@@ -33,13 +33,13 @@ const ERROR = {
 };
 
 const FACILITY_PROVIDED_DETAILS = {
-  TERM: 'TERM',
-  RESOLVING: 'RESOLVING',
-  COMMITTED: 'COMMITTED',
-  UNCOMMITTED: 'UNCOMMITTED',
-  ON_DEMAND: 'ON_DEMAND',
-  FACTORING: 'FACTORING',
-  OTHER: 'OTHER',
+  TERM: 'Term basis',
+  RESOLVING: 'Revolving or renewing basis',
+  COMMITTED: 'Committed basis',
+  UNCOMMITTED: 'Uncommitted basis',
+  ON_DEMAND: 'On demand or overdraft basis',
+  FACTORING: 'Factoring on a  with-recourse basis',
+  OTHER: 'Other',
 };
 
 const FACILITY_PAYMENT_TYPE = {

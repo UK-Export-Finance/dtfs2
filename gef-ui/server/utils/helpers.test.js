@@ -384,7 +384,7 @@ describe('mapSummaryList()', () => {
       user: MOCK_REQUEST,
     };
 
-    mockedData.details.details = ['OTHER'];
+    mockedData.details.details = ['Other'];
     mockedData.details.detailsOther = 'Other text';
     mockedDisplayItems.slice(1);
     mockedDisplayItems[0].isDetails = true;

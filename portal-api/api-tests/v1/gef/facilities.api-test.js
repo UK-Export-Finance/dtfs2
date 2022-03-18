@@ -301,7 +301,7 @@ describe(baseUrl, () => {
     it('other description is required if I select the other checkmark', async () => {
       const { details } = newFacility;
       const update = {
-        details: ['OTHER'],
+        details: ['Other'],
       };
       const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
