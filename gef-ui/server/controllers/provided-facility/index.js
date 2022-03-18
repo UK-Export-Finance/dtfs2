@@ -27,10 +27,14 @@ const providedFacility = async (req, res) => {
 };
 
 const validateProvidedFacility = async (req, res) => {
-  const { params, body, query } = req;
+  const {
+    params, body, query, session,
+  } = req;
   const { dealId, facilityId } = params;
   const { facilityType, detailsOther } = body;
   const { saveAndReturn, status } = query;
+  const { user } = session;
+  const { _id: editorId } = user;
   const providedFacilityErrors = [];
   const facilityTypeConst = FACILITY_TYPE[body.facilityType?.toUpperCase()];
   const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
@@ -70,6 +74,12 @@ const validateProvidedFacility = async (req, res) => {
       details,
       detailsOther,
     });
+
+    // updates application with editorId
+    const applicationUpdate = {
+      editorId,
+    };
+    await api.updateApplication(dealId, applicationUpdate);
 
     if (isTrueSet(saveAndReturn) || status === 'change') {
       return res.redirect(`/gef/application-details/${dealId}`);

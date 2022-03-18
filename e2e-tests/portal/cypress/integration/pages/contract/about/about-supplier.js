@@ -2,6 +2,9 @@ const address = require('./address');
 
 const page = {
   visit: (deal) => cy.visit(`/contract/${deal._id}/about/supplier`),
+
+  title: () => cy.get('[data-cy="about"]'),
+
   supplierType: () => cy.get('[data-cy="supplier-type"]'),
   supplierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="supplier-companies-house-registration-number"]'),
   supplierSearchCompaniesHouse: () => cy.get('[data-cy="DoSearch-supplier-companies-house-registration-number"]'),

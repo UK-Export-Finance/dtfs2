@@ -36,10 +36,14 @@ const aboutExporter = async (req, res) => {
 };
 
 const validateAboutExporter = async (req, res) => {
-  const { body, params, query } = req;
+  const {
+    body, params, query, session,
+  } = req;
   const { dealId } = params;
+  const { user } = session;
   const aboutExporterErrors = [];
   const { saveAndReturn, status } = query;
+  const { _id: editorId } = user;
 
   try {
     const { exporter } = await api.getApplication(dealId);
@@ -109,6 +113,7 @@ const validateAboutExporter = async (req, res) => {
         probabilityOfDefault: Number(body.probabilityOfDefault),
         isFinanceIncreasing: isTrueSet(body.isFinanceIncreasing),
       },
+      editorId,
     };
 
     await api.updateApplication(dealId, applicationExporterUpdate);

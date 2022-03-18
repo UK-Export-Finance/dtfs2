@@ -10,6 +10,7 @@
   "effectiveDate"
   */
 
+const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
 const facilityCovenant = (deal, facility, covenantType) => {
@@ -25,7 +26,7 @@ const facilityCovenant = (deal, facility, covenantType) => {
     facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     covenantType,
-    maximumLiability: Number(facility.facilitySnapshot.value),
+    maximumLiability: helpers.getMaximumLiability(facility),
     currency: facility.facilitySnapshot.currency.id,
     guaranteeCommencementDate,
     guaranteeExpiryDate,

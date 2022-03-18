@@ -1,4 +1,6 @@
 const page = {
+  title: () => cy.get('[data-cy="bond"]'),
+
   facilityValueInput: () => cy.get('[data-cy="facility-value"]'),
   facilityValueInputErrorMessage: () => cy.get('[data-cy="facility-value-error-message"]'),
 

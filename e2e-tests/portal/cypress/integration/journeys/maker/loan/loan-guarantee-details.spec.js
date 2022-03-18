@@ -43,6 +43,14 @@ context('Loan Guarantee Details', () => {
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
+  describe('Loan Guarantee title', () => {
+    it('should contain the correct title', () => {
+      goToPage(deal);
+
+      pages.loanGuaranteeDetails.title().contains('Loan');
+    });
+  });
+
   describe('when submitting an empty form', () => {
     it('should progress to `Loan Financial Details` page and after proceeding to `Loan Preview` page, should render Facility stage validation error in `Loan Guarantee Details` page', () => {
       goToPage(deal);

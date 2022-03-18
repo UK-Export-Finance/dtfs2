@@ -16,6 +16,11 @@ const MockRequest = () => {
   req.params = {};
   req.query = {};
   req.body = {};
+  req.session = {
+    user: {
+      _id: '12345',
+    },
+  };
   req.params.dealId = '123';
   req.params.facilityId = 'xyz';
   return req;
@@ -36,6 +41,8 @@ describe('controllers/facility-confirm-deletion', () => {
   let mockRequest;
   let mockFacilityResponse;
 
+  const updateApplicationSpy = jest.fn();
+
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
@@ -43,6 +50,7 @@ describe('controllers/facility-confirm-deletion', () => {
 
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.deleteFacility.mockResolvedValue({});
+    api.updateApplication = updateApplicationSpy;
   });
 
   afterEach(() => {
@@ -78,6 +86,16 @@ describe('controllers/facility-confirm-deletion', () => {
       await deleteFacility(mockRequest, mockResponse);
 
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+    });
+
+    it('calls api.updateApplication with editorId if deletion was successful', async () => {
+      await deleteFacility(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expectedUpdateObj);
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
