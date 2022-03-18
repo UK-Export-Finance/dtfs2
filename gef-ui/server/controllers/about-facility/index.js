@@ -41,11 +41,16 @@ const aboutFacility = async (req, res) => {
 };
 
 const validateAboutFacility = async (req, res) => {
-  const { body, query, params } = req;
+  const {
+    body, query, params, session,
+  } = req;
   const { facilityType, hasBeenIssued } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
   const { dealId, facilityId } = params;
+  const { user } = session;
+  const { _id: editorId } = user;
+
   const aboutFacilityErrors = [];
   const coverStartDateDay = body['cover-start-date-day'];
   const coverStartDateMonth = body['cover-start-date-month'];
@@ -259,6 +264,12 @@ const validateAboutFacility = async (req, res) => {
         ? true
         : null,
     });
+
+    // updates application with editorId
+    const applicationUpdate = {
+      editorId,
+    };
+    await api.updateApplication(dealId, applicationUpdate);
 
     if (isTrueSet(saveAndReturn) || status === 'change') {
       return res.redirect(`/gef/application-details/${dealId}`);

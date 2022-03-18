@@ -1,4 +1,6 @@
 const page = {
+  title: () => cy.get('[data-cy="loan"]'),
+
   premiumTypeInAdvanceInput: () => cy.get('[data-cy="premium-type-in-advance"]'),
   premiumTypeInArrearInput: () => cy.get('[data-cy="premium-type-in-arrear"]'),
   premiumTypeAtMaturityInput: () => cy.get('[data-cy="premium-type-at-maturity"]'),

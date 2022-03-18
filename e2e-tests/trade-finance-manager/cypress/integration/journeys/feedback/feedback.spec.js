@@ -65,7 +65,7 @@ context('User submit feedback on TFM', () => {
 
     pages.feedbackPage.submitButton().click();
 
-    cy.url().should('eq', relative('/feedback'));
+    cy.url().should('eq', relative('/thank-you-feedback'));
 
     pages.feedbackPage.thankYouPageHeading().contains('Feedback');
     pages.feedbackPage.thankYouPageText().contains('Thank you for your feedback. We will use your feedback for future improvement. Do let us know if there is anything else we need to know to improve this area of concern.');

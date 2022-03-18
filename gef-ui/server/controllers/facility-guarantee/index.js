@@ -31,8 +31,12 @@ const facilityGuarantee = async (req, res) => {
 };
 
 const updateFacilityGuarantee = async (req, res) => {
-  const { params, body, query } = req;
+  const {
+    params, body, query, session,
+  } = req;
   const { dealId, facilityId } = params;
+  const { user } = session;
+  const { _id: editorId } = user;
   const {
     feeType, inAdvanceFrequency, inArrearsFrequency, dayCountBasis,
   } = body;
@@ -65,6 +69,12 @@ const updateFacilityGuarantee = async (req, res) => {
 
     try {
       await api.updateFacility(facilityId, facilityUpdate);
+      // updates application with editorId
+      const applicationUpdate = {
+        editorId,
+      };
+      await api.updateApplication(dealId, applicationUpdate);
+
       return res.redirect(`/gef/application-details/${dealId}`);
     } catch (err) {
       return res.render('partials/problem-with-service.njk');

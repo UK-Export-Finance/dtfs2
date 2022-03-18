@@ -20,7 +20,7 @@ const mockFile = {
   filename: 'mock-file.pdf',
 };
 
-const mockUser = { roles: ['MAKER'] };
+const mockUser = { roles: ['MAKER'], _id: '12345' };
 const mockDealId = 'mock-id';
 
 let mockDeal = {
@@ -52,7 +52,7 @@ describe('utils/fileUtils', () => {
 
       const response = await (uploadAndSaveToDeal([mockFile], mockField, mockDealId, mockToken, mockUser, mockFileSize, mockDocumentPath));
 
-      expect(updateSupportingInformation).toHaveBeenCalledWith('mock-id', { ...mockFile, _id: 'mock-file-id' }, mockField);
+      expect(updateSupportingInformation).toHaveBeenCalledWith('mock-id', { ...mockFile, _id: 'mock-file-id' }, mockField, mockUser);
       expect(response).toEqual([{ ...mockFile, _id: 'mock-file-id' }]);
     });
   });
@@ -84,7 +84,7 @@ describe('utils/fileUtils', () => {
     });
 
     it('deletes the file and removes it from application if it has been uploaded (has an ID)', async () => {
-      await removeFileFromDeal(mockFile.filename, mockField, mockDeal, mockToken);
+      await removeFileFromDeal(mockFile.filename, mockField, mockDeal, mockToken, mockUser);
 
       expect(deleteFile).toHaveBeenCalledWith('mock-file-id', mockToken, mockField);
       expect(updateApplication).toHaveBeenCalledWith(mockDeal._id, {
@@ -92,6 +92,7 @@ describe('utils/fileUtils', () => {
         supportingInformation: {
           mockField: [],
         },
+        editorId: mockUser._id,
       });
     });
   });
