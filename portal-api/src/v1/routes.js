@@ -26,8 +26,8 @@ const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const mga = require('./controllers/mga.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const dealImportBssEwcsController = require('./controllers/deal-import-bss-ewcs.controller');
-const dealImportGefController = require('./controllers/deal-import-gef.controller');
+const dealImportBssEwcsController = require('./controllers/data-migration/deal-import-bss-ewcs.controller');
+const dealImportGefController = require('./controllers/data-migration/deal-import-gef.controller');
 
 const users = require('./users/routes');
 const { cleanXss, fileUpload } = require('./middleware');

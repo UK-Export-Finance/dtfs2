@@ -1,7 +1,7 @@
-const db = require('../../drivers/db-client');
-const { isSuperUser } = require('../users/checks');
-const getDealErrors = require('../validation/deal');
-const { createMultipleFacilities } = require('./facilities.controller');
+const db = require('../../../drivers/db-client');
+const { isSuperUser } = require('../../users/checks');
+const getDealErrors = require('../../validation/deal');
+const { createMultipleFacilities } = require('../facilities.controller');
 
 const importDealAndFacilities = async (req, res) => {
   if (!isSuperUser(req.user)) {

@@ -1,6 +1,6 @@
 const { initBanks } = require('../helpers/banks');
 const { initUsers } = require('../helpers/users');
-const log = require('../logs');
+const log = require('../helpers/logs');
 const mapDeal = require('./map-deal');
 const mapFacilities = require('./map-facilities');
 const api = require('../api');
@@ -71,7 +71,7 @@ const addToDatabase = async (v2Deal, v2Facilities) => {
     const { deal, facilities } = data;
 
     if (success && deal && facilities) {
-      log.addSuccess(v1DealId, `Successfully migrated v1 GEF deal`);
+      log.addSuccess(v1DealId, 'Successfully migrated v1 GEF deal');
     } else {
       log.addError(v1DealId, `Error adding v1 GEF deal to database.`);
     }
@@ -88,7 +88,7 @@ const addToDatabase = async (v2Deal, v2Facilities) => {
       //   log.addSuccess(v1DealId, `Successfully migrated v1 GEF deal`);
       // }
     // } else {
-    //   log.addError(v1DealId, `Error adding v1 GEF deal to database.`); 
+    //   log.addError(v1DealId, `Error adding v1 GEF deal to database.`);
     // }
 
   });

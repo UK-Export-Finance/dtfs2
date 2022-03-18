@@ -1,3 +1,4 @@
+const { ObjectID } = require('bson');
 const MIGRATION_MAP = require('./migration-map');
 const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { getUserByEmail } = require('../helpers/users');
@@ -132,61 +133,61 @@ const mapComments = (v1Comments, v2Users) => {
   return mapped;
 };
 
+const mapDocuments = (documents, path) => {
+  const documentsArray = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for (const item of documents) {
+    // split the v1Url at `://` - this to get the full path to the file
+    const url = item.url.split('://');
+    // split the new url at `/` - this to get the file name
+    const filename = url[1].split('/');
+    documentsArray.push({
+      _id: ObjectID(),
+      parentId: '',
+      v1Url: url[1],
+      filename: filename[filename.length - 1],
+      documentPath: path,
+      size: 'Unknown'
+    });
+  }
+
+  return documentsArray;
+};
+
 const mapSupportingInformation = (v1Eligibility) => {
   const mapped = {
-    manualInclusion: [],
+    security: {
+      exporter: '',
+      facility: ''
+    }
   };
 
   if (v1Eligibility.file_1) {
-    mapped.manualInclusion.push({
-      // documentPath
-      // encoding: '',
-      // size: '',
-      // etc
-      dataMigration: {
-        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_1,
-      },
-    })    
+    mapped.manualInclusion = mapDocuments(v1Eligibility.file_1, MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_1);
   }
 
   if (v1Eligibility.file_2) {
-    mapped.manualInclusion.push({
-      dataMigration: {
-        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_2,
-      },
-    })
+    mapped.auditedFinancialStatements = mapDocuments(v1Eligibility.file_2, MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_2);
   }
 
   if (v1Eligibility.file_3) {
-    mapped.manualInclusion.push({
-      dataMigration: {
-        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_3,
-      },
-    })
+    mapped.yearToDateManagement = mapDocuments(v1Eligibility.file_3, MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_3);
   }
 
   if (v1Eligibility.file_4) {
-    mapped.manualInclusion.push({
-      dataMigration: {
-        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_4,
-      },
-    })
+    mapped.financialForecasts = mapDocuments(v1Eligibility.file_4, MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_4);
   }
 
   if (v1Eligibility.file_5) {
-    mapped.manualInclusion.push({
-      dataMigration: {
-        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_5,
-      },
-    })
+    mapped.financialInformationCommentary = mapDocuments(v1Eligibility.file_5, MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_5);
   }
 
   if (v1Eligibility.file_6) {
-    mapped.manualInclusion.push({
-      dataMigration: {
-        url: MIGRATION_MAP.DEAL.SUBMISSION_TYPE.file_6,
-      },
-    })
+    mapped.corporateStructure = mapDocuments(v1Eligibility.file_6, MIGRATION_MAP.DEAL.SUPPORTING_INFORMATION.file_6);
+  }
+
+  if (v1Eligibility.security) {
+    mapped.security.exporter = v1Eligibility.security;
   }
 
   return mapped;
@@ -197,7 +198,6 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
   const status = MIGRATION_MAP.DEAL.DEAL_STATUS[v1Deal.field_deal_status];
   const isManualSubmission = (submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
                             || submissionType === V2_CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
-
   const mapped = {
     dataMigration: {
       drupalDealId: String(v1Deal.drupal_id),

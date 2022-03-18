@@ -6,7 +6,7 @@ const {
   addToDatabase,
   teardown,
 } = require('./migrate');
-const log = require('../logs');
+// const log = require('../helpers/logs');
 
 const { file } = args;
 
@@ -33,16 +33,16 @@ const doMigration = async () => {
     );
   }
 
-  const errorCount = log.getErrorCount();
-  const successCount = log.getSuccessCount();
+  // const errorCount = log.getErrorCount();
+  // const successCount = log.getSuccessCount();
 
-  if (errorCount !== 0) {
-    log.addInfo(`Error migrating deal ${v2Deal.dataMigration.drupalDealId}`);
-  }
+  // if (errorCount !== 0) {
+  //   log.addInfo(`Error migrating deal ${v2Deal.dataMigration.drupalDealId}`);
+  // }
 
-  if (successCount > 0) {
-    log.addInfo(`Successfully migrated deal ${v2Deal.dataMigration.drupalDealId}`);
-  }
+  // if (successCount > 0) {
+  //   log.addInfo(`Successfully migrated deal ${v2Deal.dataMigration.drupalDealId}`);
+  // }
 
   await teardown();
 };

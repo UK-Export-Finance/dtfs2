@@ -55,7 +55,7 @@ const DEAL_STATUS = {
 };
 
 const GEF_SUPPORTING_INFORMATION = {
-  EXPORTER_QUESTIONNAIRE: 'exporterQuestionnaire',
+  MANUAL_INCLUSION: 'manualInclusion',
   AUDITED_FINANCIAL_STATEMENTS: 'auditedFinancialStatements',
   YEAR_TO_DATE_MANAGEMENT_ACCOUNTS: 'yearToDateManagement',
   FINANCIAL_FORECASTS: 'financialForecasts',

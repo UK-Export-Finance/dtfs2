@@ -5,7 +5,7 @@ const {
   hasBooleanValue,
   hasObjectValues,
 } = require('../helpers/field-checks');
-const log = require('../logs');
+const log = require('../helpers/logs');
 
 const dealMappingErrors = (v2Deal, v1DealId) => {
   const errors = [];
