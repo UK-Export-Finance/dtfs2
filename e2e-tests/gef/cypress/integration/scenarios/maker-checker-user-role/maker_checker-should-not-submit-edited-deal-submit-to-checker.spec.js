@@ -1,14 +1,15 @@
-import relative from '../relativeURL';
-import applicationDetails from '../pages/application-details';
-import automaticCover from '../pages/automatic-cover';
-import applicationSubmission from '../pages/application-submission';
-import CREDENTIALS from '../../fixtures/credentials.json';
-import applicationPreview from '../pages/application-preview';
-import returnToMaker from '../pages/return-to-maker';
-import statusBanner from '../pages/application-status-banner';
+import relative from '../../relativeURL';
+import applicationDetails from '../../pages/application-details';
+import automaticCover from '../../pages/automatic-cover';
+import applicationSubmission from '../../pages/application-submission';
+import CREDENTIALS from '../../../fixtures/credentials.json';
+import applicationPreview from '../../pages/application-preview';
+import returnToMaker from '../../pages/return-to-maker';
+import statusBanner from '../../pages/application-status-banner';
 
-const dealIds = [];
-context('Submit application to UKEF', () => {
+context('Create application as MAKER, submit application to UKEF as MAKER_CHECKER', () => {
+  const dealIds = [];
+
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.MAKER)
@@ -27,15 +28,15 @@ context('Submit application to UKEF', () => {
     Cypress.Cookies.preserveOnce('connect.sid');
   });
 
-  describe('DTFS2-4698 MakerChecker should not be able to submit own edited deals', () => {
-    it('does not allow a maker/checker to submit own edited deals', () => {
-      // login as a maker and submit
+  describe('DTFS2-4698 MAKER_CHECKER should not be able to submit own edited deals when submitting to checker as MAKER_CHECKER', () => {
+    it('does not allow a MAKER_CHECKER to submit own edited deals', () => {
+      // login as a MAKER and submit
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
-      automaticCover.automaticCoverTerm().each(($el, index) => {
+      automaticCover.automaticCoverTerm().each(($el) => {
         $el.find('[data-cy="automatic-cover-true"]').trigger('click');
       });
       automaticCover.saveAndReturnButton().click();
@@ -46,7 +47,7 @@ context('Submit application to UKEF', () => {
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitle();
 
-      // login as a maker/checker and return to the maker with a comment.
+      // login as a MAKER_CHECKER and return to the maker with a comment.
       cy.login(CREDENTIALS.MAKER_CHECKER);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       applicationPreview.returnButton().click();
@@ -57,7 +58,7 @@ context('Submit application to UKEF', () => {
 
       applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
 
-      // could update the application as the maker/checker
+      // could update the application as the MAKER_CHECKER
       applicationDetails.addCashFacilityButton();
       applicationDetails.addContingentFacilityButton();
 
@@ -65,7 +66,7 @@ context('Submit application to UKEF', () => {
       applicationPreview.comments();
       applicationPreview.comments().contains('nope');
 
-      // it allows the maker/checker to submit to be checked at the bank
+      // it allows the MAKER_CHECKER to submit to be checked at the bank
       // submit the application to be checked again
       applicationDetails.submitButton().click();
 
@@ -75,7 +76,7 @@ context('Submit application to UKEF', () => {
       applicationSubmission.confirmationPanelTitle();
 
       // it changes the status to Ready for Checker's approval
-      // view the application as the maker/checker
+      // view the application as the MAKER_CHECKER
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       statusBanner.bannerStatus().contains("Ready for Checker's approval");
 

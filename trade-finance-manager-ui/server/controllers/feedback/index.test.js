@@ -20,6 +20,16 @@ describe('controllers - feedback', () => {
     });
   });
 
+  describe('thankYouFeedback', () => {
+    const mockReq = {
+      session: { user: {} },
+    };
+    it('should render thank-you-feedback template', async () => {
+      await caseController.thankYouFeedback(mockReq, res);
+      expect(res.render).toHaveBeenCalledWith('feedback/feedback-thankyou.njk');
+    });
+  });
+
   describe('postFeedback without errors', () => {
     const mockFeedback = { status: 200 };
 
@@ -54,9 +64,7 @@ describe('controllers - feedback', () => {
 
       expect(createFeedbackSpy).toHaveBeenCalledWith(mockReq.body);
 
-      expect(res.render).toHaveBeenCalledWith('feedback/feedback-thankyou.njk', {
-        user: mockReq.session.user,
-      });
+      expect(res.redirect).toHaveBeenCalledWith('/thank-you-feedback');
     });
 
     it('should call api and render template for thank you page on successful creation without a user object', async () => {
@@ -82,9 +90,7 @@ describe('controllers - feedback', () => {
 
       expect(createFeedbackSpy).toHaveBeenCalledWith(mockReqNoUser.body);
 
-      expect(res.render).toHaveBeenCalledWith('feedback/feedback-thankyou.njk', {
-        user: {},
-      });
+      expect(res.redirect).toHaveBeenCalledWith('/thank-you-feedback');
     });
   });
 

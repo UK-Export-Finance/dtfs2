@@ -10,6 +10,11 @@ const MockRequest = () => {
   req.query = {};
   req.params.dealId = '123';
   req.body = {};
+  req.session = {
+    user: {
+      _id: '12345',
+    },
+  };
   return req;
 };
 

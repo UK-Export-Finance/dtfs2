@@ -22,6 +22,7 @@ const MockRequest = () => {
     user: {
       bank: { id: 'BANKID' },
       roles: ['MAKER'],
+      _id: '12345',
     },
     userToken: 'TEST',
   };
@@ -77,6 +78,7 @@ describe('controller/review-decision', () => {
   let mockResponse;
   let mockRequest;
   let mockApplicationResponse;
+  const updateApplicationSpy = jest.fn();
 
   beforeEach(() => {
     mockResponse = MockResponse();
@@ -88,7 +90,7 @@ describe('controller/review-decision', () => {
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getUserDetails.mockResolvedValue(MockMakerUserResponse());
     api.updateApplication.mockResolvedValue(mockApplicationResponse);
-    api.setApplicationStatus.mockResolvedValue(mockApplicationResponse);
+    api.updateApplication = updateApplicationSpy;
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
   });
 
@@ -102,6 +104,12 @@ describe('controller/review-decision', () => {
 
       expect(mockResponse.redirect)
         .toHaveBeenCalledWith('/gef/application-details/1234/cover-start-date');
+    });
+
+    it('calls api.updateApplication with editorId', async () => {
+      await acceptUkefDecision(mockRequest, mockResponse);
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith(mockRequest.params.dealId, expect.objectContaining({ editorId: '12345' }));
     });
   });
 });

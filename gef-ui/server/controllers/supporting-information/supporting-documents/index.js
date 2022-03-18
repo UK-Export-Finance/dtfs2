@@ -192,7 +192,7 @@ const postSupportingDocuments = async (req, res, next) => {
 
     if (fileToDelete) {
       try {
-        await removeFileFromDeal(fileToDelete, fieldName, application, userToken);
+        await removeFileFromDeal(fileToDelete, fieldName, application, userToken, user);
       } catch (err) {
         const errMsg = `Error deleting file ${fileToDelete}: ${err.message}`;
         console.error(errMsg);
@@ -285,7 +285,7 @@ const deleteSupportingDocument = async (req, res, next) => {
 
     const application = await getApplication(dealId, user, userToken);
 
-    await removeFileFromDeal(fileToDelete, fieldName, application, userToken);
+    await removeFileFromDeal(fileToDelete, fieldName, application, userToken, user);
 
     return res.status(200).send({
       file: fileToDelete,

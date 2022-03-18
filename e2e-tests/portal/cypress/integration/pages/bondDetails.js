@@ -1,4 +1,6 @@
 const page = {
+  title: () => cy.get('[data-cy="bond"]'),
+
   bondIssuerInput: () => cy.get('[data-cy="bond-issuer"]'),
 
   bondTypeInput: () => cy.get('[data-cy="bond-type"]'),
