@@ -93,6 +93,7 @@ exports.getById = async (req, res) => {
 };
 
 const update = async (id, updateBody) => {
+  console.log('mmmm', id, updateBody);
   try {
     const collection = await db.getCollection(facilitiesCollectionName);
     const dbQuery = await db.getCollection(dealsCollectionName);
@@ -104,13 +105,18 @@ const update = async (id, updateBody) => {
       ukefExposure: calculateUkefExposure(updateBody, existingFacility),
       guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
     });
-
-    const updatedFacility = await collection.findOneAndUpdate(
-      { _id: { $eq: facilityId } },
-      { $set: facilityUpdate },
-      { returnOriginal: false },
-    );
-
+    console.log('in try catch', facilityId, facilityUpdate, existingFacility);
+    try {
+      const updatedFacility = await collection.findOneAndUpdate(
+        { _id: { $eq: facilityId } },
+        { $set: facilityUpdate },
+        { returnOriginal: false },
+      );
+      console.log(updatedFacility);
+    } catch (err) {
+      console.log('why am I failing', { err });
+    }
+    console.log('above existing');
     if (existingFacility) {
     // update facilitiesUpdated timestamp in the deal
       const dealUpdateObj = {
@@ -124,6 +130,7 @@ const update = async (id, updateBody) => {
         { returnOriginal: false },
       );
     }
+    console.log('do I reach here');
     return updatedFacility;
   } catch (e) {
     console.error('Unable to update the facility', { e });

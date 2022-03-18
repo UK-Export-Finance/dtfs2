@@ -50,13 +50,16 @@ const generateUkefFacilityId = async (facility) => generateId({
 
 const addSubmissionDateToIssuedFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
-
   facilities.forEach(async (facility) => {
     const {
-      _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate
+      _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate, hasBeenIssuedAndAcknowledged
     } = facility;
-
-    if (hasBeenIssued) {
+    /**
+     * checks if hasBeenIssued and if not hasBeenIssuedAndAcknowledged
+     * ensures that once submitted to UKEF, the coverStartDate is not overwritten to the new resubmission date
+     */
+    if (hasBeenIssued && !hasBeenIssuedAndAcknowledged) {
+      console.log('hereeee');
       const update = {
         submittedAsIssuedDate: now(),
       };
@@ -78,7 +81,6 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
       await updateFacility(_id, update);
     }
   });
-
   return facilities;
 };
 
