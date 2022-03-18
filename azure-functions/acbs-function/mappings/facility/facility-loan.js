@@ -41,7 +41,7 @@ const facilityLoan = (deal, facility, acbsData) => {
     productTypeId: helpers.getProductTypeId(facility),
     productTypeGroup: helpers.getProductTypeGroup(facility, deal.dealSnapshot.dealType),
     currency: facility.facilitySnapshot.currency.id,
-    amount: helpers.getLoanMaximumLiability(ukefExposure, deal.dealSnapshot.dealType),
+    amount: helpers.getLoanMaximumLiability(ukefExposure, facility, deal.dealSnapshot.dealType),
     issueDate,
     expiryDate: guaranteeExpiryDate,
     spreadRate: facility.facilitySnapshot.guaranteeFee || Number(facility.facilitySnapshot.guaranteeFeePayableByBank),
