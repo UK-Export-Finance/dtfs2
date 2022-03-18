@@ -1,8 +1,8 @@
 const CONSTANTS = require('../../../constants');
 
 /**
- * Returns `10%` of amount, if the `GEF` deal.
- * If `Loan` then disbursement amount else amount.
+ * `GEF` = 10% of amount.
+ * `Loan` = disbursement amount, else `amount`.
  * @param {Float} amount Facility UKEF exposure
  * @param {Object} facility Facility
  * @param {Object} dealType Deal type
