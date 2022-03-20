@@ -3,6 +3,4 @@ const DEAL_STATUS = {
   ACTIVE: 'active',
 };
 
-module.exports = {
-  DEAL_STATUS,
-};
+module.exports = { DEAL_STATUS };

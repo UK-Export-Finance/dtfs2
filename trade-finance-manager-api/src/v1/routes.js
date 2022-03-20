@@ -6,7 +6,7 @@ const openRouter = express.Router();
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const dealSubmit = require('./controllers/deal.submit.controller');
 const feedbackController = require('./controllers/feedback-controller');
-const users = require('./controllers/login/routes');
+const users = require('./controllers/user/user.routes');
 
 openRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
@@ -106,14 +106,14 @@ openRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfter
  */
 openRouter.route('/feedback').post(feedbackController.create);
 
-openRouter.route('/users').post(users.create);
+openRouter.route('/users').post(users.createTfmUser);
 
 openRouter.route('/users/:_id')
-  .get(users.findById)
-  .put(users.updateById)
-  .delete(users.remove);
+  .get(users.findTfmUserById)
+  .put(users.updateTfmUserById)
+  .delete(users.removeTfmUser);
 
-openRouter.route('/users/:_id/disable').delete(users.disable);
+openRouter.route('/users/:_id/disable').delete(users.disableTfmUser);
 
 openRouter.route('/login').post(users.login);
 

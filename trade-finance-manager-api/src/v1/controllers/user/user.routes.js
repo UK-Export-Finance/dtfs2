@@ -1,20 +1,18 @@
 const utils = require('../../../utils/crypto.util');
-const login = require('./login.controller');
 const {
-  userNotFound, userIsBlocked, incorrectPassword, userIsDisabled,
+  userNotFound, incorrectPassword, userIsDisabled,
 } = require('../../../constants/login-results.constant');
 const {
-  create, update, remove, findOne, disable,
-} = require('./controller');
+  create, update, removeTfmUser, findOne, disable,
+} = require('./user.controller');
 
-const { sanitizeUser } = require('./sanitizeUserData');
+const { mapUserData } = require('./helpers/mapUserData.helper');
+const { loginCallback } = require('./helpers/loginCallback.helper');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
 
 const combineErrors = (listOfErrors) =>
   listOfErrors.reduce((obj, error) => {
-    const response = {
-      ...obj,
-    };
+    const response = { ...obj };
     const field = Object.keys(error)[0];
     const value = error[field];
 
@@ -30,7 +28,7 @@ const combineErrors = (listOfErrors) =>
     return response;
   }, {});
 
-module.exports.create = (req, res, next) => {
+module.exports.createTfmUser = (req, res, next) => {
   const userToCreate = req.body;
 
   const errors = applyCreateRules(userToCreate);
@@ -61,19 +59,19 @@ module.exports.create = (req, res, next) => {
   });
 };
 
-module.exports.findById = (req, res, next) => {
+module.exports.findTfmUserById = (req, res, next) => {
   findOne(req.params._id, (err, user) => {
     if (err) {
       next(err);
     } else if (user) {
-      res.status(200).json(sanitizeUser(user));
+      res.status(200).json(mapUserData(user));
     } else {
       res.status(200).json({});
     }
   });
 };
 
-module.exports.updateById = (req, res, next) => {
+module.exports.updateTfmUserById = (req, res, next) => {
   findOne(req.params._id, (err, user) => {
     if (err) {
       next(err);
@@ -93,7 +91,7 @@ module.exports.updateById = (req, res, next) => {
           if (updateErr) {
             next(updateErr);
           } else {
-            res.status(200).json(sanitizeUser(updatedUser));
+            res.status(200).json(mapUserData(updatedUser));
           }
         });
       }
@@ -103,7 +101,7 @@ module.exports.updateById = (req, res, next) => {
   });
 };
 
-module.exports.disable = (req, res, next) => {
+module.exports.disableTfmUser = (req, res, next) => {
   disable(req.params._id, (err, status) => {
     if (err) {
       next(err);
@@ -113,8 +111,8 @@ module.exports.disable = (req, res, next) => {
   });
 };
 
-module.exports.remove = (req, res, next) => {
-  remove(req.params._id, (err, status) => {
+module.exports.removeTfmUser = (req, res, next) => {
+  removeTfmUser(req.params._id, (err, status) => {
     if (err) {
       next(err);
     } else {
@@ -126,32 +124,26 @@ module.exports.remove = (req, res, next) => {
 module.exports.login = async (req, res, next) => {
   const { username, password } = req.body;
 
-  const loginResult = await login(username, password);
+  const loginResult = await loginCallback(username, password);
 
   if (loginResult.err) {
     // pick out the specific cases we understand and could treat differently
     if (userNotFound === loginResult.err) {
       return res.status(401).json({
         success: false,
-        msg: 'could not find user',
-      });
-    }
-    if (userIsBlocked === loginResult.err) {
-      return res.status(401).json({
-        success: false,
-        msg: 'account is blocked',
+        msg: `Could not find the ${username} user`,
       });
     }
     if (incorrectPassword === loginResult.err) {
       return res.status(401).json({
         success: false,
-        msg: 'you entered the wrong password',
+        msg: 'You entered the wrong password',
       });
     }
     if (userIsDisabled === loginResult.err) {
       return res.status(401).json({
         success: false,
-        msg: 'user is disabled',
+        msg: 'User is disabled',
       });
     }
 
@@ -163,7 +155,7 @@ module.exports.login = async (req, res, next) => {
   return res.status(200).json({
     success: true,
     token: tokenObject.token,
-    user: sanitizeUser(user),
+    user: mapUserData(user),
     expiresIn: tokenObject.expires,
   });
 };

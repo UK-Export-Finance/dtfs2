@@ -1,4 +1,4 @@
-const sanitizeUser = (user) => ({
+const mapUserData = (user) => ({
   username: user.username,
   firstName: user.firstName,
   lastName: user.lastName,
@@ -11,5 +11,5 @@ const sanitizeUser = (user) => ({
 });
 
 module.exports = {
-  sanitizeUser,
+  mapUserData,
 };

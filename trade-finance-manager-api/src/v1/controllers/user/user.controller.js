@@ -1,12 +1,10 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const { BLOCKED, ACTIVE } = require('../../../constants/user.constant').DEAL_STATUS;
-const { sanitizeUser } = require('./sanitizeUserData');
+const { mapUserData } = require('./helpers/mapUserData.helper');
 const utils = require('../../../utils/crypto.util');
 
-const businessRules = {
-  loginFailureCount_Limit: 3,
-};
+const businessRules = { loginFailureCount_Limit: 5 };
 
 exports.findOne = async (_id, callback) => {
   const collection = await db.getCollection('tfm-users');
@@ -21,10 +19,7 @@ exports.findByUsername = async (username, callback) => {
 };
 
 exports.create = async (user, callback) => {
-  const insert = {
-    status: ACTIVE,
-    ...user,
-  };
+  const insert = { status: ACTIVE, ...user };
 
   delete insert.password;
 
@@ -35,9 +30,9 @@ exports.create = async (user, callback) => {
 
   const createdUser = await collection.findOne({ _id: userId });
 
-  const sanitizedUser = sanitizeUser(createdUser);
+  const mapUser = mapUserData(createdUser);
 
-  callback(null, sanitizedUser);
+  callback(null, mapUser);
 };
 
 exports.update = async (_id, update, callback) => {
@@ -49,7 +44,7 @@ exports.update = async (_id, update, callback) => {
       // we're updating the password, so do the dance...
       const { password: newPassword } = userUpdate;
       const { salt: oldSalt, hash: oldHash, blockedPasswordList: oldBlockedPasswordList = [] } = existingUser;
-      // don't save the raw password or password confirmation to mongo...
+      // remove the raw password
       delete userUpdate.password;
       delete userUpdate.passwordConfirm;
 
@@ -76,11 +71,7 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
     loginFailureCount: 0,
     sessionIdentifier,
   };
-  await collection.updateOne(
-    { _id: { $eq: ObjectId(user._id) } },
-    { $set: update },
-    {},
-  );
+  await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
 
   callback();
 };
@@ -93,7 +84,7 @@ exports.incrementFailedLoginCount = async (user) => {
   const update = {
     loginFailureCount: failureCount,
     lastLoginFailure: Date.now(),
-    'user-status': thresholdReached ? BLOCKED : user['user-status'],
+    status: thresholdReached ? BLOCKED : user.status,
   };
 
   await collection.updateOne(
@@ -103,7 +94,7 @@ exports.incrementFailedLoginCount = async (user) => {
   );
 };
 
-exports.remove = async (_id, callback) => {
+exports.removeTfmUser = async (_id, callback) => {
   const collection = await db.getCollection('tfm-users');
   const status = await collection.deleteOne({ _id: ObjectId(_id) });
 
