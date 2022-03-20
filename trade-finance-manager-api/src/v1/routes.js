@@ -3,18 +3,12 @@ const swaggerUi = require('swagger-ui-express');
 
 const openRouter = express.Router();
 
-const {
-  swaggerSpec,
-  swaggerUiOptions,
-} = require('./swagger');
+const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const dealSubmit = require('./controllers/deal.submit.controller');
-const userController = require('./controllers/user.controller');
 const feedbackController = require('./controllers/feedback-controller');
+const users = require('./controllers/login/routes');
 
-openRouter.route('/api-docs')
-  .get(
-    swaggerUi.setup(swaggerSpec, swaggerUiOptions),
-  );
+openRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
 /**
  * @openapi
@@ -75,51 +69,9 @@ openRouter.route('/api-docs')
  *       404:
  *         description: Not found
  */
-openRouter.route('/deals/submit')
-  .put(
-    dealSubmit.submitDealPUT,
-  );
+openRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
 
-openRouter.route('/deals/submitDealAfterUkefIds')
-  .put(
-    dealSubmit.submitDealAfterUkefIdsPUT,
-  );
-
-// Mock user routes. Not required once active directory login is enabled
-/**
- * @openapi
- * /users/:username:
- *   get:
- *     summary: Get a user by username
- *     tags: [Users]
- *     description: Get a user by username. This will be replaced by Single Sign On authentication
- *     parameters:
- *       - in: path
- *         name: username
- *         schema:
- *           type: string
- *         required: true
- *         description: Username of the user to get
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             example:
- *               _id: 123abc
- *               username: T1_USER_1
- *               email: test@testing.com
- *               teams: ['BUSINESS_SUPPORT']
- *               timezone: Europe/London
- *               firstName: Joe
- *               lastName: Bloggs
- *       404:
- *         description: Not found
- */
-openRouter.route('/users/:username')
-  .get(
-    userController.findUserGET,
-  );
+openRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
 
 /**
  * @openapi
@@ -144,7 +96,7 @@ openRouter.route('/users/:username')
  *               team: 'RISK_MANAGER'
  *               whyUsingService: 'test'
  *               easyToUse: 'Very good'
- *               satisfied: 'very satisifed'
+ *               satisfied: 'very satisfied'
  *               howWeCanImprove: ''
  *               emailAddress: ''
  *               created: 2022-03-07T14:31:38.729+00:00
@@ -152,9 +104,17 @@ openRouter.route('/users/:username')
  *       400:
  *         description: validation errors
  */
-openRouter.route('/feedback')
-  .post(
-    feedbackController.create,
-  );
+openRouter.route('/feedback').post(feedbackController.create);
+
+openRouter.route('/users').post(users.create);
+
+openRouter.route('/users/:_id')
+  .get(users.findById)
+  .put(users.updateById)
+  .delete(users.remove);
+
+openRouter.route('/users/:_id/disable').delete(users.disable);
+
+openRouter.route('/login').post(users.login);
 
 module.exports = openRouter;

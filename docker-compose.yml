@@ -63,6 +63,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
+      - SESSION_SECRET
     command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
@@ -89,6 +90,7 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
     deploy:
       resources:
         limits:

@@ -195,19 +195,29 @@ const createActivity = async (dealId, activityUpdate) => {
   return apollo('PUT', createActivityMutation, updateVariable);
 };
 
-// Temp login for mock users. Active Directory will probably replace this
-// Just get the user, not really concerned about logging in with passwords for mock users
-const login = async (username) => {
+const login = async (username, password) => {
   try {
     const response = await axios({
-      method: 'get',
-      url: `${tfmAPIurl}/v1/users/${username}`,
+      method: 'post',
+      url: `${tfmAPIurl}/v1/login`,
       headers: {
         'Content-Type': 'application/json',
       },
+      data: { username, password },
     });
-    return response.data.user;
+    let data = '';
+
+    if (response?.data) {
+      data = {
+        success: response.data.success,
+        token: response.data.token,
+        user: response.data.user,
+      };
+    }
+
+    return data;
   } catch (err) {
+    console.error('Unable to log in', err);
     return false;
   }
 };
