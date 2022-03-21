@@ -1,28 +1,29 @@
-name: Staging environment complete infrastructure setup
+name: Production environment complete infrastructure setup
 
 on:
   push:
-    branches: [ staging ]
+    branches: [ prod ]
     paths:
-    - '.github/workflows/env_staging.yml'
+    - '.github/workflows/Production/Infrastructure.yml'
 
 env:
   # Environment
   front_door_access: Allow
-  environment: staging
-  registry: ${{ secrets.ACR_REGISTRY_TEST }}
-  credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
-  app_service_plan: test
+  environment: prod
+  registry: ${{ secrets.ACR_REGISTRY_PROD }}
+  credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
+  app_service_plan: prod
   redis_sku: Basic
   database_name: dtfs-submissions
-  application_gateway_cidr: 172.16.71.0/24
-  private_endpoints_cidr: 172.16.70.0/24
-  app_service_plan_egress_cidr: 172.16.52.0/28
-  vm_cidr: 172.16.53.0/28
-  vnet_address_prefixes: "172.16.50.0/23 172.16.52.0/23 172.16.70.0/23"  # App service settings
+  application_gateway_cidr: 172.16.31.0/24
+  private_endpoints_cidr: 172.16.30.0/24
+  app_service_plan_egress_cidr: 172.16.32.0/28
+  vm_cidr: 172.16.33.0/28
+  vnet_address_prefixes: "172.16.30.0/23 172.16.32.0/23"
   production_subnet_cidr: 10.60.0.0/16
   mulesoft_subnet_cidr: 172.16.10.0/23
   palo_alto_next_hop: 10.50.0.100
+  # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
@@ -32,7 +33,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -46,7 +47,7 @@ jobs:
     needs: [set-environment]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -91,7 +92,7 @@ jobs:
     needs: [set-environment, route-tables]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
 
     steps:
     - uses: azure/login@v1
@@ -188,7 +189,7 @@ jobs:
     needs: [set-environment, vnet]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
 
     - uses: azure/login@v1
@@ -240,7 +241,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
 
     - uses: azure/login@v1
@@ -277,7 +278,7 @@ jobs:
     needs: [set-environment, vnet]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -385,7 +386,7 @@ jobs:
     needs: [set-environment, vnet]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -450,7 +451,7 @@ jobs:
     needs: [set-environment, cosmos-db-create]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -523,7 +524,7 @@ jobs:
     needs: [set-environment, cosmos-db-init, private-dns]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -614,7 +615,7 @@ jobs:
     needs: [set-environment, vnet, private-dns]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -708,7 +709,7 @@ jobs:
     needs: [set-environment, vnet, private-dns]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -790,7 +791,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, file-storage]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -916,7 +917,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, file-storage]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1042,7 +1043,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, functions-acbs, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1213,7 +1214,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1369,7 +1370,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, file-storage, trade-finance-manager-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1550,7 +1551,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1717,7 +1718,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, portal-api, reference-data-proxy, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1876,7 +1877,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -2035,7 +2036,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, portal-api, reference-data-proxy, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -2197,7 +2198,7 @@ jobs:
     needs: [set-environment, vnet, public-ip, portal-ui, gef-ui]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -2401,7 +2402,7 @@ jobs:
     needs: [set-environment, vnet, public-ip, trade-finance-manager-ui]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -2496,7 +2497,7 @@ jobs:
     needs: [set-environment, application-gateway-portal]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -2550,7 +2551,7 @@ jobs:
     needs: [set-environment, application-gateway-tfm]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:

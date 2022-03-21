@@ -1,10 +1,10 @@
-name: Setup infrastructure for Dev, Staging and Production environments.  
+name: Supporting infrastructure for Dev, Staging and Production environments.  
 
 on:
   push:
     branches: [ main ]
     paths: 
-    - '.github/workflows/infrastructure.yml'
+    - '.github/workflows/Infrastructure/infrastructure.yml'
 
 jobs:
 
