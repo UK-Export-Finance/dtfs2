@@ -1,6 +1,7 @@
 const { ObjectID } = require('bson');
 const MIGRATION_MAP = require('./migration-map');
 const V2_CONSTANTS = require('../../../portal-api/src/constants');
+const { exporterStatus } = require('../../../portal-api/src/v1/gef/controllers/validation/exporter');
 const { getUserByEmail } = require('../helpers/users');
 const { getBankByName } = require('../helpers/banks');
 const { convertDateToTimestamp } = require('./helpers');
@@ -44,6 +45,8 @@ const mapExporter = (v1Exporter) => {
   if (correspondenceAddress) {
     mapped.correspondenceAddress = mapAddress(correspondenceAddress);
   }
+
+  mapped.status = exporterStatus(mapped);
 
   return mapped;
 };

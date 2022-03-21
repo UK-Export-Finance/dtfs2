@@ -77,6 +77,7 @@ const mapCoverEndDate = (coverStartDate, exposurePeriod) => {
 
 const mapV1Facilities = (
   v1Facilities,
+  v1DealUpdatedAt,
   v2DealSubmissionDate,
 ) => {
   const v2Facilities = v1Facilities.map((v1Facility) => {
@@ -98,7 +99,7 @@ const mapV1Facilities = (
       interestPercentage: Number(v1Facility.interest_rate),
 
       feeType: v1Facility.premium_type.readable_value,
-      feeFrequency: mapFeeFrequency(v1Facility.premium_frequency),
+      feeFrequency: mapFeeFrequency(v1Facility.premium_frequency.readable_value),
       dayCountBasis: Number(v1Facility.day_basis.readable_value),
 
       details,
@@ -115,6 +116,7 @@ const mapV1Facilities = (
         v2DealSubmissionDate,
       ),
       hasBeenIssuedAndAcknowledged: Boolean(v1Facility.stage_issued_acknowledged),
+      updatedAt: convertDateToTimestamp(v1DealUpdatedAt),
     };
 
     if (hasBeenIssued) {

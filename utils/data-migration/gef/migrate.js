@@ -35,7 +35,11 @@ const mapToV2 = async (v1Deal, v2Banks, v2Users) => {
   const v2Deal = await mapDeal(token, v1Deal, v2Banks, v2Users);
 
   const v1Facilities = v1Deal.children.facilities;
-  const v2Facilities = mapFacilities(v1Facilities, v2Deal.submissionDate);
+  const v2Facilities = mapFacilities(
+    v1Facilities,
+    v1Deal.changed,
+    v2Deal.submissionDate,
+  );
 
   const v1DealId = v2Deal.dataMigration.drupalDealId;
 
