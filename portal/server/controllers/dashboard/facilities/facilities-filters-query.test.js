@@ -10,6 +10,12 @@ describe('controllers/dashboard/facilities - filters query', () => {
     bank: { id: '9' },
   };
 
+  const mockUserAdmin = {
+    _id: '123',
+    roles: ['admin'],
+    bank: { id: '*' },
+  };
+
   it('should return deal.bank.id filter', () => {
     const mockFilters = [];
 
@@ -64,6 +70,19 @@ describe('controllers/dashboard/facilities - filters query', () => {
         ...keywordQuery(mockKeyword),
       ],
     };
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should not return deal.bank.id if superuser', () => {
+    const mockFilters = [];
+
+    const result = dashboardFacilitiesFiltersQuery(
+      mockFilters,
+      mockUserAdmin,
+    );
+
+    const expected = {};
 
     expect(result).toEqual(expected);
   });

@@ -56,6 +56,15 @@ context('Dashboard Deals filters', () => {
       dashboardFacilities.rows().should('have.length', ALL_FACILITIES.length);
     });
 
+    it('renders all facilities (Admin)', () => {
+      cy.login(ADMIN);
+      dashboardFacilities.visit();
+      dashboardFacilities.rows().should('be.visible');
+      dashboardFacilities.row.nameLink(ALL_FACILITIES[0]._id).should('exist');
+      dashboardFacilities.row.nameLink(ALL_FACILITIES[1]._id).should('exist');
+      dashboardFacilities.rows().should('have.length', ALL_FACILITIES.length);
+    });
+
     it('hides filters and renders `show filter` button', () => {
       filters.panel.container().should('not.be.visible');
 
