@@ -17,7 +17,7 @@ const migrationUserFields = {
 };
 
 module.exports.removeMigrationUser = async () => {
-  console.info(`remove temp user ${migrationUserFields.username}`);
+  console.info(`Removing temp migration user ${migrationUserFields.username}`);
   await axios({
     method: 'delete',
     headers: {
@@ -25,11 +25,11 @@ module.exports.removeMigrationUser = async () => {
       Accepts: 'application/json',
     },
     url: `${urlRoot}/v1/users/${migrationUserId}`,
-  }).catch((err) => { console.info(`err: ${err}`); });
+  }).catch((err) => { console.error(`Error removing migration user ${err}`); });
 };
 
 module.exports.getToken = async () => {
-  console.info(`Creating temp user ${migrationUserFields.username}`);
+  console.info(`Creating temp migration user ${migrationUserFields.username}`);
 
   const { data: { user } } = await axios({
     method: 'post',
@@ -39,8 +39,7 @@ module.exports.getToken = async () => {
     },
     data: migrationUserFields,
   }).catch((err) => {
-    console.info('failed to create temp user');
-    console.info(`${JSON.stringify(err)}`);
+    console.error(`Failed to create temp user ${JSON.stringify(err)}`);
   });
 
   migrationUserId = user._id;
@@ -55,6 +54,6 @@ module.exports.getToken = async () => {
   });
 
   const { token } = data;
-  console.info('Got a token');
+  console.info('Temp migration user ready');
   return token;
 };

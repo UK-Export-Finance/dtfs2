@@ -13,8 +13,8 @@ const mapDealRoot = (portalDealId, v1Deal) => {
     : v1Deal.Deal_information.Extra_fields.Deal_previous_status;
 
   const dealRoot = {
-    dataMigrationInfo: {
-      v1_ID: portalDealId,
+    dataMigration: {
+      drupalDealId: portalDealId,
     },
     dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
     status: findPortalValue(
