@@ -54,9 +54,10 @@ context('User can view a case deal', () => {
     });
   });
 
-  it('should render correct MGA version', () => {
-    pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
-  });
+  // enable once set
+  // it('should render correct MGA version', () => {
+  //   pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
+  // });
 
   describe('Bank security section', () => {
     it('bank security section should not be displayed as AIN', () => {
