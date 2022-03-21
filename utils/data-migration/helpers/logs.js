@@ -47,6 +47,7 @@ const addError = (v1Id, msg) => {
     logData.errors[v1Id] = [];
   }
   logData.errors[v1Id].push(msg);
+  console.error(msg);
   saveToFile();
 };
 
@@ -60,6 +61,7 @@ const addWarning = (v1Id, msg) => {
 
 const addSuccess = (v1Id) => {
   logData.success.push(v1Id);
+  console.log(msg);
   saveToFile();
 };
 
