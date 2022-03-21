@@ -1,5 +1,13 @@
 ### GHA - CI/CD Pipeline
 
+## Directory structure
+Workflow directory structure has segregatted as per workflow categories.
+- Enviornment : Runtime enviornments `dev`, `staging` and `production`
+- Infrastructure : DNS and IaC
+- Pipeline : Artifacts are build from `latest` to `dev` and pushed to `tfsdev` ACR.
+- PR : Build and push artifact to `tfsdev` followed by PR test.
+- QA : Code level quality check
+
 ## Subscriptions
 There are two subscriptions, to manage costs:
 
@@ -32,16 +40,12 @@ which then are saved under specific ACR (Azure container registry) account i.e. 
  * Code is pushed to the `main` branch.
  * API tests and E2E tests are then executed, E2E tests are executed on multiple machines.
  * Various PR tests are then executed, if successful then we deploy to `dev`.
- * Infrastructure is setup (if any changes) `env_`, container images are build `pipeline_` with correct tags (artifacts), promoted to the containers (`promote_`)
- * Merging to the `infrastructure` branch triggers a refresh of supporting infrastructure (Service Plan, ACR)
+ * Infrastructure is setup (if any changes) respective `Infrastructure.yml`, container images are build `Pipeline` with correct tags (artifacts), promoted to the containers (`Deploy.yml`)
+ * Merging to the `main` branch triggers a refresh of supporting infrastructure (Service Plan, ACR), when a change has been detected in `.github/workflows/Infrastructure/infrastructure.yml` file.
 
 ## Deployment
 Deployment is triggered by webhooks from the ACR to the web app Service instances.
 When an image is pushed, a web app service restart is required, this is handled by the GitHub Actions workflows.
-
-## Secrets
-To add a new secret, set it in GitHub Secrets (under repository settings), then add it to each of the environment workflows.
-To manage secrets across multiple environments, an automation script has been created under `/secrets/GitHub`.
 
 ## Using AZ command-line locally
 To run Azure CLI commands locally you'll need to install the az cli, additionally you'll need:

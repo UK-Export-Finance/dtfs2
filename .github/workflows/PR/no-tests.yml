@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [ main ]
     paths: 
-    - '.github/workflows/**'
+    - '.github/workflows/PR/**'
     - 'README.md'
 
 jobs:
