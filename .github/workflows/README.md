@@ -1,12 +1,12 @@
 ### GHA - CI/CD Pipeline
 
 ## Directory structure
-Workflow directory structure has segregatted as per workflow categories.
-- Enviornment : Runtime enviornments `dev`, `staging` and `production`
-- Infrastructure : DNS and IaC
-- Pipeline : Artifacts are build from `latest` to `dev` and pushed to `tfsdev` ACR.
-- PR : Build and push artifact to `tfsdev` followed by PR test.
-- QA : Code level quality check
+Workflow directory structure has segregated as per workflow categories.
+- Environment: Runtime environments `dev`, `staging` and `production`
+- Infrastructure: DNS and IaC
+- Pipeline: Artifacts are built from `latest` to `dev` and pushed to `tfsdev` ACR.
+- PR: Build and push artifact to `tfsdev` followed by PR test.
+- QA: Code level quality check
 
 ## Subscriptions
 There are two subscriptions, to manage costs:
@@ -27,7 +27,7 @@ Environment workflows ensure we've got the right infrastructure set up and corre
 
 ## Naming conventions
 In general, naming conventions are: tfs-`environment`-`component` (in order of magnitude, so "service, environment, component").
-That means a list of things will sort alphabetically into blocks of items that work together (e.g. all items that are part of a given environment).
+That means a list of things will sort alphabetically into blocks of items that work together (e.g., all items that are part of a given environment).
 
 A couple of places this works are:
  * GitHub secrets: you can scroll through the list and find out what secrets are set for a given environment
@@ -35,12 +35,12 @@ A couple of places this works are:
 
 ## Pipeline overview
 At a high-level, the pipeline works by building docker container images (repositories) with various tags associated to it (artifacts)
-which then are saved under specific ACR (Azure container registry) account i.e. `tfsdev`, `tfsstaging` and `tfsprod`.
+which then are saved under specific ACR (Azure container registry) account i.e., `tfsdev`, `tfsstaging` and `tfsprod`.
 
  * Code is pushed to the `main` branch.
  * API tests and E2E tests are then executed, E2E tests are executed on multiple machines.
  * Various PR tests are then executed, if successful then we deploy to `dev`.
- * Infrastructure is setup (if any changes) respective `Infrastructure.yml`, container images are build `Pipeline` with correct tags (artifacts), promoted to the containers (`Deploy.yml`)
+ * Infrastructure is setup (if any changes) respective `Infrastructure.yml`, container images are built `Pipeline` with correct tags (artifacts), promoted to the containers (`Deploy.yml`)
  * Merging to the `main` branch triggers a refresh of supporting infrastructure (Service Plan, ACR), when a change has been detected in `.github/workflows/Infrastructure/infrastructure.yml` file.
 
 ## Deployment
