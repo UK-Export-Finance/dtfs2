@@ -4,7 +4,7 @@ on:
   push:
     branches: [ dev ]
     paths:
-    - '.github/workflows/env_dev.yml'
+    - '.github/workflows/Development/Infrastructure.yml'
 
 env:
   # Environment
