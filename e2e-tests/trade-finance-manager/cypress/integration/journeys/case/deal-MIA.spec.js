@@ -42,7 +42,7 @@ context('User can view a case deal', () => {
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
-    pages.caseDealPage.mgaVersion().should('exist');
+    // pages.caseDealPage.mgaVersion().should('exist');
   });
 
   it('should render case summary fields', () => {
@@ -82,6 +82,7 @@ context('User can view a case deal', () => {
       const coverEndDate = format(coverEndDateRaw, 'dd MMMM yyyy');
 
       facilityRow.facilityEndDate().contains(coverEndDate);
+      facilityRow.facilityEndDate().contains('(expected)');
     });
 
     it('clicking `Facility ID` link should take user to facility details page', () => {

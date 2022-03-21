@@ -38,7 +38,8 @@
       {% set componentData = {
         facilities: deal.facilities,
         totals: deal.totals,
-        caseId: deal._id
+        caseId: deal._id,
+        submissionType: deal.submissionType
       } %}
 
       {{ facilitiesTable.render(componentData) }}
