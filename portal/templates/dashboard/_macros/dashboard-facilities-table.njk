@@ -25,7 +25,7 @@
       {% endif %}
     {% endset %}
 
-    {% if facility.hasBeenIssued %}
+    {% if facility.hasBeenIssued and facility.hasBeenIssuedAndAcknowledged %}
       {% set stage = 'Issued' %}
     {% else %}
       {% set stage = 'Unissued' %}

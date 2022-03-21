@@ -115,6 +115,7 @@ const queryAllFacilities = async (
           type: '$type',
           hasBeenIssued: '$hasBeenIssued',
           submittedAsIssuedDate: '$submittedAsIssuedDate',
+          hasBeenIssuedAndAcknowledged: '$hasBeenIssuedAndAcknowledged',
           updatedAt: '$updatedAt',
         },
       },
