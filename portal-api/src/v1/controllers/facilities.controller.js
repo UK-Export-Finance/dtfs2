@@ -75,7 +75,6 @@ exports.createMultiple = async (req, res) => {
 exports.createMultipleFacilities = async (facilities, dealId, user) =>
   api.createMultipleFacilities(facilities, dealId, user);
 
-
 /**
 * Queries all facilities in the facilities collection (BSS, EWCS, GEF)
 * @param {*} filters any filters for deals or facilities, uses match spec

@@ -12,7 +12,6 @@ const {
   dealMappingErrors,
   facilitiesMappingErrors,
 } = require('./mapping-errors');
-// const migrateDealFiles = require('./migrate-deal-files');
 
 let token;
 let v2Banks;
@@ -79,22 +78,6 @@ const addToDatabase = async (v2Deal, v2Facilities) => {
     } else {
       log.addError(v1DealId, `Error adding v1 GEF deal to database.`);
     }
-
-      // const dealHasFilesToUpload = v2Deal.supportingInformation.manualInclusion.length;
-
-      // if (dealHasFilesToUpload) {
-      //   await migrateDealFiles(
-      //     v2Deal._id,
-      //     v2Deal.supportingInformation.manualInclusion,
-      //   );
-
-      // } else {
-      //   log.addSuccess(v1DealId, `Successfully migrated v1 GEF deal`);
-      // }
-    // } else {
-    //   log.addError(v1DealId, `Error adding v1 GEF deal to database.`);
-    // }
-
   });
 };
 
