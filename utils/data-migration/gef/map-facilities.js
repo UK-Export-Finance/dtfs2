@@ -121,8 +121,7 @@ const mapV1Facilities = (
         v2DealSubmissionDate,
       ),
       hasBeenIssuedAndAcknowledged: Boolean(v1Facility.stage_issued_acknowledged),
-      updatedAt: convertDateToTimestamp(v1DealUpdatedAt),
-
+      updatedAt: v2DealSubmissionDate,
     };
 
     if (hasBeenIssued) {

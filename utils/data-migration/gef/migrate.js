@@ -45,6 +45,14 @@ const mapToV2 = async (v1Deal, v2Banks, v2Users) => {
   const dealErrors = dealMappingErrors(v2Deal, v1DealId);
   const facilitiesErrors = facilitiesMappingErrors(v2Facilities, v1DealId);
 
+  if (dealErrors) {
+    log.addError(v1DealId, `Error mapping v1 GEF deal.`);
+  }
+
+  if (facilitiesErrors) {
+    log.addError(v1DealId, `Error mapping v1 GEF facilities.`);
+  }
+
   let mappingErrors;
   const hasMappingErrors = (dealErrors || facilitiesErrors);
 

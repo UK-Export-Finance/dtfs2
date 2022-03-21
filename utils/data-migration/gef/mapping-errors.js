@@ -124,7 +124,7 @@ const facilityMappingErrors = (v2Facility) => {
   if (!hasBooleanValue(v2Facility.hasBeenIssuedAndAcknowledged)) {
     errors.push('hasBeenIssuedAndAcknowledged');
   }
-  if (!hasValue(v2Facility.updatedAt)) {
+  if (!v2Facility.updatedAt) {
     errors.push('updatedAt');
   }
 
