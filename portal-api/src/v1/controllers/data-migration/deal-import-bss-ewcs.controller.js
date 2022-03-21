@@ -1,7 +1,7 @@
-const db = require('../../drivers/db-client');
-const { isSuperUser } = require('../users/checks');
-const getDealErrors = require('../validation/deal');
-const { createMultipleFacilities } = require('./facilities.controller');
+const db = require('../../../drivers/db-client');
+const { isSuperUser } = require('../../users/checks');
+const getDealErrors = require('../../validation/deal');
+const { createMultipleFacilities } = require('../facilities.controller');
 
 const importDealAndFacilities = async (req, res) => {
   if (!isSuperUser(req.user)) {
@@ -26,7 +26,7 @@ const importDealAndFacilities = async (req, res) => {
   });
 
   if (!deal.insertedId) {
-    return res.status(400).send(`Error importing deal for V1 deal id: ${newDeal.dataMigrationInfo.v1_ID}`);
+    return res.status(400).send(`Error importing V1 BSS/EWCS deal with id: ${newDeal.dataMigration.drupalDealId}`);
   }
 
   const { insertedId: dealId } = deal;

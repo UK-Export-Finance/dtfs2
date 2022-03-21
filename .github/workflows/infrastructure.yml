@@ -1,10 +1,10 @@
-name: Supporting infrastructure for Dev, Staging and Production environments.  
+name: Supporting infrastructure build
 
 on:
   push:
     branches: [ main ]
     paths: 
-    - '.github/workflows/Infrastructure/infrastructure.yml'
+    - '.github/workflows/infrastructure.yml'
 
 jobs:
 
@@ -91,4 +91,3 @@ jobs:
         inlineScript: |
           # Admin needs to be enabled for App Service continuous deployment
           az acr create --name tfsproduction --sku Standard --admin-enabled true
-
