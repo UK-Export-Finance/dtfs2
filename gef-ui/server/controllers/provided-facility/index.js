@@ -1,5 +1,5 @@
 const api = require('../../services/api');
-const { FACILITY_TYPE } = require('../../constants');
+const { FACILITY_TYPE, FACILITY_PROVIDED_DETAILS } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 
 const providedFacility = async (req, res) => {
@@ -48,7 +48,7 @@ const validateProvidedFacility = async (req, res) => {
       });
     }
 
-    if (body.details && body.details.includes('OTHER') && !body.detailsOther) {
+    if (body.details && body.details.includes(FACILITY_PROVIDED_DETAILS.OTHER) && !body.detailsOther) {
       providedFacilityErrors.push({
         errRef: 'detailsOther',
         errMsg: 'Enter details for "Other"',

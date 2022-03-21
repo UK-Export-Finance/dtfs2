@@ -85,7 +85,7 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
 
   /**
   1. GEF - Check whether the exporter has a URN
-  2. BSS/ECWS - Check all the parties have a URN
+  2. BSS/EWCS - Check all the parties have a URN
   */
   const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
 
