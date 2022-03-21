@@ -6,6 +6,7 @@ import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_READY_TO_SUBMIT from './test-data/dealReadyToSubmit';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
+import { T1_USER_1, TFM_URL } from '../../../../fixtures';
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -13,19 +14,20 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('Portal deal is submitted to UKEF, user views deal in TFM. Facilities display tenor (exposure period in months)', () => {
@@ -56,40 +58,37 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // user can login to TFM and view the submitted deal
     //---------------------------------------------------------------
-    // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmRootUrl = 'http://localhost:5003';
+    cy.forceVisit(TFM_URL);
 
-    cy.forceVisit(tfmRootUrl);
+    cy.tfmLogin(T1_USER_1);
 
-    tfmPages.landingPage.email().type('T1_USER_1');
-    tfmPages.landingPage.submitButton().click();
-
-    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
+    const tfmCaseDealPage = `${TFM_URL}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/deal`);
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/deal`);
 
     //---------------------------------------------------------------
     // bond facilities that are `issued` display tenor (exposure period in months)
     //---------------------------------------------------------------
     let facilityRow;
 
-    const issuedBond = dealFacilities.find((facility) =>
-      facility.type === 'Bond'
-      && facility.facilityStage === 'Issued');
+    const issuedBond = dealFacilities.find((facility) => facility.type === 'Bond' && facility.facilityStage === 'Issued');
 
     const issuedBondId = issuedBond._id;
     facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedBondId);
 
     facilityRow.facilityId().click();
 
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/facility/${issuedBondId}`);
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${issuedBondId}`);
 
-    tfmPages.facilityPage.facilityTenor().invoke('text').then((text) => {
-      // the actual month is generated dynamically via API.
-      // 'months' is added to the mapping of the API result.
-      // so safe to assert based on `months` appearing, rather than adding regex assertion.
-      expect(text.trim()).to.contain('month');
-    });
+    tfmPages.facilityPage
+      .facilityTenor()
+      .invoke('text')
+      .then((text) => {
+        // the actual month is generated dynamically via API.
+        // 'months' is added to the mapping of the API result.
+        // so safe to assert based on `months` appearing, rather than adding regex assertion.
+        expect(text.trim()).to.contain('month');
+      });
 
     //---------------------------------------------------------------
     // loan facilities that are `issued` (called `Unconditional` in loans),
@@ -97,22 +96,23 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     cy.forceVisit(tfmCaseDealPage);
 
-    const issuedLoan = dealFacilities.find((facility) =>
-      facility.type === 'Loan'
-      && facility.facilityStage === 'Unconditional');
+    const issuedLoan = dealFacilities.find((facility) => facility.type === 'Loan' && facility.facilityStage === 'Unconditional');
 
     const issuedLoanId = issuedLoan._id;
     facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedLoanId);
 
     facilityRow.facilityId().click();
 
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/facility/${issuedLoanId}`);
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${issuedLoanId}`);
 
-    tfmPages.facilityPage.facilityTenor().invoke('text').then((text) => {
-      // the actual month is generated dynamically via API.
-      // 'months' is added to the mapping of the API result.
-      // so safe to assert based on `months` appearing, rather than adding regex assertion.
-      expect(text.trim()).to.contain('month');
-    });
+    tfmPages.facilityPage
+      .facilityTenor()
+      .invoke('text')
+      .then((text) => {
+        // the actual month is generated dynamically via API.
+        // 'months' is added to the mapping of the API result.
+        // so safe to assert based on `months` appearing, rather than adding regex assertion.
+        expect(text.trim()).to.contain('month');
+      });
   });
 });

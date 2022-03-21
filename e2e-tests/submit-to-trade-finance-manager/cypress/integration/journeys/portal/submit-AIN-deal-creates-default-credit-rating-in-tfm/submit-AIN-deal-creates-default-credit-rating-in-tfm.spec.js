@@ -7,6 +7,7 @@ import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
+import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../fixtures';
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -14,19 +15,20 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('Portal deal is submitted to UKEF, `Good` credit rating is added to the deal in TFM', () => {
@@ -57,19 +59,15 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // user login to TFM
     //---------------------------------------------------------------
-    // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmRootUrl = 'http://localhost:5003';
+    cy.forceVisit(TFM_URL);
 
-    cy.forceVisit(tfmRootUrl);
+    cy.tfmLogin(UNDERWRITER_MANAGER_1);
 
-    tfmPages.landingPage.email().type('UNDERWRITER_1');
-    tfmPages.landingPage.submitButton().click();
-
-    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
+    const tfmCaseDealPage = `${TFM_URL}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
     tfmPartials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/underwriting/pricing-and-risk`);
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/underwriting/pricing-and-risk`);
 
     // assert elements/value in `pricing and risk` page
     tfmPages.underwritingPricingAndRiskPage.addRatingLink().should('not.exist');

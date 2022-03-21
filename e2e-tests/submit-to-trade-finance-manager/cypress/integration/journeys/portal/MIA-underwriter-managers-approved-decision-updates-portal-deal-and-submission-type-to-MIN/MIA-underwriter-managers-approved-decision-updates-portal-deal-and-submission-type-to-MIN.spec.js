@@ -5,7 +5,7 @@ import tfmPartials from '../../../../../../trade-finance-manager/cypress/integra
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
-
+import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../fixtures';
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('Portal to TFM deal submission', () => {
@@ -14,23 +14,24 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_MIA_DEAL_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_MIA_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('MIA is submitted, TFM Underwriter submits `Approved` decision. Portal status updates; Portal deal is resubmitted and then should become an MIN', () => {
@@ -44,7 +45,6 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
-
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
@@ -77,15 +77,12 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Underwriter Manager logs in to TFM
     //---------------------------------------------------------------
-    // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmRootUrl = 'http://localhost:5003';
 
-    cy.forceVisit(tfmRootUrl);
+    cy.forceVisit(TFM_URL);
 
-    tfmPages.landingPage.email().type('UNDERWRITER_MANAGER_1');
-    tfmPages.landingPage.submitButton().click();
+    cy.tfmLogin(UNDERWRITER_MANAGER_1);
 
-    cy.forceVisit(`${tfmRootUrl}/case/${dealId}/deal`);
+    cy.forceVisit(`${TFM_URL}/case/${dealId}/deal`);
 
     //---------------------------------------------------------------
     // TFM deal submission type should be MIA to start with
@@ -106,7 +103,6 @@ context('Portal to TFM deal submission', () => {
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
     tfmPages.managersDecisionPage.commentsInputApproveWithConditions().type(MOCK_COMMENTS);
     tfmPages.managersDecisionPage.submitButton().click();
-
 
     //---------------------------------------------------------------
     // Go back to Portal
@@ -151,7 +147,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
     portalPages.facilityConfirmCoverStartDate.submit().click();
 
-
     //---------------------------------------------------------------
     // portal maker submits deal for second review
     //---------------------------------------------------------------
@@ -160,7 +155,6 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
-
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef again
@@ -171,7 +165,6 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contractConfirmSubmission.confirmSubmit().check();
     portalPages.contractConfirmSubmission.acceptAndSubmit().click(deal);
-
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
@@ -201,12 +194,11 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Go back to TFM
     //---------------------------------------------------------------
-    cy.forceVisit(tfmRootUrl);
+    cy.forceVisit(TFM_URL);
 
-    tfmPages.landingPage.email().type('UNDERWRITER_MANAGER_1');
-    tfmPages.landingPage.submitButton().click();
+    cy.tfmLogin(UNDERWRITER_MANAGER_1);
 
-    cy.forceVisit(`${tfmRootUrl}/case/${dealId}/deal`);
+    cy.forceVisit(`${TFM_URL}/case/${dealId}/deal`);
 
     //---------------------------------------------------------------
     // TFM deal submission type should have changed from MIA to MIN

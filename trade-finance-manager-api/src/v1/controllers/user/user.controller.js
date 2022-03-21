@@ -94,7 +94,7 @@ exports.incrementFailedLoginCount = async (user) => {
   );
 };
 
-exports.removeTfmUser = async (_id, callback) => {
+exports.removeTfmUserById = async (_id, callback) => {
   const collection = await db.getCollection('tfm-users');
   const status = await collection.deleteOne({ _id: ObjectId(_id) });
 

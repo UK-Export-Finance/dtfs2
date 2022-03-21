@@ -10,10 +10,8 @@ import {
 import MOCK_USERS from '../../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_UNISSUED_BOND_READY_TO_SUBMIT from './test-data/dealWithUnissuedBondReadyToSubmit';
 
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../fixtures';
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
-
-// Cypress.config('tfmUrl') returns incorrect url...
-const tfmRootUrl = 'http://localhost:5003';
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -23,21 +21,22 @@ context('Portal to TFM deal submission', () => {
   let bondId;
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_UNISSUED_BOND_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_DEAL_UNISSUED_BOND_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-          [bond] = createdFacilities;
-          bondId = bond._id;
-        });
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
+        [bond] = createdFacilities;
+        bondId = bond._id;
       });
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('Portal deal with unissued bond is submitted to UKEF, bond displays correctly in TFM with Premium schedule populated. Bond is then issued in Portal and resubmitted; displays correctly in TFM, Portal facility status is updated to `Acknowledged`', () => {
@@ -70,12 +69,11 @@ context('Portal to TFM deal submission', () => {
     // TFM bond values should render in an unissued state
     //---------------------------------------------------------------
 
-    cy.forceVisit(tfmRootUrl);
+    cy.forceVisit(TFM_URL);
 
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
+    cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
 
-    let tfmFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${bondId}`;
+    let tfmFacilityPage = `${TFM_URL}/case/${dealId}/facility/${bondId}`;
     cy.forceVisit(tfmFacilityPage);
 
     tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {
@@ -100,7 +98,7 @@ context('Portal to TFM deal submission', () => {
 
 
     //---------------------------------------------------------------
-    // portal maker completes bond inssuance form
+    // portal maker completes bond insurance form
     //---------------------------------------------------------------
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
@@ -139,11 +137,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM bond values should be updated
     //---------------------------------------------------------------
-    cy.forceVisit(tfmRootUrl);
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
+    cy.forceVisit(TFM_URL);
+    cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
 
-    tfmFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${bondId}`;
+    tfmFacilityPage = `${TFM_URL}/case/${dealId}/facility/${bondId}`;
     cy.forceVisit(tfmFacilityPage);
 
     tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {

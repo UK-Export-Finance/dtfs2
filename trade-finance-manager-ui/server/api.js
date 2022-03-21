@@ -218,7 +218,7 @@ const login = async (username, password) => {
     return data;
   } catch (err) {
     console.error('Unable to log in', err?.response?.data);
-    return false;
+    return err?.response?.data;
   }
 };
 

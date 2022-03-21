@@ -3,7 +3,7 @@ const {
   userNotFound, incorrectPassword, userIsDisabled,
 } = require('../../../constants/login-results.constant');
 const {
-  create, update, removeTfmUser, findOne, disable,
+  create, update, removeTfmUserById, findOne, disable, findByUsername,
 } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -59,20 +59,20 @@ module.exports.createTfmUser = (req, res, next) => {
   });
 };
 
-module.exports.findTfmUserById = (req, res, next) => {
+module.exports.findTfmUserByUsername = (req, res, next) => {
   findOne(req.params._id, (err, user) => {
     if (err) {
       next(err);
     } else if (user) {
-      res.status(200).json(mapUserData(user));
+      res.status(200).json({ user: mapUserData(user), status: 200 });
     } else {
-      res.status(200).json({});
+      res.status(404).json({ user: {}, status: 404, message: 'User does not exist' });
     }
   });
 };
 
 module.exports.updateTfmUserById = (req, res, next) => {
-  findOne(req.params._id, (err, user) => {
+  findByUsername(req.params._id, (err, user) => {
     if (err) {
       next(err);
     } else if (user) {
@@ -87,7 +87,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
           },
         });
       } else {
-        update(req.params._id, req.body, (updateErr, updatedUser) => {
+        update(req.params.user, req.body, (updateErr, updatedUser) => {
           if (updateErr) {
             next(updateErr);
           } else {
@@ -112,7 +112,7 @@ module.exports.disableTfmUser = (req, res, next) => {
 };
 
 module.exports.removeTfmUser = (req, res, next) => {
-  removeTfmUser(req.params._id, (err, status) => {
+  removeTfmUserById(req.params._id, (err, status) => {
     if (err) {
       next(err);
     } else {

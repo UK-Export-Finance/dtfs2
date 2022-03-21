@@ -5,6 +5,7 @@ import tfmPartials from '../../../../../../trade-finance-manager/cypress/integra
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../fixtures';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -14,19 +15,20 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('Portal deal is submitted to UKEF, facility `risk profile` defaults to `Flat`. User can navigate to facility pages', () => {
@@ -40,7 +42,6 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
-
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
@@ -58,15 +59,11 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // user login to TFM
     //---------------------------------------------------------------
-    // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmRootUrl = 'http://localhost:5003';
+    cy.forceVisit(TFM_URL);
 
-    cy.forceVisit(tfmRootUrl);
+    cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
 
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
-
-    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
+    const tfmCaseDealPage = `${TFM_URL}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
     tfmPartials.caseSubNavigation.underwritingLink().click();
@@ -74,22 +71,28 @@ context('Portal to TFM deal submission', () => {
     // check facility 1 has default risk profile and can click through to facility page
     const facility1 = tfmPages.underwritingPricingAndRiskPage.facilityTable(dealFacilities[0]._id);
 
-    facility1.riskProfile().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Flat');
-    });
+    facility1
+      .riskProfile()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Flat');
+      });
 
     facility1.facilityLink().click();
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/facility/${dealFacilities[0]._id}`);
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${dealFacilities[0]._id}`);
 
     // check facility 1 has default risk profile and can click through to facility page
     tfmPartials.caseSubNavigation.underwritingLink().click();
     const facility2 = tfmPages.underwritingPricingAndRiskPage.facilityTable(dealFacilities[1]._id);
 
-    facility2.riskProfile().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('Flat');
-    });
+    facility2
+      .riskProfile()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Flat');
+      });
 
     facility2.facilityLink().click();
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/facility/${dealFacilities[1]._id}`);
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${dealFacilities[1]._id}`);
   });
 });

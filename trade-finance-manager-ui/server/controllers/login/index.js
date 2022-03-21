@@ -1,4 +1,5 @@
 const api = require('../../api');
+const { validationErrorHandler } = require('../../helpers/validationErrorHandler.helper');
 
 const getLogin = (req, res) => {
   const { passwordreset, passwordupdated } = req.query;
@@ -26,13 +27,9 @@ const postLogin = async (req, res) => {
   if (!password) loginErrors.push(passwordError);
 
   if (email && password) {
-    const tokenResponse = await api.login(email, password);
+    const response = await api.login(email, password);
 
-    const {
-      success,
-      token,
-      user,
-    } = tokenResponse;
+    const { success, token, user } = response;
 
     if (success) {
       req.session.userToken = token;
@@ -45,7 +42,7 @@ const postLogin = async (req, res) => {
 
   if (loginErrors.length) {
     return res.render('login.njk', {
-      errors: loginErrors,
+      errors: validationErrorHandler(loginErrors),
     });
   }
 
@@ -58,8 +55,4 @@ const logout = (req, res) => {
   });
 };
 
-module.exports = {
-  getLogin,
-  postLogin,
-  logout,
-};
+module.exports = { getLogin, postLogin, logout };

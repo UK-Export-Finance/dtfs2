@@ -6,6 +6,7 @@ import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_READY_TO_SUBMIT from './test-data/dealReadyToSubmit';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
+import { T1_USER_1, TFM_URL } from '../../../../fixtures';
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -13,19 +14,20 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('Portal deal is submitted to UKEF, user views deal in TFM. Facilities display GBP and non-GBP values and maximum ukef exposure in GBP', () => {
@@ -39,7 +41,6 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
-
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
@@ -57,17 +58,14 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // user can login to TFM and view the submitted deal
     //---------------------------------------------------------------
-    // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmRootUrl = 'http://localhost:5003';
 
-    cy.forceVisit(tfmRootUrl);
+    cy.forceVisit(TFM_URL);
 
-    tfmPages.landingPage.email().type('T1_USER_1');
-    tfmPages.landingPage.submitButton().click();
+    cy.tfmLogin(T1_USER_1);
 
-    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
+    const tfmCaseDealPage = `${TFM_URL}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/deal`);
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/deal`);
 
     //---------------------------------------------------------------
     // deal facilities with non-GBP currency display GBP and non-GBP currency values
@@ -78,20 +76,29 @@ context('Portal to TFM deal submission', () => {
 
     facilityRow.facilityId().click();
 
-    cy.url().should('eq', `${tfmRootUrl}/case/${dealId}/facility/${facilityId}`);
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${facilityId}`);
 
-    tfmPages.facilityPage.facilityValueExportCurrency().invoke('text').then((text) => {
-      const facilityCurrency = facilityWithNonGBPCurrency.currency.id;
-      expect(text.trim()).to.contain(facilityCurrency);
-    });
+    tfmPages.facilityPage
+      .facilityValueExportCurrency()
+      .invoke('text')
+      .then((text) => {
+        const facilityCurrency = facilityWithNonGBPCurrency.currency.id;
+        expect(text.trim()).to.contain(facilityCurrency);
+      });
 
     // currency is converted dynamically - tricky/flaky to assert/mock this from e2e test
-    tfmPages.facilityPage.facilityValueGbp().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('GBP');
-    });
+    tfmPages.facilityPage
+      .facilityValueGbp()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('GBP');
+      });
 
-    tfmPages.facilityPage.facilityMaximumUkefExposure().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('GBP');
-    });
+    tfmPages.facilityPage
+      .facilityMaximumUkefExposure()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('GBP');
+      });
   });
 });

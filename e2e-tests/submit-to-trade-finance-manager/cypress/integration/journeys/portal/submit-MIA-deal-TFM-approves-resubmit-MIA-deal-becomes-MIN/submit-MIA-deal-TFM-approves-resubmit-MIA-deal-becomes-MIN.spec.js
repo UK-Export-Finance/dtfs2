@@ -4,14 +4,10 @@ import tfmPages from '../../../../../../trade-finance-manager/cypress/integratio
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
-import MOCK_TFM_USERS from '../../../../../../trade-finance-manager/cypress/fixtures/users';
+import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../fixtures';
 import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 
-const {
-  BANK1_MAKER1,
-  BANK1_CHECKER1,
-  UNDERWRITER_MANAGER,
-} = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -21,29 +17,30 @@ context('Portal to TFM deal submission', () => {
   const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_MIA_DEAL_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_MIA_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          createdFacilities.forEach((facility) => {
-            const { type } = facility;
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        createdFacilities.forEach((facility) => {
+          const { type } = facility;
 
-            if (type === 'Bond') {
-              bondId = facility._id;
-            }
+          if (type === 'Bond') {
+            bondId = facility._id;
+          }
 
-            if (type === 'Loan') {
-              loanId = facility._id;
-            }
-          });
+          if (type === 'Loan') {
+            loanId = facility._id;
+          }
         });
       });
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('Checker submits an MIA deal, TFM approves, BANK1_MAKER1/checker resubmit; Deal then becomes MIN', () => {
@@ -121,15 +118,11 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM Underwriter manager approves the deal
     //---------------------------------------------------------------
-    // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmRootUrl = 'http://localhost:5003';
+    cy.forceVisit(TFM_URL);
 
-    cy.forceVisit(tfmRootUrl);
+    cy.tfmLogin(UNDERWRITER_MANAGER_1);
 
-    tfmPages.landingPage.email().type(UNDERWRITER_MANAGER.username);
-    tfmPages.landingPage.submitButton().click();
-
-    const tfmDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
+    const tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
     cy.forceVisit(tfmDealPage);
 
     // go to underwriter managers decision page
@@ -177,7 +170,6 @@ context('Portal to TFM deal submission', () => {
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
-
 
     //---------------------------------------------------------------
     // Portal Deal should now:

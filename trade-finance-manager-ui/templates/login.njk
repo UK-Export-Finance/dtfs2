@@ -12,11 +12,12 @@
 
 
   <div class="govuk-grid-row govuk-body">
-    <div class="govuk-grid-column-one-third">
+    <div class="govuk-grid-column-two-thirds govuk-!-margin-top-4">
         {% if errors %}
           {{ govukErrorSummary({
             titleText: "There is a problem",
             errorList: errors.errorSummary,
+            classes: 'govuk-!-margin-bottom-0',
             attributes: {
               'data-cy': 'error-summary'
             }
@@ -75,7 +76,7 @@
           {{ govukButton({
             text: "Sign in",
             attributes: {
-              "data-cy": "LogIn"
+              "data-cy": "submit-button"
             }
           }) }}
       </form>
