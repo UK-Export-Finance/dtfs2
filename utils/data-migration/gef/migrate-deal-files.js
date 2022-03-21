@@ -61,8 +61,6 @@ const migrateDealFiles = (v1DealId, v2DealId, filesArray) => {
       }
     };
   }
-
-  // TODO: update files list in v2 deal, with the new url.
 };
 
 
