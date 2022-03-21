@@ -78,12 +78,12 @@ const TYPE = {
 };
 
 const BASIS_DETAILS = {
-  'a facility provided on a term basis': V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.TERM,
-  'a facility provided on a revolving or renewing basis': V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.RESOLVING,
-  'a facility provided on a committed basis': V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.COMMITTED,
-  'a facility provided on an uncommitted basis': V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.UNCOMMITTED,
-  'a facility provided on an on-demand or overdraft basis': V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.ON_DEMAND,
-  'a factoring facility provided on a with-recourse basis': V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.FACTORING,
+  'a facility provided on a term basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.TERM,
+  'a facility provided on a revolving or renewing basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.RESOLVING,
+  'a facility provided on a committed basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.COMMITTED,
+  'a facility provided on an uncommitted basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.UNCOMMITTED,
+  'a facility provided on an on-demand or overdraft basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.ON_DEMAND,
+  'a factoring facility provided on a with-recourse basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.FACTORING,
 };
 
 const FACILITIES = {

@@ -7,9 +7,6 @@ const MIGRATION_MAP = require('./migration-map');
 const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { convertDateToTimestamp } = require('./helpers');
 
-// TODO:
-// paymentType: 'IN_ADVANCE_MONTHLY', // ??
-
 const mapHasBeenIssued = (v1Stage) => {
   if (v1Stage === 'Issued') {
     return true;
@@ -19,8 +16,16 @@ const mapHasBeenIssued = (v1Stage) => {
 };
 
 const mapFeeFrequency = (v1Frequency) => {
-  if (v1Frequency.length) {
+  if (v1Frequency && v1Frequency.length) {
     return v1Frequency;
+  }
+
+  return null;
+};
+
+const mapPaymentType = (v1PaymentType) => {
+  if (v1PaymentType && v1PaymentType.length) {
+    return v1PaymentType;
   }
 
   return null;
@@ -38,7 +43,7 @@ const mapBasisDetails = (v1Basis) => {
         // return MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value];
         mapped.details.push(MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]);
       } else {
-        mapped.details.push(V2_CONSTANTS.FACILITIES.FACILITY_PROVIDED_DETAILS.OTHER);
+        mapped.details.push(V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.OTHER);
         mapped.detailsOther = v1.system_value;
       }
     }); 
@@ -97,8 +102,8 @@ const mapV1Facilities = (
       currency: { id: v1Facility.currency },
       coverPercentage: Number(v1Facility.guarantee_),
       interestPercentage: Number(v1Facility.interest_rate),
-
       feeType: v1Facility.premium_type.readable_value,
+      paymentType: mapPaymentType(v1Facility.premium_frequency.readable_value),
       feeFrequency: mapFeeFrequency(v1Facility.premium_frequency.readable_value),
       dayCountBasis: Number(v1Facility.day_basis.readable_value),
 
@@ -117,6 +122,7 @@ const mapV1Facilities = (
       ),
       hasBeenIssuedAndAcknowledged: Boolean(v1Facility.stage_issued_acknowledged),
       updatedAt: convertDateToTimestamp(v1DealUpdatedAt),
+
     };
 
     if (hasBeenIssued) {
