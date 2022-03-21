@@ -1,7 +1,7 @@
 const fs = require('fs');
 const moment = require('moment');
 const args = require('minimist')(process.argv.slice(2));
-const api = require('./api');
+const api = require('../api');
 const { getToken, removeMigrationUser } = require('./temporary-token-handler');
 const consoleLogColor = require('./helpers/console-log-colour');
 

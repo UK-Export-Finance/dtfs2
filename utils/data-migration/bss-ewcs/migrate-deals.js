@@ -13,17 +13,17 @@ const {
   mapMandatoryCriteria,
   mapExporter,
 } = require('./maps');
-const { initBanks } = require('./helpers/banks');
-const { initUsers } = require('./helpers/users');
+const { initBanks } = require('../helpers/banks');
+const { initUsers } = require('../helpers/users');
 const { initCountries } = require('./helpers/countries');
 const { initCurrencies } = require('./helpers/currencies');
 const { initIndustrySectors } = require('./helpers/industry-sectors');
 const { convertV1Date } = require('./helpers/date-helpers');
 const consoleLogColor = require('./helpers/console-log-colour');
 
-const log = require('./helpers/log');
-const { getToken, removeMigrationUser } = require('./temporary-token-handler');
-const api = require('./api');
+const log = require('../logs');
+const { getToken, removeMigrationUser } = require('../temporary-token-handler');
+const api = require('../api');
 
 const Entities = require('html-entities').AllHtmlEntities;
 
@@ -133,7 +133,7 @@ const processXml = async (dealId) => {
 const importSingleDeal = async (dealId) =>
   processXml(dealId).then(async (workflowDeal) => mapV2(dealId, workflowDeal).then(async (v2Deal) => {
     if (v2Deal) {
-      const success = await api.importDeal(v2Deal, token).then(async ({ success, deal }) => {
+      const success = await api.importBssEwcsDeal(v2Deal, token).then(async ({ success, deal }) => {
         if (success) {
           log.addSuccess(dealId);
         } else if (deal.validationErrors) {
@@ -147,7 +147,6 @@ const importSingleDeal = async (dealId) =>
       });
       return success;
     } else {
-      console.error(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
       log.addError(portalDealId, `Error mapping v1 ${portalDealId} to v2`);
     }
 

@@ -7,6 +7,8 @@ const {
 
 /* eslint-disable consistent-return */
 const hasRequiredItems = (doc) => {
+  const isMigratedFacility = doc.dataMigration;
+
   const required = [];
   if (!doc.type) {
     required.push('type');
@@ -14,7 +16,7 @@ const hasRequiredItems = (doc) => {
   if (doc.hasBeenIssued === null) {
     required.push('hasBeenIssued');
   }
-  if (doc.hasBeenIssued === true && !doc.name) {
+  if (!isMigratedFacility && doc.hasBeenIssued === true && !doc.name) {
     required.push('name');
   }
   if (doc.hasBeenIssued === true && (doc.shouldCoverStartOnSubmission !== true && !doc.coverStartDate)) {
@@ -55,6 +57,7 @@ const hasRequiredItems = (doc) => {
   if (!doc.dayCountBasis) {
     required.push('dayCountBasis');
   }
+
   return required;
 };
 
@@ -78,12 +81,15 @@ const facilitiesOverallStatus = (facilities) => {
     allStatus.push(item.status);
   });
   const uniqueStatus = [...new Set(allStatus)];
+
   if (uniqueStatus.length > 0) {
     result = CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS;
   }
+
   if (uniqueStatus && uniqueStatus.length === 1 && uniqueStatus[0] === CONSTANTS.DEAL.DEAL_STATUS.COMPLETED) {
     result = CONSTANTS.DEAL.DEAL_STATUS.COMPLETED;
   }
+
   return result;
 };
 
