@@ -28,6 +28,9 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
   if (!hasObjectValues(v2Deal.exporter)) {
     errors.push('exporter');
   }
+  if (!hasValue(v2Deal.exporter.status)) {
+    errors.push('exporter.status');
+  }
   if (!isNumber(v2Deal.eligibility.version)) {
     errors.push('eligibility.version');
   }
@@ -120,6 +123,9 @@ const facilityMappingErrors = (v2Facility) => {
   }
   if (!hasBooleanValue(v2Facility.hasBeenIssuedAndAcknowledged)) {
     errors.push('hasBeenIssuedAndAcknowledged');
+  }
+  if (!hasValue(v2Facility.updatedAt)) {
+    errors.push('updatedAt');
   }
 
   if (v2Facility.hasBeenIssued) {
