@@ -35,7 +35,7 @@ describe('dealHasAllUkefIds()', () => {
     expect(result).toEqual(true);
   });
 
-  it('Should return TRUE when a deal and facilities have UKEF IDs - BSS/ECWS', async () => {
+  it('Should return TRUE when a deal and facilities have UKEF IDs - BSS/EWCS', async () => {
     const mockDeal = MOCK_DEAL;
 
     const result = await dealHasAllUkefIds(mockDeal._id);

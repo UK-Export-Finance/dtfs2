@@ -7,7 +7,7 @@ const initBanks = async (token) => {
   return banks;
 };
 
-const getBankByName = (bankName) => {
+const getBankByName = (banks, bankName) => {
   const bank = banks.find((b) => b.name.toLowerCase() === bankName.toLowerCase());
   if (!bank) return {};
   return {

@@ -95,37 +95,6 @@ const FACILITY_STATUS_PORTAL = {
   ACKNOWLEDGED: 'Acknowledged by UKEF',
 };
 
-const FACILITY_PROVIDED_ON_GEF = {
-  TERM: {
-    ID: 'TERM',
-    TEXT: 'Term basis',
-  },
-  RESOLVING: {
-    ID: 'RESOLVING',
-    TEXT: 'Revolving or renewing basis',
-  },
-  COMMITTED: {
-    ID: 'COMMITTED',
-    TEXT: 'Committed basis',
-  },
-  UNCOMMITTED: {
-    ID: 'UNCOMMITTED',
-    TEXT: 'Uncommitted basis',
-  },
-  ON_DEMAND: {
-    ID: 'ON_DEMAND',
-    TEXT: 'On demand or overdraft basis',
-  },
-  FACTORING: {
-    ID: 'FACTORING',
-    TEXT: 'Factoring facility on a with-recourse basis',
-  },
-  OTHER: {
-    ID: 'OTHER',
-    TEXT: 'Other',
-  },
-};
-
 module.exports = {
   FACILITY_TYPE,
   FACILITY_PRODUCT_GROUP,
@@ -142,5 +111,4 @@ module.exports = {
   FACILITY_FEE_FREQUENCY_PORTAL,
   FACILITY_FEE_TYPE_GEF,
   FACILITY_FEE_TYPE,
-  FACILITY_PROVIDED_ON_GEF,
 };
