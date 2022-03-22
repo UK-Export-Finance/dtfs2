@@ -198,6 +198,7 @@ describe('controllers/automatic-cover', () => {
           17: 'true',
           18: 'true',
           19: 'true',
+          20: 'true',
         };
         await validateAutomaticCover(mockRequest, mockResponse);
       });
@@ -236,6 +237,7 @@ describe('controllers/automatic-cover', () => {
           17: 'true',
           18: 'true',
           19: 'true',
+          20: 'true',
         };
 
         await validateAutomaticCover(mockRequest, mockResponse);
