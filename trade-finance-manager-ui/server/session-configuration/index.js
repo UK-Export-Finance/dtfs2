@@ -1,10 +1,10 @@
 // Fail-safe fallback to a 256-bit random value:
 
 const crypto = require('crypto');
-const session = require('express-session');
-const redis = require('redis');
+// const session = require('express-session');
+// const redis = require('redis');
 
-const RedisStore = require('connect-redis')(session);
+// const RedisStore = require('connect-redis')(session);
 
 const sessionConfig = () => {
   const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(256 / 8).toString('hex');
@@ -18,14 +18,15 @@ const sessionConfig = () => {
   if (process.env.REDIS_HOSTNAME) {
     console.info(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
 
-    let redisOptions = {};
+    // TODO: Update Redis
+    // let redisOptions = {};
 
-    if (process.env.REDIS_KEY) {
-      redisOptions = {
-        auth_pass: process.env.REDIS_KEY,
-        tls: { servername: process.env.REDIS_HOSTNAME },
-      };
-    }
+    // if (process.env.REDIS_KEY) {
+    //   redisOptions = {
+    //     auth_pass: process.env.REDIS_KEY,
+    //     tls: { servername: process.env.REDIS_HOSTNAME },
+    //   };
+    // }
 
     // const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
