@@ -6,6 +6,7 @@ import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from '../constants';
 const chance = new Chance();
 
 const eligibilityCriteria = (type) => ({
+  version: 2,
   criteria: [
     {
       id: 12,
