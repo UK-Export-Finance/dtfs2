@@ -65,10 +65,11 @@ const facilityFieldsObj = (facility) => {
     fields.coverStartDate = format(Number(fields.coverStartDate), 'do MMMM yyyy');
   }
 
-  if (fields.coverEndDate) {
-    const epochCoverEndDate = new Date(fields.coverEndDate);
-    fields.coverEndDate = format(Number(epochCoverEndDate), 'do MMMM yyyy');
-  }
+  // TODO: Tony to investigate
+  // if (fields.coverEndDate) {
+  // const epochCoverEndDate = new Date(fields.coverEndDate);
+  // fields.coverEndDate = format(Number(epochCoverEndDate), 'do MMMM yyyy');
+  // }
 
   if (fields.coverPercentage) {
     fields.coverPercentage = `${fields.coverPercentage}%`;
