@@ -135,12 +135,6 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
     };
   } catch ({ error }) {
     console.error('Facility record error: ', { error });
-    const [type, errorDetails] = error.split('Error: ');
-    return {
-      error: {
-        type,
-        details: JSON.parse(errorDetails),
-      },
-    };
+    return error;
   }
 });
