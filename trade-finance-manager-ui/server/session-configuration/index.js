@@ -27,23 +27,23 @@ const sessionConfig = () => {
       };
     }
 
-    const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
+    // const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
 
-    redisClient.on('error', (err) => {
-      console.info(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
-    });
+    // redisClient.on('error', (err) => {
+    //   console.info(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
+    // });
 
-    redisClient.on('ready', () => {
-      console.info('REDIS ready');
-    });
+    // redisClient.on('ready', () => {
+    //   console.info('REDIS ready');
+    // });
 
-    redisClient.on('connect', () => {
-      console.info('REDIS connected');
-    });
+    // redisClient.on('connect', () => {
+    //   console.info('REDIS connected');
+    // });
 
-    const sessionStore = new RedisStore({ client: redisClient });
+    // const sessionStore = new RedisStore({ client: redisClient });
 
-    sessionOptions.store = sessionStore;
+    // sessionOptions.store = sessionStore;
   } else {
     console.error('No REDIS configured, using default MemoryStore');
   }
