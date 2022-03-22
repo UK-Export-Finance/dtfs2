@@ -1,4 +1,4 @@
-const { getDealValue } = require('./get-deal-value');
+const getDealValue = require('./get-deal-value');
 const CONSTANTS = require('../../../constants');
 
 /**
