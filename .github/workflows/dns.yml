@@ -49,9 +49,6 @@ jobs:
       with:
         inlineScript: |
             az network dns record-set cname set-record --record-set-name www --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
-        inlineScript: |
-            az network dns record-set cname set-record --record-set-name * --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
-        inlineScript: |
             az network dns record-set cname set-record --record-set-name afdverify --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
 
     - name: TXT record
