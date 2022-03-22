@@ -30,7 +30,7 @@ const facilitiesUrl = '/v1/gef/facilities';
 const collectionName = 'deals';
 
 const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) =>
-  criteria.version === 1.5);
+  criteria.version === 4);
 
 describe(baseUrl, () => {
   let aMaker;
@@ -332,7 +332,6 @@ describe(baseUrl, () => {
         errMsg: 'Unrecognised enum',
       }]);
     });
-
 
     describe('status update emails', () => {
       const expectedEmailVariables = (maker, updatedByUser, deal, newStatus) => ({
