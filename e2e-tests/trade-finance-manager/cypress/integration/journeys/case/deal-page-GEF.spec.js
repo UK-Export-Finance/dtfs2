@@ -42,7 +42,7 @@ context('User can view a GEF MIA case deal', () => {
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
-    pages.caseDealPage.mgaVersion().should('exist');
+    // pages.caseDealPage.mgaVersion().should('exist');
   });
 
   it('should render case summary fields', () => {
