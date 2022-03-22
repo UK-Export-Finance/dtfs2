@@ -60,8 +60,8 @@ describe(page, () => {
     it('should render Forms Incomplete text component', () => wrappers.forEach((wrapper) =>
       wrapper.expectElement('[data-cy="forms-incomplete-text"]').toExist()));
 
-    it('should render Totals Table component', () => wrappers.forEach((wrapper) =>
-      wrapper.expectElement('[data-cy="totals-table"]').toExist()));
+    // it('should render Totals Table component', () => wrappers.forEach((wrapper) =>
+    //   wrapper.expectElement('[data-cy="totals-table"]').toExist()));
   });
 
   describe('when viewed with editable=true', () => {
