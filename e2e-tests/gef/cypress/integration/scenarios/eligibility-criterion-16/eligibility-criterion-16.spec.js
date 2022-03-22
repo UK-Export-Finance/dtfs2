@@ -8,7 +8,7 @@ import CREDENTIALS from '../../../fixtures/credentials.json';
 
 let dealId;
 
-context('Eligibility Critereon 16', () => {
+context('Eligibility Criterion 16', () => {
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.MAKER)
@@ -40,15 +40,15 @@ context('Eligibility Critereon 16', () => {
   describe('Selecting false on eligibility criteria 16', () => {
     it('the eligibility criteria have the correct aria-labels on radio buttons for true and false', () => {
       automaticCover.trueRadioButton().first().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('Eligibility critereon, 12, The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period., true');
+        expect(label).to.equal('Eligibility criterion, 12, The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period., true');
       });
 
       automaticCover.falseRadioButton().first().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('Eligibility critereon, 12, The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period., false');
+        expect(label).to.equal('Eligibility criterion, 12, The period between the Cover Start Date and the Cover End Date does not exceed the Facility Maximum Cover Period., false');
       });
     });
 
-    it('selecting false on critereon 16 and pressing continue should take user to manual inclusion questionnaire page', () => {
+    it('selecting false on criterion 16 and pressing continue should take user to manual inclusion questionnaire page', () => {
       automaticCover.automaticCoverTerm().each(($el, index) => {
         if (index === 4) {
           $el.find('[data-cy="automatic-cover-false"]').trigger('click');
