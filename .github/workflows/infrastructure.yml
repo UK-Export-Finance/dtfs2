@@ -2,7 +2,7 @@ name: Supporting infrastructure build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ infrastructure ]
     paths: 
     - '.github/workflows/infrastructure.yml'
 
