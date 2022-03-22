@@ -36,31 +36,27 @@ jobs:
       with:
         inlineScript: |
           az network dns zone create --name ${{ env.domain_name }}
-
-    - name: Azure FD verification record
-      uses: azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network dns record-set cname set-record --record-set-name afdverify --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
-
-    - name: WWW - CNAME record
-      uses: azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network dns record-set cname set-record --record-set-name www --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
-
-    - name: Domain ownership - TXT record
-      uses: azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network dns record-set txt add-record --record-set-name asuid.www --value ${{ secrets.PROD_DNS_VERIFICATION }} --zone-name ${{ env.domain_name }}
-
-    - name: service.gov.uk - A record
+    
+    - name: A record
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           front_door_id=$(az network front-door show --name ${{ env.front_door_name }} --query id -o tsv)
           az network dns record-set a create --name "@" --target-resource $front_door_id --zone-name ${{ env.domain_name }}
+
+    - name: CNAME records
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network dns record-set cname set-record --record-set-name www --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }} && \
+          az network dns record-set cname set-record --record-set-name * --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }} && \
+          az network dns record-set cname set-record --record-set-name afdverify --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
+
+    - name: TXT record
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network dns record-set txt add-record --record-set-name asuid.www --value ${{ secrets.PROD_DNS_VERIFICATION }} --zone-name ${{ env.domain_name }}
 
     - name: Add domain name to Prod FD
       uses: azure/cli@v1.0.0
