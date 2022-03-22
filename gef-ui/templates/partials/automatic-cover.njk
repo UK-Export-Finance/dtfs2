@@ -60,7 +60,8 @@
             text: "True",
             checked: term.answer === true,
             attributes: {
-              'data-cy': 'automatic-cover-true'
+              'data-cy': 'automatic-cover-true',
+              'aria-label': 'Eligibility critereon, ' + term.id + ', ' + term.text + ', true'
             }
           },
           {
@@ -68,7 +69,8 @@
             text: "False",
             checked: term.answer === false,
             attributes: {
-              'data-cy': 'automatic-cover-false'
+              'data-cy': 'automatic-cover-false',
+              'aria-label': 'Eligibility critereon, ' + term.id + ', ' + term.text + ', false'
             }
           }
         ]
