@@ -9,6 +9,8 @@ const chance = new Chance();
 
 const eligibilityCriteria = (type) => (
   {
+    version: 1.5,
+    isInDraft: false,
     criteria: [{
       id: 12,
       name: 'coverStart',

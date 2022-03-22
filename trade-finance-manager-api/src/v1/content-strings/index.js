@@ -58,9 +58,9 @@ const DEAL = {
       },
     },
     GEF: {
-      2: {
+      1.5: {
         12: {
-          text: 'The period betwen the cover start and cover end date is not more than the maximum cover period.',
+          text: 'The period between the cover start and cover end date is not more than the maximum cover period.',
         },
         13: {
           text: 'The period between the bank submitting their inclusion notice and their requested cover start dates is no more than either:',
