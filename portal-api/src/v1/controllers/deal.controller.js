@@ -22,20 +22,6 @@ const findOneDeal = async (_id, callback) => {
 
 exports.findOneDeal = findOneDeal;
 
-/**
- * Update a deal.eligibility (BSS, EWCS only)
- */
-const fillInEligibilityCriteria = (criterias, answers) => criterias.map((criteria) => {
-  const matchingAnswer = answers ? answers.find((answer) => answer.id === criteria.id) : null;
-  if (!matchingAnswer) {
-    return criteria;
-  }
-  return {
-    ...criteria,
-    ...matchingAnswer,
-  };
-});
-
 const createDealEligibility = async (eligibility) => {
   const beingGivenEligibility = (eligibility && eligibility.criteria);
   const eligibilityCriteria = await findEligibilityCriteria();
@@ -43,7 +29,7 @@ const createDealEligibility = async (eligibility) => {
   // if we're being asked to create a deal and being given an eligibility block
   // use details out of the eligibility block over the details we get from the API
   const eligibilityCriteriaWithAnswers = beingGivenEligibility
-    ? fillInEligibilityCriteria(eligibilityCriteria, eligibility.criteria)
+    ? eligibility.criteria
     : eligibilityCriteria;
 
   const eligibilityStatus = eligibility && eligibility.status
