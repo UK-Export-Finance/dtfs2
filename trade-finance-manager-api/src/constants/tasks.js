@@ -57,6 +57,7 @@ const MIA_GROUP_3_TASKS = {
 };
 
 const MIA_GROUP_4_TASKS = {
+  CHECK_ADVERSE_HISTORY_CHECK: 'Check adverse history check',
   CHECK_THE_CREDIT_ANALYSIS: 'Check the credit analysis',
   COMPLETE_RISK_ANALYSIS: 'Complete risk analysis (RAD)',
   APPROVE_OR_DECLINE_THE_DEAL: 'Approve or decline the deal',
@@ -136,6 +137,11 @@ const MIA = {
     id: 4,
     GROUP_TITLE: GROUP_TITLES.APPROVALS,
     TASKS: [
+      {
+        groupId: 4,
+        title: MIA_GROUP_4_TASKS.CHECK_ADVERSE_HISTORY_CHECK,
+        team: TEAMS.UNDERWRITER_MANAGERS,
+      },
       {
         groupId: 4,
         title: MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,

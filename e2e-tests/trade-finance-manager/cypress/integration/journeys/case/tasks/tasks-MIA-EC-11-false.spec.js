@@ -43,7 +43,7 @@ context('Case tasks - MIA deal - EC 11 false', () => {
     const TOTAL_MIA_TASK_GROUPS = 4;
     pages.tasksPage.taskGroupTable().should('have.length', TOTAL_MIA_TASK_GROUPS);
 
-    const TOTAL_MIA_TASKS = 13;
+    const TOTAL_MIA_TASKS = 14;
     pages.tasksPage.tasksTableRows().should('have.length', TOTAL_MIA_TASKS);
 
     const fourthTask = pages.tasksPage.tasks.row(1, 4);
