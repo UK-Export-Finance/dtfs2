@@ -60,9 +60,9 @@ const mapEligibility = async (token, v1Eligibility) => {
   const v1CriteriaFieldNames = Object.getOwnPropertyNames(MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA);
 
   const mappedCriteria = v1CriteriaFieldNames.map((v1Criterion) => {
-    const id = MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA[v1Criterion].id;
+    const { id } = MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA[v1Criterion];
 
-    const text = eligibilityCriteria.terms.find((c) => c.id === id).text;
+    const { text } = eligibilityCriteria.criteria.find((c) => c.id === id);
 
     return {
       id,

@@ -77,7 +77,7 @@ const ELIGIBILITY_CRITERIA = [
     version: 2,
     isInDraft: false,
     createdAt: '2022-03-22T00:00',
-    terms: [
+    criteria: [
       {
         id: 12,
         name: 'coverStart',
