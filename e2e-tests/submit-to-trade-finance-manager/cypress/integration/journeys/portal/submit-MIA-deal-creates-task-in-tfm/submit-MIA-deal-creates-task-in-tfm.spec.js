@@ -75,7 +75,7 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.tasksPage.filterRadioAllTasks().click();
 
-    const TOTAL_MIA_TASKS = 12;
+    const TOTAL_MIA_TASKS = 13;
     tfmPages.tasksPage.tasksTableRows().should('have.length', TOTAL_MIA_TASKS);
   });
 });

@@ -28,7 +28,8 @@ const insertMocks = async () => {
   }
 
   console.info('inserting GEF deals');
-  const latestEligibilityCriteria = MOCKS.ELIGIBILITY_CRITERIA.find((criteria) => criteria.version === 1.5);
+
+  const latestEligibilityCriteria = await api.latestEligibilityCriteria(token);
 
   for (const [index, item] of MOCKS.APPLICATION.entries()) {
     item.userId = makerUserId;
@@ -38,9 +39,7 @@ const insertMocks = async () => {
       submissionType: item.submissionType,
     };
 
-    applicationUpdate.eligibility = {
-      criteria: latestEligibilityCriteria.terms,
-    };
+    applicationUpdate.eligibility = latestEligibilityCriteria;
 
     await api.updateApplication(
       application._id,
