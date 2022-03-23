@@ -11,7 +11,7 @@ const getLoanMaximumLiability = (amount, facility, dealType) => {
   let ukefExposure;
 
   ukefExposure = dealType === CONSTANTS.PRODUCT.TYPE.GEF
-    ? ukefExposure = amount * 0.10 // GEF
+    ? amount * 0.10 // GEF
     : amount; // BSS/EWCS
 
   return Number(Number(ukefExposure).toFixed(2));
