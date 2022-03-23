@@ -477,6 +477,7 @@ context('Submit to UKEF', () => {
     it('submit to ukef and it should change to MIN (from MIA)', () => {
       applicationPreview.submitButton().should('exist');
       applicationPreview.submitButton().click();
+      applicationSubmission.confirmSubmissionCheckbox().click();
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)} submitted to UKEF`);
       // check that correct text is displayed under confirmation panel
