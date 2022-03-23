@@ -43,7 +43,7 @@
               textList: criterion.textList
             })
           },
-          attributes: { 'aria-label': term.text }
+          attributes: { 'aria-label': criterion.text }
         },
         attributes: {
           'data-cy': 'automatic-cover-term'
@@ -61,7 +61,7 @@
             checked: criterion.answer === true,
             attributes: {
               'data-cy': 'automatic-cover-true',
-              'aria-label': 'Eligibility criterion, ' + term.id + ', ' + term.text + ', true'
+              'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', true'
             }
           },
           {
@@ -70,7 +70,7 @@
             checked: criterion.answer === false,
             attributes: {
               'data-cy': 'automatic-cover-false',
-              'aria-label': 'Eligibility criterion, ' + term.id + ', ' + term.text + ', false'
+              'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', false'
             }
           }
         ]
