@@ -55,7 +55,7 @@ const updateDealAcbs = async (taskOutput) => {
    */
   await tfmController.updateAcbs(taskOutput);
 
-  const facilitiesUpdates = facilities.map((facility) => {
+  const facilitiesUpdates = facilities.filter((facility) => facility.facilityId).map((facility) => {
     const { facilityId, ...acbsFacility } = facility;
     // Add `acbs` object to tfm-facilities
     return tfmController.updateFacilityAcbs(facilityId, acbsFacility);
