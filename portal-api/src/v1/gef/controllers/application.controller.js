@@ -60,8 +60,7 @@ exports.create = async (req, res) => {
     const createdApplication = await applicationCollection.insertOne(
       new Application(
         newDeal,
-        eligibility.terms,
-        eligibility.version,
+        eligibility,
       ),
     );
 

@@ -2,18 +2,14 @@ const CONSTANTS = require('../../../src/constants');
 const { expectMongoId } = require('../../expectMongoIds');
 
 const expectAddedFields = (obj) => {
-  let eligibilityLastUpdated = null;
-  if (obj.eligibility && obj.eligibility.lastUpdated) {
-    eligibilityLastUpdated = obj.eligibility.lastUpdated;
-  }
-
   const expectation = expectMongoId({
     dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
     status: 'Draft',
     eligibility: {
       status: 'Not started',
+      _id: expect.any(String),
+      version: expect.any(Number),
       criteria: expect.any(Array),
-      lastUpdated: expect.toBeNumberOrNull(eligibilityLastUpdated),
     },
     submissionDetails: {
       status: 'Not started',

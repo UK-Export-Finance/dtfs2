@@ -12,6 +12,7 @@ const termToSupportDocuments = {
   facilityLimit: ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
   exporterDeclaration: ['manualInclusion', 'exportLicence'],
   dueDiligence: ['manualInclusion'],
+  revenueThreshold: ['manualInclusion'],
   facilityLetter: ['manualInclusion'],
   facilityBaseCurrency: ['manualInclusion'],
   facilityPaymentCurrency: ['manualInclusion'],
