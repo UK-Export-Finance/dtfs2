@@ -112,7 +112,11 @@ const getActivities = async (deal) => {
 
     // Add facility(ies) object(s) to the array
     if (acbsResponse.facilities.length > 0) {
-      acbsResponse.facilities.forEach(({ facilityMaster }) => activites.push(getObject(facilityMaster, deal)));
+      acbsResponse.facilities.forEach((facility) => {
+        if (facility.facilityMaster) {
+          activites.push(getObject(facility.facilityMaster, deal));
+        }
+      });
     }
     return activites;
   } catch (error) {
