@@ -8,9 +8,7 @@ const CONSTANTS = require('../../../constants');
  * @param {Object} dealType Deal type
  */
 const getLoanMaximumLiability = (amount, facility, dealType) => {
-  let ukefExposure;
-
-  ukefExposure = dealType === CONSTANTS.PRODUCT.TYPE.GEF
+  const ukefExposure = dealType === CONSTANTS.PRODUCT.TYPE.GEF
     ? amount * 0.10 // GEF
     : amount; // BSS/EWCS
 
