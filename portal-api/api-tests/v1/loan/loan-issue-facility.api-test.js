@@ -20,11 +20,6 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
         id: 'GBP',
       },
     },
-    eligibility: {
-      criteria: [
-        { id: 15, answer: true },
-      ],
-    },
   });
 
   const createCoverDateFields = (prefix, value) => ({

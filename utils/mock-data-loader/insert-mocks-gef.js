@@ -39,9 +39,7 @@ const insertMocks = async () => {
       submissionType: item.submissionType,
     };
 
-    applicationUpdate.eligibility = {
-      criteria: latestEligibilityCriteria.terms,
-    };
+    applicationUpdate.eligibility = latestEligibilityCriteria;
 
     await api.updateApplication(
       application._id,

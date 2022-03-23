@@ -146,7 +146,11 @@ authRouter
   .post(validate({ role: ['editor'] }), eligibilityCriteria.create);
 
 authRouter
-  .route('/eligibility-criteria/:id')
+  .route('/eligibility-criteria/latest')
+  .get(eligibilityCriteria.findLatestGET);
+
+authRouter
+  .route('/eligibility-criteria/:version')
   .get(eligibilityCriteria.findOne)
   .put(validate({ role: ['editor'] }), eligibilityCriteria.update)
   .delete(validate({ role: ['editor'] }), eligibilityCriteria.delete);

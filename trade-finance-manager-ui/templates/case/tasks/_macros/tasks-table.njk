@@ -33,7 +33,7 @@
                     <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.groupId }}/{{ task.id }}" data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-link">{{ task.title }}</a>
 
                     {% else %}
-                      <span data-cy="task-table-row-{{ task.id }}-title">{{ task.title }}</span>
+                      <span data-cy="task-table-row-group-{{task.groupId}}-task-{{ task.id }}-title">{{ task.title }}</span>
 
                   {% endif %}
                 </td>

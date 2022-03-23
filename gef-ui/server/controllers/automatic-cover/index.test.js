@@ -124,14 +124,14 @@ describe('controllers/automatic-cover', () => {
     it('renders the `automatic-cover` template', async () => {
       await automaticCover(mockRequest, mockResponse);
 
-      const expectedTerms = MockEligibilityCriteria().criteria.map((criterion) => ({
+      const expectedCriteria = MockEligibilityCriteria().criteria.map((criterion) => ({
         ...criterion,
         text: 'Test',
       }));
 
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/automatic-cover.njk', {
-          terms: expectedTerms,
+          criteria: expectedCriteria,
           dealId: '123',
         });
     });
@@ -172,7 +172,7 @@ describe('controllers/automatic-cover', () => {
     it('renders the correct data if validation fails', async () => {
       await validateAutomaticCover(mockRequest, mockResponse);
 
-      const expectedTerms = MockEligibilityCriteria().criteria.map((criterion) => ({
+      const expectedCriteria = MockEligibilityCriteria().criteria.map((criterion) => ({
         ...criterion,
         text: 'Test',
       }));
@@ -180,7 +180,7 @@ describe('controllers/automatic-cover', () => {
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/automatic-cover.njk', expect.objectContaining({
           errors: expect.any(Object),
-          terms: expectedTerms,
+          criteria: expectedCriteria,
           dealId: '123',
         }));
     });

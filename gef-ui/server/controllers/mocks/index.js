@@ -151,7 +151,7 @@ const MockUserResponseChecker = () => ({
 });
 
 const MockEligibilityCriteriaResponse = () => ({
-  terms: [
+  criteria: [
     {
       id: 12,
       text: 'Some eligibility criteria',
