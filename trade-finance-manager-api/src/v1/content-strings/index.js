@@ -106,6 +106,57 @@ const DEAL = {
           text: 'Any upfront or arrangement fees, as well as interest rates and risk margin fees are in an approved currency.',
         },
       },
+      2: {
+        12: {
+          text: 'The period between the cover start and cover end date is not more than the maximum cover period.',
+        },
+        13: {
+          text: 'The period between the bank submitting their inclusion notice and their requested cover start dates is no more than either:',
+          textList: [
+            '3 months',
+            'a longer period agreed with UKEF',
+          ],
+        },
+        14: {
+          text: 'The covered limit is not more than whichever is the lowest of either the:',
+          textList: [
+            'available master guarantee limit',
+            'available obligor\'s limit',
+          ],
+        },
+        15: {
+          text: 'The exporter declaration confirms that the exporter is not involved in any of the following controlled sectors:',
+          textList: [
+            'sharp arms defence',
+            'nuclear',
+            'radiological',
+            'biological',
+            'human cloning',
+            'pornography',
+            'tobacco or gambling',
+            'coal or coal power related',
+          ],
+        },
+        16: {
+          text: 'The Bank has received an Exporter Declaration which confirms that the Exporter’s Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.',
+        },
+        17: {
+          text: 'The bank has completed due diligence to its own satisfaction in line with its policies and procedures, without needing to escalate any issues to a relevant person.',
+        },
+        18: {
+          text: 'The fees or interest apply to the whole cover period and have been set in line with either:',
+          textList: [
+            'the bank’s normal pricing policies',
+            'minimum or overall pricing requirements set by UKEF (if any)',
+          ],
+        },
+        19: {
+          text: 'The facility base currency is an approved currency.',
+        },
+        20: {
+          text: 'Any upfront or arrangement fees, as well as interest rates and risk margin fees are in an approved currency.',
+        },
+      },
     },
   },
 };
