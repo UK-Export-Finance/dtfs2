@@ -9,7 +9,7 @@ const FACILITY_TYPE_CODE = {
   BSS: '250',
   EWCS: '260',
   CASH: '280',
-  CONTINGENT: '281',
+  CONTINGENT: '280',
 };
 
 const PRODUCT_TYPE_GROUP = {

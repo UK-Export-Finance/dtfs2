@@ -20,15 +20,13 @@ const { CORS_ORIGIN } = process.env;
 const configurePassport = require('./v1/users/passport');
 const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
 
+const seo = require('./v1/middleware/headers/seo');
+
 configurePassport(passport);
 
 const app = express();
 
-// Global middleware set headers
-app.use((req, res, next) => {
-  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
-  next();
-});
+app.use(seo);
 
 // TODO: re-enable Helmet (Jira - 4998)
 // app.use(
