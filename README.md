@@ -344,4 +344,3 @@ After some time, docker eats up hard drive space. Clean it up by running
 docker system prune --volumes
 ```
 
-

@@ -3,7 +3,7 @@ const ELIGIBILITY_CRITERIA = [
     version: 1,
     isInDraft: false,
     createdAt: '2021-01-02T00:00',
-    terms: [{
+    criteria: [{
       text: 'This one shouldn\'t show as it\'s an old version',
       errMsg: 'This one shouldn\'t show as it\'s an old version',
     }],
@@ -12,7 +12,7 @@ const ELIGIBILITY_CRITERIA = [
     version: 1.5,
     isInDraft: false,
     createdAt: '2021-01-02T00:00',
-    terms: [
+    criteria: [
       {
         id: 12,
         name: 'coverStart',
@@ -77,7 +77,7 @@ const ELIGIBILITY_CRITERIA = [
     version: 3,
     isInDraft: true,
     createdAt: '2021-01-02T00:00',
-    terms: [
+    criteria: [
       {
         id: 12,
         text: 'This one shouldn\'t show as it\'s in draft',
