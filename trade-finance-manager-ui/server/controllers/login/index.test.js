@@ -8,8 +8,9 @@ const res = mockRes();
 describe('controllers - login', () => {
   describe('GET', () => {
     it('should render login template', () => {
+      req.session.user = {};
       loginController.getLogin(req, res);
-      expect(res.render).toHaveBeenCalledWith('login.njk');
+      expect(res.render).toHaveBeenCalledWith('login.njk', { user: {} });
     });
   });
 
@@ -35,6 +36,7 @@ describe('controllers - login', () => {
         ...req,
         body: {
           email: 'test1',
+          password: '12345',
         },
       };
       await loginController.postLogin(postReq, res);

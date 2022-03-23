@@ -1,14 +1,9 @@
 const api = require('../../api');
 const { validationErrorHandler } = require('../../helpers/validationErrorHandler.helper');
 
-const getLogin = (req, res) => {
-  const { passwordreset, passwordupdated } = req.query;
-  return res.render('login.njk', {
-    passwordreset,
-    passwordupdated,
-    user: req.session.user,
-  });
-};
+const getLogin = (req, res) => res.render('login.njk', {
+  user: req.session.user,
+});
 
 const postLogin = async (req, res) => {
   const { email, password } = req.body;
