@@ -24,13 +24,6 @@ exports.findOneDeal = findOneDeal;
 
 const createDealEligibility = async (eligibility) => {
   const beingGivenEligibility = (eligibility && eligibility.criteria);
-  const eligibilityCriteria = await findEligibilityCriteria();
-
-  // if we're being asked to create a deal and being given an eligibility block
-  // use details out of the eligibility block over the details we get from the API
-  const eligibilityCriteriaWithAnswers = beingGivenEligibility
-    ? eligibility.criteria
-    : eligibilityCriteria;
 
   if (beingGivenEligibility) {
     const eligibilityObj = {
