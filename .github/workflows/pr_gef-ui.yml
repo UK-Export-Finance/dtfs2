@@ -4,12 +4,15 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-    - 'gef-ui/**'
-    - 'portal-api/**'
-    - 'e2e-tests/gef/cypress/**'
-    - 'utils/mock-data-loader/**'
     - 'portal/**'
+    - 'gef-ui/**'
+    - 'trade-finance-manager-ui/**'
+    - 'portal-api/**'
+    - 'trade-finance-manager-api/**'
+    - 'reference-data-proxy/**'
     - 'dtfs-central-api/**'
+    - 'e2e-tests/**'
+    - 'utils/mock-data-loader/**'
 
 env:
   environment: dev

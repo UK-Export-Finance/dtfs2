@@ -42,6 +42,8 @@ const calculateGuaranteeFee = (requestedUpdate, existingFacility) => {
 
   const calculation = (0.9 * Number(latestInterestPercentage));
 
-  return calculation;
+  const withLimitedDecimals = Number(calculation.toFixed(3));
+
+  return withLimitedDecimals;
 };
 exports.calculateGuaranteeFee = calculateGuaranteeFee;

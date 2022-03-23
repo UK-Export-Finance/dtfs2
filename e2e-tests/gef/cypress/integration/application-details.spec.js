@@ -9,6 +9,7 @@ import CREDENTIALS from '../fixtures/credentials.json';
 import CONSTANTS from '../fixtures/constants';
 
 let dealWithEmptyExporter;
+let dealWithEmptyExporterName;
 let dealWithInProgressExporter;
 let dealWithCompletedExporterAndFacilities;
 
@@ -23,6 +24,9 @@ context('Application Details Page', () => {
       .then(({ body }) => {
         dealWithEmptyExporter = body.items.find((deal) =>
           deal.exporter.status === 'Not started');
+
+        dealWithEmptyExporterName = body.items.find((deal) =>
+          deal.exporter.status === 'Not started').bankInternalRefName;
 
         dealWithInProgressExporter = body.items.find((deal) =>
           deal.exporter.status === 'In progress');
@@ -63,6 +67,13 @@ context('Application Details Page', () => {
       applicationDetails.captionHeading();
       applicationDetails.mainHeading().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Application Details');
+      });
+    });
+
+    it('shows an abandon button with correct aria-label', () => {
+      applicationDetails.abandonLink().contains('Abandon');
+      applicationDetails.abandonLink().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal(`Abandon deal ${dealWithEmptyExporterName}`);
       });
     });
 

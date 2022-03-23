@@ -4,22 +4,14 @@ const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
+const { createDealEligibility } = require('../../../src/v1/controllers/deal.controller');
 
 const dealToClone = completedDeal;
 
 dealToClone.submissionType = 'Automatic Inclusion Notice';
 dealToClone.eligibility = {
-  status: 'Incomplete',
+  status: 'Completed',
   criteria: completedDeal.eligibility.criteria,
-  validationErrors: {
-    count: 1,
-    errorList: {
-      1: {
-        order: 1,
-        text: 'Field is required',
-      },
-    },
-  },
 };
 
 dealToClone.editedBy = [
@@ -139,7 +131,9 @@ describe('/v1/deals/:id/clone', () => {
 
         const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
 
-        expect(cloned.deal.eligibility.status).toEqual(originalDeal.eligibility.status);
+        const createEligibility = await createDealEligibility(originalDeal.eligibility);
+
+        expect(cloned.deal.eligibility.status).toEqual(createEligibility.status);
         const criteriaWithoutId = originalDeal.eligibility.criteria.map(({ _id, ...rest }) => rest);
         expect(cloned.deal.eligibility.criteria).toMatchObject(criteriaWithoutId);
         expect(cloned.deal.eligibility.validationErrors).toEqual(originalDeal.eligibility.validationErrors);

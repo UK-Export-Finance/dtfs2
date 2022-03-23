@@ -22,6 +22,7 @@ import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;
   let testDealId;
+  let AINDealName;
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.MAKER).then((token) => token).then((token) => {
@@ -29,6 +30,7 @@ context('Clone GEF (AIN) deal', () => {
     }).then(({ body }) => {
       AINdealId = body.items[2]._id;
       testDealId = body.items[1]._id;
+      AINDealName = body.items[2].bankInternalRefName;
       cy.login(CREDENTIALS.MAKER);
     });
   });
@@ -63,6 +65,13 @@ context('Clone GEF (AIN) deal', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.visit(relative(`/gef/application-details/${AINdealId}`));
+    });
+
+    it('Clone button should contain the right text and aria-label', () => {
+      cloneGEFdeal.cloneGefDealLink().contains('Clone');
+      cloneGEFdeal.cloneGefDealLink().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal(`Clone deal ${AINDealName}`);
+      });
     });
 
     it('should clone an AIN deal', () => {
