@@ -5,6 +5,7 @@ const {
 } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
+const addFirstTaskEmailSentFlag = require('./deal-add-tfm-data/add-first-task-email-sent-flag');
 const { updateFacilities } = require('./update-facilities');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
 
@@ -81,17 +82,31 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
     if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
+      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
+
       /**
-       * Current requirement only allows AIN & MIN deals to be send to ACBS
+       * Current requirement only allows AIN & MIN deals to be sent to ACBS
        * This calls CREATES Deal & Facility ACBS records
        */
-      const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
       if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
-      await sendDealSubmitEmails(updatedDealWithTasks);
 
+      const { firstTaskEmail } = await sendDealSubmitEmails(dealWithTasks);
+
+      // TODO if email fails, what does email response return?
+      /**
+       * Add an emailSent flag to the first task.
+       * This prevents multiple emails from being sent.
+      */
+      const updatedDealWithTasks = dealWithTasks;
+      updatedDealWithTasks.tfm.tasks = addFirstTaskEmailSentFlag(firstTaskEmail, dealWithTasks.tfm.tasks);
+
+      /**
+       * Update the deal with all the above modifications
+       * Note: at the time of writing, some functions above update the deal, others do not.
+       */
+      const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
       return updatedDeal;
     }
 

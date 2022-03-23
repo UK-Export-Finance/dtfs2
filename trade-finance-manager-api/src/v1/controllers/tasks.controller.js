@@ -134,6 +134,7 @@ const updateAllTasks = async (
               status: CONSTANTS.TASKS.STATUS.TO_DO,
             };
           }
+
           return task;
         });
       }
@@ -156,7 +157,40 @@ const updateAllTasks = async (
     ));
   });
 
-  await Promise.all(emailPromises);
+  const emailsResponse = await Promise.all(emailPromises);
+
+  /**
+   * Add emailSent=true flag to each task that successfully sent an email
+   * */
+  const tasksToAddEmailSentFlag = [];
+  emailsResponse.forEach((response, index) => {
+    if (response.content) {
+      tasksToAddEmailSentFlag.push(taskEmailsToSend[index]);
+    }
+  });
+
+  taskGroups = taskGroups.map((g) => {
+    const group = g;
+
+    const groupHasTaskToUpdate = tasksToAddEmailSentFlag.find((task) => task.groupId === group.id);
+
+    if (groupHasTaskToUpdate) {
+      group.groupTasks = group.groupTasks.map((t) => {
+        const task = t;
+
+        const taskShouldAddEmailSentFlag = tasksToAddEmailSentFlag.find((taskForEmail) => taskForEmail.id === task.id);
+
+        if (taskShouldAddEmailSentFlag) {
+          task.emailSent = true;
+        }
+
+        return task;
+      });
+    }
+
+    return group;
+  });
+
   return taskGroups;
 };
 
@@ -169,7 +203,8 @@ const updateAllTasks = async (
  * - If previous task is complete, a sendEmail flag for that task is returned.
  * - If the task is the task that is being updated (by user), task.history is updated.
  * - Sends emails ('task is ready to start') for any tasks that return sendEmail flag.
- * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task)
+ * - Adds emailSent flag to any task that successfully sent an email.
+ * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task).
  * - Updates the deal.
  * */
 const updateTfmTask = async (dealId, taskUpdate) => {

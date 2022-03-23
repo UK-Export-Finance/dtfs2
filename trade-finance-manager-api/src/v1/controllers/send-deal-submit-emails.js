@@ -198,9 +198,9 @@ const sendDealSubmitEmails = async (deal) => {
     return false;
   }
 
-  const firstTaskEmail = await sendFirstTaskEmail(deal); // CHECKED
-  const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal); // CHECKED
-  const emailAcknowledgementAinMin = await sendAinMinAcknowledgement(deal); // CHECKED
+  const firstTaskEmail = await sendFirstTaskEmail(deal);
+  const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal);
+  const emailAcknowledgementAinMin = await sendAinMinAcknowledgement(deal);
 
   return {
     firstTaskEmail,
