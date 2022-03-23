@@ -4,10 +4,14 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-    - 'dtfs-central-api/**'
-    - 'portal-api/**'
     - 'portal/**'
     - 'gef-ui/**'
+    - 'trade-finance-manager-ui/**'
+    - 'portal-api/**'
+    - 'trade-finance-manager-api/**'
+    - 'reference-data-proxy/**'
+    - 'dtfs-central-api/**'
+    - 'e2e-tests/**'
     - 'utils/mock-data-loader/**'
 
 env:
