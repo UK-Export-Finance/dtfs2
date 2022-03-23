@@ -59,6 +59,10 @@ const sendUpdatedTaskEmail = async (task, deal, urlOrigin) => {
       templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
       break;
 
+    case CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_ADVERSE_HISTORY_CHECK:
+      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
+      break;
+
     case CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS:
       templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
       break;

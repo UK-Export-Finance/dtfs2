@@ -3,16 +3,16 @@ const ELIGIBILITY_CRITERIA = [
     version: 1,
     isInDraft: false,
     createdAt: '2021-01-02T00:00',
-    terms: [{
+    criteria: [{
       text: 'This one shouldn\'t show as it\'s an old version',
       errMsg: 'This one shouldn\'t show as it\'s an old version',
     }],
   },
   {
-    version: 1.5,
+    version: 2,
     isInDraft: false,
-    createdAt: '2021-01-02T00:00',
-    terms: [
+    createdAt: '2022-03-22T00:00',
+    criteria: [
       {
         id: 12,
         name: 'coverStart',
@@ -43,12 +43,18 @@ const ELIGIBILITY_CRITERIA = [
       },
       {
         id: 16,
+        name: 'revenueThreshold',
+        text: 'The Bank has received an Exporter Declaration which confirms that the Exporter\'s Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.',
+        errMsg: 'Select if the Bank has received an Exporter Declaration which confirms that the Exporter\'s Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.',
+      },
+      {
+        id: 17,
         name: 'dueDiligence',
         text: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence  internally  to  any  Relevant  Person  for  approval  as  part  of  its  usual  Bank  Due Diligence.',
         errMsg: 'Select if the Bank has completed its Due Diligence',
       },
       {
-        id: 17,
+        id: 18,
         name: 'facilityLetter',
         text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee:',
         textList: [
@@ -60,13 +66,13 @@ const ELIGIBILITY_CRITERIA = [
         errMsg: 'Select if the Facility Letter satisfies the following conditions',
       },
       {
-        id: 18,
+        id: 19,
         name: 'facilityBaseCurrency',
         text: 'Facility Base Currency satisfies the following conditions: is denominated in an Approved Payment Currency.',
         errMsg: 'Select if the Facility Base Currency satisfies the condition',
       },
       {
-        id: 19,
+        id: 20,
         name: 'facilityPaymentCurrency',
         text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee, is denominated in an Approved Payment Currency.',
         errMsg: 'Select if the Facility Letter satisfies the condition',
@@ -77,7 +83,7 @@ const ELIGIBILITY_CRITERIA = [
     version: 3,
     isInDraft: true,
     createdAt: '2021-01-02T00:00',
-    terms: [
+    criteria: [
       {
         id: 12,
         text: 'This one shouldn\'t show as it\'s in draft',

@@ -6,7 +6,10 @@
       {% if status and userRoles.includes('maker') %}
          {{ govukButton({
             text: "Clone",
-            attributes: { "data-cy": "clone-gef-deal-link" },
+            attributes: {
+              "data-cy": "clone-gef-deal-link",
+              "aria-label": "Clone deal " + bankInternalRefName
+              },
             classes: "govuk-button--secondary govuk-!-margin-right-2",
             href: dealId + "/clone"
          }) }}
@@ -14,7 +17,10 @@
       {%if abandon and not hasChangedFacilities and not MIAReturnToMaker %}
         {{ govukButton({
           text: "Abandon",
-          attributes: { "data-cy": "abandon-link" },
+          attributes: {
+            "data-cy": "abandon-link",
+            "aria-label": "Abandon deal " + bankInternalRefName
+          },
           classes: "govuk-button--secondary",
           href: "/gef/application-details/"+dealId+"/abandon"
         }) }}

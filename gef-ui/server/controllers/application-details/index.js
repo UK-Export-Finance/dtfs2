@@ -105,6 +105,8 @@ function buildBody(app, previewMode, user) {
         rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
         createdAt: item.details.createdAt,
         facilityId: item.details._id,
+        // facilityName added for aria-label for accessibility
+        facilityName: item.details.name,
         // ukefFacilityId required for html facility summary table id
         ukefFacilityId: item.details.ukefFacilityId,
       }))
