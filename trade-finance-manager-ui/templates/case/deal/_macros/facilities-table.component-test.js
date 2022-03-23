@@ -222,7 +222,7 @@ describe(component, () => {
     it('should render coverEndDate table cell', () => {
       params.facilities.forEach(({ facilitySnapshot: facility }) => {
         const cellSelector = `[data-cy="facility-${facility._id}-cover-end-date"]`;
-        wrapper.expectText(cellSelector).toRead(facility.dates.coverEndDate);
+        wrapper.expectText(cellSelector).toRead(`${facility.dates.coverEndDate} (expected)`);
       });
     });
 

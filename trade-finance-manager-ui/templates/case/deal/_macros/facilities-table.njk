@@ -2,7 +2,6 @@
   {% set facilities = params.facilities %}
   {% set totals = params.totals %}
   {% set caseId = params.caseId %}
-  {% set submissionType = params.submissionType %}
 
   <table class="govuk-table" data-cy="facilities-table">
     <thead class="govuk-table__head">
@@ -43,12 +42,8 @@
 
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-cover-end-date">
             {% if facility.facilitySnapshot.dates.coverEndDate %}
-              {% if submissionType === 'Manual Inclusion Application' %}
-                {{ facility.facilitySnapshot.dates.coverEndDate }} (expected)
+              {{ facility.facilitySnapshot.dates.coverEndDate }} (expected)
               {% else %}
-                {{ facility.facilitySnapshot.dates.coverEndDate }}
-              {% endif %}
-            {% else %}
               -
             {% endif %}
           </td>

@@ -29,7 +29,6 @@ const facilityFieldsObj = (facility) => {
     bankReference,
     hasBeenIssued,
     coverStartDate,
-    coverEndDate,
     value,
     currencyCode,
     coverPercentage,
@@ -44,7 +43,6 @@ const facilityFieldsObj = (facility) => {
     bankReference,
     hasBeenIssued,
     coverStartDate,
-    coverEndDate,
     value,
     currencyCode,
     coverPercentage,
@@ -63,10 +61,6 @@ const facilityFieldsObj = (facility) => {
 
   if (fields.coverStartDate) {
     fields.coverStartDate = format(Number(fields.coverStartDate), 'do MMMM yyyy');
-  }
-
-  if (fields.coverEndDate) {
-    fields.coverEndDate = format(Number(fields.coverEndDate), 'do MMMM yyyy');
   }
 
   if (fields.coverPercentage) {

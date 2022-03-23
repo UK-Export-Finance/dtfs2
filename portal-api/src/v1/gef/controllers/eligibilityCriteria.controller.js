@@ -23,13 +23,13 @@ exports.getAll = async (req, res) => {
   });
 };
 
-exports.getByVersion = async (req, res) => {
+exports.getById = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const item = await collection.findOne({ version: Number(req.params.version) });
+  const item = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
   if (item) {
     res.status(200).send(item);
   } else {
-    res.status(404).send();
+    res.status(204).send();
   }
 };
 
@@ -54,6 +54,6 @@ exports.create = async (req, res) => {
 
 exports.delete = async (req, res) => {
   const collection = await db.getCollection(collectionName);
-  const response = await collection.findOneAndDelete({ version: Number(req.params.version) });
+  const response = await collection.findOneAndDelete({ _id: ObjectId(req.params.id) });
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
 };

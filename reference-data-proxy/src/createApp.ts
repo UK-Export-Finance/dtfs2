@@ -2,11 +2,14 @@ import express from 'express';
 import compression from 'compression';
 import { apiRoutes, swaggerRoutes, healthcheck } from './v1/routes';
 
-import { seo } from './middleware/headers/seo';
-
 export const app: any = express();
 
-app.use(seo);
+// Global middleware set headers
+app.use((req: any, res: any, next: any) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
+  next();
+});
+
 app.use(express.json());
 app.use(compression());
 

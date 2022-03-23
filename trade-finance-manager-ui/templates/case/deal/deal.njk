@@ -38,8 +38,7 @@
       {% set componentData = {
         facilities: deal.facilities,
         totals: deal.totals,
-        caseId: deal._id,
-        submissionType: deal.submissionType
+        caseId: deal._id
       } %}
 
       {{ facilitiesTable.render(componentData) }}
@@ -92,10 +91,10 @@
         </div>
       </div>
       <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
-        {# <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
+        <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">MGA version</div>
           <div class="ukef-body-s" data-cy="mga-version">January 2020</div>
-        </div> #}
+        </div>
         <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">Bank reference</div>
           <div class="ukef-body-s" data-cy="bank-reference">{{ deal.bankInternalRefName | dashIfEmpty }}</div>

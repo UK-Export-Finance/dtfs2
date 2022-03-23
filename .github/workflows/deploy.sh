@@ -20,8 +20,7 @@ printf "➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n\n"
 printf "${YELLOW}0. Infrastructure 🔧${NC}\n"
 printf "${BLUE}1. Development 🧪${NC}\n"
 printf "${BLUE}2. Staging 💻${NC}\n"
-printf "${RED}3. Production 🚀${NC}\n"
-printf "${RED}4. ACR Purge 🗑️${NC}\n\n"
+printf "${RED}3. Production 🚀${NC}\n\n"
 
 read selection
 
@@ -45,24 +44,17 @@ then
 ############### PRODUCTION ###############
 destination=prod
 ############### PRODUCTION ###############
-elif [ "$selection" = "4" ]
-then
-############### ACR PURGE ###############
-destination=""
-az acr run --cmd "acr purge --filter 'portal-ui:.*' --filter 'gef-ui:.*' --filter 'trade-finance-manager-ui:.*' --filter 'portal-api:.*' --filter 'trade-finance-manager-api:.*' --filter 'dtfs-central-api:.*' --filter 'reference-data-proxy:.*' --filter 'azure-function-number-generator:.*' --filter 'azure-function-acbs:.*' --ago 15d" --registry tfsdev /dev/null
-############### ACR PURGE ###############
 fi
 
-if [ -n "$destination" ]
-then
 # Deploy
 git checkout -b $destination
 git push -f --set-upstream origin $destination
+
 # Clean up
 git checkout main
 git branch -d $destination
+
 printf "\n\n✅ Deployment initiated.\n\n"
-fi
 
 #######################################
 # UKEF deployment shell script v0.0.2

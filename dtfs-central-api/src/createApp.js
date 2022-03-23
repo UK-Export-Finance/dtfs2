@@ -1,6 +1,6 @@
 const express = require('express');
 const compression = require('compression');
-const seo = require('./v1/routes/middleware/headers/seo');
+// const helmet = require('helmet');
 
 const {
   BANK_ROUTE,
@@ -22,7 +22,11 @@ const {
 
 const app = express();
 
-app.use(seo);
+// Global middleware set headers
+app.use((req, res, next) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
+  next();
+});
 
 app.use(healthcheck);
 app.use(express.json());

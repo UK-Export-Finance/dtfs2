@@ -33,7 +33,7 @@ which then are saved under specific ACR (Azure container registry) account i.e. 
  * API tests and E2E tests are then executed, E2E tests are executed on multiple machines.
  * Various PR tests are then executed, if successful then we deploy to `dev`.
  * Infrastructure is setup (if any changes) `env_`, container images are build `pipeline_` with correct tags (artifacts), promoted to the containers (`promote_`)
- * Merging to the `infrastructure` branch triggers a refresh of supporting infrastructure (Service Plan, ACR) when a file change is detected in `infrastructure.yml` file.
+ * Merging to the `infrastructure` branch triggers a refresh of supporting infrastructure (Service Plan, ACR)
 
 ## Deployment
 Deployment is triggered by webhooks from the ACR to the web app Service instances.

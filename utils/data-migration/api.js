@@ -17,7 +17,7 @@ const createUser = async (user) => {
   return response.data;
 };
 
-const importBssEwcsDeal = async (deal, token) => {
+const importDeal = async (deal, token) => {
   const response = await axios({
     method: 'post',
     headers: {
@@ -25,34 +25,13 @@ const importBssEwcsDeal = async (deal, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/deals/import/BSS-EWCS`,
+    url: `${urlRoot}/v1/deals/import`,
     data: deal,
   }).catch(({ response: data }) => ({ error: true, data: data.data }));
 
   return {
     success: !response.error,
     deal: response.data,
-  };
-};
-
-const importGefDeal = async (deal, facilities, token) => {
-  const response = await axios({
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${urlRoot}/v1/deals/import/GEF`,
-    data: {
-      deal,
-      facilities,
-    },
-  }).catch(({ response: data }) => ({ error: true, data: data.data }));
-
-  return {
-    success: !response.error,
-    data: response.data,
   };
 };
 
@@ -126,28 +105,12 @@ const listIndustrySectors = async (token) => {
   return response.data.industrySectors;
 };
 
-const getGefEligibilityCriteria = async (token, version) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${urlRoot}/v1/gef/eligibility-criteria/${version}`,
-  }).catch((err) => { console.info(`err: ${err}`); });
-
-  return response.data;
-};
-
 module.exports = {
   createUser,
-  importBssEwcsDeal,
-  importGefDeal,
+  importDeal,
   listUsers,
   listBanks,
   listCountries,
   listCurrencies,
   listIndustrySectors,
-  getGefEligibilityCriteria,
 };

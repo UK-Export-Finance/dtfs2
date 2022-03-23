@@ -327,7 +327,6 @@ describe('controllers/about-exporter', () => {
           ...mockApplication.exporter,
           ...mockRequest.body,
           isFinanceIncreasing: true,
-          probabilityOfDefault: Number(mockRequest.body.probabilityOfDefault),
         },
         editorId: '12345',
       };

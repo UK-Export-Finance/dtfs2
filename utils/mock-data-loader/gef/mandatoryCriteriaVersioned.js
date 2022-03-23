@@ -66,11 +66,21 @@ const MANDATORY_CRITERIA_VERSIONED = [
     ],
   },
   {
-    version: 34,
+    version: 0.1,
+    createdAt: new Date('2021-01-04T00:00'),
+    updatedAt: null,
+    isInDraft: false,
+    title: 'test 4 (old version)',
+    criteria: [
+      { id: '1', body: 'Test is a mock test' },
+    ],
+  },
+  {
+    version: 3.4,
     createdAt: new Date('2021-01-04T00:00'),
     updatedAt: null,
     isInDraft: true,
-    title: 'Example draft new version',
+    title: 'test 5 (draft)',
     criteria: [
       { id: '1', body: 'Test is a mock test' },
     ],

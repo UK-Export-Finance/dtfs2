@@ -10,6 +10,7 @@ const dealSubmissionDetails = require('./controllers/deal-submission-details.con
 const dealClone = require('./controllers/deal-clone.controller');
 const dealEligibilityCriteria = require('./controllers/deal-eligibility-criteria.controller');
 const dealEligibilityDocumentation = require('./controllers/deal-eligibility-documentation.controller');
+const dealImportController = require('./controllers/deal-import.controller');
 const banks = require('./controllers/banks.controller');
 const currencies = require('./controllers/currencies.controller');
 const countries = require('./controllers/countries.controller');
@@ -26,8 +27,6 @@ const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const mga = require('./controllers/mga.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const dealImportBssEwcsController = require('./controllers/data-migration/deal-import-bss-ewcs.controller');
-const dealImportGefController = require('./controllers/data-migration/deal-import-gef.controller');
 
 const users = require('./users/routes');
 const { cleanXss, fileUpload } = require('./middleware');
@@ -44,9 +43,7 @@ authRouter.use(passport.authenticate('jwt', { session: false }), cleanXss);
 
 authRouter.use('/gef', gef);
 
-authRouter.route('/deals/import/BSS-EWCS').post(validate({ role: ['data-admin'] }), dealImportBssEwcsController.import);
-
-authRouter.route('/deals/import/GEF').post(validate({ role: ['data-admin'] }), dealImportGefController.import);
+authRouter.route('/deals/import').post(validate({ role: ['data-admin'] }), dealImportController.import);
 
 authRouter.route('/deals').post(validate({ role: ['maker'] }), dealsController.create);
 authRouter.route('/deals').get(validate({ role: ['maker', 'checker', 'admin'] }), dealsController.getQueryAllDeals);

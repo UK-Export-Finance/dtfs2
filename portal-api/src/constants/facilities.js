@@ -18,16 +18,6 @@ const FEE_FREQUENCY = {
   ANNUALLY: 'Annually',
 };
 
-const GEF_FACILITY_PROVIDED_DETAILS = {
-  TERM: 'Term basis',
-  RESOLVING: 'Revolving or renewing basis',
-  COMMITTED: 'Committed basis',
-  UNCOMMITTED: 'Uncommitted basis',
-  ON_DEMAND: 'On demand or overdraft basis',
-  FACTORING: 'Factoring on a  with-recourse basis',
-  OTHER: 'Other',
-};
-
 const DAY_COUNT_BASIS = {
   360: '360',
   365: '365',
@@ -68,7 +58,6 @@ module.exports = {
   FACILITY_TYPE,
   FEE_TYPE,
   FEE_FREQUENCY,
-  GEF_FACILITY_PROVIDED_DETAILS,
   DAY_COUNT_BASIS,
   FACILITIES_STAGE,
   TYPE,

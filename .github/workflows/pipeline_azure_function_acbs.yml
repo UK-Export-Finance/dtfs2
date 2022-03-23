@@ -38,13 +38,13 @@ jobs:
     - name: Commit hash
       run: "echo GITHUB_SHA=${{ github.sha }}"
     - name: Build and push
-      uses: docker/build-push-action@v1
+      uses: docker/build-push-action@v2
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
         password: ${{ secrets.ACR_PASSWORD_DEV }}
         repository: azure-function-acbs
-        path: azure-functions/acbs-function
+        context: azure-functions/acbs-function
         tags: latest
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true

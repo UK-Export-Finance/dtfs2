@@ -67,30 +67,30 @@ describe(baseUrl, () => {
     });
   });
 
-  describe(`GET ${baseUrl}/:version`, () => {
+  describe(`GET ${baseUrl}/:id`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().get(`${baseUrl}/1`);
       expect(status).toEqual(401);
     });
 
-    it('returns a 404 if there are no records', async () => {
+    it('returns a 204 - "No Content" if there are no records', async () => {
       const { status } = await as(aMaker).get(`${baseUrl}/doesnotexist`);
-      expect(status).toEqual(404);
+      expect(status).toEqual(204);
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
       const item = await as(anEditor).post(items[0]).to(baseUrl);
-      const { status } = await as(aMaker).get(`${baseUrl}/${items[0].version}`);
+      const { status } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(200);
     });
 
-    it('returns an eligibility criteria', async () => {
+    it('returns a eligibility criteria', async () => {
       const item = await as(anEditor).post(items[0]).to(baseUrl);
-      const { status, body } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
+      const { status, body } = await as(anEditor).get(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(200);
       const expected = {
         ...expectMongoId(items[0]),
-        version: items[0].version,
+        version: expect.any(Number),
         isInDraft: expect.any(Boolean),
         createdAt: expect.any(Number),
         terms: expect.any(Array),
@@ -118,7 +118,7 @@ describe(baseUrl, () => {
     });
   });
 
-  // describe(`PUT ${baseUrl}/:version`, () => {
+  // describe(`PUT ${baseUrl}/:id`, () => {
   //   it('rejects requests that do not present a valid Authorization token', async () => {
   //     const { status } = await as().put(updatedMandatoryCriteria).to(`${baseUrl}/1`);
   //     expect(status).toEqual(401);
@@ -131,7 +131,7 @@ describe(baseUrl, () => {
 
   //   it('accepts requests that present a valid Authorization token with "editor" role', async () => {
   //     const item = await as(anEditor).post(items[0]).to(baseUrl);
-  //     const { status } = await as(anEditor).put(updatedMandatoryCriteria).to(`${baseUrl}/${item.body.version}`);
+  //     const { status } = await as(anEditor).put(updatedMandatoryCriteria).to(`${baseUrl}/${item.body._id}`);
   //     expect(status).toEqual(200);
   //   });
 
@@ -147,7 +147,7 @@ describe(baseUrl, () => {
   //     };
   //     delete itemUpdate._id; // immutable key
 
-  //     const { status, body } = await as(anEditor).put(itemUpdate).to(`${baseUrl}/${item.body.version}`);
+  //     const { status, body } = await as(anEditor).put(itemUpdate).to(`${baseUrl}/${item.body._id}`);
 
   //     expect(status).toEqual(200);
   //     expect(body).toEqual(expectMongoId({
@@ -157,24 +157,24 @@ describe(baseUrl, () => {
   //   });
   // });
 
-  describe(`DELETE ${baseUrl}/:version`, () => {
+  describe(`DELETE ${baseUrl}/:id`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const item = await as(anEditor).post(items[0]).to(baseUrl);
-      const { status } = await as().remove(`${baseUrl}/${items[0].version}`);
+      const { status } = await as().remove(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
       const item = await as(anEditor).post(items[0]).to(baseUrl);
-      const { status } = await as(anEditor).remove(`${baseUrl}/${items[0].version}`);
+      const { status } = await as(anEditor).remove(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(200);
     });
 
     it('deletes the eligibilty-criteria', async () => {
       const { body: createdItem } = await as(anEditor).post(items[0]).to(baseUrl);
-      const { body: item } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
+      const { body: item } = await as(anEditor).get(`${baseUrl}/${createdItem._id}`);
 
-      const { status, body } = await as(anEditor).remove(`${baseUrl}/${items[0].version}`);
+      const { status, body } = await as(anEditor).remove(`${baseUrl}/${createdItem._id}`);
       expect(status).toEqual(200);
       expect(body).toEqual(item);
     });

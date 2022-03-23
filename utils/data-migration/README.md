@@ -1,70 +1,43 @@
-# Data migration
+# data-migration
 
-Scripts to migrate Portal V1 deals, facilities, users and banks (BSS/EWCS, GEF) to Portal V2.
+Scripts to migrate deals and users/banks from Portal V1 to Portal V2.
 
-:warning: To import any deals (BSS/EWCS/GEF), the database must have all Mandatory Criteria and Eligibility Criteria versions. These are stored in mock-data-loader.
+:warning: Knowledge in this area has been lost - it was built a long time ago when Workflow integration was a requirement. These scripts may now be useless. See below.
 
-## Setup
-
-```shell
-npm install
-```
-
-Make sure docker is running in the root directory of the repo.
-
-## Portal - generic scripts (BSS, EWCS, GEF)
-
-### Migrate a single user belonging to a certain bank
-
-Add a JSON file to a new directory, and pass the path to the script:
+## Migrate single bank e.g. bankId 961
 
 ```shell
-node bss-ewcs/migrate-users.js --bankId=961 --file=./path/to/user.json
+node migrate-users.js --bankId=961 --file=./path/to/user.json
 ```
 
-The V1 user will be mapped to V2 structure and added to the users collection. The users's bank must already be in the banks collection.
-
-### Migrate all users/banks
-
-Add a JSON file to a new directory, and pass the path to the script:
+## Migrate all banks
 
 ```shell
-node bss-ewcs/migrate-users.js --file=./path/to/users.json
+node migrate-users.js --file=./path/to/user.json
 ```
 
-V1 users will be mapped to V2 structure and added to the users collection. The user banks must already be in the banks collection.
+## Migrate all deals
 
-## BSS/EWCS scripts
+:warning: This is now out of date and will not work.
 
-### Migrate all BSS/EWCS deals
+Grabs deals from an Azure fileshare (that would contain deals from Workflow) and add them to our Portal/BSS database collection.
 
-Grabs deals from an Azure fileshare (that would contain deals from Workflow) and add them to our Portal/BSS database.
+This was built initially with the v1 data structure of BSS. Facilities were initially part of a deal document, all in the `deals` MongoDB collection. Now, facilities are seperated and a BSS deal contains an array of facility ids.
 
 ```shell
-node bss-ewcs/migrate-deals.js
+node migrate-deals.js --file=./path/to/deal.json
 ```
 
-V1 deals will be mapped to V2 structure and added to the deals collection. Facilities will be added to the facilities collection.
+## Moving fowrards
 
-## GEF scripts
+Data migration requirements or approach has not been discussed as a team.
 
-### Migrate all GEF deals
+All of these migration scripts may now be useless. The deals script in particular, is based on receiving data from Workflow.
 
-Add JSON files to a new directory, and pass the path to the script:
+Workflow is being retired, and the migration mapping is based on an old data structure.
 
-```shell
-node gef/migrate-deals.js --path=./gef/dump 
-```
+Questions to be asked:
 
-V1 deals will be mapped to V2 structure and added to the deals collection. Facilities will added to the facilities collection.
-
-### Migrate a single GEF deal
-
-Add a JSON file and pass the file to the script:
-
-```shell
-node gef/migrate-deal.js --file=./gef/dump/12345.json
-```
-
-The V1 deal will be mapped to V2 structure and added to the deals collection. Facilities, will be added to the facilities collection.
-
+- Do we _need_ to migrate V1 deals into the new system?
+- If so, where will we get V1 deals from? Considering that Workflow is being retired
+- How and where will we migrate real world users and banks from for staging/production?

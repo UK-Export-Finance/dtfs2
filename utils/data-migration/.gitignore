@@ -1,6 +1,3 @@
 logs/
+data
 .env*
-bss-ewcs/dump/
-bss-ewcs/data/
-gef/dump/
-gef/data/
