@@ -164,7 +164,7 @@ const updateAllTasks = async (
    * */
   const tasksToAddEmailSentFlag = [];
   emailsResponse.forEach((response, index) => {
-    if (response.content) {
+    if (!response.errors) {
       tasksToAddEmailSentFlag.push(taskEmailsToSend[index]);
     }
   });

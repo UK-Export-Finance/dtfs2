@@ -94,7 +94,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
       const { firstTaskEmail } = await sendDealSubmitEmails(dealWithTasks);
 
-      // TODO if email fails, what does email response return?
       /**
        * Add an emailSent flag to the first task.
        * This prevents multiple emails from being sent.

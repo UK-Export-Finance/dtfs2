@@ -5,7 +5,7 @@
 const addFirstTaskEmailSentFlag = (emailResponse, tasks) => {
   const modifiedTasks = tasks;
 
-  if (emailResponse.content) {
+  if (!emailResponse.errors) {
     modifiedTasks.map((g) => {
       const group = g;
 
