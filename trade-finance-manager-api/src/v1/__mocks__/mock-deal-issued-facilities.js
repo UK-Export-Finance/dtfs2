@@ -110,6 +110,7 @@ const MOCK_DEAL_ISSUED_FACILITIES = {
     supplyContractValue: '1234.00',
   },
   eligibility: {
+    version: 4,
     criteria: [
       {
         id: 11,

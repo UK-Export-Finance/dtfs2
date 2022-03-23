@@ -109,6 +109,7 @@ const MOCK_DEAL = {
     supplyContractValue: '1234.00',
   },
   eligibility: {
+    version: 4,
     criteria: [
       {
         id: 11,
