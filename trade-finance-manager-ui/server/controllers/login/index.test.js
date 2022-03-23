@@ -16,8 +16,8 @@ describe('controllers - login', () => {
 
   describe('POST', () => {
     beforeEach(() => {
-      api.login = async (username) => {
-        const returnVal = username ? { username } : false;
+      api.login = async (username, password) => {
+        const returnVal = username && password ? { success: true, token: '', user: {} } : false;
         return Promise.resolve(returnVal);
       };
     });
@@ -28,15 +28,36 @@ describe('controllers - login', () => {
         body: {},
       };
       await loginController.postLogin(postReq, res);
-      expect(res.render).toHaveBeenCalledWith('login.njk');
+      expect(res.render).toHaveBeenCalledWith('login.njk', {
+        errors: {
+          errorSummary: [
+            {
+              href: '#email',
+              text: 'Enter an email address in the correct format, for example, name@example.com',
+            },
+            {
+              href: '#password',
+              text: 'Enter a valid password',
+            },
+          ],
+          fieldErrors: {
+            email: {
+              text: 'Enter an email address in the correct format, for example, name@example.com',
+            },
+            password: {
+              text: 'Enter a valid password',
+            },
+          },
+        },
+      });
     });
 
-    it('should redirect to /deals if login successful', async () => {
+    it.only('should redirect to /deals if login successful', async () => {
       const postReq = {
         ...req,
         body: {
-          email: 'test1',
-          password: '12345',
+          email: 'T1_USER_1',
+          password: 'AbC!2345',
         },
       };
       await loginController.postLogin(postReq, res);

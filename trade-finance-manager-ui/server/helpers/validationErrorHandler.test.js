@@ -1,4 +1,4 @@
-import validationErrorHandler from './validationErrorHandler.helper';
+import { validationErrorHandler } from './validationErrorHandler.helper';
 
 describe('validationErrorHandler()', () => {
   it('returns false if no errors passed', () => {
