@@ -4,7 +4,7 @@ const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
-const { findEligibilityCriteria } = require('./eligibilityCriteria.controller');
+const { findLatest: findLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const api = require('../api');
 
 /**
@@ -32,25 +32,30 @@ const createDealEligibility = async (eligibility) => {
     ? eligibility.criteria
     : eligibilityCriteria;
 
-  const eligibilityStatus = eligibility && eligibility.status
-    ? eligibility.status
-    : DEFAULTS.DEAL.eligibility.status;
+  if (beingGivenEligibility) {
+    const eligibilityObj = {
+      ...eligibility,
+      lastUpdated: null,
+    };
 
-  const eligibilityCriteria11AgentDetails = () => {
-    if (beingGivenEligibility) {
-      const { criteria, status, ...eligibilityAgentDetails } = eligibility;
-      return eligibilityAgentDetails;
+    if (eligibility.status) {
+      eligibilityObj.status = eligibility.status;
+    } else {
+      eligibilityObj.status = DEFAULTS.DEAL.eligibility.status;
     }
-    return null;
-  };
+
+    return eligibilityObj;
+  }
+
+  const latestEligibility = await findLatestEligibilityCriteria();
 
   return {
-    status: eligibilityStatus,
-    criteria: eligibilityCriteriaWithAnswers,
-    ...eligibilityCriteria11AgentDetails(),
-    lastUpdated: null,
+    ...latestEligibility,
+    status: DEFAULTS.DEAL.eligibility.status,
   };
 };
+
+exports.createDealEligibility = createDealEligibility;
 
 /**
  * Create default deal data (BSS, EWCS only)

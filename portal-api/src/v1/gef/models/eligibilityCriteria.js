@@ -2,7 +2,7 @@ class EligibilityCriteria {
   constructor(req) {
     this.version = req.version;
     this.isInDraft = req.isInDraft;
-    this.terms = req.terms;
+    this.criteria = req.criteria;
     this.createdAt = Date.now();
   }
 }
