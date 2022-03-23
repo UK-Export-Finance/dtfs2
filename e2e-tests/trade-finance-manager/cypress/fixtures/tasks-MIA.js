@@ -159,7 +159,7 @@ const MOCK_MIA_TASKS = [
       {
         "id": "1",
         "groupId": 4,
-        "title": "Check the credit analysis",
+        "title": "Check adverse history check",
         "team": {
           "id": "UNDERWRITER_MANAGERS",
           "name": "Underwriter managers"
@@ -174,6 +174,21 @@ const MOCK_MIA_TASKS = [
       {
         "id": "2",
         "groupId": 4,
+        "title": "Check the credit analysis",
+        "team": {
+          "id": "UNDERWRITER_MANAGERS",
+          "name": "Underwriter managers"
+        },
+        "status": "To do",
+        "assignedTo": {
+          "userId": "Unassigned",
+          "userFullName": "Unassigned"
+        },
+        "canEdit": false
+      },
+      {
+        "id": "3",
+        "groupId": 4,
         "title": "Complete risk analysis (RAD)",
         "team": {
           "id": "RISK_MANAGERS",
@@ -187,7 +202,7 @@ const MOCK_MIA_TASKS = [
         "canEdit": false
       },
       {
-        "id": "3",
+        "id": "4",
         "groupId": 4,
         "title": "Approve or decline the deal",
         "team": {

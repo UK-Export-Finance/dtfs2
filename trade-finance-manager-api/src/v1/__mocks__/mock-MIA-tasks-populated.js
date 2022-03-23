@@ -110,8 +110,8 @@ const MOCK_MIA_TASKS_POPULATED = [
       {
         id: '1',
         groupId: 4,
-        title: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,
-        team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
+        title: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_ADVERSE_HISTORY_CHECK,
+        team: CONSTANTS.TEAMS.UNDERWRITER_MANAGERS,
         status: CONSTANTS.TASKS.STATUS.CANNOT_START,
         assignedTo: {
           userId: CONSTANTS.TASKS.UNASSIGNED,
@@ -122,8 +122,32 @@ const MOCK_MIA_TASKS_POPULATED = [
       {
         id: '2',
         groupId: 4,
+        title: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,
+        team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
+        status: CONSTANTS.TASKS.STATUS.CANNOT_START,
+        assignedTo: {
+          userId: CONSTANTS.TASKS.UNASSIGNED,
+          userFullName: CONSTANTS.TASKS.UNASSIGNED,
+        },
+        history: [],
+      },
+      {
+        id: '3',
+        groupId: 4,
         title: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS,
         team: CONSTANTS.TEAMS.BUSINESS_SUPPORT,
+        status: CONSTANTS.TASKS.STATUS.CANNOT_START,
+        assignedTo: {
+          userId: CONSTANTS.TASKS.UNASSIGNED,
+          userFullName: CONSTANTS.TASKS.UNASSIGNED,
+        },
+        history: [],
+      },
+      {
+        id: '4',
+        groupId: 4,
+        title: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL,
+        team: CONSTANTS.TEAMS.UNDERWRITER_MANAGERS,
         status: CONSTANTS.TASKS.STATUS.CANNOT_START,
         assignedTo: {
           userId: CONSTANTS.TASKS.UNASSIGNED,
