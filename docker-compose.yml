@@ -163,6 +163,10 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
+      - V1_FILE_SHARE_SAS=${V1_FILE_SHARE_SAS}
+      - V1_FILE_SHARE_ACCOUNT=${V1_FILE_SHARE_ACCOUNT}
+      - V1_AZURE_PORTAL_FILESHARE_NAME=${V1_AZURE_PORTAL_FILESHARE_NAME}
+      - V1_AZURE_PORTAL_EXPORT_FOLDER=${V1_AZURE_PORTAL_EXPORT_FOLDER}
 
     entrypoint: npx nodemon src/index.js -L
 

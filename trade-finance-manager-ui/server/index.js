@@ -10,17 +10,12 @@ require('./azure-env');
 
 const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
-
 const healthcheck = require('./healthcheck');
+const seo = require('./middleware/headers/seo');
 
 const app = express();
 
-// Global middleware set headers
-app.use((req, res, next) => {
-  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
-  next();
-});
-
+app.use(seo);
 app.use(helmet({ contentSecurityPolicy: false }));
 
 const PORT = process.env.PORT || 5003;

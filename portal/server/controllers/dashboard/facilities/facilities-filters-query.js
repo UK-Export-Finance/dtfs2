@@ -1,6 +1,8 @@
 const CONTENT_STRINGS = require('../../../content-strings');
 const keywordQuery = require('./facilities-filters-keyword-query');
 
+const { isSuperUser } = require('../../../helpers');
+
 /**
  * Generates an array of objects to be sent to API (for DB query)
  *
@@ -13,11 +15,13 @@ const dashboardFacilitiesFiltersQuery = (
   filters,
   user,
 ) => {
-  const query = {
-    $and: [
+  const query = {};
+  // if user is admin, then deal.bank.id should not be set so cannot see all
+  if (!isSuperUser(user)) {
+    query.$and = [
       { 'deal.bank.id': user.bank.id },
-    ],
-  };
+    ];
+  }
 
   if (filters.length) {
     query.$or = [];
