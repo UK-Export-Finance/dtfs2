@@ -139,11 +139,11 @@ const DEAL = {
         },
         16: {
           text: 'The Bank has received an Exporter Declaration which confirms that the Exporter’s Revenue Threshold Test Percentage (as defined in the relevant Exporter Declaration) is below 5%.',
-      },
-      17: {
-        text: 'The bank has completed due diligence to its own satisfaction in line with its policies and procedures, without needing to escalate any issues to a relevant person.',
-      },
-      18: {
+        },
+        17: {
+          text: 'The bank has completed due diligence to its own satisfaction in line with its policies and procedures, without needing to escalate any issues to a relevant person.',
+        },
+        18: {
           text: 'The fees or interest apply to the whole cover period and have been set in line with either:',
           textList: [
             'the bank’s normal pricing policies',
