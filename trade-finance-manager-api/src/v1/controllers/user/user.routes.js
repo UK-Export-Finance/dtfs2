@@ -72,12 +72,11 @@ module.exports.findTfmUserByUsername = (req, res, next) => {
 };
 
 module.exports.updateTfmUserById = (req, res, next) => {
-  findByUsername(req.params._id, (err, user) => {
+  findOne(req.params._id, (err, user) => {
     if (err) {
       next(err);
     } else if (user) {
       const errors = applyUpdateRules(user, req.body);
-
       if (errors.length) {
         res.status(400).json({
           success: false,
@@ -87,7 +86,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
           },
         });
       } else {
-        update(req.params.user, req.body, (updateErr, updatedUser) => {
+        update(req.params._id, req.body, (updateErr, updatedUser) => {
           if (updateErr) {
             next(updateErr);
           } else {
@@ -96,7 +95,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
         });
       }
     } else {
-      res.status(200).json({});
+      res.status(404).json({});
     }
   });
 };

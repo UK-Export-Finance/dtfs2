@@ -222,6 +222,24 @@ const login = async (username, password) => {
   }
 };
 
+const updateUserPassword = async (id, update) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${tfmAPIurl}/v1/users/${id}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: update,
+    }).catch((err) => err.response);
+
+    return response;
+  } catch (error) {
+    console.error('Unable to update user details', { error });
+    return error;
+  }
+};
+
 const createFeedback = async (formData) => {
   const response = await axios({
     method: 'post',
@@ -241,6 +259,7 @@ module.exports = {
   updateFacilityRiskProfile,
   getTeamMembers,
   getUser,
+  updateUserPassword,
   updateParty,
   updateFacility,
   updateTask,

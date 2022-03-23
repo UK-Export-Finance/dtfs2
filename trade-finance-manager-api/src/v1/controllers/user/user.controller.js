@@ -47,6 +47,7 @@ exports.update = async (_id, update, callback) => {
       // remove the raw password
       delete userUpdate.password;
       delete userUpdate.passwordConfirm;
+      delete userUpdate.currentPassword;
 
       // create new salt/hash for the new password
       const { salt, hash } = utils.genPassword(newPassword);
