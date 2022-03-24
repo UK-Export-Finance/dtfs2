@@ -48,6 +48,7 @@ const deleteTeam = async (team, token) => {
 };
 
 const createTfmUser = async (user) => {
+  console.info(user, `${tfmApi}/v1/users`);
   const response = await axios({
     method: 'post',
     headers: {
