@@ -46,11 +46,6 @@ describe(`${page} when deal is BSS`, () => {
     wrapper.expectText('[data-cy="page-title"]').toRead('Deal');
   });
 
-  // enable once set
-  // it('should render mga version', () => {
-  //   wrapper.expectText('[data-cy="mga-version"]').toRead('January 2020');
-  // });
-
   it('should render bank', () => {
     wrapper.expectText('[data-cy="deal-bank"]').toRead(params.deal.bank.name);
   });
@@ -97,12 +92,6 @@ describe(`${page} when deal is GEF`, () => {
     params.deal.supportingInformation.securityDetails.facility = 'test';
     wrapper = render(params);
   });
-
-  // TODO page title
-  // enable later
-  // it('should render mga version', () => {
-  //   wrapper.expectText('[data-cy="mga-version"]').toRead('January 2020');
-  // });
 
   it('should render bank', () => {
     wrapper.expectText('[data-cy="deal-bank"]').toRead(params.deal.bank.name);
