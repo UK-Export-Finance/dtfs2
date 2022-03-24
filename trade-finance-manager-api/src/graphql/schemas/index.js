@@ -109,6 +109,7 @@ type DealEligibilityCriterion {
 }
 
 type DealEligibility {
+  version: Int
   criteria: [DealEligibilityCriterion!]
   agentAddressCountry: Country
   agentAddressLine1: String

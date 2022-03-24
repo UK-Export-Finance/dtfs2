@@ -57,27 +57,34 @@ const MockEligibilityCriteria = () => ({
     },
     {
       id: 16,
-      name: 'dueDiligence',
+      name: 'revenueThreshold',
       answer: null,
       text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 17,
-      name: 'facilityLetter',
+      name: 'dueDiligence',
       answer: null,
       text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 18,
-      name: 'facilityBaseCurrency',
+      name: 'facilityLetter',
       answer: null,
       text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 19,
+      name: 'facilityBaseCurrency',
+      answer: null,
+      text: 'Test',
+      errMsg: 'Mock error message',
+    },
+    {
+      id: 20,
       name: 'facilityPaymentCurrency',
       answer: null,
       text: 'Test',
@@ -117,14 +124,14 @@ describe('controllers/automatic-cover', () => {
     it('renders the `automatic-cover` template', async () => {
       await automaticCover(mockRequest, mockResponse);
 
-      const expectedTerms = MockEligibilityCriteria().criteria.map((criterion) => ({
+      const expectedCriteria = MockEligibilityCriteria().criteria.map((criterion) => ({
         ...criterion,
         text: 'Test',
       }));
 
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/automatic-cover.njk', {
-          terms: expectedTerms,
+          criteria: expectedCriteria,
           dealId: '123',
         });
     });
@@ -165,7 +172,7 @@ describe('controllers/automatic-cover', () => {
     it('renders the correct data if validation fails', async () => {
       await validateAutomaticCover(mockRequest, mockResponse);
 
-      const expectedTerms = MockEligibilityCriteria().criteria.map((criterion) => ({
+      const expectedCriteria = MockEligibilityCriteria().criteria.map((criterion) => ({
         ...criterion,
         text: 'Test',
       }));
@@ -173,7 +180,7 @@ describe('controllers/automatic-cover', () => {
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/automatic-cover.njk', expect.objectContaining({
           errors: expect.any(Object),
-          terms: expectedTerms,
+          criteria: expectedCriteria,
           dealId: '123',
         }));
     });
@@ -191,6 +198,7 @@ describe('controllers/automatic-cover', () => {
           17: 'true',
           18: 'true',
           19: 'true',
+          20: 'true',
         };
         await validateAutomaticCover(mockRequest, mockResponse);
       });
@@ -229,6 +237,7 @@ describe('controllers/automatic-cover', () => {
           17: 'true',
           18: 'true',
           19: 'true',
+          20: 'true',
         };
 
         await validateAutomaticCover(mockRequest, mockResponse);
