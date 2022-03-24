@@ -10,10 +10,11 @@ const MockEligibilityCriteria = () => ({
     { id: 13, name: 'noticeDate', answer: true },
     { id: 14, name: 'facilityLimit', answer: true },
     { id: 15, name: 'exporterDeclaration', answer: true },
-    { id: 16, name: 'dueDiligence', answer: true },
-    { id: 17, name: 'facilityLetter', answer: true },
-    { id: 18, name: 'facilityBaseCurrency', answer: true },
-    { id: 19, name: 'facilityPaymentCurrency', answer: true },
+    { id: 16, name: 'revenueThreshold', answer: true },
+    { id: 17, name: 'dueDiligence', answer: true },
+    { id: 18, name: 'facilityLetter', answer: true },
+    { id: 19, name: 'facilityBaseCurrency', answer: true },
+    { id: 20, name: 'facilityPaymentCurrency', answer: true },
   ],
 });
 

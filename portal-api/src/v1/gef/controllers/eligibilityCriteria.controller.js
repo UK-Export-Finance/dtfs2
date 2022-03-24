@@ -1,5 +1,3 @@
-const { ObjectId } = require('mongodb');
-
 const db = require('../../../drivers/db-client');
 const { EligibilityCriteria } = require('../models/eligibilityCriteria');
 const utils = require('../utils.service');

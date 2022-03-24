@@ -41,7 +41,6 @@ context('User can view a case deal', () => {
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
-    // pages.caseDealPage.mgaVersion().should('exist');
   });
 
   it('should render case summary fields', () => {
@@ -53,11 +52,6 @@ context('User can view a case deal', () => {
       expect(text.trim()).to.contain(MOCK_DEAL_AIN.exporter.companyName);
     });
   });
-
-  // enable once set
-  // it('should render correct MGA version', () => {
-  //   pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
-  // });
 
   describe('Bank security section', () => {
     it('bank security section should not be displayed as AIN', () => {
