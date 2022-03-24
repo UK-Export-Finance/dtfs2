@@ -36,7 +36,7 @@
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
     "@ministryofjustice/frontend": "1.2.0",
-    "axios": "^0.26.0",
+    "axios": "^0.26.1",
     "chance": "^1.1.8",
     "clean-deep": "^3.4.0",
     "comma-number": "^2.1.0",
@@ -71,15 +71,15 @@
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
-    "@babel/core": "7.17.5",
+    "@babel/core": "7.17.8",
     "@babel/plugin-transform-runtime": "7.17.0",
     "@babel/preset-env": "7.16.11",
-    "@babel/runtime": "7.17.2",
+    "@babel/runtime": "7.17.8",
     "@types/jest": "^27.4.1",
     "babel-jest": "27.5.1",
     "babel-loader": "8.2.3",
     "cheerio": "^1.0.0-rc.10",
-    "eslint": "^8.10.0",
+    "eslint": "^8.11.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "file-loader": "^6.2.0",
@@ -90,7 +90,7 @@
     "sass-loader": "12.6.0",
     "style-loader": "3.3.1",
     "terser-webpack-plugin": "^5.3.1",
-    "webpack": "^5.69.1",
+    "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2",
     "webpack-merge": "^5.8.0"
   }

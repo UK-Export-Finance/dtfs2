@@ -1,3 +1,4 @@
+const mapFeeFrequency = require('./map-fee-frequency');
 const CONSTANTS = require('../../../constants');
 
 /**
@@ -6,7 +7,9 @@ const CONSTANTS = require('../../../constants');
  * @returns {String} ACBS day basis code
  */
 const getFeeFrequency = (facility) => {
-  switch (facility.facilitySnapshot.feeFrequency) {
+  const feeFrequency = mapFeeFrequency(facility.facilitySnapshot);
+
+  switch (feeFrequency) {
     case CONSTANTS.FACILITY.FEE_FREQUENCY.WEEKLY:
       return CONSTANTS.FACILITY.FEE_FREQUENCY_ACBS_CODE.WEEKLY;
 

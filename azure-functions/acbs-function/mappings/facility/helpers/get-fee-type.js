@@ -1,5 +1,6 @@
 const CONSTANTS = require('../../../constants');
 const getFeeFrequency = require('./get-fee-frequency');
+const mapFeeType = require('./map-fee-type');
 
 /**
  * Return ACBS field code for facility fee type.
@@ -7,10 +8,12 @@ const getFeeFrequency = require('./get-fee-frequency');
  * @param {Object} facility Facility object
  * @returns {String} ACBS fee type code
  */
-const getFeeType = (facility) => (
-  facility.facilitySnapshot.feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY
+const getFeeType = (facility) => {
+  const feeType = mapFeeType(facility.facilitySnapshot);
+
+  return feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY
     ? CONSTANTS.FACILITY.FEE_TYPE_ACBS_CODE.AT_MATURITY
-    : getFeeFrequency(facility)
-);
+    : getFeeFrequency(facility);
+};
 
 module.exports = getFeeType;

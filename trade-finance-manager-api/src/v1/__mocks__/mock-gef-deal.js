@@ -81,10 +81,12 @@ const MOCK_GEF_DEAL = {
   supportingInformation: {
     securityDetails: {
       exporter: 'mock security',
+      facility: 'mock facility security',
     },
   },
   eligibility: {
     status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.COMPLETED,
+    version: 2,
     updatedAt: 1634835561860.0,
     criteria: [
       {

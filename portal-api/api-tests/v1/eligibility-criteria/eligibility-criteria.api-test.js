@@ -10,8 +10,13 @@ const allEligibilityCriteria = require('../../fixtures/eligibilityCriteria');
 const newEligibilityCriteria = allEligibilityCriteria[0];
 const updatedEligibilityCriteria = {
   ...newEligibilityCriteria,
-  description: 'Updated eligibility criteria',
-}
+  criteria: [
+    ...newEligibilityCriteria.criteria,
+    {
+      title: 'Updated eligibility criteria',
+    },
+  ],
+};
 
 describe('/v1/eligibility-criteria', () => {
   let noRoles;
@@ -43,13 +48,7 @@ describe('/v1/eligibility-criteria', () => {
     it('returns a list of eligibility-criteria sorted by id', async () => {
       // randomise the order a bit on the way in...
       await as(anEditor).post(allEligibilityCriteria[0]).to('/v1/eligibility-criteria');
-      await as(anEditor).post(allEligibilityCriteria[6]).to('/v1/eligibility-criteria');
       await as(anEditor).post(allEligibilityCriteria[1]).to('/v1/eligibility-criteria');
-      await as(anEditor).post(allEligibilityCriteria[4]).to('/v1/eligibility-criteria');
-      await as(anEditor).post(allEligibilityCriteria[2]).to('/v1/eligibility-criteria');
-      await as(anEditor).post(allEligibilityCriteria[3]).to('/v1/eligibility-criteria');
-      await as(anEditor).post(allEligibilityCriteria[5]).to('/v1/eligibility-criteria');
-      await as(anEditor).post(allEligibilityCriteria[7]).to('/v1/eligibility-criteria');
 
       const { body } = await as(noRoles).get(`/v1/eligibility-criteria`);
       expect(body).toEqual({
@@ -59,7 +58,30 @@ describe('/v1/eligibility-criteria', () => {
     });
   });
 
-  describe('GET /v1/eligibility-criteria/:id', () => {
+  describe('GET /v1/eligibility-criteria/latest', () => {
+    it('rejects requests that do not present a valid Authorization token', async () => {
+      const { status } = await as().get('/v1/eligibility-criteria/latest');
+
+      expect(status).toEqual(401);
+    });
+
+    it('accepts requests that do present a valid Authorization token', async () => {
+      const { status } = await as(noRoles).get('/v1/eligibility-criteria/latest');
+
+      expect(status).toEqual(200);
+    });
+
+    it('returns an eligibility-criteria', async () => {
+      await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
+
+      const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${newEligibilityCriteria.version}`);
+
+      expect(status).toEqual(200);
+      expect(body).toEqual(expectMongoId(newEligibilityCriteria));
+    });
+  });
+
+  describe('GET /v1/eligibility-criteria/:version', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().get('/v1/eligibility-criteria/1');
 
@@ -75,7 +97,7 @@ describe('/v1/eligibility-criteria', () => {
     it('returns an eligibility-criteria', async () => {
       await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
 
-      const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${newEligibilityCriteria.id}`);
+      const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${newEligibilityCriteria.version}`);
 
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId(newEligibilityCriteria));
@@ -102,7 +124,7 @@ describe('/v1/eligibility-criteria', () => {
     });
   });
 
-  describe('PUT /v1/eligibility-criteria/:id', () => {
+  describe('PUT /v1/eligibility-criteria/:version', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put(updatedEligibilityCriteria).to('/v1/eligibility-criteria/1');
 
@@ -125,28 +147,28 @@ describe('/v1/eligibility-criteria', () => {
       expect(status).toEqual(200);
     });
 
-    describe('updating the eligibility-criteria', () => {
-      it('can update the description', async () => {
-        const eligibilityCriteria = allEligibilityCriteria[1];
-        const descriptionUpdate = {
-          description: 'new description',
-        };
+    it('updates an eligibility criteria', async () => {
+      const eligibilityCriteria = allEligibilityCriteria[1];
+      const update = {
+        criteria: [
+          { title: 'new title' },
+        ],
+      };
 
-        await as(anEditor).post(eligibilityCriteria).to('/v1/eligibility-criteria');
-        await as(anEditor).put(descriptionUpdate).to(`/v1/eligibility-criteria/${eligibilityCriteria.id}`);
+      await as(anEditor).post(eligibilityCriteria).to('/v1/eligibility-criteria');
+      await as(anEditor).put(update).to(`/v1/eligibility-criteria/${eligibilityCriteria.version}`);
 
-        const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${eligibilityCriteria.id}`);
+      const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${eligibilityCriteria.version}`);
 
-        expect(status).toEqual(200);
-        expect(body).toEqual(expectMongoId({
-          ...eligibilityCriteria,
-          ...descriptionUpdate,
-        }));
-      });
+      expect(status).toEqual(200);
+      expect(body).toEqual(expectMongoId({
+        ...eligibilityCriteria,
+        criteria: update.criteria,
+      }));
     });
   });
 
-  describe('DELETE /v1/eligibility-criteria/:id', () => {
+  describe('DELETE /v1/eligibility-criteria/:version', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().remove('/v1/eligibility-criteria/1');
 

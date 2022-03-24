@@ -13,7 +13,7 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
     })
     .then((response) => response)
     .catch((err) => {
-      console.error(`Portal API - Failed to send email to address: ${sendToEmailAddress} with templateId ${templateId}`);
+      console.error(`Portal API - Failed to send email to address: ${sendToEmailAddress} with templateId ${templateId}`, { err });
       return err.response;
     });
 };

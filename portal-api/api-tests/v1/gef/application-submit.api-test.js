@@ -6,10 +6,12 @@ const {
   submissionPortalActivity,
   updateChangedToIssued,
   checkCoverDateConfirmed,
+  addSubmissionDateToIssuedFacilities
 } = require('../../../src/v1/gef/controllers/application-submit');
 
 const {
   update: updateFacility,
+  getAllFacilitiesByDealId
 } = require('../../../src/v1/gef/controllers/facilities.controller');
 
 const mockApplications = require('../../fixtures/gef/application');
@@ -368,5 +370,82 @@ describe('checkCoverDateConfirmed()', () => {
     }).to(baseUrl);
 
     expect(await checkCoverDateConfirmed(mockApplication.body)).toEqual(true);
+  });
+});
+
+describe('addSubmissionDateToIssuedFacilities()', () => {
+  it('if facility hasBeenIssued but not hasBeenIssuedAndAcknowledged then should add coverStartDate and submittedAsIssuedDate', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    await wipeDB.wipe([facilitiesCollectionName]);
+    await wipeDB.wipe([dealsCollectionName]);
+
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      shouldCoverStartOnSubmission: true,
+      hasBeenIssuedAndAcknowledged: null
+    }).to(baseUrl);
+
+    const facility = await getAllFacilitiesByDealId(mockApplication.body._id);
+
+    // updates facility and sets flags
+    await updateFacility(facility[0]._id, {
+      hasBeenIssued: true,
+      shouldCoverStartOnSubmission: true,
+      hasBeenIssuedAndAcknowledged: null
+    });
+
+    await addSubmissionDateToIssuedFacilities(mockApplication.body._id);
+
+    // gets facilities from collection
+    const updatedFacility = await getAllFacilitiesByDealId(mockApplication.body._id);
+
+    const expectedCoverStartDate = (new Date()).setHours(0, 0, 0, 0);
+    // expect both to have been set
+    expect(updatedFacility[0].coverStartDate).toEqual(new Date(expectedCoverStartDate));
+    expect(updatedFacility[0].submittedAsIssuedDate).toEqual(expect.any(String));
+  });
+
+  it('if facility hasBeenIssued and hasBeenIssuedAndAcknowledged then should not override coverStartDate or submittedAsIssuedDate', async () => {
+    const testUsers = await testUserCache.initialise(app);
+    const aMaker = testUsers().withRole('maker').one();
+    await wipeDB.wipe([facilitiesCollectionName]);
+    await wipeDB.wipe([dealsCollectionName]);
+
+    const mockAIN = mockApplications[0];
+    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+
+    await as(aMaker).post({
+      dealId: mockApplication.body._id,
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      shouldCoverStartOnSubmission: true,
+      hasBeenIssuedAndAcknowledged: null
+    }).to(baseUrl);
+
+    const facility = await getAllFacilitiesByDealId(mockApplication.body._id);
+
+    // sets both flags to true
+    await updateFacility(facility[0]._id, {
+      hasBeenIssued: true,
+      shouldCoverStartOnSubmission: true,
+      hasBeenIssuedAndAcknowledged: true,
+    });
+
+    await addSubmissionDateToIssuedFacilities(mockApplication.body._id);
+
+    // gets facilities from collection
+    const updatedFacility = await getAllFacilitiesByDealId(mockApplication.body._id);
+
+    // should be null as both should not be overwritten
+    expect(updatedFacility[0].coverStartDate).toBeNull();
+    expect(updatedFacility[0].submittedAsIssuedDate).toBeNull();
   });
 });

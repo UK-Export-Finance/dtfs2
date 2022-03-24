@@ -35,7 +35,7 @@
  *         type: array
  *         items:
  *           type: string
- *           example: OTHER
+ *           example: Other
  *       detailsOther:
  *         type: string
  *         example: Test extra information

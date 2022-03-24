@@ -2,7 +2,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
-const { dashboardFilters } = require('../../../partials');
+const { dashboardFilters, dashboardSubNavigation } = require('../../../partials');
 const {
   BSS_DEAL_AIN,
   BSS_DEAL_MIA,
@@ -180,5 +180,15 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
 
     cy.url().should('eq', relative('/dashboard/facilities/0'));
+  });
+
+  it('renders the correct aria-labels based on filter selected', () => {
+    dashboardSubNavigation.facilities().invoke('attr', 'aria-label').then((label) => {
+      expect(label).to.equal('facilities: ,Filters selected: , Notice Type: , Automatic Inclusion Notice, Manual Inclusion Application, Bank\'s facility stage: , Issued, Unissued');
+    });
+
+    dashboardSubNavigation.deals().invoke('attr', 'aria-label').then((label) => {
+      expect(label).to.equal('');
+    });
   });
 });

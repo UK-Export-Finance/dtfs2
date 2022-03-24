@@ -38,6 +38,7 @@ const postSecurityDetails = async (req, res) => {
     params: { dealId },
     session: { user, userToken },
   } = req;
+  const { _id: editorId } = user;
 
   const securityDetailsErrors = [];
 
@@ -106,12 +107,11 @@ const postSecurityDetails = async (req, res) => {
       ...application.supportingInformation,
       securityDetails,
     };
+    // adds editorId to application
+    application.editorId = editorId;
 
     await updateApplication(dealId, application);
 
-    if (application.supportingInformation?.requiredFields?.includes('exportLicence')) {
-      return res.redirect('export-licence');
-    }
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
     console.error(`Error updating security details ${err}`);

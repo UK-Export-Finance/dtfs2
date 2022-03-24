@@ -13,11 +13,13 @@
     tab: tab,
     filters: filters,
     selectedFilters: selectedFilters,
+    selectedFiltersString: selectedFiltersString,
     keyword: keyword,
     renderCreatedByYou: false,
     table: facilitiesTable.render({
       facilities: facilities,
-      userTimezone: user.timezone
+      userTimezone: user.timezone,
+      isChecker: isChecker
     }),
     pages: pages,
     route: '/facilities',

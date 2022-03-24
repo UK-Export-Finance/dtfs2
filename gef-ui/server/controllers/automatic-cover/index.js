@@ -17,7 +17,7 @@ const automaticCover = async (req, res) => {
     const { eligibility } = application;
 
     return res.render('partials/automatic-cover.njk', {
-      terms: eligibility.criteria,
+      criteria: eligibility.criteria,
       dealId,
     });
   } catch (err) {
@@ -28,11 +28,18 @@ const automaticCover = async (req, res) => {
 
 const validateAutomaticCover = async (req, res, next) => {
   try {
-    const { body, params, query } = req;
+    const {
+      body,
+      params,
+      query,
+      session,
+    } = req;
     const { dealId } = params;
     const { saveAndReturn } = query;
+    const { user } = session;
     const application = await api.getApplication(dealId);
     const { eligibility } = application;
+    const { _id: editorId } = user;
 
     delete body._csrf;
 
@@ -40,7 +47,7 @@ const validateAutomaticCover = async (req, res, next) => {
     const coverType = deriveCoverType(body, eligibility.criteria);
 
     if (!saveAndReturn && automaticCoverErrors.length > 0) {
-      const mappedTerms = eligibility.criteria.map((answerObj) => {
+      const mappedCriteria = eligibility.criteria.map((answerObj) => {
         const submittedAnswer = body[String(answerObj.id)];
 
         return {
@@ -51,7 +58,7 @@ const validateAutomaticCover = async (req, res, next) => {
 
       return res.render('partials/automatic-cover.njk', {
         errors: validationErrorHandler(automaticCoverErrors, 'automatic-cover'),
-        terms: mappedTerms,
+        criteria: mappedCriteria,
         dealId,
       });
     }
@@ -69,8 +76,12 @@ const validateAutomaticCover = async (req, res, next) => {
 
     const applicationUpdate = {
       eligibility: {
+        _id: eligibility?._id,
+        version: eligibility.version,
+        isInDraft: eligibility.isInDraft,
         criteria: newAnswers,
       },
+      editorId,
     };
 
     await api.updateApplication(dealId, applicationUpdate);

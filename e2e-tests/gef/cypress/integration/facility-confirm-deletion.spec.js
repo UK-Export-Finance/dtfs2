@@ -1,5 +1,6 @@
 import relative from './relativeURL';
 import facilityConfirmDeletion from './pages/facility-confirm-deletion';
+import applicationDetails from './pages/application-details';
 import CREDENTIALS from '../fixtures/credentials.json';
 
 const applications = [];
@@ -32,6 +33,14 @@ context('Facility Confirm Deletion Page', () => {
   });
 
   describe('Visiting page as cash facility', () => {
+    it('delete facility link contains an aria-label with facility name', () => {
+      cy.visit(relative(`/gef/application-details/${applications[2].id}`));
+      applicationDetails.deleteFacilityLink().first().contains('Delete facility');
+      applicationDetails.deleteFacilityLink().first().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal(`Delete facility ${applications[2].facilities[3].details.name}`);
+      });
+    });
+
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/confirm-deletion`));
       facilityConfirmDeletion.mainHeading().should('contain', 'Cash');

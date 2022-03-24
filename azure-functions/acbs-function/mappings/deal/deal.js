@@ -1,4 +1,3 @@
-const { to2Decimals } = require('../../helpers/currency');
 const {
   getDealEffectiveDate,
   getDealValue,
@@ -32,7 +31,7 @@ const initialDeal = (deal, obligorPartyIdentifier, acbsReference) => ({
   _id: deal._id,
   dealIdentifier: getDealId(deal),
   currency: getDealCurrency(deal),
-  dealValue: to2Decimals(getDealValue(deal)),
+  dealValue: getDealValue(deal),
   guaranteeCommencementDate: getDealEffectiveDate(deal),
   obligorPartyIdentifier,
   obligorName: deal.dealSnapshot.exporter.companyName.substring(0, 35),

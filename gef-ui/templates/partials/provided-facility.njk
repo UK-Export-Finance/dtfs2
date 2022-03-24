@@ -90,39 +90,39 @@
           },
           items: [
             {
-              value: "TERM",
+              value: "Term basis",
               text: "Term basis",
-              checked: details.includes('TERM')
+              checked: details.includes('Term basis')
             },
             {
-              value: "RESOLVING",
+              value: "Revolving or renewing basis",
               text: "Revolving or renewing basis",
-              checked: details.includes('RESOLVING')
+              checked: details.includes('Revolving or renewing basis')
             },
             {
-              value: "COMMITTED",
+              value: "Committed basis",
               text: "Committed basis",
-              checked: details.includes('COMMITTED')
+              checked: details.includes('Committed basis')
             },
             {
-              value: "UNCOMMITTED",
+              value: "Uncommitted basis",
               text: "Uncommitted basis",
-              checked: details.includes('UNCOMMITTED')
+              checked: details.includes('Uncommitted basis')
             },
             {
-              value: "ON_DEMAND",
+              value: "On demand or overdraft basis",
               text: "On demand or overdraft basis",
-              checked: details.includes('ON_DEMAND')
+              checked: details.includes('On demand or overdraft basis')
             },
             {
-              value: "FACTORING",
+              value: "Factoring on a  with-recourse basis",
               text: "Factoring facility on a with-recourse basis",
-              checked: details.includes('FACTORING')
+              checked: details.includes('Factoring on a  with-recourse basis')
             },
             {
-              value: "OTHER",
+              value: "Other",
               text: "Other",
-              checked: details.includes('OTHER'),
+              checked: details.includes('Other'),
               conditional: {
                 html: other
               },
@@ -130,7 +130,8 @@
                 'data-cy': 'other-checkbox'
               }
             }
-          ]
+          ],
+          errorMessage: errors.fieldErrors.details
         }) }}
 
         <div class="govuk-button-group">

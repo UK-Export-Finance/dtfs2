@@ -4,6 +4,8 @@ import relative from './relativeURL';
 import automaticCover from './pages/automatic-cover';
 import manualInclusion from './pages/manual-inclusion-questionnaire';
 import applicationDetails from './pages/application-details';
+import applicationPreview from './pages/application-preview';
+import submitToUkef from './pages/submit-to-ukef';
 import aboutExporter from './pages/about-exporter';
 import cloneGEFdeal from './pages/clone-deal';
 import nameApplication from './pages/name-application';
@@ -20,6 +22,7 @@ import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;
   let testDealId;
+  let AINDealName;
   before(() => {
     cy.reinsertMocks();
     cy.apiLogin(CREDENTIALS.MAKER).then((token) => token).then((token) => {
@@ -27,6 +30,7 @@ context('Clone GEF (AIN) deal', () => {
     }).then(({ body }) => {
       AINdealId = body.items[2]._id;
       testDealId = body.items[1]._id;
+      AINDealName = body.items[2].bankInternalRefName;
       cy.login(CREDENTIALS.MAKER);
     });
   });
@@ -61,6 +65,13 @@ context('Clone GEF (AIN) deal', () => {
     beforeEach(() => {
       Cypress.Cookies.preserveOnce('connect.sid');
       cy.visit(relative(`/gef/application-details/${AINdealId}`));
+    });
+
+    it('Clone button should contain the right text and aria-label', () => {
+      cloneGEFdeal.cloneGefDealLink().contains('Clone');
+      cloneGEFdeal.cloneGefDealLink().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal(`Clone deal ${AINDealName}`);
+      });
     });
 
     it('should clone an AIN deal', () => {
@@ -125,6 +136,39 @@ context('Clone GEF (AIN) deal', () => {
         aboutExporter.probabilityOfDefaultInput().clear().focused().type('10');
         aboutExporter.isFinancingIncreasingRadioNo().click();
         aboutExporter.saveAndReturnButton().click();
+      });
+    });
+
+    it('should clone submitted to UKEF AIN deal and reset issueDate on facilities table to -', () => {
+      cy.login(CREDENTIALS.CHECKER);
+      cy.visit(relative(`/gef/application-details/${AINdealId}`));
+      applicationPreview.submitButton().click();
+      submitToUkef.submitButton().click();
+
+      cy.login(CREDENTIALS.MAKER);
+
+      cy.get(`[data-cy="deal__link--${AINdealId}"]`).click();
+
+      cloneGEFdeal.cloneGefDealLink().click();
+      cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
+      mandatoryCriteria.trueRadio().click();
+      mandatoryCriteria.form().submit();
+      cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone/name-application`));
+      nameApplication.internalRef().type('Cloned AIN deal');
+      nameApplication.form().submit();
+
+      cy.get('[data-cy="success-message-link"]').click();
+
+      applicationDetails.facilitySummaryListRowAction(0, 0).find('.govuk-link').invoke('attr', 'href').then((href) => {
+        // get id from href for facility
+        const hrefSplit = href.split('/');
+        const facilityId = hrefSplit[5];
+
+        cy.get('[data-cy="dashboard"]').click();
+        // goes to facilities table and makes sure it's issued and no issue date so properly cloned
+        cy.get('[data-cy="dashboard-sub-nav-link-facilities"]').click();
+        cy.get(`[data-cy="facility__bankStage--${facilityId}"]`).contains('Issued');
+        cy.get(`[data-cy="facility__issuedDate--${facilityId}"]`).contains('-');
       });
     });
   });

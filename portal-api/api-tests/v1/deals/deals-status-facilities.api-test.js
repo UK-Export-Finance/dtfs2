@@ -1,13 +1,12 @@
 const moment = require('moment');
 const wipeDB = require('../../wipeDB');
-
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-unissued-facilities');
-
 const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
+const CONSTANTS = require('../../../src/constants');
 
 describe('/v1/deals/:id/status - facilities', () => {
   let aBarclaysMaker;
@@ -16,7 +15,8 @@ describe('/v1/deals/:id/status - facilities', () => {
   const originalFacilities = completedDeal.mockFacilities;
 
   const isUnsubmittedIssuedFacility = (facility) => {
-    if ((facility.facilityStage === 'Unissued' || facility.facilityStage === 'Conditional')
+    if ((facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
+        || facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL)
       && facility.issueFacilityDetailsProvided
       && !facility.issueFacilityDetailsSubmitted
       && facility.status !== 'Submitted') {
@@ -76,57 +76,31 @@ describe('/v1/deals/:id/status - facilities', () => {
         updatedDeal = deal;
       });
 
-      describe('any issued bonds that have details provided, but not yet been submitted', () => {
-        it('should add `Ready for check` status, change facilityStage from `Unissued` to `Issued`, add previousFacilityStage', async () => {
+      describe('any issued bonds orloans that have details provided, but not yet been submitted', () => {
+        it('should add `Ready for check` status', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
 
           const issuedBondsThatShouldBeUpdated = body.deal.bondTransactions.items.filter((b) =>
-            b.facilityStage === 'Unissued'
+            b.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
             && b.issueFacilityDetailsProvided === true
             && !b.issueFacilityDetailsSubmitted);
 
           issuedBondsThatShouldBeUpdated.forEach((bond) => {
             expect(bond.status).toEqual('Ready for check');
-            expect(bond.facilityStage).toEqual('Issued');
-            expect(bond.previousFacilityStage).toEqual('Unissued');
             expect(typeof bond.updatedAt).toEqual('number');
           });
 
           const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
-            l.facilityStage === 'Conditional'
+            l.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
             && l.issueFacilityDetailsProvided === true
             && !l.issueFacilityDetailsSubmitted);
 
           issuedLoansThatShouldBeUpdated.forEach((loan) => {
             expect(loan.status).toEqual('Ready for check');
-            expect(loan.facilityStage).toEqual('Unconditional');
-            expect(loan.previousFacilityStage).toEqual('Conditional');
             expect(typeof loan.updatedAt).toEqual('number');
-          });
-        });
-      });
-
-      describe('any issued loans that have details provided, but not yet been submitted', () => {
-        it('should add `Ready for check` status, change facilityStage from `Conditional` to `Unconditional`, add previousFacilityStage', async () => {
-          expect(updatedDeal.status).toEqual(200);
-          expect(updatedDeal.body).toBeDefined();
-
-          const { body } = await as(aSuperuser).get(`/v1/deals/${createdDeal._id}`);
-
-          const issuedLoansThatShouldBeUpdated = body.deal.loanTransactions.items.filter((l) =>
-            l.facilityStage === 'Conditional'
-            && l.issueFacilityDetailsProvided === true
-            && !l.issueFacilityDetailsSubmitted);
-
-          issuedLoansThatShouldBeUpdated.forEach((loan) => {
-            const theLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
-            expect(theLoan.status).toEqual('Ready for check');
-            expect(theLoan.facilityStage).toEqual('Unconditional');
-            expect(theLoan.previousFacilityStage).toEqual('Conditional');
-            expect(typeof theLoan.updatedAt).toEqual('number');
           });
         });
       });
@@ -357,8 +331,11 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const isIssuedFacilityWithFacilityStageChange = (facility) => {
-        const issuedBond = (facility.facilityStage === 'Issued' && facility.previousFacilityStage === 'Unissued');
-        const issuedLoan = (facility.facilityStage === 'Unconditional' && facility.previousFacilityStage === 'Conditional');
+        const issuedBond = (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
+                            && facility.previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED);
+
+        const issuedLoan = (facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
+                            && facility.previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL);
 
         if ((issuedBond || issuedLoan)
           && facility.issueFacilityDetailsProvided
@@ -445,7 +422,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       };
 
       const issuedBondFields = () => ({
-        facilityStage: 'Issued',
+        facilityStage: CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED,
         hasBeenIssued: true,
         name: '1234',
         ...coverEndDate(),
@@ -454,7 +431,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       const newBonds = [
         {
           ...baseBond,
-          facilityStage: 'Unissued',
+          facilityStage: CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED,
           hasBeenIssued: false,
           ukefGuaranteeInMonths: '24',
         },
@@ -470,7 +447,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
       const conditionalLoan = () => ({
         type: 'Loan',
-        facilityStage: 'Conditional',
+        facilityStage: CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL,
         hasBeenIssued: false,
         ukefGuaranteeInMonths: '12',
         value: '100',
@@ -484,7 +461,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
       const unconditionalLoan = () => ({
         type: 'Loan',
-        facilityStage: 'Unconditional',
+        facilityStage: CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL,
         hasBeenIssued: true,
         value: '100',
         name: '1234',
@@ -534,16 +511,6 @@ describe('/v1/deals/:id/status - facilities', () => {
           expect(updatedDeal.body).toBeDefined();
 
           const { body } = await as(aSuperuser).get(`/v1/deals/${dealId}`);
-
-          expect(body.deal.bondTransactions.items[0]).toEqual({
-            ...newBonds[0],
-            status: 'Completed',
-            updatedAt: expect.any(Number),
-            createdDate: expect.any(Number),
-            requestedCoverStartDate: expect.any(Number),
-            _id: expect.any(String),
-            dealId,
-          });
 
           expect(body.deal.bondTransactions.items[1]).toEqual({
             ...newBonds[1],
@@ -647,8 +614,8 @@ describe('/v1/deals/:id/status - facilities', () => {
       });
 
       const isUnsubmittedFacilityWithIssueFacilityDetailsProvided = (facility) => {
-        const issuedBond = facility.facilityStage === 'Issued';
-        const unconditionalLoan = facility.facilityStage === 'Unconditional';
+        const issuedBond = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED;
+        const unconditionalLoan = facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL;
 
         if ((issuedBond || unconditionalLoan)
           && facility.issueFacilityDetailsProvided
@@ -667,7 +634,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const unconditionalLoansThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
             f.type === 'Loan'
-            && f.facilityStage === 'Unconditional');
+            && f.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL);
 
           // make sure we have some loans to test against
           expect(unconditionalLoansThatShouldBeUpdated.length > 0).toEqual(true);
@@ -693,7 +660,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const issuedBondsThatShouldBeUpdated = completedDeal.mockFacilities.filter((f) =>
             f.type === 'Bond'
-            && f.facilityStage === 'Issued');
+            && f.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED);
 
           // make sure we have some bonds to test against
           expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);

@@ -60,8 +60,7 @@ exports.create = async (req, res) => {
     const createdApplication = await applicationCollection.insertOne(
       new Application(
         newDeal,
-        eligibility.terms,
-        eligibility.version,
+        eligibility,
       ),
     );
 
@@ -167,12 +166,14 @@ exports.update = async (req, res) => {
 exports.updateSupportingInformation = async (req, res) => {
   const collection = await db.getCollection(dealsCollection);
 
-  const { application, field } = req.body;
+  const { application, field, user } = req.body;
   const { id: dealId } = req.params;
+  const { _id: editorId } = user;
 
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(dealId) } },
     {
+      $addToSet: { editedBy: editorId },
       // set the updatedAt property to the current time in EPOCH format
       $set: { updatedAt: Date.now() },
       // insert new documents into the supportingInformation object -> array. i.e. supportingInformation.manualInclusion

@@ -50,17 +50,19 @@ const generateUkefFacilityId = async (facility) => generateId({
 
 const addSubmissionDateToIssuedFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
-
-  facilities.forEach(async (facility) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const facility of facilities) {
     const {
-      _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate
+      _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate, hasBeenIssuedAndAcknowledged
     } = facility;
-
-    if (hasBeenIssued) {
+    /**
+     * checks if hasBeenIssued and if not hasBeenIssuedAndAcknowledged
+     * ensures that once submitted to UKEF, the coverStartDate is not overwritten to the new resubmission date
+     */
+    if (hasBeenIssued && !hasBeenIssuedAndAcknowledged) {
       const update = {
         submittedAsIssuedDate: now(),
       };
-
       /**
        * if canResubmitIssuedFacilities and shouldCoverStartOnSubmission is true
        * sets coverStartDate to issueDate
@@ -74,11 +76,10 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
           update.coverStartDate = (new Date()).setHours(0, 0, 0, 0);
         }
       }
-
+      // eslint-disable-next-line no-await-in-loop
       await updateFacility(_id, update);
     }
-  });
-
+  }
   return facilities;
 };
 

@@ -4,12 +4,14 @@ let users;
 
 const initUsers = async (token) => {
   users = await api.listUsers(token);
+
+  return users;
 };
 
-const getUserByEmail = (email) => {
+const getUserByEmail = (users, email) => {
   if (!email) return {};
 
-  const user = users.find((b) => b.username.toLowerCase() === email.toLowerCase());
+  const user = users.find((u) => u.email?.toLowerCase() === email.toLowerCase());
   if (!user) return {};
 
   return {
@@ -18,6 +20,7 @@ const getUserByEmail = (email) => {
     firstname: user.firstname,
     surname: user.surname,
     email: user.email,
+    roles: user.roles,
     bank: {
       id: user.bank.id,
       name: user.bank.name,

@@ -22,10 +22,14 @@ const companiesHouse = async (req, res) => {
 };
 
 const validateCompaniesHouse = async (req, res) => {
-  const { params, body, query } = req;
+  const {
+    params, body, query, session,
+  } = req;
   const { regNumber } = body;
   const { dealId } = params;
   const { status } = query;
+  const { user } = session;
+  const { _id: editorId } = user;
   const companiesHouseErrors = [];
   let companiesHouseDetails;
 
@@ -71,6 +75,7 @@ const validateCompaniesHouse = async (req, res) => {
         probabilityOfDefault: '',
         isFinanceIncreasing: null,
       },
+      editorId,
     };
 
     await api.updateApplication(dealId, applicationExporterUpdate);

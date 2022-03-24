@@ -52,8 +52,8 @@ router.route('/eligibility-criteria')
 router.route('/eligibility-criteria/latest')
   .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), eligibilityCriteria.getLatest);
 
-router.route('/eligibility-criteria/:id')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), eligibilityCriteria.getById)
+router.route('/eligibility-criteria/:version')
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), eligibilityCriteria.getByVersion)
   // .put(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.update)
   .delete(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.delete);
 

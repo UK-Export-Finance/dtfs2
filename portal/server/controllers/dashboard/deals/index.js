@@ -5,6 +5,7 @@ const { selectedFilters } = require('./selected-filters');
 const {
   submittedFiltersArray,
   submittedFiltersObject,
+  filtersToText,
 } = require('../filters/helpers');
 const { removeSessionFilter } = require('../filters/remove-filter-from-session');
 const {
@@ -126,6 +127,7 @@ exports.allDeals = async (req, res) => {
   return res.render('dashboard/deals.njk', {
     ...templateVariables,
     successMessage: getFlashSuccessMessage(req),
+    selectedFiltersString: filtersToText(templateVariables.selectedFilters),
   });
 };
 

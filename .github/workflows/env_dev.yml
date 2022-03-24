@@ -478,21 +478,17 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name facilities || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name facilities --shard "_id"
 
-
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name banks || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name banks --shard "_id"
-
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria --shard "_id"
-
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria --shard "_id"
 
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name users || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name users --shard "_id"
 
-          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters || \
-          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name idCounters --shard "_id"
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name tfm-users || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name tfm-users --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name tfm-teams || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name tfm-teams --shard "_id"
 
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name tfm-deals || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name tfm-deals --shard "_id"
@@ -500,9 +496,16 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name tfm-facilities || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name tfm-facilities --shard "_id"
 
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name mandatoryCriteria --shard "_id" \
+            --idx '[{"key": {"keys": ["version"]}}, {"key": {"keys": ["_id"]}}]'
+
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-mandatoryCriteriaVersioned || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-mandatoryCriteriaVersioned --shard "_id" \
             --idx '[{"key": {"keys": ["version"]}}, {"key": {"keys": ["_id"]}}]'
+          
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria --shard "_id"
 
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-eligibilityCriteria || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-eligibilityCriteria --shard "_id" \
@@ -514,6 +517,9 @@ jobs:
 
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name file || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name files --shard "_id"
+
+          az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name feedback || \
+          az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name feedback --shard "_id"
     
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private

@@ -17,14 +17,11 @@ const uploadTest = require('./upload-test');
 
 const configureNunjucks = require('./nunjucks-configuration');
 const csrfToken = require('./routes/middleware/csrf-token.middleware');
+const seo = require('./routes/middleware/headers/seo');
 
 const app = express();
 
-// Global middleware set headers
-app.use((req, res, next) => {
-  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, noimageindex, nosnippet');
-  next();
-});
+app.use(seo);
 
 app.use(helmet({ contentSecurityPolicy: false }));
 

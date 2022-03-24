@@ -147,6 +147,7 @@ describe('controllers/dashboard/facilities', () => {
         filters: templateFilters(expectedFiltersObj),
         selectedFilters: selectedFilters(expectedFiltersObj),
         keyword: mockReq.session.dashboardFilters.keyword,
+        isChecker: false,
       };
 
       expect(result).toEqual(expected);
@@ -210,6 +211,7 @@ describe('controllers/dashboard/facilities', () => {
       expect(mockRes.render).toHaveBeenCalledWith('dashboard/facilities.njk', {
         ...expectedVariables,
         successMessage: getFlashSuccessMessage(mockReq),
+        selectedFiltersString: 'Filters selected: none',
       });
     });
   });

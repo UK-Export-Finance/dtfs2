@@ -56,7 +56,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
-    maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
+    maximumLiability: helpers.getMaximumLiability(facility),
     productTypeId: helpers.getProductTypeId(facility),
     capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
     productTypeName: deal.dealSnapshot.dealType,

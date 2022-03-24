@@ -36,12 +36,12 @@
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "@babel/runtime": "7.17.2",
+    "@babel/runtime": "7.17.8",
     "@ministryofjustice/frontend": "1.2.0",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
     "apollo-link-http": "^1.5.17",
-    "axios": "^0.26.0",
+    "axios": "^0.26.1",
     "compression": "^1.7.4",
     "connect-flash": "0.1.1",
     "connect-redis": "^5.0.0",
@@ -70,7 +70,7 @@
     "redis": "^3.1.2"
   },
   "devDependencies": {
-    "@babel/core": "7.17.5",
+    "@babel/core": "7.17.8",
     "@babel/plugin-transform-runtime": "7.17.0",
     "@babel/preset-env": "7.16.11",
     "@types/jest": "^27.4.1",
@@ -79,7 +79,7 @@
     "chance": "^1.1.8",
     "cheerio": "^1.0.0-rc.10",
     "copy-webpack-plugin": "^10.2.0",
-    "eslint": "^8.10.0",
+    "eslint": "^8.11.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "file-loader": "^6.2.0",
@@ -91,7 +91,7 @@
     "sass-loader": "12.6.0",
     "style-loader": "3.3.1",
     "terser-webpack-plugin": "^5.3.1",
-    "webpack": "^5.69.1",
+    "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2",
     "webpack-merge": "^5.8.0"
   }

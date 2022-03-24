@@ -222,7 +222,7 @@ const deleteMandatoryCriteria = async (version, token) => {
   return response.data;
 };
 
-const deleteEligibilityCriteria = async (eligibilityCriteria, token) => {
+const deleteEligibilityCriteria = async (version, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
@@ -230,7 +230,7 @@ const deleteEligibilityCriteria = async (eligibilityCriteria, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${portalApiUrl}/v1/eligibility-criteria/${eligibilityCriteria.id}`,
+    url: `${portalApiUrl}/v1/eligibility-criteria/${version}`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;

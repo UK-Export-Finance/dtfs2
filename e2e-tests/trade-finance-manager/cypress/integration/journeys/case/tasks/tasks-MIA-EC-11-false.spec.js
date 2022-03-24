@@ -4,28 +4,11 @@ import pages from '../../../pages';
 import MOCK_DEAL_MIA_EC_11_FALSE from '../../../../fixtures/deal-MIA-EC-11-false';
 import MOCK_USERS from '../../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
-import {
-  submitTaskInProgress,
-  submitTaskComplete,
-} from './tasks-helpers';
 
 context('Case tasks - MIA deal - EC 11 false', () => {
   let dealId;
   const dealFacilities = [];
   const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
-  const userFullName = `${businessSupportUser.firstName} ${businessSupportUser.lastName}`;
-  let userId;
-  let loggedInUserTeamName;
-  let usersInTeam;
-
-  before(() => {
-    cy.getUser(businessSupportUser.username).then((userObj) => {
-      userId = userObj._id;
-    });
-
-    [loggedInUserTeamName] = businessSupportUser.teams;
-    usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
-  });
 
   beforeEach(() => {
     cy.insertOneDeal(MOCK_DEAL_MIA_EC_11_FALSE, MOCK_MAKER_TFM).then((insertedDeal) => {
@@ -60,7 +43,7 @@ context('Case tasks - MIA deal - EC 11 false', () => {
     const TOTAL_MIA_TASK_GROUPS = 4;
     pages.tasksPage.taskGroupTable().should('have.length', TOTAL_MIA_TASK_GROUPS);
 
-    const TOTAL_MIA_TASKS = 13;
+    const TOTAL_MIA_TASKS = 14;
     pages.tasksPage.tasksTableRows().should('have.length', TOTAL_MIA_TASKS);
 
     const fourthTask = pages.tasksPage.tasks.row(1, 4);

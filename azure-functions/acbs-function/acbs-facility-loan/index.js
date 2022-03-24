@@ -34,7 +34,7 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
     { acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput },
   );
 
-  // 2. Create Guarantee (Facility buyer) - ECWS/BSS ONLY
+  // 2. Create Guarantee (Facility buyer) - EWCS/BSS ONLY
   if (deal.dealSnapshot.dealType !== CONSTANTS.PRODUCT.TYPE.GEF) {
     const acbsFacilityBuyerGuaranteeInput = mappings.facility.facilityGuarantee(
       deal,
