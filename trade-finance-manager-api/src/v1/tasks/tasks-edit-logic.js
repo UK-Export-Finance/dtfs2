@@ -106,7 +106,7 @@ const handleTaskEditFlagAndStatus = (
 ) => {
   const updatedTask = task;
   let sendEmail = false;
-  
+
   /**
    * If a task is completed, it can no longer be edited.
    * Therefore return the existing task as it is

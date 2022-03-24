@@ -45,7 +45,7 @@ describe('tasks controller', () => {
     api.sendEmail.mockClear();
     api.sendEmail = sendEmailApiSpy;
   });
-  
+
   describe('updateTask', () => {
     it('should update a single task in a group', () => {
       const mockGroup1Tasks = [
@@ -258,7 +258,7 @@ describe('tasks controller', () => {
           })),
         };
 
-        const result = await updateAllTasks(
+        await updateAllTasks(
           tasksWithUnderwritingTasksUnlocked,
           tfmTaskUpdate.groupId,
           tfmTaskUpdate,
