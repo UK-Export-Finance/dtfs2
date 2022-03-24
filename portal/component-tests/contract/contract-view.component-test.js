@@ -60,6 +60,7 @@ describe(page, () => {
     it('should render Forms Incomplete text component', () => wrappers.forEach((wrapper) =>
       wrapper.expectElement('[data-cy="forms-incomplete-text"]').toExist()));
 
+    // DTFS2-5570 hidden as not accurate
     // it('should render Totals Table component', () => wrappers.forEach((wrapper) =>
     //   wrapper.expectElement('[data-cy="totals-table"]').toExist()));
   });
