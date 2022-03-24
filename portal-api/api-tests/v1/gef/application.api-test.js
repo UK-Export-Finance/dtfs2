@@ -29,7 +29,7 @@ const baseUrl = '/v1/gef/application';
 const facilitiesUrl = '/v1/gef/facilities';
 const collectionName = 'deals';
 
-const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 1.5);
+const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2);
 
 describe(baseUrl, () => {
   let aMaker;

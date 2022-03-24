@@ -57,27 +57,34 @@ const MockEligibilityCriteria = () => ({
     },
     {
       id: 16,
-      name: 'dueDiligence',
+      name: 'revenueThreshold',
       answer: null,
       text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 17,
-      name: 'facilityLetter',
+      name: 'dueDiligence',
       answer: null,
       text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 18,
-      name: 'facilityBaseCurrency',
+      name: 'facilityLetter',
       answer: null,
       text: 'Test',
       errMsg: 'Mock error message',
     },
     {
       id: 19,
+      name: 'facilityBaseCurrency',
+      answer: null,
+      text: 'Test',
+      errMsg: 'Mock error message',
+    },
+    {
+      id: 20,
       name: 'facilityPaymentCurrency',
       answer: null,
       text: 'Test',
@@ -191,6 +198,7 @@ describe('controllers/automatic-cover', () => {
           17: 'true',
           18: 'true',
           19: 'true',
+          20: 'true',
         };
         await validateAutomaticCover(mockRequest, mockResponse);
       });
@@ -229,6 +237,7 @@ describe('controllers/automatic-cover', () => {
           17: 'true',
           18: 'true',
           19: 'true',
+          20: 'true',
         };
 
         await validateAutomaticCover(mockRequest, mockResponse);

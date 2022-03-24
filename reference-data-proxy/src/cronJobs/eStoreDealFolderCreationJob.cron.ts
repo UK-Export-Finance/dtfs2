@@ -16,7 +16,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
     console.info('Deal Identifier Cron Job: DealIdentifier is set to PENDING');
     const identifier = tfmDealsCollection.findOne({ _id: ObjectId(eStoreData.dealId) });
     if (identifier?.dealSnapshot?.ukefDealId) {
-      dealIdentifier = identifier.dealSnapshot.ukefDealId;
+      dealIdentifier = identifier?.dealSnapshot?.ukefDealId;
     }
   }
 
