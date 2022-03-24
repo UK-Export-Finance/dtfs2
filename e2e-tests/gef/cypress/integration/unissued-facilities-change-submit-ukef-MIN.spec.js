@@ -452,6 +452,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
       applicationPreview.submitButton().should('exist');
       applicationPreview.submitButton().click();
+      applicationSubmission.confirmSubmissionCheckbox().click();
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted to UKEF');
       // check that correct text is displayed under confirmation panel

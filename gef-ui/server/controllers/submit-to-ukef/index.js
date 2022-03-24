@@ -5,15 +5,12 @@ const { issuedFacilityConfirmation } = require('../../utils/facility-helpers');
 const api = require('../../services/api');
 const Application = require('../../models/application');
 
-const MAX_COMMENT_LENGTH = 400;
-
 const submitToUkef = async (req, res) => {
   const { params } = req;
   const { dealId } = params;
   try {
     return res.render('partials/submit-to-ukef.njk', {
       dealId,
-      maxCommentLength: MAX_COMMENT_LENGTH,
     });
   } catch (err) {
     console.error(err);
@@ -25,7 +22,7 @@ const createSubmissionToUkef = async (req, res) => {
   const { params, body } = req;
   const { user, userToken } = req.session;
   const { dealId } = params;
-  const { comment } = body;
+  const { confirmSubmitUkef } = body;
   console.info('GEF Application is being submitted to UKEF--TFM');
   const application = await api.getApplication(dealId);
   // Fetch the application with facilities to check if unissuedToIssued
@@ -33,41 +30,17 @@ const createSubmissionToUkef = async (req, res) => {
 
   const { ukefDecisionAccepted } = application;
 
-  let checker;
   try {
-    checker = await api.getUserDetails(user._id, userToken);
-  } catch (err) {
-    console.error('Unable to get the user details.', { err });
-  }
-
-  try {
-    if (comment.length > MAX_COMMENT_LENGTH) {
+    if (!confirmSubmitUkef) {
       const errors = validationErrorHandler({
-        errRef: 'comment',
-        errMsg: `You have entered more than ${MAX_COMMENT_LENGTH} characters`,
+        errRef: 'confirmSubmitUkef',
+        errMsg: 'Select that you have reviewed the information given and want to proceed with the submission',
       });
 
       return res.render('partials/submit-to-ukef.njk', {
         dealId,
-        maxCommentLength: MAX_COMMENT_LENGTH,
         errors,
-        comment,
       });
-    }
-
-    if (comment.length > 0) {
-      const commentObj = {
-        roles: checker.roles,
-        userName: checker.username,
-        firstname: checker.firstname,
-        surname: checker.surname,
-        email: checker.email,
-        createdAt: Date.now(),
-        comment,
-      };
-      const comments = application.comments || [];
-      comments.push(commentObj);
-      application.comments = comments;
     }
 
     // Always update with the latest checkers details.

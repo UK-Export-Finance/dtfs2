@@ -94,6 +94,7 @@ describe('controllers/submit-to-ukef', () => {
   describe('Ascertain correct deal submission type', () => {
     it('Should stay as an AIN', async () => {
       const submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.AIN;
+      mockRequest.body.confirmSubmitUkef = 'true';
       await createSubmissionToUkef(mockRequest, mockResponse);
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/submit-to-ukef-confirmation.njk', {
@@ -108,6 +109,7 @@ describe('controllers/submit-to-ukef', () => {
 
   describe('create submission to UKEF', () => {
     it('redirects to submission url', async () => {
+      mockRequest.body.confirmSubmitUkef = 'true';
       await createSubmissionToUkef(mockRequest, mockResponse);
       // TODO: DTFS2-4706 - add a route and redirect instead of rendering?
       expect(mockResponse.render)
@@ -120,17 +122,14 @@ describe('controllers/submit-to-ukef', () => {
         });
     });
 
-    it('renders an error when the comment is over the maximum length', async () => {
-      const longComments = 'a'.repeat(401);
-      mockRequest.body.comment = longComments;
+    it('renders an error when confirmation checkbox is not selected', async () => {
+      mockRequest.body.confirmSubmitUkef = null;
 
       await createSubmissionToUkef(mockRequest, mockResponse);
 
       expect(mockResponse.render)
         .toHaveBeenCalledWith('partials/submit-to-ukef.njk', expect.objectContaining({
           dealId: expect.any(String),
-          comment: longComments,
-          maxCommentLength: expect.any(Number),
           errors: expect.any(Object),
         }));
     });
@@ -145,7 +144,6 @@ describe('controllers/submit-to-ukef', () => {
           'partials/submit-to-ukef.njk',
           expect.objectContaining({
             dealId: expect.any(String),
-            maxCommentLength: expect.any(Number),
           }),
         );
     });

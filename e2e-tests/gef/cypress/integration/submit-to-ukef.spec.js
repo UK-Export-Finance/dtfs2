@@ -48,44 +48,42 @@ context('Submit to UKEF', () => {
 
   describe('Submit to UKEF', () => {
     it('displays the page as expected', () => {
-      submitToUkef.mainHeading();
-      submitToUkef.comment();
+      submitToUkef.mainHeading().contains('Confirm your submission');
+      submitToUkef.mainText().contains('you have reviewed the information');
+      submitToUkef.mainText().contains('you want to proceed with the submission');
+
+      submitToUkef.confirmSubmission().contains('I understand and agree');
+      submitToUkef.confirmSubmissionCheckbox();
+      submitToUkef.confirmSubmissionCheckbox().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal('Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information and you want to proceed with the submission, I understand and agree');
+      });
       submitToUkef.submitButton();
       submitToUkef.cancelLink();
     });
 
-    it('display an error when the comment is greater than 400 characters', () => {
-      const longComment = 'a'.repeat(401);
-
-      submitToUkef.comment().type(longComment);
+    it('display an error when the confirmation checkbox is not checked', () => {
       submitToUkef.submitButton().click();
-      submitToUkef.errorSummary();
+      submitToUkef.errorSummary().contains('Select that you have reviewed the information given and want to proceed with the submission');
+      cy.get('[id="confirmSubmitUkef-error"]').contains('Select that you have reviewed the information given and want to proceed with the submission');
     });
 
     it('takes checker back to application review page when cancelled', () => {
-      submitToUkef.comment().type('Some comments here ....');
       submitToUkef.cancelLink().click();
       cy.location('pathname').should('eq', `/gef/application-details/${dealId}`);
     });
 
     it('takes checker to dashboard from the confirmation page', () => {
+      submitToUkef.confirmSubmissionCheckbox().click();
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.dashboardLink().click();
       cy.location('pathname').should('contain', 'dashboard');
     });
 
-    it('submits without comments and displays the confirmation page', () => {
+    it('submits once checkbox selected and displays the confirmation page', () => {
+      submitToUkef.confirmSubmissionCheckbox().click();
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)} submitted to UKEF`);
       submitToUkefConfirmation.dashboardLink();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
-    });
-
-    it('submits with comments', () => {
-      submitToUkef.comment().type('Test comment');
-      submitToUkef.submitButton().click();
-      submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)} submitted to UKEF`);
-      submitToUkefConfirmation.confirmationText().contains('We\'ll send you an email shortly to confirm we\'ve accepted your notice.');
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });
 
@@ -97,9 +95,6 @@ context('Submit to UKEF', () => {
         statusBanner.bannerDateSubmitted().contains(todayFormatted);
         statusBanner.bannerUkefDealId();
         statusBanner.bannerDateCreated().contains(todayFormatted);
-
-        applicationDetails.comments().contains(`Comments from ${CREDENTIALS.CHECKER.firstname} ${CREDENTIALS.CHECKER.surname}`);
-        applicationDetails.comments().contains('Test comment');
       });
     });
   });
