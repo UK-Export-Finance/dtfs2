@@ -109,11 +109,9 @@ openRouter.route('/feedback').post(feedbackController.create);
 openRouter.route('/users').post(users.createTfmUser);
 
 openRouter.route('/users/:_id')
-  .get(users.findTfmUserByUsername)
+  .get(users.findTfmUserById)
   .put(users.updateTfmUserById)
-  .delete(users.removeTfmUser);
-
-openRouter.route('/users/:_id/disable').post(users.disableTfmUser);
+  .delete(users.removeTfmUserById);
 
 openRouter.route('/login').post(users.login);
 

@@ -1,9 +1,7 @@
 const utils = require('../../../utils/crypto.util');
+const { userNotFound, incorrectPassword, userIsDisabled } = require('../../../constants/login-results.constant');
 const {
-  userNotFound, incorrectPassword, userIsDisabled,
-} = require('../../../constants/login-results.constant');
-const {
-  create, update, removeTfmUserById, findOne, disable, findByUsername,
+  create, update, removeTfmUserById, findOne,
 } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -59,7 +57,7 @@ module.exports.createTfmUser = (req, res, next) => {
   });
 };
 
-module.exports.findTfmUserByUsername = (req, res, next) => {
+module.exports.findTfmUserById = (req, res, next) => {
   findOne(req.params._id, (err, user) => {
     if (err) {
       next(err);
@@ -100,17 +98,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
   });
 };
 
-module.exports.disableTfmUser = (req, res, next) => {
-  disable(req.params._id, (err, status) => {
-    if (err) {
-      next(err);
-    } else {
-      res.status(200).json(status);
-    }
-  });
-};
-
-module.exports.removeTfmUser = (req, res, next) => {
+module.exports.removeTfmUserById = (req, res, next) => {
   removeTfmUserById(req.params._id, (err, status) => {
     if (err) {
       next(err);
