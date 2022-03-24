@@ -16,7 +16,7 @@ const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 const MOCK_MIA_TASKS_POPULATED = require('../__mocks__/mock-MIA-tasks-populated');
 const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
 const MOCK_TEAMS = require('../__mocks__/mock-teams');
-
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const CONSTANTS = require('../../constants');
 
 const taskUpdateBase = {
@@ -34,7 +34,18 @@ const createTaskUpdateObj = (groupId, taskId) => ({
   groupId,
 });
 
+const mockUrlOrigin = 'http://test.com';
+
+const sendEmailApiSpy = jest.fn(() => Promise.resolve(
+  MOCK_NOTIFY_EMAIL_RESPONSE,
+));
+
 describe('tasks controller', () => {
+  beforeEach(() => {
+    api.sendEmail.mockClear();
+    api.sendEmail = sendEmailApiSpy;
+  });
+  
   describe('updateTask', () => {
     it('should update a single task in a group', () => {
       const mockGroup1Tasks = [
@@ -126,7 +137,6 @@ describe('tasks controller', () => {
     });
 
     describe('when adverse history task is complete', () => {
-      const mockUrlOrigin = 'http://test.com';
       const mockTasks = MOCK_MIA_TASKS_POPULATED;
 
       const tasksWithAdverseHistoryTaskComplete = mockTasks;
@@ -220,6 +230,43 @@ describe('tasks controller', () => {
 
         const expectedThirdCall = generatedExpectedCall(thirdUnderwritingTask);
         expect(thirdCall).toEqual(expectedThirdCall);
+      });
+    });
+
+    describe('when all Underwriting group tasks are already unlocked', () => {
+      it('should not send an email for any Underwriting group tasks (emails are sent when unlocked)', async () => {
+        const tfmTaskUpdate = createTaskUpdateObj(3, 1);
+
+        const mockTasks = MOCK_MIA_TASKS_POPULATED;
+        const underwritingTasks = mockTasks[2];
+
+        const tasksWithUnderwritingTasksUnlocked = [
+          {
+            groupId: 1,
+            groupTasks: [],
+          },
+          underwritingTasks,
+        ];
+
+        // mark all tasks in underwriting group as To do and emailSent
+        tasksWithUnderwritingTasksUnlocked[1] = {
+          ...underwritingTasks[1],
+          groupTasks: underwritingTasks.groupTasks.map((task) => ({
+            ...task,
+            status: 'To do',
+            emailSent: true,
+          })),
+        };
+
+        const result = await updateAllTasks(
+          tasksWithUnderwritingTasksUnlocked,
+          tfmTaskUpdate.groupId,
+          tfmTaskUpdate,
+          MOCK_DEAL_MIA_SUBMITTED,
+          mockUrlOrigin,
+        );
+
+        expect(api.sendEmail).not.toHaveBeenCalled();
       });
     });
   });

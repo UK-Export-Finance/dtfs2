@@ -28,7 +28,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
     const previousGroupId = group.id - 1;
     const previousGroup = getGroupById(allTaskGroups, previousGroupId);
 
-    const previousGroupHasAllTasksCompleted = groupHasAllTasksCompleted(previousGroup.groupTasks);
+    const previousGroupHasAllTasksCompleted = groupHasAllTasksCompleted(previousGroup?.groupTasks);
 
     if (previousGroupHasAllTasksCompleted) {
       return true;
@@ -44,7 +44,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
 
   const previousTask = getTaskInGroupById(group.groupTasks, previousTaskId);
 
-  if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+  if (previousTask?.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
     return true;
   }
 
@@ -106,7 +106,7 @@ const handleTaskEditFlagAndStatus = (
 ) => {
   const updatedTask = task;
   let sendEmail = false;
-
+  
   /**
    * If a task is completed, it can no longer be edited.
    * Therefore return the existing task as it is
@@ -152,6 +152,7 @@ const handleTaskEditFlagAndStatus = (
       if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
         updatedTask.canEdit = false;
       }
+
       return { updatedTask };
     }
 

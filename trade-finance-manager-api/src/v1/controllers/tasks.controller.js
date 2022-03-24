@@ -100,7 +100,8 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
             && task.groupId === taskUpdate.groupId);
 
           // add the task to list of emails to be sent
-          if (!isTaskThatIsBeingUpdated) {
+          const shouldSendEmail = (!isTaskThatIsBeingUpdated && !task.emailSent);
+          if (shouldSendEmail) {
             taskEmailsToSend.push(task);
           }
 
