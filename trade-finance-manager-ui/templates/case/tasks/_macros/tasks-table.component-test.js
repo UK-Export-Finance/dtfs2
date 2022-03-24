@@ -92,7 +92,7 @@ describe(component, () => {
           taskWithCanEdit.title,
         );
 
-        wrapper.expectElement(`[data-cy="task-table-row-${taskWithCanEdit.id}-title"]`).notToExist();
+        wrapper.expectElement(`[data-cy="task-table-row-group-${taskWithCanEdit.groupId}-task-${taskWithCanEdit.id}-title"]`).notToExist();
       });
     });
 
@@ -104,7 +104,7 @@ describe(component, () => {
 
         wrapper.expectElement(linkSelector).notToExist();
 
-        wrapper.expectText(`[data-cy="task-table-row-${taskWithoutCanEdit.id}-title"]`).toRead(taskWithoutCanEdit.title);
+        wrapper.expectText(`[data-cy="task-table-row-group-${taskWithoutCanEdit.groupId}-task-${taskWithoutCanEdit.id}-title"]`).toRead(taskWithoutCanEdit.title);
       });
     });
 

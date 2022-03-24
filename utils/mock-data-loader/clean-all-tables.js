@@ -69,7 +69,7 @@ const cleanEligibilityCriteria = async (token) => {
   console.info('cleaning BSS eligibility-criteria');
 
   for (const eligibilityCriteria of await api.listEligibilityCriteria(token)) {
-    await api.deleteEligibilityCriteria(eligibilityCriteria, token);
+    await api.deleteEligibilityCriteria(eligibilityCriteria.version, token);
   }
 };
 

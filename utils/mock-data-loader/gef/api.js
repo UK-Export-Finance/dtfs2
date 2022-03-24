@@ -162,6 +162,19 @@ const listEligibilityCriteria = async (token) => {
   return response.data.items;
 };
 
+const latestEligibilityCriteria = async (token) => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${portalApi}/v1/gef/eligibility-criteria/latest`,
+  }).catch((err) => { console.error(`err: ${err}`); });
+  return response.data;
+};
+
 // Mandatory Criteria
 
 const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
@@ -245,6 +258,7 @@ module.exports = {
   createEligibilityCriteria,
   deleteEligibilityCriteria,
   listEligibilityCriteria,
+  latestEligibilityCriteria,
   createMandatoryCriteriaVersioned,
   deleteMandatoryCriteriaVersioned,
   listMandatoryCriteriaVersioned,
