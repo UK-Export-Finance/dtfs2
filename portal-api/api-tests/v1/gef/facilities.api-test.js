@@ -538,7 +538,7 @@ describe(baseUrl, () => {
 
   describe('calculateGuaranteeFee', () => {
     describe('when interestPercentage is present in the requested update', () => {
-      it('should calculate using the the provided interestPercentage', () => {
+      it('should calculate using the the provided interestPercentage, limited to 3 decimal points', () => {
         const update = {
           interestPercentage: '25',
         };
@@ -546,7 +546,9 @@ describe(baseUrl, () => {
 
         const result = calculateGuaranteeFee(update, existingFacility);
 
-        const expected = (0.9 * Number(update.interestPercentage));
+        const calculation = (0.9 * Number(update.interestPercentage));
+        const expected = Number(calculation.toFixed(3));
+
         expect(result).toEqual(expected);
       });
     });
@@ -560,7 +562,9 @@ describe(baseUrl, () => {
 
         const result = calculateGuaranteeFee(update, existingFacility);
 
-        const expected = (0.9 * existingFacility.interestPercentage);
+        const calculation = (0.9 * Number(existingFacility.interestPercentage));
+        const expected = Number(calculation.toFixed(3));
+
         expect(result).toEqual(expected);
       });
     });
