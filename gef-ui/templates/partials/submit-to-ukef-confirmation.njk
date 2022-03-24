@@ -21,6 +21,8 @@
       {{ govukPanel({
         attributes: {
           'data-cy': 'ukef-submission-confirmation'
+          'aria-label': titleComponentData.submissionType + titleComponentData.text,
+          'tabIndex': 0
         },
         titleHtml: submitConfirmationTitle.render(titleComponentData),
         classes: "govuk-!-margin-bottom-7"
