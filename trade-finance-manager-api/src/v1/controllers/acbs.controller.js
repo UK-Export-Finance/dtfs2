@@ -82,25 +82,27 @@ const checkAzureAcbsFunction = async () => {
     const taskList = await Promise.all(tasks);
 
     taskList.forEach(async (task) => {
+      if (task.runtimeStatus) {
       // Update
-      if (task.runtimeStatus !== 'Running') {
-        await collection.findOneAndUpdate(
-          { instanceId: task.instanceId },
-          $.flatten({
-            status: task.runtimeStatus,
-            acbsTaskResult: task,
-          }),
-        );
-      }
-      // ADD `acbs` object to tfm-deals and tfm-facilities
-      if (task.runtimeStatus === 'Completed') {
-        switch (task.name) {
-          case 'acbs-issue-facility':
-            await updateIssuedFacilityAcbs(task.output);
-            break;
+        if (task.runtimeStatus !== 'Running') {
+          await collection.findOneAndUpdate(
+            { instanceId: task.instanceId },
+            $.flatten({
+              status: task.runtimeStatus,
+              acbsTaskResult: task,
+            }),
+          );
+        }
+        // ADD `acbs` object to tfm-deals and tfm-facilities
+        if (task.runtimeStatus === 'Completed') {
+          switch (task.name) {
+            case 'acbs-issue-facility':
+              await updateIssuedFacilityAcbs(task.output);
+              break;
 
-          default:
-            await updateDealAcbs(task.output);
+            default:
+              await updateDealAcbs(task.output);
+          }
         }
       }
     });
