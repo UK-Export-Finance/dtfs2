@@ -11,7 +11,7 @@ const getDescription = (facility, dealType) => {
     return `MGA GEF ${exposurePeriod} Months`;
   }
 
-  switch (facility.facilitySnapshot.type) {
+  switch (facility.type || facility.facilitySnapshot.type) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
       return `BSS ${exposurePeriod} Months`;
 

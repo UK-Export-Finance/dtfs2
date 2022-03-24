@@ -49,6 +49,14 @@ context('Bond Details', () => {
     });
   });
 
+  it('should display the correct title for bond details', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+
+    pages.contract.addBondButton().click();
+
+    pages.bondDetails.title().contains('Bond');
+  });
+
   it('form submit of all required fields should display a `completed` status tag only for `Bond Details` in task list header', () => {
     cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
@@ -133,7 +141,7 @@ context('Bond Details', () => {
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
         row.uniqueNumberLink().invoke('text').then((text) => {
-          expect(text.trim()).equal('Not entered');
+          expect(text.trim()).equal('Bond’s reference number not entered');
         });
 
         row.facilityStage().invoke('text').then((text) => {

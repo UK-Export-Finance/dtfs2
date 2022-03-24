@@ -15,7 +15,11 @@ const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 
 const app = express();
-app.use(helmet({ contentSecurityPolicy: false }));
+
+const seo = require('./middleware/headers/seo');
+
+app.use(seo);
+app.use(helmet());
 
 dotenv.config();
 

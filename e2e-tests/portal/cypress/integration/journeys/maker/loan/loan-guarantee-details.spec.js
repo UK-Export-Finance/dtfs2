@@ -43,6 +43,14 @@ context('Loan Guarantee Details', () => {
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
+  describe('Loan Guarantee title', () => {
+    it('should contain the correct title', () => {
+      goToPage(deal);
+
+      pages.loanGuaranteeDetails.title().contains('Loan');
+    });
+  });
+
   describe('when submitting an empty form', () => {
     it('should progress to `Loan Financial Details` page and after proceeding to `Loan Preview` page, should render Facility stage validation error in `Loan Guarantee Details` page', () => {
       goToPage(deal);
@@ -108,7 +116,7 @@ context('Loan Guarantee Details', () => {
   });
 
   describe('when a maker submits Facility stage as `Unconditional`', () => {
-    it('should render additional form fields and validation errors when returning to the page and render a `Not entered` link in the Deal page when (optional) Bank Reference Number is not provided', () => {
+    it('should render additional form fields and validation errors when returning to the page and render a `Loan’s reference number not entered` link in the Deal page when (optional) Bank Reference Number is not provided', () => {
       goToPage(deal);
 
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
@@ -137,7 +145,7 @@ context('Loan Guarantee Details', () => {
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
         row.nameLink().invoke('text').then((text) => {
-          expect(text.trim()).equal('Not entered');
+          expect(text.trim()).equal('Loan’s reference number not entered');
           // assert that clicking the `bank reference number` link progesses to the guarantee details page
           row.nameLink().click();
           cy.url().should('include', '/contract');

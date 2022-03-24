@@ -4,8 +4,14 @@ on:
   pull_request:
     branches: [ main ]
     paths:
+    - 'portal/**'
+    - 'gef-ui/**'
+    - 'trade-finance-manager-ui/**'
     - 'portal-api/**'
-    - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
+    - 'trade-finance-manager-api/**'
+    - 'reference-data-proxy/**'
+    - 'dtfs-central-api/**'
+    - 'e2e-tests/**'
     - 'utils/mock-data-loader/**'
 
 env:
@@ -102,7 +108,7 @@ jobs:
         add_git_labels: true
 
   test:
-    name: "Run PR tests"
+    name: "Run Portal API tests"
     needs: build
     environment:
       name: APITEST
@@ -178,8 +184,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        # run 1 copy of the job
-        machines: [ 1 ]
+        machines: [ 1, 2, 3, 4 ]
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
       AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
@@ -273,7 +278,7 @@ jobs:
         cd $GITHUB_WORKSPACE
         npm install --legacy-peer-deps
         cd e2e-tests/submit-to-trade-finance-manager
-        npx cypress run --config video=false --record --parallel --browser=chrome
+        npx cypress run --config video=false --record --browser=chrome
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main

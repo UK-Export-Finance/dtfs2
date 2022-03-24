@@ -51,6 +51,14 @@ context('Provided Facility Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
     });
 
+    it('clicking continue without selecting any options shows error messages', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
+      providedFacility.continueButton().click();
+
+      providedFacility.errorSummary().contains('You must select at least one option');
+      providedFacility.mainHeading().contains('You must select at least one option');
+    });
+
     it('clicking on `Other` checkbox shows `Enter details` textarea field', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
       providedFacility.otherCheckbox().click();

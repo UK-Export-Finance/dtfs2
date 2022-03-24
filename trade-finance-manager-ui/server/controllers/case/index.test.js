@@ -535,7 +535,7 @@ describe('controllers - case', () => {
           assignedTo: {
             userId: req.body.assignedTo,
           },
-          updatedBy: req.session.user._id, // eslint-disable-line no-underscore-dangle
+          updatedBy: req.session.user._id,
           urlOrigin: req.headers.origin,
         };
 
@@ -544,7 +544,6 @@ describe('controllers - case', () => {
           expectedUpdateObj,
         );
 
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/tasks`);
       });
     });
@@ -721,7 +720,6 @@ describe('controllers - case', () => {
         };
 
         await caseController.postTfmFacility(req, res);
-        // eslint-disable-next-line no-underscore-dangle
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
       });
     });

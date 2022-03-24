@@ -30,15 +30,19 @@ const facilities = async (req, res) => {
       status,
     });
   } catch (err) {
-    console.error(err);
+    console.error('Facilities error', { err });
     return res.render('partials/problem-with-service.njk');
   }
 };
 
 const createFacility = async (req, res) => {
-  const { body, params, query } = req;
+  const {
+    body, params, query, session,
+  } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
+  const { user } = session;
+  const { _id: editorId } = user;
   let { facilityType } = query;
   const hasBeenIssuedErrors = [];
   let facility;
@@ -54,6 +58,7 @@ const createFacility = async (req, res) => {
       });
 
       return res.render('partials/facilities.njk', {
+        facilityType: facilityTypeString,
         errors: validationErrorHandler(hasBeenIssuedErrors),
         dealId,
         status,
@@ -72,13 +77,19 @@ const createFacility = async (req, res) => {
       });
     }
 
+    // updates application with editorId
+    const applicationUpdate = {
+      editorId,
+    };
+    await api.updateApplication(dealId, applicationUpdate);
+
     if (status && status === 'change') {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    // eslint-disable-next-line no-underscore-dangle
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facility.details._id}/about-facility`);
   } catch (err) {
+    console.error('Error creating a facility', { err });
     return res.render('partials/problem-with-service.njk');
   }
 };

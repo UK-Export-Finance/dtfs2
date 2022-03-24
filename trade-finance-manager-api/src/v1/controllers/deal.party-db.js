@@ -53,7 +53,6 @@ const addPartyUrns = async (deal) => {
     },
   };
 
-  // eslint-disable-next-line no-underscore-dangle
   const updatedDeal = await api.updateDeal(deal._id, dealUpdate);
 
   return {

@@ -9,6 +9,7 @@ const {
 } = require('./swagger');
 const dealSubmit = require('./controllers/deal.submit.controller');
 const userController = require('./controllers/user.controller');
+const feedbackController = require('./controllers/feedback-controller');
 
 openRouter.route('/api-docs')
   .get(
@@ -118,6 +119,42 @@ openRouter.route('/deals/submitDealAfterUkefIds')
 openRouter.route('/users/:username')
   .get(
     userController.findUserGET,
+  );
+
+/**
+ * @openapi
+ * /feedback:
+ *   post:
+ *     summary: Post feedback to tfm-feedback collection
+ *     tags: [Users]
+ *     description: Post feedback to tfm-feedback collection with/without being logged in
+ *     parameters:
+ *       - in: feedback object
+ *         schema:
+ *           type: Object
+ *         required: true
+ *         description: parameters of the feedback form
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               role: 'user'
+ *               team: 'RISK_MANAGER'
+ *               whyUsingService: 'test'
+ *               easyToUse: 'Very good'
+ *               satisfied: 'very satisifed'
+ *               howWeCanImprove: ''
+ *               emailAddress: ''
+ *               created: 2022-03-07T14:31:38.729+00:00
+
+ *       400:
+ *         description: validation errors
+ */
+openRouter.route('/feedback')
+  .post(
+    feedbackController.create,
   );
 
 module.exports = openRouter;

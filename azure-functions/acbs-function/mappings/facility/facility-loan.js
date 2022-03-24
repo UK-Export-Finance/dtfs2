@@ -30,27 +30,28 @@ const facilityLoan = (deal, facility, acbsData) => {
   const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
   const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
     ? facility.tfm.facilityGuaranteeDates
-    : '';
+    : facility.update;
+  const ukefExposure = helpers.getMaximumLiability(facility);
 
   let loanRecord = {
     portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     postingDate: date.now(),
     facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     borrowerPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
-    productTypeId: helpers.getProductTypeId(facility, deal.dealSnapshot.dealType),
+    productTypeId: helpers.getProductTypeId(facility),
     productTypeGroup: helpers.getProductTypeGroup(facility, deal.dealSnapshot.dealType),
     currency: facility.facilitySnapshot.currency.id,
-    amount: facility.tfm.ukefExposure,
+    amount: helpers.getLoanMaximumLiability(ukefExposure, facility, deal.dealSnapshot.dealType),
     issueDate,
     expiryDate: guaranteeExpiryDate,
-    spreadRate: facility.facilitySnapshot.guaranteeFee || facility.facilitySnapshot.guaranteeFeePayableByBank,
+    spreadRate: facility.facilitySnapshot.guaranteeFee || Number(facility.facilitySnapshot.guaranteeFeePayableByBank),
     nextDueDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
     yearBasis: helpers.getYearBasis(facility),
     loanBillingFrequencyType: helpers.getFeeType(facility),
   };
 
   // If facility is not in GBP, then set following fields
-  if (facility.facilitySnapshot.conversionRate) {
+  if (facility.tfm.exchangeRate) {
     loanRecord = {
       ...loanRecord,
       dealCustomerUsageRate: helpers.getCurrencyExchangeRate(facility),
@@ -59,11 +60,10 @@ const facilityLoan = (deal, facility, acbsData) => {
   }
 
   // BSS/EWCS deals only fields
-  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS
-    || deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.EWCS) {
+  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS_EWCS) {
     loanRecord = {
       ...loanRecord,
-      spreadRateCTL: helpers.getInterestPercentage(facility),
+      spreadRateCTL: helpers.getInterestOrFeeRate(facility),
       indexRateChangeFrequency: helpers.getFeeFrequency(facility),
     };
   }

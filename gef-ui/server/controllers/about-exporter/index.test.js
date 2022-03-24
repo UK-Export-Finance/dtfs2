@@ -18,6 +18,11 @@ const MockRequest = () => {
   const req = {};
   req.params = {};
   req.body = {};
+  req.session = {
+    user: {
+      _id: '12345',
+    },
+  };
   req.query = {
     status: 'test',
   };
@@ -322,7 +327,9 @@ describe('controllers/about-exporter', () => {
           ...mockApplication.exporter,
           ...mockRequest.body,
           isFinanceIncreasing: true,
+          probabilityOfDefault: Number(mockRequest.body.probabilityOfDefault),
         },
+        editorId: '12345',
       };
 
       expect(updateApplicationSpy).toHaveBeenCalledWith(mockApplication._id, expectedUpdateObj);

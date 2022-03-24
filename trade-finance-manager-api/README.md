@@ -115,9 +115,7 @@ When TFM creates a snapshot (and adds to the TFM collections) for it's own consu
     ...
   },
   tfm: {
-    dateReceived: '12-12-2021',
-    tasks: [],
-    history: [],
+    dateReceived: '20-12-2021',
     ...
   },
 }
@@ -214,3 +212,7 @@ We map the data when:
     - See GraphQL reducer mappings: `/src/graphql/reducers`
 
 When BSS is redesigned, it should share a generic data structure with GEF. TFM should then be refactored to query and render data based on the generic data structure, instead of BSS. The submission mapping is a step towards this.
+
+# DTFS
+
+

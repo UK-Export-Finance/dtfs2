@@ -41,11 +41,21 @@ context('Check GEF GOVUK header displays correctly', () => {
     });
 
     it('displays the navigation correctly', () => {
-      pageBanner.userName().contains(CREDENTIALS.MAKER.username);
+      pageBanner.userName().contains(`${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
       pageBanner.profile().contains('Profile');
       pageBanner.logout().contains('Sign out');
       pageBanner.logout().invoke('attr', 'href').then((href) => {
         expect(href).to.equal('/logout');
+      });
+    });
+
+    it('displays the beta banner correctly', () => {
+      pageBanner.userName().contains(`${CREDENTIALS.MAKER.firstname} ${CREDENTIALS.MAKER.surname}`);
+      pageBanner.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
+      pageBanner.betaBanner().contains('beta');
+      pageBanner.betaBannerHref().contains('feedback');
+      pageBanner.betaBannerHref().invoke('attr', 'href').then((href) => {
+        expect(href).to.equal('/feedback');
       });
     });
   });

@@ -27,7 +27,7 @@ const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
     limitKey: acbsData.dealAcbsData.parties.exporter.partyIdentifier,
     guaranteeExpiryDate,
     effectiveDate,
-    maximumLiability: helpers.getMaximumLiability(facility.facilitySnapshot),
+    maximumLiability: helpers.getMaximumLiability(facility),
     guaranteeTypeCode,
   };
 };

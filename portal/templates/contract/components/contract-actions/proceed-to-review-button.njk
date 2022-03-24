@@ -39,7 +39,7 @@
 
     {% elseif ["Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.status) %}
 
-      {% if params.allRequestedCoverStartDatesConfirmed %}
+      {% if params.dealHasIssuedFacilitiesToSubmit or params.allRequestedCoverStartDatesConfirmed %}
         {{ govukButton({
           "disabled": false,
           "text": "Proceed to review",

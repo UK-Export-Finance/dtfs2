@@ -139,7 +139,7 @@ const findOneDeal = async (dealId) => {
     });
     return response.data.deal;
   } catch ({ response }) {
-    console.error(`TFM API - error finding BSS deal ${dealId}`);
+    console.error(`TFM API - error finding deal ${dealId}`);
 
     return false;
   }
@@ -246,6 +246,23 @@ const updateFacility = async (facilityId, facilityUpdate) => {
       data: {
         facilityUpdate,
       },
+    });
+
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+const updateGefFacility = async (facilityId, facilityUpdate) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${centralApiUrl}/v1/portal/gef/facilities/${facilityId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: facilityUpdate,
     });
 
     return response.data;
@@ -500,13 +517,11 @@ const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url
     return response.data;
   } catch (err) {
     console.error(`Unable to getFunctionsAPI for ${modifiedUrl}`, { err });
-    return err?.response?.data
-      ? err.response.data
-      : err;
+    return err;
   }
 };
 
-const createEstoreFolders = async (eStoreFolderInfo) => {
+const createEstoreFolders = async (data) => {
   try {
     const response = await axios({
       method: 'post',
@@ -514,12 +529,11 @@ const createEstoreFolders = async (eStoreFolderInfo) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {
-        eStoreFolderInfo,
-      },
+      data,
     });
     return response.data;
   } catch (err) {
+    console.error({ err });
     return {};
   }
 };
@@ -676,6 +690,7 @@ module.exports = {
   findOneFacility,
   findFacilitesByDealId,
   updateFacility,
+  updateGefFacility,
   queryDeals,
   getPartyDbInfo,
   findUser,

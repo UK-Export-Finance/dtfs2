@@ -1,14 +1,16 @@
 const CONTENT_STRINGS = require('../content-strings');
 
-const mapEligibilityCriteriaContentStrings = (criteria, dealType) => {
+const mapEligibilityCriteriaContentStrings = (eligibility, dealType) => {
   // NOTE: BSS and GEF have different content strings.
-  const mappedCriteria = criteria;
+  const mappedCriteria = eligibility.criteria;
   const contentStrings = CONTENT_STRINGS.DEAL.ELIGIBILITY_CRITERIA[dealType];
+
+  const versionContentStrings = contentStrings[eligibility.version];
 
   return mappedCriteria.map((criterion) => {
     const mappedCriterion = criterion;
 
-    const contentObj = contentStrings[String(criterion.id)];
+    const contentObj = versionContentStrings[String(criterion.id)];
 
     mappedCriterion.text = contentObj.text;
     mappedCriterion.textList = contentObj.textList;

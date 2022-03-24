@@ -22,6 +22,11 @@ const cleanDurableFunctions = async (token) => {
   await api.getDurableFunctions(token);
 };
 
+const deleteCronJobs = async (token) => {
+  console.info('cleaning cron-job-logs');
+  await api.deleteCronJobs(token);
+};
+
 const cleanAllTables = async () => {
   const token = await tokenFor({
     username: 'admin',
@@ -33,6 +38,7 @@ const cleanAllTables = async () => {
   await cleanEligibilityCriteria(token);
   await cleanMandatoryCriteriaVersioned(token);
   await cleanDurableFunctions(token);
+  await deleteCronJobs(token);
 };
 
 module.exports = cleanAllTables;

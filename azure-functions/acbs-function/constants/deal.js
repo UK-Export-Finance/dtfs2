@@ -5,11 +5,12 @@ const SUBMISSION_TYPE = {
 };
 
 const SME_TYPE = {
-  MICRO: 'Micro',
-  SMALL: 'Small',
-  MEDIUM: 'Medium',
-  NON_SME: 'Non-SME',
-  NOT_KNOWN: 'Not known',
+  MICRO: 'micro',
+  SMALL: 'small',
+  MEDIUM: 'medium',
+  NON_SME: 'non-sme',
+  NOT_SME: 'not sme',
+  NOT_KNOWN: 'not known',
 };
 
 const EXPIRATION_DATE = {

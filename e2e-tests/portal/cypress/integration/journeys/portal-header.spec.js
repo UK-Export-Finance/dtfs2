@@ -35,11 +35,20 @@ context('Portal GOVUK header displays correctly', () => {
     });
 
     it('displays the navigation correctly', () => {
-      page.userNameLink().contains(BANK1_MAKER1.username);
+      page.userNameLink().contains(`${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       page.profileLink().contains('Profile');
       page.logoutLink().contains('Sign out');
       page.logoutLink().invoke('attr', 'href').then((href) => {
         expect(href).to.equal('/logout');
+      });
+    });
+
+    it('displays the beta banner correctly', () => {
+      page.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
+      page.betaBanner().contains('beta');
+      page.betaBannerHref().contains('feedback');
+      page.betaBannerHref().invoke('attr', 'href').then((href) => {
+        expect(href).to.equal('/feedback');
       });
     });
   });
@@ -71,6 +80,15 @@ context('Portal GOVUK header displays correctly', () => {
       page.userNameLink().should('not.exist');
       page.profileLink().should('not.exist');
       page.logoutLink().should('not.exist');
+    });
+
+    it('displays the beta banner correctly', () => {
+      page.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
+      page.betaBanner().contains('beta');
+      page.betaBannerHref().contains('feedback');
+      page.betaBannerHref().invoke('attr', 'href').then((href) => {
+        expect(href).to.equal('/feedback');
+      });
     });
   });
 });

@@ -1,28 +1,35 @@
 const express = require('express');
 const api = require('../api');
-const {
-  requestParams,
-  generateErrorSummary,
-} = require('../helpers');
+const { generateErrorSummary } = require('../helpers');
 
 const router = express.Router();
 
 const errorHref = (id) => `#${id}`;
 
 router.get('/feedback', (req, res) =>
-  res.render('feedback/feedback-form.njk', {
-    user: req.session.user,
-  }));
+  res.render('feedback/feedback-form.njk'));
 
 router.post('/feedback', async (req, res) => {
-  const { userToken } = requestParams(req);
+  const userDetails = {
+    username: null,
+    email: null,
+  };
 
   try {
-    const response = await api.createFeedback(req.body, userToken);
+    // generates the user object from session if logged in, else null
+    if (req.session.user) {
+      const { username, email } = req.session.user;
+
+      userDetails.username = username;
+      userDetails.email = email;
+    }
+
+    const feedbackBody = req.body;
+    feedbackBody.submittedBy = userDetails;
+
+    const response = await api.createFeedback(feedbackBody);
     if (response) {
-      return res.render('feedback/feedback-thankyou.njk', {
-        user: req.session.user,
-      });
+      return res.redirect('/thank-you-feedback');
     }
   } catch (catchErr) {
     const { data } = catchErr.response;
@@ -44,5 +51,8 @@ router.post('/feedback', async (req, res) => {
     user: req.session.user,
   });
 });
+
+router.get('/thank-you-feedback', (req, res) =>
+  res.render('feedback/feedback-thankyou.njk'));
 
 module.exports = router;

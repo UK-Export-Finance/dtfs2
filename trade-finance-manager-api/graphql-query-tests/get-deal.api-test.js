@@ -24,9 +24,6 @@ const MOCK_DEAL_TFM = {
   exporterCreditRating: 'Good (BB-)',
   lossGivenDefault: '50%',
   stage: 'Confirmed',
-  history: {
-    tasks: [],
-  },
   activities: [{
     type: 'COMMENT',
     timestamp: 13345665,
@@ -170,6 +167,7 @@ query Deal($_id: String! $tasksFilters: TasksFilters $activityFilters: ActivityF
         tfm {
           bondIssuerPartyUrn,
           bondBeneficiaryPartyUrn,
+          exchangeRate,
           facilityValueInGBP,
           exposurePeriodInMonths,
           ukefExposure {

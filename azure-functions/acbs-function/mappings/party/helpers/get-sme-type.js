@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../../constants');
 
 const getSmeType = (smeType) => {
-  switch (smeType) {
+  switch (smeType.toLowerCase()) {
     case CONSTANTS.DEAL.SME_TYPE.MICRO:
       return '40';
 
@@ -15,6 +15,9 @@ const getSmeType = (smeType) => {
       return '70';
 
     case CONSTANTS.DEAL.SME_TYPE.NON_SME:
+      return '20';
+
+    case CONSTANTS.DEAL.SME_TYPE.NOT_SME:
       return '20';
 
     default:

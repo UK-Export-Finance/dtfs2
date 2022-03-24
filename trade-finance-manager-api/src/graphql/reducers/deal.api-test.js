@@ -10,7 +10,7 @@ const MOCK_CASH_CONTINGENT_FACILIIES = require('../../v1/__mocks__/mock-cash-con
 describe('reducer - deal', () => {
   it('should return mapped object', () => {
     const mockDeal = {
-      _id: MOCK_DEAL_AIN_SUBMITTED._id, // eslint-disable-line no-underscore-dangle
+      _id: MOCK_DEAL_AIN_SUBMITTED._id,
       dealSnapshot: {
         ...MOCK_DEAL_AIN_SUBMITTED,
         facilities: [
@@ -36,7 +36,7 @@ describe('reducer - deal', () => {
     const result = dealReducer(mockDeal);
 
     const expected = {
-      _id: mockDeal._id, // eslint-disable-line no-underscore-dangle
+      _id: mockDeal._id,
       dealSnapshot: mapDealSnapshot(mockDeal),
       tfm: mapDealTfm(mockDeal),
     };

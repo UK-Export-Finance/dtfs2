@@ -39,14 +39,14 @@ const getComments = (role, deal) => {
   if (deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS && deal.dealSnapshot.comments) {
     const comments = deal.dealSnapshot.comments.filter((comment) => comment.user.roles.includes(role));
     if (comments.length > 0) {
-      return comments[0].text;
+      return comments[(comments.length - 1)].text;
     }
   }
 
   if (deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && deal.dealSnapshot.comments) {
-    const comments = deal.dealSnapshot.comments.filter((comment) => comment.role === role);
+    const comments = deal.dealSnapshot.comments.filter((comment) => comment.roles.includes(role));
     if (comments.length > 0) {
-      return comments[0].comment;
+      return comments[(comments.length - 1)].comment;
     }
   }
   return '';
@@ -112,7 +112,11 @@ const getActivities = async (deal) => {
 
     // Add facility(ies) object(s) to the array
     if (acbsResponse.facilities.length > 0) {
-      acbsResponse.facilities.forEach(({ facilityMaster }) => activites.push(getObject(facilityMaster, deal)));
+      acbsResponse.facilities.forEach((facility) => {
+        if (facility.facilityMaster) {
+          activites.push(getObject(facility.facilityMaster, deal));
+        }
+      });
     }
     return activites;
   } catch (error) {

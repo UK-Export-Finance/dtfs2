@@ -24,8 +24,9 @@ const facilitiesController = require('./controllers/facilities.controller');
 const bondIssueFacility = require('./controllers/bond-issue-facility.controller');
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
-const mga = require('./controllers/mga.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
+const dealImportBssEwcsController = require('./controllers/data-migration/deal-import-bss-ewcs.controller');
+const dealImportGefController = require('./controllers/data-migration/deal-import-gef.controller');
 
 const users = require('./users/routes');
 const { cleanXss, fileUpload } = require('./middleware');
@@ -42,7 +43,9 @@ authRouter.use(passport.authenticate('jwt', { session: false }), cleanXss);
 
 authRouter.use('/gef', gef);
 
-authRouter.route('/deals/import').post(validate({ role: ['data-admin'] }), dealsController.import);
+authRouter.route('/deals/import/BSS-EWCS').post(validate({ role: ['data-admin'] }), dealImportBssEwcsController.import);
+
+authRouter.route('/deals/import/GEF').post(validate({ role: ['data-admin'] }), dealImportGefController.import);
 
 authRouter.route('/deals').post(validate({ role: ['maker'] }), dealsController.create);
 authRouter.route('/deals').get(validate({ role: ['maker', 'checker', 'admin'] }), dealsController.getQueryAllDeals);
@@ -121,8 +124,11 @@ authRouter.route('/countries/:code').get(countries.findOne);
 
 authRouter
   .route('/feedback')
-  .get(validate({ role: ['data-admin'] }), feedback.findAll)
-  .post(validate({ role: ['maker', 'checker'] }), feedback.create);
+  .get(validate({ role: ['data-admin'] }), feedback.findAll);
+
+openRouter
+  .route('/feedback')
+  .post(feedback.create);
 
 authRouter
   .route('/feedback/:id')
@@ -139,14 +145,14 @@ authRouter
   .post(validate({ role: ['editor'] }), eligibilityCriteria.create);
 
 authRouter
-  .route('/eligibility-criteria/:id')
+  .route('/eligibility-criteria/latest')
+  .get(eligibilityCriteria.findLatestGET);
+
+authRouter
+  .route('/eligibility-criteria/:version')
   .get(eligibilityCriteria.findOne)
   .put(validate({ role: ['editor'] }), eligibilityCriteria.update)
   .delete(validate({ role: ['editor'] }), eligibilityCriteria.delete);
-
-authRouter.route('/mga').get(mga.findAllByUserOrganisation);
-
-authRouter.route('/mga/:filename').get(mga.downloadMga);
 
 authRouterAllowXss
   .route('/mandatory-criteria')
@@ -154,7 +160,11 @@ authRouterAllowXss
   .post(validate({ role: ['editor'] }), mandatoryCriteria.create);
 
 authRouterAllowXss
-  .route('/mandatory-criteria/:id')
+  .route('/mandatory-criteria/latest')
+  .get(mandatoryCriteria.findLatest);
+
+authRouterAllowXss
+  .route('/mandatory-criteria/:version')
   .get(mandatoryCriteria.findOne)
   .put(validate({ role: ['editor'] }), mandatoryCriteria.update)
   .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);

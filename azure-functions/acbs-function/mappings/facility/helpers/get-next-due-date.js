@@ -1,6 +1,7 @@
 const CONSTANTS = require('../../../constants');
 const getFeeFrequencyMonths = require('./get-fee-frequency-months');
 const { addMonth } = require('../../../helpers/date');
+const mapFeeType = require('./map-fee-type');
 
 /**
  * Return facility next due date.
@@ -9,10 +10,14 @@ const { addMonth } = require('../../../helpers/date');
  */
 
 const getNextDueDate = (facility) => {
-  const { guaranteeCommencementDate, guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
-  const months = getFeeFrequencyMonths(facility);
+  const { guaranteeCommencementDate, guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
+    ? facility.tfm.facilityGuaranteeDates
+    : facility.update;
 
-  if (facility.facilitySnapshot.feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY) {
+  const months = getFeeFrequencyMonths(facility);
+  const feeType = mapFeeType(facility.facilitySnapshot);
+
+  if (feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY) {
     return guaranteeExpiryDate;
   }
   const nextDueDate = addMonth(guaranteeCommencementDate, months);

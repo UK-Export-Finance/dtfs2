@@ -162,6 +162,19 @@ const listEligibilityCriteria = async (token) => {
   return response.data.items;
 };
 
+const latestEligibilityCriteria = async (token) => {
+  const response = await axios({
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${portalApi}/v1/gef/eligibility-criteria/latest`,
+  }).catch((err) => { console.error(`err: ${err}`); });
+  return response.data;
+};
+
 // Mandatory Criteria
 
 const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
@@ -220,6 +233,19 @@ const getDurableFunctions = async (token) => {
   return response;
 };
 
+const deleteCronJobs = async (token) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${centralApi}/v1/portal/cron-jobs`
+  }).catch((err) => { console.error(`err: ${err}`); });
+  return response;
+};
+
 module.exports = {
   createApplication,
   updateApplication,
@@ -232,8 +258,10 @@ module.exports = {
   createEligibilityCriteria,
   deleteEligibilityCriteria,
   listEligibilityCriteria,
+  latestEligibilityCriteria,
   createMandatoryCriteriaVersioned,
   deleteMandatoryCriteriaVersioned,
   listMandatoryCriteriaVersioned,
   getDurableFunctions,
+  deleteCronJobs
 };

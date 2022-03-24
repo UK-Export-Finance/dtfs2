@@ -82,7 +82,7 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
       },
     };
 
-    return res.redirect(`/contract/${deal._id}/about/supplier`); // eslint-disable-line no-underscore-dangle
+    return res.redirect(`/contract/${deal._id}/about/supplier`);
   }
 
   // munge data back into form data
@@ -118,7 +118,7 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
 
   req.session.aboutSupplierFormData = deal;
 
-  const redirectUrl = `/contract/${deal._id}/about/supplier#${prefix}-companies-house-registration-number`; // eslint-disable-line no-underscore-dangle
+  const redirectUrl = `/contract/${deal._id}/about/supplier#${prefix}-companies-house-registration-number`;
   return res.redirect(redirectUrl);
 });
 

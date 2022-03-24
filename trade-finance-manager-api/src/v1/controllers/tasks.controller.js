@@ -47,7 +47,14 @@ const updateTask = (allTaskGroups, taskUpdate) =>
  * Update all tasks canEdit flag and status
  * Depending on what task has been changed.
  * */
-const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigin) => {
+const updateAllTasks = async (
+  allTaskGroups,
+  groupId,
+  taskUpdate,
+  statusFrom,
+  deal,
+  urlOrigin,
+) => {
   const taskEmailsToSend = [];
 
   let taskGroups = allTaskGroups.map((tGroup) => {
@@ -72,6 +79,17 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
           isTaskThatIsBeingUpdated,
         );
 
+        if (isTaskThatIsBeingUpdated) {
+          updatedTask.history.push(mapTaskHistoryObject({
+            taskId: task.id,
+            groupId: task.groupId,
+            statusFrom,
+            statusTo: taskUpdate.status,
+            assignedUserId: taskUpdate.assignedTo.userId,
+            updatedBy: taskUpdate.updatedBy,
+          }));
+        }
+
         if (sendEmail) {
           taskEmailsToSend.push(updatedTask);
         }
@@ -84,7 +102,7 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
   });
 
   /**
-   * If 'Adverse History Check' task is completed
+   * If 'Complete an adverse history check' task is completed
    * All tasks in the Underwriting Group Task become unlocked and are able to be started
    * */
   const canUnlockUnderWritingGroupTasks = isAdverseHistoryTaskIsComplete(taskGroups);
@@ -117,6 +135,7 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
               status: CONSTANTS.TASKS.STATUS.TO_DO,
             };
           }
+
           return task;
         });
       }
@@ -139,7 +158,40 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
     ));
   });
 
-  await Promise.all(emailPromises);
+  const emailsResponse = await Promise.all(emailPromises);
+
+  /**
+   * Add emailSent=true flag to each task that successfully sent an email
+   * */
+  const tasksToAddEmailSentFlag = [];
+  emailsResponse.forEach((response, index) => {
+    if (!response.errors) {
+      tasksToAddEmailSentFlag.push(taskEmailsToSend[index]);
+    }
+  });
+
+  taskGroups = taskGroups.map((g) => {
+    const group = g;
+
+    const groupHasTaskToUpdate = tasksToAddEmailSentFlag.find((task) => task.groupId === group.id);
+
+    if (groupHasTaskToUpdate) {
+      group.groupTasks = group.groupTasks.map((t) => {
+        const task = t;
+
+        const taskShouldAddEmailSentFlag = tasksToAddEmailSentFlag.find((taskForEmail) => taskForEmail.id === task.id);
+
+        if (taskShouldAddEmailSentFlag) {
+          task.emailSent = true;
+        }
+
+        return task;
+      });
+    }
+
+    return group;
+  });
+
   return taskGroups;
 };
 
@@ -150,9 +202,10 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, deal, urlOrigi
  * - Finds the group the task belongs to and updates the task in that group.
  * - Maps over all tasks in every group and updates their status/canEdit flag.
  * - If previous task is complete, a sendEmail flag for that task is returned.
+ * - If the task is the task that is being updated (by user), task.history is updated.
  * - Sends emails ('task is ready to start') for any tasks that return sendEmail flag.
- * - Updates tfm.history.tasks.
- * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task)
+ * - Adds emailSent flag to any task that successfully sent an email.
+ * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task).
  * - Updates the deal.
  * */
 const updateTfmTask = async (dealId, taskUpdate) => {
@@ -164,9 +217,7 @@ const updateTfmTask = async (dealId, taskUpdate) => {
   const {
     id: taskIdToUpdate,
     groupId,
-    assignedTo,
     status: statusTo,
-    updatedBy,
     urlOrigin,
   } = taskUpdate;
 
@@ -197,32 +248,16 @@ const updateTfmTask = async (dealId, taskUpdate) => {
       modifiedTasks,
       groupId,
       updatedTask,
+      statusFrom,
       deal,
       urlOrigin,
     );
-
-    /**
-     * Update TFM history.tasks
-     * */
-    const tfmHistoryUpdate = {
-      tasks: [
-        mapTaskHistoryObject({
-          taskId: taskIdToUpdate,
-          groupId,
-          statusFrom,
-          statusTo,
-          assignedUserId: assignedTo.userId,
-          updatedBy,
-        }),
-      ],
-    };
 
     /**
      * Construct TFM update object
      * */
     const tfmDealUpdate = {
       tfm: {
-        history: tfmHistoryUpdate,
         tasks: modifiedTasksWithEditStatus,
       },
     };

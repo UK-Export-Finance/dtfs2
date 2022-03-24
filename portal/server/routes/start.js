@@ -22,6 +22,7 @@ const userCanCreateADeal = (user) => user && user.roles.includes('maker');
 
 router.get('/before-you-start', provide([MANDATORY_CRITERIA]), async (req, res) => {
   const { mandatoryCriteria } = req.apiData;
+
   const { user } = req.session;
 
   if (!userCanCreateADeal(user)) {
@@ -97,7 +98,7 @@ router.post('/before-you-start/bank-deal', provide([MANDATORY_CRITERIA]), async 
     });
   }
 
-  return res.redirect(`/contract/${apiResponse._id}`); // eslint-disable-line no-underscore-dangle
+  return res.redirect(`/contract/${apiResponse._id}`);
 });
 
 router.get('/unable-to-proceed', (req, res) => res.render('unable-to-proceed.njk', {

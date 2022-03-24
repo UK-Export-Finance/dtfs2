@@ -4,9 +4,14 @@ on:
   pull_request:
     branches: [ main ]
     paths:
+    - 'portal/**'
     - 'gef-ui/**'
+    - 'trade-finance-manager-ui/**'
     - 'portal-api/**'
-    - 'e2e-tests/gef/cypress/**'
+    - 'trade-finance-manager-api/**'
+    - 'reference-data-proxy/**'
+    - 'dtfs-central-api/**'
+    - 'e2e-tests/**'
     - 'utils/mock-data-loader/**'
 
 env:
@@ -102,7 +107,7 @@ jobs:
         add_git_labels: true
 
   test:
-    name: "Run PR tests"
+    name: "Run PR GEF UI E2E tests"
     needs: build
     environment:
       name: E2ETEST
@@ -114,8 +119,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        # run 6 copies of the job in parallel
-        machines: [ 1, 2, 3, 4, 5, 6 ]
+        machines: [ 1, 2, 3, 4 ]
     env:
       AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
       AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}

@@ -50,4 +50,20 @@ describe('mapCoverEndDate', () => {
       expect(yearResult).toEqual('2021');
     });
   });
+
+  describe('when cover end date is null', () => {
+    it('should return undefined as date is null', () => {
+      const mockCoverEndDate = {
+        day: null,
+        month: null,
+        year: null,
+      };
+
+      const { day, month, year } = mockCoverEndDate;
+
+      const result = mapCoverEndDate(day, month, year);
+
+      expect(result).toEqual(undefined);
+    });
+  });
 });

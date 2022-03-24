@@ -1,11 +1,9 @@
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const assert = require('assert');
-const moment = require('moment');
-require('moment-timezone');// monkey-patch to provide moment().tz()
+const { format, getUnixTime, fromUnixTime } = require('date-fns');
 
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
-const now = require('../../now');
 const sendEmail = require('../email');
 
 const findFeedbacks = async (callback) => {
@@ -20,7 +18,7 @@ const findFeedbacks = async (callback) => {
 const findOneFeedback = async (id, callback) => {
   const collection = await db.getCollection('feedback');
 
-  collection.findOne({ _id: new ObjectID(id) }, (err, result) => {
+  collection.findOne({ _id: ObjectId(id) }, (err, result) => {
     assert.equal(err, null);
     callback(result);
   });
@@ -38,18 +36,14 @@ exports.create = async (req, res) => {
 
   const modifiedFeedback = {
     ...req.body,
-    submittedBy: req.user.username,
-    created: now(),
+    created: getUnixTime(new Date()),
   };
 
   const collection = await db.getCollection('feedback');
   const createdFeedback = await collection.insertOne(modifiedFeedback);
 
   // get formatted date from created timestamp, to display in email
-  const targetTimezone = req.user.timezone;
-  const utc = moment(parseInt(modifiedFeedback.created, 10));
-  const localisedTimestamp = utc.tz(targetTimezone);
-  const formattedCreated = localisedTimestamp.format('DD/MM/YYYY HH:mm');
+  const formattedCreated = format(fromUnixTime(modifiedFeedback.created), 'dd/MM/yyyy HH:mm');
 
   const {
     role,
@@ -60,9 +54,13 @@ exports.create = async (req, res) => {
     clearlyExplained,
     satisfied,
     howCanWeImprove,
-    submittedBy,
     emailAddress,
+    submittedBy
   } = modifiedFeedback;
+
+  if (!submittedBy.username) {
+    submittedBy.username = 'N/A';
+  }
 
   const emailVariables = {
     role,
@@ -73,9 +71,9 @@ exports.create = async (req, res) => {
     clearlyExplained,
     satisfied,
     howCanWeImprove,
-    submittedBy,
-    emailAddress,
+    emailAddressForContact: emailAddress,
     created: formattedCreated,
+    submittedBy: submittedBy.username,
   };
 
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';
@@ -110,7 +108,7 @@ exports.delete = async (req, res) => {
       return res.status(404).send();
     }
     const collection = await db.getCollection('feedback');
-    const status = await collection.deleteOne({ _id: new ObjectID(req.params.id) });
+    const status = await collection.deleteOne({ _id: ObjectId(req.params.id) });
     return res.status(200).send(status);
   });
 };

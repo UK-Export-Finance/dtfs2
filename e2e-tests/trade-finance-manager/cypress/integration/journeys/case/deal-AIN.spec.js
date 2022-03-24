@@ -1,3 +1,4 @@
+import format from 'date-fns/format';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
@@ -40,7 +41,6 @@ context('User can view a case deal', () => {
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
-    pages.caseDealPage.mgaVersion().should('exist');
   });
 
   it('should render case summary fields', () => {
@@ -51,10 +51,6 @@ context('User can view a case deal', () => {
     partials.caseSummary.exporterName().invoke('text').then((text) => {
       expect(text.trim()).to.contain(MOCK_DEAL_AIN.exporter.companyName);
     });
-  });
-
-  it('should render correct MGA version', () => {
-    pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
   });
 
   describe('Bank security section', () => {
@@ -69,6 +65,19 @@ context('User can view a case deal', () => {
   });
 
   describe('facilities table', () => {
+    it('should show a cover end date', () => {
+      const facilityId = dealFacilities[0]._id;
+      const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
+
+      // constructs date
+      const coverEndDateRaw = new Date(dealFacilities[0]['coverEndDate-year'], dealFacilities[0]['coverEndDate-month'] - 1, dealFacilities[0]['coverEndDate-day']);
+      // formats to correct format in table
+      const coverEndDate = format(coverEndDateRaw, 'dd MMMM yyyy');
+
+      facilityRow.facilityEndDate().contains(coverEndDate);
+      facilityRow.facilityEndDate().should('not.contain', '(expected)');
+    });
+
     it('clicking `Facility ID` link should take user to facility details page', () => {
       const facilityId = dealFacilities[0]._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);

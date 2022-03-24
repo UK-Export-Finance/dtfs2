@@ -17,8 +17,9 @@ const sendTfmEmail = require('./send-tfm-email');
  * we might not want to send an email.
  * */
 const shouldSendFirstTaskEmail = (firstTask) =>
-  (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES
-  || firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE);
+  ((firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES
+  || firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE)
+  && !firstTask.emailSent);
 
 const sendFirstTaskEmail = async (deal) => {
   const {
@@ -198,9 +199,9 @@ const sendDealSubmitEmails = async (deal) => {
     return false;
   }
 
-  const firstTaskEmail = await sendFirstTaskEmail(deal); // CHECKED
-  const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal); // CHECKED
-  const emailAcknowledgementAinMin = await sendAinMinAcknowledgement(deal); // CHECKED
+  const firstTaskEmail = await sendFirstTaskEmail(deal);
+  const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal);
+  const emailAcknowledgementAinMin = await sendAinMinAcknowledgement(deal);
 
   return {
     firstTaskEmail,

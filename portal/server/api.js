@@ -42,19 +42,26 @@ const resetPassword = async (email) => {
 };
 
 const resetPasswordFromToken = async (resetPwdToken, formData) => {
-  const response = await axios({
-    method: 'post',
-    url: `${portalApi}/v1/users/reset-password/${resetPwdToken}`,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: formData,
-  });
-
-  return {
-    status: response.status,
-    data: response.data,
-  };
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${portalApi}/v1/users/reset-password/${resetPwdToken}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: formData,
+    });
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error('Reset password failed', { error });
+    return {
+      status: error.response.status,
+      data: error.response.data,
+    };
+  }
 };
 
 const allDeals = async (start, pagesize, filters, token, sort) => {
@@ -116,7 +123,7 @@ const createDeal = async (deal, token) => {
 const updateDeal = async (deal, token) => {
   const response = await axios({
     method: 'put',
-    url: `${portalApi}/v1/deals/${deal._id}`, // eslint-disable-line no-underscore-dangle
+    url: `${portalApi}/v1/deals/${deal._id}`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
@@ -236,7 +243,7 @@ const updateEligibilityDocumentation = async (dealId, body, files, token) => {
   });
 
   files.forEach((file) => {
-    formData.append(file.fieldname, file.buffer, file.originalname);
+    formData.append(file.fieldname, file.buffer, file.originalname, file.size);
   });
 
   const formHeaders = formData.getHeaders();
@@ -564,20 +571,17 @@ const getDeal = async (id, token) => {
   };
 };
 
-const getMandatoryCriteria = async (token) => {
+const getLatestMandatoryCriteria = async (token) => {
   const response = await axios({
     method: 'get',
-    url: `${portalApi}/v1/mandatory-criteria`,
+    url: `${portalApi}/v1/mandatory-criteria/latest`,
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
     },
   });
 
-  return {
-    status: response.status,
-    mandatoryCriteria: response.data.mandatoryCriteria,
-  };
+  return response.data;
 };
 
 const downloadFile = async (id, fieldname, filename, token) => {
@@ -593,37 +597,11 @@ const downloadFile = async (id, fieldname, filename, token) => {
   return response.data;
 };
 
-const mga = async (token) => {
-  const response = await axios({
-    method: 'get',
-    url: `${portalApi}/v1/mga`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data;
-};
-
-const downloadMga = async (filename, token) => {
-  const response = await axios({
-    method: 'get',
-    responseType: 'stream',
-    url: `${portalApi}/v1/mga/${filename}`,
-    headers: {
-      Authorization: token,
-    },
-  });
-  return response.data;
-};
-
-const createFeedback = async (formData, token) => {
+const createFeedback = async (formData) => {
   const response = await axios({
     method: 'post',
     url: `${portalApi}/v1/feedback`,
     headers: {
-      Authorization: token,
       'Content-Type': 'application/json',
     },
     data: formData,
@@ -704,10 +682,8 @@ module.exports = {
   getDeal,
   getLoan,
   getIndustrySectors,
-  getMandatoryCriteria,
+  getLatestMandatoryCriteria,
   downloadFile,
-  mga,
-  downloadMga,
   getUnissuedFacilitiesReport,
   getUkefDecisionReport,
 };

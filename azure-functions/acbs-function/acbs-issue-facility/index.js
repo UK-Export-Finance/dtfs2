@@ -26,12 +26,16 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
     },
   };
   const facilitySnapshot = {
-    tfm: facility.tfm,
+    tfm: {
+      ...facility.tfm,
+    },
     facilitySnapshot: {
       ...facility,
       currency: {
         id: facility.currencyCode,
       },
+    },
+    update: {
     },
   };
 
@@ -45,7 +49,8 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
 
     if (acbsFacility && etag) {
       // 2.1. Create updated facility master record object
-      const acbsFacilityMasterInput = mappings.facility.facilityUpdate(facility, acbsFacility, deal);
+      const acbsFacilityMasterInput = mappings.facility.facilityUpdate(facilitySnapshot, acbsFacility, deal);
+
       // 2.2. PUT updated facility master record object
       const issuedFacilityMaster = yield context.df.callActivityWithRetry(
         'activity-update-facility-master',
@@ -60,12 +65,17 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
       acbsParties.parties.exporter = {
         partyIdentifier: acbsFacility.dealBorrowerIdentifier,
       };
+      facilitySnapshot.update = {
+        ...acbsFacilityMasterInput,
+      };
+
       // 3.1. Facility loan record
       const acbsFacilityLoanInput = mappings.facility.facilityLoan(
         deal,
         facilitySnapshot,
         acbsParties,
       );
+
       // 3.2. Create facility loan record
       const facilityLoan = yield context.df.callActivityWithRetry(
         'activity-create-facility-loan',
@@ -78,6 +88,7 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
         deal,
         facilitySnapshot,
       );
+
       // 4.2. Facility fixed-fee record(s) creation
       if (Array.isArray(acbsFacilityFeeInput)) {
         facilityFee = [];

@@ -43,7 +43,7 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
     url: `${exposurePeriodURL}?startdate=${startDate}&enddate=${endDate}&productgroup=${productGroup}`,
     auth: { username, password },
   }).catch((error) => {
-    console.error('Error calling Exposure Period API ', error.response.data, error.response.status);
+    console.error('Error calling Exposure Period API ', { error });
     return { data: error.response.data, status: error.response.status };
   });
 

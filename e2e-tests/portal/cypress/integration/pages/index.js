@@ -47,8 +47,8 @@ module.exports = {
   createUser: require('./admin/users/createUser'),
   editUser: require('./admin/users/editUser'),
   resetPassword: require('./resetPassword'),
-  mga: require('./mga'),
   footer: require('./footer'),
   selectScheme: require('./selectScheme'),
   reports: require('./reports'),
+  feedbackPage: require('./feedbackPage'),
 };

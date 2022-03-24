@@ -1,10 +1,10 @@
-const moment = require('moment');
 const externalApis = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const submitDeal = require('../utils/submitDeal');
 const mapSubmittedDeal = require('../../../src/v1/mappings/map-submitted-deal');
 const addTfmDealData = require('../../../src/v1/controllers/deal-add-tfm-data');
 const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
+const generateDateReceived = require('../../../src/v1/controllers/deal-add-tfm-data/dateReceived');
 
 const CONSTANTS = require('../../../src/constants');
 
@@ -48,6 +48,8 @@ const createSubmitBody = (mockDeal) => ({
   dealType: mockDeal.dealType,
 });
 
+const updateGefFacilitySpy = jest.fn(() => Promise.resolve({}));
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
@@ -61,6 +63,9 @@ describe('/v1/deals', () => {
     updatePortalGefDealStatusSpy.mockClear();
     externalApis.updatePortalBssDealStatus = updatePortalBssDealStatusSpy;
     externalApis.updatePortalGefDealStatus = updatePortalGefDealStatusSpy;
+
+    updateGefFacilitySpy.mockClear();
+    externalApis.updateGefFacility = updateGefFacilitySpy;
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -200,27 +205,14 @@ describe('/v1/deals', () => {
       });
     });
 
-    it('adds dateReceived to deal.tfm from deal submissionDate', async () => {
+    it('adds dateReceived to deal.tfm', async () => {
       const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
 
       expect(status).toEqual(200);
 
-      const utc = moment(parseInt(MOCK_DEAL_AIN_SUBMITTED.details.submissionDate, 10));
-      const localisedTimestamp = utc.tz('Europe/London');
-
-      const expectedDateReceived = localisedTimestamp.format('DD-MM-YYYY');
-
+      const expectedDateReceived = generateDateReceived().dateReceived;
       expect(body.tfm.dateReceived).toEqual(expectedDateReceived);
-    });
-
-    it('adds empty TFM history to deal', async () => {
-      const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
-
-      expect(status).toEqual(200);
-      expect(body.tfm.history).toEqual({
-        tasks: [],
-        emails: [],
-      });
+      expect(body.tfm.dateReceivedTimestamp).toBeDefined();
     });
 
     describe('eStore', () => {
@@ -238,6 +230,19 @@ describe('/v1/deals', () => {
       it('should return 200', async () => {
         const { status } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
         expect(status).toEqual(200);
+      });
+
+      it('should call updateGefFacility', async () => {
+        const { body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_AIN));
+
+        const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
+
+        expect(updateGefFacilitySpy).toHaveBeenCalledWith(
+          facilityId,
+          {
+            hasBeenIssuedAndAcknowledged: true,
+          },
+        );
       });
     });
 

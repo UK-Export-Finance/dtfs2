@@ -15,17 +15,17 @@
     }}
   {% endif %}
 
-  <h1 class="govuk-heading-l">Mandatory criteria</h1>
+  <h1 class="govuk-heading-l" data-cy="mandatory-criteria-heading">Mandatory criteria</h1>
 
-  <h2 class="govuk-heading-m">Does this deal meet all UKEF’s mandatory criteria?</h2>
+  <h2 class="govuk-heading-m" data-cy="mandatory-criteria-sub-heading">Does this deal meet all UKEF's mandatory criteria?</h2>
 
-  <p class="govuk-body">To proceed with this submission, you need to be able to affirm that all the following mandatory criteria are or will be true for this deal on the date that cover starts.</p>
+  <p class="govuk-body" data-cy="mandatory-criteria-intro">To proceed with this submission, you need to be able to affirm that all the following mandatory criteria are or will be true for this deal on the date that cover starts.</p>
 
-  {% for group in mandatoryCriteria %}
-    <h2 class="govuk-heading-m">{{ group.title }}</h2>
+  {% for criterion in mandatoryCriteria.criteria %}
+    <h2 class="govuk-heading-m" data-cy="mandatory-criteria-criterion-{{ criterion.id }}-title">{{ criterion.title }}</h2>
 
-    <ol class="govuk-list govuk-list--number">
-      {% for item in group.items %}
+    <ol class="govuk-list govuk-list--number" data-cy="mandatory-criteria-criterion">
+      {% for item in criterion.items %}
         <li value="{{ item.id }}">{{ item.copy | safe}}</li>
       {% endfor %}
     </ol>

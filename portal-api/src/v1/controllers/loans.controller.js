@@ -13,6 +13,7 @@ const {
 const { loanStatus } = require('../section-status/loans');
 const { sanitizeCurrency } = require('../../utils/number');
 const facilitiesController = require('./facilities.controller');
+const CONSTANTS = require('../../constants');
 
 exports.create = async (req, res) => {
   await findOneDeal(req.params.id, async (deal) => {
@@ -32,7 +33,7 @@ exports.create = async (req, res) => {
 
     return res.status(status).send({
       ...data,
-      loanId: data._id, // eslint-disable-line no-underscore-dangle
+      loanId: data._id,
     });
   });
 };
@@ -73,7 +74,7 @@ const facilityStageFields = (loan) => {
   const modifiedLoan = loan;
   const { facilityStage } = modifiedLoan;
 
-  if (facilityStage === 'Conditional') {
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
     // remove any 'Unconditional' specific fields
     modifiedLoan.requestedCoverStartDate = null;
     modifiedLoan['requestedCoverStartDate-day'] = null;
@@ -86,7 +87,7 @@ const facilityStageFields = (loan) => {
     modifiedLoan.hasBeenIssued = false;
   }
 
-  if (facilityStage === 'Unconditional') {
+  if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL) {
     // remove any 'Conditional' specific fields
     modifiedLoan.ukefGuaranteeInMonths = null;
     modifiedLoan.hasBeenIssued = true;

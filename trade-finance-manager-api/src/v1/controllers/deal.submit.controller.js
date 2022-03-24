@@ -5,6 +5,7 @@ const {
 } = require('./deal.controller');
 const { addPartyUrns } = require('./deal.party-db');
 const { createDealTasks } = require('./deal.tasks');
+const addFirstTaskEmailSentFlag = require('./deal-add-tfm-data/add-first-task-email-sent-flag');
 const { updateFacilities } = require('./update-facilities');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
 
@@ -67,7 +68,6 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
   const submittedDeal = await api.submitDeal(dealType, dealId);
   const mappedDeal = mapSubmittedDeal(submittedDeal);
-
   const { submissionCount } = mappedDeal;
   const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
@@ -82,17 +82,30 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
     if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      const updatedDealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
+      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
+
       /**
-       * Current requirement only allows AIN & MIN deals to be send to ACBS
+       * Current requirement only allows AIN & MIN deals to be sent to ACBS
        * This calls CREATES Deal & Facility ACBS records
        */
-      const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
       if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
-      await sendDealSubmitEmails(updatedDealWithTasks);
 
+      const { firstTaskEmail } = await sendDealSubmitEmails(dealWithTasks);
+
+      /**
+       * Add an emailSent flag to the first task.
+       * This prevents multiple emails from being sent.
+      */
+      const updatedDealWithTasks = dealWithTasks;
+      updatedDealWithTasks.tfm.tasks = addFirstTaskEmailSentFlag(firstTaskEmail, dealWithTasks.tfm.tasks);
+
+      /**
+       * Update the deal with all the above modifications
+       * Note: at the time of writing, some functions above update the deal, others do not.
+       */
+      const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
       return updatedDeal;
     }
 
@@ -101,6 +114,16 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
   if (dealHasBeenResubmit) {
     const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
+
+    /**
+     * checks if can update to MIN
+     * if it can, changes mappedDeal to show MIN to allow gef fee record to be calculated
+     * isUpdatingToMIN then also used to update deal to MIN
+    */
+    const isUpdatingToMIN = shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal);
+    if (isUpdatingToMIN) {
+      mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
+    }
     const updatedDeal = await updatedIssuedFacilities(mappedDeal);
     /**
      * Current requirement only allows AIN & MIN deals to be send to ACBS
@@ -111,7 +134,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
       await acbsController.issueAcbsFacilities(updatedDeal);
     }
 
-    if (shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal)) {
+    if (isUpdatingToMIN) {
       const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker);
 
       // NOTE: this is the one and only time that TFM updates a snapshot.

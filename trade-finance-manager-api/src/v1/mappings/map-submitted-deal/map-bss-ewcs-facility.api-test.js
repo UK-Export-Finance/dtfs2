@@ -55,11 +55,12 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         name,
         disbursementAmount,
         facilityStage,
+        hasBeenIssuedAndAcknowledged,
       } = mockFacility;
 
       const expected = {
         _id,
-        ukefFacilityId: Number(ukefFacilityId),
+        ukefFacilityId: String(ukefFacilityId),
         type,
         currencyCode: currency.id,
         value: Number(value.replace(/,/g, '')),
@@ -77,6 +78,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
         name,
         tfm: mockFacility.tfm,
+        hasBeenIssuedAndAcknowledged,
       };
 
       expect(result).toEqual(expected);

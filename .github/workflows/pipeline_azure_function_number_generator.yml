@@ -1,9 +1,9 @@
-name: Deploy ACBS Number Generator Function App
+name: Dev - Deploy ACBS Number Generator Function App
 
 on:
   push:
     # Branch updates initiates deployment
-    branches: [ main ]
+    branches: [ dev ]
     paths:
     - 'azure-functions/number-generator-function/**'
   schedule:
@@ -19,7 +19,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -29,7 +29,7 @@ jobs:
 
   build:
     name: Build and push ACBS Azure Function
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -54,7 +54,7 @@ jobs:
     needs: [set-environment, build]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     env:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
@@ -73,7 +73,7 @@ jobs:
 
   promote:
     name: Promote container images to Dev
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     needs: [set-environment, test]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -97,7 +97,7 @@ jobs:
     needs: [set-environment, promote]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:

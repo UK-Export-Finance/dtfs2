@@ -1,12 +1,12 @@
 import express from 'express';
 import compression from 'compression';
-import * as dotenv from 'dotenv';
-
 import { apiRoutes, swaggerRoutes, healthcheck } from './v1/routes';
 
-dotenv.config();
+import { seo } from './middleware/headers/seo';
 
 export const app: any = express();
+
+app.use(seo);
 app.use(express.json());
 app.use(compression());
 

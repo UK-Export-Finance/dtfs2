@@ -3,7 +3,7 @@
     <div class="govuk-footer__meta">
       <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
         <h2>Contact us</h2>
-        <p>
+        <p class="email-wrap">
           Email: DigitalService.TradeFinance@ukexportfinance.gov.uk<br/>
           Phone: +44 (0)207 271 8010<br/>
           Opening times: Monday to Friday, 9am to 5pm (excluding public holidays)
@@ -11,13 +11,6 @@
 
         <h2 class="govuk-visually-hidden">Support links</h2>
         <ul class="govuk-footer__inline-list">
-          {%if user%}
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/mga" data-cy="mga-page-link">
-              Master Guarantee Agreement
-            </a>
-          </li>
-          {% endif %}
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/cookies">
               Cookies

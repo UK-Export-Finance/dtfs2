@@ -109,6 +109,7 @@ type DealEligibilityCriterion {
 }
 
 type DealEligibility {
+  version: Int
   criteria: [DealEligibilityCriterion!]
   agentAddressCountry: Country
   agentAddressLine1: String
@@ -243,17 +244,6 @@ type TFMTaskHistory {
   timestamp: String
 }
 
-type TFMEmailHistory {
-  recipient: String
-  templateId: String
-  timestamp: String
-}
-
-type TFMDealHistory {
-  tasks: [TFMTaskHistory]
-  emails: [TFMEmailHistory]
-}
-
 type TFMDealDecision  {
   decision: String
   comments: String
@@ -282,9 +272,9 @@ type TFMDealData {
   stage: String
   lossGivenDefault: Int
   probabilityOfDefault: Float
-  history: TFMDealHistory
   underwriterManagersDecision: TFMDealDecision
   dateReceived: String
+  dateReceivedTimestamp: Int
   estore: TFMEstore
   leadUnderwriter: String
   activities: [TFMActivity]
@@ -310,6 +300,7 @@ type PremiumScheduleData {
 type TFMFacilityData {
   bondIssuerPartyUrn: String
   bondBeneficiaryPartyUrn: String
+  exchangeRate: Float
   facilityValueInGBP: String
   exposurePeriodInMonths: Int
   ukefExposure: FacilityUkefExposure

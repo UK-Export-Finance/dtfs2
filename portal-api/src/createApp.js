@@ -20,15 +20,21 @@ const { CORS_ORIGIN } = process.env;
 const configurePassport = require('./v1/users/passport');
 const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
 
+const seo = require('./v1/middleware/headers/seo');
+
 configurePassport(passport);
 
 const app = express();
+
+app.use(seo);
+
 // TODO: re-enable Helmet (Jira - 4998)
 // app.use(
 //   helmet({
 //     contentSecurityPolicy: false,
 //   }),
 // );
+
 app.use(healthcheck);
 app.use(passport.initialize());
 app.use(express.json());

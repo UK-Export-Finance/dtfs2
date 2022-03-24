@@ -49,10 +49,6 @@ describe('send-deal-submit-emails - TFM tasks', () => {
             ],
           },
         ],
-        history: {
-          tasks: [],
-          emails: [],
-        },
       },
     };
   });
@@ -79,6 +75,16 @@ describe('send-deal-submit-emails - TFM tasks', () => {
     it('should return false when task title is NOT `match or create parties`', () => {
       const mockTask = {
         title: 'Test',
+      };
+
+      const result = shouldSendFirstTaskEmail(mockTask);
+      expect(result).toEqual(false);
+    });
+
+    it('should return false when task has emailSent flag', () => {
+      const mockTask = {
+        title: 'Test',
+        emailSent: true,
       };
 
       const result = shouldSendFirstTaskEmail(mockTask);

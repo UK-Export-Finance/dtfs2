@@ -285,5 +285,33 @@ describe('/v1/deals', () => {
         });
       });
     });
+
+    describe('hasBeenIssuedAndAcknowledged', () => {
+      describe('when facility/dealType is GEF', () => {
+        it('sets hasBeenIssuedAndAcknowledged to true for issued facilities', async () => {
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL));
+
+          expect(status).toEqual(200);
+
+          const issuedFacility = body.facilities.find((facility) =>
+            facility.hasBeenIssued);
+
+          expect(issuedFacility.hasBeenIssuedAndAcknowledged).toEqual(true);
+        });
+      });
+
+      describe('when facility/dealType is BSS', () => {
+        it('sets hasBeenIssuedAndAcknowledged to true for issued facilities', async () => {
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_ISSUED_FACILITIES));
+
+          expect(status).toEqual(200);
+
+          const issuedFacility = body.facilities.find((facility) =>
+            facility.hasBeenIssued);
+
+          expect(issuedFacility.hasBeenIssuedAndAcknowledged).toEqual(true);
+        });
+      });
+    });
   });
 });

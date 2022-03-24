@@ -40,8 +40,12 @@ const validateFileQuestion = (application, field, errRef) => {
 
 const nextDocument = (application, dealId, fieldName) => {
   let supportingDocument = 'manual-inclusion-questionnaire'; // default page
-  const currentIndex = application.supportingInformation?.requiredFields?.indexOf(fieldName);
+  let currentIndex = 0;
   if (application.supportingInformation?.requiredFields?.length > 0) {
+    // append the security details to the requiredFields
+    application.supportingInformation.requiredFields.push('securityDetails');
+    currentIndex = application.supportingInformation?.requiredFields?.indexOf(fieldName);
+
     const allDocTypes = docType;
     const nextIndex = (currentIndex + 1) % application.supportingInformation.requiredFields.length;
 
@@ -52,11 +56,14 @@ const nextDocument = (application, dealId, fieldName) => {
         supportingDocument = value.path;
       }
     });
+    if (nextItem === 'securityDetails') {
+      supportingDocument = 'security-details';
+    }
   }
 
   let nextDoc = `/gef/application-details/${dealId}/supporting-information/${supportingDocument}`;
-  if (!application.supportingInformation?.requiredFields?.length
-      || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
+  // check if there are no required fields or check if we reached the end of the required fields
+  if (!application.supportingInformation?.requiredFields?.length || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
     nextDoc = `/gef/application-details/${dealId}`;
   }
 
@@ -185,7 +192,7 @@ const postSupportingDocuments = async (req, res, next) => {
 
     if (fileToDelete) {
       try {
-        await removeFileFromDeal(fileToDelete, fieldName, application, userToken);
+        await removeFileFromDeal(fileToDelete, fieldName, application, userToken, user);
       } catch (err) {
         const errMsg = `Error deleting file ${fileToDelete}: ${err.message}`;
         console.error(errMsg);
@@ -278,7 +285,7 @@ const deleteSupportingDocument = async (req, res, next) => {
 
     const application = await getApplication(dealId, user, userToken);
 
-    await removeFileFromDeal(fileToDelete, fieldName, application, userToken);
+    await removeFileFromDeal(fileToDelete, fieldName, application, userToken, user);
 
     return res.status(200).send({
       file: fileToDelete,

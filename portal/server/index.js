@@ -14,8 +14,12 @@ const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
 
 const configureNunjucks = require('./nunjucks-configuration');
+const seo = require('./routes/middleware/headers/seo');
 
 const app = express();
+
+app.use(seo);
+
 app.use(helmet({ contentSecurityPolicy: false }));
 
 const PORT = process.env.PORT || 5000;
@@ -92,4 +96,4 @@ app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.
 
 console.info(`GITHUB_SHA: ${process.env.GITHUB_SHA}`);
 
-app.listen(PORT, () => console.info(`BSS app listening on port ${PORT}!`)); // eslint-disable-line no-console
+app.listen(PORT, () => console.info(`BSS app listening on port ${PORT}!`));

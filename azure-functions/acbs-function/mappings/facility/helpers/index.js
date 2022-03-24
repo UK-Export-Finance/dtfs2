@@ -14,13 +14,14 @@ const getIssueDate = require('./get-issue-date');
 const getGuarantorParty = require('./get-guarantor-party');
 const getFacilityValue = require('./get-facility-value');
 const getMaximumLiability = require('./get-maximum-liability');
+const getLoanMaximumLiability = require('./get-loan-maximum-liability');
 const mapFeeFrequency = require('./map-fee-frequency');
+const mapFeeType = require('./map-fee-type');
 const getInsuredPercentage = require('./get-insured-percentage');
 const getBaseCurrency = require('./get-base-currency');
 const getCoverStartDate = require('./get-cover-start-date');
 const hasFacilityBeenIssued = require('./get-facility-issue-status');
 const getCurrencyExchangeRate = require('./get-facility-currency-exchange-rate');
-const getInterestPercentage = require('./get-interest-percentage');
 const getNextDueDate = require('./get-next-due-date');
 const getYearBasis = require('./get-year-basis');
 const getFeeFrequency = require('./get-fee-frequency');
@@ -48,13 +49,14 @@ module.exports = {
   getGuarantorParty,
   getFacilityValue,
   getMaximumLiability,
+  getLoanMaximumLiability,
   mapFeeFrequency,
+  mapFeeType,
   getInsuredPercentage,
   getBaseCurrency,
   getCoverStartDate,
   hasFacilityBeenIssued,
   getCurrencyExchangeRate,
-  getInterestPercentage,
   getNextDueDate,
   getYearBasis,
   getFeeFrequency,

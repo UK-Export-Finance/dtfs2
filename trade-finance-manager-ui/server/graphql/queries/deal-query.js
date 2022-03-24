@@ -136,6 +136,7 @@ const dealQuery = gql`
           tfm {
             bondIssuerPartyUrn,
             bondBeneficiaryPartyUrn,
+            exchangeRate,
             facilityValueInGBP,
             exposurePeriodInMonths,
             ukefExposure {

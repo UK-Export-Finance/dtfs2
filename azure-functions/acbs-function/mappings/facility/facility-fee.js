@@ -16,11 +16,10 @@
 
 const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
+const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date');
 
 const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
-  const { effectiveDate } = facility.tfm.facilityGuaranteeDates
-    ? facility.tfm.facilityGuaranteeDates
-    : '';
+  const effectiveDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
   const {
     expirationDate,
     nextDueDate,

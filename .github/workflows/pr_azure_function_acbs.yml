@@ -3,10 +3,10 @@ name: PR tests - ACBS Function App
 on:
   pull_request:
     branches: [ main ]
-    paths: 
+    paths:
     - 'azure-functions/acbs-function/**'
   schedule:
-    # A weekly run to roll up any base image patches, 
+    # A weekly run to roll up any base image patches,
     # in office hours, avoiding bank holiday Mondays:
     # "At 12:00 on Tuesday." - https://crontab.guru/
     - cron: '0 12 * * 2'
@@ -25,7 +25,7 @@ jobs:
     - name: Initialise Environment
       run: |
         echo Setting environment to ${{ env.environment }}
-        
+
   build:
     name: Build and push ACBS Azure Function
     runs-on: ubuntu-latest

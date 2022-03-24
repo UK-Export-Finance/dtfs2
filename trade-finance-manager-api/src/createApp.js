@@ -18,12 +18,16 @@ const healthcheck = require('./healthcheck');
 const openRouter = require('./v1/routes');
 const initScheduler = require('./scheduler');
 
+const seo = require('./v1/middleware/headers/seo');
+
 dotenv.config();
 
 initScheduler();
 
 const app = express();
-// app.use(helmet());
+
+app.use(seo);
+
 app.use(express.json());
 app.use(compression());
 

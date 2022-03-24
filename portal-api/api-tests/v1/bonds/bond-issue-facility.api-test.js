@@ -4,6 +4,7 @@ const aDeal = require('../deals/deal-builder');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
+const CONSTANTS = require('../../../src/constants');
 
 describe('/v1/deals/:id/bond/:id/issue-facility', () => {
   const newDeal = aDeal({
@@ -65,7 +66,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
   const createBond = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-    dealId = deal.body._id; // eslint-disable-line no-underscore-dangle
+    dealId = deal.body._id; 
 
     const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     bondId = createBondResponse.body.bondId;
@@ -146,12 +147,14 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
       expect(body.status).toEqual(null);
     });
 
-    it('should return 200 with updated bond, add issueFacilityDetailsProvided and generate timestamps', async () => {
+    it('should return 200 with updated bond, add issueFacilityDetailsProvided, hasBeenIssued, facilityStage, previousFacilityStage and timestamps', async () => {
       const { status, body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
 
       expect(status).toEqual(200);
       expect(body.issueFacilityDetailsProvided).toEqual(true);
       expect(body.hasBeenIssued).toEqual(true);
+      expect(body.previousFacilityStage).toEqual(CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED);
+      expect(body.facilityStage).toEqual(CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED);
       expect(typeof body.requestedCoverStartDate === 'string').toEqual(true);
       expect(typeof body.issuedDate === 'string').toEqual(true);
     });

@@ -1,84 +1,103 @@
 import { Request, Response } from 'express';
-import { createExporterSite, createBuyerFolder, createDealFolder, createFacilityFolder } from './eStoreApi.controller';
+import { getCollection } from '../../../database';
+import { Estore } from '../../../interfaces';
+import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
+import { eStoreCronJobManager, eStoreTermStoreAndBuyerFolder, eStoreSiteCreationJob } from '../../../cronJobs';
+import { createExporterSite, siteExists } from './eStoreApi';
 
-/* {
-  exporter: NAME,
-  buyer: NAME,
-  "dealIdentifier": "0040000449",
-  "destinationMarket": "United Kingdom",
-  "riskMarket": "United States",
-  facilityIdentifiers: [0040000450]
-} */
+const siteCreationTimer = '50 * * * * *'; // ~ 50 seconds
+
+const checkExistingCronJobs = async () => {
+  const cronJobLogsCollection = await getCollection('cron-job-logs');
+  console.info('Cron Job: Checking for running CronJobs');
+  const runningCronJobs = await cronJobLogsCollection.find({ 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING }).toArray();
+
+  if (runningCronJobs.length) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const job of runningCronJobs) {
+      eStoreCronJobManager.add(job.siteName, siteCreationTimer, async () => {
+        await eStoreSiteCreationJob(job);
+      });
+      eStoreCronJobManager.start(job.siteName);
+    }
+  } else {
+    console.info('Cron Job: There are no active CronJobs');
+  }
+};
+
+checkExistingCronJobs();
 
 export const createEstore = async (req: Request, res: Response) => {
-  const { eStoreFolderInfo } = req.body;
+  const eStoreData: Estore = req.body;
 
-  const { exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket, facilityIdentifiers } = eStoreFolderInfo;
+  // check if the body is not empty
+  if (Object.keys(eStoreData).length) {
+    // send a response back to tfm-api
+    // this is because we are not waiting for the cron-jobs to finish
+    res.status(200).send();
+    const cronJobLogsCollection = await getCollection('cron-job-logs');
 
-  const createSiteRes = await createExporterSite(exporterName);
+    // keep track of new submissions
+    await cronJobLogsCollection.insertOne({
+      ...eStoreData,
+      timestamp: Date.now(),
+      siteExists: false,
+      siteName: null,
+      facilityCronJob: {
+        status: ESTORE_CRON_STATUS.PENDING,
+      },
+      dealCronJob: {
+        status: ESTORE_CRON_STATUS.PENDING,
+      },
+    });
 
-  if (!createSiteRes) {
-    return res.status(200).send({});
+    console.info('API Call: Checking if the site exists');
+    const siteExistsResponse = await siteExists({ exporterName: eStoreData.exporterName });
+    // check if site exists in eStore
+    if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
+      // update the database to indicate that the site exists in eStore
+      await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteExists: true, siteName: siteExistsResponse.data.siteName } });
+
+      eStoreData.siteName = siteExistsResponse.data.siteName;
+
+      // add facilityIds to termStore and create the buyer folder
+      eStoreTermStoreAndBuyerFolder(eStoreData);
+    } else if (siteExistsResponse?.status === 404 && siteExistsResponse?.data?.siteName === '') {
+      // update the database to indicate that a new cron job needs to be created to add a new site to Sharepoint
+      await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteCronJob: { status: ESTORE_CRON_STATUS.PENDING } } });
+
+      // send a request to eStore to start creating the eStore site
+      console.info('API Call started: Create a new eStore site for ', eStoreData.exporterName);
+      const siteCreationResponse = await createExporterSite({ exporterName: eStoreData.exporterName });
+
+      // check if the siteCreation endpoint returns a siteName - this is usually a number (i.e. 12345)
+      if (siteCreationResponse?.data?.siteName) {
+        // update the database with the new siteName
+        await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteName: siteCreationResponse.data.siteName } });
+        // add a new job to the `Cron Job Manager` queue that runs every 50 seconds
+        // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
+        eStoreCronJobManager.add(siteCreationResponse.data.siteName, siteCreationTimer, async () => {
+          await eStoreSiteCreationJob(eStoreData);
+        });
+        console.info('Cron job started: eStore Site Creation Cron Job started ', siteCreationResponse.data.siteName);
+        // update the database to indicate that the `site cron job` started
+        await cronJobLogsCollection.updateOne(
+          { dealId: eStoreData.dealId },
+          { $set: { 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'siteCronJob.startDate': Date.now() } },
+        );
+        eStoreCronJobManager.start(siteCreationResponse.data.siteName);
+      } else {
+        console.error('API Call failed: Unable to create a new site in eStore', { siteCreationResponse });
+        // update the database to indicate that the API call failed
+        await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: siteCreationResponse });
+      }
+    } else {
+      console.error('API Call failed: Unable to check if a site exists', { siteExistsResponse });
+      // update the database to indicate that the API call failed
+      await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteExistsResponse } });
+    }
+  } else {
+    console.error('eStore body is empty', { eStoreData });
+    res.status(400).send({ message: 'eStore body is empty', status: 400 });
   }
-
-  const { siteName } = createSiteRes.data;
-
-  const result = {
-    buyerName: '',
-    folderName: '',
-    facilities: {},
-    siteName,
-  };
-
-  if (createSiteRes.status > 299) {
-    return res.status(createSiteRes.status).send(createSiteRes.data);
-  }
-
-  const createBuyer = await createBuyerFolder({
-    siteName,
-    exporterName,
-    buyerName,
-  });
-  result.buyerName = createBuyer.data.buyerName;
-
-  const createDeal = await createDealFolder({
-    siteName,
-    exporterName,
-    buyerName,
-    dealIdentifier,
-    destinationMarket,
-    riskMarket,
-  });
-  result.folderName = createDeal.data.folderName;
-
-  const createFacilities = facilityIdentifiers.map(
-    (facilityIdentifier: any) =>
-      new Promise((resolve, reject) =>
-        // eslint-disable-next-line no-promise-executor-return
-        createFacilityFolder({
-          siteName,
-          dealIdentifier,
-          exporterName,
-          buyerName,
-          facilityIdentifier: facilityIdentifier?.toString(),
-          destinationMarket,
-          riskMarket,
-        }).then(
-          ({ status, data }: any) => {
-            if (status !== 201) {
-              resolve(data);
-            }
-            resolve({
-              facilityIdentifier,
-              ...data,
-            });
-          },
-          (err: any) => reject(err),
-        ),
-      ),
-  );
-
-  result.facilities = await Promise.all(createFacilities);
-
-  return res.status(200).send(result);
 };

@@ -1,6 +1,6 @@
 const express = require('express');
 const compression = require('compression');
-// const helmet = require('helmet');
+const seo = require('./v1/routes/middleware/headers/seo');
 
 const {
   BANK_ROUTE,
@@ -21,12 +21,9 @@ const {
 } = require('./v1/routes');
 
 const app = express();
-// TODO re-enable Helmet (Jira - 4998)
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: false,
-//   }),
-// );
+
+app.use(seo);
+
 app.use(healthcheck);
 app.use(express.json());
 app.use(compression());

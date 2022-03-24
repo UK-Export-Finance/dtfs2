@@ -1,6 +1,10 @@
 const DEFAULTS = require('../defaults');
 const { findMandatoryCriteria } = require('./mandatoryCriteria.controller');
-const { findOneDeal, createDeal } = require('./deal.controller');
+const {
+  findOneDeal,
+  createDeal,
+  createDealEligibility,
+} = require('./deal.controller');
 const { getCloneDealErrors } = require('../validation/clone-bss-deal');
 const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
@@ -69,7 +73,9 @@ exports.clone = async (req, res) => {
       cloneTransactions,
     } = req.body;
 
-    const { _id, previousStatus, tfm, ...existingDealWithoutCertainFields } = existingDeal;
+    const {
+      _id, previousStatus, tfm, ...existingDealWithoutCertainFields
+    } = existingDeal;
 
     const modifiedDeal = {
       ...existingDealWithoutCertainFields,
@@ -83,6 +89,7 @@ exports.clone = async (req, res) => {
         maker: req.user,
       },
       mandatoryCriteria: await getCurrentMandatoryCriteria(),
+      eligibility: await createDealEligibility(existingDeal.eligibility),
       editedBy: [],
       comments: [],
       ukefComments: [],
@@ -109,7 +116,7 @@ exports.clone = async (req, res) => {
       data: createdDeal,
     } = await createDeal(modifiedDeal, req.user);
 
-    const createdDealId = createdDeal._id; // eslint-disable-line no-underscore-dangle
+    const createdDealId = createdDeal._id;
 
     if (cloneTransactions === 'true') {
       const hasBonds = existingDeal.bondTransactions.items.length > 0;

@@ -3,7 +3,6 @@ const $ = require('mongo-dot-notation');
 const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
-const isIssued = require('../helpers/is-issued');
 const CONSTANTS = require('../../constants');
 
 const addToACBSLog = async ({
@@ -12,7 +11,6 @@ const addToACBSLog = async ({
   const collection = await db.getCollection('durable-functions-log');
 
   const acbsLog = await collection.insertOne({
-    // eslint-disable-next-line no-underscore-dangle
     type: 'ACBS',
     dealId: deal._id,
     deal,
@@ -57,7 +55,7 @@ const updateDealAcbs = async (taskOutput) => {
    */
   await tfmController.updateAcbs(taskOutput);
 
-  const facilitiesUpdates = facilities.map((facility) => {
+  const facilitiesUpdates = facilities.filter((facility) => facility.facilityId).map((facility) => {
     const { facilityId, ...acbsFacility } = facility;
     // Add `acbs` object to tfm-facilities
     return tfmController.updateFacilityAcbs(facilityId, acbsFacility);
@@ -66,7 +64,10 @@ const updateDealAcbs = async (taskOutput) => {
 };
 
 const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster }) =>
-  tfmController.updateFacilityAcbs(facilityId, { issuedFacilityMaster });
+  tfmController.updateFacilityAcbs(facilityId, {
+    facilityStage: CONSTANTS.FACILITIES.ACBS_FACILITY_STAGE.ISSUED,
+    issuedFacilityMaster,
+  });
 
 const checkAzureAcbsFunction = async () => {
   try {
@@ -81,25 +82,27 @@ const checkAzureAcbsFunction = async () => {
     const taskList = await Promise.all(tasks);
 
     taskList.forEach(async (task) => {
+      if (task.runtimeStatus) {
       // Update
-      if (task.runtimeStatus !== 'Running') {
-        await collection.findOneAndUpdate(
-          { instanceId: task.instanceId },
-          $.flatten({
-            status: task.runtimeStatus,
-            acbsTaskResult: task,
-          }),
-        );
-      }
-      // ADD `acbs` object to tfm-deals and tfm-facilities
-      if (task.runtimeStatus === 'Completed') {
-        switch (task.name) {
-          case 'acbs-issue-facility':
-            await updateIssuedFacilityAcbs(task.output);
-            break;
+        if (task.runtimeStatus !== 'Running') {
+          await collection.findOneAndUpdate(
+            { instanceId: task.instanceId },
+            $.flatten({
+              status: task.runtimeStatus,
+              acbsTaskResult: task,
+            }),
+          );
+        }
+        // ADD `acbs` object to tfm-deals and tfm-facilities
+        if (task.runtimeStatus === 'Completed') {
+          switch (task.name) {
+            case 'acbs-issue-facility':
+              await updateIssuedFacilityAcbs(task.output);
+              break;
 
-          default:
-            await updateDealAcbs(task.output);
+            default:
+              await updateDealAcbs(task.output);
+          }
         }
       }
     });
@@ -117,12 +120,15 @@ const issueAcbsFacilities = async (deal) => {
      */
     return false;
   }
+  /**
+   * ACBS verification has been removed due to an ongoing bug of not receiving
+   * the `acbs` object imperative data thus preventing maker from issuing the facility.
+   * TO-DO:
+   * !isIssued(facilityStageInAcbs) && !facility.tfm.acbs.issuedFacilityMaster
+   * const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
+   */
 
-  const acbsIssuedFacilitiesPromises = deal.facilities.filter((facility) => {
-    // Only concerned with issued facilities on Portal that aren't issued on ACBS
-    const facilityStageInAcbs = facility.tfm.acbs && facility.tfm.acbs.facilityStage;
-    return !isIssued(facilityStageInAcbs) && !facility.tfm.acbs.issuedFacilityMaster && isIssued(facility.facilityStage);
-  }).map((facility) => api.updateACBSfacility(facility, {
+  const acbsIssuedFacilitiesPromises = deal.facilities.filter((facility) => facility.hasBeenIssued).map((facility) => api.updateACBSfacility(facility, {
     dealSnapshot: {
       dealType: deal.dealType,
       submissionType: deal.submissionType,

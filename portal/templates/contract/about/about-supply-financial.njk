@@ -19,17 +19,10 @@
       })
     }}
   {% endif %}
-  
-
-  <script type="text/javascript">
-    function onChangeSupplyContractCurrency(event) {
-      DTFS.main.changeScreenVisibilityOfElement('supply-contract-currency-conversion-fields', event.target.value !== 'GBP');
-    };
-  </script>
 
 
   {{ taskListHeader.render({
-    title: 'About the Supply Contract',
+    title: 'Add financial information',
     dealId: deal._id,
     items: taskListItems,
     entityName: 'about'
@@ -58,8 +51,7 @@
         name: "supplyContractCurrency",
         label: { text: "Supply Contract currency" },
         attributes: {
-          "data-cy": "supplyContractCurrency",
-          "onChange": "onChangeSupplyContractCurrency(event)"
+          "data-cy": "supplyContractCurrency"
         },
         items: currencies,
         errorMessage: validationErrors.errorList["supplyContractCurrency"]

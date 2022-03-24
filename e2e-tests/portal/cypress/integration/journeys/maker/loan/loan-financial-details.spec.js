@@ -49,6 +49,14 @@ context('Loan Financial Details', () => {
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
+  describe('Loan financial details title', () => {
+    it('should contain the correct title', () => {
+      goToPageWithUnconditionalFacilityStage(deal);
+
+      pages.loanFinancialDetails.title().contains('Add loan financial details');
+    });
+  });
+
   describe('when submitting an empty form', () => {
     it('it should progress to `Loan Dates and Repayments` page and after proceeding to `Loan Preview` page, should render validation errors in `Loan Financial Details` page', () => {
       goToPageWithUnconditionalFacilityStage(deal);

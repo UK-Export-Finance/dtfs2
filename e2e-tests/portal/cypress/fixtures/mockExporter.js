@@ -18,7 +18,7 @@ const exporterOne = {
     },
   },
   industries: [],
-  smeType: 'MICRO',
+  smeType: 'Micro',
   probabilityOfDefault: 45.5,
   isFinanceIncreasing: true,
 };
@@ -43,7 +43,7 @@ const exporterTwo = {
     },
   },
   industries: [],
-  smeType: 'MICRO',
+  smeType: 'Micro',
   probabilityOfDefault: 45.5,
   isFinanceIncreasing: true,
 };
@@ -68,7 +68,7 @@ const exporterThree = {
     },
   },
   industries: [],
-  smeType: 'MICRO',
+  smeType: 'Micro',
   probabilityOfDefault: 45.5,
   isFinanceIncreasing: true,
 };
@@ -93,7 +93,7 @@ const exporterFour = {
     },
   },
   industries: [],
-  smeType: 'MICRO',
+  smeType: 'Micro',
   probabilityOfDefault: 45.5,
   isFinanceIncreasing: true,
 };

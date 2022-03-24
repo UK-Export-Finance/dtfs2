@@ -1,4 +1,5 @@
 const page = {
+  title: () => cy.get('[data-cy="loan"]'),
   // Facility stage = Conditional specifics
   facilityStageConditionalInput: () => cy.get('[data-cy="facility-stage-conditional"]'),
   facilityStageUnconditionalInput: () => cy.get('[data-cy="facility-stage-unconditional"]'),

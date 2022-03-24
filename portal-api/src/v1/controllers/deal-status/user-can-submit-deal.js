@@ -5,8 +5,8 @@ const userCanSubmitDeal = (deal, user) => {
     return true;
   }
 
-  const makerId = String(deal.maker._id); // eslint-disable-line no-underscore-dangle
-  const userId = String(user._id); // eslint-disable-line no-underscore-dangle
+  const makerId = String(deal.maker._id);
+  const userId = String(user._id);
   const makerCheckerCreatedTheDeal = (makerId === userId);
 
   if (makerCheckerCreatedTheDeal) {
@@ -14,7 +14,7 @@ const userCanSubmitDeal = (deal, user) => {
   }
 
   const makerCheckerEditedTheDeal = deal.editedBy.find((edited) =>
-    String(edited.userId) === String(user._id)); // eslint-disable-line no-underscore-dangle
+    String(edited.userId) === String(user._id));
 
   if (makerCheckerEditedTheDeal) {
     return false;

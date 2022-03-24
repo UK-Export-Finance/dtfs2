@@ -13,7 +13,7 @@ const get = async (dataType, req) => {
   const token = req.session.userToken;
 
   if (DEAL === dataType) {
-    const dealId = req.params._id;// eslint-disable-line no-underscore-dangle
+    const dealId = req.params._id;
     const { deal, validationErrors } = await api.getDeal(dealId, token).catch(
       (err) => {
         console.error(`api-data-provider: querying for deal(${dealId}) => ${err}`);
@@ -52,10 +52,10 @@ const get = async (dataType, req) => {
     req.apiData[CURRENCIES] = currencies;
     return;
   } if (MANDATORY_CRITERIA === dataType) {
-    const { mandatoryCriteria } = await api.getMandatoryCriteria(token).catch(
+    const mandatoryCriteria = await api.getLatestMandatoryCriteria(token).catch(
       (err) => {
-        console.error(`api-data-provider: querying for mandatory criteria => ${err}`);
-        return { mandatoryCriteria: [] };
+        console.error(`api-data-provider: querying for latest mandatory criteria => ${err}`);
+        return {};
       },
     );
 
@@ -63,7 +63,7 @@ const get = async (dataType, req) => {
     return;
   } if (LOAN === dataType) {
     const {
-      _id, // eslint-disable-line no-underscore-dangle
+      _id,
       loanId,
     } = req.params;
 
@@ -77,7 +77,7 @@ const get = async (dataType, req) => {
     return;
   } if (BOND === dataType) {
     const {
-      _id, // eslint-disable-line no-underscore-dangle
+      _id,
       bondId,
     } = req.params;
 

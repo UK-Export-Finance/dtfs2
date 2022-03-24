@@ -30,25 +30,26 @@
 
 
   <form method="post" data-cy="form">
-    {% for term in terms %}
+    {% for criterion in criteria %}
       {{ govukRadios({
         classes: "govuk-radios--inline",
-        idPrefix: term.id,
-        name: term.id,
+        idPrefix: criterion.id,
+        name: criterion.id,
         fieldset: {
           legend: {
             html: eligibilityCriterion.render({
-              id: term.id,
-              text: term.text,
-              textList: term.textList
+              id: criterion.id,
+              text: criterion.text,
+              textList: criterion.textList
             })
-          }
+          },
+          attributes: { 'aria-label': criterion.text }
         },
         attributes: {
           'data-cy': 'automatic-cover-term'
         },
-        errorMessage: errors and errors.fieldErrors[term.id] and  {
-          text: errors.fieldErrors[term.id].text,
+        errorMessage: errors and errors.fieldErrors[criterion.id] and  {
+          text: errors.fieldErrors[criterion.id].text,
           attributes: {
             'data-cy': 'automatic-cover-error'
           }
@@ -57,17 +58,19 @@
           {
             value: "true",
             text: "True",
-            checked: term.answer === true,
+            checked: criterion.answer === true,
             attributes: {
-              'data-cy': 'automatic-cover-true'
+              'data-cy': 'automatic-cover-true',
+              'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', true'
             }
           },
           {
             value: "false",
             text: "False",
-            checked: term.answer === false,
+            checked: criterion.answer === false,
             attributes: {
-              'data-cy': 'automatic-cover-false'
+              'data-cy': 'automatic-cover-false',
+              'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', false'
             }
           }
         ]

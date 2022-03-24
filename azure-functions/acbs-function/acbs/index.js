@@ -17,7 +17,6 @@ const CONSTANTS = require('../constants');
 module.exports = df.orchestrator(function* HDeal(context) {
   if (context.df.getInput()) {
     const { deal, bank } = context.df.getInput();
-
     // Get Product Type
     const product = deal.dealSnapshot.dealType;
 
@@ -112,7 +111,6 @@ module.exports = df.orchestrator(function* HDeal(context) {
       product === CONSTANTS.PRODUCT.TYPE.GEF
         ? [exporterTask, bankTask]
         : [exporterTask, bankTask, buyerTask],
-      // : [exporterTask, buyerTask, agentTask, indemnifierTask, bankTask],
     );
 
     let parties;

@@ -10,7 +10,7 @@ const getCurrencies = async () => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => {
-    console.error('Error retrieving currencies from Reference Data API. ', err)
+    console.error('Error retrieving currencies from Reference Data API. ', err);
     return err;
   });
 
@@ -25,7 +25,7 @@ const getCurrency = async (id) => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => {
-    console.error('Error retrieving currency from Reference Data API. ', err)
+    console.error('Error retrieving currency from Reference Data API. ', err);
     return err;
   });
 

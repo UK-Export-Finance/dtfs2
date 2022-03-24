@@ -1,9 +1,8 @@
 const api = require('../../api');
-const { dateReceived: addDateReceived } = require('./dateReceived');
+const generateDateReceived = require('./dateReceived');
 const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
-const DEFAULTS = require('../../defaults');
 
 const addTfmDealData = async (deal) => {
   if (!deal) {
@@ -12,7 +11,6 @@ const addTfmDealData = async (deal) => {
 
   const {
     _id: dealId,
-    submissionDate,
     submissionType,
     status,
     tfm,
@@ -21,8 +19,7 @@ const addTfmDealData = async (deal) => {
   const dealUpdate = {
     tfm: {
       ...tfm,
-      dateReceived: addDateReceived(submissionDate),
-      history: DEFAULTS.HISTORY,
+      ...generateDateReceived(),
       parties: {},
       activities: [],
       product: addDealProduct(deal),

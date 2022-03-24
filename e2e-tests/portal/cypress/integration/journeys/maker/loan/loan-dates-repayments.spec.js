@@ -40,6 +40,14 @@ context('Loan Dates and Repayments', () => {
       .then((insertedDeal) => { deal = insertedDeal; });
   });
 
+  describe('Loan Dates and Repayments title', () => {
+    it('should contain the correct title', () => {
+      goToPage(deal);
+
+      pages.loanDatesRepayments.title().contains('Add dates and repayments');
+    });
+  });
+
   describe('when submitting an empty form', () => {
     it('should progress to `Loan Preview` page, should render validation errors in `Loan Dates and Repayments` page', () => {
       goToPage(deal);

@@ -32,38 +32,6 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
   }
 
   /**
-   * History helper variables
-   * */
-  const existingDealHistory = (existingDeal.tfm && existingDeal.tfm.history);
-  const tfmUpdateHasHistory = tfmUpdate.history;
-  const tfmUpdateHasHistoryTasks = (tfmUpdateHasHistory
-                                    && tfmUpdate.history.tasks
-                                    && Object.keys(tfmUpdate.history.tasks).length > 0);
-  const tfmUpdateHasHistoryEmails = (tfmUpdateHasHistory
-                                     && tfmUpdate.history.emails
-                                     && Object.keys(tfmUpdate.history.emails).length > 0);
-
-  /**
-   * Ensure tfm.history is not wiped and avoid recursive object creation
-   * by checking that history.tasks and history.emails is not empty
-   * */
-  if (existingDealHistory) {
-    if (tfmUpdateHasHistoryTasks) {
-      dealUpdate.tfm.history.tasks = [
-        ...existingDeal.tfm.history.tasks,
-        ...tfmUpdate.history.tasks,
-      ];
-    }
-
-    if (tfmUpdateHasHistoryEmails) {
-      dealUpdate.tfm.history.emails = [
-        ...existingDeal.tfm.history.emails,
-        ...tfmUpdate.history.emails,
-      ];
-    }
-  }
-
-  /**
    * Activities helper variables
    * */
   const existingDealActivities = (existingDeal.tfm && existingDeal.tfm.activities);
@@ -76,15 +44,21 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
    */
   if (tfmUpdateHasActivities) {
     if (Array.isArray(tfmUpdate.activities)) {
-      dealUpdate.tfm.activities = [
+      const updatedActivities = [
         ...tfmUpdate.activities,
         ...existingDealActivities,
       ];
+      // ensures that duplicate entries are not added to activities by comparing timestamp and label
+      dealUpdate.tfm.activities = updatedActivities.filter((value, index, arr) =>
+        arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
     } else {
-      dealUpdate.tfm.activities = [
+      const updatedActivities = [
         tfmUpdate.activities,
         ...existingDealActivities,
       ];
+      // ensures that duplicate entries are not added to activities by comparing timestamp and label
+      dealUpdate.tfm.activities = updatedActivities.filter((value, index, arr) =>
+        arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
     }
   }
 
@@ -119,25 +93,30 @@ exports.updateDealPut = async (req, res) => {
 };
 
 const updateDealSnapshot = async (deal, snapshotChanges) => {
-  const collection = await db.getCollection('tfm-deals');
+  try {
+    const collection = await db.getCollection('tfm-deals');
 
-  const update = {
-    ...deal,
-    dealSnapshot: {
-      ...deal.dealSnapshot,
-      ...snapshotChanges,
-    },
-  };
+    const update = {
+      ...deal,
+      dealSnapshot: {
+        ...deal.dealSnapshot,
+        ...snapshotChanges,
+      },
+    };
 
-  const dealId = deal._id;
+    const dealId = deal._id;
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(String(dealId)) } },
-    $.flatten(withoutId(update)),
-    { returnOriginal: false, upsert: true },
-  );
+    const findAndUpdateResponse = await collection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(String(dealId)) } },
+      $.flatten(withoutId(update)),
+      { returnOriginal: false, upsert: true },
+    );
 
-  return findAndUpdateResponse.value;
+    return findAndUpdateResponse.value;
+  } catch (err) {
+    console.error('Error updating TFM dealSnapshot', { err });
+    return err;
+  }
 };
 
 exports.updateDealSnapshotPut = async (req, res) => {

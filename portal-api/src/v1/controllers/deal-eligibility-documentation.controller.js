@@ -1,4 +1,6 @@
 const stream = require('stream');
+const filesize = require('filesize');
+
 const fileshare = require('../../drivers/fileshare');
 const { formatFilenameForSharepoint } = require('../../utils');
 const { userHasAccessTo } = require('../users/checks');
@@ -70,11 +72,14 @@ exports.update = async (req, res) => {
         }
 
         return {
+          parentId: req.params.id,
           fieldname,
           type: getFileType(fieldname),
           fullPath: fileInfo.fullPath,
           filename: fileInfo.filename,
+          folder: `${fileInfo.folder}`,
           mimetype,
+          size: filesize(size, { round: 0 })
         };
       }
 
@@ -134,7 +139,7 @@ exports.update = async (req, res) => {
     };
 
     const updatedDeal = await updateDeal(
-      deal._id, // eslint-disable-line no-underscore-dangle
+      deal._id,
       updatedDealData,
       req.user,
     );

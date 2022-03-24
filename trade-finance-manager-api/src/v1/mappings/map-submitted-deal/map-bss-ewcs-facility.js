@@ -49,13 +49,14 @@ const mapBssEwcsFacility = (facility) => {
     name,
     disbursementAmount,
     facilityStage,
+    hasBeenIssuedAndAcknowledged,
   } = facility;
 
   const cleanUkefExposure = Number(ukefExposure.split('.')[0].replace(/,/g, ''));
 
   return {
     _id,
-    ukefFacilityId: Number(ukefFacilityId),
+    ukefFacilityId,
     type,
     currencyCode: currency && currency.id,
     value: Number(value.replace(/,/g, '')),
@@ -72,6 +73,7 @@ const mapBssEwcsFacility = (facility) => {
     dayCountBasis: Number(dayCountBasis),
     disbursementAmount: disbursementAmount && Number(stripCommas(disbursementAmount)),
     name,
+    hasBeenIssuedAndAcknowledged,
     tfm: facility.tfm,
   };
 };

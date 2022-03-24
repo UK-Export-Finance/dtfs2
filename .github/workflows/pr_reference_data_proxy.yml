@@ -4,7 +4,15 @@ on:
   pull_request:
     branches: [ main ]
     paths:
+    - 'portal/**'
+    - 'gef-ui/**'
+    - 'trade-finance-manager-ui/**'
+    - 'portal-api/**'
+    - 'trade-finance-manager-api/**'
     - 'reference-data-proxy/**'
+    - 'dtfs-central-api/**'
+    - 'e2e-tests/**'
+    - 'utils/mock-data-loader/**'
 
 env:
   environment: dev
@@ -14,7 +22,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: self-hosted
+    runs-on: [self-hosted, linux]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -24,7 +32,7 @@ jobs:
 
   build:
     name: Build and push Reference Data Proxy
-    runs-on: self-hosted
+    runs-on: [self-hosted, linux]
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -45,11 +53,11 @@ jobs:
         add_git_labels: true
 
   test:
-    name: "Run PR tests"
+    name: "Run Third Party API tests"
     needs: [set-environment, build]
     environment:
       name: APITEST
-    runs-on: self-hosted
+    runs-on: [self-hosted, linux]
     env:
       MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
       MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
@@ -101,7 +109,6 @@ jobs:
     - name: Run API tests
       run: |
         docker-compose exec -T reference-data-proxy npm run api-test
-
 
     - uses: act10ns/slack@v1
       with:

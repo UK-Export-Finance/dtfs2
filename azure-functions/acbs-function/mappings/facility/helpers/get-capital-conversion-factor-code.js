@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../../constants');
 
 const getCapitalConversionFactorCode = (facility) => {
-  const type = facility.type || facility.facilitySnapshot.type || facility.facilitySnapshot.type;
+  const type = facility.type || facility.facilitySnapshot.type;
 
   switch (type) {
     case CONSTANTS.FACILITY.FACILITY_TYPE.BOND:
