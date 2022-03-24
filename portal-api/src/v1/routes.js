@@ -24,7 +24,6 @@ const facilitiesController = require('./controllers/facilities.controller');
 const bondIssueFacility = require('./controllers/bond-issue-facility.controller');
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
-const mga = require('./controllers/mga.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
 const dealImportBssEwcsController = require('./controllers/data-migration/deal-import-bss-ewcs.controller');
 const dealImportGefController = require('./controllers/data-migration/deal-import-gef.controller');
@@ -154,10 +153,6 @@ authRouter
   .get(eligibilityCriteria.findOne)
   .put(validate({ role: ['editor'] }), eligibilityCriteria.update)
   .delete(validate({ role: ['editor'] }), eligibilityCriteria.delete);
-
-authRouter.route('/mga').get(mga.findAllByUserOrganisation);
-
-authRouter.route('/mga/:filename').get(mga.downloadMga);
 
 authRouterAllowXss
   .route('/mandatory-criteria')
