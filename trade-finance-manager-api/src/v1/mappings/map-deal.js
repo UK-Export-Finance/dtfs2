@@ -10,7 +10,7 @@ const mapDeal = async (deal) => {
   const mappedDeal = JSON.parse(JSON.stringify(deal));
 
   mappedDeal.eligibility.criteria = mapEligibilityCriteriaContentStrings(
-    mappedDeal.eligibility.criteria,
+    mappedDeal.eligibility,
     deal.dealType,
   );
 

@@ -2,22 +2,15 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * `GEF` = 10% of amount.
- * `Loan` = disbursement amount, else `amount`.
+ * `Loan` or `Bond` = amount
  * @param {Float} amount Facility UKEF exposure
  * @param {Object} facility Facility
  * @param {Object} dealType Deal type
  */
 const getLoanMaximumLiability = (amount, facility, dealType) => {
-  let ukefExposure;
-  // GEF
-  if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    ukefExposure = amount * 0.10;
-  } else {
-  // BSS/EWCS
-    ukefExposure = facility.facilitySnapshot.type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN
-      ? facility.facilitySnapshot.disbursementAmount
-      : amount;
-  }
+  const ukefExposure = dealType === CONSTANTS.PRODUCT.TYPE.GEF
+    ? amount * 0.10 // GEF
+    : amount; // BSS/EWCS
 
   return Number(Number(ukefExposure).toFixed(2));
 };

@@ -55,7 +55,7 @@ const updateDealAcbs = async (taskOutput) => {
    */
   await tfmController.updateAcbs(taskOutput);
 
-  const facilitiesUpdates = facilities.map((facility) => {
+  const facilitiesUpdates = facilities.filter((facility) => facility.facilityId).map((facility) => {
     const { facilityId, ...acbsFacility } = facility;
     // Add `acbs` object to tfm-facilities
     return tfmController.updateFacilityAcbs(facilityId, acbsFacility);
@@ -82,25 +82,27 @@ const checkAzureAcbsFunction = async () => {
     const taskList = await Promise.all(tasks);
 
     taskList.forEach(async (task) => {
+      if (task.runtimeStatus) {
       // Update
-      if (task.runtimeStatus !== 'Running') {
-        await collection.findOneAndUpdate(
-          { instanceId: task.instanceId },
-          $.flatten({
-            status: task.runtimeStatus,
-            acbsTaskResult: task,
-          }),
-        );
-      }
-      // ADD `acbs` object to tfm-deals and tfm-facilities
-      if (task.runtimeStatus === 'Completed') {
-        switch (task.name) {
-          case 'acbs-issue-facility':
-            await updateIssuedFacilityAcbs(task.output);
-            break;
+        if (task.runtimeStatus !== 'Running') {
+          await collection.findOneAndUpdate(
+            { instanceId: task.instanceId },
+            $.flatten({
+              status: task.runtimeStatus,
+              acbsTaskResult: task,
+            }),
+          );
+        }
+        // ADD `acbs` object to tfm-deals and tfm-facilities
+        if (task.runtimeStatus === 'Completed') {
+          switch (task.name) {
+            case 'acbs-issue-facility':
+              await updateIssuedFacilityAcbs(task.output);
+              break;
 
-          default:
-            await updateDealAcbs(task.output);
+            default:
+              await updateDealAcbs(task.output);
+          }
         }
       }
     });
@@ -110,7 +112,7 @@ const checkAzureAcbsFunction = async () => {
 };
 
 const issueAcbsFacilities = async (deal) => {
-  if (!deal.tfm) {
+  if (!deal.tfm || !deal.tfm.acbs) {
     /**
      * A facility can only be issued (if unissued),
      * the deal has been submitted to ACBS and acknowledged by the TFM.
