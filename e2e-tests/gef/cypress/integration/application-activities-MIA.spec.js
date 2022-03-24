@@ -76,6 +76,7 @@ context('Submit AIN deal and check portalActivities', () => {
 
     it('submits detail to UKEF', () => {
       applicationPreview.submitButton().click();
+      submitToUkef.confirmSubmissionCheckbox().click();
       submitToUkef.submitButton().click();
     });
   });
