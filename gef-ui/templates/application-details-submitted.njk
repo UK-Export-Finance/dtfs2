@@ -9,7 +9,6 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
-
       {% set titleComponentData = {
         submissionType: submissionType,
         status: status,
@@ -21,7 +20,9 @@
         titleHtml: submitConfirmationTitle.render(titleComponentData),
         classes: "govuk-!-margin-bottom-7",
         attributes: {
-          'data-cy': 'application-submission-confirmation'
+          'data-cy': 'application-submission-confirmation',
+          'aria-label': titleComponentData.submissionType + titleComponentData.text,
+          'tabIndex': 0
         }
       }) }}
 
