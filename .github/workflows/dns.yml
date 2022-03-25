@@ -58,6 +58,12 @@ jobs:
         inlineScript: |
           az network dns record-set txt add-record --record-set-name asuid.www --value ${{ secrets.PROD_DNS_VERIFICATION }} --zone-name ${{ env.domain_name }}
           az network dns record-set txt add-record --record-set-name '@' --value '_globalsign-domain-verification=avG_7JwIvVmNxS7K2KOEplp_B3KudAfdqpnlPNVRpB' --zone-name ${{ env.domain_name }}
+    
+    - name: CAA record
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network dns record-set caa add-record -n 'GlobalSign' --value 'globalsign.com' --tag 'issue' --flags 0 --zone-name ${{ env.domain_name }}
 
     - name: Add domain name to Prod FD
       uses: azure/cli@v1.0.0
