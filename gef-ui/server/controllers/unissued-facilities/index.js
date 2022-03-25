@@ -5,6 +5,7 @@ const { isTrueSet } = require('../../utils/helpers');
 const CONSTANTS = require('../../constants');
 const { applicationDetails } = require('../application-details');
 const { facilityValidation } = require('./validation');
+const { validationErrorHandler } = require('../../utils/helpers');
 
 /**
  * creates body/parameters for the template for unissued facilities
@@ -101,6 +102,30 @@ const changeUnissuedFacilityPreview = async (req, res) => {
   }
 };
 
+// when changing unissued facility from application preview page
+// renders about-facility change page for unissued facilities
+const changeIssuedToUnissuedFacility = async (req, res) => {
+  const { params, query } = req;
+  const { dealId, facilityId } = params;
+  let { facilityType } = query;
+  facilityType = facilityType || FACILITY_TYPE.CASH;
+  const facilityTypeString = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
+
+  try {
+    const { details } = await api.getFacility(facilityId);
+    const hasBeenIssued = JSON.stringify(details.hasBeenIssued);
+
+    return res.render('partials/issued-facility-to-unissued.njk', {
+      facilityType: facilityTypeString,
+      hasBeenIssued: hasBeenIssued !== 'null' ? hasBeenIssued : null,
+      dealId,
+    });
+  } catch (err) {
+    console.error('Facilities error', { err });
+    return res.render('partials/problem-with-service.njk');
+  }
+};
+
 /**
  * post function for changing unissued facilities to issued from unissued facilities list
  * validates first and gets parameters {Object} from validation function
@@ -154,12 +179,14 @@ const postChangeUnissuedFacility = async (req, res) => {
   };
 
   try {
+    const { details } = await api.getFacility(facilityId);
+
     await api.updateFacility(
       facilityId,
       {
         name: body.facilityName,
         shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
-        monthsOfCover: body.monthsOfCover || null,
+        monthsOfCover: details.monthsOfCover || null,
         issueDate: issueDate ? format(issueDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
@@ -240,12 +267,14 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
   };
 
   try {
+    const { details } = await api.getFacility(facilityId);
+
     await api.updateFacility(
       facilityId,
       {
         name: body.facilityName,
         shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
-        monthsOfCover: body.monthsOfCover || null,
+        monthsOfCover: details.monthsOfCover || null,
         issueDate: issueDate ? format(issueDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
@@ -270,6 +299,75 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
   }
 };
 
+/**
+ * post function for changing changedToIssued facility back to unissued
+ * changes date fields to null and adds the months of cover back to database if changing facility back to unissued
+ * works in collaboration with facilities model in portal-api
+ * @param {req}
+ * @param {res}
+ * @returns {res}
+ */
+const postChangeIssuedToUnissuedFacility = async (req, res) => {
+  const {
+    body, params, query, session,
+  } = req;
+  const { dealId, facilityId } = params;
+  const { user } = session;
+  const { _id: editorId } = user;
+  let { facilityType } = query;
+  const hasBeenIssuedErrors = [];
+  facilityType = facilityType || FACILITY_TYPE.CASH;
+  const facilityTypeString = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
+
+  // Don't validate form if user clicks on 'return to application` button
+  if (!body.hasBeenIssued) {
+    hasBeenIssuedErrors.push({
+      errRef: 'hasBeenIssued',
+      errMsg: `Select if your bank has already issued this ${facilityTypeString} facility`,
+    });
+
+    return res.render('partials/issued-facility-to-unissued.njk', {
+      facilityType: facilityTypeString,
+      errors: validationErrorHandler(hasBeenIssuedErrors),
+      dealId,
+    });
+  }
+
+  try {
+    if (body.hasBeenIssued === 'false') {
+      const { details } = await api.getFacility(facilityId);
+
+      await api.updateFacility(
+        facilityId,
+        {
+          name: body.facilityName,
+          shouldCoverStartOnSubmission: null,
+          monthsOfCover: details.monthsOfCover || null,
+          issueDate: null,
+          coverStartDate: null,
+          coverEndDate: null,
+          hasBeenIssued: isTrueSet(body.hasBeenIssued),
+          canResubmitIssuedFacilities: false,
+          coverDateConfirmed: false,
+          unissuedToIssuedByMaker: {},
+        },
+        (req.url = `/gef/application-details/${dealId}`),
+      );
+
+      // updates application with editorId
+      const applicationUpdate = {
+        editorId,
+      };
+      await api.updateApplication(dealId, applicationUpdate);
+    }
+
+    return res.redirect(`/gef/application-details/${dealId}`);
+  } catch (err) {
+    console.error('Error creating a facility', { err });
+    return res.render('partials/problem-with-service.njk');
+  }
+};
+
 module.exports = {
   renderChangeFacilityPartial,
   changeUnissuedFacility,
@@ -277,4 +375,6 @@ module.exports = {
   postChangeUnissuedFacility,
   postChangeUnissuedFacilityPreview,
   facilityValidation,
+  changeIssuedToUnissuedFacility,
+  postChangeIssuedToUnissuedFacility,
 };

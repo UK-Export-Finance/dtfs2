@@ -411,7 +411,7 @@ context('Return to maker', () => {
       // forth facility has change links as changedToIssued
       applicationDetails.facilitySummaryListRowAction(3, 0).contains('Change');
       applicationDetails.facilitySummaryListRowAction(3, 1).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 2).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(3, 2).contains('Change');
       applicationDetails.facilitySummaryListRowAction(3, 3).contains('Change');
       applicationDetails.facilitySummaryListRowAction(3, 4).contains('Change');
       applicationDetails.facilitySummaryListRowAction(3, 5).contains('Change');

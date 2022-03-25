@@ -162,7 +162,9 @@ class Facility {
         this.coverStartDate = null;
         this.coverEndDate = null;
         this.shouldCoverStartOnSubmission = null;
-      } else if (req.hasBeenIssued === true) {
+        this.issueDate = null;
+      } else if (req.hasBeenIssued === true && !req.canResubmitIssuedFacilities) {
+        // if has been issued and changed to issued after submission, then monthsOfCover should not be set to null
         this.monthsOfCover = null;
       }
 
