@@ -10,7 +10,7 @@ import {
 import MOCK_USERS from '../../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_UNISSUED_BOND_READY_TO_SUBMIT from './test-data/dealWithUnissuedBondReadyToSubmit';
 
-import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../fixtures';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('Portal to TFM deal submission', () => {

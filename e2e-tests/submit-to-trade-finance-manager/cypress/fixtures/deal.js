@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import * as CONSTANTS from './constants.fixture';
+import * as CONSTANTS from '../../../e2e-fixtures';
 
 const chance = new Chance();
 

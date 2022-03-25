@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import activityCommentBoxPage from '../../../pages/activities/activityCommentBoxPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { BUSINESS_SUPPORT_USER_1 } from '../../../../../../fixtures';
+import { BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 const { format } = require('date-fns');

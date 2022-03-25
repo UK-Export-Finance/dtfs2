@@ -5,7 +5,7 @@ import tfmPartials from '../../../../../../trade-finance-manager/cypress/integra
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
-import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../fixtures';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 

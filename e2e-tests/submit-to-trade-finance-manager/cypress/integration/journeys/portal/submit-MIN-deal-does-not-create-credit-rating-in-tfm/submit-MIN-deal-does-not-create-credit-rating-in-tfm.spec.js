@@ -3,7 +3,7 @@ import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
-import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../fixtures';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal/dealReadyToSubmit';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;

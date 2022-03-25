@@ -149,6 +149,8 @@ jobs:
       MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
 
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
 
       COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}

@@ -5,7 +5,6 @@ const dealsLightQuery = require('./graphql/queries/deals-query-light');
 const facilitiesLightQuery = require('./graphql/queries/facilities-query-light');
 const facilityQuery = require('./graphql/queries/facility-query');
 const teamMembersQuery = require('./graphql/queries/team-members-query');
-const userQuery = require('./graphql/queries/user-query');
 const updatePartiesMutation = require('./graphql/mutations/update-parties');
 const updateFacilityMutation = require('./graphql/mutations/update-facilities');
 const updateFacilityRiskProfileMutation = require('./graphql/mutations/update-facility-risk-profile');

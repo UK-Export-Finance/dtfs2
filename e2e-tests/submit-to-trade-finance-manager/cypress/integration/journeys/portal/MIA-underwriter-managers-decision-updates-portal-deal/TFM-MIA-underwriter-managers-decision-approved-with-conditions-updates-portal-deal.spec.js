@@ -4,7 +4,7 @@ import portalPartials from '../../../../../../portal/cypress/integration/partial
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../portal/cypress/fixtures/users';
-import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../fixtures';
+import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 

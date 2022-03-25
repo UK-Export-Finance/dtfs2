@@ -8,7 +8,7 @@ import MOCK_MIA_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubm
 const mockDeal = MOCK_MIA_DEAL_READY_TO_SUBMIT();
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
-import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../fixtures';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 context('Portal to TFM deal submission', () => {
   let deal;
