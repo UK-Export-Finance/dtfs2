@@ -187,6 +187,10 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:${{ github.sha }} dtfs/portal
+    - name: Pull tfm-api
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
     - name: Pull GEF
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ github.sha }}
