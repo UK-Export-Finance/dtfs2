@@ -56,9 +56,9 @@ const createTfmUser = async (user) => {
     },
     url: `${tfmApi}/v1/users`,
     data: user,
-  });
+  }).catch((err) => { console.error(`err: ${err}`); });
 
-  return response;
+  return response.data;
 };
 
 const listUsers = async (token) => {
