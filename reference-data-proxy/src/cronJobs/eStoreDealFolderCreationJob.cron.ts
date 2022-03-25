@@ -6,7 +6,7 @@ import { ESTORE_CRON_STATUS, UKEF_ID } from '../constants';
 import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreFacilityFolderCreationJob } from './eStoreFacilityFolderCreationJob.cron';
 import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
-const facilityCreationTimer = '30 * * * * *';
+const facilityCreationTimer = '59 * * * * *';
 
 export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
   const cronJobLogsCollection = await getCollection('cron-job-logs');
@@ -63,17 +63,28 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       console.info('Cron task started: Create the Facility folder');
       eStoreCronJobManager.start(`Facility${eStoreData.dealId}`);
     } else {
-      console.error(`API Call failed: Unable to create a Deal Folder for ${eStoreData.dealIdentifier}`, { dealFolderResponse });
-      // stop and delete the cron job - this to release the memory
-      eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
-      // update the record inside `cron-job-logs` collection to indicate that the cron job failed
-      await cronJobLogsCollection.updateOne(
+      console.info('Cron job continues: eStore Deal Folder Cron Job continues to run for dealIdentifier: ', eStoreData.dealIdentifier);
+      // increment the dealFolderCreationRetries by 1
+      const response = await cronJobLogsCollection.findOneAndUpdate(
         { dealId: eStoreData.dealId },
-        { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.completionDate': Date.now() } },
+        { $inc: { dealFolderCreationRetries: 1 } },
+        { returnDocument: 'after' },
       );
+      // stop the Deal Folder Cron Job after 3 retries
+      // this is to prevent it from running forever
+      if (response?.value?.dealFolderCreationRetries === 3) {
+        console.error(`API Call failed: Unable to create a Deal Folder for ${eStoreData.dealIdentifier}`, { dealFolderResponse });
+        // stop and delete the cron job - this to release the memory
+        eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
+        // update the record inside `cron-job-logs` collection to indicate that the cron job failed
+        await cronJobLogsCollection.updateOne(
+          { dealId: eStoreData.dealId },
+          { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.completionDate': Date.now() } },
+        );
+      }
     }
   } else {
-    console.info('Cron job continues: eStore Deal Folder Cron Job continues to run');
+    console.info('Cron job continues: eStore Deal Folder Cron Job continues to run for dealIdentifier: ', eStoreData.dealIdentifier);
     // increment the dealFolderCreationRetries by 1
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: eStoreData.dealId },
