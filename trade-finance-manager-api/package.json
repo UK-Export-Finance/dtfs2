@@ -50,7 +50,6 @@
     "graphql-middleware": "^4.0.2",
     "graphql-shield": "^7.5.0",
     "graphql-tag": "^2.12.6",
-    "helmet": "^5.0.2",
     "is-port-reachable": "^3.0.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.34",

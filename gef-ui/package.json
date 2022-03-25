@@ -52,7 +52,6 @@
     "filesize": "^8.0.7",
     "form-data": "4.0.0",
     "govuk-frontend": "^4.0.1",
-    "helmet": "^5.0.2",
     "http-errors": "^2.0.0",
     "imask": "^6.4.2",
     "jquery": "3.6.0",
