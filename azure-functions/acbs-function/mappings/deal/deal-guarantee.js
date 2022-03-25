@@ -1,5 +1,9 @@
-const { to2Decimals } = require('../../helpers/currency');
-const { getDealValue, getDealEffectiveDate, getDealGuaranteeExpiryDate, getDealId } = require('./helpers');
+const {
+  getDealGuaranteeValue,
+  getDealEffectiveDate,
+  getDealGuaranteeExpiryDate,
+  getDealId,
+} = require('./helpers');
 const CONSTANT = require('../../constants');
 
 /*
@@ -17,7 +21,7 @@ const dealInvestor = (deal, limitKey) => ({
   limitKey,
   guaranteeExpiryDate: getDealGuaranteeExpiryDate(deal),
   effectiveDate: getDealEffectiveDate(deal),
-  maximumLiability: to2Decimals(getDealValue(deal)),
+  maximumLiability: getDealGuaranteeValue(deal),
 });
 
 module.exports = dealInvestor;

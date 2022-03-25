@@ -42,7 +42,6 @@ context('User can view a GEF MIA case deal', () => {
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
-    pages.caseDealPage.mgaVersion().should('exist');
   });
 
   it('should render case summary fields', () => {
@@ -53,10 +52,6 @@ context('User can view a GEF MIA case deal', () => {
     partials.caseSummary.exporterName().invoke('text').then((text) => {
       expect(text.trim()).to.contain(MOCK_APPLICATION_MIA.exporter.companyName);
     });
-  });
-
-  it('should render correct MGA version', () => {
-    pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
   });
 
   describe('Bank security section', () => {
@@ -123,7 +118,6 @@ context('User can view a GEF AIN case deal', () => {
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
-    pages.caseDealPage.mgaVersion().should('exist');
   });
 
   it('should render case summary fields', () => {
@@ -134,10 +128,6 @@ context('User can view a GEF AIN case deal', () => {
     partials.caseSummary.exporterName().invoke('text').then((text) => {
       expect(text.trim()).to.contain(MOCK_APPLICATION_AIN.exporter.companyName);
     });
-  });
-
-  it('should render correct MGA version', () => {
-    pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
   });
 
   describe('Bank security section', () => {

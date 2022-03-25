@@ -5,11 +5,9 @@ const mapFacilityProduct = require('../facilities/mapFacilityProduct');
 const mapFacilityType = require('../facilities/mapFacilityType');
 const mapGuaranteeFeePayableToUkef = require('../facilities/mapGuaranteeFeePayableToUkef');
 const mapFacilityTfm = require('../facilities/mapFacilityTfm');
-
 const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
-const mapGefFacilityProvidedOn = require('./mapGefFacilityProvidedOn');
 
 const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
   const {
@@ -66,7 +64,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       ukefFacilityType: mapGefUkefFacilityType(type),
       ukefFacilityId,
       ukefExposure: `${currency.id} ${ukefExposure}`,
-      providedOn: mapGefFacilityProvidedOn(facilitySnapshot.details),
+      providedOn: facilitySnapshot.details,
       providedOnOther: facilitySnapshot.detailsOther,
     },
     tfm: mapFacilityTfm(facilityTfm, dealTfm),

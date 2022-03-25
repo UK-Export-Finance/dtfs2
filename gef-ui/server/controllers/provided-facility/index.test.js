@@ -56,7 +56,11 @@ describe('controllers/provided-facility', () => {
   describe('GET Provided Facility', () => {
     it('renders the `Provided Facility` template', async () => {
       mockRequest.query.status = 'change';
-      mockProvidedFacilityResponse.details.details = ['TERMS', 'RESOLVING'];
+      mockProvidedFacilityResponse.details.details = [
+        CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM,
+        CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING,
+      ];
+
       mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
 
       api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
@@ -64,7 +68,7 @@ describe('controllers/provided-facility', () => {
       await providedFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/provided-facility.njk', expect.objectContaining({
-        details: ['TERMS', 'RESOLVING'],
+        details: ['Term basis', 'Revolving or renewing basis'],
         facilityTypeString: 'cash',
         dealId: '123',
         facilityId: 'xyz',
@@ -100,7 +104,7 @@ describe('controllers/provided-facility', () => {
 
     it('redirects user to application page if application page if query status is equal to `change`', async () => {
       mockRequest.query.status = 'change';
-      mockRequest.body.details = ['TERMS'];
+      mockRequest.body.details = ['Term basis'];
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
@@ -108,7 +112,7 @@ describe('controllers/provided-facility', () => {
     });
 
     it('shows error message if Other textarea is left empty', async () => {
-      mockRequest.body.details = 'OTHER';
+      mockRequest.body.details = 'Other';
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
@@ -118,7 +122,7 @@ describe('controllers/provided-facility', () => {
         }),
       }));
 
-      mockRequest.body.details = ['OTHER', 'TERMS'];
+      mockRequest.body.details = ['Other', 'Term basis'];
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
@@ -130,13 +134,13 @@ describe('controllers/provided-facility', () => {
     });
 
     it('calls the updateFacility api with the correct data', async () => {
-      mockRequest.body.details = ['TERMS', 'RESOLVING'];
+      mockRequest.body.details = ['Term basis', 'Revolving or renewing basis'];
       mockRequest.body.type = CONSTANTS.FACILITY_TYPE.CASH;
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
       expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
-        details: ['TERMS', 'RESOLVING'],
+        details: ['Term basis', 'Revolving or renewing basis'],
         detailsOther: undefined,
       });
     });
@@ -155,7 +159,7 @@ describe('controllers/provided-facility', () => {
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-      mockRequest.body.details = ['TERMS'];
+      mockRequest.body.details = ['Term basis'];
       api.updateFacility.mockRejectedValueOnce();
       await validateProvidedFacility(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');

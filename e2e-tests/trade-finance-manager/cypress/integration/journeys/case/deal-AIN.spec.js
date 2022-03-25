@@ -41,7 +41,6 @@ context('User can view a case deal', () => {
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
-    pages.caseDealPage.mgaVersion().should('exist');
   });
 
   it('should render case summary fields', () => {
@@ -52,10 +51,6 @@ context('User can view a case deal', () => {
     partials.caseSummary.exporterName().invoke('text').then((text) => {
       expect(text.trim()).to.contain(MOCK_DEAL_AIN.exporter.companyName);
     });
-  });
-
-  it('should render correct MGA version', () => {
-    pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
   });
 
   describe('Bank security section', () => {
@@ -80,6 +75,7 @@ context('User can view a case deal', () => {
       const coverEndDate = format(coverEndDateRaw, 'dd MMMM yyyy');
 
       facilityRow.facilityEndDate().contains(coverEndDate);
+      facilityRow.facilityEndDate().should('not.contain', '(expected)');
     });
 
     it('clicking `Facility ID` link should take user to facility details page', () => {

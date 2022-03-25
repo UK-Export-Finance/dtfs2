@@ -3,7 +3,6 @@ const caseDealPage = {
   caseSubNavigation: () => cy.get('[data-cy="case-sub-navigation"]'),
   dealBankDetails: () => cy.get('[data-cy="deal-bank-details"]'),
   dealFacilities: () => cy.get('[data-cy="deal-facilities"]'),
-  mgaVersion: () => cy.get('[data-cy="mga-version"]'),
   partiesLink: () => cy.get('[data-cy="parties-link"]'),
   bankSecuritySection: () => cy.get('[data-cy="deal-bank-security-details"]'),
   bankSecuritySectionHeading: () => cy.get('[data-cy="bank-security-section-heading"]'),

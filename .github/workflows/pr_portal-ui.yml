@@ -5,11 +5,14 @@ on:
     branches: [ main ]
     paths:
     - 'portal/**'
-    - 'e2e-tests/portal/cypress/**'
-    - 'utils/mock-data-loader/**'
-    - 'dtfs-central-api/**'
-    - 'portal-api/**'
     - 'gef-ui/**'
+    - 'trade-finance-manager-ui/**'
+    - 'portal-api/**'
+    - 'trade-finance-manager-api/**'
+    - 'reference-data-proxy/**'
+    - 'dtfs-central-api/**'
+    - 'e2e-tests/**'
+    - 'utils/mock-data-loader/**'
 
 env:
   environment: dev

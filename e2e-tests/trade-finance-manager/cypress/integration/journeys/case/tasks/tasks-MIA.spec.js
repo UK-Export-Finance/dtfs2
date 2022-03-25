@@ -60,7 +60,7 @@ context('Case tasks - MIA deal', () => {
     const TOTAL_MIA_TASK_GROUPS = 4;
     pages.tasksPage.taskGroupTable().should('have.length', TOTAL_MIA_TASK_GROUPS);
 
-    const TOTAL_MIA_TASKS = 12;
+    const TOTAL_MIA_TASKS = 13;
     pages.tasksPage.tasksTableRows().should('have.length', TOTAL_MIA_TASKS);
   });
 

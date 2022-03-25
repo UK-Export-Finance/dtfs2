@@ -96,19 +96,26 @@ const MOCK_MIA_TASKS = [
       {
         id: '1',
         groupId: 4,
-        title: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,
+        title: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_ADVERSE_HISTORY_CHECK,
         team: CONSTANTS.TEAMS.UNDERWRITER_MANAGERS,
         history: [],
       },
       {
         id: '2',
         groupId: 4,
+        title: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,
+        team: CONSTANTS.TEAMS.UNDERWRITER_MANAGERS,
+        history: [],
+      },
+      {
+        id: '3',
+        groupId: 4,
         title: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS,
         team: CONSTANTS.TEAMS.RISK_MANAGERS,
         history: [],
       },
       {
-        id: '3',
+        id: '4',
         groupId: 4,
         title: CONSTANTS.TASKS.MIA_GROUP_4_TASKS.APPROVE_OR_DECLINE_THE_DEAL,
         team: CONSTANTS.TEAMS.UNDERWRITER_MANAGERS,

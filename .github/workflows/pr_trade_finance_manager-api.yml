@@ -4,14 +4,15 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-    - 'trade-finance-manager-api/**'
-    - 'trade-finance-manager-ui/**'
-    - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
-    - 'utils/mock-data-loader/**'
-    - 'dtfs-central-api/**'
-    - 'portal-api/**'
     - 'portal/**'
     - 'gef-ui/**'
+    - 'trade-finance-manager-ui/**'
+    - 'portal-api/**'
+    - 'trade-finance-manager-api/**'
+    - 'reference-data-proxy/**'
+    - 'dtfs-central-api/**'
+    - 'e2e-tests/**'
+    - 'utils/mock-data-loader/**'
 
   schedule:
     # A weekly run to roll up any base image patches,
