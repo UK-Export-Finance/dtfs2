@@ -65,8 +65,6 @@ jobs:
         inlineScript: |
           az network dns record-set caa add-record -n '@' --value 'globalsign.com' --tag 'issue' --flags 0 --zone-name ${{ env.domain_name }}
           az network dns record-set caa add-record -n '@' --value 'mailto:DigitalService.TradeFinance@ukexportfinance.gov.uk' --tag 'iodef' --flags 0 --zone-name ${{ env.domain_name }}
-          az network dns record-set caa add-record -n 'www' --value 'globalsign.com' --tag 'issue' --flags 0 --zone-name ${{ env.domain_name }}
-          az network dns record-set caa add-record -n 'www' --value 'mailto:DigitalService.TradeFinance@ukexportfinance.gov.uk' --tag 'iodef' --flags 0 --zone-name ${{ env.domain_name }}
 
     - name: Add domain name to Prod FD
       uses: azure/cli@v1.0.0
