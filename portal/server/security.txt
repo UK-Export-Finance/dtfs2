@@ -1,0 +1,11 @@
+# DTFS Portal 2.0
+Policy: https://www.gov.uk/help/report-vulnerability
+
+Contact: https://hackerone.com/44c348eb-e030-4273-b445-d4a2f6f83ba8/embedded_submissions/new
+Contact: https://get-a-guarantee-for-export-finance.service.gov.uk/feedback
+Contact: https://www.gov.uk/contact/govuk
+
+Acknowledgments: https://get-a-guarantee-for-export-finance.service.gov.uk/thanks.txt
+Hiring: https://www.civilservicejobs.service.gov.uk/
+
+Last-Updated: 23-03-2022 13:22:00+00:00 GMT

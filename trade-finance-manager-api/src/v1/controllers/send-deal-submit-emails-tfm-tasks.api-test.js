@@ -80,6 +80,16 @@ describe('send-deal-submit-emails - TFM tasks', () => {
       const result = shouldSendFirstTaskEmail(mockTask);
       expect(result).toEqual(false);
     });
+
+    it('should return false when task has emailSent flag', () => {
+      const mockTask = {
+        title: 'Test',
+        emailSent: true,
+      };
+
+      const result = shouldSendFirstTaskEmail(mockTask);
+      expect(result).toEqual(false);
+    });
   });
 
   describe('sendFirstTaskEmail', () => {

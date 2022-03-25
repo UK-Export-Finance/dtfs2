@@ -235,6 +235,29 @@ describe('task emails functions', () => {
       );
     });
 
+    it('should send an email for MIA - CHECK_ADVERSE_HISTORY_CHECK task', async () => {
+      const mockTask = MOCK_MIA_TASKS[3].groupTasks.find(
+        (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_ADVERSE_HISTORY_CHECK,
+      );
+
+      await sendUpdatedTaskEmail(mockTask, mockDeal, mockUrlOrigin);
+
+      const underwritersTeam = api.findOneTeam(mockTask.team.id);
+
+      const expectedEmailVars = {
+        taskTitle: lowercaseFirstLetter(CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_ADVERSE_HISTORY_CHECK),
+        taskUrl: generateTaskUrl(mockUrlOrigin, MOCK_DEAL_MIA_SUBMITTED._id, mockTask),
+        exporterName: mockDeal.exporter.companyName,
+        ukefDealId: mockDeal.ukefDealId,
+      };
+
+      expect(api.sendEmail).toHaveBeenCalledWith(
+        CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+        underwritersTeam.email,
+        expectedEmailVars,
+      );
+    });
+
     it('should send an email for MIA - CHECK_THE_CREDIT_ANALYSIS task', async () => {
       const mockTask = MOCK_MIA_TASKS[3].groupTasks.find(
         (t) => t.title === CONSTANTS.TASKS.MIA_GROUP_4_TASKS.CHECK_THE_CREDIT_ANALYSIS,

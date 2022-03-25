@@ -4,11 +4,11 @@
   {% set text = params.text %}
   {% set textList = params.textList %}
 
-  <p>{{ id }}. {{ text }}</p>
+  <p class="govuk-!-margin-bottom-0">{{ id }}. {{ text }}</p>
 
   {% if textList %}
     <div class="lower-roman-with-parens">
-      <ol type="i">
+      <ol type="i" class="govuk-!-margin-bottom-0 govuk-!-margin-top-2">
         {% for item in textList %}
           <li>{{ item }}</li>
         {% endfor %}

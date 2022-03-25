@@ -47,7 +47,7 @@ describe('/v1/deals', () => {
   describe('PUT /v1/deals/:dealId/submit', () => {
     describe('deal/case tasks', () => {
       describe('when deal is AIN', () => {
-        it('adds AIN tasks to the deal', async () => {
+        it('adds AIN tasks to the deal with emailSent flag added to the first task', async () => {
           const { status, body: submittedDeal } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_NO_COMPANIES_HOUSE));
 
           expect(status).toEqual(200);
@@ -55,6 +55,7 @@ describe('/v1/deals', () => {
           const taskCreation = await createDealTasks(submittedDeal);
 
           const expected = taskCreation.tfm.tasks;
+          expected[0].groupTasks[0].emailSent = true;
 
           expect(submittedDeal.tfm.tasks).toEqual(expected);
         });
@@ -93,7 +94,7 @@ describe('/v1/deals', () => {
       });
 
       describe('when deal is MIA', () => {
-        it('adds MIA tasks to the deal', async () => {
+        it('adds MIA tasks to the deal with emailSent flag added to the first task', async () => {
           const { status, body: submittedDeal } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SUBMITTED));
 
           expect(status).toEqual(200);
@@ -101,6 +102,7 @@ describe('/v1/deals', () => {
           const taskCreation = await createDealTasks(submittedDeal);
 
           const expected = taskCreation.tfm.tasks;
+          expected[0].groupTasks[0].emailSent = true;
 
           expect(submittedDeal.tfm.tasks).toEqual(expected);
         });
