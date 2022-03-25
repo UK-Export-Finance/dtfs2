@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import MOCK_USERS from '../../../../fixtures/users';
+import { UNDERWRITING_SUPPORT_1, UNDERWRITER_1 } from '../../../../../../fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 const MOCK_CREDIT_RATING_TEXT_INPUT_VALUE = 'Testing';
@@ -10,8 +10,6 @@ const MOCK_CREDIT_RATING_TEXT_INPUT_VALUE = 'Testing';
 context('Case Underwriting - Pricing and risk', () => {
   let dealId;
   const dealFacilities = [];
-  const underWritingUser = MOCK_USERS.find((user) => user.teams.includes('UNDERWRITERS'));
-  const underwritingSupportUser = MOCK_USERS.find((user) => !user.teams.includes('UNDERWRITING_SUPPORT'));
 
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
@@ -36,7 +34,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
   describe('when unable to edit', () => {
     beforeEach(() => {
-      cy.login(underwritingSupportUser);
+      cy.login(UNDERWRITING_SUPPORT_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to pricing and risk page
@@ -54,7 +52,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
   describe('when able to edit', () => {
     beforeEach(() => {
-      cy.login(underWritingUser);
+      cy.login(UNDERWRITER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to pricing and risk page
@@ -184,7 +182,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
   describe('a user that is not in the `underwriters` or `underwriter managers`', () => {
     beforeEach(() => {
-      cy.login(underwritingSupportUser);
+      cy.login(UNDERWRITING_SUPPORT_1);
 
       cy.visit(`/case/${dealId}/underwriting/pricing-and-risk`);
       cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));

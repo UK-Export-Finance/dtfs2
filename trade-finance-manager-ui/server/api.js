@@ -89,12 +89,6 @@ const getTeamMembers = async (teamId) => {
   return response.data.teamMembers;
 };
 
-const getUser = async (userId) => {
-  const response = await apollo('GET', userQuery, { userId });
-
-  return response.data.user;
-};
-
 const updateParty = async (id, partyUpdate) => {
   const updateVariables = {
     id,
@@ -250,6 +244,21 @@ const createFeedback = async (formData) => {
     data: formData,
   });
   return response.data;
+};
+
+const getUser = async (userId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/users/${userId}`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return response.data.user;
+  } catch (err) {
+    console.error('Unable to get the user details', err?.response?.data);
+    return err?.response?.data;
+  }
 };
 
 module.exports = {

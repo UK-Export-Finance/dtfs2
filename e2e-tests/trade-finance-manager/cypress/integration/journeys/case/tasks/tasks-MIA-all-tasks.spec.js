@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import MOCK_USERS from '../../../../fixtures/users';
+import { BUSINESS_SUPPORT_USER_1 } from '../../../../../../fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 import {
   MIA_TASKS_STRUCTURE,
@@ -17,7 +17,6 @@ import {
 context('Case tasks - MIA deal - all tasks', () => {
   let dealId;
   const dealFacilities = [];
-  const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
   let userId;
 
   const underwritingGroupId = 3;
@@ -27,7 +26,7 @@ context('Case tasks - MIA deal - all tasks', () => {
   const underwritingLastTaskId = 3;
 
   before(() => {
-    cy.getUser(businessSupportUser.username).then((userObj) => {
+    cy.getUser(BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
       userId = userObj._id;
     });
   });
@@ -44,7 +43,7 @@ context('Case tasks - MIA deal - all tasks', () => {
 
       cy.submitDeal(dealId, dealType);
 
-      cy.login(businessSupportUser);
+      cy.login(BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
     });
   });

@@ -4,7 +4,7 @@ const { BLOCKED, ACTIVE } = require('../../../constants/user.constant').DEAL_STA
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const utils = require('../../../utils/crypto.util');
 
-const businessRules = { loginFailureCount_Limit: 5 };
+const businessRules = { loginFailureCount: 5 };
 
 exports.findOne = async (_id, callback) => {
   const collection = await db.getCollection('tfm-users');
@@ -79,7 +79,7 @@ exports.updateLastLogin = async (user, sessionIdentifier, callback) => {
 
 exports.incrementFailedLoginCount = async (user) => {
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
-  const thresholdReached = (failureCount >= businessRules.loginFailureCount_Limit);
+  const thresholdReached = (failureCount >= businessRules.loginFailureCount);
 
   const collection = await db.getCollection('tfm-users');
   const update = {

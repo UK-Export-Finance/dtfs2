@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import MOCK_USERS from '../../../../fixtures/users';
+import * as MOCK_USERS from '../../../../../../fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 import {
   submitTaskInProgress,
@@ -12,19 +12,16 @@ import {
 context('Case tasks - MIA deal', () => {
   let dealId;
   const dealFacilities = [];
-  const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
-  const userFullName = `${businessSupportUser.firstName} ${businessSupportUser.lastName}`;
+  const userFullName = `${MOCK_USERS.BUSINESS_SUPPORT_USER_1.firstName} ${MOCK_USERS.BUSINESS_SUPPORT_USER_1.lastName}`;
   let userId;
-  let loggedInUserTeamName;
   let usersInTeam;
 
   before(() => {
-    cy.getUser(businessSupportUser.username).then((userObj) => {
+    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
       userId = userObj._id;
     });
 
-    [loggedInUserTeamName] = businessSupportUser.teams;
-    usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
+    usersInTeam = [MOCK_USERS.BUSINESS_SUPPORT_USER_1, MOCK_USERS.BUSINESS_SUPPORT_USER_2];
   });
 
   beforeEach(() => {
@@ -39,7 +36,7 @@ context('Case tasks - MIA deal', () => {
 
       cy.submitDeal(dealId, dealType);
 
-      cy.login(businessSupportUser);
+      cy.login(MOCK_USERS.BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
     });
   });
@@ -64,12 +61,12 @@ context('Case tasks - MIA deal', () => {
     pages.tasksPage.tasksTableRows().should('have.length', TOTAL_MIA_TASKS);
   });
 
-  it('user can assign a task to themself, change status and then unassign', () => {
+  it('user can assign a task to themselves, change status and then unassign', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     //---------------------------------------------------------------
-    // user assigns task to themself
+    // user assigns task to themselves
     //---------------------------------------------------------------
     pages.tasksPage.filterRadioYourTeam().click();
     const firstTask = pages.tasksPage.tasks.row(1, 1);
@@ -113,7 +110,7 @@ context('Case tasks - MIA deal', () => {
     pages.taskPage.assignedToSelectInput().invoke('val').should('eq', userId);
     pages.taskPage.assignedToSelectInputSelectedOption().should('have.text', userFullName);
 
-    // `in progess` status should be selected
+    // `in progress` status should be selected
     pages.taskPage.taskStatusRadioInputInProgress().should('be.checked');
 
     //---------------------------------------------------------------

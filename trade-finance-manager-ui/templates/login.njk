@@ -36,7 +36,10 @@
 
           {{ govukInput({
             label: {
-              text: "Email address"
+              text: "Email address",
+              attributes: {
+                "data-cy": "email-heading"
+              }
             },
             id: "email",
             name: "email",
@@ -55,7 +58,10 @@
 
           {{ govukInput({
             label: {
-              text: "Password"
+              text: "Password",
+              attributes: {
+                "data-cy": "password-heading"
+              }
             },
             id: "password",
             name: "password",

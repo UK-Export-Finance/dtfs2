@@ -1,7 +1,8 @@
+const { ObjectId } = require('mongodb');
 const utils = require('../../../utils/crypto.util');
 const { userNotFound, incorrectPassword, userIsDisabled } = require('../../../constants/login-results.constant');
 const {
-  create, update, removeTfmUserById, findOne,
+  create, update, removeTfmUserById, findOne, findByUsername,
 } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -57,20 +58,32 @@ module.exports.createTfmUser = (req, res, next) => {
   });
 };
 
-module.exports.findTfmUserById = (req, res, next) => {
-  findOne(req.params._id, (err, user) => {
-    if (err) {
-      next(err);
-    } else if (user) {
-      res.status(200).json({ user: mapUserData(user), status: 200 });
-    } else {
-      res.status(404).json({ user: {}, status: 404, message: 'User does not exist' });
-    }
-  });
+module.exports.findTfmUser = (req, res, next) => {
+  if (ObjectId.isValid(req.params.user)) {
+    findOne(req.params.user, (err, user) => {
+      if (err) {
+        next(err);
+      } else if (user) {
+        res.status(200).json({ user: mapUserData(user), status: 200 });
+      } else {
+        res.status(404).json({ user: {}, status: 404, message: 'User does not exist' });
+      }
+    });
+  } else {
+    findByUsername(req.params.user, (err, user) => {
+      if (err) {
+        next(err);
+      } else if (user) {
+        res.status(200).json({ user: mapUserData(user), status: 200 });
+      } else {
+        res.status(404).json({ user: {}, status: 404, message: 'User does not exist' });
+      }
+    });
+  }
 };
 
 module.exports.updateTfmUserById = (req, res, next) => {
-  findOne(req.params._id, (err, user) => {
+  findOne(req.params.user, (err, user) => {
     if (err) {
       next(err);
     } else if (user) {
@@ -84,7 +97,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
           },
         });
       } else {
-        update(req.params._id, req.body, (updateErr, updatedUser) => {
+        update(req.params.user, req.body, (updateErr, updatedUser) => {
           if (updateErr) {
             next(updateErr);
           } else {
@@ -99,7 +112,7 @@ module.exports.updateTfmUserById = (req, res, next) => {
 };
 
 module.exports.removeTfmUserById = (req, res, next) => {
-  removeTfmUserById(req.params._id, (err, status) => {
+  removeTfmUserById(req.params.user, (err, status) => {
     if (err) {
       next(err);
     } else {

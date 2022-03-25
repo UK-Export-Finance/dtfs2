@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import MOCK_USERS from '../../../../fixtures/users';
+import { T1_USER_1, UNDERWRITER_MANAGER_1 } from '../../../../../../fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 context('Case Underwriting - Pricing and risk', () => {
@@ -25,10 +25,7 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   beforeEach(() => {
-    underWritingManager = MOCK_USERS.find((user) =>
-      user.teams.includes('UNDERWRITER_MANAGERS'));
-
-    cy.login(underWritingManager);
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page
@@ -48,10 +45,7 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   it('a user that is NOT in UNDERWRITER_MANAGERS team should not see `Add decision` link', () => {
-    const nonUnderWritingManager = MOCK_USERS.find((user) =>
-      !user.teams.includes('UNDERWRITER_MANAGERS'));
-
-    cy.login(nonUnderWritingManager);
+    cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page
@@ -123,7 +117,7 @@ context('Case Underwriting - Pricing and risk', () => {
     });
 
     pages.managersDecisionPage.decisionMadeBy().invoke('text').then((text) => {
-      const { firstName, lastName } = underWritingManager;
+      const { firstName, lastName } = UNDERWRITER_MANAGER_1;
       const userFullName = `${firstName} ${lastName}`;
 
       expect(text.trim()).to.equal(userFullName);

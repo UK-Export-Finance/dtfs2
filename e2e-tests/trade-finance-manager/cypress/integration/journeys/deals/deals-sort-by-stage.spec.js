@@ -2,7 +2,7 @@ import relative from '../../relativeURL';
 import pages from '../../pages';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import createMockDeal from '../../../fixtures/create-mock-deal';
-import MOCK_USERS from '../../../fixtures/users';
+import { T1_USER_1 } from '../../../../../fixtures';
 import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
 
 context('User can view and sort deals by stage', () => {
@@ -58,7 +58,7 @@ context('User can view and sort deals by stage', () => {
   });
 
   beforeEach(() => {
-    cy.login(MOCK_USERS[0]);
+    cy.login(T1_USER_1);
     cy.url().should('eq', relative('/deals'));
   });
 

@@ -6,7 +6,7 @@ import partials from '../../partials';
 import { nowPlusDays } from '../../../support/utils/dateFuncs';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import MOCK_USERS from '../../../fixtures/users';
+import { T1_USER_1 } from '../../../../../fixtures';
 import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
 import CONSTANTS from '../../../fixtures/constants';
 
@@ -96,7 +96,7 @@ context('User can view and filter multiple deals', () => {
   });
 
   beforeEach(() => {
-    cy.login(MOCK_USERS[0]);
+    cy.login(T1_USER_1);
     cy.url().should('eq', relative('/deals'));
   });
 

@@ -108,8 +108,8 @@ openRouter.route('/feedback').post(feedbackController.create);
 
 openRouter.route('/users').post(users.createTfmUser);
 
-openRouter.route('/users/:_id')
-  .get(users.findTfmUserById)
+openRouter.route('/users/:user')
+  .get(users.findTfmUser)
   .put(users.updateTfmUserById)
   .delete(users.removeTfmUserById);
 

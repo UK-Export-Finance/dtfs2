@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import MOCK_USERS from '../../../../fixtures/users';
+import { UNDERWRITER_MANAGER_1 } from '../../../../../../fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 const MOCK_COMMENTS = 'Testing';
@@ -10,7 +10,6 @@ const MOCK_INTERNAL_COMMENTS = 'Internal comment';
 
 context('Case Underwriting - Pricing and risk', () => {
   let dealId;
-  let underWritingManager;
   const dealFacilities = [];
 
   before(() => {
@@ -28,9 +27,7 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   beforeEach(() => {
-    underWritingManager = MOCK_USERS.find((user) => user.teams.includes('UNDERWRITER_MANAGERS'));
-
-    cy.login(underWritingManager);
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page
@@ -65,7 +62,7 @@ context('Case Underwriting - Pricing and risk', () => {
     });
 
     pages.managersDecisionPage.decisionMadeBy().invoke('text').then((text) => {
-      const { firstName, lastName } = underWritingManager;
+      const { firstName, lastName } = UNDERWRITER_MANAGER_1;
       const userFullName = `${firstName} ${lastName}`;
 
       expect(text.trim()).to.equal(userFullName);

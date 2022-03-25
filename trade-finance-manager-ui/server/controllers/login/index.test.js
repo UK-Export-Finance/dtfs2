@@ -52,7 +52,7 @@ describe('controllers - login', () => {
       });
     });
 
-    it.only('should redirect to /deals if login successful', async () => {
+    it('should redirect to /deals if login successful', async () => {
       const postReq = {
         ...req,
         body: {

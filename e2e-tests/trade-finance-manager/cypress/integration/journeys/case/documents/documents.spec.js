@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import MOCK_USERS from '../../../../fixtures/users';
+import { T1_USER_1 } from '../../../../../../fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 context('Documents', () => {
@@ -32,7 +32,7 @@ context('Documents', () => {
 
   context('eStore', () => {
     beforeEach(() => {
-      cy.login(MOCK_USERS[0]);
+      cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to documents page

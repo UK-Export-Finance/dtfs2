@@ -1,14 +1,12 @@
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import MOCK_USERS from '../../../../fixtures/users';
+import { T1_USER_1, BUSINESS_SUPPORT_USER_1 } from '../../../../../../fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 context('Parties page', () => {
   let dealId;
   const dealFacilities = [];
-  const team1User = MOCK_USERS.find((user) => user.teams.includes('TEAM1'));
-  const businessSupportUser = MOCK_USERS.find((user) => user.teams.includes('BUSINESS_SUPPORT'));
 
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
@@ -33,7 +31,7 @@ context('Parties page', () => {
 
   describe('for any user', () => {
     beforeEach(() => {
-      cy.login(team1User);
+      cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/parties`));
     });
 
@@ -80,7 +78,7 @@ context('Parties page', () => {
 
   describe('when user is in BUSINESS_SUPPORT team', () => {
     beforeEach(() => {
-      cy.login(businessSupportUser);
+      cy.login(BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/parties`));
     });
 
