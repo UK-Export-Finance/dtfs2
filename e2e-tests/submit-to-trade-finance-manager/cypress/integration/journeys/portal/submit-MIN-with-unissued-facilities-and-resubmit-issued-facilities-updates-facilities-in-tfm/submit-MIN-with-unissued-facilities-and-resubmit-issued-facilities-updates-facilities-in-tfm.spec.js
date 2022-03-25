@@ -20,7 +20,7 @@ import {
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
-import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../fixtures';
+import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 context('Portal to TFM deal submission', () => {
   let deal;

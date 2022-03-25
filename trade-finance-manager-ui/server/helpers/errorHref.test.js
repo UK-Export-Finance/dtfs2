@@ -1,4 +1,4 @@
-import errorHref from './errorHref.helper';
+import { errorHref } from './errorHref.helper';
 
 describe('errorHref', () => {
   it('should return a html id selector', () => {

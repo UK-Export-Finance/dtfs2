@@ -48,25 +48,16 @@ const deleteTeam = async (team, token) => {
 };
 
 const createTfmUser = async (user) => {
-  let response;
-  console.log(tfmApi);
-  try {
-    response = await axios({
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        Accepts: 'application/json',
-      },
-      url: `${tfmApi}/v1/users`,
-      data: user,
-    });
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+    },
+    url: `${tfmApi}/v1/users`,
+    data: user,
+  });
 
-    response = response.data;
-  } catch (error) {
-    response = error;
-  }
-
-  console.log(response);
   return response;
 };
 

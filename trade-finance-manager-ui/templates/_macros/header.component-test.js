@@ -18,7 +18,7 @@ describe(component, () => {
     it('should render user\'s first and last name', () => {
       wrapper = render(params);
 
-      const expected = `${params.user.firstName} ${params.user.lastName}`;
+      const expected = `${params.user.firstName} ${params.user.lastName}Profile`;
 
       wrapper.expectText('[data-cy="header-user-link"]').toRead(expected);
     });

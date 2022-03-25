@@ -72,6 +72,17 @@ jobs:
         tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
+    - name: Build and push TFM-API
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: trade-finance-manager-api
+        path: trade-finance-manager-api
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
     - name: Build and push Portal-UI
       uses: docker/build-push-action@v1
       with:
