@@ -16,7 +16,7 @@ env:
 jobs:
 
   zone:
-    name: Create service.gov.uk zone
+    name: {{ env.domain_name }}
     runs-on: [self-hosted, linux]
     steps:
 
@@ -38,14 +38,14 @@ jobs:
         inlineScript: |
           az network dns zone create --name ${{ env.domain_name }}
     
-    - name: A record
+    - name: DNS - A record
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           front_door_id=$(az network front-door show --name ${{ env.front_door_name }} --query id -o tsv)
           az network dns record-set a create --name "@" --target-resource $front_door_id --zone-name ${{ env.domain_name }}
 
-    - name: CNAME records
+    - name: DNS - CNAME records
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
@@ -53,36 +53,36 @@ jobs:
             az network dns record-set cname set-record --record-set-name afdverify --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
             az network dns record-set cname set-record --record-set-name '*' --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
 
-    - name: TXT record
+    - name: DNS - TXT record
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           az network dns record-set txt add-record --record-set-name asuid.www --value ${{ secrets.PROD_DNS_VERIFICATION }} --zone-name ${{ env.domain_name }}
           az network dns record-set txt add-record --record-set-name '@' --value '_globalsign-domain-verification=avG_7JwIvVmNxS7K2KOEplp_B3KudAfdqpnlPNVRpB' --zone-name ${{ env.domain_name }}
     
-    - name: CAA record
+    - name: DNS - CAA record
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           az network dns record-set caa add-record -n '@' --value 'globalsign.com' --tag 'issue' --flags 0 --zone-name ${{ env.domain_name }}
           az network dns record-set caa add-record -n '@' --value 'mailto:DigitalService.TradeFinance@ukexportfinance.gov.uk' --tag 'iodef' --flags 0 --zone-name ${{ env.domain_name }}
 
-    - name: Add domain name to Prod FD
+    - name: FD - Add domains
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "Portal" --host-name ${{ env.domain_name }}
           az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "Portal-WWW" --host-name www.${{ env.domain_name }}
 
-    - name: Enable HTTPS
+    - name: FD - HTTPS
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          $frontend_endpoint_id=$(az network front-door show --name tfs-${{ env.environment }}-fd --query "frontendEndpoints[0].id" -o tsv)
-          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $frontend_endpoint_id --secret-name  {{ env.key_vault_secret }} --secret-version "Latest"
-          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal-WWW" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $frontend_endpoint_id --secret-name  {{ env.key_vault_secret }} --secret-version "Latest"
+          $keyvault_id=$(az keyvault show --name tfs-${{ env.environment }}-kv --query id -o tsv)
+          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name {{ env.key_vault_secret }} --secret-version "Latest"
+          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal-WWW" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name {{ env.key_vault_secret }} --secret-version "Latest"
           
-    - name: Check domain name mapping
+    - name: FD - Verify mapping
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
