@@ -10,11 +10,9 @@ import {
 
 import MOCK_USERS from '../../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_UNISSUED_LOAN_READY_TO_SUBMIT from './test-data/dealWithUnissuedLoanReadyToSubmit';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
-
-// Cypress.config('tfmUrl') returns incorrect url...
-const tfmRootUrl = 'http://localhost:5003';
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -39,6 +37,10 @@ context('Portal to TFM deal submission', () => {
           loanId = loan._id;
         });
       });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('Portal deal with unissued loan is submitted to UKEF, loan displays correctly in TFM. Loan is then issued in Portal and resubmitted; displays correctly in TFM with Premium schedule populated, Portal facility status is updated to `Acknowledged`', () => {
@@ -71,12 +73,11 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM loan values should render in an unissued state
     //---------------------------------------------------------------
-    cy.forceVisit(tfmRootUrl);
+    cy.forceVisit(TFM_URL);
 
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
+    cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
 
-    let tfmFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${loanId}`;
+    let tfmFacilityPage = `${TFM_URL}/case/${dealId}/facility/${loanId}`;
     cy.forceVisit(tfmFacilityPage);
 
     tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {
@@ -103,7 +104,7 @@ context('Portal to TFM deal submission', () => {
 
 
     //---------------------------------------------------------------
-    // portal maker completes loan inssuance form
+    // portal maker completes loan insurance form
     //---------------------------------------------------------------
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
@@ -142,11 +143,11 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM loan values should be updated
     //---------------------------------------------------------------
-    cy.forceVisit(tfmRootUrl);
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
+    cy.forceVisit(TFM_URL);
 
-    tfmFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${loanId}`;
+    cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
+
+    tfmFacilityPage = `${TFM_URL}/case/${dealId}/facility/${loanId}`;
     cy.forceVisit(tfmFacilityPage);
 
     tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {
