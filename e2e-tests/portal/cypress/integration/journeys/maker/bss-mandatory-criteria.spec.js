@@ -6,7 +6,7 @@ const MOCK_USERS = require('../../../fixtures/users');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('New BSS deal: Check deal details page', () => {
+context('BSS Mandatory criteria: Check deal details page', () => {
   let deal;
   beforeEach(() => {
     cy.insertOneDeal(dealFullyCompleted, BANK1_MAKER1).then((insertedDeal) => {
