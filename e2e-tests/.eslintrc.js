@@ -32,4 +32,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 12, // es2021
   },
+  globals: {
+    cy: true,
+  },
 };
