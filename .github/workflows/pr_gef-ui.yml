@@ -187,10 +187,6 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:${{ github.sha }} dtfs/portal
-    - name: Pull tfm-api
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
     - name: Pull GEF
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/gef-ui:${{ github.sha }}
@@ -201,8 +197,8 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/azure-function-number-generator:${{ github.sha }} dtfs/azure-function-number-generator
     - name: Pull tfm-api
       run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api dtfs/trade-finance-manager-api
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
     - name: Pull reference-data-proxy
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/reference-data-proxy:${{ github.sha }}
@@ -210,7 +206,7 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose -f docker-compose.gha.yml up --build -d
+        docker-compose -f docker-compose.gha.yml up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
