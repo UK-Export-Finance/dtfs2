@@ -3,6 +3,7 @@ const compression = require('compression');
 const session = require('express-session');
 const morgan = require('morgan');
 const path = require('path');
+
 const routes = require('./routes');
 require('./azure-env');
 const configureNunjucks = require('./nunjucks-configuration');
@@ -46,4 +47,4 @@ app.get('/not-found', (req, res) => res.render('page-not-found.njk', { user: req
 
 app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
-app.listen(PORT, () => console.info(`TFM UI app listening on port ${PORT}!`)); // eslint-disable-line no-console
+app.listen(PORT, () => console.info(`TFM UI app listening on port ${PORT}!`));

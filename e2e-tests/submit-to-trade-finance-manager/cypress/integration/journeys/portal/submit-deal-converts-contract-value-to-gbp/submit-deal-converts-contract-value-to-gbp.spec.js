@@ -1,10 +1,10 @@
 import relative from '../../../relativeURL';
 import portalPages from '../../../../../../portal/cypress/integration/pages';
-import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -14,19 +14,20 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('Portal deal is submitted to UKEF, tasks are added to the deal in TFM.', () => {
@@ -41,7 +42,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
-
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
@@ -55,33 +55,31 @@ context('Portal to TFM deal submission', () => {
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
-
     //---------------------------------------------------------------
     // user login to TFM
     //---------------------------------------------------------------
-    // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmRootUrl = 'http://localhost:5003';
+    cy.forceVisit(TFM_URL);
 
-    cy.forceVisit(tfmRootUrl);
+    cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
 
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
-
-    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
+    const tfmCaseDealPage = `${TFM_URL}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
+    tfmPartials.caseSummary
+      .contractValue()
+      .invoke('text')
+      .then((text) => {
+        const { supplyContractCurrency } = MOCK_DEAL_READY_TO_SUBMIT().submissionDetails;
 
-    tfmPartials.caseSummary.contractValue().invoke('text').then((text) => {
-      const {
-        supplyContractCurrency,
-      } = MOCK_DEAL_READY_TO_SUBMIT().submissionDetails;
-
-      expect(text.trim()).to.contain(supplyContractCurrency.id);
-    });
+        expect(text.trim()).to.contain(supplyContractCurrency.id);
+      });
 
     // currency is converted dynamically - tricky/flaky to assert/mock this from e2e test
-    tfmPartials.caseSummary.contractValueInGBP().invoke('text').then((text) => {
-      expect(text.trim()).to.contain('GBP');
-    });
+    tfmPartials.caseSummary
+      .contractValueInGBP()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('GBP');
+      });
   });
 });
