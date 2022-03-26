@@ -50,6 +50,7 @@ services:
       - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
       - ESTORE_URL
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+      - SESSION_SECRET
     command: npx nodemon --inspect=0.0.0.0:9224 server/index.js -L
 
   trade-finance-manager-api:
@@ -77,6 +78,7 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
+      - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
     command: npx nodemon --inspect=0.0.0.0:9225 src/index.js -L
 
   portal:

@@ -3,38 +3,26 @@ const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
-// const helmet = require('helmet');
-
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const healthcheck = require('./healthcheck');
-
 const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
 const { validateUserMiddleware } = require('./graphql/middleware');
 
 dotenv.config();
-
 const { CORS_ORIGIN } = process.env;
-
 const configurePassport = require('./v1/users/passport');
 const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
-
 const seo = require('./v1/middleware/headers/seo');
+const security = require('./v1/middleware/headers/security');
 
 configurePassport(passport);
 
 const app = express();
 
 app.use(seo);
-
-// TODO: re-enable Helmet (Jira - 4998)
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: false,
-//   }),
-// );
-
+app.use(security);
 app.use(healthcheck);
 app.use(passport.initialize());
 app.use(express.json());

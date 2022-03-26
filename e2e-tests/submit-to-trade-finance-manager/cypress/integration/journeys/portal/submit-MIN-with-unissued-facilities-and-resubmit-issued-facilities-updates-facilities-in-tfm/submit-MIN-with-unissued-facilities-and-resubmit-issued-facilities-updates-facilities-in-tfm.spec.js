@@ -20,8 +20,7 @@ import {
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
-// Cypress.config('tfmUrl') returns incorrect url...
-const tfmRootUrl = 'http://localhost:5003';
+import { UNDERWRITER_MANAGER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 context('Portal to TFM deal submission', () => {
   let deal;
@@ -29,23 +28,24 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_MIN_UNISSUED_FACILITIES_DEAL_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_MIN_UNISSUED_FACILITIES_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-          const loans = createdFacilities.filter((f) => f.type === 'Loan');
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const bonds = createdFacilities.filter((f) => f.type === 'Bond');
+        const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
-          dealFacilities.bonds = bonds;
-          dealFacilities.loans = loans;
-        });
+        dealFacilities.bonds = bonds;
+        dealFacilities.loans = loans;
       });
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('MIN deal with unissued facilities that then become issued updates facilties in TFM', () => {
@@ -59,7 +59,6 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
-
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
@@ -127,15 +126,14 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // login to TFM
     //---------------------------------------------------------------
-    cy.forceVisit(tfmRootUrl);
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
+    cy.forceVisit(TFM_URL);
 
+    cy.tfmLogin(UNDERWRITER_MANAGER_1);
 
     //---------------------------------------------------------------
     // tenor for all facilities should be updated in main deal page
     //---------------------------------------------------------------
-    const tfmDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
+    const tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
     cy.forceVisit(tfmDealPage);
 
     const tfmBondRow = tfmPages.caseDealPage.dealFacilitiesTable.row(bondId);
@@ -154,11 +152,10 @@ context('Portal to TFM deal submission', () => {
       expect(text.trim()).to.contain('month');
     });
 
-
     //---------------------------------------------------------------
     // bond facility should be updated
     //---------------------------------------------------------------
-    const tfmBondFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${bondId}`;
+    const tfmBondFacilityPage = `${TFM_URL}/case/${dealId}/facility/${bondId}`;
     cy.forceVisit(tfmBondFacilityPage);
 
     tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {
@@ -206,7 +203,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // loan facility should be updated
     //---------------------------------------------------------------
-    const tfmLoanFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${loanId}`;
+    const tfmLoanFacilityPage = `${TFM_URL}/case/${dealId}/facility/${loanId}`;
     cy.forceVisit(tfmLoanFacilityPage);
 
     tfmPages.facilityPage.facilityStage().invoke('text').then((text) => {

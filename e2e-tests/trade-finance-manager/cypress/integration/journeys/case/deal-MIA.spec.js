@@ -3,7 +3,7 @@ import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import MOCK_USERS from '../../../fixtures/users';
+import { T1_USER_1 } from '../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 
 context('User can view a case deal', () => {
@@ -26,7 +26,7 @@ context('User can view a case deal', () => {
   });
 
   beforeEach(() => {
-    cy.login(MOCK_USERS[0]);
+    cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
   });
 
