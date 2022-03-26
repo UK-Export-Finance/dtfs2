@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import MOCK_USERS from '../../../../fixtures/users';
+import { T1_USER_1, UNDERWRITER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
@@ -34,10 +34,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
   context('unauthorised user', () => {
     it('a user that is not in the `underwriting support` team cannot view the loss given default page', () => {
       // non-underwriting support user goes to the `Pricing and risk` page
-      const nonUnderWritingSupportUser = MOCK_USERS.find((user) =>
-        !user.teams.includes('UNDERWRITERS'));
-
-      cy.login(nonUnderWritingSupportUser);
+      cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting/pricing-and-risk/loss-given-default`));
 
       cy.url().should('eq', relative('/not-found'));
@@ -46,10 +43,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
 
   context('authorised user', () => {
     beforeEach(() => {
-      const underWritingSupportUser = MOCK_USERS.find((user) =>
-        user.teams.includes('UNDERWRITERS'));
-
-      cy.login(underWritingSupportUser);
+      cy.login(UNDERWRITER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to pricing and risk page

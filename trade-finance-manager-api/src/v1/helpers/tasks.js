@@ -24,7 +24,7 @@ const isFirstTaskInAGroup = (taskId, groupId) =>
 const isFirstTaskInFirstGroup = (taskId, groupId) =>
   (taskId === '1' && groupId === 1);
 
-const groupHasAllTasksCompleted = (groupTasks) => {
+const groupHasAllTasksCompleted = (groupTasks = []) => {
   const totalTasks = groupTasks.length;
 
   const completedTasks = groupTasks.filter((task) =>
