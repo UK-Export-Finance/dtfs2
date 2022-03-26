@@ -2,6 +2,7 @@ const MOCK_USERS = [
   {
     _id: '6051d94564494924d38ce67c',
     username: 'BUSINESS_SUPPORT_USER_1',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['BUSINESS_SUPPORT'],
     timezone: 'Europe/London',
@@ -11,6 +12,7 @@ const MOCK_USERS = [
   {
     _id: '6051d94564494924d38ce123',
     username: 'myUsername',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['BUSINESS_SUPPORT'],
     timezone: 'Europe/London',
@@ -20,6 +22,7 @@ const MOCK_USERS = [
   {
     _id: '6051d94564494924d38ce124',
     username: 'myUsername',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITING_SUPPORT'],
     timezone: 'Europe/London',
@@ -29,6 +32,7 @@ const MOCK_USERS = [
   {
     _id: '6051d94564494924d38ce125',
     username: 'UNDERWRITER_MANAGER_1',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITER_MANAGERS'],
     timezone: 'Europe/London',
@@ -38,6 +42,7 @@ const MOCK_USERS = [
   {
     _id: '6051d94564494924d38ce126',
     username: 'UNDERWRITER_1',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITERS'],
     timezone: 'Europe/London',
@@ -47,6 +52,7 @@ const MOCK_USERS = [
   {
     _id: '6051d94564494924d38ce127',
     username: 'RISK_MANAGER_1',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['RISK_MANAGERS'],
     timezone: 'Europe/London',

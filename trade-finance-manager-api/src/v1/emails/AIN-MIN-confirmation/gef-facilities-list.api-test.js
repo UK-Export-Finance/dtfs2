@@ -67,12 +67,13 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     it('should return and format specific fields from a facility object', () => {
       const result = facilityFieldsObj(mockFacility);
 
+      const coverEndDate = new Date(mockFacility.coverEndDate);
       const expected = {
         ukefFacilityId: mockFacility.ukefFacilityId,
         bankReference: mockFacility.bankReference,
         hasBeenIssued: mapIssuedValue(mockFacility.hasBeenIssued),
         coverStartDate: format(Number(mockFacility.coverStartDate), 'do MMMM yyyy'),
-        coverEndDate: format(Number(mockFacility.coverEndDate), 'do MMMM yyyy'),
+        coverEndDate: format(Number(coverEndDate), 'do MMMM yyyy'),
         value: mockFacility.value,
         currencyCode: mockFacility.currencyCode,
         interestPercentage: `${mockFacility.interestPercentage}%`,

@@ -13,13 +13,13 @@ const insertMocks = async () => {
   });
 
   console.info('inserting TFM teams');
-  for (team of MOCKS.TEAMS) {
+  for (const team of MOCKS.TEAMS) {
     await api.createTeam(team, token);
   }
 
   console.info('inserting TFM users');
-  for (user of MOCKS.USERS) {
-    await api.createUser(user, token);
+  for (const user of MOCKS.USERS) {
+    await api.createTfmUser(user);
   }
 };
 

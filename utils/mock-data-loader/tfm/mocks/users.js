@@ -2,6 +2,7 @@ module.exports = [
   {
     username: 'T1_USER_1',
     email: 'test@testing.com',
+    password: 'AbC!2345',
     teams: ['TEAM1'],
     timezone: 'Europe/London',
     firstName: 'Joe',
@@ -10,6 +11,7 @@ module.exports = [
   {
     username: 'T1_USER_2',
     email: 'test@testing.com',
+    password: 'AbC!2345',
     teams: ['TEAM1'],
     timezone: 'Europe/London',
     firstName: 'Joe',
@@ -18,6 +20,7 @@ module.exports = [
   {
     username: 'T1_USER_3',
     email: 'test@testing.com',
+    password: 'AbC!2345',
     teams: ['TEAM1'],
     timezone: 'Europe/London',
     firstName: 'Joe',
@@ -26,6 +29,7 @@ module.exports = [
   {
     username: 'T2_USER_1',
     email: 'test@testing.com',
+    password: 'AbC!2345',
     teams: ['TEAM2'],
     timezone: 'Europe/London',
     firstName: 'Joe',
@@ -34,6 +38,7 @@ module.exports = [
   {
     username: 'T2_USER_2',
     email: 'test@testing.com',
+    password: 'AbC!2345',
     teams: ['TEAM2'],
     timezone: 'Europe/London',
     firstName: 'Joe',
@@ -42,6 +47,7 @@ module.exports = [
   {
     username: 'T2_USER_3',
     email: 'test@testing.com',
+    password: 'AbC!2345',
     teams: ['TEAM2'],
     timezone: 'Europe/London',
     firstName: 'Joe',
@@ -49,6 +55,7 @@ module.exports = [
   },
   {
     username: 'BUSINESS_SUPPORT_USER_1',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['BUSINESS_SUPPORT'],
     timezone: 'Europe/London',
@@ -57,6 +64,7 @@ module.exports = [
   },
   {
     username: 'BUSINESS_SUPPORT_USER_2',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['BUSINESS_SUPPORT'],
     timezone: 'Europe/London',
@@ -65,6 +73,7 @@ module.exports = [
   },
   {
     username: 'UNDERWRITING_SUPPORT_1',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITING_SUPPORT'],
     timezone: 'Europe/London',
@@ -73,6 +82,7 @@ module.exports = [
   },
   {
     username: 'UNDERWRITING_SUPPORT_2',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITING_SUPPORT'],
     timezone: 'Europe/London',
@@ -81,6 +91,7 @@ module.exports = [
   },
   {
     username: 'UNDERWRITER_MANAGER_1',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITER_MANAGERS'],
     timezone: 'Europe/London',
@@ -89,6 +100,7 @@ module.exports = [
   },
   {
     username: 'UNDERWRITER_MANAGER_2',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITER_MANAGERS'],
     timezone: 'Europe/London',
@@ -97,6 +109,7 @@ module.exports = [
   },
   {
     username: 'UNDERWRITER_1',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITERS'],
     timezone: 'Europe/London',
@@ -105,6 +118,7 @@ module.exports = [
   },
   {
     username: 'UNDERWRITER_2',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITERS'],
     timezone: 'Europe/London',
@@ -113,6 +127,7 @@ module.exports = [
   },
   {
     username: 'UNDERWRITER_3',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITERS'],
     timezone: 'Europe/London',
@@ -121,6 +136,7 @@ module.exports = [
   },
   {
     username: 'RISK_MANAGER_1',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['RISK_MANAGERS'],
     timezone: 'Europe/London',
@@ -129,6 +145,7 @@ module.exports = [
   },
   {
     username: 'QA',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['UNDERWRITER_MANAGERS'],
     timezone: 'Europe/London',
@@ -137,6 +154,7 @@ module.exports = [
   },
   {
     username: 'ESTORE',
+    password: 'AbC!2345',
     email: 'test@testing.com',
     teams: ['ESTORE'],
     timezone: 'Europe/London',
