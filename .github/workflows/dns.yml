@@ -42,7 +42,7 @@ jobs:
       with:
         inlineScript: |
           front_door_id=$(az network front-door show --name ${{ env.front_door_name }} --query id -o tsv)
-          az network dns record-set a create --name "@" --target-resource ${{ secrets.PROD_PORTAL_FD }} --zone-name ${{ env.domain_name }}
+          az network dns record-set a create --name "@" --target-resource $front_door_id --zone-name ${{ env.domain_name }}
 
     - name: CNAME records
       uses: azure/cli@v1.0.0

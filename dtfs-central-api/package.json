@@ -41,7 +41,6 @@
     "date-fns": "^2.28.0",
     "dotenv": "16.0.0",
     "express": "4.17.3",
-    "helmet": "^5.0.2",
     "moment": "^2.29.1",
     "mongo-dot-notation": "2.0.0",
     "mongodb": "~3.6.12",
