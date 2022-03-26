@@ -64,8 +64,8 @@ context('View dashboard deals as a checker', () => {
 
     cy.insertOneDeal(BSS_DEALS.DRAFT, BANK1_MAKER1).then((createdDeal) => {
       BANK1_DEALS.push(createdDeal);
-    });;
-    
+    });
+
     cy.insertOneGefApplication(GEF_DEALS.READY_FOR_CHECK, BANK1_MAKER1)
       .then((gefDeal) => {
         cy.setGefApplicationStatus(gefDeal._id, GEF_DEALS.READY_FOR_CHECK.status, BANK1_MAKER1)
