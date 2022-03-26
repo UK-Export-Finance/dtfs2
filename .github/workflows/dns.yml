@@ -16,7 +16,7 @@ env:
 jobs:
 
   zone:
-    name: {{ env.domain_name }}
+    name: DNS Zone
     runs-on: [self-hosted, linux]
     steps:
 
