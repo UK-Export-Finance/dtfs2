@@ -9,6 +9,8 @@ on:
 env:
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
+  key_vault_id: ${{ secrets.PROD_KEYVAULT_ID }}
+  key_vault_secret: ${{ secrets.PROD_KEYVAULT_SECRET }}
   domain_name: "get-a-guarantee-for-export-finance.service.gov.uk"
   front_door_name: tfs-prod-fd
 
@@ -71,15 +73,15 @@ jobs:
       with:
         inlineScript: |
           az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "Portal" --host-name ${{ env.domain_name }}
-          az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "Portal" --host-name www.${{ env.domain_name }}
+          az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "Portal-WWW" --host-name www.${{ env.domain_name }}
 
     - name: Enable HTTPS
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "service.gov.uk"
+          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id {{ env.key_vault_id }} --secret-name  {{ env.key_vault_secret }} --secret-version "Latest"
+          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal-WWW" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id {{ env.key_vault_id }} --secret-name  {{ env.key_vault_secret }} --secret-version "Latest"
           
-
     - name: Check domain name mapping
       uses: azure/cli@v1.0.0
       with:
