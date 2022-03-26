@@ -5,7 +5,7 @@ import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreDealFolderCreationJob } from './eStoreDealFolderCreationJob.cron';
 import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
 
-const folderCreationTimer = '30 * * * * *';
+const folderCreationTimer = '59 * * * * *';
 
 export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
   const cronJobLogsCollection = await getCollection('cron-job-logs');
