@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import MOCK_USERS from '../../../../fixtures/users';
+import * as MOCK_USERS from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 const TOTAL_DEFAULT_AIN_TASKS = 2;
@@ -28,19 +28,15 @@ const assignTaskToSomeoneElseInMyTeam = (dealId, differentUserInSameTeam) => new
 context('Case tasks - AIN deal', () => {
   let dealId;
   const dealFacilities = [];
-  const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
-  const nonBusinessSupportUser = MOCK_USERS.find((u) => !u.teams.includes('BUSINESS_SUPPORT'));
   let userId;
-  let loggedInUserTeamName;
   let usersInTeam;
 
   before(() => {
-    cy.getUser(businessSupportUser.username).then((userObj) => {
+    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
       userId = userObj._id;
     });
 
-    [loggedInUserTeamName] = businessSupportUser.teams;
-    usersInTeam = MOCK_USERS.filter((u) => u.teams.includes(loggedInUserTeamName));
+    usersInTeam = [MOCK_USERS.BUSINESS_SUPPORT_USER_1, MOCK_USERS.BUSINESS_SUPPORT_USER_2];
   });
 
   beforeEach(() => {
@@ -55,7 +51,7 @@ context('Case tasks - AIN deal', () => {
 
       cy.submitDeal(dealId, dealType);
 
-      cy.login(businessSupportUser);
+      cy.login(MOCK_USERS.BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
     });
   });
@@ -207,7 +203,7 @@ context('Case tasks - AIN deal', () => {
     let firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.link().click();
 
-    const differentUserInSameTeam = usersInTeam.find((u) => u.username !== businessSupportUser.username);
+    const differentUserInSameTeam = usersInTeam.find((u) => u.username !== MOCK_USERS.BUSINESS_SUPPORT_USER_1.username);
 
     assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then((userObj) => {
       const { firstName, lastName } = userObj;
@@ -289,7 +285,7 @@ context('Case tasks - AIN deal', () => {
       pages.tasksPage.filterRadioYourTasks().should('be.checked');
 
       //---------------------------------------------------------------
-      // list of tasks in `assigned to me` shuold be empty
+      // list of tasks in `assigned to me` should be empty
       // as no tasks are assigned yet (default)
       //---------------------------------------------------------------
       pages.tasksPage.tasksTableRows().should('have.length', 0);
@@ -308,7 +304,7 @@ context('Case tasks - AIN deal', () => {
       const firstTask = pages.tasksPage.tasks.row(1, 1);
       firstTask.link().click();
 
-      const differentUserInSameTeam = usersInTeam.find((u) => u.username !== businessSupportUser.username);
+      const differentUserInSameTeam = usersInTeam.find((u) => u.username !== MOCK_USERS.BUSINESS_SUPPORT_USER_1.username);
 
       assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then(() => {
         // cy.wait(100); // for some reason this prevents flaky test
@@ -323,7 +319,7 @@ context('Case tasks - AIN deal', () => {
     });
 
     it('a user in a team that does not have any assigned tasks should not see any task assigned to their team', () => {
-      cy.login(nonBusinessSupportUser);
+      cy.login(MOCK_USERS.T1_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
       partials.caseSubNavigation.tasksLink().click();

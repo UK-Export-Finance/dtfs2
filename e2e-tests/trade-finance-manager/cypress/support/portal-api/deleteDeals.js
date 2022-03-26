@@ -3,8 +3,11 @@ const {
   deleteDeal,
 } = require('./api');
 
-const deleteOneDeal = (token, dealId) =>
-  deleteDeal(token, dealId);
+const deleteOneDeal = (token, dealId) => {
+  if (dealId) {
+    return deleteDeal(token, dealId);
+  }
+};
 
 module.exports = (dealId, user) => {
   console.info('deleteOneDeal::');

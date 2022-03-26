@@ -15,7 +15,10 @@
             <nav class="moj-header__navigation" aria-label="Account navigation">
               <ul class="moj-header__navigation-list">
                 <li class="moj-header__navigation-item">
-                  <a class="moj-header__navigation-link" href="#" aria-current="page" data-cy="header-user-link">{{ params.user.firstName + ' ' + params.user.lastName }}</a>
+                  <span aria-current="page" data-cy="header-user-link">{{ params.user.firstName + ' ' + params.user.lastName }}</span>
+                </li>
+                <li class="moj-header__navigation-item">
+                  <a class="moj-header__navigation-link" href="/user/change-password" aria-current="page" data-cy="header-user-link">Profile</a>
                 </li>
                 <li class="moj-header__navigation-item">
                   <a class="moj-header__navigation-link" href="/logout" data-cy="header-sign-out-link">Sign out</a>

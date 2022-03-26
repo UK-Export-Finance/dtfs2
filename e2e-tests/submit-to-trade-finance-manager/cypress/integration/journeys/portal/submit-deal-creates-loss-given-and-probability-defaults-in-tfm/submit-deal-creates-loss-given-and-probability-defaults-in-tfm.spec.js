@@ -5,6 +5,7 @@ import tfmPartials from '../../../../../../trade-finance-manager/cypress/integra
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/AIN-deal/dealReadyToSubmit';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -13,17 +14,18 @@ context('Portal to TFM deal submission', () => {
   let dealId;
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1);
-      });
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1);
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('Portal deal is submitted to UKEF - deal `loss given default` defaults to `50%`, `probability of default` defaults to `Less than 14.1%`', () => {
@@ -38,7 +40,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
-
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
@@ -52,33 +53,35 @@ context('Portal to TFM deal submission', () => {
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
-
     //---------------------------------------------------------------
     // user login to TFM
     //---------------------------------------------------------------
-    // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmRootUrl = 'http://localhost:5003';
 
-    cy.forceVisit(tfmRootUrl);
+    cy.forceVisit(TFM_URL);
 
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
+    cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
 
-    const tfmCaseDealPage = `${tfmRootUrl}/case/${dealId}/deal`;
+    const tfmCaseDealPage = `${TFM_URL}/case/${dealId}/deal`;
     cy.forceVisit(tfmCaseDealPage);
 
     tfmPartials.caseSubNavigation.underwritingLink().click();
 
     tfmPages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault().should('exist');
 
-    tfmPages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault().invoke('text').then((text) => {
-      expect(text.trim()).to.eq('50%');
-    });
+    tfmPages.underwritingPricingAndRiskPage
+      .exporterTableLossGivenDefault()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.eq('50%');
+      });
 
     tfmPages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().should('exist');
 
-    tfmPages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().invoke('text').then((text) => {
-      expect(text.trim()).to.eq('Less than 14.1%');
-    });
+    tfmPages.underwritingPricingAndRiskPage
+      .exporterTableProbabilityOfDefault()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.eq('Less than 14.1%');
+      });
   });
 });

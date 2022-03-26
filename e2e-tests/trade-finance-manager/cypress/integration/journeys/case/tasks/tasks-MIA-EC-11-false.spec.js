@@ -2,13 +2,12 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA_EC_11_FALSE from '../../../../fixtures/deal-MIA-EC-11-false';
-import MOCK_USERS from '../../../../fixtures/users';
+import { BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 context('Case tasks - MIA deal - EC 11 false', () => {
   let dealId;
   const dealFacilities = [];
-  const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
 
   beforeEach(() => {
     cy.insertOneDeal(MOCK_DEAL_MIA_EC_11_FALSE, MOCK_MAKER_TFM).then((insertedDeal) => {
@@ -22,7 +21,7 @@ context('Case tasks - MIA deal - EC 11 false', () => {
 
       cy.submitDeal(dealId, dealType);
 
-      cy.login(businessSupportUser);
+      cy.login(BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
     });
   });
