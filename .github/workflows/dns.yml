@@ -80,8 +80,8 @@ jobs:
       with:
         inlineScript: |
           keyvault_id=$(az keyvault show --name ${{ env.key_vault_name }} --query id -o tsv)
-          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }} --secret-version "Latest"
-          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal-WWW" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }} --secret-version "Latest"
+          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }}
+          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal-WWW" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }}
           
     - name: FD - Verify mapping
       uses: azure/cli@v1.0.0
