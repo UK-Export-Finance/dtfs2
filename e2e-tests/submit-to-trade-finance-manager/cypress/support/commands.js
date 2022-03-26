@@ -34,10 +34,9 @@ Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'))
 
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
-
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add('login', require('./portal/logIn'));
-
+Cypress.Commands.add('tfmLogin', require('./trade-finance-manager-ui/login'));
 
 Cypress.Commands.add('forceVisit', (url) => {
   cy.window().then((win) => win.open(url, '_self'));

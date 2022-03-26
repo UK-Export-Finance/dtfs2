@@ -5,7 +5,6 @@ const dealsLightQuery = require('./graphql/queries/deals-query-light');
 const facilitiesLightQuery = require('./graphql/queries/facilities-query-light');
 const facilityQuery = require('./graphql/queries/facility-query');
 const teamMembersQuery = require('./graphql/queries/team-members-query');
-const userQuery = require('./graphql/queries/user-query');
 const updatePartiesMutation = require('./graphql/mutations/update-parties');
 const updateFacilityMutation = require('./graphql/mutations/update-facilities');
 const updateFacilityRiskProfileMutation = require('./graphql/mutations/update-facility-risk-profile');
@@ -87,12 +86,6 @@ const getTeamMembers = async (teamId) => {
   const response = await apollo('GET', teamMembersQuery, { teamId });
 
   return response.data.teamMembers;
-};
-
-const getUser = async (userId) => {
-  const response = await apollo('GET', userQuery, { userId });
-
-  return response.data.user;
 };
 
 const updateParty = async (id, partyUpdate) => {
@@ -195,20 +188,48 @@ const createActivity = async (dealId, activityUpdate) => {
   return apollo('PUT', createActivityMutation, updateVariable);
 };
 
-// Temp login for mock users. Active Directory will probably replace this
-// Just get the user, not really concerned about logging in with passwords for mock users
-const login = async (username) => {
+const login = async (username, password) => {
   try {
     const response = await axios({
-      method: 'get',
-      url: `${tfmAPIurl}/v1/users/${username}`,
+      method: 'post',
+      url: `${tfmAPIurl}/v1/login`,
       headers: {
         'Content-Type': 'application/json',
       },
+      data: { username, password },
     });
-    return response.data.user;
+    let data = '';
+
+    if (response?.data) {
+      data = {
+        success: response.data.success,
+        token: response.data.token,
+        user: response.data.user,
+      };
+    }
+
+    return data;
   } catch (err) {
-    return false;
+    console.error('Unable to log in', err?.response?.data);
+    return err?.response?.data;
+  }
+};
+
+const updateUserPassword = async (id, update) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${tfmAPIurl}/v1/users/${id}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: update,
+    }).catch((err) => err.response);
+
+    return response;
+  } catch (error) {
+    console.error('Unable to update user details', { error });
+    return error;
   }
 };
 
@@ -224,6 +245,21 @@ const createFeedback = async (formData) => {
   return response.data;
 };
 
+const getUser = async (userId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/users/${userId}`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return response.data.user;
+  } catch (err) {
+    console.error('Unable to get the user details', err?.response?.data);
+    return err?.response?.data;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -231,6 +267,7 @@ module.exports = {
   updateFacilityRiskProfile,
   getTeamMembers,
   getUser,
+  updateUserPassword,
   updateParty,
   updateFacility,
   updateTask,

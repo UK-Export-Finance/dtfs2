@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import activityCommentBoxPage from '../../../pages/activities/activityCommentBoxPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import MOCK_USERS from '../../../../fixtures/users';
+import { BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 const { format } = require('date-fns');
@@ -10,11 +10,10 @@ const { format } = require('date-fns');
 context('Users can create and submit comments', () => {
   let dealId;
   const dealFacilities = [];
-  const businessSupportUser = MOCK_USERS.find((u) => u.teams.includes('BUSINESS_SUPPORT'));
-  const userFullName = `${businessSupportUser.firstName} ${businessSupportUser.lastName}`;
+  const userFullName = `${BUSINESS_SUPPORT_USER_1.firstName} ${BUSINESS_SUPPORT_USER_1.lastName}`;
 
   before(() => {
-    cy.getUser(businessSupportUser.username);
+    cy.getUser(BUSINESS_SUPPORT_USER_1.username);
 
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
       dealId = insertedDeal._id;
@@ -43,7 +42,7 @@ context('Users can create and submit comments', () => {
         },
       };
       cy.updateTFMDeal(dealId, otherActivity);
-      cy.login(businessSupportUser);
+      cy.login(BUSINESS_SUPPORT_USER_1);
     });
   });
 

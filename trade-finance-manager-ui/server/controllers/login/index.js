@@ -1,14 +1,45 @@
 const api = require('../../api');
+const { validationErrorHandler } = require('../../helpers/validationErrorHandler.helper');
 
-const getLogin = (req, res) => res.render('login.njk');
+const getLogin = (req, res) => res.render('login.njk', {
+  user: req.session.user,
+});
 
 const postLogin = async (req, res) => {
-  const user = await api.login(req.body.email);
+  const { email, password } = req.body;
+  const loginErrors = [];
 
-  if (!user) {
-    return res.render('login.njk');
+  const emailError = {
+    errMsg: 'Enter an email address in the correct format, for example, name@example.com',
+    errRef: 'email',
+  };
+  const passwordError = {
+    errMsg: 'Enter a valid password',
+    errRef: 'password',
+  };
+
+  if (!email) loginErrors.push(emailError);
+  if (!password) loginErrors.push(passwordError);
+
+  if (email && password) {
+    const response = await api.login(email, password);
+
+    const { success, token, user } = response;
+
+    if (success) {
+      req.session.userToken = token;
+      req.session.user = user;
+    } else {
+      loginErrors.push(emailError);
+      loginErrors.push(passwordError);
+    }
   }
-  req.session.user = user;
+
+  if (loginErrors.length) {
+    return res.render('login.njk', {
+      errors: validationErrorHandler(loginErrors),
+    });
+  }
 
   return res.redirect('/deals');
 };
@@ -19,8 +50,4 @@ const logout = (req, res) => {
   });
 };
 
-module.exports = {
-  getLogin,
-  postLogin,
-  logout,
-};
+module.exports = { getLogin, postLogin, logout };

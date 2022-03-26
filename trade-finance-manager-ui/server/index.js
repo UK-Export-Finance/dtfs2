@@ -2,21 +2,20 @@ const express = require('express');
 const compression = require('compression');
 const session = require('express-session');
 const morgan = require('morgan');
-const helmet = require('helmet');
-
 const path = require('path');
+
 const routes = require('./routes');
 require('./azure-env');
-
 const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
 const healthcheck = require('./healthcheck');
 const seo = require('./middleware/headers/seo');
+const security = require('./middleware/headers/security');
 
 const app = express();
 
 app.use(seo);
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(security);
 
 const PORT = process.env.PORT || 5003;
 
@@ -48,4 +47,4 @@ app.get('/not-found', (req, res) => res.render('page-not-found.njk', { user: req
 
 app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
-app.listen(PORT, () => console.info(`TFM UI app listening on port ${PORT}!`)); // eslint-disable-line no-console
+app.listen(PORT, () => console.info(`TFM UI app listening on port ${PORT}!`));

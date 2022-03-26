@@ -1,13 +1,12 @@
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import MOCK_USERS from '../../../../fixtures/users';
+import { RISK_MANAGER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 context('Case Underwriting - Pricing and risk for Risk Managers', () => {
   let dealId;
   const dealFacilities = [];
-  const riskManagerUser = MOCK_USERS.find((user) => user.teams.includes('RISK_MANAGERS'));
 
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
@@ -32,7 +31,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
 
   describe('users in the `RISK_MANAGERS` group should be able to edit', () => {
     beforeEach(() => {
-      cy.login(riskManagerUser);
+      cy.login(RISK_MANAGER_1);
 
       cy.visit(`/case/${dealId}/underwriting/pricing-and-risk`);
       cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
@@ -83,7 +82,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
 
   describe('Risk Managers can edit once logged in', () => {
     beforeEach(() => {
-      cy.login(riskManagerUser);
+      cy.login(RISK_MANAGER_1);
 
       cy.visit(`/case/${dealId}/underwriting/pricing-and-risk`);
       cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
