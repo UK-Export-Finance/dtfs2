@@ -2,26 +2,25 @@ import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import MOCK_USERS from '../../../fixtures/users';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
+import { T1_USER_1 } from '../../../../../e2e-fixtures';
 
 context('User can login', () => {
   let dealId;
   const dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
+    cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
 
-        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType);
+      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+
+      cy.submitDeal(dealId, dealType);
+    });
   });
   after(() => {
     cy.deleteDeals(dealId, ADMIN_LOGIN);
@@ -40,13 +39,14 @@ context('User can login', () => {
 
   it('should login, redirect to /deals. Header displays user\'s first and last name and logout link', () => {
     pages.landingPage.visit();
-    pages.landingPage.email().type(MOCK_USERS[0].username);
+    cy.login(T1_USER_1);
+
     pages.landingPage.submitButton().click();
     cy.url().should('eq', relative('/deals'));
 
     partials.header.userLink().invoke('text').then((text) => {
-      const expected = `${MOCK_USERS[0].firstName} ${MOCK_USERS[0].lastName}`;
-      expect(text.trim()).to.equal(expected);
+      const expected = `${T1_USER_1.firstName} ${T1_USER_1.lastName}`;
+      expect(text.trim()).to.contain(expected);
     });
 
     partials.header.signOutLink().should('exist');
@@ -54,7 +54,7 @@ context('User can login', () => {
 
   it('should login, and show relevant header information', () => {
     pages.landingPage.visit();
-    pages.landingPage.email().type(MOCK_USERS[0].username);
+    cy.login(T1_USER_1);
     pages.landingPage.submitButton().click();
     cy.url().should('eq', relative('/deals'));
 

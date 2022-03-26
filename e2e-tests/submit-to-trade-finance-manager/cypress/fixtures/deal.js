@@ -1,29 +1,31 @@
-const MOCK_DEAL = {
-  dealType: 'BSS/EWCS',
-  submissionType: 'Automatic Inclusion Notice',
+import Chance from 'chance';
+import * as CONSTANTS from '../../../e2e-fixtures';
+
+const chance = new Chance();
+
+export const MOCK_DEAL = {
+  dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
+  submissionType: CONSTANTS.SUBMISSION_TYPE.AIN,
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
-  status: 'Acknowledged by UKEF',
+  status: CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   previousStatus: 'Submitted',
   bank: {
     id: '123',
     name: 'Barclays Bank',
-    emails: [
-      'test1@mock.com',
-      'test2@mock.com',
-    ],
+    emails: ['test1@mock.com'],
   },
   maker: {
     username: 'JOE',
-    firstname: 'Joe',
-    surname: 'Bloggs',
+    firstname: chance.first(),
+    surname: chance.last(),
   },
   details: {
     bank: 'Mock bank',
     checker: {
       username: 'CHECKER',
-      firstname: 'Emilio',
-      surname: 'Largo',
+      firstname: chance.first(),
+      surname: chance.last(),
     },
     submissionDate: '1606900616651',
   },
@@ -110,22 +112,26 @@ const MOCK_DEAL = {
     criteria: [
       {
         id: 11,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
       },
       {
         id: 12,
-        description: 'The cover period for each Transaction does not exceed 5 years, or such other period approved by UKEF (that has not lapsed or been withdrawn) in relation to bonds and/or loans for this Obligor.',
+        description:
+          'The cover period for each Transaction does not exceed 5 years, or such other period approved by UKEF (that has not lapsed or been withdrawn) in relation to bonds and/or loans for this Obligor.',
         answer: false,
       },
       {
         id: 13,
-        description: 'The total UKEF exposure, across all short-term schemes (including bond support and export working capital transactions), for this Obligor (including this Transaction) does not exceed £2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).',
+        description:
+          'The total UKEF exposure, across all short-term schemes (including bond support and export working capital transactions), for this Obligor (including this Transaction) does not exceed £2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).',
         answer: true,
       },
       {
         id: 14,
-        description: 'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
+        description:
+          'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 3 months prior to the submission of this Inclusion Notice. For a loan Transaction, the loan has not yet been advanced.',
         answer: true,
       },
       {
@@ -135,17 +141,20 @@ const MOCK_DEAL = {
       },
       {
         id: 16,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco or gambling, and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description:
+          'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco or gambling, and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
       },
       {
         id: 17,
-        description: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
+        description:
+          'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
         answer: true,
       },
       {
         id: 18,
-        description: 'The fees and/or interest apply to the whole Cover Period, and have been set in accordance with the Bank’s normal pricing policies and, if any, minimum or overall pricing requirements set by UKEF.',
+        description:
+          'The fees and/or interest apply to the whole Cover Period, and have been set in accordance with the Bank’s normal pricing policies and, if any, minimum or overall pricing requirements set by UKEF.',
         answer: true,
       },
     ],
@@ -162,10 +171,10 @@ const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      type: 'Bond',
+      type: CONSTANTS.FACILITY_TYPE.BOND,
       bondIssuer: 'Issuer',
       bondType: 'Advance payment guarantee',
-      facilityStage: 'Issued',
+      facilityStage: CONSTANTS.FACILITY_STAGE.ISSUED,
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '10',
       bondBeneficiary: 'test',
@@ -187,16 +196,16 @@ const MOCK_DEAL = {
       'coverEndDate-year': '2020',
       issuedDate: '1606900616651',
       requestedCoverStartDate: '1606900616652',
-      name: 'Test-123',
+      name: chance.word(),
       updatedAt: Date.now(),
     },
     {
-      type: 'Loan',
-      createdDate: 1610369832226.0,
-      facilityStage: 'Conditional',
+      type: CONSTANTS.FACILITY_TYPE.LOAN,
+      createdDate: 1610369832226,
+      facilityStage: CONSTANTS.FACILITY_STAGE.CONDITIONAL,
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
-      name: '5678',
+      name: chance.word(),
       guaranteeFeePayableByBank: '27.0000',
       updatedAt: Date.now(),
       value: '1234.00',
@@ -216,17 +225,14 @@ const MOCK_DEAL = {
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
-      requestedCoverStartDate: 1610369832226.0,
-      issuedDate: 1610369832226.0,
+      requestedCoverStartDate: 1610369832226,
+      issuedDate: 1610369832226,
       issueFacilityDetailsProvided: true,
       status: 'Acknowledged',
       currency: {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      name: 'Test-321',
     },
   ],
 };
-
-module.exports = MOCK_DEAL;
