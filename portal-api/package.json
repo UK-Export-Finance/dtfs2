@@ -47,7 +47,6 @@
     "filesize": "^8.0.7",
     "graphql": "^15.8.0",
     "graphql-middleware": "^4.0.2",
-    "helmet": "^5.0.2",
     "jsonwebtoken": "8.5.1",
     "moment": "2.29.1",
     "moment-timezone": "0.5.34",
