@@ -1,6 +1,7 @@
 const express = require('express');
 const compression = require('compression');
 const seo = require('./v1/routes/middleware/headers/seo');
+const security = require('./v1/routes/middleware/headers/security');
 
 const {
   BANK_ROUTE,
@@ -23,6 +24,7 @@ const {
 const app = express();
 
 app.use(seo);
+app.use(security);
 
 app.use(healthcheck);
 app.use(express.json());

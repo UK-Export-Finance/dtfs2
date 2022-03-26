@@ -46,6 +46,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
+      - SESSION_SECRET
     command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
@@ -72,6 +73,7 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - SENTRY_DSN=${SENTRY_DSN}
+      - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
     entrypoint: npx nodemon src/index.js -L
 
   portal:

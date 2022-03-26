@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const graphqlKeyPermissions = (req) => {
   const token = req.headers.authorization;
 

@@ -1,14 +1,12 @@
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import MOCK_USERS from '../../../../fixtures/users';
+import { T1_USER_1, BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 context('Parties - user can view and edit buyer', () => {
   let dealId;
   const dealFacilities = [];
-  const businessSupportUser = MOCK_USERS.find((user) => user.teams.includes('BUSINESS_SUPPORT'));
-  const nonBusinessSupportUser = MOCK_USERS.find((user) => !user.teams.includes('BUSINESS_SUPPORT'));
 
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
@@ -34,7 +32,7 @@ context('Parties - user can view and edit buyer', () => {
   describe('Buyer page', () => {
     describe('when user is in BUSINESS_SUPPORT team', () => {
       beforeEach(() => {
-        cy.login(businessSupportUser);
+        cy.login(BUSINESS_SUPPORT_USER_1);
         cy.visit(relative(`/case/${dealId}/parties`));
       });
 
@@ -78,7 +76,7 @@ context('Parties - user can view and edit buyer', () => {
 
     describe('when user is NOT in BUSINESS_SUPPORT team', () => {
       beforeEach(() => {
-        cy.login(nonBusinessSupportUser);
+        cy.login(T1_USER_1);
       });
 
       it('user cannot manually to the page', () => {

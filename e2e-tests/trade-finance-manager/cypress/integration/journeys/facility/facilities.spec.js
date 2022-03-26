@@ -1,7 +1,7 @@
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import MOCK_USERS from '../../../fixtures/users';
+import { T1_USER_1 } from '../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
 import partials from '../../partials';
 import page from '../../pages';
@@ -39,7 +39,7 @@ context('Facility page', () => {
   });
 
   beforeEach(() => {
-    cy.login(MOCK_USERS[0]);
+    cy.login(T1_USER_1);
   });
 
   after(() => {
