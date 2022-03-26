@@ -2,7 +2,7 @@ import relative from '../../relativeURL';
 import pages from '../../pages';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import createMockDeal from '../../../fixtures/create-mock-deal';
-import { T1_USER_1 } from '../../../../../fixtures';
+import { T1_USER_1 } from '../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
 import CONSTANTS from '../../../fixtures/constants';
 

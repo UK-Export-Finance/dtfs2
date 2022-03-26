@@ -1,7 +1,7 @@
 import relative from '../../relativeURL';
 import partials from '../../partials';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import { T1_USER_1 } from '../../../../../fixtures';
+import { T1_USER_1 } from '../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 
 context('Facility page', () => {

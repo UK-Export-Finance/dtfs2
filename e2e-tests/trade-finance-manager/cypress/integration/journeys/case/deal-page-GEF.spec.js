@@ -3,7 +3,7 @@ import pages from '../../pages';
 import partials from '../../partials';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
-import { T1_USER_1 } from '../../../../../fixtures';
+import { T1_USER_1 } from '../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 import { DEAL_TYPE } from '../../../fixtures/constants';
 import facilityPage from '../../pages/facilityPage';

@@ -149,6 +149,10 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api
+    - name: Pull tfm-api
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh && docker-compose -f docker-compose.gha.yml up -d portal-api

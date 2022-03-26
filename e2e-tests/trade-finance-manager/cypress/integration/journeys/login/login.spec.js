@@ -3,7 +3,7 @@ import pages from '../../pages';
 import partials from '../../partials';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
-import { T1_USER_1 } from '../../../../../fixtures';
+import { T1_USER_1 } from '../../../../../e2e-fixtures';
 
 context('User can login', () => {
   let dealId;

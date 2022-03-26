@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import { UNDERWRITING_SUPPORT_1, UNDERWRITER_1 } from '../../../../../../fixtures';
+import { UNDERWRITING_SUPPORT_1, UNDERWRITER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 const MOCK_CREDIT_RATING_TEXT_INPUT_VALUE = 'Testing';
