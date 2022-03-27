@@ -10,45 +10,52 @@ const withoutId = (obj) => {
 };
 
 const updateFacilityStatus = async (facilityId, status, existingFacility) => {
-  const collection = await db.getCollection('facilities');
+  if (ObjectId.isValid(facilityId)) {
+    const collection = await db.getCollection('facilities');
 
-  console.info(`Updating Portal facility status to ${status}`);
-  const previousStatus = existingFacility.status;
+    console.info(`Updating Portal facility status to ${status}`);
+    const previousStatus = existingFacility.status;
 
-  const update = {
-    ...existingFacility,
-    updatedAt: Date.now(),
-    previousStatus,
-    status,
-  };
+    const update = {
+      ...existingFacility,
+      updatedAt: Date.now(),
+      previousStatus,
+      status,
+    };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: ObjectId(facilityId) },
-    $.flatten(withoutId(update)),
-    { returnOriginal: false },
-  );
+    const findAndUpdateResponse = await collection.findOneAndUpdate(
+      { _id: ObjectId(facilityId) },
+      $.flatten(withoutId(update)),
+      { returnOriginal: false },
+    );
 
-  console.info(`Updated Portal facility status from ${previousStatus} to ${status}`);
+    console.info(`Updated Portal facility status from ${previousStatus} to ${status}`);
 
-  return findAndUpdateResponse.value;
+    return findAndUpdateResponse.value;
+  }
+  return { status: 400, message: 'Invalid Facility Id' };
 };
 exports.updateFacilityStatus = updateFacilityStatus;
 
 exports.updateFacilityStatusPut = async (req, res) => {
-  const facilityId = req.params.id;
+  if (ObjectId.isValid(req.params.id)) {
+    const facilityId = req.params.id;
 
-  const { status } = req.body;
+    const { status } = req.body;
 
-  await findOneFacility(facilityId, async (existingFacility) => {
-    if (existingFacility) {
-      const updatedFacility = await updateFacilityStatus(
-        facilityId,
-        status,
-        existingFacility,
-      );
-      return res.status(200).json(updatedFacility);
-    }
+    await findOneFacility(facilityId, async (existingFacility) => {
+      if (existingFacility) {
+        const updatedFacility = await updateFacilityStatus(
+          facilityId,
+          status,
+          existingFacility,
+        );
+        return res.status(200).json(updatedFacility);
+      }
 
-    return res.status(404).send();
-  });
+      return res.status(404).send();
+    });
+  } else {
+    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+  }
 };

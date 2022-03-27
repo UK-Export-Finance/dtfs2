@@ -14,11 +14,14 @@ const findOneFacility = async (_id, callback) => {
 exports.findOneFacility = findOneFacility;
 
 exports.findOneFacilityGet = async (req, res) => {
-  const facility = await findOneFacility(req.params.id);
+  if (ObjectId.isValid(req.params.id)) {
+    const facility = await findOneFacility(req.params.id);
 
-  if (facility) {
-    return res.status(200).send(facility);
+    if (facility) {
+      return res.status(200).send(facility);
+    }
+
+    return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
-
-  return res.status(404).send();
+  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };
