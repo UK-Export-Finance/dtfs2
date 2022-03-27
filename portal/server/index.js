@@ -8,30 +8,32 @@ const csrf = require('csurf');
 const flash = require('connect-flash');
 const path = require('path');
 require('./azure-env');
-
 const RedisStore = require('connect-redis')(session);
 const routes = require('./routes');
 const eligibilityRoutes = require('./routes/contract/eligibility');
 const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
-
 const configureNunjucks = require('./nunjucks-configuration');
 const csrfToken = require('./routes/middleware/csrf-token.middleware');
 const seo = require('./routes/middleware/headers/seo');
+const security = require('./routes/middleware/headers/security');
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 app.use(seo);
-
-app.use(helmet({ contentSecurityPolicy: false }));
-
-const PORT = process.env.PORT || 5000;
+app.use(security);
 
 if (!process.env.SESSION_SECRET) {
   console.error('Portal UI server - SESSION_SECRET missing');
 }
 
 const sessionOptions = {
+  path: '/',
+  httpOnly: true,
+  secure: true,
+  sameSite: 'strict',
+  maxAge: 604800000, // 7 days
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,

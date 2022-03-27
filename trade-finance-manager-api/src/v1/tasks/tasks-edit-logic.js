@@ -28,7 +28,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
     const previousGroupId = group.id - 1;
     const previousGroup = getGroupById(allTaskGroups, previousGroupId);
 
-    const previousGroupHasAllTasksCompleted = groupHasAllTasksCompleted(previousGroup.groupTasks);
+    const previousGroupHasAllTasksCompleted = groupHasAllTasksCompleted(previousGroup?.groupTasks);
 
     if (previousGroupHasAllTasksCompleted) {
       return true;
@@ -44,7 +44,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
 
   const previousTask = getTaskInGroupById(group.groupTasks, previousTaskId);
 
-  if (previousTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+  if (previousTask?.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
     return true;
   }
 
@@ -132,14 +132,19 @@ const handleTaskEditFlagAndStatus = (
 
     /**
      * Otherwise, the task can be started - because the previous task is complete.
-     * Therefore, if the task is locked,
-     * update the canEdit flag and change status to 'To do'.
+     * Therefore, if the task is locked:
+     * - update the canEdit flag
+     * - change status to 'To do'
+     * - return sendEmail flag (to alert user that the task is ready)
      * */
     if (!isTaskThatIsBeingUpdated
       && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START) {
       updatedTask.canEdit = true;
       updatedTask.status = CONSTANTS.TASKS.STATUS.TO_DO;
-      sendEmail = true;
+
+      if (!task.emailSent) {
+        sendEmail = true;
+      }
     }
   }
 
@@ -152,6 +157,7 @@ const handleTaskEditFlagAndStatus = (
       if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
         updatedTask.canEdit = false;
       }
+
       return { updatedTask };
     }
 

@@ -9,15 +9,15 @@ on:
 env:
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
+  key_vault_name: ${{ secrets.PROD_KEYVAULT_NAME }}
+  key_vault_secret: ${{ secrets.PROD_KEYVAULT_SECRET }}
+  front_door_name: ${{ secrets.PROD_FRONTDOOR_NAME }}
   domain_name: "get-a-guarantee-for-export-finance.service.gov.uk"
-  front_door_name: tfs-prod-fd
-  portal_ui: tfs-prod-portal-ui
-  gef_ui: tfs-prod-gef-ui
 
 jobs:
 
   zone:
-    name: Create service.gov.uk zone
+    name: DNS Zone
     runs-on: [self-hosted, linux]
     steps:
 
@@ -33,58 +33,57 @@ jobs:
           az configure --defaults group=${{ env.resource_group }}
           az extension add --name front-door
 
-    - name: Zone
+    - name: Create DNS zone
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           az network dns zone create --name ${{ env.domain_name }}
-
-    - name: Front Door verification record
-      uses: azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network dns record-set cname create --zone ${{ env.domain_name }} --name afdverify.${{ env.domain_name }}
-          az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name afdverify.${{ env.domain_name }} --cname ${{ env.front_door_name }}.azurefd.net
-
-    - name: Custom domains for web apps
-      uses: azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name www --cname ${{ env.portal_ui }}.azurewebsites.net
-          # az network dns record-set cname set-record --zone ${{ env.domain_name }} --record-set-name www --cname ${{ env.gef_ui }}.azurewebsites.net
-
-    - name: Custom domains ownership records
-      uses: azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az network dns record-set txt add-record --record-set-name asuid.www --value ${{ secrets.PROD_DNS_VERIFICATION }} --zone-name ${{ env.domain_name }}
-
-    - name: Alias record for service.gov.uk domain
+    
+    - name: DNS - A record
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           front_door_id=$(az network front-door show --name ${{ env.front_door_name }} --query id -o tsv)
-          az network dns record-set a create --name "@" --zone-name ${{ env.domain_name }} --target-resource $front_door_id
+          az network dns record-set a create --name "@" --target-resource $front_door_id --zone-name ${{ env.domain_name }}
 
-    - name: Add domain name to Prod Front Door
+    - name: DNS - CNAME records
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network front-door frontend-endpoint create \
-            --front-door-name ${{ env.front_door_name }} \
-            --name "GOVUK" \
-            --host-name ${{ env.domain_name }}
+            az network dns record-set cname set-record --record-set-name www --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
+            az network dns record-set cname set-record --record-set-name afdverify --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
+            az network dns record-set cname set-record --record-set-name '*' --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
 
-    - name: Enable HTTPS
+    - name: DNS - TXT record
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az network front-door frontend-endpoint enable-https \
-            --front-door-name ${{ env.front_door_name }} \
-            --name "service.gov.uk"
+          az network dns record-set txt add-record --record-set-name asuid.www --value ${{ secrets.PROD_DNS_VERIFICATION }} --zone-name ${{ env.domain_name }}
+          az network dns record-set txt add-record --record-set-name '@' --value '_globalsign-domain-verification=avG_7JwIvVmNxS7K2KOEplp_B3KudAfdqpnlPNVRpB' --zone-name ${{ env.domain_name }}
+    
+    - name: DNS - CAA record
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network dns record-set caa add-record -n '@' --value 'globalsign.com' --tag 'issue' --flags 0 --zone-name ${{ env.domain_name }}
+          az network dns record-set caa add-record -n '@' --value 'mailto:DigitalService.TradeFinance@ukexportfinance.gov.uk' --tag 'iodef' --flags 0 --zone-name ${{ env.domain_name }}
+
+    - name: FD - Add domains
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "Portal" --host-name ${{ env.domain_name }}
+          az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "Portal-WWW" --host-name www.${{ env.domain_name }}
+
+    - name: FD - HTTPS
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          keyvault_id=$(az keyvault show --name ${{ env.key_vault_name }} --query id -o tsv)
+          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }}
+          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "Portal-WWW" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }}
           
-
-    - name: Check domain name mapping
+    - name: FD - Verify mapping
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |

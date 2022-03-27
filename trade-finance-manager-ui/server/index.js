@@ -7,20 +7,21 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 
 const path = require('path');
+
 const routes = require('./routes');
 const feedbackRoutes = require('./routes/feedback');
 require('./azure-env');
-
 const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
 const healthcheck = require('./healthcheck');
 const csrfToken = require('./middleware/csrf-token.middleware');
 const seo = require('./middleware/headers/seo');
+const security = require('./middleware/headers/security');
 
 const app = express();
 
 app.use(seo);
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(security);
 
 const PORT = process.env.PORT || 5003;
 

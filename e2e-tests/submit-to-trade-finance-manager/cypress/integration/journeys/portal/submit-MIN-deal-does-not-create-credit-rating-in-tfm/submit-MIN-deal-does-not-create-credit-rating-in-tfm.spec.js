@@ -3,6 +3,7 @@ import portalPages from '../../../../../../portal/cypress/integration/pages';
 import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../e2e-fixtures';
 import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal/dealReadyToSubmit';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
@@ -13,19 +14,20 @@ context('Portal to TFM deal submission', () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertManyDeals([
-      MOCK_DEAL_READY_TO_SUBMIT(),
-    ], BANK1_MAKER1)
-      .then((insertedDeals) => {
-        [deal] = insertedDeals;
-        dealId = deal._id;
+    cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
+      [deal] = insertedDeals;
+      dealId = deal._id;
 
-        const { mockFacilities } = deal;
+      const { mockFacilities } = deal;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
       });
+    });
+  });
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
   });
 
   it('Portal MIN deal is submitted to UKEF, `Not set` credit rating displays in TFM facilities', () => {
@@ -40,7 +42,6 @@ context('Portal to TFM deal submission', () => {
     portalPages.contractReadyForReview.comments().type('go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
-
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
@@ -54,20 +55,15 @@ context('Portal to TFM deal submission', () => {
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
-
     //---------------------------------------------------------------
     // user login to TFM
     //---------------------------------------------------------------
-    // Cypress.config('tfmUrl') returns incorrect url...
-    const tfmRootUrl = 'http://localhost:5003';
+    cy.forceVisit(TFM_URL);
 
-    cy.forceVisit(tfmRootUrl);
-
-    tfmPages.landingPage.email().type('BUSINESS_SUPPORT_USER_1');
-    tfmPages.landingPage.submitButton().click();
+    cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
 
     const facilityId = dealFacilities[0]._id;
-    const tfmFacilityPage = `${tfmRootUrl}/case/${dealId}/facility/${facilityId}`;
+    const tfmFacilityPage = `${TFM_URL}/case/${dealId}/facility/${facilityId}`;
     cy.forceVisit(tfmFacilityPage);
 
     tfmPages.facilityPage.facilityDealCreditRating().should('not.exist');

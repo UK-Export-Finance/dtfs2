@@ -64,7 +64,7 @@ module.exports = [
       },
       {
         id: 16,
-        description: 'Either the Supplier or the Guarantor does not currently appear on any internal watchlist maintained by the Bank and is not being managed out of the Bank’s stressed management or restructuring units.',
+        description: 'Either the Supplier or the Guarantor does not currently appear on any internal watchlist maintained by the Bank and is not being managed out of the Bank\'s stressed management or restructuring units.',
       },
       {
         id: 17,
@@ -80,7 +80,7 @@ module.exports = [
       },
       {
         id: 20,
-        description: 'The fees and/or interest have been set either in accordance with the Bank’s normal pricing policies or, if any, minimum or overall pricing requirements set by UKEF.',
+        description: 'The fees and/or interest have been set either in accordance with the Bank\'s normal pricing policies or, if any, minimum or overall pricing requirements set by UKEF.',
       },
       {
         id: 21,
@@ -166,7 +166,7 @@ module.exports = [
       },
       {
         id: 16,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco or gambling, and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
       },
       {
         id: 17,

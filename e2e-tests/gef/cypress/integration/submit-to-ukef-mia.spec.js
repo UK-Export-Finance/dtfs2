@@ -86,13 +86,21 @@ context('Submit MIA to UKEF', () => {
     });
 
     it('Submission page as expected', () => {
-      submitToUkef.mainHeading();
-      submitToUkef.comment();
+      submitToUkef.mainHeading().contains('Confirm your submission');
+      submitToUkef.mainText().contains('you have reviewed the information');
+      submitToUkef.mainText().contains('you want to proceed with the submission');
+
+      submitToUkef.confirmSubmission().contains('I understand and agree');
+      submitToUkef.confirmSubmissionCheckbox();
+      submitToUkef.confirmSubmissionCheckbox().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal('Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information and you want to proceed with the submission, I understand and agree');
+      });
       submitToUkef.submitButton();
       submitToUkef.cancelLink();
     });
 
-    it('Submits without comments and displays the confirmation page', () => {
+    it('Submits and displays the confirmation page', () => {
+      submitToUkef.confirmSubmissionCheckbox().click();
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
       submitToUkefConfirmation.confirmationText().contains('We\'ve sent you a confirmation email.');

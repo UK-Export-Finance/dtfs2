@@ -16,7 +16,7 @@ const MOCK_MIA_TASKS = require('../__mocks__/mock-MIA-tasks');
 const MOCK_MIA_TASKS_POPULATED = require('../__mocks__/mock-MIA-tasks-populated');
 const MOCK_DEAL_AIN_SUBMITTED = require('../__mocks__/mock-deal-AIN-submitted');
 const MOCK_TEAMS = require('../__mocks__/mock-teams');
-
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const CONSTANTS = require('../../constants');
 
 const taskUpdateBase = {
@@ -24,7 +24,7 @@ const taskUpdateBase = {
     userId: MOCK_USERS[0]._id,
     userFullName: `${MOCK_USERS[0].firstName} ${MOCK_USERS[0].lastName}`,
   },
-  status: 'Done',
+  status: CONSTANTS.TASKS.STATUS.COMPLETED,
   updatedBy: MOCK_USERS[0]._id,
 };
 
@@ -34,7 +34,18 @@ const createTaskUpdateObj = (groupId, taskId) => ({
   groupId,
 });
 
+const mockUrlOrigin = 'http://test.com';
+
+const sendEmailApiSpy = jest.fn(() => Promise.resolve(
+  MOCK_NOTIFY_EMAIL_RESPONSE,
+));
+
 describe('tasks controller', () => {
+  beforeEach(() => {
+    api.sendEmail.mockClear();
+    api.sendEmail = sendEmailApiSpy;
+  });
+
   describe('updateTask', () => {
     it('should update a single task in a group', () => {
       const mockGroup1Tasks = [
@@ -142,7 +153,6 @@ describe('tasks controller', () => {
     });
 
     describe('when adverse history task is complete', () => {
-      const mockUrlOrigin = 'http://test.com';
       const mockTasks = MOCK_MIA_TASKS_POPULATED;
 
       const tasksWithAdverseHistoryTaskComplete = mockTasks;
@@ -238,6 +248,81 @@ describe('tasks controller', () => {
 
         const expectedThirdCall = generatedExpectedCall(thirdUnderwritingTask);
         expect(thirdCall).toEqual(expectedThirdCall);
+      });
+    });
+
+    describe('when a task or tasks are unlocked', () => {
+      it('should add emailSent flag to the tasks that have been unlocked and emails sent', async () => {
+        const mockUrlOrigin = 'http://test.com';
+        const mockTasks = MOCK_MIA_TASKS_POPULATED;
+
+        const tasksWithFirstGroupComplete = mockTasks;
+
+        // mark all tasks in group 1 as complete
+        const group1 = tasksWithFirstGroupComplete[0];
+        tasksWithFirstGroupComplete[0] = {
+          ...group1,
+          groupTasks: group1.groupTasks.map((task) => ({
+            ...task,
+            status: 'Done',
+          })),
+        };
+
+        // complete the only task in group 2 - therefore unlocking group 3 tasks.
+        const tfmTaskUpdate = createTaskUpdateObj(2, 1);
+
+        const result = await updateAllTasks(
+          tasksWithFirstGroupComplete,
+          tfmTaskUpdate.groupId,
+          tfmTaskUpdate,
+          CONSTANTS.TASKS.STATUS.TO_DO,
+          MOCK_DEAL_MIA_SUBMITTED,
+          mockUrlOrigin,
+        );
+
+        // all tasks in group 3 (Underwriting group tasks) are now unlocked
+        // emailSent flag should be added;
+        const group3TasksAfterUpdate = result[2].groupTasks;
+        expect(group3TasksAfterUpdate[0].emailSent).toEqual(true);
+        expect(group3TasksAfterUpdate[1].emailSent).toEqual(true);
+        expect(group3TasksAfterUpdate[2].emailSent).toEqual(true);
+      });
+    });
+
+    describe('when all Underwriting group tasks are already unlocked', () => {
+      it('should not send an email for any Underwriting group tasks (emails are sent when unlocked)', async () => {
+        const tfmTaskUpdate = createTaskUpdateObj(3, 1);
+
+        const mockTasks = MOCK_MIA_TASKS_POPULATED;
+        const underwritingTasks = mockTasks[2];
+
+        const tasksWithUnderwritingTasksUnlocked = [
+          {
+            groupId: 1,
+            groupTasks: [],
+          },
+          underwritingTasks,
+        ];
+
+        // mark all tasks in underwriting group as To do and emailSent
+        tasksWithUnderwritingTasksUnlocked[1] = {
+          ...underwritingTasks[1],
+          groupTasks: underwritingTasks.groupTasks.map((task) => ({
+            ...task,
+            status: 'To do',
+            emailSent: true,
+          })),
+        };
+
+        await updateAllTasks(
+          tasksWithUnderwritingTasksUnlocked,
+          tfmTaskUpdate.groupId,
+          tfmTaskUpdate,
+          MOCK_DEAL_MIA_SUBMITTED,
+          mockUrlOrigin,
+        );
+
+        expect(api.sendEmail).not.toHaveBeenCalled();
       });
     });
   });

@@ -143,6 +143,7 @@ context('Clone GEF (AIN) deal', () => {
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${AINdealId}`));
       applicationPreview.submitButton().click();
+      submitToUkef.confirmSubmissionCheckbox().click();
       submitToUkef.submitButton().click();
 
       cy.login(CREDENTIALS.MAKER);

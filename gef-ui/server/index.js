@@ -6,7 +6,6 @@ const redis = require('redis');
 const flash = require('connect-flash');
 const path = require('path');
 const RedisStore = require('connect-redis')(session);
-const helmet = require('helmet');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
@@ -21,13 +20,14 @@ const csrfToken = require('./middleware/csrf');
 const app = express();
 
 const seo = require('./middleware/headers/seo');
+const security = require('./middleware/headers/security');
 
 app.use(seo);
-app.use(helmet());
+app.use(security);
+app.use(compression());
 
 dotenv.config();
 
-app.use(compression());
 const PORT = process.env.PORT || 5006;
 
 if (!process.env.SESSION_SECRET) {

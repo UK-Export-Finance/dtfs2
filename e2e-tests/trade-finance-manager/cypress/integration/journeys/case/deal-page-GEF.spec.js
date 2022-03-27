@@ -3,7 +3,7 @@ import pages from '../../pages';
 import partials from '../../partials';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
-import MOCK_USERS from '../../../fixtures/users';
+import { T1_USER_1 } from '../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
 import { DEAL_TYPE } from '../../../fixtures/constants';
 import facilityPage from '../../pages/facilityPage';
@@ -14,22 +14,21 @@ context('User can view a GEF MIA case deal', () => {
 
   before(() => {
     // inserts a gef deal
-    cy.insertOneGefDeal(MOCK_APPLICATION_MIA, MOCK_MAKER_TFM)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
-        // updates a gef deal so has relevant fields
-        cy.updateGefDeal(dealId, MOCK_APPLICATION_MIA, MOCK_MAKER_TFM);
+    cy.insertOneGefDeal(MOCK_APPLICATION_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
+      // updates a gef deal so has relevant fields
+      cy.updateGefDeal(dealId, MOCK_APPLICATION_MIA, MOCK_MAKER_TFM);
 
-        cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities = createdFacilities.details;
-        });
-
-        cy.submitDeal(dealId, DEAL_TYPE.GEF);
+      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities = createdFacilities.details;
       });
+
+      cy.submitDeal(dealId, DEAL_TYPE.GEF);
+    });
   });
 
   beforeEach(() => {
-    cy.login(MOCK_USERS[0]);
+    cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
   });
 
@@ -42,7 +41,6 @@ context('User can view a GEF MIA case deal', () => {
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
-    // pages.caseDealPage.mgaVersion().should('exist');
   });
 
   it('should render case summary fields', () => {
@@ -54,11 +52,6 @@ context('User can view a GEF MIA case deal', () => {
       expect(text.trim()).to.contain(MOCK_APPLICATION_MIA.exporter.companyName);
     });
   });
-
-  // enable once set
-  // it('should render correct MGA version', () => {
-  //   pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
-  // });
 
   describe('Bank security section', () => {
     it('bank security section should be displayed as MIA', () => {
@@ -96,22 +89,21 @@ context('User can view a GEF AIN case deal', () => {
 
   before(() => {
     // inserts a gef deal
-    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, MOCK_MAKER_TFM)
-      .then((insertedDeal) => {
-        dealId = insertedDeal._id;
-        // updates a gef deal so has relevant fields
-        cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, MOCK_MAKER_TFM);
+    cy.insertOneGefDeal(MOCK_APPLICATION_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
+      // updates a gef deal so has relevant fields
+      cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, MOCK_MAKER_TFM);
 
-        cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities = createdFacilities.details;
-        });
-
-        cy.submitDeal(dealId, DEAL_TYPE.GEF);
+      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities = createdFacilities.details;
       });
+
+      cy.submitDeal(dealId, DEAL_TYPE.GEF);
+    });
   });
 
   beforeEach(() => {
-    cy.login(MOCK_USERS[0]);
+    cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
   });
 
@@ -124,7 +116,6 @@ context('User can view a GEF AIN case deal', () => {
     pages.caseDealPage.caseSubNavigation().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
-    // pages.caseDealPage.mgaVersion().should('exist');
   });
 
   it('should render case summary fields', () => {
@@ -136,11 +127,6 @@ context('User can view a GEF AIN case deal', () => {
       expect(text.trim()).to.contain(MOCK_APPLICATION_AIN.exporter.companyName);
     });
   });
-
-  // enable once set
-  // it('should render correct MGA version', () => {
-  //   pages.caseDealPage.mgaVersion().should('have.text', 'January 2020');
-  // });
 
   describe('Bank security section', () => {
     it('bank security section should not be displayed as AIN', () => {
