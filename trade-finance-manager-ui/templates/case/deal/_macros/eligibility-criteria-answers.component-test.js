@@ -13,7 +13,7 @@ describe(component, () => {
         text: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
         textList: [
           '11 test',
-          '11 testing'
+          '11 testing',
         ],
         answer: true,
       },
@@ -23,12 +23,12 @@ describe(component, () => {
         answer: true,
         textList: [
           '12 test',
-          '12 testing'
+          '12 testing',
         ],
       },
       {
         id: 13,
-        text: 'The total UKEF exposure, across all short-term schemes (including bond support and export working capital transactions), for this Obligor (including this Transaction) does not exceed £2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).',
+        text: 'The total UKEF exposure, across all short-term schemes (including bond support, export working capital and general export facility transactions), for this Obligor (including this Transaction) does not exceed £5 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).',
         answer: true,
         textList: [],
       },
@@ -38,7 +38,7 @@ describe(component, () => {
         answer: true,
         textList: [
           '14 test',
-          '14 testing'
+          '14 testing',
         ],
       },
       {
@@ -49,11 +49,11 @@ describe(component, () => {
       },
       {
         id: 16,
-        text: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco or gambling, and the Bank is not aware that any of the information contained within it is inaccurate.',
+        text: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
         answer: true,
         textList: [
           '16 test',
-          '16 testing'
+          '16 testing',
         ],
       },
       {
@@ -68,7 +68,7 @@ describe(component, () => {
         answer: true,
         textList: [
           '18 test',
-          '18 testing'
+          '18 testing',
         ],
       },
     ],
@@ -103,9 +103,6 @@ describe(component, () => {
   });
 
   it('should render `last` class for the table cells in last table row', () => {
-    const lastCriterion = params.eligibilityCriteria[params.eligibilityCriteria.length - 1];
-    const lastCriterionIndex = params.eligibilityCriteria.indexOf(lastCriterion);
-
     const tableCellClassSelector = '.govuk-table__cell--last';
     wrapper.expectElement(tableCellClassSelector).lengthToEqual(3);
   });
