@@ -83,6 +83,9 @@ context('Submit to UKEF', () => {
       submitToUkef.confirmSubmissionCheckbox().click();
       submitToUkef.submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)} submitted to UKEF`);
+      submitToUkefConfirmation.confirmation().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal('Automatic Inclusion Notice submitted to UKEF');
+      });
       submitToUkefConfirmation.dashboardLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });
