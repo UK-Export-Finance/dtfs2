@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const manualInclusion = {
-  url: (id) => `/gef/application-details/${id}/supporting-information/manual-inclusion-questionnaire`,
+  url: (id) => `/gef/application-details/${id}/supporting-information/document/manual-inclusion-questionnaire`,
 
   headingCaption: () => cy.get('[data-cy="heading-caption"]'),
   mainHeading: () => cy.get('[data-cy="main-heading"]'),

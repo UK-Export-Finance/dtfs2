@@ -22,7 +22,7 @@
       <p class="govuk-body" data-cy="team-subheading">{{ task.team.name }}</p>
 
       <form method="POST" autocomplete="off">
-
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {% set assignToMeCopy = (userFullName + ' ' + '(Assign to me)') %}
 
         {% if taskIsAssignedToUser %}
@@ -91,7 +91,7 @@
         }) }}
 
         <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/tasks" data-cy="close-link">Close without saving</a>
-      
+
       </form>
 
     </div>

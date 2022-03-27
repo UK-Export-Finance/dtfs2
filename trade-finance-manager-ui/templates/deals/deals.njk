@@ -15,7 +15,7 @@
     </div>
 
     <div class="govuk-grid-column-one-quarter govuk-!-padding-top-7">
-      {{ dealsTableSearchForm.render() }}
+      {{ dealsTableSearchForm.render(csrfToken) }}
     </div>
 
   </div>
@@ -27,7 +27,8 @@
         deals: deals,
         user: user,
         activeSortByOrder: activeSortByOrder,
-        activeSortByField: activeSortByField
+        activeSortByField: activeSortByField,
+        csrfToken: csrfToken
       } %}
 
       {{ dealsTable.render(componentData) }}

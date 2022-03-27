@@ -10,6 +10,7 @@
 
   {% block content %}
     <form autocomplete="off" method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ exporterArea.render({
         deal: deal,
         tfm: tfm,

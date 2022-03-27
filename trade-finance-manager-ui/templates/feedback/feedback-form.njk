@@ -23,7 +23,7 @@
   <h1 class="govuk-heading-l govuk-!-padding-top-5" data-cy="heading">Feedback</h1>
 
   <form method="POST" autocomplete="off">
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukInput({
       label: {
         text: "What is your role?",

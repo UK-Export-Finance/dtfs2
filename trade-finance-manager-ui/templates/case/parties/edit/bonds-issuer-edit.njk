@@ -12,6 +12,7 @@
     {% set filteredFacilities = deal.facilities | bondIssuerFacilities %}
 
    <form autocomplete="off" method="POST">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <div class="govuk-grid-row {% if params.renderEditLink %}ukef-flex-container separator-line deal{% endif %}">
       <div class="govuk-grid-column-one-half">
         <h1 class="ukef-heading-l govuk-!-margin-top-9" data-cy="edit-heading">Edit bond issuer details</h1>

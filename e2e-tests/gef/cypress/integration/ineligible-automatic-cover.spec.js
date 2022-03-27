@@ -34,7 +34,7 @@ context('Ineligible Automatic Cover Page', () => {
   describe('Clicking on Continue button', () => {
     it('redirects user to Manual Application Page', () => {
       ineligibleAutomaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/manual-inclusion-questionnaire`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
     });
   });
 });

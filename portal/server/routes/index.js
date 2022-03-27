@@ -22,5 +22,6 @@ router.use('/', userRoutes);
 router.use('/', feedbackRoutes);
 router.use('/', schemeTypeRoutes);
 router.use('/', portalRoutes);
+router.use('/', feedbackRoutes);
 
 module.exports = router;

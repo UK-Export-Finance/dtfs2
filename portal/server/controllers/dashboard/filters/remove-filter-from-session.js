@@ -11,6 +11,7 @@ const sanitiseFieldValue = (value) => {
 
 const removeSessionFilter = (req) => {
   const sessionFilters = req.session.dashboardFilters;
+  delete sessionFilters._csrf;
 
   const {
     fieldName,

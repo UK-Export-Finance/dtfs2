@@ -24,6 +24,7 @@ const getApplicationSubmission = async (req, res) => {
 };
 
 const postApplicationSubmission = async (req, res, next) => {
+  delete req.body?._csrf;
   const { params, session, body } = req;
   const { user, userToken } = session;
   const { dealId } = params;

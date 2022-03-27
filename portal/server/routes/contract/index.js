@@ -2,7 +2,7 @@ const express = require('express');
 const api = require('../../api');
 const aboutRoutes = require('./about');
 const bondRoutes = require('./bond');
-const eligibilityRoutes = require('./eligibility');
+
 const loanRoutes = require('./loan');
 const {
   requestParams,
@@ -387,7 +387,6 @@ router.use(
   aboutRoutes,
   loanRoutes,
   bondRoutes,
-  eligibilityRoutes,
 );
 
 module.exports = router;

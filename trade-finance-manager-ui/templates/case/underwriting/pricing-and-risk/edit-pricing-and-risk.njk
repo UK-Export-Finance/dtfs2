@@ -6,7 +6,7 @@
 {% extends "index.njk" %}
 
 {% block content %}
-  <section class="govuk-!-margin-top-9"> 
+  <section class="govuk-!-margin-top-9">
 
     {% if validationErrors.count %}
       {{
@@ -28,7 +28,7 @@
           <div class="govuk-grid-column-one-half">
 
             <form method="POST" autocomplete="off">
-
+              <input type="hidden" name="_csrf" value="{{ csrfToken }}">
               {% set legendText = 'Add a credit rating for ' + deal.submissionDetails.supplierName %}
 
               {% set exporterCreditRatingOtherChecked = tfm.exporterCreditRating.length > 0 and tfm.exporterCreditRating !== 'Good (BB-)' and tfm.exporterCreditRating !== 'Acceptable (B+)' %}

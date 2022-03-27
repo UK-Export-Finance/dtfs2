@@ -7,11 +7,15 @@ const flash = require('connect-flash');
 const path = require('path');
 const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
 
 require('./azure-env');
 const routes = require('./routes');
+const supportingDocuments = require('./routes/supporting-documents.route');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
+const csrfToken = require('./middleware/csrf');
 
 const app = express();
 
@@ -65,7 +69,11 @@ sessionOptions.store = sessionStore;
 
 app.set('trustproxy', true);
 app.use(session(sessionOptions));
-
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use('/', supportingDocuments);
+app.use(csrf());
+app.use(csrfToken());
 app.use(flash());
 
 configureNunjucks({
@@ -74,8 +82,6 @@ configureNunjucks({
   noCache: true,
   watch: true,
 });
-
-app.use(express.urlencoded());
 
 app.use(morgan('dev', {
   skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
@@ -89,8 +95,13 @@ app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  res.status(err.statusCode || 500);
-  res.render('partials/problem-with-service.njk', { user: req.session.user, error: err });
+  if (err.code === 'EBADCSRFTOKEN') {
+    // handle CSRF token errors here
+    res.status(err.statusCode || 500);
+    res.redirect('/');
+  } else {
+    res.render('partials/problem-with-service.njk', { user: req.session.user, error: err });
+  }
 });
 
 app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));

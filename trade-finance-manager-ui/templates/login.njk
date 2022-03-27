@@ -33,7 +33,7 @@
   <div class="govuk-grid-row govuk-body">
     <div class="govuk-grid-column-one-third">
       <form method="POST" autocomplete="off">
-
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
           {{ govukInput({
             label: {
               text: "Email address",

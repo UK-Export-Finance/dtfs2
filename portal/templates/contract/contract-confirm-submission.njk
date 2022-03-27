@@ -17,7 +17,7 @@
   {% endif %}
 
   <form method="POST" autocomplete="off">
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <div class="govuk-grid-row">
 
       <div class="govuk-grid-column-three-quarters">

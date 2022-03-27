@@ -7,7 +7,7 @@ const BASE_DEAL = {
   bank: { id: BANK1_MAKER1.bank.id },
   additionalRefName: 'Mock',
   exporter: {
-    companyName: 'Mock company',
+    companyName: 'Mock company name',
   },
 };
 
@@ -79,7 +79,7 @@ const GEF_FACILITY_CONTINGENT = {
 };
 
 module.exports = {
-  BSS_DEAL_DRAFT, 
+  BSS_DEAL_DRAFT,
   BSS_DEAL_READY_FOR_CHECK,
   BSS_DEAL_AIN,
   BSS_DEAL_MIA,

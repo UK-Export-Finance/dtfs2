@@ -47,7 +47,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
 
       // login as maker_checker to add a file only and then complete as maker
       cy.login(CREDENTIALS.MAKER_CHECKER);
-      cy.visit(relative(`/gef/application-details/${dealIds[2]}/supporting-information/manual-inclusion-questionnaire`));
+      cy.visit(relative(`/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire`));
 
       cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(dealIds[2])}/upload`);
       manualInclusion.uploadSuccess('upload-file-valid.doc');
