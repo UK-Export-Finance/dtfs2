@@ -48,10 +48,16 @@ exports.findOne = (req, res) => (
   )
 );
 
-exports.findLatest = async (req, res) => {
+const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection('mandatoryCriteria');
   const latest = await collection.find({}).sort({ version: -1 }).limit(1).toArray();
-  return res.status(200).send(latest[0]);
+  return latest[0];
+};
+exports.findLatestMandatoryCriteria = findLatestMandatoryCriteria;
+
+exports.findLatest = async (req, res) => {
+  const latest = await findLatestMandatoryCriteria();
+  return res.status(200).send(latest);
 };
 
 exports.update = async (req, res) => {

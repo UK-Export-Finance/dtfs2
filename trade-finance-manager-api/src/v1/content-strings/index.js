@@ -16,7 +16,7 @@ const DEAL = {
         13: {
           text: 'The UKEF exposure for this exporter, across all short term schemes, is less than either:',
           textList: [
-            '£2 million',
+            '£5 million',
             'another limit approved by UKEF',
           ],
         },
@@ -41,6 +41,10 @@ const DEAL = {
             'biological',
             'human cloning',
             'pornography',
+            'coal',
+            'oil',
+            'gas',
+            'fossil fuel energy',
             'tobacco or gambling',
           ],
         },
