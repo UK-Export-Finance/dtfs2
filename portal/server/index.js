@@ -2,7 +2,6 @@ const express = require('express');
 const morgan = require('morgan');
 const session = require('express-session');
 const redis = require('redis');
-const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');

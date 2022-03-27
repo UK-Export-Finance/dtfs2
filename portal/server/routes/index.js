@@ -9,7 +9,6 @@ const userRoutes = require('./user');
 const feedbackRoutes = require('./feedback');
 const schemeTypeRoutes = require('./schemeType');
 const portalRoutes = require('./reports.route');
-const feedbackRoutes = require('./feedback');
 
 const router = express.Router();
 
