@@ -30,6 +30,7 @@
 
 
   <form method="post" data-cy="form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {% for criterion in criteria %}
       {{ govukRadios({
         classes: "govuk-radios--inline",

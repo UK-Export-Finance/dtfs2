@@ -119,6 +119,7 @@ const getBondBeneficiaryPartyDetails = async (req, res) => {
 const postPartyDetails = (partyType) => (
   async (req, res) => {
     const { user } = req.session;
+    delete req.body._csrf;
 
     if (!userCanEdit(user)) {
       return res.redirect('/not-found');

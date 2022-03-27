@@ -37,6 +37,7 @@
   <p class="govuk-body">Confirmation</p>
 
   <form autocomplete="off" method="POST">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{
       govukRadios({
         classes: "govuk-radios--inline",

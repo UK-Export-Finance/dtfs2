@@ -165,7 +165,7 @@ const MOCK_DEAL = {
     agentAddressTown: 'City',
   },
   exporter: {
-    companyName: 'Mock company',
+    companyName: 'Mock company name',
   },
   mockFacilities: [
     {
@@ -231,7 +231,6 @@ const MOCK_DEAL = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      name: 'Test-321',
     },
   ],
 };

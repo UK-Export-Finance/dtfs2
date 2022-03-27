@@ -50,9 +50,8 @@
         <p class="govuk-body">—</p>
       {% endif %}
 
-      <form
-        method="post"
-        data-cy="form">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ govukSelect({
           id: "selectedAddresses",
           name: "selectedAddress",

@@ -27,7 +27,7 @@
   })}}
 
   <form method="POST" autocomplete="off">
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <input type="hidden" name="premiumFrequency" value="{{ loan.premiumFrequency }}" />
 
     <div class="govuk-grid-row">

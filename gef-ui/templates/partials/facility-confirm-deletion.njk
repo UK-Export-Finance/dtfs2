@@ -12,10 +12,8 @@
     <p class="govuk-body">This action cannot be undone.</p>
   </div>
 
-  <form
-    method="post"
-    data-cy="form">
-
+  <form method="post" data-cy="form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <div class="govuk-button-group">
       {{ govukButton({
         text: "Yes, delete",

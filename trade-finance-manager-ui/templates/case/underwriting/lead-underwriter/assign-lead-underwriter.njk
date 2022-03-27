@@ -4,7 +4,7 @@
 {% extends "index.njk" %}
 
 {% block content %}
-  <section class="govuk-!-margin-top-9"> 
+  <section class="govuk-!-margin-top-9">
 
     <div class="govuk-grid-row">
 
@@ -13,7 +13,7 @@
         <h3 class="govuk-heading-l" data-cy="assign-lead-underwriter-heading">Assign a lead underwriter</h3>
 
         <form method="POST" autocomplete="off">
-
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
           {{ govukSelect({
             id: "assignedTo",
             name: "assignedTo",
@@ -38,7 +38,7 @@
           <a class="govuk-body govuk-link govuk-!-margin-left-3 close-link" href="/case/{{ dealId }}/underwriting/lead-underwriter" data-cy="cancel-link">Cancel</a>
 
         </form>
-        
+
       </div>
 
     </div>

@@ -19,7 +19,7 @@
   <h1 class="govuk-heading-l">Bond Issue Facility</h1>
 
   <form method="POST" autocomplete="off" novalidate>
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ dateField.render(
       legend = 'Issued Date',
       id = 'issuedDate',

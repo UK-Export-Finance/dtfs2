@@ -1,8 +1,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
-    <form
-      method="post"
-      data-cy="form">
+    <form method="post" data-cy="form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ govukRadios({
         classes: "govuk-radios--inline",
         idPrefix: "correspondence",
@@ -36,9 +35,7 @@
               'data-cy': 'correspondence-no'
             }
           }
-        ] })
-      }}
-
+        ] }) }}
       <div id="conditional-correspondence">
         {{ govukInput({
           label: {
@@ -61,19 +58,17 @@
             }
           }
         }) }}
-
-        {%if errors and errors.fieldErrors.postcode %}
+        {% if errors and errors.fieldErrors.postcode %}
           <p class="govuk-!-margin-bottom-6">
-            <a class="govuk-link"
-              href="/gef/application-details/{{dealId}}/enter-exporters-correspondence-address"
+            <a
+              class="govuk-link"
+              href="/gef/application-details/{{ dealId }}/enter-exporters-correspondence-address"
               data-cy="enter-address-manually">
               Enter address manually
             </a>
           </p>
         {% endif %}
-
       </div>
-
       <div class="govuk-button-group">
         {{ govukButton({
           text: "Continue",
@@ -85,5 +80,4 @@
     </form>
   </div>
 </div>
-
 <script src="/assets/js/correspondenceAddress.js" type="text/javascript"></script>

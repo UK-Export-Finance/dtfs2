@@ -29,8 +29,11 @@ context('Parties - user can view and edit bond beneficiary', () => {
 
   describe('Bond issuer page', () => {
     describe('when user is in BUSINESS_SUPPORT team', () => {
-      beforeEach(() => {
+      before(() => {
         cy.login(BUSINESS_SUPPORT_USER_1);
+      });
+      beforeEach(() => {
+        Cypress.Cookies.preserveOnce('connect.sid');
         cy.visit(relative(`/case/${dealId}/parties`));
       });
 
@@ -54,7 +57,7 @@ context('Parties - user can view and edit bond beneficiary', () => {
         const partyUrn = 'test partyurn';
 
         pages.partiesPage.bondBeneficiaryEditLink().click();
-        pages.bondBeneficiaryPage.urnInput().type(partyUrn);
+        pages.bondBeneficiaryPage.urnInput().focus().type(partyUrn);
 
         pages.bondBeneficiaryPage.saveButton().click();
 

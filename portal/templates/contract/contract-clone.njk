@@ -19,7 +19,7 @@
   <h1 class="govuk-heading-l">Clone Deal {{ additionalRefName }}</h1>
 
   <form method="POST" autocomplete="off">
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <div class="govuk-grid-row">
 
       <div class="govuk-grid-column-one-half">
@@ -38,7 +38,7 @@
               </label>
 
               <span id="bankInternalRefName-hint" class="govuk-hint">
-                It's not possible to change this later. 
+                It's not possible to change this later.
               </span>
 
               {% if validationErrors.errorList.bankInternalRefName %}
