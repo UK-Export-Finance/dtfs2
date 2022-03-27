@@ -11,9 +11,7 @@ const createFacility = async (newFacility) => {
   const response = await collection.insertOne(facility);
   const { insertedId } = response;
 
-  return {
-    _id: insertedId,
-  };
+  return { _id: insertedId };
 };
 
 exports.createFacilityPost = async (req, res) => {

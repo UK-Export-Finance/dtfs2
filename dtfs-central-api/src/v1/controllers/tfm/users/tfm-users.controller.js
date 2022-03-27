@@ -44,20 +44,26 @@ exports.findOneUserGET = async (req, res) => {
 };
 
 const findOneUserById = async (userId) => {
-  const collection = await db.getCollection(usersCollection);
-  const user = await collection.findOne({ _id: new ObjectId(userId) });
-  return user;
+  if (ObjectId.isValid(userId)) {
+    const collection = await db.getCollection(usersCollection);
+    const user = await collection.findOne({ _id: new ObjectId(userId) });
+    return user;
+  }
+  return { status: 400, message: 'Invalid User Id' };
 };
 exports.findOneUserById = findOneUserById;
 
 exports.findOneUserByIdGET = async (req, res) => {
-  const user = await findOneUserById(req.params.userId);
+  if (ObjectId.isValid(req.params.userId)) {
+    const user = await findOneUserById(req.params.userId);
 
-  if (user) {
-    return res.status(200).send(user);
+    if (user) {
+      return res.status(200).send(user);
+    }
+
+    return res.status(404).send({ status: 404, message: 'User not found' });
   }
-
-  return res.status(404).send();
+  return res.status(400).send({ status: 400, message: 'Invalid User Id' });
 };
 
 const findTeamUsers = async (teamId) => {

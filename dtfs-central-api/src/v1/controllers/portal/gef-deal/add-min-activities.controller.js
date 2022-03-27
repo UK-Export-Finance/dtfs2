@@ -1,6 +1,6 @@
 const { getUnixTime } = require('date-fns');
 
-const { ObjectID } = require('mongodb');
+const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 
 const { findOneDeal } = require('./get-gef-deal.controller');
@@ -30,23 +30,26 @@ const updateChangedToIssued = async (facilities) => {
 
 // retrieves user information from database
 const getUserInfo = async (userId) => {
-  const userCollectionName = 'users';
+  if (ObjectId.isValid(userId)) {
+    const userCollectionName = 'users';
 
-  const userCollection = await db.getCollection(userCollectionName);
-  const {
-    firstname,
-    surname = '',
-  } = userId
-    ? await userCollection.findOne({ _id: new ObjectID(String(userId)) })
-    : {};
+    const userCollection = await db.getCollection(userCollectionName);
+    const {
+      firstname,
+      surname = '',
+    } = userId
+      ? await userCollection.findOne({ _id: new ObjectId(String(userId)) })
+      : {};
 
-  // creates user object which can be used
-  const user = {
-    firstname,
-    surname,
-    _id: userId,
-  };
-  return user;
+    // creates user object which can be used
+    const user = {
+      firstname,
+      surname,
+      _id: userId,
+    };
+    return user;
+  }
+  return { status: 400, message: 'Invalid User Id' };
 };
 
 // creates portal activity object to store in DB
@@ -168,32 +171,36 @@ const ukefSubmissionPortalActivity = async (application) => {
  * @param {*} res
  */
 const generateMINActivities = async (req, res) => {
-  try {
-    const dealId = req.params.id;
+  if (ObjectId.isValid(req.params.id)) {
+    try {
+      const dealId = req.params.id;
 
-    const application = await findOneDeal(dealId);
+      const application = await findOneDeal(dealId);
 
-    if (application) {
-      const facilities = await findAllGefFacilitiesByDealId(dealId);
-      let { portalActivities } = application;
+      if (application) {
+        const facilities = await findAllGefFacilitiesByDealId(dealId);
+        let { portalActivities } = application;
 
-      portalActivities = await ukefSubmissionPortalActivity(application);
-      portalActivities = await facilityChangePortalActivity(application, facilities);
+        portalActivities = await ukefSubmissionPortalActivity(application);
+        portalActivities = await facilityChangePortalActivity(application, facilities);
 
-      const update = {
-        portalActivities,
-      };
+        const update = {
+          portalActivities,
+        };
 
-      await updateChangedToIssued(facilities);
+        await updateChangedToIssued(facilities);
 
-      const updatedDeal = await updateDeal(dealId, update);
+        const updatedDeal = await updateDeal(dealId, update);
 
-      res.status(200).send(updatedDeal);
+        res.status(200).send(updatedDeal);
+      }
+      res.status(404).send();
+    } catch (err) {
+      console.error(`Central-API - Error generating MIN activities ${err}`);
+      res.status(400).send();
     }
-    res.status(404);
-  } catch (err) {
-    console.error(`Central-API - Error generating MIN activities ${err}`);
-    res.status(403);
+  } else {
+    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 };
 
