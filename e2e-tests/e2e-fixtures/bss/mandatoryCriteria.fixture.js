@@ -26,7 +26,7 @@ export const mandatoryCriteria = {
       items: [
         {
           id: 4,
-          copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href="/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">Eligible Person</a>',
+          copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href="/assets/files/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">Eligible Person</a>',
         },
       ],
     },
