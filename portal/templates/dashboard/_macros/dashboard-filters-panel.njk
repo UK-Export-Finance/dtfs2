@@ -5,11 +5,12 @@
   {% set filters = params.filters %}
   {% set selectedFilters = params.selectedFilters %}
   {% set keyword = params.keyword %}
+  {% set csrfToken = params.csrfToken %}
 
   <div class="moj-filter-layout__filter">
 
     <form method="POST" autocomplete="off">
-
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {% if selectedFilters.length %}
         {{ mojFilter({
           heading: {

@@ -41,6 +41,8 @@ const validateAutomaticCover = async (req, res, next) => {
     const { eligibility } = application;
     const { _id: editorId } = user;
 
+    delete body._csrf;
+
     const automaticCoverErrors = getValidationErrors(body, eligibility.criteria);
     const coverType = deriveCoverType(body, eligibility.criteria);
 

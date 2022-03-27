@@ -26,7 +26,7 @@
   })}}
 
   <form method="POST" autocomplete="off" enctype="multipart/form-data">
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <ol class="govuk-list">
     <li>
         {{

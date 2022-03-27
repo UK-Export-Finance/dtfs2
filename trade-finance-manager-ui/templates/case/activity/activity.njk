@@ -7,7 +7,7 @@
 {% extends "case/case.njk" %}
 
 {% block sub_content %}
-  
+
   <div class="govuk-grid-row" data-cy="case-activity">
 
     <div class="govuk-grid-column-full">
@@ -15,7 +15,8 @@
       <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-5" data-cy="activity-heading">Activity and comments</h2>
 
         {% set filterCommentData = {
-          selectedActivityFilter: selectedActivityFilter
+          selectedActivityFilter: selectedActivityFilter,
+          csrfToken: csrfToken
         } %}
 
       {{ activityCommentFilter.render(filterCommentData) }}
@@ -37,7 +38,7 @@
       }) }}
 
     </div>
-    
+
   </div>
 
 {% endblock %}

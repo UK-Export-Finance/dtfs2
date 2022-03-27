@@ -4,28 +4,25 @@ const { removeFacilityIdFromDeal } = require('../deal/update-deal.controller');
 const db = require('../../../../drivers/db-client');
 
 exports.deleteFacility = async (req, res) => {
-  const facilityId = req.params.id;
+  if (ObjectId.isValid(req.params.id)) {
+    const facilityId = req.params.id;
 
-  await findOneFacility(facilityId, async (facility) => {
-    if (facility) {
-      const collection = await db.getCollection('facilities');
-      const status = await collection.deleteOne({ _id: ObjectId(facilityId) });
+    await findOneFacility(facilityId, async (facility) => {
+      if (facility) {
+        const collection = await db.getCollection('facilities');
+        const status = await collection.deleteOne({ _id: ObjectId(facilityId) });
 
-      // remove facility ID from the associated deal
-      const {
-        user,
-      } = req.body;
+        // remove facility ID from the associated deal
+        const { user } = req.body;
 
-      await removeFacilityIdFromDeal(
-        facility.dealId,
-        facilityId,
-        user,
-        req.routePath,
-      );
+        await removeFacilityIdFromDeal(facility.dealId, facilityId, user, req.routePath);
 
-      return res.status(200).send(status);
-    }
+        return res.status(200).send(status);
+      }
 
-    return res.status(404).send();
-  });
+      return res.status(404).send({ status: 400, message: 'Facility not found' });
+    });
+  } else {
+    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+  }
 };

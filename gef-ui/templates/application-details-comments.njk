@@ -39,6 +39,7 @@
     </div>
     <div class="govuk-grid-column-one-half-from-desktop">
       <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ govukCharacterCount({
           name: "comment",
           id: "comment",

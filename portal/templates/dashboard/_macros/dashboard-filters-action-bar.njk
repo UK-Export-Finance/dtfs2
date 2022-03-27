@@ -5,6 +5,7 @@
   {% set renderCreatedByYou = params.renderCreatedByYou %}
   {% set createdByYou = params.createdByYou %}
   {% set selectedFilters = params.selectedFilters %}
+  {% set csrfToken = params.csrfToken %}
 
   <div class="moj-action-bar" data-cy="filters-action-bar">
 
@@ -12,11 +13,12 @@
       <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
         <div class="moj-action-bar__filter"></div>
       </div>
-    
+
       {% if renderCreatedByYou %}
         <div class="govuk-grid-column-one-half">
 
           <form method="POST" autocomplete="off" class="created-by-you-form">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}">
             {{ govukCheckboxes({
               name: "createdByYou",
               classes: "govuk-checkboxes--small created-by-you",

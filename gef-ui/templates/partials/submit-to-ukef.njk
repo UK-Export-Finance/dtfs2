@@ -33,6 +33,7 @@
       </ul>
 
       <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ govukCheckboxes({
           idPrefix: "confirmSubmitUkef",
           name: "confirmSubmitUkef",

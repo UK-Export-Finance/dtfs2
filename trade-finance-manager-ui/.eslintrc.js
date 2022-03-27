@@ -14,10 +14,10 @@ module.exports = {
       ignoreTemplateLiterals: true,
     }],
     'no-console': ['error', { allow: ['info', 'error'] }],
-    'no-underscore-dangle': ['error', { allow: ['_id'] }],
+    'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
-    'import/no-extraneous-dependencies': ['error', {devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js']}],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js'] }],
   },
   parserOptions: {
     ecmaVersion: 2020,

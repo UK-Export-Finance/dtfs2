@@ -46,9 +46,8 @@
     </ol>
   </div>
 
-  <form
-    method="post"
-    data-cy="form">
+  <form method="post" data-cy="form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukRadios({
       classes: "govuk-radios--inline",
       idPrefix: "confirm",

@@ -45,8 +45,8 @@ context('Return to Maker as MIA', () => {
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
       automaticCover.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/manual-inclusion-questionnaire`));
-      cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(dealId)}/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
+      cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload-file-valid.doc');
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
@@ -125,7 +125,7 @@ context('Return to Maker as MIA', () => {
       // supporting info should show change link
       applicationDetails.supportingInfoListRowAction(0, 0).contains('Change');
       applicationDetails.supportingInfoListRowAction(0, 0).find('.govuk-link').invoke('attr', 'href').then((href) => {
-        expect(href).to.equal(`/gef/application-details/${dealId}/supporting-information/manual-inclusion-questionnaire`);
+        expect(href).to.equal(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`);
       });
       applicationDetails.supportingInfoListRowAction(0, 1).contains('Change');
       applicationDetails.supportingInfoListRowAction(0, 1).find('.govuk-link').invoke('attr', 'href').then((href) => {

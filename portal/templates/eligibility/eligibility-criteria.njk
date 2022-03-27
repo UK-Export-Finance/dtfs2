@@ -28,7 +28,7 @@
   })}}
 
   <form method="POST" autocomplete="off">
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {% for criterion in eligibility.criteria %}
       {% set hasValidationError = validationErrors.errorList[criterion.id] %}
 

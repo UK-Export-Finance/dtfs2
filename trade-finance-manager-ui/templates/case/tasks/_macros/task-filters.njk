@@ -4,11 +4,12 @@
 {% macro render(params) %}
   {% set tasks = params.tasks %}
   {% set selectedTaskFilter = params.selectedTaskFilter %}
+  {% set csrfToken = params.csrfToken %}
 
   <section id="task-filters" data-cy="task-filters">
 
     <form method="post" autocomplete="off">
-
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{govukRadios({
         classes: "govuk-radios--inline govuk-radios--small task-filters__radios",
         idPrefix: "filterType",

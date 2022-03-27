@@ -361,6 +361,9 @@ describe('controllers - case - parties', () => {
 
       it('should redirect to not-found route', async () => {
         const req = {
+          body: {
+            csrf: '12345',
+          },
           params: {
             _id: '1',
           },
@@ -375,6 +378,9 @@ describe('controllers - case - parties', () => {
     describe('when user is not allowed to edit', () => {
       it('should redirect to not-found route', async () => {
         const req = {
+          body: {
+            csrf: '12345',
+          },
           params: {
             _id: '1',
           },

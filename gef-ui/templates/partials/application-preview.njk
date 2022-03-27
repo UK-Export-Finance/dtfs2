@@ -34,6 +34,7 @@
 
   {% if makerCanReSubmit %}
     <form method="post" data-cy="form">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {% include "includes/submit/submit-to-checker-post-ukef-approval.njk" %}
     </form>
   {% elif checkerCanSubmit %}

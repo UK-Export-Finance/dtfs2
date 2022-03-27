@@ -60,73 +60,79 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
 };
 
 const updateDealEditedByPortal = async (dealId, user) => {
-  const collection = await db.getCollection('deals');
-  const editedBy = await handleEditedByPortal(dealId, {}, user);
+  if (ObjectId.isValid(dealId)) {
+    const collection = await db.getCollection('deals');
+    const editedBy = await handleEditedByPortal(dealId, {}, user);
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: ObjectId(dealId) },
-    $.flatten(withoutId({ editedBy })),
-    { returnOriginal: false },
-  );
+    const findAndUpdateResponse = await collection.findOneAndUpdate(
+      { _id: ObjectId(dealId) },
+      $.flatten(withoutId({ editedBy })),
+      { returnOriginal: false },
+    );
 
-  const { value } = findAndUpdateResponse;
-  return value;
+    const { value } = findAndUpdateResponse;
+    return value;
+  }
+  return { status: 400, message: 'Invalid Deal Id' };
 };
 exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
 const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) => {
-  const collection = await db.getCollection('deals');
+  if (ObjectId.isValid(dealId)) {
+    const collection = await db.getCollection('deals');
 
-  let originalDeal = existingDeal;
+    let originalDeal = existingDeal;
 
-  if (!existingDeal) {
-    originalDeal = await findOneDeal(dealId);
+    if (!existingDeal) {
+      originalDeal = await findOneDeal(dealId);
+    }
+
+    let originalDealDetails;
+    if (originalDeal && originalDeal.details) {
+      originalDealDetails = originalDeal.details;
+    }
+
+    let dealChangesDetails;
+    if (dealChanges && dealChanges.details) {
+      dealChangesDetails = dealChanges.details;
+    }
+
+    let originalDealEligibility;
+    if (originalDeal && originalDeal.eligibility) {
+      originalDealEligibility = originalDeal.eligibility;
+    }
+
+    let dealChangesEligibility;
+    if (dealChanges && dealChanges.eligibility) {
+      dealChangesEligibility = dealChanges.eligibility;
+    }
+
+    const update = {
+      ...dealChanges,
+      updatedAt: Date.now(),
+      details: {
+        ...originalDealDetails,
+        ...dealChangesDetails,
+      },
+      eligibility: {
+        ...originalDealEligibility,
+        ...dealChangesEligibility,
+      },
+    };
+
+    if (routePath === PORTAL_ROUTE) {
+      update.editedBy = await handleEditedByPortal(dealId, update, user);
+    }
+
+    const findAndUpdateResponse = await collection.findOneAndUpdate(
+      { _id: ObjectId(dealId) },
+      $.flatten(withoutId(update)),
+      { returnOriginal: false },
+    );
+
+    return findAndUpdateResponse.value;
   }
-
-  let originalDealDetails;
-  if (originalDeal && originalDeal.details) {
-    originalDealDetails = originalDeal.details;
-  }
-
-  let dealChangesDetails;
-  if (dealChanges && dealChanges.details) {
-    dealChangesDetails = dealChanges.details;
-  }
-
-  let originalDealEligibility;
-  if (originalDeal && originalDeal.eligibility) {
-    originalDealEligibility = originalDeal.eligibility;
-  }
-
-  let dealChangesEligibility;
-  if (dealChanges && dealChanges.eligibility) {
-    dealChangesEligibility = dealChanges.eligibility;
-  }
-
-  const update = {
-    ...dealChanges,
-    updatedAt: Date.now(),
-    details: {
-      ...originalDealDetails,
-      ...dealChangesDetails,
-    },
-    eligibility: {
-      ...originalDealEligibility,
-      ...dealChangesEligibility,
-    },
-  };
-
-  if (routePath === PORTAL_ROUTE) {
-    update.editedBy = await handleEditedByPortal(dealId, update, user);
-  }
-
-  const findAndUpdateResponse = await collection.findOneAndUpdate(
-    { _id: ObjectId(dealId) },
-    $.flatten(withoutId(update)),
-    { returnOriginal: false },
-  );
-
-  return findAndUpdateResponse.value;
+  return { status: 400, message: 'Invalid Deal Id' };
 };
 exports.updateDeal = updateDeal;
 
@@ -169,21 +175,25 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
 exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 
 exports.updateDealPut = async (req, res) => {
-  const dealId = req.params.id;
+  if (ObjectId.isValid(req.params.id)) {
+    const dealId = req.params.id;
 
-  const { user, dealUpdate } = req.body;
+    const { user, dealUpdate } = req.body;
 
-  await findOneDeal(dealId, async (deal) => {
-    if (deal) {
-      const updatedDeal = await updateDeal(
-        dealId,
-        dealUpdate,
-        user,
-        deal,
-        req.routePath,
-      );
-      return res.status(200).json(updatedDeal);
-    }
-    return res.status(404).send();
-  });
+    await findOneDeal(dealId, async (deal) => {
+      if (deal) {
+        const updatedDeal = await updateDeal(
+          dealId,
+          dealUpdate,
+          user,
+          deal,
+          req.routePath,
+        );
+        return res.status(200).json(updatedDeal);
+      }
+      return res.status(404).send({ status: 404, message: 'Deal not found' });
+    });
+  } else {
+    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  }
 };

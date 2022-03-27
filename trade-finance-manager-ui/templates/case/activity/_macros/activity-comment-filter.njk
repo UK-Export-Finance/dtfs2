@@ -3,11 +3,12 @@
 
 {% macro render(params) %}
     {% set selectedActivityFilter = params.selectedActivityFilter %}
+    {% set csrfToken = params.csrfToken %}
 
   <section id="activity-filters" data-cy="activity-filters">
 
     <form method="post" autocomplete="off">
-
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ govukRadios({
         classes: "govuk-radios--inline",
         idPrefix: "filterType",
