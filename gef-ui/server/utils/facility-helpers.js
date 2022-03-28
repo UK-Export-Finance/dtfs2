@@ -195,7 +195,13 @@ const issuedFacilityConfirmation = (application) => {
   && (submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN || submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
 };
 
-const facilityTypeStringGenerator = (facilityType) => CONSTANTS.FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
+const facilityTypeStringGenerator = (facilityType) => {
+  if (facilityType) {
+    const type = CONSTANTS.FACILITY_TYPE[facilityType.toUpperCase()];
+    return type.toLowerCase();
+  }
+  return null;
+};
 
 module.exports = {
   areUnissuedFacilitiesPresent,
