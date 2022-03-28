@@ -1,4 +1,5 @@
 const tasksPage = {
+  tasksHeading: () => cy.get('[data-cy="tasks-heading"]'),
   tasksTableRows: () => cy.get('[data-cy="tasks-table"] tbody tr'),
   taskGroupTable: () => cy.get('[data-cy="task-group-table"]'),
   tasks: {

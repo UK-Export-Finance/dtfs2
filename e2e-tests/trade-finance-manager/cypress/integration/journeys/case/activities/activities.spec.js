@@ -59,9 +59,20 @@ context('Users can create and submit comments', () => {
   });
 
   describe('add a comment', () => {
+    it('should show correct heading and aria-label for activities tab heading', () => {
+      activitiesPage.mainHeading().contains('Activity and comments');
+      activitiesPage.mainHeading().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal('Activity and comments');
+      });
+    });
+
     it('should go to add a comment page if add comment button clicked', () => {
       activitiesPage.addACommentButton().click();
       cy.url().should('eq', relative(`/case/${dealId}/activity/post-comment`));
+      activitiesPage.addACommentHeading().contains('Add a comment');
+      activitiesPage.addACommentHeading().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal('Add a comment');
+      });
     });
 
     it('entering no comment should take you back to activity page and no comment in timeline', () => {

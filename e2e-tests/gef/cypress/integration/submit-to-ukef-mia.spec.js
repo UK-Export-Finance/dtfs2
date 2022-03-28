@@ -87,13 +87,13 @@ context('Submit MIA to UKEF', () => {
 
     it('Submission page as expected', () => {
       submitToUkef.mainHeading().contains('Confirm your submission');
-      submitToUkef.mainText().contains('you have reviewed the information');
+      submitToUkef.mainText().contains('you have reviewed the information given');
       submitToUkef.mainText().contains('you want to proceed with the submission');
 
       submitToUkef.confirmSubmission().contains('I understand and agree');
       submitToUkef.confirmSubmissionCheckbox();
       submitToUkef.confirmSubmissionCheckbox().invoke('attr', 'aria-label').then((label) => {
-        expect(label).to.equal('Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information and you want to proceed with the submission, I understand and agree');
+        expect(label).to.equal('Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information given and you want to proceed with the submission, I understand and agree');
       });
       submitToUkef.submitButton();
       submitToUkef.cancelLink();

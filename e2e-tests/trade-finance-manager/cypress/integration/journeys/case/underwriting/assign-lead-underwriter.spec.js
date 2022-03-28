@@ -57,8 +57,11 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     // go to lead underwriter page
     partials.caseSubNavigation.underwritingLink().click();
     partials.underwritingSubNav.leadUnderwriterLink().click();
-
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/lead-underwriter`));
+    partials.underwritingSubNav.underwritingHeading().contains('Underwriting');
+    partials.underwritingSubNav.underwritingHeading().invoke('attr', 'aria-label').then((label) => {
+      expect(label).to.equal('Underwriting page: lead underwriter');
+    });
   });
 
   it('a user that is NOT in UNDERWRITER_MANAGERS or UNDERWRITERS team cannot manually navigate to assign-lead-underwriter page', () => {

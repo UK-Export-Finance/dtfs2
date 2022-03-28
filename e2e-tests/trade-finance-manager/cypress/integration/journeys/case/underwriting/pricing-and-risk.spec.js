@@ -40,6 +40,10 @@ context('Case Underwriting - Pricing and risk', () => {
       // go to pricing and risk page
       partials.caseSubNavigation.underwritingLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+      partials.underwritingSubNav.underwritingHeading().contains('Underwriting');
+      partials.underwritingSubNav.underwritingHeading().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal('Underwriting page: pricing and risk');
+      });
     });
 
     it('should NOT display `change` links', () => {
