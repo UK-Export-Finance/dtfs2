@@ -8,6 +8,7 @@ import {
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
   issuedFacilityConfirmation,
+  facilityTypeStringGenerator,
 } from './facility-helpers';
 
 import {
@@ -427,5 +428,14 @@ describe('issuedFacilityConfirmation()', () => {
   });
   it('Should return `true` as the facility has been issued, application is AIN', () => {
     expect(issuedFacilityConfirmation(MOCK_AIN_APPLICATION)).toEqual(true);
+  });
+});
+
+describe('facilityTypeStringGenerator', () => {
+  it('Should return `cash` for Cash facility', () => {
+    expect(facilityTypeStringGenerator(CONSTANTS.FACILITY_TYPE.CASH)).toEqual('cash');
+  });
+  it('Should return `contingent` for Contingent facility', () => {
+    expect(facilityTypeStringGenerator(CONSTANTS.FACILITY_TYPE.CONTINGENT)).toEqual('contingent');
   });
 });
