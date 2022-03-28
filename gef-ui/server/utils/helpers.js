@@ -103,6 +103,10 @@ const validationErrorHandler = (errs, href = '') => {
   Object is empty or not. */
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
+// for which rows in the facility tables should show change when facilities changed to issued post submission
+const changedToIssuedKeys = (id) =>
+  id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate' || id === 'hasBeenIssued';
+
 // summary items for application details page
 const detailsSummaryItems = (href, keys, item, value) => {
   const summaryItems = [
@@ -144,6 +148,7 @@ const previewItemConditions = (previewParams) => {
   const {
     issuedHref,
     unissuedHref,
+    issuedToUnissuedHref,
     changedToIssueShow,
     unissuedShow,
     item,
@@ -168,11 +173,20 @@ const previewItemConditions = (previewParams) => {
 
   if (summaryIssuedChangedToIssued(previewParams)) {
     /**
+     * if facility changed to issued && submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker
+     * can unissue facility which requires different href to other change to issued facilities
+     * creates change link with different href to change to unissued again for the stage row
+     */
+    if (item.id === 'hasBeenIssued') {
+      summaryItems = previewSummaryItems(issuedToUnissuedHref, changedToIssueShow, item);
+    } else {
+    /**
      * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility changed to issued
      * can change name, coverStartDate and coverEndDate column
      * change link displayed taking to unissued-facility-change change page
      */
-    summaryItems = previewSummaryItems(unissuedHref, changedToIssueShow, item);
+      summaryItems = previewSummaryItems(unissuedHref, changedToIssueShow, item);
+    }
   } else if (summaryIssuedUnchanged(previewParams)) {
     /**
      * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility still unissued
@@ -249,13 +263,15 @@ const summaryItemsConditions = (summaryItemsObj) => {
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
   const isCoverStartOnSubmission = id === 'coverStartDate' && shouldCoverStartOnSubmission;
   // column keys to display change if facility has been changed to issued
-  const changedToIssueShow = id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate';
+  const changedToIssueShow = changedToIssuedKeys(id);
   // column key to display add if facility not yet issued
   const unissuedShow = id === 'hasBeenIssued';
   // Issued facility change link (post confirmation)
   const issuedHref = `/gef/application-details/${app._id}/${data.details._id}/confirm-cover-start-date`;
   // personalised href for facility to change to issued (once submitted to UKEF)
   const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
+  // personalised href for facility to change to unissued from issued (once submitted to UKEF and changed to issued)
+  const issuedToUnissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change-to-unissued`;
   // array of facilities which have been changed to issued
   const facilitiesChanged = facilitiesChangedToIssuedAsArray(app);
 
@@ -268,6 +284,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
     href,
     issuedHref,
     unissuedHref,
+    issuedToUnissuedHref,
     isCoverStartOnSubmission,
     changedToIssueShow,
     unissuedShow,
