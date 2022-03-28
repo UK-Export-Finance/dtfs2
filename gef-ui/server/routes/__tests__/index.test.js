@@ -24,11 +24,11 @@ import facilityValue from '../facility-value';
 import facilityGuarantee from '../facility-guarantee';
 import facilityConfirmDeletion from '../facility-confirm-deletion';
 import returnToMaker from '../return-to-maker';
-import supportingInformation from '../supporting-information';
 import portalActivities from '../application-activities';
 import downloadFiles from '../downloadFile';
 import cloneGefDeal from '../clone-gef-deal';
 import unissuedFacilities from '../unissued-facilities';
+import securityDetails from '../security-details';
 
 const useSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -76,10 +76,10 @@ describe('Routes', () => {
     expect(useSpy).toHaveBeenCalledWith(facilityGuarantee);
     expect(useSpy).toHaveBeenCalledWith(facilityConfirmDeletion);
     expect(useSpy).toHaveBeenCalledWith(returnToMaker);
-    expect(useSpy).toHaveBeenCalledWith(supportingInformation);
     expect(useSpy).toHaveBeenCalledWith(portalActivities);
     expect(useSpy).toHaveBeenCalledWith(downloadFiles);
     expect(useSpy).toHaveBeenCalledWith(cloneGefDeal);
     expect(useSpy).toHaveBeenCalledWith(unissuedFacilities);
+    expect(useSpy).toHaveBeenCalledWith(securityDetails);
   });
 });

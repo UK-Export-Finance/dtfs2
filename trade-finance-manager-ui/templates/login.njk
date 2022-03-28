@@ -1,35 +1,90 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% extends "index.njk" %}
 
+{% block pageTitle %}Sign in{% endblock %}
+
+
 {% block content %}
 
-  <h1 class="govuk-heading-l govuk-!-padding-top-5" data-cy="sign-in-heading">Sign in</h1>
 
-  <div class="govuk-grid-row">
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-two-thirds govuk-!-margin-top-4">
+        {% if errors %}
+          {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errors.errorSummary,
+            classes: 'govuk-!-margin-bottom-0',
+            attributes: {
+              'data-cy': 'error-summary'
+            }
+          }) }}
+        {% endif %}
+      </div>
+    </div>
+
+
+
+  <h1 class="govuk-heading-l " data-cy="sign-in-heading">Sign in</h1>
+
+  <div class="govuk-grid-row govuk-body">
     <div class="govuk-grid-column-one-third">
-
       <form method="POST" autocomplete="off">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {{ govukInput({
+            label: {
+              text: "Email address",
+              attributes: {
+                "data-cy": "email-heading"
+              }
+            },
+            id: "email",
+            name: "email",
+            spellcheck: false,
+            errorMessage: errors.fieldErrors.email and {
+              text: errors.fieldErrors.email.text,
+              attributes: {
+                "data-cy": "email-error"
+              }
+            },
+            attributes: {
+              "data-cy": "email",
+              "autocapitalize": "off"
+            }
+          }) }}
 
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="email" data-cy="email-heading">
-            Email address
-          </label>
-          <input class="govuk-input" id="email" name="email" type="text" autocapitalize="off" data-cy="email">
-        </div>
+          {{ govukInput({
+            label: {
+              text: "Password",
+              attributes: {
+                "data-cy": "password-heading"
+              }
+            },
+            id: "password",
+            name: "password",
+            type: "password",
+            spellcheck: false,
+            errorMessage: errors.fieldErrors.password and {
+              text: errors.fieldErrors.password.text,
+              attributes: {
+                "data-cy": "password-error"
+              }
+            },
+            attributes: {
+              "data-cy": "password",
+              "autocomplete": "off"
+            }
+          }) }}
 
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="password" data-cy="password-heading">
-            Password
-          </label>
-          <input class="govuk-input" id="password" name="password" type="password" autocomplete="off" data-cy="password">
-        </div>
-
-
-        <button class="govuk-button" data-module="govuk-button" data-cy="submit-button">
-          Sign in
-        </button>
-
+          {{ govukButton({
+            text: "Sign in",
+            attributes: {
+              "data-cy": "submit-button"
+            }
+          }) }}
       </form>
 
     </div>

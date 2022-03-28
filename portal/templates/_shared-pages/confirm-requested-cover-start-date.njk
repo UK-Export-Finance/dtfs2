@@ -17,7 +17,7 @@
   {% endif %}
 
   <form method="POST" autocomplete="off">
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {% if needToChangeRequestedCoverStartDate %}
 
       <input type="hidden" name="needToChangeRequestedCoverStartDate" value="true" />

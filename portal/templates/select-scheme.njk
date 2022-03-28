@@ -41,7 +41,7 @@
   <div class="govuk-grid-row govuk-body">
     <div class="govuk-grid-column-two-thirds">
       <form method="POST" autocomplete="off">
-
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
           {{ govukRadios({
             idPrefix: "scheme",
             name: "scheme",

@@ -1,5 +1,5 @@
 const DEFAULTS = require('../defaults');
-const { findMandatoryCriteria } = require('./mandatoryCriteria.controller');
+const { findLatestMandatoryCriteria } = require('./mandatoryCriteria.controller');
 const {
   findOneDeal,
   createDeal,
@@ -57,10 +57,6 @@ const stripTransaction = (transaction, allowedFields) => {
   return stripped;
 };
 
-const getCurrentMandatoryCriteria = () => new Promise((resolve) => {
-  findMandatoryCriteria(resolve);
-});
-
 exports.clone = async (req, res) => {
   await findOneDeal(req.params.id, async (existingDeal) => {
     if (!existingDeal) {
@@ -88,7 +84,7 @@ exports.clone = async (req, res) => {
       details: {
         maker: req.user,
       },
-      mandatoryCriteria: await getCurrentMandatoryCriteria(),
+      mandatoryCriteria: await findLatestMandatoryCriteria(),
       eligibility: await createDealEligibility(existingDeal.eligibility),
       editedBy: [],
       comments: [],

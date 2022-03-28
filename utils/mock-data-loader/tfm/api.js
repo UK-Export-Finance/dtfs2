@@ -1,7 +1,8 @@
 const axios = require('axios');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
-const urlRoot = process.env.DTFS_CENTRAL_API;
+const urlCentralApi = process.env.DTFS_CENTRAL_API;
+const tfmApi = process.env.TFM_API;
 
 const createTeam = async (team, token) => {
   const response = await axios({
@@ -11,7 +12,7 @@ const createTeam = async (team, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/tfm/teams`,
+    url: `${urlCentralApi}/v1/tfm/teams`,
     data: { team },
   }).catch((err) => { console.error(`err: ${err}`); });
 
@@ -26,7 +27,7 @@ const listTeams = async (token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/tfm/teams`,
+    url: `${urlCentralApi}/v1/tfm/teams`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.teams;
@@ -40,23 +41,21 @@ const deleteTeam = async (team, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/tfm/teams/${team.id}`,
+    url: `${urlCentralApi}/v1/tfm/teams/${team.id}`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
 };
 
-
-const createUser = async (user, token) => {
+const createTfmUser = async (user) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
     },
-    url: `${urlRoot}/v1/tfm/users`,
-    data: { user },
+    url: `${tfmApi}/v1/users`,
+    data: user,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
@@ -70,7 +69,7 @@ const listUsers = async (token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/tfm/users`,
+    url: `${urlCentralApi}/v1/tfm/users`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.users;
@@ -83,7 +82,7 @@ const deleteUser = async (user) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
-    url: `${urlRoot}/v1/tfm/users/${user.username}`,
+    url: `${urlCentralApi}/v1/tfm/users/${user.username}`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
@@ -92,7 +91,7 @@ const deleteUser = async (user) => {
 const listDeals = async () => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/tfm/deals`,
+    url: `${urlCentralApi}/v1/tfm/deals`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.deals;
@@ -106,7 +105,7 @@ const deleteDeal = async (deal, token) => {
       Accepts: 'application/json',
       Authorization: token || '',
     },
-    url: `${urlRoot}/v1/tfm/deals/${deal._id}`,
+    url: `${urlCentralApi}/v1/tfm/deals/${deal._id}`,
   }).catch(() => { });
 
   return response && response.data;
@@ -114,11 +113,11 @@ const deleteDeal = async (deal, token) => {
 
 module.exports = {
   createTeam,
-  createUser,
   deleteTeam,
   deleteUser,
   listTeams,
   listUsers,
   listDeals,
   deleteDeal,
+  createTfmUser
 };

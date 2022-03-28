@@ -30,6 +30,7 @@
   <p class="govuk-body">You’ll also be asked to confirm whether the bonds or loan transactions meet the eligibility criteria for UKEF’s automatic inclusion model. Transactions that don’t meet these requirements can still be submitted through this service, but they will proceed as a Manual Inclusion Application. If accepted, these transactions will require submission as a Manual Inclusion Notice.</p>
 
   <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
     <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="30">
       {{ govukInput({

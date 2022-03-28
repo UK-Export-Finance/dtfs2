@@ -9,6 +9,7 @@
   <p class="govuk-body">This action cannot be undone.</p>
 
   <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
     <button type="submit" class="govuk-button govuk-button--warning govuk-!-margin-right-1" data-module="govuk-button" data-cy="submit-button">
       Delete

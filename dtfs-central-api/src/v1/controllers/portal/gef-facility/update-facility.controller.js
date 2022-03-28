@@ -16,10 +16,9 @@ const updateFacility = async (id, updateBody) => {
         // update facilitiesUpdated timestamp in the deal
         const dealUpdateObj = { facilitiesUpdated: new Date().valueOf() };
 
-        await dealsCollection.findOneAndUpdate(
+        await dealsCollection.updateOne(
           { _id: { $eq: ObjectId(existingFacility.dealId) } },
           { $set: dealUpdateObj },
-          { returnOriginal: false },
         );
       }
     }
@@ -33,14 +32,17 @@ const updateFacility = async (id, updateBody) => {
 exports.updateFacility = updateFacility;
 
 exports.updateFacilityPut = async (req, res) => {
-  const facilityId = req.params.id;
-  const facilityUpdate = req.body;
+  if (ObjectId.isValid(req.params.id)) {
+    const facilityId = req.params.id;
+    const facilityUpdate = req.body;
 
-  const updatedFacility = await updateFacility(facilityId, facilityUpdate);
+    const updatedFacility = await updateFacility(facilityId, facilityUpdate);
 
-  if (updatedFacility) {
-    return res.status(200).json(updatedFacility);
+    if (updatedFacility) {
+      return res.status(200).json(updatedFacility);
+    }
+
+    return res.status(404).send({ status: 404, message: 'The facility ID doesn\'t exist' });
   }
-
-  return res.status(404).send({ status: 404, message: 'The facility ID doesn\'t exist' });
+  return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
 };

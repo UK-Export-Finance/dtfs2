@@ -42,7 +42,7 @@
   </script>
 
   <form method="POST" autocomplete="off">
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ supplierTypeDropdown.render({
       deal: deal,
       validationErrors: validationErrors

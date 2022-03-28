@@ -6,9 +6,10 @@
   {% set user = params.user %}
   {% set activeSortByOrder = params.activeSortByOrder %}
   {% set activeSortByField = params.activeSortByField %}
+  {% set csrfToken = params.csrfToken %}
 
   <form method="POST" autocomplete="off" novalidate>
-
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <table class="govuk-table deals-table" data-cy="deals-table">
       <thead class="govuk-table__head">
         <tr>

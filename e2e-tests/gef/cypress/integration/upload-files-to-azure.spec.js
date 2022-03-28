@@ -32,9 +32,9 @@ context('Upload files to Azure', () => {
       automaticCover.continueButton().click();
       manualInclusion.continueButton().click();
 
-      cy.uploadFile('test.pdf', `${manualInclusion.url(dealId)}/upload`);
+      cy.uploadFile('test.pdf', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('test.pdf');
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/manual-inclusion-questionnaire`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
 
       cy.visit(relative(`/gef/application-details/${dealId}`));
 
@@ -62,8 +62,8 @@ context('Upload files to Azure', () => {
 
     it('should allow the same document to be uploaded in different sections', () => {
       uploadFiles.supportingInfoManagementAccountsButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/management-accounts`));
-      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/management-accounts/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/management-accounts`));
+      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/document/management-accounts/upload`);
       uploadFiles.uploadSuccess('file1.png');
       cy.visit(relative(`/gef/application-details/${dealId}`));
       uploadFiles.supportingInfoManagementAccountsButton().parent().parent().find('.govuk-summary-list__value')
@@ -72,62 +72,62 @@ context('Upload files to Azure', () => {
 
     it('should delete one of the documents', () => {
       uploadFiles.supportingInfoManagementAccountsButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/management-accounts`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/management-accounts`));
       uploadFiles.deleteSupportingDocument('file1.png').click();
       uploadFiles.uploadSuccess('file1.png').should('not.exist');
     });
 
     it('should upload files to the `Management Accounts` section', () => {
       uploadFiles.supportingInfoManagementAccountsButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/management-accounts`));
-      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/management-accounts/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/management-accounts`));
+      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/document/management-accounts/upload`);
       uploadFiles.uploadSuccess('file1.png');
     });
 
     it('should upload files to the `Financial Statements` section', () => {
       uploadFiles.supportingInfoFinancialStatementsButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/financial-statements`));
-      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/financial-statements/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/financial-statements`));
+      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/document/financial-statements/upload`);
       uploadFiles.uploadSuccess('file1.png');
     });
 
     it('should upload files to the `Financial Forecasts` section', () => {
       uploadFiles.supportingInfoFinancialForecastsButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/financial-forecasts`));
-      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/financial-forecasts/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/financial-forecasts`));
+      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/document/financial-forecasts/upload`);
       uploadFiles.uploadSuccess('file1.png');
 
-      cy.uploadFile('file2.png', `/gef/application-details/${dealId}/supporting-information/financial-forecasts/upload`);
+      cy.uploadFile('file2.png', `/gef/application-details/${dealId}/supporting-information/document/financial-forecasts/upload`);
       uploadFiles.uploadSuccess('file2.png');
     });
 
     it('should upload files to the `Financial Commentary` section', () => {
       uploadFiles.supportingInfoFinancialCommentaryButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/financial-commentary`));
-      cy.uploadFile('file2.png', `/gef/application-details/${dealId}/supporting-information/financial-commentary/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/financial-commentary`));
+      cy.uploadFile('file2.png', `/gef/application-details/${dealId}/supporting-information/document/financial-commentary/upload`);
       uploadFiles.uploadSuccess('file2.png');
 
-      cy.uploadFile('file3.png', `/gef/application-details/${dealId}/supporting-information/financial-commentary/upload`);
+      cy.uploadFile('file3.png', `/gef/application-details/${dealId}/supporting-information/document/financial-commentary/upload`);
       uploadFiles.uploadSuccess('file3.png');
     });
 
     it('should upload files to the `Corporate Structure` section', () => {
       uploadFiles.supportingInfoCorporateStructureButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/corporate-structure`));
-      cy.uploadFile('file4.png', `/gef/application-details/${dealId}/supporting-information/corporate-structure/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/corporate-structure`));
+      cy.uploadFile('file4.png', `/gef/application-details/${dealId}/supporting-information/document/corporate-structure/upload`);
       uploadFiles.uploadSuccess('file4.png');
 
-      cy.uploadFile('file5.png', `/gef/application-details/${dealId}/supporting-information/corporate-structure/upload`);
+      cy.uploadFile('file5.png', `/gef/application-details/${dealId}/supporting-information/document/corporate-structure/upload`);
       uploadFiles.uploadSuccess('file5.png');
     });
 
     it('should upload files to the `Debtor Creditor` section', () => {
       uploadFiles.supportingInfoDebtorCreditorButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/debtor-creditor-reports`));
-      cy.uploadFile('file4.png', `/gef/application-details/${dealId}/supporting-information/debtor-creditor-reports/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/debtor-creditor-reports`));
+      cy.uploadFile('file4.png', `/gef/application-details/${dealId}/supporting-information/document/debtor-creditor-reports/upload`);
       uploadFiles.uploadSuccess('file4.png');
 
-      cy.uploadFile('file5.png', `/gef/application-details/${dealId}/supporting-information/debtor-creditor-reports/upload`);
+      cy.uploadFile('file5.png', `/gef/application-details/${dealId}/supporting-information/document/debtor-creditor-reports/upload`);
       uploadFiles.uploadSuccess('file5.png');
     });
 
@@ -141,11 +141,11 @@ context('Upload files to Azure', () => {
 
     it('should upload files to the `Export Licence` section', () => {
       uploadFiles.supportingInfoExportLicenceButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/export-licence`));
-      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/export-licence/upload`);
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/export-licence`));
+      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/document/export-licence/upload`);
       uploadFiles.uploadSuccess('file1.png');
 
-      cy.uploadFile('file6.png', `/gef/application-details/${dealId}/supporting-information/export-licence/upload`);
+      cy.uploadFile('file6.png', `/gef/application-details/${dealId}/supporting-information/document/export-licence/upload`);
       uploadFiles.uploadSuccess('file6.png');
     });
 

@@ -30,6 +30,7 @@
   {% endif %}
 
    <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukCheckboxes({
       idPrefix: "roles",
       name: "roles",

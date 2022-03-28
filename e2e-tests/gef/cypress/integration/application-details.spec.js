@@ -282,7 +282,7 @@ context('Application Details Page', () => {
 
       it('takes you to first supporting info question when clicked on `Add supporting information` link', () => {
         applicationDetails.supportingInfoStartLink().click();
-        cy.url().should('eq', relative(`/gef/application-details/${dealWithInProgressExporter._id}/supporting-information/manual-inclusion-questionnaire`));
+        cy.url().should('eq', relative(`/gef/application-details/${dealWithInProgressExporter._id}/supporting-information/document/manual-inclusion-questionnaire`));
       });
     });
   });

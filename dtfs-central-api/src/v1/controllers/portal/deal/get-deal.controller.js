@@ -67,32 +67,39 @@ const findOneDeal = async (_id, callback) => {
 exports.findOneDeal = findOneDeal;
 
 const findOneGefDeal = async (_id, callback) => {
-  const dealsCollection = await db.getCollection('deals');
+  if (ObjectId.isValid(_id)) {
+    const dealsCollection = await db.getCollection('deals');
 
-  const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
+    const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
 
-  if (deal) {
-    const facilities = await findAllGefFacilitiesByDealId(_id);
+    if (deal) {
+      const facilities = await findAllGefFacilitiesByDealId(_id);
 
-    deal.facilities = facilities;
+      deal.facilities = facilities;
+    }
+
+    if (callback) {
+      callback(deal);
+    }
+
+    return deal;
   }
-
-  if (callback) {
-    callback(deal);
-  }
-
-  return deal;
+  return { status: 400, message: 'Invalid Deal Id' };
 };
 exports.findOneGefDeal = findOneGefDeal;
 
 exports.findOneDealGet = async (req, res) => {
-  const deal = await findOneDeal(req.params.id);
+  if (ObjectId.isValid(req.params.id)) {
+    const deal = await findOneDeal(req.params.id);
 
-  if (deal) {
-    return res.status(200).send({
-      deal,
-    });
+    if (deal) {
+      return res.status(200).send({
+        deal,
+      });
+    }
+
+    return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
-  return res.status(404).send();
+  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };

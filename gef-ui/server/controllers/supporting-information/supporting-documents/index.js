@@ -61,7 +61,10 @@ const nextDocument = (application, dealId, fieldName) => {
     }
   }
 
-  let nextDoc = `/gef/application-details/${dealId}/supporting-information/${supportingDocument}`;
+  let nextDoc = `/gef/application-details/${dealId}/supporting-information/document/${supportingDocument}`;
+  if (supportingDocument === 'security-details') {
+    nextDoc = `/gef/application-details/${dealId}/supporting-information/${supportingDocument}`;
+  }
   // check if there are no required fields or check if we reached the end of the required fields
   if (!application.supportingInformation?.requiredFields?.length || currentIndex + 1 === application.supportingInformation?.requiredFields?.length) {
     nextDoc = `/gef/application-details/${dealId}`;
@@ -127,6 +130,7 @@ const getSupportingDocuments = async (req, res, next) => {
 };
 
 const postSupportingDocuments = async (req, res, next) => {
+  delete req.body?._csrf;
   const {
     body: { delete: fileToDelete, submit },
     files,
