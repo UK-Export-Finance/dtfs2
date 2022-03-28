@@ -40,7 +40,7 @@ describe(component, () => {
       const deals = [
         {_id: 1, status: "Draft"},
         {_id: 2, status: "Abandoned"},
-        {_id: 3, status: "Acknowledged by UKEF"},
+        {_id: 3, status: "Acknowledged"},
         {_id: 4, status: "Accepted by UKEF (without conditions)"},
         {_id: 5, status: "Accepted by UKEF (with conditions)"},
         {_id: 6, status: "In progress by UKEF"},
@@ -98,7 +98,7 @@ describe(component, () => {
       }
     });
 
-    it('should NOT render when deal status is `Acknowledged by UKEF`', () => {
+    it('should NOT render when deal status is `Acknowledged`', () => {
       const user = { roles: ['maker', 'checker'] };
       const deals = [
         { _id: 1, status: 'Further Maker\'s input required' },
@@ -162,7 +162,7 @@ describe(component, () => {
         { _id: 4, status: 'Draft' },
         { _id: 5, status: 'Further Maker\'s input required' },
         { _id: 6, status: 'Abandoned' },
-        { _id: 7, status: 'Acknowledged by UKEF' },
+        { _id: 7, status: 'Acknowledged' },
         { _id: 8, status: 'Accepted by UKEF (without conditions)' },
         { _id: 9, status: 'Accepted by UKEF (with conditions)' },
       ];
@@ -182,7 +182,7 @@ describe(component, () => {
         {_id: 1, status: "Submitted"},
         {_id: 2, status: "Rejected by UKEF"},
         {_id: 3, status: "Abandoned"},
-        {_id: 4, status: "Acknowledged by UKEF"},
+        {_id: 4, status: "Acknowledged"},
         {_id: 5, status: "Accepted by UKEF (without conditions)"},
         {_id: 6, status: "Accepted by UKEF (with conditions)"},
         {_id: 7, status: "Ready for Checker's approval"},

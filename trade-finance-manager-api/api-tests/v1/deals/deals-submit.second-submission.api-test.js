@@ -115,7 +115,7 @@ describe('/v1/deals', () => {
           expect(status).toEqual(200);
 
           const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
-          expect(updatedBond.status).toEqual('Acknowledged by UKEF');
+          expect(updatedBond.status).toEqual('Acknowledged');
         });
 
         it('should call updatePortalFacilityStatus with `Acknowledged` status', async () => {
@@ -124,7 +124,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(
             bondId,
-            'Acknowledged by UKEF',
+            'Acknowledged',
           );
         });
 
@@ -211,7 +211,7 @@ describe('/v1/deals', () => {
 
           const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
 
-          expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
+          expect(updatedLoan.status).toEqual('Acknowledged');
         });
 
         it('should call updatePortalFacilityStatus with `Acknowledged` status', async () => {
@@ -221,7 +221,7 @@ describe('/v1/deals', () => {
 
           expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(
             loanId,
-            'Acknowledged by UKEF',
+            'Acknowledged',
           );
         });
 
@@ -363,7 +363,7 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
 
         const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
-        expect(updatedBond.status).toEqual('Acknowledged by UKEF');
+        expect(updatedBond.status).toEqual('Acknowledged');
       });
 
       it('should update loan status to `Acknowledged` if the facilityStage changes from `Conditional` to `Unconditional`', async () => {
@@ -376,7 +376,7 @@ describe('/v1/deals', () => {
         expect(status).toEqual(200);
 
         const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
-        expect(updatedLoan.status).toEqual('Acknowledged by UKEF');
+        expect(updatedLoan.status).toEqual('Acknowledged');
       });
 
       it('should NOT update ACBS for MIA`', async () => {

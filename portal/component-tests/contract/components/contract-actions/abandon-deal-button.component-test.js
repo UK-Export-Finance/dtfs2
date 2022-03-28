@@ -59,7 +59,7 @@ describe(component, () => {
         },
         {
           _id: 2,
-          status: "Acknowledged by UKEF",
+          status: "Acknowledged",
           maker: { _id: 123 },
         },
         {

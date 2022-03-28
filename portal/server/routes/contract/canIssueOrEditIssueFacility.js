@@ -42,8 +42,8 @@ const canIssueOrEditIssueFacility = (userRoles, deal, facility) => {
   const allowedFacilityStage = (allowedLoanFacilityStage || allowedBondFacilityStage);
 
   const allowedDealAndFacilityStatus = (
-    (dealStatus === 'Acknowledged by UKEF' || facilityStatus === 'Maker\'s input required')
-    || (dealStatus === 'Acknowledged by UKEF' && facilityStatus === 'Not started')
+    (dealStatus === 'Acknowledged' || facilityStatus === 'Maker\'s input required')
+    || (dealStatus === 'Acknowledged' && facilityStatus === 'Not started')
     || (acceptedByUkefDealStatus && (facilityStatus === 'Maker\'s input required' || facilityStatus === 'Not started' || facilityStatus === 'Completed'))
     || (dealStatus === 'Further Maker\'s input required' && facilityStatus === 'Not started')
     || (dealStatus === 'Further Maker\'s input required' && facilityStatus === 'Completed')

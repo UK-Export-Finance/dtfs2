@@ -5,7 +5,7 @@ const deal = {
   updatedAt: Date.now(),
   bankInternalRefName: 'mock id',
   additionalRefName: 'mock name',
-  status: 'Acknowledged by UKEF',
+  status: 'Acknowledged',
   details: {
     created: now,
     submissionDate: now,

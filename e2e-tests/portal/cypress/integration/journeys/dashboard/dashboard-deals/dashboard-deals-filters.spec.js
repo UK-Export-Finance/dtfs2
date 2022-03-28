@@ -122,7 +122,7 @@ context('Dashboard Deals filters', () => {
       dashboardDeals.filters.panel.form.status.submitted.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.submitted.checkbox().should('not.be.checked');
 
-      // acknowledged by UKEF
+      // Acknowledged
       dashboardDeals.filters.panel.form.status.acknowledgedByUKEF.label().contains(CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
       dashboardDeals.filters.panel.form.status.acknowledgedByUKEF.checkbox().should('exist');
       dashboardDeals.filters.panel.form.status.acknowledgedByUKEF.checkbox().should('not.be.checked');

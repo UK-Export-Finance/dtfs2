@@ -44,7 +44,7 @@ describe(component, () => {
         },
         {
           _id: 4,
-          status: 'Acknowledged by UKEF',
+          status: 'Acknowledged',
           maker: { _id: 123 },
         },
         {
@@ -97,7 +97,7 @@ describe(component, () => {
           maker: { _id: 123 },
         },
         {
-          status: 'Acknowledged by UKEF',
+          status: 'Acknowledged',
           maker: { _id: 123 },
         },
         {
@@ -131,7 +131,7 @@ describe(component, () => {
         { status: 'Submitted' },
         { status: 'Rejected by UKEF' },
         { status: 'Abandoned' },
-        { status: 'Acknowledged by UKEF' },
+        { status: 'Acknowledged' },
         { status: 'Accepted by UKEF (without conditions)' },
         { status: 'Accepted by UKEF (with conditions)' },
         { status: 'Ready for Checker\'s approval' },
