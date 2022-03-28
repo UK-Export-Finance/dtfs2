@@ -19,6 +19,13 @@ const security = require('./routes/middleware/headers/security');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const cookie = {
+  path: '/',
+  httpOnly: true,
+  secure: false,
+  sameSite: 'strict',
+  maxAge: 604800000, // 7 days
+};
 
 app.use(seo);
 app.use(security);
@@ -28,14 +35,10 @@ if (!process.env.SESSION_SECRET) {
 }
 
 const sessionOptions = {
-  path: '/',
-  httpOnly: true,
-  secure: true,
-  sameSite: 'strict',
-  maxAge: 604800000, // 7 days
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
+  cookie,
 };
 
 console.info(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
@@ -82,7 +85,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/', eligibilityRoutes);
-app.use(csrf({ cookie: true }));
+app.use(csrf({
+  cookie,
+}));
 app.use(csrfToken());
 
 app.use(morgan('dev', {

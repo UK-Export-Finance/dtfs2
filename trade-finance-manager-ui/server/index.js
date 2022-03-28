@@ -18,11 +18,17 @@ const seo = require('./middleware/headers/seo');
 const security = require('./middleware/headers/security');
 
 const app = express();
+const PORT = process.env.PORT || 5003;
+const cookie = {
+  path: '/',
+  httpOnly: true,
+  secure: false,
+  sameSite: 'strict',
+  maxAge: 604800000, // 7 days
+};
 
 app.use(seo);
 app.use(security);
-
-const PORT = process.env.PORT || 5003;
 
 configureNunjucks({
   autoescape: true,
@@ -38,7 +44,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/', feedbackRoutes);
-app.use(csrf({ cookie: true }));
+app.use(csrf({
+  cookie,
+}));
 app.use(csrfToken());
 
 app.use(morgan('dev', {

@@ -4,7 +4,7 @@ const MOCK_DEAL_NO_UKEF_ID = {
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
-  status: 'Acknowledged by UKEF',
+  status: 'Acknowledged',
   previousStatus: 'Submitted',
   maker: {
     username: 'JOE',
@@ -109,7 +109,7 @@ const MOCK_DEAL_NO_UKEF_ID = {
     supplyContractValue: '1234.00',
   },
   eligibility: {
-    version: 4,
+    version: 5,
     criteria: [
       {
         id: 11,

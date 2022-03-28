@@ -4,7 +4,7 @@ const MOCK_DEAL = {
   submissionType: 'Manual Inclusion Application',
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
-  status: 'Acknowledged by UKEF',
+  status: 'Acknowledged',
   previousStatus: 'Submitted',
   bank: {
     id: '123',
@@ -110,7 +110,7 @@ const MOCK_DEAL = {
     supplyContractValue: '1234.00',
   },
   eligibility: {
-    version: 4,
+    version: 5,
     criteria: [
       {
         id: 11,

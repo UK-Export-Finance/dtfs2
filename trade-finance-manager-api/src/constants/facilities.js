@@ -92,7 +92,7 @@ const FACILITY_RISK_PROFILE = {
 };
 
 const FACILITY_STATUS_PORTAL = {
-  ACKNOWLEDGED: 'Acknowledged by UKEF',
+  ACKNOWLEDGED: 'Acknowledged',
 };
 
 module.exports = {

@@ -110,7 +110,7 @@ const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
     supplyContractValue: '1234.00',
   },
   eligibility: {
-    version: 4,
+    version: 5,
     criteria: [
       {
         id: 11,

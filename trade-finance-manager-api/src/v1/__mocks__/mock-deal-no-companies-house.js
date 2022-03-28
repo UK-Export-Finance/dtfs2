@@ -6,7 +6,7 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
-  status: 'Acknowledged by UKEF',
+  status: 'Acknowledged',
   previousStatus: 'Submitted',
   bank: {
     id: '123',
@@ -112,7 +112,7 @@ const MOCK_DEAL_NO_COMPANIES_HOUSE = {
     supplyContractValue: '1234.00',
   },
   eligibility: {
-    version: 4,
+    version: 5,
     criteria: [
       {
         id: 11,

@@ -205,7 +205,7 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
-    status: 'Acknowledged by UKEF',
+    status: 'Acknowledged',
     previousStatus: 'Submitted',
     bank: {
       id: '9',
@@ -266,7 +266,7 @@ module.exports = [
   }, {
     bankInternalRefName: 'abc-1-def',
     additionalRefName: 'Tibettan submarine acquisition scheme',
-    status: 'Acknowledged by UKEF',
+    status: 'Acknowledged',
     previousStatus: 'Submitted',
     bank: {
       id: '9',
