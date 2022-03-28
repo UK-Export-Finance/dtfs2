@@ -110,7 +110,7 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
   const { dealId, facilityId } = params;
   let { facilityType } = query;
   facilityType = facilityType || FACILITY_TYPE.CASH;
-  const facilityTypeString = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
+  const facilityTypeString = facilityTypeStringGenerator(facilityType);
 
   try {
     const { details } = await api.getFacility(facilityId);
