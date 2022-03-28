@@ -109,7 +109,7 @@ const MOCK_DEAL_NO_UKEF_ID = {
     supplyContractValue: '1234.00',
   },
   eligibility: {
-    version: 4,
+    version: 5,
     criteria: [
       {
         id: 11,

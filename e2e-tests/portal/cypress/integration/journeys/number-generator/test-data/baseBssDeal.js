@@ -105,7 +105,7 @@ exports.BASE_DEAL = {
   },
   eligibility: {
     status: 'Completed',
-    version: 4,
+    version: 5,
     criteria: [{
       id: 11,
       answer: true,
