@@ -22,47 +22,50 @@
     }) }}
   {% endif %}
 
-    <div class="govuk-grid-row govuk-!-padding-top-3">
-        <div class="govuk-grid-column-two-thirds-from-desktop">
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="main-heading">
-            Add a comment
-        </h1>
+  <div class="govuk-grid-row govuk-!-padding-top-3">
+    <div class="govuk-grid-column-one-half-from-desktop">
+      <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukCharacterCount({
+          name: "comment",
+          id: "comment",
+          value: comment,
+          rows: "8",
+          maxlength: maxCommentLength,
+          label: {
+            text: "Add a comment",
+            classes: "govuk-label--xl govuk-!-margin-bottom-6",
+            isPageHeading: true,
+              attributes: {
+              'data-cy': 'main-heading',
+              'aria-label': 'Add a comment'
+            }
+          },
+          errorMessage: validationErrors and validationErrors.errorList.comment and {
+              text: validationErrors.errorList.comment.text,
+              attributes: {
+              'data-cy': 'activity-comment-error'
+              }
+          },
+          attributes: {
+              'data-cy': 'activity-comment-box'
+          }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+              text: "Add",
+              attributes: {
+              'data-cy': 'add-comment-button'
+              }
+          }) }}
+
+          <a class="govuk-link",
+              href="/case/{{ dealId }}/activity", data-cy="cancel-comment-link">Cancel</a>
         </div>
-
-        <div class="govuk-grid-column-one-half-from-desktop">
-            <form method="post" data-cy="form">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-                {{ govukCharacterCount({
-                    name: "comment",
-                    id: "comment",
-                    value: comment,
-                    rows: "8",
-                    maxlength: maxCommentLength,
-                    errorMessage: validationErrors and validationErrors.errorList.comment and {
-                        text: validationErrors.errorList.comment.text,
-                        attributes: {
-                        'data-cy': 'activity-comment-error'
-                        }
-                    },
-                    attributes: {
-                        'data-cy': 'activity-comment-box'
-                    }
-                    }) }}
-
-                <div class="govuk-button-group">
-                    {{ govukButton({
-                        text: "Add",
-                        attributes: {
-                        'data-cy': 'add-comment-button'
-                        }
-                    }) }}
-
-                    <a class="govuk-link",
-                        href="/case/{{ dealId }}/activity", data-cy="cancel-comment-link">Cancel</a>
-                </div>
-            </form>
-        </div>
+      </form>
     </div>
+  </div>
 
 
 {% endblock %}
