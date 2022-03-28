@@ -41,6 +41,10 @@ context('Case Underwriting - Pricing and risk', () => {
 
   it('clicking `underwriting managers decision` nav link should direct to underwriting-managers-decision page', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
+    partials.underwritingSubNav.underwritingHeading().contains('Underwriting');
+    partials.underwritingSubNav.underwritingHeading().invoke('attr', 'aria-label').then((label) => {
+      expect(label).to.equal('Underwriting page: underwriter managers decision');
+    });
   });
 
   it('a user that is NOT in UNDERWRITER_MANAGERS team should not see `Add decision` link', () => {

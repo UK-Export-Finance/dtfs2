@@ -36,6 +36,10 @@ context('Parties page', () => {
     });
 
     it('should render components', () => {
+      pages.partiesPage.partiesHeading().contains('Parties');
+      pages.partiesPage.partiesHeading().invoke('attr', 'aria-label').then((label) => {
+        expect(label).to.equal('Parties');
+      });
       pages.partiesPage.exporterArea().should('exist');
       pages.partiesPage.buyerArea().should('exist');
       pages.partiesPage.agentArea().should('exist');
