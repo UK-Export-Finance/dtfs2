@@ -9,7 +9,6 @@ const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
-
 require('./azure-env');
 const routes = require('./routes');
 const supportingDocuments = require('./routes/supporting-documents.route');
@@ -18,17 +17,22 @@ const configureNunjucks = require('./nunjucks-configuration');
 const csrfToken = require('./middleware/csrf');
 
 const app = express();
-
 const seo = require('./middleware/headers/seo');
 const security = require('./middleware/headers/security');
+
+const PORT = process.env.PORT || 5006;
+const cookie = {
+  path: '/',
+  httpOnly: true,
+  secure: true,
+  sameSite: 'strict',
+  maxAge: 604800000, // 7 days
+};
 
 app.use(seo);
 app.use(security);
 app.use(compression());
-
 dotenv.config();
-
-const PORT = process.env.PORT || 5006;
 
 if (!process.env.SESSION_SECRET) {
   console.error('GEF UI server - SESSION_SECRET missing');
@@ -38,6 +42,7 @@ const sessionOptions = {
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
+  cookie,
 };
 
 let redisOptions = {};
@@ -72,7 +77,9 @@ app.use(session(sessionOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', supportingDocuments);
-app.use(csrf());
+app.use(csrf({
+  cookie,
+}));
 app.use(csrfToken());
 app.use(flash());
 
