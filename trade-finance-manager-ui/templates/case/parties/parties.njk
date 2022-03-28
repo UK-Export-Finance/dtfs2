@@ -13,7 +13,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-      <p class="header-label">Parties</p>
+      <p class="header-label" aria-label="Parties" data-cy="parties-heading">Parties</p>
     </div>
   </div>
 
@@ -46,7 +46,7 @@
   </section>
 
   <section class="deal-parties-section">
-    {{ indemnifierArea.render({ 
+    {{ indemnifierArea.render({
       deal: deal,
       tfm: tfm,
       userCanEdit: userCanEdit,
@@ -55,7 +55,7 @@
   </section>
 
   <section class="deal-parties-section">
-    {{ bondIssuerArea.render({ 
+    {{ bondIssuerArea.render({
       deal: deal,
       tfm: tfm,
       userCanEdit: userCanEdit,
@@ -64,7 +64,7 @@
   </section>
 
   <section class="deal-parties-section">
-    {{ bondBeneficiaryArea.render({ 
+    {{ bondBeneficiaryArea.render({
       deal: deal,
       tfm: tfm,
       userCanEdit: userCanEdit,

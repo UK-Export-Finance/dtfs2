@@ -1,4 +1,5 @@
 const partiesPage = {
+  partiesHeading: () => cy.get('[data-cy="parties-heading"]'),
   exporterArea: () => cy.get('[data-cy="parties-exporter"]'),
   exporterEditLink: () => cy.get('[data-cy="parties-exporter"] [data-cy="edit-party-link"]'),
   buyerArea: () => cy.get('[data-cy="parties-buyer"]'),
