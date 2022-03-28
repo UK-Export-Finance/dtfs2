@@ -4,7 +4,7 @@ const MOCK_DEAL_ISSUED_FACILITIES = {
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
-  status: 'Acknowledged by UKEF',
+  status: 'Acknowledged',
   previousStatus: 'Submitted',
   bank: {
     id: '123',

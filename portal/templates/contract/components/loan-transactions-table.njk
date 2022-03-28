@@ -62,7 +62,7 @@
 
                 <td class="govuk-table__cell govuk-!-font-size-14">
 
-                  {% set dealStatusAllowsRequestedCoverDateChange = dealStatus === "Acknowledged by UKEF" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Further Maker's input required" and dealPreviousStatus !== "Draft" %}
+                  {% set dealStatusAllowsRequestedCoverDateChange = dealStatus === "Acknowledged" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Further Maker's input required" and dealPreviousStatus !== "Draft" %}
                   {% set hasConfirmedCoverStartDate = params.confirmedRequestedCoverStartDates.includes(loan._id) %}
 
                   {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: loan, facilityName: 'loan', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate, facilityTableIndex: loop.index} %}

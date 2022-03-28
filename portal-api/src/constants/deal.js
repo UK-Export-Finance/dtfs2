@@ -41,7 +41,7 @@ const DEAL_STATUS = {
   READY_FOR_APPROVAL: 'Ready for Checker\'s approval',
   CHANGES_REQUIRED: 'Further Maker\'s input required',
   SUBMITTED_TO_UKEF: 'Submitted',
-  UKEF_ACKNOWLEDGED: 'Acknowledged by UKEF',
+  UKEF_ACKNOWLEDGED: 'Acknowledged',
   UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted by UKEF (without conditions)',
   UKEF_APPROVED_WITH_CONDITIONS: 'Accepted by UKEF (with conditions)',
   UKEF_REFUSED: 'Rejected by UKEF',

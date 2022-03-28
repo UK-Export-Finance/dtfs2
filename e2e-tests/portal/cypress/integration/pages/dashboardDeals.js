@@ -65,8 +65,8 @@ const page = {
             checkbox: () => cy.get('[data-cy="filter-input-status-Submitted"]'),
           },
           acknowledgedByUKEF: {
-            label: () => cy.get('[data-cy="filter-label-status-Acknowledged-by-UKEF"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-Acknowledged-by-UKEF"]'),
+            label: () => cy.get('[data-cy="filter-label-status-Acknowledged"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-status-Acknowledged"]'),
           },
           inProgressByUKEF: {
             label: () => cy.get('[data-cy="filter-label-status-In-progress-by-UKEF"]'),

@@ -5,7 +5,7 @@ const MOCK_USERS = require('../../../../fixtures/users');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('A maker is informed of a loan\'s status before submitting an issued loan facility with a deal in `Acknowledged by UKEF` status', () => {
+context('A maker is informed of a loan\'s status before submitting an issued loan facility with a deal in `Acknowledged` status', () => {
   let deal;
   let dealId;
   const dealFacilities = {

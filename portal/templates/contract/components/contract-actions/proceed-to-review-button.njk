@@ -26,7 +26,7 @@
         "href": ""
       }) }}
 
-    {% elseif  ["Draft", "Further Maker's input required", "Abandoned", "Acknowledged by UKEF"].includes(params.deal.status) and not params.dealFormsCompleted and not params.dealHasIssuedFacilitiesToSubmit %}
+    {% elseif  ["Draft", "Further Maker's input required", "Abandoned", "Acknowledged"].includes(params.deal.status) and not params.dealFormsCompleted and not params.dealHasIssuedFacilitiesToSubmit %}
 
       {{ govukButton({
         "disabled": true,
@@ -59,7 +59,7 @@
         }) }}
       {% endif %}
 
-    {% elseif ["Acknowledged by UKEF", "Ready for Checker's approval", "Further Maker's input required"].includes(params.deal.status) and params.dealHasIssuedFacilitiesToSubmit %}
+    {% elseif ["Acknowledged", "Ready for Checker's approval", "Further Maker's input required"].includes(params.deal.status) and params.dealHasIssuedFacilitiesToSubmit %}
       {{ govukButton({
         "disabled": false,
         "text": "Proceed to review",
