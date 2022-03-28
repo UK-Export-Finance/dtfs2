@@ -22,7 +22,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, C2]
     outputs:
       environment: ${{ env.environment }}
     steps:
