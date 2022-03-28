@@ -18,7 +18,7 @@ const doMigration = async () => {
 
   const totalV1Deals = v1Deals.length;
 
-  v1Deals.forEach(async (fileName) => {
+  const migratedDeals = await Promise.all(v1Deals.map(async (fileName) => {
     const jsonBuffer = fs.readFileSync(`${path}/${fileName}`);
     const v1DealJson = JSON.parse(jsonBuffer);
 
@@ -36,20 +36,23 @@ const doMigration = async () => {
         );
       }
     }
-  });
 
-  // const errorCount = log.getErrorCount();
+    return fileName;
+  }));
+
+  return {
+    totalV1Deals,
+    migratedDeals,
+  };
+};
+
+doMigration().then(async ({ totalV1Deals }) => {
   const successCount = log.getSuccessCount();
 
-  // if (errorCount !== 0) {
-  //   log.addInfo(`Error migrating ${errorCount} of ${totalV1Deals} V1 deals.`);
-  // }
-
   if (successCount > 0) {
-    log.addInfo(`Successfully migrated ${successCount} of ${totalV1Deals} V1 deals.`);
+    log.addSuccess(`Successfully migrated ${successCount} of ${totalV1Deals} V1 deals.`);
   }
 
   await teardown();
-};
+});
 
-doMigration();
