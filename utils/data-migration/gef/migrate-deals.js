@@ -6,7 +6,7 @@ const {
   addToDatabase,
   teardown,
 } = require('./migrate');
-const log = require('../logs');
+const log = require('../helpers/logs');
 
 const doMigration = async () => {
   const { path } = args;
@@ -18,7 +18,7 @@ const doMigration = async () => {
   const totalV1Deals = v1Deals.length;
 
   v1Deals.forEach(async (fileName) => {
-    const jsonBuffer = fs.readFileSync(path + '/' + fileName);
+    const jsonBuffer = fs.readFileSync(`${path}/${fileName}`);
     const v1DealJson = JSON.parse(jsonBuffer);
 
     const {
@@ -35,12 +35,12 @@ const doMigration = async () => {
     }
   });
 
-  const errorCount = log.getErrorCount();
+  // const errorCount = log.getErrorCount();
   const successCount = log.getSuccessCount();
 
-  if (errorCount !== 0) {
-    log.addInfo(`Error migrating ${errorCount} of ${totalV1Deals} V1 deals.`);
-  }
+  // if (errorCount !== 0) {
+  //   log.addInfo(`Error migrating ${errorCount} of ${totalV1Deals} V1 deals.`);
+  // }
 
   if (successCount > 0) {
     log.addInfo(`Successfully migrated ${successCount} of ${totalV1Deals} V1 deals.`);

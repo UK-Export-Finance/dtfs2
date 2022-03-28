@@ -160,7 +160,6 @@ const facilitiesMappingErrors = (v2Facilities, v1DealId) => {
   return false;
 };
 
-
 module.exports = {
   dealMappingErrors,
   facilitiesMappingErrors,

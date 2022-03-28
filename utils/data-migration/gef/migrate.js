@@ -46,11 +46,11 @@ const mapToV2 = async (v1Deal, v2Banks, v2Users) => {
   const facilitiesErrors = facilitiesMappingErrors(v2Facilities, v1DealId);
 
   if (dealErrors) {
-    log.addError(v1DealId, `Error mapping v1 GEF deal.`);
+    log.addError(v1DealId, 'Error mapping v1 GEF deal.');
   }
 
   if (facilitiesErrors) {
-    log.addError(v1DealId, `Error mapping v1 GEF facilities.`);
+    log.addError(v1DealId, 'Error mapping v1 GEF facilities.');
   }
 
   let mappingErrors;
@@ -84,7 +84,7 @@ const addToDatabase = async (v2Deal, v2Facilities) => {
     if (success && deal && facilities) {
       log.addSuccess(v1DealId, 'Successfully migrated v1 GEF deal');
     } else {
-      log.addError(v1DealId, `Error adding v1 GEF deal to database.`);
+      log.addError(v1DealId, 'Error adding v1 GEF deal to database.');
     }
   });
 };
