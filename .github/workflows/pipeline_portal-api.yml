@@ -121,33 +121,6 @@ jobs:
     - name: Run API tests
       run: |
         docker-compose exec -T portal-api npm run api-test
-    # - name: Run Submit to Trade Finance Manager e2e tests
-    #   env:
-    #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-    #     MULESOFT_API_KEY: ${{ secrets.E2ETEST_MULESOFT_API_KEY }}
-    #     MULESOFT_API_SECRET: ${{ secrets.E2ETEST_MULESOFT_API_SECRET }}
-    #     MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.E2ETEST_MULESOFT_API_NUMBER_GENERATOR_URL }}
-    #     MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.E2ETEST_MULESOFT_API_ACBS_DEAL_URL }}
-    #     MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.E2ETEST_MULESOFT_API_ACBS_FACILITY_URL }}
-    #     MULESOFT_API_PARTY_DB_KEY: ${{ secrets.E2ETEST_MULESOFT_API_PARTY_DB_KEY }}
-    #     MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.E2ETEST_MULESOFT_API_PARTY_DB_SECRET }}
-    #     MULESOFT_API_PARTY_DB_URL: ${{ secrets.E2ETEST_MULESOFT_API_PARTY_DB_URL }}
-    #     MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: ${{ secrets.E2ETEST_MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}
-    #     MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.E2ETEST_MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
-    #     MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.E2ETEST_MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
-    #     MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.E2ETEST_MULESOFT_API_EXPOSURE_PERIOD_URL }}
-    #   run: |
-    #     pwd
-    #     cd $GITHUB_WORKSPACE
-    #     npm install
-    #     cd e2e-tests/submit-to-trade-finance-manager
-    #     npx cypress run --config video=false # --record
-    # - name: Save Cypress screenshots
-    #   if: ${{ failure() }}
-    #   uses: actions/upload-artifact@main
-    #   with:
-    #     name: screenshots
-    #     path: './cypress/screenshots'
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
