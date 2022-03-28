@@ -28,7 +28,7 @@ context('Portal to TFM deal submission', () => {
     Cypress.Cookies.preserveOnce('connect.sid');
   });
 
-  it('Portal MIN deal is submitted to UKEF, TFM acknowledges the submission and updates the portal deal status from `Submitted` to `Acknowledged by UKEF`', () => {
+  it('Portal MIN deal is submitted to UKEF, TFM acknowledges the submission and updates the portal deal status from `Submitted` to `Acknowledged`', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -64,7 +64,7 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.visit(deal);
 
     portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged by UKEF');
+      expect(text.trim()).to.equal('Acknowledged');
     });
 
     portalPages.contract.previousStatus().invoke('text').then((text) => {

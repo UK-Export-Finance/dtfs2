@@ -43,13 +43,13 @@ describe('section-status - bond', () => {
     };
 
     const validMockDeal = {
-      status: 'Acknowledged by UKEF',
+      status: 'Acknowledged',
       previousStatus: 'Test',
     };
 
     it('should return true when deal status is allowed and issueFacilityDetailsSubmitted is false', () => {
       const mockDeals = [
-        { status: 'Acknowledged by UKEF', previousStatus: 'Test' },
+        { status: 'Acknowledged', previousStatus: 'Test' },
         { status: 'Accepted by UKEF (with conditions)', previousStatus: 'Test' },
         { status: 'Accepted by UKEF (without conditions)', previousStatus: 'Test' },
         { status: 'Ready for Checker\'s approval', previousStatus: 'Test' },
@@ -64,7 +64,7 @@ describe('section-status - bond', () => {
 
     it('should return false when previous deal status is `Draft`', () => {
       const mockDeal = {
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         previousStatus: 'Draft',
       };
 

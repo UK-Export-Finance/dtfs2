@@ -1,4 +1,4 @@
-const completedFacilityStatus = ['Completed', 'Acknowledged by UKEF'];
+const completedFacilityStatus = ['Completed', 'Acknowledged'];
 
 const hasIncompleteBonds = (deal) => {
   const allBonds = deal.bondTransactions && deal.bondTransactions.items;

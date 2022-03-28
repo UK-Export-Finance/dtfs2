@@ -231,7 +231,7 @@ portalRouter.route('/deals/:id').delete(
  *           schema:
  *             type: object
  *             example:
- *               status: Acknowledged by UKEF
+ *               status: Acknowledged
  *     responses:
  *       200:
  *         description: OK
@@ -247,7 +247,7 @@ portalRouter.route('/deals/:id').delete(
  *                         previousStatus:
  *                           example: Submitted
  *                         status:
- *                           example: Acknowledged by UKEF
+ *                           example: Acknowledged
  *       404:
  *         description: Not found
  */
@@ -674,7 +674,7 @@ portalRouter.route('/gef/deals/activity/:id')
  *                     previousStatus:
  *                       example: Submitted
  *                     status:
- *                       example: Acknowledged by UKEF
+ *                       example: Acknowledged
  *       404:
  *         description: Not found
  */

@@ -8,11 +8,11 @@ describe('canIssueOrEditIssueFacility', () => {
     hasBeenIssued: false,
   };
 
-  describe('when a deal status is `Acknowledged by UKEF`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
+  describe('when a deal status is `Acknowledged`, AIN submissionType and a Conditional loan that has NOT been submitted', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {
           submissionDate: 12345678910,
         },
@@ -22,11 +22,11 @@ describe('canIssueOrEditIssueFacility', () => {
     });
   });
 
-  describe('when a deal status is `Acknowledged by UKEF`, MIN submissionType and a Conditional loan that has NOT been submitted', () => {
+  describe('when a deal status is `Acknowledged`, MIN submissionType and a Conditional loan that has NOT been submitted', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Manual Inclusion Notice',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {
           submissionDate: 12345678910,
         },
@@ -78,11 +78,11 @@ describe('canIssueOrEditIssueFacility', () => {
     });
   });
 
-  describe('when a deal status is `Acknowledged by UKEF`, AIN submissionType and a Conditional loan that has NOT been submitted with `Not started` status', () => {
+  describe('when a deal status is `Acknowledged`, AIN submissionType and a Conditional loan that has NOT been submitted with `Not started` status', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {
           submissionDate: 12345678910,
         },
@@ -180,7 +180,7 @@ describe('canIssueOrEditIssueFacility', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {
           submissionDate: 12345678910,
         },
@@ -200,7 +200,7 @@ describe('canIssueOrEditIssueFacility', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {
           submissionDate: 12345678910,
         },
@@ -220,7 +220,7 @@ describe('canIssueOrEditIssueFacility', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {
           submissionDate: 12345678910,
         },
@@ -240,7 +240,7 @@ describe('canIssueOrEditIssueFacility', () => {
     it('should return true', () => {
       const mockDeal = {
         submissionType: 'Automatic Inclusion Notice',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {
           submissionDate: 12345678910,
         },
@@ -289,7 +289,7 @@ describe('canIssueOrEditIssueFacility', () => {
     it('should return false', () => {
       const mockDeal = {
         submissionType: 'Some other submission type',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {
           submissionDate: 12345678910,
         },
@@ -303,7 +303,7 @@ describe('canIssueOrEditIssueFacility', () => {
     it('should return false', () => {
       const mockDeal = {
         submissionType: 'Manual Inclusion Notice',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {
           submissionDate: 12345678910,
         },
@@ -323,7 +323,7 @@ describe('canIssueOrEditIssueFacility', () => {
     it('should return false', () => {
       const mockDeal = {
         submissionType: 'Manual Inclusion Notice',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {},
       };
 
@@ -382,7 +382,7 @@ describe('canIssueOrEditIssueFacility', () => {
     it('should return false', () => {
       const mockDeal = {
         submissionType: 'Manual Inclusion Notice',
-        status: 'Acknowledged by UKEF',
+        status: 'Acknowledged',
         details: {},
       };
 

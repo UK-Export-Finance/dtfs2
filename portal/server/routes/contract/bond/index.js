@@ -39,7 +39,7 @@ const userCanAccessBond = (user, deal) => {
   const { status } = deal.details;
 
   if (status === 'Ready for checker\'s approval'
-    || status === 'Acknowledged by UKEF'
+    || status === 'Acknowledged'
     || status === 'Accepted by UKEF (with conditions)'
     || status === 'Accepted by UKEF (without conditions)'
     || status === 'Submitted') {

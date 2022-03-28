@@ -305,12 +305,12 @@ describe('/v1/portal/deals', () => {
       const createdDeal = postResult.body;
 
       // First status update - 200
-      let statusUpdate = 'Acknowledged by UKEF';
+      let statusUpdate = 'Acknowledged';
       const { status } = await api.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       expect(status).toEqual(200);
 
       // Second status update - 400
-      statusUpdate = 'Acknowledged by UKEF';
+      statusUpdate = 'Acknowledged';
       const { status: secondStatus } = await api.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       expect(secondStatus).toEqual(400);
     });
@@ -324,13 +324,13 @@ describe('/v1/portal/deals', () => {
 
       const postResult = await api.post({ deal: dealWithSubmittedStatus, user: mockUser }).to('/v1/portal/deals');
       const createdDeal = postResult.body;
-      const statusUpdate = 'Acknowledged by UKEF';
+      const statusUpdate = 'Acknowledged';
 
       const { status, body } = await api.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(200);
 
-      expect(body.status).toEqual('Acknowledged by UKEF');
+      expect(body.status).toEqual('Acknowledged');
       expect(body.previousStatus).toEqual('Submitted');
       expect(typeof body.updatedAt).toEqual('number');
     });

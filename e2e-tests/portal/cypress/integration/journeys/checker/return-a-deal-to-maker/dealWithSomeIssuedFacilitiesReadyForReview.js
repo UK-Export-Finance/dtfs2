@@ -10,7 +10,7 @@ const deal = {
   bankInternalRefName: 'mock id',
   additionalRefName: 'mock name',
   status: "Ready for Checker's approval",
-  previousStatus: 'Acknowledged by UKEF',
+  previousStatus: 'Acknowledged',
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
