@@ -1,8 +1,8 @@
-const { getUserByEmail } = require('../helpers/users');
+const { getUserByEmail } = require('../../helpers/users');
 const { convertV1Date } = require('../helpers/date-helpers');
 const formatUkefId = require('../helpers/formatUkefId');
-const log = require('../helpers/log');
-const CONSTANTS = require('../../../portal-api/src/constants');
+const log = require('../../helpers/logs');
+const CONSTANTS = require('../../../../portal-api/src/constants');
 
 const mapDetails = (portalDealId, v1Deal, v2SubmissionType) => {
   let hasError = false;
@@ -16,7 +16,6 @@ const mapDetails = (portalDealId, v1Deal, v2SubmissionType) => {
     ukefDealId: formatUkefId(v1Deal.UKEF_deal_id),
     created: convertV1Date(v1Deal.Deal_information.Extra_fields.Deal_created),
   };
-
 
   if (v1Deal.Deal_information.Extra_fields.MIN_Checker.username) {
     const checkerMIN = getUserByEmail(v1Deal.Deal_information.Extra_fields.MIN_Checker.username);

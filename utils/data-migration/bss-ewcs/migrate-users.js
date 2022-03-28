@@ -2,9 +2,8 @@ const fs = require('fs');
 const moment = require('moment');
 const args = require('minimist')(process.argv.slice(2));
 const api = require('../api');
-const { getToken, removeMigrationUser } = require('./temporary-token-handler');
+const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 const consoleLogColor = require('./helpers/console-log-colour');
-
 
 const { file, bankId } = args;
 
@@ -22,7 +21,6 @@ const generateRoles = (v1Role) => {
 
   return [v1Role.toLowerCase()];
 };
-
 
 const apiSummary = (createdUsers) => ({
   successUsers: createdUsers.filter((createdUser) => createdUser.success).map(({ user }) => user.username),

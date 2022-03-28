@@ -1,9 +1,9 @@
 const findPortalValue = require('./findPortalValue');
 const mapSubmissionType = require('./map-submission-type');
-const { getBankByName } = require('../helpers/banks');
+const { getBankByName } = require('../../helpers/banks');
 const { convertV1Date } = require('../helpers/date-helpers');
-const { getUserByEmail } = require('../helpers/users');
-const CONSTANTS = require('../../../portal-api/src/constants');
+const { getUserByEmail } = require('../../helpers/users');
+const CONSTANTS = require('../../../../portal-api/src/constants');
 
 const mapDealRoot = (portalDealId, v1Deal) => {
   let hasError = false;
