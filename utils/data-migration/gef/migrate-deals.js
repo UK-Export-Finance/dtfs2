@@ -7,6 +7,7 @@ const {
   teardown,
 } = require('./migrate');
 const log = require('../helpers/logs');
+const shouldMigrateDeal = require('./should-migrate-deal');
 
 const doMigration = async () => {
   const { path } = args;
@@ -21,17 +22,19 @@ const doMigration = async () => {
     const jsonBuffer = fs.readFileSync(`${path}/${fileName}`);
     const v1DealJson = JSON.parse(jsonBuffer);
 
-    const {
-      mappingErrors,
-      v2Deal,
-      v2Facilities,
-    } = await mapToV2(v1DealJson, v2Banks, v2Users);
-
-    if (!mappingErrors) {
-      const imported = await addToDatabase(
+    if (shouldMigrateDeal(v1DealJson)) {
+      const {
+        mappingErrors,
         v2Deal,
         v2Facilities,
-      );
+      } = await mapToV2(v1DealJson, v2Banks, v2Users);
+
+      if (!mappingErrors) {
+        const imported = await addToDatabase(
+          v2Deal,
+          v2Facilities,
+        );
+      }
     }
   });
 

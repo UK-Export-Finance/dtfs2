@@ -6,6 +6,7 @@ const {
   addToDatabase,
   teardown,
 } = require('./migrate');
+const shouldMigrateDeal = require('./should-migrate-deal');
 
 const { file } = args;
 
@@ -19,17 +20,19 @@ const doMigration = async () => {
 
   const v1Deal = loadDealFromFile();
 
-  const {
-    mappingErrors,
-    v2Deal,
-    v2Facilities,
-  } = await mapToV2(v1Deal, v2Banks, v2Users);
-
-  if (!mappingErrors) {
-    await addToDatabase(
+  if (shouldMigrateDeal(v1Deal)) {
+    const {
+      mappingErrors,
       v2Deal,
       v2Facilities,
-    );
+    } = await mapToV2(v1Deal, v2Banks, v2Users);
+
+    if (!mappingErrors) {
+      await addToDatabase(
+        v2Deal,
+        v2Facilities,
+      );
+    }
   }
 
   await teardown();
