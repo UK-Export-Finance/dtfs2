@@ -4,7 +4,7 @@
 
   {% if params.deal.status and params.userCanSubmit %}
 
-    {% if not ["Draft", "Further Maker's input required", "Acknowledged by UKEF", "In progress by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.status) and params.user.roles.includes('checker') and params.user.roles.includes('maker') %}
+    {% if not ["Draft", "Further Maker's input required", "Acknowledged", "In progress by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)"].includes(params.deal.status) and params.user.roles.includes('checker') and params.user.roles.includes('maker') %}
       {{ govukButton({
         "disabled": false,
         "text": "Proceed to submit",
@@ -28,7 +28,7 @@
             "href": "/contract/" + params.deal._id + "/confirm-submission"
           }) }}
 
-        {% elseif  ["Draft", "Abandoned", "Acknowledged by UKEF", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "In progress by UKEF"].includes(params.deal.status) %}
+        {% elseif  ["Draft", "Abandoned", "Acknowledged", "Accepted by UKEF (without conditions)", "Accepted by UKEF (with conditions)", "In progress by UKEF"].includes(params.deal.status) %}
 
           {{ govukButton({
             "disabled": true,

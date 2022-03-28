@@ -21,7 +21,7 @@
  *         example: 1632392778918
  *       status:
  *         type: string
- *         example: Acknowledged by UKEF
+ *         example: Acknowledged
  *       previousStatus:
  *         type: string
  *         example: Completed

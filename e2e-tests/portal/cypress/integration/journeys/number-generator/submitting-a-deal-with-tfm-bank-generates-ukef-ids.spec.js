@@ -53,7 +53,7 @@ context.skip('A TFM checker submits a deal', () => {
     pages.contract.visit(deal);
 
     pages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged by UKEF');
+      expect(text.trim()).to.equal('Acknowledged');
     });
 
     pages.contract.previousStatus().invoke('text').then((text) => {

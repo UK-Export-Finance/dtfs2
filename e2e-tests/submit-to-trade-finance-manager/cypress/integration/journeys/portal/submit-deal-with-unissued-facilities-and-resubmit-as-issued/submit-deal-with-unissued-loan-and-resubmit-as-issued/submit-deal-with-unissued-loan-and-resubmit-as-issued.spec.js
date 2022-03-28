@@ -204,24 +204,24 @@ context('Portal to TFM deal submission', () => {
     });
 
     //---------------------------------------------------------------
-    // portal loan status should be updated to `Acknowledged by UKEF`
+    // portal loan status should be updated to `Acknowledged`
     //---------------------------------------------------------------
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
 
     loanRow.loanStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged by UKEF');
+      expect(text.trim()).to.equal('Acknowledged');
     });
 
     //---------------------------------------------------------------
-    // portal deal status should be updated to `Acknowledged by UKEF`
+    // portal deal status should be updated to `Acknowledged`
     //---------------------------------------------------------------
     portalPages.contract.previousStatus().invoke('text').then((text) => {
       expect(text.trim()).to.equal('Submitted');
     });
 
     portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged by UKEF');
+      expect(text.trim()).to.equal('Acknowledged');
     });
   });
 });

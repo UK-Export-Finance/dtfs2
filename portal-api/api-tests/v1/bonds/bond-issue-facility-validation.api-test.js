@@ -14,7 +14,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
-    status: 'Acknowledged by UKEF',
+    status: 'Acknowledged',
     details: {
       submissionDate: moment(submissionDate).utc().valueOf(),
     },

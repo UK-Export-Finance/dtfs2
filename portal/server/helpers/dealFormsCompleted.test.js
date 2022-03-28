@@ -4,7 +4,7 @@ const completeFacilities = {
   items: [
     { _id: '12345678911', status: 'Completed' },
     { _id: '12345678910', status: 'Completed' },
-    { _id: '12345678910', status: 'Acknowledged by UKEF' },
+    { _id: '12345678910', status: 'Acknowledged' },
   ],
 };
 
