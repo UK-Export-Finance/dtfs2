@@ -294,13 +294,38 @@ const MockRequestUnissued = () => {
   return req;
 };
 
+const MockRequestIssuedToUnissued = () => {
+  const req = {};
+  req.params = {};
+  req.query = {};
+  req.body = {};
+  req.params.dealId = '123';
+  req.params.facilityId = 'xyz';
+  req.params.facilityName = 'UKEF123';
+  req.session = {
+    user: {
+      bank: { id: 'BANKID' },
+      roles: ['MAKER'],
+      _id: '12345',
+      firstname: 'Test',
+      surname: 'Test',
+    },
+    userToken: 'TEST',
+  };
+  req.success = {
+    message: 'UKEF123 is updated',
+  };
+  req.url = '/gef/application-details/123/unissued-facilities/xyz/change-to-unissued';
+  return req;
+};
+
 const MockFacilityResponseUnissued = () => {
   const res = {};
   res.details = {
     type: CONSTANTS.FACILITY_TYPE.CASH,
     name: 'UKEF123',
     hasBeenIssued: true,
-    monthsOfCover: null,
+    monthsOfCover: 30,
     issueDate: '2022-01-05T00:00:00.000+00:00',
     coverStartDate: '2022-01-02T00:00:00.000+00:00',
     shouldCoverStartOnSubmission: true,
@@ -313,7 +338,7 @@ const MockExpectedFacilityRenderChange = (change) => ({
   facilityType: CONSTANTS.FACILITY_TYPE.CASH,
   facilityName: 'UKEF123',
   hasBeenIssued: true,
-  monthsOfCover: null,
+  monthsOfCover: '30',
   shouldCoverStartOnSubmission: 'true',
   issueDateDay: '5',
   issueDateMonth: '1',
@@ -338,7 +363,7 @@ const MockFacilitiesResponse = () => ({
         type: CONSTANTS.FACILITY_TYPE.CASH,
         name: 'UKEF123',
         hasBeenIssued: true,
-        monthsOfCover: null,
+        monthsOfCover: 30,
         issueDate: '2022-01-05T00:00:00.000+00:00',
         coverStartDate: '2022-01-02T00:00:00.000+00:00',
         shouldCoverStartOnSubmission: true,
@@ -366,6 +391,7 @@ module.exports = {
   MockSubmissionRequest,
   MockResponseUnissued,
   MockRequestUnissued,
+  MockRequestIssuedToUnissued,
   MockFacilityResponseUnissued,
   MockExpectedFacilityRenderChange,
   MockFacilitiesResponse,
