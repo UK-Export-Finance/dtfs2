@@ -50,7 +50,7 @@ exports.cloneAzureFilesGef = async (supportingInformation, dealId) => {
             console.error(`Unable to update the deal ${dealId}`, error);
           }
 
-          for (const item of supportingInformation[document]) {
+          for await (const item of supportingInformation[document]) {
             newFileName = item.filename;
             const fileClient = newServiceClient
               .getShareClient(v2ShareName)
@@ -59,7 +59,8 @@ exports.cloneAzureFilesGef = async (supportingInformation, dealId) => {
 
             copyFromURL = `https://${v1AccountName}.file.core.windows.net/${v1ShareName}/${v1RootFolder}/${item.v1Url}${v1SharedAccessSignature}`;
 
-            fileClient
+            // eslint-disable-next-line no-await-in-loop
+            await fileClient
               .startCopyFromURL(copyFromURL)
               .then(() => {
                 console.info(`File ${newFileName} was uploaded successfully`);
@@ -72,6 +73,7 @@ exports.cloneAzureFilesGef = async (supportingInformation, dealId) => {
           }
         }
       }
+      return { status: 200 };
     } catch (error) {
       console.error(error);
       return { status: 400 };

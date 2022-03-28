@@ -46,7 +46,7 @@ const mapBasisDetails = (v1Basis) => {
         mapped.details.push(V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.OTHER);
         mapped.detailsOther = v1.system_value;
       }
-    }); 
+    });
   }
 
   return mapped;
@@ -61,7 +61,7 @@ const mapCoverDateConfirmed = (issued) => {
 };
 
 const mapShouldCoverStartOnSubmission = (
-    v2CoverStartDate,
+  v2CoverStartDate,
   v2DealSubmissionDate
 ) => {
   if (v2CoverStartDate === v2DealSubmissionDate) {
@@ -70,7 +70,6 @@ const mapShouldCoverStartOnSubmission = (
 
   return false;
 };
-
 
 const mapCoverEndDate = (coverStartDate, exposurePeriod) => {
   const date = add(new Date(fromUnixTime(coverStartDate)), {
@@ -95,7 +94,7 @@ const mapV1Facilities = (
         drupalFacilityId: String(v1Facility.drupal_facility_id),
       },
       type: MIGRATION_MAP.FACILITIES.TYPE[v1Facility.facility_type],
-      ukefFacilityId: v1Facility.ukef_facility_id,
+      ukefFacilityId: v1Facility?.ukef_facility_id || '',
       name: v1Facility.bank_facility_number,
       hasBeenIssued,
       value: Number(v1Facility.amount),

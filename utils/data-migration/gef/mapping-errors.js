@@ -22,9 +22,9 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
   if (!isNumber(v2Deal.submissionDate)) {
     errors.push('submissionDate');
   }
-  if (!hasValue(v2Deal.ukefDealId)) {
-    errors.push('ukefDealId');
-  }
+  // if (!hasValue(v2Deal.ukefDealId)) {
+  //   errors.push('ukefDealId');
+  // }
   if (!hasObjectValues(v2Deal.exporter)) {
     errors.push('exporter');
   }
@@ -62,7 +62,7 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
 
   if (errors.length) {
     errors.forEach((error) => {
-      log.addError(v1DealId, `Error with deal mapping - ${error}`);
+      log.addError(v1DealId, `Error with deal ${v1DealId} mapping - ${error}`);
     });
     return errors;
   }
@@ -76,9 +76,9 @@ const facilityMappingErrors = (v2Facility) => {
   if (!hasValue(v2Facility.type)) {
     errors.push('type');
   }
-  if (!hasValue(v2Facility.ukefFacilityId)) {
-    errors.push('ukefFacilityId');
-  }
+  // if (!hasValue(v2Facility.ukefFacilityId)) {
+  //   errors.push('ukefFacilityId');
+  // }
   if (!hasBooleanValue(v2Facility.hasBeenIssued)) {
     errors.push('v2Facility');
   }
