@@ -5,7 +5,7 @@ const { convertV1Date } = require('../helpers/date-helpers');
 const { getUserByEmail } = require('../../helpers/users');
 const CONSTANTS = require('../../../../portal-api/src/constants');
 
-const mapDealRoot = (portalDealId, v1Deal) => {
+const mapDealRoot = (portalDealId, v1Deal, banks) => {
   let hasError = false;
 
   const previousStatus = v1Deal.Deal_information.Extra_fields.Deal_previous_status === 'confirmed_by_bank'
@@ -29,7 +29,7 @@ const mapDealRoot = (portalDealId, v1Deal) => {
       'DEAL',
       'STATUS',
     ),
-    bank: getBankByName(v1Deal.Application_bank),
+    bank: getBankByName(banks, v1Deal.Application_bank),
     submissionType: mapSubmissionType(v1Deal),
     bankInternalRefName: v1Deal.General_information.Bank_deal_id,
     additionalRefName: v1Deal.General_information.Deal_name,
@@ -46,7 +46,7 @@ const mapDealRoot = (portalDealId, v1Deal) => {
 
   dealRoot.maker = maker;
 
-  if (!dealRoot.dataMigrationInfo.v1_ID
+  if (!dealRoot.dataMigration.drupalDealId
     || !dealRoot.dealType
     || !dealRoot.status
     || !dealRoot.previousStatus

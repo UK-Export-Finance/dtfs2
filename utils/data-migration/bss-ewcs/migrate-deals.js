@@ -20,6 +20,7 @@ const { initCurrencies } = require('./helpers/currencies');
 const { initIndustrySectors } = require('./helpers/industry-sectors');
 const { convertV1Date } = require('./helpers/date-helpers');
 const consoleLogColor = require('./helpers/console-log-colour');
+const shouldMigrateDeal = require('./helpers/should-migrate-deal');
 
 const log = require('../helpers/logs');
 const { getToken, removeMigrationUser } = require('../temporary-token-handler');
@@ -32,6 +33,7 @@ const entities = new Entities();
 let token;
 let logFile;
 let importDealCount;
+let banks;
 
 const AZURE_WORKFLOW_FILESHARE_CONFIG = {
   FILESHARE_NAME: process.env.MIGRATION_AZURE_WORKFLOW_FILESHARE_NAME,
@@ -42,7 +44,7 @@ const AZURE_WORKFLOW_FILESHARE_CONFIG = {
 
 const init = async () => {
   token = await getToken();
-  await initBanks(token);
+  banks = await initBanks(token);
   await initUsers(token);
   await initCountries(token);
   await initCurrencies(token);
@@ -61,7 +63,7 @@ const teardown = async () => {
 const convertHtmlEntities = (value) => entities.decode(value);
 
 const mapV2 = async (portalDealId, v1Deal) => {
-  const [dealRoot, dealRootError] = mapDealRoot(portalDealId, v1Deal);
+  const [dealRoot, dealRootError] = mapDealRoot(portalDealId, v1Deal, banks);
   const [details, detailsError] = mapDetails(portalDealId, v1Deal, dealRoot.submissionType);
   const [eligibility, eligibilityError] = mapEligibility(portalDealId, v1Deal);
   const [submissionDetails, submissionDetailsError] = mapSubmissionDetails(portalDealId, v1Deal);
@@ -133,19 +135,21 @@ const processXml = async (dealId) => {
 const importSingleDeal = async (dealId) =>
   processXml(dealId).then(async (workflowDeal) => mapV2(dealId, workflowDeal).then(async (v2Deal) => {
     if (v2Deal) {
-      const success = await api.importBssEwcsDeal(v2Deal, token).then(async ({ success, deal }) => {
-        if (success) {
-          log.addSuccess(dealId);
-        } else if (deal.validationErrors) {
-          log.addError(dealId, deal.validationErrors.errorList);
-        } else if (deal.errmsg) {
-          log.addError(dealId, deal.errmsg);
-        } else {
-          log.addError(dealId, 'unknown API deal create error');
-        }
+      if (shouldMigrateDeal(v2Deal.status)) {
+        const success = await api.importBssEwcsDeal(v2Deal, token).then(async ({ success, deal }) => {
+          if (success) {
+            log.addSuccess(dealId);
+          } else if (deal.validationErrors) {
+            log.addError(dealId, deal.validationErrors.errorList);
+          } else if (deal.errmsg) {
+            log.addError(dealId, deal.errmsg);
+          } else {
+            log.addError(dealId, 'unknown API deal create error');
+          }
+          return success;
+        });
         return success;
-      });
-      return success;
+      }
     }
     log.addError(dealId, `Error mapping v1 ${dealId} to v2`);
 
