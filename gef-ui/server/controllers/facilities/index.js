@@ -1,4 +1,5 @@
 const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
+const { facilityTypeStringGenerator } = require('../../utils/facility-helpers');
 const { FACILITY_TYPE } = require('../../constants');
 const api = require('../../services/api');
 
@@ -9,7 +10,7 @@ const facilities = async (req, res) => {
   let { facilityType } = query;
 
   facilityType = facilityType || FACILITY_TYPE.CASH;
-  const facilityTypeString = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
+  const facilityTypeString = facilityTypeStringGenerator(facilityType);
 
   if (!facilityId) {
     return res.render('partials/facilities.njk', {
@@ -47,7 +48,7 @@ const createFacility = async (req, res) => {
   const hasBeenIssuedErrors = [];
   let facility;
   facilityType = facilityType || FACILITY_TYPE.CASH;
-  const facilityTypeString = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
+  const facilityTypeString = facilityTypeStringGenerator(facilityType);
 
   try {
     // Don't validate form if user clicks on 'return to application` button

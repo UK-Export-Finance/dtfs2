@@ -195,6 +195,8 @@ const issuedFacilityConfirmation = (application) => {
   && (submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN || submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
 };
 
+const facilityTypeStringGenerator = (facilityType) => CONSTANTS.FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
+
 module.exports = {
   areUnissuedFacilitiesPresent,
   getUnissuedFacilitiesAsArray,
@@ -208,4 +210,5 @@ module.exports = {
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
   issuedFacilityConfirmation,
+  facilityTypeStringGenerator,
 };

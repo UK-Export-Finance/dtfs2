@@ -103,6 +103,10 @@ const validationErrorHandler = (errs, href = '') => {
   Object is empty or not. */
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
+// for which rows in the facility tables should show change when facilities changed to issued post submission
+const changedToIssuedKeys = (id) =>
+  id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate' || id === 'hasBeenIssued';
+
 // summary items for application details page
 const detailsSummaryItems = (href, keys, item, value) => {
   const summaryItems = [
@@ -259,7 +263,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
   const isCoverStartOnSubmission = id === 'coverStartDate' && shouldCoverStartOnSubmission;
   // column keys to display change if facility has been changed to issued
-  const changedToIssueShow = id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate' || id === 'hasBeenIssued';
+  const changedToIssueShow = changedToIssuedKeys(id);
   // column key to display add if facility not yet issued
   const unissuedShow = id === 'hasBeenIssued';
   // Issued facility change link (post confirmation)

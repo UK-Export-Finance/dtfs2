@@ -2,6 +2,7 @@ const { format } = require('date-fns');
 const api = require('../../services/api');
 const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet } = require('../../utils/helpers');
+const { facilityTypeStringGenerator } = require('../../utils/facility-helpers');
 const CONSTANTS = require('../../constants');
 const { applicationDetails } = require('../application-details');
 const { facilityValidation } = require('./validation');
@@ -317,7 +318,7 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
   let { facilityType } = query;
   const hasBeenIssuedErrors = [];
   facilityType = facilityType || FACILITY_TYPE.CASH;
-  const facilityTypeString = FACILITY_TYPE[facilityType?.toUpperCase()].toLowerCase();
+  const facilityTypeString = facilityTypeStringGenerator(facilityType);
 
   // Don't validate form if user clicks on 'return to application` button
   if (!body.hasBeenIssued) {
@@ -336,31 +337,31 @@ const postChangeIssuedToUnissuedFacility = async (req, res) => {
   try {
     if (body.hasBeenIssued === 'false') {
       const { details } = await api.getFacility(facilityId);
+      if (details) {
+        await api.updateFacility(
+          facilityId,
+          {
+            name: body.facilityName,
+            shouldCoverStartOnSubmission: null,
+            monthsOfCover: details.monthsOfCover || null,
+            issueDate: null,
+            coverStartDate: null,
+            coverEndDate: null,
+            hasBeenIssued: isTrueSet(body.hasBeenIssued),
+            canResubmitIssuedFacilities: false,
+            coverDateConfirmed: false,
+            unissuedToIssuedByMaker: {},
+          },
+          (req.url = `/gef/application-details/${dealId}`),
+        );
 
-      await api.updateFacility(
-        facilityId,
-        {
-          name: body.facilityName,
-          shouldCoverStartOnSubmission: null,
-          monthsOfCover: details.monthsOfCover || null,
-          issueDate: null,
-          coverStartDate: null,
-          coverEndDate: null,
-          hasBeenIssued: isTrueSet(body.hasBeenIssued),
-          canResubmitIssuedFacilities: false,
-          coverDateConfirmed: false,
-          unissuedToIssuedByMaker: {},
-        },
-        (req.url = `/gef/application-details/${dealId}`),
-      );
-
-      // updates application with editorId
-      const applicationUpdate = {
-        editorId,
-      };
-      await api.updateApplication(dealId, applicationUpdate);
+        // updates application with editorId
+        const applicationUpdate = {
+          editorId,
+        };
+        await api.updateApplication(dealId, applicationUpdate);
+      }
     }
-
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (err) {
     console.error('Error creating a facility', { err });
