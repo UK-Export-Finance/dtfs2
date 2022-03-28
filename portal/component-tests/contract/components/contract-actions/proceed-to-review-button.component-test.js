@@ -21,10 +21,10 @@ describe(component, () => {
       }
     });
 
-    it('should be enabled for deals in status=Acknowledged by UKEF with dealHasIssuedFacilitiesToSubmit flag set to true', () => {
+    it('should be enabled for deals in status=Acknowledged with dealHasIssuedFacilitiesToSubmit flag set to true', () => {
       const user = { roles: ['maker'] };
       const deals = [
-        { _id: 1, status: 'Acknowledged by UKEF' },
+        { _id: 1, status: 'Acknowledged' },
       ];
 
       const dealFormsCompleted = true;
@@ -39,10 +39,10 @@ describe(component, () => {
       }
     });
 
-    it('should be enabled for deals in status=`Acknowledged by UKEF`, `Ready for Checker\'s approval`, `Further Maker\'s input required` when dealHasIssuedFacilitiesToSubmit flag set to true and dealFormsCompleted flag set to false', () => {
+    it('should be enabled for deals in status=`Acknowledged`, `Ready for Checker\'s approval`, `Further Maker\'s input required` when dealHasIssuedFacilitiesToSubmit flag set to true and dealFormsCompleted flag set to false', () => {
       const user = { roles: ['maker'] };
       const deals = [
-        { _id: 1, status: 'Acknowledged by UKEF' },
+        { _id: 1, status: 'Acknowledged' },
         { _id: 4, status: 'Ready for Checker\'s approval' },
       ];
 
@@ -139,7 +139,7 @@ describe(component, () => {
         { _id: 1, status: 'Draft' },
         { _id: 2, status: "Further Maker's input required" },
         { _id: 3, status: 'Abandoned' },
-        { _id: 4, status: 'Acknowledged by UKEF' },
+        { _id: 4, status: 'Acknowledged' },
       ];
 
       const dealFormsCompleted = false;
@@ -160,7 +160,7 @@ describe(component, () => {
         { _id: 1, status: 'Draft' },
         { _id: 2, status: 'Further Maker\'s input required' },
         { _id: 3, status: 'Abandoned' },
-        { _id: 4, status: 'Acknowledged by UKEF' },
+        { _id: 4, status: 'Acknowledged' },
       ];
 
       for (const deal of deals) {
@@ -180,7 +180,7 @@ describe(component, () => {
         { _id: 3, status: 'Submitted' },
         { _id: 4, status: 'Rejected by UKEF' },
         { _id: 5, status: 'Abandoned' },
-        { _id: 6, status: 'Acknowledged by UKEF' },
+        { _id: 6, status: 'Acknowledged' },
         { _id: 7, status: 'Accepted by UKEF (without conditions)' },
         { _id: 8, status: 'Accepted by UKEF (with conditions)' },
         { _id: 9, status: "Ready for Checker's approval" },

@@ -24,7 +24,7 @@ const bondStatus = (bond, bondErrors, bondIssueFacilityErrors) => {
 };
 
 const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, bond) => {
-  const allowedDealStatus = ((dealStatus === 'Acknowledged by UKEF'
+  const allowedDealStatus = ((dealStatus === 'Acknowledged'
                             || dealStatus === 'Accepted by UKEF (with conditions)'
                             || dealStatus === 'Accepted by UKEF (without conditions)'
                             || dealStatus === 'Ready for Checker\'s approval'

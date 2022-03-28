@@ -7,7 +7,7 @@ const { fillAndSubmitIssueLoanFacilityForm } = require('../fill-and-submit-issue
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('A maker can issue and submit issued bond and loan facilities with a deal in `Acknowledged by UKEF` status', () => {
+context('A maker can issue and submit issued bond and loan facilities with a deal in `Acknowledged` status', () => {
   let deal;
   let dealId;
   const dealFacilities = {
@@ -217,7 +217,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     });
 
     pages.contract.previousStatus().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Acknowledged by UKEF');
+      expect(text.trim()).to.equal('Acknowledged');
     });
 
     //---------------------------------------------------------------

@@ -12,7 +12,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
     submissionType: 'Manual Inclusion Notice',
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
-    status: 'Acknowledged by UKEF',
+    status: 'Acknowledged',
     details: {
       submissionDate: moment().utc().valueOf(),
     },

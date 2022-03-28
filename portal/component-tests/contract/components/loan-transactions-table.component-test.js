@@ -86,7 +86,7 @@ describe(component, () => {
     describe('when a loan Cover Date can be modified', () => {
       it('should render `change start date` link and NOT `issue facility link', () => {
         const dealWithLoansThatCanChangeCoverDate = deal;
-        dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged by UKEF';
+        dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged';
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].hasBeenIssued = true;
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
@@ -116,7 +116,7 @@ describe(component, () => {
 
       it('should render `change start date` link', () => {
         const dealWithLoansThatCanChangeCoverDate = deal;
-        dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged by UKEF';
+        dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged';
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].hasBeenIssued = true;
         dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;

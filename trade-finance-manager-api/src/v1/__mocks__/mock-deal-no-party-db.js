@@ -6,7 +6,7 @@ const MOCK_DEAL_NO_PARTY_DB = {
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
-  status: 'Acknowledged by UKEF',
+  status: 'Acknowledged',
   previousStatus: 'Submitted',
   bank: {
     id: '123',
