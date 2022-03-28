@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 5003;
 const cookie = {
   path: '/',
   httpOnly: true,
-  secure: true,
+  secure: false,
   sameSite: 'strict',
   maxAge: 604800000, // 7 days
 };
