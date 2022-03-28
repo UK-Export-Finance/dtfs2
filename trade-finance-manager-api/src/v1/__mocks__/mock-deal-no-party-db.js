@@ -112,7 +112,7 @@ const MOCK_DEAL_NO_PARTY_DB = {
     supplyContractValue: '1234.00',
   },
   eligibility: {
-    version: 4,
+    version: 5,
     criteria: [
       {
         id: 11,
