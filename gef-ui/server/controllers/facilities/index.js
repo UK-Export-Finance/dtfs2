@@ -83,10 +83,6 @@ const createFacility = async (req, res) => {
     };
     await api.updateApplication(dealId, applicationUpdate);
 
-    if (status && status === 'change') {
-      return res.redirect(`/gef/application-details/${dealId}`);
-    }
-
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facility.details._id}/about-facility`);
   } catch (err) {
     console.error('Error creating a facility', { err });
