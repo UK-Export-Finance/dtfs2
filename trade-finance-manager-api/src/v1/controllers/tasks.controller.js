@@ -81,8 +81,6 @@ const updateAllTasks = async (
 
         if (isTaskThatIsBeingUpdated) {
           updatedTask.history.push(mapTaskHistoryObject({
-            taskId: task.id,
-            groupId: task.groupId,
             statusFrom,
             statusTo: taskUpdate.status,
             assignedUserId: taskUpdate.assignedTo.userId,

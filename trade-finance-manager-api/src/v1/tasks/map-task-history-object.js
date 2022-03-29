@@ -1,15 +1,11 @@
 const { getTime } = require('date-fns');
 
 const mapTaskHistoryObject = ({
-  taskId,
-  groupId,
   statusFrom,
   statusTo,
   assignedUserId,
   updatedBy,
 }) => ({
-  taskId,
-  groupId,
   statusFrom,
   statusTo,
   assignedUserId,
