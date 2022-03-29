@@ -295,8 +295,12 @@ context('User can view and filter multiple deals', () => {
     const searchString = 'BSS';
 
     const dealsWithBonds = ALL_SUBMITTED_DEALS.filter((deal) => {
-      if (deal.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.BOND)) {
-        return deal;
+      const { dealSnapshot } = deal;
+
+      if (dealSnapshot.mockFacilities) {
+        if (dealSnapshot.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.BOND)) {
+          return deal;
+        }
       }
       return null;
     });

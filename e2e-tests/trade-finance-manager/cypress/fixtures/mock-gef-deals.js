@@ -86,7 +86,10 @@ const eligibilityCriteria = (type) => ({
 
 const commonApplicationDetails = {
   dealType: DEAL_TYPE.GEF,
-  bank: { id: '9' },
+  bank: {
+    id: '9',
+    name: 'UKEF test bank (Delegated)',
+  },
   bankInternalRefName: chance.sentence({ words: 2 }),
   mandatoryVersionId: null,
   createdAt: 1638363403942,
