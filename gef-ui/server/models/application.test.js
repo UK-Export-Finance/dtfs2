@@ -121,7 +121,7 @@ describe('models/application', () => {
       it('sets the requiredSupportingDocuments as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInformation.requiredFields).toEqual(['manualInclusion', 'exportLicence']);
+        expect(application.supportingInformation.requiredFields).toEqual(['manualInclusion']);
       });
     });
 
@@ -165,7 +165,7 @@ describe('models/application', () => {
       it('sets the requiredSupportingDocuments as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInformation.requiredFields).toEqual(['manualInclusion', 'exportLicence']);
+        expect(application.supportingInformation.requiredFields).toEqual(['manualInclusion']);
       });
     });
 
@@ -173,7 +173,6 @@ describe('models/application', () => {
       beforeEach(() => {
         mockApplicationResponse.supportingInformation.securityDetails = { exporter: 'a', application: 'b' };
         mockApplicationResponse.supportingInformation.manualInclusion = ['path'];
-        mockApplicationResponse.supportingInformation.exportLicence = ['path'];
 
         mockApplicationResponse.eligibility = MockEligibilityCriteria();
         mockApplicationResponse.eligibility.criteria[3].answer = false;
@@ -188,7 +187,7 @@ describe('models/application', () => {
       it('sets the requiredSupportingDocuments as expected', async () => {
         const application = await Application.findById('', MockUserResponse(), '');
 
-        expect(application.supportingInformation.requiredFields).toEqual(['manualInclusion', 'exportLicence']);
+        expect(application.supportingInformation.requiredFields).toEqual(['manualInclusion']);
       });
     });
   });

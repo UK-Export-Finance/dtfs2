@@ -251,7 +251,7 @@ context('Return to maker for unissued to issued facilities', () => {
       // 1st facility table - makes sure no action buttons exist (change or add)
       applicationDetails.facilitySummaryListRowAction(0, 0).contains('Change');
       applicationDetails.facilitySummaryListRowAction(0, 1).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(0, 2).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(0, 2).contains('Change');
       applicationDetails.facilitySummaryListRowAction(0, 3).contains('Change');
       applicationDetails.facilitySummaryListRowAction(0, 4).contains('Change');
       applicationDetails.facilitySummaryListRowAction(0, 5).contains('Change');
@@ -265,7 +265,7 @@ context('Return to maker for unissued to issued facilities', () => {
       // second facility
       applicationDetails.facilitySummaryListRowAction(1, 0).contains('Change');
       applicationDetails.facilitySummaryListRowAction(1, 1).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(1, 2).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(1, 2).contains('Change');
       applicationDetails.facilitySummaryListRowAction(1, 3).contains('Change');
       applicationDetails.facilitySummaryListRowAction(1, 4).contains('Change');
       applicationDetails.facilitySummaryListRowAction(1, 5).contains('Change');
@@ -334,7 +334,7 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListRowValue(3, 0).contains(MOCK_FACILITY_ONE.name);
       applicationDetails.facilitySummaryListRowAction(3, 0).contains('Change');
       applicationDetails.facilitySummaryListRowAction(3, 1).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 2).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(3, 2).contains('Change');
       applicationDetails.facilitySummaryListRowValue(3, 3).contains(issuedDate);
       applicationDetails.facilitySummaryListRowAction(3, 3).contains('Change');
       applicationDetails.facilitySummaryListRowValue(3, 4).contains(coverStart);

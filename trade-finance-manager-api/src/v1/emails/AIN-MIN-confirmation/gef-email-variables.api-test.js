@@ -37,4 +37,16 @@ describe('generate AIN/MIN confirmation email variables - GEF', () => {
 
     expect(result).toEqual(expected);
   });
+
+  describe('when there is no additionalRefName', () => {
+    it('should return dealName as a dash', () => {
+      const mockDeal = MOCK_GEF_DEAL;
+      delete mockDeal.additionalRefName;
+
+      const mockSubmittedDeal = mapSubmittedDeal({ dealSnapshot: mockDeal });
+
+      const result = gefEmailVariables(mockSubmittedDeal, mockFacilityLists);
+      expect(result.dealName).toEqual('-');
+    });
+  });
 });

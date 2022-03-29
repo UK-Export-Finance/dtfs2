@@ -5,6 +5,8 @@ import {
   changeUnissuedFacilityPreview,
   postChangeUnissuedFacility,
   postChangeUnissuedFacilityPreview,
+  changeIssuedToUnissuedFacility,
+  postChangeIssuedToUnissuedFacility,
 } from './index';
 import api from '../../services/api';
 import MOCKS from '../mocks/index';
@@ -208,7 +210,7 @@ describe('postChangeUnissuedFacility()', () => {
         coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
         issueDate: format(now, 'MMMM d, yyyy'),
         shouldCoverStartOnSubmission: null,
-        monthsOfCover: null,
+        monthsOfCover: 30,
         name: 'UKEF123',
         hasBeenIssued: true,
         canResubmitIssuedFacilities: true,
@@ -285,7 +287,7 @@ describe('postChangeUnissuedFacility()', () => {
         coverStartDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
         issueDate: format(twoDaysAgoMidnight, 'MMMM d, yyyy'),
         shouldCoverStartOnSubmission: null,
-        monthsOfCover: null,
+        monthsOfCover: 30,
         name: 'UKEF123',
         hasBeenIssued: true,
         canResubmitIssuedFacilities: true,
@@ -321,7 +323,7 @@ describe('postChangeUnissuedFacility()', () => {
         coverStartDate: format(yesterday, 'MMMM d, yyyy'),
         issueDate: format(yesterday, 'MMMM d, yyyy'),
         shouldCoverStartOnSubmission: null,
-        monthsOfCover: null,
+        monthsOfCover: 30,
         name: 'UKEF123',
         hasBeenIssued: true,
         canResubmitIssuedFacilities: true,
@@ -375,7 +377,7 @@ describe('postChangeUnissuedFacility()', () => {
         coverStartDate: format(oneYearFromNow, 'MMMM d, yyyy'),
         issueDate: format(tomorrow, 'MMMM d, yyyy'),
         shouldCoverStartOnSubmission: null,
-        monthsOfCover: null,
+        monthsOfCover: 30,
         name: 'UKEF123',
         hasBeenIssued: true,
         canResubmitIssuedFacilities: true,
@@ -459,7 +461,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
         coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
         issueDate: format(now, 'MMMM d, yyyy'),
         shouldCoverStartOnSubmission: null,
-        monthsOfCover: null,
+        monthsOfCover: 30,
         name: 'UKEF123',
         hasBeenIssued: true,
         canResubmitIssuedFacilities: true,
@@ -553,6 +555,175 @@ describe('postChangeUnissuedFacilityPreview()', () => {
 
     api.updateFacility.mockRejectedValueOnce();
     await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+  });
+});
+
+describe('postChangeIssuedToUnissuedFacility', () => {
+  let mockResponse;
+  let mockRequest;
+  let mockFacilityResponse;
+  let mockFacilitiesResponse;
+  let mockUserResponse;
+  const updateApplicationSpy = jest.fn();
+
+  beforeEach(() => {
+    mockResponse = MOCKS.MockResponseUnissued();
+    mockRequest = MOCKS.MockRequestIssuedToUnissued();
+    mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
+    mockFacilitiesResponse = MOCKS.MockFacilitiesResponse();
+    mockUserResponse = MOCKS.MockUserResponse();
+
+    api.getApplication.mockResolvedValue(MOCKS.MockApplicationResponseSubmitted());
+    api.getUserDetails.mockResolvedValue(mockUserResponse);
+    api.getFacility.mockResolvedValue(mockFacilityResponse);
+    api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
+    api.updateFacility.mockResolvedValue({});
+    api.updateApplication = updateApplicationSpy;
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('posts and changes facility to unissued and returns correct url', async () => {
+    mockRequest.body.hasBeenIssued = 'false';
+
+    await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
+
+    expect(api.updateFacility).toHaveBeenCalledWith(
+      'xyz',
+      {
+        coverEndDate: null,
+        coverStartDate: null,
+        issueDate: null,
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: 30,
+        hasBeenIssued: false,
+        canResubmitIssuedFacilities: false,
+        coverDateConfirmed: false,
+        unissuedToIssuedByMaker: {},
+      },
+      '/gef/application-details/123',
+    );
+  });
+
+  it('renders template with errors if no box is selected', async () => {
+    mockRequest.body.hasBeenIssued = null;
+
+    await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
+      errors: {
+        errorSummary: [
+          {
+            text: 'Select if your bank has already issued this cash facility',
+            href: '#hasBeenIssued',
+          },
+        ],
+        fieldErrors: {
+          hasBeenIssued: { text: 'Select if your bank has already issued this cash facility' },
+        },
+      },
+    }));
+    // should not go ahead with call as errors
+    expect(api.updateFacility).not.toHaveBeenCalledWith(
+      'xyz',
+      {
+        coverEndDate: null,
+        coverStartDate: null,
+        issueDate: null,
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: 30,
+        hasBeenIssued: false,
+        canResubmitIssuedFacilities: false,
+        coverDateConfirmed: false,
+        unissuedToIssuedByMaker: {},
+      },
+      '/gef/application-details/123',
+    );
+  });
+
+  it('should redirect to application details page and not update facility if hasBeenIssued is selected as true', async () => {
+    mockRequest.body.hasBeenIssued = 'true';
+
+    await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+
+    expect(api.updateFacility).not.toHaveBeenCalledWith(
+      'xyz',
+      {
+        coverEndDate: null,
+        coverStartDate: null,
+        issueDate: null,
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: 30,
+        hasBeenIssued: false,
+        canResubmitIssuedFacilities: false,
+        coverDateConfirmed: false,
+        unissuedToIssuedByMaker: {},
+      },
+      '/gef/application-details/123',
+    );
+  });
+
+  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+    mockRequest.body.hasBeenIssued = 'false';
+
+    api.updateFacility.mockRejectedValueOnce();
+    await postChangeIssuedToUnissuedFacility(mockRequest, mockResponse);
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+  });
+});
+
+describe('changeIssuedToUnissuedFacility()', () => {
+  let mockResponse;
+  let mockRequest;
+  let mockFacilityResponse;
+
+  beforeEach(() => {
+    mockResponse = MOCKS.MockResponseUnissued();
+    mockRequest = MOCKS.MockRequestUnissued();
+    mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
+
+    api.getApplication.mockResolvedValue(MOCKS.MockApplicationResponseSubmitted());
+    api.getFacility.mockResolvedValue(mockFacilityResponse);
+    api.updateFacility.mockResolvedValue({});
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('renders the template for a contingent facility', async () => {
+    mockRequest.query.facilityType = CONSTANTS.FACILITY_TYPE.CONTINGENT;
+
+    await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
+      dealId: '123',
+      facilityType: 'contingent',
+      hasBeenIssued: 'true',
+    }));
+  });
+
+  it('renders the template for a cash facility', async () => {
+    // cash comes through as null/undefined
+    mockRequest.query.facilityType = null;
+
+    await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
+
+    expect(mockResponse.render).toHaveBeenCalledWith('partials/issued-facility-to-unissued.njk', expect.objectContaining({
+      dealId: '123',
+      facilityType: 'cash',
+      hasBeenIssued: 'true',
+    }));
+  });
+
+  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+    api.getFacility.mockRejectedValueOnce();
+    await changeIssuedToUnissuedFacility(mockRequest, mockResponse);
     expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
   });
 });

@@ -1,0 +1,87 @@
+{% extends "index.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% block pageTitle %}Facilities{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+      text: "Back to previous page",
+      href: "/gef/application-details/" + dealId,
+      attributes: {
+        'data-cy': 'back-link'
+      }
+  }) }}
+
+  <form
+    method="post"
+    data-cy="form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ govukRadios({
+      classes: "govuk-radios--inline govuk-!-margin-bottom-4",
+      idPrefix: "hasBeenIssued",
+      name: "hasBeenIssued",
+      fieldset: {
+        legend: {
+          isPageHeading: true,
+          text: "Has your bank already issued this " + facilityType + " facility to the exporter?",
+          classes: "govuk-fieldset__legend--xl"
+        },
+        attributes: {
+          'data-cy': 'has-been-issued-heading'
+        }
+      },
+      errorMessage: errors and errors.fieldErrors.hasBeenIssued and {
+        text: errors.fieldErrors.hasBeenIssued.text,
+        attributes: {
+          'data-cy': 'has-been-issued-error'
+        }
+      },
+      items: [
+        {
+          value: 'true',
+          text: "Yes",
+          checked: hasBeenIssued === 'true',
+          attributes: {
+            'data-cy': 'has-been-issued-radio-yes'
+          }
+        },
+        {
+          value: 'false',
+          text: "No",
+          checked: hasBeenIssued === 'false',
+          attributes: {
+            'data-cy': 'has-been-issued-radio-no'
+          }
+        }
+      ]
+    }) }}
+
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Continue",
+        attributes: {
+          'data-cy': 'continue-button'
+        }
+      }) }}
+
+    <a
+      class="govuk-link"
+      href="/gef/application-details/{{dealId}}"
+      data-cy="cancel-link">Cancel</a>
+    </div>
+  </form>
+{% endblock %}
