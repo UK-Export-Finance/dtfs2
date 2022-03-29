@@ -1,4 +1,4 @@
-const log = require('../helpers/log');
+const log = require('../../helpers/logs');
 const { getCountryById } = require('../helpers/countries');
 const mandatoryCriteriaRequired = require('../helpers/mandatory-criteria-required');
 
@@ -85,7 +85,6 @@ const getGroup = (id) => {
 
   return 'Legal criteria';
 };
-
 
 const getCriteria = (ecList, idMap, hasMandatoryCriteria) => {
   const criteria = ecList.Extra_fields.Ec_answers.Ec_answer.map((v1Ec) => {
