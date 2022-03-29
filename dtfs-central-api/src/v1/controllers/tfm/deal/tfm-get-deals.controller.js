@@ -71,7 +71,8 @@ const findDeals = async (searchString, sortBy, fieldQueries, callback) => {
 
     const query = {
       $or: [
-        { 'dealSnapshot.details.ukefDealId': { $regex: searchString, $options: 'i' } },
+        { 'dealSnapshot.details.ukefDealId': { $regex: searchString, $options: 'i' } }, // BSS
+        { 'dealSnapshot.ukefDealId': { $regex: searchString, $options: 'i' } }, // GEF
         { 'dealSnapshot.bank.name': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.submissionDetails.supplier-name': { $regex: searchString, $options: 'i' } },
         { 'dealSnapshot.submissionType': { $regex: searchString, $options: 'i' } },

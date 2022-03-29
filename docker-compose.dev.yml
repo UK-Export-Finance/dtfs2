@@ -48,7 +48,7 @@ services:
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
-      - ESTORE_URL
+      - ESTORE_URL=${ESTORE_URL}
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - SESSION_SECRET
     command: npx nodemon --inspect=0.0.0.0:9224 server/index.js -L

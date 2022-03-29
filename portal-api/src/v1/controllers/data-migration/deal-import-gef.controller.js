@@ -32,7 +32,7 @@ const importDealAndFacilities = async (req, res) => {
 
   const cloneFiles = await cloneAzureFilesGef(deal.supportingInformation, dealId);
 
-  if (!cloneFiles) {
+  if (!cloneFiles?.status === 200 || !cloneFiles) {
     return res.status(400).send(`Error cloning V1 GEF documents with deal ID: ${dealId}`);
   }
 

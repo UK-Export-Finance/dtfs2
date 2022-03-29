@@ -1,7 +1,7 @@
 import validateFacilityValue from './facility-value';
 
 const interestErrorExpected = {
-  errMsg: 'You can only enter a number between 0 and 100',
+  errMsg: 'You can only enter a number between 0 and 99 and can have up to 4 decimal places',
   errRef: 'interestPercentage',
 };
 const coverErrorExpected = {
@@ -77,6 +77,62 @@ describe('facility-value when using continue', () => {
       coverPercentage: 50,
     });
     expect(errors).toContainEqual(interestErrorExpected);
+  });
+
+  it('validates the interest percentage with no decimals', () => {
+    const interest = validateFacilityValue({
+      interestPercentage: 10,
+      coverPercentage: 50,
+    });
+    expect(interest).toEqual([]);
+  });
+
+  it('validates the interest percentage with one decimals', () => {
+    const interest = validateFacilityValue({
+      interestPercentage: 10.1,
+      coverPercentage: 50,
+    });
+    expect(interest).toEqual([]);
+  });
+
+  it('validates the interest percentage with two decimals', () => {
+    const interest = validateFacilityValue({
+      interestPercentage: 10.12,
+      coverPercentage: 50,
+    });
+    expect(interest).toEqual([]);
+  });
+
+  it('validates the interest percentage with three decimals', () => {
+    const interest = validateFacilityValue({
+      interestPercentage: 10.123,
+      coverPercentage: 50,
+    });
+    expect(interest).toEqual([]);
+  });
+
+  it('validates the interest percentage with four decimals', () => {
+    const interest = validateFacilityValue({
+      interestPercentage: 10.1234,
+      coverPercentage: 50,
+    });
+    expect(interest).toEqual([]);
+  });
+
+  it('validates the interest percentage with 5 decimals', () => {
+    const interest = validateFacilityValue({
+      interestPercentage: 10.12345,
+      coverPercentage: 50,
+    });
+    expect(interest).toContainEqual(interestErrorExpected);
+  });
+
+  it('validates the interest percentage with two digits and four decimals', () => {
+    const interest = validateFacilityValue({
+      interestPercentage: 100.1234,
+      coverPercentage: 50,
+    });
+    expect(interest).toContainEqual(interestErrorExpected);
   });
 
   it('generates an error then the interest percentage is invalid', () => {
