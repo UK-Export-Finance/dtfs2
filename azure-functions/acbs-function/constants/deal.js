@@ -37,6 +37,11 @@ const UNITED_KINGDOM = [
   'northern ireland',
 ];
 
+const EXPORTER_CREDIT_RATING = {
+  B_PLUS: 'Acceptable (B+)',
+  BB_MINUS: 'Good (BB-)',
+};
+
 module.exports = {
   SME_TYPE,
   SUBMISSION_TYPE,
@@ -45,4 +50,5 @@ module.exports = {
   CURRENCY,
   COUNTRY,
   UNITED_KINGDOM,
+  EXPORTER_CREDIT_RATING,
 };
