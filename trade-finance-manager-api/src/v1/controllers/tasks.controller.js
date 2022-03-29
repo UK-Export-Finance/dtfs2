@@ -103,7 +103,7 @@ const updateAllTasks = async (
 
   /**
    * If 'Complete an adverse history check' task is completed
-   * All tasks in the Underwriting Group Task become unlocked and are able to be started
+   * All tasks in the Underwriting Group become unlocked and are able to be started
    * */
   const canUnlockUnderWritingGroupTasks = isAdverseHistoryTaskIsComplete(taskGroups);
 

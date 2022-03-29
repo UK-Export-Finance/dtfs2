@@ -253,7 +253,6 @@ describe('tasks controller', () => {
 
     describe('when a task or tasks are unlocked', () => {
       it('should add emailSent flag to the tasks that have been unlocked and emails sent', async () => {
-        const mockUrlOrigin = 'http://test.com';
         const mockTasks = MOCK_MIA_TASKS_POPULATED;
 
         const tasksWithFirstGroupComplete = mockTasks;
