@@ -8,7 +8,6 @@ const uploadFIles = {
   supportingInfoCorporateStructureButton: () => cy.get('[data-cy="supportingInfo__corporate-structure-cta"]'),
   supportingInfoDebtorCreditorButton: () => cy.get('[data-cy="supportingInfo__debtor-creditor-cta"]'),
   supportingInfoSecurityDetailsButton: () => cy.get('[data-cy="security-details-cta"]'),
-  supportingInfoExportLicenceButton: () => cy.get('[data-cy="supportingInfo__export-licence-cta"]'),
   deleteSupportingDocument: (file) => cy.get(`.moj-multi-file-upload__delete[value='${file}']`),
   uploadSuccess: (fileName) => cy.get('.moj-multi-file-upload__success').contains(fileName),
   uploadFailure: (fileName) => cy.get('.moj-multi-file-upload__error').contains(fileName),

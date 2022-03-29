@@ -271,16 +271,6 @@ context('Clone GEF (MIA) deal', () => {
       uploadFiles.continueButton().click();
     });
 
-    it('should upload files to the `Export Licence` section', () => {
-      uploadFiles.supportingInfoExportLicenceButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/document/export-licence`));
-      cy.uploadFile('file1.png', `/gef/application-details/${MIAdealId}/supporting-information/document/export-licence/upload`);
-      uploadFiles.uploadSuccess('file1.png');
-
-      cy.uploadFile('file6.png', `/gef/application-details/${MIAdealId}/supporting-information/document/export-licence/upload`);
-      uploadFiles.uploadSuccess('file6.png');
-    });
-
     it('should verify the status of the Supporting Information section is set to `Complete`', () => {
       uploadFiles.supportingInfoStatus().should('contain', 'Complete');
     });
