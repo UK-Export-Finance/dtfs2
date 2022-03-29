@@ -21,7 +21,7 @@ const gefEmailVariables = (deal, facilityLists) => {
     exporterName: exporter.companyName,
     ukefDealId,
     bankGefDealId: bankInternalRefName,
-    dealName: additionalRefName,
+    dealName: additionalRefName || '-',
     submissionDate: format(getSubmissionDate(deal), 'do MMMM yyyy'),
     exporterCompaniesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
     exporterAddress: generateAddressString(exporter.registeredAddress),
