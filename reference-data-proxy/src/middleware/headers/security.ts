@@ -24,7 +24,7 @@ export const security = (req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
   res.setHeader('X-Frame-Options', 'deny');
   res.setHeader('X-XSS-Protection', '1; mode=block');
-  res.setHeader('X-Content-Type-Options', 'no-sniff');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader(
     'Content-Security-Policy',
     "default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self' 'unsafe-inline';script-src-attr 'self' 'unsafe-inline';style-src 'self' https:;upgrade-insecure-requests",
