@@ -271,7 +271,7 @@ const validateAboutFacility = async (req, res) => {
     };
     await api.updateApplication(dealId, applicationUpdate);
 
-    if (isTrueSet(saveAndReturn) || status === 'change') {
+    if (isTrueSet(saveAndReturn)) {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 

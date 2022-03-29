@@ -98,6 +98,27 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCoverError();
 
       facilityValuePage.interestPercentage().clear();
+      facilityValuePage.interestPercentage().type('10.12345');
+      facilityValuePage.percentageCover().clear();
+      facilityValuePage.percentageCover().type('79');
+      facilityValuePage.continueButton().click();
+      facilityValuePage.errorSummary();
+
+      facilityValuePage.interestPercentage().clear();
+      facilityValuePage.interestPercentage().type('1.12345');
+      facilityValuePage.percentageCover().clear();
+      facilityValuePage.percentageCover().type('79');
+      facilityValuePage.continueButton().click();
+      facilityValuePage.errorSummary();
+
+      facilityValuePage.interestPercentage().clear();
+      facilityValuePage.interestPercentage().type('122.1234');
+      facilityValuePage.percentageCover().clear();
+      facilityValuePage.percentageCover().type('79');
+      facilityValuePage.continueButton().click();
+      facilityValuePage.errorSummary();
+
+      facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('0');
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('80');

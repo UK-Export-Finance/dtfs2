@@ -1,4 +1,4 @@
-const log = require('../helpers/log');
+const log = require('../../helpers/logs');
 const { getCountryById } = require('../helpers/countries');
 const { getCurrencyById } = require('../helpers/currencies');
 const { getIndustrySectorByCode, getIndustryClassByCode } = require('../helpers/industry-sectors');
