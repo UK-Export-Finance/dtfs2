@@ -153,13 +153,13 @@ describe('controllers/facilities', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
 
-    it('redirects user to `application` page if status query is set to `Change`', async () => {
+    it('redirects user to `about-facility` page if status query is set to `Change`', async () => {
       mockRequest.query.status = 'change';
       mockRequest.body.hasBeenIssued = 'true';
 
       await createFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/abc/about-facility');
     });
 
     it('redirects user to `about facility` page if response from api is successful', async () => {

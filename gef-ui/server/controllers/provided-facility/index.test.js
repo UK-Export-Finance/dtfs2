@@ -102,13 +102,13 @@ describe('controllers/provided-facility', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
     });
 
-    it('redirects user to application page if application page if query status is equal to `change`', async () => {
+    it('redirects user to facility-currency page if application page if query status is equal to `change`', async () => {
       mockRequest.query.status = 'change';
       mockRequest.body.details = ['Term basis'];
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
-      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-currency');
     });
 
     it('shows error message if Other textarea is left empty', async () => {
