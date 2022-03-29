@@ -14,9 +14,6 @@ const eStoreMap = {
   debtorAndCreditorReports: {
     eStoreName: 'Audited_financial_statements', // TODO: update to `Business Information` once eStore supports it
   },
-  exportLicence: {
-    eStoreName: 'Financial_information_commentary', // TODO: update to `Business Information` once eStore supports it
-  },
   // BSS
   auditedFinancialStatements: {
     eStoreName: 'Audited_financial_statements',

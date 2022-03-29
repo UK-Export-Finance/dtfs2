@@ -56,8 +56,6 @@ context('Upload files to Azure', () => {
         .should('contain', 'Required');
       uploadFiles.supportingInfoSecurityDetailsButton().parent().parent().find('.govuk-summary-list__value')
         .should('contain', 'Required');
-      uploadFiles.supportingInfoExportLicenceButton().parent().parent().find('.govuk-summary-list__value')
-        .should('contain', 'Required');
     });
 
     it('should allow the same document to be uploaded in different sections', () => {
@@ -137,16 +135,6 @@ context('Upload files to Azure', () => {
       uploadFiles.exporterSecurity().type('test');
       uploadFiles.facilitySecurity().type('test2');
       uploadFiles.continueButton().click();
-    });
-
-    it('should upload files to the `Export Licence` section', () => {
-      uploadFiles.supportingInfoExportLicenceButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/export-licence`));
-      cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/document/export-licence/upload`);
-      uploadFiles.uploadSuccess('file1.png');
-
-      cy.uploadFile('file6.png', `/gef/application-details/${dealId}/supporting-information/document/export-licence/upload`);
-      uploadFiles.uploadSuccess('file6.png');
     });
 
     it('should verify the status of the Supporting Information section is set to `Complete`', () => {

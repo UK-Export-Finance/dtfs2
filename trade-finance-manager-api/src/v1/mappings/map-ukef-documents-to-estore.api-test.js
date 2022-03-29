@@ -115,14 +115,6 @@ const mockGefDeal = {
       documentPath: 'debtorAndCreditorReports',
     },
   ],
-  exportLicence: [
-    {
-      _id: '621f4521827574001e0ebf74',
-      parentId: '6221d87ceee25648b62aa043',
-      filename: 'file7.png',
-      documentPath: 'exportLicence',
-    },
-  ],
   status: 'Completed',
   requiredFields: [
     'manualInclusion',
@@ -132,7 +124,6 @@ const mockGefDeal = {
     'financialInformationCommentary',
     'corporateStructure',
     'debtorAndCreditorReports',
-    'exportLicence',
   ],
   securityDetails: {
     exporter: 'security text',
@@ -231,12 +222,6 @@ describe('mapUKEFDocumentsToEstore', () => {
           documentType: 'Audited_financial_statements',
           fileLocationPath: `files/portal_storage/${mockGefDeal.debtorAndCreditorReports[0]._id}/${mockGefDeal.debtorAndCreditorReports[0].documentPath}/`,
           fileName: mockGefDeal.debtorAndCreditorReports[0].filename,
-        },
-        {
-          parentId: '6221d87ceee25648b62aa043',
-          documentType: 'Financial_information_commentary',
-          fileLocationPath: `files/portal_storage/${mockGefDeal.exportLicence[0]._id}/${mockGefDeal.exportLicence[0].documentPath}/`,
-          fileName: mockGefDeal.exportLicence[0].filename,
         },
       ];
       expect(result).toEqual(expected);

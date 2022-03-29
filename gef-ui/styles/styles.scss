@@ -4,6 +4,7 @@ $govuk-new-link-styles: true;
 @import "node_modules/@ministryofjustice/frontend/moj/all";
 @import "./helpers.scss";
 @import "./footer.scss";
+@import "./accessibility.scss";
 
 .govuk-section-break {
   &--bold {
