@@ -476,8 +476,7 @@ describe('controllers/supporting-documents', () => {
           'financialForecasts',
           'financialInformationCommentary',
           'corporateStructure',
-          'debtorAndCreditorReports',
-          'exportLicence'],
+          'debtorAndCreditorReports'],
       },
     };
     const dealId = 1234;
@@ -497,11 +496,8 @@ describe('controllers/supporting-documents', () => {
     it('moves to the Aged debtor and aged creditor listing page', () => {
       expect(nextDocument(application, dealId, 'corporateStructure')).toContain('/debtor-creditor-reports');
     });
-    it('moves to the Exporter licence page', () => {
-      expect(nextDocument(application, dealId, 'debtorAndCreditorReports')).toContain('/export-licence');
-    });
     it('moves to the Security details page', () => {
-      expect(nextDocument(application, dealId, 'exportLicence')).toContain('/security-details');
+      expect(nextDocument(application, dealId, 'debtorAndCreditorReports')).toContain('/security-details');
     });
 
     it('skips the management accounts page and moves to the financial forecasts page', () => {
