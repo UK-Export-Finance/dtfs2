@@ -37,36 +37,48 @@ exports.cloneAzureFilesGef = async (supportingInformation, dealId) => {
   await newDirectory.createIfNotExists();
   const newServiceClient = ShareServiceClient.fromConnectionString(connectionString);
 
-  try {
-    for await (const document of documentPaths) {
-      newDirectory = shareClient.getDirectoryClient(`${v2RootFolder}/${dealId}/${document}`);
-      await newDirectory.createIfNotExists();
-      const dealsCollection = await db.getCollection('deals');
-      try {
-        await dealsCollection.updateOne(
-          { _id: dealId },
-          { $set: { [`supportingInformation.${document}.$[].parentId`]: dealId.toHexString() } }
-        );
-      } catch (error) {
-        console.error(`Unable to update the deal ${dealId}`, error);
+  if (supportingInformation && Object.keys(supportingInformation).length) {
+    try {
+      for await (const document of documentPaths) {
+        if (document !== 'security') {
+          newDirectory = shareClient.getDirectoryClient(`${v2RootFolder}/${dealId}/${document}`);
+          await newDirectory.createIfNotExists();
+          const dealsCollection = await db.getCollection('deals');
+          try {
+            await dealsCollection.updateOne({ _id: dealId }, { $set: { [`supportingInformation.${document}.$[].parentId`]: dealId.toHexString() } });
+          } catch (error) {
+            console.error(`Unable to update the deal ${dealId}`, error);
+          }
+
+          for await (const item of supportingInformation[document]) {
+            newFileName = item.filename;
+            const fileClient = newServiceClient
+              .getShareClient(v2ShareName)
+              .getDirectoryClient(`${v2RootFolder}/${dealId}/${document}`)
+              .getFileClient(newFileName);
+
+            copyFromURL = `https://${v1AccountName}.file.core.windows.net/${v1ShareName}/${v1RootFolder}/${item.v1Url}${v1SharedAccessSignature}`;
+
+            // eslint-disable-next-line no-await-in-loop
+            await fileClient
+              .startCopyFromURL(copyFromURL)
+              .then(() => {
+                console.info(`File ${newFileName} was uploaded successfully`);
+                return { status: 200 };
+              })
+              .catch((err) => {
+                console.info(`Unable to upload the selected file ${err}`, newFileName);
+                return { status: 400 };
+              });
+          }
+        }
       }
-
-      for (const item of supportingInformation[document]) {
-        newFileName = item.filename;
-        const fileClient = newServiceClient.getShareClient(v2ShareName).getDirectoryClient(`${v2RootFolder}/${dealId}/${document}`).getFileClient(newFileName);
-
-        copyFromURL = `https://${v1AccountName}.file.core.windows.net/${v1ShareName}/${v1RootFolder}/${item.v1Url}${v1SharedAccessSignature}`;
-
-        fileClient
-          .startCopyFromURL(copyFromURL)
-          .then(() => {
-            console.info(`File ${newFileName} was uploaded successfully`);
-          }).catch((err) => {
-            console.info(`Unable to upload the selected file ${err}`, newFileName);
-          });
-      }
+      return { status: 200 };
+    } catch (error) {
+      console.error(error);
+      return { status: 400 };
     }
-  } catch (error) {
-    console.error(error);
+  } else {
+    return { status: 200 };
   }
 };

@@ -2,9 +2,8 @@ const fs = require('fs');
 const moment = require('moment');
 const args = require('minimist')(process.argv.slice(2));
 const api = require('../api');
-const { getToken, removeMigrationUser } = require('./temporary-token-handler');
+const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 const consoleLogColor = require('./helpers/console-log-colour');
-
 
 const { file, bankId } = args;
 
@@ -22,7 +21,6 @@ const generateRoles = (v1Role) => {
 
   return [v1Role.toLowerCase()];
 };
-
 
 const apiSummary = (createdUsers) => ({
   successUsers: createdUsers.filter((createdUser) => createdUser.success).map(({ user }) => user.username),
@@ -58,39 +56,45 @@ const migrateUsers = async () => {
   const importBank = bankId ? banks.find((b) => b.id === bankId.toString()) : { name: 'All banks' };
 
   const usersV2 = usersV1Bank.map((userV1) => {
-    const bank = banks.find((b) => b.id === userV1.Bank_id);
-    if (!bank) {
-      console.info({ banks, bankId: userV1.Bank_id });
-      userNoBanksError.push(userV1.Mail);
-      consoleLogColor(`unknown bank: ${userV1.Mail}`);
-      return {};
+    if (userV1.Status !== 'Blocked') {
+      const bank = banks.find((b) => b.id === userV1.Bank_id);
+      if (!bank) {
+        console.info({ banks, bankId: userV1.Bank_id });
+        userNoBanksError.push(userV1.Mail);
+        consoleLogColor(`unknown bank: ${userV1.Mail}`);
+        return {};
+      }
+
+      const userV2 = {
+        dataMigrationInfo: {
+          v1_ID: userV1.User_id,
+        },
+        'user-status': 'active',
+        timezone: 'Europe/London',
+        username: userV1.Mail,
+        firstname: userV1.First_name,
+        surname: userV1.Last_name,
+        email: userV1.Mail,
+        roles: generateRoles(userV1.Roles),
+        bank: {
+          id: userV1.Bank_id,
+          name: bank.name,
+          emails: bank.emails,
+        },
+        disabled: userV1.Disabled === 'Disabled',
+        password: `AbC!2345_${Math.random()}`,
+      };
+
+      const lastLogin = moment(userV1.Last_login, 'DD/MM/YYYY - hh:mm').utc().valueOf().toString();
+
+      if (userV1.Last_login !== '01/01/1970 - 01:00') {
+        userV2.lastLogin = lastLogin;
+      }
+
+      return userV2;
     }
 
-    const userV2 = {
-      'user-status': 'active',
-      timezone: 'Europe/London',
-      username: userV1.Mail,
-      firstname: userV1.First_name,
-      surname: userV1.Last_name,
-      email: userV1.Mail,
-      roles: generateRoles(userV1.Roles),
-      bank: {
-        id: userV1.Bank_id,
-        name: bank.name,
-        emails: bank.emails,
-      },
-      disabled: userV1.Disabled === 'Disabled',
-      v1_ID: userV1.User_id,
-      password: `AbC!2345_${Math.random()}`,
-    };
-
-    const lastLogin = moment(userV1.Last_login, 'DD/MM/YYYY - hh:mm').utc().valueOf().toString();
-
-    if (userV1.Last_login !== '01/01/1970 - 01:00') {
-      userV2.lastLogin = lastLogin;
-    }
-
-    return userV2;
+    return {};
   });
 
   console.info('creating users');
