@@ -40,11 +40,5 @@ context('Documents', () => {
 
       cy.url().should('eq', relative(`/case/${dealId}/documents`));
     });
-
-    it('should display a link to eStore', () => {
-      pages.documentsPage.eStoreLink().invoke('text').then((value) => {
-        expect(value.trim()).equal('View in eStore');
-      });
-    });
   });
 });
