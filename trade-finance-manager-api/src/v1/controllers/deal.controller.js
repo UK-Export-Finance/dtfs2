@@ -88,6 +88,7 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
   2. BSS/EWCS - Check all the parties have a URN
   */
   const allRequiredPartiesHaveUrn = allPartiesHaveUrn(deal);
+  console.log('========', allRequiredPartiesHaveUrn);
 
   if (allRequiredPartiesHaveUrn) {
     await acbsController.createACBS(deal);
