@@ -111,7 +111,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
   // any additional fields that are located at the root of the object and that need removing can be added here
   const unusedProperties = ['_id', 'ukefDecision', 'ukefDecisionAccepted', 'checkerMIN', 'manualInclusionNoticeSubmissionDate', 'comments', 'previousStatus'];
   // removed unused properties inside the `supportingInformation` property
-  const unusedSupportingInfo = ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports', 'exportLicence'];
+  const unusedSupportingInfo = ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'];
 
   // get the current GEF deal
   const existingDeal = await collection.findOne({

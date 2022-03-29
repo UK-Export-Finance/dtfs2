@@ -201,27 +201,7 @@
             }
           ] if displayChangeSupportingInfo
         }
-      },
-      {
-        key: {
-          text: "Exporter licence"
-        },
-        value: {
-          text: "Required" if not supportingInfo.exportLicence[0],
-          classes: "has-text-danger" if not supportingInfo.exportLicence[0],
-          html: fileList(supportingInfo.exportLicence, "/files/") if supportingInfo.exportLicence[0]
-        },
-        actions: {
-          items: [
-            {
-              href: "/gef/application-details/" + dealId + "/supporting-information/document/export-licence",
-              text: "Change" if supportingInfo.exportLicence[0] else "Add",
-              visuallyHiddenText: "export licence",
-              attributes: { 'data-cy': 'supportingInfo__export-licence-cta' }
-            }
-          ] if displayChangeSupportingInfo
-        }
-      } if supportingInfo.requiredFields.includes('exportLicence')
+      }
     ]
   }) }}
 {% endif %}
