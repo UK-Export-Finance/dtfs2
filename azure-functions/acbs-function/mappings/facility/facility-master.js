@@ -68,7 +68,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     intrestOrFeeRate: helpers.getInterestOrFeeRate(facility),
     facilityStageCode,
     exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
-    creditRatingCode: CONSTANTS.FACILITY.CREDIT_RATING.CODE14,
+    creditRatingCode: helpers.getCreditRatingCode(deal),
     guaranteePercentage: helpers.getInsuredPercentage(facilityStageCode),
     premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility.facilitySnapshot),
     riskCountryCode: CONSTANTS.FACILITY.RISK.COUNTRY.UNITED_KINGDOM,
