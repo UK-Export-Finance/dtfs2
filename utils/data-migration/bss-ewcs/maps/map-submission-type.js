@@ -1,4 +1,4 @@
-const CONSTANTS = require('../../../portal-api/src/constants');
+const CONSTANTS = require('../../../../portal-api/src/constants');
 
 const mapSubmissionType = (v1Deal) => {
   const applicationRoute = v1Deal.Application_route;
@@ -14,9 +14,8 @@ const mapSubmissionType = (v1Deal) => {
       ? CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
       : CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
   }
-  
+
   return submissionType;
 };
-
 
 module.exports = mapSubmissionType;
