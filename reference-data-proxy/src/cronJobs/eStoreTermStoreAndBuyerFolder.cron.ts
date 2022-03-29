@@ -14,7 +14,11 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     // add facilityIds to TermStore
     console.info('API Call started: Add facilityIds to TermStore');
     const termStoreResponse: TermStoreResponse[] = await Promise.all(
-      eStoreData.facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id.toString() })),
+      eStoreData.facilityIdentifiers.map((id: number) => {
+        if (id) {
+          return addFacilityToTermStore({ id: id.toString() })
+        }
+      }),
     );
     if (termStoreResponse.every((term) => term.status === 201)) {
       console.info('API Call finished: The facilityIds were added to TermStore successfully');
