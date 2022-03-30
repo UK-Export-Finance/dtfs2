@@ -29,6 +29,17 @@ const cookie = {
   maxAge: 604800000, // 7 days
 };
 
+/**
+ * `secure` cookie for HTTPS environments, whilst `false` for localhost.
+ */
+app.use((req, res, next) => {
+  const { host } = req.headers;
+  if (host) {
+    cookie.secure = Boolean(host.indexOf('localhost'));
+  }
+  next();
+});
+
 app.use(seo);
 app.use(security);
 app.use(compression());
