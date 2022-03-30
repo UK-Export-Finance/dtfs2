@@ -5,6 +5,7 @@ const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
 const graphqlPermissions = require('../src/graphql/middleware/graphql-permissions');
 const graphqlKeyAuthentication = require('../src/graphql/key-authentication');
+const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
 
 const apiToken = process.env.UKEF_TFM_API_SYSTEM_KEY;
 
@@ -72,7 +73,7 @@ describe('graphql query - authentication', () => {
     it('GET - should return not authorised if missing auth key', async () => {
       const { data, errors } = await query({
         query: GET_DEAL,
-        variables: { _id: '123456789' },
+        variables: { _id: MOCK_DEAL._id },
       });
 
       expect(data.deal).toEqual(null);
@@ -119,7 +120,7 @@ describe('graphql query - authentication', () => {
     it('GET - should return result', async () => {
       const { data, errors } = await query({
         query: GET_DEAL,
-        variables: { _id: '123456789' },
+        variables: { _id: MOCK_DEAL._id },
         context: {
           headers: {
             Authorization: apiToken,
@@ -127,7 +128,7 @@ describe('graphql query - authentication', () => {
         },
       });
 
-      expect(data.deal.dealSnapshot._id).toEqual('123456789');
+      expect(data.deal.dealSnapshot._id).toEqual(MOCK_DEAL._id);
       expect(errors).toEqual(undefined);
     });
 
@@ -135,7 +136,7 @@ describe('graphql query - authentication', () => {
       const { data, errors } = await query({
         query: UPDATE_PARTIES,
         variables: {
-          id: '123456789',
+          id: MOCK_DEAL._id,
           partyUpdate,
         },
       });
@@ -173,7 +174,7 @@ describe('graphql query - authentication', () => {
     it('GET - should return result', async () => {
       const { data, errors } = await query({
         query: GET_DEAL,
-        variables: { _id: '123456789' },
+        variables: { _id: MOCK_DEAL._id },
         context: {
           headers: {
             Authorization: apiToken,
@@ -181,7 +182,7 @@ describe('graphql query - authentication', () => {
         },
       });
 
-      expect(data.deal.dealSnapshot._id).toEqual('123456789');
+      expect(data.deal.dealSnapshot._id).toEqual(MOCK_DEAL._id);
       expect(errors).toEqual(undefined);
     });
 
@@ -189,7 +190,7 @@ describe('graphql query - authentication', () => {
       const { data, errors } = await query({
         query: UPDATE_PARTIES,
         variables: {
-          id: '123456789',
+          id: MOCK_DEAL._id,
           partyUpdate,
         },
       });
