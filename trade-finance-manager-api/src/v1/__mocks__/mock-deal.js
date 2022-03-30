@@ -1,7 +1,7 @@
 const { MOCK_FACILITIES } = require('./mock-facilities');
 
 const MOCK_DEAL = {
-  _id: '61f7a4edcf809301e78fbq43',
+  _id: 'AIN_DEAL',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',
