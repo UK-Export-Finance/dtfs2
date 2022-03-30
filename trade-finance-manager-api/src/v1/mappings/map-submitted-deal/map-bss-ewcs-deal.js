@@ -11,8 +11,7 @@ const mapBssEwcsDeal = (deal) => {
     additionalRefName,
     details,
     submissionDetails,
-    bondTransactions,
-    loanTransactions,
+    facilities,
     eligibility,
     exporter,
     status,
@@ -25,9 +24,6 @@ const mapBssEwcsDeal = (deal) => {
     submissionDate,
     ukefDealId,
   } = details;
-
-  const bonds = bondTransactions.items;
-  const loans = loanTransactions.items;
 
   const mapped = {
     _id,
@@ -56,10 +52,7 @@ const mapBssEwcsDeal = (deal) => {
     destinationOfGoodsAndServices: submissionDetails.destinationOfGoodsAndServices,
     eligibility,
     supportingInformation,
-    facilities: [
-      ...bonds.map((facility) => mapBssEwcsFacility(facility)),
-      ...loans.map((facility) => mapBssEwcsFacility(facility)),
-    ],
+    facilities: facilities.map((facility) => mapBssEwcsFacility(facility)),
     tfm,
   };
 

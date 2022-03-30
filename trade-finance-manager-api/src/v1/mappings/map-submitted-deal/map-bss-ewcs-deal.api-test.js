@@ -19,8 +19,7 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       additionalRefName,
       details,
       submissionDetails,
-      bondTransactions,
-      loanTransactions,
+      facilities,
       eligibility,
       exporter,
       status,
@@ -59,16 +58,10 @@ describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
       dealValue: submissionDetails.supplyContractValue,
       destinationOfGoodsAndServices: submissionDetails.destinationOfGoodsAndServices,
       eligibility,
-      facilities: [
-        ...bondTransactions.items.map((facility) => ({
-          ...mapBssEwcsFacility(facility),
-          coverEndDate: expect.any(Object), // date object
-        })),
-        ...loanTransactions.items.map((facility) => ({
-          ...mapBssEwcsFacility(facility),
-          coverEndDate: expect.any(Object), // date object
-        })),
-      ],
+      facilities: facilities.map((facility) => ({
+        ...mapBssEwcsFacility(facility),
+        coverEndDate: expect.any(Object), // date object
+      })),
       tfm: mockDeal.tfm,
     };
 
