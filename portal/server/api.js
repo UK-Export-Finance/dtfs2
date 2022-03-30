@@ -563,7 +563,7 @@ const getDeal = async (id, token) => {
       'Content-Type': 'application/json',
     },
   });
- 
+
   return {
     status: response.status,
     deal: response.data.deal,
