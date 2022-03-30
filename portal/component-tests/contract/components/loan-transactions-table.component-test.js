@@ -11,34 +11,32 @@ describe(component, () => {
   const deal = {
     submissionType: 'Manual Inclusion Application',
     status: 'Ready for Checker\'s approval',
-    loanTransactions: {
-      items: [
-        {
-          _id: '1',
-          ukefFacilityId: '5678',
-          status: 'Incomplete',
-          value: '100',
-          currency: { id: 'GBP' },
-          facilityStage: 'Conditional',
-          hasBeenIssued: false,
-          requestedCoverStartDate: moment().utc().valueOf(),
-          name: '1234',
-          canIssueOrEditIssueFacility: true,
-        },
-        {
-          _id: '2',
-          ukefFacilityId: '5678',
-          status: 'Incomplete',
-          value: '100',
-          currency: { id: 'GBP' },
-          facilityStage: 'Conditional',
-          hasBeenIssued: false,
-          requestedCoverStartDate: moment().utc().valueOf(),
-          name: '1234',
-          canIssueOrEditIssueFacility: true,
-        },
-      ],
-    },
+    loans: [
+      {
+        _id: '1',
+        ukefFacilityId: '5678',
+        status: 'Incomplete',
+        value: '100',
+        currency: { id: 'GBP' },
+        facilityStage: 'Conditional',
+        hasBeenIssued: false,
+        requestedCoverStartDate: moment().utc().valueOf(),
+        name: '1234',
+        canIssueOrEditIssueFacility: true,
+      },
+      {
+        _id: '2',
+        ukefFacilityId: '5678',
+        status: 'Incomplete',
+        value: '100',
+        currency: { id: 'GBP' },
+        facilityStage: 'Conditional',
+        hasBeenIssued: false,
+        requestedCoverStartDate: moment().utc().valueOf(),
+        name: '1234',
+        canIssueOrEditIssueFacility: true,
+      },
+    ],
   };
 
   describe('table headings', () => {
@@ -62,7 +60,7 @@ describe(component, () => {
         user, deal, confirmedRequestedCoverStartDates: [], editable: true,
       });
 
-      deal.loanTransactions.items.forEach((facility) => {
+      deal.loans.forEach((facility) => {
         const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
         wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-bank-reference-number-link-${facility._id}"]`).toExist();
@@ -87,13 +85,13 @@ describe(component, () => {
       it('should render `change start date` link and NOT `issue facility link', () => {
         const dealWithLoansThatCanChangeCoverDate = deal;
         dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged';
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].hasBeenIssued = true;
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
+        dealWithLoansThatCanChangeCoverDate.loans[0].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loans[0].hasBeenIssued = true;
+        dealWithLoansThatCanChangeCoverDate.loans[0].issueFacilityDetailsSubmitted = true;
 
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].hasBeenIssued = true;
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
+        dealWithLoansThatCanChangeCoverDate.loans[1].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loans[1].hasBeenIssued = true;
+        dealWithLoansThatCanChangeCoverDate.loans[1].issueFacilityDetailsSubmitted = true;
 
         const wrapper = render({
           user,
@@ -101,7 +99,7 @@ describe(component, () => {
           confirmedRequestedCoverStartDates: [],
         });
 
-        deal.loanTransactions.items.forEach((facility) => {
+        deal.loans.forEach((facility) => {
           const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
@@ -117,13 +115,13 @@ describe(component, () => {
       it('should render `change start date` link', () => {
         const dealWithLoansThatCanChangeCoverDate = deal;
         dealWithLoansThatCanChangeCoverDate.status = 'Acknowledged';
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].facilityStage = 'Unconditional';
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].hasBeenIssued = true;
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[0].issueFacilityDetailsSubmitted = true;
+        dealWithLoansThatCanChangeCoverDate.loans[0].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loans[0].hasBeenIssued = true;
+        dealWithLoansThatCanChangeCoverDate.loans[0].issueFacilityDetailsSubmitted = true;
 
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].facilityStage = 'Unconditional';
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].hasBeenIssued = true;
-        dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
+        dealWithLoansThatCanChangeCoverDate.loans[1].facilityStage = 'Unconditional';
+        dealWithLoansThatCanChangeCoverDate.loans[1].hasBeenIssued = true;
+        dealWithLoansThatCanChangeCoverDate.loans[1].issueFacilityDetailsSubmitted = true;
 
         const wrapper = render({
           user: makerCheckerUser,
@@ -131,7 +129,7 @@ describe(component, () => {
           confirmedRequestedCoverStartDates: [],
         });
 
-        deal.loanTransactions.items.forEach((facility) => {
+        deal.loans.forEach((facility) => {
           const facilityIdSelector = `[data-cy="loan-${facility._id}"]`;
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="loan-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();

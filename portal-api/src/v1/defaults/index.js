@@ -10,16 +10,9 @@ const DEFAULTS = {
     submissionDetails: {
       status: 'Not started',
     },
-    bondTransactions: {
-      items: [],
-    },
-    loanTransactions: {
-      items: [],
-    },
     summary: {},
     comments: [],
     editedBy: [],
-    facilities: [],
     exporter: {},
     supportingInformation: {
       securityDetails: {

@@ -16,17 +16,17 @@ describe(component, () => {
   });
 
   it('should render number of bonds', () => {
-    const expected = String(deal.bondTransactions.items.length);
+    const expected = String(deal.bonds.length);
     wrapper.expectText('[data-cy="number-of-bonds"]').toRead(expected);
   });
 
   it('should render number of loans', () => {
-    const expected = String(deal.loanTransactions.items.length);
+    const expected = String(deal.loans.length);
     wrapper.expectText('[data-cy="number-of-loans"]').toRead(expected);
   });
 
   it('should render total number of transactions (bonds and loans)', () => {
-    const expected = String(deal.bondTransactions.items.length + deal.loanTransactions.items.length);
+    const expected = String(deal.bonds.length + deal.loans.length);
     wrapper.expectText('[data-cy="number-of-transactions"]').toRead(expected);
   });
 });

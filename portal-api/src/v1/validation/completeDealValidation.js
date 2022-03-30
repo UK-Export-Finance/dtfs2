@@ -27,12 +27,15 @@ module.exports = (deal) => {
 
   validationErrors.submissionDetailsErrors = submissionDetailsRules(deal.submissionDetails);
 
-  deal.bondTransactions.items.filter((bond) => {
+  const bonds = deal.facilities.filter((facility) => facility.type === 'Bond');
+  const loans = deal.facilities.filter((facility) => facility.type === 'Loan');
+
+  bonds.filter((bond) => {
     validationErrors.bondErrors[bond._id] = bondRules(bond, deal);
     return true;
   });
 
-  deal.loanTransactions.items.filter((loan) => {
+  loans.filter((loan) => {
     validationErrors.loanErrors[loan._id] = loanRules(loan, deal);
     return true;
   });

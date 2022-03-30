@@ -11,7 +11,7 @@ describe(component, () => {
     timezone: 'Europe/London',
   };
 
-  const loan = deal.loanTransactions.items[0];
+  const loan = deal.loans[0];
   loan.issuedDate = '1603367125920';
   loan.requestedCoverStartDate = '1603367125920';
   loan.currencySameAsSupplyContractCurrency = 'false';

@@ -61,7 +61,7 @@
     {{ eligibilityDocumentation.render(deal.supportingInformation, deal._id) }}
   {% endif %}
 
-  {% for bond in deal.bondTransactions.items %}
+  {% for bond in deal.bonds %}
     <div id="bond-{{ bond._id }}" data-cy="bond-{{ bond._id }}">
       <h3 class="govuk-heading-l">
         <span data-cy="bond-heading">Bond</span>
@@ -76,7 +76,7 @@
     </div>
   {% endfor %}
 
-  {% for loan in deal.loanTransactions.items %}
+  {% for loan in deal.loans %}
     <div id="loan-{{ loan._id }}" data-cy="loan-{{ loan._id }}">
       <h3 class="govuk-heading-l">
         <span data-cy="loan-heading">Loan</span>

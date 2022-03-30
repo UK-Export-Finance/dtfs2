@@ -136,44 +136,6 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
 };
 exports.updateDeal = updateDeal;
 
-const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
-  await findOneDeal(dealId, async (deal) => {
-    const { facilities } = deal;
-
-    const updatedFacilities = [...facilities, newFacilityId.toHexString()];
-    const dealUpdate = { ...deal, facilities: updatedFacilities };
-
-    const updatedDeal = await updateDeal(dealId, dealUpdate, user, null, routePath);
-
-    return updatedDeal;
-  });
-};
-
-exports.addFacilityIdToDeal = addFacilityIdToDeal;
-
-const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => {
-  await findOneDeal(dealId, async (deal) => {
-    if (deal && deal.facilities) {
-      const { facilities } = deal;
-
-      const updatedFacilities = facilities.filter((f) => f !== facilityId);
-
-      const dealUpdate = {
-        ...deal,
-        facilities: updatedFacilities,
-      };
-
-      const updatedDeal = await updateDeal(dealId, dealUpdate, user, null, routePath);
-
-      return updatedDeal;
-    }
-
-    return null;
-  });
-};
-
-exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
-
 exports.updateDealPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;

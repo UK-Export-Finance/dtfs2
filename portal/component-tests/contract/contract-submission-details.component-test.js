@@ -2,8 +2,8 @@ const pageRenderer = require('../pageRenderer');
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
 
 const deal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
-deal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189e1';
-deal.bondTransactions.items[1]._id = '61f6fbaea2460c018a4189e2';
+deal.bonds[0]._id = '61f6fbaea2460c018a4189e1';
+deal.bonds[1]._id = '61f6fbaea2460c018a4189e2';
 
 const page = 'contract/contract-submission-details.njk';
 
@@ -102,7 +102,7 @@ describe(page, () => {
 
   describe('Bonds', () => {
     it('should render a heading, edit link component and Bond Submission Details component', () => {
-      for (const bond of deal.bondTransactions.items) { // eslint-disable-line no-restricted-syntax
+      for (const bond of deal.bonds) { // eslint-disable-line no-restricted-syntax
         const bondSelector = `[data-cy="bond-${bond._id}"]`;
 
         wrapper.expectText(`${bondSelector} [data-cy="bond-heading"]`).toRead('Bond');
@@ -117,7 +117,7 @@ describe(page, () => {
 
   describe('Loans', () => {
     it('should render a heading, edit link and Loan Submission Details component', () => {
-      for (const loan of deal.loanTransactions.items) { // eslint-disable-line no-restricted-syntax
+      for (const loan of deal.loans) { // eslint-disable-line no-restricted-syntax
         const loanSelector = `[data-cy="loan-${loan._id}"]`;
 
         wrapper.expectText(`${loanSelector} [data-cy="loan-heading"]`).toRead('Loan');

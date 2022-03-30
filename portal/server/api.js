@@ -564,9 +564,23 @@ const getDeal = async (id, token) => {
     },
   });
 
+  const facilitiesResponse = await axios({
+    method: 'get',
+    url: `${portalApi}/v1/deals/${id}/facilities`,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const dealWithFacilities = {
+    ...response.data.deal,
+    facilities: facilitiesResponse.data,
+  };
+
   return {
     status: response.status,
-    deal: response.data.deal,
+    deal: dealWithFacilities,
     validationErrors: response.data.validationErrors,
   };
 };

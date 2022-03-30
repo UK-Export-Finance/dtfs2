@@ -6,8 +6,10 @@ const page = 'contract/contract-view.njk';
 const render = pageRenderer(page);
 const dealFullyCompleted = require('../fixtures/deal-fully-completed');
 
-const deal = { _id: '61f6fbaea2460c018a4189d7', ...dealFullyCompleted };
-deal.bondTransactions.items[0]._id = '61f6fbaea2460c018a4189d8';
+const deal = {
+  _id: '61f6fbaea2460c018a4189d7',
+  ...dealFullyCompleted,
+};
 
 const aDealInStatus = (status) => ({
   ...deal,
@@ -89,10 +91,10 @@ describe(page, () => {
 
     it('provides a link to the bond', () => {
       const dealId = deal._id;
-      const bondId = deal.bondTransactions.items[0]._id;
+      const bondId = deal.bonds[0]._id;
 
       return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="name-link-${bondId}"]`)
-        .toLinkTo(`/contract/${dealId}/bond/${bondId}/details`, deal.bondTransactions.items[0].name));
+        .toLinkTo(`/contract/${dealId}/bond/${bondId}/details`, deal.bonds[0].name));
     });
 
     it('renders bond transactions table', () =>
@@ -103,10 +105,10 @@ describe(page, () => {
 
     it('provides a link to the loan', () => {
       const dealId = deal._id;
-      const loanId = deal.loanTransactions.items[0]._id;
+      const loanId = deal.loans[0]._id;
 
       return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`)
-        .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, deal.loanTransactions.items[0].name));
+        .toLinkTo(`/contract/${dealId}/loan/${loanId}/guarantee-details`, deal.loans[0].name));
     });
 
     it('renders loan transactions table', () =>
@@ -134,12 +136,12 @@ describe(page, () => {
     it('hides the link to add a bond', () => wrappers.forEach((wrapper) => wrapper.expectLink('[data-cy="link-add-bond"]').notToExist()));
 
     it('hides the link to delete a bond', () => {
-      const bondId = deal.bondTransactions.items[0]._id;
+      const bondId = deal.bonds[0]._id;
       return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="delete-bond-${bondId}"]`).notToExist());
     });
 
     it('hides the link to the bond', () => {
-      const bondId = deal.bondTransactions.items[0]._id;
+      const bondId = deal.bonds[0]._id;
       return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="name-link-${bondId}"]`).notToExist());
     });
 
@@ -147,7 +149,7 @@ describe(page, () => {
 
     it('hides the link to the loan', () => {
       const dealId = deal._id;
-      const loanId = deal.loanTransactions.items[0]._id;
+      const loanId = deal.loans[0]._id;
 
       return wrappers.forEach((wrapper) => wrapper.expectLink(`[data-cy="loan-bank-reference-number-link-${loanId}"]`).notToExist());
     });
@@ -157,9 +159,9 @@ describe(page, () => {
     const wrappers = [];
     const dealWithNoBonds = {
       ...deal,
-      bondTransactions: {
-        items: [],
-      },
+      facilities: [
+        { type: 'Loan' },
+      ],
     };
 
     beforeAll(() => {
@@ -182,9 +184,9 @@ describe(page, () => {
     const wrappers = [];
     const dealWithNoLoans = {
       ...deal,
-      loanTransactions: {
-        items: [],
-      },
+      facilities: [
+        { type: 'Bond' },
+      ],
     };
 
     beforeAll(() => {

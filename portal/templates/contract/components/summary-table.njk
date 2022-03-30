@@ -18,7 +18,7 @@
         <th scope="row" class="govuk-table__header">Number of bonds</th>
 
         <td class="govuk-table__cell" data-cy="number-of-bonds">
-          {{ deal.bondTransactions.items.length }}
+          {{ deal.bonds.length }}
         </td>
       </tr>
 
@@ -26,7 +26,7 @@
         <th scope="row" class="govuk-table__header">Number of loans</th>
 
         <td class="govuk-table__cell" data-cy="number-of-loans">
-          {{ deal.loanTransactions.items.length }}
+          {{ deal.loans.length }}
         </td>
       </tr>
 
@@ -34,7 +34,7 @@
         <th scope="row" class="govuk-table__header">Number of transactions</th>
 
         <td class="govuk-table__cell" data-cy="number-of-transactions">
-          {{ deal.bondTransactions.items.length + deal.loanTransactions.items.length }}
+          {{ deal.bonds.length + deal.loans.length }}
         </td>
       </tr>
 

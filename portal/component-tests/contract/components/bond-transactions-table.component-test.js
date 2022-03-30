@@ -11,34 +11,32 @@ describe(component, () => {
   const deal = {
     submissionType: 'Manual Inclusion Application',
     status: 'Ready for Checker\'s approval',
-    bondTransactions: {
-      items: [
-        {
-          _id: '5f3ab3f705e6630007dcfb21',
-          ukefFacilityId: '5678',
-          status: 'Incomplete',
-          value: '100',
-          currency: { id: 'GBP' },
-          facilityStage: 'Unissued',
-          hasBeenIssued: false,
-          requestedCoverStartDate: moment().utc().valueOf(),
-          name: '1234',
-          canIssueOrEditIssueFacility: true,
-        },
-        {
-          _id: '5f3ab3f705e6630007dcfb22',
-          ukefFacilityId: '5678',
-          status: 'Incomplete',
-          value: '100',
-          currency: { id: 'GBP' },
-          facilityStage: 'Unissued',
-          hasBeenIssued: false,
-          requestedCoverStartDate: moment().utc().valueOf(),
-          name: '1234',
-          canIssueOrEditIssueFacility: true,
-        },
-      ],
-    },
+    bonds: [
+      {
+        _id: '5f3ab3f705e6630007dcfb21',
+        ukefFacilityId: '5678',
+        status: 'Incomplete',
+        value: '100',
+        currency: { id: 'GBP' },
+        facilityStage: 'Unissued',
+        hasBeenIssued: false,
+        requestedCoverStartDate: moment().utc().valueOf(),
+        name: '1234',
+        canIssueOrEditIssueFacility: true,
+      },
+      {
+        _id: '5f3ab3f705e6630007dcfb22',
+        ukefFacilityId: '5678',
+        status: 'Incomplete',
+        value: '100',
+        currency: { id: 'GBP' },
+        facilityStage: 'Unissued',
+        hasBeenIssued: false,
+        requestedCoverStartDate: moment().utc().valueOf(),
+        name: '1234',
+        canIssueOrEditIssueFacility: true,
+      },
+    ],
   };
 
   describe('table headings', () => {
@@ -62,7 +60,7 @@ describe(component, () => {
         user, deal, confirmedRequestedCoverStartDates: [], editable: true,
       });
 
-      deal.bondTransactions.items.forEach((facility) => {
+      deal.bonds.forEach((facility) => {
         const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
         wrapper.expectElement(`${facilityIdSelector} [data-cy="name-link-${facility._id}"]`).toExist();
@@ -87,13 +85,13 @@ describe(component, () => {
       it('should render `change start date` link and NOT `issue facility link', () => {
         const dealWithBondsThatCanChangeCoverDate = deal;
         dealWithBondsThatCanChangeCoverDate.status = 'Acknowledged';
-        dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].facilityStage = 'Issued';
-        dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].hasBeenIssued = true;
-        dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].issueFacilityDetailsSubmitted = true;
+        dealWithBondsThatCanChangeCoverDate.bonds[0].facilityStage = 'Issued';
+        dealWithBondsThatCanChangeCoverDate.bonds[0].hasBeenIssued = true;
+        dealWithBondsThatCanChangeCoverDate.bonds[0].issueFacilityDetailsSubmitted = true;
 
-        dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].facilityStage = 'Issued';
-        dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].hasBeenIssued = true;
-        dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].issueFacilityDetailsSubmitted = true;
+        dealWithBondsThatCanChangeCoverDate.bonds[1].facilityStage = 'Issued';
+        dealWithBondsThatCanChangeCoverDate.bonds[1].hasBeenIssued = true;
+        dealWithBondsThatCanChangeCoverDate.bonds[1].issueFacilityDetailsSubmitted = true;
 
         const wrapper = render({
           user,
@@ -101,7 +99,7 @@ describe(component, () => {
           confirmedRequestedCoverStartDates: [],
         });
 
-        deal.bondTransactions.items.forEach((facility) => {
+        deal.bonds.forEach((facility) => {
           const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
           wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();
@@ -116,13 +114,13 @@ describe(component, () => {
         it('should render `change start date` link', () => {
           const dealWithBondsThatCanChangeCoverDate = deal;
           dealWithBondsThatCanChangeCoverDate.status = 'Acknowledged';
-          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].facilityStage = 'Issued';
-          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].hasBeenIssued = true;
-          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[0].issueFacilityDetailsSubmitted = true;
+          dealWithBondsThatCanChangeCoverDate.bonds[0].facilityStage = 'Issued';
+          dealWithBondsThatCanChangeCoverDate.bonds[0].hasBeenIssued = true;
+          dealWithBondsThatCanChangeCoverDate.bonds[0].issueFacilityDetailsSubmitted = true;
 
-          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].facilityStage = 'Issued';
-          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].hasBeenIssued = true;
-          dealWithBondsThatCanChangeCoverDate.bondTransactions.items[1].issueFacilityDetailsSubmitted = true;
+          dealWithBondsThatCanChangeCoverDate.bonds[1].facilityStage = 'Issued';
+          dealWithBondsThatCanChangeCoverDate.bonds[1].hasBeenIssued = true;
+          dealWithBondsThatCanChangeCoverDate.bonds[1].issueFacilityDetailsSubmitted = true;
 
           const wrapper = render({
             user: makerCheckerUser,
@@ -130,7 +128,7 @@ describe(component, () => {
             confirmedRequestedCoverStartDates: [],
           });
 
-          deal.bondTransactions.items.forEach((facility) => {
+          deal.bonds.forEach((facility) => {
             const facilityIdSelector = `[data-cy="bond-${facility._id}"]`;
 
             wrapper.expectElement(`${facilityIdSelector} [data-cy="bond-change-or-confirm-cover-start-date-${facility._id}"]`).toExist();

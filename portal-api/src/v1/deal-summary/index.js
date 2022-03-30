@@ -135,19 +135,15 @@ const canCalculate = (supplyContractCurrency, supplyContractConversionRateToGBP,
 };
 
 const calculateDealSummary = (deal) => {
-  const {
-    submissionDetails,
-    bondTransactions,
-    loanTransactions,
-  } = deal;
+  const { submissionDetails } = deal;
 
   const {
     supplyContractCurrency,
     supplyContractConversionRateToGBP,
   } = submissionDetails;
 
-  const bonds = bondTransactions.items;
-  const loans = loanTransactions.items;
+  const bonds = deal.facilities.filter((facility) => facility.type === 'Bond');
+  const loans = deal.facilities.filter((facility) => facility.type === 'Loan');
 
   if (canCalculate(supplyContractCurrency, supplyContractConversionRateToGBP, bonds, loans)) {
     const {

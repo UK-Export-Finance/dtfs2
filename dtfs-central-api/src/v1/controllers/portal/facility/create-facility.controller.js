@@ -2,9 +2,8 @@ const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const getCreateFacilityErrors = require('../../../validation/create-facility');
 const { findOneDeal } = require('../deal/get-deal.controller');
-const { addFacilityIdToDeal } = require('../deal/update-deal.controller');
 
-const createFacility = async (facility, user, routePath) => {
+const createFacility = async (facility) => {
   const collection = await db.getCollection('facilities');
 
   const { dealId } = facility;
@@ -19,22 +18,11 @@ const createFacility = async (facility, user, routePath) => {
   const response = await collection.insertOne(newFacility);
   const { insertedId } = response;
 
-  await addFacilityIdToDeal(
-    dealId,
-    insertedId,
-    user,
-    routePath,
-  );
-
   return { _id: insertedId };
 };
 
 exports.createFacilityPost = async (req, res) => {
-  const { facility, user } = req.body;
-
-  if (!user) {
-    return res.status(404).send();
-  }
+  const { facility } = req.body;
 
   const validationErrors = getCreateFacilityErrors(facility);
 
@@ -47,7 +35,7 @@ exports.createFacilityPost = async (req, res) => {
   const deal = await findOneDeal(facility.dealId);
 
   if (deal) {
-    const createdFacility = await createFacility(facility, user, req.routePath);
+    const createdFacility = await createFacility(facility);
 
     return res.status(200).send(createdFacility);
   }

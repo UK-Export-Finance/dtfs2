@@ -3,26 +3,18 @@ const canIssueOrEditIssueFacility = require('./canIssueOrEditIssueFacility');
 const dealWithCanIssueFacilityFlags = (userRoles, deal) => {
   const modifiedDeal = deal;
 
-  const bonds = modifiedDeal.bondTransactions.items;
-  const loans = modifiedDeal.loanTransactions.items;
+  modifiedDeal.facilities.map((f) => {
+    const facility = f;
 
-  bonds.map((b) => {
-    const bond = b;
-    if (canIssueOrEditIssueFacility(userRoles, deal, b)) {
-      bond.canIssueOrEditIssueFacility = true;
+    if (canIssueOrEditIssueFacility(userRoles, deal, facility)) {
+      facility.canIssueOrEditIssueFacility = true;
     }
 
-    return bond;
+    return facility;
   });
 
-  loans.map((l) => {
-    const loan = l;
-    if (canIssueOrEditIssueFacility(userRoles, deal, l)) {
-      loan.canIssueOrEditIssueFacility = true;
-    }
-
-    return loan;
-  });
+  modifiedDeal.bonds = modifiedDeal.facilities.filter((facility) => facility.type === 'Bond');
+  modifiedDeal.loans = modifiedDeal.facilities.filter((facility) => facility.type === 'Loan');
 
   return modifiedDeal;
 };

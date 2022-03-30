@@ -51,8 +51,8 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
 
   const confirmedRequestedCoverStartDates = req.session.confirmedRequestedCoverStartDates || {};
 
-  const issuedBonds = deal.bondTransactions.items.filter((b) => b.facilityStage === 'Issued');
-  const unconditionalLoans = deal.loanTransactions.items.filter((l) => l.facilityStage === 'Unconditional');
+  const issuedBonds = deal.facilities.filter((facility) => facility.type === 'Bond' && facility.facilityStage === 'Issued');
+  const unconditionalLoans = deal.facilities.filter((facility) => facility.type === 'Loan' && facility.facilityStage === 'Unconditional');
   const issuedTotal = issuedBonds.length + unconditionalLoans.length;
 
   const allRequestedCoverStartDatesConfirmed = issuedTotal === 0

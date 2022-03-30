@@ -47,9 +47,12 @@ const addAccurateStatusesToLoans = (
   const {
     status: dealStatus,
     previousStatus: previousDealStatus,
+    facilities,
   } = deal;
 
-  if (deal.loanTransactions.items.length) {
+  const loans = facilities.filter((facility) => facility.type === 'Loan');
+
+  if (loans.length) {
     deal.loanTransactions.items.forEach((l) => {
       const loan = l;
       const validationErrors = isValidationRequired(deal) && loanValidationErrors(loan, deal);

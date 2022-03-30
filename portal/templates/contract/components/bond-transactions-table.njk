@@ -6,86 +6,84 @@
 {# TODO: component tests #}
 
 {% macro render(params) %}
-  {% if params.deal.bondTransactions.items %}
-    <div class="govuk-grid-column-full">
-      {% set dealStatus = params.deal.status %}
-      {% set dealPreviousStatus = params.deal.previousStatus %}
-      {% set bonds = params.deal.bondTransactions.items %}
-      <div class="table-overflow">
-        <table class="govuk-table contract-table contract-transactions-table govuk-!-margin-bottom-0" data-cy="bond-transactions-table">
-          <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-unique-number">Bond's unique number</th>
-              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-ukef-facility-id">UKEF facility ID</th>
-              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-status">Status</th>
-              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-value">Value</th>
-              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-stage">Stage</th>
-              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-start-date">Start date</th>
-              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-end-date">End date</th>
-              <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-action">Action</th>
-            </tr>
-          </thead>
+  <div class="govuk-grid-column-full">
+    {% set dealStatus = params.deal.status %}
+    {% set dealPreviousStatus = params.deal.previousStatus %}
+    {% set bonds = params.deal.bonds %}
+    <div class="table-overflow">
+      <table class="govuk-table contract-table contract-transactions-table govuk-!-margin-bottom-0" data-cy="bond-transactions-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-unique-number">Bond's unique number</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-ukef-facility-id">UKEF facility ID</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-status">Status</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-value">Value</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-stage">Stage</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-start-date">Start date</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-end-date">End date</th>
+            <th scope="col" class="govuk-table__header govuk-!-font-size-14" data-cy="bonds-table-header-action">Action</th>
+          </tr>
+        </thead>
 
-          <tbody class="govuk-table__body">
+        <tbody class="govuk-table__body">
 
-            {% for bond in bonds %}
-              <tr class="govuk-table__row" data-cy="bond-{{ bond._id }}">
-                <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ bondLink.render(params, bond) | safe }}
-                </td>
+          {% for bond in bonds %}
+            <tr class="govuk-table__row" data-cy="bond-{{ bond._id }}">
+              <td class="govuk-table__cell govuk-!-font-size-14">
+                {{ bondLink.render(params, bond) | safe }}
+              </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-ukef-facility-id-{{ bond._id }}">
-                  {{ bond.ukefFacilityId | safe }}
-                </td>
+              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-ukef-facility-id-{{ bond._id }}">
+                {{ bond.ukefFacilityId | safe }}
+              </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell" data-cy="bond-status-{{ bond._id}}">
-                  {{ statusTag.render(bond.status) | safe }}
-                </td>
+              <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell" data-cy="bond-status-{{ bond._id}}">
+                {{ statusTag.render(bond.status) | safe }}
+              </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-facility-value">
-                  {{ bond.currency.id | safe }} {{ bond.value | safe }}
-                </td>
+              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-facility-value">
+                {{ bond.currency.id | safe }} {{ bond.value | safe }}
+              </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="facility-stage-{{ bond._id}}">{{ bond.facilityStage | safe }}</td>
+              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="facility-stage-{{ bond._id}}">{{ bond.facilityStage | safe }}</td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-requested-cover-start-date">
-                  {% if bond.requestedCoverStartDate %}
-                  {{ bond.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) | safe }}
+              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-requested-cover-start-date">
+                {% if bond.requestedCoverStartDate %}
+                {{ bond.requestedCoverStartDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) | safe }}
+              {% endif %}
+              </td>
+
+              <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date">
+                {% if bond['coverEndDate-day'] and bond['coverEndDate-month'] and bond['coverEndDate-year'] %}
+                  {{ bond['coverEndDate-day'] | safe }}/{{ bond['coverEndDate-month'] | safe }}/{{ bond['coverEndDate-year'] | safe }}
                 {% endif %}
-                </td>
+              </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date">
-                  {% if bond['coverEndDate-day'] and bond['coverEndDate-month'] and bond['coverEndDate-year'] %}
-                    {{ bond['coverEndDate-day'] | safe }}/{{ bond['coverEndDate-month'] | safe }}/{{ bond['coverEndDate-year'] | safe }}
-                  {% endif %}
-                </td>
+              <td class="govuk-table__cell govuk-!-font-size-14">
 
-                <td class="govuk-table__cell govuk-!-font-size-14">
+                {% set dealStatusAllowsRequestedCoverDateChange = dealStatus === "Acknowledged" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Further Maker's input required" and dealPreviousStatus !== "Draft" %}
+                {% set hasConfirmedCoverStartDate = params.confirmedRequestedCoverStartDates.includes(bond._id) %}
 
-                  {% set dealStatusAllowsRequestedCoverDateChange = dealStatus === "Acknowledged" or dealStatus === "Accepted by UKEF (with conditions)" or dealStatus === "Accepted by UKEF (without conditions)" or dealStatus === "Further Maker's input required" and dealPreviousStatus !== "Draft" %}
-                  {% set hasConfirmedCoverStartDate = params.confirmedRequestedCoverStartDates.includes(bond._id) %}
+                {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: bond, facilityName: 'bond', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate, facilityTableIndex: loop.index} %}
 
-                  {% set componentData = {user: params.user, deal: params.deal, editable: params.editable, facility: bond, facilityName: 'bond', hasConfirmedCoverStartDate: hasConfirmedCoverStartDate, facilityTableIndex: loop.index} %}
+                {% set userIsMaker = params.user.roles.includes('maker')%}
 
-                  {% set userIsMaker = params.user.roles.includes('maker')%}
+                {% set dealSubmissionType = params.deal.submissionType %}
 
-                  {% set dealSubmissionType = params.deal.submissionType %}
+                {% set requestedCoverDateCanEdit = userIsMaker and bond.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.facilityStage === 'Issued' and bond.issueFacilityDetailsSubmitted %}
 
-                  {% set requestedCoverDateCanEdit = userIsMaker and bond.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.facilityStage === 'Issued' and bond.issueFacilityDetailsSubmitted %}
+                {% if requestedCoverDateCanEdit %}
+                  {{ requestedCoverStartDateLink.render(componentData) }}
 
-                  {% if requestedCoverDateCanEdit %}
-                    {{ requestedCoverStartDateLink.render(componentData) }}
+                  {% else %}
+                  {{ issueOrDeleteFacilityLink.render(componentData) }}
+                {% endif %}
+              </td>
+            </tr>
 
-                    {% else %}
-                    {{ issueOrDeleteFacilityLink.render(componentData) }}
-                  {% endif %}
-                </td>
-              </tr>
-
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-  {% endif %}
+  </div>
 {% endmacro %}

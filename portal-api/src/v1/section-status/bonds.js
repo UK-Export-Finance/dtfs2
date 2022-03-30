@@ -48,10 +48,13 @@ const addAccurateStatusesToBonds = (
   const {
     status: dealStatus,
     previousStatus: previousDealStatus,
+    facilities,
   } = deal;
 
-  if (deal.bondTransactions.items.length) {
-    deal.bondTransactions.items.forEach((b) => {
+  const bonds = facilities.filter((facility) => facility.type === 'Bond');
+
+  if (bonds.length) {
+    bonds.forEach((b) => {
       const bond = b;
       const validationErrors = isValidationRequired(deal) && bondValidationErrors(bond, deal);
       let issueFacilityValidationErrors;

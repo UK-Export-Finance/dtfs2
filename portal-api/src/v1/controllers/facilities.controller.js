@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const db = require('../../drivers/db-client');
 const api = require('../api');
 const { updateDeal } = require('./deal.controller');
@@ -67,6 +68,18 @@ exports.createMultiple = async (req, res) => {
   );
 
   return res.status(200).send(allFacilities);
+};
+
+/**
+ * Get all facilities by deal id (BSS, EWCS only)
+ */
+exports.getAllByDealId = async (req, res) => {
+  const collection = await db.getCollection('facilities');
+  const { id } = req.params;
+
+  const facilities = await collection.find({ dealId: ObjectId(id) }).toArray();
+
+  return res.status(200).send(facilities);
 };
 
 /**

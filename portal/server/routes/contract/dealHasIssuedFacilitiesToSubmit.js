@@ -1,9 +1,5 @@
 const dealHasIssuedFacilitiesToSubmit = (deal) => {
-  const bonds = deal.bondTransactions.items;
-  const loans = deal.loanTransactions.items;
-  const allFacilities = [...bonds, ...loans];
-
-  const facilitiesToSubmit = allFacilities.filter((facility) => {
+  const facilitiesToSubmit = deal.facilities.filter((facility) => {
     if (facility.issueFacilityDetailsProvided === true
       && !facility.issueFacilityDetailsSubmitted
       && facility.status !== 'Ready for check'

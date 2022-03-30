@@ -140,7 +140,7 @@
                   Bond transactions
                 </span>
             <span class="govuk-!-margin-left-6">
-              {{ statusTag.render(deal.bondTransactions.status) }}
+              {{ statusTag.render(deal.bonds.status) }}
             </span>
           </h2>
         </div>
@@ -149,7 +149,7 @@
           {{ addABondButton.render(componentData) }}
         </div>
 
-        {% if deal.bondTransactions.items.length %}
+        {% if deal.bonds.length %}
           {{ bondTransactionsTable.render(componentData) }}
         {% endif %}
 
@@ -165,7 +165,7 @@
                 </span>
 
             <span class="govuk-!-margin-left-6">
-              {{ statusTag.render(deal.loanTransactions.status) }}
+              {{ statusTag.render(deal.loans.status) }}
             </span>
 
           </h2>
@@ -175,7 +175,7 @@
           {{ addALoanButton.render(componentData) }}
         </div>
 
-        {% if deal.loanTransactions.items.length %}
+        {% if deal.loans.length %}
           {{ loanTransactionsTable.render(componentData) }}
         {% endif %}
 

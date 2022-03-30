@@ -11,7 +11,7 @@ describe(component, () => {
     timezone: 'Europe/London',
   };
 
-  const bond = deal.bondTransactions.items[0];
+  const bond = deal.bonds[0];
   bond.issuedDate = '1603367125920';
   bond.requestedCoverStartDate = '1603367125920';
   bond.currencySameAsSupplyContractCurrency = 'false';
