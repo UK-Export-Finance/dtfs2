@@ -17,13 +17,17 @@ const findOneDeal = async (_id, callback) => {
 
   const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
 
-  const extendedDeal = await extendDealWithFacilities(deal);
+  if (deal) {
+    const extendedDeal = await extendDealWithFacilities(deal);
 
-  if (callback) {
-    callback(extendedDeal);
+    if (callback) {
+      callback(extendedDeal);
+    }
+
+    return extendedDeal;
   }
 
-  return extendedDeal;
+  return { status: 400, message: 'Invalid Deal Id' };
 };
 exports.findOneDeal = findOneDeal;
 
