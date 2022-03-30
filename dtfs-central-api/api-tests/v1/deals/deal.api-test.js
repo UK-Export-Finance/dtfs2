@@ -148,7 +148,7 @@ describe('/v1/portal/deals', () => {
     });
 
     describe('when a BSS deal has facilities', () => {
-      it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
+      it('returns deal with facilities', async () => {
         const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
         const dealId = postResult.body._id;
 
@@ -182,12 +182,9 @@ describe('/v1/portal/deals', () => {
         const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
 
         expect(status).toEqual(200);
-        expect(body.deal.bondTransactions.items).toEqual([
+        expect(body.deal.facilities).toEqual([
           bond1,
           bond2,
-        ]);
-
-        expect(body.deal.loanTransactions.items).toEqual([
           loan1,
           loan2,
         ]);

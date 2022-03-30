@@ -1,25 +1,21 @@
 import { dealFormsCompleted, dealHasIncompleteTransactions } from './dealFormsCompleted';
 
-const completeFacilities = {
-  items: [
-    { _id: '12345678911', status: 'Completed' },
-    { _id: '12345678910', status: 'Completed' },
-    { _id: '12345678910', status: 'Acknowledged' },
-  ],
-};
+const completeFacilities = [
+  { _id: '12345678911', status: 'Completed' },
+  { _id: '12345678910', status: 'Completed' },
+  { _id: '12345678910', status: 'Acknowledged' },
+];
 
-const incompleteFacilities = {
-  items: [
-    { _id: '12345678911', status: 'Completed' },
-    { _id: '12345678910', status: 'Incomplete' },
-  ],
-};
+const incompleteFacilities = [
+  { _id: '12345678911', status: 'Completed' },
+  { _id: '12345678910', status: 'Incomplete' },
+];
 
-const completeBonds = completeFacilities;
-const incompleteBonds = incompleteFacilities;
+const completeBonds = completeFacilities.map((f) => ({ ...f, type: 'Bond' }));
+const incompleteBonds = incompleteFacilities.map((f) => ({ ...f, type: 'Bond' }));
 
-const completeLoans = completeFacilities;
-const incompleteLoans = incompleteFacilities;
+const completeLoans = completeFacilities.map((f) => ({ ...f, type: 'Loan' }));
+const incompleteLoans = incompleteFacilities.map((f) => ({ ...f, type: 'Loan' }));
 
 const incompleteSubmissionDetails = { status: 'not completed' };
 const completeSubmissionDetails = { status: 'Completed' };
@@ -30,8 +26,7 @@ const completeEligibility = { status: 'Completed' };
 describe('dealHasIncompleteTransactions', () => {
   it('should return true if a deal has any bonds who\'s bond.status is NOT `Completed`', () => {
     const deal = {
-      bondTransactions: incompleteBonds,
-      loanTransactions: { items: [] },
+      facilities: incompleteBonds,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -41,8 +36,7 @@ describe('dealHasIncompleteTransactions', () => {
 
   it('should return true if a deal has any loan who\'s loan.status is NOT `Completed`', () => {
     const deal = {
-      bondTransactions: { items: [] },
-      loanTransactions: incompleteLoans,
+      facilities: incompleteLoans,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -52,8 +46,7 @@ describe('dealHasIncompleteTransactions', () => {
 
   it('should return false when all bonds have `Completed` status ', () => {
     const deal = {
-      bondTransactions: completeBonds,
-      loanTransactions: { items: [] },
+      facilities: completeBonds,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -63,8 +56,7 @@ describe('dealHasIncompleteTransactions', () => {
 
   it('should return false when all loans have `Completed` status ', () => {
     const deal = {
-      bondTransactions: { items: [] },
-      loanTransactions: completeLoans,
+      facilities: completeLoans,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -77,7 +69,7 @@ describe('dealFormsCompleted', () => {
   it('should return false when a deal\'s eligibility.status is NOT `Completed`', () => {
     const deal = {
       eligibility: incompleteEligibility,
-      bondTransactions: completeBonds,
+      facilities: completeBonds,
       submissionDetails: completeSubmissionDetails,
     };
 
@@ -87,8 +79,7 @@ describe('dealFormsCompleted', () => {
   it('should return false when a deal\'s submissionDetails.status is NOT `Completed`', () => {
     const deal = {
       submissionDetails: incompleteSubmissionDetails,
-      bondTransactions: completeBonds,
-      loanTransactions: completeLoans,
+      facilities: completeFacilities,
       eligibility: completeEligibility,
     };
 
@@ -97,8 +88,7 @@ describe('dealFormsCompleted', () => {
 
   it('should return false if a deal has no bonds and no loans`', () => {
     const deal = {
-      bondTransactions: { items: [] },
-      loanTransactions: { items: [] },
+      facilities: [],
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -108,8 +98,7 @@ describe('dealFormsCompleted', () => {
 
   it('should return false if a deal has any bonds who\'s bond.status is NOT `Completed`', () => {
     const deal = {
-      bondTransactions: incompleteBonds,
-      loanTransactions: { items: [] },
+      facilities: incompleteBonds,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -119,8 +108,7 @@ describe('dealFormsCompleted', () => {
 
   it('should return false if a deal has any loan who\'s loan.status is NOT `Completed`', () => {
     const deal = {
-      bondTransactions: { items: [] },
-      loanTransactions: incompleteLoans,
+      facilities: incompleteLoans,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -130,8 +118,7 @@ describe('dealFormsCompleted', () => {
 
   it('If there are 1+ loans, should return true if all sections are in status `Completed`', () => {
     const deal = {
-      bondTransactions: { items: [] },
-      loanTransactions: completeLoans,
+      facilities: completeLoans,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -141,8 +128,7 @@ describe('dealFormsCompleted', () => {
 
   it('If there are 1+ bonds, should return true if all sections are in status `Completed`', () => {
     const deal = {
-      loanTransactions: { items: [] },
-      bondTransactions: completeBonds,
+      facilities: completeBonds,
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };
@@ -152,8 +138,10 @@ describe('dealFormsCompleted', () => {
 
   it('If there are 1+ bonds and 1+ loans, should return true if all sections are in status `Completed`', () => {
     const deal = {
-      bondTransactions: completeBonds,
-      loanTransactions: completeLoans,
+      facilities: [
+        ...completeBonds,
+        ...completeLoans,
+      ],
       submissionDetails: completeSubmissionDetails,
       eligibility: completeEligibility,
     };

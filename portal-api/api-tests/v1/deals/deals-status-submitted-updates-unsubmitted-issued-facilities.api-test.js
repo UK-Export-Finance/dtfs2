@@ -151,7 +151,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         expect(loansThatShouldBeUpdated.length > 0).toEqual(true);
 
         loansThatShouldBeUpdated.forEach((loan) => {
-          const updatedLoan = deal.loanTransactions.items.find((l) => l._id === loan._id);
+          const updatedLoan = deal.facilities.find((l) => l._id === loan._id);
 
           expect(updatedLoan.issueFacilityDetailsSubmitted).toEqual(true);
           expect(typeof updatedLoan.submittedAsIssuedDate).toEqual('number');
@@ -184,7 +184,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         expect(bondsThatShouldBeUpdated.length > 0).toEqual(true);
 
         bondsThatShouldBeUpdated.forEach((bond) => {
-          const updatedBond = deal.bondTransactions.items.find((b) => b._id === bond._id);
+          const updatedBond = deal.facilities.find((b) => b._id === bond._id);
 
           expect(updatedBond.issueFacilityDetailsSubmitted).toEqual(true);
           expect(typeof updatedBond.submittedAsIssuedDate).toEqual('number');
@@ -218,7 +218,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         expect(loansThatShouldBeUpdated.length > 0).toEqual(true);
 
         loansThatShouldBeUpdated.forEach((loan) => {
-          const updatedLoan = deal.loanTransactions.items.find((l) => l._id === loan._id);
+          const updatedLoan = deal.facilities.find((l) => l._id === loan._id);
 
           expect(updatedLoan.status).toEqual('Submitted');
         });
@@ -246,7 +246,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         expect(bondsThatShouldBeUpdated.length > 0).toEqual(true);
 
         bondsThatShouldBeUpdated.forEach((facility) => {
-          const updatedBond = deal.bondTransactions.items.find((l) => l._id === facility._id);
+          const updatedBond = deal.facilities.find((l) => l._id === facility._id);
 
           expect(updatedBond.status).toEqual('Submitted');
         });

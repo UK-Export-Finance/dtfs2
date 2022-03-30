@@ -21,6 +21,19 @@ context('Checker tries to submit a deal that has changed/newly issued facilities
       .then((insertedDeal) => {
         deal = insertedDeal;
         dealId = deal._id;
+
+        const { mockFacilities } = insertedDeal;
+
+        const facilitiesWithDealId = mockFacilities.map((f) => ({
+          ...f,
+          dealId,
+        }))
+
+        cy.createFacilities(
+          dealId,
+          facilitiesWithDealId,
+          BANK1_MAKER1,
+        );
       });
   });
 

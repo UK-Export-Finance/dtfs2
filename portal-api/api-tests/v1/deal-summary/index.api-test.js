@@ -10,6 +10,7 @@ describe('deal-summary', () => {
 
   const mockCompletedBonds = [
     {
+      type: 'Bond',
       status: 'Completed',
       value: '123456.45',
       conversionRate: '80',
@@ -20,6 +21,7 @@ describe('deal-summary', () => {
       },
     },
     {
+      type: 'Bond',
       status: 'Completed',
       value: '1000.24',
       conversionRate: '40',
@@ -33,6 +35,7 @@ describe('deal-summary', () => {
 
   const mockCompletedLoans = [
     {
+      type: 'Loan',
       status: 'Completed',
       value: '5000.10',
       conversionRate: '90',
@@ -43,6 +46,7 @@ describe('deal-summary', () => {
       },
     },
     {
+      type: 'Loan',
       status: 'Completed',
       value: '10500.67',
       conversionRate: '40',
@@ -60,17 +64,6 @@ describe('deal-summary', () => {
         submissionDetails: {
           supplyContractConversionRateToGBP: '',
         },
-        bondTransactions: {
-          items: [
-            { status: 'Completed' },
-          ],
-        },
-        loanTransactions: {
-          items: [
-            { status: 'Completed' },
-            { status: 'Completed' },
-          ],
-        },
       };
       expect(calculateDealSummary(mockDeal)).toEqual({});
     });
@@ -83,17 +76,6 @@ describe('deal-summary', () => {
           supplyContractConversionRateToGBP: '50',
           supplyContractCurrency: { id: '' }
         },
-        bondTransactions: {
-          items: [
-            { status: 'Completed' },
-          ],
-        },
-        loanTransactions: {
-          items: [
-            { status: 'Completed' },
-            { status: 'Completed' },
-          ],
-        },
       };
       expect(calculateDealSummary(mockDeal)).toEqual({});
     });
@@ -105,15 +87,10 @@ describe('deal-summary', () => {
         submissionDetails: {
           supplyContractConversionRateToGBP: '50',
         },
-        bondTransactions: {
-          items: [],
-        },
-        loanTransactions: {
-          items: [
-            { status: 'Incomplete' },
-            { status: 'Incomplete' },
-          ],
-        },
+        facilities: [
+          { type: 'Bond', status: 'Incomplete' },
+          { type: 'Loan', status: 'Incomplete' },
+        ],
       };
       expect(calculateDealSummary(mockDeal)).toEqual({});
     });
@@ -125,15 +102,10 @@ describe('deal-summary', () => {
         submissionDetails: {
           supplyContractConversionRateToGBP: '50',
         },
-        bondTransactions: {
-          items: [],
-        },
-        loanTransactions: {
-          items: [
-            { status: 'Not started' },
-            { status: 'Not started' },
-          ],
-        },
+        facilities: [
+          { type: 'Bond', status: 'Not started' },
+          { type: 'Loan', status: 'Not started' },
+        ],
       };
       expect(calculateDealSummary(mockDeal)).toEqual({});
     });
@@ -149,12 +121,9 @@ describe('deal-summary', () => {
               id: 'AUD',
             },
           },
-          bondTransactions: {
-            items: [
-              { status: null, submittedAsIssuedDate: true },
-            ],
-          },
-          loanTransactions: { items: [] }
+          facilities: [
+            { type: 'Bond' status: null, submittedAsIssuedDate: true },
+          ],
         };
         expect(calculateDealSummary(mockDeal).totalValue).toBeDefined();
         expect(calculateDealSummary(mockDeal).totalUkefExposure).toBeDefined();
@@ -170,11 +139,8 @@ describe('deal-summary', () => {
               id: 'AUD',
             },
           },
-          bondTransactions: { items: [] },
-          loanTransactions: {
-            items: [
-              { status: null, submittedAsIssuedDate: true },
-            ],
+          facilities: {
+            { type: 'Loan', status: null, submittedAsIssuedDate: true },
           },
         };
         expect(calculateDealSummary(mockDeal).totalValue).toBeDefined();
@@ -192,8 +158,10 @@ describe('deal-summary', () => {
           },
           supplyContractConversionRateToGBP: '50',
         },
-        bondTransactions: { items: mockCompletedBonds },
-        loanTransactions: { items: mockCompletedLoans },
+        facilities: [
+          ...mockCompletedBonds,
+          ...mockCompletedLoans,
+        ],
       };
 
       beforeEach(() => {
@@ -201,9 +169,9 @@ describe('deal-summary', () => {
       });
 
       describe('totalValue object', () => {
-        const calculateTotalAllBonds = (bondTransactions) => {
+        const calculateTotalAllBonds = (bonds) => {
           let total = 0;
-          bondTransactions.items.forEach((bond) => {
+          bonds.forEach((bond) => {
             if (bond.conversionRate) {
               total += Number(bond.value) / Number(bond.conversionRate);
             } else {
@@ -213,9 +181,9 @@ describe('deal-summary', () => {
           return total;
         };
 
-        const calculateTotalAllLoans = (loanTransactions) => {
+        const calculateTotalAllLoans = (loans) => {
           let total = 0;
-          loanTransactions.items.forEach((loan) => {
+          loans.forEach((loan) => {
             if (loan.conversionRate) {
               total += Number(loan.value) / Number(loan.conversionRate);
             } else {
@@ -225,8 +193,11 @@ describe('deal-summary', () => {
           return total;
         };
 
-        const totalAllBonds = calculateTotalAllBonds(mockDeal.bondTransactions);
-        const totalAllLoans = calculateTotalAllLoans(mockDeal.loanTransactions);
+        const bonds = mockDeal.facilities.filter(({ type }) => type === 'Bond');
+        const loans = mockDeal.facilities.filter(({ type }) => type === 'Loan');
+
+        const totalAllBonds = calculateTotalAllBonds(bonds);
+        const totalAllLoans = calculateTotalAllLoans(loans);
 
         it('should be returned', () => {
           expect(result.totalValue).toBeDefined();
@@ -295,36 +266,33 @@ describe('deal-summary', () => {
         });
 
         describe('completed bonds/loans GBP currency conditions', () => {
-          const mockTransactions = {
-            items: [
-              {
-                status: 'Completed',
-                value: '123456.45',
-                currency: { id: 'GBP', text: 'UK Sterling' },
-              },
-              {
-                status: 'Completed',
-                value: '1000.24',
-                currency: { id: 'EUR', text: 'Euros' },
-                conversionRate: '40',
-              },
-            ],
-          };
+          const mockFacilities: [
+            {
+              status: 'Completed',
+              value: '123456.45',
+              currency: { id: 'GBP', text: 'UK Sterling' },
+            },
+            {
+              status: 'Completed',
+              value: '1000.24',
+              currency: { id: 'EUR', text: 'Euros' },
+              conversionRate: '40',
+            },
+          ];
 
           describe('when any completed bond has a GBP currency (and therefore no conversionRate)', () => {
             let calculation;
             let expected;
 
             beforeEach(() => {
-              const mockBondTransactions = mockTransactions;
+              const mockBonds = mockFacilities.map((f) => ({ ...f, type: 'Bond' }));
 
               result = calculateDealSummary({
                 ...mockDeal,
-                bondTransactions: mockBondTransactions,
-                loanTransactions: { items: [] },
+                facilities: mockBonds,
               });
 
-              calculation = (calculateTotalAllBonds(mockBondTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
+              calculation = (calculateTotalAllBonds(mockBonds) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
               expected = formattedNumber(roundNumber(calculation), 2);
             });
 
@@ -342,14 +310,13 @@ describe('deal-summary', () => {
             let expected;
 
             beforeEach(() => {
-              const mockLoanTransactions = mockTransactions;
+              const mockLoans = mockFacilities.map((f) => ({ ...f, type: 'Bond' }));
 
               result = calculateDealSummary({
                 ...mockDeal,
-                bondTransactions: { items: [] },
-                loanTransactions: mockLoanTransactions,
+                facilities: mockLoans,
               });
-              calculation = (calculateTotalAllLoans(mockLoanTransactions) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
+              calculation = (calculateTotalAllLoans(mockLoans) / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
               expected = formattedNumber(roundNumber(calculation), 2);
             });
 
@@ -364,16 +331,18 @@ describe('deal-summary', () => {
 
           describe('when both completed loans and bonds have a GBP currency', () => {
             it('should have formatted dealInGbp calculation without using loans/bonds conversionRates', () => {
-              const mockBondTransactions = mockTransactions;
-              const mockLoanTransactions = mockTransactions;
+              const mockBonds = mockFacilities.map((f) => ({ ...f, type: 'Bond' }));
+              const mockLoans = mockFacilities.map((f) => ({ ...f, type: 'Loan' }));
 
               result = calculateDealSummary({
                 ...mockDeal,
-                bondTransactions: mockBondTransactions,
-                loanTransactions: mockLoanTransactions,
+                facilities: [
+                  ...mockBonds,
+                  ...mockLoans,
+                ],
               });
 
-              const totalBondsAndLoans = (calculateTotalAllBonds(mockBondTransactions) + calculateTotalAllLoans(mockLoanTransactions));
+              const totalBondsAndLoans = (calculateTotalAllBonds(mockBonds) + calculateTotalAllLoans(mockLoans));
               const calculation = (totalBondsAndLoans / mockDeal.submissionDetails.supplyContractConversionRateToGBP);
               const expected = formattedNumber(roundNumber(calculation), 2);
 
@@ -384,9 +353,9 @@ describe('deal-summary', () => {
       });
 
       describe('totalUkefExposure object', () => {
-        const calculateTotalAllBonds = (bondTransactions) => {
+        const calculateTotalAllBonds = (bonds) => {
           let total = 0;
-          bondTransactions.items.forEach((bond) => {
+          bonds.forEach((bond) => {
             if (bond.conversionRate) {
               total += Number(bond.ukefExposure) / Number(bond.conversionRate);
             } else {
@@ -396,9 +365,9 @@ describe('deal-summary', () => {
           return total;
         };
 
-        const calculateTotalAllLoans = (loanTransactions) => {
+        const calculateTotalAllLoans = (loans) => {
           let total = 0;
-          loanTransactions.items.forEach((loan) => {
+          loans.forEach((loan) => {
             if (loan.conversionRate) {
               total += Number(loan.ukefExposure) / Number(loan.conversionRate);
             } else {
@@ -408,8 +377,10 @@ describe('deal-summary', () => {
           return total;
         };
 
-        const totalAllBonds = calculateTotalAllBonds(mockDeal.bondTransactions);
-        const totalAllLoans = calculateTotalAllLoans(mockDeal.loanTransactions);
+        const bonds = mockDeal.facilities.filter((f) => f.type === 'Bond');
+        const loans = mockDeal.facilities.filter((f) => f.type === 'Loan');
+        const totalAllBonds = calculateTotalAllBonds(bonds);
+        const totalAllLoans = calculateTotalAllLoans(loans);
 
         it('should be returned', () => {
           expect(result.totalUkefExposure).toBeDefined();

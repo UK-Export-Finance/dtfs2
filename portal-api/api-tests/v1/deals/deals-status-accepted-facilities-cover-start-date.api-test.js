@@ -85,7 +85,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
         issuedBondsThatShouldBeUpdated.forEach((bond) => {
-          const updatedBond = body.deal.bondTransactions.items.find((b) => b._id === bond._id);
+          const updatedBond = body.deal.facilities.find((b) => b._id === bond._id);
 
           expect(updatedBond.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
           expect(typeof updatedBond.updatedAt).toEqual('number');
@@ -109,7 +109,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
         issuedLoansThatShouldBeUpdated.forEach((loan) => {
-          const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+          const updatedLoan = body.deal.facilities.find((l) => l._id === loan._id);
           expect(updatedLoan.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
           expect(typeof updatedLoan.updatedAt).toEqual('number');
         });
@@ -168,7 +168,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         expect(issuedBondsThatShouldBeUpdated.length > 0).toEqual(true);
 
         issuedBondsThatShouldBeUpdated.forEach((bond) => {
-          const updatedBond = body.deal.bondTransactions.items.find((l) => l._id === bond._id);
+          const updatedBond = body.deal.facilities.items.find((l) => l._id === bond._id);
           expect(updatedBond.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
           expect(typeof updatedBond.updatedAt).toEqual('number');
         });
@@ -191,7 +191,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         expect(issuedLoansThatShouldBeUpdated.length > 0).toEqual(true);
 
         issuedLoansThatShouldBeUpdated.forEach((loan) => {
-          const updatedLoan = body.deal.loanTransactions.items.find((l) => l._id === loan._id);
+          const updatedLoan = body.deal.facilities.find((l) => l._id === loan._id);
           expect(updatedLoan.requestedCoverStartDate).toEqual(submittedMinDeal.details.manualInclusionNoticeSubmissionDate);
           expect(typeof updatedLoan.updatedAt).toEqual('number');
         });

@@ -104,57 +104,51 @@
       }
     ]
   },
-    "bondTransactions": {
-      "items": [
-      {
-        "type": "Bond",
-        "bondIssuer": "Issuer",
-        "bondType": "Advance payment guarantee",
-        "facilityStage": "Unissued",
-        "hasBeenIssued": false,
-        "ukefGuaranteeInMonths": "10",
-        "bondBeneficiary": "",
-        "guaranteeFeePayableByBank": "9.0000",
-        "value": "12345.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "riskMarginFee": "10",
-        "coveredPercentage": "20",
-        "minimumRiskMarginFee": "30",
-        "ukefExposure": "2,469.00",
-        "feeType": "At maturity",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
+  "mockFacilities": [
+    {
+      "type": "Bond",
+      "bondIssuer": "Issuer",
+      "bondType": "Advance payment guarantee",
+      "facilityStage": "Unissued",
+      "hasBeenIssued": false,
+      "ukefGuaranteeInMonths": "10",
+      "bondBeneficiary": "",
+      "guaranteeFeePayableByBank": "9.0000",
+      "value": "12345.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "riskMarginFee": "10",
+      "coveredPercentage": "20",
+      "minimumRiskMarginFee": "30",
+      "ukefExposure": "2,469.00",
+      "feeType": "At maturity",
+      "dayCountBasis": "365",
+      "currency": {
+        "text": "GBP - UK Sterling",
+        "id": "GBP"
       }
-    ]
-  },
-  "loanTransactions": {
-    "items": [
-      {
-        "type": "Loan",
-        "facilityStage": "Unconditional",
-        "hasBeenIssued": true,
-        "name": "8888888",
-        "guaranteeFeePayableByBank": "18.0000",
-        "value": "44444.00",
-        "currencySameAsSupplyContractCurrency": "true",
-        "disbursementAmount": "100.00",
-        "interestMarginFee": "20",
-        "coveredPercentage": "21",
-        "minimumQuarterlyFee": "22",
-        "ukefExposure": "9,333.24",
-        "premiumFrequency": "Annually",
-        "premiumType": "In advance",
-        "dayCountBasis": "365",
-        "currency": {
-          "text": "GBP - UK Sterling",
-          "id": "GBP"
-        }
+    },
+    {
+      "type": "Loan",
+      "facilityStage": "Unconditional",
+      "hasBeenIssued": true,
+      "name": "8888888",
+      "guaranteeFeePayableByBank": "18.0000",
+      "value": "44444.00",
+      "currencySameAsSupplyContractCurrency": "true",
+      "disbursementAmount": "100.00",
+      "interestMarginFee": "20",
+      "coveredPercentage": "21",
+      "minimumQuarterlyFee": "22",
+      "ukefExposure": "9,333.24",
+      "premiumFrequency": "Annually",
+      "premiumType": "In advance",
+      "dayCountBasis": "365",
+      "currency": {
+        "text": "GBP - UK Sterling",
+        "id": "GBP"
       }
-    ]
-  },
+    }
+  ],
   "summary": {
     "totalValue": {
       "dealInDealCurrency": "10,000",

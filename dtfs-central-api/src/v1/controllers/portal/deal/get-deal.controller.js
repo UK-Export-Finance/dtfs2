@@ -1,41 +1,13 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
-const CONSTANTS = require('../../../../constants');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 
 const extendDealWithFacilities = async (deal) => {
   const facilitiesCollection = await db.getCollection('facilities');
   const mappedDeal = { ...deal };
-  const mappedBonds = [];
-  const mappedLoans = [];
-  const facilityIds = deal.facilities;
   const facilities = await facilitiesCollection.find({ dealId: ObjectId(deal._id) }).toArray();
 
-  facilityIds.forEach((id) => {
-    const facilityObj = facilities.find((f) => f._id.toHexString() === id);
-
-    if (facilityObj) {
-      const { type } = facilityObj;
-
-      if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
-        mappedBonds.push(facilityObj);
-      }
-
-      if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
-        mappedLoans.push(facilityObj);
-      }
-    }
-  });
-
-  if (facilityIds && facilityIds.length > 0) {
-    mappedDeal.bondTransactions = {
-      items: mappedBonds,
-    };
-
-    mappedDeal.loanTransactions = {
-      items: mappedLoans,
-    };
-  }
+  mappedDeal.facilities = facilities;
 
   return mappedDeal;
 };
@@ -45,24 +17,13 @@ const findOneDeal = async (_id, callback) => {
 
   const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
 
-  if (deal && deal.facilities) {
-    const facilityIds = deal.facilities;
-
-    if (facilityIds && facilityIds.length > 0) {
-      const extendedDeal = await extendDealWithFacilities(deal);
-      if (callback) {
-        callback(extendedDeal);
-      }
-
-      return extendedDeal;
-    }
-  }
+  const extendedDeal = await extendDealWithFacilities(deal);
 
   if (callback) {
-    callback(deal);
+    callback(extendedDeal);
   }
 
-  return deal;
+  return extendedDeal;
 };
 exports.findOneDeal = findOneDeal;
 

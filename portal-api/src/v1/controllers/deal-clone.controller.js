@@ -90,9 +90,6 @@ exports.clone = async (req, res) => {
       comments: [],
       ukefComments: [],
       ukefDecision: [],
-      bondTransactions: DEFAULTS.DEAL.bondTransactions,
-      loanTransactions: DEFAULTS.DEAL.loanTransactions,
-      facilities: DEFAULTS.DEAL.facilities,
     };
 
     if (modifiedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
@@ -114,6 +111,7 @@ exports.clone = async (req, res) => {
 
     const createdDealId = createdDeal._id;
 
+    // TODO: fix/update.
     if (cloneTransactions === 'true') {
       const hasBonds = existingDeal.bondTransactions.items.length > 0;
       const hasLoans = existingDeal.loanTransactions.items.length > 0;

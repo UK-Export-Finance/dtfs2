@@ -41,7 +41,13 @@ context('A maker selects to submit a contract for review from the view-contract 
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteBonds;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+
+        const facilitiesWithDealId = mockFacilities.map((f) => ({
+          ...f,
+          dealId,
+        }));
+
+        cy.createFacilities(dealId, facilitiesWithDealId, BANK1_MAKER1).then((createdFacilities) => {
           allCreatedFacilities.push(...createdFacilities);
         });
       });
@@ -52,7 +58,13 @@ context('A maker selects to submit a contract for review from the view-contract 
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteLoans;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+
+        const facilitiesWithDealId = mockFacilities.map((f) => ({
+          ...f,
+          dealId,
+        }));
+
+        cy.createFacilities(dealId, facilitiesWithDealId, BANK1_MAKER1).then((createdFacilities) => {
           allCreatedFacilities.push(...createdFacilities);
         });
       });
@@ -63,7 +75,13 @@ context('A maker selects to submit a contract for review from the view-contract 
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteAbout;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+
+        const facilitiesWithDealId = mockFacilities.map((f) => ({
+          ...f,
+          dealId,
+        }));
+
+        cy.createFacilities(dealId, facilitiesWithDealId, BANK1_MAKER1).then((createdFacilities) => {
           allCreatedFacilities.push(...createdFacilities);
         });
       });
@@ -74,7 +92,13 @@ context('A maker selects to submit a contract for review from the view-contract 
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithIncompleteEligibility;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+
+        const facilitiesWithDealId = mockFacilities.map((f) => ({
+          ...f,
+          dealId,
+        }));
+
+        cy.createFacilities(dealId, facilitiesWithDealId, BANK1_MAKER1).then((createdFacilities) => {
           allCreatedFacilities.push(...createdFacilities);
         });
       });
@@ -86,7 +110,12 @@ context('A maker selects to submit a contract for review from the view-contract 
 
         const { mockFacilities } = dealReadyToSubmitForReview;
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        const facilitiesWithDealId = mockFacilities.map((f) => ({
+          ...f,
+          dealId,
+        }));
+
+        cy.createFacilities(dealId, facilitiesWithDealId, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -103,7 +132,13 @@ context('A maker selects to submit a contract for review from the view-contract 
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithNoBondCoverStartDate;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+
+        const facilitiesWithDealId = mockFacilities.map((f) => ({
+          ...f,
+          dealId,
+        }));
+
+        cy.createFacilities(dealId, facilitiesWithDealId, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -120,7 +155,13 @@ context('A maker selects to submit a contract for review from the view-contract 
         dealId = insertedDeal._id;
 
         const { mockFacilities } = dealWithNoLoanCoverStartDate;
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+
+        const facilitiesWithDealId = mockFacilities.map((f) => ({
+          ...f,
+          dealId,
+        }));
+
+        cy.createFacilities(dealId, facilitiesWithDealId, BANK1_MAKER1).then((createdFacilities) => {
           const bonds = createdFacilities.filter((f) => f.type === 'Bond');
           const loans = createdFacilities.filter((f) => f.type === 'Loan');
 
@@ -171,7 +212,7 @@ context('A maker selects to submit a contract for review from the view-contract 
   });
 
   describe('when a deal has Completed Eligibility, Bonds and Loans', () => {
-    it('User can proceed to submit the deal for review', () => {
+    it.only('User can proceed to submit the deal for review', () => {
       const deal = deals.dealReadyToSubmitForReview;
 
       cy.login(BANK1_MAKER1);

@@ -24,7 +24,9 @@ module.exports = (deal) => {
     ...submissionDetailsRules(deal.submissionDetails),
   };
 
-  deal.bondTransactions.items.filter((bond) => {
+  const bonds = deal.facilities.filter((f) => f.type === 'Bond');
+
+  bonds.filter((bond) => {
     validationErrors = {
       ...validationErrors,
       ...bondRules(bond, deal).errorList,
@@ -33,7 +35,9 @@ module.exports = (deal) => {
     return true;
   });
 
-  deal.loanTransactions.items.filter((loan) => {
+  const loans = deal.facilities.filter((f) => f.type === 'Loan');
+
+  loans.filter((loan) => {
     validationErrors = {
       ...validationErrors,
       ...loanRules(loan, deal).errorList,

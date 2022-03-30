@@ -37,17 +37,11 @@ context('A checker selects to submit a contract from the view-contract page', ()
           dealLoanCoverStartDateInThePast,
         ] = insertedDeals;
 
-        const goodDealFacilities = [
-          ...goodDeal.bondTransactions.items,
-          ...goodDeal.loanTransactions.items,
-        ];
+        const goodDealFacilities = goodDeal.mockFacilities;
 
         cy.createFacilities(goodDeal._id, goodDealFacilities, BANK1_MAKER1);
 
-        const dealBondCoverStartDateInThePastFacilities = [
-          ...dealBondCoverStartDateInThePast.bondTransactions.items,
-          ...dealBondCoverStartDateInThePast.loanTransactions.items,
-        ];
+        const dealBondCoverStartDateInThePastFacilities = dealBondCoverStartDateInThePast.mockFacilities;
 
         cy.createFacilities(
           dealBondCoverStartDateInThePast._id,
@@ -55,10 +49,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
           BANK1_MAKER1,
         );
 
-        const dealLoanCoverStartDateInThePastFacilities = [
-          ...dealLoanCoverStartDateInThePast.bondTransactions.items,
-          ...dealLoanCoverStartDateInThePast.loanTransactions.items,
-        ];
+        const dealLoanCoverStartDateInThePastFacilities = dealLoanCoverStartDateInThePast.mockFacilities;
 
         cy.createFacilities(
           dealLoanCoverStartDateInThePast._id,

@@ -10,13 +10,13 @@ module.exports = () => {
 
   deal.details.submissionDate = dealSubmissionDate;
 
-  deal.loanTransactions.items[0].requestedCoverStartDate = coverStartDateBeforeDealSubmissionDate;
+  deal.mockFacilities[1].requestedCoverStartDate = coverStartDateBeforeDealSubmissionDate;
 
-  deal.loanTransactions.items[0]['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
-  deal.loanTransactions.items[0]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
-  deal.loanTransactions.items[0]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
-  deal.loanTransactions.items[0].facilityStage = 'Unconditional';
-  deal.loanTransactions.items[0].hasBeenIssued = true;
+  deal.mockFacilities[1]['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
+  deal.mockFacilities[1]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
+  deal.mockFacilities[1]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
+  deal.mockFacilities[1].facilityStage = 'Unconditional';
+  deal.mockFacilities[1].hasBeenIssued = true;
 
   return deal;
 };

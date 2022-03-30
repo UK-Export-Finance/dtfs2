@@ -137,12 +137,6 @@
         },
         "viewedPreviewPage" : true
     },
-    "bondTransactions" : {
-        "items" : []
-    },
-    "loanTransactions" : {
-        "items" : []
-    },
     "summary" : {},
     "comments" : []
 }

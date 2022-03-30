@@ -23,10 +23,7 @@ context('Checker submits a deal with all facility types to UKEF', () => {
         deal = insertedDeal;
         dealId = deal._id;
 
-        const facilitiesToCreate = [
-          ...deal.bondTransactions.items,
-          ...deal.loanTransactions.items,
-        ];
+        const facilitiesToCreate = deal.mockFacilities;
 
         cy.createFacilities(dealId, facilitiesToCreate, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.bonds = createdFacilities.filter((f) => f.type === 'Bond');

@@ -148,14 +148,9 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
       expect(body.deal.details.ukefDealId).toBeDefined();
       expect(body.deal.details.ukefDealId).toEqual(MOCK_NUMBER_GENERATOR_ID);
 
-      body.deal.bondTransactions.items.forEach((bond) => {
-        expect(bond.ukefFacilityId).toBeDefined();
-        expect(bond.ukefFacilityId).toEqual(MOCK_NUMBER_GENERATOR_ID);
-      });
-
-      body.deal.loanTransactions.items.forEach((loan) => {
-        expect(loan.ukefFacilityId).toBeDefined();
-        expect(loan.ukefFacilityId).toEqual(MOCK_NUMBER_GENERATOR_ID);
+      body.deal.facilities.forEach((facility) => {
+        expect(facility.ukefFacilityId).toBeDefined();
+        expect(facility.ukefFacilityId).toEqual(MOCK_NUMBER_GENERATOR_ID);
       });
     });
 
@@ -185,18 +180,11 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
         expect(dealAfterSecondSubmission.body.deal.details.ukefDealId).toEqual(dealAfterFirstSubmission.body.details.ukefDealId);
 
-        dealAfterSecondSubmission.body.deal.bondTransactions.items.forEach((bond) => {
-          const bondInFirstSubmission = dealAfterFirstSubmission.body.bondTransactions.items.find((b) =>
-            b._id === bond._id);
+        dealAfterSecondSubmission.body.deal.facilities.forEach((bond) => {
+          const facilityInFirstSubmission = dealAfterFirstSubmission.body.facilities.find((f) =>
+            f._id === bofacilitynd._id);
 
-          expect(bond.ukefFacilityId).toEqual(bondInFirstSubmission.ukefFacilityId);
-        });
-
-        dealAfterSecondSubmission.body.deal.loanTransactions.items.forEach((loan) => {
-          const loanInFirstSubmission = dealAfterFirstSubmission.body.loanTransactions.items.find((l) =>
-            l._id === loan._id);
-
-          expect(loan.ukefFacilityId).toEqual(loanInFirstSubmission.ukefFacilityId);
+          expect(facility.ukefFacilityId).toEqual(facilityInFirstSubmission.ukefFacilityId);
         });
       });
     });

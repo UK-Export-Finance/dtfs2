@@ -148,12 +148,6 @@
         },
         "supplyContractValue" : "10,000"
     },
-    "bondTransactions" : {
-        "items" : []
-    },
-    "loanTransactions" : {
-        "items" : []
-    },
     "summary" : {},
     "comments" : []
 }

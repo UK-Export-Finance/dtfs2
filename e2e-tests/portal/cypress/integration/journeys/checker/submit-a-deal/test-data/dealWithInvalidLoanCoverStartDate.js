@@ -8,13 +8,13 @@ module.exports = () => {
 
   const dealWithBadCoverStartDate = { ...dealReadyToSubmitForReview() };
 
-  dealWithBadCoverStartDate.loanTransactions.items[0].requestedCoverStartDate = invalidCoverStartDate;
+  dealWithBadCoverStartDate.mockFacilities[1].requestedCoverStartDate = invalidCoverStartDate;
 
-  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
-  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
-  dealWithBadCoverStartDate.loanTransactions.items[0]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
-  dealWithBadCoverStartDate.loanTransactions.items[0].facilityStage = 'Unconditional';
-  dealWithBadCoverStartDate.loanTransactions.items[0].hasBeenIssued = true;
+  dealWithBadCoverStartDate.mockFacilities[1]['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
+  dealWithBadCoverStartDate.mockFacilities[1]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
+  dealWithBadCoverStartDate.mockFacilities[1]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
+  dealWithBadCoverStartDate.mockFacilities[1].facilityStage = 'Unconditional';
+  dealWithBadCoverStartDate.mockFacilities[1].hasBeenIssued = true;
 
   return dealWithBadCoverStartDate;
 };

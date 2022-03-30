@@ -314,20 +314,6 @@
  *         items:
  *           type: string
  *           example: 123abc
- *       bondTransactions:
- *         type: object
- *         properties:
- *           items:
- *             type: array
- *             items:
- *               $ref: '#/definitions/FacilityBSS'
- *       loanTransactions:
- *         type: object
- *         properties:
- *           items:
- *             type: array
- *             items:
- *               $ref: '#/definitions/FacilityEWCS'
  *       summary:
  *         type: object
  *         properties:

@@ -70,7 +70,11 @@ const addAccurateStatusesToBonds = (
       bond.status = bondStatus(bond, validationErrors, issueFacilityValidationErrors);
     });
   }
-  return deal.bondTransactions;
+
+  return {
+    ...deal,
+    facilities,
+  };
 };
 
 module.exports = {

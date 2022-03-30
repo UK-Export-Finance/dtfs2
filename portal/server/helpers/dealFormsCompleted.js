@@ -1,7 +1,7 @@
 const completedFacilityStatus = ['Completed', 'Acknowledged'];
 
 const hasIncompleteBonds = (deal) => {
-  const allBonds = deal.bondTransactions && deal.bondTransactions.items;
+  const allBonds = deal.facilities.filter((facility) => facility.type === 'Bond');
   const totalBonds = allBonds.length;
   const completed = allBonds.filter((b) => completedFacilityStatus.includes(b.status));
 
@@ -13,7 +13,7 @@ const hasIncompleteBonds = (deal) => {
 };
 
 const hasIncompleteLoans = (deal) => {
-  const allLoans = deal.loanTransactions && deal.loanTransactions.items;
+  const allLoans = deal.facilities.filter((facility) => facility.type === 'Loan');
   const totalLoans = allLoans.length;
   const completed = allLoans.filter((l) => completedFacilityStatus.includes(l.status));
 
@@ -24,8 +24,16 @@ const hasIncompleteLoans = (deal) => {
   return true;
 };
 
-const hasAtLeastOneLoanOrBond = (deal) => deal.loanTransactions.items.length > 0
-                                       || deal.bondTransactions.items.length > 0;
+const hasAtLeastOneLoanOrBond = (deal) => {
+  const bonds = deal.facilities.filter((facility) => facility.type === 'Bond');
+  const loans = deal.facilities.filter((facility) => facility.type === 'Loan');
+
+  if (bonds.length > 0 || loans.length > 0) {
+    return true;
+  }
+
+  return false;
+};
 
 const submissionDetailsComplete = (deal) => deal.submissionDetails && deal.submissionDetails.status === 'Completed';
 

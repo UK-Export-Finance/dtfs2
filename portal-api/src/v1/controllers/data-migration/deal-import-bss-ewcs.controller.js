@@ -33,13 +33,8 @@ const importDealAndFacilities = async (req, res) => {
 
   const createdDeal = deal.ops && deal.ops[0];
 
-  const facilities = [
-    ...newDeal.bondTransactions.items,
-    ...newDeal.loanTransactions.items,
-  ];
-
   const createdFacilities = await createMultipleFacilities(
-    facilities,
+    newDeal.facilities,
     dealId,
     req.user,
   );

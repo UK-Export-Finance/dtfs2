@@ -5,6 +5,7 @@ const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
 const { findLatest: findLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
+const { getAllByDealId } = require('./facilities.controller');
 const api = require('../api');
 
 /**
@@ -13,11 +14,16 @@ const api = require('../api');
 const findOneDeal = async (_id, callback) => {
   const deal = await api.findOneDeal(_id);
 
+  const dealWithFacilities = {
+    ...deal,
+    facilities: await getAllByDealId(_id),
+  };
+
   if (callback) {
-    callback(deal);
+    callback(dealWithFacilities);
   }
 
-  return deal;
+  return dealWithFacilities;
 };
 
 exports.findOneDeal = findOneDeal;
@@ -84,10 +90,10 @@ exports.create = async (req, res) => {
 };
 
 /**
- * Find a deal (BSS, EWCS only)
+ * Find a deal and all associated facilities (BSS, EWCS only)
  */
 exports.findOne = (req, res) => {
-  findOneDeal(req.params.id, (deal) => {
+  findOneDeal(req.params.id, async (deal) => {
     if (!deal) {
       res.status(404).send();
     } else if (!userHasAccessTo(req.user, deal)) {
@@ -100,7 +106,7 @@ exports.findOne = (req, res) => {
 
       const dealWithSummary = {
         ...dealWithStatuses,
-        summary: calculateDealSummary(deal),
+        summary: calculateDealSummary(dealWithStatuses),
       };
 
       res.status(200).send({

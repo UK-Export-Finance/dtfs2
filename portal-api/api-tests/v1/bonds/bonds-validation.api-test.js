@@ -70,8 +70,6 @@ describe('/v1/deals/:id/bond', () => {
     const bondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     const { bondId: _id } = bondResponse.body;
     bondId = _id;
-
-    deal.bondTransactions = bondResponse.body.bondTransactions;
   });
 
   describe('GET /v1/deals/:id/bond/:id', () => {

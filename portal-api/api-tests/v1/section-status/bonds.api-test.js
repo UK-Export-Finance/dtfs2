@@ -121,9 +121,7 @@ describe('section-status - bond', () => {
         const mockDeal = (submissionType) => ({
           status: 'Further Maker\'s input required',
           submissionType,
-          bondTransactions: {
-            items: mockBonds,
-          },
+          facilities: mockBonds,
         });
 
         const mockDeals = [

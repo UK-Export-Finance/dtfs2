@@ -15,11 +15,11 @@ module.exports = () => {
   deal.submissionDetails['supplyContractConversionDate-month'] = now.getMonth() + 1;
   deal.submissionDetails['supplyContractConversionDate-year'] = now.getFullYear();
 
-  deal.loanTransactions.items[0].requestedCoverStartDate = now.valueOf();
+  deal.mockFacilities[1].requestedCoverStartDate = now.valueOf();
 
   const aMonthInTheFuture = nowPlusMonths(1);
-  deal.loanTransactions.items[0]['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
-  deal.loanTransactions.items[0]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
-  deal.loanTransactions.items[0]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
+  deal.mockFacilities[1]['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
+  deal.mockFacilities[1]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
+  deal.mockFacilities[1]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
   return deal;
 };

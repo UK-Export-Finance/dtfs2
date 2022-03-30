@@ -122,12 +122,6 @@
         "supplier-correspondence-address-is-different" : "true",
         "supply-contract-description" : "Description."
     },
-    "bondTransactions" : {
-        "items" : []
-    },
-    "loanTransactions" : {
-        "items" : []
-    },
     "summary" : {},
     "comments" : []
 }

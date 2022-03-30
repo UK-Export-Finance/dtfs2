@@ -83,7 +83,7 @@ authRouter.route('/deals/:id/bond/:bondId/issue-facility').put(validate({ role: 
 
 authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validate({ role: ['maker'] }), bondChangeCoverStartDate.updateBondCoverStartDate);
 
-authRouter.route('/deals/:id/facilities').get(validate({ role: ['maker'] }), facilitiesController.getAllByDealId);
+authRouter.route('/deals/:id/facilities').get(validate({ role: ['maker'] }), facilitiesController.getAllByDealIdGET);
 
 authRouter.route('/deals/:id/multiple-facilities').post(validate({ role: ['maker'] }), facilitiesController.createMultiple);
 

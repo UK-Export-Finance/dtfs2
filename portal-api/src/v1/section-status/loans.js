@@ -53,7 +53,7 @@ const addAccurateStatusesToLoans = (
   const loans = facilities.filter((facility) => facility.type === 'Loan');
 
   if (loans.length) {
-    deal.loanTransactions.items.forEach((l) => {
+    loans.forEach((l) => {
       const loan = l;
       const validationErrors = isValidationRequired(deal) && loanValidationErrors(loan, deal);
       let issueFacilityValidationErrors;
@@ -69,7 +69,11 @@ const addAccurateStatusesToLoans = (
       loan.status = loanStatus(loan, validationErrors, issueFacilityValidationErrors);
     });
   }
-  return deal.loanTransactions;
+
+  return {
+    ...deal,
+    facilities,
+  };
 };
 
 module.exports = {
