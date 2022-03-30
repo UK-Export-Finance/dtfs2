@@ -21,7 +21,7 @@ const seo = require('./middleware/headers/seo');
 const security = require('./middleware/headers/security');
 
 const PORT = process.env.PORT || 5006;
-const https = process.env.HTTPS || 0;
+const https = Boolean(process.env.HTTPS || 0);
 const cookie = {
   path: '/',
   httpOnly: true,

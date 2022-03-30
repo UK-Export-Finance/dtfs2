@@ -19,7 +19,7 @@ const security = require('./routes/middleware/headers/security');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const https = process.env.HTTPS || 0;
+const https = Boolean(process.env.HTTPS || 0);
 const cookie = {
   path: '/',
   httpOnly: true,
