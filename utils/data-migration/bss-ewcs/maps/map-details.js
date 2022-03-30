@@ -1,4 +1,4 @@
-const { getUserByEmail } = require('../../helpers/users');
+const { getBssUserByEmail } = require('../../helpers/users');
 const { convertV1Date } = require('../helpers/date-helpers');
 const formatUkefId = require('../helpers/formatUkefId');
 const log = require('../../helpers/logs');
@@ -18,7 +18,7 @@ const mapDetails = (portalDealId, v1Deal, v2SubmissionType) => {
   };
 
   if (v1Deal.Deal_information.Extra_fields.MIN_Checker.username) {
-    const checkerMIN = getUserByEmail(v1Deal.Deal_information.Extra_fields.MIN_Checker.username);
+    const checkerMIN = getBssUserByEmail(v1Deal.Deal_information.Extra_fields.MIN_Checker.username);
     if (checkerMIN.username) {
       details.checkerMIN = checkerMIN;
     } else {

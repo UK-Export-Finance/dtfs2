@@ -226,7 +226,7 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
     supportingInformation: {},
   };
 
-  if (v1Deal.field_min_maker) {
+  if (v1Deal.field_min_maker.length) {
     mapped.maker = getUserByEmail(v2Users, v1Deal.field_min_maker.email);
   } else {
     mapped.maker = getUserByEmail(v2Users, v1Deal.owner.email);
