@@ -60,8 +60,6 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
       && confirmedRequestedCoverStartDates[dealId]
       && confirmedRequestedCoverStartDates[dealId].length === issuedTotal);
 
-  console.log('----------- deal \n', deal);
-  console.log('----------- deal facilities \n', deal.facilities);
   return res.render('contract/contract-view.njk', {
     successMessage: getFlashSuccessMessage(req),
     deal: dealWithCanIssueOrEditIssueFacilityFlags(user.roles, deal),
