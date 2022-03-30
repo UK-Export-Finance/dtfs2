@@ -19,25 +19,15 @@ const security = require('./middleware/headers/security');
 
 const app = express();
 const PORT = process.env.PORT || 5003;
+const https = process.env.HTTPS || 0;
+const sessionConfiguration = sessionOptions();
 const cookie = {
   path: '/',
   httpOnly: true,
-  secure: false,
+  secure: https,
   sameSite: 'strict',
   maxAge: 604800000, // 7 days
 };
-const sessionConfiguration = sessionOptions();
-
-/**
- * `secure` cookie for HTTPS environments, whilst `false` for localhost.
- */
-app.use((req, res, next) => {
-  const { host } = req.headers;
-  if (host) {
-    cookie.secure = Boolean(host.indexOf('localhost'));
-  }
-  next();
-});
 
 app.use(seo);
 app.use(security);

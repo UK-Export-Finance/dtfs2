@@ -1865,7 +1865,8 @@ jobs:
               REDIS_HOSTNAME="$redis_hostname" \
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
+              HTTPS=1
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -2025,7 +2026,8 @@ jobs:
               REDIS_KEY="$redis_key" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
-              ESTORE_URL="${{ secrets.ESTORE_URL }}"
+              ESTORE_URL="${{ secrets.ESTORE_URL }}" \
+              HTTPS=1
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -2183,7 +2185,8 @@ jobs:
               REDIS_HOSTNAME="$redis_hostname" \
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
+              HTTPS=1
 
     - name: Secrets
       uses: azure/cli@v1.0.0
