@@ -9,7 +9,6 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const nowPlusMonth = nowPlusMonths(0);
 const issuedDateDay = format(nowPlusMonth, 'dd');
-const issuedDateMonth = format(nowPlusMonth, 'M');
 
 context('Given an MIA deal that has been submitted to UKEF, maker has issued facilities and a checker has returned the deal to maker', () => {
   let deal;
@@ -86,10 +85,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       bondRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
       pages.bondIssueFacility.issuedDateDayInput().clear();
-      console.log(nowPlusMonth)
       pages.bondIssueFacility.issuedDateDayInput().type(issuedDateDay);
-      pages.bondIssueFacility.issuedDateMonthInput().clear();
-      pages.bondIssueFacility.issuedDateMonthInput().type(issuedDateMonth);
       pages.bondIssueFacility.submit().click();
     });
 
