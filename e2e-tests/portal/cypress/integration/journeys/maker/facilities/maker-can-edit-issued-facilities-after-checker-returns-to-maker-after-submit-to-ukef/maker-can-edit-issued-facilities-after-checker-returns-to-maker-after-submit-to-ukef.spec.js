@@ -7,7 +7,7 @@ const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
-const nowPlusMonth = nowPlusMonths(1);
+const nowPlusMonth = nowPlusMonths(0);
 const issuedDateDay = format(nowPlusMonth, 'dd');
 
 context('Given an MIA deal that has been submitted to UKEF, maker has issued facilities and a checker has returned the deal to maker', () => {
