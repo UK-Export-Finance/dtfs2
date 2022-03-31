@@ -170,24 +170,24 @@ There are also a series of smaller, more generic helper functions in `/src/v1/he
 
 When a TFM user updates a task (e.g changes the status, assigns the task to someone), the UI calls the TFM API via GraphQL. The GraphQL resolver simply calls the `updateTfmTask` function (with the single task that has changed with user input). This triggers a series of events for the all tasks.
 
-1) Get the deal and all tasks from DB
-2) Finds the group that the task belongs to
-3) Maps the user-inputted task input, into the Task schema structure, adding a few fields like `dateStarted`, `dateCompleted`, `statusFrom`
-4) Checks if the task can be updated (i.e, previous task is complete)
-5) Updates the task in that group. Function now has an array of all the latest tasks (not saved to DB yet)
+1) Get the deal and all tasks from DB.
+2) Finds the group that the task belongs to.
+3) Maps the user-inputted task input, into the Task schema structure, adding a few fields like `dateStarted`, `dateCompleted`, `statusFrom`.
+4) Checks if the task can be updated (i.e, previous task is complete).
+5) Updates the task in that group. Function now has an array of all the latest tasks (not saved to DB yet).
 6) Map over _all tasks_ (including the one task that has been updated) via `updateAllTasks`. This function:
 
 - Unlocks the next task if the previous task is completed and the next task is not already unlocked. Changes `task.status` and `task.canEdit`.
 - Makes sure that if a task is completed, mark `task.canEdit` as false.
 - The above logic happens via `handleTaskEditFlagAndStatus` function, which handles and applies the business rules and task property changes to an individual task. It also return a `sendEmail` flag if the task has been unlocked. This is the core, basic functionality for all tasks.
-- if the task that is being mapped over is the task that has been requested to update - update the tasks's history array with the status changed, who it's assigned to, and who updated it.
-- if the `handleTaskEditFlagAndStatus` function returned a `sendEmail` flag, add the task to an array of emails to send.
+- If the task that is being mapped over is the task that has been requested to update - update the tasks's history array with the status changed, who it's assigned to, and who updated it.
+- If the `handleTaskEditFlagAndStatus` function returned a `sendEmail` flag, add the task to an array of emails to send.
   
 7) Unlock any tasks with special business rules (e.g when X task is completed, unlock multiple tasks in Y group). Currently the only logic for this is inside the `canUnlockUnderWritingGroupTasks` conditional.
 8) Loop over the array of emails to send (that was returned previously), make an API call for each task.
 9) For each task that has successfully sent email - add the task to a new array: `tasksToAddEmailSentFlag`.
 10) Map over all the tasks again and if the task matches a task in the `tasksToAddEmailSentFlag` array, update the task with a `emailSent` flag. This flag is a fail-safe to ensure that duplicate emails are not set.
-11) Finally, return all tasks
+11) Finally, return all tasks.
 
 ## Future
 
