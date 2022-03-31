@@ -15,7 +15,7 @@ const NEW_TASK = ({
  * @param {Array} tasks to add to a group
  * @param {Number} group ID
  * @param {Array} additional/special tasks to add to the group
- * @returns {Array} created tasks 
+ * @returns {Array} created tasks
  */
 const createGroupTasks = (
   tasks,
@@ -32,7 +32,7 @@ const createGroupTasks = (
      * Only create the task if:
      * - task title is NOT conditional and always applies.
      * - OR the task is conditional and the task title is listed in additionalTasks array
-     * */
+     */
     const shouldCreateTask = (
       !task.isConditional
       || (task.isConditional && additionalTasks.includes(task.title)));

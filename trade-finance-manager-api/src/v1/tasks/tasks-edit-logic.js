@@ -21,14 +21,14 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
      * No other tasks/groups if the task is
      * the first task in the first group.
      * Previous task is irrelevant
-     * */
+     */
     return true;
   }
 
   if (isFirstTaskInAGroup(taskId, group.id)) {
     /**
      * Check that all tasks in the previous group are completed
-     * */
+     */
     const previousGroupId = group.id - 1;
     const previousGroup = getGroupById(allTaskGroups, previousGroupId);
 
@@ -43,7 +43,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
 
   /**
    * Check that the previous task in the current group is completed
-   * */
+   */
   const previousTaskId = String(Number(taskId - 1));
 
   const previousTask = getTaskInGroupById(group.groupTasks, previousTaskId);
@@ -123,7 +123,7 @@ const handleTaskEditFlagAndStatus = (
    * If a task is completed, it can no longer be edited.
    * Therefore return the existing task as it is
    * and prevent execution of other conditions below
-   * */
+   */
   if (!isTaskThatIsBeingUpdated
     && task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
     return { updatedTask: task };
@@ -134,7 +134,7 @@ const handleTaskEditFlagAndStatus = (
      * If the task we're mapping over is the task in the requested update,
      * Just return the updated task.
      * But, if the task is completed, mark as cannot edit.
-     * */
+     */
     if (isTaskThatIsBeingUpdated) {
       if (updatedTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
         updatedTask.canEdit = false;
@@ -148,7 +148,7 @@ const handleTaskEditFlagAndStatus = (
      * - update the canEdit flag
      * - change status to 'To do'
      * - return sendEmail flag (to alert user that the task is ready)
-     * */
+     */
     if (!isTaskThatIsBeingUpdated
       && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START) {
       updatedTask.canEdit = true;
@@ -163,7 +163,7 @@ const handleTaskEditFlagAndStatus = (
   /**
    * Some tasks/groups can have any task in the group edited,
    * without the previous task being completed.
-   * */
+   */
   if (taskCanBeEditedWithoutPreviousTaskComplete(group, task)) {
     if (isTaskThatIsBeingUpdated) {
       if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {

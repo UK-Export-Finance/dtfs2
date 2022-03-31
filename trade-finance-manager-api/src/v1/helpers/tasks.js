@@ -28,7 +28,7 @@ const getTaskInGroupByTitle = (groupTasks, title) =>
 
 /**
  * Get a group by group ID
- * @param {Array} all task groups array 
+ * @param {Array} all task groups array
  * @param {Number} group ID
  * @returns {Object} Group
  */
@@ -40,7 +40,7 @@ const getGroupById = (allTaskGroups, groupId) => {
 
 /**
  * Get a group by group title
- * @param {Array} all task groups array 
+ * @param {Array} all task groups array
  * @param {String} group title
  * @returns {Object} Group
  */
@@ -88,7 +88,7 @@ const groupHasAllTasksCompleted = (groupTasks = []) => {
  * @param {String} task status changing from
  * @param {String} task status changing to
  * @returns {Boolean}
- **/
+ */
 const taskIsCompletedImmediately = (statusFrom, statusTo) => {
   if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO
     && statusTo === CONSTANTS.TASKS.STATUS.COMPLETED) {
@@ -102,7 +102,7 @@ const taskIsCompletedImmediately = (statusFrom, statusTo) => {
  * Check if the Adverse History Check task is completed.
  * @param {Array} all task groups array
  * @returns {Boolean}
- * */
+ */
 const isAdverseHistoryTaskIsComplete = (allTaskGroups) => {
   const adverseGroup = getGroupByTitle(allTaskGroups, CONSTANTS.TASKS.GROUP_TITLES.ADVERSE_HISTORY);
 
@@ -130,7 +130,7 @@ const isAdverseHistoryTaskIsComplete = (allTaskGroups) => {
  * @param {String} task status changing from
  * @param {String} task status changing to
  * @returns {Boolean}
- * */
+ */
 const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, statusTo) => {
   const isMiaDeal = (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
   const firstTaskInFirstGroup = isFirstTaskInFirstGroup(taskId, groupId);
