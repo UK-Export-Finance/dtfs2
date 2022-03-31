@@ -31,6 +31,7 @@ const getIncomeClassCode = require('./get-income-class-code');
 const getFeeRecordPeriod = require('./get-fee-record-period');
 const getFeeDates = require('./get-fee-dates');
 const getFeeAmount = require('./get-fee-amount');
+const getCreditRatingCode = require('./get-credit-rating-code');
 
 module.exports = {
   isIssued,
@@ -66,4 +67,5 @@ module.exports = {
   getFeeRecordPeriod,
   getFeeDates,
   getFeeAmount,
+  getCreditRatingCode,
 };

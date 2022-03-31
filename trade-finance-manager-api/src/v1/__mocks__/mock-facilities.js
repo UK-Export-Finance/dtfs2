@@ -1,7 +1,7 @@
 const MOCK_FACILITIES = [
   {
     _id: '61f7a4edcf809301e78fbe53',
-    dealId: '61f7a4edcf809301e78fbe41',
+    dealId: 'AIN_DEAL',
     type: 'Bond',
     bondIssuer: 'Issuer',
     bondType: 'Advance payment guarantee',

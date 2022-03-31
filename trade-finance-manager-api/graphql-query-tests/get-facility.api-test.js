@@ -18,7 +18,6 @@ const facilityReducer = require('../src/graphql/reducers/facility');
 const mockFacilityTfm = {
   ukefExposure: '1,234.00',
   ukefExposureCalculationTimestamp: '1606900616651',
-  exchangeRate: 1.23,
   facilityValueInGBP: '123,45.00',
   bondIssuerPartyUrn: '456-test',
   bondBeneficiaryPartyUrn: '123-test',
@@ -34,49 +33,49 @@ const GET_FACILITY = gql`
       _id,
       facilitySnapshot {
         _id
-        ukefFacilityId,
-        dealId,
+        ukefFacilityId
+        ukefFacilityType
+        dealId
         facilityProduct {
-          code,
+          code
           name
-        },
-        type,
-        ukefFacilityType,
-        facilityStage,
-        hasBeenIssued,
-        facilityValueExportCurrency,
-        value,
-        currency,
-        ukefExposure,
-        coveredPercentage,
-        bankFacilityReference,
-        guaranteeFeePayableToUkef,
-        bondIssuer,
-        bondBeneficiary,
-        banksInterestMargin,
-        firstDrawdownAmountInExportCurrency,
-        feeType,
-        feeFrequency,
-        dayCountBasis,
-        providedOn,
-        providedOnOther,
+        }
+        hasBeenIssued
+        type
+        facilityStage
+        facilityValueExportCurrency
+        value
+        coveredPercentage
+        bankFacilityReference
+        guaranteeFeePayableToUkef
+        bondIssuer
+        bondBeneficiary
+        bankFacilityReference
+        ukefExposure
+        banksInterestMargin
+        firstDrawdownAmountInExportCurrency
+        currency
+        feeType
+        feeFrequency
+        dayCountBasis
+        providedOn
+        providedOnOther
         dates {
-          inclusionNoticeReceived,
-          bankIssueNoticeReceived,
-          coverStartDate,
-          coverEndDate,
+          inclusionNoticeReceived
+          bankIssueNoticeReceived
+          coverStartDate
+          coverEndDate
           tenor
         }
-      },
+      }
       tfm {
-        bondIssuerPartyUrn,
-        bondBeneficiaryPartyUrn,
-        facilityValueInGBP,
+        bondIssuerPartyUrn
+        bondBeneficiaryPartyUrn
+        facilityValueInGBP
         ukefExposure {
-          exposure,
+          exposure
           timestamp
-        },
-        creditRating
+        }
         premiumSchedule {
           id
           calculationDate
@@ -90,8 +89,9 @@ const GET_FACILITY = gql`
           created
           updated
           isAtive
-        },
+        }
         premiumTotals
+        creditRating
       }
     }
   }
@@ -131,13 +131,22 @@ describe('graphql query - get facility', () => {
       tfm: mockFacility.tfm,
     };
 
-    const reducerResult = facilityReducer(initFacilityShape, MOCK_DEAL, mockDealTfm);
+    const mockDeal = {
+      dealSnapshot: MOCK_DEAL,
+      tfm: {},
+    };
+
+    const reducerResult = facilityReducer(
+      initFacilityShape,
+      MOCK_DEAL,
+      mockDealTfm,
+    );
 
     expect(data.facility._id).toEqual(MOCK_FACILITIES[0]._id);
 
     const expectedSnapshot = {
       ...reducerResult.facilitySnapshot,
-      // providedOn is in the query, but only specific to GEF facilities.
+      // these fields are in the query, but only specific to GEF facilities.
       providedOn: null,
       providedOnOther: null,
     };
