@@ -4,7 +4,11 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       <h2 class="govuk-heading-xl govuk-!-margin-top-6" data-cy="documents-heading" aria-label="Documents">Documents</h2>
-      <a  class="govuk-link" target="_ukef_estore" href="{{eStoreUrl}}/{{ tfm.estore.siteName }}/CaseLibrary/{{ tfm.estore.buyerName }}/{{ tfm.estore.folderName}}" data-cy="estore-link">View in eStore</a>
+      {% if tfm.estore and tfm.estore.siteName %}
+        <a class="govuk-link" target="_blank" rel="noreferrer noopener nofollow" href="{{eStoreUrl}}/{{ tfm.estore.siteName }}/CaseLibrary" data-cy="estore-link">View in eStore</a>
+      {% else %}
+        <p>The Documents are being uploaded</p>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

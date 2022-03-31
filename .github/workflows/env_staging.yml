@@ -32,7 +32,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -46,7 +46,7 @@ jobs:
     needs: [set-environment]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -91,7 +91,7 @@ jobs:
     needs: [set-environment, route-tables]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
 
     steps:
     - uses: azure/login@v1
@@ -188,7 +188,7 @@ jobs:
     needs: [set-environment, vnet]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
 
     - uses: azure/login@v1
@@ -240,7 +240,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
 
     - uses: azure/login@v1
@@ -277,7 +277,7 @@ jobs:
     needs: [set-environment, vnet]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -345,29 +345,11 @@ jobs:
             --source-address-prefixes "51.145.36.44" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
-
-          # David
-          az network nsg rule create --name team-ips-david --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 1000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "195.188.184.171" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
           # UKEF IP
           az network nsg rule create --name team-ips-ukef --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 3000 --direction Inbound --protocol "*" --access Allow \
             --source-address-prefixes "51.140.76.208" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Tony B
-          az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 4001 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "87.74.98.153" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Caroline - VM
-          az network nsg rule create --name team-ips-caroline-vm --nsg-name tfs-${{ env.environment }}-gw-nsg \
-          --priority 4002 --direction Inbound --protocol "*" --access Allow \
-          --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
-          --destination-address-prefixes "*" --destination-port-ranges "*"
 
 
     - name: Associate NSG to gateway subnet
@@ -385,7 +367,7 @@ jobs:
     needs: [set-environment, vnet]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -450,7 +432,7 @@ jobs:
     needs: [set-environment, cosmos-db-create]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -500,7 +482,7 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-mandatoryCriteriaVersioned || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-mandatoryCriteriaVersioned --shard "_id" \
             --idx '[{"key": {"keys": ["version"]}}, {"key": {"keys": ["_id"]}}]'
-          
+
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria --shard "_id" \
             --idx '[{"key": {"keys": ["version"]}}, {"key": {"keys": ["_id"]}}]'
@@ -518,13 +500,13 @@ jobs:
 
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name feedback || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name feedback --shard "_id"
-    
+
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
     needs: [set-environment, cosmos-db-init, private-dns]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -615,7 +597,7 @@ jobs:
     needs: [set-environment, vnet, private-dns]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -709,7 +691,7 @@ jobs:
     needs: [set-environment, vnet, private-dns]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -791,7 +773,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, file-storage]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -917,7 +899,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, file-storage]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1043,7 +1025,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, functions-acbs, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1202,6 +1184,7 @@ jobs:
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
+              GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
               ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" \
               AZURE_ACBS_FUNCTION_URL="https://$acbs_function_url" \
               GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
@@ -1214,7 +1197,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1370,7 +1353,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, file-storage, trade-finance-manager-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1551,7 +1534,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1708,7 +1691,8 @@ jobs:
               UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
               TFM_URI="${{ secrets.TFM_URI }}" \
               AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
-              AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}"
+              AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}" \
+              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}"
 
   # END API setup
 
@@ -1718,7 +1702,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, portal-api, reference-data-proxy, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -1877,7 +1861,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -2036,7 +2020,7 @@ jobs:
     needs: [set-environment, vnet, private-dns, portal-api, reference-data-proxy, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -2198,7 +2182,7 @@ jobs:
     needs: [set-environment, vnet, public-ip, portal-ui, gef-ui]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -2402,7 +2386,7 @@ jobs:
     needs: [set-environment, vnet, public-ip, trade-finance-manager-ui]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -2497,7 +2481,7 @@ jobs:
     needs: [set-environment, application-gateway-portal]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:
@@ -2551,7 +2535,7 @@ jobs:
     needs: [set-environment, application-gateway-tfm]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, linux, deployment]
     steps:
     - uses: azure/login@v1
       with:

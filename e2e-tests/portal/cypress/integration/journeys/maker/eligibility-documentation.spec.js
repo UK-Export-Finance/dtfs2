@@ -62,13 +62,13 @@ context('Eligibility Documentation', () => {
 
   it('should only display upload button when a file has been chosen', () => {
     taskListHeader.itemLink('supporting-documentation').click();
-    eligibilityDocumentation.downloadMIQuestionaireLinkDoc().contains('Download Manual Inclusion Questionnaire.docx (21KB)');
+    eligibilityDocumentation.downloadMIQuestionaireLinkDoc().contains('Download Manual Inclusion Questionnaire.docx (22KB)');
     eligibilityDocumentation.downloadMIQuestionaireLinkDoc().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal('/assets/files/Manual%20Inclusion%20Questionnaire%20v2_0.docx');
+      expect(href).to.equal('/assets/files/BSS EWCS Manual Inclusion Questionnaire.docx');
     });
-    eligibilityDocumentation.downloadMIQuestionaireLinkPdf().contains('Download Manual Inclusion Questionnaire.pdf (129KB)');
+    eligibilityDocumentation.downloadMIQuestionaireLinkPdf().contains('Download Manual Inclusion Questionnaire.pdf (95KB)');
     eligibilityDocumentation.downloadMIQuestionaireLinkPdf().invoke('attr', 'href').then((href) => {
-      expect(href).to.equal('/assets/files/Manual%20Inclusion%20Questionnaire%20v2_0.pdf');
+      expect(href).to.equal('/assets/files/BSS EWCS Manual Inclusion Questionnaire.pdf');
     });
     eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
     eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');

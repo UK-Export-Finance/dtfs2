@@ -346,29 +346,11 @@ jobs:
             --source-address-prefixes "51.145.36.44" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
-
-          # David
-          az network nsg rule create --name team-ips-david --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 1000 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "195.188.184.171" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
           # UKEF IP
           az network nsg rule create --name team-ips-ukef --nsg-name tfs-${{ env.environment }}-gw-nsg \
             --priority 3000 --direction Inbound --protocol "*" --access Allow \
             --source-address-prefixes "51.140.76.208" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Tony B
-          az network nsg rule create --name team-ips-tonyb --nsg-name tfs-${{ env.environment }}-gw-nsg \
-            --priority 4001 --direction Inbound --protocol "*" --access Allow \
-            --source-address-prefixes "87.74.98.153" --source-port-ranges "*" \
-            --destination-address-prefixes "*" --destination-port-ranges "*"
-
-          # Caroline - VM
-          az network nsg rule create --name team-ips-caroline-vm --nsg-name tfs-${{ env.environment }}-gw-nsg \
-          --priority 4002 --direction Inbound --protocol "*" --access Allow \
-          --source-address-prefixes "51.132.249.180" --source-port-ranges "*" \
-          --destination-address-prefixes "*" --destination-port-ranges "*"
 
 
     - name: Associate NSG to gateway subnet
@@ -501,7 +483,7 @@ jobs:
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-mandatoryCriteriaVersioned || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name gef-mandatoryCriteriaVersioned --shard "_id" \
             --idx '[{"key": {"keys": ["version"]}}, {"key": {"keys": ["_id"]}}]'
-          
+
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name eligibilityCriteria --shard "_id" \
             --idx '[{"key": {"keys": ["version"]}}, {"key": {"keys": ["_id"]}}]'
@@ -519,7 +501,7 @@ jobs:
 
           az cosmosdb mongodb collection show   --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name feedback || \
           az cosmosdb mongodb collection create --account tfs-${{ env.environment }}-mongo --database-name ${{ env.database_name }} --name feedback --shard "_id"
-    
+
   cosmos-db-private:
     name: Cosmos DB (Mongo) Make Private
     needs: [set-environment, cosmos-db-init, private-dns]
@@ -1203,6 +1185,7 @@ jobs:
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \
+              GOV_NOTIFY_EMAIL_RECIPIENT="${{ env.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
               ORDNANCE_SURVEY_API_KEY="${{ secrets.ORDNANCE_SURVEY_API_KEY }}" \
               AZURE_ACBS_FUNCTION_URL="https://$acbs_function_url" \
               GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
@@ -1709,7 +1692,8 @@ jobs:
               UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
               TFM_URI="${{ secrets.TFM_URI }}" \
               AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
-              AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}"
+              AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}" \
+              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}"
 
   # END API setup
 

@@ -34,9 +34,4 @@ exports.docType = {
     title: 'Add aged debtor and aged creditor reports',
     path: 'debtor-creditor-reports',
   },
-  'export-licence': {
-    fieldName: 'exportLicence',
-    title: 'Add export licence',
-    path: 'export-licence',
-  },
 };

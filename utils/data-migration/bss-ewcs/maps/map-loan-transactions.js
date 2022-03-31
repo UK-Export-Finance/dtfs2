@@ -1,13 +1,12 @@
-
 const { getCurrencyById, formatCurrency } = require('../helpers/currencies');
 const { convertV1Date } = require('../helpers/date-helpers');
-const { getUserByEmail } = require('../helpers/users');
+const { getUserByEmail } = require('../../helpers/users');
 const formatUkefId = require('../helpers/formatUkefId');
 
 const findPortalValue = require('./findPortalValue');
-const CONSTANTS = require('../../../portal-api/src/constants');
+const CONSTANTS = require('../../../../portal-api/src/constants');
 
-const log = require('../helpers/log');
+const log = require('../../helpers/logs');
 
 const mapLoanTransactions = (portalDealId, v1Deal) => {
   let hasError = false;
@@ -98,7 +97,6 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
 
     return v2loan;
   };
-
 
   const { Facilities: { EWCS: loan } } = v1Deal;
 

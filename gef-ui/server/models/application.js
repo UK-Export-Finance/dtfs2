@@ -10,7 +10,7 @@ const termToSupportDocuments = {
   coverStart: ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
   noticeDate: ['manualInclusion'],
   facilityLimit: ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'],
-  exporterDeclaration: ['manualInclusion', 'exportLicence'],
+  exporterDeclaration: ['manualInclusion'],
   dueDiligence: ['manualInclusion'],
   revenueThreshold: ['manualInclusion'],
   facilityLetter: ['manualInclusion'],

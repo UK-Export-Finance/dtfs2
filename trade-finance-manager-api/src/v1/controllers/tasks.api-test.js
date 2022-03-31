@@ -177,7 +177,7 @@ describe('tasks controller', () => {
         })),
       };
 
-      it('should unlock all tasks in the Underwriting group', async () => {
+      it('should unlock all tasks in the Underwriting group and send an email for every unlocked task in the Underwriting group', async () => {
         const tfmTaskUpdate = createTaskUpdateObj(2, 1);
 
         const result = await updateAllTasks(
@@ -200,24 +200,8 @@ describe('tasks controller', () => {
 
         expect(underwritingGroup.groupTasks[2].status).toEqual(CONSTANTS.TASKS.STATUS.TO_DO);
         expect(underwritingGroup.groupTasks[2].canEdit).toEqual(true);
-      });
-
-      it('should send an email for every unlocked task in the Underwriting group', async () => {
-        const tfmTaskUpdate = createTaskUpdateObj(2, 1);
-
-        const result = await updateAllTasks(
-          tasksWithAdverseHistoryTaskComplete,
-          tfmTaskUpdate.groupId,
-          tfmTaskUpdate,
-          CONSTANTS.TASKS.STATUS.TO_DO,
-          MOCK_DEAL_MIA_SUBMITTED,
-          mockUrlOrigin,
-        );
 
         expect(api.sendEmail).toHaveBeenCalled();
-
-        const underwritingGroup = result.find((group) =>
-          group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING);
 
         const underwritingTeamEmail = MOCK_TEAMS.find((team) => team.id === CONSTANTS.TEAMS.UNDERWRITERS.id).email;
 

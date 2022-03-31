@@ -1,4 +1,4 @@
-const MANDATORY_CRITERIA = require('../../mock-data-loader/bss/mandatoryCriteria');
+const MANDATORY_CRITERIA = require('../../../mock-data-loader/bss/mandatoryCriteria');
 const mandatoryCriteriaRequired = require('../helpers/mandatory-criteria-required');
 
 const mapMandatoryCriteria = (v1Deal) => {

@@ -42,8 +42,8 @@ describe(page, () => {
   });
 
   it('should render the eStore links', () => {
-    const { tfm, eStoreUrl } = params;
-    const eStoreLink = `${eStoreUrl}/${tfm.estore.siteName}/CaseLibrary/${tfm.estore.buyerName}/${tfm.estore.folderName}`;
+    const { eStoreUrl } = params;
+    const eStoreLink = `${eStoreUrl}/${params.tfm.estore.siteName}/CaseLibrary`;
 
     wrapper.expectLink('[data-cy="estore-link"]').toLinkTo(eStoreLink, 'View in eStore');
   });

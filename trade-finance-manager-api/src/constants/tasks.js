@@ -41,7 +41,7 @@ const AIN = {
 
 const MIA_GROUP_1_TASKS = {
   FILE_ALL_DEAL_EMAILS: 'File all deal emails in this deal',
-  CREATE_CREDIT_ANALYSIS_DOCUMENT: 'Create a credit analysis document',
+  CREATE_CREDIT_ANALYSIS_DOCUMENT: 'Create a credit submission document',
   ASSIGN_AN_UNDERWRITER: 'Assign an underwriter for this deal',
   COMPLETE_AGENT_CHECK: 'Complete an agent check',
 };
@@ -53,12 +53,12 @@ const MIA_ADVERSE_HISTORY_GROUP_TASKS = {
 const MIA_GROUP_3_TASKS = {
   CHECK_EXPOSURE: 'Check exposure',
   GIVE_EXPORTER_A_CREDIT_RATING: 'Give the exporter a credit rating',
-  COMPLETE_CREDIT_ANALYSIS: 'Complete the credit analysis',
+  COMPLETE_CREDIT_ANALYSIS: 'Complete the credit submission',
 };
 
 const MIA_GROUP_4_TASKS = {
   CHECK_ADVERSE_HISTORY_CHECK: 'Check adverse history check',
-  CHECK_THE_CREDIT_ANALYSIS: 'Check the credit analysis',
+  CHECK_THE_CREDIT_ANALYSIS: 'Check the credit submission',
   COMPLETE_RISK_ANALYSIS: 'Complete risk analysis (RAD)',
   APPROVE_OR_DECLINE_THE_DEAL: 'Approve or decline the deal',
 };

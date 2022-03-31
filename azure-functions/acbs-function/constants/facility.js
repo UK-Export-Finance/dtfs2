@@ -130,7 +130,37 @@ const LIMIT_TYPE = {
 };
 
 const CREDIT_RATING = {
-  CODE14: '14',
+  AAA: '01',
+  AA_PLUS: '02',
+  AA: '03',
+  AA_MINUS: '04',
+  A_PLUS: '05',
+  A: '06',
+  A_MINUS: '07',
+  BBB_PLUS: '08',
+  BBB: '09',
+  BBB_MINUS: '10',
+  BB_PLUS: '11',
+  BB: '12',
+  BB_MINUS: '13',
+  B_PLUS: '14',
+  B: '15',
+  B_MINUS: '16',
+  CCC_PLUS: '17',
+  CCC: '18',
+  CCC_MINUS: '19',
+  CC_PLUS: '20',
+  CC: '21',
+  CC_MINUS: '22',
+  C_PLUS: '23',
+  C: '24',
+  C_MINUS: '25',
+  D: '27',
+  GOOD: '28',
+  STANDARD: '29',
+  ACCEPTABLE: '30',
+  NOT_KNOWN: '98',
+  NOT_APPLICABLE: '99',
 };
 
 const RISK = {

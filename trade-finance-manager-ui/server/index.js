@@ -45,7 +45,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/', feedbackRoutes);
 app.use(csrf({
-  cookie,
+  cookie: {
+    ...cookie,
+    maxAge: 43200, // 12 hours
+  },
 }));
 app.use(csrfToken());
 

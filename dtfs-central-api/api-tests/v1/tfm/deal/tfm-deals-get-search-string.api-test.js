@@ -17,7 +17,7 @@ describe('/v1/tfm/deals', () => {
 
   describe('GET /v1/tfm/deals', () => {
     describe('filter by search string', () => {
-      it('returns deals filtered by ukefDealId', async () => {
+      it('returns deals filtered by deal.details.ukefDealId (BSS/EWCS)', async () => {
         const miaDeal = newDeal({
           details: {
             ukefDealId: 'test-1',
@@ -47,6 +47,38 @@ describe('/v1/tfm/deals', () => {
 
         const expectedDeals = submittedDeals.filter((deal) =>
           deal.dealSnapshot.details.ukefDealId === miaDeal.details.ukefDealId);
+
+        expect(body.deals.length).toEqual(expectedDeals.length);
+
+        expect(body.deals).toEqual(expectedDeals);
+      });
+
+      it('returns deals filtered by deal.ukefDealId (GEF)', async () => {
+        const miaDeal = newDeal({
+          ukefDealId: 'test-1',
+        });
+
+        const minDeal = newDeal({
+          ukefDealId: 'test-2',
+        });
+
+        const submittedDeals = await createAndSubmitDeals([
+          miaDeal,
+          minDeal,
+        ]);
+
+        const mockReqBody = {
+          queryParams: {
+            searchString: miaDeal.ukefDealId,
+          },
+        };
+
+        const { status, body } = await api.get('/v1/tfm/deals', mockReqBody);
+
+        expect(status).toEqual(200);
+
+        const expectedDeals = submittedDeals.filter((deal) =>
+          deal.dealSnapshot.ukefDealId === miaDeal.ukefDealId);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 

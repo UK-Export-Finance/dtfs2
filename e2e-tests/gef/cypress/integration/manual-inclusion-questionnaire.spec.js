@@ -49,14 +49,14 @@ context('manual inclusion Page', () => {
     });
 
     it('displays the correct text for questionnaire download', () => {
-      manualInclusion.templateLinkDocx().contains('Download Manual Inclusion Questionnaire.docx (24KB)');
+      manualInclusion.templateLinkDocx().contains('Download Manual Inclusion Questionnaire.docx (49KB)');
       manualInclusion.templateLinkDocx().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('/gef/assets/files/GEF%20Manual%20Inclusion%20Questionnaire%20-%20MM%20v2.docx');
+        expect(href).to.equal('/gef/assets/files/GEF Manual Inclusion Questionnaire.docx');
       });
 
-      manualInclusion.templateLinkPdf().contains('Download Manual Inclusion Questionnaire.pdf (87KB)');
+      manualInclusion.templateLinkPdf().contains('Download Manual Inclusion Questionnaire.pdf (92KB)');
       manualInclusion.templateLinkPdf().invoke('attr', 'href').then((href) => {
-        expect(href).to.equal('/gef/assets/files/GEF%20Manual%20Inclusion%20Questionnaire%20-%20MM%20v2.pdf');
+        expect(href).to.equal('/gef/assets/files/GEF Manual Inclusion Questionnaire.pdf');
       });
     });
 

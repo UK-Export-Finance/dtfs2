@@ -222,6 +222,12 @@ const postTfmFacility = async (req, res) => {
     }),
   );
 
+  /**
+   * Trigger's ACBS upon bond `beneficiary`
+   * and `issuer` URN criteria match.
+   * */
+  await api.updateParty(dealId, deal.parties);
+
   return res.redirect(`/case/${dealId}/parties`);
 };
 

@@ -215,7 +215,7 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
     submissionType,
     status,
     submissionDate: convertDateToTimestamp(v1Deal.field_submission_date),
-    ukefDealId: v1Deal.field_ukef_deal_id,
+    ukefDealId: v1Deal?.field_ukef_deal_id || '',
     exporter: mapExporter(v1Deal.children.general_info),
     eligibility: await mapEligibility(token, v1Deal.children.eligiblity),
     submissionCount: mapSubmissionCount(submissionType),

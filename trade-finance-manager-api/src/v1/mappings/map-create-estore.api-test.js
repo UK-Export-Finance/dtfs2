@@ -148,14 +148,6 @@ describe('mapCreateEstore', () => {
           documentPath: 'debtorAndCreditorReports',
         },
       ],
-      exportLicence: [
-        {
-          _id: '621f4521827574001e0ebf74',
-          parentId: '6221edcff154ec00136fcfef',
-          filename: 'file7.png',
-          documentPath: 'exportLicence',
-        },
-      ],
       status: 'Completed',
       requiredFields: [
         'manualInclusion',
@@ -165,7 +157,6 @@ describe('mapCreateEstore', () => {
         'financialInformationCommentary',
         'corporateStructure',
         'debtorAndCreditorReports',
-        'exportLicence',
       ],
       securityDetails: {
         exporter: 'security text',
@@ -286,12 +277,6 @@ describe('mapCreateEstore', () => {
             documentType: 'Audited_financial_statements',
             fileLocationPath: `files/portal_storage/${mockGefDeal.supportingInformation.debtorAndCreditorReports[0]._id}/${mockGefDeal.supportingInformation.debtorAndCreditorReports[0].documentPath}/`,
             fileName: mockGefDeal.supportingInformation.debtorAndCreditorReports[0].filename,
-          },
-          {
-            parentId: '6221edcff154ec00136fcfef',
-            documentType: 'Financial_information_commentary',
-            fileLocationPath: `files/portal_storage/${mockGefDeal.supportingInformation.exportLicence[0]._id}/${mockGefDeal.supportingInformation.exportLicence[0].documentPath}/`,
-            fileName: mockGefDeal.supportingInformation.exportLicence[0].filename,
           },
         ],
       };
