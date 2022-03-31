@@ -9,8 +9,12 @@ const {
 } = require('../helpers/tasks');
 
 /**
-* Check if a task's previous task is complete
-* */
+ * Check if a task's previous task is complete
+ * @param {Array} all task groups array
+ * @param {Object} group that the task you want to check is in
+ * @param {String} task ID you want to check
+ * @returns {Boolean}
+ */
 const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
   if (isFirstTaskInFirstGroup(taskId, group.id)) {
     /**
@@ -53,7 +57,10 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
 
 /**
  * Check if a task is in the Underwriting group.
- * */
+ * @param {Object} group
+ * @param {String} task title
+ * @returns {Boolean}
+ */
 const isTaskInUnderwritingGroup = (group, taskTitle) => {
   const isUnderwritingGroupTitle = group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING;
 
@@ -67,12 +74,14 @@ const isTaskInUnderwritingGroup = (group, taskTitle) => {
 };
 
 /**
- * Rules/conditions for special task groups
- * Where any tasks in the group can be completed regardless of
- * a previous task in that group.
- * This currently only applies to the Underwriting group
- * If required, can be easily extended for other groups.
- * */
+ * Rules/conditions for special task groups where:
+ * - Any tasks in the group can be completed regardless of a previous task in that group.
+ * - This currently only applies to the Underwriting group.
+ * - If required, can be easily extended for other groups.
+ * @param {Object} group
+ * @param {Objject} task
+ * @returns {Boolean}
+ */
 const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
   const { previousStatus } = task;
 
@@ -97,7 +106,10 @@ const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
 /**
  * Rules/conditions for task.canEdit and task.status
  * When a task is updated, all tasks are mapped over and call this function.
- * */
+ * @param {Object} group
+ * @param {Objject} task
+ * @returns {Boolean}
+ */
 const handleTaskEditFlagAndStatus = (
   allTaskGroups,
   group,
