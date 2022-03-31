@@ -8,19 +8,10 @@ const RedisStore = require('connect-redis')(session);
 
 const sessionConfig = () => {
   const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(256 / 8).toString('hex');
-  const cookie = {
-    path: '/',
-    httpOnly: true,
-    secure: false,
-    sameSite: 'strict',
-    maxAge: 604800000, // 7 days
-  };
-
   const sessionOptions = {
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie,
   };
 
   if (process.env.REDIS_HOSTNAME) {

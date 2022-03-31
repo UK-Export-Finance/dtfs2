@@ -19,10 +19,11 @@ const security = require('./routes/middleware/headers/security');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const https = Boolean(process.env.HTTPS || 0);
 const cookie = {
   path: '/',
   httpOnly: true,
-  secure: false,
+  secure: https,
   sameSite: 'strict',
   maxAge: 604800000, // 7 days
 };
