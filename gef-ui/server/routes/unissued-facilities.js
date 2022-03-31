@@ -5,8 +5,8 @@ const {
   changeUnissuedFacilityPreview,
   postChangeUnissuedFacility,
   postChangeUnissuedFacilityPreview,
-  changeIssuedToUnissuedFacility,
-  postChangeIssuedToUnissuedFacility,
+  // changeIssuedToUnissuedFacility,
+  // postChangeIssuedToUnissuedFacility,
 } = require('../controllers/unissued-facilities');
 const validateToken = require('../middleware/validateToken');
 
@@ -29,11 +29,12 @@ router.get('/application-details/:dealId/unissued-facilities/:facilityId/change'
 router.post('/application-details/:dealId/unissued-facilities/:facilityId/change', validateToken, (req, res) =>
   postChangeUnissuedFacilityPreview(req, res));
 
-// get change issued facility to unissued from application preview
-router.get('/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued', validateToken, (req, res) =>
-  changeIssuedToUnissuedFacility(req, res));
-// post change issued facility to unissued from application preview
-router.post('/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued', validateToken, (req, res) =>
-  postChangeIssuedToUnissuedFacility(req, res));
+// TODO: DTFS2-5616
+// // get change issued facility to unissued from application preview
+// router.get('/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued', validateToken, (req, res) =>
+//   changeIssuedToUnissuedFacility(req, res));
+// // post change issued facility to unissued from application preview
+// router.post('/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued', validateToken, (req, res) =>
+//   postChangeIssuedToUnissuedFacility(req, res));
 
 module.exports = router;
