@@ -198,6 +198,7 @@ const updateAllTasks = async (
  * - Gets the deal and all tasks.
  * - Maps the taskUpdate input into schema format, adding dates.
  * - Finds the group the task belongs to and updates the task in that group.
+ * - Checks if the task can be updated.
  * - Maps over all tasks in every group and updates their status/canEdit flag.
  * - If previous task is complete, a sendEmail flag for that task is returned.
  * - If the task is the task that is being updated (by user), task.history is updated.
