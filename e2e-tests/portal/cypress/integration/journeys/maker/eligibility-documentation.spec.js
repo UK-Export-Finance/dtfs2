@@ -66,7 +66,7 @@ context('Eligibility Documentation', () => {
     eligibilityDocumentation.downloadMIQuestionaireLinkDoc().invoke('attr', 'href').then((href) => {
       expect(href).to.equal('/assets/files/BSS EWCS Manual Inclusion Questionnaire.docx');
     });
-    eligibilityDocumentation.downloadMIQuestionaireLinkPdf().contains('Download Manual Inclusion Questionnaire.pdf (94KB)');
+    eligibilityDocumentation.downloadMIQuestionaireLinkPdf().contains('Download Manual Inclusion Questionnaire.pdf (95KB)');
     eligibilityDocumentation.downloadMIQuestionaireLinkPdf().invoke('attr', 'href').then((href) => {
       expect(href).to.equal('/assets/files/BSS EWCS Manual Inclusion Questionnaire.pdf');
     });
