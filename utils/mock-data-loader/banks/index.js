@@ -32,6 +32,14 @@ const BANKS = [
     hasGefAccessOnly: true,
   },
   {
+    id: '5213',
+    name: 'Newable',
+    mga: [''],
+    emails: ['checker4@ukexportfinance.gov.uk'],
+    companiesHouseNo: '08796862',
+    partyUrn: '00319394'
+  },
+  {
     id: '964',
     name: 'LLOYDS',
     mga: ['UKEF-Lloyds-amended-and-restated-MGA-dated-31-January-2020.pdf'],

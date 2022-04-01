@@ -1,6 +1,6 @@
 const { getCurrencyById } = require('../helpers/currencies');
 const { convertV1Date } = require('../helpers/date-helpers');
-const { getUserByEmail } = require('../../helpers/users');
+const { getBssUserByEmail } = require('../../helpers/users');
 const formatUkefId = require('../helpers/formatUkefId');
 
 const findPortalValue = require('./findPortalValue');
@@ -22,6 +22,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     };
 
     const facilityStage = findPortalValue(bond.BSS_Guarantee_details.BSS_stage, 'BSS_stage', 'FACILITIES', 'STAGE_BOND', logError);
+    const hasBeenIssued = facilityStage === 'Issued';
 
     const v2bond = {
       type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
@@ -30,6 +31,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
       bondIssuer: bond.BSS_Guarantee_details.BSS_issuer,
       bondType: findPortalValue(bond.BSS_Guarantee_details.BSS_type, 'BSS_type', 'FACILITIES', 'TYPE', logError),
       facilityStage,
+      hasBeenIssued,
       bondBeneficiary: bond.BSS_Guarantee_details.BSS_beneficiary,
       value: bond.BSS_Financial_details.BSS_value,
       currency: getCurrencyById(bond.BSS_Financial_details.BSS_currency_code),
@@ -48,7 +50,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     };
 
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED) {
-      v2bond.status = CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
+      v2bond.status = CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED;
     }
 
     if (bond.BSS_Financial_details.BSS_conversion_date_deal) {
@@ -94,7 +96,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     }
 
     if (bond.Extra_fields.User_who_issued && bond.Extra_fields.User_who_issued.username) {
-      v2bond.submittedAsIssuedBy = getUserByEmail(bond.Extra_fields.User_who_issued.username);
+      v2bond.submittedAsIssuedBy = getBssUserByEmail(bond.Extra_fields.User_who_issued.username);
     }
 
     return v2bond;
