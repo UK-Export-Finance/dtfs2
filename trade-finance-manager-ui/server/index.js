@@ -19,10 +19,12 @@ const security = require('./middleware/headers/security');
 
 const app = express();
 const PORT = process.env.PORT || 5003;
+const https = Boolean(process.env.HTTPS || 0);
+const sessionConfiguration = sessionOptions();
 const cookie = {
   path: '/',
   httpOnly: true,
-  secure: false,
+  secure: https,
   sameSite: 'strict',
   maxAge: 604800000, // 7 days
 };
@@ -37,7 +39,10 @@ configureNunjucks({
   watch: true,
 });
 
-app.use(session(sessionOptions()));
+app.use(session({
+  ...sessionConfiguration,
+  cookie,
+}));
 app.use(compression());
 
 app.use(express.json());

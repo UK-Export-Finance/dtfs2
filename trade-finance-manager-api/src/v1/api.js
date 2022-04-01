@@ -480,7 +480,7 @@ const updateACBSfacility = async (facility, deal) => {
       });
       return response.data;
     } catch (err) {
-      console.error('ACBS Facility update error', { err });
+      console.error('TFM-API Facility update error', { err });
       return err;
     }
   }

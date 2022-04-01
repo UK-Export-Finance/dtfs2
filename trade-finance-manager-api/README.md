@@ -214,5 +214,3 @@ We map the data when:
 When BSS is redesigned, it should share a generic data structure with GEF. TFM should then be refactored to query and render data based on the generic data structure, instead of BSS. The submission mapping is a step towards this.
 
 # DTFS
-
-

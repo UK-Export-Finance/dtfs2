@@ -1,5 +1,6 @@
 const { now } = require('../../helpers/date');
 const { getPartyNames } = require('./helpers');
+const CONSTANTS = require('../../constants');
 
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
@@ -20,9 +21,9 @@ const bankMap = ({ bank }) => {
     alternateIdentifier: bank.partyUrn.substring(0, 20),
     industryClassification: '2501',
     smeType: '5',
-    citizenshipClass: '1',
+    citizenshipClass: CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM,
     officerRiskDate: now(),
-    countryCode: 'GBR',
+    countryCode: CONSTANTS.DEAL.COUNTRY.DEFAULT,
     ...partyNames,
   };
 };

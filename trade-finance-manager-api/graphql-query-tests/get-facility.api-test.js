@@ -131,11 +131,6 @@ describe('graphql query - get facility', () => {
       tfm: mockFacility.tfm,
     };
 
-    const mockDeal = {
-      dealSnapshot: MOCK_DEAL,
-      tfm: {},
-    };
-
     const reducerResult = facilityReducer(
       initFacilityShape,
       MOCK_DEAL,

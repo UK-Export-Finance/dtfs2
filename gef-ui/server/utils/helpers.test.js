@@ -595,7 +595,7 @@ describe('mapSummaryList()', () => {
       // should be blank so cannot change
       expect(text).toEqual('');
     });
-    it('can change issued back to unissued', () => {
+    it('cannot change issued back to unissued', () => {
       // 'key' for value row
       const MockedDisplayItemsIssued = () => [
         {
@@ -610,10 +610,9 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
-
-      expect(text).toEqual('Change');
-      expect(href).toContain('/change-to-unissued');
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
+      // should be blank so cannot change
+      expect(text).toEqual('');
     });
   });
 
@@ -928,10 +927,9 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
-      expect(text).toEqual('Change');
-      expect(href).toContain('/change-to-unissued');
+      expect(text).toEqual('');
     });
 
     it('Should show change for coverStartDate', () => {
@@ -1262,9 +1260,8 @@ describe('summaryItemsConditions()', () => {
         data: MOCK_AIN_APPLICATION.facilities.items[1],
       };
 
-      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('Change');
-      expect(href).toContain('/change-to-unissued');
+      const { text } = summaryItemsConditions(summaryItemsObj)[0];
+      expect(text).toEqual('');
     });
   });
 

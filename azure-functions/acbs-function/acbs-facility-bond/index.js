@@ -36,9 +36,9 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
   );
 
   const parties = {};
-  // Create facility parties
+  // Create parties
   if (facility.tfm.bondIssuerPartyUrn) {
-    parties.bondIssuer = yield context.df.callActivityWithRetryWithRetry(
+    parties.bondIssuer = yield context.df.callActivityWithRetry(
       'activity-create-party',
       retryOptions,
       { party: mappings.party.bondIssuer({ deal, facility }) },
