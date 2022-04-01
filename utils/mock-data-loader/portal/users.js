@@ -50,7 +50,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Nikolaevich',
     surname: 'Chernov',
-    email: 'checker@ukexportfinance.gov.uk',
+    email: 'checker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['checker'],
     bank: UKEF_TEST_BANK_1,
@@ -146,18 +146,6 @@ const USERS = [
     email: '',
     timezone: 'Europe/London',
     roles: ['editor'],
-    bank: {
-      id: '*',
-    },
-  },
-  {
-    username: 'TEST_EMAIL_NO_GOV_NOTIFY',
-    password: 'AbC!2345',
-    firstname: 'Wolfgang',
-    surname: 'Weisen',
-    email: 'test_no_notify@ukexportfinance.gov.uk',
-    timezone: 'Europe/London',
-    roles: ['maker'],
     bank: {
       id: '*',
     },
