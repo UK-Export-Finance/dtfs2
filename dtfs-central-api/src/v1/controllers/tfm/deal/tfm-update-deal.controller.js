@@ -24,47 +24,48 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
     const dealUpdate = { tfm };
     const tfmUpdate = dealUpdate.tfm;
 
+    if (tfmUpdate) {
     /**
    * Ensure that if a tfmUpdate with activities is an empty object,
    * we do not make activities an empty object.
    * */
-    if (tfmUpdate.activities && Object.keys(tfmUpdate.activities).length === 0) {
-      dealUpdate.tfm.activities = [];
-    }
+      if (tfmUpdate.activities && Object.keys(tfmUpdate.activities).length === 0) {
+        dealUpdate.tfm.activities = [];
+      }
 
-    /**
+      /**
    * Activities helper variables
    * */
-    const existingDealActivities = (existingDeal.tfm && existingDeal.tfm.activities);
-    const tfmUpdateHasActivities = (tfmUpdate.activities
+      const existingDealActivities = (existingDeal.tfm && existingDeal.tfm.activities);
+      const tfmUpdateHasActivities = (tfmUpdate.activities
                                   && Object.keys(tfmUpdate.activities).length > 0);
-    /**
+      /**
    * ACBS activities update is an array whereas TFM activity update is an object
    * Checks if array, then uses spread operator
    * else if not array, adds the object
    */
-    if (tfmUpdateHasActivities) {
-      if (Array.isArray(tfmUpdate.activities)) {
-        const updatedActivities = [
-          ...tfmUpdate.activities,
-          ...existingDealActivities,
-        ];
-        // ensures that duplicate entries are not added to activities by comparing timestamp and label
-        dealUpdate.tfm.activities = updatedActivities.filter((value, index, arr) =>
-          arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
-      } else {
-        const updatedActivities = [
-          tfmUpdate.activities,
-          ...existingDealActivities,
-        ];
-        // ensures that duplicate entries are not added to activities by comparing timestamp and label
-        dealUpdate.tfm.activities = updatedActivities.filter((value, index, arr) =>
-          arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
+      if (tfmUpdateHasActivities) {
+        if (Array.isArray(tfmUpdate.activities)) {
+          const updatedActivities = [
+            ...tfmUpdate.activities,
+            ...existingDealActivities,
+          ];
+          // ensures that duplicate entries are not added to activities by comparing timestamp and label
+          dealUpdate.tfm.activities = updatedActivities.filter((value, index, arr) =>
+            arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
+        } else {
+          const updatedActivities = [
+            tfmUpdate.activities,
+            ...existingDealActivities,
+          ];
+          // ensures that duplicate entries are not added to activities by comparing timestamp and label
+          dealUpdate.tfm.activities = updatedActivities.filter((value, index, arr) =>
+            arr.findIndex((item) => ['timestamp', 'label'].every((key) => item[key] === value[key])) === index);
+        }
       }
+
+      dealUpdate.tfm.lastUpdated = new Date().valueOf();
     }
-
-    dealUpdate.tfm.lastUpdated = new Date().valueOf();
-
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(dealId) } },
       $.flatten(withoutId(dealUpdate)),
