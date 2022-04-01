@@ -27,5 +27,7 @@ describe('Routes', () => {
     expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/unissued-facilities/:facilityId/change', validateToken, expect.any(Function));
     expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/unissued-facilities/:facilityId/about', validateToken, expect.any(Function));
     expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/unissued-facilities/:facilityId/change', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued', validateToken, expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued', validateToken, expect.any(Function));
   });
 });

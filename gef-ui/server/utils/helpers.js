@@ -105,7 +105,7 @@ const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
 // for which rows in the facility tables should show change when facilities changed to issued post submission
 const changedToIssuedKeys = (id) =>
-  id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate';
+  id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate' || id === 'hasBeenIssued';
 
 // summary items for application details page
 const detailsSummaryItems = (href, keys, item, value) => {
@@ -148,8 +148,7 @@ const previewItemConditions = (previewParams) => {
   const {
     issuedHref,
     unissuedHref,
-    // TODO: DTFS2-5616
-    // issuedToUnissuedHref,
+    issuedToUnissuedHref,
     changedToIssueShow,
     unissuedShow,
     item,
@@ -178,15 +177,16 @@ const previewItemConditions = (previewParams) => {
      * can unissue facility which requires different href to other change to issued facilities
      * creates change link with different href to change to unissued again for the stage row
      */
-    // if (item.id === 'hasBeenIssued') {
-    // summaryItems = previewSummaryItems(issuedToUnissuedHref, changedToIssueShow, item);
-    // } else {
+    if (item.id === 'hasBeenIssued') {
+      summaryItems = previewSummaryItems(issuedToUnissuedHref, changedToIssueShow, item);
+    } else {
     /**
      * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility changed to issued
      * can change name, coverStartDate and coverEndDate column
      * change link displayed taking to unissued-facility-change change page
      */
-    summaryItems = previewSummaryItems(unissuedHref, changedToIssueShow, item);
+      summaryItems = previewSummaryItems(unissuedHref, changedToIssueShow, item);
+    }
   } else if (summaryIssuedUnchanged(previewParams)) {
     /**
      * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility still unissued
