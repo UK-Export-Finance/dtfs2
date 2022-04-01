@@ -112,12 +112,11 @@ const checkAzureAcbsFunction = async () => {
 };
 
 const issueAcbsFacilities = async (deal) => {
-  if (!deal.tfm) {
+  if (!deal.tfm || !deal.tfm.acbs) {
     /**
      * A facility can only be issued (if unissued),
      * the deal has been submitted to ACBS and acknowledged by the TFM.
-     * If the above is false, please do not proceed
-     * if (!deal.tfm || !deal.tfm.acbs)
+     * If the above is false, please do not proceed.
      */
     return false;
   }
