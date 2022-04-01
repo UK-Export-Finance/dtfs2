@@ -44,6 +44,7 @@ const mapSubmissionsDetails = (portalDealId, v1Deal) => {
   const indemnifierLegallyDistinct = Boolean(exporterInfo.Indemnifier_name);
 
   const submissionDetails = {
+    v1Status: 'Completed',
     'supplier-type': findPortalValue(exporterInfo.Customer_type, 'Customer_type', 'DEAL', 'SUPPLIER_TYPE', logError),
     'supplier-companies-house-registration-number': exporterInfo.Exporter_co_hse_reg_number,
     'supplier-name': exporterInfo.Exporter_name,

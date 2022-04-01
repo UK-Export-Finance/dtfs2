@@ -39,8 +39,10 @@ const rules = [
 module.exports = (submissionDetails) => {
   let errorList = {};
 
-  for (let i = 0; i < rules.length; i += 1) {
-    errorList = rules[i](submissionDetails, errorList);
+  if (!submissionDetails.v1Status) {
+    for (let i = 0; i < rules.length; i += 1) {
+      errorList = rules[i](submissionDetails, errorList);
+    }
   }
 
   return errorList;
