@@ -10,7 +10,7 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
   resource_group: ${{ secrets.PROD_RESOURCE_GROUP }}
   key_vault_name: ${{ secrets.PROD_KEYVAULT_NAME }}
-  key_vault_secret: ${{ secrets.PROD_KEYVAULT_SECRET }}
+  key_vault_secret: ${{ secrets.PROD_KEYVAULT_TFM_SECRET }}
   front_door_name: ${{ secrets.PROD_FRONTDOOR_TFM_NAME }}
   domain_name: "trade-finance-manager.ukexportfinance.gov.uk"
 
@@ -60,3 +60,17 @@ jobs:
         inlineScript: |
           az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "TFM" --host-name ${{ env.domain_name }}
           az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "TFM-WWW" --host-name www.${{ env.domain_name }}
+
+    - name: FD - HTTPS
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          keyvault_id=$(az keyvault show --name ${{ env.key_vault_name }} --query id -o tsv)
+          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "TFM" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }}
+          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "TFM-WWW" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }}
+
+    - name: FD - Verify mapping
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az network front-door check-custom-domain --host-name ${{ env.domain_name }} --name ${{ env.front_door_name }}
