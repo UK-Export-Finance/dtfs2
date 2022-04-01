@@ -1,5 +1,6 @@
 import relative from '../../relativeURL';
 import partials from '../../partials';
+import facilityPage from '../../pages/facilityPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { T1_USER_1 } from '../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../fixtures/users-portal';
@@ -48,6 +49,8 @@ context('Facility page', () => {
     partials.caseSummary.exporterName().invoke('text').then((text) => {
       expect(text.trim()).equal(MOCK_DEAL_AIN.exporter.companyName);
     });
+
+    facilityPage.facilityMaximumUkefExposure().contains(dealFacilities[0].ukefExposure);
   });
 
   it('user can navigate back to parties page via sub navigation', () => {

@@ -1,5 +1,6 @@
 const { now } = require('../../helpers/date');
 const { getSmeType, getPartyNames } = require('./helpers');
+const CONSTANTS = require('../../constants');
 
 /*
 Field mapping based on email from Gareth Ashby 15/03/2021
@@ -17,8 +18,9 @@ const bondBeneficiary = ({ deal, facility }) => {
   const { submissionDetails } = deal.dealSnapshot;
 
   const countryCode = submissionDetails['supplier-address-country'] && submissionDetails['supplier-address-country'].code;
-  const citizenshipClass = countryCode === 'GBR' ? '1' : '2';
-
+  const citizenshipClass = countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT
+    ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
+    : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
   const partyNames = getPartyNames(facility.facilitySnapshot.bondBeneficiary);
 
   return {

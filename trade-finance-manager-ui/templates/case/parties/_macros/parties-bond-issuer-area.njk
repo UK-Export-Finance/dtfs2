@@ -11,7 +11,7 @@
 <div class="govuk-grid-row separator-line {% if renderEditLink %}ukef-flex-container deal{% endif %}" data-cy="bond-issuer-area">
     <div class="govuk-grid-column-one-half">
     <h2 class="ukef-heading-l" data-cy="bond-issuer-heading">Bond issuer</h2>
-    <p class="ukef-hint" style="margin-top:-36px" data-cy="bond-issuer-sub-heading">(if different to bank)</p>
+    <p class="ukef-hint" id="parties-bond-issuer-area-ukef-hint" data-cy="bond-issuer-sub-heading">(if different to bank)</p>
     </div>
 
   {% if filteredFacilities.length > 0 and renderEditLink %}
