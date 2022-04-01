@@ -58,7 +58,7 @@
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-gbp">{{ facility.facilitySnapshot.value | dashIfEmpty}}</td>
           <td class="govuk-table__cell govuk-body-s">
             <span data-cy="facility-{{ facility._id }}-ukef-exposure">{{ facility.tfm.ukefExposure.exposure | dashIfEmpty }}</span>
-            <span data-cy="facility-{{ facility._id }}-covered-percentage" class="govuk-!-padding-right-4" style="float:right;">
+            <span data-cy="facility-{{ facility._id }}-covered-percentage" class="govuk-!-padding-right-4" id="facility-covered-percentage">
             ({{ facility.facilitySnapshot.coveredPercentage | dashIfEmpty }})
             </span>
           </td>
