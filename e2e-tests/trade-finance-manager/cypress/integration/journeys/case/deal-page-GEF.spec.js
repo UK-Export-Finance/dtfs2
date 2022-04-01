@@ -80,6 +80,17 @@ context('User can view a GEF MIA case deal', () => {
 
       cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}`));
     });
+
+    it('Premium schedule contains the feeType in the How bank will pay field', () => {
+      const facilityId = dealFacilities._id;
+      const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
+
+      facilityRow.facilityId().click();
+
+      facilityPage.facilityTabPremiumSchedule().click();
+
+      facilityPage.facilityFeeType().contains(dealFacilities.feeType);
+    });
   });
 });
 
@@ -164,6 +175,17 @@ context('User can view a GEF AIN case deal', () => {
 
       facilityPage.facilityCoverStartDate().contains('-');
       facilityPage.facilityCoverEndDate().contains('-');
+    });
+
+    it('Premium schedule contains the feeType in the How bank will pay field', () => {
+      const facilityId = dealFacilities._id;
+      const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
+
+      facilityRow.facilityId().click();
+
+      facilityPage.facilityTabPremiumSchedule().click();
+
+      facilityPage.facilityFeeType().contains(dealFacilities.feeType);
     });
   });
 });
