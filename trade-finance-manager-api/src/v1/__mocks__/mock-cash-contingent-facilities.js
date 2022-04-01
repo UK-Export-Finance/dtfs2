@@ -57,6 +57,7 @@ const MOCK_CASH_CONTINGENT_FACILIIES = [
     hasBeenIssued: true,
     submittedAsIssuedDate: 1641054981000,
     hasBeenIssuedAndAcknowledged: true,
+    feeType: 'In advance',
   },
   {
     _id: 'MOCK_CONTINGENT_FACILITY_ISSUED',

@@ -5,7 +5,6 @@ const mapFacilityProduct = require('../facilities/mapFacilityProduct');
 const mapFacilityType = require('../facilities/mapFacilityType');
 const mapGuaranteeFeePayableToUkef = require('../facilities/mapGuaranteeFeePayableToUkef');
 const mapFacilityTfm = require('../facilities/mapFacilityTfm');
-const mapGefFacilityFeeType = require('./mapGefFacilityFeeType');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
 
@@ -21,7 +20,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
     currency,
     value,
     interestPercentage,
-    paymentType,
+    feeType,
     feeFrequency,
     hasBeenIssued,
     name,
@@ -55,7 +54,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       currency: currency.id,
       facilityValueExportCurrency: `${currency.id} ${formattedFacilityValue}`,
       value: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),
-      feeType: mapGefFacilityFeeType(paymentType),
+      feeType,
       feeFrequency,
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFee),
       dayCountBasis: facilitySnapshot.dayCountBasis,
