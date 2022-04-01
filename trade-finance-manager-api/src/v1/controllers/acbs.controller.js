@@ -116,7 +116,7 @@ const issueAcbsFacilities = async (deal) => {
     /**
      * A facility can only be issued (if unissued),
      * the deal has been submitted to ACBS and acknowledged by the TFM.
-     * If the above is false, please do not proceed
+     * If the above is false, please do not proceed.
      */
     return false;
   }
