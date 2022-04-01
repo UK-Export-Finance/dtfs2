@@ -59,7 +59,6 @@ jobs:
       with:
         inlineScript: |
           az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "TFM" --host-name ${{ env.domain_name }}
-          az network front-door frontend-endpoint create --front-door-name ${{ env.front_door_name }} --name "TFM-WWW" --host-name www.${{ env.domain_name }}
 
     - name: FD - HTTPS
       uses: azure/cli@v1.0.0
@@ -67,7 +66,6 @@ jobs:
         inlineScript: |
           keyvault_id=$(az keyvault show --name ${{ env.key_vault_name }} --query id -o tsv)
           az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "TFM" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }}
-          az network front-door frontend-endpoint enable-https --front-door-name ${{ env.front_door_name }} --name "TFM-WWW" --certificate-source AzureKeyVault --minimum-tls-version 1.2 --vault-id $keyvault_id --secret-name ${{ env.key_vault_secret }}
 
     - name: FD - Verify mapping
       uses: azure/cli@v1.0.0
