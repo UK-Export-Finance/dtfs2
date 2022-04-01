@@ -50,7 +50,6 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-            az network dns record-set cname set-record --record-set-name www --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
             az network dns record-set cname set-record --record-set-name afdverify --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
             az network dns record-set cname set-record --record-set-name '*' --cname ${{ env.front_door_name }}.azurefd.net --zone ${{ env.domain_name }}
 
