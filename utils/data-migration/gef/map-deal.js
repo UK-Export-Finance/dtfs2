@@ -62,14 +62,18 @@ const mapEligibility = async (token, v1Eligibility) => {
   const mappedCriteria = v1CriteriaFieldNames.map((v1Criterion) => {
     const { id } = MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA[v1Criterion];
 
-    const { text } = eligibilityCriteria.criteria.find((c) => c.id === id);
+    const { text, textList } = eligibilityCriteria.criteria.find((c) => c.id === id);
 
-    return {
+    const criteria = {
       id,
       name: MIGRATION_MAP.DEAL.ELIGIBILITY_CRITERIA[v1Criterion].name,
       text,
       answer: v1Eligibility[v1Criterion].answer,
     };
+    if (textList) {
+      criteria.textList = textList;
+    }
+    return criteria;
   });
 
   const mapped = {
@@ -93,30 +97,31 @@ const mapSubmissionCount = (submissionType) => {
   return 0;
 };
 
-const mapUkefDecision = (v1Deal, status) => {
-  if (status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED) {
+const mapUkefDecision = (v1Deal, status, submissionType) => {
+  if (submissionType !== 'Automatic Inclusion Notice') {
+    if (status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED) {
+      return [
+        {
+          decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED,
+          text: v1Deal.field_deal_comments,
+        },
+      ];
+    }
+
+    if (v1Deal.field_special_conditions.length) {
+      return [
+        {
+          decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+          text: v1Deal.field_special_conditions
+        },
+      ];
+    }
     return [
       {
-        decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_REFUSED,
-        text: v1Deal.field_deal_comments,
+        decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
       },
     ];
   }
-
-  if (v1Deal.field_special_conditions.length) {
-    return [
-      {
-        decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
-        text: v1Deal.field_special_conditions
-      },
-    ];
-  }
-
-  return [
-    {
-      decision: V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
-    },
-  ];
 };
 
 const mapComments = (v1Comments, v2Users) => {
@@ -159,7 +164,7 @@ const mapDocuments = (documents, path) => {
 
 const mapSupportingInformation = (v1Eligibility) => {
   const mapped = {
-    security: {
+    securityDetails: {
       exporter: '',
       facility: ''
     }
@@ -190,7 +195,7 @@ const mapSupportingInformation = (v1Eligibility) => {
   }
 
   if (v1Eligibility.security) {
-    mapped.security.exporter = v1Eligibility.security;
+    mapped.securityDetails.exporter = v1Eligibility.security;
   }
 
   return mapped;
@@ -222,7 +227,7 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
     portalActivities: [],
     manualInclusionNoticeSubmissionDate: convertDateToTimestamp(v1Deal.field_min_checker_date),
     comments: mapComments(v1Deal.children.comments_maker_checker, v2Users),
-    ukefDecision: mapUkefDecision(v1Deal, status),
+    ukefDecision: mapUkefDecision(v1Deal, status, submissionType),
     supportingInformation: {},
   };
 
@@ -235,19 +240,23 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
   if (v1Deal.field_min_checker.length) {
     mapped.checkerId = getUserByEmail(v2Users, v1Deal.field_min_checker[0].email)._id;
   } else {
-    mapped.checkerId = getUserByEmail(v2Users, v1Deal.Deal_information.Extra_fields.First_Checker.username)._id;
+    mapped.checkerId = getUserByEmail(v2Users, v1Deal.field_initial_checker.email)._id;
   }
 
   if (v1Deal.field_min_checker_date) {
     mapped.manualInclusionNoticeSubmissionDate = convertDateToTimestamp(v1Deal.field_min_checker_date);
   }
 
-  if (mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
-    mapped.ukefDecisionAccepted = v1Deal.field_i_agree_with_special_cond;
-  }
+  if (mapped.submissionType === 'Manual Inclusion Notice') {
+    mapped.ukefDecisionAccepted = true;
+  } else {
+    if (mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS) {
+      mapped.ukefDecisionAccepted = v1Deal.field_i_agree_with_special_cond;
+    }
 
-  if (mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
-    mapped.ukefDecisionAccepted = v1Deal.field_i_agree_with_conditions;
+    if (mapped.status === V2_CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+      mapped.ukefDecisionAccepted = v1Deal.field_i_agree_with_conditions;
+    }
   }
 
   if (isManualSubmission) {
