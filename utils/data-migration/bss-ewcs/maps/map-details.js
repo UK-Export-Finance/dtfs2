@@ -26,6 +26,15 @@ const mapDetails = (portalDealId, v1Deal, v2SubmissionType) => {
     }
   }
 
+  if (v1Deal.Deal_information.Extra_fields.First_Checker) {
+    const checker = getBssUserByEmail(v1Deal.Deal_information.Extra_fields.First_Checker.username);
+    if (checker.username) {
+      details.checker = checker;
+    } else {
+      logError(`checker username not found ${v1Deal.Deal_information.Extra_fields.First_Checker.username}`);
+    }
+  }
+
   const submissionDate = v1Deal.Deal_information.Extra_fields.Submission_date_AIN_and_MIA;
 
   if (submissionDate) {

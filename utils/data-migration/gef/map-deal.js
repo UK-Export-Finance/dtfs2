@@ -229,13 +229,13 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
   if (v1Deal.field_min_maker.length) {
     mapped.maker = getUserByEmail(v2Users, v1Deal.field_min_maker.email);
   } else {
-    mapped.maker = getUserByEmail(v2Users, v1Deal.owner.email);
+    mapped.maker = getUserByEmail(v2Users, v1Deal.Application_owner_email);
   }
 
   if (v1Deal.field_min_checker.length) {
     mapped.checkerId = getUserByEmail(v2Users, v1Deal.field_min_checker[0].email)._id;
   } else {
-    mapped.checkerId = getUserByEmail(v2Users, v1Deal.field_initial_checker.email)._id;
+    mapped.checkerId = getUserByEmail(v2Users, v1Deal.Deal_information.Extra_fields.First_Checker.username)._id;
   }
 
   if (v1Deal.field_min_checker_date) {

@@ -1,6 +1,6 @@
 const { getCurrencyById } = require('../helpers/currencies');
 const { convertV1Date } = require('../helpers/date-helpers');
-const { getUserByEmail } = require('../../helpers/users');
+const { getBssUserByEmail } = require('../../helpers/users');
 const formatUkefId = require('../helpers/formatUkefId');
 
 const findPortalValue = require('./findPortalValue');
@@ -96,7 +96,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     }
 
     if (bond.Extra_fields.User_who_issued && bond.Extra_fields.User_who_issued.username) {
-      v2bond.submittedAsIssuedBy = getUserByEmail(bond.Extra_fields.User_who_issued.username);
+      v2bond.submittedAsIssuedBy = getBssUserByEmail(bond.Extra_fields.User_who_issued.username);
     }
 
     return v2bond;

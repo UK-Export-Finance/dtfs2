@@ -3,7 +3,7 @@ const mandatoryCriteriaRequired = require('../helpers/mandatory-criteria-require
 
 const mapMandatoryCriteria = (v1Deal) => {
   if (mandatoryCriteriaRequired(v1Deal)) {
-    return MANDATORY_CRITERIA;
+    return MANDATORY_CRITERIA.filter((criteria) => criteria.version === 30);
   }
   return [];
 };

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const moment = require('moment');
 const args = require('minimist')(process.argv.slice(2));
+const generator = require('generate-password');
 const api = require('../api');
 const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 const consoleLogColor = require('./helpers/console-log-colour');
@@ -57,6 +58,13 @@ const migrateUsers = async () => {
 
   const usersV2 = usersV1Bank.map((userV1) => {
     const bank = banks.find((b) => b.id === userV1.Bank_id);
+    const password = generator.generate({
+      length: 20,
+      numbers: true,
+      symbols: false,
+      lowercase: true,
+      uppercase: true,
+    });
     if (!bank) {
       console.info({ banks, bankId: userV1.Bank_id });
       userNoBanksError.push(userV1.Mail);
@@ -81,7 +89,7 @@ const migrateUsers = async () => {
         emails: bank.emails,
       },
       disabled: userV1.Disabled === 'Disabled',
-      password: `AbC!2345_${Math.random()}`,
+      password: `AbC!2345_${password}`,
     };
 
     const lastLogin = moment(userV1.Last_login, 'DD/MM/YYYY - hh:mm').utc().valueOf().toString();
