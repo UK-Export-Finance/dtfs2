@@ -15,7 +15,7 @@
 
   <div class="govuk-grid-row" data-cy="deal-facilities">
     <div class="govuk-grid-column-full separator-line deal">
-      <p class="ukef-heading-l" style="padding-top:30px">Facilities</p>
+      <p class="ukef-heading-l" id="deal-ukef-heading">Facilities</p>
 
         {% if deal.dealType == 'GEF' %}
           {% if deal.isFinanceIncreasing %}
@@ -51,18 +51,18 @@
     <div class="govuk-grid-row" data-cy="deal-bank-security-details">
 
       <div class="govuk-grid-column-full separator-line deal">
-        <p class="ukef-heading-l" style="padding-top:30px" data-cy="bank-security-section-heading">Bank security</p>
+        <p class="ukef-heading-l" id="deal-supporting-information-bank-security" data-cy="bank-security-section-heading">Bank security</p>
         <h4 class="govuk-heading-s govuk-!-padding-top-3 govuk-!-padding-bottom-0 govuk-!-margin-top-0" data-cy="bank-security-sub-heading">
         General bank security for this exporter
         </h4>
 
-        <p style="white-space:pre-line" data-cy="bank-security-text">{{ deal.supportingInformation.securityDetails.exporter }}</p>
+        <p id="deal-bank-security-text" data-cy="bank-security-text">{{ deal.supportingInformation.securityDetails.exporter }}</p>
         {% if deal.dealType === 'GEF' and deal.supportingInformation.securityDetails.facility %}
           <h4 class="govuk-heading-s govuk-!-padding-top-3 govuk-!-padding-bottom-0 govuk-!-margin-top-0" data-cy="bank-security-facility-sub-heading">
           Specific bank security for the facilities listed in this application
           </h4>
 
-          <p style="white-space:pre-line" data-cy="bank-security-facility-text">{{ deal.supportingInformation.securityDetails.facility }}</p>
+          <p id="deal-bank-security-facility-text" data-cy="bank-security-facility-text">{{ deal.supportingInformation.securityDetails.facility }}</p>
         {% endif %}
       </div>
     </div>
@@ -71,7 +71,7 @@
   <div class="govuk-grid-row" data-cy="deal-bank-details">
 
     <div class="govuk-grid-column-full separator-line deal">
-      <p class="ukef-heading-l" style="padding-top:30px">Bank application or notice</p>
+      <p class="ukef-heading-l" id="deal-bank-details-ukef-heading">Bank application or notice</p>
       <div class="govuk-grid-row govuk-!-margin-0 govuk-!-padding-top-6">
         <div class="govuk-grid-column-one-fifth govuk-!-padding-bottom-4 govuk-!-padding-left-0">
           <div class="ukef-heading-xs">Bank</div>
