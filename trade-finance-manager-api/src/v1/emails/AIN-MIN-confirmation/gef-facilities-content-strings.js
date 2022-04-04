@@ -40,6 +40,7 @@ const GEF_FACILITIES_CONTENT_STRINGS = {
       hasBeenIssued: GENERIC_LIST_ITEM_TITLES.facilityStage,
       requestedCoverStartDate: GENERIC_LIST_ITEM_TITLES.requestedCoverStartDate,
       coverStartDate: GENERIC_LIST_ITEM_TITLES.coverStartDate,
+      coverEndDate: GENERIC_LIST_ITEM_TITLES.coverEndDate,
       value: 'Contingent facility value',
       currencyCode: 'Contingent facility currency',
       coverPercentage: GENERIC_LIST_ITEM_TITLES.coverPercentage,
