@@ -20,7 +20,7 @@ const bankMap = ({ bank }) => {
   return {
     alternateIdentifier: bank.partyUrn.substring(0, 20),
     industryClassification: '2501',
-    smeType: '5',
+    smeType: '20',
     citizenshipClass: CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM,
     officerRiskDate: now(),
     countryCode: CONSTANTS.DEAL.COUNTRY.DEFAULT,
