@@ -20,6 +20,11 @@ const security = require('./middleware/headers/security');
 const app = express();
 const PORT = process.env.PORT || 5003;
 const https = Boolean(process.env.HTTPS || 0);
+
+if (https) {
+  app.set('trust proxy', 1);
+}
+
 const sessionConfiguration = sessionOptions();
 const cookie = {
   path: '/',
