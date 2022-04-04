@@ -7,6 +7,7 @@ const {
   displayChangeSupportingInfo,
   canUpdateUnissuedFacilitiesCheck,
   isMIAWithoutChangedToIssuedFacilities,
+  returnToMakerNoFacilitiesChanged,
 } = require('../../utils/helpers');
 const {
   areUnissuedFacilitiesPresent,
@@ -137,6 +138,7 @@ function buildBody(app, previewMode, user) {
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
     canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
+    returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };
 
   return appBody;
