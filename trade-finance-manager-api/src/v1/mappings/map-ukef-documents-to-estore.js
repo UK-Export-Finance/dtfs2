@@ -47,7 +47,7 @@ const mapUKEFDocumentsToEstore = (files) => {
           documents.push({
             documentType: eStoreMap[file].eStoreName,
             fileName: val.filename,
-            fileLocationPath: val.folder ? `files/${val.folder}` : `files/portal_storage/${val._id}/${val.documentPath}/`,
+            fileLocationPath: val.folder ? `files/${val.folder}` : `files/portal_storage/${val.parentId}/${val.documentPath}/`,
             parentId: val.parentId,
           });
         }
