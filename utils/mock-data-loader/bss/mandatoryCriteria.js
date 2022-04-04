@@ -1,6 +1,7 @@
 const MANDATORY_CRITERIA = [
   {
     version: 27,
+    product: 'BSS/EWCS',
     criteria: [
       {
         id: 1,
@@ -76,6 +77,7 @@ const MANDATORY_CRITERIA = [
   },
   {
     version: 30,
+    product: 'BSS/EWCS',
     criteria: [
       {
         id: 1,
@@ -151,6 +153,7 @@ const MANDATORY_CRITERIA = [
   },
   {
     version: 33,
+    product: 'BSS/EWCS',
     criteria: [
       {
         id: 1,

@@ -3,6 +3,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     version: 33,
     createdAt: new Date('2021-01-03T00:00'),
     updatedAt: null,
+    product: 'GEF',
     isInDraft: false,
     title: 'Confirm eligibility (mandatory criteria)',
     introText: 'You must confirm that all the following will be true for this application on the date that cover starts.',
@@ -64,17 +65,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
         ],
       },
     ],
-  },
-  {
-    version: 34,
-    createdAt: new Date('2021-01-04T00:00'),
-    updatedAt: null,
-    isInDraft: true,
-    title: 'Example draft new version',
-    criteria: [
-      { id: '1', body: 'Test is a mock test' },
-    ],
-  },
+  }
 ];
 
 module.exports = MANDATORY_CRITERIA_VERSIONED;

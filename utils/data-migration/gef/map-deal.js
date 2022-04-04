@@ -231,7 +231,7 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
     supportingInformation: {},
   };
 
-  if (v1Deal.field_min_maker.length) {
+  if (v1Deal.field_min_maker.length || v1Deal.field_min_maker) {
     mapped.maker = getUserByEmail(v2Users, v1Deal.field_min_maker.email);
   } else {
     mapped.maker = getUserByEmail(v2Users, v1Deal.Application_owner_email);
@@ -239,6 +239,8 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
 
   if (v1Deal.field_min_checker.length) {
     mapped.checkerId = getUserByEmail(v2Users, v1Deal.field_min_checker[0].email)._id;
+  } else if (v1Deal.field_min_checker) {
+    mapped.checkerId = getUserByEmail(v2Users, v1Deal.field_min_checker.email)._id;
   } else {
     mapped.checkerId = getUserByEmail(v2Users, v1Deal.field_initial_checker.email)._id;
   }

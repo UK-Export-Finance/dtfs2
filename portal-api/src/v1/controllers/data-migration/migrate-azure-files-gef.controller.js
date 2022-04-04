@@ -40,7 +40,7 @@ exports.cloneAzureFilesGef = async (supportingInformation, dealId) => {
   if (supportingInformation && Object.keys(supportingInformation).length) {
     try {
       for await (const document of documentPaths) {
-        if (document !== 'security') {
+        if (document !== 'securityDetails') {
           newDirectory = shareClient.getDirectoryClient(`${v2RootFolder}/${dealId}/${document}`);
           await newDirectory.createIfNotExists();
           const dealsCollection = await db.getCollection('deals');
