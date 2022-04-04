@@ -22,6 +22,11 @@ const security = require('./middleware/headers/security');
 
 const PORT = process.env.PORT || 5006;
 const https = Boolean(process.env.HTTPS || 0);
+
+if (https) {
+  app.set('trust proxy', 1);
+}
+
 const cookie = {
   path: '/',
   httpOnly: true,

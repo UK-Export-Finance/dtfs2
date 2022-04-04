@@ -7,14 +7,6 @@ const MIGRATION_MAP = require('./migration-map');
 const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { convertDateToTimestamp } = require('./helpers');
 
-const mapHasBeenIssued = (v1Stage) => {
-  if (v1Stage === 'Issued') {
-    return true;
-  }
-
-  return false;
-};
-
 const mapFeeFrequency = (v1Frequency) => {
   if (v1Frequency && v1Frequency.length) {
     return v1Frequency;
@@ -85,7 +77,7 @@ const mapV1Facilities = (
   v2DealSubmissionDate,
 ) => {
   const v2Facilities = v1Facilities.map((v1Facility) => {
-    const hasBeenIssued = mapHasBeenIssued(v1Facility.facility_stage);
+    const hasBeenIssued = v1Facility.facility_stage.readable_value === 'Issued';
     const { details, detailsOther } = mapBasisDetails(v1Facility.facility_characteristics);
     const coverStartDate = v2DealSubmissionDate;
 

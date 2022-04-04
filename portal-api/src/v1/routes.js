@@ -89,7 +89,7 @@ authRouter.route('/facilities').get(validate({ role: ['maker', 'checker', 'admin
 
 authRouter
   .route('/deals/:id')
-  .get(validate({ role: ['maker', 'checker'] }), dealsController.findOne)
+  .get(validate({ role: ['maker', 'checker', 'admin'] }), dealsController.findOne)
   .put(validate({ role: ['maker'] }), dealsController.update)
   .delete(validate({ role: ['maker'] }), dealsController.delete);
 
