@@ -10,7 +10,7 @@
   {% for facility in facilities %}
 
     {% if facility.type === 'Cash' or facility.type === 'Contingent' %}
-        {% set url = '/gef/application-details/' + facility.dealId %}
+        {% set url = '/gef/application-details/' + facility.dealId + '#' + facility._id %}
     {% else %}
         {% set url = '/contract/' + facility.dealId %}
     {% endif %}
