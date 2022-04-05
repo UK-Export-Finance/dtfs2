@@ -525,16 +525,6 @@ const user = async (id, token) => {
 const createUser = async (userToCreate, token) => {
   if (!token) return false;
 
-  const User = userToCreate;
-
-  if (User.email) {
-    User.email = User.email.toLowerCase();
-  }
-
-  if (User.username) {
-    User.username = User.username.toLowerCase();
-  }
-
   const response = await axios({
     method: 'post',
     url: `${portalApi}/v1/users`,
@@ -542,7 +532,7 @@ const createUser = async (userToCreate, token) => {
       Authorization: token,
       'Content-Type': 'application/json',
     },
-    data: User,
+    data: userToCreate,
   }).catch((err) => err.response);
 
   return response;

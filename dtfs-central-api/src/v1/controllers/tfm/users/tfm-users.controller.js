@@ -5,16 +5,6 @@ const usersCollection = 'tfm-users';
 
 const createUser = async (User) => {
   const collection = await db.getCollection(usersCollection);
-  const user = User;
-
-  if (user.email) {
-    user.email = user.email.toLowerCase();
-  }
-
-  if (user.username) {
-    user.username = user.username.toLowerCase();
-  }
-
   return collection.insertOne(User);
 };
 exports.createUser = createUser;
