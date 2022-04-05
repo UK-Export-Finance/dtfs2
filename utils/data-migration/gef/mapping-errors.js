@@ -112,9 +112,9 @@ const facilityMappingErrors = (v2Facility) => {
   if (!isNumber(v2Facility.coverStartDate)) {
     errors.push('coverStartDate');
   }
-  if (!isNumber(v2Facility.coverEndDate)) {
-    errors.push('coverEndDate');
-  }
+  // if (!isNumber(v2Facility.coverEndDate)) {
+  //   errors.push('coverEndDate');
+  // }
   if (!hasBooleanValue(v2Facility.coverDateConfirmed)) {
     errors.push('coverDateConfirmed');
   }

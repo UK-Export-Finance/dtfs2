@@ -1,7 +1,9 @@
 /* eslint-disable no-restricted-syntax */
+const { ObjectId } = require('mongodb');
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const dotenv = require('dotenv');
 const db = require('../../../drivers/db-client');
+const { formatFilenameForSharepoint } = require('../../../utils');
 
 dotenv.config();
 
@@ -44,18 +46,24 @@ exports.cloneAzureFilesGef = async (supportingInformation, dealId) => {
           newDirectory = shareClient.getDirectoryClient(`${v2RootFolder}/${dealId}/${document}`);
           await newDirectory.createIfNotExists();
           const dealsCollection = await db.getCollection('deals');
-          try {
-            await dealsCollection.updateOne({ _id: dealId }, { $set: { [`supportingInformation.${document}.$[].parentId`]: dealId.toHexString() } });
-          } catch (error) {
-            console.error(`Unable to update the deal ${dealId}`, error);
-          }
+          await dealsCollection.updateOne({ _id: dealId }, { $set: { [`supportingInformation.${document}.$[].parentId`]: dealId.toHexString() } });
 
           for await (const item of supportingInformation[document]) {
             newFileName = item.filename;
             const fileClient = newServiceClient
               .getShareClient(v2ShareName)
               .getDirectoryClient(`${v2RootFolder}/${dealId}/${document}`)
-              .getFileClient(newFileName);
+              .getFileClient(formatFilenameForSharepoint(newFileName));
+
+            const filesCollection = await db.getCollection('files');
+            // insert record into files collection - this is used to download the files
+            await filesCollection.insertOne({
+              _id: new ObjectId(item._id),
+              parentId: new ObjectId(dealId.toHexString()),
+              filename: formatFilenameForSharepoint(newFileName),
+              documentPath: item.documentPath,
+              size: 'Unknown'
+            });
 
             copyFromURL = `https://${v1AccountName}.file.core.windows.net/${v1ShareName}/${v1RootFolder}/${item.v1Url}${v1SharedAccessSignature}`;
 
