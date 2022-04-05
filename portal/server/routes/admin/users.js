@@ -90,7 +90,7 @@ router.post('/users/create', async (req, res) => {
   userToCreate.bank = selectedBank;
 
   // rename email->username.. not sure which it should be but we currently care about username..
-  userToCreate.username = userToCreate.email;
+  userToCreate.username = userToCreate.email.toLowerCase();
 
   //------
 

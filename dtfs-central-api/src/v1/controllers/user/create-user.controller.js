@@ -1,7 +1,16 @@
 const db = require('../../../drivers/db-client');
 
-const createUser = async (user) => {
+const createUser = async (User) => {
   const collection = await db.getCollection('users');
+  const user = User;
+
+  if (user.email) {
+    user.email = user.email.toLowerCase();
+  }
+
+  if (user.username) {
+    user.username = user.username.toLowerCase();
+  }
 
   const response = await collection.insertOne(user);
 
