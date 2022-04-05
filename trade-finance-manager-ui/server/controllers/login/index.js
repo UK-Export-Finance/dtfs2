@@ -6,7 +6,11 @@ const getLogin = (req, res) => res.render('login.njk', {
 });
 
 const postLogin = async (req, res) => {
-  const { email, password } = req.body;
+  let { email } = req.body;
+  const { password } = req.body;
+
+  email = email.toLowerCase();
+
   const loginErrors = [];
 
   const emailError = {
