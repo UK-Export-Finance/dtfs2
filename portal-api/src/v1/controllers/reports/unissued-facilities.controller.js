@@ -117,18 +117,21 @@ exports.findUnissuedFacilitiesReports = async (req, res) => {
           // check if the `submissionDate` is not null
           defaultDate = item.submissionDate || '';
         }
-        const setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(0, 0, 1, 0);
-        // add 3 months to the submission date - as per ticket
-        const deadlineForIssuing = add(setDateToMidnight, { days: 90 });
-        // format the date DD MMM YYYY (i.e. 18 April 2022)
-        facility.deadlineForIssuing = facility.submissionDate ? format(deadlineForIssuing, 'dd LLL yyyy') : '';
+        // ensure there is a default date (either submission date or MIN date)
+        if (defaultDate) {
+          const setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(0, 0, 1, 0);
+          // add 3 months to the submission date - as per ticket
+          const deadlineForIssuing = add(setDateToMidnight, { days: 90 });
+          // format the date DD MMM YYYY (i.e. 18 April 2022)
+          facility.deadlineForIssuing = facility.submissionDate ? format(deadlineForIssuing, 'dd LLL yyyy') : '';
 
-        // get today's date
-        const todaysDate = new Date();
-        facility.daysLeftToIssue = defaultDate ? differenceInCalendarDays(todaysDate, deadlineForIssuing) * -1 + 0 : 0;
+          // get today's date
+          const todaysDate = new Date();
+          facility.daysLeftToIssue = defaultDate ? differenceInCalendarDays(todaysDate, deadlineForIssuing) * -1 + 0 : 0;
 
-        facility.currencyAndValue = item.value ? `${item.currency} ${commaNumber(item.value)}` : '';
-        unissuedFacilities.push(facility);
+          facility.currencyAndValue = item.value ? `${item.currency} ${commaNumber(item.value)}` : '';
+          unissuedFacilities.push(facility);
+        }
       });
     }
 

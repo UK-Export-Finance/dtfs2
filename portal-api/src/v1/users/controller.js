@@ -143,6 +143,8 @@ exports.update = async (_id, update, callback) => {
       // don't save the raw password or password confirmation to mongo...
       delete userUpdate.password;
       delete userUpdate.passwordConfirm;
+      delete userUpdate.currentPassword;
+      delete userUpdate._csrf;
 
       // create new salt/hash for the new password
       const { salt, hash } = utils.genPassword(newPassword);
