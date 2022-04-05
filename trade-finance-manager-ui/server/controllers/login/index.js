@@ -9,8 +9,9 @@ const postLogin = async (req, res) => {
   let { email } = req.body;
   const { password } = req.body;
 
-  email = email.toLowerCase();
-
+  if (email) {
+    email = email.toLowerCase();
+  }
   const loginErrors = [];
 
   const emailError = {

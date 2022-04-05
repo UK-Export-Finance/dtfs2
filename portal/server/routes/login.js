@@ -23,7 +23,9 @@ router.post('/login', async (req, res) => {
   let { email } = req.body;
   const { password } = req.body;
 
-  email = email.toLowerCase();
+  if (email) {
+    email = email.toLowerCase();
+  }
 
   const loginErrors = [];
 
@@ -82,7 +84,9 @@ router.get('/reset-password', (req, res) => {
 router.post('/reset-password', async (req, res) => {
   let { email } = req.body;
 
-  email = email.toLowerCase();
+  if (email) {
+    email = email.toLowerCase();
+  }
 
   const { success } = await api.resetPassword(email);
 
