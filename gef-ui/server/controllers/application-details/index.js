@@ -90,6 +90,7 @@ function buildBody(app, previewMode, user) {
         { details: app.exporter }, // wrap in details because mapSummaryList relies this.
         exporterItems(exporterUrl, {
           showIndustryChangeLink: app.exporter?.industries?.length > 1,
+          correspondenceAddressLink: !app.exporter.correspondenceAddress,
         }),
         mapSummaryParams,
         previewMode,
