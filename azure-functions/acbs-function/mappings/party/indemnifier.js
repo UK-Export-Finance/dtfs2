@@ -1,5 +1,5 @@
 const { now } = require('../../helpers/date');
-const { getSmeType, getPartyNames } = require('./helpers');
+const { getPartyNames } = require('./helpers');
 const CONSTANTS = require('../../constants');
 
 /*
@@ -24,8 +24,8 @@ const indemnifier = ({ deal }) => {
 
   return {
     alternateIdentifier: deal.tfm.parties.indemnifier.partyUrn.substring(0, 20),
-    industryClassification: '0001',
-    smeType: getSmeType(''),
+    industryClassification: CONSTANTS.PARTY.INDUSTRY_CLASSFICATION.DEFAULT,
+    smeType: CONSTANTS.PARTY.SME_TYPE.NOT_KNOWN,
     citizenshipClass,
     officerRiskDate: now(),
     countryCode,
