@@ -136,7 +136,7 @@ exports.update = async (_id, update, callback) => {
     }
     //---
 
-    if (userUpdate.password) {
+    if (userUpdate.password && userUpdate.passwordConfirm) {
       // we're updating the password, so do the dance...
       const { password: newPassword } = userUpdate;
       const { salt: oldSalt, hash: oldHash, blockedPasswordList: oldBlockedPasswordList = [] } = existingUser;
@@ -154,10 +154,9 @@ exports.update = async (_id, update, callback) => {
       // queue the addition of the old salt/hash to our list of blocked passwords that we re-check
       // in 'passwordsCannotBeReUsed' rule
       userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
+
+      await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
     }
-
-    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
-
     callback(null, userUpdate);
   });
 };

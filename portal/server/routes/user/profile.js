@@ -42,28 +42,33 @@ router.get('/:_id/change-password', async (req, res) => {
 });
 
 router.post('/:_id/change-password', async (req, res) => {
-  const { _id } = requestParams(req);
+  // ensure that the user is logged in
+  if (req?.session?.user) {
+    const { _id } = requestParams(req);
+    delete req.body._csrf;
 
-  const { status, data } = await api.updateUser(_id, req.body, req.session.userToken);
+    const { status, data } = await api.updateUser(_id, req.body, req.session.userToken);
 
-  if (status === 200) {
-    return res.redirect(`/user/${_id}`);
+    if (status === 200) {
+      return res.redirect(`/user/${_id}`);
+    }
+
+    const formattedValidationErrors = generateErrorSummary(
+      data.errors,
+      errorHref,
+    );
+
+    return res.render(
+      'user/change-password.njk',
+      {
+        _id,
+        user: req.session.user,
+        validationErrors: formattedValidationErrors,
+        requireCurrentPassword: true,
+      },
+    );
   }
-
-  const formattedValidationErrors = generateErrorSummary(
-    data.errors,
-    errorHref,
-  );
-
-  return res.render(
-    'user/change-password.njk',
-    {
-      _id,
-      user: req.session.user,
-      validationErrors: formattedValidationErrors,
-      requireCurrentPassword: true,
-    },
-  );
+  return res.redirect('/');
 });
 
 module.exports = router;
