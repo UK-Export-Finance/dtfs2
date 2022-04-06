@@ -3,25 +3,25 @@ const CONSTANTS = require('../../../constants');
 const getSmeType = (smeType) => {
   switch (smeType.toLowerCase()) {
     case CONSTANTS.DEAL.SME_TYPE.MICRO:
-      return '40';
+      return CONSTANTS.PARTY.SME_TYPE.MICRO;
 
     case CONSTANTS.DEAL.SME_TYPE.SMALL:
-      return '50';
+      return CONSTANTS.PARTY.SME_TYPE.SMALL;
 
     case CONSTANTS.DEAL.SME_TYPE.MEDIUM:
-      return '60';
+      return CONSTANTS.PARTY.SME_TYPE.MEDIUM;
 
     case CONSTANTS.DEAL.SME_TYPE.NOT_KNOWN:
-      return '70';
+      return CONSTANTS.PARTY.SME_TYPE.NOT_KNOWN;
 
     case CONSTANTS.DEAL.SME_TYPE.NON_SME:
-      return '20';
+      return CONSTANTS.PARTY.SME_TYPE.NON_SME;
 
     case CONSTANTS.DEAL.SME_TYPE.NOT_SME:
-      return '20';
+      return CONSTANTS.PARTY.SME_TYPE.NON_SME;
 
     default:
-      return '70';
+      return CONSTANTS.PARTY.SME_TYPE.NOT_KNOWN;
   }
 };
 
