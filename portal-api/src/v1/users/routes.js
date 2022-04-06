@@ -103,6 +103,9 @@ module.exports.findById = (req, res, next) => {
 };
 
 module.exports.updateById = (req, res, next) => {
+  if (req?.body?._csrf) {
+    delete req.body._csrf;
+  }
   findOne(req.params._id, (err, user) => {
     if (err) {
       next(err);

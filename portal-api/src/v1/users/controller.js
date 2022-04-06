@@ -154,9 +154,11 @@ exports.update = async (_id, update, callback) => {
       // in 'passwordsCannotBeReUsed' rule
       userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
     }
-
+    delete userUpdate.password;
+    delete userUpdate.passwordConfirm;
+    delete userUpdate.currentPassword;
+    delete userUpdate._csrf;
     await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
-
     callback(null, userUpdate);
   });
 };
