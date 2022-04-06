@@ -3,7 +3,7 @@ const { getPartyNames } = require('./helpers');
 const CONSTANTS = require('../../constants');
 
 /*
-Field mapping based on email from Gareth Ashby 15/03/2021
+Field mapping based on email from GA 15/03/2021
   partyAlternateIdentifier  string  UKEF Party URN (Maximum 20 character)
   industryClassification    string  4 digit industry class, banks = 2501, if not known then use 0001, default to 0116
   name1                     string  First 35 characters of Party name
