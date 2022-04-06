@@ -45,7 +45,6 @@ router.post('/:_id/change-password', async (req, res) => {
   // ensure that the user is logged in
   if (req?.session?.user) {
     const { _id } = requestParams(req);
-    delete req.body._csrf;
 
     const { status, data } = await api.updateUser(_id, req.body, req.session.userToken);
 
