@@ -194,24 +194,33 @@ module.exports.resetPassword = async (req, res) => {
   });
 };
 
+/**
+ * Portal reset password route caters for following user scenarios:
+ * 1. User initiated password reset
+ * 2. Adminstrator adds a new user, where user need to specify the password.
+ */
 module.exports.resetPasswordWithToken = async (req, res, next) => {
   const { resetPwdToken } = req.params;
   const { currentPassword, password, passwordConfirm } = req.body;
 
-  if (currentPassword.trim() === '') {
-    return res.status(400).json({
-      success: false,
-      errors: {
-        count: 1,
-        errorList: {
-          currentPassword: {
-            text: 'Empty password',
+  // Only valid for user initiated password reset operation
+  if (currentPassword) {
+    if (currentPassword.trim() === '') {
+      return res.status(400).json({
+        success: false,
+        errors: {
+          count: 1,
+          errorList: {
+            currentPassword: {
+              text: 'Empty password',
+            },
           },
         },
-      },
-    });
+      });
+    }
   }
 
+  // First password
   if (password.trim() === '') {
     return res.status(400).json({
       success: false,
@@ -226,6 +235,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     });
   }
 
+  // Second password
   if (passwordConfirm.trim() === '') {
     return res.status(400).json({
       success: false,
@@ -240,6 +250,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     });
   }
 
+  // Match passwords
   if (password.trim() !== passwordConfirm.trim()) {
     return res.status(400).json({
       success: false,
@@ -257,34 +268,22 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     });
   }
 
+  // Void token - Token expired
   const user = await getUserByPasswordToken(resetPwdToken, req.body);
-
-  if (!user) {
-    return res.status(400).json({
-      success: false,
-      errors: {
-        count: 1,
-        errorList: {
-          currentPassword: {
-            text: 'Password reset link is not valid',
-          },
-        },
-      },
-    });
-  }
-
+  // Stale token - Generated over 24 hours ago
   const hoursSincePasswordResetRequest = user.resetPwdTimestamp
     ? (Date.now() - user.resetPwdTimestamp) / 1000 / 60 / 60
     : 9999;
 
-  if (hoursSincePasswordResetRequest > 24) {
+  // Token check
+  if (!user || (hoursSincePasswordResetRequest > 24)) {
     return res.status(400).json({
       success: false,
       errors: {
         count: 1,
         errorList: {
-          currentPassword: {
-            text: 'Password reset link has expired',
+          password: {
+            text: 'Password reset link is not valid',
           },
         },
       },
