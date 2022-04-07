@@ -84,8 +84,7 @@ exports.findOne = async (_id, callback) => {
 
 exports.findByUsername = async (username, callback) => {
   const collection = await db.getCollection('users');
-
-  collection.findOne({ username }, callback);
+  collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.create = async (user, callback) => {
@@ -155,9 +154,11 @@ exports.update = async (_id, update, callback) => {
       // in 'passwordsCannotBeReUsed' rule
       userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
     }
-
+    delete userUpdate.password;
+    delete userUpdate.passwordConfirm;
+    delete userUpdate.currentPassword;
+    delete userUpdate._csrf;
     await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
-
     callback(null, userUpdate);
   });
 };

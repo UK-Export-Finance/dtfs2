@@ -1,5 +1,10 @@
-const { resetPassword, changePassword } = require('../../pages');
+const {
+  resetPassword, changePassword, header, userProfile,
+} = require('../../pages');
 const relative = require('../../relativeURL');
+const MOCK_USERS = require('../../../fixtures/users');
+
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Reset password', () => {
   beforeEach(() => {
@@ -20,28 +25,38 @@ context('Reset password', () => {
       resetPassword.resetPasswordError().should('exist');
     });
 
-    // TODO: (DTFS2-5621) re-enable the tests once the user is added back in the mock data loader
-    // it('should redirect to login page on successful request for reset password', () => {
-    //   resetPassword.emailInput().type('test_no_notify@ukexportfinance.gov.uk');
-    //   resetPassword.submit().click();
+    it('should redirect to login page on successful request for reset password', () => {
+      resetPassword.emailInput().type('test_no_notify@ukexportfinance.gov.uk');
+      resetPassword.submit().click();
 
-    //   cy.url().should('eq', relative('/login?passwordreset=1'));
-    // });
+      cy.url().should('eq', relative('/login?passwordreset=1'));
+    });
 
-    // it('should be case insensitive when accepting email', () => {
-    //   resetPassword.emailInput().type('Test_No_Notify@ukexportfinance.gov.uk');
-    //   resetPassword.submit().click();
+    it('should be case insensitive when accepting email', () => {
+      resetPassword.emailInput().type('Test_No_Notify@ukexportfinance.gov.uk');
+      resetPassword.submit().click();
 
-    //   cy.url().should('eq', relative('/login?passwordreset=1'));
-    // });
+      cy.url().should('eq', relative('/login?passwordreset=1'));
+    });
   });
 
   context('Change Password screen', () => {
-    beforeEach(() => {
-      resetPassword.visitChangePassword();
+    it('should display password change page WITHOUT `current password` field', () => {
+      resetPassword.visitChangePassword(); // this redirects to '/reset-password/mockToken'
+      // the `current password` should NOT exist if the user is not logged in
+      // this is because the page contains a token
+      changePassword.currentPassword().should('not.exist');
+      changePassword.password().should('exist');
+      changePassword.confirmPassword().should('exist');
     });
 
-    it('should display password change page', () => {
+    it('should display the password change page WITH `current password` field', () => {
+      cy.login(BANK1_MAKER1);
+      cy.url().should('eq', relative('/dashboard/deals/0'));
+      header.profile().click();
+      userProfile.changePassword().click();
+
+      changePassword.currentPassword().should('exist');
       changePassword.password().should('exist');
       changePassword.confirmPassword().should('exist');
     });
