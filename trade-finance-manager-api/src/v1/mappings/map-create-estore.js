@@ -38,7 +38,7 @@ const mapCreateEstore = (deal) => {
   return {
     dealId: deal._id,
     dealType,
-    exporterName: (exporter && exporter.companyName) ? formatNameForSharepoint(exporter.companyName) : '',
+    exporterName: (exporter && exporter.companyName) ? exporter.companyName : '',
     buyerName,
     dealIdentifier: ukefDealId,
     destinationMarket,

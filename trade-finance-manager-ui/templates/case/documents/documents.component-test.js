@@ -43,7 +43,7 @@ describe(page, () => {
 
   it('should render the eStore links', () => {
     const { eStoreUrl } = params;
-    const eStoreLink = `${eStoreUrl}/${params.tfm.estore.siteName}/CaseLibrary`;
+    const eStoreLink = `${eStoreUrl}/sites/${params.tfm.estore.siteName}/CaseLibrary`;
 
     wrapper.expectLink('[data-cy="estore-link"]').toLinkTo(eStoreLink, 'View in eStore');
   });
