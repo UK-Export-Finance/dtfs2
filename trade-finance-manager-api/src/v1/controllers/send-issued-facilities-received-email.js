@@ -1,3 +1,5 @@
+const { getCollection } = require('../../drivers/db-client');
+
 const CONSTANTS = require('../../constants');
 const sendTfmEmail = require('./send-tfm-email');
 const { capitalizeFirstLetter } = require('../../utils/string');
@@ -35,10 +37,12 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
     || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
 
   if (shouldSendEmail) {
-    const {
-      firstname: recipientName,
-      email: sendToEmailAddress,
-    } = maker;
+    const { firstname: recipientName, email: makerEmailAddress } = maker;
+
+    const collection = await getCollection('tfm-teams');
+    const pimUser = await collection.findOne({ id: CONSTANTS.TEAMS.PIM.id });
+    // get the email address for PIM user
+    const { email: pimEmailAddress } = pimUser;
 
     const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED;
 
@@ -50,14 +54,12 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
       facilitiesList: generateIssuedFacilitiesListString(updatedFacilities),
     };
 
-    const emailResponse = await sendTfmEmail(
-      templateId,
-      sendToEmailAddress,
-      emailVariables,
-      deal,
-    );
+    // send email to maker
+    const makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
+    // send a copy of the email to PIM
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmailAddress, emailVariables, deal);
 
-    return emailResponse;
+    return { makerEmailResponse, pimEmailResponse };
   }
 
   return null;
