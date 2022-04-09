@@ -13,6 +13,7 @@ const checkExistingCronJobs = async () => {
   const runningCronJobs = await cronJobLogsCollection.find({ 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING }).toArray();
 
   if (runningCronJobs.length) {
+    console.info('Cron Job: The following jobs are running ', runningCronJobs);
     // eslint-disable-next-line no-restricted-syntax
     for (const job of runningCronJobs) {
       eStoreCronJobManager.add(job.siteName, siteCreationTimer, async () => {
@@ -99,8 +100,7 @@ export const createEstore = async (req: Request, res: Response) => {
         await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteExistsResponse } });
       }
     } else {
-      console.error('eStore body is empty', { eStoreData });
-      res.status(400).send({ message: 'eStore body is empty', status: 400 });
+      console.error('eStore body is empty', eStoreData);
     }
   } else {
     console.info('eStore API call is being re-triggered ', eStoreData.dealId);
