@@ -23,10 +23,16 @@ const BUSINESS_SUPPORT = {
   name: ' Business support group',
 };
 
+const PIM = {
+  id: 'PIM',
+  name: ' PIM',
+};
+
 module.exports = {
   UNDERWRITING_SUPPORT,
   UNDERWRITER_MANAGERS,
   UNDERWRITERS,
   RISK_MANAGERS,
   BUSINESS_SUPPORT,
+  PIM,
 };

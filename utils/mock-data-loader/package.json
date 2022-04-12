@@ -20,6 +20,6 @@
     "dotenv": "^16.0.0",
     "generate-password": "^1.7.0",
     "json2csv": "^5.0.7",
-    "moment": "^2.29.1"
+    "moment": "^2.29.2"
   }
 }
