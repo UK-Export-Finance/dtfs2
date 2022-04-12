@@ -1,4 +1,4 @@
-const formatNameForSharepoint = require('../helpers/formatNameForSharepoint');
+const { formatNameForSharepoint, formatExporterNameForSharepoint } = require('../helpers/formatNameForSharepoint');
 const CONSTANTS = require('../../constants');
 const { mapUKEFDocumentsToEstore } = require('./map-ukef-documents-to-estore');
 
@@ -38,7 +38,7 @@ const mapCreateEstore = (deal) => {
   return {
     dealId: deal._id,
     dealType,
-    exporterName: (exporter && exporter.companyName) ? exporter.companyName : '',
+    exporterName: (exporter && exporter.companyName) ? formatExporterNameForSharepoint(exporter.companyName) : '',
     buyerName,
     dealIdentifier: ukefDealId,
     destinationMarket,

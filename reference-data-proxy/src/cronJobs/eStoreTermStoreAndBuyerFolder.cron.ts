@@ -20,7 +20,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
         }
       }),
     );
-    if (termStoreResponse.every((term) => term.status === 201)) {
+    if (termStoreResponse.every((term) => term?.status === 201)) {
       console.info('API Call finished: The facilityIds were added to TermStore successfully');
     } else {
       console.error('API Call failed: Unable to add the facilityIds to TermStore', { termStoreResponse });
@@ -36,7 +36,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     buyerName: eStoreData.buyerName,
   });
 
-  if (buyerFolderResponse.status === 201) {
+  if (buyerFolderResponse?.status === 201) {
     console.info(`API Call finished: The Buyer folder for ${eStoreData.buyerName} was successfully created`);
     // add a new job to the `Cron Job manager` queue that runes every 35 seconds
     // in general, the folder creation should take between 20 to 30 seconds
@@ -46,7 +46,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     // update the database to indicate that the deal cron job started
     await cronJobLogsCollection.updateOne(
       { dealId: eStoreData.dealId },
-      { $set: { 'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'dealCronJob.startDate': Date.now() } },
+      { $set: { 'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'dealCronJob.startDate': new Date() } },
     );
     console.info('Cron job started: eStore Deal folder Cron Job started');
     eStoreCronJobManager.start(`Deal${eStoreData.dealId}`);

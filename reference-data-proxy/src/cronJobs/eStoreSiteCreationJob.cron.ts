@@ -26,9 +26,9 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
         $set: {
           siteName: siteExistsResponse.data.siteName,
           'siteCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
-          'siteCronJob.completionDate': Date.now(),
+          'siteCronJob.completionDate': new Date(),
           'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING,
-          'dealCronJob.startDate': Date.now(),
+          'dealCronJob.startDate': new Date(),
         },
       },
     );
@@ -51,7 +51,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
       // update the record inside `cron-job-logs` collection
       await cronJobLogsCollection.updateOne(
         { exporterName: eStoreData.exporterName },
-        { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': Date.now() } },
+        { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': new Date() } },
       );
     }
   } else {
@@ -61,7 +61,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
     // update the record inside `cron-job-logs` collection
     await cronJobLogsCollection.updateOne(
       { exporterName: eStoreData.exporterName },
-      { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': Date.now() } },
+      { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': new Date() } },
     );
   }
 };
