@@ -26,7 +26,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Execute Script
-# ENTRYPOINT ["/bin/init.sh"]
+ENTRYPOINT ["/bin/init.sh"]
 
 # Hot reloading
-CMD node server/index.js
+# CMD node server/index.js
