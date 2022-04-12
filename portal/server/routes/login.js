@@ -87,42 +87,22 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
-// User forgot password
+/**
+ * 1. User forgot password
+ * 2. Admin account create - user set's password
+ */
 router.get('/reset-password/:pwdResetToken', (req, res) => {
-  res.render('user/change-password.njk', { requireCurrentPassword: true });
-});
-
-// User forgot password
-router.post('/reset-password/:pwdResetToken', async (req, res) => {
-  const { pwdResetToken } = requestParams(req);
-  const { data } = await api.resetPasswordFromToken(pwdResetToken, req.body);
-  const formattedValidationErrors = generateErrorSummary(
-    data.errors,
-    errorHref,
-  );
-
-  if (formattedValidationErrors && formattedValidationErrors.count > 0) {
-    return res.render(
-      'user/change-password.njk',
-      {
-        requireCurrentPassword: true,
-        validationErrors: formattedValidationErrors,
-      },
-    );
-  }
-
-  return res.redirect('/?passwordupdated=1');
-});
-
-// Admin - Account create
-router.get('/set-password/:pwdResetToken', (req, res) => {
   res.render('user/change-password.njk', { requireCurrentPassword: false });
 });
 
-// Admin - Account create
-router.post('/set-password/:pwdResetToken', async (req, res) => {
+/**
+ * 1. User forgot password
+ * 2. Admin account create - user set's password
+ */
+router.post('/reset-password/:pwdResetToken', async (req, res) => {
   const { pwdResetToken } = requestParams(req);
   const { data } = await api.resetPasswordFromToken(pwdResetToken, req.body);
+
   const formattedValidationErrors = generateErrorSummary(
     data.errors,
     errorHref,

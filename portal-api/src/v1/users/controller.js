@@ -6,6 +6,7 @@ const businessRules = require('../../config/businessRules');
 const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
+const { sendPasswordUpdateEmail } = require('./reset-password.controller');
 
 const createPasswordToken = async (email) => {
   const collection = await db.getCollection('users');
@@ -94,9 +95,8 @@ exports.create = async (user, callback) => {
     ...user,
   };
 
-  // tidy fields that shouldn't be here. this might not be the best place.
   delete insert.password;
-  //---
+  delete insert.passwordConfirm;
 
   const collection = await db.getCollection('users');
   const createUserResult = await collection.insertOne(insert);
@@ -122,21 +122,18 @@ exports.update = async (_id, update, callback) => {
   const collection = await db.getCollection('users');
 
   collection.findOne({ _id: ObjectId(_id) }, async (err, existingUser) => {
-    // --- this section could (/should?) have been done as a separate endpoints for the actions
-    //  of blocking+unblocking.. we've done that elsewhere... but seemed overkill here
     if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
-      // the user is being blocked..
+      // User is being blocked.
       await sendBlockedEmail(existingUser.username);
     }
 
     if (existingUser['user-status'] === BLOCKED && userUpdate['user-status'] === ACTIVE) {
-      // the user is being re-activated..
+      // User is being re-activated.
       await sendUnblockedEmail(existingUser.username);
     }
-    //---
 
+    // Password update
     if (userUpdate.password) {
-      // we're updating the password, so do the dance...
       const { password: newPassword } = userUpdate;
       const { salt: oldSalt, hash: oldHash, blockedPasswordList: oldBlockedPasswordList = [] } = existingUser;
       // don't save the raw password or password confirmation to mongo...
@@ -153,7 +150,13 @@ exports.update = async (_id, update, callback) => {
       // queue the addition of the old salt/hash to our list of blocked passwords that we re-check
       // in 'passwordsCannotBeReUsed' rule
       userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
+      userUpdate.loginFailureCount = 0;
+      userUpdate.passwordUpdatedAt = Date.now();
+
+      // Send password update email notification to the user
+      sendPasswordUpdateEmail(existingUser.email, userUpdate.passwordUpdatedAt);
     }
+
     delete userUpdate.password;
     delete userUpdate.passwordConfirm;
     delete userUpdate.currentPassword;

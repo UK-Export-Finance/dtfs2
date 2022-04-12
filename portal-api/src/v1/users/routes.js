@@ -1,28 +1,23 @@
 const utils = require('../../crypto/utils');
 const login = require('./login.controller');
 const {
-  userNotFound, userIsBlocked, incorrectPassword, userIsDisabled,
+  userNotFound,
+  userIsBlocked,
+  incorrectPassword,
+  userIsDisabled,
 } = require('../../constants/login-results');
 const {
-  create, update, remove, list, findOne, disable,
+  create,
+  update,
+  remove,
+  list,
+  findOne,
+  disable,
+  findByUsername,
 } = require('./controller');
-const { sendPasswordUpdateEmail, resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
-
+const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
-
-const goodChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-=_+[]{};\\:"|,./<>?';
-const charAtRandom = () => goodChars[Math.floor(Math.random() * goodChars.length)];
-
-const generatePassword = () => {
-  let newPassword = '';
-
-  while (!newPassword || applyCreateRules({ password: newPassword }).length > 0) {
-    newPassword = `${newPassword}${charAtRandom()}`;
-  }
-
-  return newPassword;
-};
 
 module.exports.list = (req, res, next) => {
   list((err, users) => {
@@ -53,40 +48,64 @@ const combineErrors = (listOfErrors) => listOfErrors.reduce((obj, error) => {
   return response;
 }, {});
 
-module.exports.create = (req, res, next) => {
-  const userToCreate = req.body;
-
-  if (userToCreate.autoCreatePassword === 'true') {
-    userToCreate.password = generatePassword();
-    userToCreate.passwordConfirm = userToCreate.password;
+module.exports.create = async (req, res, next) => {
+  if (req?.body?._csrf) {
+    delete req.body._csrf;
   }
 
-  const errors = applyCreateRules(userToCreate);
-  if (errors.length) {
-    return res.status(400).json({
-      success: false,
-      errors: {
-        count: errors.length,
-        errorList: combineErrors(errors),
-      },
-    });
-  }
-  const { password } = userToCreate;
-  const saltHash = utils.genPassword(password);
-
-  const { salt, hash } = saltHash;
-
-  const newUser = {
-    ...userToCreate,
-    salt,
-    hash,
-  };
-
-  return create(newUser, (err, user) => {
-    if (err) {
-      return next(err);
+  await findByUsername(req.body.email, (error, user) => {
+    let userExists = {};
+    if (user) {
+      // User exists with same email address
+      userExists = {
+        email: {
+          order: '1',
+          text: 'User already exists.',
+        },
+      };
     }
-    return res.json({ success: true, user });
+
+    if (Object.keys(userExists).length) {
+      return res.status(400).json({
+        success: false,
+        errors: {
+          count: userExists.length,
+          errorList: userExists,
+        },
+      });
+    }
+
+    const userToCreate = req.body;
+    const errors = applyCreateRules(userToCreate);
+
+    if (errors.length) {
+      return res.status(400).json({
+        success: false,
+        errors: {
+          count: errors.length,
+          errorList: combineErrors(errors),
+        },
+      });
+    }
+    const { password } = userToCreate;
+    const saltHash = utils.genPassword(password);
+
+    userToCreate.password = '';
+    userToCreate.passwordConfirm = '';
+
+    const { salt, hash } = saltHash;
+    const newUser = {
+      ...userToCreate,
+      salt,
+      hash,
+    };
+
+    return create(newUser, (err, u) => {
+      if (err) {
+        return next(err);
+      }
+      return res.json({ success: true, u });
+    });
   });
 };
 
@@ -106,12 +125,12 @@ module.exports.updateById = (req, res, next) => {
   if (req?.body?._csrf) {
     delete req.body._csrf;
   }
+
   findOne(req.params._id, (err, user) => {
     if (err) {
       next(err);
     } else if (user) {
       const errors = applyUpdateRules(user, req.body);
-
       if (errors.length) {
         res.status(400).json({
           success: false,
@@ -312,8 +331,6 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
     loginFailureCount: 0,
     passwordUpdatedAt: `${Date.now()}`,
   };
-
-  sendPasswordUpdateEmail(user.email, updateData.passwordUpdatedAt);
 
   return update(user._id, updateData, (updateErr) => {
     if (updateErr) {

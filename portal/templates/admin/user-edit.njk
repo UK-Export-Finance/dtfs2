@@ -26,6 +26,29 @@
 
    <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+    {{ govukInput({
+    attributes: {"data-cy": "firstname"},
+    label: {
+      text: "First name"
+    },
+    classes: "govuk-!-width-one-third",
+    id: "firstname",
+    name: "firstname",
+    value: displayedUser.firstname
+  }) }}
+
+  {{ govukInput({
+    attributes: {"data-cy": "surname"},
+    label: {
+      text: "Surname"
+    },
+    classes: "govuk-!-width-one-third",
+    id: "surname",
+    name: "surname",
+    value: displayedUser.surname
+  }) }}
+
     {{ govukCheckboxes({
       idPrefix: "roles",
       name: "roles",
@@ -57,13 +80,13 @@
         },
         {
           value: "ukef_operations",
-          text: "UKEF Operations",
+          text: "UK Export Finance Operations",
           checked: displayedUser.roles.includes("ukef_operations"),
           attributes: {"data-cy": "role-ukef_operations"}
         },
         {
           value: "EFM",
-          text: "EFM",
+          text: "Export Finance Manager (EFM)",
           checked: displayedUser.roles.includes("EFM"),
           attributes: {"data-cy": "role-efm"}
         }
@@ -75,7 +98,6 @@
       <p class="govuk-body">Email<br/>{{ displayedUser.email }}</p>
       <p class="govuk-body">Display name<br/>{{ displayedUser.username }}</p>
     {% else %}
-
       {{ govukInput({
         attributes: {
           "data-cy": "username",
@@ -90,7 +112,8 @@
         classes: "govuk-!-width-one-third",
         id: "email",
         name: "email",
-        value: displayedUser.username
+        value: displayedUser.username,
+        errorMessage: validationErrors.errorList.email
       }) }}
 
       {{
@@ -195,71 +218,58 @@
       }
     ]
   }) }}
-
-  {{ govukInput({
-    attributes: {"data-cy": "firstname"},
-    label: {
-      text: "First name"
-    },
-    classes: "govuk-!-width-one-third",
-    id: "firstname",
-    name: "firstname",
-    value: displayedUser.firstname
-  }) }}
-
-  {{ govukInput({
-    attributes: {"data-cy": "surname"},
-    label: {
-      text: "Surname"
-    },
-    classes: "govuk-!-width-one-third",
-    id: "surname",
-    name: "surname",
-    value: displayedUser.surname
-  }) }}
   
-  {% set banksList = [
-    {
-          value: "all",
-          text: "Any",
-          selected: true
-    }
-  ] %}
-  {% for bank in banks %}
-   {%
-      set banksList = (banksList.push({
-      value: bank.id,
-      text: bank.name
-    }), banksList)
-   %}
-  {% endfor %}
-  
-  {{ govukSelect({
-    id: "bank",
-    name: "bank",
-    label: {
-      text: "Bank"
-    },
-    hint: {
-      text: "Applicable for Bank Staff users only."
-    },
-    attributes: {
-      "data-cy": "bank"
-    },
-    classes: "govuk-!-width-one-third",
-    items: banksList
-  }) }}
+  {% if not _id %}
+
+    {% set banksList = [
+      {
+            value: "all",
+            text: "Any"
+      }
+    ] %}
+    {% for bank in banks %}
+
+      {% set selectedBank = (bank.id === displayedUser.bank.id) %}
+
+    {%
+        set banksList = (banksList.push({
+        value: bank.id,
+        text: bank.name,
+        selected: selectedBank
+      }), banksList)
+    %}
+
+    {% endfor %}
+    
+    {{ govukSelect({
+      id: "bank",
+      name: "bank",
+      label: {
+        text: "Bank"
+      },
+      hint: {
+        text: "Applicable for Bank Staff users only."
+      },
+      attributes: {
+        "data-cy": "bank"
+      },
+      classes: "govuk-!-width-one-third",
+      items: banksList
+    }) }}
+
+  {% endif %}
 
   {% if _id %}
     {{ govukButton({
       attributes: {"data-cy": "Save"},
+      classes: "govuk-!-margin-right-1",
       text: "Save"
     }) }}
 
     {{ govukButton({
         text: "Change password",
-        classes: "govuk-button--secondary",
         href: "/admin/users/change-password/" + _id,
+        classes: "govuk-!-margin-right-1",
         attributes: {
           'data-cy': 'change-password-button'
         }
@@ -268,9 +278,20 @@
   {% else %}
     {{ govukButton({
       attributes: {"data-cy": "CreateUser"},
+      classes: "govuk-!-margin-right-1",
       text: "Create user"
     }) }}
   {% endif %}
+
+  {{ govukButton({
+        text: "Cancel",
+        classes: "govuk-button--secondary govuk-!-margin-right-1",
+        href: "/admin/users/",
+        attributes: {
+          'data-cy': 'user-edit-button-cancel'
+        }
+      })
+    }}
 
   </form>
 

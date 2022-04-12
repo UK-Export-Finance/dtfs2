@@ -1,4 +1,5 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% extends "index.njk" %}
 
@@ -7,119 +8,7 @@
 {% block content %}
   <h1 class="govuk-heading-l">User admin</h1>
 
-  <p class="govuk-body">
-    <a data-cy="AddUser" class="govuk-link" href="/admin/users/create">Add user</a>
-  </p>
-
-  {# <form method="POST" autocomplete="off" class="govuk-!-margin-top-4">
-
-    <div class="govuk-grid-row">
-
-      <div class="govuk-grid-column-one-third">
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="filterByNameOrEmail">
-            Name or email contains
-          </label>
-
-          <input class="govuk-input" id="filterByNameOrEmail" name="filterByNameOrEmail" type="text">
-
-        </div>
-      </div>
-
-      <div class="govuk-grid-column-one-third">
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="filterByRole">
-            Role
-          </label>
-
-          <select class="govuk-select govuk-!-width-full" id="filterByRole" name="filterByRole">
-            <option value="all">Any</option>
-            <option value="administrator">Administrator</option>
-            <option value="ukef_admin">UKEF admin</option>
-            <option value="ukef_staff">UKEF staff</option>
-            <option value="cont">Content Admin</option>
-            <option value="bank_admin">Bank Admin</option>
-            <option value="bank_staff">Bank staff</option>
-            <option value="maker_checker">Maker/Checker</option>
-            <option value="checker">Checker</option>
-            <option value="maker">Maker</option>
-            <option value="access_site_in_maintenance">Access site in maintenance mode</option>
-            <option value="ukef_operations">UKEF Operations</option>
-            <option value="ukef_efm">EFM</option>
-          </select>
-
-        </div>
-      </div>
-
-      <div class="govuk-grid-column-one-third">
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="filterByPermission">
-            Permission
-          </label>
-
-          <select class="govuk-select govuk-!-width-full" id="filterByPermission" name="filterByPermission">
-            <option value="all">Any</option>
-          </select>
-
-        </div>
-      </div>
-
-      <div class="govuk-grid-column-one-third">
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="filterByStatus">
-            Status
-          </label>
-
-          <select class="govuk-select govuk-!-width-full" id="filterByStatus" name="filterByStatus">
-            <option value="all">Any</option>
-            <option value="active">Active</option>
-            <option value="blocked">Blocked</option>
-          </select>
-        </div>
-
-      </div>
-
-      <div class="govuk-grid-column-one-third">
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="filterByOrganisation">
-            Organisation - bank
-          </label>
-
-          <select class="govuk-select govuk-!-width-full" id="filterByOrganisation" name="filterByOrganisation">
-            <option value="all">Any</option>
-            {% for bank in banks %}
-              <option value="{{ bank.id}}">{{ bank.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <button class="govuk-button govuk-button--secondary" data-module="govuk-button">
-      Apply filters
-    </button>
-
-  </form>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-third">
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="filterByAction">
-            Action
-          </label>
-
-          <select class="govuk-select govuk-!-width-full" id="filterByStatus" name="filterByAction">
-            <option value="all">Block the selected user(s)</option>
-            <option value="all">Unblock the selected user(s)</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <button class="govuk-button" data-module="govuk-button">
-      Apply to selectes items
-    </button> #}
-
-  <table class="govuk-table govuk-!-margin-bottom-0 govuk-!-margin-top-4">
+  <table class="govuk-table govuk-!-margin-bottom-0 govuk-!-margin-top-4 govuk-!-margin-bottom-4">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
       {# <th scope="col" class="govuk-table__header govuk-!-font-size-14">
@@ -216,5 +105,24 @@
 
         </tbody>
   </table>
+
+  {{ govukButton({
+      text: "Add user",
+      href: "/admin/users/create",
+      classes: "govuk-!-margin-right-1",
+      attributes: {
+        "data-cy": "admin-users-save"
+        }
+  }) }}
+
+  {{ govukButton({
+        text: "Cancel",
+        classes: "govuk-button--secondary govuk-!-margin-right-1",
+        href: "/dashboard",
+        attributes: {
+          'data-cy': 'admin-users-cancel'
+        }
+      })
+  }}
 
 {% endblock %}
