@@ -268,7 +268,10 @@ exports.changeStatus = async (req, res) => {
   }
 
   // If status of correct type, send update email
-  if ([DEAL_STATUS.READY_FOR_APPROVAL, DEAL_STATUS.CHANGES_REQUIRED, DEAL_STATUS.SUBMITTED_TO_UKEF].includes(status)) {
+  if ([DEAL_STATUS.READY_FOR_APPROVAL,
+    DEAL_STATUS.CHANGES_REQUIRED,
+    DEAL_STATUS.SUBMITTED_TO_UKEF]
+    .includes(status)) {
     const { user } = req;
     await sendStatusUpdateEmail(user, existingApplication, status);
   }
