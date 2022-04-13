@@ -51,7 +51,6 @@ context('Admin user updates an existing user', () => {
 
     editUser.save().click();
 
-
     users.row(userToUpdate).roles().invoke('text').then((text) => {
       expect(text.trim()).to.equal('checker');
     });

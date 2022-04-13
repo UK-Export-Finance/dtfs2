@@ -11,7 +11,7 @@ const { sendPasswordUpdateEmail } = require('./reset-password.controller');
 const createPasswordToken = async (email) => {
   const collection = await db.getCollection('users');
 
-  const user = await collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } });
+  const user = await collection.findOne({ email });
 
   if (!user) {
     return false;
@@ -85,12 +85,12 @@ exports.findOne = async (_id, callback) => {
 
 exports.findByUsername = async (username, callback) => {
   const collection = await db.getCollection('users');
-  collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
+  collection.findOne({ username }, callback);
 };
 
 exports.findByEmail = async (email, callback) => {
   const collection = await db.getCollection('users');
-  collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } }, callback);
+  collection.findOne({ email }, callback);
 };
 
 exports.create = async (user, callback) => {

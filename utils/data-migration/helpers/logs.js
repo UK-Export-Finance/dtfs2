@@ -61,7 +61,6 @@ const addWarning = (v1Id, msg) => {
 
 const addSuccess = (v1Id) => {
   logData.success.push(v1Id);
-  // console.log(msg);
   saveToFile();
 };
 

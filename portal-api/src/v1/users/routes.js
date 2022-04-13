@@ -54,7 +54,6 @@ module.exports.create = async (req, res, next) => {
   }
   await findByEmail(req.body.email, (error, account) => {
     let userExists = {};
-
     if (account) {
       // User exists with same email address
       userExists = {
