@@ -6,12 +6,39 @@ const businessRules = require('../../config/businessRules');
 const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
-const { sendPasswordUpdateEmail } = require('./reset-password.controller');
+
+/**
+ * Send a password update confirmation email with update timestamp.
+ * @param {String} emailAddress User email address
+ * @param {String} timestamp Password update timestamp
+ */
+const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
+  const EMAIL_TEMPLATE_ID = '41235821-7e52-4d63-a773-fa147362c5f0';
+  const formattedTimestamp = new Date(Number(timestamp)).toLocaleDateString('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    month: 'long',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    timeZoneName: 'short'
+  });
+
+  await sendEmail(
+    EMAIL_TEMPLATE_ID,
+    emailAddress,
+    {
+      timestamp: formattedTimestamp,
+    },
+  );
+};
+exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
 const createPasswordToken = async (email) => {
   const collection = await db.getCollection('users');
 
-  const user = await collection.findOne({ email });
+  const user = await collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } });
 
   if (!user) {
     return false;
@@ -85,7 +112,7 @@ exports.findOne = async (_id, callback) => {
 
 exports.findByUsername = async (username, callback) => {
   const collection = await db.getCollection('users');
-  collection.findOne({ username }, callback);
+  collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.findByEmail = async (email, callback) => {

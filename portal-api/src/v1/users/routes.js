@@ -222,7 +222,7 @@ module.exports.resetPasswordWithToken = async (req, res, next) => {
   const { currentPassword, password, passwordConfirm } = req.body;
 
   // Only valid for user initiated password reset operation
-  if (currentPassword) {
+  if (Object.prototype.hasOwnProperty.call(req.body, 'currentPassword')) {
     if (currentPassword.trim() === '') {
       return res.status(400).json({
         success: false,
