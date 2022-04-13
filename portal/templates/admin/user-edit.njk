@@ -277,7 +277,9 @@
     }}
   {% else %}
     {{ govukButton({
-      attributes: {"data-cy": "CreateUser"},
+      attributes: {
+        "data-cy": "create-user-add"
+        },
       classes: "govuk-!-margin-right-1",
       text: "Create user"
     }) }}
@@ -288,7 +290,7 @@
         classes: "govuk-button--secondary govuk-!-margin-right-1",
         href: "/admin/users/",
         attributes: {
-          'data-cy': 'user-edit-button-cancel'
+          'data-cy': 'create-user-cancel'
         }
       })
     }}
