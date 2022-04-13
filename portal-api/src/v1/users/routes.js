@@ -13,7 +13,7 @@ const {
   list,
   findOne,
   disable,
-  findByUsername,
+  findByEmail,
 } = require('./controller');
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
@@ -52,10 +52,10 @@ module.exports.create = async (req, res, next) => {
   if (req?.body?._csrf) {
     delete req.body._csrf;
   }
-
-  await findByUsername(req.body.email, (error, user) => {
+  await findByEmail(req.body.email, (error, account) => {
     let userExists = {};
-    if (user) {
+
+    if (account) {
       // User exists with same email address
       userExists = {
         email: {
@@ -100,11 +100,11 @@ module.exports.create = async (req, res, next) => {
       hash,
     };
 
-    return create(newUser, (err, u) => {
+    return create(newUser, (err, user) => {
       if (err) {
         return next(err);
       }
-      return res.json({ success: true, u });
+      return res.json({ success: true, user });
     });
   });
 };

@@ -88,6 +88,11 @@ exports.findByUsername = async (username, callback) => {
   collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
+exports.findByEmail = async (email, callback) => {
+  const collection = await db.getCollection('users');
+  collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } }, callback);
+};
+
 exports.create = async (user, callback) => {
   const insert = {
     'user-status': ACTIVE,
