@@ -1,5 +1,5 @@
 const api = require('../../api');
-const { getTask } = require('./helpers');
+const { getTask, showAmendmentButton } = require('./helpers');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
 
@@ -178,6 +178,7 @@ const getCaseFacility = async (req, res) => {
     facilityId,
     facilityTfm: facility.tfm,
     user: req.session.user,
+    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams),
   });
 };
 
