@@ -1,27 +1,38 @@
 {% extends "case/case.njk" %}
 {% import './_macros/facility_details.njk' as details %}
 {% import './_macros/premium_schedule.njk' as schedule %}
+{% import './_macros/amendments.njk' as amendments %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% block sub_content %}
   {% set facilityDetailsHtml %}
-  {% set detailsComponentData = {
-    deal: deal,
-    facility: facility,
-    user: user,
-    facilityTfm: facilityTfm
-  } %}
-  {{ details.render(detailsComponentData) }}
+    {% set detailsComponentData = {
+      deal: deal,
+      facility: facility,
+      user: user,
+      facilityTfm: facilityTfm
+    } %}
+    {{ details.render(detailsComponentData) }}
   {% endset %}
-  {% set premiumScheduleHtml %}
 
-  {% set scheduleComponentData = {
-    facility: facility,
-    facilityTfm: facilityTfm,
-    user: user
-  } %}
+  {% set premiumScheduleHtml %}
+    {% set scheduleComponentData = {
+      facility: facility,
+      facilityTfm: facilityTfm,
+      user: user
+    } %}
     {{ schedule.render(scheduleComponentData) }}
+  {% endset %}
+
+  {% set amendmentsHtml %}
+    {% set amendmentsComponentData = {
+      facility: facility,
+      facilityTfm: facilityTfm,
+      user: user,
+      showAmendmentButton: showAmendmentButton
+    } %}
+    {{ amendments.render(amendmentsComponentData) }}
   {% endset %}
 
 
@@ -36,7 +47,7 @@
       {
         label: "Details",
         id: "details",
-        panel: {
+         panel: {
           html: facilityDetailsHtml
         },
         attributes: {
@@ -51,6 +62,16 @@
         },
         attributes: {
           'data-cy': 'facility-details-tab-premium-schedule'
+        }
+      },
+      {
+        label: "Amendments",
+        id: "amendments",
+        panel: {
+          html: amendmentsHtml
+        },
+        attributes: {
+          'data-cy': 'facility-details-tab-amendments'
         }
       }
     ]
