@@ -6,6 +6,7 @@ const businessRules = require('../../config/businessRules');
 const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
+const CONSTNATS = require('../../constants');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -13,7 +14,6 @@ const utils = require('../../crypto/utils');
  * @param {String} timestamp Password update timestamp
  */
 const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
-  const EMAIL_TEMPLATE_ID = '41235821-7e52-4d63-a773-fa147362c5f0';
   const formattedTimestamp = new Date(Number(timestamp)).toLocaleDateString('en-GB', {
     weekday: 'long',
     day: 'numeric',
@@ -26,7 +26,7 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
   });
 
   await sendEmail(
-    EMAIL_TEMPLATE_ID,
+    CONSTNATS.EMAIL_TEMPLATE_IDS.PASSWORD_UPDATE,
     emailAddress,
     {
       timestamp: formattedTimestamp,
@@ -58,27 +58,22 @@ const createPasswordToken = async (email) => {
 exports.createPasswordToken = createPasswordToken;
 
 const sendBlockedEmail = async (emailAddress) => {
-  const EMAIL_TEMPLATE_ID = '82506983-cb85-4f33-b962-922b850be7ac';
-
   await sendEmail(
-    EMAIL_TEMPLATE_ID,
+    CONSTNATS.EMAIL_TEMPLATE_IDS.BLOCKED,
     emailAddress,
     {},
   );
 };
 
 const sendUnblockedEmail = async (emailAddress) => {
-  const EMAIL_TEMPLATE_ID = '44959d08-6389-4f27-a6be-2faae8bea711';
-
   await sendEmail(
-    EMAIL_TEMPLATE_ID,
+    CONSTNATS.EMAIL_TEMPLATE_IDS.UNBLOCKED,
     emailAddress,
     {},
   );
 };
 
 const sendNewAccountEmail = async (user, resetToken) => {
-  const EMAIL_TEMPLATE_ID = '354031c8-8ca5-4ac7-9356-00613faf793c';
   const emailAddress = user.username;
 
   const variables = {
@@ -92,7 +87,7 @@ const sendNewAccountEmail = async (user, resetToken) => {
   };
 
   await sendEmail(
-    EMAIL_TEMPLATE_ID,
+    CONSTNATS.EMAIL_TEMPLATE_IDS.NEW_ACCOUNT,
     emailAddress,
     variables,
   );

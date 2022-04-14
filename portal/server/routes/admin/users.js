@@ -75,7 +75,9 @@ const handleRoles = (roles) => {
 
 // Admin - user create
 router.post('/users/create', async (req, res) => {
-  if (req?.body?.firstname && req?.body?.surname && req?.body?.roles) {
+  const { firstname, surname, roles } = req.body;
+
+  if (firstname && surname && roles) {
     const { userToken } = requestParams(req);
     const userToCreate = {
       ...req.body,
