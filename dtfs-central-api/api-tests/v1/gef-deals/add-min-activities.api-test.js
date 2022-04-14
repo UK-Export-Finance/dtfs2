@@ -158,6 +158,8 @@ describe('facilityChangePortalActivity()', () => {
     expect(portalActivityObject.facilityType).toEqual(`${mockFacilityOne[0].type} facility`);
 
     expect(portalActivityObject.ukefFacilityId).toEqual(mockFacilityOne[0].ukefFacilityId);
+
+    expect(portalActivityObject.facilityId).toEqual(mockFacilityOne[0]._id);
   });
 
   it('should return a populated array with 2 in the issued facility activity object', async () => {
@@ -233,6 +235,7 @@ describe('portalActivityGenerator()', () => {
   const facility = {
     type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
     ukefFacilityId: 123456,
+    _id: 123,
   };
   const maker = {
     firstname: 'Joe',
@@ -306,6 +309,10 @@ describe('portalActivityGenerator()', () => {
     it('should correctly return ukefFacilityId', () => {
       expect(result.ukefFacilityId).toEqual(123456);
     });
+
+    it('should correctly return facilityId', () => {
+      expect(result.facilityId).toEqual(123);
+    });
   });
 
   describe('should correctly return populated object where facility undefined', () => {
@@ -367,6 +374,10 @@ describe('portalActivityGenerator()', () => {
 
     it('should correctly return ukefFacilityId', () => {
       expect(result.ukefFacilityId).toEqual('');
+    });
+
+    it('should correctly return facilityId', () => {
+      expect(result.facilityId).toEqual('');
     });
   });
 });

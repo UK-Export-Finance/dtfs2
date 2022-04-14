@@ -196,6 +196,8 @@ describe('facilityChangePortalActivity()', () => {
     expect(portalActivityObject.facilityType).toEqual(`${mockFacilityOne[0].type} facility`);
 
     expect(portalActivityObject.ukefFacilityId).toEqual(mockFacilityOne[0].ukefFacilityId);
+
+    expect(portalActivityObject.facilityId).toEqual(mockFacilityOne[0]._id);
   });
 
   it('should return a populated array with 2 in the issued facility activity object', async () => {

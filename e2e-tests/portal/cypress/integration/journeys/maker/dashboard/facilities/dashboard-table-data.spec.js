@@ -169,7 +169,6 @@ context('View dashboard facilities as a maker', () => {
     let expectedDate = format(gefFacility.submittedAsIssuedDate, 'd MMM yyyy');
     issuedDate(gefFacilityId).should('contain', expectedDate);
 
-
     //---------------------------------------------------------------
     // second facility (BSS)
     //---------------------------------------------------------------
@@ -203,17 +202,16 @@ context('View dashboard facilities as a maker', () => {
 
     // GEF link
     nameLink(gefFacilityId).click();
-    let expectedUrl = `/gef/application-details/${gefDeal._id}`;
+    let expectedUrl = `/gef/application-details/${gefDeal._id}#${gefFacilityId}`;
 
     cy.url().should('eq', relative(expectedUrl));
 
     // go back to the dashboard
     dashboardFacilities.visit();
 
-
     // BSS link
     nameLink(bssFacilityId).click();
-    expectedUrl = `/contract/${bssDeal._id}`;
+    expectedUrl = `/contract/${bssDeal._id}#${bssFacilityId}`;
 
     cy.url().should('eq', relative(expectedUrl));
   });
