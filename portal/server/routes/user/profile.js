@@ -28,6 +28,7 @@ router.get('/:_id', async (req, res) => {
   );
 });
 
+// When user is logged in and would like to change the password
 router.get('/:_id/change-password', async (req, res) => {
   const { _id } = requestParams(req);
 
@@ -41,8 +42,9 @@ router.get('/:_id/change-password', async (req, res) => {
   );
 });
 
+// When user is logged in and would like to change the password
 router.post('/:_id/change-password', async (req, res) => {
-  // ensure that the user is logged in
+  // Ensure that the user is logged in
   if (req?.session?.user) {
     const { _id } = requestParams(req);
 
