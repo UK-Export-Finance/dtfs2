@@ -8,6 +8,7 @@ const { ADMIN } = MOCK_USERS;
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
     username: 'another.address@some.com',
+    email: 'another.address@some.com',
     password: 'Aleg1tP@ssword',
     firstname: 'bobert',
     surname: 'the builder',
@@ -17,6 +18,19 @@ context('Admin user updates an existing user', () => {
 
   beforeEach(() => {
     cy.removeUserIfPresent(userToUpdate, ADMIN);
+  });
+
+  it('Go to users and back', () => {
+    // Login and go to the dashboard
+    cy.login(ADMIN);
+    cy.url().should('include', '/dashboard/deals');
+    header.users().click();
+
+    // Cancel
+    users.cancel().click();
+
+    // Back to the dashboard
+    cy.url().should('include', '/dashboard/deals');
   });
 
   it('Create a user, then edit the user and change their role(s)', () => {
@@ -50,7 +64,6 @@ context('Admin user updates an existing user', () => {
     editUser.surname().type('{selectAll}{backspace}Simpson');
 
     editUser.save().click();
-
 
     users.row(userToUpdate).roles().invoke('text').then((text) => {
       expect(text.trim()).to.equal('checker');
