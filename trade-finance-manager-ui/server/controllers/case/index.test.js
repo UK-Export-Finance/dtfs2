@@ -619,6 +619,7 @@ describe('controllers - case', () => {
           activeSubNavigation: 'facility',
           facilityId: req.params.facilityId,
           user: session.user,
+          showAmendmentButton: false,
         });
       });
     });
