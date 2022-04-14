@@ -51,11 +51,11 @@ authRouter.route('/deals').post(validate({ role: ['maker'] }), dealsController.c
 authRouter.route('/deals').get(validate({ role: ['maker', 'checker', 'admin'] }), dealsController.getQueryAllDeals);
 
 authRouter.route('/deals/:id/status')
-  .get(validate({ role: ['maker', 'checker'] }), dealStatus.findOne)
+  .get(validate({ role: ['maker', 'checker', 'admin'] }), dealStatus.findOne)
   .put(validate({ role: ['maker', 'checker', 'interface'] }), dealStatus.update);
 
 authRouter.route('/deals/:id/submission-details')
-  .get(validate({ role: ['maker', 'checker'] }), dealSubmissionDetails.findOne)
+  .get(validate({ role: ['maker', 'checker', 'admin'] }), dealSubmissionDetails.findOne)
   .put(validate({ role: ['maker'] }), dealSubmissionDetails.update);
 
 authRouter.route('/deals/:id/additionalRefName').put(validate({ role: ['maker'] }), dealName.update);
@@ -63,7 +63,7 @@ authRouter.route('/deals/:id/additionalRefName').put(validate({ role: ['maker'] 
 authRouter.route('/deals/:id/loan/create').put(validate({ role: ['maker'] }), loans.create);
 
 authRouter.route('/deals/:id/loan/:loanId')
-  .get(validate({ role: ['maker'] }), loans.getLoan)
+  .get(validate({ role: ['maker', 'admin'] }), loans.getLoan)
   .put(validate({ role: ['maker'] }), loans.updateLoan)
   .delete(validate({ role: ['maker'] }), loans.deleteLoan);
 
@@ -75,7 +75,7 @@ authRouter.route('/deals/:id/bond/create').put(validate({ role: ['maker'] }), bo
 
 authRouter
   .route('/deals/:id/bond/:bondId')
-  .get(validate({ role: ['maker'] }), bonds.getBond)
+  .get(validate({ role: ['maker', 'admin'] }), bonds.getBond)
   .put(validate({ role: ['maker'] }), bonds.updateBond)
   .delete(validate({ role: ['maker'] }), bonds.deleteBond);
 
@@ -101,7 +101,7 @@ authRouter.route('/deals/:id/eligibility-documentation').put(validate({ role: ['
 
 authRouter
   .route('/deals/:id/eligibility-documentation/:fieldname/:filename')
-  .get(validate({ role: ['maker', 'checker'] }), dealEligibilityDocumentation.downloadFile);
+  .get(validate({ role: ['maker', 'checker', 'admin'] }), dealEligibilityDocumentation.downloadFile);
 
 authRouter
   .route('/banks')
@@ -124,7 +124,7 @@ authRouter.route('/countries/:code').get(countries.findOne);
 
 authRouter
   .route('/feedback')
-  .get(validate({ role: ['data-admin'] }), feedback.findAll);
+  .get(validate({ role: ['data-admin', 'admin'] }), feedback.findAll);
 
 openRouter
   .route('/feedback')
@@ -132,7 +132,7 @@ openRouter
 
 authRouter
   .route('/feedback/:id')
-  .get(validate({ role: ['data-admin'] }), feedback.findOne)
+  .get(validate({ role: ['data-admin', 'admin'] }), feedback.findOne)
   .delete(validate({ role: ['data-admin'] }), feedback.delete);
 
 authRouter.route('/industry-sectors').get(industrySectors.findAll);
@@ -182,8 +182,8 @@ openRouter.route('/users/reset-password').post(users.resetPassword);
 openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswordWithToken);
 
 // Portal reports
-authRouter.route('/reports/unissued-facilities').get(validate({ role: ['maker', 'checker'] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
-authRouter.route('/reports/review-ukef-decision').get(validate({ role: ['maker', 'checker'] }), ukefDecisionReport.reviewUkefDecisionReports);
+authRouter.route('/reports/unissued-facilities').get(validate({ role: ['maker', 'checker', 'admin'] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
+authRouter.route('/reports/review-ukef-decision').get(validate({ role: ['maker', 'checker', 'admin'] }), ukefDecisionReport.reviewUkefDecisionReports);
 
 // token-validator
 authRouter.get('/validate', validate(), (req, res) => {

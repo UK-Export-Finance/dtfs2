@@ -42,14 +42,19 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
             facilityOneId = facility.body.details._id;
+            MOCK_FACILITY_ONE._id = facility.body.details._id;
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
           });
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE));
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR));
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) => {
+            MOCK_FACILITY_THREE._id = facility.body.details._id;
+            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE);
+          });
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+            MOCK_FACILITY_FOUR._id = facility.body.details._id;
+            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR);
+          });
           cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
         });
       });
@@ -479,7 +484,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[0].type} facility ${unissuedFacilitiesArray[0].ukefFacilityId}`);
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[0].ukefFacilityId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[0]._id}`));
 
       applicationActivities.subNavigationBarActivities().click();
 
@@ -491,7 +496,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[1].type} facility ${unissuedFacilitiesArray[1].ukefFacilityId}`);
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[1].ukefFacilityId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[1]._id}`));
 
       applicationActivities.subNavigationBarActivities().click();
 
@@ -503,7 +508,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[2].type} facility ${unissuedFacilitiesArray[2].ukefFacilityId}`);
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[2].ukefFacilityId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[2]._id}`));
     });
 
     it('should not contain already issued facility or submission message', () => {

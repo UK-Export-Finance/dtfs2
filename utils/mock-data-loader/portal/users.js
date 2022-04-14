@@ -127,6 +127,18 @@ const USERS = [
     },
   },
   {
+    username: 'ADMINNOMAKER',
+    password: 'AbC!2345',
+    firstname: 'Julius',
+    surname: 'No',
+    email: '',
+    timezone: 'Europe/London',
+    roles: ['admin'],
+    bank: {
+      id: '*',
+    },
+  },
+  {
     username: 'UKEF_OPERATIONS',
     password: 'AbC!2345',
     firstname: 'Elliot',
