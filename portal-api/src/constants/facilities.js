@@ -28,6 +28,11 @@ const GEF_FACILITY_PROVIDED_DETAILS = {
   OTHER: 'Other',
 };
 
+const DAY_COUNT_BASIS = {
+  360: '360',
+  365: '365',
+};
+
 const FACILITIES_STAGE = {
   LOAN: {
     CONDITIONAL: 'Conditional',
@@ -64,6 +69,7 @@ module.exports = {
   FEE_TYPE,
   FEE_FREQUENCY,
   GEF_FACILITY_PROVIDED_DETAILS,
+  DAY_COUNT_BASIS,
   FACILITIES_STAGE,
   TYPE,
   DEAL_STATUS,

@@ -47,7 +47,6 @@ services:
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL=${ESTORE_URL}
       - SESSION_SECRET
-      - REDIS_HOSTNAME=redis
     command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
