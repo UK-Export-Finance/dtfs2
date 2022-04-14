@@ -1,6 +1,7 @@
 const facilityPage = {
   facilityTabDetails: () => cy.get('[data-cy="facility-details-tab-details"]'),
   facilityTabPremiumSchedule: () => cy.get('[data-cy="facility-details-tab-premium-schedule"]'),
+  facilityTabAmendments: () => cy.get('[data-cy="facility-details-tab-amendments"]'),
 
   firstDrawdownAmountInExportCurrency: () => cy.get('[data-cy="first-drawdown-amount-in-export-currency"]'),
   facilityStage: () => cy.get('[data-cy="facility-stage"]'),
