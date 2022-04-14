@@ -1,3 +1,5 @@
+const { ObjectId } = require('bson');
+const { getCollection } = require('../../drivers/db-client');
 const {
   findOneTfmDeal,
   findOnePortalDeal,
@@ -163,20 +165,60 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
 
+// function used only for deals that have been migrated
+// note: this should not be used anymore once the migration for Amendments is complete
+const submitMigratedDeal = async (dealId, dealType, checker) => {
+  const deal = await getDeal(dealId, dealType);
+
+  if (!deal) {
+    console.error('TFM API - submitDealAfterUkefIds - deal not found ', dealId);
+    return false;
+  }
+  const facilitiesCollection = await getCollection('facilities');
+  const facilities = await facilitiesCollection.find({ dealId: ObjectId(deal._id) }).toArray();
+  if (facilities) {
+    deal.facilities = facilities;
+  }
+
+  const mappedDeal = mapSubmittedDeal({ dealSnapshot: deal });
+
+  const updatedDeal = await updatedIssuedFacilities(mappedDeal);
+
+  const isUpdatingToMIN = deal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
+
+  if (isUpdatingToMIN) {
+    const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker);
+    updatedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
+    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+      updatedDeal.manualInclusionNoticeSubmissionDate = portalMINUpdate.manualInclusionNoticeSubmissionDate;
+      updatedDeal.checkerMIN = portalMINUpdate.checkerMIN;
+    } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+      updatedDeal.manualInclusionNoticeSubmissionDate = portalMINUpdate.details.manualInclusionNoticeSubmissionDate;
+      updatedDeal.checkerMIN = portalMINUpdate.details.checkerMIN;
+    }
+    await sendAinMinAcknowledgement(updatedDeal);
+  }
+  await updatePortalDealStatus(updatedDeal);
+
+  return true;
+};
+
 const submitDealPUT = async (req, res) => {
-  const {
-    dealId,
-    dealType,
-    checker,
-  } = req.body;
+  const { dealId, dealType, checker } = req.body;
   let deal;
 
-  const canSubmitDealAfterUkefIds = await dealHasAllUkefIds(dealId);
-
-  if (canSubmitDealAfterUkefIds) {
-    deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+  const { status: canSubmitDealAfterUkefIds, message } = await dealHasAllUkefIds(dealId);
+  // check if the deal has been migrated from Portal V1 to Portal v2
+  if (message === 'Migrated deal') {
+    console.info('Submitting a migrated deal', dealId);
+    deal = await submitMigratedDeal(dealId, dealType, checker);
   } else {
-    deal = await submitDealBeforeUkefIds(dealId, dealType);
+    console.info('Submitting a brand new deal', dealId);
+    if (canSubmitDealAfterUkefIds) {
+      deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+    } else {
+      deal = await submitDealBeforeUkefIds(dealId, dealType);
+    }
   }
 
   if (!deal) {
@@ -189,11 +231,7 @@ const submitDealPUT = async (req, res) => {
 exports.submitDealPUT = submitDealPUT;
 
 const submitDealAfterUkefIdsPUT = async (req, res) => {
-  const {
-    dealId,
-    dealType,
-    checker,
-  } = req.body;
+  const { dealId, dealType, checker } = req.body;
 
   const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
 
