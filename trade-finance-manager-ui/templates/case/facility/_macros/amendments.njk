@@ -1,0 +1,27 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% set showAmendmentButton = params.showAmendmentButton %}
+
+  <div class="govuk-grid-row" data-cy="amendments">
+    <div class="govuk-grid-column-full">
+      {% if showAmendmentButton %}
+        {{ govukButton({
+          text: "Add an amendment request",
+          attributes: {
+            'data-cy': 'add-amendment-button'
+          }
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="govuk-grid-row separator-line govuk-!-margin-top-53 govuk-!-padding-top-6" data-cy="">
+
+
+  </div>
+
+
+
+
+{% endmacro %}
