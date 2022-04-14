@@ -48,7 +48,7 @@ describe('/v1/deals/:id/loan', () => {
 
     const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
-    dealId = deal._id; 
+    dealId = deal._id;
 
     const loanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     const { loanId: _id } = loanResponse.body;
