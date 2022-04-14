@@ -19,6 +19,7 @@ const DEAL_STAGE = {
   UKEF_APPROVED_WITH_CONDITIONS: 'Approved (with conditions)',
   APPROVED_WITHOUT_CONDITIONS: 'Approved (without conditions)',
   DECLINED: 'Declined',
+  CONFIRMED: 'Confirmed',
 };
 
 module.exports = {
