@@ -20,6 +20,7 @@ describe(page, () => {
   it('should render tabs', () => {
     wrapper.expectText('[data-cy="facility-details-tab-details"]').toRead('Details');
     wrapper.expectText('[data-cy="facility-details-tab-premium-schedule"]').toRead('Premium schedule');
+    wrapper.expectText('[data-cy="facility-details-tab-amendments"]').toRead('Amendments');
   });
 
   it('should render overview section', () => {
