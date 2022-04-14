@@ -1,28 +1,31 @@
-const {
-  findOneTfmDeal,
-} = require('../controllers/deal.controller');
+const { findOneTfmDeal, findOnePortalDeal } = require('../controllers/deal.controller');
 const CONSTANTS = require('../../constants');
 
 /**
- * Verified whether the deal and all its facilities have a UKEF ID
- * @param {String} dealId UKEF deal ID
+ * Verified whether the tfmDeal and all its facilities have a UKEF ID
+ * @param {String} dealId UKEF tfmDeal ID
  * @returns {Boolean}  Boolean value
  */
 const dealHasAllUkefIds = async (dealId) => {
-  const deal = await findOneTfmDeal(dealId);
+  const portalDeal = await findOnePortalDeal(dealId);
+  // check if the deal has NOT been migrated
+  if (!Object.prototype.hasOwnProperty.call(portalDeal, 'dataMigration')) {
+    const tfmDeal = await findOneTfmDeal(dealId);
 
-  if (deal && deal.dealSnapshot && deal.dealSnapshot.facilities) {
-    const dealHasId = deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
-      ? !!deal.dealSnapshot.ukefDealId
-      : !!deal.dealSnapshot.details.ukefDealId;
+    if (tfmDeal && tfmDeal.dealSnapshot && tfmDeal.dealSnapshot.facilities) {
+      const dealHasId = tfmDeal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
+        ? !!tfmDeal.dealSnapshot.ukefDealId
+        : !!tfmDeal.dealSnapshot.details.ukefDealId;
 
-    const facilitiesHaveIds = deal.dealSnapshot.facilities.filter((f) =>
-      !f.facilitySnapshot.ukefFacilityId).length === 0;
+      const facilitiesHaveIds = tfmDeal.dealSnapshot.facilities.filter((f) => !f.facilitySnapshot.ukefFacilityId).length === 0;
 
-    return dealHasId && facilitiesHaveIds;
+      return { status: dealHasId && facilitiesHaveIds };
+    }
+
+    return { status: false, message: 'TFM Deal not found' };
   }
-
-  return false;
+  // return `true` if the deal has been migrated
+  return { status: false, message: 'Migrated deal' };
 };
 
 module.exports = dealHasAllUkefIds;

@@ -2,16 +2,11 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 
 const updatePortalDealStatus = async (deal) => {
-  const {
-    _id: dealId,
-    dealType,
-    submissionType,
-  } = deal;
+  const { _id: dealId, dealType, submissionType } = deal;
 
   let newStatus;
 
-  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-    || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
+  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
     newStatus = CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED;
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
       await api.updatePortalBssDealStatus(dealId, newStatus);
