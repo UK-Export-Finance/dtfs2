@@ -2,7 +2,7 @@ name: PR tests - Trade Finance Manager API
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main, amendments ]
     paths:
     - 'portal/**'
     - 'gef-ui/**'

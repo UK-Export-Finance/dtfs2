@@ -2,7 +2,7 @@ name: PR tests - Number Generator Function App
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main, amendments ]
     paths:
     - 'azure-functions/number-generator-function/**'
   schedule:
