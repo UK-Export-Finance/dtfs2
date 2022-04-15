@@ -98,13 +98,39 @@ jobs:
       name: APITEST
     runs-on: ubuntu-latest
     env:
-      UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
-      UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
       AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
       AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
+      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
+
+      GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
+      GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+
       JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
       JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+
+      MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
+      MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
+      MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}
+      MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}
+      MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}
+      MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
+      MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
+      MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
+      MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
+      MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
+      MULESOFT_API_UKEF_MDM_EA_URL: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }}
+      MULESOFT_API_UKEF_MDM_EA_KEY: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}
+      MULESOFT_API_UKEF_MDM_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+
+      UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+      UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+      ESTORE_URL: ${{ secrets.ESTORE_URL }}
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
@@ -113,17 +139,18 @@ jobs:
         login-server: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
         password: ${{ secrets.ACR_PASSWORD_DEV }}
-    - name: Pull trade-finance-manager-api
-      run: |
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }}
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
     - name: Pull portal-api
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api
+    - name: Pull tfm-api
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
     - name: Start Docker Compose
       run: |
-        source secrets/set_jwt_keypair.sh && docker-compose -f docker-compose.gha.yml up -d
+        source secrets/set_jwt_keypair.sh
+        docker-compose -f docker-compose.gha.yml up --build -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
@@ -131,6 +158,7 @@ jobs:
         cd utils/mock-data-loader
         npm install --legacy-peer-deps
         node ./re-insert-mocks.js
+        pwd
     - name: Run API tests
       run: |
         docker-compose exec -T trade-finance-manager-api npm run api-test
