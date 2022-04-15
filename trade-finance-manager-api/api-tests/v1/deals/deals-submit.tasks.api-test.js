@@ -69,7 +69,7 @@ describe('/v1/deals', () => {
 
           const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
-          expect(sendEmailApiSpy).toBeCalledTimes(2);
+          expect(sendEmailApiSpy).toBeCalledTimes(3);
 
           const expected = {
             templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
