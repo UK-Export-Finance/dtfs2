@@ -102,6 +102,9 @@ jobs:
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
       AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
       AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
     steps:
     - uses: actions/checkout@v2
     # Pull the latest images to run with so we don't need to build them
@@ -114,9 +117,13 @@ jobs:
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }}
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api:${{ github.sha }} dtfs/trade-finance-manager-api
+    - name: Pull portal-api
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:${{ github.sha }} dtfs/portal-api
     - name: Start Docker Compose
       run: |
-        source secrets/set_jwt_keypair.sh && docker-compose -f docker-compose.gha.yml up -d trade-finance-manager-api
+        source secrets/set_jwt_keypair.sh && docker-compose -f docker-compose.gha.yml up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
     - name: Load mock data
@@ -151,12 +158,6 @@ jobs:
       matrix:
         machines: [ 1, 2, 3, 4 ]
     env:
-      AZURE_WORKFLOW_STORAGE_ACCOUNT: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}
-      AZURE_WORKFLOW_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}
-      AZURE_WORKFLOW_FILESHARE_NAME: ${{ secrets.AZURE_WORKFLOW_FILESHARE_NAME }}
-      AZURE_WORKFLOW_EXPORT_FOLDER: ${{ secrets.AZURE_WORKFLOW_EXPORT_FOLDER }}
-      AZURE_WORKFLOW_IMPORT_FOLDER: ${{ secrets.AZURE_WORKFLOW_IMPORT_FOLDER }}
-
       AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
       AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
       AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
