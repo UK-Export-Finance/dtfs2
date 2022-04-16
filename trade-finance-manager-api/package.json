@@ -15,7 +15,7 @@
     "start:dev": "npx nodemon src/index.js",
     "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js ",
     "unit-test-quick": "jest --config=unit.jest.config.js --testTimeout=10000",
-    "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js ",
+    "api-test": "jest --notify --coverage --verbose --runInBand --forceExit --config=api-test.jest.config.js",
     "api-test-dev": "jest --notify --verbose --runInBand --detectOpenHandles --config=api-test.jest.config.js ",
     "api-test-file": "jest --config=api-test-file.jest.config.js --runInBand --verbose --testMatch ",
     "api-test-quick": "jest --config=api-test.jest.config.js --runInBand --testTimeout=10000"
