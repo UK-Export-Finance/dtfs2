@@ -30,7 +30,7 @@ jobs:
         echo Setting environment to ${{ env.environment }}
 
   build:
-    name: Build and push Trade Finance Manager API
+    name: Build and push API Services
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -39,7 +39,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Commit hash
       run: "echo GITHUB_SHA=${{ github.sha }}"
-    - name: Build and push
+    - name: TFM-API - Build and push
       uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
@@ -48,6 +48,28 @@ jobs:
         repository: trade-finance-manager-api
         path: trade-finance-manager-api
         tags: latest
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+    - name: Portal API - Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: portal-api
+        path: portal-api
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+    - name: DTFS Central API - Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: dtfs-central-api
+        path: dtfs-central-api
+        tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
