@@ -96,14 +96,30 @@ jobs:
         login-server: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
         password: ${{ secrets.ACR_PASSWORD_DEV }}
-    - name: Pull trade-finance-manager-api
+    - name: Pull portal-api
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api dtfs/portal-api
+    - name: Pull portal
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui dtfs/portal
+    - name: Pull tfm-api
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api dtfs/trade-finance-manager-api
+    - name: Pull tfm-ui
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-ui
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-ui dtfs/trade-finance-manager-ui
+    - name: Pull dtfs-central-api
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api:${{ github.sha }} dtfs/dtfs-central-api
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose -f docker-compose.gha.yml up -d trade-finance-manager-api
+        docker-compose -f docker-compose.gha.yml up -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10        
     - name: Load mock data
