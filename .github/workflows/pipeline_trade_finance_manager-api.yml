@@ -108,8 +108,6 @@ jobs:
       MULESOFT_API_UKEF_MDM_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-      UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
-      UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
       ESTORE_URL: ${{ secrets.ESTORE_URL }}
     steps:
     - uses: actions/checkout@v2
