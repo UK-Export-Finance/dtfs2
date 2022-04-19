@@ -236,6 +236,7 @@ const findFacilitesByDealId = async (dealId) => {
 };
 
 const updateFacility = async (facilityId, facilityUpdate) => {
+  console.log('rrrrrrrrrrrrrrrrrrrrrr', facilityId, facilityUpdate);
   try {
     const response = await axios({
       method: 'put',

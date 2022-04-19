@@ -15,6 +15,7 @@ const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-p
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
 const createActivityMutation = require('./graphql/mutations/create-activity');
+const createAmendmentMutation = require('./graphql/mutations/create-amendment');
 
 require('dotenv').config();
 
@@ -260,6 +261,15 @@ const getUser = async (userId) => {
   }
 };
 
+const createAmendment = async (_id, amendmentUpdate) => {
+  const updateVariable = {
+    _id,
+    amendmentUpdate,
+  };
+  console.log('tfm ui create amendnment');
+  return apollo('PUT', createAmendmentMutation, updateVariable);
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -280,4 +290,5 @@ module.exports = {
   login,
   getFacilities,
   createFeedback,
+  createAmendment,
 };

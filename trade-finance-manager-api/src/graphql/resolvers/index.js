@@ -15,6 +15,7 @@ const updateProbabilityOfDefault = require('./mutation-update-probability-of-def
 const updateUnderwriterManagersDecision = require('./mutation-update-underwriter-managers-decision');
 const updateLeadUnderwriter = require('./mutation-update-lead-underwriter');
 const createActivity = require('./mutation-update-activity');
+const createAmendment = require('./mutation-update-amendment');
 
 const resolvers = {
   Query: {
@@ -36,6 +37,7 @@ const resolvers = {
     updateUnderwriterManagersDecision: (root, args) => updateUnderwriterManagersDecision(args),
     updateLeadUnderwriter: (root, args) => updateLeadUnderwriter(args),
     createActivity: (root, args) => createActivity(args),
+    createAmendment: (root, args) => createAmendment(args),
   },
 };
 

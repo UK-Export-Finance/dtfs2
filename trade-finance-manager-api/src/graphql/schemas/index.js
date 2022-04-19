@@ -297,6 +297,11 @@ type PremiumScheduleData {
   isAtive: String
 }
 
+type FacilityAmendments {
+  requestDate: Int
+  timestamp: Int
+}
+
 type TFMFacilityData {
   bondIssuerPartyUrn: String
   bondBeneficiaryPartyUrn: String
@@ -310,6 +315,7 @@ type TFMFacilityData {
   premiumTotals: String
   hasBeenAcknowledged: Boolean
   feeRecord: Float
+  amendments: [FacilityAmendments]
 }
 
 input TasksFilters {
@@ -484,6 +490,11 @@ input TFMActivityInput {
   label: String
 }
 
+input TFMAmendmentInput {
+  requestDate: Int
+  timestamp: Int
+}
+
 type TeamMember {
   _id: String
   firstName: String
@@ -518,6 +529,7 @@ type Mutation {
   updateUnderwriterManagersDecision(dealId: ID!, managersDecisionUpdate: TFMUnderwriterManagersDecisionInput): TFMDealData
   updateLeadUnderwriter(dealId: ID!, leadUnderwriterUpdate: TFMLeadUnderwriterInput): TFMDealData
   createActivity(dealId: ID!, activityUpdate: TFMActivityInput): TFMDealData
+  createAmendment(_id: ID!, amendmentUpdate: TFMAmendmentInput): TFMFacilityData
 }
 `;
 
