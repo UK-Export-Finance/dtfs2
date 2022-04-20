@@ -76,7 +76,19 @@ router.get('/reset-password', (req, res) => {
 });
 
 router.post('/reset-password', async (req, res) => {
+  const emailError = {
+    errMsg: 'Enter an email address in the correct format, for example, name@example.com',
+    errRef: 'email',
+  };
+  const loginErrors = [];
   const { email } = req.body;
+
+  if (!email) {
+    loginErrors.push(emailError);
+    return res.render('reset-password.njk', {
+      errors: validationErrorHandler(loginErrors),
+    });
+  }
 
   const { success } = await api.resetPassword(email);
 

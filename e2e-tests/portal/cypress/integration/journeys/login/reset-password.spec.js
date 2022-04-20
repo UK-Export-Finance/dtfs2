@@ -6,18 +6,32 @@ const MOCK_USERS = require('../../../fixtures/users');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Reset password', () => {
+context('Password management screens', () => {
   beforeEach(() => {
     resetPassword.visitRequestEmail();
   });
 
-  context('Request password', () => {
+  context('Forgot / Reset password', () => {
     beforeEach(() => {
       resetPassword.visitRequestEmail();
     });
 
-    it('An incorrect email displays error message', () => {
-      resetPassword.emailInput().type('aaa');
+    it('Should have email address input, submit and cancel buttons on the page', () => {
+      cy.url().should('eq', relative('/reset-password'));
+      resetPassword.emailInput().should('exist');
+      resetPassword.submit().should('exist');
+      resetPassword.cancel().should('exist');
+    });
+
+    it('Enter an empty email address displays error message', () => {
+      resetPassword.emailInput().should('be.empty');
+      resetPassword.submit().click();
+
+      resetPassword.emailInputError().should('exist');
+    });
+
+    it('An non-existant email displays error message', () => {
+      resetPassword.emailInput().type('email_is_not_valid@ukexportfinance.gov.uk');
       resetPassword.submit().click();
 
       cy.url().should('eq', relative('/reset-password?passwordreseterror=1'));
@@ -41,16 +55,14 @@ context('Reset password', () => {
   });
 
   context('Change Password screen', () => {
-    it('should display password change page WITHOUT `current password` field', () => {
+    it('Should display password set page WITHOUT `current password` field', () => {
       resetPassword.visitChangePassword(); // this redirects to '/reset-password/mockToken'
-      // the `current password` should NOT exist if the user is not logged in
-      // this is because the page contains a token
       changePassword.currentPassword().should('not.exist');
       changePassword.password().should('exist');
       changePassword.confirmPassword().should('exist');
     });
 
-    it('should display the password change page WITH `current password` field', () => {
+    it('Should display the password change page WITH `current password` field', () => {
       cy.login(BANK1_MAKER1);
       cy.url().should('eq', relative('/dashboard/deals/0'));
       header.profile().click();
