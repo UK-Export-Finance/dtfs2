@@ -64,7 +64,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/');
+    res.redirect('/login');
   });
 });
 
@@ -76,15 +76,28 @@ router.get('/reset-password', (req, res) => {
 });
 
 router.post('/reset-password', async (req, res) => {
+  const emailError = {
+    errMsg: 'Enter an email address in the correct format, for example, name@example.com',
+    errRef: 'email',
+  };
+  const loginErrors = [];
   const { email } = req.body;
+
+  if (!email) {
+    loginErrors.push(emailError);
+    return res.render('reset-password.njk', {
+      errors: validationErrorHandler(loginErrors),
+    });
+  }
 
   const { success } = await api.resetPassword(email);
 
   if (success) {
     res.redirect('/login?passwordreset=1');
-  } else {
-    res.redirect('?passwordreseterror=1');
   }
+
+  // If all of the above fails
+  return res.redirect('/reset-password?passwordreseterror=1');
 });
 
 /**
@@ -118,7 +131,7 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
     );
   }
 
-  return res.redirect('/?passwordupdated=1');
+  return res.redirect('/login?passwordupdated=1');
 });
 
 module.exports = router;
