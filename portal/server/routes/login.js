@@ -87,13 +87,22 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+/**
+ * 1. User forgot password
+ * 2. Admin account create - user set's password
+ */
 router.get('/reset-password/:pwdResetToken', (req, res) => {
   res.render('user/change-password.njk', { requireCurrentPassword: false });
 });
 
+/**
+ * 1. User forgot password
+ * 2. Admin account create - user set's password
+ */
 router.post('/reset-password/:pwdResetToken', async (req, res) => {
   const { pwdResetToken } = requestParams(req);
   const { data } = await api.resetPasswordFromToken(pwdResetToken, req.body);
+
   const formattedValidationErrors = generateErrorSummary(
     data.errors,
     errorHref,

@@ -13,10 +13,20 @@ const insertMocks = async () => {
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['maker', 'editor', 'data-admin'],
+    email: 're-insert-mocks-data-loader',
     bank: MOCK_BANKS.find((bank) => bank.id === '9'),
   });
 
-  const tfmMaker = PORTAL_MOCKS.USERS.find((user) => user.username === 'BANK1_MAKER1');
+  const tfmMaker = {
+    username: 'BANK3_MAKER3',
+    password: 'AbC!2345',
+    firstname: 'Tamil',
+    surname: 'Rahani',
+    email: 'maker33@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    roles: ['maker'],
+    bank: MOCK_BANKS.find((bank) => bank.id === '9'),
+  };
   const tfmMakerToken = await tokenFor({
     ...tfmMaker,
   });
