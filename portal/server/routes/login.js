@@ -64,7 +64,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/');
+    res.redirect('/login');
   });
 });
 
@@ -94,12 +94,10 @@ router.post('/reset-password', async (req, res) => {
 
   if (success) {
     res.redirect('/login?passwordreset=1');
-  } else {
-    res.redirect('?passwordreseterror=1');
   }
 
   // If all of the above fails
-  return res.render('reset-password.njk');
+  return res.redirect('/reset-password?passwordreseterror=1');
 });
 
 /**
@@ -133,7 +131,7 @@ router.post('/reset-password/:pwdResetToken', async (req, res) => {
     );
   }
 
-  return res.redirect('/?passwordupdated=1');
+  return res.redirect('/login?passwordupdated=1');
 });
 
 module.exports = router;
