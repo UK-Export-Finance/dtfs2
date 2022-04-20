@@ -61,7 +61,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error(`TFM API - error updating BSS deal status ${dealId}`, { response });
+    console.error(`TFM API - error updating BSS deal status ${dealId}`);
 
     return false;
   }
