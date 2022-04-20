@@ -97,6 +97,9 @@ router.post('/reset-password', async (req, res) => {
   } else {
     res.redirect('?passwordreseterror=1');
   }
+
+  // If all of the above fails
+  return res.render('reset-password.njk');
 });
 
 /**
