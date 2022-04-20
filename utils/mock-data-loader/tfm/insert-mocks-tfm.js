@@ -10,6 +10,7 @@ const insertMocks = async () => {
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['data-admin'],
+    email: 're-insert-mocks-data-loader-tfm',
   });
 
   console.info('inserting TFM teams');

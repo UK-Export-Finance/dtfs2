@@ -1,14 +1,11 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% extends "index.njk" %}
 
-{% block pageTitle %}Profile for {{ user.username }}{% endblock %}
+{% block pageTitle %}Profile for {{ user.firstname }} {{ user.surname }}{% endblock %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Logged in as<br/>{{ user.username }}</h1>
-
-  <p class="govuk-body">
-    <a data-cy="changePassword" class="govuk-link" href="/user/{{ _id }}/change-password">Change password</a>
-  </p>
+  <h1 class="govuk-heading-l">Logged in as {{ user.firstname }} {{ user.surname }}</h1>
 
   <h2 class="govuk-heading-m">Account information</h2>
 
@@ -69,5 +66,27 @@
        <p class="govuk-body">{{ user.lastLogin | localiseTimestamp("DD/MM/YYYY HH:mm", user.timezone) }}</p>
     </div>
   </div>
+
+      {{
+          govukButton({
+          text: "Change password",
+          classes: "govuk-!-margin-right-1",
+          href: "/user/" + user._id + "/change-password",
+          attributes: {
+            'data-cy': 'profile-change-password-ok'
+          }
+        })
+      }}
+
+      {{
+          govukButton({
+          text: "Cancel",
+          classes: "govuk-button--secondary govuk-!-margin-right-1",
+          href: "/dashboard",
+          attributes: {
+            'data-cy': 'profile-change-password-cancel'
+          }
+        })
+      }}
 
 {% endblock %}

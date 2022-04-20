@@ -7,7 +7,7 @@ describe('dealHasAllUkefIds()', () => {
   it('Should return FALSE when deal has no UKEF ID', async () => {
     const mockDeal = {
       ...MOCK_DEAL_NO_UKEF_ID,
-      faclities: [
+      facilities: [
         {
           ukefFacilityId: '123',
         },
@@ -15,7 +15,7 @@ describe('dealHasAllUkefIds()', () => {
     };
 
     const result = await dealHasAllUkefIds(mockDeal._id);
-    expect(result).toEqual(false);
+    expect(result.status).toEqual(false);
   });
 
   it('Should return FALSE when a facility has no UKEF ID', async () => {
@@ -25,27 +25,27 @@ describe('dealHasAllUkefIds()', () => {
     };
 
     const result = await dealHasAllUkefIds(mockDeal._id);
-    expect(result).toEqual(false);
+    expect(result.status).toEqual(false);
   });
 
   it('Should return TRUE when a deal and facilities have UKEF IDs', async () => {
     const mockDeal = MOCK_DEAL;
 
     const result = await dealHasAllUkefIds(mockDeal._id);
-    expect(result).toEqual(true);
+    expect(result.status).toEqual(true);
   });
 
   it('Should return TRUE when a deal and facilities have UKEF IDs - BSS/EWCS', async () => {
     const mockDeal = MOCK_DEAL;
 
     const result = await dealHasAllUkefIds(mockDeal._id);
-    expect(result).toEqual(true);
+    expect(result.status).toEqual(true);
   });
 
   it('Should return TRUE when a deal and facilities have UKEF IDs - GEF', async () => {
     const mockDeal = {
       ...MOCK_DEAL_GEF,
-      faclities: [
+      facilities: [
         {
           ukefFacilityId: '123',
         },
@@ -59,6 +59,30 @@ describe('dealHasAllUkefIds()', () => {
     };
 
     const result = await dealHasAllUkefIds(mockDeal._id);
-    expect(result).toEqual(true);
+    expect(result.status).toEqual(true);
+  });
+
+  // TODO: remove once amendments is in place
+  it('Should return FALSE when a deal has been migrated', async () => {
+    const deal = MOCK_DEAL_GEF;
+    deal.dataMigration = { drupalDealId: '1234' };
+    const mockDeal = {
+      ...deal,
+      facilities: [
+        {
+          ukefFacilityId: '123',
+        },
+        {
+          ukefFacilityId: '123',
+        },
+        {
+          ukefFacilityId: '123',
+        },
+      ],
+    };
+
+    const result = await dealHasAllUkefIds(mockDeal._id);
+    expect(result.status).toEqual(false);
+    expect(result.message).toEqual('Migrated deal');
   });
 });
