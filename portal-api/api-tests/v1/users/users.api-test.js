@@ -185,7 +185,7 @@ describe('a user', () => {
       success: true,
       token: expect.any(String),
       user: expectedUserData,
-      expiresIn: '1d',
+      expiresIn: '12h',
     });
   });
 

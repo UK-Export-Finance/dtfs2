@@ -44,9 +44,9 @@ const applyRules = (ruleset, existingUser, candidateChange) => ruleset.reduce((a
 const applyCreateRules = (candidateChange) => applyRules(createRules, null, candidateChange);
 
 const applyUpdateRules = (existingUser, candidateChange) => {
-  const rule = candidateChange.currentPassword
-    ? updateRules
-    : adminUpdateRules;
+  const rule = !candidateChange.currentPassword
+    ? adminUpdateRules
+    : updateRules;
   return applyRules(rule, existingUser, candidateChange);
 };
 
