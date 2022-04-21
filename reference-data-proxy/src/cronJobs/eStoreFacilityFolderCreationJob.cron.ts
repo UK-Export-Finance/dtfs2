@@ -30,7 +30,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
           {
             $set: {
               'facilityCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
-              'facilityCronJob.completionDate': Date.now(),
+              'facilityCronJob.completionDate': new Date(),
             },
           },
         );
@@ -66,7 +66,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
           // update the record inside `cron-job-logs` collection to indicate that the cron job failed
           await cronJobLogsCollection.updateOne(
             { dealId: eStoreData.dealId },
-            { $set: { facilityFoldersResponse, 'facilityCronJob.status': ESTORE_CRON_STATUS.FAILED, 'facilityCronJob.completionDate': Date.now() } },
+            { $set: { facilityFoldersResponse, 'facilityCronJob.status': ESTORE_CRON_STATUS.FAILED, 'facilityCronJob.completionDate': new Date() } },
           );
         }
       }
@@ -77,7 +77,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
         { dealId: eStoreData.dealId },
-        { $set: { 'facilityCronJob.status': ESTORE_CRON_STATUS.COMPLETED, 'facilityCronJob.completionDate': Date.now() } },
+        { $set: { 'facilityCronJob.status': ESTORE_CRON_STATUS.COMPLETED, 'facilityCronJob.completionDate': new Date() } },
       );
     }
   } catch (error) {

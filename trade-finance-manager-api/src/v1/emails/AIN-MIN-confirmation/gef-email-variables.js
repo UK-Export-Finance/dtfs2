@@ -26,7 +26,7 @@ const gefEmailVariables = (deal, facilityLists) => {
     exporterCompaniesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
     exporterAddress: generateAddressString(exporter.registeredAddress),
     industrySector: exporter.selectedIndustry.name,
-    industryClass: exporter.selectedIndustry.class,
+    industryClass: exporter.selectedIndustry.class?.name || exporter.selectedIndustry.class,
     smeType: exporter.smeType,
     probabilityOfDefault: exporter.probabilityOfDefault,
     cashFacilitiesList: facilityLists.cashes,

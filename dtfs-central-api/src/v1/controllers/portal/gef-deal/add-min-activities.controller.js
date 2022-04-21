@@ -80,6 +80,7 @@ const portalActivityGenerator = (activityParams) => {
     html: activityHTML,
     facilityType: facility ? `${facility.type} facility` : '',
     ukefFacilityId: facility ? facility.ukefFacilityId : '',
+    facilityId: facility ? facility._id : '',
     maker,
     checker,
   };
