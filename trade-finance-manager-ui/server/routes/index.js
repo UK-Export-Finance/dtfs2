@@ -7,7 +7,7 @@ const facilitiesRoutes = require('./facilities');
 const feedbackRoutes = require('./feedback');
 const thankYouFeedbackRoutes = require('./feedback-thank-you');
 const userRoutes = require('./user');
-const miscRoutes = require('./misc');
+const footerRoutes = require('./footer');
 
 const { validateUser } = require('../middleware/user-validation');
 
@@ -20,6 +20,6 @@ router.use('/facilities', validateUser, facilitiesRoutes);
 router.use('/feedback', feedbackRoutes);
 router.use('/thank-you-feedback', thankYouFeedbackRoutes);
 router.use('/user', userRoutes);
-router.use('/', miscRoutes);
+router.use('/', footerRoutes);
 
 module.exports = router;
