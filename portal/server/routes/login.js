@@ -68,6 +68,7 @@ router.get('/logout', (req, res) => {
   });
 });
 
+// Initiate reset password email request - page
 router.get('/reset-password', (req, res) => {
   const { passwordreseterror } = req.query;
   return res.render('reset-password.njk', {
@@ -75,6 +76,7 @@ router.get('/reset-password', (req, res) => {
   });
 });
 
+// Initiate reset password email request
 router.post('/reset-password', async (req, res) => {
   const emailError = {
     errMsg: 'Enter an email address in the correct format, for example, name@example.com',
