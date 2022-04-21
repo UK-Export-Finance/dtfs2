@@ -1846,7 +1846,8 @@ jobs:
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
-              HTTPS=1
+              HTTPS=1 \
+              START_PAGE_REDIRECT=1
 
     - name: Secrets
       uses: azure/cli@v1.0.0
