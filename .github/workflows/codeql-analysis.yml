@@ -2,7 +2,7 @@ name: "CodeQL - Code Quality checkup"
 
 on:
   pull_request:
-    branches: [ main, amendments ]
+    branches: [ main, main-amendments ]
 
 jobs:
   analyze:

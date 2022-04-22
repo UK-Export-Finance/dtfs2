@@ -2,7 +2,7 @@ name: PR tests - ACBS Function App
 
 on:
   pull_request:
-    branches: [ main, amendments ]
+    branches: [ main, main-amendments ]
     paths:
     - 'azure-functions/acbs-function/**'
   schedule:
