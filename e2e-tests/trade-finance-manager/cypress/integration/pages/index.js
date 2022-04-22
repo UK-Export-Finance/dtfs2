@@ -21,6 +21,7 @@ import managersDecisionPage from './underwriting/managersDecisionPage';
 import facilityRiskProfilePage from './underwriting/facilityRiskProfilePage';
 import facilitiesPage from './facilitiesPage';
 import feedbackPage from './feedbackPage';
+import footer from './footer';
 
 export default {
   landingPage,
@@ -46,4 +47,5 @@ export default {
   facilityRiskProfilePage,
   facilitiesPage,
   feedbackPage,
+  footer,
 };
