@@ -1,4 +1,4 @@
-name: PR End-To-End tests
+name: PR - End-To-End tests
 
 on:
   pull_request:
@@ -62,9 +62,12 @@ jobs:
       AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
       AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
       AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
-
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
-
+      GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+      ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
+      ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
       MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
       MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
       MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}
@@ -78,18 +81,15 @@ jobs:
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
       MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
       MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
-
+      MULESOFT_API_UKEF_MDM_EA_URL: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }}
+      MULESOFT_API_UKEF_MDM_EA_KEY: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}
+      MULESOFT_API_UKEF_MDM_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
-      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-
       COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-      ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
-      ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
-
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+      ESTORE_URL: ${{ secrets.ESTORE_URL }}
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
@@ -124,6 +124,15 @@ jobs:
         name: screenshots
         path: './cypress/screenshots'
 
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs-github-actions'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
+
   portal-tests:
     name: "Run - Portal E2E tests"
     environment:
@@ -142,13 +151,12 @@ jobs:
       AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
       AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
       AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
-
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
       GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-
       JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
       JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-
+      ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
+      ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
       MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
       MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
       MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}
@@ -161,12 +169,16 @@ jobs:
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
       MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
-
+      MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
+      MULESOFT_API_UKEF_MDM_EA_URL: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }}
+      MULESOFT_API_UKEF_MDM_EA_KEY: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}
+      MULESOFT_API_UKEF_MDM_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+      ESTORE_URL: ${{ secrets.ESTORE_URL }}
 
     steps:
     - uses: actions/checkout@v3
@@ -202,6 +214,15 @@ jobs:
         name: screenshots
         path: './cypress/screenshots'
 
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs-github-actions'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
+
   tfm-tests:
     name: "Run - Trade Finance Manager E2E tests"
     environment:
@@ -220,9 +241,12 @@ jobs:
       AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
       AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
       AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
-
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
-
+      GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+      ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
+      ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
       MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
       MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
       MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}
@@ -235,16 +259,16 @@ jobs:
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
       MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
       MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
+      MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
       MULESOFT_API_UKEF_MDM_EA_URL: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }}
       MULESOFT_API_UKEF_MDM_EA_KEY: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}
       MULESOFT_API_UKEF_MDM_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
-
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
+      COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
       ESTORE_URL: ${{ secrets.ESTORE_URL }}
-
-      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
-      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
@@ -278,6 +302,15 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs-github-actions'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
+
 
   tfm-submit-tests:
     name: "Run - Submit to TFM End-To-End tests"
@@ -297,13 +330,12 @@ jobs:
       AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
       AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
       AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
-
       GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
       GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-
       JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
       JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-
+      ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
+      ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
       MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
       MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
       MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}
@@ -321,8 +353,8 @@ jobs:
       MULESOFT_API_UKEF_MDM_EA_KEY: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}
       MULESOFT_API_UKEF_MDM_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
       COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
-
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
       ESTORE_URL: ${{ secrets.ESTORE_URL }}
@@ -356,3 +388,11 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs-github-actions'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
