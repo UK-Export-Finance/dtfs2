@@ -1,3 +1,4 @@
+const { getCollection } = require('../../drivers/db-client');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { getFirstTask } = require('../helpers/tasks');
@@ -148,16 +149,22 @@ const sendAinMinAcknowledgement = async (deal) => {
     facilities,
   } = deal;
 
-  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
-    && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    console.info('The current deal is not an AIN or MIN deal', deal?._id);
     return null;
   }
 
   let facilityLists;
   let templateId;
   let emailVariables;
-  let emailResponse;
-  const { email: sendToEmailAddress } = maker;
+  let makerEmailResponse;
+  let pimEmailResponse;
+  const { email: makerEmailAddress } = maker;
+
+  const collection = await getCollection('tfm-teams');
+  const pimUser = await collection.findOne({ id: CONSTANTS.TEAMS.PIM.id });
+  // get the email address for PIM user
+  const { email: pimEmailAddress } = pimUser;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     facilityLists = generateFacilityLists(dealType, facilities);
@@ -166,13 +173,10 @@ const sendAinMinAcknowledgement = async (deal) => {
 
     emailVariables = generateBssDealAinMinConfirmationEmailVariables(deal, facilityLists);
 
-    emailResponse = await sendTfmEmail(
-      templateId,
-      sendToEmailAddress,
-      emailVariables,
-      deal,
-    );
-    return emailResponse;
+    makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
+    // send a copy of the email to PIM
+    pimEmailResponse = await sendTfmEmail(templateId, pimEmailAddress, emailVariables, deal);
+    return { makerEmailResponse, pimEmailResponse };
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
@@ -182,13 +186,11 @@ const sendAinMinAcknowledgement = async (deal) => {
 
     emailVariables = generateAinMinConfirmationEmailVars(deal, facilityLists);
 
-    emailResponse = await sendTfmEmail(
-      templateId,
-      sendToEmailAddress,
-      emailVariables,
-      deal,
-    );
-    return emailResponse;
+    makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
+    // send a copy of the email to PIM
+    pimEmailResponse = await sendTfmEmail(templateId, pimEmailAddress, emailVariables, deal);
+
+    return { makerEmailResponse, pimEmailResponse };
   }
 
   return null;

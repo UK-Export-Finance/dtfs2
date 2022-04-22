@@ -93,7 +93,7 @@ class Application {
     try {
       const application = await getApplication(id);
 
-      if (application.bank.id !== user.bank.id) {
+      if (application.bank.id !== user.bank.id && !user.roles.includes('admin')) {
         return null;
       }
 

@@ -91,6 +91,7 @@ function buildBody(app, previewMode, user) {
         { details: app.exporter }, // wrap in details because mapSummaryList relies this.
         exporterItems(exporterUrl, {
           showIndustryChangeLink: app.exporter?.industries?.length > 1,
+          correspondenceAddressLink: !app.exporter.correspondenceAddress,
         }),
         mapSummaryParams,
         previewMode,
@@ -130,13 +131,14 @@ function buildBody(app, previewMode, user) {
     isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: hasUkefDecisionAccepted,
     coverDatesConfirmed: coverDates,
-    renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted),
+    renderReviewDecisionLink: (ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && !app.userRoles.includes('admin')),
     previewMode,
     hasChangedFacilities,
     userRoles: app.userRoles,
+    isAdmin: app.userRoles.includes('admin'),
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
+    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted) && !app.userRoles.includes('admin'),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };

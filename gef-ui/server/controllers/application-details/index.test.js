@@ -146,6 +146,7 @@ describe('controllers/application-details', () => {
           // user in session
           user: mockRequest.session.user,
           userRoles: mockRequest.session.user.roles,
+          isAdmin: expect.any(Boolean),
         });
     });
 

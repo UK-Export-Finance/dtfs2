@@ -21,7 +21,7 @@
   </div>
 </div>
 
-{% if eligibility.status.code === 'Not started' or eligibility.status.code === 'In progress' %}
+{% if not isAdmin and eligibility.status.code === 'Not started' or eligibility.status.code === 'In progress' %}
   <a class="govuk-link" href="/gef/application-details/{{dealId}}/automatic-cover" data-cy="automatic-cover-details-link">
     Check if you're eligible for automatic cover
   </a>
