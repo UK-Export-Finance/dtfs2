@@ -31,29 +31,30 @@ jobs:
 
   # Cancel Previous runs
   # this action is used to cancel previous runs for the current branch
-  cancel-previous-tests:
-    name: "Cancel previous actions"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
+  # cancel-previous-tests:
+  #   name: "Cancel previous actions"
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Cancel Previous Runs
+  #       uses: styfle/cancel-workflow-action@0.9.1
+  #       with:
+  #         access_token: ${{ secrets.GITHUB_TOKEN }}
 
-jobs:
-  set-environment:
-    name: Set - GEF UI Environment
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ env.environment }}
-    steps:
-    - name: Initialise Environment
-      run: |
-        echo Setting environment to ${{ env.environment }}
+# jobs:
+#   set-environment:
+#     name: Set - GEF UI Environment
+#     runs-on: ubuntu-latest
+#     outputs:
+#       environment: ${{ env.environment }}
+#     steps:
+#     - name: Initialise Environment
+#       run: |
+#         echo Setting environment to ${{ env.environment }}
+
   # Run GEF-UI End-To-End tests
   # these tests are part of e2e-tests/gef-ui
   gef-tests:
-    name: "Run: GEF-UI E2E tests"
+    name: "Run GEF-UI E2E tests"
     environment:
       name: E2ETEST
     runs-on: ubuntu-latest
@@ -132,16 +133,17 @@ jobs:
         name: screenshots
         path: './cypress/screenshots'
 
-jobs:
-  set-environment:
-    name: Set - Portal UI Environment
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ env.environment }}
-    steps:
-    - name: Initialise Environment
-      run: |
-        echo Setting environment to ${{ env.environment }}
+# jobs:
+#   set-environment:
+#     name: Set - Portal UI Environment
+#     runs-on: ubuntu-latest
+#     outputs:
+#       environment: ${{ env.environment }}
+#     steps:
+#     - name: Initialise Environment
+#       run: |
+#         echo Setting environment to ${{ env.environment }}
+
   # Run Portal End-To-End tests
   # these tests are part of e2e-tests/portal
   portal-tests:
@@ -222,16 +224,17 @@ jobs:
         name: screenshots
         path: './cypress/screenshots'
 
-jobs:
-  set-environment:
-    name: Set TFM UI Environment
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ env.environment }}
-    steps:
-    - name: Initialise Environment
-      run: |
-        echo Setting environment to ${{ env.environment }}
+# jobs:
+#   set-environment:
+#     name: Set TFM UI Environment
+#     runs-on: ubuntu-latest
+#     outputs:
+#       environment: ${{ env.environment }}
+#     steps:
+#     - name: Initialise Environment
+#       run: |
+#         echo Setting environment to ${{ env.environment }}
+
   # Run TFM End-To-End tests
   # these tests are part of e2e-tests/trade-finance-manager
   tfm-tests:
@@ -311,16 +314,17 @@ jobs:
         name: screenshots
         path: './cypress/screenshots'
 
-jobs:
-  set-environment:
-    name: Set Submit to TFM Environment
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ env.environment }}
-    steps:
-    - name: Initialise Environment
-      run: |
-        echo Setting environment to ${{ env.environment }}
+# jobs:
+#   set-environment:
+#     name: Set Submit to TFM Environment
+#     runs-on: ubuntu-latest
+#     outputs:
+#       environment: ${{ env.environment }}
+#     steps:
+#     - name: Initialise Environment
+#       run: |
+#         echo Setting environment to ${{ env.environment }}
+
   # Run Submit to TFM End-To-End tests
   # these tests are part part of e2e-tests/submit-to-trade-finance-manager
   tfm-submit-tests:

@@ -89,11 +89,26 @@ jobs:
         docker-compose -f docker-compose.gha.yml up --build -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
+
+    - name: Install node v14
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
         npm install --legacy-peer-deps
         node ./re-insert-mocks.js
+
     - name: Run API tests
       run: |
-        docker-compose exec -T trade-finance-manager-api npm run api-test
+        pwd
+        cd $GITHUB_WORKSPACE
+        cd trade-finance-manager-api
+        npm install --legacy-peer-deps
+        npm run api-test
+
+    - name: Stop containers
+      if: always()
+      run: docker-compose -f docker-compose.gha.yml down
