@@ -1,0 +1,15 @@
+name: PR tests - Empty tests for github action config
+
+on:
+  pull_request:
+    branches: [ main, main-amendments ]
+    paths:
+    - '.github/workflows/**'
+    - 'README.md'
+
+jobs:
+  test:
+    name: Run PR tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
