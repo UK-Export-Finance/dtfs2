@@ -88,6 +88,12 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
     });
 
     it('relevant fields are locked ', () => {
+      applicationPreview.facilityGuidance();
+      applicationPreview.facilityGuidance().contains('Guidance on cash and contingent facilities');
+      applicationPreview.facilityGuidance().contains('Cash facilities');
+      applicationPreview.facilityGuidance().contains('Contingent facilities');
+      applicationPreview.facilityGuidance().contains('How many you can add');
+
       //  makes sure no action buttons exist (change or add)
       applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 1).should('not.exist');
@@ -290,6 +296,12 @@ context('Return to maker', () => {
     });
 
     it('should not be able to edit any facilities', () => {
+      applicationPreview.facilityGuidance();
+      applicationPreview.facilityGuidance().contains('Guidance on cash and contingent facilities');
+      applicationPreview.facilityGuidance().contains('Cash facilities');
+      applicationPreview.facilityGuidance().contains('Contingent facilities');
+      applicationPreview.facilityGuidance().contains('How many you can add');
+
       // 1st facility table - makes sure no action buttons exist (change or add)
       applicationPreview.facilitySummaryListRowAction(0, 0).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 1).should('not.exist');
