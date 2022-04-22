@@ -2,7 +2,7 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * `GEF` = 10% of amount
- * `Loan` (EWCS) = Disbursement amount
+ * `Loan` (EWCS) = Disbursement amount * (UKEF cover percentage / 100)
  * `Bond` (BSS) = Amount
  * @param {Float} amount Facility UKEF exposure
  * @param {Object} facility Facility
@@ -17,7 +17,7 @@ const getLoanMaximumLiability = (amount, facility, dealType) => {
   } else {
   // BSS/EWCS
     ukefExposure = facility.facilitySnapshot.type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN
-      ? facility.facilitySnapshot.disbursementAmount // EWCS
+      ? (facility.facilitySnapshot.disbursementAmount * (facility.facilitySnapshot.coveredPercentage / 100)) // EWCS
       : amount; // BSS
   }
 
