@@ -40,9 +40,8 @@ jobs:
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
-
-  tfm-api-tests:
-    name: "Run TFM-API tests"
+  api-tests:
+    name: "Run API tests"
     environment:
       name: APITEST
     runs-on: [self-hosted, api-tests]
@@ -90,24 +89,42 @@ jobs:
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10
 
-    - name: Install node v14
-      uses: actions/setup-node@v3
-      with:
-        node-version: '14'
-
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
         npm install --legacy-peer-deps
         node ./re-insert-mocks.js
 
-    - name: Run API tests
+    - name: Run TFM API tests
       run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        cd trade-finance-manager-api
-        npm install --legacy-peer-deps
-        npm run api-test
+        docker-compose exec -T trade-finance-manager-api npm run api-test
+
+    - name: Clear up the database and load mock data
+      run: |
+        cd utils/mock-data-loader
+        node ./re-insert-mocks.js
+
+    - name: Run Reference Data Proxy API tests
+      run: |
+        docker-compose exec -T reference-data-proxy npm run api-test
+
+    - name: Clear up the database and load mock data
+      run: |
+        cd utils/mock-data-loader
+        node ./re-insert-mocks.js
+
+    - name: Run Portal API tests
+      run: |
+        docker-compose exec -T portal-api npm run api-test
+
+    - name: Clear up the database and load mock data
+      run: |
+        cd utils/mock-data-loader
+        node ./re-insert-mocks.js
+
+    - name: Run Central API tests
+      run: |
+        docker-compose exec -T dtfs-central-api npm run api-test
 
     - name: Stop containers
       if: always()
