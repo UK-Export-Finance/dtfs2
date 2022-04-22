@@ -7,7 +7,6 @@ const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
-const { expectAddedFields, expectAllAddedFields } = require('./expectAddedFields');
 
 const newDeal = aDeal({
   updatedAt: Date.now(),
@@ -340,7 +339,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
-      validationErrors = body.validationErrors;
+      const { validationErrors } = body;
 
       expect(validationErrors.errorList['supplyContractConversionDate-day']).toEqual({
         order: expect.any(String),
@@ -359,7 +358,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
-      validationErrors = body.validationErrors;
+      const { validationErrors } = body;
 
       expect(validationErrors.errorList['supplyContractConversionDate-month']).toEqual({
         order: expect.any(String),
@@ -378,7 +377,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
       const { body } = await as(anHSBCMaker).put(submissionDetails).to(`/v1/deals/${createdDeal._id}/submission-details`);
 
-      validationErrors = body.validationErrors;
+      const { validationErrors } = body;
 
       expect(validationErrors.errorList['supplyContractConversionDate-year']).toEqual({
         order: expect.any(String),
@@ -492,7 +491,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
       validationErrors = body.validationErrors;
     });
 
-
     describe('expects supplier correspondence address', () => {
       it('expects supplier-correspondence-address-line-1', () => {
         expect(validationErrors.errorList['supplier-correspondence-address-line-1']).toEqual({
@@ -510,8 +508,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
 
     describe('If supplier-correspondence-address === GBR, postcode is required', () => {
-      let validationErrors;
-
       beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
@@ -536,8 +532,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
 
     describe('If supplier-correspondence-address !== GBR, town is required', () => {
-      let validationErrors;
-
       beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
@@ -606,8 +600,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
 
     describe('If indemnifier-address === GBR, postcode is required', () => {
-      let validationErrors;
-
       beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
@@ -632,8 +624,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
 
     describe('If indemnifier-address !== GBR, town is required', () => {
-      let validationErrors;
-
       beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
@@ -691,8 +681,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
 
     describe('If indemnifier-corresdpondence-address === GBR, postcode is required', () => {
-      let validationErrors;
-
       beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
@@ -718,8 +706,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
 
     describe('If indemnifier-correspondence-address !== GBR, town is required', () => {
-      let validationErrors;
-
       beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;
@@ -745,8 +731,6 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
     });
 
     describe('Supply contract value is not correct currency format', () => {
-      let validationErrors;
-
       beforeAll(async () => {
         const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
         const createdDeal = postResult.body;

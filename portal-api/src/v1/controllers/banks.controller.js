@@ -1,4 +1,5 @@
 const assert = require('assert');
+const { ObjectId } = require('mongodb');
 
 const db = require('../../drivers/db-client');
 
@@ -54,4 +55,23 @@ exports.delete = async (req, res) => {
   const collection = await db.getCollection('banks');
   const status = await collection.deleteOne({ id: req.params.id });
   res.status(200).send(status);
+};
+
+// validate the user's bank against the deal
+exports.validateBank = async (req, res) => {
+  const { dealId, bankId } = req.body;
+
+  // check if the `dealId` is a valid ObjectId
+  if (ObjectId.isValid(dealId)) {
+    const collection = await db.getCollection('deals');
+
+    // validate the bank against the deal
+    const isValid = await collection.findOne({ _id: ObjectId(dealId), 'bank.id': bankId });
+
+    if (isValid) {
+      return res.status(200).send({ status: 200, isValid: true });
+    }
+    return res.status(404).send({ status: 404, isValid: false });
+  }
+  return res.status(422).send({ status: 422, isValid: false });
 };

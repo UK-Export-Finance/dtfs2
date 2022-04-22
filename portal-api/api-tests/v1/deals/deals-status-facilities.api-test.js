@@ -1,4 +1,5 @@
 const moment = require('moment');
+const CONSTANTS2 = require('@uk-export-finance/dtfs-constants');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -13,6 +14,7 @@ describe('/v1/deals/:id/status - facilities', () => {
   let aBarclaysChecker;
   let aSuperuser;
   const originalFacilities = completedDeal.mockFacilities;
+  console.log(CONSTANTS2.SUBMISSION_TYPE.AIN);
 
   const isUnsubmittedIssuedFacility = (facility) => {
     if ((facility.facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED

@@ -192,4 +192,7 @@ authRouter.get('/validate', validate(), (req, res) => {
   res.status(200).send();
 });
 
+// bank-validator
+authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
+
 module.exports = { authRouter, openRouter, authRouterAllowXss };

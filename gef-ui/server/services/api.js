@@ -12,6 +12,16 @@ const validateToken = async (token) => {
   }
 };
 
+const validateBank = async (dealId, bankId) => {
+  try {
+    const { data } = await Axios.get('/validate/bank', { data: { dealId, bankId } });
+    return data;
+  } catch (err) {
+    console.error('Unable to validate the bank %O', err.response.data);
+    return err.response.data;
+  }
+};
+
 const getMandatoryCriteria = async () => {
   try {
     const { data } = await Axios.get('/gef/mandatory-criteria-versioned/latest');
@@ -233,6 +243,7 @@ const downloadFile = async (fileId, token) => {
 
 module.exports = {
   validateToken,
+  validateBank,
   getMandatoryCriteria,
   createApplication,
   cloneApplication,
