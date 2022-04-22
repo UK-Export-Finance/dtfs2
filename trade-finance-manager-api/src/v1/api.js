@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { ObjectId } = require('mongodb');
 
 require('dotenv').config();
 
@@ -255,21 +256,30 @@ const updateFacility = async (facilityId, facilityUpdate) => {
 };
 
 const createFacilityAmendment = async (facilityId, amendmentsUpdate) => {
-  try {
-    const response = await axios({
-      method: 'put',
-      url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        amendmentsUpdate,
-      },
-    });
+  // checks if facilityId is valid
+  const facilityIdValid = ObjectId.isValid(facilityId);
 
-    return response.data;
-  } catch (err) {
-    return err;
+  if (facilityIdValid) {
+    try {
+      const response = await axios({
+        method: 'put',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          amendmentsUpdate,
+        },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Error creating facility amendment', { err });
+      return err;
+    }
+  } else {
+    console.error('Invalid facilityId provided');
+    return { status: 400, message: 'Invalid ObjectId' };
   }
 };
 

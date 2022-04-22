@@ -5,42 +5,42 @@ const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
-
-const newFacility = {
-  type: 'Bond',
-  dealId: MOCK_DEAL.DEAL_ID,
-};
-
-const newDeal = aDeal({
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-  additionalRefName: 'mock name',
-  bankInternalRefName: 'mock id',
-  editedBy: [],
-  eligibility: {
-    status: 'Not started',
-    criteria: [{}],
-  },
-});
-const createDeal = async () => {
-  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
-  return body;
-};
-
 describe('/v1/tfm/facilities/:id/amendments', () => {
   let dealId;
 
+  const mockUser = {
+    _id: '123456789',
+    username: 'temp',
+    roles: [],
+    bank: {
+      id: '956',
+      name: 'Barclays Bank',
+    },
+  };
+
+  const newFacility = {
+    type: 'Bond',
+    dealId: MOCK_DEAL.DEAL_ID,
+  };
+
+  const newDeal = aDeal({
+    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+    additionalRefName: 'mock name',
+    bankInternalRefName: 'mock id',
+    editedBy: [],
+    eligibility: {
+      status: 'Not started',
+      criteria: [{}],
+    },
+  });
+
+  const createDeal = async () => {
+    const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+    return body;
+  };
+
   beforeAll(async () => {
-    await wipeDB.wipe(['tfm-deals']);
-    await wipeDB.wipe(['tfm-facilities']);
+    await wipeDB.wipe(['tfm-facilities', 'tfm-deals']);
   });
 
   beforeEach(async () => {
@@ -51,27 +51,7 @@ describe('/v1/tfm/facilities/:id/amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments', () => {
-    it('returns the empty amendments collection from tfm-facilities', async () => {
-      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      const newId = postResult.body._id;
-
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
-
-      const { status, body } = await api.get(`/v1/tfm/facilities/${newId}/amendments`);
-
-      expect(status).toEqual(200);
-
-      const expected = {
-        history: [],
-      };
-
-      expect(body).toEqual(expected);
-    });
-
-    it('returns the full amendments collection from tfm-facilities', async () => {
+    it('it should return the full amendments collection from tfm-facilities', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
@@ -105,7 +85,7 @@ describe('/v1/tfm/facilities/:id/amendments', () => {
       expect(body).toEqual(expected);
     });
 
-    it('returns 404 status if facility not found', async () => {
+    it('it should return 404 status if facility not found', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       await api.put({
@@ -119,7 +99,7 @@ describe('/v1/tfm/facilities/:id/amendments', () => {
       expect(text).toEqual('{"status":404,"message":"Facility not found"}');
     });
 
-    it('returns 400 status if id is wrong format', async () => {
+    it('it should return 400 status if id is wrong format', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
       await api.put({

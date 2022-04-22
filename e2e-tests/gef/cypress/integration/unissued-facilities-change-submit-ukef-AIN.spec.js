@@ -6,7 +6,7 @@ import CONSTANTS from '../fixtures/constants';
 
 import { MOCK_APPLICATION_AIN } from '../fixtures/mocks/mock-deals';
 import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
-import dateConstants from '../fixtures/dateConstants';
+import dateConstants from '../../../e2e-fixtures/dateConstants';
 
 import {
   MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,

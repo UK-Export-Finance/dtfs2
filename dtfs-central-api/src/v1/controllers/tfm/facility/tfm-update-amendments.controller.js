@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findFacilitiesAmendmentsByDealId } = require('./tfm-get-amendments.controller');
+const { findOneFacility } = require('./tfm-get-facility.controller');
 
 const db = require('../../../../drivers/db-client');
 
@@ -8,6 +9,31 @@ const withoutId = (obj) => {
   const cleanedObject = { ...obj };
   delete cleanedObject._id;
   return cleanedObject;
+};
+
+/**
+ * creates amendments object in tfm-facilities
+ * object blank history array
+ */
+const createAmendmentsObject = async (facilityId) => {
+  const collection = await db.getCollection('tfm-facilities');
+
+  // blank amendments object
+  const amendmentsObject = {
+    history: [],
+  };
+  try {
+    const updatedAmendments = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten({ amendments: amendmentsObject }), {
+      returnOriginal: false,
+      upsert: true,
+    });
+
+    // returns amendments collection
+    return updatedAmendments.value.amendments;
+  } catch (err) {
+    console.error('Error creating amendments collection', { err });
+    return null;
+  }
 };
 
 const createFacilityAmendments = async (facilityId, currentAmendments, amendment) => {
@@ -46,7 +72,7 @@ const createFacilityAmendments = async (facilityId, currentAmendments, amendment
     return returnObj;
   } catch (err) {
     console.error('Unable to create amendment object', { err });
-    return { err };
+    return null;
   }
 };
 exports.createFacilityAmendments = createFacilityAmendments;
@@ -62,12 +88,23 @@ exports.updateFacilityAmendmentsCreate = async (req, res) => {
     const facilityId = req.params.id;
     const { amendmentsUpdate } = req.body;
 
-    const currentAmendments = await findFacilitiesAmendmentsByDealId(facilityId);
+    // returns tfm-facility
+    const currentFacility = await findOneFacility(facilityId);
 
-    if (currentAmendments) {
-      const updatedAmendments = await createFacilityAmendments(facilityId, currentAmendments, amendmentsUpdate);
-
-      return res.status(200).json(updatedAmendments);
+    // checks if there is facility
+    if (currentFacility) {
+      const currentAmendments = await findFacilitiesAmendmentsByDealId(facilityId);
+      // if amendments collection already exists
+      if (currentAmendments) {
+        const updatedAmendments = await createFacilityAmendments(facilityId, currentAmendments, amendmentsUpdate);
+        return res.status(200).json(updatedAmendments);
+      }
+      // if amendments collection does not exist, then creates the collection and then adds to it
+      const createdAmendmentsObject = await createAmendmentsObject(facilityId);
+      if (createdAmendmentsObject) {
+        const updatedAmendments = await createFacilityAmendments(facilityId, createdAmendmentsObject, amendmentsUpdate);
+        return res.status(200).json(updatedAmendments);
+      }
     }
 
     return res.status(404).send({ status: 404, message: 'Facility not found' });

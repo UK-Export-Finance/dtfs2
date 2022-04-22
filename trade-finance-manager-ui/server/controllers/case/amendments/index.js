@@ -11,20 +11,25 @@ const CONSTANTS = require('../../../constants');
 const getAmendmentRequest = async (req, res) => {
   const { facilityId } = req.params;
   const { user } = req.session;
-  const facility = await api.getFacility(facilityId);
 
-  if (!facility) {
+  try {
+    const facility = await api.getFacility(facilityId);
+    if (!facility) {
+      return res.redirect('/not-found');
+    }
+
+    const { dealId } = facility.facilitySnapshot;
+
+    return res.render('case/amendments/amendment-request.njk', {
+      dealId,
+      facility,
+      facilityId,
+      user,
+    });
+  } catch (err) {
+    console.error('getAmendmentRequest - error getting facility', { err });
     return res.redirect('/not-found');
   }
-
-  const { dealId } = facility.facilitySnapshot;
-
-  return res.render('case/amendments/amendment-request.njk', {
-    dealId,
-    facility,
-    facilityId,
-    user,
-  });
 };
 
 /**

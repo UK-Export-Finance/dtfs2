@@ -3,7 +3,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import amendmentsRequestPage from '../../../pages/amendments/amendmentsRequestPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../fixtures/dateConstants';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
@@ -33,7 +33,7 @@ context('Amendments request page', () => {
       });
     });
 
-    it('Clicking on add an amendment button takes you to amendment request page', () => {
+    it('it should take you to amendment request page when clicking add an amendment button', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -55,7 +55,7 @@ context('Amendments request page', () => {
       amendmentsRequestPage.cancelLink();
     });
 
-    it('Clicking continue on blank inputs should return errors', () => {
+    it('it should return errors when clicking continue on blank inputs', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
@@ -70,7 +70,7 @@ context('Amendments request page', () => {
       amendmentsRequestPage.errorMessage().contains('Enter the date the bank requested the amendment');
     });
 
-    it('Clicking continue on past date should return errors', () => {
+    it('it should return errors when clicking continue on past date', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
@@ -89,7 +89,7 @@ context('Amendments request page', () => {
       amendmentsRequestPage.errorMessage().contains('Amendment request date cannot be before the notice submission date');
     });
 
-    it('Clicking continue on future date should return errors', () => {
+    it('it should return errors when clicking continue on future date', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
@@ -108,7 +108,7 @@ context('Amendments request page', () => {
       amendmentsRequestPage.errorMessage().contains('Amendment request date cannot be in the future');
     });
 
-    it('Clicking cancel should take you back to amendments page', () => {
+    it('it should take you back to amendments page when clicking cancel', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
@@ -121,7 +121,7 @@ context('Amendments request page', () => {
       cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}#amendments`));
     });
 
-    it('Adding correct request date should redirect', () => {
+    it('it should redirect when adding correct request date', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 

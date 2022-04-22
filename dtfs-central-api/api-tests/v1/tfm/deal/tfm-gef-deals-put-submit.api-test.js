@@ -90,9 +90,6 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         ...newFacility1,
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      amendments: {
-        history: [],
-      },
     });
 
     const facility2 = await api.get(`/v1/tfm/facilities/${facility2Id}`);
@@ -105,9 +102,6 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
         ...newFacility2,
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      amendments: {
-        history: [],
-      },
     });
   });
 });

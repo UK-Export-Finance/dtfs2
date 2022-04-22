@@ -111,9 +111,6 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         updatedAt: expect.any(Number),
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      amendments: {
-        history: [],
-      },
     });
 
     const facility2 = await api.get(`/v1/tfm/facilities/${facility2Id}`);
@@ -128,9 +125,6 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
         updatedAt: expect.any(Number),
       },
       tfm: DEFAULTS.FACILITY_TFM,
-      amendments: {
-        history: [],
-      },
     });
   });
 });
