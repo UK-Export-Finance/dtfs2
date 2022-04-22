@@ -96,8 +96,4 @@ jobs:
         node ./re-insert-mocks.js
     - name: Run API tests
       run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        cd trade-finance-manager-api
-        npm install --legacy-peer-deps
-        npm run api-test
+        docker-compose exec -T trade-finance-manager-api npm run api-test
