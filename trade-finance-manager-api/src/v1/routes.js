@@ -6,6 +6,7 @@ const openRouter = express.Router();
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const dealSubmit = require('./controllers/deal.submit.controller');
 const feedbackController = require('./controllers/feedback-controller');
+const facilityController = require('./controllers/facility.controller');
 const users = require('./controllers/user/user.routes');
 
 openRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
@@ -114,5 +115,38 @@ openRouter.route('/users/:user')
   .delete(users.removeTfmUserById);
 
 openRouter.route('/login').post(users.login);
+
+/**
+ * @openapi
+ * //amendments/request:
+ *   post:
+ *     summary: Creates amendment request
+ *     description: Creates amendment request and changes status
+ *     parameters:
+ *       - in: amendment object and facility id
+ *         schema:
+ *           type: Object
+ *         required: true
+ *         description: parameters of the amendment object in tfm-facilities
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: 'In-progress'
+ *               _id: 12345
+ *               amendmentObj:
+ *                {
+ *                 requestDate: 1555662,
+ *                 creationTimestamp: 1555662,
+ *                 createdBy: user,
+ *                }
+ *       404:
+ *         description: deal not found
+ *       400:
+ *         description: cannot create amendment
+ */
+openRouter.route('/amendments/request').post(facilityController.createTfmFacilityAmendment);
 
 module.exports = openRouter;

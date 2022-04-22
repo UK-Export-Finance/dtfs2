@@ -10,6 +10,8 @@ const tfmSubmitDealController = require('../controllers/tfm/deal/tfm-submit-deal
 const tfmGetFacilitiesController = require('../controllers/tfm/facility/tfm-get-facilities.controller');
 const tfmGetFacilityController = require('../controllers/tfm/facility/tfm-get-facility.controller');
 const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-update-facility.controller');
+const tfmGetFacilityAmendmentsController = require('../controllers/tfm/facility/tfm-get-amendments.controller');
+const tfmUpdateFacilityAmendmentsController = require('../controllers/tfm/facility/tfm-update-amendments.controller');
 
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
@@ -373,6 +375,100 @@ tfmRouter.route('/facilities/:id')
  */
 tfmRouter.route('/facilities/:id').put(
   tfmUpdateFacilityController.updateFacilityPut,
+);
+
+/**
+ * @openapi
+ * /tfm/facilities/:id/amendments:
+ *   get:
+ *     summary: Finds full amendment object for facility-id
+ *     tags: [TFM, Amendments]
+ *     description: Finds full amendment object for facility-id including status and full history array
+ *     requestBody:
+ *       description: Fields required to update a facility
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               facilityUpdate:
+ *                 type: string
+ *             example:
+ *               facilityUpdate: { aNewField: true }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                {
+ *                 status: 'In progress',
+ *                 history: []
+ *               }
+ *       404:
+ *         description: Not found
+ */
+tfmRouter.route('/facilities/:id/amendments')
+  .get(
+    tfmGetFacilityAmendmentsController.findFacilityAmendmentsGet,
+  );
+
+/**
+ * @openapi
+ * /tfm/facilities/:id/amendments:
+ *   put:
+ *     summary: Creates new amendment object and changes status
+ *     tags: [TFM, Amendments]
+ *     description: Adds new amendment object in history and changes status
+ *     requestBody:
+ *       description: Fields required to create amendment
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               amendment:
+ *                 type: object
+ *               id:
+ *                 type: string
+ *             example:
+ *               status: 'In-progress'
+ *               _id: 12345
+ *               amendmentObj: {
+ *                requestDate: 1555662,
+ *                creationTimestamp: 1555662,
+ *                createdBy: user
+ *              }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                {
+ *                 updated
+ *                 createdAmendment
+ *               }
+*       404:
+*         description: Not found
+*/
+tfmRouter.route('/facilities/:id/amendments').put(
+  tfmUpdateFacilityAmendmentsController.updateFacilityAmendmentsCreate,
+);
+
+/**
+* @openapi
+* /tfm/facilities/amendments/:id:
+*
+*       404:
+*         description: Not found
+*/
+tfmRouter.route('/facilities/:id/amendments/:amendmentId').put(
+  tfmUpdateFacilityAmendmentsController.updateFacilityAmendmentsPut,
 );
 
 /**

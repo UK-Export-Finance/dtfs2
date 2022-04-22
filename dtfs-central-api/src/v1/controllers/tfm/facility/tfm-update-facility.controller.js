@@ -10,7 +10,6 @@ const withoutId = (obj) => {
 };
 
 const updateFacility = async (facilityId, tfmUpdate) => {
-  console.log('in central api update facility');
   const collection = await db.getCollection('tfm-facilities');
 
   const update = {

@@ -90,10 +90,54 @@ const createFacilitiesSnapshot = async (deal) => {
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
+/**
+ * creates amendments object in tfm-facilities
+ * object blank history array
+ */
+const createFacilitiesAmendments = async (deal) => {
+  if (ObjectId.isValid(deal._id)) {
+    const { dealType, _id: dealId } = deal;
+
+    let dealFacilities = [];
+    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+      dealFacilities = await findAllFacilitiesByDealId(dealId);
+    }
+
+    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+      dealFacilities = await findAllGefFacilitiesByDealId(dealId);
+    }
+
+    const collection = await db.getCollection('tfm-facilities');
+
+    // blank amendments object
+    const amendmentsObject = {
+      history: [],
+    };
+
+    if (dealFacilities) {
+      const updatedAmendments = Promise.all(
+        dealFacilities.map(async (facility) =>
+          collection.findOneAndUpdate({ _id: { $eq: ObjectId(facility._id) } }, $.flatten({ amendments: amendmentsObject }), {
+            returnOriginal: false,
+            upsert: true,
+          })),
+      );
+
+      return updatedAmendments;
+    }
+
+    return null;
+  }
+  return { status: 400, message: 'Invalid Deal Id on creating amendments object' };
+};
+
 const submitDeal = async (deal) => {
   await createDealSnapshot(deal);
 
   await createFacilitiesSnapshot(deal);
+
+  // adds amendments object in tfm-facilities when submitting deal
+  await createFacilitiesAmendments(deal);
 
   const updatedDeal = await tfmController.findOneDeal(String(deal._id));
 

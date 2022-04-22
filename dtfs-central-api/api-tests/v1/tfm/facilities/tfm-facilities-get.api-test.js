@@ -51,6 +51,9 @@ describe('/v1/tfm/deals/:id/facilities', () => {
           _id: facility._id,
           ...newFacility,
         },
+        amendments: {
+          history: [],
+        },
       });
 
       // assert all facilities returned from GET against the created facilities

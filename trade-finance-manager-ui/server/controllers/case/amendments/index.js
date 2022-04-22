@@ -5,10 +5,12 @@ const {
 const api = require('../../../api');
 const { amendmentRequestDateValidation } = require('./requestDateValidation');
 
-// const CONSTANTS = require('../../../constants');
+const CONSTANTS = require('../../../constants');
 
+// when add an amendment button clicked, renders amendment request date page
 const getAmendmentRequest = async (req, res) => {
   const { facilityId } = req.params;
+  const { user } = req.session;
   const facility = await api.getFacility(facilityId);
 
   if (!facility) {
@@ -21,13 +23,20 @@ const getAmendmentRequest = async (req, res) => {
     dealId,
     facility,
     facilityId,
-    user: req.session.user,
+    user,
   });
 };
 
+/**
+ * posts amendment request date when continue button clicked
+ * as first stage of amendment, creates a new amendment object
+ * includes request date, user, creation timestamp and changes status
+ * TODO: when changing request date, need to update amendment instead of creating new object
+ */
 const postAmendmentRequest = async (req, res) => {
   const { facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
+  const { user } = req.session;
 
   const { dealId } = facility.facilitySnapshot;
 
@@ -46,18 +55,30 @@ const postAmendmentRequest = async (req, res) => {
       dealId,
       facility,
       facilityId,
-      user: req.session.user,
+      user,
     });
   }
 
   try {
-    console.log('I AM HEREEE NOW', facilityId);
-    const amendmentObj = {
-      requestDate: amendmentRequestDate,
-      timestamp: getUnixTime(new Date()),
+    const update = {
+      _id: facilityId,
+      amendmentObj: {
+        requestDate: amendmentRequestDate,
+        creationTimestamp: getUnixTime(new Date()),
+        createdBy: {
+          userName: user.username,
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          team: user.teams,
+        },
+        status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+      },
     };
-    console.log(typeof amendmentObj.requestDate, typeof amendmentObj.timestamp);
-    await api.createAmendment(facilityId, amendmentObj);
+
+    const createdAmendment = await api.createAmendment(update);
+
+    const amendmentId = createdAmendment.createdAmendment.amendments._id;
+    return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments/${amendmentId}`);
   } catch (err) {
     console.error('Problem creating amendment request date', { err });
   }

@@ -1,6 +1,6 @@
 import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
-import amendmentsPage from '../../../pages/amendmentsPage';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIN } from '../../../../fixtures/mock-gef-deals';
@@ -10,7 +10,7 @@ import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 import CONSTANTS from '../../../../fixtures/constants';
 
-context('Facility page', () => {
+context('Amendments page', () => {
   describe('AIN', () => {
     let dealId;
     const dealFacilities = [];
@@ -44,6 +44,9 @@ context('Facility page', () => {
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.addAmendmentButton().should('exist');
       amendmentsPage.addAmendmentButton().contains('Add an amendment request');
+      amendmentsPage.addAmendmentButton().invoke('attr', 'href').then((href) => {
+        expect(href).to.equal(`${facilityId}/amendments/request`);
+      });
     });
 
     it('does not render add amendment button if AIN and not PIM user', () => {

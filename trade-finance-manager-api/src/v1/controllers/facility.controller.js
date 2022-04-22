@@ -24,15 +24,13 @@ const updateTfmFacilityRiskProfile = async (facilityId, tfmUpdate) => {
   return updatedFacility.tfm;
 };
 
-const updateTfmFacilityAmendment = async (_id, amendmentUpdate) => {
-  console.log('in tfm api update amendment create');
-  const updatedAmendment = {
-    tfm: {
-      amendments: amendmentUpdate,
-    },
+const createTfmFacilityAmendment = async (req, res) => {
+  const amendments = {
+    amendments: req.body.amendmentObj,
   };
-  const updatedFacility = await api.updateFacility(_id, updatedAmendment);
-  return updatedFacility.tfm;
+  const createdAmendment = await api.createFacilityAmendment(req.body._id, amendments);
+
+  return res.status(200).send(createdAmendment);
 };
 
 module.exports = {
@@ -40,5 +38,5 @@ module.exports = {
   findOneFacility,
   updateTfmFacility,
   updateTfmFacilityRiskProfile,
-  updateTfmFacilityAmendment,
+  createTfmFacilityAmendment,
 };

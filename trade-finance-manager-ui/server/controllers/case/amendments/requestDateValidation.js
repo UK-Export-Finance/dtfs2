@@ -45,6 +45,14 @@ const validationErrorHandler = (errs, href = '') => {
   };
 };
 
+/**
+ *
+ * @param {Object} body
+ * @param {Object} facility
+ * @returns {Object} containing errors and amendment date
+ * function to validate the amendment request date
+ * checks if in future or before submission date
+ */
 const amendmentRequestDateValidation = async (body, facility) => {
   const {
     'amendment-request-date-day': amendmentRequestDateDay,
@@ -118,6 +126,7 @@ const amendmentRequestDateValidation = async (body, facility) => {
       new Date(),
       { year: amendmentRequestDateYear, month: amendmentRequestDateMonth - 1, date: amendmentRequestDateDay },
     );
+    // sets to unix timestamp
     amendmentRequestDate = getUnixTime(amendmentRequestDateFormatted);
   }
 
