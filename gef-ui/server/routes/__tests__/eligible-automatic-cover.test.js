@@ -21,5 +21,7 @@ describe('Routes', () => {
 
   it('Sets up all routes', () => {
     expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/eligible-automatic-cover', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/ineligible-automatic-cover', validateToken, expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/ineligible-gef', validateToken, expect.any(Function));
   });
 });

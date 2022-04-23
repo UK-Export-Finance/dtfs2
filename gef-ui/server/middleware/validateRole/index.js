@@ -20,7 +20,7 @@ const userRoleIsValid = (requiredRoles, user) => {
  * @param {array} opts  (i.e. ['maker'])
  *
  */
-exports.validate = (opts) => {
+const validateRole = (opts) => {
   const requiredRoles = opts ? opts.role : null;
 
   return (req, res, next) => {
@@ -31,3 +31,5 @@ exports.validate = (opts) => {
     }
   };
 };
+
+module.exports = validateRole;

@@ -1,6 +1,6 @@
 const api = require('../../services/api');
 
-exports.validateBank = async (req, res, next) => {
+const validateBank = async (req, res, next) => {
   const { dealId } = req.params;
   const { id: bankId } = req.session.user.bank;
 
@@ -16,3 +16,5 @@ exports.validateBank = async (req, res, next) => {
   }
   return res.redirect('/not-found');
 };
+
+module.exports = validateBank;
