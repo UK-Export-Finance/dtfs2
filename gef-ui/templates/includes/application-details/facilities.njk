@@ -22,7 +22,7 @@
     }) }}
   </div>
 </div>
-{% if not previewMode and not hasChangedFacilities and not MIAReturnToMaker%}
+{% if not previewMode and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged%}
   <div class="govuk-button-group">
     {{ govukButton({
       text: "Add a cash facility",
@@ -57,7 +57,7 @@
       <h3 class="govuk-heading-m" data-cy="facility-type-heading">
         {{item.heading}} facility
       </h3>
-      {% if not previewMode and not hasChangedFacilities and not MIAReturnToMaker%}
+      {% if not previewMode and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged%}
         <a
           class="govuk-link"
           href="/gef/application-details/{{dealId}}/facilities/{{item.facilityId}}/confirm-deletion"
