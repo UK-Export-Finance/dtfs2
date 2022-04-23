@@ -109,14 +109,17 @@ jobs:
         sleep 30
         curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run GEF-UI e2e tests
+      uses: cypress-io/github-action@v2
+      with:
+        video: false
+        record: true
+        parallel: true
+        browser: chrome
+        group: 'GEF UI'
+        project: ./e2e-tests/gef
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        npm install --legacy-peer-deps
-        cd e2e-tests/gef
-        npx cypress run --config video=false --record --parallel --browser=chrome --group 'GEF UI'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
