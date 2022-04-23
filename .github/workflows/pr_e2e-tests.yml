@@ -109,14 +109,18 @@ jobs:
         sleep 30
         curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run GEF-UI e2e tests
+      uses: cypress-io/github-action@v2
+      with:
+        headless: true
+        record: true
+        parallel: true
+        browser: chrome
+        group: 'GEF UI'
+        project: ./e2e-tests/gef
+        config: video=false
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        npm install --legacy-peer-deps
-        cd e2e-tests/gef
-        npx cypress run --config video=false --record --parallel --browser=chrome --group 'GEF UI'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
@@ -199,14 +203,18 @@ jobs:
         sleep 30
         curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run e2e tests
+      uses: cypress-io/github-action@v2
+      with:
+        headless: true
+        record: true
+        parallel: true
+        browser: chrome
+        group: 'Portal UI'
+        project: ./e2e-tests/portal
+        config: video=false
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        npm install --legacy-peer-deps
-        cd e2e-tests/portal
-        npx cypress run --config video=false --record --parallel --browser=chrome --group 'Portal UI'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
@@ -288,14 +296,18 @@ jobs:
         sleep 30
         curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run e2e tests
+      uses: cypress-io/github-action@v2
+      with:
+        headless: true
+        record: true
+        parallel: true
+        browser: chrome
+        group: 'TFM UI'
+        project: ./e2e-tests/trade-finance-manager
+        config: video=false
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        npm install --legacy-peer-deps
-        cd e2e-tests/trade-finance-manager
-        npx cypress run --config video=false --record --parallel --browser=chrome --group 'TFM UI'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
@@ -374,14 +386,18 @@ jobs:
         node ./re-insert-mocks.js
         pwd
     - name: Run e2e tests
+      uses: cypress-io/github-action@v2
+      with:
+        headless: true
+        record: true
+        parallel: true
+        browser: chrome
+        group: 'TFM Submit'
+        project: ./e2e-tests/submit-to-trade-finance-manager
+        config: video=false
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      run: |
-        pwd
-        cd $GITHUB_WORKSPACE
-        npm install --legacy-peer-deps
-        cd e2e-tests/submit-to-trade-finance-manager
-        npx cypress run --config video=false --record --parallel --browser=chrome --group 'TFM Submit'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Save Cypress screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@main
