@@ -1,5 +1,6 @@
 const assert = require('assert');
 const { ObjectId } = require('mongodb');
+const { hasValidObjectId } = require('../validation/validateObjectId');
 
 const db = require('../../drivers/db-client');
 
@@ -62,7 +63,7 @@ exports.validateBank = async (req, res) => {
   const { dealId, bankId } = req.body;
 
   // check if the `dealId` is a valid ObjectId
-  if (ObjectId.isValid(dealId)) {
+  if (hasValidObjectId(dealId)) {
     const collection = await db.getCollection('deals');
 
     // validate the bank against the deal

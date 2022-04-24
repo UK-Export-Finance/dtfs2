@@ -17,7 +17,7 @@ const validateBank = async (dealId, bankId) => {
     const { data } = await Axios.get('/validate/bank', { data: { dealId, bankId } });
     return data;
   } catch (err) {
-    console.error('Unable to validate the bank %O', err.response.data);
+    console.error('Unable to validate the bank %O', err?.response?.data);
     return err.response.data;
   }
 };
@@ -150,7 +150,7 @@ const getCompaniesHouseDetails = async (companyRegNumber) => {
     const { data } = await Axios.get(`/gef/company/${companyRegNumber}`);
     return data;
   } catch (err) {
-    console.error('Unable to get company house details', { err });
+    console.error('Unable to get company house details', err?.response?.data);
     return apiErrorHandler(err);
   }
 };

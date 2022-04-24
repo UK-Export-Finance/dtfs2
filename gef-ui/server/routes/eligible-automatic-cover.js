@@ -20,7 +20,7 @@ router.get(
 
 router.get(
   '/ineligible-gef',
-  [validateToken, validateBank, validateRole({ role: ['maker'] })],
+  [validateToken, validateRole({ role: ['maker'] })],
   (req, res) => ineligibleGef(req, res),
 );
 

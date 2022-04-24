@@ -1,12 +1,12 @@
 const express = require('express');
-const { validateRole, validateToken, validateBank } = require('../middleware');
+const { validateRole, validateToken } = require('../middleware');
 const downloadFile = require('../controllers/downloadFile');
 
 const router = express.Router();
 
 router.get(
   '/file/:fileId',
-  [validateToken, validateBank, validateRole({ role: ['maker', 'checker'] })],
+  [validateToken, validateRole({ role: ['maker', 'checker'] })],
   (req, res) => downloadFile(req, res),
 );
 

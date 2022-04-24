@@ -41,7 +41,7 @@ router.get('/dashboard/facilities/clear-all-filters', removeAllFacilitiesFilters
 router.get('/dashboard/facilities/filters/remove/:fieldName/:fieldValue', removeSingleAllFacilitiesFilter);
 
 /**
- * Deals and facilitiers - pagination
+ * Deals and facilities - pagination
  * - Needs to be ordered last to avoid priority issues
  */
 router.get('/dashboard/deals/:page', allDeals);
