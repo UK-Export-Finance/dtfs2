@@ -22,9 +22,9 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/name-application', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/name-application', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
-    expect(getSpy).toHaveBeenCalledWith('/applications/:id/name', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/applications/:id/name', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/name-application', [validateToken, expect.any(Function)], expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/name-application', [validateToken, expect.any(Function)], expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/applications/:dealId/name', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith('/applications/:dealId/name', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
   });
 });

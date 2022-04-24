@@ -1,4 +1,4 @@
-import { validateToken, validateBank } from '../../middleware';
+import { validateToken } from '../../middleware';
 
 const getSpy = jest.fn();
 jest.doMock('express', () => ({
@@ -20,6 +20,6 @@ describe('routes/file', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/file/:fileId', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith('/file/:fileId', [validateToken, expect.any(Function)], expect.any(Function));
   });
 });

@@ -33,6 +33,7 @@ jobs:
   # this action is used to cancel previous runs for the current branch
   cancel-previous-tests:
     name: "Cancel previous tests"
+    needs: set-environment
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
@@ -46,6 +47,7 @@ jobs:
   # these tests are part of e2e-tests/gef-ui
   gef-tests:
     name: "Run - GEF-UI E2E tests"
+    needs: set-environment
     environment:
       name: E2ETEST
     runs-on: ubuntu-latest
@@ -139,6 +141,7 @@ jobs:
 
   portal-tests:
     name: "Run - Portal E2E tests"
+    needs: set-environment
     environment:
       name: E2ETEST
     runs-on: ubuntu-latest
@@ -233,6 +236,7 @@ jobs:
 
   tfm-tests:
     name: "Run - Trade Finance Manager E2E tests"
+    needs: set-environment
     environment:
       name: E2ETEST
     runs-on: ubuntu-latest
@@ -326,6 +330,7 @@ jobs:
 
   tfm-submit-tests:
     name: "Run - Submit to TFM End-To-End tests"
+    needs: set-environment
     environment:
       name: E2ETEST
     runs-on: ubuntu-latest
