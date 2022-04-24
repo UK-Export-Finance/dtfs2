@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const sanitizeHtml = require('sanitize-html');
 const db = require('../../../drivers/db-client');
 
 const { cloneAzureFiles } = require('../utils/clone-azure-files.utils');
@@ -173,7 +174,7 @@ exports.clone = async (req, res) => {
   const validateErrs = validateApplicationReferences(req.body);
 
   if (validateErrs) {
-    return res.status(422).send(validateErrs);
+    return res.status(422).send(sanitizeHtml(validateErrs));
   }
   // clone GEF deal
   const response = await cloneDeal(existingDealId, bankInternalRefName, additionalRefName, req.user, userId, bank);

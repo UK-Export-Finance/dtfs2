@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const sanitizeHtml = require('sanitize-html');
 const assert = require('assert');
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
 
@@ -29,8 +30,8 @@ exports.create = async (req, res) => {
 
   if (validationErrors.count !== 0) {
     return res.status(400).send({
-      feedback: req.body,
-      validationErrors,
+      feedback: sanitizeHtml(req.body),
+      validationErrors: sanitizeHtml(validationErrors),
     });
   }
 
