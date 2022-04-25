@@ -23,12 +23,22 @@ env:
   acr_password: ${{ secrets.ACR_PASSWORD_DEV }}
 
 jobs:
+  deployment-environment:
+    name: Environment setup
+    runs-on: [self-hosted, linux, deployment]
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+    - name: Initialise Environment
+      run: echo "Setting up ${{ env.environment }} environment"
+
   #################### 1. PORTAL UI ####################
   deploy-portal-ui:
-    needs: set-environment
+    needs: deployment-environment
     name: Portal UI
     runs-on: [self-hosted, linux, deployment]
-    environment: ${{ env.environment }}
+    environment:
+      name: ${{ needs.deployment-environment.outputs.environment }}
     env:
       repository: portal-ui
 
