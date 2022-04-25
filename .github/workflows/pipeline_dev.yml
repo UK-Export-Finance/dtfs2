@@ -1,8 +1,8 @@
 name: Development environment deployment
 
 on:
-  push:
-    branches: [ dev ]
+  pull_request:
+    branches: [ main ]
     paths:
     - 'portal/**'
     - 'portal-api/**'
