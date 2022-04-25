@@ -1,8 +1,8 @@
 name: Development environment deployment
 
 on:
-  pull_request:
-    branches: [ main ]
+  push:
+    branches: [ DTFS2-5637-review-the-deployment-pipelines-this-to-include-amendments ]
     paths:
     - 'portal/**'
     - 'portal-api/**'
@@ -79,9 +79,8 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Azure defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
-        azcliversion: 1.0.0
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
