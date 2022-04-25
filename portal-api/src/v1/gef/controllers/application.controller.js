@@ -1,5 +1,4 @@
 const { ObjectId } = require('mongodb');
-const sanitizeHtml = require('sanitize-html');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
 const {
@@ -132,7 +131,7 @@ exports.update = async (req, res) => {
   const update = new Application(req.body);
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
-    return res.status(422).send((sanitizeHtml(validateErrs)));
+    return res.status(422).send((validateErrs));
   }
 
   // TODO: DTFS2-4987 Write unit tests for editorId

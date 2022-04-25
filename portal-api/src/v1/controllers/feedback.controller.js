@@ -31,7 +31,7 @@ exports.create = async (req, res) => {
   if (validationErrors.count !== 0) {
     return res.status(400).send({
       feedback: sanitizeHtml(req.body),
-      validationErrors: sanitizeHtml(validationErrors),
+      validationErrors,
     });
   }
 
