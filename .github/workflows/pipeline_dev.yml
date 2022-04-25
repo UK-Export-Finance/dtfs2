@@ -17,70 +17,70 @@ on:
     - 'trade-finance-manager-api/**'
     - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
   
-  env:
-    environment: dev
-    credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-    from: latest
-    region: ${{ secrets.AZURE_REGION }}
-    group: ${{ secrets.resource_group }}
+env:
+  environment: dev
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  from: latest
+  region: ${{ secrets.AZURE_REGION }}
+  group: ${{ secrets.resource_group }}
 
-  jobs:
-    set-environment:
-      name: Environment setup
-      runs-ons: [self-hosted, linux]
-      outputs:
-        environment: ${{ env.environment }}
-  
-    #################### 1. PORTAL UI ####################
-    deploy-portal-ui:
-      needs: set-environment
+jobs:
+  set-environment:
+    name: Environment setup
+    runs-ons: [self-hosted, linux]
+    outputs:
+      environment: ${{ env.environment }}
 
-      name: 1. Portal UI
-      environment:
-        name: ${{ needs.set-envionment.outputs.environment }}
-      runs-on: [self-hosted, linux, deployment]
+  #################### 1. PORTAL UI ####################
+  deploy-portal-ui:
+    needs: set-environment
 
-      steps:
-        name: 1. Latest commit hash
-        uses: actions/checkout@v3
-        run: "echo GITHUB_SHA=${{} github.sha }}"
+    name: 1. Portal UI
+    environment:
+      name: ${{ needs.set-envionment.outputs.environment }}
+    runs-on: [self-hosted, linux, deployment]
 
-        name: 2. Build and push
-        uses: docker/build-push-action@v2
-        with:
-          registry: ${{ secrets.ACR_REGISTRY_DEV }}
-          username: ${{ secrets.ACR_USERNAME_DEV }}
-          password: ${{ secrets.ACR_PASSWORD_DEV }}
-          repository: portal-ui
-          path: portal
-          tags: latest
-          build_args: GITHUB_SHA=${{ github.sha }}
-          add_git_labels: true
+    steps:
+      name: 1. Latest commit hash
+      uses: actions/checkout@v3
+      run: "echo GITHUB_SHA=${{} github.sha }}"
 
-        name: 3. Tag image
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_REGISTRY_DEV }}
-          username: ${{ secrets.ACR_USERNAME_DEV }}
-          password: ${{ secrets.ACR_PASSWORD_DEV }}
-        run: |
-          from=${{ env.from }}
-          to=${{ env.environment }}
-          docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$from
-          docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$from ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$to
-          docker push ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$to
+      name: 2. Build and push
+      uses: docker/build-push-action@v2
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: portal-ui
+        path: portal
+        tags: latest
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
 
-        name: 4. Azure login
-        uses: azure/login@v1
-        with:
-          creds: ${{ env.credentials }}
+      name: 3. Tag image
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+      run: |
+        from=${{ env.from }}
+        to=${{ env.environment }}
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$from
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$from ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$to
+        docker push ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$to
 
-        name: 5. Azure CLI
-        uses: azure/cli@v1
-        with:
-          inlineScript: |
-            az configure --defaults location=${{ env.region }}
-            az configure --defaults group=${{ env.group }}
-            az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
-            az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
-            az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
+      name: 4. Azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+      name: 5. Azure CLI
+      uses: azure/cli@v1
+      with:
+        inlineScript: |
+          az configure --defaults location=${{ env.region }}
+          az configure --defaults group=${{ env.group }}
+          az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
