@@ -56,12 +56,14 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
-    - name: 3. Tag image
+    - name: 3. ACR login
       uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
         password: ${{ secrets.ACR_PASSWORD_DEV }}
+
+    - name: 4. Tag images
       run: |
         from=${{ env.from }}
         to=${{ env.environment }}
@@ -69,12 +71,12 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$from ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$to
         docker push ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$to
 
-    - name: 4. Azure login
+    - name: 5. Azure login
       uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
 
-    - name: 5. Azure CLI
+    - name: 6. Azure CLI
       uses: azure/cli@v1
       with:
         inlineScript: |
