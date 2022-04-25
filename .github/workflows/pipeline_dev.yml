@@ -5,17 +5,14 @@ on:
     branches: [ dev ]
     paths:
     - 'portal/**'
-    - 'e2e-tests/portal/cypress/**'
     - 'portal-api/**'
-    - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
     - 'gef-ui/**'
-    - 'e2e-tests/gef/cypress/**'
     - 'dtfs-central-api/**'
     - 'reference-data-proxy/**'
     - 'trade-finance-manager-ui/**'
-    - 'e2e-tests/trade-finance-manager/cypress/**'
     - 'trade-finance-manager-api/**'
-    - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
+    - 'azure-functions/number-generator-function/**'
+    - 'azure-functions/acbs-function/**'
   
 env:
   environment: dev
@@ -27,9 +24,12 @@ env:
 jobs:
   set-environment:
     name: Environment setup
-    runs-ons: [self-hosted, linux]
+    runs-on: [self-hosted, linux]
     outputs:
       environment: ${{ env.environment }}
+    steps:
+    - name: Initialising deployment environment
+      run: "echo Setting-up ${{ env.environment }} environment"
 
   #################### 1. PORTAL UI ####################
   deploy-portal-ui:
@@ -37,16 +37,15 @@ jobs:
 
     name: 1. Portal UI
     environment:
-      name: ${{ needs.set-envionment.outputs.environment }}
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
 
     steps:
-      name: 1. Latest commit hash
+    - name: 1. Latest commit hash
       uses: actions/checkout@v3
-      run: "echo GITHUB_SHA=${{} github.sha }}"
 
-      name: 2. Build and push
-      uses: docker/build-push-action@v2
+    - name: 2. Build and push
+      uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
@@ -57,7 +56,7 @@ jobs:
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
-      name: 3. Tag image
+    - name: 3. Tag image
       uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_REGISTRY_DEV }}
@@ -70,12 +69,12 @@ jobs:
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$from ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$to
         docker push ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$to
 
-      name: 4. Azure login
+    - name: 4. Azure login
       uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
 
-      name: 5. Azure CLI
+    - name: 5. Azure CLI
       uses: azure/cli@v1
       with:
         inlineScript: |
