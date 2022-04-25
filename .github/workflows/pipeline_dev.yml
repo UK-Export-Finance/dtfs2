@@ -27,10 +27,11 @@ jobs:
   deploy-portal-ui:
     name: Portal UI
     runs-on: [self-hosted, linux, deployment]
-    environment:
-      name: ${{ env.environment }}
     env:
       repository: portal-ui
+      env: ${{ env.environment }}
+    environment:
+      name: ${{ env.environment }}
 
     steps:
     - name: 1. Latest commit hash
