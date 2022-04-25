@@ -31,12 +31,6 @@ jobs:
     steps:
     - name: Initialise Environment
       run: echo "Setting up ${{ env.environment }} environment"
-    - name: Azure defaults
-      uses: azure/cli@v1.0.0
-      with:
-        inlineScript: |
-          az configure --defaults location=${{ secrets.AZURE_REGION }}
-          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
   #################### 1. PORTAL UI ####################
   deploy-portal-ui:
@@ -84,7 +78,14 @@ jobs:
       with:
         creds: ${{ env.credentials }}
 
-    - name: 6. Slot
+    - name: 6. Azure CLI defaults
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=${{ secrets.AZURE_REGION }}
+          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
+
+    - name: 7. Slot
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
