@@ -7,10 +7,10 @@ on:
     - 'portal/**'
     - 'portal-api/**'
     - 'gef-ui/**'
-    - 'dtfs-central-api/**'
-    - 'reference-data-proxy/**'
     - 'trade-finance-manager-ui/**'
     - 'trade-finance-manager-api/**'
+    - 'dtfs-central-api/**'
+    - 'reference-data-proxy/**'
     - 'azure-functions/number-generator-function/**'
     - 'azure-functions/acbs-function/**'
   
@@ -54,6 +54,189 @@ jobs:
         password: ${{ env.acr_password }}
         repository: ${{ env.repository }}
         path: portal
+        tags: latest
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+
+    - name: 3. ACR login
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.acr }}
+        username: ${{ env.acr_username }}
+        password: ${{ env.acr_password }}
+
+    - name: 4. Tag images
+      run: |
+        from=${{ env.from }}
+        to=${{ env.environment }}
+        docker pull ${{ env.acr }}/${{ env.repository }}:$from
+        docker tag ${{ env.acr }}/${{ env.repository }}:$from ${{ env.acr }}/${{ env.repository }}:$to
+        docker push ${{ env.acr }}/${{ env.repository }}:$to
+
+    - name: 5. Azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: 6. Azure CLI defaults
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=${{ secrets.AZURE_REGION }}
+          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
+
+    - name: 7. Slot
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
+
+  #################### 2. PORTAL API ####################
+  deploy-portal-api:
+    needs: deployment-environment
+    name: Portal API
+    runs-on: [self-hosted, linux, deployment]
+    environment:
+      name: ${{ needs.deployment-environment.outputs.environment }}
+    env:
+      repository: portal-api
+      
+    steps:
+    - name: 1. Latest commit hash
+      uses: actions/checkout@v3
+
+    - name: 2. Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ env.acr }}
+        username: ${{ env.acr_username }}
+        password: ${{ env.acr_password }}
+        repository: ${{ env.repository }}
+        path: ${{ env.repository }}
+        tags: latest
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+
+    - name: 3. ACR login
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.acr }}
+        username: ${{ env.acr_username }}
+        password: ${{ env.acr_password }}
+
+    - name: 4. Tag images
+      run: |
+        from=${{ env.from }}
+        to=${{ env.environment }}
+        docker pull ${{ env.acr }}/${{ env.repository }}:$from
+        docker tag ${{ env.acr }}/${{ env.repository }}:$from ${{ env.acr }}/${{ env.repository }}:$to
+        docker push ${{ env.acr }}/${{ env.repository }}:$to
+
+    - name: 5. Azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: 6. Azure CLI defaults
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=${{ secrets.AZURE_REGION }}
+          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
+
+    - name: 7. Slot
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
+
+  #################### 3. GEF UI ####################
+  deploy-gef-api:
+    needs: deployment-environment
+    name: GEF UI
+    runs-on: [self-hosted, linux, deployment]
+    environment:
+      name: ${{ needs.deployment-environment.outputs.environment }}
+    env:
+      repository: gef-ui
+      
+    steps:
+    - name: 1. Latest commit hash
+      uses: actions/checkout@v3
+
+    - name: 2. Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ env.acr }}
+        username: ${{ env.acr_username }}
+        password: ${{ env.acr_password }}
+        repository: ${{ env.repository }}
+        path: ${{ env.repository }}
+        tags: latest
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+
+    - name: 3. ACR login
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.acr }}
+        username: ${{ env.acr_username }}
+        password: ${{ env.acr_password }}
+
+    - name: 4. Tag images
+      run: |
+        from=${{ env.from }}
+        to=${{ env.environment }}
+        docker pull ${{ env.acr }}/${{ env.repository }}:$from
+        docker tag ${{ env.acr }}/${{ env.repository }}:$from ${{ env.acr }}/${{ env.repository }}:$to
+        docker push ${{ env.acr }}/${{ env.repository }}:$to
+
+    - name: 5. Azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: 6. Azure CLI defaults
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=${{ secrets.AZURE_REGION }}
+          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
+
+    - name: 7. Slot
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
+
+  #################### 4. TFM UI ####################
+  deploy-tfm-ui:
+    needs: deployment-environment
+    name: TFM UI
+    runs-on: [self-hosted, linux, deployment]
+    environment:
+      name: ${{ needs.deployment-environment.outputs.environment }}
+    env:
+      repository: trade-finance-manager-ui
+      
+    steps:
+    - name: 1. Latest commit hash
+      uses: actions/checkout@v3
+
+    - name: 2. Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ env.acr }}
+        username: ${{ env.acr_username }}
+        password: ${{ env.acr_password }}
+        repository: ${{ env.repository }}
+        path: ${{ env.repository }}
         tags: latest
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
