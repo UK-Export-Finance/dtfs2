@@ -31,7 +31,7 @@ const createAmendmentsObject = async (facilityId) => {
     // returns amendments collection
     return updatedAmendments.value.amendments;
   } catch (err) {
-    console.error('Error creating amendments collection', { err });
+    console.error('Error creating amendments object', { err });
     return null;
   }
 };
