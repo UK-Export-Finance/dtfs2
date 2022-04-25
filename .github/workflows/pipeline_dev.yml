@@ -23,15 +23,24 @@ env:
   acr_password: ${{ secrets.ACR_PASSWORD_DEV }}
 
 jobs:
+  set-environment:
+    name: Environment setup
+    runs-on: [self-hosted, linux, deployment]
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+    - name: Initialise Environment
+      run: "echo Setting environment to ${{ env.environment }}"
+
   #################### 1. PORTAL UI ####################
   deploy-portal-ui:
+    needs: set-environment
     name: Portal UI
     runs-on: [self-hosted, linux, deployment]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
     env:
       repository: portal-ui
-      env: ${{ env.environment }}
-    environment:
-      name: ${{ env.environment }}
 
     steps:
     - name: 1. Latest commit hash
