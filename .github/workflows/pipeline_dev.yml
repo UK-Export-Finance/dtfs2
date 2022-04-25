@@ -81,7 +81,7 @@ jobs:
     - name: 6. Azure defaults
       uses: azure/cli@v1
       with:
-        azcliversion: 2.30.0
+        azcliversion: 1.0.0
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
