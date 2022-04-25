@@ -102,4 +102,4 @@ BSS could be seperated from Portal and the Portal UI's only purpose is to login 
 3. Product pages served (/bss-ui or /gef-ui)
 
 # DTFS
-Trigger 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123
+Trigger 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123

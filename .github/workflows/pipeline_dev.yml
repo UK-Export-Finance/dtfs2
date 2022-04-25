@@ -32,7 +32,7 @@ jobs:
     - name: Initialise Environment
       run: echo "Setting up ${{ env.environment }} environment"
     - name: Azure defaults
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
@@ -85,7 +85,7 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Slot
-      uses: azure/cli@v1
+      uses: azure/cli@v1.0.0
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
