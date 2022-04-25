@@ -8,7 +8,7 @@ const {
   removeAllFacilitiesFilters,
 } = require('../controllers/dashboard');
 const CONSTANTS = require('../constants');
-const validateToken = require('./middleware/validate-token');
+const { validateToken, validateBank, validateRole } = require('./middleware');
 
 const router = express.Router();
 

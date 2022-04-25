@@ -20,13 +20,13 @@ const isDealEditable = require('./isDealEditable');
 const userCanSubmitDeal = require('./userCanSubmitDeal');
 const dealHasIssuedFacilitiesToSubmit = require('./dealHasIssuedFacilitiesToSubmit');
 const dealWithCanIssueOrEditIssueFacilityFlags = require('./dealWithCanIssueOrEditIssueFacilityFlags');
-const validateToken = require('../middleware/validate-token');
+const { validateToken, validateBank, validateRole } = require('../middleware');
 
 const router = express.Router();
 
 router.use('/contract/*', validateToken);
 
-router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
+router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
   const { user } = req.session;
 
@@ -74,7 +74,7 @@ router.get('/contract/:_id', provide([DEAL]), async (req, res) => {
   });
 });
 
-router.get('/contract/:_id/comments', provide([DEAL]), async (req, res) => {
+router.get('/contract/:_id/comments', [provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
 
   return res.render('contract/contract-view-comments.njk', {

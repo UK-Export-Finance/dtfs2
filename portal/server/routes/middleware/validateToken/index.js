@@ -1,5 +1,5 @@
-const api = require('../../api');
-
+const api = require('../../../api');
+const { PORTAL_URL } = require('../../../constants');
 /**
  * Global middleware to validate user session
  * @param {Object} req Request object
@@ -13,8 +13,9 @@ const validateToken = async (req, res, next) => {
   if (await api.validateToken(userToken)) {
     next();
   } else {
+    const redirectAddress = startPageRedirect ? PORTAL_URL : '/login';
     req.session.destroy(() => {
-      res.redirect(startPageRedirect ? 'https://www.gov.uk/guidance/get-a-guarantee-for-export-finance' : '/login');
+      res.redirect(redirectAddress);
     });
   }
 };
