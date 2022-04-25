@@ -23,6 +23,16 @@ env:
   acr_password: ${{ secrets.ACR_PASSWORD_DEV }}
 
 jobs:
+    set-environment:
+    name: Set Environment
+    runs-on: [self-hosted, linux, deployment]
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+    - name: Initialise Environment
+      run: |
+        echo Setting environment to ${{ env.environment }}
+
   #################### 1. PORTAL UI ####################
   deploy-portal-ui:
     name: Portal UI
@@ -71,7 +81,7 @@ jobs:
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
-          az configure --defaults group=${{ secrets.resource_group }}
+          az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: 7. CLI Slot - Create
       uses: azure/cli@v1
@@ -90,4 +100,4 @@ jobs:
       uses: azure/cli@v1
       with:
         inlineScript: |          
-          az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
