@@ -20,25 +20,17 @@ env:
   from: latest
   region: ${{ secrets.AZURE_REGION }}
   group: ${{ secrets.resource_group }}
+  acr: ${{ secrets.ACR_REGISTRY_DEV }}
+  acr_username: ${{ secrets.ACR_USERNAME_DEV }}
+  acr_password: ${{ secrets.ACR_PASSWORD_DEV }}
 
 jobs:
-  set-environment:
-    name: Environment setup
-    runs-on: [self-hosted, linux]
-    outputs:
-      environment: ${{ env.environment }}
-    steps:
-    - name: Initialising deployment environment
-      run: "echo Setting-up ${{ env.environment }} environment"
-
   #################### 1. PORTAL UI ####################
   deploy-portal-ui:
-    needs: set-environment
-
-    name: 1. Portal UI
-    environment:
-      name: ${{ needs.set-environment.outputs.environment }}
+    name: Portal UI
     runs-on: [self-hosted, linux, deployment]
+    env:
+      repository: portal-ui
 
     steps:
     - name: 1. Latest commit hash
@@ -47,10 +39,10 @@ jobs:
     - name: 2. Build and push
       uses: docker/build-push-action@v1
       with:
-        registry: ${{ secrets.ACR_REGISTRY_DEV }}
-        username: ${{ secrets.ACR_USERNAME_DEV }}
-        password: ${{ secrets.ACR_PASSWORD_DEV }}
-        repository: portal-ui
+        registry: ${{ env.acr }}
+        username: ${{ env.acr_username }}
+        password: ${{ env.acr_password }}
+        repository: ${{ env.repository }}
         path: portal
         tags: latest
         build_args: GITHUB_SHA=${{ github.sha }}
@@ -59,29 +51,45 @@ jobs:
     - name: 3. ACR login
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
-        username: ${{ secrets.ACR_USERNAME_DEV }}
-        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        login-server: ${{ env.acr }}
+        username: ${{ env.acr_username }}
+        password: ${{ env.acr_password }}
 
     - name: 4. Tag images
       run: |
         from=${{ env.from }}
         to=${{ env.environment }}
-        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$from
-        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$from ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$to
-        docker push ${{ secrets.ACR_REGISTRY_DEV }}/portal-ui:$to
+        docker pull ${{ env.acr }}/${{ env.repository }}:$from
+        docker tag ${{ env.acr }}/${{ env.repository }}:$from ${{ env.acr }}/${{ env.repository }}:$to
+        docker push ${{ env.acr }}/${{ env.repository }}:$to
 
     - name: 5. Azure login
       uses: azure/login@v1
       with:
         creds: ${{ env.credentials }}
 
-    - name: 6. Azure CLI
+    - name: 6. CLI - Set defaults
       uses: azure/cli@v1
       with:
         inlineScript: |
           az configure --defaults location=${{ env.region }}
           az configure --defaults group=${{ env.group }}
-          az webapp deployment slot create --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-ui
-          az webapp deployment slot swap --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }} --action swap
-          az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-ui --slot ${{ github.sha }}
+
+    - name: 7. CLI Slot - Create
+      uses: azure/cli@v1
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
+  
+    - name: 8. CLI Slot - Swap
+      uses: azure/cli@v1
+      with:
+        inlineScript: |
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
+
+    - name: 9. CLI Slot - Delete
+      if: ${{ always() }}
+      uses: azure/cli@v1
+      with:
+        inlineScript: |          
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
