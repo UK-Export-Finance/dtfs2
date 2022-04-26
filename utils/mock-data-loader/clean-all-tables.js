@@ -20,7 +20,6 @@ const cleanFacilities = async (token) => {
 
   const facilities = await centralApi.listFacilities();
   for (const facility of facilities) {
-
     if (facility.type === 'Bond'
       || facility.type === 'Loan') {
       await centralApi.deleteFacility(facility._id, token);
@@ -40,7 +39,6 @@ const cleanDeals = async (token) => {
 
   if (deals) {
     for (const deal of deals) {
-
       // NOTE: BSS and GEF deals use different MongoDB _ids.
       // Therefore they currently have their own endpoints to delete
       // to use the correct .find({ _id ... }) with or without ObjectId.
@@ -84,6 +82,7 @@ const cleanUsers = async () => {
 const cleanAllTables = async () => {
   const token = await tokenFor({
     username: 'admin',
+    email: 'admin-2',
     password: 'AbC!2345',
     roles: ['maker', 'editor'],
     bank: { id: '*' },
