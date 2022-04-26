@@ -2,7 +2,7 @@ name: Development environment deployment
 
 on:
   push:
-    branches: [ DTFS2-5637-review-the-deployment-pipelines-this-to-include-amendments ]
+    branches: [ dev ]
     paths:
     - 'portal/**'
     - 'portal-api/**'
