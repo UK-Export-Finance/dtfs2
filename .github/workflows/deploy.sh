@@ -54,7 +54,7 @@ if [ -n "$selection" ]; then
     if [ -n "$destination" -a -n "$branch" ]
     then
     # Display latest push commit
-    git checkout ${branch}
+    git checkout "${branch}"
     git pull
     printf "\n\n${NC}⬆️ ${branch} branch latest push : ${NC}"
     printf "${GREEN}"
@@ -62,11 +62,11 @@ if [ -n "$selection" ]; then
     printf "${NC}\n\n"
 
     # Deploy
-    git checkout -b $destination
+    git checkout -b "${destination}"
     git push -f --set-upstream origin $destination
 
     # Clean up
-    git checkout $branch
+    git checkout "${branch}"
     git branch -d $destination
     printf "\n\n✅ ${destination} deployment initiated, switched to ${branch}.\n\n"
     fi

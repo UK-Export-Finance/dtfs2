@@ -367,10 +367,10 @@ jobs:
         inlineScript: |
           az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
 
-  #################### 6. DTFS API ####################
+  #################### 6. DTFS Central API ####################
   deploy-dtfs-api:
     needs: deployment-environment
-    name: DTFS API
+    name: DTFS Central API
     runs-on: [self-hosted, linux, deployment]
     environment:
       name: ${{ needs.deployment-environment.outputs.environment }}
