@@ -27,7 +27,7 @@ if [ -n "$selection" ]; then
     then
     ############### DEV ###############
     destination=dev
-    branch=main
+    branch=main-amendments
     ############### DEV ###############
     elif [ "$selection" = "2" ]
     then
@@ -51,22 +51,24 @@ if [ -n "$selection" ]; then
     ############### ACR PURGE ###############
     fi
 
+    if [ -n "$destination" -a -n "$branch" ]
+    then
     # Display latest push commit
     git checkout ${branch}
+    git pull
     printf "\n\n${NC}⬆️ ${branch} branch latest push : ${NC}"
     printf "${GREEN}"
     git log -n 1 --pretty | sort | grep commit
     printf "${NC}\n\n"
 
-    if [ -n "$destination" -a -n "$branch" ]
-    then
     # Deploy
     git checkout -b $destination
     git push -f --set-upstream origin $destination
+
     # Clean up
-    git checkout main
+    git checkout $branch
     git branch -d $destination
-    printf "\n\n✅ ${destination} deployment initiated.\n\n"
+    printf "\n\n✅ ${destination} deployment initiated, switched to ${branch}.\n\n"
     fi
 
 else
@@ -76,6 +78,6 @@ fi
 
 #######################################
 # UKEF deployment shell script v0.0.3
-# 19/04/2022
+# 26/04/2022
 # Abhi Markan
 #######################################

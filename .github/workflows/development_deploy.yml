@@ -92,6 +92,12 @@ jobs:
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
           az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
+    
+    - name: 8. Restart
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
 
   #################### 2. PORTAL API ####################
   deploy-portal-api:
@@ -154,6 +160,12 @@ jobs:
           az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
 
+    - name: 8. Restart
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
+
   #################### 3. GEF UI ####################
   deploy-gef-api:
     needs: deployment-environment
@@ -214,6 +226,12 @@ jobs:
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
           az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
+
+    - name: 8. Restart
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
 
   #################### 4. TFM UI ####################
   deploy-tfm-ui:
@@ -276,6 +294,12 @@ jobs:
           az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
 
+    - name: 8. Restart
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
+
   #################### 5. TFM API ####################
   deploy-tfm-api:
     needs: deployment-environment
@@ -336,6 +360,12 @@ jobs:
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
           az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
+
+    - name: 8. Restart
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
 
   #################### 6. DTFS API ####################
   deploy-dtfs-api:
@@ -398,6 +428,12 @@ jobs:
           az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
 
+    - name: 8. Restart
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
+
   #################### 7. RDP API ####################
   deploy-rdp-api:
     needs: deployment-environment
@@ -458,6 +494,12 @@ jobs:
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
           az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
+
+    - name: 8. Restart
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
 
   #################### 8. Numgen ####################
   deploy-numgen:
@@ -522,6 +564,12 @@ jobs:
           az functionapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }} --action swap
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }}
 
+    - name: 8. Restart
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
+
   #################### 9. ACBS ####################
   deploy-acbs:
     needs: deployment-environment
@@ -584,3 +632,9 @@ jobs:
           az functionapp deployment slot create --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.name }}
           az functionapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }} --action swap
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }}
+
+    - name: 8. Restart
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az functionapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
