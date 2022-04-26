@@ -568,7 +568,7 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az functionapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
+          az functionapp restart --name tfs-${{ env.environment }}-${{ env.name }}
 
   #################### 9. ACBS ####################
   deploy-acbs:
@@ -637,4 +637,4 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az functionapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
+          az functionapp restart --name tfs-${{ env.environment }}-${{ env.name }}
