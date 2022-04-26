@@ -469,6 +469,7 @@ jobs:
     env:
       repository: azure-function-number-generator
       path: azure-functions/number-generator-function
+      name: function-number-generator
       
     steps:
     - name: 1. Latest commit hash
@@ -517,9 +518,9 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
-          az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
-          az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
+          az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }} --action swap
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }}
 
   #################### 9. ACBS ####################
   deploy-acbs:
@@ -531,7 +532,8 @@ jobs:
     env:
       repository: azure-function-acbs
       path: azure-functions/acbs-function
-      
+      name: function-acbs
+
     steps:
     - name: 1. Latest commit hash
       uses: actions/checkout@v3
@@ -579,6 +581,6 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
-          az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --action swap
-          az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
+          az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }} --action swap
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }}
