@@ -31,7 +31,7 @@ const createSubmitBody = (mockDeal) => ({
   dealType: mockDeal.dealType,
 });
 
-const findOneBankSpy = jest.fn(() => Promise.resolve({ emails: [] }));
+const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
 describe('/v1/deals', () => {
@@ -45,8 +45,8 @@ describe('/v1/deals', () => {
 
     externalApis.updatePortalBssDealStatus = jest.fn();
     externalApis.updatePortalGefDealStatus = jest.fn();
-    findOneBankSpy.mockClear();
-    externalApis.findOneBank = findOneBankSpy;
+    findBankByIdSpy.mockClear();
+    externalApis.findBankById = findBankByIdSpy;
 
     findOneTeamSpy.mockClear();
     externalApis.findOneTeam = findOneTeamSpy;

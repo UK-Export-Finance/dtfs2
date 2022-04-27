@@ -52,7 +52,7 @@ const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.res
   facilityUpdate,
 ));
 
-const findOneBankSpy = jest.fn(() => Promise.resolve({ emails: [] }));
+const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
 const createSubmitBody = (mockDeal) => ({
@@ -103,8 +103,8 @@ describe('/v1/deals', () => {
 
     externalApis.updatePortalBssDealStatus = jest.fn();
     externalApis.updatePortalGefDealStatus = jest.fn();
-    findOneBankSpy.mockClear();
-    externalApis.findOneBank = findOneBankSpy;
+    findBankByIdSpy.mockClear();
+    externalApis.findBankById = findBankByIdSpy;
 
     findOneTeamSpy.mockClear();
     externalApis.findOneTeam = findOneTeamSpy;

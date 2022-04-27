@@ -17,7 +17,7 @@ const updatePortalBssDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const updatePortalGefDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const addUnderwriterCommentToGefDealSpy = jest.fn(() => Promise.resolve({}));
 const addPortalDealCommentSpy = jest.fn(() => Promise.resolve({}));
-const findOneBankSpy = jest.fn(() => Promise.resolve({ emails: [] }));
+const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
 describe('update tfm underwriter managers decision', () => {
@@ -39,8 +39,8 @@ describe('update tfm underwriter managers decision', () => {
     externalApis.updatePortalGefDealStatus = updatePortalGefDealStatusSpy;
     externalApis.addUnderwriterCommentToGefDeal = addUnderwriterCommentToGefDealSpy;
     externalApis.addPortalDealComment = addPortalDealCommentSpy;
-    findOneBankSpy.mockClear();
-    externalApis.findOneBank = findOneBankSpy;
+    findBankByIdSpy.mockClear();
+    externalApis.findBankById = findBankByIdSpy;
 
     findOneTeamSpy.mockClear();
     externalApis.findOneTeam = findOneTeamSpy;

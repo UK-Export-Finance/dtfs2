@@ -678,14 +678,14 @@ const getAllFacilities = async (searchString) => {
 const findBankById = async (bankId) => {
   try {
     const response = await axios({
-      method: 'GET',
+      method: 'get',
       url: `${centralApiUrl}/v1/bank/${bankId}`,
       headers: { 'Content-Type': 'application/json' },
     });
     return response.data;
-  } catch ({ response }) {
-    console.error('Unable to get bank by id', response);
-    return response;
+  } catch (response) {
+    console.error('Unable to get bank by id', response?.data);
+    return response?.data;
   }
 };
 
