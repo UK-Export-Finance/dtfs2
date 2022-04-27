@@ -4,7 +4,7 @@ on:
   push:
     branches: [ dns ]
     paths: 
-    - '.github/workflows/tfm-dns.yml'
+    - '.github/workflows/dns_tfm.yml'
 
 env:
   credentials: ${{ secrets.AZURE_DIGITAL_PROD }}

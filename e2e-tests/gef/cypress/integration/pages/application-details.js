@@ -44,6 +44,7 @@ const applicationDetails = {
   facilityStatus: () => cy.get('[data-cy="facility-status"]'),
   addCashFacilityButton: () => cy.get('[data-cy="add-cash-facility-button"]'),
   addContingentFacilityButton: () => cy.get('[data-cy="add-contingent-facility-button"]'),
+  facilityGuidance: () => cy.get('[data-cy="facility-guidance"]'),
   facilitySummaryList: () => cy.get('[data-cy="facility-summary-list"]'),
   deleteFacilityLink: () => cy.get('[data-cy="delete-facility"]'),
 

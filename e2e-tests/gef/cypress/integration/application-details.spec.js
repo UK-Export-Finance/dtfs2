@@ -102,6 +102,11 @@ context('Application Details Page', () => {
       applicationDetails.facilityStatus().contains('Not started');
       applicationDetails.addCashFacilityButton();
       applicationDetails.addContingentFacilityButton();
+      applicationDetails.facilityGuidance();
+      applicationDetails.facilityGuidance().contains('Guidance on cash and contingent facilities');
+      applicationDetails.facilityGuidance().contains('Cash facilities');
+      applicationDetails.facilityGuidance().contains('Contingent facilities');
+      applicationDetails.facilityGuidance().contains('How many you can add');
       applicationDetails.facilitySummaryList().should('not.exist');
     });
 
@@ -183,6 +188,14 @@ context('Application Details Page', () => {
       applicationDetails.automaticCoverSummaryList().should('not.exist');
     });
 
+    it('displays the facility guidance', () => {
+      applicationDetails.facilityGuidance();
+      applicationDetails.facilityGuidance().contains('Guidance on cash and contingent facilities');
+      applicationDetails.facilityGuidance().contains('Cash facilities');
+      applicationDetails.facilityGuidance().contains('Contingent facilities');
+      applicationDetails.facilityGuidance().contains('How many you can add');
+    });
+
     it('displays the correct submit elements', () => {
       applicationDetails.submitHeading();
       applicationDetails.submitButton().should('not.exist');
@@ -241,6 +254,14 @@ context('Application Details Page', () => {
       applicationDetails.eligibilityCriterionSeventeen();
       applicationDetails.eligibilityCriterionEighteen();
       applicationDetails.eligibilityCriterionNineteen();
+    });
+
+    it('displays the facility guidance', () => {
+      applicationDetails.facilityGuidance();
+      applicationDetails.facilityGuidance().contains('Guidance on cash and contingent facilities');
+      applicationDetails.facilityGuidance().contains('Cash facilities');
+      applicationDetails.facilityGuidance().contains('Contingent facilities');
+      applicationDetails.facilityGuidance().contains('How many you can add');
     });
 
     it('displays the correct submit elements', () => {
