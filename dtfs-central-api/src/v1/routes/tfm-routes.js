@@ -11,7 +11,7 @@ const tfmGetFacilitiesController = require('../controllers/tfm/facility/tfm-get-
 const tfmGetFacilityController = require('../controllers/tfm/facility/tfm-get-facility.controller');
 const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-update-facility.controller');
 const tfmGetFacilityAmendmentsController = require('../controllers/tfm/facility/tfm-get-amendments.controller');
-const tfmUpdateFacilityAmendmentsController = require('../controllers/tfm/facility/tfm-update-amendments.controller');
+const tfmAmendment = require('../controllers/tfm/facility/tfm-update-amendments.controller');
 
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
@@ -409,15 +409,14 @@ tfmRouter.route('/facilities/:id').put(
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/facilities/:id/amendments')
-  .get(
-    tfmGetFacilityAmendmentsController.findFacilityAmendmentsGet,
-  );
+tfmRouter.route('/facilities/:id/amendment').get(tfmGetFacilityAmendmentsController.getAllAmendments);
+tfmRouter.route('/facilities/:id/amendment/in-progress').get(tfmGetFacilityAmendmentsController.getAmendmentInProgress);
+tfmRouter.route('/facilities/:id/amendment/:amendmentId').get(tfmGetFacilityAmendmentsController.getAmendmentById);
 
 /**
  * @openapi
- * /tfm/facilities/:id/amendments:
- *   put:
+ * /tfm/facilities/:id/amendment:
+ *   post:
  *     summary: Creates new amendment object and changes status
  *     tags: [TFM, Amendments]
  *     description: Adds new amendment object in history and changes status
@@ -436,9 +435,7 @@ tfmRouter.route('/facilities/:id/amendments')
  *               id:
  *                 type: string
  *             example:
- *               status: 'In-progress'
- *               _id: 12345
- *               amendmentObj: {
+ *              {
  *                requestDate: 1555662,
  *                creationTimestamp: 1555662,
  *                createdBy: user
@@ -456,9 +453,7 @@ tfmRouter.route('/facilities/:id/amendments')
 *       404:
 *         description: Not found
 */
-tfmRouter.route('/facilities/:id/amendments').put(
-  tfmUpdateFacilityAmendmentsController.updateFacilityAmendmentsCreate,
-);
+tfmRouter.route('/facilities/:id/amendment').post(tfmAmendment.postTfmAmendment);
 
 /**
 * @openapi
@@ -467,9 +462,7 @@ tfmRouter.route('/facilities/:id/amendments').put(
 *       404:
 *         description: Not found
 */
-tfmRouter.route('/facilities/:id/amendments/:amendmentId').put(
-  tfmUpdateFacilityAmendmentsController.updateFacilityAmendmentsPut,
-);
+tfmRouter.route('/facilities/:id/amendment/:amendmentId').put(tfmAmendment.updateTfmAmendment);
 
 /**
  * @openapi

@@ -16,9 +16,10 @@ router.get('/:_id/tasks/:groupId/:taskId', caseController.getCaseTask);
 router.post('/:_id/tasks/:groupId/:taskId', caseController.putCaseTask);
 
 router.get('/:_id/facility/:facilityId', caseController.getCaseFacility);
+router.post('/:_id/facility/:facilityId', caseController.postFacilityAmendment);
 
-router.get('/:_id/facility/:facilityId/amendments/request', amendmentsController.getAmendmentRequest);
-router.post('/:_id/facility/:facilityId/amendments/request', amendmentsController.postAmendmentRequest);
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.getAmendmentRequestDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.postAmendmentRequestDate);
 
 router.get('/:_id/parties', partiesController.getCaseParties);
 

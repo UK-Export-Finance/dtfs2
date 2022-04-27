@@ -6,7 +6,7 @@ const openRouter = express.Router();
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const dealSubmit = require('./controllers/deal.submit.controller');
 const feedbackController = require('./controllers/feedback-controller');
-const facilityController = require('./controllers/facility.controller');
+const amendmentController = require('./controllers/amendment.controller');
 const users = require('./controllers/user/user.routes');
 
 openRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
@@ -109,21 +109,20 @@ openRouter.route('/feedback').post(feedbackController.create);
 
 openRouter.route('/users').post(users.createTfmUser);
 
-openRouter.route('/users/:user')
-  .get(users.findTfmUser)
-  .put(users.updateTfmUserById)
-  .delete(users.removeTfmUserById);
+openRouter.route('/users/:user').get(users.findTfmUser).put(users.updateTfmUserById).delete(users.removeTfmUserById);
 
 openRouter.route('/login').post(users.login);
 
+openRouter.route('/facility/:facilityId/amendment').post(amendmentController.createFacilityAmendment);
+
 /**
  * @openapi
- * //amendments/request:
+ * /facility/:facilityId/amendment:amendmentId:
  *   post:
- *     summary: Creates amendment request
- *     description: Creates amendment request and changes status
+ *     summary: Update amendment
+ *     description: Updates the amendment with the given id
  *     parameters:
- *       - in: amendment object and facility id
+ *       - in: facilityId, amendmentId and payload
  *         schema:
  *           type: Object
  *         required: true
@@ -133,20 +132,12 @@ openRouter.route('/login').post(users.login);
  *         description: OK
  *         content:
  *           application/json:
- *             example:
- *               status: 'In-progress'
- *               _id: 12345
- *               amendmentObj:
- *                {
- *                 requestDate: 1555662,
- *                 creationTimestamp: 1555662,
- *                 createdBy: user,
- *                }
+ *             example: { requestDate: 1555662, creationTimestamp: 1555662, createdBy: user }
  *       404:
- *         description: deal not found
+ *         description: Deal not found
  *       400:
- *         description: cannot create amendment
+ *         description: Cannot update the amendment
  */
-openRouter.route('/amendments/request').post(facilityController.createTfmFacilityAmendment);
+openRouter.route('/facility/:facilityId/amendment/:amendmentId').put(amendmentController.updateFacilityAmendment);
 
 module.exports = openRouter;

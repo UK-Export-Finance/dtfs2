@@ -260,20 +260,34 @@ const getUser = async (userId) => {
   }
 };
 
-const createAmendment = async (amendmentUpdate) => {
+const createFacilityAmendment = async (facilityId) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${tfmAPIurl}/v1/amendments/request`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: amendmentUpdate,
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment`,
+      headers: { 'Content-Type': 'application/json' },
+      data: { facilityId },
     });
 
     return response.data;
   } catch (err) {
-    console.error('cannot create amendment', err?.response?.data);
+    console.error('Unable to create new amendment %O', { response: err?.response?.data });
+    return err?.response?.data;
+  }
+};
+
+const createAmendmentRequestDate = async (facilityId, amendmentId, data) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/${amendmentId}`,
+      headers: { 'Content-Type': 'application/json' },
+      data,
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Unable to create amendment request %O', { response: err?.response?.data });
     return err?.response?.data;
   }
 };
@@ -298,5 +312,6 @@ module.exports = {
   login,
   getFacilities,
   createFeedback,
-  createAmendment,
+  createAmendmentRequestDate,
+  createFacilityAmendment,
 };

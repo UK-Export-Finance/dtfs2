@@ -1,14 +1,8 @@
-const {
-  getUnixTime,
-} = require('date-fns');
-
 const api = require('../../../api');
 const { amendmentRequestDateValidation } = require('./requestDateValidation');
 
-const CONSTANTS = require('../../../constants');
-
 // when add an amendment button clicked, renders amendment request date page
-const getAmendmentRequest = async (req, res) => {
+const getAmendmentRequestDate = async (req, res) => {
   const { facilityId } = req.params;
   const { user } = req.session;
 
@@ -38,8 +32,8 @@ const getAmendmentRequest = async (req, res) => {
  * includes request date, user, creation timestamp and changes status
  * TODO: when changing request date, need to update amendment instead of creating new object
  */
-const postAmendmentRequest = async (req, res) => {
-  const { facilityId } = req.params;
+const postAmendmentRequestDate = async (req, res) => {
+  const { facilityId, amendmentId } = req.params;
   const facility = await api.getFacility(facilityId);
   const { user } = req.session;
 
@@ -65,29 +59,23 @@ const postAmendmentRequest = async (req, res) => {
   }
 
   try {
-    const update = {
-      _id: facilityId,
-      amendmentObj: {
-        requestDate: amendmentRequestDate,
-        creationTimestamp: getUnixTime(new Date()),
-        createdBy: {
-          userName: user.username,
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          team: user.teams,
-        },
-        status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+    const payload = {
+      requestDate: amendmentRequestDate,
+      createdBy: {
+        userName: user.username,
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        team: user.teams,
       },
     };
 
-    const createdAmendment = await api.createAmendment(update);
+    await api.createAmendmentRequestDate(facilityId, amendmentId, payload);
 
-    const amendmentId = createdAmendment.createdAmendment.amendments._id;
-    return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments/${amendmentId}`);
+    return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-date`);
   } catch (err) {
-    console.error('Problem creating amendment request date', { err });
+    console.error('There was a problem creating the amendment request date %O', { response: err?.response?.data });
   }
   return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
 };
 
-module.exports = { getAmendmentRequest, postAmendmentRequest };
+module.exports = { getAmendmentRequestDate, postAmendmentRequestDate };

@@ -1,5 +1,6 @@
 const axios = require('axios');
-const { ObjectId } = require('mongodb');
+const { hasValidObjectId } = require('./helpers/hasValidObjectId.helper');
+const { hasValidUri } = require('./helpers/hasValidUri.helper');
 
 require('dotenv').config();
 
@@ -255,31 +256,47 @@ const updateFacility = async (facilityId, facilityUpdate) => {
   }
 };
 
-const createFacilityAmendment = async (facilityId, amendmentsUpdate) => {
-  // checks if facilityId is valid
-  const facilityIdValid = ObjectId.isValid(facilityId);
-
-  if (facilityIdValid) {
+const createFacilityAmendment = async (facilityId) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  if (isValid) {
     try {
       const response = await axios({
-        method: 'put',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: {
-          amendmentsUpdate,
-        },
+        method: 'post',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { facilityId },
       });
 
       return response.data;
     } catch (err) {
-      console.error('Error creating facility amendment', { err });
-      return err;
+      console.error('Error creating facility amendment %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
     }
   } else {
     console.error('Invalid facilityId provided');
     return { status: 400, message: 'Invalid ObjectId' };
+  }
+};
+
+const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidObjectId(amendmentId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'put',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/${amendmentId}`,
+        headers: { 'Content-Type': 'application/json' },
+        data: payload,
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Error creating facility amendment %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facility Id or amendment Id provided');
+    return { status: 400, message: 'Invalid facility Id or amendment Id provided' };
   }
 };
 
@@ -720,6 +737,7 @@ module.exports = {
   findFacilitesByDealId,
   updateFacility,
   createFacilityAmendment,
+  updateFacilityAmendment,
   updateGefFacility,
   queryDeals,
   getPartyDbInfo,

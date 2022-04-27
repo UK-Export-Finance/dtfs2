@@ -182,6 +182,13 @@ const getCaseFacility = async (req, res) => {
   });
 };
 
+const postFacilityAmendment = async (req, res) => {
+  const { _id: dealId, facilityId } = req.params;
+  const { amendmentId } = await api.createFacilityAmendment(facilityId);
+
+  return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-date`);
+};
+
 const getCaseDocuments = async (req, res) => {
   const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
@@ -239,6 +246,7 @@ module.exports = {
   getCaseTask,
   putCaseTask,
   getCaseFacility,
+  postFacilityAmendment,
   getCaseDocuments,
   postTfmFacility,
 };
