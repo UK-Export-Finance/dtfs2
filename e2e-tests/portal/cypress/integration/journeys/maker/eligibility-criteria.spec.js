@@ -89,8 +89,8 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.eligibilityCriteria11False().click();
     eligibilityCriteria.agentsName.input().type(longString);
 
-    eligibilityCriteria.agentsName.count().should('have.text', 'You have 0 characters remaining');
-    eligibilityCriteria.agentsName.input().should('have.value', longString.substring(0, characterCount));
+    eligibilityCriteria.agentsName.count().should('have.text', 'You have 1 character too many');
+    eligibilityCriteria.agentsName.input().should('have.value', longString);
   });
 
   it('should not have a country selected by default', () => {

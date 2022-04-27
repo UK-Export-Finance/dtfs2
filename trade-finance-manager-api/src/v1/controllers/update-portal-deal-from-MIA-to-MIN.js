@@ -14,10 +14,7 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
       manualInclusionNoticeSubmissionDate: now(),
     };
 
-    update = await api.updatePortalGefDeal(
-      dealId,
-      dealUpdate,
-    );
+    update = await api.updatePortalGefDeal(dealId, dealUpdate);
 
     // adds portal activity object for min submission and facilities changed -> issued
     update = await api.updateGefMINActivity(dealId);
@@ -30,10 +27,7 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
       },
     };
 
-    update = await api.updatePortalDeal(
-      dealId,
-      dealUpdate,
-    );
+    update = await api.updatePortalDeal(dealId, dealUpdate);
   }
 
   return update;

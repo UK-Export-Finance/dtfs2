@@ -12,6 +12,7 @@ const insertTfmUsersAndTeams = async () => {
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['data-admin'],
+    email: 're-insert-mocks-tfm',
   });
 
   console.info('Cleaning TFM teams');

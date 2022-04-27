@@ -48,7 +48,7 @@
           eligibilityDocumentationInput.fileInput(
             fieldname = "auditedFinancialStatements",
             label = "2. Financial statements for the past 3 years (optional)",
-            hint = "Financial statements (audited if available) for the past 3 years, including a Profit & Loss, Balance Sheet and Cash Flow Statement, (with notes, if applicable). If the company is part of a larger group, separate accounts should be provided for the company and group.",
+            hint = "<div> Financial statements (audited if available) for the past 3 years, including a Profit & Loss, Balance Sheet and Cash Flow Statement, (with notes, if applicable). If the company is part of a larger group, separate accounts should be provided for the company and group. </div>",
             fileList = supportingInformation.auditedFinancialStatements,
             validationError = validationErrors.errorList.auditedFinancialStatements,
             dealId = _id
@@ -61,7 +61,7 @@
           eligibilityDocumentationInput.fileInput(
             fieldname = "yearToDateManagement",
             label = "3. Year to date management accounts (optional)",
-            hint = "Including Profit & Loss, Balance Sheet and Cash Flow where available.",
+            hint = "<div> Including Profit & Loss, Balance Sheet and Cash Flow where available. </div>",
             fileList = supportingInformation.yearToDateManagement,
             validationError = validationErrors.errorList.yearToDateManagement,
             dealId = _id
@@ -74,7 +74,7 @@
           eligibilityDocumentationInput.fileInput(
             fieldname = "financialForecasts",
             label = "4. Financial forecasts for the next 3 years (optional)",
-            hint = "Including monthly cash-flow projections for the business as a whole. If unavailable provide for at least the projected facility/guarantee term. If there are any cash flow shortfalls, explain how these will be filled.",
+            hint = "<div> Including monthly cash-flow projections for the business as a whole. If unavailable provide for at least the projected facility/guarantee term. If there are any cash flow shortfalls, explain how these will be filled. </div>",
             fileList = supportingInformation.financialForecasts,
             validationError = validationErrors.errorList.financialForecasts,
             dealId = _id
@@ -87,7 +87,7 @@
           eligibilityDocumentationInput.fileInput(
             fieldname = "financialInformationCommentary",
             label = "5. Brief commentary on the financial information (optional)",
-            hint = "A brief commentary on the financial information in 2-4, with particular focus on turnover, gross and net profit, dividends (if any), debt profile including bank borrowing and net worth, and any other information with explains any exceptions, anomalies or volatility. If the company has experienced any unusual or off-trend financial performance in the last 3 years please also explain this.",
+            hint = "<div> A brief commentary on the financial information in 2-4, with particular focus on turnover, gross and net profit, dividends (if any), debt profile including bank borrowing and net worth, and any other information with explains any exceptions, anomalies or volatility. If the company has experienced any unusual or off-trend financial performance in the last 3 years please also explain this.</div>",
             fileList = supportingInformation.financialInformationCommentary,
             validationError = validationErrors.errorList.financialInformationCommentary,
             dealId = _id
@@ -100,7 +100,7 @@
           eligibilityDocumentationInput.fileInput(
             fieldname = "corporateStructure",
             label = "6. Corporate structure diagram (optional)",
-            hint = "Showing corporate structure including parent, subsidiary and associated companies.",
+            hint = "<div> Showing corporate structure including parent, subsidiary and associated companies.</div>",
             fileList = supportingInformation.corporateStructure,
             validationError = validationErrors.errorList.corporateStructure,
             dealId = _id
