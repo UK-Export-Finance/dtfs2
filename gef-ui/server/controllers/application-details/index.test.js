@@ -137,6 +137,7 @@ describe('controllers/application-details', () => {
           displayChangeSupportingInfo: expect.any(Boolean),
           canUpdateUnissuedFacilities: expect.any(Boolean),
           MIAReturnToMaker: expect.any(Boolean),
+          returnToMakerNoFacilitiesChanged: expect.any(Boolean),
 
           // actions
           submit: expect.any(Boolean),
@@ -145,6 +146,7 @@ describe('controllers/application-details', () => {
           // user in session
           user: mockRequest.session.user,
           userRoles: mockRequest.session.user.roles,
+          isAdmin: expect.any(Boolean),
         });
     });
 
