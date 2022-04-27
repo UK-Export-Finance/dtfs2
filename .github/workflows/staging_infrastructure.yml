@@ -423,9 +423,8 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         # TODO: switch from provisioned throughput to "serverless" capacity at the account level once it's available for Mongo (currently available for sql).
-        # TODO: enable continuous backup once that becomes available - looks like it's in private beta at the moment.
         inlineScript: |
-          az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name ${{ env.database_name }} --max-throughput 4000
+          az cosmosdb mongodb database create --account tfs-${{ env.environment }}-mongo --name ${{ env.database_name }} --max-throughput 100
 
   cosmos-db-init:
     name: Cosmos DB (Mongo) Initialise Collections
