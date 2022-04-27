@@ -4,6 +4,13 @@ const leadUnderwriter = require('./lead-underwriter');
 const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
 
+/**
+ * controller for underwriting tab
+ * gets dealId and user
+ * gets deal
+ * gets objects from relevant pages
+ * renders underwriting page with deal, tfm, dealId, user, leadUnderwriter, pricingAndRisk, underwriterManagersDecision
+ */
 const getUnderwriterPage = async (req, res) => {
   const dealId = req.params._id;
   const { user } = req.session;
