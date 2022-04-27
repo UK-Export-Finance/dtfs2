@@ -30,7 +30,7 @@ jobs:
         echo Setting environment to ${{ env.environment }}
 
   build:
-    name: Build and push Trade Finance Manager API
+    name: Build and push API Services
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -39,7 +39,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Commit hash
       run: "echo GITHUB_SHA=${{ github.sha }}"
-    - name: Build and push
+    - name: TFM-API - Build and push
       uses: docker/build-push-action@v1
       with:
         registry: ${{ secrets.ACR_REGISTRY_DEV }}
@@ -48,6 +48,28 @@ jobs:
         repository: trade-finance-manager-api
         path: trade-finance-manager-api
         tags: latest
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+    - name: Portal API - Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: portal-api
+        path: portal-api
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+    - name: DTFS Central API - Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: dtfs-central-api
+        path: dtfs-central-api
+        tags: ${{ github.sha }}
         build_args: GITHUB_SHA=${{ github.sha }}
         add_git_labels: true
 
@@ -60,21 +82,64 @@ jobs:
     env:
       UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
       UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+      AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
+      AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+      AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
+      AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
+      GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
+      GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+      JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+      JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+      MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
+      MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
+      MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}
+      MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}
+      MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}
+      MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
+      MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
+      MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
+      MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
+      MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
+      MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
+      MULESOFT_API_UKEF_MDM_EA_URL: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }}
+      MULESOFT_API_UKEF_MDM_EA_KEY: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}
+      MULESOFT_API_UKEF_MDM_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
+      ESTORE_URL: ${{ secrets.ESTORE_URL }}
     steps:
     - uses: actions/checkout@v2
-    # Pull the latest images to run with so we don't need to build them
     - uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_REGISTRY_DEV }}
         username: ${{ secrets.ACR_USERNAME_DEV }}
         password: ${{ secrets.ACR_PASSWORD_DEV }}
-    - name: Pull trade-finance-manager-api
+    - name: Pull portal-api
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api dtfs/portal-api
+    - name: Pull tfm-api
       run: |
         docker pull ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api
         docker tag ${{ secrets.ACR_REGISTRY_DEV }}/trade-finance-manager-api dtfs/trade-finance-manager-api
+    - name: Pull dtfs-central-api
+      run: |
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api:${{ github.sha }}
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/dtfs-central-api:${{ github.sha }} dtfs/dtfs-central-api
     - name: Start Docker Compose
       run: |
-        docker-compose -f docker-compose.gha.yml up -d trade-finance-manager-api
+        source secrets/set_jwt_keypair.sh
+        docker-compose -f docker-compose.gha.yml up -d
+        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
+        sleep 10        
+    - name: Load mock data
+      run: |
+        cd utils/mock-data-loader
+        npm install --legacy-peer-deps
+        node ./re-insert-mocks.js
+        pwd
     - name: Run API tests
       run: |
         docker-compose exec -T trade-finance-manager-api npm run api-test
