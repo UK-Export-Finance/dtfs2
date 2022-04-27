@@ -802,6 +802,7 @@ jobs:
       with:
         inlineScript: |
           az functionapp config appsettings set --name tfs-${{ env.environment }}-function-acbs \
+            --ftps-state Disabled \
             --settings \
               FUNCTIONS_WORKER_RUNTIME="node" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
@@ -928,6 +929,7 @@ jobs:
       with:
         inlineScript: |
           az functionapp config appsettings set --name tfs-${{ env.environment }}-function-number-generator \
+            --ftps-state Disabled \
             --settings \
               FUNCTIONS_WORKER_RUNTIME="node" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
@@ -1141,7 +1143,8 @@ jobs:
       with:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-reference-data-proxy \
-            --always-on true
+            --always-on true \
+            --ftps-state Disabled
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -1313,7 +1316,8 @@ jobs:
       with:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-dtfs-central-api \
-            --always-on true
+            --always-on true \
+            --ftps-state Disabled
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -1469,7 +1473,8 @@ jobs:
       with:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-portal-api \
-            --always-on true
+            --always-on true \
+            --ftps-state Disabled
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -1650,7 +1655,8 @@ jobs:
       with:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-trade-finance-manager-api \
-            --always-on true
+            --always-on true \
+            --ftps-state Disabled
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -1817,7 +1823,8 @@ jobs:
       with:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-portal-ui \
-            --always-on true
+            --always-on true \
+            --ftps-state Disabled
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -1977,7 +1984,8 @@ jobs:
       with:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
-            --always-on true
+            --always-on true \
+            --ftps-state Disabled
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -2137,7 +2145,8 @@ jobs:
       with:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-gef-ui \
-            --always-on true
+            --always-on true \
+            --ftps-state Disabled
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
