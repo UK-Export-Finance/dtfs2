@@ -43,12 +43,8 @@ const banks = {
 };
 
 const testUsers = [
-  {
-    username: 'no-roles', email: 'no-roles', password: 'P@ssword1234', roles: []
-  },
-  {
-    username: 'an-editor', email: 'an-editor', password: 'P@ssword1234', roles: ['editor']
-  },
+  { username: 'no-roles', password: 'P@ssword1234', roles: [] },
+  { username: 'an-editor', password: 'P@ssword1234', roles: ['editor'] },
   {
     username: 'HSBC-maker-1',
     password: 'P@ssword1234',
@@ -202,7 +198,7 @@ const finder = () => {
 module.exports.initialise = async (app) => {
   if (notYetInitialised) {
     const {
-      get, post, remove,
+      get, post, put, remove,
     } = api(app).as();
 
     const currentUsersResponse = await get('/v1/users');
@@ -214,8 +210,10 @@ module.exports.initialise = async (app) => {
 
     for (const testUser of testUsers) {
       await post(testUser).to('/v1/users/');
+
       const { body } = await post({ username: testUser.username, password: testUser.password }).to('/v1/login');
       const { token } = body;
+
       loadedUsers.push({
         ...testUser,
         _id: body.user._id,

@@ -46,7 +46,9 @@ const createSubmissionToUkef = async (req, res) => {
     // Always update with the latest checkers details.
     application.checkerId = user._id;
     const hasIssuedFacility = issuedFacilityConfirmation(applicationWithFacilities);
-    const submissionType = ukefDecisionAccepted ? CONSTANTS.DEAL_SUBMISSION_TYPE.MIN : application.submissionType;
+    const submissionType = ukefDecisionAccepted
+      ? CONSTANTS.DEAL_SUBMISSION_TYPE.MIN
+      : application.submissionType;
 
     await api.updateApplication(dealId, application);
     await api.setApplicationStatus(dealId, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);

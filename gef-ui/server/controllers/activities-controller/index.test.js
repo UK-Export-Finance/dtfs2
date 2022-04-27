@@ -26,7 +26,6 @@ describe('mapPortalActivities', () => {
     html: '',
     facilityType: '',
     ukefFacilityId: '',
-    facilityId: '',
     maker: '',
     checker: '',
   }];
@@ -44,7 +43,6 @@ describe('mapPortalActivities', () => {
     html: 'facility',
     facilityType: 'Cash facility',
     ukefFacilityId: '12345',
-    facilityId: '123456',
     maker: {
       firstname: 'Joe',
       surname: 'Bloggs',
@@ -69,7 +67,6 @@ describe('mapPortalActivities', () => {
       html: '',
       facilityType: '',
       ukefFacilityId: '',
-      facilityId: '',
       maker: '',
       checker: '',
     }];
@@ -89,7 +86,6 @@ describe('mapPortalActivities', () => {
       html: 'facility',
       facilityType: 'Cash facility',
       ukefFacilityId: '12345',
-      facilityId: '123456',
       maker: {
         firstname: 'Joe',
         surname: 'Bloggs',

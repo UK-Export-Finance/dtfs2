@@ -14,28 +14,11 @@ const api = require('../api');
 
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 
-const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
+const sendEmailApiSpy = jest.fn(() => Promise.resolve(
+  MOCK_NOTIFY_EMAIL_RESPONSE,
+));
 
 describe('send-deal-submit-emails - GEF', () => {
-  const emailAcknowledgementAinMin = {
-    pimEmailResponse: {
-      content: {
-        body: {},
-      },
-      id: 'MOCK-NOTIFY-TEMPLATE-ID',
-      email: 'mock@testing.com',
-      template: {},
-    },
-    makerEmailResponse: {
-      content: {
-        body: {},
-      },
-      id: 'MOCK-NOTIFY-TEMPLATE-ID',
-      email: 'mock@testing.com',
-      template: {},
-    },
-  };
-
   beforeEach(() => {
     api.sendEmail.mockClear();
     api.sendEmail = sendEmailApiSpy;
@@ -73,7 +56,7 @@ describe('send-deal-submit-emails - GEF', () => {
       expect(result).toEqual({
         firstTaskEmail: await sendFirstTaskEmail(mappedDeal),
         emailAcknowledgementMIA: await sendMiaAcknowledgement(mappedDeal),
-        emailAcknowledgementAinMin,
+        emailAcknowledgementAinMin: MOCK_NOTIFY_EMAIL_RESPONSE,
       });
     });
   });
@@ -142,7 +125,7 @@ describe('send-deal-submit-emails - GEF', () => {
       expect(result).toEqual({
         firstTaskEmail: await sendFirstTaskEmail(mappedDeal),
         emailAcknowledgementMIA: await sendMiaAcknowledgement(mappedDeal),
-        emailAcknowledgementAinMin,
+        emailAcknowledgementAinMin: MOCK_NOTIFY_EMAIL_RESPONSE,
       });
     });
   });

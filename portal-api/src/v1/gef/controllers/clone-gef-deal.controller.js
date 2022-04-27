@@ -109,7 +109,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
   const collection = await db.getCollection(applicationCollection);
   // remove unused properties at the top of the Object (i.e. _id, ukefDecision, etc).
   // any additional fields that are located at the root of the object and that need removing can be added here
-  const unusedProperties = ['_id', 'ukefDecision', 'ukefDecisionAccepted', 'checkerMIN', 'manualInclusionNoticeSubmissionDate', 'comments', 'previousStatus', 'dataMigration'];
+  const unusedProperties = ['_id', 'ukefDecision', 'ukefDecisionAccepted', 'checkerMIN', 'manualInclusionNoticeSubmissionDate', 'comments', 'previousStatus'];
   // removed unused properties inside the `supportingInformation` property
   const unusedSupportingInfo = ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'];
 

@@ -29,9 +29,6 @@ $govuk-new-link-styles: true;
 @import "./deal-parties.scss";
 @import "./search-form.scss";
 
-@import "./accessibility.scss";
-@import "./footer.scss";
-
 .js-enabled .js-hidden {
   display: none;
 }

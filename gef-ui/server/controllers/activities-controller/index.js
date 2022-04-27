@@ -17,7 +17,6 @@ const mapPortalActivities = (portalActivities) => portalActivities.map((portalAc
   html: portalActivity.html,
   facilityType: portalActivity.facilityType,
   ukefFacilityId: portalActivity.ukefFacilityId,
-  facilityId: portalActivity.facilityId,
   maker: portalActivity.maker,
   checker: portalActivity.checker,
 }));

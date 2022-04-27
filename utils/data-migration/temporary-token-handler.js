@@ -10,7 +10,6 @@ const migrationUserFields = {
   password: 'AbC!2345',
   firstname: 'V1 Migration',
   surname: 'DataLoader',
-  email: 'data-migration',
   roles: ['maker', 'editor', 'data-admin'],
   bank: {
     id: '*',

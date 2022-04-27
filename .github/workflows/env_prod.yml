@@ -1,29 +1,28 @@
-name: Development environment complete infrastructure setup
+name: Production environment complete infrastructure setup
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ prod ]
     paths:
-    - '.github/workflows/development_infrastructure.yml'
+    - '.github/workflows/env_prod.yml'
 
 env:
   # Environment
   front_door_access: Allow
-  environment: dev
-  registry: ${{ secrets.ACR_REGISTRY_DEV }}
-  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  app_service_plan: dev
+  environment: prod
+  registry: ${{ secrets.ACR_REGISTRY_PROD }}
+  credentials: ${{ secrets.AZURE_DIGITAL_PROD }}
+  app_service_plan: prod
   redis_sku: Basic
   database_name: dtfs-submissions
-  application_gateway_cidr: 172.16.41.0/24
-  private_endpoints_cidr: 172.16.40.0/24
-  app_service_plan_egress_cidr: 172.16.42.0/28
-  vm_cidr: 172.16.43.0/28
-  vnet_address_prefixes: "172.16.40.0/22 172.16.60.0/23"
+  application_gateway_cidr: 172.16.31.0/24
+  private_endpoints_cidr: 172.16.30.0/24
+  app_service_plan_egress_cidr: 172.16.32.0/28
+  vm_cidr: 172.16.33.0/28
+  vnet_address_prefixes: "172.16.30.0/23 172.16.32.0/23"
   production_subnet_cidr: 10.60.0.0/16
   mulesoft_subnet_cidr: 172.16.10.0/23
   palo_alto_next_hop: 10.50.0.100
-  api_portal_access_port: 44232
   # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}

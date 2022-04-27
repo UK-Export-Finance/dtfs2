@@ -1,0 +1,124 @@
+name: Dev - Portal API
+
+on:
+  push:
+    # Branch updates initiates deployment
+    branches: [ dev ]
+    paths:
+    - 'portal-api/**'
+    - 'e2e-tests/submit-to-trade-finance-manager/cypress/**'
+  schedule:
+    # A weekly run to roll up any base image patches,
+    # in office hours, avoiding bank holiday Mondays:
+    # "At 12:00 on Tuesday." - https://crontab.guru/
+    - cron: '0 12 * * 2'
+
+env:
+  environment: dev
+  # Credentials for accessing Azure
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+
+jobs:
+  set-environment:
+    name: Set Environment
+    runs-on: [self-hosted, linux, deployment]
+    outputs:
+      environment: ${{ env.environment }}
+    steps:
+    - name: Initialise Environment
+      run: |
+        echo Setting environment to ${{ env.environment }}
+
+  build:
+    name: Build and push Portal API
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: [self-hosted, linux, deployment]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Commit hash
+      run: "echo GITHUB_SHA=${{ github.sha }}"
+    - name: Build and push
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: portal-api
+        path: portal-api
+        tags: latest
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+    - name: Build and push TFM-API
+      uses: docker/build-push-action@v1
+      with:
+        registry: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+        repository: trade-finance-manager-api
+        path: trade-finance-manager-api
+        tags: ${{ github.sha }}
+        build_args: GITHUB_SHA=${{ github.sha }}
+        add_git_labels: true
+
+  promote:
+    name: Promote container images to Dev
+    needs: [set-environment, build]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: [self-hosted, linux, deployment]
+    steps:
+    - name: Log in to Dev container registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_REGISTRY_DEV }}
+        username: ${{ secrets.ACR_USERNAME_DEV }}
+        password: ${{ secrets.ACR_PASSWORD_DEV }}
+    - name: Tag images
+      run: |
+        from=latest
+        to=dev
+        docker pull ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:$from
+        docker tag ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:$from ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:$to
+        docker push ${{ secrets.ACR_REGISTRY_DEV }}/portal-api:$to
+
+  deploy:
+    name: Deploy container images to Dev
+    needs: [set-environment, promote]
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: [self-hosted, linux, deployment]
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: ${{ env.credentials }}
+
+    - name: Defaults
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az configure --defaults location=uksouth
+          az configure --defaults group=${{ secrets.resource_group }}
+
+    - name: Create slot ${{ github.sha }}
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot create --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-portal-api
+
+    - name: Swap slot ${{ github.sha }} into production
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot swap   --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }} --action swap
+
+    - name: Delete slot ${{ github.sha }}
+      # Clean up the slot regardless of errors
+      if: ${{ always() }}
+      uses: azure/cli@v1.0.0
+      with:
+        inlineScript: |
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
+
+

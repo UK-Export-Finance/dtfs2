@@ -29,7 +29,7 @@
           <tbody class="govuk-table__body">
 
             {% for bond in bonds %}
-              <tr class="govuk-table__row" data-cy="bond-{{ bond._id }}" id="{{ bond._id }}">
+              <tr class="govuk-table__row" data-cy="bond-{{ bond._id }}">
                 <td class="govuk-table__cell govuk-!-font-size-14">
                   {{ bondLink.render(params, bond) | safe }}
                 </td>

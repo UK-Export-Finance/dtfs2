@@ -52,14 +52,13 @@ function genPasswordResetToken(user) {
 }
 
 /**
- * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
- * @returns {Object} Token, expires in and session ID
+ * @param {*} user - The user object.  We need this to set the JWT `sub` payload property to the MongoDB user ID
  */
 function issueJWT(user) {
   const { _id } = user;
   const sessionIdentifier = crypto.randomBytes(32).toString('hex');
 
-  const expiresIn = '12h';
+  const expiresIn = '1d';
 
   const payload = {
     sub: _id,

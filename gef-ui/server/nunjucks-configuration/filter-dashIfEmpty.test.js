@@ -25,10 +25,4 @@ describe('nunjuck filters - dashIfEmpty', () => {
 
     expect(result).toEqual('-');
   });
-
-  it('should return dash if NaN', () => {
-    const result = dashIfEmpty('NaN');
-
-    expect(result).toEqual('-');
-  });
 });

@@ -301,7 +301,7 @@ describe('/v1/deals', () => {
         const mockDeal = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
         await submitDeal(createSubmitBody(mockDeal));
 
-        expect(sendEmailApiSpy).toBeCalledTimes(2);
+        expect(sendEmailApiSpy).toBeCalledTimes(1);
 
         const allFacilities = [
           ...mockDeal.bondTransactions.items,
@@ -530,7 +530,7 @@ describe('/v1/deals', () => {
         const mockDeal = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
         await submitDeal(createSubmitBody(mockDeal));
 
-        expect(sendEmailApiSpy).toBeCalledTimes(2);
+        expect(sendEmailApiSpy).toBeCalledTimes(1);
 
         const allFacilities = [
           ...mockDeal.bondTransactions.items,

@@ -6,34 +6,6 @@ const businessRules = require('../../config/businessRules');
 const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
-const CONSTNATS = require('../../constants');
-
-/**
- * Send a password update confirmation email with update timestamp.
- * @param {String} emailAddress User email address
- * @param {String} timestamp Password update timestamp
- */
-const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
-  const formattedTimestamp = new Date(Number(timestamp)).toLocaleDateString('en-GB', {
-    weekday: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    month: 'long',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    timeZoneName: 'short'
-  });
-
-  await sendEmail(
-    CONSTNATS.EMAIL_TEMPLATE_IDS.PASSWORD_UPDATE,
-    emailAddress,
-    {
-      timestamp: formattedTimestamp,
-    },
-  );
-};
-exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
 const createPasswordToken = async (email) => {
   const collection = await db.getCollection('users');
@@ -58,22 +30,27 @@ const createPasswordToken = async (email) => {
 exports.createPasswordToken = createPasswordToken;
 
 const sendBlockedEmail = async (emailAddress) => {
+  const EMAIL_TEMPLATE_ID = '82506983-cb85-4f33-b962-922b850be7ac';
+
   await sendEmail(
-    CONSTNATS.EMAIL_TEMPLATE_IDS.BLOCKED,
+    EMAIL_TEMPLATE_ID,
     emailAddress,
     {},
   );
 };
 
 const sendUnblockedEmail = async (emailAddress) => {
+  const EMAIL_TEMPLATE_ID = '44959d08-6389-4f27-a6be-2faae8bea711';
+
   await sendEmail(
-    CONSTNATS.EMAIL_TEMPLATE_IDS.UNBLOCKED,
+    EMAIL_TEMPLATE_ID,
     emailAddress,
     {},
   );
 };
 
 const sendNewAccountEmail = async (user, resetToken) => {
+  const EMAIL_TEMPLATE_ID = '354031c8-8ca5-4ac7-9356-00613faf793c';
   const emailAddress = user.username;
 
   const variables = {
@@ -87,7 +64,7 @@ const sendNewAccountEmail = async (user, resetToken) => {
   };
 
   await sendEmail(
-    CONSTNATS.EMAIL_TEMPLATE_IDS.NEW_ACCOUNT,
+    EMAIL_TEMPLATE_ID,
     emailAddress,
     variables,
   );
@@ -110,11 +87,6 @@ exports.findByUsername = async (username, callback) => {
   collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
-exports.findByEmail = async (email, callback) => {
-  const collection = await db.getCollection('users');
-  collection.findOne({ email }, callback);
-};
-
 exports.create = async (user, callback) => {
   const insert = {
     'user-status': ACTIVE,
@@ -122,8 +94,9 @@ exports.create = async (user, callback) => {
     ...user,
   };
 
+  // tidy fields that shouldn't be here. this might not be the best place.
   delete insert.password;
-  delete insert.passwordConfirm;
+  //---
 
   const collection = await db.getCollection('users');
   const createUserResult = await collection.insertOne(insert);
@@ -149,18 +122,21 @@ exports.update = async (_id, update, callback) => {
   const collection = await db.getCollection('users');
 
   collection.findOne({ _id: ObjectId(_id) }, async (err, existingUser) => {
+    // --- this section could (/should?) have been done as a separate endpoints for the actions
+    //  of blocking+unblocking.. we've done that elsewhere... but seemed overkill here
     if (existingUser['user-status'] !== BLOCKED && userUpdate['user-status'] === BLOCKED) {
-      // User is being blocked.
+      // the user is being blocked..
       await sendBlockedEmail(existingUser.username);
     }
 
     if (existingUser['user-status'] === BLOCKED && userUpdate['user-status'] === ACTIVE) {
-      // User is being re-activated.
+      // the user is being re-activated..
       await sendUnblockedEmail(existingUser.username);
     }
+    //---
 
-    // Password update
     if (userUpdate.password) {
+      // we're updating the password, so do the dance...
       const { password: newPassword } = userUpdate;
       const { salt: oldSalt, hash: oldHash, blockedPasswordList: oldBlockedPasswordList = [] } = existingUser;
       // don't save the raw password or password confirmation to mongo...
@@ -177,13 +153,7 @@ exports.update = async (_id, update, callback) => {
       // queue the addition of the old salt/hash to our list of blocked passwords that we re-check
       // in 'passwordsCannotBeReUsed' rule
       userUpdate.blockedPasswordList = oldBlockedPasswordList.concat([{ oldSalt, oldHash }]);
-      userUpdate.loginFailureCount = 0;
-      userUpdate.passwordUpdatedAt = Date.now();
-
-      // Send password update email notification to the user
-      sendPasswordUpdateEmail(existingUser.email, userUpdate.passwordUpdatedAt);
     }
-
     delete userUpdate.password;
     delete userUpdate.passwordConfirm;
     delete userUpdate.currentPassword;

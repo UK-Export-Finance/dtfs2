@@ -7,18 +7,18 @@ const { orderNumber } = require('../../../../utils/error-list-order-number');
 
 module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };
+
   const {
     'conversionRateDate-day': conversionRateDateDay,
     'conversionRateDate-month': conversionRateDateMonth,
     'conversionRateDate-year': conversionRateDateYear,
-    v1ExtraInfo
   } = facility;
 
   if (dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
     const formattedDate = `${conversionRateDateYear}-${conversionRateDateMonth}-${conversionRateDateDay}`;
     const nowDate = moment().format('YYYY-MM-DD');
 
-    if (moment(formattedDate).isAfter(nowDate) && !v1ExtraInfo) {
+    if (moment(formattedDate).isAfter(nowDate)) {
       newErrorList.conversionRateDate = {
         text: 'Conversion rate date must be today or in the past',
         order: orderNumber(newErrorList),
@@ -27,7 +27,7 @@ module.exports = (facility, errorList) => {
 
     const MAX_DAYS_FROM_NOW = moment(nowDate).subtract(29, 'day');
 
-    if (moment(formattedDate).isBefore(MAX_DAYS_FROM_NOW) && !v1ExtraInfo) {
+    if (moment(formattedDate).isBefore(MAX_DAYS_FROM_NOW)) {
       newErrorList.conversionRateDate = {
         text: `Conversion rate date must be between ${moment(MAX_DAYS_FROM_NOW).format('Do MMMM YYYY')} and ${moment(nowDate).format('Do MMMM YYYY')}`,
         order: orderNumber(newErrorList),

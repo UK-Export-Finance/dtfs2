@@ -1,6 +1,6 @@
 const userProfile = {
-  changePassword: () => cy.get('[data-cy="profile-change-password-ok"]'),
-  cancel: () => cy.get('[data-cy="profile-change-password-cancel"]'),
-};
+  // visit: () => cy.visit('/'),
+  changePassword: () => cy.get('[data-cy="changePassword"]'),
+}
 
 module.exports = userProfile;

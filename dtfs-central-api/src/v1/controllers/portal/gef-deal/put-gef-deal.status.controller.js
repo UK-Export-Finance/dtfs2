@@ -6,6 +6,8 @@ const updateDealStatus = async (dealId, previousStatus, newStatus) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection('deals');
 
+    console.info(`Updating Portal GEF deal status to ${newStatus}`);
+
     const dealUpdate = {
       previousStatus,
       status: newStatus,

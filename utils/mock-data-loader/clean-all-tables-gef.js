@@ -31,7 +31,6 @@ const cleanAllTables = async () => {
   const token = await tokenFor({
     username: 'admin',
     password: 'AbC!2345',
-    email: 'admin-1',
     roles: ['maker', 'editor', 'checker'],
     bank: { id: '*' },
   });

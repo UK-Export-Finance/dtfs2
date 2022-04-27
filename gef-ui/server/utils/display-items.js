@@ -21,7 +21,7 @@ const exporterItems = (exporterUrl, options = {}) => [
   {
     label: 'Correspondence address, if different',
     id: 'correspondenceAddress',
-    href: options.correspondenceAddressLink ? `${exporterUrl}/exporters-address` : `${exporterUrl}/enter-exporters-correspondence-address?status=change`,
+    href: `${exporterUrl}/enter-exporters-correspondence-address?status=change`,
   },
   {
     label: 'Industry',

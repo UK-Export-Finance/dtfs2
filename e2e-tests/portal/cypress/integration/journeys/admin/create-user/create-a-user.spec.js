@@ -7,7 +7,6 @@ const { ADMIN } = MOCK_USERS;
 context('Admin user creates a new user', () => {
   const validUser = {
     username: 'an.address@some.com',
-    email: 'an.address@some.com',
     password: 'Aleg1tP@ssword',
     firstname: 'bob',
     surname: 'builder',
@@ -17,7 +16,6 @@ context('Admin user creates a new user', () => {
 
   const userWithInvalidPassword = {
     username: 'another.address@some.com',
-    email: 'another.address@some.com',
     password: 'aaa',
     firstname: 'alfred',
     surname: 'd. great',
@@ -30,40 +28,8 @@ context('Admin user creates a new user', () => {
     cy.removeUserIfPresent(userWithInvalidPassword, ADMIN);
   });
 
-  it('Go to add user page and back', () => {
-    // Login and go to the dashboard
-    cy.login(ADMIN);
-    cy.url().should('include', '/dashboard/deals');
-    header.users().click();
-
-    // Go to add user's page
-    users.addUser().click();
-    cy.url().should('include', '/admin/users/create');
-
-    // Back to the users page
-    createUser.cancel().click();
-    cy.url().should('include', '/admin/users');
-  });
-
-  it('Admin create user with empty fields', () => {
-    // Login and go to the dashboard
-    cy.login(ADMIN);
-    cy.url().should('include', '/dashboard/deals');
-    header.users().click();
-
-    // Go to add user's page
-    users.addUser().click();
-    cy.url().should('include', '/admin/users/create');
-
-    // Add user
-    createUser.createUser().click();
-
-    // Empty input, should get re-directed to user create page
-    cy.url().should('include', '/admin/users/create');
-  });
-
   it('Admin user adds a new user and confirms the new user works', () => {
-    // Login and go to the dashboard
+    // login and go to dashboard
     cy.login(ADMIN);
 
     header.users().click();
@@ -103,7 +69,7 @@ context('Admin user creates a new user', () => {
   });
 
   it('Admin user adds a new user, triggering validation errors', () => {
-    // Login and go to the dashboard
+    // login and go to dashboard
     cy.login(ADMIN);
 
     header.users().click();

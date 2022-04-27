@@ -149,8 +149,8 @@ const sendAinMinAcknowledgement = async (deal) => {
     facilities,
   } = deal;
 
-  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
-    console.info('The current deal is not an AIN or MIN deal', deal?._id);
+  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
+    && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
     return null;
   }
 

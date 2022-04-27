@@ -49,8 +49,6 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
 };
 
 const validateEnterExportersCorrespondenceAddress = async (req, res) => {
-  delete req.body._csrf;
-
   const {
     params, body, query, session,
   } = req;
@@ -87,9 +85,7 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
 
   // always default to UK (this is not entered in the UI)
   // https://ukef-dtfs.atlassian.net/browse/DTFS2-4456?focusedCommentId=15031
-  if (body.addressLine1 && body.postalCode) {
-    body.country = DEFAULT_COUNTRY;
-  }
+  body.country = DEFAULT_COUNTRY;
 
   try {
     const { exporter } = await api.getApplication(dealId);

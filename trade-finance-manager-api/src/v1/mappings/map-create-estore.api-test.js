@@ -1,5 +1,5 @@
 const mapCreateEstore = require('./map-create-estore');
-const { formatNameForSharepoint, formatExporterNameForSharepoint } = require('../helpers/formatNameForSharepoint');
+const formatNameForSharepoint = require('../helpers/formatNameForSharepoint');
 const CONSTANTS = require('../../constants');
 
 describe('mapCreateEstore', () => {
@@ -172,7 +172,7 @@ describe('mapCreateEstore', () => {
       const expected = {
         dealId: '6221ee3e14a7efbadb431798',
         exporterName: formatNameForSharepoint(mockBssDeal.exporter.companyName),
-        buyerName: formatExporterNameForSharepoint(mockBssDeal.buyer.name),
+        buyerName: formatNameForSharepoint(mockBssDeal.buyer.name),
         dealIdentifier: mockBssDeal.ukefDealId,
         destinationMarket: mockBssDeal.destinationOfGoodsAndServices.name,
         riskMarket: mockBssDeal.buyer.country.name,

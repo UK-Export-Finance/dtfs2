@@ -1,9 +1,6 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/details/macro.njk" import govukDetails %}
-
-{% import '../../_macros/facility-guidance.njk' as facilityGuidance %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
@@ -12,14 +9,6 @@
     </h2>
   </div>
 </div>
-
-{{ govukDetails({
-  summaryText: "Guidance on cash and contingent facilities",
-  text: facilityGuidance.render(),
-  attributes: {
-    'data-cy': 'facility-guidance'
-  }
-}) }}
 
 {% if facilities.data.length > 0 %}
   {% for item in facilities.data %}
@@ -32,7 +21,7 @@
       rows: item.rows,
       attributes: {
         'data-cy': 'facility-summary-list',
-        id: item.facilityId
+        id: item.ukefFacilityId
       }
     }) }}
   {% endfor %}

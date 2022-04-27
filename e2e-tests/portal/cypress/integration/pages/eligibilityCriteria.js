@@ -12,7 +12,7 @@ const page = {
   eligibilityCriteriaFalse: (question) => cy.get(`[data-id="criteria-${question}-false"]`),
   agentsName: {
     input: () => cy.get('[data-cy="agents-name-input"]'),
-    count: () => cy.get('[id="agentName-info"]'),
+    count: () => cy.get('[data-cy="agents-name-count"]'),
   },
   eligibilityAgent: (criteria) => cy.get(`[data-cy="eligibility-agent-details-criteria-${criteria}"]`),
   agentsCountry: () => cy.get('[data-cy="agent-country"]'),

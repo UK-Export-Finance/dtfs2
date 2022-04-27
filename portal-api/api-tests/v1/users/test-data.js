@@ -4,14 +4,12 @@ module.exports = [
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'One',
-    email: 'maker1@ukexportfinance.gov.uk',
     roles: [],
   }, {
     username: 'MAKER',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Two',
-    email: 'maker2@ukexportfinance.gov.uk',
     roles: ['maker'],
     bank: {
       id: '956',
@@ -26,7 +24,6 @@ module.exports = [
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Three',
-    email: 'maker3@ukexportfinance.gov.uk',
     roles: ['checker'],
     bank: {
       id: '956',
@@ -41,7 +38,6 @@ module.exports = [
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Four',
-    email: 'maker4@ukexportfinance.gov.uk',
     roles: ['maker', 'checker'],
     bank: {
       id: '956',
@@ -56,7 +52,6 @@ module.exports = [
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Five',
-    email: 'maker5@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {
       id: '956',
@@ -71,7 +66,6 @@ module.exports = [
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Six',
-    email: 'maker6@ukexportfinance.gov.uk',
     roles: ['maker'],
     bank: {
       id: '961',
@@ -82,7 +76,6 @@ module.exports = [
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Seven',
-    email: 'maker7@ukexportfinance.gov.uk',
     roles: ['checker'],
     bank: {
       id: '961',
@@ -93,7 +86,6 @@ module.exports = [
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Eight',
-    email: 'maker8@ukexportfinance.gov.uk',
     roles: ['maker', 'checker'],
     bank: {
       id: '961',
@@ -104,7 +96,6 @@ module.exports = [
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Nine',
-    email: 'maker9@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {
       id: '961',

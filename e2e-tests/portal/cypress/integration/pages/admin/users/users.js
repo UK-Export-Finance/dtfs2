@@ -1,7 +1,6 @@
 const page = {
   visit: () => cy.visit('/admin/users/'),
-  addUser: () => cy.get('[data-cy="admin-add-user"]'),
-  cancel: () => cy.get('[data-cy="admin-cancel"]'),
+  addUser: () => cy.get('[data-cy="AddUser"]'),
   user: (user) => cy.get(`[data-cy="user-${user.username}"]`),
   row: (user) => ({
     username: () => cy.get(`[data-cy="username-${user.username}"]`),

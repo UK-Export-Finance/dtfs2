@@ -29,7 +29,7 @@
           <tbody class="govuk-table__body">
 
             {% for loan in loans %}
-              <tr class="govuk-table__row" data-cy="loan-{{ loan._id }}" id="{{ loan._id }}">
+              <tr class="govuk-table__row" data-cy="loan-{{ loan._id }}">
                 <td class="govuk-table__cell govuk-!-font-size-14">
                   {{ loanLink.render(params, loan) }}
                 </td>

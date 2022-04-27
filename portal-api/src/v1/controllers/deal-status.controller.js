@@ -46,7 +46,8 @@ exports.update = (req, res) => {
     const fromStatus = deal.status;
     const toStatus = req.body.status;
 
-    if (toStatus !== 'Ready for Checker\'s approval' && toStatus !== 'Abandoned') {
+    if (toStatus !== 'Ready for Checker\'s approval'
+        && toStatus !== 'Abandoned') {
       if (!userCanSubmitDeal(deal, req.user)) {
         return res.status(401).send();
       }
@@ -80,7 +81,8 @@ exports.update = (req, res) => {
     // only trigger updateDeal (which updates the deal's `editedBy` array),
     // if a checker is NOT changing the status to either:
     // `Maker input required` or 'Submitted'
-    if (toStatus !== 'Further Maker\'s input required' && toStatus !== 'Submitted') {
+    if (toStatus !== 'Further Maker\'s input required'
+        && toStatus !== 'Submitted') {
       const dealAfterEditedByUpdate = await updateDeal(
         req.params.id,
         dealAfterAllUpdates,
@@ -129,8 +131,7 @@ exports.update = (req, res) => {
         dealAfterAllUpdates = await createMiaSubmissionDate(req.params.id, user);
       }
 
-      // ensure that the deal is not migrated
-      if (dealAfterAllUpdates.details.submissionCount === 1 && !Object.prototype.hasOwnProperty.call(dealAfterAllUpdates, 'dataMigration')) {
+      if (dealAfterAllUpdates.details.submissionCount === 1) {
         dealAfterAllUpdates = await createUkefIds(
           req.params.id,
           dealAfterAllUpdates,
@@ -138,7 +139,11 @@ exports.update = (req, res) => {
         );
       }
 
-      await api.tfmDealSubmit(deal._id, CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS, req.user);
+      await api.tfmDealSubmit(
+        deal._id,
+        CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS,
+        req.user,
+      );
     }
 
     // check for approvals back from UKEF and date stamp it for countdown indicator

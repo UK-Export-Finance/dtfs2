@@ -103,7 +103,7 @@ describe('password reset', () => {
       it('should return error for invalid token', async () => {
         const { body } = await as().post({ currentPassword: 'currentPassword', password: 'newPassword', passwordConfirm: 'newPassword' }).to('/v1/users/reset-password/madeuptoken123');
         expect(body.success).toEqual(false);
-        expect(body.errors.errorList.password.text).toEqual('Password reset link is not valid');
+        expect(body.errors.errorList.currentPassword.text).toEqual('Password reset link is not valid');
       });
 
       it('should reset the users password when using correct reset token', async () => {

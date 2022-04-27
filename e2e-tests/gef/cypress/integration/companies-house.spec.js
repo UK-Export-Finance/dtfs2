@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-undef */
 import relative from './relativeURL';
 import companiesHouse from './pages/companies-house';
 import CREDENTIALS from '../fixtures/credentials.json';

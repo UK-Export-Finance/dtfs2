@@ -1,7 +1,7 @@
-import { validateFacilityValue, interestPercentageValidation } from './facility-value';
+import validateFacilityValue from './facility-value';
 
 const interestErrorExpected = {
-  errMsg: 'You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places',
+  errMsg: 'You can only enter a number between 0 and 99 and can have up to 4 decimal places',
   errRef: 'interestPercentage',
 };
 const coverErrorExpected = {
@@ -20,7 +20,7 @@ describe('facility-value when using save and return', () => {
 
   it('validates the interest percentage is between 0 and 100 when it is present', () => {
     const errors = validateFacilityValue({
-      interestPercentage: '101',
+      interestPercentage: 101,
     }, true);
     expect(errors).toContainEqual(interestErrorExpected);
   });
@@ -34,35 +34,14 @@ describe('facility-value when using save and return', () => {
 
   it('validates the interest percentage when it is present', () => {
     const errors = validateFacilityValue({
-      interestPercentage: '100',
+      interestPercentage: 100,
     }, true);
-    expect(errors).toContainEqual(interestErrorExpected);
-  });
-
-  it('validates the interest percentage when it is greater than 99', () => {
-    const errors = validateFacilityValue({
-      interestPercentage: '99.0001',
-    }, true);
-    expect(errors).toContainEqual(interestErrorExpected);
-  });
-
-  it('validates the interest percentage when it is 0', () => {
-    const errors = validateFacilityValue({
-      interestPercentage: '0',
-    }, true);
-    expect(errors).toContainEqual(interestErrorExpected);
-  });
-
-  it('validates the interest percentage when it has more than 4dp', () => {
-    const errors = validateFacilityValue({
-      interestPercentage: '1.23456',
-    }, true);
-    expect(errors).toContainEqual(interestErrorExpected);
+    expect(errors).toEqual([]);
   });
 
   it('validates the cover percentage is between 1 and 80 when it is present', () => {
     const errors = validateFacilityValue({
-      coverPercentage: '101',
+      coverPercentage: 101,
     }, true);
     expect(errors).toContainEqual(coverErrorExpected);
   });
@@ -169,7 +148,7 @@ describe('facility-value when using continue', () => {
       interestPercentage: 100,
       coverPercentage: 80,
     });
-    expect(errors).toContainEqual(interestErrorExpected);
+    expect(errors).toEqual([]);
   });
 
   it('validates the values are within the range', () => {
@@ -187,57 +166,5 @@ describe('facility-value when using continue', () => {
       interestPercentage: 99,
     });
     expect(errors).toContainEqual(coverErrorExpected);
-  });
-});
-
-describe('interestPercentageValidation()', () => {
-  it('returns false if number is 0', () => {
-    const result = interestPercentageValidation('0');
-    expect(result).toEqual(false);
-  });
-
-  it('returns false if number is 100', () => {
-    const result = interestPercentageValidation('100');
-    expect(result).toEqual(false);
-  });
-
-  it('returns false if number has 5 dp', () => {
-    const result = interestPercentageValidation('1.23456');
-    expect(result).toEqual(false);
-  });
-
-  it('returns false if number > 99', () => {
-    const result = interestPercentageValidation('99.0001');
-    expect(result).toEqual(false);
-  });
-
-  it('returns false if number > 99', () => {
-    const result = interestPercentageValidation('101');
-    expect(result).toEqual(false);
-  });
-
-  it('returns false if number < 0.0001', () => {
-    const result = interestPercentageValidation('-1');
-    expect(result).toEqual(false);
-  });
-
-  it('returns false if number between 0.0001 - 99', () => {
-    const result = interestPercentageValidation('0.0001');
-    expect(result).toEqual(true);
-  });
-
-  it('returns false if number between 0.0001 - 99', () => {
-    const result = interestPercentageValidation('99');
-    expect(result).toEqual(true);
-  });
-
-  it('returns false if number between 0.0001 - 99', () => {
-    const result = interestPercentageValidation('5');
-    expect(result).toEqual(true);
-  });
-
-  it('returns false if number between 0.0001 - 99', () => {
-    const result = interestPercentageValidation('25.0001');
-    expect(result).toEqual(true);
   });
 });

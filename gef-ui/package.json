@@ -56,7 +56,6 @@
     "govuk-frontend": "^4.0.1",
     "http-errors": "^2.0.0",
     "imask": "^6.4.2",
-    "joi": "^17.6.0",
     "jquery": "3.6.0",
     "lodash": "^4.17.21",
     "moment": "2.29.2",

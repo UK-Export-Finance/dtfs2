@@ -15,24 +15,14 @@ const createRules = [
   passwordAtLeastOneSpecialCharacter,
 ];
 
-const adminUpdateRules = [
-  passwordAtLeast8Characters,
-  passwordAtLeastOneNumber,
-  passwordAtLeastOneUppercase,
-  passwordAtLeastOneLowercase,
-  passwordAtLeastOneSpecialCharacter,
-  passwordsMustMatch,
-  passwordsCannotBeReUsed,
-];
-
 const updateRules = [
   passwordAtLeast8Characters,
   passwordAtLeastOneNumber,
   passwordAtLeastOneUppercase,
   passwordAtLeastOneLowercase,
   passwordAtLeastOneSpecialCharacter,
-  passwordsMustMatch,
   passwordsCannotBeReUsed,
+  passwordsMustMatch,
   currentPasswordMustMatch,
 ];
 
@@ -43,12 +33,7 @@ const applyRules = (ruleset, existingUser, candidateChange) => ruleset.reduce((a
 
 const applyCreateRules = (candidateChange) => applyRules(createRules, null, candidateChange);
 
-const applyUpdateRules = (existingUser, candidateChange) => {
-  const rule = !candidateChange.currentPassword
-    ? adminUpdateRules
-    : updateRules;
-  return applyRules(rule, existingUser, candidateChange);
-};
+const applyUpdateRules = (existingUser, candidateChange) => applyRules(updateRules, existingUser, candidateChange);
 
 module.exports = {
   applyCreateRules,

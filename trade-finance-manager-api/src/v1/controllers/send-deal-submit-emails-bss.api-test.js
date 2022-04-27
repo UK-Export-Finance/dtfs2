@@ -11,29 +11,12 @@ const api = require('../api');
 
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 
-const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
+const sendEmailApiSpy = jest.fn(() => Promise.resolve(
+  MOCK_NOTIFY_EMAIL_RESPONSE,
+));
 
 describe('send-deal-submit-emails - BSS', () => {
   let mockDeal;
-
-  const emailAcknowledgementAinMin = {
-    pimEmailResponse: {
-      content: {
-        body: {},
-      },
-      id: 'MOCK-NOTIFY-TEMPLATE-ID',
-      email: 'mock@testing.com',
-      template: {},
-    },
-    makerEmailResponse: {
-      content: {
-        body: {},
-      },
-      id: 'MOCK-NOTIFY-TEMPLATE-ID',
-      email: 'mock@testing.com',
-      template: {},
-    },
-  };
 
   beforeEach(async () => {
     api.sendEmail.mockClear();
@@ -129,7 +112,7 @@ describe('send-deal-submit-emails - BSS', () => {
         expect(result).toEqual({
           firstTaskEmail: await sendFirstTaskEmail(mockDealIssuedAndUnissued),
           emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDealIssuedAndUnissued),
-          emailAcknowledgementAinMin,
+          emailAcknowledgementAinMin: MOCK_NOTIFY_EMAIL_RESPONSE,
         });
       });
     });
@@ -187,7 +170,7 @@ describe('send-deal-submit-emails - BSS', () => {
         expect(result).toEqual({
           firstTaskEmail: await sendFirstTaskEmail(mockDealIssued),
           emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDealIssued),
-          emailAcknowledgementAinMin,
+          emailAcknowledgementAinMin: MOCK_NOTIFY_EMAIL_RESPONSE,
         });
       });
     });
@@ -248,7 +231,7 @@ describe('send-deal-submit-emails - BSS', () => {
         expect(result).toEqual({
           firstTaskEmail: await sendFirstTaskEmail(mockDealIssuedAndUnissued),
           emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDealIssuedAndUnissued),
-          emailAcknowledgementAinMin,
+          emailAcknowledgementAinMin: MOCK_NOTIFY_EMAIL_RESPONSE,
         });
       });
     });
@@ -309,7 +292,7 @@ describe('send-deal-submit-emails - BSS', () => {
         expect(result).toEqual({
           firstTaskEmail: await sendFirstTaskEmail(mockDealIssued),
           emailAcknowledgementMIA: await sendMiaAcknowledgement(mockDealIssued),
-          emailAcknowledgementAinMin,
+          emailAcknowledgementAinMin: MOCK_NOTIFY_EMAIL_RESPONSE,
         });
       });
     });

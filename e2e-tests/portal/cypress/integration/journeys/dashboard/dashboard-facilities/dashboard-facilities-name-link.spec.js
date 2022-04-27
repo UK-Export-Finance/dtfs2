@@ -38,7 +38,7 @@ context('Dashboard Facilities - Name link', () => {
   it('if facility name not entered, link shows Not entered', () => {
     cy.get(`[data-cy="facility__name--link--${facilityId}"]`).contains('Not entered');
     cy.get(`[data-cy="facility__name--link--${facilityId}"]`).invoke('attr', 'href').then((href) => {
-      expect(href).to.equal(`/contract/${dealId}#${facilityId}`);
+      expect(href).to.equal(`/contract/${dealId}`);
     });
   });
 
@@ -55,7 +55,7 @@ context('Dashboard Facilities - Name link', () => {
     dashboardFacilities.visit();
     cy.get(`[data-cy="facility__name--link--${facilityId}"]`).contains('Test');
     cy.get(`[data-cy="facility__name--link--${facilityId}"]`).invoke('attr', 'href').then((href) => {
-      expect(href).to.equal(`/contract/${dealId}#${facilityId}`);
+      expect(href).to.equal(`/contract/${dealId}`);
     });
   });
 });

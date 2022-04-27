@@ -15,7 +15,7 @@ const router = express.Router();
 
 // Application
 router.route('/application')
-  .get(validate({ role: ['maker', 'checker', 'data-admin', 'admin'] }), application.getAll)
+  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getAll)
   .post(validate({ role: ['maker', 'data-admin'] }), application.create);
 
 router.route('/application/clone')
@@ -30,43 +30,43 @@ router.route('/application/supporting-information/:id')
   .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.updateSupportingInformation);
 
 router.route('/application/status/:id')
-  .get(validate({ role: ['maker', 'checker', 'data-admin', 'admin'] }), application.getStatus)
+  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), application.getStatus)
   .put(validate({ role: ['maker', 'checker', 'data-admin'] }), application.changeStatus);
 
 // Facilities
 router.route('/facilities')
-  .get(validate({ role: ['maker', 'checker', 'data-admin', 'admin'] }), facilities.getAllGET)
+  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), facilities.getAllGET)
   .post(validate({ role: ['maker', 'data-admin'] }), facilities.create)
   .delete(validate({ role: ['maker', 'data-admin'] }), facilities.deleteByDealId);
 
 router.route('/facilities/:id')
-  .get(validate({ role: ['maker', 'checker', 'data-admin', 'admin'] }), facilities.getById)
+  .get(validate({ role: ['maker', 'checker', 'data-admin'] }), facilities.getById)
   .put(validate({ role: ['maker', 'data-admin'] }), facilities.updatePUT)
   .delete(validate({ role: ['maker', 'data-admin'] }), facilities.delete);
 
 // Eligibility Criteria
 router.route('/eligibility-criteria')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), eligibilityCriteria.getAll)
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), eligibilityCriteria.getAll)
   .post(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.create);
 
 router.route('/eligibility-criteria/latest')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), eligibilityCriteria.getLatest);
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), eligibilityCriteria.getLatest);
 
 router.route('/eligibility-criteria/:version')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), eligibilityCriteria.getByVersion)
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), eligibilityCriteria.getByVersion)
   // .put(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.update)
   .delete(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.delete);
 
 // Mandatory Criteria
 router.route('/mandatory-criteria-versioned')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findAll)
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), mandatoryCriteriaVersioned.findAll)
   .post(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.create);
 
 router.route('/mandatory-criteria-versioned/latest')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findLatest);
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), mandatoryCriteriaVersioned.findLatest);
 
 router.route('/mandatory-criteria-versioned/:id')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findOne)
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), mandatoryCriteriaVersioned.findOne)
   .put(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.update)
   .delete(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.delete);
 
@@ -80,17 +80,17 @@ router.route('/files')
   );
 
 router.route('/files/:id')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), files.getById)
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), files.getById)
   .delete(validate({ role: ['maker', 'data-admin'] }), files.delete);
 
 router.route('/files/:id/download')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), files.downloadFile);
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin'] }), files.downloadFile);
 
 // 3rd Party
 router.route('/company/:number') // companies house
-  .get(validate({ role: ['maker', 'data-admin', 'admin'] }), externalApi.getByRegistrationNumber);
+  .get(validate({ role: ['maker', 'data-admin'] }), externalApi.getByRegistrationNumber);
 
 router.route('/address/:postcode') // ordnancesurvey
-  .get(validate({ role: ['maker', 'data-admin', 'admin'] }), externalApi.getAddressesByPostcode);
+  .get(validate({ role: ['maker', 'data-admin'] }), externalApi.getAddressesByPostcode);
 
 module.exports = router;
