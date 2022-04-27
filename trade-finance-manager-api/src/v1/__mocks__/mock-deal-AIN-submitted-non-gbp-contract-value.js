@@ -1,3 +1,4 @@
+const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 
 const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
@@ -16,11 +17,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
       'test2@mock.com',
     ],
   },
-  maker: {
-    username: 'JOE',
-    firstname: 'Joe',
-    surname: 'Bloggs',
-  },
+  maker: MOCK_PORTAL_USERS[0],
   facilities: [],
   details: {
     bank: 'Mock bank',
