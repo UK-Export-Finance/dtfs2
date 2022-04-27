@@ -32,6 +32,9 @@ const createSubmitBody = (mockDeal) => ({
   dealType: 'BSS/EWCS',
 });
 
+const findOneBankSpy = jest.fn(() => Promise.resolve({ emails: [] }));
+const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
@@ -42,6 +45,12 @@ describe('/v1/deals', () => {
     externalApis.sendEmail = sendEmailApiSpy;
 
     externalApis.updatePortalBssDealStatus = jest.fn();
+
+    findOneBankSpy.mockClear();
+    externalApis.findOneBank = findOneBankSpy;
+
+    findOneTeamSpy.mockClear();
+    externalApis.findOneTeam = findOneTeamSpy;
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {

@@ -17,6 +17,8 @@ const updatePortalBssDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const updatePortalGefDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const addUnderwriterCommentToGefDealSpy = jest.fn(() => Promise.resolve({}));
 const addPortalDealCommentSpy = jest.fn(() => Promise.resolve({}));
+const findOneBankSpy = jest.fn(() => Promise.resolve({ emails: [] }));
+const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
 describe('update tfm underwriter managers decision', () => {
   const bssDealId = MOCK_DEAL_BSS_MIA._id;
@@ -37,6 +39,11 @@ describe('update tfm underwriter managers decision', () => {
     externalApis.updatePortalGefDealStatus = updatePortalGefDealStatusSpy;
     externalApis.addUnderwriterCommentToGefDeal = addUnderwriterCommentToGefDealSpy;
     externalApis.addPortalDealComment = addPortalDealCommentSpy;
+    findOneBankSpy.mockClear();
+    externalApis.findOneBank = findOneBankSpy;
+
+    findOneTeamSpy.mockClear();
+    externalApis.findOneTeam = findOneTeamSpy;
   });
 
   describe('when deal is MIA with decision: approved with conditions', () => {

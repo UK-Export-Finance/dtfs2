@@ -1,28 +1,15 @@
+const api = require('../api');
 const CONSTANTS = require('../../constants');
 const sendTfmEmail = require('./send-tfm-email');
 
 const sendDealDecisionEmail = async (mappedDeal) => {
   const { tfm } = mappedDeal;
-
-  const {
-    bankInternalRefName,
-    ukefDealId,
-    maker,
-    exporter,
-  } = mappedDeal;
-
-  const {
-    firstname: recipientName,
-    email: sendToEmailAddress,
-  } = maker;
-
-  const {
-    stage,
-    underwriterManagersDecision,
-  } = tfm;
-
+  const { bankInternalRefName, ukefDealId, maker, exporter } = mappedDeal;
+  const { firstname: recipientName, email: sendToEmailAddress } = maker;
+  const { stage, underwriterManagersDecision } = tfm;
   const { comments } = underwriterManagersDecision;
-
+  const bankId = maker.bank.id;
+  const { emails: bankEmails } = await api.findBankById(bankId);
   let templateId;
 
   const emailVariables = {
@@ -52,12 +39,10 @@ const sendDealDecisionEmail = async (mappedDeal) => {
     default:
   }
 
-  await sendTfmEmail(
-    templateId,
-    sendToEmailAddress,
-    emailVariables,
-    mappedDeal,
-  );
+  await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, mappedDeal);
+  // send a copy of the email to bank's general email address
+  const bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, mappedDeal));
+  return bankResponse;
 };
 
 module.exports = sendDealDecisionEmail;
