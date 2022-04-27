@@ -141,6 +141,7 @@ describe('controllers/about-exporter', () => {
       const expectedUpdateObj = {
         editorId: '12345',
         exporter: {
+          correspondenceAddress: null,
           isFinanceIncreasing: null,
           probabilityOfDefault: '',
           smeType: '',

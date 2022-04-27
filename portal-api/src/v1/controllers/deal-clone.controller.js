@@ -72,6 +72,7 @@ exports.clone = async (req, res) => {
     const {
       _id, previousStatus, tfm, ...existingDealWithoutCertainFields
     } = existingDeal;
+    delete existingDealWithoutCertainFields.dataMigration;
 
     const modifiedDeal = {
       ...existingDealWithoutCertainFields,

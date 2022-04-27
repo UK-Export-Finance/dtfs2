@@ -93,22 +93,25 @@
 
           <div id="criterion-group-agent-name" class="govuk-form-group{% if hasAgentNameValidationError %} govuk-form-group--error{% endif %}">
 
-            <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="150">
-              <div class="govuk-form-group">
-                <label class="govuk-label" for="agentName">
-                  Agent's corporate name
-                </label>
-                <span id="agentName-hint" class="govuk-hint">
-                  This should be the legal name of the entity.
-                </span>
-                <input class="govuk-input govuk-!-width-one-half govuk-js-character-count" id="agentName" name="agentName" value="{{eligibility.agentName}}" maxLength="150" aria-describedby="agentName-info agentName-hint" data-cy="agents-name-input" />
-              </div>
+            {{ govukCharacterCount({
+              name: "agentName",
+              id: "agentName",
+              value: eligibility.agentName,
+              maxlength: 150,
+              classes: "govuk-input govuk-!-width-one-half govuk-js-character-count",
+              attributes: {
+                "data-cy": "agents-name-input"
+              },
+              label: {
+                text: "Agent's corporate name",
+                classes: "govuk-label",
+                isPageHeading: false
+              },
+              hint: {
+                text: "This should be the legal name of the entity."
+              }
+            }) }}
 
-              <span id="agentName-info" class="govuk-hint govuk-character-count__message" aria-live="polite" data-cy="agents-name-count">
-                You can enter up to 150 characters
-              </span>
-
-            </div>
           </div>
 
           {% call govukFieldset({
