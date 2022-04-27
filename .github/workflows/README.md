@@ -1,4 +1,4 @@
-### GHA - CI/CD Pipeline
+# GHA - CI/CD Pipeline
 
 ## Subscriptions
 There are two subscriptions, to manage costs:
@@ -29,10 +29,8 @@ A couple of places this works are:
 At a high-level, the pipeline works by building docker container images (repositories) with various tags associated to it (artifacts)
 which then are saved under specific ACR (Azure container registry) account i.e. `tfsdev`, `tfsstaging` and `tfsprod`.
 
- * Code is pushed to the `main` branch.
- * API tests and E2E tests are then executed, E2E tests are executed on multiple machines.
- * Various PR tests are then executed, if successful then we deploy to `dev`.
- * Infrastructure is setup (if any changes) `env_`, container images are build `pipeline_` with correct tags (artifacts), promoted to the containers (`promote_`)
+ * Code is pushed to the `main` or `main-amendment` branch.
+ * Infrastructure is setup (if any changes) `_infrastructure`, container images are build, pushed and deployed `_deployment` with correct tags (artifacts).
  * Merging to the `infrastructure` branch triggers a refresh of supporting infrastructure (Service Plan, ACR) when a file change is detected in `infrastructure.yml` file.
 
 ## Deployment

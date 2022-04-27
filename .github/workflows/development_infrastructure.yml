@@ -1,28 +1,30 @@
-name: Staging environment complete infrastructure setup
+name: Development environment complete infrastructure setup
 
 on:
   push:
-    branches: [ staging ]
+    branches: [ dev ]
     paths:
-    - '.github/workflows/env_staging.yml'
+    - '.github/workflows/development_infrastructure.yml'
 
 env:
   # Environment
   front_door_access: Allow
-  environment: staging
-  registry: ${{ secrets.ACR_REGISTRY_TEST }}
-  credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
-  app_service_plan: test
+  environment: dev
+  registry: ${{ secrets.ACR_REGISTRY_DEV }}
+  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  app_service_plan: dev
   redis_sku: Basic
   database_name: dtfs-submissions
-  application_gateway_cidr: 172.16.71.0/24
-  private_endpoints_cidr: 172.16.70.0/24
-  app_service_plan_egress_cidr: 172.16.52.0/28
-  vm_cidr: 172.16.53.0/28
-  vnet_address_prefixes: "172.16.50.0/23 172.16.52.0/23 172.16.70.0/23"  # App service settings
+  application_gateway_cidr: 172.16.41.0/24
+  private_endpoints_cidr: 172.16.40.0/24
+  app_service_plan_egress_cidr: 172.16.42.0/28
+  vm_cidr: 172.16.43.0/28
+  vnet_address_prefixes: "172.16.40.0/22 172.16.60.0/23"
   production_subnet_cidr: 10.60.0.0/16
   mulesoft_subnet_cidr: 172.16.10.0/23
   palo_alto_next_hop: 10.50.0.100
+  api_portal_access_port: 44232
+  # App service settings
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"

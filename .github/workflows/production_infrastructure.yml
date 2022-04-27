@@ -4,7 +4,7 @@ on:
   push:
     branches: [ prod ]
     paths:
-    - '.github/workflows/env_prod.yml'
+    - '.github/workflows/production_infrastructure.yml'
 
 env:
   # Environment

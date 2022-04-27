@@ -7,6 +7,7 @@ const {
   displayChangeSupportingInfo,
   canUpdateUnissuedFacilitiesCheck,
   isMIAWithoutChangedToIssuedFacilities,
+  returnToMakerNoFacilitiesChanged,
 } = require('../../utils/helpers');
 const {
   areUnissuedFacilitiesPresent,
@@ -90,6 +91,7 @@ function buildBody(app, previewMode, user) {
         { details: app.exporter }, // wrap in details because mapSummaryList relies this.
         exporterItems(exporterUrl, {
           showIndustryChangeLink: app.exporter?.industries?.length > 1,
+          correspondenceAddressLink: !app.exporter.correspondenceAddress,
         }),
         mapSummaryParams,
         previewMode,
@@ -138,6 +140,7 @@ function buildBody(app, previewMode, user) {
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
     canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted) && !app.userRoles.includes('admin'),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
+    returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
   };
 
   return appBody;

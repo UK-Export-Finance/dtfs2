@@ -53,6 +53,7 @@
             <span class="govuk-!-font-size-16" data-cy="total-to-be-paid-to-ukef">
 
             {% if isGefFacility %}
+            
               {{ facilityTfm.feeRecord | formatAsCurrency | dashIfEmpty }}
 
               {% else %}
