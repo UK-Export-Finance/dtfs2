@@ -1,0 +1,64 @@
+{% from "govuk/components/accordion/macro.njk" import govukAccordion %}
+
+{% import './lead-underwriter/lead-underwriter.njk' as leadUnderWriterMacro %}
+{% import './pricing-and-risk/pricing-and-risk.njk' as pricingAndRiskMacro %}
+{% import './managers-decision/managers-decision.njk' as managersDecisionMacro %}
+
+{% extends "case/case.njk" %}
+
+{% block sub_content %}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-full">
+      <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-6" data-cy="underwriting-heading-deal" aria-label="Underwriting page">Deal</h2>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+
+
+
+  <div class="govuk-grid-column-two-thirds">
+    {% block underwriting_content %}
+      {{ govukAccordion({
+        id: "underwriting",
+        attributes: {
+          "data-cy": "underwriting"
+        },
+        items: [
+          {
+            heading: {
+              text: "Lead underwriter"
+            },
+            content: {
+              html: leadUnderWriterMacro.render({leadUnderwriter: leadUnderwriter})
+            },
+            expanded: false
+          },
+          {
+            heading: {
+              text: "Pricing and risk"
+            },
+            content: {
+              html: pricingAndRiskMacro.render({pricingAndRisk: pricingAndRisk})
+            },
+            expanded: false
+          },
+            {
+            heading: {
+              text: "Underwriter Manager's decision"
+            },
+            content: {
+              html: managersDecisionMacro.render({underwriterManagersDecision: underwriterManagersDecision})
+            },
+            expanded: false
+          }
+        ]
+      }) }}
+    {% endblock %}
+  </div>
+
+  </div>
+
+{% endblock %}

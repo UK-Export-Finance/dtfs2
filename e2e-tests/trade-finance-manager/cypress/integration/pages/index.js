@@ -19,6 +19,7 @@ import underwritingProbabilityOfDefaultPage from './underwriting/probabilityOfDe
 import leadUnderwriterPage from './underwriting/leadUnderwriterPage';
 import managersDecisionPage from './underwriting/managersDecisionPage';
 import facilityRiskProfilePage from './underwriting/facilityRiskProfilePage';
+import underwritingPage from './underwriting/underwritingPage';
 import facilitiesPage from './facilitiesPage';
 import feedbackPage from './feedbackPage';
 
@@ -46,4 +47,5 @@ export default {
   facilityRiskProfilePage,
   facilitiesPage,
   feedbackPage,
+  underwritingPage,
 };

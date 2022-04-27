@@ -36,7 +36,7 @@ describe(page, () => {
     it('should render save & close buttons', () => {
       wrapper.expectElement('[data-cy="submit-button"]').toExist();
       wrapper.expectLink('[data-cy="close-link"]')
-        .toLinkTo(`/case/${params.dealId}/underwriting/pricing-and-risk`, 'Cancel');
+        .toLinkTo(`/case/${params.dealId}/underwriting`, 'Cancel');
     });
   });
 });

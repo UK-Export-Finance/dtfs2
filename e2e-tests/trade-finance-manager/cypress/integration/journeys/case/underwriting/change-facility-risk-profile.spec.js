@@ -41,7 +41,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
       // go to pricing and risk page
       partials.caseSubNavigation.underwritingLink().click();
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+      cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
       // change link should not be visible
       const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
@@ -60,12 +60,12 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     // go to pricing and risk page
     partials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
-    const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
+    const facilityRow = pages.underwritingPage.facilityTable(facilityId);
 
-    facilityRow.changeRiskProfileLink().should('be.visible');
-    facilityRow.changeRiskProfileLink().click();
+    facilityRow.changeRiskProfileLink().should('exist');
+    facilityRow.changeRiskProfileLink().click({ force: true });
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
   });
@@ -76,11 +76,11 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     // go to pricing and risk page
     partials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
 
-    facilityRow.changeRiskProfileLink().click();
+    facilityRow.changeRiskProfileLink().click({ force: true });
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
 
@@ -95,17 +95,17 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     // go to pricing and risk page
     partials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
 
-    facilityRow.changeRiskProfileLink().click();
+    facilityRow.changeRiskProfileLink().click({ force: true });
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
 
     pages.facilityRiskProfilePage.cancelLink().click();
 
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
 
   it('submitting an empty form displays validation errors', () => {
@@ -114,16 +114,16 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     // go to pricing and risk page
     partials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
 
-    facilityRow.changeRiskProfileLink().click();
+    facilityRow.changeRiskProfileLink().click({ force: true });
 
     pages.facilityRiskProfilePage.submitButton().click();
 
     pages.facilityRiskProfilePage.errorSummaryItems().should('have.length', 1);
-    pages.facilityRiskProfilePage.riskProfileRadioInputValidationError().should('be.visible');
+    pages.facilityRiskProfilePage.riskProfileRadioInputValidationError().should('exist');
   });
 
   it('submitting a new risk profile redirects to `Pricing and Risk` page and updates the value in facilities table', () => {
@@ -132,7 +132,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     // go to pricing and risk page
     partials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
 
@@ -141,13 +141,13 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
       expect(text.trim()).to.equal('Flat');
     });
 
-    facilityRow.changeRiskProfileLink().click();
+    facilityRow.changeRiskProfileLink().click({ force: true });
 
     // submit form
     pages.facilityRiskProfilePage.riskProfileRadioInputVariable().click();
     pages.facilityRiskProfilePage.submitButton().click();
 
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     // assert new Risk Profile value
     facilityRow.riskProfile().invoke('text').then((text) => {
