@@ -812,7 +812,8 @@ jobs:
               MULESOFT_API_UKEF_MDM_EA_URL=${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }} \
               MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} \
               MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }} \
-              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
+              WEBSITE_USE_PLACEHOLDER=0
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
@@ -937,7 +938,8 @@ jobs:
               MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
               MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} \
               MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
-              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
+              WEBSITE_USE_PLACEHOLDER=0
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
