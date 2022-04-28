@@ -15,6 +15,8 @@ const api = require('../api');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
+const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
+const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
 describe('send-deal-submit-emails - GEF', () => {
   const emailAcknowledgementAinMin = {
@@ -34,11 +36,26 @@ describe('send-deal-submit-emails - GEF', () => {
       email: 'mock@testing.com',
       template: {},
     },
+    bankResponse: [],
+  };
+  const emailAcknowledgementMIA = {
+    emailResponse: {
+      content: { body: {} },
+      id: 'MOCK-NOTIFY-TEMPLATE-ID',
+      email: 'mock@testing.com',
+      template: {},
+    },
+    bankResponse: [],
   };
 
   beforeEach(() => {
     api.sendEmail.mockClear();
     api.sendEmail = sendEmailApiSpy;
+    findBankByIdSpy.mockClear();
+    api.findBankById = findBankByIdSpy;
+
+    findOneTeamSpy.mockClear();
+    api.findOneTeam = findOneTeamSpy;
   });
 
   describe('GEF deal - AIN', () => {
@@ -104,7 +121,7 @@ describe('send-deal-submit-emails - GEF', () => {
 
       expect(result).toEqual({
         firstTaskEmail: await sendFirstTaskEmail(mappedDeal),
-        emailAcknowledgementMIA: MOCK_NOTIFY_EMAIL_RESPONSE,
+        emailAcknowledgementMIA,
         emailAcknowledgementAinMin: await sendAinMinAcknowledgement(mappedDeal),
       });
     });

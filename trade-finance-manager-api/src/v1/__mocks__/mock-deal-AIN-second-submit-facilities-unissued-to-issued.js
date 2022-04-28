@@ -1,3 +1,4 @@
+const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 
 const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
@@ -16,12 +17,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
       'test2@mock.com',
     ],
   },
-  maker: {
-    username: 'JOE',
-    firstname: 'Joe',
-    surname: 'Bloggs',
-    email: 'test@testing.com',
-  },
+  maker: MOCK_PORTAL_USERS[0],
   details: {
     bank: 'Mock bank',
     ukefDealId: '20010739',
