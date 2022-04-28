@@ -2,7 +2,7 @@ name: Production environment complete infrastructure setup
 
 on:
   push:
-    branches: [ prod ]
+    branches: [ infrastructure ]
     paths:
     - '.github/workflows/production_infrastructure.yml'
 

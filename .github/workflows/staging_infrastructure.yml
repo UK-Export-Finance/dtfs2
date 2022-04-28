@@ -2,7 +2,7 @@ name: Staging environment complete infrastructure setup
 
 on:
   push:
-    branches: [ staging ]
+    branches: [ infrastructure ]
     paths:
     - '.github/workflows/staging_infrastructure.yml'
 
