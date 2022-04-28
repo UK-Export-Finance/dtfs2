@@ -810,7 +810,8 @@ jobs:
               MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
               MULESOFT_API_UKEF_MDM_EA_URL=${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }} \
               MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} \
-              MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
+              MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }} \
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
@@ -934,7 +935,8 @@ jobs:
               WEBSITE_VNET_ROUTE_ALL=1 \
               MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
               MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} \
-              MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
+              MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
@@ -1192,7 +1194,8 @@ jobs:
               GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
               AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
-              MONGODB_URI="$mongo_connection_string"
+              MONGODB_URI="$mongo_connection_string" \
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1329,7 +1332,8 @@ jobs:
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
               PORT=5000 \
-              WEBSITES_PORT=5000
+              WEBSITES_PORT=5000 \
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -1486,7 +1490,8 @@ jobs:
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
               PORT=5000 \
-              WEBSITES_PORT=5000
+              WEBSITES_PORT=5000 \
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -1668,7 +1673,8 @@ jobs:
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
               PORT=5000 \
-              WEBSITES_PORT=5000
+              WEBSITES_PORT=5000 \
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -1851,7 +1857,8 @@ jobs:
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
-              HTTPS=1
+              HTTPS=1 \
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -2013,7 +2020,8 @@ jobs:
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
               ESTORE_URL="${{ secrets.ESTORE_URL }}" \
-              HTTPS=1
+              HTTPS=1 \
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -2173,7 +2181,8 @@ jobs:
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
-              HTTPS=1
+              HTTPS=1 \
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
 
     - name: Secrets
       uses: azure/cli@v1.0.0
