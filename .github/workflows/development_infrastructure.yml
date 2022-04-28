@@ -2,7 +2,7 @@ name: Development environment complete infrastructure setup
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ infrastructure ]
     paths:
     - '.github/workflows/development_infrastructure.yml'
 
