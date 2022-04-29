@@ -4,13 +4,13 @@ import relative from './relativeURL';
 
 import CONSTANTS from '../fixtures/constants';
 
-import dateConstants from '../fixtures/dateConstants';
+import dateConstants from '../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_AIN } from '../fixtures/mocks/mock-deals';
 import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
 import {
   MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE,
-} from '../../../e2e-fixtures/mocks/mock-facilities';
+} from '../fixtures/mocks/mock-facilities';
 import applicationPreview from './pages/application-preview';
 import unissuedFacilityTable from './pages/unissued-facilities';
 import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';

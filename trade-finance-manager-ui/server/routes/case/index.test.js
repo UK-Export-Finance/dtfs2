@@ -66,10 +66,10 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/activity/post-comment', activityController.getCommentBox);
 
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendments/request', amendmentsController.getAmendmentRequest);
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.getAmendmentRequestDate);
 
     // POST routes
-    expect(post).toHaveBeenCalledTimes(17);
+    expect(post).toHaveBeenCalledTimes(18);
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks', caseController.filterCaseTasks);
 
@@ -103,6 +103,6 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/activity/post-comment', activityController.postComment);
 
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendments/request', amendmentsController.postAmendmentRequest);
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.postAmendmentRequestDate);
   });
 });

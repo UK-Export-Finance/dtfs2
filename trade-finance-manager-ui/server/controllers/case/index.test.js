@@ -620,6 +620,8 @@ describe('controllers - case', () => {
           facilityId: req.params.facilityId,
           user: session.user,
           showAmendmentButton: false,
+          showContinueAmendmentButton: true,
+          amendmentId: 1234,
         });
       });
     });
