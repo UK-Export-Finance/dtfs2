@@ -16,7 +16,6 @@ on:
 
 env:
   environment: dev
-  # Credentials for accessing Azure
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
 
 jobs:
