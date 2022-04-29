@@ -7,6 +7,9 @@ const invalidUsers = ['BANK1_MAKER1', 'BANK1_CHECKER1', 'EDITOR'];
 
 context('Only allow authorised users to access admin pages', () => {
   context('User admin', () => {
+    beforeEach(() => {
+
+    });
     it('Valid users can access', () => {
       // login and go to dashboard
       validUsers.forEach((validUser) => {
@@ -22,12 +25,15 @@ context('Only allow authorised users to access admin pages', () => {
     it('Invalid users cannot access', () => {
       // login and go to dashboard
       invalidUsers.forEach((invalidUser) => {
+        Cypress.Cookies.preserveOnce('connect.sid');
+        Cypress.Cookies.preserveOnce('_csrf');
+        header.logOut();
         const user = MOCK_USERS[invalidUser];
         cy.login(user);
         users.visit();
 
-        cy.url().should('eq', relative('/not-found'));
-        header.logOut();
+        cy.url().should('eq', relative('/login'));
+        // header.logOut();
       });
     });
   });

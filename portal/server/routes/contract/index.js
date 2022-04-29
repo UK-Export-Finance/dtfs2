@@ -20,7 +20,7 @@ const isDealEditable = require('./isDealEditable');
 const userCanSubmitDeal = require('./userCanSubmitDeal');
 const dealHasIssuedFacilitiesToSubmit = require('./dealHasIssuedFacilitiesToSubmit');
 const dealWithCanIssueOrEditIssueFacilityFlags = require('./dealWithCanIssueOrEditIssueFacilityFlags');
-const { validateToken, validateBank, validateRole } = require('../middleware');
+const { validateToken, validateBank } = require('../middleware');
 
 const router = express.Router();
 

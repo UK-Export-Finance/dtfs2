@@ -11,6 +11,10 @@ const userRoleIsValid = (requiredRoles, user) => {
   if (!requiredRoles || requiredRoles.length === 0) {
     return true;
   }
+  if (!user) {
+    return false;
+  }
+
   const userHasOneOfTheRequiredRoles = ukefAdminRoles.some((adminRole) => user.roles.includes(adminRole))
                                     || requiredRoles.some((role) => user.roles.includes(role));
   return userHasOneOfTheRequiredRoles;
