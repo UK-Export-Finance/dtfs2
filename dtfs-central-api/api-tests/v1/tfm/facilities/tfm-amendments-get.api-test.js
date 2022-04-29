@@ -50,67 +50,69 @@ describe('/v1/tfm/facilities/:id/amendments', () => {
     newFacility.dealId = dealId;
   });
 
-  describe('GET /v1/tfm/facilities/:id/amendments', () => {
-    it('it should return the full amendments collection from tfm-facilities', async () => {
+  describe('GET /v1/tfm/facilities/:id/amendment', () => {
+    it('should return the full amendments object for a given facilityId', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      // amendment to insert
-      const amendment1 = {
-        _id: newId,
-        amendments: {
-          status: 'In progress',
-          creationDate: 111234,
-        },
-      };
-
-      // creates 2 new amendments
-      const insertedAmendment1 = await api.put({ amendmentsUpdate: amendment1 }).to(`/v1/tfm/facilities/${newId}/amendments`);
-      const insertedAmendment2 = await api.put({ amendmentsUpdate: amendment1 }).to(`/v1/tfm/facilities/${newId}/amendments`);
-
-      const { status, body } = await api.get(`/v1/tfm/facilities/${newId}/amendments`);
+      // creates 1 new amendment
+      await api.post().to(`/v1/tfm/facilities/${newId}/amendment`);
+      const { status, body } = await api.get(`/v1/tfm/facilities/${newId}/amendment`);
 
       expect(status).toEqual(200);
 
-      // insertedAmendment1.body.createdAmendment.amendments gives the inserted amendment
-      const expected = {
-        history: [insertedAmendment1.body.createdAmendment.amendments, insertedAmendment2.body.createdAmendment.amendments],
-      };
+      const exp = [
+        {
+          amendmentId: expect.any(String),
+          createdAt: expect.any(Number),
+          updatedAt: expect.any(Number),
+          status: expect.any(String)
+        }
+      ];
 
-      expect(body).toEqual(expected);
+      expect(body).toEqual(exp);
     });
 
-    it('it should return 404 status if facility not found', async () => {
+    it('should return 404 status if the facility does NOT exist', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
-
-      const { status, text } = await api.get('/v1/tfm/facilities/11111a1a1a111a11aaaaa111/amendments');
+      const { status, text } = await api.get('/v1/tfm/facilities/626a9270184ded001357c010/amendment/626a9270184ded001357c010');
 
       expect(status).toEqual(404);
-      expect(text).toEqual('{"status":404,"message":"Facility not found"}');
+      expect(text).toEqual('{"status":404,"message":"The current facility doesn\'t have the specified amendment"}');
     });
 
-    it('it should return 400 status if id is wrong format', async () => {
+    it('should return 400 status if the  amendmentId has the wrong format', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
-
-      const { status, text } = await api.get('/v1/tfm/facilities/123/amendments');
+      const { status, text } = await api.get('/v1/tfm/facilities/626a9270184ded001357c010/amendment/123');
 
       expect(status).toEqual(400);
-      expect(text).toEqual('{"status":400,"message":"Invalid facility Id"}');
+      expect(text).toEqual('{"status":400,"message":"Invalid facility or amendment Id"}');
+    });
+
+    it('should return 400 status if the facilityId has the wrong format', async () => {
+      await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
+
+      const { status, text } = await api.get('/v1/tfm/facilities/123/amendment/626a9270184ded001357c010');
+
+      expect(status).toEqual(400);
+      expect(text).toEqual('{"status":400,"message":"Invalid facility or amendment Id"}');
+    });
+
+    it('should return 400 status if the facilityId and amendmentId have the wrong format', async () => {
+      await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
+
+      const { status, text } = await api.get('/v1/tfm/facilities/123/amendment/1234');
+
+      expect(status).toEqual(400);
+      expect(text).toEqual('{"status":400,"message":"Invalid facility or amendment Id"}');
     });
   });
 });

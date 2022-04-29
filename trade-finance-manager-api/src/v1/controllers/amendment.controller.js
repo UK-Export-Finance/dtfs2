@@ -13,7 +13,14 @@ const updateFacilityAmendment = async (req, res) => {
   return res.status(200).send(createdAmendment);
 };
 
+const getAmendmentInProgress = async (req, res) => {
+  const { facilityId } = req.params;
+  const amendment = await api.getAmendmentInProgress(facilityId);
+  return res.status(200).send(amendment);
+};
+
 module.exports = {
   createFacilityAmendment,
   updateFacilityAmendment,
+  getAmendmentInProgress,
 };

@@ -160,6 +160,7 @@ const putCaseTask = async (req, res) => {
 const getCaseFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
+  const amendment = await api.getAmendmentInProgress(facilityId);
 
   if (!facility) {
     return res.redirect('/not-found');
@@ -178,7 +179,9 @@ const getCaseFacility = async (req, res) => {
     facilityId,
     facilityTfm: facility.tfm,
     user: req.session.user,
-    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams),
+    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendment?.amendmentId,
+    showContinueAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && amendment?.amendmentId,
+    amendmentId: amendment?.amendmentId,
   });
 };
 

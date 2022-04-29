@@ -9,32 +9,28 @@ const CONSTANTS = require('../../../../constants');
 //     "updatedAt": 1651059653,
 //     "status": "In progress",
 // }]
-const findAllAmendments = async (facilityId) => {
+const findAllAmendmentsByFacilityId = async (facilityId) => {
   const collection = await db.getCollection('tfm-facilities');
 
   try {
     const amendment = await collection.aggregate([
       { $match: { _id: ObjectId(facilityId) } },
-      { $project: { _id: 0, amendments: '$amendments.history' } },
+      { $project: { _id: 0, amendments: '$amendments' } },
     ]).toArray();
 
     // returns the amendment object for the given facilityId and amendmentId
-    return amendment[0].amendments;
+    return amendment[0]?.amendments;
   } catch (err) {
     console.error('Unable to find amendments object %O', { err });
     return null;
   }
 };
 
-exports.getAllAmendments = async (req, res) => {
+exports.getAllAmendmentsByFacilityId = async (req, res) => {
   const { id: facilityId } = req.params;
   if (ObjectId.isValid(facilityId)) {
-    const amendment = await findAllAmendments(facilityId);
-    if (amendment) {
-      return res.status(200).send({ status: 200, amendment });
-    }
-
-    return res.status(404).send({ status: 404, message: 'The current facility doesn\'t have any amendments' });
+    const amendment = await findAllAmendmentsByFacilityId(facilityId) || [];
+    return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
 };
@@ -51,13 +47,13 @@ const findAmendmentById = async (facilityId, amendmentId) => {
 
   try {
     const amendment = await collection.aggregate([
-      { $match: { _id: ObjectId(facilityId), 'amendments.history.amendmentId': ObjectId(amendmentId) } },
+      { $match: { _id: ObjectId(facilityId), 'amendments.amendmentId': ObjectId(amendmentId) } },
       {
         $project: {
           _id: 0,
           amendments: {
             $filter: {
-              input: '$amendments.history',
+              input: '$amendments',
               as: 'amendment',
               cond: { $eq: ['$$amendment.amendmentId', ObjectId(amendmentId)] },
             },
@@ -68,7 +64,7 @@ const findAmendmentById = async (facilityId, amendmentId) => {
     ]).toArray();
 
     // returns the amendment object for the given facilityId and amendmentId
-    return amendment[0].amendments;
+    return amendment[0]?.amendments || null;
   } catch (err) {
     console.error('Unable to find amendments object %O', { err });
     return null;
@@ -76,19 +72,14 @@ const findAmendmentById = async (facilityId, amendmentId) => {
 };
 exports.findAmendmentById = findAmendmentById;
 
-/**
- * returns whole amendment object/collection in object
- * includes status and history array
- * 200 if found or 400 if invalid facilityId
- */
+// get an amendment object based on a given facilityId and amendmentId
 exports.getAmendmentById = async (req, res) => {
   const { id: facilityId, amendmentId } = req.params;
   if (ObjectId.isValid(facilityId) && ObjectId.isValid(amendmentId)) {
     const amendment = await findAmendmentById(facilityId, amendmentId);
     if (amendment) {
-      return res.status(200).send({ status: 200, amendment });
+      return res.status(200).send(amendment);
     }
-
     return res.status(404).send({ status: 404, message: 'The current facility doesn\'t have the specified amendment' });
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility or amendment Id' });
@@ -104,36 +95,39 @@ exports.getAmendmentById = async (req, res) => {
 const findAmendmentInProgress = async (facilityId) => {
   const collection = await db.getCollection('tfm-facilities');
 
-  try {
-    const amendment = await collection.aggregate([
-      { $match: { _id: ObjectId(facilityId), 'amendments.history.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS } },
-      {
-        $project: {
-          _id: 0,
-          amendments: {
-            $filter: {
-              input: '$amendments.history',
-              as: 'amendment',
-              cond: { $eq: ['$$amendment.status', CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS] },
+  if (ObjectId.isValid(facilityId)) {
+    try {
+      const amendment = await collection.aggregate([
+        { $match: { _id: ObjectId(facilityId), 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS } },
+        {
+          $project: {
+            _id: 0,
+            amendments: {
+              $filter: {
+                input: '$amendments',
+                as: 'amendment',
+                cond: { $eq: ['$$amendment.status', CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS] },
+              },
             },
           },
         },
-      },
-    ]).toArray();
-    // returns the amendment object for the given facilityId
-    return amendment[0]?.amendments || [];
-  } catch (err) {
-    console.error('Unable to find amendments object %O', { err });
-    return null;
+      ]).toArray();
+      // returns the amendment object for the given facilityId
+      return amendment[0]?.amendments[0] || null;
+    } catch (err) {
+      console.error('Unable to find amendments object %O', { err });
+      return null;
+    }
   }
+  return null;
 };
 exports.findAmendmentInProgress = findAmendmentInProgress;
 
 exports.getAmendmentInProgress = async (req, res) => {
   const { id: facilityId } = req.params;
   if (ObjectId.isValid(facilityId)) {
-    const amendment = await findAmendmentInProgress(facilityId);
-    return res.status(200).send({ status: 200, amendment });
+    const amendment = await findAmendmentInProgress(facilityId) || [];
+    return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
 };

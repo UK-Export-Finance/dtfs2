@@ -10,8 +10,9 @@ const tfmSubmitDealController = require('../controllers/tfm/deal/tfm-submit-deal
 const tfmGetFacilitiesController = require('../controllers/tfm/facility/tfm-get-facilities.controller');
 const tfmGetFacilityController = require('../controllers/tfm/facility/tfm-get-facility.controller');
 const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-update-facility.controller');
-const tfmGetFacilityAmendmentsController = require('../controllers/tfm/facility/tfm-get-amendments.controller');
-const tfmAmendment = require('../controllers/tfm/facility/tfm-update-amendments.controller');
+const tfmGetAmendmentController = require('../controllers/tfm/amendments/tfm-get-amendments.controller');
+const tfmPutAmendmentController = require('../controllers/tfm/amendments/tfm-put-amendments.controller');
+const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-post-amendments.controller');
 
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
@@ -409,9 +410,9 @@ tfmRouter.route('/facilities/:id').put(
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/facilities/:id/amendment').get(tfmGetFacilityAmendmentsController.getAllAmendments);
-tfmRouter.route('/facilities/:id/amendment/in-progress').get(tfmGetFacilityAmendmentsController.getAmendmentInProgress);
-tfmRouter.route('/facilities/:id/amendment/:amendmentId').get(tfmGetFacilityAmendmentsController.getAmendmentById);
+tfmRouter.route('/facilities/:id/amendment').get(tfmGetAmendmentController.getAllAmendmentsByFacilityId);
+tfmRouter.route('/facilities/:id/amendment/in-progress').get(tfmGetAmendmentController.getAmendmentInProgress);
+tfmRouter.route('/facilities/:id/amendment/:amendmentId').get(tfmGetAmendmentController.getAmendmentById);
 
 /**
  * @openapi
@@ -453,7 +454,7 @@ tfmRouter.route('/facilities/:id/amendment/:amendmentId').get(tfmGetFacilityAmen
 *       404:
 *         description: Not found
 */
-tfmRouter.route('/facilities/:id/amendment').post(tfmAmendment.postTfmAmendment);
+tfmRouter.route('/facilities/:id/amendment').post(tfmPostAmendmentController.postTfmAmendment);
 
 /**
 * @openapi
@@ -462,7 +463,7 @@ tfmRouter.route('/facilities/:id/amendment').post(tfmAmendment.postTfmAmendment)
 *       404:
 *         description: Not found
 */
-tfmRouter.route('/facilities/:id/amendment/:amendmentId').put(tfmAmendment.updateTfmAmendment);
+tfmRouter.route('/facilities/:id/amendment/:amendmentId').put(tfmPutAmendmentController.updateTfmAmendment);
 
 /**
  * @openapi

@@ -6,6 +6,7 @@
   {% set facilityId = params.facilityId %}
   {% set showAmendmentButton = params.showAmendmentButton %}
   {% set showContinueAmendmentButton = params.showContinueAmendmentButton %}
+  {% set amendmentId = params.amendmentId %}
 
   <div class="govuk-grid-row" data-cy="amendments">
     <div class="govuk-grid-column-full">
@@ -19,6 +20,14 @@
             }
           }) }}
         </form>
+      {% elif showContinueAmendmentButton %}
+        {{ govukButton({
+          text: "Continue with amendment request",
+          attributes: {
+            'data-cy': 'continue-amendment-button'
+          },
+          href: facilityId + '/amendment/' + amendmentId + "/request-date"
+        }) }}
       {% endif %}
     </div>
   </div>

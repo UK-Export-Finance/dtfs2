@@ -300,6 +300,27 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
   }
 };
 
+const getAmendmentInProgress = async (facilityId) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/in-progress`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get facility in progress %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facility Id');
+    return { status: 400, message: 'Invalid facility Id or amendment Id provided' };
+  }
+};
+
 const updateGefFacility = async (facilityId, facilityUpdate) => {
   try {
     const response = await axios({
@@ -738,6 +759,7 @@ module.exports = {
   updateFacility,
   createFacilityAmendment,
   updateFacilityAmendment,
+  getAmendmentInProgress,
   updateGefFacility,
   queryDeals,
   getPartyDbInfo,

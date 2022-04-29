@@ -42,10 +42,7 @@ context('Amendments request page', () => {
       amendmentsPage.addAmendmentButton().should('exist');
       amendmentsPage.addAmendmentButton().contains('Add an amendment request');
       amendmentsPage.addAmendmentButton().click();
-      cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}/amendments/request`));
-    });
-
-    it('Amendments request page should contain the correct elements', () => {
+      cy.url().should('contain', 'request-date');
       amendmentsRequestPage.amendmentRequestHeading().contains('What date did the bank request the amendment?');
       amendmentsRequestPage.amendmentRequestHint().contains('For example, 31 3 1980');
       amendmentsRequestPage.amendmentRequestDayInput();
@@ -62,7 +59,7 @@ context('Amendments request page', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.addAmendmentButton().click();
+      amendmentsPage.continueAmendmentButton().click();
 
       amendmentsRequestPage.continueButton().click();
 
@@ -77,7 +74,7 @@ context('Amendments request page', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.addAmendmentButton().click();
+      amendmentsPage.continueAmendmentButton().click();
 
       amendmentsRequestPage.amendmentRequestDayInput().type('01');
       amendmentsRequestPage.amendmentRequestMonthInput().type('01');
@@ -96,7 +93,7 @@ context('Amendments request page', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.addAmendmentButton().click();
+      amendmentsPage.continueAmendmentButton().click();
 
       amendmentsRequestPage.amendmentRequestDayInput().type(dateConstants.threeMonthsDay);
       amendmentsRequestPage.amendmentRequestMonthInput().type(dateConstants.threeMonthsMonth);
@@ -115,7 +112,7 @@ context('Amendments request page', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.addAmendmentButton().click();
+      amendmentsPage.continueAmendmentButton().click();
 
       amendmentsRequestPage.cancelLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}#amendments`));
@@ -128,7 +125,7 @@ context('Amendments request page', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.addAmendmentButton().click();
+      amendmentsPage.continueAmendmentButton().click();
 
       amendmentsRequestPage.amendmentRequestDayInput().type(dateConstants.todayDay);
       amendmentsRequestPage.amendmentRequestMonthInput().type(dateConstants.todayMonth);
@@ -136,7 +133,7 @@ context('Amendments request page', () => {
 
       amendmentsRequestPage.continueButton().click();
 
-      cy.url().should('contain', relative(`/case/${dealId}/facility/${facilityId}#amendments`));
+      cy.url().should('contain', 'request-date');
     });
   });
 });

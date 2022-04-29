@@ -292,6 +292,21 @@ const createAmendmentRequestDate = async (facilityId, amendmentId, data) => {
   }
 };
 
+const getAmendmentInProgress = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/in-progress`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Unable to get the amendment in progress %O', { response: err?.response?.data });
+    return err?.response?.data;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -314,4 +329,5 @@ module.exports = {
   createFeedback,
   createAmendmentRequestDate,
   createFacilityAmendment,
+  getAmendmentInProgress,
 };
