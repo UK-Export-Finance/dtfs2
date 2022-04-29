@@ -277,7 +277,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       applicationPreview.facilitySummaryListRowAction(0, 0).contains('Change');
       applicationPreview.facilitySummaryListRowAction(0, 1).should('have.value', '');
       applicationPreview.facilitySummaryListRowValue(0, 2).contains('Issued');
-      applicationPreview.facilitySummaryListRowAction(0, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 2).contains('Change');
       applicationPreview.facilitySummaryListRowValue(0, 3).contains(issuedDate);
       applicationPreview.facilitySummaryListRowAction(0, 3).contains('Change');
       applicationPreview.facilitySummaryListRowValue(0, 4).contains(coverStartThreeMonths);

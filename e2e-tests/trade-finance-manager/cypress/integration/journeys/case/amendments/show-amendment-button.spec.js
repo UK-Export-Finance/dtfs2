@@ -84,7 +84,7 @@ context('Amendments page', () => {
       });
     });
 
-    it('it should not renders add amendment button if MIA and PIM user', () => {
+    it('should not renders add amendment button if MIA and PIM user', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -93,7 +93,7 @@ context('Amendments page', () => {
       amendmentsPage.addAmendmentButton().should('not.exist');
     });
 
-    it('it should not render add amendment button if MIA and not PIM user', () => {
+    it('should not render add amendment button if MIA and not PIM user', () => {
       cy.login(T1_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -129,7 +129,7 @@ context('Amendments page', () => {
       });
     });
 
-    it('it should not render add amendment button if MIN and not confirmed and PIM user', () => {
+    it('should not render add amendment button if MIN and not confirmed and PIM user', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -138,7 +138,7 @@ context('Amendments page', () => {
       amendmentsPage.addAmendmentButton().should('not.exist');
     });
 
-    it('it should not render add amendment button if MIN and confirmed and PIM user', () => {
+    it('should not render add amendment button if MIN and confirmed and PIM user', () => {
       cy.login(T1_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -174,7 +174,7 @@ context('Amendments page', () => {
       });
     });
 
-    it('it should render add amendment button if MIN and confirmed and PIM user', () => {
+    it('should render add amendment button if MIN and confirmed and PIM user', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -184,7 +184,7 @@ context('Amendments page', () => {
       amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     });
 
-    it('it should not render add amendment button if MIN and not confirmed and PIM user', () => {
+    it('should not render add amendment button if MIN and not confirmed and PIM user', () => {
       cy.login(T1_USER_1);
       const facilityId = dealFacilities._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));

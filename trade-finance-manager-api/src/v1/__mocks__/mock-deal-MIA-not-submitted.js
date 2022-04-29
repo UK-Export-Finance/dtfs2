@@ -1,4 +1,5 @@
 const { MOCK_FACILITIES } = require('./mock-facilities');
+const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 
 const MOCK_DEAL = {
   _id: 'MOCK_MIA_NOT_SUBMITTED',
@@ -16,11 +17,7 @@ const MOCK_DEAL = {
       'test2@mock.com',
     ],
   },
-  maker: {
-    username: 'JOE',
-    firstname: 'Joe',
-    surname: 'Bloggs',
-  },
+  maker: MOCK_PORTAL_USERS[0],
   details: {
     bank: 'Mock bank',
     ukefDealId: '20010739',

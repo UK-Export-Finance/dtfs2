@@ -742,6 +742,20 @@ const getAllFacilities = async (searchString) => {
   }
 };
 
+const findBankById = async (bankId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/bank/${bankId}`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+    return response.data;
+  } catch (response) {
+    console.error('Unable to get bank by id', response?.data);
+    return response?.data;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -781,4 +795,5 @@ module.exports = {
   updatePortalGefDeal,
   addUnderwriterCommentToGefDeal,
   updateGefMINActivity,
+  findBankById,
 };

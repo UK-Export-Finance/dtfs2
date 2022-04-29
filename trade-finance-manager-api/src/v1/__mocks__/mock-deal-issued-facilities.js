@@ -1,3 +1,5 @@
+const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
+
 const MOCK_DEAL_ISSUED_FACILITIES = {
   _id: 'MOCK_DEAL_ISSUED_FACILITIES',
   dealType: 'BSS/EWCS',
@@ -14,11 +16,7 @@ const MOCK_DEAL_ISSUED_FACILITIES = {
       'test2@mock.com',
     ],
   },
-  maker: {
-    username: 'JOE',
-    firstname: 'Joe',
-    surname: 'Bloggs',
-  },
+  maker: MOCK_PORTAL_USERS[0],
   details: {
     bank: 'Mock bank',
     ukefDealId: '20010739',

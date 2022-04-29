@@ -8,6 +8,4 @@ router.get('/cookies', (req, res) => res.render('cookies.njk', { user: req.sessi
 
 router.get('/accessibility-statement', (req, res) => res.render('accessibility-statement.njk', { user: req.session.user }));
 
-router.get('/not-found', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
-
 module.exports = router;

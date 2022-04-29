@@ -32,6 +32,9 @@ const createSubmitBody = (mockDeal) => ({
   dealType: 'BSS/EWCS',
 });
 
+const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
+const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
@@ -42,6 +45,12 @@ describe('/v1/deals', () => {
     externalApis.sendEmail = sendEmailApiSpy;
 
     externalApis.updatePortalBssDealStatus = jest.fn();
+
+    findBankByIdSpy.mockClear();
+    externalApis.findBankById = findBankByIdSpy;
+
+    findOneTeamSpy.mockClear();
+    externalApis.findOneTeam = findOneTeamSpy;
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -69,7 +78,7 @@ describe('/v1/deals', () => {
 
           const { email: expectedTeamEmailAddress } = MOCK_TEAMS.find((t) => t.id === firstTask.team.id);
 
-          expect(sendEmailApiSpy).toBeCalledTimes(2);
+          expect(sendEmailApiSpy).toBeCalledTimes(3);
 
           const expected = {
             templateId: CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
