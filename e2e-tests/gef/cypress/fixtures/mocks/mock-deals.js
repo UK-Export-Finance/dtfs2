@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import dateConstants from '../dateConstants';
+import dateConstants from '../../../../e2e-fixtures/dateConstants';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from '../constants';
 
 const chance = new Chance();
