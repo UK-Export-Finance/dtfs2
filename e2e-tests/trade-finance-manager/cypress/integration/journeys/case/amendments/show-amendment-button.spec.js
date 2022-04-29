@@ -1,6 +1,6 @@
 import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
-import amendmentsPage from '../../../pages/amendmentsPage';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIN } from '../../../../fixtures/mock-gef-deals';
@@ -10,7 +10,7 @@ import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 import CONSTANTS from '../../../../fixtures/constants';
 
-context('Facility page', () => {
+context('Amendments page', () => {
   describe('AIN', () => {
     let dealId;
     const dealFacilities = [];
@@ -36,7 +36,7 @@ context('Facility page', () => {
       });
     });
 
-    it('renders add amendment button if AIN and PIM user', () => {
+    it('should render `add amendment` button if AIN and PIM user', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -46,7 +46,7 @@ context('Facility page', () => {
       amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     });
 
-    it('does not render add amendment button if AIN and not PIM user', () => {
+    it('should NOT render `add amendment` button if AIN and not PIM user', () => {
       cy.login(T1_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -81,7 +81,7 @@ context('Facility page', () => {
       });
     });
 
-    it('does not renders add amendment button if MIA and PIM user', () => {
+    it('should NOT renders `add amendment` button if MIA and PIM user', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -90,7 +90,7 @@ context('Facility page', () => {
       amendmentsPage.addAmendmentButton().should('not.exist');
     });
 
-    it('does not render add amendment button if MIA and not PIM user', () => {
+    it('should NOT render `add amendment` button if MIA and not PIM user', () => {
       cy.login(T1_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -126,7 +126,7 @@ context('Facility page', () => {
       });
     });
 
-    it('renders add amendment button if MIN and confirmed and PIM user', () => {
+    it('should NOT render `add amendment` button if MIN and not confirmed and PIM user', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -135,7 +135,7 @@ context('Facility page', () => {
       amendmentsPage.addAmendmentButton().should('not.exist');
     });
 
-    it('does not render add amendment button if MIN and confirmed and PIM user', () => {
+    it('should NOT render `add amendment` button if MIN and confirmed and PIM user', () => {
       cy.login(T1_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -171,7 +171,7 @@ context('Facility page', () => {
       });
     });
 
-    it('does not renders add amendment button if MIN and not confirmed and PIM user', () => {
+    it('should render `add amendment` button if MIN and confirmed and PIM user', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -181,7 +181,7 @@ context('Facility page', () => {
       amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     });
 
-    it('does not render add amendment button if MIN and not confirmed and PIM user', () => {
+    it('should NOT render `add amendment` button if MIN and not confirmed and PIM user', () => {
       cy.login(T1_USER_1);
       const facilityId = dealFacilities._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
