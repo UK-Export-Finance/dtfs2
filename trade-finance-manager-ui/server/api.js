@@ -260,6 +260,53 @@ const getUser = async (userId) => {
   }
 };
 
+const createFacilityAmendment = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment`,
+      headers: { 'Content-Type': 'application/json' },
+      data: { facilityId },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Unable to create new amendment %O', { response: err?.response?.data });
+    return err?.response?.data;
+  }
+};
+
+const createAmendmentRequestDate = async (facilityId, amendmentId, data) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/${amendmentId}`,
+      headers: { 'Content-Type': 'application/json' },
+      data,
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Unable to create amendment request %O', { response: err?.response?.data });
+    return err?.response?.data;
+  }
+};
+
+const getAmendmentInProgress = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/in-progress`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Unable to get the amendment in progress %O', { response: err?.response?.data });
+    return err?.response?.data;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -280,4 +327,7 @@ module.exports = {
   login,
   getFacilities,
   createFeedback,
+  createAmendmentRequestDate,
+  createFacilityAmendment,
+  getAmendmentInProgress,
 };
