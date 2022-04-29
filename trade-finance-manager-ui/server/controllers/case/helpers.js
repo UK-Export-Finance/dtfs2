@@ -28,7 +28,7 @@ const getTask = (groupId, taskId, tasks) => {
  */
 const showAmendmentButton = (deal, userTeam) => {
   const acceptableSubmissionType = [CONSTANTS.DEAL.SUBMISSION_TYPE.AIN, CONSTANTS.DEAL.SUBMISSION_TYPE.MIN];
-  const acceptableUser = 'PIM';
+  const acceptableUser = CONSTANTS.TEAMS.PIM;
   const acceptableStatus = [CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED];
 
   if (acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) && userTeam.includes(acceptableUser)
