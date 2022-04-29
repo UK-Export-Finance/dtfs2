@@ -2,17 +2,17 @@ const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 
-// returns an array of object containing all properties for a given facilityId:
-// [{
-//     "amendmentId": "62692866ce546902bfcd9168",
-//     "createdAt": 1651058790,
-//     "updatedAt": 1651059653,
-//     "status": "In progress",
-// }]
+/* returns an array of object containing all properties for a given facilityId:
+ * [{
+ *    "amendmentId": "62692866ce546902bfcd9168",
+ *    "createdAt": 1651058790,
+ *    "updatedAt": 1651059653,
+ *    "status": "In progress",
+ * }]
+ */
 const findAllAmendmentsByFacilityId = async (facilityId) => {
-  const collection = await db.getCollection('tfm-facilities');
-
   try {
+    const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection.aggregate([
       { $match: { _id: ObjectId(facilityId) } },
       { $project: { _id: 0, amendments: '$amendments' } },
@@ -35,17 +35,19 @@ exports.getAllAmendmentsByFacilityId = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
 };
 
-// returns an object containing all properties for a given amendmentId:
-// {
-//     "amendmentId": "62692866ce546902bfcd9168",
-//     "createdAt": 1651058790,
-//     "updatedAt": 1651059653,
-//     "status": "In progress",
-// }
-const findAmendmentById = async (facilityId, amendmentId) => {
-  const collection = await db.getCollection('tfm-facilities');
+/**
+ * returns an object containing all properties for a given amendmentId:
+ * {
+ *   "amendmentId": "62692866ce546902bfcd9168",
+ *   "createdAt": 1651058790,
+ *   "updatedAt": 1651059653,
+ *   "status": "In progress",
+  * }
+*/
 
+const findAmendmentById = async (facilityId, amendmentId) => {
   try {
+    const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection.aggregate([
       { $match: { _id: ObjectId(facilityId), 'amendments.amendmentId': ObjectId(amendmentId) } },
       {
@@ -85,18 +87,20 @@ exports.getAmendmentById = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid facility or amendment Id' });
 };
 
-// returns an object containing an amendment that's in progress based on a given facilityId:
-// {
-//     "amendmentId": "62692866ce546902bfcd9168",
-//     "createdAt": 1651058790,
-//     "updatedAt": 1651059653,
-//     "status": "In progress",
-// }
-const findAmendmentInProgress = async (facilityId) => {
-  const collection = await db.getCollection('tfm-facilities');
+/**
+ *  returns an object containing an amendment that's in progress based on a given facilityId:
+ *  {
+ *     "amendmentId": "62692866ce546902bfcd9168",
+ *    "createdAt": 1651058790,
+ *    "updatedAt": 1651059653,
+ *    "status": "In progress",
+ *  }
+ */
 
+const findAmendmentInProgress = async (facilityId) => {
   if (ObjectId.isValid(facilityId)) {
     try {
+      const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection.aggregate([
         { $match: { _id: ObjectId(facilityId), 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS } },
         {
