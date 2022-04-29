@@ -3,6 +3,7 @@ const caseController = require('../../controllers/case');
 const partiesController = require('../../controllers/case/parties');
 const underwritingController = require('../../controllers/case/underwriting');
 const activityController = require('../../controllers/case/activity');
+const amendmentsController = require('../../controllers/case/amendments');
 
 const router = express.Router();
 
@@ -15,6 +16,10 @@ router.get('/:_id/tasks/:groupId/:taskId', caseController.getCaseTask);
 router.post('/:_id/tasks/:groupId/:taskId', caseController.putCaseTask);
 
 router.get('/:_id/facility/:facilityId', caseController.getCaseFacility);
+router.post('/:_id/facility/:facilityId', caseController.postFacilityAmendment);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.getAmendmentRequestDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.postAmendmentRequestDate);
 
 router.get('/:_id/parties', partiesController.getCaseParties);
 
