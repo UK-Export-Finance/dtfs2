@@ -384,7 +384,7 @@ tfmRouter.route('/facilities/:id').put(
  *   get:
  *     summary: Finds full amendment object for facility-id
  *     tags: [TFM, Amendments]
- *     description: Finds full amendment object for facility-id including status and full history array
+ *     description: Finds full amendment object for facility-id
  *     requestBody:
  *       description: Fields required to update a facility
  *       required: true
@@ -404,8 +404,7 @@ tfmRouter.route('/facilities/:id').put(
  *           application/json:
  *             schema:
  *                {
- *                 status: 'In progress',
- *                 history: []
+ *                 status: 'In progress'
  *               }
  *       404:
  *         description: Not found
@@ -420,7 +419,7 @@ tfmRouter.route('/facilities/:id/amendment/:amendmentId').get(tfmGetAmendmentCon
  *   post:
  *     summary: Creates new amendment object and changes status
  *     tags: [TFM, Amendments]
- *     description: Adds new amendment object in history and changes status
+ *     description: Adds new amendment object in amendments array
  *     requestBody:
  *       description: Fields required to create amendment
  *       required: true

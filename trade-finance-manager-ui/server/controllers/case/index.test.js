@@ -598,12 +598,14 @@ describe('controllers - case', () => {
       beforeEach(() => {
         api.getFacility = () => Promise.resolve(mockFacility);
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentInProgress = () => Promise.resolve({ amendmentId: '626bae8c43c01e02076352e1' });
       });
 
       it('should render deal template with data', async () => {
         const req = {
           params: {
             facilityId: mockFacility._id,
+            amendmentId: '626bae8c43c01e02076352e1',
           },
           session,
         };
@@ -620,8 +622,8 @@ describe('controllers - case', () => {
           facilityId: req.params.facilityId,
           user: session.user,
           showAmendmentButton: false,
-          showContinueAmendmentButton: true,
-          amendmentId: 1234,
+          showContinueAmendmentButton: false,
+          amendmentId: '626bae8c43c01e02076352e1',
         });
       });
     });

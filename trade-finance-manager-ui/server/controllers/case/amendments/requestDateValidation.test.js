@@ -19,9 +19,7 @@ describe('requestDateValidation()', () => {
           inclusionNoticeReceived: 1650538933299,
         },
       },
-      amendments: {
-        history: [],
-      },
+      amendments: [],
     };
 
     const result = await requestDateValidation.amendmentRequestDateValidation(body, mockFacility);
@@ -75,9 +73,7 @@ describe('requestDateValidation()', () => {
           inclusionNoticeReceived: 1650538933299,
         },
       },
-      amendments: {
-        history: [],
-      },
+      amendments: [],
     };
 
     const result = await requestDateValidation.amendmentRequestDateValidation(body, mockFacility);
@@ -138,9 +134,7 @@ describe('requestDateValidation()', () => {
           inclusionNoticeReceived: 1650538933299,
         },
       },
-      amendments: {
-        history: [],
-      },
+      amendments: [],
     };
 
     const result = await requestDateValidation.amendmentRequestDateValidation(body, mockFacility);
@@ -200,9 +194,7 @@ describe('requestDateValidation()', () => {
           inclusionNoticeReceived: 1650538933299,
         },
       },
-      amendments: {
-        history: [],
-      },
+      amendments: [],
     };
 
     const result = await requestDateValidation.amendmentRequestDateValidation(body, mockFacility);

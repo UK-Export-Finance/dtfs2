@@ -28,9 +28,7 @@ describe('controllers - case - amendments', () => {
           _id: '12345',
           dealId: '4567',
         },
-        amendments: {
-          history: [],
-        },
+        amendments: [],
       };
 
       beforeEach(() => {
@@ -45,7 +43,7 @@ describe('controllers - case - amendments', () => {
           session,
         };
 
-        await amendmentsController.getAmendmentRequest(req, res);
+        await amendmentsController.getAmendmentRequestDate(req, res);
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request.njk', {
           dealId: mockFacility.facilitySnapshot.dealId,
           facility: mockFacility,
@@ -68,7 +66,7 @@ describe('controllers - case - amendments', () => {
           session,
         };
 
-        await amendmentsController.getAmendmentRequest(req, res);
+        await amendmentsController.getAmendmentRequestDate(req, res);
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });
@@ -77,17 +75,15 @@ describe('controllers - case - amendments', () => {
   describe('POST postAmendmentRequest', () => {
     describe('', () => {
       const mockFacility = {
-        _id: '12345',
+        _id: '625e99cb88eeeb001e33bf4b',
         facilitySnapshot: {
-          _id: '12345',
+          _id: '625e99cb88eeeb001e33bf4b',
           dealId: '4567',
           dates: {
             inclusionNoticeReceived: 1650538933299,
           },
         },
-        amendments: {
-          history: [],
-        },
+        amendments: [],
       };
 
       beforeEach(() => {
@@ -107,7 +103,7 @@ describe('controllers - case - amendments', () => {
           },
         };
 
-        await amendmentsController.postAmendmentRequest(req, res);
+        await amendmentsController.postAmendmentRequestDate(req, res);
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request.njk', {
           dealId: mockFacility.facilitySnapshot.dealId,
           facility: mockFacility,
@@ -145,7 +141,7 @@ describe('controllers - case - amendments', () => {
           },
         };
 
-        await amendmentsController.postAmendmentRequest(req, res);
+        await amendmentsController.postAmendmentRequestDate(req, res);
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request.njk', {
           dealId: mockFacility.facilitySnapshot.dealId,
           facility: mockFacility,
@@ -181,6 +177,7 @@ describe('controllers - case - amendments', () => {
         const req = {
           params: {
             facilityId: mockFacility._id,
+            amendmentId: '626bae8c43c01e02076352e1',
           },
           session,
           body: {
@@ -190,7 +187,7 @@ describe('controllers - case - amendments', () => {
           },
         };
 
-        await amendmentsController.postAmendmentRequest(req, res);
+        await amendmentsController.postAmendmentRequestDate(req, res);
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request.njk', {
           dealId: mockFacility.facilitySnapshot.dealId,
           facility: mockFacility,
@@ -225,7 +222,7 @@ describe('controllers - case - amendments', () => {
           },
         };
         api.getFacility = () => Promise.resolve(mockFacility);
-        api.createAmendment = () => Promise.resolve(update);
+        api.createFacilityAmendment = () => Promise.resolve(update);
 
         const today = new Date();
 
@@ -236,6 +233,7 @@ describe('controllers - case - amendments', () => {
         const req = {
           params: {
             facilityId: mockFacility._id,
+            amendmentId: '626bae8c43c01e02076352e1',
           },
           session,
           body: {
@@ -245,9 +243,8 @@ describe('controllers - case - amendments', () => {
           },
         };
 
-        await amendmentsController.postAmendmentRequest(req, res);
-
-        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockFacility.facilitySnapshot.dealId}/facility/${mockFacility._id}#amendments/${update.createdAmendment.amendments._id}`);
+        await amendmentsController.postAmendmentRequestDate(req, res);
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockFacility.facilitySnapshot.dealId}/facility/${mockFacility._id}/amendment/626bae8c43c01e02076352e1/request-date`);
       });
     });
   });
