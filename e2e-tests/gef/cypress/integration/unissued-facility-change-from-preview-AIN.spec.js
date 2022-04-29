@@ -6,7 +6,7 @@ import CONSTANTS from '../fixtures/constants';
 
 import { MOCK_APPLICATION_AIN } from '../fixtures/mocks/mock-deals';
 import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
-import dateConstants from '../fixtures/dateConstants';
+import dateConstants from '../../../e2e-fixtures/dateConstants';
 
 import {
   MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR,
@@ -141,7 +141,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListRowValue(3, 0).contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListRowAction(3, 0).contains('Change');
       applicationPreview.facilitySummaryListRowAction(3, 1).should('have.value', '');
-      applicationPreview.facilitySummaryListRowAction(3, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 2).contains('Change');
       applicationPreview.facilitySummaryListRowValue(3, 3).contains(issuedDate);
       applicationPreview.facilitySummaryListRowAction(3, 3).contains('Change');
       applicationPreview.facilitySummaryListRowValue(3, 4).contains(coverStart);
@@ -216,7 +216,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListRowAction(0, 0).contains('Change');
       applicationPreview.facilitySummaryListRowAction(0, 1).should('have.value', '');
       applicationPreview.facilitySummaryListRowValue(0, 2).contains('Issued');
-      applicationPreview.facilitySummaryListRowAction(0, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 2).contains('Change');
       applicationPreview.facilitySummaryListRowValue(0, 3).contains(issuedDate);
       applicationPreview.facilitySummaryListRowAction(0, 3).contains('Change');
       applicationPreview.facilitySummaryListRowValue(0, 4).contains(coverStart);

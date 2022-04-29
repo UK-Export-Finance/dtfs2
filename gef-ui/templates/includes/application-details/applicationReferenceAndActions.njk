@@ -14,7 +14,7 @@
             href: dealId + "/clone"
          }) }}
       {% endif %}
-      {%if abandon and not hasChangedFacilities and not MIAReturnToMaker %}
+      {%if abandon and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged and not isAdmin %}
         {{ govukButton({
           text: "Abandon",
           attributes: {
@@ -31,7 +31,7 @@
     <div class="govuk-grid-column-one-half">
       <div class="govuk-grid-column-one-third"><p class="govuk-body"><strong>Bank's reference</strong></p></div>
       <div class="govuk-grid-column-two-thirds">
-        {%if abandon and not hasChangedFacilities and not MIAReturnToMaker %}
+        {%if abandon and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged and not isAdmin %}
         <p class="govuk-body" data-cy="bank-reference">
           <a class="govuk-link" href="/gef/applications/{{dealId}}/name" data-cy="edit-refname-link">{{ bankInternalRefName }}</a>
         </p>
@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="govuk-grid-column-one-half">
-    {%if abandon and not hasChangedFacilities and not MIAReturnToMaker %}
+    {%if abandon and not hasChangedFacilities and not MIAReturnToMaker and not returnToMakerNoFacilitiesChanged and not isAdmin %}
       <div class="govuk-grid-column-one-third"><p class="govuk-body"><strong>Additional reference</strong></p></div>
       <div class="govuk-grid-column-two-thirds">
         <p class="govuk-body" data-cy="additional-reference">

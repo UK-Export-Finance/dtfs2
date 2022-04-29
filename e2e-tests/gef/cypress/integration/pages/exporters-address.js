@@ -7,6 +7,7 @@ const automaticCover = {
   registeredCompanyAddressTitle: () => cy.get('[data-cy="registered-company-address-title"]'),
   changeDetails: () => cy.get('[data-cy="change-details"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),
+  saveAndReturn: () => cy.get('[data-cy="save-and-return-button"]'),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   postcodeError: () => cy.get('[data-cy="postcode-error"]'),
   fieldError: () => cy.get('[data-cy="correspondence-error"]'),
