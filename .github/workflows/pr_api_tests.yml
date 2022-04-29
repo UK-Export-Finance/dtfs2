@@ -46,7 +46,7 @@ jobs:
   api-tests:
     name: "Run API tests"
     environment:
-      name: APITEST
+      name: ${{ env.environment }}
     runs-on: [self-hosted, api-tests]
     env:
       AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}

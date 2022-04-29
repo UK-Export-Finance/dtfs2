@@ -47,7 +47,7 @@ jobs:
   gef-tests:
     name: "Run - GEF-UI E2E tests"
     environment:
-      name: E2ETEST
+      name: ${{ env.environment }}
     runs-on: ubuntu-latest
     strategy:
       # when one test fails, DO NOT cancel the other
@@ -140,7 +140,7 @@ jobs:
   portal-tests:
     name: "Run - Portal E2E tests"
     environment:
-      name: E2ETEST
+      name: ${{ env.environment }}
     runs-on: ubuntu-latest
     strategy:
       # when one test fails, DO NOT cancel the other
@@ -234,7 +234,7 @@ jobs:
   tfm-tests:
     name: "Run - Trade Finance Manager E2E tests"
     environment:
-      name: E2ETEST
+      name: ${{ env.environment }}
     runs-on: ubuntu-latest
     strategy:
       # when one test fails, DO NOT cancel the other
@@ -327,7 +327,7 @@ jobs:
   tfm-submit-tests:
     name: "Run - Submit to TFM End-To-End tests"
     environment:
-      name: E2ETEST
+      name: ${{ env.environment }}
     runs-on: ubuntu-latest
     strategy:
       # when one test fails, DO NOT cancel the other
