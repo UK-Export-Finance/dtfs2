@@ -1,5 +1,4 @@
-const { getCollection } = require('../../drivers/db-client');
-
+const api = require('../api');
 const CONSTANTS = require('../../constants');
 const sendTfmEmail = require('./send-tfm-email');
 const { capitalizeFirstLetter } = require('../../utils/string');
@@ -24,25 +23,18 @@ const generateIssuedFacilitiesListString = (facilities) => {
 };
 
 const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
-  const {
-    bankInternalRefName,
-    ukefDealId: ukefDealID,
-    exporter,
-    submissionType,
-    maker,
-  } = deal;
+  const { bankInternalRefName, ukefDealId: ukefDealID, exporter, submissionType, maker } = deal;
 
   const shouldSendEmail = (
     submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
     || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
 
   if (shouldSendEmail) {
+    const bankId = maker.bank.id;
     const { firstname: recipientName, email: makerEmailAddress } = maker;
-
-    const collection = await getCollection('tfm-teams');
-    const pimUser = await collection.findOne({ id: CONSTANTS.TEAMS.PIM.id });
+    const { emails: bankEmails } = await api.findBankById(bankId);
     // get the email address for PIM user
-    const { email: pimEmailAddress } = pimUser;
+    const { email: pimEmail } = await api.findOneTeam(CONSTANTS.TEAMS.PIM.id);
 
     const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED;
 
@@ -57,9 +49,11 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
     // send email to maker
     const makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
     // send a copy of the email to PIM
-    const pimEmailResponse = await sendTfmEmail(templateId, pimEmailAddress, emailVariables, deal);
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+    // send a copy of the email to bank's general email address
+    const bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
 
-    return { makerEmailResponse, pimEmailResponse };
+    return { makerEmailResponse, pimEmailResponse, bankResponse };
   }
 
   return null;

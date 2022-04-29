@@ -16,7 +16,6 @@ on:
 
 env:
   environment: dev
-  # Credentials for accessing Azure
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
 
 jobs:
@@ -48,7 +47,7 @@ jobs:
     name: "Run API tests"
     needs: set-environment
     environment:
-      name: APITEST
+      name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, api-tests]
     env:
       AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
