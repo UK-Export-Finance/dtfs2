@@ -9,7 +9,7 @@ const { reports } = require('../../pages');
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('Dashboard: Review UKEF Decision report', () => {
-  const todayAtMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
+  const todayAtMidnight = (new Date(parseInt(Date.now(), 10))).setHours(1, 0, 1, 0);
   let daysInThePast = sub(todayAtMidnight, { days: 25 });
   const dateCreated = format(todayAtMidnight, 'dd LLL yyyy');
   let submissionDate = format(todayAtMidnight, 'dd LLL yyyy');
@@ -67,6 +67,8 @@ context('Dashboard: Review UKEF Decision report', () => {
     beforeEach(() => {
       cy.login(BANK1_MAKER1);
       cy.visit(relative('/reports'));
+      Cypress.Cookies.preserveOnce('connect.sid');
+      Cypress.Cookies.preserveOnce('_csrf');
     });
 
     it('returns the reports page with UKEF decisions', () => {

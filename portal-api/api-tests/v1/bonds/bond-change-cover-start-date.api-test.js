@@ -81,13 +81,13 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
 
   describe('GET /v1/deals/:id/bond/:id/change-cover-start-date', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as({}).put({}).to(`/v1/deals/${dealId}/bond/123456789012/change-cover-start-date`);
+      const { status } = await as({}).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put({}).to(`/v1/deals/${dealId}/bond/123456789012/change-cover-start-date`);
+      const { status } = await as(noRoles).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
@@ -96,13 +96,13 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
       const deal = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/123456789012/change-cover-start-date`);
+      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/123456789012/bond/123456789012/change-cover-start-date');
+      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b/change-cover-start-date');
 
       expect(status).toEqual(404);
     });
@@ -111,7 +111,7 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
       const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/123456789012/change-cover-start-date`);
+      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(404);
     });

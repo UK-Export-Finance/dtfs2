@@ -1,6 +1,5 @@
 const wipeDB = require('../../wipeDB');
 const aDeal = require('./deal-builder');
-const api = require('../../../src/v1/api');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const dealWithAboutComplete = require('../../fixtures/deal-with-complete-about-section.json');
@@ -52,13 +51,13 @@ describe('/v1/deals', () => {
 
   describe('GET /v1/deals/:id', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/deals/123456789012');
+      const { status } = await as().get('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(noRoles).get('/v1/deals/123456789012');
+      const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
@@ -88,7 +87,7 @@ describe('/v1/deals', () => {
     });
 
     it('404s requests for unkonwn ids', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/deals/123456789012');
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
@@ -144,13 +143,13 @@ describe('/v1/deals', () => {
 
   describe('PUT /v1/deals/:id', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put(newDeal).to('/v1/deals/123456789012');
+      const { status } = await as().put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(newDeal).to('/v1/deals/123456789012');
+      const { status } = await as(noRoles).put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
@@ -340,14 +339,14 @@ describe('/v1/deals', () => {
 
   describe('DELETE /v1/deals/:id', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove('/v1/deals/123456789012');
+      const { status } = await as().remove('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
       await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const { status } = await as(noRoles).remove('/v1/deals/123456789012');
+      const { status } = await as(noRoles).remove('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
@@ -361,7 +360,7 @@ describe('/v1/deals', () => {
     });
 
     it('404s requests to delete unkonwn ids', async () => {
-      const { status } = await as(anHSBCMaker).remove('/v1/deals/123456789012');
+      const { status } = await as(anHSBCMaker).remove('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });

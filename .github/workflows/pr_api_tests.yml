@@ -33,6 +33,7 @@ jobs:
   # this action is used to cancel previous runs for the current branch
   cancel-previous-tests:
     name: "Cancel previous tests"
+    needs: set-environment
     runs-on: [self-hosted, api-tests]
     timeout-minutes: 3
     steps:

@@ -66,7 +66,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
   const createBond = async () => {
     const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
-    dealId = deal.body._id; 
+    dealId = deal.body._id;
 
     const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     bondId = createBondResponse.body.bondId;
@@ -101,12 +101,12 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     });
 
     it('should return 404 when deal does not exist', async () => {
-      const { status } = await putIssueFacility('123456789012', bondId, {});
+      const { status } = await putIssueFacility('620a1aa095a618b12da38c7b', bondId, {});
       expect(status).toEqual(404);
     });
 
     it('should return 404 when bond does not exist', async () => {
-      const { status } = await putIssueFacility(dealId, '123456789012', {});
+      const { status } = await putIssueFacility(dealId, '620a1aa095a618b12da38c7b', {});
       expect(status).toEqual(404);
     });
 

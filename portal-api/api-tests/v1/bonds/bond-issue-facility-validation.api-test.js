@@ -48,7 +48,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
   const createDealAndBond = async () => {
     const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
-    dealId = deal._id; 
+    dealId = deal._id;
 
     const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     const { bondId: _id } = createBondResponse.body;
@@ -158,7 +158,6 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
           const { validationErrors } = await updateIssuedDate(issuedDateFields);
           expect(validationErrors.errorList.issuedDate.order).toBeDefined();
 
-          const formattedSubmissionDate = moment(formattedTimestamp(newDeal.details.submissionDate)).format('Do MMMM YYYY');
           const expectedText = 'Issued Date must be today or in the past';
           expect(validationErrors.errorList.issuedDate.text).toEqual(expectedText);
         });
@@ -332,7 +331,6 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
               },
             };
 
-            const todayPlus3Months = moment().add(3, 'month');
             const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
@@ -418,7 +416,6 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
               },
             };
 
-            const todayPlus3Months = moment().add(3, 'month');
             const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),

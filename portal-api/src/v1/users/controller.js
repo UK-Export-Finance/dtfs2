@@ -6,7 +6,7 @@ const businessRules = require('../../config/businessRules');
 const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
 const utils = require('../../crypto/utils');
-const CONSTNATS = require('../../constants');
+const CONSTANTS = require('../../constants');
 
 /**
  * Send a password update confirmation email with update timestamp.
@@ -26,7 +26,7 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
   });
 
   await sendEmail(
-    CONSTNATS.EMAIL_TEMPLATE_IDS.PASSWORD_UPDATE,
+    CONSTANTS.EMAIL_TEMPLATE_IDS.PASSWORD_UPDATE,
     emailAddress,
     {
       timestamp: formattedTimestamp,
@@ -59,7 +59,7 @@ exports.createPasswordToken = createPasswordToken;
 
 const sendBlockedEmail = async (emailAddress) => {
   await sendEmail(
-    CONSTNATS.EMAIL_TEMPLATE_IDS.BLOCKED,
+    CONSTANTS.EMAIL_TEMPLATE_IDS.BLOCKED,
     emailAddress,
     {},
   );
@@ -67,7 +67,7 @@ const sendBlockedEmail = async (emailAddress) => {
 
 const sendUnblockedEmail = async (emailAddress) => {
   await sendEmail(
-    CONSTNATS.EMAIL_TEMPLATE_IDS.UNBLOCKED,
+    CONSTANTS.EMAIL_TEMPLATE_IDS.UNBLOCKED,
     emailAddress,
     {},
   );
@@ -87,7 +87,7 @@ const sendNewAccountEmail = async (user, resetToken) => {
   };
 
   await sendEmail(
-    CONSTNATS.EMAIL_TEMPLATE_IDS.NEW_ACCOUNT,
+    CONSTANTS.EMAIL_TEMPLATE_IDS.NEW_ACCOUNT,
     emailAddress,
     variables,
   );

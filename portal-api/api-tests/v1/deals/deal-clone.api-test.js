@@ -62,13 +62,13 @@ describe('/v1/deals/:id/clone', () => {
 
   describe('POST /v1/deals/:id/clone', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(dealToClone).to('/v1/deals/123456789012/clone');
+      const { status } = await as().post(dealToClone).to('/v1/deals/620a1aa095a618b12da38c7b/clone');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).post(dealToClone).to('/v1/deals/123456789012/clone');
+      const { status } = await as(noRoles).post(dealToClone).to('/v1/deals/620a1aa095a618b12da38c7b/clone');
 
       expect(status).toEqual(401);
     });
