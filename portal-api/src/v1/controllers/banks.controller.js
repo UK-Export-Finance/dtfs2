@@ -74,5 +74,5 @@ exports.validateBank = async (req, res) => {
     }
     return res.status(404).send({ status: 404, isValid: false });
   }
-  return res.status(422).send({ status: 422, isValid: false });
+  return res.status(400).send({ status: 400, isValid: false });
 };
