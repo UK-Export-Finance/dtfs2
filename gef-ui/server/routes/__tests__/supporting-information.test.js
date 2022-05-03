@@ -1,6 +1,6 @@
 import multer from 'multer';
 
-import validateToken from '../../middleware/validateToken';
+import { validateToken, validateBank } from '../../middleware';
 
 jest.mock('multer', () => () => ({
   array: jest.fn(),
@@ -29,9 +29,26 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/document/:documentType', [validateToken], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/document/:documentType', [validateToken, multer().array('documents', 2)], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/document/:documentType/upload', [validateToken], expect.any(Function), expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/document/:documentType/delete', [validateToken], expect.any(Function));
+    expect(getSpy).toHaveBeenCalledWith(
+      '/application-details/:dealId/supporting-information/document/:documentType',
+      [validateToken, validateBank, expect.any(Function)],
+      expect.any(Function),
+    );
+    expect(postSpy).toHaveBeenCalledWith(
+      '/application-details/:dealId/supporting-information/document/:documentType',
+      [validateToken, validateBank, multer().array('documents', 2)],
+      expect.any(Function),
+    );
+    expect(postSpy).toHaveBeenCalledWith(
+      '/application-details/:dealId/supporting-information/document/:documentType/upload',
+      [validateToken, validateBank, expect.any(Function)],
+      expect.any(Function),
+      expect.any(Function),
+    );
+    expect(postSpy).toHaveBeenCalledWith(
+      '/application-details/:dealId/supporting-information/document/:documentType/delete',
+      [validateToken, validateBank, expect.any(Function)],
+      expect.any(Function),
+    );
   });
 });

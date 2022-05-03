@@ -114,49 +114,49 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
   const unusedSupportingInfo = ['manualInclusion', 'yearToDateManagement', 'auditedFinancialStatements', 'financialForecasts', 'financialInformationCommentary', 'corporateStructure', 'debtorAndCreditorReports'];
 
   // get the current GEF deal
-  const existingDeal = await collection.findOne({
-    _id: ObjectId(String(dealId)),
-  });
+  const existingDeal = await collection.findOne({ _id: ObjectId(dealId), 'bank.id': bank.id });
+  if (existingDeal) {
+    const clonedDeal = existingDeal;
 
-  const clonedDeal = existingDeal;
+    // delete unused properties
+    unusedProperties.forEach((property) => {
+      if (clonedDeal[property]) {
+        delete clonedDeal[property];
+      }
+    });
+    // unusedSupportingInfo unused properties
+    unusedSupportingInfo.forEach((property) => {
+      delete clonedDeal.supportingInformation[property];
+    });
 
-  // delete unused properties
-  unusedProperties.forEach((property) => {
-    if (clonedDeal[property]) {
-      delete clonedDeal[property];
+    clonedDeal.createdAt = Date.now();
+    clonedDeal.updatedAt = Date.now();
+    clonedDeal.facilitiesUpdated = Date.now();
+    clonedDeal.eligibility.updatedAt = Date.now();
+    if (clonedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
+      clonedDeal.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
     }
-  });
-  // unusedSupportingInfo unused properties
-  unusedSupportingInfo.forEach((property) => {
-    delete clonedDeal.supportingInformation[property];
-  });
+    clonedDeal.status = CONSTANTS.DEAL.DEAL_STATUS.DRAFT;
+    clonedDeal.submissionCount = 0;
+    clonedDeal.submissionDate = null;
+    clonedDeal.bankInternalRefName = bankInternalRefName;
+    clonedDeal.additionalRefName = additionalRefName;
+    clonedDeal.maker = maker;
+    clonedDeal.bank = bank;
+    clonedDeal.ukefDealId = null;
+    clonedDeal.checkerId = null;
+    clonedDeal.editedBy = [userId];
+    clonedDeal.exporter = cloneExporter(clonedDeal.exporter);
+    clonedDeal.portalActivities = [];
 
-  clonedDeal.createdAt = Date.now();
-  clonedDeal.updatedAt = Date.now();
-  clonedDeal.facilitiesUpdated = Date.now();
-  clonedDeal.eligibility.updatedAt = Date.now();
-  if (clonedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
-    clonedDeal.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
+    // insert the cloned deal in the database
+    const createdApplication = await collection.insertOne(clonedDeal);
+    const newDealId = createdApplication.insertedId;
+
+    // return the ID for the newly inserted deal
+    return { newDealId: newDealId.toHexString(), status: 200 };
   }
-  clonedDeal.status = CONSTANTS.DEAL.DEAL_STATUS.DRAFT;
-  clonedDeal.submissionCount = 0;
-  clonedDeal.submissionDate = null;
-  clonedDeal.bankInternalRefName = bankInternalRefName;
-  clonedDeal.additionalRefName = additionalRefName;
-  clonedDeal.maker = maker;
-  clonedDeal.bank = bank;
-  clonedDeal.ukefDealId = null;
-  clonedDeal.checkerId = null;
-  clonedDeal.editedBy = [userId];
-  clonedDeal.exporter = cloneExporter(clonedDeal.exporter);
-  clonedDeal.portalActivities = [];
-
-  // insert the cloned deal in the database
-  const createdApplication = await collection.insertOne(clonedDeal);
-  const newDealId = createdApplication.insertedId;
-
-  // return the ID for the newly inserted deal
-  return { newDealId: newDealId.toHexString() };
+  return { status: 404 };
 };
 
 exports.clone = async (req, res) => {
@@ -173,11 +173,13 @@ exports.clone = async (req, res) => {
   const validateErrs = validateApplicationReferences(req.body);
 
   if (validateErrs) {
-    res.status(422).send(validateErrs);
-  } else {
-    // clone GEF deal
-    const { newDealId } = await cloneDeal(existingDealId, bankInternalRefName, additionalRefName, req.user, userId, bank);
+    return res.status(422).send(validateErrs);
+  }
+  // clone GEF deal
+  const response = await cloneDeal(existingDealId, bankInternalRefName, additionalRefName, req.user, userId, bank);
 
+  if (response.status === 200) {
+    const { newDealId } = response;
     // clone the corresponding facilities
     await cloneFacilities(existingDealId, newDealId);
 
@@ -187,6 +189,7 @@ exports.clone = async (req, res) => {
     // clone the azure files from one folder to another
     await cloneAzureFiles(existingDealId, newDealId);
 
-    res.send({ dealId: newDealId });
+    return res.status(200).send({ dealId: newDealId });
   }
+  return res.status(404).send({ message: 'The resource that you are trying to access does not exist' });
 };

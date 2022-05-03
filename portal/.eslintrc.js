@@ -18,6 +18,9 @@ module.exports = {
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js', '**/*.spec.js', '**/webpack.*.js'] }],
+    'object-curly-newline': ['error', {
+      consistent: true,
+    }],
   },
   ignorePatterns: ['**/node_modules/**'],
   parserOptions: {

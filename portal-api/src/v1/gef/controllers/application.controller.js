@@ -131,8 +131,7 @@ exports.update = async (req, res) => {
   const update = new Application(req.body);
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
-    return res.status(422)
-      .send(validateErrs);
+    return res.status(422).send((validateErrs));
   }
 
   // TODO: DTFS2-4987 Write unit tests for editorId

@@ -3,7 +3,7 @@ const api = require('../../services/api');
 
 const nameApplication = async (req, res, next) => {
   const { params } = req;
-  const dealId = params?.id;
+  const dealId = params?.dealId;
   const viewProps = {};
 
   try {
@@ -46,7 +46,7 @@ const createApplication = async (req, res, next) => {
 
 const updateApplicationReferences = async (req, res, next) => {
   const { body, params } = req;
-  const dealId = params.id;
+  const { dealId } = params;
 
   body.bankInternalRefName = body.bankInternalRefName ?? '';
   body.additionalRefName = body.additionalRefName ?? '';

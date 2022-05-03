@@ -39,13 +39,13 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
   describe('PUT /v1/deals/:id/eligibility-criteria', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put(updatedECPartial).to('/v1/deals/123456789012/eligibility-criteria');
+      const { status } = await as().put(updatedECPartial).to('/v1/deals/620a1aa095a618b12da38c7b/eligibility-criteria');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(updatedECPartial).to('/v1/deals/123456789012/eligibility-criteria');
+      const { status } = await as(noRoles).put(updatedECPartial).to('/v1/deals/620a1aa095a618b12da38c7b/eligibility-criteria');
 
       expect(status).toEqual(401);
     });
@@ -60,7 +60,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
     });
 
     it('404s requests for unknown resources', async () => {
-      const { status } = await as(aBarclaysMaker).put(updatedECPartial).to('/v1/deals/123456789012/eligibility-criteria');
+      const { status } = await as(aBarclaysMaker).put(updatedECPartial).to('/v1/deals/620a1aa095a618b12da38c7b/eligibility-criteria');
 
       expect(status).toEqual(404);
     });
