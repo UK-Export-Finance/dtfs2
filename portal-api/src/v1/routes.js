@@ -177,7 +177,7 @@ openRouter.route('/users/:_id/disable').delete(users.disable);
 
 openRouter.route('/login').post(users.login);
 
-// 1. Request pasword reset
+// 1. Request password reset
 openRouter.route('/users/reset-password').post(users.resetPassword);
 
 // 2. Password reset post request

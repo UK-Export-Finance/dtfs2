@@ -1,13 +1,8 @@
 const express = require('express');
 const api = require('../api');
-const {
-  requestParams, generateErrorSummary, errorHref, postToApi,
-} = require('../helpers');
-
+const { requestParams, generateErrorSummary, errorHref, postToApi } = require('../helpers');
 const { validateToken, validateRole } = require('./middleware');
-
 const { provide, MANDATORY_CRITERIA } = require('./api-data-provider');
-
 const beforeYouStartValidation = require('../validation/before-you-start');
 
 const router = express.Router();
