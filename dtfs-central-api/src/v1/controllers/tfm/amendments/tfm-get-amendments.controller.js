@@ -117,7 +117,7 @@ const findAmendmentStatus = async (facilityId, status) => {
         },
       ]).toArray();
       // returns the amendment object for the given facilityId
-      return amendment[0]?.amendments[0] || null;
+      return amendment[0]?.amendments || null;
     } catch (err) {
       console.error('Unable to find amendments object %O', { err });
       return null;
@@ -131,7 +131,7 @@ exports.getAmendmentInProgress = async (req, res) => {
   const { id: facilityId } = req.params;
   if (ObjectId.isValid(facilityId)) {
     const amendment = await findAmendmentStatus(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) || [];
-    return res.status(200).send(amendment);
+    return res.status(200).send(amendment[0]);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
 };
@@ -160,9 +160,9 @@ const findLatestCompletedAmendment = async (facilityId) => {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection.aggregate([
         { $match: { _id: ObjectId(facilityId), 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
-        { $project: { _id: 0, amendments: 1 } },
         { $unwind: '$amendments' },
-        { $sort: { updatedAt: -1 } },
+        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+        { $project: { _id: 0, amendments: 1 } },
         { $limit: 1 },
       ]).toArray();
       return amendment[0]?.amendments || null;

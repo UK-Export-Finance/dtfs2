@@ -61,11 +61,14 @@ describe('PUT /v1/tfm/facilities/:id/amendments', () => {
       const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendment/${body.amendmentId}`);
 
       const expected = {
+        dealId: expect.any(String),
+        facilityId: expect.any(String),
         status: expect.any(String),
         amendmentId: expect.any(String),
         createdAt: expect.any(Number),
         updatePayload,
-        updatedAt: expect.any(Number)
+        updatedAt: expect.any(Number),
+        version: 1
       };
       expect(status).toEqual(200);
       expect(bodyPutResponse).toEqual(expected);
@@ -88,10 +91,10 @@ describe('PUT /v1/tfm/facilities/:id/amendments', () => {
     it('should return 400 if invalid dealId', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
-      const { status, text } = await api.put({ amendmentsUpdate: {} }).to('/v1/tfm/facilities/123/amendment/1234');
+      const { status, body } = await api.put({ amendmentsUpdate: {} }).to('/v1/tfm/facilities/123/amendment/1234');
 
       expect(status).toEqual(400);
-      expect(text).toEqual('{"status":400,"message":"Invalid facility or amendment id"}');
+      expect(body).toEqual({ status: 400, message: 'Invalid facility or amendment id' });
     });
   });
 });
