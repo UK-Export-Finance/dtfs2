@@ -1,49 +1,7 @@
 const {
   isAfter, isBefore, set, getUnixTime,
 } = require('date-fns');
-
-// Checks to see if an element is an object or not
-const isObject = (el) => typeof el === 'object' && el !== null && !(el instanceof Array);
-
-/*
-  Maps through validation errors = require( the server and returns i)t
-  so both Summary Error component and field component
-  can display the error messages correctly.
-*/
-const validationErrorHandler = (errs, href = '') => {
-  const errorSummary = [];
-  const fieldErrors = {};
-
-  if (!errs) {
-    return false;
-  }
-
-  const errors = isObject(errs) ? [errs] : errs;
-
-  errors.forEach((el) => {
-    const mappedErrorMessage = el.errMsg;
-
-    errorSummary.push({
-      text: mappedErrorMessage,
-      href: `${href}#${el.errRef}`,
-    });
-    fieldErrors[el.errRef] = {
-      text: mappedErrorMessage,
-    };
-    if (el.subFieldErrorRefs) {
-      el.subFieldErrorRefs.forEach((subFieldRef) => {
-        fieldErrors[subFieldRef] = {
-          text: mappedErrorMessage,
-        };
-      });
-    }
-  });
-
-  return {
-    errorSummary,
-    fieldErrors,
-  };
-};
+const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
 
 /**
  *
@@ -97,15 +55,13 @@ const amendmentRequestDateValidation = async (body, facility) => {
     });
   } else if (amendmentRequestIsFullyComplete) {
     // set to midnight to stop mismatch if date in past so set to midnight
-    const submissionDate = (new Date(Number(facility.facilitySnapshot.dates.inclusionNoticeReceived))).setHours(0, 0, 0, 0);
-    const now = new Date();
-    const requestDateSet = (set(
-      new Date(),
-      { year: amendmentRequestDateYear, month: amendmentRequestDateMonth - 1, date: amendmentRequestDateDay },
-    )).setHours(0, 0, 0, 0);
+    const submissionDate = new Date(Number(facility.facilitySnapshot.dates.inclusionNoticeReceived)).setHours(2, 2, 2, 2);
+    const today = new Date();
+    let requestDateSet = set(new Date(), { year: amendmentRequestDateYear, month: amendmentRequestDateMonth - 1, date: amendmentRequestDateDay });
+    requestDateSet = requestDateSet.setHours(2, 2, 2, 2);
 
     // checks amendment date not in the future
-    if (isAfter(requestDateSet, now)) {
+    if (isAfter(requestDateSet, today)) {
       amendmentRequestDateErrors.push({
         errRef: 'amendmentRequestDate',
         errMsg: 'Amendment request date cannot be in the future',
@@ -122,10 +78,11 @@ const amendmentRequestDateValidation = async (body, facility) => {
   }
 
   if (amendmentRequestIsFullyComplete) {
-    const amendmentRequestDateFormatted = set(
-      new Date(),
-      { year: amendmentRequestDateYear, month: amendmentRequestDateMonth - 1, date: amendmentRequestDateDay },
-    );
+    const amendmentRequestDateFormatted = set(new Date(), {
+      year: amendmentRequestDateYear,
+      month: amendmentRequestDateMonth - 1,
+      date: amendmentRequestDateDay,
+    });
     // sets to unix timestamp
     amendmentRequestDate = getUnixTime(amendmentRequestDateFormatted);
   }

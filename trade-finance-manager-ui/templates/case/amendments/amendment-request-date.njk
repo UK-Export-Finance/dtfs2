@@ -66,13 +66,15 @@
     }) }}
 
     <div class="govuk-button-group">
-      {{ govukButton({
-        text: "Continue",
-        attributes: {
-            "data-cy": "continue-button"
-        }
-        })
-      }}
+      {% if isEditable %}
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+              "data-cy": "continue-button"
+          }
+          })
+        }}
+      {% endif %}
       <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="cancel-button">Cancel</a>
     </div>
 

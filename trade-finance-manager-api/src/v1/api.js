@@ -306,17 +306,38 @@ const getAmendmentInProgress = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/in-progress`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/in-progress`,
         headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get facility in progress %O', { response: err?.response?.data });
+      console.error('Unable to get the amendment in progress %O', { response: err?.response?.data });
       return { status: 500, data: err?.response?.data };
     }
   } else {
     console.error('Invalid facility Id');
+    return { status: 400, message: 'Invalid facility Id amendment Id provided' };
+  }
+};
+
+const getAmendmentById = async (facilityId, amendmentId) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidObjectId(amendmentId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/${amendmentId}`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get the amendment %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facility or amendment Id');
     return { status: 400, message: 'Invalid facility Id or amendment Id provided' };
   }
 };
@@ -774,6 +795,7 @@ module.exports = {
   createFacilityAmendment,
   updateFacilityAmendment,
   getAmendmentInProgress,
+  getAmendmentById,
   updateGefFacility,
   queryDeals,
   getPartyDbInfo,

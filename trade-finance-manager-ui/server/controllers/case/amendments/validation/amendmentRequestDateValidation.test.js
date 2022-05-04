@@ -1,6 +1,6 @@
 import { add, format } from 'date-fns';
 
-import requestDateValidation from './requestDateValidation';
+import requestDateValidation from './amendmentRequestDate.validate';
 
 describe('requestDateValidation()', () => {
   it('returns error if no request amendment date', async () => {
