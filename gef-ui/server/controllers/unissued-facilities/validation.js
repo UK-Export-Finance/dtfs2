@@ -27,6 +27,7 @@ const facilityValidation = async (body, query, params) => {
     'cover-end-date-day': coverEndDateDay,
     'cover-end-date-month': coverEndDateMonth,
     'cover-end-date-year': coverEndDateYear,
+    shouldCoverStartOnSubmission,
   } = body;
 
   const application = await api.getApplication(dealId);
@@ -36,7 +37,8 @@ const facilityValidation = async (body, query, params) => {
   const issueDateIsFullyComplete = issueDateDay && issueDateMonth && issueDateYear;
   const issueDateIsPartiallyComplete = !issueDateIsFullyComplete && (issueDateDay || issueDateMonth || issueDateYear);
   const issueDateIsBlank = !issueDateDay && !issueDateMonth && !issueDateYear;
-  const coverStartDateIsFullyComplete = coverStartDateDay && coverStartDateMonth && coverStartDateYear;
+  const coverStartDateIsFullyComplete = (coverStartDateDay && coverStartDateMonth && coverStartDateYear && !shouldCoverStartOnSubmission)
+  || shouldCoverStartOnSubmission;
   const coverStartDateIsPartiallyComplete = !coverStartDateIsFullyComplete && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
   const coverStartDateIsBlank = !coverStartDateDay && !coverStartDateMonth && !coverStartDateYear;
   const coverEndDateIsFullyComplete = coverEndDateDay && coverEndDateMonth && coverEndDateYear;
@@ -104,14 +106,14 @@ const facilityValidation = async (body, query, params) => {
     }
   }
 
-  if (!body.shouldCoverStartOnSubmission && !saveAndReturn) {
+  if (!shouldCoverStartOnSubmission && !saveAndReturn) {
     aboutFacilityErrors.push({
       errRef: 'shouldCoverStartOnSubmission',
       errMsg: 'Select if you want UKEF cover to start on the day you issue the facility',
     });
   }
 
-  if (body.shouldCoverStartOnSubmission === 'false') {
+  if (shouldCoverStartOnSubmission === 'false') {
     if (coverStartDateIsBlank) {
       if (!saveAndReturn) {
         aboutFacilityErrors.push({
@@ -220,7 +222,10 @@ const facilityValidation = async (body, query, params) => {
   }
 
   if (coverStartDateIsFullyComplete) {
-    coverStartDate = set(new Date(), { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay });
+    const value = shouldCoverStartOnSubmission
+      ? { year: issueDateYear, month: issueDateMonth - 1, date: issueDateDay }
+      : { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay };
+    coverStartDate = set(new Date(), value);
   }
 
   if (coverEndDateIsFullyComplete) {
@@ -274,7 +279,7 @@ const facilityValidation = async (body, query, params) => {
   const errorsObject = {
     errors: validationErrorHandler(aboutFacilityErrors),
     facilityName: body.facilityName,
-    shouldCoverStartOnSubmission: body.shouldCoverStartOnSubmission,
+    shouldCoverStartOnSubmission,
     monthsOfCover: body.monthsOfCover,
     hasBeenIssued: true,
     issueDateDay,
