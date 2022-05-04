@@ -88,9 +88,9 @@ exports.getAmendmentById = async (req, res) => {
 };
 
 /**
- *  returns an object containing an amendment that's in progress or completed based on a given facilityId and status:
+ *  returns an object containing an amendment that's in progress based on a given facilityId:
  *  {
- *    "amendmentId": "62692866ce546902bfcd9168",
+ *     "amendmentId": "62692866ce546902bfcd9168",
  *    "createdAt": 1651058790,
  *    "updatedAt": 1651059653,
  *    "status": "In progress",

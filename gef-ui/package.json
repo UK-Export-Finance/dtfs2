@@ -68,7 +68,8 @@
     "nunjucks": "3.2.3",
     "path": "0.12.7",
     "redis": "^3.1.2",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "sanitize-html": "^2.7.0"
   },
   "devDependencies": {
     "@babel/core": "7.17.8",

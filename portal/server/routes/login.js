@@ -95,7 +95,7 @@ router.post('/reset-password', async (req, res) => {
   const { success } = await api.resetPassword(email);
 
   if (success) {
-    res.redirect('/login?passwordreset=1');
+    return res.redirect('/login?passwordreset=1');
   }
 
   // If all of the above fails

@@ -41,13 +41,13 @@ describe('/v1/deals/:id/status', () => {
 
   describe('GET /v1/deals/:id/status', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/deals/123456789012/status');
+      const { status } = await as().get('/v1/deals/620a1aa095a618b12da38c7b/status');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(noRoles).get('/v1/deals/123456789012/status');
+      const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b/status');
 
       expect(status).toEqual(401);
     });
@@ -77,7 +77,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('404s requests for unkonwn ids', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/deals/123456789012/status');
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/status');
 
       expect(status).toEqual(404);
     });
@@ -103,13 +103,13 @@ describe('/v1/deals/:id/status', () => {
 
   describe('PUT /v1/deals/:id/status', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put(completedDeal).to('/v1/deals/123456789012/status');
+      const { status } = await as().put(completedDeal).to('/v1/deals/620a1aa095a618b12da38c7b/status');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(noRoles).put(completedDeal).to('/v1/deals/123456789012/status');
+      const { status } = await as(noRoles).put(completedDeal).to('/v1/deals/620a1aa095a618b12da38c7b/status');
 
       expect(status).toEqual(401);
     });

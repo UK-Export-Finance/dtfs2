@@ -1,5 +1,5 @@
 const { format, getUnixTime, fromUnixTime } = require('date-fns');
-
+const sanitizeHtml = require('sanitize-html');
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendTfmEmail = require('./send-tfm-email');
@@ -13,7 +13,7 @@ exports.create = async (req, res) => {
 
   if (validationErrors.count !== 0) {
     return res.status(400).send({
-      feedback: req.body,
+      feedback: sanitizeHtml(req.body),
       validationErrors,
     });
   }

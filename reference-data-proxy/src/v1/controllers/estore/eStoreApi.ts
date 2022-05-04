@@ -28,7 +28,7 @@ const postToEstore = async (
   apiEndpoint: string,
   apiPayload: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
   timeout = 0,
-  headers = { 'Content-Type': 'application/json' }
+  headers = { 'Content-Type': 'application/json' },
 ) => {
   const eStoreUrl: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_URL;
   const username: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_KEY;
@@ -43,7 +43,7 @@ const postToEstore = async (
     data: apiPayload,
     timeout,
   }).catch(async (error: any) => {
-    console.error(`Error calling eStore API (/${apiEndpoint}): ${error?.response?.status} \n`, error?.response?.data);
+    console.error(`Error calling eStore API %O`, { apiEndpoint, data: error?.response?.data, status: error?.response?.status });
     const tfmUserCollection = await getCollection('tfm-users');
     const tfmDevUser = await tfmUserCollection.aggregate([{ $match: { teams: { $in: ['ESTORE'] } } }, { $project: { _id: 0, email: 1 } }]).toArray();
 

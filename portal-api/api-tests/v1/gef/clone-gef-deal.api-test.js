@@ -12,16 +12,20 @@ const collectionName = 'deals';
 const mockApplication = {
   ...mockApplications[0],
   bankInternalRefName: 'Updated Ref Name - Unit Test',
-  submissionType: 'Automatic Inclusion Notice',
+  submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
 };
 
 describe(baseUrl, () => {
   let aMaker;
+  let anotherMaker;
+  let aChecker;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').one();
+    aChecker = testUsers().withRole('checker').one();
+    aMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
+    anotherMaker = testUsers().withRole('maker').withBankName('HSBC').one();
   });
 
   beforeEach(async () => {
@@ -72,11 +76,12 @@ describe(baseUrl, () => {
       }).to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
+      mockApplication.bank = { id: aMaker.bank.id };
       const { status } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
       expect(status).toEqual(200);
     });
 
-    it('returns a new application ID when a deal is cloned', async () => {
+    it('successfully clones a GEF deal and returns a new application ID', async () => {
       const mockDeal = await as(aMaker).post({
         dealType: 'GEF',
         maker: aMaker,
@@ -92,9 +97,53 @@ describe(baseUrl, () => {
       }).to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
+      mockApplication.bank = { id: aMaker.bank.id };
 
       const { body } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
       expect(body).toEqual({ dealId: expect.any(String) });
+    });
+
+    it('returns a `404` status if the maker belongs to a different bank', async () => {
+      const mockDeal = await as(aMaker).post({
+        dealType: 'GEF',
+        maker: aMaker,
+        bank: { id: aMaker.bank.id },
+        bankInternalRefName: 'Bank 1',
+        additionalRefName: 'Team 1',
+        exporter: {},
+        createdAt: '2021-01-01T00:00',
+        mandatoryVersionId: '123',
+        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+        updatedAt: null,
+        submissionCount: 0,
+      }).to(baseUrl);
+
+      mockApplication.dealId = mockDeal.body._id;
+      mockApplication.bank = { id: anotherMaker.bank.id };
+
+      const { status } = await as(anotherMaker).post(mockApplication).to(`${baseUrl}/clone`);
+      expect(status).toEqual(404);
+    });
+
+    it('returns a `401` status if the user role is `Checker`', async () => {
+      const mockDeal = await as(aChecker).post({
+        dealType: 'GEF',
+        maker: aMaker,
+        bank: { id: aMaker.bank.id },
+        bankInternalRefName: 'Bank 1',
+        additionalRefName: 'Team 1',
+        exporter: {},
+        createdAt: '2021-01-01T00:00',
+        mandatoryVersionId: '123',
+        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+        updatedAt: null,
+        submissionCount: 0,
+      }).to(baseUrl);
+
+      mockApplication.dealId = mockDeal.body._id;
+
+      const { status } = await as(aChecker).post(mockApplication).to(`${baseUrl}/clone`);
+      expect(status).toEqual(401);
     });
 
     it('returns an error message when Bank Internal Ref Name is null', async () => {
