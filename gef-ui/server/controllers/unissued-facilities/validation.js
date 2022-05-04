@@ -222,9 +222,21 @@ const facilityValidation = async (body, query, params) => {
   }
 
   if (coverStartDateIsFullyComplete) {
-    const value = shouldCoverStartOnSubmission
-      ? { year: issueDateYear, month: issueDateMonth - 1, date: issueDateDay }
-      : { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay };
+    let value;
+    if (shouldCoverStartOnSubmission) {
+      value = {
+        year: issueDateYear,
+        month: issueDateMonth - 1,
+        date: issueDateDay,
+      };
+    } else {
+      value = {
+        year: coverStartDateYear,
+        month: coverStartDateMonth - 1,
+        date: coverStartDateDay,
+      };
+    }
+
     coverStartDate = set(new Date(), value);
   }
 
