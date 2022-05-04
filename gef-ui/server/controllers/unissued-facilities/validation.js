@@ -37,8 +37,8 @@ const facilityValidation = async (body, query, params) => {
   const issueDateIsFullyComplete = issueDateDay && issueDateMonth && issueDateYear;
   const issueDateIsPartiallyComplete = !issueDateIsFullyComplete && (issueDateDay || issueDateMonth || issueDateYear);
   const issueDateIsBlank = !issueDateDay && !issueDateMonth && !issueDateYear;
-  const coverStartDateIsFullyComplete = (coverStartDateDay && coverStartDateMonth && coverStartDateYear && !shouldCoverStartOnSubmission)
-  || shouldCoverStartOnSubmission;
+  const coverStartDateIsFullyComplete = (coverStartDateDay && coverStartDateMonth && coverStartDateYear && shouldCoverStartOnSubmission === 'false')
+  || shouldCoverStartOnSubmission === 'true';
   const coverStartDateIsPartiallyComplete = !coverStartDateIsFullyComplete && (coverStartDateDay || coverStartDateMonth || coverStartDateYear);
   const coverStartDateIsBlank = !coverStartDateDay && !coverStartDateMonth && !coverStartDateYear;
   const coverEndDateIsFullyComplete = coverEndDateDay && coverEndDateMonth && coverEndDateYear;
@@ -223,7 +223,7 @@ const facilityValidation = async (body, query, params) => {
 
   if (coverStartDateIsFullyComplete) {
     let value;
-    if (shouldCoverStartOnSubmission) {
+    if (shouldCoverStartOnSubmission === 'true') {
       value = {
         year: issueDateYear,
         month: issueDateMonth - 1,
@@ -236,7 +236,6 @@ const facilityValidation = async (body, query, params) => {
         date: coverStartDateDay,
       };
     }
-
     coverStartDate = set(new Date(), value);
   }
 

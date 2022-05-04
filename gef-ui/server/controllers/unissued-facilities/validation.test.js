@@ -36,6 +36,8 @@ describe('validation()', () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
     mockRequest.body['cover-start-date-day'] = format(now, 'd');
     mockRequest.body['cover-start-date-month'] = format(now, 'M');
     mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
@@ -45,7 +47,6 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
     const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
-
     const expected = {
       coverStartDate: now,
       coverEndDate: tomorrow,
@@ -120,6 +121,7 @@ describe('validation()', () => {
   it('should return object with errors populated if end date before start date', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = '';
@@ -165,6 +167,7 @@ describe('validation()', () => {
   it('should return object with errors populated if start date before issue date', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = format(now, 'd');
@@ -206,6 +209,7 @@ describe('validation()', () => {
   it('should return object with errors populated if end date before issue date', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'true';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = format(now, 'd');
