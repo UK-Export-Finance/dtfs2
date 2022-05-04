@@ -5,8 +5,8 @@ const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const getAmendmentRequestApproval = async (req, res) => {
   try {
     const { facilityId, amendmentId } = req.params;
-    const amendment = await api.getAmendmentById(facilityId, amendmentId);
-    if (!amendment) {
+    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+    if (status !== 200) {
       return res.redirect('/not-found');
     }
 
@@ -35,10 +35,11 @@ const postAmendmentRequestApproval = async (req, res) => {
   const approval = requireUkefApproval === 'Yes';
 
   const { errorsObject, amendmentRequestApprovalErrors } = requestApprovalValidation(requireUkefApproval);
-  const { dealId, status } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { dealId } = amendment;
 
   if (amendmentRequestApprovalErrors.length > 0) {
-    const isEditable = status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
     return res.render('case/amendments/amendment-request-approval.njk', {
       errors: errorsObject.errors,
       dealId,

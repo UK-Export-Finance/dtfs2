@@ -6,15 +6,16 @@ const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const getAmendmentEffectiveDate = async (req, res) => {
   try {
     const { facilityId, amendmentId } = req.params;
+    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+
+    if (status !== 200) {
+      return res.redirect('/not-found');
+    }
+
+    const { dealId } = amendment;
     let amendmentEffectiveDateDay = '';
     let amendmentEffectiveDateMonth = '';
     let amendmentEffectiveDateYear = '';
-
-    const amendment = await api.getAmendmentById(facilityId, amendmentId);
-    if (!amendment) {
-      return res.redirect('/not-found');
-    }
-    const { dealId } = amendment;
 
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
     if (amendment.amendmentEffectiveDate) {
@@ -38,34 +39,36 @@ const getAmendmentEffectiveDate = async (req, res) => {
 };
 const postAmendmentEffectiveDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
-  const { dealId, status } = await api.getAmendmentById(facilityId, amendmentId);
-  const { amendmentEffectiveDate, errorsObject, amendmentEffectiveDateErrors } = await amendmentEffectiveDateValidation(req.body);
+  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+  if (status === 200) {
+    const { amendmentEffectiveDate, errorsObject, amendmentEffectiveDateErrors } = await amendmentEffectiveDateValidation(req.body);
 
-  if (amendmentEffectiveDateErrors.length > 0) {
-    const isEditable = status === AMENDMENT_STATUS.IN_PROGRESS;
-    return res.render('case/amendments/amendment-effective-date.njk', {
-      dealId,
-      facilityId,
-      isEditable,
-      amendmentEffectiveDateDay: errorsObject.amendmentEffectiveDateDay,
-      amendmentEffectiveDateMonth: errorsObject.amendmentEffectiveDateMonth,
-      amendmentEffectiveDateYear: errorsObject.amendmentEffectiveDateYear,
-      errors: errorsObject.errors,
-    });
-  }
-
-  try {
-    const payload = { amendmentEffectiveDate };
-    const update = await api.updateAmendment(facilityId, amendmentId, payload);
-
-    if (update) {
-      return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
+    if (amendmentEffectiveDateErrors.length > 0) {
+      const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+      return res.render('case/amendments/amendment-effective-date.njk', {
+        dealId: amendment.dealId,
+        facilityId,
+        isEditable,
+        amendmentEffectiveDateDay: errorsObject.amendmentEffectiveDateDay,
+        amendmentEffectiveDateMonth: errorsObject.amendmentEffectiveDateMonth,
+        amendmentEffectiveDateYear: errorsObject.amendmentEffectiveDateYear,
+        errors: errorsObject.errors,
+      });
     }
-    return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-effective-date`);
-  } catch (err) {
-    console.error('There was a problem adding the amendment effective date %O', { response: err?.response?.data });
+
+    try {
+      const payload = { amendmentEffectiveDate };
+      const update = await api.updateAmendment(facilityId, amendmentId, payload);
+
+      if (update) {
+        return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
+      }
+      return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-effective-date`);
+    } catch (err) {
+      console.error('There was a problem adding the amendment effective date %O', { response: err?.response?.data });
+    }
   }
-  return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
+  return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}#amendments`);
 };
 
 module.exports = { getAmendmentEffectiveDate, postAmendmentEffectiveDate };

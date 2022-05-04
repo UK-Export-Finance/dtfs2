@@ -15,6 +15,30 @@
     }) }}
   {% endif %}
 
+  {% set optionsWithHTML = [] %}
+
+  {% if hasBeenIssued === true %}
+    {% set checkboxToAdd =
+      {
+        value: "coverEndDate",
+        text: "Cover end date",
+        checked: changeCoverEndDate === true,
+        attributes: { "data-cy": "amendment--coverEndDate-checkbox" }
+      }
+    %}
+    {% set optionsWithHTML = (optionsWithHTML.push(checkboxToAdd), optionsWithHTML) %}
+  {% endif %}
+
+  {% set defaultCheckbox =
+    {
+      value: "facilityValue",
+      text: "Facility value",
+      checked: changeFacilityValue === true ,
+      attributes: { "data-cy": "amendment--facilityValue-checkbox" }
+    }
+  %}
+  {% set optionsWithHTML = (optionsWithHTML.push(defaultCheckbox), optionsWithHTML) %}
+
   <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-4" data-cy="amendment-options-heading" aria-label="What would the bank like to change?">What would the bank like to change?</h1>
 
     <form method="POST" autocomplete="off">
@@ -28,24 +52,7 @@
             'data-cy': 'amendment-request-approval-error'
           }
         },
-        items: [
-          {
-            value: "coverEndDate",
-            text: "Cover end date",
-            checked: changeCoverEndDate === true,
-            attributes: {
-              "data-cy": "amendment--coverEndDate-checkbox"
-            }
-          },
-          {
-            value: "facilityValue",
-            text: "Facility value",
-            checked: changeFacilityValue === true ,
-            attributes: {
-              "data-cy": "amendment--facilityValue-checkbox"
-            }
-          }
-        ]
+        items: optionsWithHTML
       }) }}
 
       <div class="govuk-button-group govuk-!-margin-top-4">

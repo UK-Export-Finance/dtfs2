@@ -7,6 +7,7 @@
   {% set showAmendmentButton = params.showAmendmentButton %}
   {% set showContinueAmendmentButton = params.showContinueAmendmentButton %}
   {% set amendmentId = params.amendmentId %}
+  {% set amendmentVersion = params.amendmentVersion %}
 
   <div class="govuk-grid-row" data-cy="amendments">
     <div class="govuk-grid-column-full">
@@ -22,7 +23,7 @@
         </form>
       {% elif showContinueAmendmentButton %}
         {{ govukButton({
-          text: "Continue with amendment request",
+          text: "Continue with amendment request " + amendmentVersion,
           attributes: {
             'data-cy': 'continue-amendment-button'
           },
@@ -32,11 +33,6 @@
     </div>
   </div>
 
-  <div class="govuk-grid-row separator-line govuk-!-margin-top-53 govuk-!-padding-top-6" data-cy="">
-
-
-  </div>
-
-
+  <div class="govuk-grid-row separator-line govuk-!-margin-top-53 govuk-!-padding-top-6" data-cy=""> </div>
 
 {% endmacro %}

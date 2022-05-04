@@ -7,15 +7,15 @@ const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const getAmendmentRequestDate = async (req, res) => {
   try {
     const { facilityId, amendmentId } = req.params;
-    let amendmentRequestDateDay = '';
-    let amendmentRequestDateMonth = '';
-    let amendmentRequestDateYear = '';
 
-    const amendment = await api.getAmendmentById(facilityId, amendmentId);
-    if (!amendment) {
+    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+    if (status !== 200) {
       return res.redirect('/not-found');
     }
     const { dealId } = amendment;
+    let amendmentRequestDateDay = '';
+    let amendmentRequestDateMonth = '';
+    let amendmentRequestDateYear = '';
 
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
     if (amendment.requestDate) {
@@ -33,7 +33,7 @@ const getAmendmentRequestDate = async (req, res) => {
       amendmentRequestDateYear,
     });
   } catch (err) {
-    console.error('getAmendmentRequest - error getting facility', { err });
+    console.error('Unable to get the amendment request date page', { err });
     return res.redirect('/not-found');
   }
 };
@@ -47,12 +47,12 @@ const postAmendmentRequestDate = async (req, res) => {
   const facility = await api.getFacility(facilityId);
   const { user } = req.session;
 
-  const { dealId, status } = await api.getAmendmentById(facilityId, amendmentId);
-
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
   const { amendmentRequestDate, errorsObject, amendmentRequestDateErrors } = await amendmentRequestDateValidation(req.body, facility);
+  const { dealId } = amendment;
 
   if (amendmentRequestDateErrors.length > 0) {
-    const isEditable = status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
     return res.render('case/amendments/amendment-request-date.njk', {
       dealId,
       facilityId,

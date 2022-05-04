@@ -330,10 +330,10 @@ const getAmendmentById = async (facilityId, amendmentId) => {
       headers: { 'Content-Type': 'application/json' },
     });
 
-    return response.data;
+    return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment the amendment %O', { response: err?.response?.data });
-    return err?.response?.data;
+    console.error('Unable to get the amendment by Id %O', { response: err?.response?.data });
+    return { status: err.response.status, data: err?.response?.data };
   }
 };
 
