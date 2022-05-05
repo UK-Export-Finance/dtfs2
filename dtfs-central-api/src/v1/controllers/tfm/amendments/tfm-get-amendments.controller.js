@@ -131,7 +131,8 @@ exports.getAmendmentInProgress = async (req, res) => {
   const { id: facilityId } = req.params;
   if (ObjectId.isValid(facilityId)) {
     const amendment = await findAmendmentStatus(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) || [];
-    return res.status(200).send(amendment[0]);
+    const response = amendment[0] ?? [];
+    return res.status(200).send(response);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
 };
