@@ -182,6 +182,7 @@ const getCaseFacility = async (req, res) => {
     showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendment?.amendmentId,
     showContinueAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && amendment?.amendmentId,
     amendmentId: amendment?.amendmentId,
+    amendmentVersion: amendment.version,
   });
 };
 

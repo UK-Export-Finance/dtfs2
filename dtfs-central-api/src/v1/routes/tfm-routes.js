@@ -410,7 +410,9 @@ tfmRouter.route('/facilities/:id').put(
  *         description: Not found
  */
 tfmRouter.route('/facilities/:id/amendment').get(tfmGetAmendmentController.getAllAmendmentsByFacilityId);
-tfmRouter.route('/facilities/:id/amendment/in-progress').get(tfmGetAmendmentController.getAmendmentInProgress);
+tfmRouter.route('/facilities/:id/amendment/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgress);
+tfmRouter.route('/facilities/:id/amendment/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendments);
+tfmRouter.route('/facilities/:id/amendment/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendment);
 tfmRouter.route('/facilities/:id/amendment/:amendmentId').get(tfmGetAmendmentController.getAmendmentById);
 
 /**
