@@ -28,8 +28,18 @@ const getAmendmentInProgress = async (req, res) => {
   return res.status(422).send({ message: 'Unable to get amendment in progress' });
 };
 
+const getAmendmentById = async (req, res) => {
+  const { facilityId, amendmentId } = req.params;
+  const amendment = await api.getAmendmentById(facilityId, amendmentId);
+  if (amendment) {
+    return res.status(200).send(amendment);
+  }
+  return res.status(422).send({ message: 'Unable to get the amendment' });
+};
+
 module.exports = {
   createFacilityAmendment,
   updateFacilityAmendment,
   getAmendmentInProgress,
+  getAmendmentById,
 };
