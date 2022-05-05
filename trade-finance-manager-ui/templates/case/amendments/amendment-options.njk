@@ -1,0 +1,69 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends "index.njk" %}
+
+{% block sub_content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+
+  {% set optionsWithHTML = [] %}
+
+  {% if hasBeenIssued === true %}
+    {% set checkboxToAdd =
+      {
+        value: "coverEndDate",
+        text: "Cover end date",
+        checked: changeCoverEndDate === true,
+        attributes: { "data-cy": "amendment--coverEndDate-checkbox" }
+      }
+    %}
+    {% set optionsWithHTML = (optionsWithHTML.push(checkboxToAdd), optionsWithHTML) %}
+  {% endif %}
+
+  {% set defaultCheckbox =
+    {
+      value: "facilityValue",
+      text: "Facility value",
+      checked: changeFacilityValue === true ,
+      attributes: { "data-cy": "amendment--facilityValue-checkbox" }
+    }
+  %}
+  {% set optionsWithHTML = (optionsWithHTML.push(defaultCheckbox), optionsWithHTML) %}
+
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-4" data-cy="amendment-options-heading" aria-label="What would the bank like to change?">What would the bank like to change?</h1>
+
+    <form method="POST" autocomplete="off">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      {{ govukCheckboxes({
+        name: "amendmentOptions",
+        classes: "govuk-checkboxes",
+        errorMessage: errors and errors.fieldErrors.amendmentOptions and {
+          text: errors.fieldErrors.amendmentOptions.text,
+          attributes: {
+            'data-cy': 'amendment-inline-error'
+          }
+        },
+        items: optionsWithHTML
+      }) }}
+
+      <div class="govuk-button-group govuk-!-margin-top-4">
+        {% if isEditable %}
+          {{ govukButton({
+            text: "Continue",
+            attributes: { "data-cy": "continue-button" }
+            })
+          }}
+        {% endif %}
+        <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="cancel-button">Cancel</a>
+      </div>
+    </form>
+{% endblock %}
