@@ -12,12 +12,13 @@ exports.updateTfmAmendment = async (req, res) => {
     if (findAmendment) {
       const collection = await db.getCollection('tfm-facilities');
 
-      const update = { updatedAt: getUnixTime(new Date()), ...payload };
+      const update = { ...payload, updatedAt: getUnixTime(new Date()) };
 
       await collection.updateOne(
         { _id: ObjectId(facilityId), 'amendments.amendmentId': ObjectId(amendmentId) },
         $.flatten({ 'amendments.$': update }),
       );
+
       const updatedAmendment = await findAmendmentById(facilityId, amendmentId);
       return res.status(200).json({ ...updatedAmendment });
     }

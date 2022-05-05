@@ -19,7 +19,7 @@ describe('routes - case', () => {
 
   it('should setup routes with controllers', () => {
     // GET routes
-    expect(get).toHaveBeenCalledTimes(24);
+    expect(get).toHaveBeenCalledTimes(27);
 
     expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
 
@@ -67,9 +67,12 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/:_id/activity/post-comment', activityController.getCommentBox);
 
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.getAmendmentRequestDate);
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval', amendmentsController.getAmendmentRequestApproval);
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.getAmendmentOptions);
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.getAmendmentEffectiveDate);
 
     // POST routes
-    expect(post).toHaveBeenCalledTimes(18);
+    expect(post).toHaveBeenCalledTimes(21);
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks', caseController.filterCaseTasks);
 
@@ -104,5 +107,8 @@ describe('routes - case', () => {
     expect(post).toHaveBeenCalledWith('/:_id/activity/post-comment', activityController.postComment);
 
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.postAmendmentRequestDate);
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval', amendmentsController.postAmendmentRequestApproval);
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.postAmendmentOptions);
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.postAmendmentEffectiveDate);
   });
 });
