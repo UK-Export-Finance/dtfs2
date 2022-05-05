@@ -14,6 +14,7 @@ const facilityQuery = gql`
         facilityStage,
         facilityValueExportCurrency,
         value,
+        hasBeenIssued,
         coveredPercentage,
         bankFacilityReference,
         guaranteeFeePayableToUkef,
