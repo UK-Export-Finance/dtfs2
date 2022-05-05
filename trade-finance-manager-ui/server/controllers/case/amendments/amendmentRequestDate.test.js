@@ -3,7 +3,7 @@ import { add, format } from 'date-fns';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 
-import amendmentsController from '.';
+import amendmentsController from './amendmentRequestDate.controller';
 
 const CONSTANTS = require('../../../constants');
 
@@ -21,7 +21,7 @@ const session = { user };
 
 describe('controllers - case - amendments', () => {
   describe('GET getAmendmentRequest', () => {
-    describe('when facility exists', () => {
+    describe('an existing amendment', () => {
       const mockFacility = {
         _id: '12345',
         facilitySnapshot: {
@@ -32,37 +32,38 @@ describe('controllers - case - amendments', () => {
       };
 
       beforeEach(() => {
-        api.getFacility = () => Promise.resolve(mockFacility);
+        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: 'In progress', dealId: '4567' } });
       });
 
       it('should render deal template with data', async () => {
         const req = {
           params: {
             facilityId: mockFacility._id,
+            amendmentId: '12345',
           },
           session,
         };
 
         await amendmentsController.getAmendmentRequestDate(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request.njk', {
+        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request-date.njk', {
           dealId: mockFacility.facilitySnapshot.dealId,
-          facility: mockFacility,
           facilityId: mockFacility._id,
-          user,
+          amendmentRequestDateDay: '',
+          amendmentRequestDateMonth: '',
+          amendmentRequestDateYear: '',
+          isEditable: true,
         });
       });
     });
 
-    describe('when facility does NOT exist', () => {
+    describe('a non-existent amendment', () => {
       beforeEach(() => {
-        api.getFacility = () => Promise.resolve();
+        api.getAmendmentById = () => Promise.resolve({ status: 400, data: {} });
       });
 
       it('should redirect to not-found route', async () => {
         const req = {
-          params: {
-            _id: '1',
-          },
+          params: { _id: '1' },
           session,
         };
 
@@ -80,7 +81,7 @@ describe('controllers - case - amendments', () => {
           _id: '625e99cb88eeeb001e33bf4b',
           dealId: '4567',
           dates: {
-            inclusionNoticeReceived: 1650538933299,
+            inclusionNoticeReceived: 1651664521000,
           },
         },
         amendments: [],
@@ -88,12 +89,14 @@ describe('controllers - case - amendments', () => {
 
       beforeEach(() => {
         api.getFacility = () => Promise.resolve(mockFacility);
+        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: 'In progress', dealId: '4567' } });
       });
 
-      it('should render template with errors if no date', async () => {
+      it('should render the template with errors if no date is provided', async () => {
         const req = {
           params: {
             facilityId: mockFacility._id,
+            amendmentId: '12345',
           },
           session,
           body: {
@@ -104,11 +107,10 @@ describe('controllers - case - amendments', () => {
         };
 
         await amendmentsController.postAmendmentRequestDate(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request.njk', {
+        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request-date.njk', {
           dealId: mockFacility.facilitySnapshot.dealId,
-          facility: mockFacility,
+          isEditable: true,
           facilityId: mockFacility._id,
-          user,
           amendmentRequestDateDay: '',
           amendmentRequestDateMonth: '',
           amendmentRequestDateYear: '',
@@ -128,27 +130,27 @@ describe('controllers - case - amendments', () => {
         });
       });
 
-      it('should render template with errors before submission date', async () => {
+      it('should render the template with errors if the date is before the submission date', async () => {
         const req = {
           params: {
             facilityId: mockFacility._id,
+            amendmentId: '12345',
           },
           session,
           body: {
-            'amendment-request-date-day': '5',
-            'amendment-request-date-month': '04',
+            'amendment-request-date-day': '4',
+            'amendment-request-date-month': '03',
             'amendment-request-date-year': '2022',
           },
         };
 
         await amendmentsController.postAmendmentRequestDate(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request.njk', {
+        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request-date.njk', {
           dealId: mockFacility.facilitySnapshot.dealId,
-          facility: mockFacility,
+          isEditable: true,
           facilityId: mockFacility._id,
-          user,
-          amendmentRequestDateDay: '5',
-          amendmentRequestDateMonth: '04',
+          amendmentRequestDateDay: '4',
+          amendmentRequestDateMonth: '03',
           amendmentRequestDateYear: '2022',
           errors: {
             errorSummary: [
@@ -188,11 +190,10 @@ describe('controllers - case - amendments', () => {
         };
 
         await amendmentsController.postAmendmentRequestDate(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request.njk', {
+        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-request-date.njk', {
           dealId: mockFacility.facilitySnapshot.dealId,
-          facility: mockFacility,
           facilityId: mockFacility._id,
-          user,
+          isEditable: true,
           amendmentRequestDateDay: futureDay.toString(),
           amendmentRequestDateMonth: futureMonth.toString(),
           amendmentRequestDateYear: futureYear.toString(),
@@ -212,7 +213,7 @@ describe('controllers - case - amendments', () => {
         });
       });
 
-      it('should render template with no errors if valid date', async () => {
+      it('should render the template successfully if there are no errors', async () => {
         const update = {
           createdAmendment: {
             amendments: {
@@ -222,7 +223,8 @@ describe('controllers - case - amendments', () => {
           },
         };
         api.getFacility = () => Promise.resolve(mockFacility);
-        api.createFacilityAmendment = () => Promise.resolve(update);
+        api.updateAmendment = () => Promise.resolve(update);
+        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: 'In progress', dealId: '4567' } });
 
         const today = new Date();
 
@@ -244,7 +246,7 @@ describe('controllers - case - amendments', () => {
         };
 
         await amendmentsController.postAmendmentRequestDate(req, res);
-        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockFacility.facilitySnapshot.dealId}/facility/${mockFacility._id}/amendment/626bae8c43c01e02076352e1/request-date`);
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockFacility.facilitySnapshot.dealId}/facility/${mockFacility._id}/amendment/626bae8c43c01e02076352e1/request-approval`);
       });
     });
   });
