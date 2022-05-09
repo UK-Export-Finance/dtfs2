@@ -128,7 +128,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const filename = 'test-file-1.txt';
+      const filename = 'test_file_1.txt';
       const fieldname = 'exporterQuestionnaire';
       const type = 'general_correspondence';
 
@@ -204,14 +204,14 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       const files = [
         {
-          filename: 'test-file-1.txt',
-          filepath: 'api-tests/fixtures/test-file-1.txt',
+          filename: 'test_file_1.txt',
+          filepath: 'api-tests/fixtures/test_file_1.txt',
           fieldname,
           type: 'financials',
         },
         {
-          filename: 'test-file-2.txt',
-          filepath: 'api-tests/fixtures/test-file-2.txt',
+          filename: 'test_file_2.txt',
+          filepath: 'api-tests/fixtures/test_file_2.txt',
           fieldname,
           type: 'financials',
         },
@@ -236,14 +236,14 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       const files = [
         {
-          filename: 'test-file-1.txt',
-          filepath: 'api-tests/fixtures/test-file-1.txt',
+          filename: 'test_file_1.txt',
+          filepath: 'api-tests/fixtures/test_file_1.txt',
           fieldname: 'exporterQuestionnaire',
           type: 'general_correspondence',
         },
         {
-          filename: 'test-file-2.txt',
-          filepath: 'api-tests/fixtures/test-file-2.txt',
+          filename: 'test_file_2.txt',
+          filepath: 'api-tests/fixtures/test_file_2.txt',
           fieldname: 'auditedFinancialStatements',
           type: 'financials',
         },

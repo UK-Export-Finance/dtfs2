@@ -47,7 +47,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire`));
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire/upload`);
-      manualInclusion.uploadSuccess('upload-file-valid.doc');
+      manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealIds[2]);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
@@ -65,7 +65,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       cy.visit(relative(`/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire`));
 
       cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(dealIds[2])}/upload`);
-      manualInclusion.uploadSuccess('upload-file-valid.doc');
+      manualInclusion.uploadSuccess('upload_file_valid.doc');
 
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       // submit the deal

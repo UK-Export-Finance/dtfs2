@@ -47,7 +47,7 @@ context('Return to Maker as MIA', () => {
       automaticCover.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
-      manualInclusion.uploadSuccess('upload-file-valid.doc');
+      manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
