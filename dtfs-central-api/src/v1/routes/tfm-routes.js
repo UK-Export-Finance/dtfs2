@@ -411,6 +411,8 @@ tfmRouter.route('/facilities/:id').put(
  */
 tfmRouter.route('/facilities/:facilityId/amendment').get(tfmGetAmendmentController.getAllAmendmentsByFacilityId);
 tfmRouter.route('/facilities/:facilityId/amendment/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgress);
+tfmRouter.route('/facilities/:id/amendment/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendments);
+tfmRouter.route('/facilities/:id/amendment/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendment);
 tfmRouter.route('/facilities/:facilityId/amendment/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendmentsByFacilityId);
 tfmRouter.route('/facilities/:facilityId/amendment/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendment);
 tfmRouter.route('/facilities/:facilityId/amendment/:amendmentId').get(tfmGetAmendmentController.getAmendmentById);
