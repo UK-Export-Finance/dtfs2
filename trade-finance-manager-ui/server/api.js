@@ -285,10 +285,10 @@ const updateAmendment = async (facilityId, amendmentId, data) => {
       data,
     });
 
-    return response.data;
+    return { status: 200, data: response.data };
   } catch (err) {
     console.error('Unable to create amendment request %O', { response: err?.response?.data });
-    return err?.response?.data;
+    return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
@@ -307,7 +307,7 @@ const getAmendmentInProgress = async (facilityId) => {
   }
 };
 
-const getAmendmentCompleted = async (facilityId) => {
+const getCompletedAmendment = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
@@ -322,6 +322,21 @@ const getAmendmentCompleted = async (facilityId) => {
   }
 };
 
+const getLatestCompletedAmendment = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/status/completed/latest`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the latest completed amendment %O', { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
 const getAmendmentById = async (facilityId, amendmentId) => {
   try {
     const response = await axios({
@@ -333,7 +348,82 @@ const getAmendmentById = async (facilityId, amendmentId) => {
     return { status: 200, data: response.data };
   } catch (err) {
     console.error('Unable to get the amendment by Id %O', { response: err?.response?.data });
-    return { status: err.response.status, data: err?.response?.data };
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const getAmendmentByFacilityId = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the amendment by Id %O', { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const getAmendmentByDealId = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/deal/${dealId}/amendment`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the amendment by deal Id %O', { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const getAmendmentInProgressByDealId = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/deal/${dealId}/amendment/status/in-progress`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the amendment in progress by deal Id %O', { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const getCompletedAmendmentByDealId = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/deal/${dealId}/amendment/status/completed`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the completed amendment by deal Id %O', { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const getLatestCompletedAmendmentByDealId = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/deal/${dealId}/amendment/status/completed/latest`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the latest completed amendment by deal Id %O', { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
@@ -360,6 +450,12 @@ module.exports = {
   updateAmendment,
   createFacilityAmendment,
   getAmendmentInProgress,
-  getAmendmentCompleted,
+  getCompletedAmendment,
+  getLatestCompletedAmendment,
   getAmendmentById,
+  getAmendmentByFacilityId,
+  getAmendmentByDealId,
+  getAmendmentInProgressByDealId,
+  getCompletedAmendmentByDealId,
+  getLatestCompletedAmendmentByDealId,
 };

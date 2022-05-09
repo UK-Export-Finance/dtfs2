@@ -7,6 +7,7 @@ const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
 
   const deal = await api.getDeal(dealId);
+  const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
@@ -19,6 +20,10 @@ const getCaseDeal = async (req, res) => {
     activeSubNavigation: 'deal',
     dealId,
     user: req.session.user,
+    facilityType: amendment.type,
+    ukefFacilityId: amendment.ukefFacilityId,
+    facilityId: amendment.amendments.facilityId,
+    hasAmendmentInProgress: amendment.amendments.status === 'In progress' && amendment.amendments.requireUkefApproval,
   });
 };
 
@@ -183,6 +188,7 @@ const getCaseFacility = async (req, res) => {
     showContinueAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && amendment?.amendmentId,
     amendmentId: amendment?.amendmentId,
     amendmentVersion: amendment.version,
+    hasAmendmentInProgress: amendment.status === 'In progress' && amendment.requireUkefApproval,
   });
 };
 

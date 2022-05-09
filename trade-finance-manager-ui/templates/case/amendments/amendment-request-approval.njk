@@ -4,6 +4,10 @@
 
 {% extends "index.njk" %}
 
+{% block pageTitle %}
+  Amendment - Request approval
+{% endblock %}
+
 {% block sub_content %}
   {% if errors %}
     {{ govukErrorSummary({

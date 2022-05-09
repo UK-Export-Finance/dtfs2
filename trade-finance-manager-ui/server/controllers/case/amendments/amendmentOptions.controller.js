@@ -3,83 +3,84 @@ const { amendmentOptionsValidation } = require('./validation/amendmentOptions.va
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 
 const getAmendmentOptions = async (req, res) => {
-  try {
-    const { facilityId, amendmentId } = req.params;
-    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
-    if (status !== 200) {
-      return res.redirect('/not-found');
-    }
-
-    const facility = await api.getFacility(facilityId);
-
-    const { dealId } = amendment;
-    const changeCoverEndDate = amendment.changeCoverEndDate ?? '';
-    const changeFacilityValue = amendment.changeFacilityValue ?? '';
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
-    const { hasBeenIssued } = facility.facilitySnapshot;
-    return res.render('case/amendments/amendment-options.njk', {
-      dealId,
-      facilityId,
-      isEditable,
-      changeCoverEndDate,
-      changeFacilityValue,
-      hasBeenIssued,
-    });
-  } catch (err) {
-    console.error('Unable to get the amendment options page', { err });
+  const { facilityId, amendmentId } = req.params;
+  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+  if (status !== 200) {
     return res.redirect('/not-found');
   }
+
+  const facility = await api.getFacility(facilityId);
+
+  const changeCoverEndDate = amendment.changeCoverEndDate ?? '';
+  const changeFacilityValue = amendment.changeFacilityValue ?? '';
+  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const { hasBeenIssued } = facility.facilitySnapshot;
+  const { dealId } = amendment;
+  return res.render('case/amendments/amendment-options.njk', {
+    dealId,
+    facilityId,
+    isEditable,
+    changeCoverEndDate,
+    changeFacilityValue,
+    hasBeenIssued,
+    user: req.session.user,
+  });
 };
 
 const postAmendmentOptions = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
+  const { amendmentOptions } = req.body;
+
   const facility = await api.getFacility(facilityId);
-  // check if the facility is valid
-  if (facility) {
-    const { amendmentOptions } = req.body;
-    const { hasBeenIssued } = facility.facilitySnapshot;
-    const { errorsObject, amendmentOptionsValidationErrors } = amendmentOptionsValidation(amendmentOptions, hasBeenIssued);
+  const { hasBeenIssued } = facility.facilitySnapshot;
+  const { errorsObject, amendmentOptionsValidationErrors } = amendmentOptionsValidation(amendmentOptions, hasBeenIssued);
 
-    const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
-    const { dealId } = amendment;
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { dealId } = amendment;
 
-    if (amendmentOptionsValidationErrors.length > 0) {
-      const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
-      return res.render('case/amendments/amendment-options.njk', {
-        errors: errorsObject.errors,
-        dealId,
-        facilityId,
-        isEditable,
-        hasBeenIssued,
-        amendmentOptionsValidationErrors,
-      });
-    }
-
-    let changeFacilityValue;
-    let changeCoverEndDate;
-
-    // check if both checkboxes are checked
-    if (Array.isArray(amendmentOptions)) {
-      changeFacilityValue = !!amendmentOptions.includes('facilityValue');
-      changeCoverEndDate = !!amendmentOptions.includes('coverEndDate');
-    } else {
-      changeFacilityValue = amendmentOptions === 'facilityValue';
-      changeCoverEndDate = amendmentOptions === 'coverEndDate';
-    }
-
-    try {
-      const payload = { changeFacilityValue, changeCoverEndDate };
-      await api.updateAmendment(facilityId, amendmentId, payload);
-
-      if (changeCoverEndDate) {
-        return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
-      }
-      return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
-    } catch (err) {
-      console.error('There was a problem creating the amendment approval %O', { response: err?.response?.data });
-    }
+  if (amendmentOptionsValidationErrors.length) {
+    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    return res.render('case/amendments/amendment-options.njk', {
+      dealId,
+      facilityId,
+      isEditable,
+      changeCoverEndDate: amendment.changeCoverEndDate ?? '',
+      changeFacilityValue: amendment.changeFacilityValue ?? '',
+      hasBeenIssued,
+      errors: errorsObject.errors,
+      amendmentOptionsValidationErrors,
+      user: req.session.user,
+    });
   }
-  return res.redirect('/');
+
+  let changeFacilityValue;
+  let changeCoverEndDate;
+
+  // check if both checkboxes are checked
+  if (Array.isArray(amendmentOptions)) {
+    changeFacilityValue = !!amendmentOptions.includes('facilityValue');
+    changeCoverEndDate = !!amendmentOptions.includes('coverEndDate');
+  } else {
+    changeFacilityValue = amendmentOptions === 'facilityValue';
+    changeCoverEndDate = amendmentOptions === 'coverEndDate';
+  }
+
+  try {
+    const payload = { changeFacilityValue, changeCoverEndDate };
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+
+    if (status === 200) {
+      if (changeCoverEndDate) {
+        return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/cover-end-date`);
+      }
+      return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
+    }
+    console.error('Unable to update the amendment options');
+    return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
+  } catch (err) {
+    console.error('There was a problem creating the amendment approval %O', { response: err?.response?.data });
+    return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
+  }
 };
 
 module.exports = { getAmendmentOptions, postAmendmentOptions };

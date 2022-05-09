@@ -6,7 +6,7 @@ const { findAmendmentById } = require('./tfm-get-amendments.controller');
 
 exports.updateTfmAmendment = async (req, res) => {
   const payload = req.body;
-  const { amendmentId, id: facilityId } = req.params;
+  const { amendmentId, facilityId } = req.params;
   if (ObjectId.isValid(facilityId) && ObjectId.isValid(amendmentId)) {
     const findAmendment = await findAmendmentById(facilityId, amendmentId);
     if (findAmendment) {
