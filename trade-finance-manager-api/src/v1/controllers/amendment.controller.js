@@ -6,7 +6,7 @@ const createFacilityAmendment = async (req, res) => {
   if (amendmentId) {
     return res.status(200).send({ amendmentId });
   }
-  return res.status(422).send({ message: 'Unable to create amendment' });
+  return res.status(422).send({ data: 'Unable to create amendment' });
 };
 
 const updateFacilityAmendment = async (req, res) => {
@@ -16,16 +16,16 @@ const updateFacilityAmendment = async (req, res) => {
   if (createdAmendment) {
     return res.status(200).send(createdAmendment);
   }
-  return res.status(422).send({ message: 'Unable to update amendment' });
+  return res.status(422).send({ data: 'Unable to update amendment' });
 };
 
 const getAmendmentInProgress = async (req, res) => {
   const { facilityId } = req.params;
-  const amendment = await api.getAmendmentInProgress(facilityId);
-  if (amendment) {
+  const { data: amendment, status } = await api.getAmendmentInProgress(facilityId);
+  if (status === 200) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ message: 'Unable to get amendment in progress' });
+  return res.status(422).send({ data: 'Unable to get amendment in progress' });
 };
 
 const getCompletedAmendment = async (req, res) => {
@@ -34,7 +34,7 @@ const getCompletedAmendment = async (req, res) => {
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ message: 'Unable to get the completed amendment' });
+  return res.status(422).send({ data: 'Unable to get the completed amendment' });
 };
 
 const getLatestCompletedAmendment = async (req, res) => {
@@ -43,7 +43,7 @@ const getLatestCompletedAmendment = async (req, res) => {
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ message: 'Unable to get the latest completed amendment' });
+  return res.status(422).send({ data: 'Unable to get the latest completed amendment' });
 };
 
 const getAmendmentById = async (req, res) => {
@@ -52,7 +52,7 @@ const getAmendmentById = async (req, res) => {
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ message: 'Unable to get the amendment by Id' });
+  return res.status(422).send({ data: 'Unable to get the amendment by Id' });
 };
 
 const getAmendmentByFacilityId = async (req, res) => {
@@ -61,7 +61,7 @@ const getAmendmentByFacilityId = async (req, res) => {
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ message: 'Unable to get the amendment by facilityId' });
+  return res.status(422).send({ data: 'Unable to get the amendment by facilityId' });
 };
 
 const getAmendmentByDealId = async (req, res) => {
@@ -70,7 +70,7 @@ const getAmendmentByDealId = async (req, res) => {
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ message: 'Unable to get the amendment by deal Id' });
+  return res.status(422).send({ data: 'Unable to get the amendment by deal Id' });
 };
 
 const getAmendmentInProgressByDealId = async (req, res) => {
@@ -79,7 +79,7 @@ const getAmendmentInProgressByDealId = async (req, res) => {
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ message: 'Unable to get the amendment in progress by deal Id' });
+  return res.status(422).send({ data: 'Unable to get the amendment in progress by deal Id' });
 };
 
 const getCompletedAmendmentByDealId = async (req, res) => {
@@ -88,7 +88,7 @@ const getCompletedAmendmentByDealId = async (req, res) => {
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ message: 'Unable to get the completed amendment by deal Id' });
+  return res.status(422).send({ data: 'Unable to get the completed amendment by deal Id' });
 };
 
 const getLatestCompletedAmendmentByDealId = async (req, res) => {
@@ -97,7 +97,15 @@ const getLatestCompletedAmendmentByDealId = async (req, res) => {
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ message: 'Unable to get the latest completed amendment by deal Id' });
+  return res.status(422).send({ data: 'Unable to get the latest completed amendment by deal Id' });
+};
+
+const getAllAmendmentsInProgress = async (req, res) => {
+  const amendment = await api.getAllAmendmentsInProgress();
+  if (amendment) {
+    return res.status(200).send(amendment);
+  }
+  return res.status(422).send({ data: 'Unable to get the amendments in progress' });
 };
 
 module.exports = {
@@ -112,4 +120,5 @@ module.exports = {
   getAmendmentInProgressByDealId,
   getCompletedAmendmentByDealId,
   getLatestCompletedAmendmentByDealId,
+  getAllAmendmentsInProgress,
 };

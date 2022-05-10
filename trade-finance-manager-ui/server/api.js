@@ -300,10 +300,25 @@ const getAmendmentInProgress = async (facilityId) => {
       headers: { 'Content-Type': 'application/json' },
     });
 
-    return response.data;
+    return { status: 200, data: response.data };
   } catch (err) {
     console.error('Unable to get the amendment in progress %O', { response: err?.response?.data });
-    return err?.response?.data;
+    return { status: err?.response?.status || 500, data: err?.response?.data };
+  }
+};
+
+const getAllAmendmentsInProgress = async () => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/amendments/status/in-progress`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the amendments in progress %O', { response: err?.response?.data });
+    return { status: err?.response?.status || 500, data: err?.response?.data };
   }
 };
 
@@ -458,4 +473,5 @@ module.exports = {
   getAmendmentInProgressByDealId,
   getCompletedAmendmentByDealId,
   getLatestCompletedAmendmentByDealId,
+  getAllAmendmentsInProgress,
 };

@@ -44,14 +44,14 @@ const postAmendmentAnswers = async (req, res) => {
   const { dealId } = amendment;
 
   try {
-    const payload = { amendmentSubmitted: true };
+    const payload = { submittedByPim: true };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
     if (status === 200) {
-      return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
+      return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
     }
-    console.error('Unable to update the amendment options');
-    return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
+    console.error('Unable to submit the amendment');
+    return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
   } catch (err) {
     console.error('There was a problem creating the amendment approval %O', { response: err?.response?.data });
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);

@@ -8,6 +8,24 @@ const getDeals = async (req, res) => {
   };
 
   const apiResponse = await api.getDeals(queryParams);
+  const { data: amendments } = await api.getAllAmendmentsInProgress();
+
+  // override the deal stage if there is an amendment in progress
+  if (amendments?.length > 0) {
+    amendments.map((item) => {
+      const hasBeenSubmitted = item?.amendments?.submittedByPim ?? false;
+      if (hasBeenSubmitted) {
+        return apiResponse.deals.map((deal) => {
+          if (item.amendments.dealId === deal._id) {
+            // eslint-disable-next-line no-param-reassign
+            deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+          }
+          return deal;
+        });
+      }
+      return item;
+    });
+  }
 
   if (apiResponse && apiResponse.deals) {
     return res.render('deals/deals.njk', {
@@ -52,6 +70,25 @@ const queryDeals = async (req, res) => {
 
   if (req.body.descending) {
     activeSortByOrder = CONSTANTS.DEALS.TFM_SORT_BY.DESCENDING;
+  }
+
+  const { data: amendments } = await api.getAllAmendmentsInProgress();
+
+  // override the deal stage if there is an amendment in progress
+  if (amendments?.length > 0) {
+    amendments.map((item) => {
+      const hasBeenSubmitted = item.amendments.submittedByPim ?? false;
+      if (hasBeenSubmitted) {
+        return deals.map((deal) => {
+          if (item.amendments.dealId === deal._id) {
+            // eslint-disable-next-line no-param-reassign
+            deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+          }
+          return deal;
+        });
+      }
+      return item;
+    });
   }
 
   return res.render('deals/deals.njk', {

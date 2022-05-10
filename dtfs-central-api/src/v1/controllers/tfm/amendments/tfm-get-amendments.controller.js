@@ -2,6 +2,36 @@ const { ObjectId } = require('mongodb');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 
+/* returns an array of object containing all amendments in progress
+ * [{
+ *    "amendmentId": "62692866ce546902bfcd9168",
+ *    "createdAt": 1651058790,
+ *    "updatedAt": 1651059653,
+ *    "status": "In progress",
+ * }]
+ */
+const findAllAmendmentsByStatus = async (status) => {
+  try {
+    const collection = await db.getCollection('tfm-facilities');
+    const amendment = await collection.aggregate([
+      { $project: { _id: 0, amendments: '$amendments' } },
+      { $unwind: '$amendments' },
+      { $match: { 'amendments.status': status } },
+    ]).toArray();
+
+    // returns the amendment object for the given facilityId and amendmentId
+    return amendment;
+  } catch (err) {
+    console.error('Unable to find amendments object %O', { err });
+    return [];
+  }
+};
+
+exports.getAllAmendmentsInProgress = async (req, res) => {
+  const amendment = await findAllAmendmentsByStatus(CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS);
+  return res.status(200).send(amendment);
+};
+
 /* returns an array of object containing all properties for a given facilityId:
  * [{
  *    "amendmentId": "62692866ce546902bfcd9168",

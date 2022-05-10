@@ -138,6 +138,7 @@ openRouter.route('/facility/:facilityId/amendment').post(amendmentController.cre
  *       400:
  *         description: Cannot update the amendment
  */
+openRouter.route('/amendments/status/in-progress').get(amendmentController.getAllAmendmentsInProgress);
 openRouter.route('/facility/:facilityId/amendment/').get(amendmentController.getAmendmentByFacilityId);
 openRouter.route('/facility/:facilityId/amendment/:amendmentId').put(amendmentController.updateFacilityAmendment);
 openRouter.route('/facility/:facilityId/amendment/:amendmentId').get(amendmentController.getAmendmentById);

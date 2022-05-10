@@ -8,9 +8,20 @@ const getCaseDeal = async (req, res) => {
 
   const deal = await api.getDeal(dealId);
   const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
+  const {
+    status, requireUkefApproval, facilityId, submittedByPim,
+  } = amendment.amendments;
 
   if (!deal) {
     return res.redirect('/not-found');
+  }
+
+  const hasBeenSubmitted = submittedByPim ?? false;
+  const hasAmendmentInProgress = (status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && !hasBeenSubmitted)
+                            || (status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && hasBeenSubmitted && requireUkefApproval);
+
+  if (hasBeenSubmitted) {
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
   return res.render('case/deal/deal.njk', {
@@ -22,8 +33,8 @@ const getCaseDeal = async (req, res) => {
     user: req.session.user,
     facilityType: amendment.type,
     ukefFacilityId: amendment.ukefFacilityId,
-    facilityId: amendment.amendments.facilityId,
-    hasAmendmentInProgress: amendment.amendments.status === 'In progress' && amendment.amendments.requireUkefApproval,
+    facilityId,
+    hasAmendmentInProgress,
   });
 };
 
@@ -166,6 +177,9 @@ const getCaseFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
   const amendment = await api.getAmendmentInProgress(facilityId);
+  const {
+    status, requireUkefApproval, submittedByPim,
+  } = amendment;
 
   if (!facility) {
     return res.redirect('/not-found');
@@ -173,6 +187,10 @@ const getCaseFacility = async (req, res) => {
 
   const { dealId } = facility.facilitySnapshot;
   const deal = await api.getDeal(dealId);
+
+  const hasBeenSubmitted = submittedByPim ?? false;
+  const hasAmendmentInProgress = (status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && !hasBeenSubmitted)
+  || (status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && hasBeenSubmitted && requireUkefApproval);
 
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
@@ -187,8 +205,8 @@ const getCaseFacility = async (req, res) => {
     showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendment?.amendmentId,
     showContinueAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && amendment?.amendmentId,
     amendmentId: amendment?.amendmentId,
-    amendmentVersion: amendment.version,
-    hasAmendmentInProgress: amendment.status === 'In progress' && amendment.requireUkefApproval,
+    amendmentVersion: amendment?.version,
+    hasAmendmentInProgress,
   });
 };
 
