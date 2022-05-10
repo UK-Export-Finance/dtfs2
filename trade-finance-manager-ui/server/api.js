@@ -260,6 +260,83 @@ const getUser = async (userId) => {
   }
 };
 
+const createFacilityAmendment = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment`,
+      headers: { 'Content-Type': 'application/json' },
+      data: { facilityId },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Unable to create new amendment %O', { response: err?.response?.data });
+    return err?.response?.data;
+  }
+};
+
+const updateAmendment = async (facilityId, amendmentId, data) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/${amendmentId}`,
+      headers: { 'Content-Type': 'application/json' },
+      data,
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Unable to create amendment request %O', { response: err?.response?.data });
+    return err?.response?.data;
+  }
+};
+
+const getAmendmentInProgress = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/status/in-progress`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Unable to get the amendment in progress %O', { response: err?.response?.data });
+    return err?.response?.data;
+  }
+};
+
+const getAmendmentCompleted = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/status/completed`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Unable to get the completed amendment %O', { response: err?.response?.data });
+    return err?.response?.data;
+  }
+};
+
+const getAmendmentById = async (facilityId, amendmentId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/${amendmentId}`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the amendment by Id %O', { response: err?.response?.data });
+    return { status: err.response.status, data: err?.response?.data };
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -280,4 +357,9 @@ module.exports = {
   login,
   getFacilities,
   createFeedback,
+  updateAmendment,
+  createFacilityAmendment,
+  getAmendmentInProgress,
+  getAmendmentCompleted,
+  getAmendmentById,
 };

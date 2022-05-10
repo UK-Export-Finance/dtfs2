@@ -1,3 +1,4 @@
+const sanitizeHtml = require('sanitize-html');
 const Application = require('../../../models/application');
 const { validationErrorHandler } = require('../../../utils/helpers');
 const validateFile = require('../../../utils/validateFile');
@@ -292,9 +293,9 @@ const deleteSupportingDocument = async (req, res, next) => {
     await removeFileFromDeal(fileToDelete, fieldName, application, userToken, user);
 
     return res.status(200).send({
-      file: fileToDelete,
+      file: sanitizeHtml(fileToDelete),
       success: {
-        messageText: `${fileToDelete} deleted`,
+        messageText: `${sanitizeHtml(fileToDelete)} deleted`,
       },
     });
   } catch (err) {

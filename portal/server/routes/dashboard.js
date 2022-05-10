@@ -8,7 +8,7 @@ const {
   removeAllFacilitiesFilters,
 } = require('../controllers/dashboard');
 const CONSTANTS = require('../constants');
-const validateToken = require('./middleware/validate-token');
+const { validateToken } = require('./middleware');
 
 const router = express.Router();
 
@@ -41,7 +41,7 @@ router.get('/dashboard/facilities/clear-all-filters', removeAllFacilitiesFilters
 router.get('/dashboard/facilities/filters/remove/:fieldName/:fieldValue', removeSingleAllFacilitiesFilter);
 
 /**
- * Deals and facilitiers - pagination
+ * Deals and facilities - pagination
  * - Needs to be ordered last to avoid priority issues
  */
 router.get('/dashboard/deals/:page', allDeals);

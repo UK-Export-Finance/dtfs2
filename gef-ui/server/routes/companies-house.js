@@ -3,11 +3,11 @@ const {
   companiesHouse,
   validateCompaniesHouse,
 } = require('../controllers/companies-house');
-const validateToken = require('../middleware/validateToken');
+const { validateRole, validateToken, validateBank } = require('../middleware');
 
 const router = express.Router();
 
-router.get('/application-details/:dealId/companies-house', validateToken, (req, res) => companiesHouse(req, res));
-router.post('/application-details/:dealId/companies-house', validateToken, (req, res) => validateCompaniesHouse(req, res));
+router.get('/application-details/:dealId/companies-house', [validateToken, validateBank, validateRole({ role: ['maker'] })], (req, res) => companiesHouse(req, res));
+router.post('/application-details/:dealId/companies-house', [validateToken, validateBank, validateRole({ role: ['maker'] })], (req, res) => validateCompaniesHouse(req, res));
 
 module.exports = router;

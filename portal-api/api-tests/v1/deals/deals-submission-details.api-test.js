@@ -45,13 +45,13 @@ describe('/v1/deals/:id/submission-details', () => {
 
   describe('GET /v1/deals/:id/submission-details', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().get('/v1/deals/123456789012/submission-details');
+      const { status } = await as().get('/v1/deals/620a1aa095a618b12da38c7b/submission-details');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker || role=checker', async () => {
-      const { status } = await as(noRoles).get('/v1/deals/123456789012/submission-details');
+      const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b/submission-details');
 
       expect(status).toEqual(401);
     });
@@ -81,7 +81,7 @@ describe('/v1/deals/:id/submission-details', () => {
     });
 
     it('404s requests for unkonwn ids', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/deals/123456789012/submission-details');
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/submission-details');
 
       expect(status).toEqual(404);
     });
@@ -107,14 +107,14 @@ describe('/v1/deals/:id/submission-details', () => {
 
   describe('PUT /v1/deals/:id/submission-details', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put(newDeal).to('/v1/deals/123456789012/submission-details');
+      const { status } = await as().put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b/submission-details');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
       const { status } = await as(noRoles).put(newDeal).to(
-        '/v1/deals/123456789012/submission-details',
+        '/v1/deals/620a1aa095a618b12da38c7b/submission-details',
       );
 
       expect(status).toEqual(401);

@@ -1,3 +1,4 @@
+const sanitizeHtml = require('sanitize-html');
 const CONSTANTS = require('../../../../constants');
 const { ERROR } = require('../../enums');
 
@@ -39,10 +40,10 @@ const validateApplicationReferences = (body = {}) => {
   let validationErrors = [];
 
   if (Object.keys(body).includes('bankInternalRefName')) {
-    validationErrors.push(validateMandatoryField('bankInternalRefName', body.bankInternalRefName));
-    validationErrors.push(validateNameFieldValue('bankInternalRefName', body.bankInternalRefName));
+    validationErrors.push(validateMandatoryField('bankInternalRefName', sanitizeHtml(body.bankInternalRefName)));
+    validationErrors.push(validateNameFieldValue('bankInternalRefName', sanitizeHtml(body.bankInternalRefName)));
   }
-  if (body.additionalRefName) validationErrors.push(validateNameFieldValue('additionalRefName', body.additionalRefName));
+  if (body.additionalRefName) validationErrors.push(validateNameFieldValue('additionalRefName', sanitizeHtml(body.additionalRefName)));
 
   validationErrors = validationErrors.filter((el) => el !== null); // remove nulls
   return validationErrors.length === 0 ? null : validationErrors;
@@ -51,7 +52,7 @@ const validateApplicationReferences = (body = {}) => {
 const validatorStatusCheckEnums = (doc) => {
   const enumErrors = [];
 
-  // statuses received from TFM - shouldnt be updating to UKEF_ACKNOWLEDGED, UKEF_APPROVED_WITH_CONDITIONS on its own
+  // statuses received from TFM - shouldn't be updating to UKEF_ACKNOWLEDGED, UKEF_APPROVED_WITH_CONDITIONS on its own
   switch (doc.status) {
     case CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED:
     case CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS:

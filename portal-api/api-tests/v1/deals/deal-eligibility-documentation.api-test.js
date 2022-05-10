@@ -346,7 +346,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       }];
 
       await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
-      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/123456789012/eligibility-documentation/${fieldname}/${filename}`);
+      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/620a1aa095a618b12da38c7b/eligibility-documentation/${fieldname}/${filename}`);
 
       expect(status).toEqual(404);
       expect(header['content-disposition']).toBeUndefined();

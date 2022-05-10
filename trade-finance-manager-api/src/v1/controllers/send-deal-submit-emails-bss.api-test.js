@@ -12,6 +12,8 @@ const api = require('../api');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
+const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
+const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
 describe('send-deal-submit-emails - BSS', () => {
   let mockDeal;
@@ -33,11 +35,17 @@ describe('send-deal-submit-emails - BSS', () => {
       email: 'mock@testing.com',
       template: {},
     },
+    bankResponse: [],
   };
 
   beforeEach(async () => {
     api.sendEmail.mockClear();
     api.sendEmail = sendEmailApiSpy;
+    findBankByIdSpy.mockClear();
+    api.findBankById = findBankByIdSpy;
+
+    findOneTeamSpy.mockClear();
+    api.findOneTeam = findOneTeamSpy;
 
     const mockDealMia = await api.findOneDeal('MOCK_MIA_NOT_SUBMITTED');
 
