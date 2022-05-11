@@ -41,7 +41,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
         // update the `tfm-deals` collection once the buyer and deal folders have been created
         tfmDealsCollection.updateOne(
           { _id: ObjectId(eStoreData.dealId) },
-          { $set: { 'tfm.eStore': { buyerName: eStoreData.buyerName, folderName: dealFolderResponse.data.foldername, siteName: eStoreData.siteName } } },
+          { $set: { 'tfm.estore': { buyerName: eStoreData.buyerName, folderName: dealFolderResponse.data.foldername, siteName: eStoreData.siteName } } },
         );
 
         // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
