@@ -21,7 +21,11 @@ const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
-const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
+const {
+  sendDealSubmitEmails,
+  sendAinMinAcknowledgement,
+  sendMigratedDealEmail,
+} = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const dealHasAllUkefIds = require('../helpers/dealHasAllUkefIds');
 
@@ -196,6 +200,14 @@ const submitMigratedDeal = async (dealId, dealType, checker) => {
       updatedDeal.manualInclusionNoticeSubmissionDate = portalMINUpdate.details.manualInclusionNoticeSubmissionDate;
       updatedDeal.checkerMIN = portalMINUpdate.details.checkerMIN;
     }
+
+    // ACBS interaction : AIN or MIN only
+    if (dealController.canDealBeSubmittedToACBS(portalMINUpdate.submissionType)) {
+      console.info('Migrated deal ACBS interaction initiated: ', dealId);
+      await sendMigratedDealEmail(dealId);
+      await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+    }
+
     await sendAinMinAcknowledgement(updatedDeal);
   }
   await updatePortalDealStatus(updatedDeal);

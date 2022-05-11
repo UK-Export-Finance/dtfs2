@@ -188,6 +188,23 @@ const sendDealSubmitEmails = async (deal) => {
   };
 };
 
+const sendMigratedDealEmail = async (dealId) => {
+  if (!dealId) {
+    return false;
+  }
+
+  const sendToEmailAddress = process.env.INTERNAL_EMAIL_GROUP;
+  const emailVariables = {
+    dealId,
+  };
+
+  return sendTfmEmail(
+    CONSTANTS.EMAIL_TEMPLATE_IDS.MIGRATED_DEAL_SUBMITTED,
+    sendToEmailAddress,
+    emailVariables,
+  );
+};
+
 module.exports = {
   shouldSendFirstTaskEmail,
   sendFirstTaskEmail,
@@ -195,4 +212,5 @@ module.exports = {
   sendMiaAcknowledgement,
   generateBssDealAinMinConfirmationEmailVariables,
   sendAinMinAcknowledgement,
+  sendMigratedDealEmail,
 };

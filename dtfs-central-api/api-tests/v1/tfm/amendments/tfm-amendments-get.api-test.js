@@ -86,7 +86,7 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
     it('should return 200 with an empty array if the facility does not have any amendments', async () => {
       const { status, body } = await api.get('/v1/tfm/facilities/626a9270184ded001357c010/amendment');
       expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(body).toEqual([]);
     });
   });
 
@@ -236,7 +236,7 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendment/status/completed`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(body).toEqual([]);
     });
 
     it('should return 400 status if the facilityId has the wrong format', async () => {
@@ -283,7 +283,7 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendment/status/completed/latest`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(body).toEqual([]);
     });
 
     it('should return 400 status if the facilityId has the wrong format', async () => {
