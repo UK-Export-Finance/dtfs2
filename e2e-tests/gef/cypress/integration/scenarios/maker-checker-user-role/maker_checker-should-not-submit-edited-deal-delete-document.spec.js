@@ -58,7 +58,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
       uploadFIles.supportingInfoManualInclusionButton().click();
-      uploadFIles.deleteSupportingDocument('upload-file-valid.doc').click();
+      uploadFIles.deleteSupportingDocument('upload_file_valid.doc').click();
 
       cy.login(CREDENTIALS.MAKER);
 
