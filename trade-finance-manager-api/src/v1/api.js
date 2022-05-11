@@ -310,7 +310,7 @@ const getAmendmentInProgress = async (facilityId) => {
         headers: { 'Content-Type': 'application/json' },
       });
 
-      return response.data;
+      return { status: 200, data: response.data };
     } catch (err) {
       console.error('Unable to get the amendment in progress %O', { response: err?.response?.data });
       return { status: 500, data: err?.response?.data };

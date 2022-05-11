@@ -176,7 +176,7 @@ const putCaseTask = async (req, res) => {
 const getCaseFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
-  const amendment = await api.getAmendmentInProgress(facilityId);
+  const { data: amendment } = await api.getAmendmentInProgress(facilityId);
   const {
     status, requireUkefApproval, submittedByPim,
   } = amendment;
