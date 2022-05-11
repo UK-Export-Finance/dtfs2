@@ -17,18 +17,21 @@ const findAllAmendmentsByStatus = async (status) => {
       { $project: { _id: 0, amendments: '$amendments' } },
       { $unwind: '$amendments' },
       { $match: { 'amendments.status': status } },
+      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+      { $project: { _id: 0, amendments: 1 } },
     ]).toArray();
 
     // returns the amendment object for the given facilityId and amendmentId
-    return amendment;
+    return amendment[0]?.amendments ?? null;
   } catch (err) {
     console.error('Unable to find amendments object %O', { err });
-    return [];
+    return null;
   }
 };
 
 exports.getAllAmendmentsInProgress = async (req, res) => {
-  const amendment = await findAllAmendmentsByStatus(CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS);
+  const amendment = await findAllAmendmentsByStatus(CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
+
   return res.status(200).send(amendment);
 };
 
@@ -196,7 +199,7 @@ exports.getAmendmentInProgress = async (req, res) => {
 exports.getAllCompletedAmendmentsByFacilityId = async (req, res) => {
   const { facilityId } = req.params;
   if (ObjectId.isValid(facilityId)) {
-    const amendment = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED) ?? {};
+    const amendment = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED) ?? [];
     return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
@@ -256,7 +259,7 @@ exports.getAmendmentInProgressByDealId = async (req, res) => {
 exports.getCompletedAmendmentByDealId = async (req, res) => {
   const { dealId } = req.params;
   if (ObjectId.isValid(dealId)) {
-    const amendment = await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED) ?? {};
+    const amendment = await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED) ?? [];
     return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid deal Id' });

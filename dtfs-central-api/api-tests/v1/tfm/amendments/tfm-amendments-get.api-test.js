@@ -39,11 +39,8 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
     return body;
   };
 
-  beforeAll(async () => {
-    await wipeDB.wipe(['tfm-facilities', 'tfm-deals']);
-  });
-
   beforeEach(async () => {
+    await wipeDB.wipe(['tfm-facilities', 'tfm-deals']);
     const deal = await createDeal();
     dealId = deal._id;
 
@@ -86,7 +83,7 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
     it('should return 200 with an empty array if the facility does not have any amendments', async () => {
       const { status, body } = await api.get('/v1/tfm/facilities/626a9270184ded001357c010/amendment');
       expect(status).toEqual(200);
-      expect(body).toEqual([]);
+      expect(body).toEqual({});
     });
   });
 
@@ -283,7 +280,7 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendment/status/completed/latest`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual([]);
+      expect(body).toEqual({});
     });
 
     it('should return 400 status if the facilityId has the wrong format', async () => {
@@ -294,6 +291,47 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
 
       expect(status).toEqual(400);
       expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
+    });
+  });
+
+  describe('GET /v1/tfm/amendments/status/in-progress', () => {
+    it('should return 200 status and all amendments that are in progress', async () => {
+      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const facilityId1 = postResult.body._id;
+
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
+
+      await api.post().to(`/v1/tfm/facilities/${facilityId1}/amendment`);
+
+      const postResult2 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const facilityId2 = postResult2.body._id;
+
+      await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
+
+      await api.post().to(`/v1/tfm/facilities/${facilityId2}/amendment`);
+      const { status, body } = await api.get('/v1/tfm//amendments/status/in-progress');
+
+      expect(status).toEqual(200);
+      expect(body).toEqual([
+        {
+          amendmentId: expect.any(String),
+          createdAt: expect.any(Number),
+          status: expect.any(String),
+          updatedAt: expect.any(Number),
+          dealId: expect.any(String),
+          facilityId: expect.any(String),
+          version: 1,
+        },
+        {
+          amendmentId: expect.any(String),
+          createdAt: expect.any(Number),
+          status: expect.any(String),
+          updatedAt: expect.any(Number),
+          dealId: expect.any(String),
+          facilityId: expect.any(String),
+          version: 1,
+        }
+      ]);
     });
   });
 });
