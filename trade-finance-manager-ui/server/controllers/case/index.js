@@ -9,8 +9,8 @@ const getCaseDeal = async (req, res) => {
   const deal = await api.getDeal(dealId);
   const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
   const {
-    status, requireUkefApproval, facilityId, submittedByPim,
-  } = amendment.amendments;
+    status, requireUkefApproval, facilityId, submittedByPim, type, ukefFacilityId,
+  } = amendment;
 
   if (!deal) {
     return res.redirect('/not-found');
@@ -31,8 +31,8 @@ const getCaseDeal = async (req, res) => {
     activeSubNavigation: 'deal',
     dealId,
     user: req.session.user,
-    facilityType: amendment.type,
-    ukefFacilityId: amendment.ukefFacilityId,
+    facilityType: type,
+    ukefFacilityId,
     facilityId,
     hasAmendmentInProgress,
   });

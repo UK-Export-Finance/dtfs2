@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
-const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendment } = require('./tfm-get-amendments.controller');
+const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendmentByFacilityId } = require('./tfm-get-amendments.controller');
 const { findOneFacility } = require('../facility/tfm-get-facility.controller');
 
 exports.postTfmAmendment = async (req, res) => {
@@ -17,7 +17,7 @@ exports.postTfmAmendment = async (req, res) => {
       // check if there is an amendment in progress
       if (!amendmentInProgress) {
         const { dealId } = facility.facilitySnapshot;
-        const latestCompletedAmendment = await findLatestCompletedAmendment(facilityId);
+        const latestCompletedAmendment = await findLatestCompletedAmendmentByFacilityId(facilityId);
 
         const amendment = {
           amendmentId: new ObjectId(),
