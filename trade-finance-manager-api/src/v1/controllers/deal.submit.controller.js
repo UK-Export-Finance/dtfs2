@@ -201,15 +201,16 @@ const submitMigratedDeal = async (dealId, dealType, checker) => {
       updatedDeal.checkerMIN = portalMINUpdate.details.checkerMIN;
     }
 
-    // ACBS interaction : AIN or MIN only
-    if (dealController.canDealBeSubmittedToACBS(portalMINUpdate.submissionType)) {
-      console.info('Migrated deal ACBS interaction initiated: ', dealId);
-      await sendMigratedDealEmail(dealId);
-      await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
-    }
-
     await sendAinMinAcknowledgement(updatedDeal);
   }
+
+  // ACBS interaction : AIN or MIN only
+  if (dealController.canDealBeSubmittedToACBS(updatedDeal.submissionType)) {
+    console.info('Migrated deal ACBS interaction initiated: ', dealId);
+    await sendMigratedDealEmail(dealId);
+    await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+  }
+
   await updatePortalDealStatus(updatedDeal);
 
   return true;
