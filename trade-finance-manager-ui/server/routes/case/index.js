@@ -33,7 +33,7 @@ router.post('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effecti
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', underwritingController.getAssignAmendmentLeadUnderwriter);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', underwritingController.postAssignAmendmentLeadUnderwriter);
 
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.getUnderwriterManagersDecisionEdit);
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.getAmendmentUnderwriterManagersDecisionEdit);
 // router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.postUnderwriterManagersDecision);
 
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', underwritingController.getBanksDecisionEdit);

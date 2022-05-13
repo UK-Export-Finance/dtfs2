@@ -38,7 +38,7 @@ const getUnderwriterPage = async (req, res) => {
   // if amendments object exists then populate fields
   if (amendment.amendments) {
     amendmentLeadUnderwriterData = await amendmentLeadUnderwriter.getAmendmentLeadUnderwriter(deal, amendment, user);
-    amendmentUnderwriterManagersDecisionData = await amendmentUnderwriterManagersDecision.getUnderwriterManagersDecision(deal, amendment, user);
+    amendmentUnderwriterManagersDecisionData = await amendmentUnderwriterManagersDecision.getAmendmentUnderwriterManagersDecision(deal, amendment, user);
     amendmentBanksDecisionData = await amendmentBanksDecision.getAmendmentBankDecision(deal, amendment, user);
   }
 

@@ -11,7 +11,7 @@ const { canUserEditManagersDecision } = require('../helpers');
  * @returns {Object}
  * checks if user can edit managers decision and returns object
  */
-const getUnderwriterManagersDecision = async (deal, amendment, user) => {
+const getAmendmentUnderwriterManagersDecision = async (deal, amendment, user) => {
   const userCanEdit = canUserEditManagersDecision(
     user,
     amendment.amendments,
@@ -34,7 +34,7 @@ const getUnderwriterManagersDecision = async (deal, amendment, user) => {
  * @param {*} res
  * renders first page of amendment managers decision if can be editted by user
  */
-const getUnderwriterManagersDecisionEdit = async (req, res) => {
+const getAmendmentUnderwriterManagersDecisionEdit = async (req, res) => {
   const {
     _id: dealId,
     amendmentId,
@@ -127,7 +127,7 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
 // };
 
 module.exports = {
-  getUnderwriterManagersDecision,
-  getUnderwriterManagersDecisionEdit,
+  getAmendmentUnderwriterManagersDecision,
+  getAmendmentUnderwriterManagersDecisionEdit,
   // postUnderwriterManagersDecision,
 };

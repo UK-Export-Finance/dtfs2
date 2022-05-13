@@ -68,7 +68,7 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.getAmendmentOptions);
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.getAmendmentEffectiveDate);
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', underwritingController.getAssignAmendmentLeadUnderwriter);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.getUnderwriterManagersDecisionEdit);
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.getAmendmentUnderwriterManagersDecisionEdit);
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', underwritingController.getBanksDecisionEdit);
 
     // POST routes

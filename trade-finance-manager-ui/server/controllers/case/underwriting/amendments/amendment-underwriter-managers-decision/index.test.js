@@ -8,7 +8,7 @@ import MOCKS from '../test-mocks/amendment-test-mocks';
 
 const res = mockRes();
 
-describe('getUnderwriterManagersDecision()', () => {
+describe('getAmendmentUnderwriterManagersDecision()', () => {
   const userCanEdit = canUserEditManagersDecision(
     MOCKS.session.user,
     MOCKS.MOCK_AMENDMENT,
@@ -16,7 +16,7 @@ describe('getUnderwriterManagersDecision()', () => {
 
   describe('when deal exists', () => {
     it('should return object with data', async () => {
-      const result = await amendmentUnderwritersDecision.getUnderwriterManagersDecision(
+      const result = await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecision(
         MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER,
         MOCKS.MOCK_AMENDMENT,
         MOCKS.session.user,
@@ -36,7 +36,7 @@ describe('getUnderwriterManagersDecision()', () => {
   });
 });
 
-describe('getUnderwriterManagersDecisionEdit()', () => {
+describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
   describe('when deal exist and amendments exist', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER);
@@ -53,7 +53,7 @@ describe('getUnderwriterManagersDecisionEdit()', () => {
         session: MOCKS.session,
       };
 
-      await amendmentUnderwritersDecision.getUnderwriterManagersDecisionEdit(req, res);
+      await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/underwriting/amendments/amendment-managers-decision/amendment-edit-managers-decision.njk', {
         activePrimaryNavigation: 'manage work',
@@ -88,7 +88,7 @@ describe('getUnderwriterManagersDecisionEdit()', () => {
         },
       };
 
-      await amendmentUnderwritersDecision.getUnderwriterManagersDecisionEdit(req, res);
+      await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
 
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
@@ -110,7 +110,7 @@ describe('getUnderwriterManagersDecisionEdit()', () => {
         session: MOCKS.session,
       };
 
-      await amendmentUnderwritersDecision.getUnderwriterManagersDecisionEdit(req, res);
+      await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
 
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
@@ -130,7 +130,7 @@ describe('getUnderwriterManagersDecisionEdit()', () => {
         session: MOCKS.session,
       };
 
-      await amendmentUnderwritersDecision.getUnderwriterManagersDecisionEdit(req, res);
+      await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
@@ -148,7 +148,7 @@ describe('getUnderwriterManagersDecisionEdit()', () => {
         session: MOCKS.session,
       };
 
-      await amendmentUnderwritersDecision.getUnderwriterManagersDecisionEdit(req, res);
+      await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });

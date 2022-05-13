@@ -36,9 +36,6 @@ context('PIM User', () => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
-      partials.caseSubNavigation.underwritingLink().click();
-      partials.underwritingSubNav.leadUnderwriterLink().click();
-
       pages.leadUnderwriterPage.assignLeadUnderwriterLink().should('not.exist');
       pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('not.exist');
     });
@@ -68,8 +65,6 @@ context('PIM User', () => {
       cy.visit(relative(`/case/${dealId}/deal`));
 
       partials.caseSubNavigation.underwritingLink().click();
-
-      partials.underwritingSubNav.underwriterManagerDecisionLink().click();
 
       pages.managersDecisionPage.addDecisionLink().should('not.exist');
     });
