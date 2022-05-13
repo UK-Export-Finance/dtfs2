@@ -184,3 +184,48 @@ exports.getLatestCompletedAmendment = async (req, res) => {
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
 };
+
+/**
+ *  returns an object containing an amendment that's `in progress` or `completed` based on a given dealId:
+ *  {
+ *    "amendmentId": "62692866ce546902bfcd9168",
+ *    "createdAt": 1651058790,
+ *    "updatedAt": 1651059653,
+ *    "status": "In progress",
+ *  }
+ */
+
+const findAmendmentByStatusAndDealId = async (dealId, status) => {
+  if (ObjectId.isValid(dealId)) {
+    try {
+      const collection = await db.getCollection('tfm-facilities');
+      const amendment = await collection.aggregate([
+        { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
+        { $unwind: '$amendments' },
+        { $match: { 'amendments.status': status, } },
+        {
+          $project: {
+            _id: 0, amendments: 1, type: '$facilitySnapshot.type', ukefFacilityId: '$facilitySnapshot.ukefFacilityId'
+          }
+        },
+      ]).toArray();
+      // returns the amendment object for the given dealId
+      return { amendments: amendment[0]?.amendments, type: amendment[0]?.type, ukefFacilityId: amendment[0]?.ukefFacilityId } ?? [];
+    } catch (err) {
+      console.error('Unable to find the amendments object %O', { err });
+      return [];
+    }
+  }
+  console.error('Invalid deal Id');
+  return [];
+};
+exports.findAmendmentByStatusAndDealId = findAmendmentByStatusAndDealId;
+
+exports.getAmendmentInProgressByDealId = async (req, res) => {
+  const { dealId } = req.params;
+  if (ObjectId.isValid(dealId)) {
+    const amendment = await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS);
+    return res.status(200).send(amendment);
+  }
+  return res.status(400).send({ status: 400, message: 'Invalid deal Id' });
+};

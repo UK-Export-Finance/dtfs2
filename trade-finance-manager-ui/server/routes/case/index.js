@@ -30,6 +30,15 @@ router.post('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.getAmendmentEffectiveDate);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.postAmendmentEffectiveDate);
 
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', underwritingController.getAssignAmendmentLeadUnderwriter);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', underwritingController.postAssignAmendmentLeadUnderwriter);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.getUnderwriterManagersDecisionEdit);
+// router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.postUnderwriterManagersDecision);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', underwritingController.getBanksDecisionEdit);
+// router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.postUnderwriterManagersDecision);
+
 router.get('/:_id/parties', partiesController.getCaseParties);
 
 router.get('/:_id/parties/exporter', partiesController.getExporterPartyDetails);

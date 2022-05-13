@@ -1,0 +1,51 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% set leadAmendmentUnderwriter = params.amendmentLeadUnderwriter %}
+
+  {% block underwriting_content %}
+
+    {% if leadAmendmentUnderwriter.currentLeadUnderWriter %}
+
+      <div class="govuk-grid-row">
+
+        <div class="govuk-grid-column-three-quarters">
+          <p class="govuk-!-margin-top-0" data-cy="amendment-lead-underwriter-name">{{ leadAmendmentUnderwriter.amendment.amendments.leadUnderwriter.firstName }} {{ leadAmendmentUnderwriter.amendment.amendments.leadUnderwriter.lastName }}</p>
+          <p><a class="govuk-link" href="mailto:{{ leadAmendmentUnderwriter.amendment.amendments.leadUnderwriter.email }}" data-cy="amendment-lead-underwriter-email">{{ leadAmendmentUnderwriter.amendment.amendments.leadUnderwriter.email }}</a></p>
+        </div>
+
+        <div class="govuk-grid-column-one-quarter text-align-right">
+          {% if leadAmendmentUnderwriter.userCanEdit %}
+            <p class="govuk-!-margin-top-0"><a class="govuk-link" href="/case/{{ leadAmendmentUnderwriter.amendment.amendments.dealId }}/facility/{{ leadAmendmentUnderwriter.amendment.amendments.facilityId }}/amendment/{{ leadAmendmentUnderwriter.amendment.amendments.amendmentId }}/lead-underwriter" data-cy="amendment-change-lead-underwriter-link">Change</a></p>
+          {% endif %}
+        </div>
+
+      </div>
+
+      {% else %}
+
+        {% if leadAmendmentUnderwriter.userCanEdit %}
+
+          {{ govukButton({
+            text: "Add underwriter",
+            href: "/case/" + leadAmendmentUnderwriter.amendment.amendments.dealId + "/facility/" + leadAmendmentUnderwriter.amendment.amendments.facilityId + "/amendment/" + leadAmendmentUnderwriter.amendment.amendments.amendmentId + "/lead-underwriter",
+            attributes: {
+              "data-cy":"amendment-assign-lead-underwriter-link"
+            }
+          }) }}
+
+        {% else %}
+
+          <p class="govuk-!-margin-top-0" data-cy="amendment-unassigned-underwriter-readonly">Unassigned</p>
+
+        {% endif %}
+
+
+    {% endif %}
+
+
+  {% endblock %}
+
+{% endmacro %}

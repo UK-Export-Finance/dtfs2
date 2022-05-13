@@ -3,10 +3,68 @@
 {% import './lead-underwriter/lead-underwriter.njk' as leadUnderWriterMacro %}
 {% import './pricing-and-risk/pricing-and-risk.njk' as pricingAndRiskMacro %}
 {% import './managers-decision/managers-decision.njk' as managersDecisionMacro %}
+{% import './amendments/amendment-lead-underwriter/amendment-lead-underwriter.njk' as amendmentLeadUnderWriterMacro %}
+{% import './amendments/amendment-managers-decision/amendment-managers-decision.njk' as amendmentManagersDecisionMacro %}
+{% import './amendments/amendment-banks-decision/amendment-banks-decision.njk' as amendmentBanksDecisionMacro %}
 
 {% extends "case/case.njk" %}
 
 {% block sub_content %}
+
+  {% if amendmentData.amendments.amendmentId %}
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-full">
+      <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-6" data-cy="underwriting-heading-amendment" aria-label="Underwriting page">Amendment for {{ amendmentData.type | lower }} facility {{amendmentData.ukefFacilityId}}</h2>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% block underwriting_amendment_content %}
+        {{ govukAccordion({
+          id: "underwriting_amendment",
+          attributes: {
+            "data-cy": "underwriting-amendment"
+          },
+          items: [
+            {
+              heading: {
+                text: "Lead underwriter"
+              },
+              content: {
+                html: amendmentLeadUnderWriterMacro.render({amendmentLeadUnderwriter: amendmentLeadUnderwriter})
+              },
+              expanded: false
+            },
+            {
+              heading: {
+                text: "Underwriter manager's decision"
+              },
+              content: {
+                html: amendmentManagersDecisionMacro.render({amendmentUnderwriterManagersDecision: amendmentUnderwriterManagersDecision})
+              },
+              expanded: false
+            },
+            {
+            heading: {
+              text: "Bank's decision"
+            },
+            content: {
+              html: amendmentBanksDecisionMacro.render({amendmentBanksDecision: amendmentBanksDecision})
+            },
+            expanded: false
+          }
+          ]
+        }) }}
+      {% endblock %}
+    </div>
+
+  </div>
+
+  {% endif %}
 
   <div class="govuk-grid-row">
 
@@ -16,48 +74,46 @@
   </div>
 
   <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-
-
-  <div class="govuk-grid-column-two-thirds">
-    {% block underwriting_content %}
-      {{ govukAccordion({
-        id: "underwriting",
-        attributes: {
-          "data-cy": "underwriting"
-        },
-        items: [
-          {
-            heading: {
-              text: "Lead underwriter"
-            },
-            content: {
-              html: leadUnderWriterMacro.render({leadUnderwriter: leadUnderwriter})
-            },
-            expanded: false
+      {% block underwriting_deal_content %}
+        {{ govukAccordion({
+          id: "underwriting",
+          attributes: {
+            "data-cy": "underwriting"
           },
-          {
-            heading: {
-              text: "Pricing and risk"
-            },
-            content: {
-              html: pricingAndRiskMacro.render({pricingAndRisk: pricingAndRisk})
-            },
-            expanded: false
-          },
+          items: [
             {
-            heading: {
-              text: "Underwriter Manager's decision"
+              heading: {
+                text: "Lead underwriter"
+              },
+              content: {
+                html: leadUnderWriterMacro.render({leadUnderwriter: leadUnderwriter})
+              },
+              expanded: false
             },
-            content: {
-              html: managersDecisionMacro.render({underwriterManagersDecision: underwriterManagersDecision})
+            {
+              heading: {
+                text: "Pricing and risk"
+              },
+              content: {
+                html: pricingAndRiskMacro.render({pricingAndRisk: pricingAndRisk})
+              },
+              expanded: false
             },
-            expanded: false
-          }
-        ]
-      }) }}
-    {% endblock %}
-  </div>
+              {
+              heading: {
+                text: "Underwriter Manager's decision"
+              },
+              content: {
+                html: managersDecisionMacro.render({underwriterManagersDecision: underwriterManagersDecision})
+              },
+              expanded: false
+            }
+          ]
+        }) }}
+      {% endblock %}
+    </div>
 
   </div>
 

@@ -3,6 +3,9 @@ const api = require('../../../api');
 const leadUnderwriter = require('./lead-underwriter');
 const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
+const amendmentLeadUnderwriter = require('./amendments/amendment-lead-underwriter');
+const amendmentUnderwriterManagersDecision = require('./amendments/amendment-underwriter-managers-decision');
+const amendmentBanksDecision = require('./amendments/amendment-banks-decision');
 
 /**
  * controller for underwriting tab
@@ -25,6 +28,20 @@ const getUnderwriterPage = async (req, res) => {
   const pricingAndRiskData = await pricingAndRisk.getUnderWritingPricingAndRisk(deal, user);
   const underwriterManagersDecisionData = await underwriterManagersDecision.getUnderwriterManagersDecision(deal, user);
 
+  // gets latest in progress amendment
+  const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
+
+  let amendmentLeadUnderwriterData = {};
+  let amendmentUnderwriterManagersDecisionData = {};
+  let amendmentBanksDecisionData = {};
+
+  // if amendments object exists then populate fields
+  if (amendment.amendments) {
+    amendmentLeadUnderwriterData = await amendmentLeadUnderwriter.getAmendmentLeadUnderwriter(deal, amendment, user);
+    amendmentUnderwriterManagersDecisionData = await amendmentUnderwriterManagersDecision.getUnderwriterManagersDecision(deal, amendment, user);
+    amendmentBanksDecisionData = await amendmentBanksDecision.getAmendmentBankDecision(deal, amendment, user);
+  }
+
   return res.render('case/underwriting/underwriting.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
@@ -33,6 +50,10 @@ const getUnderwriterPage = async (req, res) => {
     leadUnderwriter: leadUnderWriterData,
     pricingAndRisk: pricingAndRiskData,
     underwriterManagersDecision: underwriterManagersDecisionData,
+    amendmentData: amendment,
+    amendmentLeadUnderwriter: amendmentLeadUnderwriterData,
+    amendmentUnderwriterManagersDecision: amendmentUnderwriterManagersDecisionData,
+    amendmentBanksDecision: amendmentBanksDecisionData,
   });
 };
 
@@ -40,5 +61,8 @@ module.exports = {
   ...leadUnderwriter,
   ...pricingAndRisk,
   ...underwriterManagersDecision,
+  ...amendmentLeadUnderwriter,
+  ...amendmentUnderwriterManagersDecision,
+  ...amendmentBanksDecision,
   getUnderwriterPage,
 };

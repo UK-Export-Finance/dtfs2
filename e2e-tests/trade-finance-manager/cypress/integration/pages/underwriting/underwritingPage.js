@@ -25,6 +25,25 @@ const underwritingPage = {
   addUnderwriterManagerDecisionButton: () => cy.get('[data-cy="add-decision-link"]'),
   underwriterManagerDecisionNotAdded: () => cy.get('[data-cy="decision-not-added-readonly"]'),
 
+  amendmentHeading: () => cy.get('[data-cy="underwriting-heading-amendment"]'),
+
+  assignAmendmentLeadUnderwriterButton: () => cy.get('[data-cy="amendment-assign-lead-underwriter-link"]'),
+  amendmentLeadUnderwriterUnassigned: () => cy.get('[data-cy="amendment-unassigned-underwriter-readonly"]'),
+  amendmentLeadUnderwriterName: () => cy.get('[data-cy="amendment-lead-underwriter-name"]'),
+  amendmentLleadUnderwriterEmail: () => cy.get('[data-cy="amendment-lead-underwriter-email"]'),
+  amendmentChangeLeadUnderwriterLink: () => cy.get('[data-cy="amendment-change-lead-underwriter-link"]'),
+
+  addAmendmentUnderwriterManagerDecisionButton: () => cy.get('[data-cy="amendment-manager-add-decision-link"]'),
+  amendmentUnderwriterManagerDecisionNotAdded: () => cy.get('[data-cy="amendment-manager-decision-not-added-readonly"]'),
+  amendmentUnderwriterDecisionStatusTag: () => cy.get('[data-cy="decision-status-tag"]'),
+  amendmentUnderwriterDecisionMadeBy: () => cy.get('[data-cy="decision-made-by-value"]'),
+  amendmentUnderwriterDecisionDateTime: () => cy.get('[data-cy="date-time-value"]'),
+  amendmentUnderwriterconditions: () => cy.get('[data-cy="conditions-value"]'),
+  amendmentUnderwriterinternalComments: () => cy.get('[data-cy="internal-comments-value"]'),
+
+  addBankDecisionLink: () => cy.get('[data-cy="add-amendment-bank-decision-link"]'),
+  bankDecisionDependent: () => cy.get('[data-cy="amendment-bank-decision-dependent"]'),
+  bankDecisionUnassigned: () => cy.get('[data-cy="amendment-manager-decision-not-added-readonly"]'),
 };
 
 module.exports = underwritingPage;
