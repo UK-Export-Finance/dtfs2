@@ -82,7 +82,7 @@ context('Eligibility Documentation', () => {
     eligibilityDocumentation.questionnaireFileInputUploadButton().should('not.be.visible');
 
     eligibilityDocumentation.questionnaireFileUploaded().should('have.length', 1);
-    eligibilityDocumentation.questionnaireFileUploaded().contains('test-upload.txt (16 B)');
+    eligibilityDocumentation.questionnaireFileUploaded().contains('test_upload.txt (16 B)');
     eligibilityDocumentation.questionnaireFileUploadedRemove().should('have.length', 1);
 
     eligibilityDocumentation.questionnaireFileUploadedRemove().click();

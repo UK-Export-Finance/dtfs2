@@ -50,7 +50,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       cy.visit(relative(`/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire`));
 
       cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(dealIds[2])}/upload`);
-      manualInclusion.uploadSuccess('upload-file-valid.doc');
+      manualInclusion.uploadSuccess('upload_file_valid.doc');
 
       cy.login(CREDENTIALS.MAKER);
       securityDetails.visit(dealIds[2]);
