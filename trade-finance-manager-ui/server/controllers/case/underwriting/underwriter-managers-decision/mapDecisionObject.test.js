@@ -1,3 +1,5 @@
+import CONSTANTS from '../../../../constants';
+
 import {
   mapDecisionValue,
   mapDecisionObject,
@@ -10,21 +12,21 @@ describe('POST underwriting - map decision object', () => {
   describe('mapDecisionValue', () => {
     describe('when value is `Approve without conditions`', () => {
       it('should return mapped value', () => {
-        const result = mapDecisionValue('Approve with conditions');
+        const result = mapDecisionValue(CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
         expect(result).toEqual('Approved (with conditions)');
       });
     });
 
     describe('when value is `Approve without conditions`', () => {
       it('should return mapped value', () => {
-        const result = mapDecisionValue('Approve without conditions');
+        const result = mapDecisionValue(CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS);
         expect(result).toEqual('Approved (without conditions)');
       });
     });
 
     describe('when value is `Declined`', () => {
       it('should return mapped value', () => {
-        const result = mapDecisionValue('Decline');
+        const result = mapDecisionValue(CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINE);
         expect(result).toEqual('Declined');
       });
     });
@@ -45,7 +47,7 @@ describe('POST underwriting - map decision object', () => {
 
     it('should return object with mapped decision and internalComments', () => {
       const submittedValues = {
-        decision: 'Approve with conditions',
+        decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,
         internalComments: 'mock comments',
       };
 
@@ -61,7 +63,7 @@ describe('POST underwriting - map decision object', () => {
     describe('when decision is `Approve with conditions` with approveWithConditionsComments', () => {
       it('should return object with comment as approveWithConditionsComments', () => {
         const submittedValues = {
-          decision: 'Approve with conditions',
+          decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,
           approveWithConditionsComments: 'approve comments',
         };
 
@@ -78,7 +80,7 @@ describe('POST underwriting - map decision object', () => {
     describe('when decision is `Decline` with declineComments', () => {
       it('should return object with comment as declineComments', () => {
         const submittedValues = {
-          decision: 'Decline',
+          decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINE,
           declineComments: 'decline comments',
         };
 

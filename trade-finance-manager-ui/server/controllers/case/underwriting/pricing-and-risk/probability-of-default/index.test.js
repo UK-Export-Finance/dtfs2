@@ -47,7 +47,6 @@ describe('GET underwriting - probability of default', () => {
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
-          activeSideNavigation: 'pricing and risk',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id,
@@ -141,7 +140,7 @@ describe('POST underwriting - probability of default', () => {
 
       await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);
     });
 
     describe('with no req.body.probabilityOfDefault', () => {
@@ -177,7 +176,6 @@ describe('POST underwriting - probability of default', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,
@@ -224,7 +222,6 @@ describe('POST underwriting - probability of default', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,

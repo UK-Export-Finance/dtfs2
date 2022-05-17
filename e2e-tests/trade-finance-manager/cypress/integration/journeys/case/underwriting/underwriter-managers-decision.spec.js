@@ -29,7 +29,6 @@ context('Case Underwriting - Pricing and risk', () => {
 
     // go to underwriter managers decision page
     partials.caseSubNavigation.underwritingLink().click();
-    partials.underwritingSubNav.underwriterManagerDecisionLink().click();
   });
 
   after(() => {
@@ -39,12 +38,8 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
-  it('clicking `underwriting managers decision` nav link should direct to underwriting-managers-decision page', () => {
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
-    partials.underwritingSubNav.underwritingHeading().contains('Underwriting');
-    partials.underwritingSubNav.underwritingHeading().invoke('attr', 'aria-label').then((label) => {
-      expect(label).to.equal('Underwriting page: underwriter managers decision');
-    });
+  it('should take you to underwriting page', () => {
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
 
   it('a user that is NOT in UNDERWRITER_MANAGERS team should not see `Add decision` link', () => {
@@ -53,13 +48,12 @@ context('Case Underwriting - Pricing and risk', () => {
 
     // go to underwriter managers decision page
     partials.caseSubNavigation.underwritingLink().click();
-    partials.underwritingSubNav.underwriterManagerDecisionLink().click();
 
-    pages.managersDecisionPage.addDecisionLink().should('not.exist');
+    pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
   });
 
   it('submitting an empty form displays validation errors', () => {
-    pages.managersDecisionPage.addDecisionLink().click();
+    pages.underwritingPage.addUnderwriterManagerDecisionButton().click({ force: true });
     pages.managersDecisionPage.submitButton().click();
 
     pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
@@ -67,7 +61,7 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   it('selecting `Approve with conditions` radio button reveals comments input, throws validation error if no comment provided and persists radio selection', () => {
-    pages.managersDecisionPage.addDecisionLink().click();
+    pages.underwritingPage.addUnderwriterManagerDecisionButton().click({ force: true });
 
     pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.exist');
 
@@ -84,7 +78,7 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   it('selecting `Decline` radio button reveals comments input, throws validation error if no comment provided  and persists radio selection', () => {
-    pages.managersDecisionPage.addDecisionLink().click();
+    pages.underwritingPage.addUnderwriterManagerDecisionButton().click({ force: true });
 
     pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.exist');
 
@@ -101,7 +95,7 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   it('after valid form submit, displays submitted values and updates deal stage', () => {
-    pages.managersDecisionPage.addDecisionLink().click();
+    pages.underwritingPage.addUnderwriterManagerDecisionButton().click({ force: true });
 
     const MOCK_COMMENTS = 'Testing';
     const MOCK_INTERNAL_COMMENTS = 'Internal comment';
@@ -112,7 +106,7 @@ context('Case Underwriting - Pricing and risk', () => {
     pages.managersDecisionPage.commentsInputInternal().type(MOCK_INTERNAL_COMMENTS);
 
     pages.managersDecisionPage.submitButton().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     // assert values are displayed in decision page
     pages.managersDecisionPage.decisionStatusTag().invoke('text').then((text) => {
