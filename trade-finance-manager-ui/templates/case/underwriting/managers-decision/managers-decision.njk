@@ -1,34 +1,52 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
 {% import './_macros/managers-decision-submitted.njk' as managersDecisionSubmitted %}
 
-{% extends "case/underwriting/layout.njk" %}
+{% macro render(params) %}
 
-{% block underwriting_content %}
+  {% set underWriterDecision = params.underwriterManagersDecision %}
 
-  <div class="govuk-grid-row">
+  {% block underwriting_content %}
 
-    <div class="govuk-grid-column-three-quarters">
+    <div class="govuk-grid-row">
 
-    <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="managers-decision-heading">Underwriter manager’s decision</h3>
+      <div class="govuk-grid-column-three-quarters">
 
-      {% if tfm.underwriterManagersDecision.decision %}
+        {% if underWriterDecision.tfm.underwriterManagersDecision.decision %}
 
-        {% set managersDecisionSubmittedComponentData = {
-          decision: tfm.underwriterManagersDecision,
-          user: user
-        } %}
+          {% set managersDecisionSubmittedComponentData = {
+            decision: underWriterDecision.tfm.underwriterManagersDecision,
+            user: underWriterDecision.user
+          } %}
 
-        {{managersDecisionSubmitted.render(managersDecisionSubmittedComponentData)}}
+          {{managersDecisionSubmitted.render(managersDecisionSubmittedComponentData)}}
 
-      {% elseif userCanEdit %}
-        <div class="separator-line govuk-!-padding-top-7">
-          <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/managers-decision/edit" data-cy="add-decision-link">Add your decision</a></p>
-        </div>
-      {% endif %}
-      
+        {% else %}
+
+          {% if underWriterDecision.userCanEdit %}
+            <div class="govuk-!-padding-top-0">
+              {{ govukButton({
+                  text: "Add decision",
+                  href: "/case/" + underWriterDecision.dealId  + "/underwriting/managers-decision/edit",
+                  attributes: {
+                    "data-cy":"add-decision-link"
+                  }
+                }) }}
+            </div>
+          {% else %}
+
+            <p class="govuk-!-margin-top-0" data-cy="decision-not-added-readonly">Not added yet</p>
+
+          {% endif %}
+
+
+        {% endif %}
+
+      </div>
 
     </div>
 
-  </div>
+  {% endblock %}
 
-{% endblock %}
+{% endmacro %}

@@ -50,7 +50,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
       partials.caseSubNavigation.underwritingLink().click();
 
       // go to loss given default
-      pages.underwritingPricingAndRiskPage.exporterTableChangeLossGivenDefaultLink().click();
+      pages.underwritingPage.exporterTableChangeLossGivenDefaultLink().click({ force: true });
       cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/loss-given-default`));
     });
 
@@ -71,7 +71,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
     it('should return to pricing & risk page without updating value if cancel', () => {
       pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput().clear().type('45');
       pages.underwritingLossGivenDefaultPage.closeLink().click();
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+      cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
       pages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault().invoke('text').then((text) => {
         expect(text.trim()).to.equal('50%');
       });
@@ -80,7 +80,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
     it('should update LGD', () => {
       pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput().clear().type('45');
       pages.underwritingLossGivenDefaultPage.submitButton().click();
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+      cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
       pages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault().invoke('text').then((text) => {
         expect(text.trim()).to.equal('45%');
       });

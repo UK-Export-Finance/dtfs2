@@ -78,7 +78,7 @@ context('Portal to TFM deal submission', () => {
         expect(text.trim()).to.contain('Flat');
       });
 
-    facility1.facilityLink().click();
+    facility1.facilityLink().click({ force: true });
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${dealFacilities[0]._id}`);
 
     // check facility 1 has default risk profile and can click through to facility page
@@ -92,7 +92,7 @@ context('Portal to TFM deal submission', () => {
         expect(text.trim()).to.contain('Flat');
       });
 
-    facility2.facilityLink().click();
+    facility2.facilityLink().click({ force: true });
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${dealFacilities[1]._id}`);
   });
 });

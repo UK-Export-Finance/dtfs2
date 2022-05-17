@@ -67,7 +67,7 @@ context('Portal to TFM deal submission', () => {
     cy.forceVisit(tfmCaseDealPage);
 
     tfmPartials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', `${TFM_URL}/case/${dealId}/underwriting/pricing-and-risk`);
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/underwriting`);
 
     // assert elements/value in `pricing and risk` page
     tfmPages.underwritingPricingAndRiskPage.addRatingLink().should('not.exist');
@@ -76,6 +76,6 @@ context('Portal to TFM deal submission', () => {
       expect(text.trim()).to.equal('Acceptable (B+)');
     });
 
-    tfmPages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('be.visible');
+    tfmPages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('exist');
   });
 });
