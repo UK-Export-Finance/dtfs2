@@ -8,7 +8,7 @@ import { sortArrayOfObjectsAlphabetically } from '../../../../../helpers/array';
 import MOCKS from '../test-mocks/amendment-test-mocks';
 
 describe('GET getAmendmentLeadUnderwriter()', () => {
-  const userCanEdit = canUserEditLeadUnderwriter(MOCKS.session.user);
+  const isEditable = canUserEditLeadUnderwriter(MOCKS.session.user);
 
   const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCKS.MOCK_USER_UNDERWRITER_MANAGER));
 
@@ -23,7 +23,7 @@ describe('GET getAmendmentLeadUnderwriter()', () => {
     );
 
     expect(result).toEqual({
-      userCanEdit,
+      isEditable,
       amendment: MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
       dealId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.dealId,
       facilityId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.facilityId,
@@ -45,7 +45,7 @@ describe('GET getAmendmentLeadUnderwriter()', () => {
     );
 
     expect(result).toEqual({
-      userCanEdit,
+      isEditable,
       amendment: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS,
       currentLeadUnderWriter: MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
       dealId: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS.dealId,
@@ -94,7 +94,8 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         assignToSelectOptions: expectedAssignToSelectOptions,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
-        userCanEdit: true,
+        isEditable: true,
+        user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
       });
     });
 
@@ -117,7 +118,8 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         assignToSelectOptions: expectedAssignToSelectOptions,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
-        userCanEdit: true,
+        isEditable: true,
+        user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
       });
     });
   });

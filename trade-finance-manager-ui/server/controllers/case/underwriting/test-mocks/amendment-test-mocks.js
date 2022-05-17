@@ -35,6 +35,25 @@ const MOCK_AMENDMENT = {
   ukefFacilityId: '123',
 };
 
+const MOCK_AMENDMENT_PROGRESS = {
+  amendmentId: '12345',
+  facilityId: '45678',
+  dealId: '999',
+  type: 'Cash',
+  ukefFacilityId: '123',
+};
+
+const MOCK_AMENDMENT_PROGRESS_FULL = {
+  status: 200,
+  data: {
+    amendmentId: '12345',
+    facilityId: '45678',
+    dealId: '999',
+    type: 'Cash',
+    ukefFacilityId: '123',
+  },
+};
+
 const MOCK_AMENDMENT_FULL = {
   status: 200,
   data: {
@@ -66,6 +85,8 @@ module.exports = {
   MOCK_USER_UNDERWRITER_MANAGER,
   session,
   MOCK_AMENDMENT,
+  MOCK_AMENDMENT_PROGRESS,
+  MOCK_AMENDMENT_PROGRESS_FULL,
   MOCK_AMENDMENT_FULL,
   MOCK_TEAM_UNDERWRITER_MANAGERS,
   MOCK_USER_UNDERWRITER,

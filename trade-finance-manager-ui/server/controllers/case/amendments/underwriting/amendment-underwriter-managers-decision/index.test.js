@@ -9,7 +9,7 @@ import MOCKS from '../test-mocks/amendment-test-mocks';
 const res = mockRes();
 
 describe('getAmendmentUnderwriterManagersDecision()', () => {
-  const userCanEdit = canUserEditManagersDecision(
+  const isEditable = canUserEditManagersDecision(
     MOCKS.session.user,
     MOCKS.MOCK_AMENDMENT,
   );
@@ -22,7 +22,7 @@ describe('getAmendmentUnderwriterManagersDecision()', () => {
       );
 
       expect(result).toEqual({
-        userCanEdit,
+        isEditable,
         amendment: MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
         dealId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.dealId,
         facilityId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.facilityId,
@@ -54,7 +54,8 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
       expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-managers-decision/amendment-edit-managers-decision.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
-        userCanEdit: true,
+        isEditable: true,
+        user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
       });
     });
   });
@@ -85,33 +86,8 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
       expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-managers-decision/amendment-edit-managers-decision.njk', {
         dealId: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
-        userCanEdit: false,
-      });
-    });
-  });
-
-  describe('when user cannot edit (i.e, NO lead underwriter)', () => {
-    beforeEach(() => {
-      api.getDeal = () => Promise.resolve(MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER);
-      api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
-    });
-
-    it('should render template with data with false userCanEdit', async () => {
-      const req = {
-        params: {
-          _id: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER._id,
-          amendmentId: MOCKS.MOCK_AMENDMENT.amendments.amendmentId,
-          facilityId: '12345',
-        },
-        session: MOCKS.session,
-      };
-
-      await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
-
-      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-managers-decision/amendment-edit-managers-decision.njk', {
-        dealId: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.dealSnapshot._id,
-        amendment: MOCKS.MOCK_AMENDMENT.amendments,
-        userCanEdit: false,
+        isEditable: false,
+        user: req.session.user,
       });
     });
   });

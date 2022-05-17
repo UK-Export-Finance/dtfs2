@@ -12,13 +12,13 @@ const { canUserEditManagersDecision } = require('../helpers');
  * checks if user can edit managers decision and returns object
  */
 const getAmendmentUnderwriterManagersDecision = async (amendment, user) => {
-  const userCanEdit = canUserEditManagersDecision(
+  const isEditable = canUserEditManagersDecision(
     user,
     amendment,
   );
 
   return {
-    userCanEdit,
+    isEditable,
     dealId: amendment.dealId,
     facilityId: amendment.facilityId,
     amendmentId: amendment.amendmentId,
@@ -44,15 +44,16 @@ const getAmendmentUnderwriterManagersDecisionEdit = async (req, res) => {
 
   const { user } = req.session;
 
-  const userCanEdit = canUserEditManagersDecision(
+  const isEditable = canUserEditManagersDecision(
     user,
     amendment,
   );
 
   return res.render('case/amendments/underwriting/amendment-managers-decision/amendment-edit-managers-decision.njk', {
     amendment,
-    userCanEdit,
+    isEditable,
     dealId,
+    user,
   });
 };
 

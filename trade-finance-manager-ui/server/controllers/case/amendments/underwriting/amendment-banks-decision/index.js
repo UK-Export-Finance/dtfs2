@@ -11,13 +11,13 @@ const { canUserEditBankDecision } = require('../helpers');
  * if true, then returns object containing userCanEdit flag
  */
 const getAmendmentBankDecision = async (amendment, user) => {
-  const userCanEdit = canUserEditBankDecision(
+  const isEditable = canUserEditBankDecision(
     user,
     amendment,
   );
 
   return {
-    userCanEdit,
+    isEditable,
     dealId: amendment.dealId,
     facilityId: amendment.facilityId,
     amendmentId: amendment.amendmentId,
@@ -45,7 +45,7 @@ const getBanksDecisionEdit = async (req, res) => {
 
   const { user } = req.session;
 
-  const userCanEdit = canUserEditBankDecision(
+  const isEditable = canUserEditBankDecision(
     user,
     amendment,
   );
@@ -53,7 +53,8 @@ const getBanksDecisionEdit = async (req, res) => {
   return res.render('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
     amendment,
     dealId,
-    userCanEdit,
+    isEditable,
+    user,
   });
 };
 

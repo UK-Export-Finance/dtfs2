@@ -15,7 +15,7 @@ describe('GET getUnderwriterPage', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(MOCKS.MOCK_DEAL);
       api.getUser = apiGetUserSpy;
-      api.getAmendmentInProgressByDealId = () => Promise.resolve(MOCKS.MOCK_AMENDMENT_FULL);
+      api.getAmendmentInProgressByDealId = () => Promise.resolve(MOCKS.MOCK_AMENDMENT_PROGRESS_FULL);
     });
 
     it('it should render template with data', async () => {
@@ -70,18 +70,29 @@ describe('GET getUnderwriterPage', () => {
           userCanEdit: true,
         },
         amendmentBanksDecision: {
-          userCanEdit: false,
-          amendment: MOCKS.MOCK_AMENDMENT_FULL.data,
+          isEditable: false,
+          amendment: MOCKS.MOCK_AMENDMENT_PROGRESS,
+          dealId: MOCKS.MOCK_AMENDMENT_PROGRESS.dealId,
+          facilityId: MOCKS.MOCK_AMENDMENT_PROGRESS.facilityId,
+          amendmentId: MOCKS.MOCK_AMENDMENT_PROGRESS.amendmentId,
+          banksDecision: undefined,
+          underwriterManagersDecision: undefined,
         },
-        amendmentData: MOCKS.MOCK_AMENDMENT_FULL.data,
+        amendmentData: MOCKS.MOCK_AMENDMENT_PROGRESS,
         amendmentLeadUnderwriter: {
-          userCanEdit: true,
+          isEditable: true,
           currentLeadUnderWriter: undefined,
-          amendment: MOCKS.MOCK_AMENDMENT_FULL.data,
+          amendment: MOCKS.MOCK_AMENDMENT_PROGRESS,
+          dealId: MOCKS.MOCK_AMENDMENT_PROGRESS.dealId,
+          facilityId: MOCKS.MOCK_AMENDMENT_PROGRESS.facilityId,
+          amendmentId: MOCKS.MOCK_AMENDMENT_PROGRESS.amendmentId,
         },
         amendmentUnderwriterManagersDecision: {
-          userCanEdit: true,
-          amendment: MOCKS.MOCK_AMENDMENT_FULL.data,
+          isEditable: true,
+          amendment: MOCKS.MOCK_AMENDMENT_PROGRESS,
+          dealId: MOCKS.MOCK_AMENDMENT_PROGRESS.dealId,
+          facilityId: MOCKS.MOCK_AMENDMENT_PROGRESS.facilityId,
+          amendmentId: MOCKS.MOCK_AMENDMENT_PROGRESS.amendmentId,
         },
       });
     });

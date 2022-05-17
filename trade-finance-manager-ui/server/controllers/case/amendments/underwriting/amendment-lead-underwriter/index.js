@@ -27,10 +27,10 @@ const getAmendmentLeadUnderwriter = async (amendment, user) => {
   }
 
   // checks if user has ability to assign or change lead-underwriter to render change link or add button
-  const userCanEdit = canUserEditLeadUnderwriter(user);
+  const isEditable = canUserEditLeadUnderwriter(user);
 
   return {
-    userCanEdit,
+    isEditable,
     currentLeadUnderWriter,
     dealId: amendment.dealId,
     facilityId: amendment.facilityId,
@@ -61,7 +61,7 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
   const { user } = req.session;
 
   // checks if can edit
-  const userCanEdit = canUserEditLeadUnderwriter(user);
+  const isEditable = canUserEditLeadUnderwriter(user);
 
   let currentLeadUnderWriterUserId;
 
@@ -86,7 +86,8 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
     assignToSelectOptions: mapAssignToSelectOptions(currentLeadUnderWriterUserId, user, alphabeticalTeamMembers),
     amendment,
     dealId,
-    userCanEdit,
+    isEditable,
+    user,
   });
 };
 
@@ -109,9 +110,9 @@ const postAssignAmendmentLeadUnderwriter = async (req, res) => {
 
   const { user } = req.session;
 
-  const userCanEdit = canUserEditLeadUnderwriter(user);
+  const isEditable = canUserEditLeadUnderwriter(user);
 
-  if (!userCanEdit) {
+  if (!isEditable) {
     return res.redirect('/not-found');
   }
 

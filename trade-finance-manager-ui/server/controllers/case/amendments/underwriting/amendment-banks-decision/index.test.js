@@ -14,7 +14,7 @@ describe('GET getAmendmentBankDecision()', () => {
     );
 
     expect(result).toEqual({
-      userCanEdit: false,
+      isEditable: false,
       amendment: MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
       dealId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.dealId,
       facilityId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.facilityId,
@@ -31,7 +31,7 @@ describe('GET getAmendmentBankDecision()', () => {
     );
 
     expect(result).toEqual({
-      userCanEdit: false,
+      isEditable: false,
       amendment: MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
       dealId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.dealId,
       facilityId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.facilityId,
@@ -48,7 +48,7 @@ describe('GET getAmendmentBankDecision()', () => {
     );
 
     expect(result).toEqual({
-      userCanEdit: true,
+      isEditable: true,
       amendment: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS,
       dealId: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS.dealId,
       facilityId: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS.facilityId,
@@ -83,7 +83,8 @@ describe('GET getBanksDecisionEdit()', () => {
       expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments,
-        userCanEdit: true,
+        isEditable: true,
+        user: MOCKS.MOCK_USER_PIM,
       });
     });
   });
@@ -111,7 +112,8 @@ describe('GET getBanksDecisionEdit()', () => {
       expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments,
-        userCanEdit: false,
+        isEditable: false,
+        user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
       });
     });
   });
@@ -137,7 +139,8 @@ describe('GET getBanksDecisionEdit()', () => {
       expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
-        userCanEdit: false,
+        isEditable: false,
+        user: MOCKS.MOCK_USER_PIM,
       });
     });
   });
