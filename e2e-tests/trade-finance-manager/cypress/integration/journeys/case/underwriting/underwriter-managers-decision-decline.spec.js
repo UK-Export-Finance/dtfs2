@@ -32,7 +32,6 @@ context('Case Underwriting - Pricing and risk', () => {
 
     // go to underwriter managers decision page
     partials.caseSubNavigation.underwritingLink().click();
-    partials.underwritingSubNav.underwriterManagerDecisionLink().click();
   });
 
   after(() => {
@@ -42,12 +41,8 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
-  it('clicking `underwriting managers decision` nav link should direct to underwriting-managers-decision page', () => {
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
-  });
-
   it('decline GEF deal', () => {
-    pages.managersDecisionPage.addDecisionLink().click();
+    pages.underwritingPage.addUnderwriterManagerDecisionButton().click({ force: true });
 
     pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('not.exist');
 
