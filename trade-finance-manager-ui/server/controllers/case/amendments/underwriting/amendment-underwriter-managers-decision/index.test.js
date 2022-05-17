@@ -66,7 +66,7 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
     });
 
-    it('should render template with data with false userCanEdit', async () => {
+    it('should render template with data with false isEditable', async () => {
       const req = {
         params: {
           _id: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER._id,

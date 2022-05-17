@@ -100,7 +100,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
     });
 
     it('should render template with data for lead underwriter assigned', async () => {
-      MOCKS.MOCK_AMENDMENT.amendments.leadUnderwriter = { userId: '12345678' };
+      MOCKS.MOCK_AMENDMENT.amendments.leadUnderwriterId = '12345678';
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
 
       await amendmentLeadUnderwriterController.getAssignAmendmentLeadUnderwriter(req, res);
@@ -109,7 +109,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
       const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
 
       const expectedAssignToSelectOptions = mapAssignToSelectOptions(
-        MOCKS.MOCK_AMENDMENT.amendments.leadUnderwriter.userId,
+        MOCKS.MOCK_AMENDMENT.amendments.leadUnderwriterId,
         MOCKS.session.user,
         alphabeticalTeamMembers,
       );
@@ -199,9 +199,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
     await amendmentLeadUnderwriterController.postAssignAmendmentLeadUnderwriter(req, res);
 
     const expectedUpdateObj = {
-      leadUnderwriter: {
-        userId: MOCKS.MOCK_USER_UNDERWRITER_MANAGER._id,
-      },
+      leadUnderwriterId: MOCKS.MOCK_USER_UNDERWRITER_MANAGER._id,
     };
 
     expect(apiUpdateSpy).toHaveBeenCalledWith(
@@ -229,9 +227,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
     await amendmentLeadUnderwriterController.postAssignAmendmentLeadUnderwriter(req, res);
 
     const expectedUpdateObj = {
-      leadUnderwriter: {
-        userId: 'Unassigned',
-      },
+      leadUnderwriterId: 'Unassigned',
     };
 
     expect(apiUpdateSpy).toHaveBeenCalledWith(

@@ -7,7 +7,7 @@ import MOCKS from '../test-mocks/amendment-test-mocks';
 const res = mockRes();
 
 describe('GET getAmendmentBankDecision()', () => {
-  it('should return an object with the correct parameters and with false userCanEdit when decision set and not PIM', async () => {
+  it('should return an object with the correct parameters and with false isEditable when decision set and not PIM', async () => {
     const result = await amendmentBanksDecisionController.getAmendmentBankDecision(
       MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
       MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
@@ -24,7 +24,7 @@ describe('GET getAmendmentBankDecision()', () => {
     });
   });
 
-  it('should return an object with false userCanEdit when no bank decision set and PIM', async () => {
+  it('should return an object with false isEditable when no bank decision set and PIM', async () => {
     const result = await amendmentBanksDecisionController.getAmendmentBankDecision(
       MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
       MOCKS.MOCK_USER_PIM,
@@ -41,7 +41,7 @@ describe('GET getAmendmentBankDecision()', () => {
     });
   });
 
-  it('should return an object with true userCanEdit when bank decision is set and PIM', async () => {
+  it('should return an object with true isEditable when bank decision is set and PIM', async () => {
     const result = await amendmentBanksDecisionController.getAmendmentBankDecision(
       MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS,
       MOCKS.MOCK_USER_PIM,
@@ -95,7 +95,7 @@ describe('GET getBanksDecisionEdit()', () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
     });
 
-    it('should render the template with userCanEdit as false', async () => {
+    it('should render the template with isEditable as false', async () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments });
 
       const req = {
@@ -124,7 +124,7 @@ describe('GET getBanksDecisionEdit()', () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
     });
 
-    it('should render the template with userCanEdit as false', async () => {
+    it('should render the template with isEditable as false', async () => {
       const req = {
         params: {
           _id: MOCKS.MOCK_DEAL._id,

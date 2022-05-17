@@ -62,12 +62,12 @@
             })
           }}
 
-          {% if userCanEdit %}
+          {% if isEditable %}
 
             {{ govukButton({
               text: "Continue",
               attributes: {
-                'data-cy': 'submit-button'
+                'data-cy': 'amendment--continue-button'
               }
             }) }}
 

@@ -106,9 +106,7 @@ const MOCK_AMENDMENT_LEAD_UNDERWRITER = {
     amendmentId: '12345',
     facilityId: '45678',
     dealId: '999',
-    leadUnderwriter: {
-      userId: '12345678',
-    },
+    leadUnderwriterId: '12345678',
   },
   type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
   ukefFacilityId: '123',
@@ -118,9 +116,7 @@ const MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS = {
   amendmentId: '12345',
   facilityId: '45678',
   dealId: '999',
-  leadUnderwriter: {
-    userId: '12345678',
-  },
+  leadUnderwriterId: '12345678',
   type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
   ukefFacilityId: '123',
 };

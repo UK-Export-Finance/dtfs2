@@ -44,7 +44,7 @@ const amendmentsPage = {
 
   underWriterManagerDecisionRadioInputValidationError: () => cy.get('[data-cy="decision-input-error"]'),
 
-  underWritingSubmitButton: () => cy.get('[data-cy="submit-button"]'),
+  underWritingSubmitButton: () => cy.get('[data-cy="amendment--continue-button"]'),
   underWritingCancelLink: () => cy.get('[data-cy="cancel-link"]'),
 
 };

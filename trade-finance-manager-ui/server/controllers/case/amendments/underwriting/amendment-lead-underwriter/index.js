@@ -17,8 +17,8 @@ const getAmendmentLeadUnderwriter = async (amendment, user) => {
   let currentLeadUnderWriterUserId;
 
   // checks if leadUnderwriter exists in amendments object and sets currentLeadUnderWriterUserId
-  if (amendment?.leadUnderwriter?.userId) {
-    currentLeadUnderWriterUserId = amendment.leadUnderwriter.userId;
+  if (amendment?.leadUnderwriterId) {
+    currentLeadUnderWriterUserId = amendment.leadUnderwriterId;
   }
 
   // checks if set and not unassigned and gets details
@@ -66,8 +66,8 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
   let currentLeadUnderWriterUserId;
 
   // if already set then shows name of assigned underwriter
-  if (amendment.leadUnderwriter) {
-    currentLeadUnderWriterUserId = amendment.leadUnderwriter.userId;
+  if (amendment.leadUnderwriterId) {
+    currentLeadUnderWriterUserId = amendment.leadUnderwriterId;
   }
 
   // gets all underwriter and managers
@@ -120,22 +120,8 @@ const postAssignAmendmentLeadUnderwriter = async (req, res) => {
     assignedTo: assignedToValue, // will be user._id or `Unassigned`
   } = req.body;
 
-  if (assignedToValue === 'Unassigned') {
-    const update = {
-      leadUnderwriter: {
-        userId: assignedToValue,
-      },
-    };
-
-    await api.updateAmendment(facilityId, amendmentId, update);
-
-    return res.redirect(`/case/${dealId}/underwriting`);
-  }
-
   const update = {
-    leadUnderwriter: {
-      userId: assignedToValue,
-    },
+    leadUnderwriterId: assignedToValue,
   };
 
   await api.updateAmendment(facilityId, amendmentId, update);

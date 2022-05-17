@@ -28,12 +28,12 @@
             items: assignToSelectOptions
           }) }}
 
-          {% if userCanEdit %}
+          {% if isEditable %}
 
             {{ govukButton({
               text: "Save",
               attributes: {
-                'data-cy': 'submit-button'
+                'data-cy': 'amendment--continue-button'
               }
             }) }}
 
