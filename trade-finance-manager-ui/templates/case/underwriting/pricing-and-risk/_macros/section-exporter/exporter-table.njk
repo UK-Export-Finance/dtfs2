@@ -1,4 +1,5 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% macro render(params) %}
   {% set caseId = params.caseId %}
@@ -12,11 +13,11 @@
 
       <tr class="govuk-table__row">
 
-        <td scope="row" class="govuk-table__header govuk-body-s govuk-table__cell width-half govuk-table__cell--border-top" data-cy="exporter-table-credit-rating-heading">
+        <td scope="row" class="govuk-table__header govuk-body-s govuk-table__cell width-half" data-cy="exporter-table-credit-rating-heading">
           Credit rating
         </td>
 
-        <td class="govuk-table__cell govuk-table__cell--border-top">
+        <td class="govuk-table__cell">
           {% if exporterCreditRating %}
             <span data-cy="exporter-table-credit-rating-value">{{ exporterCreditRating }}</span>
 
@@ -32,10 +33,18 @@
 
           {% endif %}
         </td>
-        
-        <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
+
+        <td class="govuk-table__cell text-align-right">
           {% if exporterCreditRating and userCanEditGeneral %}
             <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/edit" data-cy="exporter-table-change-credit-rating-link">Change</a>
+          {% elseif not exporterCreditRating and userCanEditGeneral %}
+            {{ govukButton({
+              text: "Add",
+              href: "/case/" + caseId + "/underwriting/pricing-and-risk/edit",
+              attributes: {
+                "data-cy":"add-credit-rating-link"
+              }
+            }) }}
           {% endif %}
         </td>
 
@@ -60,7 +69,7 @@
             <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/loss-given-default" data-cy="exporter-table-change-loss-given-default-link">Change</a>
           {% endif %}
         </td>
-        
+
       </tr>
 
       <tr class="govuk-table__row">
@@ -78,7 +87,7 @@
             -
           {% endif %}
         </td>
-        
+
         <td class="govuk-table__cell govuk-table__cell--border-top text-align-right">
           {% if userCanEditGeneral %}
             <a class="govuk-link" href="/case/{{ caseId }}/underwriting/pricing-and-risk/probability-of-default" data-cy="exporter-table-change-probability-of-default-link">Change</a>

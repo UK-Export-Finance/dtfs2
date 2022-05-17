@@ -1,0 +1,32 @@
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+
+{% macro render(params) %}
+  {% set validationError = params.validationError %}
+  {% set id = params.id %}
+  {% set label = params.label %}
+  {% set value = params.value %}
+
+  {{ govukCharacterCount({
+    name: id,
+    id: id,
+    maxlength: 1000,
+    rows: 9,
+    label: {
+      text: label,
+      attributes : {
+        'data-cy' : id + '-input-label'
+      }
+    },
+    value: value,
+    errorMessage: validationError and {
+      text: validationError.text,
+      attributes: {
+        'data-cy': id + '-input-error'
+      }
+    },
+    attributes : {
+      'data-cy' : id + '-input'
+    }
+  }) }}
+
+{% endmacro %}
