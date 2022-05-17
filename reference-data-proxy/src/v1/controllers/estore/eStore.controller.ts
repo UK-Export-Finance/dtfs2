@@ -42,7 +42,6 @@ export const createEstore = async (req: Request, res: Response) => {
 
     // check if the deal doesn't exist in the cron-job-logs collection
     if (!cronAlreadyExists) {
-
       // keep track of new submissions
       // add a record in the database only if the site does not exist
       await cronJobLogsCollection.insertOne({
@@ -100,9 +99,9 @@ export const createEstore = async (req: Request, res: Response) => {
         await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteExistsResponse } });
       }
     } else {
-      console.error('eStore body is empty', eStoreData);
+      console.info('eStore API call is being re-triggered ', eStoreData.dealId);
     }
   } else {
-    console.info('eStore API call is being re-triggered ', eStoreData.dealId);
+    console.error('eStore body is empty', eStoreData);
   }
 };
