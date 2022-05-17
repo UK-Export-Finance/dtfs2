@@ -28,14 +28,19 @@
             items: assignToSelectOptions
           }) }}
 
-          {{ govukButton({
-            text: "Save",
-            attributes: {
-              'data-cy': 'submit-button'
-            }
-          }) }}
+          {% if userCanEdit %}
+
+            {{ govukButton({
+              text: "Save",
+              attributes: {
+                'data-cy': 'submit-button'
+              }
+            }) }}
+
+          {% endif %}
 
           <a class="govuk-body govuk-link govuk-!-margin-left-3 close-link" href="/case/{{ dealId }}/underwriting" data-cy="cancel-link">Cancel</a>
+
 
         </form>
 

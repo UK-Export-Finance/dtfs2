@@ -33,7 +33,7 @@ context('Amendments underwriting - add lead underwriter', () => {
       });
     });
 
-    it('it should add an amendment request', () => {
+    it('should add an amendment request', () => {
       // adds the amendment
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
@@ -58,7 +58,7 @@ context('Amendments underwriting - add lead underwriter', () => {
       amendmentsPage.continueAmendment().click();
     });
 
-    it('it should take you to assign amendment underwriter page as underwriter manager when adding a lead underwriter', () => {
+    it('should take you to assign amendment underwriter page as underwriter manager when adding a lead underwriter', () => {
       cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
@@ -71,16 +71,16 @@ context('Amendments underwriting - add lead underwriter', () => {
       cy.url().should('contain', `case/${dealId}/facility/${_id}/amendment`);
       cy.url().should('contain', '/lead-underwriter');
 
-      pages.amendmentLeadUnderwriterPage.heading().contains('Assign a lead underwriter');
-      pages.amendmentLeadUnderwriterPage.assignedToSelectInput();
-      pages.amendmentLeadUnderwriterPage.assignedToSelectInputOption();
-      pages.amendmentLeadUnderwriterPage.assignedToSelectInputSelectedOption();
+      pages.amendmentsPage.leadUnderwriterheading().contains('Assign a lead underwriter');
+      pages.amendmentsPage.assignedToSelectInput();
+      pages.amendmentsPage.assignedToSelectInputOption();
+      pages.amendmentsPage.assignedToSelectInputSelectedOption();
 
-      pages.amendmentLeadUnderwriterPage.submitButton();
-      pages.amendmentLeadUnderwriterPage.cancelLink();
+      pages.amendmentsPage.underWritingSubmitButton();
+      pages.amendmentsPage.underWritingCancelLink();
     });
 
-    it('it should still show add lead underwriter button if press cancel on assign page', () => {
+    it('should still show add lead underwriter button if press cancel on assign page', () => {
       cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
@@ -88,12 +88,12 @@ context('Amendments underwriting - add lead underwriter', () => {
 
       pages.underwritingPage.assignAmendmentLeadUnderwriterButton().click({ force: true });
 
-      pages.amendmentLeadUnderwriterPage.cancelLink(0).click();
+      pages.amendmentsPage.underWritingCancelLink().click();
 
       pages.underwritingPage.assignAmendmentLeadUnderwriterButton().contains('Add underwriter');
     });
 
-    it('it should show details of assigned lead underwriter details on assigning an underwriter and a change links which takes back to assign lead underwriter page', () => {
+    it('should show details of assigned lead underwriter details on assigning an underwriter and a change links which takes back to assign lead underwriter page', () => {
       cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
@@ -101,7 +101,7 @@ context('Amendments underwriting - add lead underwriter', () => {
 
       pages.underwritingPage.assignAmendmentLeadUnderwriterButton().click({ force: true });
 
-      pages.amendmentLeadUnderwriterPage.submitButton(0).click();
+      pages.amendmentsPage.underWritingSubmitButton(0).click();
 
       pages.underwritingPage.assignAmendmentLeadUnderwriterButton().should('not.exist');
 
@@ -117,7 +117,7 @@ context('Amendments underwriting - add lead underwriter', () => {
       cy.url().should('contain', '/lead-underwriter');
     });
 
-    it('it should not show change link when logged in as T1_USER or PIM user', () => {
+    it('should not show change link when logged in as T1_USER or PIM user', () => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 

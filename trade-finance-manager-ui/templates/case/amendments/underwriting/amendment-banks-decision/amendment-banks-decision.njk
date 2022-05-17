@@ -13,13 +13,13 @@
 
       <div class="govuk-grid-column-three-quarters">
 
-        {% if banksDecision.amendment.amendments.underwriterManagersDecision.decision %}
+        {% if banksDecision.underwriterManagersDecision.decision %}
 
-          {% if banksDecision.amendment.amendments.banksDecision.decision %}
+          {% if banksDecision.banksDecision.decision %}
 
             {% set banksDecisionSubmittedComponentData = {
-              decision: banksDecision.amendment.amendments.banksDecision.decision,
-              user: banksDecision.amendment.amendments.banksDecision.user
+              decision: banksDecision.banksDecision.decision,
+              user: banksDecision.banksDecision.user
             } %}
 
             {{banksDecisionSubmitted.render(banksDecisionSubmittedComponentData)}}
@@ -30,7 +30,7 @@
               <div class="govuk-!-padding-top-0">
                 {{ govukButton({
                     text: "Add decision",
-                    href: "/case/" + banksDecision.amendment.amendments.dealId + "/facility/" + banksDecision.amendment.amendments.facilityId + "/amendment/" + banksDecision.amendment.amendments.amendmentId + "/banks-decision",
+                    href: "/case/" + banksDecision.dealId + "/facility/" + banksDecision.facilityId + "/amendment/" + banksDecision.amendmentId + "/banks-decision",
                     attributes: {
                       "data-cy":"add-amendment-bank-decision-link"
                     }

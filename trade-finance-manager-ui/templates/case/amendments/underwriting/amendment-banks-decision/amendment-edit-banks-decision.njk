@@ -62,12 +62,16 @@
             })
           }}
 
-          {{ govukButton({
-            text: "Continue",
-            attributes: {
-              'data-cy': 'submit-button'
-            }
-          }) }}
+          {% if userCanEdit %}
+
+            {{ govukButton({
+              text: "Continue",
+              attributes: {
+                'data-cy': 'submit-button'
+              }
+            }) }}
+
+          {% endif %}
 
           <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/underwriting" data-cy="cancel-link">Cancel</a>
 

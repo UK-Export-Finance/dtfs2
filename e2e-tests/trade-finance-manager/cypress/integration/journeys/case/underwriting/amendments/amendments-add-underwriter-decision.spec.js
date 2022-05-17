@@ -33,7 +33,7 @@ context('Amendments underwriting - add underwriter decision', () => {
       });
     });
 
-    it('it should add an amendment request', () => {
+    it('should add an amendment request', () => {
       // adds the amendment
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
@@ -58,7 +58,7 @@ context('Amendments underwriting - add underwriter decision', () => {
       amendmentsPage.continueAmendment().click();
     });
 
-    it('it should take you to add underwriter decision page as underwriter manager when adding an underwriter decision', () => {
+    it('should take you to add underwriter decision page as underwriter manager when adding an underwriter decision', () => {
       cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
@@ -71,14 +71,14 @@ context('Amendments underwriting - add underwriter decision', () => {
       cy.url().should('contain', `case/${dealId}/facility/${_id}/amendment`);
       cy.url().should('contain', '/managers-decision');
 
-      pages.amendmentUnderwriterDecisionPage.heading().contains('What\'s your decision?');
+      pages.amendmentsPage.underWriterManagerDecisionHeading().contains('What\'s your decision?');
 
-      pages.amendmentUnderwriterDecisionPage.decisionRadioInputApproveWithoutConditions();
-      pages.amendmentUnderwriterDecisionPage.decisionApproveWithoutConditionsHint().contains('You’ll be able to add comments that only UKEF can see later.');
-      pages.amendmentUnderwriterDecisionPage.decisionRadioInputApproveWithConditions();
-      pages.amendmentUnderwriterDecisionPage.decisionApproveWithConditionsHint().contains('You’ll be able to add conditions to the approval later.');
-      pages.amendmentUnderwriterDecisionPage.decisionRadioInputDecline();
-      pages.amendmentUnderwriterDecisionPage.decisionDeclineHint().contains('You’ll be able to add the reasons why you are declining the change later.');
+      pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions();
+      pages.amendmentsPage.underWriterManagerDecisionApproveWithoutConditionsHint().contains('You’ll be able to add comments that only UKEF can see later.');
+      pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions();
+      pages.amendmentsPage.underWriterManagerDecisionApproveWithConditionsHint().contains('You’ll be able to add conditions to the approval later.');
+      pages.amendmentsPage.underWriterManagerDecisionRadioInputDecline();
+      pages.amendmentsPage.underWriterManagerDecisionDeclineHint().contains('You’ll be able to add the reasons why you are declining the change later.');
     });
   });
 });

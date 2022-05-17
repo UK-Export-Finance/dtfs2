@@ -16,49 +16,41 @@ describe('GET getAmendmentLeadUnderwriter()', () => {
     api.getUser = apiGetUserSpy;
   });
 
-  it('it should return an object with the correct parameters when no lead underwriter set', async () => {
+  it('should return an object with the correct parameters when no lead underwriter set', async () => {
     const result = await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(
-      MOCKS.MOCK_DEAL,
-      MOCKS.MOCK_AMENDMENT,
+      MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
       MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
     );
 
     expect(result).toEqual({
       userCanEdit,
-      activePrimaryNavigation: 'manage work',
-      activeSubNavigation: 'underwriting',
-      deal: MOCKS.MOCK_DEAL.dealSnapshot,
-      tfm: MOCKS.MOCK_DEAL.tfm,
-      dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-      user: MOCKS.session.user,
-      amendment: MOCKS.MOCK_AMENDMENT,
+      amendment: MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
+      dealId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.dealId,
+      facilityId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.facilityId,
+      amendmentId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.amendmentId,
       currentLeadUnderWriter: undefined,
     });
   });
 
   it('should not call getUser API to get current lead underwriter user data', async () => {
-    await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(MOCKS.MOCK_DEAL, MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
+    await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(MOCKS.MOCK_AMENDMENT_BY_PROGRESS, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
 
     expect(apiGetUserSpy).not.toHaveBeenCalled();
   });
 
   it('it should return an object with the lead underwriter when lead underwriter set', async () => {
     const result = await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(
-      MOCKS.MOCK_DEAL,
-      MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER,
+      MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS,
       MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
     );
 
     expect(result).toEqual({
       userCanEdit,
-      activePrimaryNavigation: 'manage work',
-      activeSubNavigation: 'underwriting',
-      deal: MOCKS.MOCK_DEAL.dealSnapshot,
-      tfm: MOCKS.MOCK_DEAL.tfm,
-      dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-      user: MOCKS.session.user,
-      amendment: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER,
+      amendment: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS,
       currentLeadUnderWriter: MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
+      dealId: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS.dealId,
+      facilityId: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS.facilityId,
+      amendmentId: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS.amendmentId,
     });
   });
 });
@@ -98,14 +90,11 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
         alphabeticalTeamMembers,
       );
 
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/amendments/amendment-lead-underwriter/amendment-assign-lead-underwriter.njk', {
-        activeSubNavigation: 'underwriting',
-        deal: MOCKS.MOCK_DEAL.dealSnapshot,
-        tfm: MOCKS.MOCK_DEAL.tfm,
+      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-lead-underwriter/amendment-assign-lead-underwriter.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-        user: MOCKS.session.user,
         assignToSelectOptions: expectedAssignToSelectOptions,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
+        userCanEdit: true,
       });
     });
 
@@ -124,14 +113,11 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
         alphabeticalTeamMembers,
       );
 
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/amendments/amendment-lead-underwriter/amendment-assign-lead-underwriter.njk', {
-        activeSubNavigation: 'underwriting',
-        deal: MOCKS.MOCK_DEAL.dealSnapshot,
-        tfm: MOCKS.MOCK_DEAL.tfm,
+      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-lead-underwriter/amendment-assign-lead-underwriter.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-        user: MOCKS.session.user,
         assignToSelectOptions: expectedAssignToSelectOptions,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
+        userCanEdit: true,
       });
     });
   });
@@ -195,7 +181,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
     api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
   });
 
-  it('it should call api.updateAmendment and redirect to /lead-underwriter with correct params if lead underwriter set', async () => {
+  it('should call api.updateAmendment and redirect to /lead-underwriter with correct params if lead underwriter set', async () => {
     const req = {
       params: {
         _id: MOCKS.MOCK_DEAL._id,
@@ -213,9 +199,6 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
     const expectedUpdateObj = {
       leadUnderwriter: {
         userId: MOCKS.MOCK_USER_UNDERWRITER_MANAGER._id,
-        firstName: MOCKS.MOCK_USER_UNDERWRITER_MANAGER.firstName,
-        lastName: MOCKS.MOCK_USER_UNDERWRITER_MANAGER.lastName,
-        email: MOCKS.MOCK_USER_UNDERWRITER_MANAGER.email,
       },
     };
 
@@ -228,7 +211,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
     expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/underwriting`);
   });
 
-  it('it should call api.updateAmendment and redirect to /lead-underwriter with correct params if unassigned', async () => {
+  it('should call api.updateAmendment and redirect to /lead-underwriter with correct params if unassigned', async () => {
     const req = {
       params: {
         _id: MOCKS.MOCK_DEAL._id,
@@ -246,9 +229,6 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
     const expectedUpdateObj = {
       leadUnderwriter: {
         userId: 'Unassigned',
-        firstName: '',
-        lastName: '',
-        email: '',
       },
     };
 

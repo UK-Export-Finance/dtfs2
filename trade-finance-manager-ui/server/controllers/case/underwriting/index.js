@@ -3,9 +3,9 @@ const api = require('../../../api');
 const leadUnderwriter = require('./lead-underwriter');
 const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
-const amendmentLeadUnderwriter = require('./amendments/amendment-lead-underwriter');
-const amendmentUnderwriterManagersDecision = require('./amendments/amendment-underwriter-managers-decision');
-const amendmentBanksDecision = require('./amendments/amendment-banks-decision');
+const amendmentLeadUnderwriter = require('../amendments/underwriting/amendment-lead-underwriter');
+const amendmentUnderwriterManagersDecision = require('../amendments/underwriting/amendment-underwriter-managers-decision');
+const amendmentBanksDecision = require('../amendments/underwriting/amendment-banks-decision');
 
 /**
  * controller for underwriting tab
@@ -36,13 +36,15 @@ const getUnderwriterPage = async (req, res) => {
   let amendmentBanksDecisionData = {};
 
   // if amendments object exists then populate fields
-  if (amendment.amendments) {
-    amendmentLeadUnderwriterData = await amendmentLeadUnderwriter.getAmendmentLeadUnderwriter(deal, amendment, user);
-    amendmentUnderwriterManagersDecisionData = await amendmentUnderwriterManagersDecision.getAmendmentUnderwriterManagersDecision(deal, amendment, user);
-    amendmentBanksDecisionData = await amendmentBanksDecision.getAmendmentBankDecision(deal, amendment, user);
+  if (amendment) {
+    amendmentLeadUnderwriterData = await amendmentLeadUnderwriter.getAmendmentLeadUnderwriter(amendment, user);
+    amendmentUnderwriterManagersDecisionData = await amendmentUnderwriterManagersDecision.getAmendmentUnderwriterManagersDecision(amendment, user);
+    amendmentBanksDecisionData = await amendmentBanksDecision.getAmendmentBankDecision(amendment, user);
   }
 
   return res.render('case/underwriting/underwriting.njk', {
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'underwriting',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,

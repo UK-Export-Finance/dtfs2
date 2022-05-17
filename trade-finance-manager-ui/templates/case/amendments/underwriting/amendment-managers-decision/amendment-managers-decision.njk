@@ -5,7 +5,7 @@
 
 {% macro render(params) %}
 
-  {% set underWriterDecision = params.amendmentUnderwriterManagersDecision %}
+  {% set underwriterManagerDecision = params.amendmentUnderwriterManagersDecision %}
 
   {% block underwriting_content %}
 
@@ -13,22 +13,22 @@
 
       <div class="govuk-grid-column-three-quarters">
 
-        {% if underWriterDecision.amendment.amendments.underwriterManagersDecision.decision %}
+        {% if underwriterManagerDecision.underwriterManagersDecision.decision %}
 
           {% set managersDecisionSubmittedComponentData = {
-            decision: underWriterDecision.amendment.amendments.underwriterManagersDecision.decision,
-            user: underWriterDecision.amendment.amendments.underwriterManagersDecision.user
+            decision: underwriterManagerDecision.underwriterManagersDecision.decision,
+            user: underwriterManagerDecision.underwriterManagersDecision.user
           } %}
 
           {{managersDecisionSubmitted.render(managersDecisionSubmittedComponentData)}}
 
         {% else %}
 
-          {% if underWriterDecision.userCanEdit %}
+          {% if underwriterManagerDecision.userCanEdit %}
             <div class="govuk-!-padding-top-0">
               {{ govukButton({
                   text: "Add decision",
-                  href: "/case/" + underWriterDecision.amendment.amendments.dealId + "/facility/" + underWriterDecision.amendment.amendments.facilityId + "/amendment/" + underWriterDecision.amendment.amendments.amendmentId + "/managers-decision",
+                  href: "/case/" + underwriterManagerDecision.dealId + "/facility/" + underwriterManagerDecision.facilityId + "/amendment/" + underwriterManagerDecision.amendmentId + "/managers-decision",
                   attributes: {
                     "data-cy":"amendment-manager-add-decision-link"
                   }

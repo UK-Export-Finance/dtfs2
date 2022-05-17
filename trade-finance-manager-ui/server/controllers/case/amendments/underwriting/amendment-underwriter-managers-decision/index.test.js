@@ -17,20 +17,16 @@ describe('getAmendmentUnderwriterManagersDecision()', () => {
   describe('when deal exists', () => {
     it('should return object with data', async () => {
       const result = await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecision(
-        MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER,
-        MOCKS.MOCK_AMENDMENT,
+        MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
         MOCKS.session.user,
       );
 
       expect(result).toEqual({
         userCanEdit,
-        activePrimaryNavigation: 'manage work',
-        activeSubNavigation: 'underwriting',
-        deal: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.dealSnapshot,
-        tfm: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.tfm,
-        dealId: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.dealSnapshot._id,
-        user: MOCKS.session.user,
-        amendment: MOCKS.MOCK_AMENDMENT,
+        amendment: MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
+        dealId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.dealId,
+        facilityId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.facilityId,
+        amendmentId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.amendmentId,
       });
     });
   });
@@ -55,14 +51,10 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
 
       await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/amendments/amendment-managers-decision/amendment-edit-managers-decision.njk', {
-        activePrimaryNavigation: 'manage work',
-        activeSubNavigation: 'underwriting',
-        deal: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.dealSnapshot,
-        tfm: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.tfm,
-        dealId: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.dealSnapshot._id,
-        user: MOCKS.session.user,
+      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-managers-decision/amendment-edit-managers-decision.njk', {
+        dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
+        userCanEdit: true,
       });
     });
   });
@@ -73,7 +65,7 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
     });
 
-    it('should redirect to not-found route', async () => {
+    it('should render template with data with false userCanEdit', async () => {
       const req = {
         params: {
           _id: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER._id,
@@ -90,7 +82,11 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
 
       await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-managers-decision/amendment-edit-managers-decision.njk', {
+        dealId: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.dealSnapshot._id,
+        amendment: MOCKS.MOCK_AMENDMENT.amendments,
+        userCanEdit: false,
+      });
     });
   });
 
@@ -100,7 +96,7 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
     });
 
-    it('should redirect to not-found route', async () => {
+    it('should render template with data with false userCanEdit', async () => {
       const req = {
         params: {
           _id: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER._id,
@@ -112,7 +108,11 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
 
       await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-managers-decision/amendment-edit-managers-decision.njk', {
+        dealId: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.dealSnapshot._id,
+        amendment: MOCKS.MOCK_AMENDMENT.amendments,
+        userCanEdit: false,
+      });
     });
   });
 

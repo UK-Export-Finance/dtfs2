@@ -201,30 +201,36 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection.aggregate([
         { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
-        { $unwind: '$amendments' },
-        { $match: { 'amendments.status': status, } },
         {
-          $project: {
-            _id: 0, amendments: 1, type: '$facilitySnapshot.type', ukefFacilityId: '$facilitySnapshot.ukefFacilityId'
+          $addFields: {
+            'amendments.type': '$facilitySnapshot.type',
+            'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId'
           }
         },
+        { $unwind: '$amendments' },
+        { $match: { 'amendments.status': status } },
+        { $project: { _id: 0, amendments: 1 } },
+        { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+        { $project: { amendments: 1, type: 1, _id: 0, } },
       ]).toArray();
+
       // returns the amendment object for the given dealId
-      return { amendments: amendment[0]?.amendments, type: amendment[0]?.type, ukefFacilityId: amendment[0]?.ukefFacilityId } ?? [];
+      return amendment[0]?.amendments ?? null;
     } catch (err) {
       console.error('Unable to find the amendments object %O', { err });
-      return [];
+      return null;
     }
   }
   console.error('Invalid deal Id');
-  return [];
+  return null;
 };
 exports.findAmendmentByStatusAndDealId = findAmendmentByStatusAndDealId;
 
 exports.getAmendmentInProgressByDealId = async (req, res) => {
   const { dealId } = req.params;
   if (ObjectId.isValid(dealId)) {
-    const amendment = await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS);
+    let amendment = await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
+    amendment = amendment[0] ?? {};
     return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid deal Id' });

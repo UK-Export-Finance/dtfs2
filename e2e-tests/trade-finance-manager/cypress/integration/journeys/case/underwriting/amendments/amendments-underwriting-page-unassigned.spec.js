@@ -33,14 +33,14 @@ context('Amendments underwriting page', () => {
       });
     });
 
-    it('it should not show amendments on underwriting page as not yet started', () => {
+    it('should not show amendments on underwriting page as not yet started', () => {
       cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.amendmentHeading().should('not.exist');
     });
 
-    it('it should add an amendment request', () => {
+    it('should add an amendment request', () => {
       // adds the amendment
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
@@ -65,7 +65,7 @@ context('Amendments underwriting page', () => {
       amendmentsPage.continueAmendment().click();
     });
 
-    it('it should shows amendment on underwriting page as non-PIM and non-underwriter manager with no links to add', () => {
+    it('should shows amendment on underwriting page as non-PIM and non-underwriter manager with no links to add', () => {
       // should be unassigned as nothing added and t1_user is not underwriter manager
       cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
@@ -82,7 +82,7 @@ context('Amendments underwriting page', () => {
       pages.underwritingPage.bankDecisionDependent().contains('Dependent on the Underwriter manager’s decision');
     });
 
-    it('it should show amendment on underwriting page with correct assign links as underwriter manager', () => {
+    it('should show amendment on underwriting page with correct assign links as underwriter manager', () => {
       cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
@@ -98,7 +98,7 @@ context('Amendments underwriting page', () => {
       pages.underwritingPage.bankDecisionDependent().contains('Dependent on the Underwriter manager’s decision');
     });
 
-    it('it should show amendment on underwriting page as PIM with no links to add', () => {
+    it('should show amendment on underwriting page as PIM with no links to add', () => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 

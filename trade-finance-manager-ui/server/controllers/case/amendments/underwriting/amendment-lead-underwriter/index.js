@@ -12,13 +12,13 @@ const { sortArrayOfObjectsAlphabetically } = require('../../../../../helpers/arr
  * @returns {Object}
  * checks if leadUnderwriter already set and returns an object with currentLeadUnderwriter if set
  */
-const getAmendmentLeadUnderwriter = async (deal, amendment, user) => {
+const getAmendmentLeadUnderwriter = async (amendment, user) => {
   let currentLeadUnderWriter;
   let currentLeadUnderWriterUserId;
 
   // checks if leadUnderwriter exists in amendments object and sets currentLeadUnderWriterUserId
-  if (amendment.amendments.leadUnderwriter && amendment.amendments.leadUnderwriter.userId) {
-    currentLeadUnderWriterUserId = amendment.amendments.leadUnderwriter.userId;
+  if (amendment?.leadUnderwriter?.userId) {
+    currentLeadUnderWriterUserId = amendment.leadUnderwriter.userId;
   }
 
   // checks if set and not unassigned and gets details
@@ -31,13 +31,10 @@ const getAmendmentLeadUnderwriter = async (deal, amendment, user) => {
 
   return {
     userCanEdit,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'underwriting',
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
-    user,
     currentLeadUnderWriter,
+    dealId: amendment.dealId,
+    facilityId: amendment.facilityId,
+    amendmentId: amendment.amendmentId,
     amendment,
   };
 };
@@ -51,11 +48,7 @@ const getAmendmentLeadUnderwriter = async (deal, amendment, user) => {
  * renders template
  */
 const getAssignAmendmentLeadUnderwriter = async (req, res) => {
-  const {
-    _id: dealId,
-    amendmentId,
-    facilityId,
-  } = req.params;
+  const { _id: dealId, amendmentId, facilityId } = req.params;
   const deal = await api.getDeal(dealId);
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
@@ -69,10 +62,6 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
 
   // checks if can edit
   const userCanEdit = canUserEditLeadUnderwriter(user);
-
-  if (!userCanEdit) {
-    return res.redirect('/not-found');
-  }
 
   let currentLeadUnderWriterUserId;
 
@@ -93,14 +82,11 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
   // sorts alphabetically
   const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(allTeamMembers, 'firstName');
 
-  return res.render('case/underwriting/amendments/amendment-lead-underwriter/amendment-assign-lead-underwriter.njk', {
-    activeSubNavigation: 'underwriting',
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
-    user,
+  return res.render('case/amendments/underwriting/amendment-lead-underwriter/amendment-assign-lead-underwriter.njk', {
     assignToSelectOptions: mapAssignToSelectOptions(currentLeadUnderWriterUserId, user, alphabeticalTeamMembers),
     amendment,
+    dealId,
+    userCanEdit,
   });
 };
 
@@ -112,11 +98,7 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
  * redirects back to underwriting page
  */
 const postAssignAmendmentLeadUnderwriter = async (req, res) => {
-  const {
-    _id: dealId,
-    amendmentId,
-    facilityId,
-  } = req.params;
+  const { _id: dealId, amendmentId, facilityId } = req.params;
   const deal = await api.getDeal(dealId);
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
@@ -141,9 +123,6 @@ const postAssignAmendmentLeadUnderwriter = async (req, res) => {
     const update = {
       leadUnderwriter: {
         userId: assignedToValue,
-        firstName: '',
-        lastName: '',
-        email: '',
       },
     };
 
@@ -152,14 +131,9 @@ const postAssignAmendmentLeadUnderwriter = async (req, res) => {
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 
-  const underWriterUserToAdd = await api.getUser(assignedToValue);
-
   const update = {
     leadUnderwriter: {
       userId: assignedToValue,
-      firstName: underWriterUserToAdd.firstName,
-      lastName: underWriterUserToAdd.lastName,
-      email: underWriterUserToAdd.email,
     },
   };
 

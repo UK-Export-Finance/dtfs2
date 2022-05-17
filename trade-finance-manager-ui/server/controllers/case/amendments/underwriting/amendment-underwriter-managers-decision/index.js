@@ -11,20 +11,18 @@ const { canUserEditManagersDecision } = require('../helpers');
  * @returns {Object}
  * checks if user can edit managers decision and returns object
  */
-const getAmendmentUnderwriterManagersDecision = async (deal, amendment, user) => {
+const getAmendmentUnderwriterManagersDecision = async (amendment, user) => {
   const userCanEdit = canUserEditManagersDecision(
     user,
-    amendment.amendments,
+    amendment,
   );
 
   return {
     userCanEdit,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'underwriting',
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
-    user,
+    dealId: amendment.dealId,
+    facilityId: amendment.facilityId,
+    amendmentId: amendment.amendmentId,
+    underwriterManagersDecision: amendment.underwriterManagersDecision,
     amendment,
   };
 };
@@ -35,11 +33,7 @@ const getAmendmentUnderwriterManagersDecision = async (deal, amendment, user) =>
  * renders first page of amendment managers decision if can be editted by user
  */
 const getAmendmentUnderwriterManagersDecisionEdit = async (req, res) => {
-  const {
-    _id: dealId,
-    amendmentId,
-    facilityId,
-  } = req.params;
+  const { _id: dealId, amendmentId, facilityId } = req.params;
   const deal = await api.getDeal(dealId);
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
@@ -55,18 +49,10 @@ const getAmendmentUnderwriterManagersDecisionEdit = async (req, res) => {
     amendment,
   );
 
-  if (!userCanEdit) {
-    return res.redirect('/not-found');
-  }
-
-  return res.render('case/underwriting/amendments/amendment-managers-decision/amendment-edit-managers-decision.njk', {
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'underwriting',
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
-    user,
+  return res.render('case/amendments/underwriting/amendment-managers-decision/amendment-edit-managers-decision.njk', {
     amendment,
+    userCanEdit,
+    dealId,
   });
 };
 

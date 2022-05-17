@@ -7,60 +7,54 @@ import MOCKS from '../test-mocks/amendment-test-mocks';
 const res = mockRes();
 
 describe('GET getAmendmentBankDecision()', () => {
-  it('it should return an object with the correct parameters and with false userCanEdit when decision set and not PIM', async () => {
+  it('should return an object with the correct parameters and with false userCanEdit when decision set and not PIM', async () => {
     const result = await amendmentBanksDecisionController.getAmendmentBankDecision(
-      MOCKS.MOCK_DEAL,
-      MOCKS.MOCK_AMENDMENT,
+      MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
       MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
     );
 
     expect(result).toEqual({
       userCanEdit: false,
-      activePrimaryNavigation: 'manage work',
-      activeSubNavigation: 'underwriting',
-      deal: MOCKS.MOCK_DEAL.dealSnapshot,
-      tfm: MOCKS.MOCK_DEAL.tfm,
-      dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-      user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
-      amendment: MOCKS.MOCK_AMENDMENT,
+      amendment: MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
+      dealId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.dealId,
+      facilityId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.facilityId,
+      amendmentId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.amendmentId,
+      underwriterManagersDecision: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.underwriterManagersDecision,
+      banksDecision: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.banksDecision,
     });
   });
 
-  it('it should return an object with false userCanEdit when no bank decision set and PIM', async () => {
+  it('should return an object with false userCanEdit when no bank decision set and PIM', async () => {
     const result = await amendmentBanksDecisionController.getAmendmentBankDecision(
-      MOCKS.MOCK_DEAL,
-      MOCKS.MOCK_AMENDMENT,
+      MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
       MOCKS.MOCK_USER_PIM,
     );
 
     expect(result).toEqual({
       userCanEdit: false,
-      activePrimaryNavigation: 'manage work',
-      activeSubNavigation: 'underwriting',
-      deal: MOCKS.MOCK_DEAL.dealSnapshot,
-      tfm: MOCKS.MOCK_DEAL.tfm,
-      dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-      user: MOCKS.MOCK_USER_PIM,
-      amendment: MOCKS.MOCK_AMENDMENT,
+      amendment: MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
+      dealId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.dealId,
+      facilityId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.facilityId,
+      amendmentId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.amendmentId,
+      underwriterManagersDecision: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.underwriterManagersDecision,
+      banksDecision: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.banksDecision,
     });
   });
 
-  it('it should return an object with true userCanEdit when bank decision is set and PIM', async () => {
+  it('should return an object with true userCanEdit when bank decision is set and PIM', async () => {
     const result = await amendmentBanksDecisionController.getAmendmentBankDecision(
-      MOCKS.MOCK_DEAL,
-      MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION,
+      MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS,
       MOCKS.MOCK_USER_PIM,
     );
 
     expect(result).toEqual({
       userCanEdit: true,
-      activePrimaryNavigation: 'manage work',
-      activeSubNavigation: 'underwriting',
-      deal: MOCKS.MOCK_DEAL.dealSnapshot,
-      tfm: MOCKS.MOCK_DEAL.tfm,
-      dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-      user: MOCKS.MOCK_USER_PIM,
-      amendment: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION,
+      amendment: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS,
+      dealId: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS.dealId,
+      facilityId: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS.facilityId,
+      amendmentId: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS.amendmentId,
+      underwriterManagersDecision: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS.underwriterManagersDecision,
+      banksDecision: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_BY_PROGRESS.banksDecision,
     });
   });
 });
@@ -72,7 +66,7 @@ describe('GET getBanksDecisionEdit()', () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
     });
 
-    it('it should render the template with correct parameters', async () => {
+    it('should render the template with correct parameters', async () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments });
 
       const req = {
@@ -86,14 +80,10 @@ describe('GET getBanksDecisionEdit()', () => {
 
       await amendmentBanksDecisionController.getBanksDecisionEdit(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('case/underwriting/amendments/amendment-banks-decision/amendment-edit-banks-decision.njk', {
-        activePrimaryNavigation: 'manage work',
-        activeSubNavigation: 'underwriting',
-        deal: MOCKS.MOCK_DEAL.dealSnapshot,
-        tfm: MOCKS.MOCK_DEAL.tfm,
+      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-        user: MOCKS.MOCK_USER_PIM,
         amendment: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments,
+        userCanEdit: true,
       });
     });
   });
@@ -104,7 +94,7 @@ describe('GET getBanksDecisionEdit()', () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
     });
 
-    it('it should redirect to not-found', async () => {
+    it('should render the template with userCanEdit as false', async () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments });
 
       const req = {
@@ -118,7 +108,11 @@ describe('GET getBanksDecisionEdit()', () => {
 
       await amendmentBanksDecisionController.getBanksDecisionEdit(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
+        dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
+        amendment: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments,
+        userCanEdit: false,
+      });
     });
   });
 
@@ -128,7 +122,7 @@ describe('GET getBanksDecisionEdit()', () => {
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
     });
 
-    it('it should redirect to not-found', async () => {
+    it('should render the template with userCanEdit as false', async () => {
       const req = {
         params: {
           _id: MOCKS.MOCK_DEAL._id,
@@ -140,7 +134,11 @@ describe('GET getBanksDecisionEdit()', () => {
 
       await amendmentBanksDecisionController.getBanksDecisionEdit(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
+        dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
+        amendment: MOCKS.MOCK_AMENDMENT.amendments,
+        userCanEdit: false,
+      });
     });
   });
 
@@ -151,7 +149,7 @@ describe('GET getBanksDecisionEdit()', () => {
         api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT.amendments });
       });
 
-      it('it should redirect to not-found', async () => {
+      it('should redirect to not-found', async () => {
         const req = {
           params: {
             _id: MOCKS.MOCK_DEAL._id,
@@ -173,7 +171,7 @@ describe('GET getBanksDecisionEdit()', () => {
         api.getAmendmentById = () => Promise.resolve({ data: {} });
       });
 
-      it('it should redirect to not-found', async () => {
+      it('should redirect to not-found', async () => {
         const req = {
           params: {
             _id: MOCKS.MOCK_DEAL._id,

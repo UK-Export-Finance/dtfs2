@@ -1,7 +1,7 @@
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 
-import MOCKS from './amendments/test-mocks/amendment-test-mocks';
+import MOCKS from './test-mocks/amendment-test-mocks';
 
 import underwriterController from '.';
 
@@ -29,6 +29,8 @@ describe('GET getUnderwriterPage', () => {
       await underwriterController.getUnderwriterPage(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/underwriting/underwriting.njk', {
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'underwriting',
         deal: MOCKS.MOCK_DEAL.dealSnapshot,
         tfm: MOCKS.MOCK_DEAL.tfm,
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
@@ -68,34 +70,16 @@ describe('GET getUnderwriterPage', () => {
           userCanEdit: true,
         },
         amendmentBanksDecision: {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'underwriting',
-          deal: MOCKS.MOCK_DEAL.dealSnapshot,
-          tfm: MOCKS.MOCK_DEAL.tfm,
-          dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-          user: MOCKS.session.user,
           userCanEdit: false,
           amendment: MOCKS.MOCK_AMENDMENT_FULL.data,
         },
         amendmentData: MOCKS.MOCK_AMENDMENT_FULL.data,
         amendmentLeadUnderwriter: {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'underwriting',
-          deal: MOCKS.MOCK_DEAL.dealSnapshot,
-          tfm: MOCKS.MOCK_DEAL.tfm,
-          dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-          user: MOCKS.session.user,
           userCanEdit: true,
           currentLeadUnderWriter: undefined,
           amendment: MOCKS.MOCK_AMENDMENT_FULL.data,
         },
         amendmentUnderwriterManagersDecision: {
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'underwriting',
-          deal: MOCKS.MOCK_DEAL.dealSnapshot,
-          tfm: MOCKS.MOCK_DEAL.tfm,
-          dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-          user: MOCKS.session.user,
           userCanEdit: true,
           amendment: MOCKS.MOCK_AMENDMENT_FULL.data,
         },

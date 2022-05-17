@@ -4,6 +4,8 @@ import {
 } from './validateSubmittedValues';
 import generateValidationErrors from '../../../../../helpers/validation';
 
+import CONSTANTS from '../../../../../constants';
+
 describe('POST underwriting - managers decision - validate submitted values', () => {
   describe('validateCommentField', () => {
     describe('when field is NOT alphanumeric', () => {
@@ -109,7 +111,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
     describe('when `decision` is `Approve with conditions`', () => {
       it('should return validationErrors when there is no `approveWithConditionsComments`', () => {
         const result = validateSubmittedValues({
-          decision: 'Approve with conditions',
+          decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,
           approveWithConditionsComments: '',
         });
 
@@ -126,7 +128,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
     describe('when `decision` is `Decline`', () => {
       it('should return validationErrors when there is no `declineComments`', () => {
         const result = validateSubmittedValues({
-          decision: 'Decline',
+          decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINE,
           declineComments: '',
         });
 
@@ -167,7 +169,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
 
     it('should return false when there are no validationErrors', () => {
       const result = validateSubmittedValues({
-        decision: 'Approved without conditions',
+        decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS,
       });
 
       expect(result).toEqual(false);

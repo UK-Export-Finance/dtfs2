@@ -10,20 +10,19 @@ const { canUserEditBankDecision } = require('../helpers');
  * checks if user can edit bank decision
  * if true, then returns object containing userCanEdit flag
  */
-const getAmendmentBankDecision = async (deal, amendment, user) => {
+const getAmendmentBankDecision = async (amendment, user) => {
   const userCanEdit = canUserEditBankDecision(
     user,
-    amendment.amendments,
+    amendment,
   );
 
   return {
     userCanEdit,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'underwriting',
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
-    user,
+    dealId: amendment.dealId,
+    facilityId: amendment.facilityId,
+    amendmentId: amendment.amendmentId,
+    underwriterManagersDecision: amendment.underwriterManagersDecision,
+    banksDecision: amendment.banksDecision,
     amendment,
   };
 };
@@ -35,11 +34,7 @@ const getAmendmentBankDecision = async (deal, amendment, user) => {
  * checks if can be editted, and if so, then renders template
  */
 const getBanksDecisionEdit = async (req, res) => {
-  const {
-    _id: dealId,
-    amendmentId,
-    facilityId,
-  } = req.params;
+  const { _id: dealId, amendmentId, facilityId } = req.params;
   const deal = await api.getDeal(dealId);
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
@@ -55,18 +50,10 @@ const getBanksDecisionEdit = async (req, res) => {
     amendment,
   );
 
-  if (!userCanEdit) {
-    return res.redirect('/not-found');
-  }
-
-  return res.render('case/underwriting/amendments/amendment-banks-decision/amendment-edit-banks-decision.njk', {
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'underwriting',
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
-    user,
+  return res.render('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
     amendment,
+    dealId,
+    userCanEdit,
   });
 };
 

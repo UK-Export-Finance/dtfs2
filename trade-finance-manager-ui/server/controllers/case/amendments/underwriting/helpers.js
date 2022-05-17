@@ -7,8 +7,7 @@ const canUserEditLeadUnderwriter = (user) =>
 const canUserEditManagersDecision = (user, amendment) => {
   const isManager = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
-  const hasDecision = (amendment.underwriterManagersDecision
-    && amendment.underwriterManagersDecision.decision);
+  const hasDecision = amendment?.underwriterManagersDecision?.decision;
 
   if (isManager && !hasDecision) {
     return true;
@@ -20,8 +19,7 @@ const canUserEditManagersDecision = (user, amendment) => {
 const canUserEditBankDecision = (user, amendment) => {
   const isPim = userIsInTeam(user, [CONSTANTS.TEAMS.PIM]);
 
-  const hasDecision = (amendment.underwriterManagersDecision
-    && amendment.underwriterManagersDecision.decision);
+  const hasDecision = amendment?.underwriterManagersDecision?.decision;
 
   if (isPim && hasDecision) {
     return true;

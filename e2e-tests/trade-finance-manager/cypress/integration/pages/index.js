@@ -17,12 +17,11 @@ import underwritingPricingAndRiskEditPage from './underwriting/pricingAndRiskEdi
 import underwritingLossGivenDefaultPage from './underwriting/lossGivenDefaultPage';
 import underwritingProbabilityOfDefaultPage from './underwriting/probabilityOfDefaultPage';
 import leadUnderwriterPage from './underwriting/leadUnderwriterPage';
-import amendmentLeadUnderwriterPage from './underwriting/amendmentLeadUnderwriterPage';
 import managersDecisionPage from './underwriting/managersDecisionPage';
-import amendmentUnderwriterDecisionPage from './underwriting/amendmentUnderwriterDecisionPage';
 import facilityRiskProfilePage from './underwriting/facilityRiskProfilePage';
 import underwritingPage from './underwriting/underwritingPage';
 import facilitiesPage from './facilitiesPage';
+import amendmentsPage from './amendments/amendmentsPage';
 import feedbackPage from './feedbackPage';
 import footer from './footer';
 
@@ -46,12 +45,11 @@ export default {
   underwritingLossGivenDefaultPage,
   underwritingProbabilityOfDefaultPage,
   leadUnderwriterPage,
-  amendmentLeadUnderwriterPage,
   managersDecisionPage,
-  amendmentUnderwriterDecisionPage,
   facilityRiskProfilePage,
   facilitiesPage,
   feedbackPage,
   underwritingPage,
+  amendmentsPage,
   footer,
 };

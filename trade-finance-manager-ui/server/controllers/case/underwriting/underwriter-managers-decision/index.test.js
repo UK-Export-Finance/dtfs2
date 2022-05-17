@@ -6,6 +6,8 @@ import { mapDecisionObject } from './mapDecisionObject';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 
+import CONSTANTS from '../../../../constants';
+
 const res = mockRes();
 
 const session = {
@@ -164,7 +166,7 @@ describe('POST underwriting - underwriting managers decision edit', () => {
         },
         session,
         body: {
-          decision: 'Approve with conditions',
+          decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,
         },
       };
 
@@ -178,7 +180,7 @@ describe('POST underwriting - underwriting managers decision edit', () => {
         dealId: mockDeal.dealSnapshot._id,
         user: session.user,
         submittedValues: {
-          decision: 'Approve with conditions',
+          decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,
         },
         validationErrors: validateSubmittedValues(req.body),
       });
