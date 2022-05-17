@@ -30,6 +30,30 @@ const amendmentsPage = {
   continueAmendment: () => cy.get('[data-cy="amendment--continue-button"]'),
   cancelLink: () => cy.get('[data-cy="amendment--cancel-button"]'),
 
+  leadUnderwriterheading: () => cy.get('[data-cy="amendment-assign-lead-underwriter-heading"]'),
+
+  assignedToSelectInput: () => cy.get('[data-cy="assigned-to-select-input"]').first(),
+  assignedToSelectInputOption: () => cy.get('[data-cy="assigned-to-select-input"] option'),
+  assignedToSelectInputSelectedOption: () => cy.get('[data-cy="assigned-to-select-input"]').first().find('option:selected'),
+
+  underWriterManagerDecisionHeading: () => cy.get('[data-cy="amendment-managers-decision"]'),
+
+  underWriterManagerDecisionErrorSummaryItems: () => cy.get('[data-cy="error-summary"] li'),
+
+  underWriterManagerDecisionRadioInputApproveWithoutConditions: () => cy.get('[data-cy="approve-without-conditions-radio-button"]'),
+  underWriterManagerDecisionApproveWithoutConditionsHint: () => cy.get('[data-cy="approve-without-conditions-hint"]'),
+
+  underWriterManagerDecisionRadioInputApproveWithConditions: () => cy.get('[data-cy="approve-with-conditions-radio-button"]'),
+  underWriterManagerDecisionApproveWithConditionsHint: () => cy.get('[data-cy="approve-with-conditions-hint"]'),
+
+  underWriterManagerDecisionRadioInputDecline: () => cy.get('[data-cy="decline-radio-button"]'),
+  underWriterManagerDecisionDeclineHint: () => cy.get('[data-cy="decline-hint"]'),
+
+  underWriterManagerDecisionRadioInputValidationError: () => cy.get('[data-cy="decision-input-error"]'),
+
+  underWritingSubmitButton: () => cy.get('[data-cy="amendment--continue-button"]'),
+  underWritingCancelLink: () => cy.get('[data-cy="cancel-link"]'),
+
   amendmentAnswerBankRequestDate: () => cy.get('[data-cy="amendment--bank-request-date-response"]'),
   amendmentAnswerRequireApproval: () => cy.get('[data-cy="amendment--require-approval-response"]'),
   amendmentAnswerEffectiveDate: () => cy.get('[data-cy="amendment--effective-date-response"]'),

@@ -4,16 +4,7 @@ const mapAssignToSelectOptions = require('../../../../helpers/map-assign-to-sele
 const canUserEditLeadUnderwriter = require('./helpers');
 const { sortArrayOfObjectsAlphabetically } = require('../../../../helpers/array');
 
-const getLeadUnderwriter = async (req, res) => {
-  const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-
-  if (!deal) {
-    return res.redirect('/not-found');
-  }
-
-  const { user } = req.session;
-
+const getLeadUnderwriter = async (deal, user) => {
   let currentLeadUnderWriter;
   let currentLeadUnderWriterUserId;
 
@@ -27,17 +18,16 @@ const getLeadUnderwriter = async (req, res) => {
 
   const userCanEdit = canUserEditLeadUnderwriter(user);
 
-  return res.render('case/underwriting/lead-underwriter/lead-underwriter.njk', {
+  return {
     userCanEdit,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
-    activeSideNavigation: 'lead underwriter',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
     user,
     currentLeadUnderWriter,
-  });
+  };
 };
 
 const getAssignLeadUnderwriter = async (req, res) => {
@@ -74,7 +64,6 @@ const getAssignLeadUnderwriter = async (req, res) => {
 
   return res.render('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
     activeSubNavigation: 'underwriting',
-    activeSideNavigation: 'lead underwriter',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
@@ -109,7 +98,7 @@ const postAssignLeadUnderwriter = async (req, res) => {
 
   await api.updateLeadUnderwriter(dealId, update);
 
-  return res.redirect(`/case/${dealId}/underwriting/lead-underwriter`);
+  return res.redirect(`/case/${dealId}/underwriting`);
 };
 
 module.exports = {

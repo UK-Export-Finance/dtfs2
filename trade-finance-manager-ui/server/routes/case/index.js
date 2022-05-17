@@ -30,6 +30,15 @@ router.post('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.getAmendmentEffectiveDate);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.postAmendmentEffectiveDate);
 
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', underwritingController.getAssignAmendmentLeadUnderwriter);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', underwritingController.postAssignAmendmentLeadUnderwriter);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.getAmendmentUnderwriterManagersDecisionEdit);
+// router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.postUnderwriterManagersDecision);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', underwritingController.getBanksDecisionEdit);
+// router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.postUnderwriterManagersDecision);
+
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.getAmendFacilityValue);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.postAmendFacilityValue);
 
@@ -64,7 +73,8 @@ router.post('/:_id/activity', activityController.filterActivities);
 router.get('/:_id/activity/post-comment', activityController.getCommentBox);
 router.post('/:_id/activity/post-comment', activityController.postComment);
 
-router.get('/:_id/underwriting/pricing-and-risk', underwritingController.getUnderWritingPricingAndRisk);
+router.get('/:_id/underwriting', underwritingController.getUnderwriterPage);
+
 router.get('/:_id/underwriting/pricing-and-risk/edit', underwritingController.getUnderWritingPricingAndRiskEdit);
 router.post('/:_id/underwriting/pricing-and-risk/edit', underwritingController.postUnderWritingPricingAndRisk);
 router.get('/:_id/underwriting/pricing-and-risk/loss-given-default', underwritingController.getUnderWritingLossGivenDefault);
@@ -75,11 +85,8 @@ router.post('/:_id/underwriting/pricing-and-risk/probability-of-default', underw
 router.get('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.getUnderWritingFacilityRiskProfileEdit);
 router.post('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.postUnderWritingFacilityRiskProfileEdit);
 
-router.get('/:_id/underwriting/lead-underwriter', underwritingController.getLeadUnderwriter);
 router.get('/:_id/underwriting/lead-underwriter/assign', underwritingController.getAssignLeadUnderwriter);
 router.post('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
-
-router.get('/:_id/underwriting/managers-decision', underwritingController.getUnderwriterManagersDecision);
 
 router.get('/:_id/underwriting/managers-decision/edit', underwritingController.getUnderwriterManagersDecisionEdit);
 router.post('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);

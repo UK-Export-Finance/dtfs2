@@ -442,6 +442,21 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
   }
 };
 
+const getAmendmentInProgressByDealId = async (dealId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/deal/${dealId}/amendment/status/in-progress`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the amendment in progress by deal Id %O', { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
