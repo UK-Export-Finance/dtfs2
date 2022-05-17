@@ -1,4 +1,5 @@
 const api = require('../../api');
+const CONSTANTS = require('../../constants');
 
 const getFacilities = async (req, res) => {
   const apiResponse = await api.getFacilities();
@@ -8,10 +9,10 @@ const getFacilities = async (req, res) => {
   // override the deal stage if there is an amendment in progress
   if (amendments?.length > 0) {
     amendments.map((item) => {
-      const hasBeenSubmitted = item.amendments.submittedByPim ?? false;
-      if (hasBeenSubmitted) {
+      const amendmentInProgress = item.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+      if (amendmentInProgress) {
         return apiResponse.facilities.map((facility) => {
-          if (item.amendments.facilityId === facility.facilityId) {
+          if (item.facilityId === facility.facilityId) {
             // eslint-disable-next-line no-param-reassign
             facility.hasAmendmentInProgress = true;
           }
@@ -46,10 +47,10 @@ const queryFacilities = async (req, res) => {
   // override the deal stage if there is an amendment in progress
   if (amendments?.length > 0) {
     amendments.map((item) => {
-      const hasBeenSubmitted = item?.amendments?.submittedByPim ?? false;
-      if (hasBeenSubmitted) {
+      const amendmentInProgress = item.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+      if (amendmentInProgress) {
         return apiResponse.facilities.map((facility) => {
-          if (item.amendments.facilityId === facility.facilityId) {
+          if (item.facilityId === facility.facilityId) {
             // eslint-disable-next-line no-param-reassign
             facility.hasAmendmentInProgress = true;
           }

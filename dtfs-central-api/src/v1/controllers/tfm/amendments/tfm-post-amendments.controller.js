@@ -25,7 +25,7 @@ exports.postTfmAmendment = async (req, res) => {
           dealId,
           createdAt: getUnixTime(new Date()),
           updatedAt: getUnixTime(new Date()),
-          status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS,
+          status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED,
           version: 1
         };
         if (latestCompletedAmendment) {

@@ -123,7 +123,6 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(updatedInvalidDeal.status).toEqual(200);
       expect(updatedInvalidDeal.body.eligibility.status).toEqual('Incomplete');
     });
-
     it('uploads a file with the correct type', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
@@ -142,8 +141,8 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       expect(status).toEqual(200);
       expect(body.supportingInformation[fieldname][0]).toMatchObject({
-        filename,
-        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename}`,
+        filename: 'test_file_1.txt',
+        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/test_file_1.txt`,
         type,
       });
     });

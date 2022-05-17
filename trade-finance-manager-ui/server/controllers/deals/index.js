@@ -13,10 +13,10 @@ const getDeals = async (req, res) => {
   // override the deal stage if there is an amendment in progress
   if (amendments?.length > 0) {
     amendments.map((item) => {
-      const hasBeenSubmitted = item?.amendments?.submittedByPim ?? false;
-      if (hasBeenSubmitted) {
+      const amendmentInProgress = item.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+      if (amendmentInProgress) {
         return apiResponse.deals.map((deal) => {
-          if (item.amendments.dealId === deal._id) {
+          if (item.dealId === deal._id) {
             // eslint-disable-next-line no-param-reassign
             deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
           }
@@ -77,10 +77,10 @@ const queryDeals = async (req, res) => {
   // override the deal stage if there is an amendment in progress
   if (amendments?.length > 0) {
     amendments.map((item) => {
-      const hasBeenSubmitted = item.amendments.submittedByPim ?? false;
-      if (hasBeenSubmitted) {
+      const amendmentInProgress = item.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+      if (amendmentInProgress) {
         return deals.map((deal) => {
-          if (item.amendments.dealId === deal._id) {
+          if (item.dealId === deal._id) {
             // eslint-disable-next-line no-param-reassign
             deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
           }

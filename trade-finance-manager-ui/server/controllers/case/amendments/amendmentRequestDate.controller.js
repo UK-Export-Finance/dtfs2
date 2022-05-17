@@ -17,7 +17,7 @@ const getAmendmentRequestDate = async (req, res) => {
     let amendmentRequestDateMonth = '';
     let amendmentRequestDateYear = '';
 
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status !== AMENDMENT_STATUS.COMPLETED;
     if (amendment.requestDate) {
       amendmentRequestDateDay = format(fromUnixTime(amendment.requestDate), 'dd');
       amendmentRequestDateMonth = format(fromUnixTime(amendment.requestDate), 'M');
@@ -53,7 +53,7 @@ const postAmendmentRequestDate = async (req, res) => {
   const { dealId } = amendment;
 
   if (amendmentRequestDateErrors.length) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status !== AMENDMENT_STATUS.COMPLETED;
     return res.render('case/amendments/amendment-request-date.njk', {
       dealId,
       facilityId,
@@ -69,6 +69,7 @@ const postAmendmentRequestDate = async (req, res) => {
   try {
     const payload = {
       requestDate: amendmentRequestDate,
+      status: AMENDMENT_STATUS.IN_PROGRESS,
       createdBy: {
         username: user.username,
         name: `${user.firstName} ${user.lastName}`,

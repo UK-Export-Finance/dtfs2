@@ -46,8 +46,14 @@ const postAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
   const { dealId } = amendment;
+  const facility = await api.getFacility(facilityId);
+  const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId);
+  let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
+  if (latestAmendment?.coverEndDate) {
+    currentCoverEndDate = format(fromUnixTime(latestAmendment.coverEndDate), 'dd MMMM yyyy');
+  }
 
-  const { coverEndDate, errorsObject, coverEndDateErrors } = await coverEndDateValidation(req.body);
+  const { coverEndDate, errorsObject, coverEndDateErrors } = await coverEndDateValidation(req.body, currentCoverEndDate);
 
   if (coverEndDateErrors.length) {
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate;
@@ -59,6 +65,7 @@ const postAmendCoverEndDate = async (req, res) => {
       coverEndDateMonth: errorsObject.coverEndDateMonth,
       coverEndDateYear: errorsObject.coverEndDateYear,
       errors: errorsObject.errors,
+      currentCoverEndDate,
       user: req.session.user,
     });
   }

@@ -14,7 +14,7 @@
       titleText: "There is a problem",
       errorList: errors.errorSummary,
       attributes: {
-        'data-cy': 'error-summary'
+        'data-cy': 'amendment--error-summary'
       }
     }) }}
   {% endif %}
@@ -43,7 +43,7 @@
   %}
   {% set optionsWithHTML = (optionsWithHTML.push(defaultCheckbox), optionsWithHTML) %}
 
-  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-4" data-cy="amendment-options-heading" aria-label="What would the bank like to change?">What would the bank like to change?</h1>
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-4" data-cy="amendment--options-heading" aria-label="What would the bank like to change?">What would the bank like to change?</h1>
 
     <form method="POST" autocomplete="off">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -53,7 +53,7 @@
         errorMessage: errors and errors.fieldErrors.amendmentOptions and {
           text: errors.fieldErrors.amendmentOptions.text,
           attributes: {
-            'data-cy': 'amendment-inline-error'
+            'data-cy': 'amendment--inline-error'
           }
         },
         items: optionsWithHTML
@@ -63,11 +63,11 @@
         {% if isEditable %}
           {{ govukButton({
             text: "Continue",
-            attributes: { "data-cy": "continue-button" }
+            attributes: { "data-cy": "amendment--continue-button" }
             })
           }}
         {% endif %}
-        <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="cancel-button">Cancel</a>
+        <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
       </div>
     </form>
 {% endblock %}

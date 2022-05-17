@@ -147,7 +147,9 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      await api.post().to(`/v1/tfm/facilities/${facilityId}/amendment`);
+      const { body: bodyPostResponse } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendment`);
+      const updatePayload = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
+      await api.put(updatePayload).to(`/v1/tfm/facilities/${facilityId}/amendment/${bodyPostResponse.amendmentId}`);
       const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendment/status/in-progress`);
 
       expect(status).toEqual(200);
@@ -301,14 +303,19 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      await api.post().to(`/v1/tfm/facilities/${facilityId1}/amendment`);
+      const { body: bodyPostResponse1 } = await api.post().to(`/v1/tfm/facilities/${facilityId1}/amendment`);
+      const updatePayload1 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
+      await api.put(updatePayload1).to(`/v1/tfm/facilities/${facilityId1}/amendment/${bodyPostResponse1.amendmentId}`);
 
       const postResult2 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId2 = postResult2.body._id;
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      await api.post().to(`/v1/tfm/facilities/${facilityId2}/amendment`);
+      const { body: bodyPostResponse2 } = await api.post().to(`/v1/tfm/facilities/${facilityId2}/amendment`);
+      const updatePayload2 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
+      await api.put(updatePayload2).to(`/v1/tfm/facilities/${facilityId2}/amendment/${bodyPostResponse2.amendmentId}`);
+
       const { status, body } = await api.get('/v1/tfm//amendments/status/in-progress');
 
       expect(status).toEqual(200);

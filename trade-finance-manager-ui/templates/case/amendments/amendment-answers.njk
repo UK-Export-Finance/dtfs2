@@ -13,7 +13,7 @@
       titleText: "There is a problem",
       errorList: errors.errorSummary,
       attributes: {
-        'data-cy': 'error-summary'
+        'data-cy': 'amendment--error-summary'
       }
     }) }}
   {% endif %}
@@ -31,7 +31,7 @@
   {% set defaultBankRequestDate =
     [
       { text: 'Bank requested change' },
-      { text: requestDate },
+      { text: requestDate, attributes: { "data-cy": "amendment--bank-request-date-response" } },
       { html: bankRequestDateUrl, attributes: { "data-cy": "amendment--bank-request-date-link" } }
     ]
   %}
@@ -48,7 +48,7 @@
   {% set defaultRequireUkefApproval =
     [
       { text: 'UKEF approval needed' },
-      { text: "Yes" if requireUkefApproval === true else "No" },
+      { text: "Yes" if requireUkefApproval === true else "No", attributes: { "data-cy": "amendment--require-approval-response" } },
       { html: requireUkefApprovalUrl, attributes: { "data-cy": "amendment--require-approval-link" } }
     ]
   %}
@@ -66,7 +66,7 @@
     {% set defaultEffectiveDate =
       [
         { text: 'Date the amendment will be effective from' },
-        { text:  effectiveDate },
+        { text:  effectiveDate, attributes: { "data-cy": "amendment--effective-date-response" } },
         { html: effectiveDateUrl, attributes: { "data-cy": "amendment--effective-date-link" } }
       ]
     %}
@@ -85,7 +85,7 @@
     {% set defaultCoverEndDate =
       [
         { text: 'New cover date' },
-        { text: coverEndDate },
+        { text: coverEndDate, attributes: { "data-cy": "amendment--cover-end-date-response" } },
         { html: coverEndDateUrl, attributes: { "data-cy": "amendment--cover-end-date-link" } }
       ]
     %}
@@ -104,7 +104,7 @@
     {% set defaultFacilityValue =
       [
         { text: 'New facility value' },
-        { text: value },
+        { text: value, attributes: { "data-cy": "amendment--facility-value-response" } },
         { html: facilityValueUrl, attributes: { "data-cy": "amendment--facility-value-link" } }
       ]
     %}
@@ -113,7 +113,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-      <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-4" data-cy="amendment-answers-heading" aria-label="Check your answers">Check your answers</h1>
+      <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-4" data-cy="amendment--answers-heading" aria-label="Check your answers">Check your answers</h1>
 
       <form method="POST" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -126,11 +126,11 @@
           {% if isEditable %}
             {{ govukButton({
               text: "Submit",
-              attributes: { "data-cy": "continue-button" }
+              attributes: { "data-cy": "amendment--continue-button" }
               })
             }}
           {% endif %}
-          <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="cancel-button">Cancel</a>
+          <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
         </div>
       </form>
     </div>

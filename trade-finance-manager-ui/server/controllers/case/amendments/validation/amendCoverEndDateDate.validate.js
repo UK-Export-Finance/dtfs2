@@ -25,7 +25,7 @@ const coverEndDateValidation = async (body, currentEndDate) => {
     const newCoverEnd = set(new Date(), { year: coverEndYear, month: coverEndMonth - 1, date: coverEndDay });
 
     // checks if the current cover end date the same as the new cover end date
-    if (isSameDay(newCoverEnd, currentEndDate)) {
+    if (isSameDay(newCoverEnd, new Date(currentEndDate))) {
       coverEndDateErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'The new cover end date cannot be the same as the current cover end date',
