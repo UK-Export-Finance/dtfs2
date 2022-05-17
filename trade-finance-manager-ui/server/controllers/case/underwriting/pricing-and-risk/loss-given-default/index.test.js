@@ -47,7 +47,6 @@ describe('GET underwriting - loss given default', () => {
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
-          activeSideNavigation: 'pricing and risk',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id,
@@ -119,7 +118,7 @@ describe('POST underwriting - loss given default', () => {
         { lossGivenDefault: Number(req.body.lossGivenDefault) },
       );
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);
     });
 
     describe('with no req.body.lossGivenDefault', () => {
@@ -155,7 +154,6 @@ describe('POST underwriting - loss given default', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,
@@ -202,7 +200,6 @@ describe('POST underwriting - loss given default', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,
@@ -249,7 +246,6 @@ describe('POST underwriting - loss given default', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,
@@ -296,7 +292,6 @@ describe('POST underwriting - loss given default', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,

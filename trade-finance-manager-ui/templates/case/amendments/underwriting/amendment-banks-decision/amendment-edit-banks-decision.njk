@@ -1,0 +1,86 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block content %}
+  <section class="govuk-!-margin-top-9">
+
+    {% if validationErrors.count %}
+      {{
+        govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: validationErrors.summary,
+          attributes: {
+            'data-cy': 'error-summary'
+          }
+        })
+      }}
+    {% endif %}
+
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-three-quarters">
+
+        <form method="POST" autocomplete="off" data-cy="amendment-managers-decision-form">
+
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+          {{govukRadios({
+              fieldset: {
+                legend: {
+                  text: "What is the bank's decision?",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--xl"
+                }
+              },
+              name: "decision",
+              items: [
+                {
+                  value: "Proceed",
+                  text: "Proceed",
+                  attributes: {
+                    'data-cy': 'proceed-radio-button'
+                  }
+                },
+                {
+                  value: "Withdraw",
+                  text: "Withdraw",
+                  attributes: {
+                    'data-cy': 'withdraw-radio-button'
+                  }
+                }
+              ],
+              errorMessage: validationErrors and validationErrors.errorList.decision and {
+                text: validationErrors.errorList.decision.text,
+                attributes: {
+                  'data-cy': 'decision-input-error'
+                }
+              }
+            })
+          }}
+
+          {% if isEditable %}
+
+            {{ govukButton({
+              text: "Continue",
+              attributes: {
+                'data-cy': 'amendment--continue-button'
+              }
+            }) }}
+
+          {% endif %}
+
+          <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/underwriting" data-cy="cancel-link">Cancel</a>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </section>
+
+{% endblock %}
