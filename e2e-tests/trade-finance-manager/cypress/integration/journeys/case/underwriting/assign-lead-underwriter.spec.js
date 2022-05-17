@@ -50,7 +50,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     });
   });
 
-  it('it should show unassigned on lead underwriter section on underwriting page', () => {
+  it('should show unassigned on lead underwriter section on underwriting page', () => {
     cy.login(UNDERWRITER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 

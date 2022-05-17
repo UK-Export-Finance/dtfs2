@@ -38,7 +38,7 @@ describe('GET getAmendmentLeadUnderwriter()', () => {
     expect(apiGetUserSpy).not.toHaveBeenCalled();
   });
 
-  it('it should return an object with the lead underwriter when lead underwriter set', async () => {
+  it('should return an object with the lead underwriter when lead underwriter set', async () => {
     const result = await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(
       MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS,
       MOCKS.MOCK_USER_UNDERWRITER_MANAGER,

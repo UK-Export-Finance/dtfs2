@@ -58,7 +58,7 @@ describe('GET underwriting - lead underwriter', () => {
       api.getUser = apiGetUserSpy;
     });
 
-    it('it should return an object with the correct parameters', async () => {
+    it('should return an object with the correct parameters', async () => {
       const result = await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL, MOCK_USER_UNDERWRITER_MANAGER);
 
       expect(result).toEqual({

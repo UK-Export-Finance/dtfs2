@@ -18,7 +18,7 @@ describe('GET getUnderwriterPage', () => {
       api.getAmendmentInProgressByDealId = () => Promise.resolve(MOCKS.MOCK_AMENDMENT_PROGRESS_FULL);
     });
 
-    it('it should render template with data', async () => {
+    it('should render template with data', async () => {
       const req = {
         params: {
           _id: dealId,

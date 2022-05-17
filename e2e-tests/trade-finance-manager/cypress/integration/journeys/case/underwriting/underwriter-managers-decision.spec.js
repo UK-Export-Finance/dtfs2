@@ -38,7 +38,7 @@ context('Case Underwriting - Pricing and risk', () => {
     });
   });
 
-  it('it should take you to underwriting page', () => {
+  it('should take you to underwriting page', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
 

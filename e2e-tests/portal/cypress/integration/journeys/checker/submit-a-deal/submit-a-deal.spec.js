@@ -144,7 +144,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
   });
 
   describe('If a deal has been previously submitted and the deal contains a Bond with a cover start date that is now in the past', () => {
-    it('it should successfully submit', () => {
+    it('should successfully submit', () => {
       // log in, visit a deal, submit
       cy.login(BANK1_CHECKER1);
       contract.visit(dealBondCoverStartDateInThePast);
@@ -163,7 +163,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
   });
 
   describe('If a deal has been previously submitted and the deal contains a loan with a cover start date that is now in the past', () => {
-    it('it should successfully submit', () => {
+    it('should successfully submit', () => {
       // log in, visit a deal, submit
       cy.login(BANK1_CHECKER1);
       contract.visit(dealLoanCoverStartDateInThePast);

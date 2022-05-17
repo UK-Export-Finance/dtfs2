@@ -32,7 +32,7 @@ context('PIM User', () => {
       });
     });
 
-    it('it should not allow PIM users to assign a lead underwriter', () => {
+    it('should not allow PIM users to assign a lead underwriter', () => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
@@ -40,7 +40,7 @@ context('PIM User', () => {
       pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('not.exist');
     });
 
-    it('it should not allow PIM users to change the facility risk profile', () => {
+    it('should not allow PIM users to change the facility risk profile', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
@@ -59,7 +59,7 @@ context('PIM User', () => {
       pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');
     });
 
-    it('it should not allow PIM users to set underwriter manager decision', () => {
+    it('should not allow PIM users to set underwriter manager decision', () => {
       cy.login(PIM_USER_1);
 
       cy.visit(relative(`/case/${dealId}/deal`));

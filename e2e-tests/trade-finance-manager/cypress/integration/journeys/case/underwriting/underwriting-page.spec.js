@@ -31,7 +31,7 @@ context('Underwriting page', () => {
     });
   });
 
-  it('It should have the correct headings', () => {
+  it('should have the correct headings', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
@@ -43,7 +43,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.underwritingAccordion().contains('Underwriter Manager\'s decision');
   });
 
-  it('It should show unassigned and no decision yet if logged in as non-underwriter manager', () => {
+  it('should show unassigned and no decision yet if logged in as non-underwriter manager', () => {
     cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
@@ -66,7 +66,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.facilityTable(dealFacilities[0]._id).changeRiskProfileLink().should('not.exist');
   });
 
-  it('It should show correct links and buttons if logged in as underwriter_manager', () => {
+  it('should show correct links and buttons if logged in as underwriter_manager', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
@@ -89,7 +89,7 @@ context('Underwriting page', () => {
     pages.underwritingPage.facilityTable(dealFacilities[0]._id).changeRiskProfileLink().contains('Change');
   });
 
-  it('It should show correct links and buttons if logged in as underwriter', () => {
+  it('should show correct links and buttons if logged in as underwriter', () => {
     cy.login(UNDERWRITER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
