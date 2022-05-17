@@ -163,7 +163,7 @@ describe('POST underwriting - facility risk profile', () => {
         req.body,
       );
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);
     });
   });
 

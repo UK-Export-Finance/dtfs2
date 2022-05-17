@@ -1,3 +1,5 @@
+const CONSTANTS = require('../../../../constants');
+
 const {
   hasValue,
   isAlphanumeric,
@@ -73,7 +75,7 @@ const validateSubmittedValues = (submittedValues) => {
     );
   }
 
-  if (decision === 'Approve with conditions') {
+  if (decision === CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS) {
     if (!hasValue(approveWithConditionsComments)) {
       errorsCount = increment(errorsCount);
 
@@ -99,7 +101,7 @@ const validateSubmittedValues = (submittedValues) => {
     }
   }
 
-  if (decision === 'Decline') {
+  if (decision === CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINE) {
     if (!hasValue(declineComments)) {
       errorsCount = increment(errorsCount);
 

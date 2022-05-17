@@ -18,7 +18,6 @@ const getUnderWritingProbabilityOfDefault = async (req, res) => {
   return res.render('case/underwriting/pricing-and-risk/probability-of-default.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
-    activeSideNavigation: 'pricing and risk',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
@@ -69,7 +68,6 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
     return res.render('case/underwriting/pricing-and-risk/probability-of-default.njk', {
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'underwriting',
-      activeSideNavigation: 'pricing and risk',
       deal: deal.dealSnapshot,
       tfm: {
         ...deal.tfm,
@@ -87,7 +85,7 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
 
   await api.updateProbabilityOfDefault(dealId, update);
 
-  return res.redirect(`/case/${dealId}/underwriting/pricing-and-risk`);
+  return res.redirect(`/case/${dealId}/underwriting`);
 };
 
 module.exports = {
