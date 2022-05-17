@@ -1,28 +1,31 @@
 {% import './_macros/section-exporter/section-exporter.njk' as sectionExporter %}
 {% import './_macros/section-facilities/section-facilities.njk' as sectionFacilities %}
 
-{% extends "case/underwriting/layout.njk" %}
+{% macro render(params) %}
+  {% set pricingAndRisk = params.pricingAndRisk %}
 
-{% block underwriting_content %}
-  <h3 class="govuk-heading-l ukef-heading-grey govuk-!-margin-bottom-3" data-cy="pricing-and-risk-heading">Pricing and risk</h3>
+  {% block underwriting_content %}
 
-  {% set componentData = {
-    caseId: dealId,
-    supplierName: deal.submissionDetails.supplierName,
-    exporterCreditRating: tfm.exporterCreditRating,
-    lossGivenDefault: tfm.lossGivenDefault,
-    probabilityOfDefault: tfm.probabilityOfDefault,
-    userCanEditGeneral: userCanEditGeneral
-  } %}
+    {% set componentData = {
+      caseId: pricingAndRisk.dealId,
+      supplierName: pricingAndRisk.deal.submissionDetails.supplierName,
+      exporterCreditRating: pricingAndRisk.tfm.exporterCreditRating,
+      lossGivenDefault: pricingAndRisk.tfm.lossGivenDefault,
+      probabilityOfDefault: pricingAndRisk.tfm.probabilityOfDefault,
+      userCanEditGeneral: pricingAndRisk.userCanEditGeneral
+    } %}
 
-  {{sectionExporter.render(componentData)}}
+    {{sectionExporter.render(componentData)}}
 
-  {% set componentData = {
-    caseId: dealId,
-    facilities: deal.facilities,
-    userCanEdit: userCanEditGeneral
-  } %}
+    {% set componentData = {
+      caseId: pricingAndRisk.dealId,
+      facilities: pricingAndRisk.deal.facilities,
+      userCanEdit: pricingAndRisk.userCanEditGeneral
+    } %}
 
-  {{sectionFacilities.render(componentData)}}
+    {{sectionFacilities.render(componentData)}}
 
-{% endblock %}
+  {% endblock %}
+
+{% endmacro %}
+
