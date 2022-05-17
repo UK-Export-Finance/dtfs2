@@ -414,6 +414,7 @@ tfmRouter.route('/facilities/:id/amendment/status/in-progress').get(tfmGetAmendm
 tfmRouter.route('/facilities/:id/amendment/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendments);
 tfmRouter.route('/facilities/:id/amendment/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendment);
 tfmRouter.route('/facilities/:id/amendment/:amendmentId').get(tfmGetAmendmentController.getAmendmentById);
+tfmRouter.route('/deals/:dealId/amendment/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgressByDealId);
 
 /**
  * @openapi
