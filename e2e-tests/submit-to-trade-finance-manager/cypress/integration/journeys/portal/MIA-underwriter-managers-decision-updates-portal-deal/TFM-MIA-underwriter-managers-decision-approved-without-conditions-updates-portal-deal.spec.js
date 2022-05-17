@@ -71,8 +71,7 @@ context('Portal to TFM deal submission', () => {
     // Underwriter Manager submits a decision
     //---------------------------------------------------------------
     tfmPartials.caseSubNavigation.underwritingLink().click();
-    tfmPartials.underwritingSubNav.underwriterManagerDecisionLink().click();
-    tfmPages.managersDecisionPage.addDecisionLink().click();
+    tfmPages.managersDecisionPage.addDecisionLink().click({ force: true });
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithoutConditions().click();
     tfmPages.managersDecisionPage.submitButton().click();

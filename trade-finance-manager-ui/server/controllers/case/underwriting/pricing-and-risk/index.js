@@ -10,27 +10,15 @@ const {
   userCanEditGeneral,
 } = require('./helpers');
 
-const getUnderWritingPricingAndRisk = async (req, res) => {
-  const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-
-  if (!deal) {
-    return res.redirect('/not-found');
-  }
-
-  const { user } = req.session;
-
-  return res.render('case/underwriting/pricing-and-risk/pricing-and-risk.njk', {
-    userCanEditGeneral: userCanEditGeneral(user),
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'underwriting',
-    activeSideNavigation: 'pricing and risk',
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
-    user,
-  });
-};
+const getUnderWritingPricingAndRisk = async (deal, user) => ({
+  userCanEditGeneral: userCanEditGeneral(user),
+  activePrimaryNavigation: 'manage work',
+  activeSubNavigation: 'underwriting',
+  deal: deal.dealSnapshot,
+  tfm: deal.tfm,
+  dealId: deal.dealSnapshot._id,
+  user,
+});
 
 const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   const dealId = req.params._id;
@@ -47,7 +35,6 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
-    activeSideNavigation: 'pricing and risk',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
@@ -141,7 +128,6 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
     return res.render('case/underwriting/pricing-and-risk/edit-pricing-and-risk.njk', {
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'underwriting',
-      activeSideNavigation: 'pricing and risk',
       deal: deal.dealSnapshot,
       tfm: {
         ...deal.tfm,
@@ -159,7 +145,7 @@ const postUnderWritingPricingAndRisk = async (req, res) => {
 
   await api.updateCreditRating(dealId, update);
 
-  return res.redirect(`/case/${dealId}/underwriting/pricing-and-risk`);
+  return res.redirect(`/case/${dealId}/underwriting`);
 };
 
 module.exports = {
