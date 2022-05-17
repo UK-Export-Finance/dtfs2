@@ -33,6 +33,21 @@
       facilityId: facilityId,
       user: user,
       showAmendmentButton: showAmendmentButton,
+      showContinueAmendmentButton: showContinueAmendmentButton,
+      amendmentId: amendmentId,
+      amendmentVersion: amendmentVersion,
+      csrfToken: csrfToken
+    } %}
+    {{ amendments.render(amendmentsComponentData) }}
+  {% endset %}
+
+  {% set amendmentsHtml %}
+    {% set amendmentsComponentData = {
+      deal: deal,
+      facility: facility,
+      facilityId: facilityId,
+      user: user,
+      showAmendmentButton: showAmendmentButton,
       hasAmendmentInProgress: hasAmendmentInProgress,
       amendmentId: amendmentId,
       amendmentVersion: amendmentVersion,

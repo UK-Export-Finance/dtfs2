@@ -1,0 +1,81 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends "index.njk" %}
+
+{% block sub_content %}
+
+{% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment-request-heading" aria-label="What date did the bank request the amendment?">What date did the bank request the amendment?</h1>
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ govukDateInput({
+      id: "amendmentRequestDate",
+      namePrefix: "amendment-request-date",
+      hint: {
+        text: "For example, 31 3 1980",
+        attributes: {
+          "data-cy": "amendments-request-hint"
+        }
+      },
+      errorMessage: errors and errors.fieldErrors.amendmentRequestDate and {
+        text: errors.fieldErrors.amendmentRequestDate.text,
+        attributes: {
+          'data-cy': 'amendment-inline-error'
+        }
+      },
+      items: [
+        {
+          label: "Day",
+          classes: errors.fieldErrors.amendmentRequestDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "day",
+          value: amendmentRequestDateDay,
+          attributes: {
+            'data-cy': "amendment-request-date-day"
+          }
+        },
+        {
+          label: "Month",
+          classes: errors.fieldErrors.amendmentRequestDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "month",
+          value: amendmentRequestDateMonth,
+          attributes: {
+            'data-cy': "amendment-request-date-month"
+          }
+        },
+        {
+          label: "Year",
+          classes: errors.fieldErrors.amendmentRequestDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+          name: "year",
+          value: amendmentRequestDateYear,
+          attributes: {
+            'data-cy': "amendment-request-date-year"
+          }
+        }
+      ]
+    }) }}
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Continue",
+        attributes: {
+            "data-cy": "continue-button"
+        }
+        })
+      }}
+      <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="cancel-button">Cancel</a>
+    </div>
+
+  </form>
+
+{% endblock %}
