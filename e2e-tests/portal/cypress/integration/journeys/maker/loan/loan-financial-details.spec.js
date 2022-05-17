@@ -58,7 +58,7 @@ context('Loan Financial Details', () => {
   });
 
   describe('when submitting an empty form', () => {
-    it('it should progress to `Loan Dates and Repayments` page and after proceeding to `Loan Preview` page, should render validation errors in `Loan Financial Details` page', () => {
+    it('should progress to `Loan Dates and Repayments` page and after proceeding to `Loan Preview` page, should render validation errors in `Loan Financial Details` page', () => {
       goToPageWithUnconditionalFacilityStage(deal);
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 0);
