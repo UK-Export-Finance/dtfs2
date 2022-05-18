@@ -2,23 +2,22 @@
 {% import './_macros/case-summary.njk' as caseSummary %}
 
 {% extends "index.njk" %}
-  {% set primary = 'cases' %}
+{% set primary = 'cases' %}
 
-  {% block content %}
+{% block content %}
 
-    {% set componentData = {
-      deal: deal,
-      tfm: tfm,
-      user: user
-    } %}
+  {% set componentData = {
+    deal: deal,
+    tfm: tfm,
+    user: user,
+    amendment: amendment
+  } %}
 
-    {{caseSummary.render(componentData)}}
+  {{caseSummary.render(componentData)}}
 
-    {% include "_partials/case_sub_navigation.njk" %}
+  {% include "_partials/case_sub_navigation.njk" %}
 
-  {% endblock %}
+{% endblock %}
 
   {% block sub_content %}
   {% endblock %}
-
-  
