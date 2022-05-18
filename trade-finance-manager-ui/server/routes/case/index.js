@@ -39,6 +39,15 @@ router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision'
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', underwritingController.getBanksDecisionEdit);
 // router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.postUnderwriterManagersDecision);
 
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.getAmendFacilityValue);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.postAmendFacilityValue);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.getAmendCoverEndDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.postAmendCoverEndDate);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', amendmentsController.getAmendmentAnswers);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', amendmentsController.postAmendmentAnswers);
+
 router.get('/:_id/parties', partiesController.getCaseParties);
 
 router.get('/:_id/parties/exporter', partiesController.getExporterPartyDetails);
