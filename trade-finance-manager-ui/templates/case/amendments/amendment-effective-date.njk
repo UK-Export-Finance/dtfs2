@@ -4,6 +4,10 @@
 
 {% extends "index.njk" %}
 
+{% block pageTitle %}
+  Amendment - Effective date
+{% endblock %}
+
 {% block sub_content %}
 
 {% if errors %}
@@ -11,55 +15,55 @@
       titleText: "There is a problem",
       errorList: errors.errorSummary,
       attributes: {
-        'data-cy': 'error-summary'
+        'data-cy': 'amendment--error-summary'
       }
     }) }}
   {% endif %}
-  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment-effective-date-heading" aria-label="What date will the amendment be effective from?">What date will the amendment be effective from?</h1>
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--effective-date-heading" aria-label="What date will the amendment be effective from?">What date will the amendment be effective from?</h1>
 
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukDateInput({
-      id: "amendmentEffectiveDate",
+      id: "effectiveDate",
       namePrefix: "amendment-effective-date",
       hint: {
         text: "For example, 31 3 1980",
         attributes: {
-          "data-cy": "amendments-effective-hint"
+          "data-cy": "amendment--effective-hint"
         }
       },
-      errorMessage: errors and errors.fieldErrors.amendmentEffectiveDate and {
-        text: errors.fieldErrors.amendmentEffectiveDate.text,
+      errorMessage: errors and errors.fieldErrors.effectiveDate and {
+        text: errors.fieldErrors.effectiveDate.text,
         attributes: {
-          'data-cy': 'amendment-inline-error'
+          'data-cy': 'amendment--inline-error'
         }
       },
       items: [
         {
           label: "Day",
-          classes: errors.fieldErrors.amendmentEffectiveDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          classes: errors.fieldErrors.effectiveDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
           name: "day",
-          value: amendmentEffectiveDateDay,
+          value: effectiveDateDay,
           attributes: {
-            'data-cy': "amendment-effective-date-day"
+            'data-cy': "amendment--effective-date-day"
           }
         },
         {
           label: "Month",
-          classes: errors.fieldErrors.amendmentEffectiveDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          classes: errors.fieldErrors.effectiveDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
           name: "month",
-          value: amendmentEffectiveDateMonth,
+          value: effectiveDateMonth,
           attributes: {
-            'data-cy': "amendment-effective-date-month"
+            'data-cy': "amendment--effective-date-month"
           }
         },
         {
           label: "Year",
-          classes: errors.fieldErrors.amendmentEffectiveDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+          classes: errors.fieldErrors.effectiveDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
           name: "year",
-          value: amendmentEffectiveDateYear,
+          value: effectiveDateYear,
           attributes: {
-            'data-cy': "amendment-effective-date-year"
+            'data-cy': "amendment--effective-date-year"
           }
         }
       ]
@@ -70,12 +74,12 @@
         {{ govukButton({
           text: "Continue",
           attributes: {
-              "data-cy": "continue-button"
+              "data-cy": "amendment--continue-button"
           }
           })
         }}
       {% endif %}
-      <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="cancel-button">Cancel</a>
+      <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
     </div>
 
   </form>
