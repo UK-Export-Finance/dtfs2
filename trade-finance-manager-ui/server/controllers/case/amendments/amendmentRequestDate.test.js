@@ -15,6 +15,7 @@ const user = {
   firstName: 'Joe',
   lastName: 'Bloggs',
   teams: ['PIM'],
+  email: 'test@localhost',
 };
 
 const session = { user };
@@ -32,7 +33,7 @@ describe('controllers - case - amendments', () => {
       };
 
       beforeEach(() => {
-        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: 'In progress', dealId: '4567' } });
+        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' } });
       });
 
       it('should render deal template with data', async () => {
@@ -52,6 +53,7 @@ describe('controllers - case - amendments', () => {
           amendmentRequestDateMonth: '',
           amendmentRequestDateYear: '',
           isEditable: true,
+          user: req.session.user,
         });
       });
     });
@@ -89,7 +91,7 @@ describe('controllers - case - amendments', () => {
 
       beforeEach(() => {
         api.getFacility = () => Promise.resolve(mockFacility);
-        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: 'In progress', dealId: '4567' } });
+        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' } });
       });
 
       it('should render the template with errors if no date is provided', async () => {
@@ -127,6 +129,7 @@ describe('controllers - case - amendments', () => {
               },
             },
           },
+          user: req.session.user,
         });
       });
 
@@ -165,6 +168,7 @@ describe('controllers - case - amendments', () => {
               },
             },
           },
+          user: req.session.user,
         });
       });
 
@@ -210,6 +214,7 @@ describe('controllers - case - amendments', () => {
               },
             },
           },
+          user: req.session.user,
         });
       });
 
@@ -221,10 +226,11 @@ describe('controllers - case - amendments', () => {
               status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
             },
           },
+          status: 200,
         };
         api.getFacility = () => Promise.resolve(mockFacility);
         api.updateAmendment = () => Promise.resolve(update);
-        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: 'In progress', dealId: '4567' } });
+        api.getAmendmentById = () => Promise.resolve({ status: 200, data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' } });
 
         const today = new Date();
 

@@ -58,7 +58,7 @@ context('Amendments request page', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.continueAmendmentButton().click();
+      amendmentsPage.addAmendmentButton().click();
 
       amendmentsPage.continueAmendment().click();
 
@@ -73,7 +73,7 @@ context('Amendments request page', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.continueAmendmentButton().click();
+      amendmentsPage.addAmendmentButton().click();
 
       amendmentsPage.amendmentRequestDayInput().type('01');
       amendmentsPage.amendmentRequestMonthInput().type('01');
@@ -92,7 +92,7 @@ context('Amendments request page', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.continueAmendmentButton().click();
+      amendmentsPage.addAmendmentButton().click();
 
       amendmentsPage.amendmentRequestDayInput().type(dateConstants.threeMonthsDay);
       amendmentsPage.amendmentRequestMonthInput().type(dateConstants.threeMonthsMonth);
@@ -111,7 +111,7 @@ context('Amendments request page', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.continueAmendmentButton().click();
+      amendmentsPage.addAmendmentButton().click();
 
       amendmentsPage.cancelLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}#amendments`));
@@ -124,7 +124,7 @@ context('Amendments request page', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.continueAmendmentButton().click();
+      amendmentsPage.addAmendmentButton().click();
 
       amendmentsPage.amendmentRequestDayInput().type(dateConstants.todayDay);
       amendmentsPage.amendmentRequestMonthInput().type(dateConstants.todayMonth);

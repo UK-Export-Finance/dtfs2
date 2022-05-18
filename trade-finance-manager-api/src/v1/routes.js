@@ -138,9 +138,16 @@ openRouter.route('/facility/:facilityId/amendment').post(amendmentController.cre
  *       400:
  *         description: Cannot update the amendment
  */
+openRouter.route('/amendments/status/in-progress').get(amendmentController.getAllAmendmentsInProgress);
+openRouter.route('/facility/:facilityId/amendment/').get(amendmentController.getAmendmentByFacilityId);
 openRouter.route('/facility/:facilityId/amendment/:amendmentId').put(amendmentController.updateFacilityAmendment);
 openRouter.route('/facility/:facilityId/amendment/:amendmentId').get(amendmentController.getAmendmentById);
 openRouter.route('/facility/:facilityId/amendment/status/in-progress').get(amendmentController.getAmendmentInProgress);
+openRouter.route('/facility/:facilityId/amendment/status/completed').get(amendmentController.getCompletedAmendment);
+openRouter.route('/facility/:facilityId/amendment/status/completed/latest').get(amendmentController.getLatestCompletedAmendment);
+openRouter.route('/deal/:dealId/amendment/').get(amendmentController.getAmendmentByDealId);
 openRouter.route('/deal/:dealId/amendment/status/in-progress').get(amendmentController.getAmendmentInProgressByDealId);
+openRouter.route('/deal/:dealId/amendment/status/completed').get(amendmentController.getCompletedAmendmentByDealId);
+openRouter.route('/deal/:dealId/amendment/status/completed/latest').get(amendmentController.getLatestCompletedAmendmentByDealId);
 
 module.exports = openRouter;
