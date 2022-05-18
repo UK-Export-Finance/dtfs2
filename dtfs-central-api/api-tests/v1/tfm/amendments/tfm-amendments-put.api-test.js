@@ -56,8 +56,8 @@ describe('PUT /v1/tfm/facilities/:id/amendments', () => {
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const updatePayload = { createdBy: mockUser };
       const { status, body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendment/`);
+      const updatePayload = { createdBy: mockUser };
       const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendment/${body.amendmentId}`);
 
       const expected = {
