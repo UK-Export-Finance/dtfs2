@@ -1,11 +1,11 @@
 const CONSTANTS = require('../../constants');
 
 /**
-* Generate timestamps:
-* - updatedAt
-* - dateStarted
-* - dateCompleted
-* */
+ * Generate timestamps
+ * @param {String} task status changing from
+ * @param {String} task status changing to
+ * @returns {Object} updatedAt, dateStarted, dateCompleted
+ */
 const generateTaskDates = (statusFrom, statusTo) => {
   const dates = {
     updatedAt: Date.now(),

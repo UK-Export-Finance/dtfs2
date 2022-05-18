@@ -174,9 +174,7 @@ E2E tests for GHA have been setup to run in parallel. When these run you will se
 
 Several environments are used:
 * http://tfs-dev-fd.azurefd.net/
-* http://tfs-demo-fd.azurefd.net/
 * http://tfs-test-fd.azurefd.net/
-* http://tfs-staging-fd.azurefd.net/
 * http://tfs-prod-fd.azurefd.net/
 
 GEF test environment is hosted on the same URL as Portal v2. To access GEF:
@@ -187,22 +185,34 @@ GEF test environment is hosted on the same URL as Portal v2. To access GEF:
 
 ## Deployment
 
-The dev environment is the only environment that is automatically updated. All other environments require a manual trigger.
+All environments require a manual trigger.
 
 This ensures that the environments are stable, unaffected by CI/CD and the business can continue with QA and user testing.
 
 :warning: When changes are merged to the main branch (and is automatically deployed to the dev environment), we need to be mindful of any breaking changes with the TFM GraphQL schema/queries or cleaning the dev database. Another team consumes the TFM GraphQL API - we need to notify them of any breaking changes by emailing "IT Mulesoft Technical Support".
 
+### Deploying to dev
+
+To deploy to the dev environment, run the `update-dev.sh` script in `.github/workflows` directory.
+This will take the latest code in the main branch and deploy it.
+
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-dev-fd.azurefd.net/healthcheck
+
 ### Deploying to test
 
-After merging to main, dev environment will be updated.
-
 To deploy to the test environment, run the `update-test.sh` script in `.github/workflows` directory.
-This will take the latest code in the development environment and deploy to test.
+This will take the latest code in the dev environment and deploy to test environment.
 
-The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-test-fd.azurefd.net/healthcheck
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: <https://tfs-test-fd.azurefd.net/healthcheck>
 
-#### Recommended
+### Deploying to prod
+
+To deploy to the demo environment, run the `update-prod.sh` script in `.github/workflows` directory.
+This will take the latest code in the staging environment and deploy to prod environment.
+
+The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-prod-fd.azurefd.net/healthcheck
+
+### Recommended
 
 After deployment, manually check things are OK by submitting a deal to TFM and check that in TFM the deal has data populated.
 
@@ -227,27 +237,6 @@ Until the underlying issue is fixed, the workaround is to restart the Number Gen
 After the restart, newly submitted deals will work.
 
 After this, worth wiping the `durable-functions-log` collection so that there are no dead documents in the collection.
-
-### Deploying to demo
-
-To deploy to the demo environment, run the `update-demo.sh` script in `.github/workflows` directory.
-This will take the latest code in the development environment and deploy to demo.
-
-The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-demo-fd.azurefd.net/healthcheck
-
-### Deploying to staging
-
-To deploy to the staging environment, run the `update-staging.sh` script in `.github/workflows` directory.
-This will take the latest code in the test environment and deploy to staging.
-
-The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-staging-fd.azurefd.net/healthcheck
-
-### Deploying to prod
-
-To deploy to the demo environment, run the `update-prod.sh` script in `.github/workflows` directory.
-This will take the latest code in the staging environment and deploy to prod.
-
-The latest deployed commit can be checked by looking at the test/dev branch, or visiting the healthcheck endpoint. E.g: https://tfs-prod-fd.azurefd.net/healthcheck
 
 ## Updating/refreshing the database with mock data
 
@@ -329,12 +318,6 @@ Currenty Notify does not have much support for complex, conditional content - on
 We have a requirement to render multiple lists of facilities, also seperated by facility types. It is not possible to do this out-of-the-box. Therefore, for emails that have lists of facilities, we generate a single string with HTMl/Notify encodings, that will render lists in the Notify template. The single string will be passed as a single email variable to Notify. You can see this in `notify-template-formatters.js`, in TFM API.
 
 We have contacted Notify about this asking for more support.
-
-## Workflow/typeB integration
-
-At the start of the project, the requirement was to submit deals to another system called Workflow. "TypeB" is a Workflow service. Workflow is being retired and we submit to TFM now - so there is no need to integrate with Workflow/TypeB and this has been disabled.
-
-In the codebase there is commented out code for the TypeB functionality just incase we need to use it again. For more information see jira ticket DTFS2-4545 which contains links to the relevant PRs.
 
 ## Docker
 

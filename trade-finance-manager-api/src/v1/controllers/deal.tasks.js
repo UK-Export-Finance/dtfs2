@@ -3,8 +3,10 @@ const CONSTANTS = require('../../constants');
 const { createTasks } = require('../helpers/create-tasks');
 
 /**
- * Conditions for adding 'create or match parties' task
- * */
+ * Check if the "create or match parties" task should be created
+ * @param {Object} deal
+ * @returns {Boolean}
+ */
 const shouldCreatePartiesTask = (deal) => {
   const { tfm } = deal;
   const exporterPartyUrn = tfm.parties.exporter.partyUrn;
@@ -17,8 +19,10 @@ const shouldCreatePartiesTask = (deal) => {
 };
 
 /**
- * Conditions for adding 'check agent' task
- * */
+ * Check if the "check agent" task should be created
+ * @param {Object} deal
+ * @returns {Boolean}
+ */
 const shouldCreateAgentCheckTask = (deal) => {
   const {
     dealType,
@@ -43,8 +47,10 @@ const shouldCreateAgentCheckTask = (deal) => {
 };
 
 /**
- * Additional/conditional tasks to include, depending on deal data.
- * */
+ * Get additional/conditional tasks that should be added to tasks, depending on deal data.
+ * @param {Object} deal
+ * @returns {Array}
+ */
 const listAdditionalTasks = (deal) => {
   const additionalTasks = [];
 
@@ -59,6 +65,11 @@ const listAdditionalTasks = (deal) => {
   return additionalTasks;
 };
 
+/**
+ * Get additional/conditional tasks that should be added to tasks, depending on deal data.
+ * @param {Object} deal
+ * @returns {Object} deal with tasks
+ */
 const createDealTasks = async (deal) => {
   if (!deal) {
     return false;
