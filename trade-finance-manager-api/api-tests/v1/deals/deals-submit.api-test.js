@@ -205,10 +205,10 @@ describe('/v1/deals', () => {
       });
 
       describe('when deal is MIN', () => {
-        it('should NOT add tfm stage', async () => {
+        it('should add `Confirmed` tfm stage', async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIN));
           expect(status).toEqual(200);
-          expect(body.tfm.stage).toBeUndefined();
+          expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED);
         });
       });
     });

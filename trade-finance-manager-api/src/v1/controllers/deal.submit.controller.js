@@ -12,6 +12,7 @@ const { updateFacilities } = require('./update-facilities');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
 
 const addTfmDealData = require('./deal-add-tfm-data');
+const dealStage = require('./deal-add-tfm-data/dealStage');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const { updatePortalDealStatus } = require('./update-portal-deal-status');
 const CONSTANTS = require('../../constants');
@@ -159,6 +160,10 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
       await sendAinMinAcknowledgement(updatedDeal);
+
+      // if changed to MIN, status should be updated to confirmed
+      const updatedDealStage = dealStage(mappedDeal.status, mappedDeal.submissionType);
+      updatedDeal.tfm.stage = updatedDealStage;
     }
     await updatePortalDealStatus(updatedDeal);
 
