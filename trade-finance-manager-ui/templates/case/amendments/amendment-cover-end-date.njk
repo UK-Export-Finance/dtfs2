@@ -5,7 +5,7 @@
 {% extends "index.njk" %}
 
 {% block pageTitle %}
-  Amendment - Request date
+  Amendment - Cover End Date
 {% endblock %}
 
 {% block sub_content %}
@@ -19,21 +19,25 @@
       }
     }) }}
   {% endif %}
-  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--request-heading" aria-label="What date did the bank request the amendment?">What date did the bank request the amendment?</h1>
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--cover-end-date-heading" aria-label="Enter the new cover end date">Enter the new cover end date</h1>
 
+  <div class="govuk-body govuk-!-margin-bottom-4" data-cy="amendment--current-cover-end-date">
+    <p class="govuk-body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Current cover end date</p>
+    {{currentCoverEndDate}}
+  </div>
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukDateInput({
-      id: "amendmentRequestDate",
-      namePrefix: "amendment-request-date",
+      id: "coverEndDate",
+      namePrefix: "cover-end-date",
       hint: {
-        text: "For example, 31 3 1980",
+        text: "For example, 31 3 2022",
         attributes: {
-          "data-cy": "amendments--request-hint"
+          "data-cy": "cover-end-date-hint"
         }
       },
-      errorMessage: errors and errors.fieldErrors.amendmentRequestDate and {
-        text: errors.fieldErrors.amendmentRequestDate.text,
+      errorMessage: errors and errors.fieldErrors.coverEndDate and {
+        text: errors.fieldErrors.coverEndDate.text,
         attributes: {
           'data-cy': 'amendment--inline-error'
         }
@@ -41,29 +45,29 @@
       items: [
         {
           label: "Day",
-          classes: errors.fieldErrors.amendmentRequestDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
           name: "day",
-          value: amendmentRequestDateDay,
+          value: coverEndDateDay,
           attributes: {
-            'data-cy': "amendment--request-date-day"
+            'data-cy': "amendment--cover-end-date-day"
           }
         },
         {
           label: "Month",
-          classes: errors.fieldErrors.amendmentRequestDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
           name: "month",
-          value: amendmentRequestDateMonth,
+          value: coverEndDateMonth,
           attributes: {
-            'data-cy': "amendment--request-date-month"
+            'data-cy': "amendment--cover-end-date-month"
           }
         },
         {
           label: "Year",
-          classes: errors.fieldErrors.amendmentRequestDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+          classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
           name: "year",
-          value: amendmentRequestDateYear,
+          value: coverEndDateYear,
           attributes: {
-            'data-cy': "amendment--request-date-year"
+            'data-cy': "amendment--cover-end-date-year"
           }
         }
       ]
