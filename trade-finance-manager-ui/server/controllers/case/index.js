@@ -7,9 +7,19 @@ const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
 
   const deal = await api.getDeal(dealId);
+  const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
+  const {
+    facilityId, type, ukefFacilityId, status,
+  } = amendment;
 
   if (!deal) {
     return res.redirect('/not-found');
+  }
+
+  const amendmentInProgress = status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+
+  if (amendmentInProgress) {
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
   return res.render('case/deal/deal.njk', {
@@ -19,6 +29,10 @@ const getCaseDeal = async (req, res) => {
     activeSubNavigation: 'deal',
     dealId,
     user: req.session.user,
+    facilityType: type,
+    ukefFacilityId,
+    facilityId,
+    hasAmendmentInProgress: amendmentInProgress,
   });
 };
 
@@ -160,7 +174,8 @@ const putCaseTask = async (req, res) => {
 const getCaseFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
-  const amendment = await api.getAmendmentInProgress(facilityId);
+  const { data: amendment } = await api.getAmendmentInProgress(facilityId);
+  const { status, amendmentId } = amendment;
 
   if (!facility) {
     return res.redirect('/not-found');
@@ -168,6 +183,8 @@ const getCaseFacility = async (req, res) => {
 
   const { dealId } = facility.facilitySnapshot;
   const deal = await api.getDeal(dealId);
+
+  const amendmentInProgress = status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
@@ -179,10 +196,11 @@ const getCaseFacility = async (req, res) => {
     facilityId,
     facilityTfm: facility.tfm,
     user: req.session.user,
-    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendment?.amendmentId,
-    showContinueAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && amendment?.amendmentId,
+    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendmentId,
+    showContinueAmendmentButton: amendmentInProgress && !amendment.submittedByPim,
     amendmentId: amendment?.amendmentId,
-    amendmentVersion: amendment.version,
+    amendmentVersion: amendment?.version,
+    hasAmendmentInProgress: amendmentInProgress,
   });
 };
 

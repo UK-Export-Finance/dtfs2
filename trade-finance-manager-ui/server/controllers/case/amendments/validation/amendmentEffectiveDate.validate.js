@@ -1,5 +1,5 @@
 const {
-  isAfter, set, getUnixTime,
+  isBefore, set, getUnixTime,
 } = require('date-fns');
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
 
@@ -11,84 +11,84 @@ const { validationErrorHandler } = require('../../../../helpers/validationErrorH
  * function to validate the amendment effective date
  * checks if in future or before submission date
  */
-const amendmentEffectiveDateValidation = async (body) => {
+const effectiveDateValidation = async (body) => {
   const {
-    'amendment-effective-date-day': amendmentEffectiveDateDay,
-    'amendment-effective-date-month': amendmentEffectiveDateMonth,
-    'amendment-effective-date-year': amendmentEffectiveDateYear,
+    'amendment-effective-date-day': effectiveDateDay,
+    'amendment-effective-date-month': effectiveDateMonth,
+    'amendment-effective-date-year': effectiveDateYear,
   } = body;
 
-  const amendmentEffectiveDateErrors = [];
+  const effectiveDateErrors = [];
 
-  const amendmentEffectiveIsFullyComplete = amendmentEffectiveDateDay && amendmentEffectiveDateMonth && amendmentEffectiveDateYear;
+  const amendmentEffectiveIsFullyComplete = effectiveDateDay && effectiveDateMonth && effectiveDateYear;
   const amendmentEffectiveIsPartiallyComplete = !amendmentEffectiveIsFullyComplete
-    && (amendmentEffectiveDateDay || amendmentEffectiveDateMonth || amendmentEffectiveDateYear);
-  const amendmentEffectiveIsBlank = !amendmentEffectiveDateDay && !amendmentEffectiveDateMonth && !amendmentEffectiveDateYear;
+    && (effectiveDateDay || effectiveDateMonth || effectiveDateYear);
+  const amendmentEffectiveIsBlank = !effectiveDateDay && !effectiveDateMonth && !effectiveDateYear;
 
-  let amendmentEffectiveDate = null;
+  let effectiveDate = null;
 
   if (amendmentEffectiveIsBlank) {
-    amendmentEffectiveDateErrors.push({
-      errRef: 'amendmentEffectiveDate',
+    effectiveDateErrors.push({
+      errRef: 'effectiveDate',
       errMsg: 'Enter the date the amendment is effective from',
     });
   } else if (amendmentEffectiveIsPartiallyComplete) {
     let msg = 'Amendment effective date must include a ';
     const dateFieldsInError = [];
-    if (!amendmentEffectiveDateDay) {
+    if (!effectiveDateDay) {
       msg += 'day ';
-      dateFieldsInError.push('amendmentEffectiveDate-day');
+      dateFieldsInError.push('effectiveDate-day');
     }
-    if (!amendmentEffectiveDateMonth) {
-      msg += !amendmentEffectiveDateDay ? ' and month ' : 'month ';
-      dateFieldsInError.push('amendmentEffectiveDate-month');
+    if (!effectiveDateMonth) {
+      msg += !effectiveDateDay ? ' and month ' : 'month ';
+      dateFieldsInError.push('effectiveDate-month');
     }
-    if (!amendmentEffectiveDateYear) {
-      msg += !amendmentEffectiveDateDay || !amendmentEffectiveDateMonth ? 'and year' : 'year';
-      dateFieldsInError.push('amendmentEffectiveDate-year');
+    if (!effectiveDateYear) {
+      msg += !effectiveDateDay || !effectiveDateMonth ? 'and year' : 'year';
+      dateFieldsInError.push('effectiveDate-year');
     }
 
-    amendmentEffectiveDateErrors.push({
-      errRef: 'amendmentEffectiveDate',
+    effectiveDateErrors.push({
+      errRef: 'effectiveDate',
       errMsg: msg,
       subFieldErrorRefs: dateFieldsInError,
     });
   } else if (amendmentEffectiveIsFullyComplete) {
-    const today = new Date();
-    let effectiveDateSet = set(new Date(), { year: amendmentEffectiveDateYear, month: amendmentEffectiveDateMonth - 1, date: amendmentEffectiveDateDay });
+    const today = (new Date()).setHours(2, 2, 2, 2);
+    let effectiveDateSet = set(new Date(), { year: effectiveDateYear, month: effectiveDateMonth - 1, date: effectiveDateDay });
     effectiveDateSet = effectiveDateSet.setHours(2, 2, 2, 2);
 
-    // checks amendment date not in the future
-    if (isAfter(effectiveDateSet, today)) {
-      amendmentEffectiveDateErrors.push({
-        errRef: 'amendmentEffectiveDate',
+    // checks amendment date is not in the future
+    if (isBefore(effectiveDateSet, today)) {
+      effectiveDateErrors.push({
+        errRef: 'effectiveDate',
         errMsg: 'The date the amendment is effective from must be today or in the future',
       });
     }
   }
 
   if (amendmentEffectiveIsFullyComplete) {
-    const amendmentEffectiveDateFormatted = set(new Date(), {
-      year: amendmentEffectiveDateYear,
-      month: amendmentEffectiveDateMonth - 1,
-      date: amendmentEffectiveDateDay,
+    const effectiveDateFormatted = set(new Date(), {
+      year: effectiveDateYear,
+      month: effectiveDateMonth - 1,
+      date: effectiveDateDay,
     });
     // sets to unix timestamp
-    amendmentEffectiveDate = getUnixTime(amendmentEffectiveDateFormatted);
+    effectiveDate = getUnixTime(effectiveDateFormatted);
   }
 
   const errorsObject = {
-    errors: validationErrorHandler(amendmentEffectiveDateErrors),
-    amendmentEffectiveDateDay,
-    amendmentEffectiveDateMonth,
-    amendmentEffectiveDateYear,
+    errors: validationErrorHandler(effectiveDateErrors),
+    effectiveDateDay,
+    effectiveDateMonth,
+    effectiveDateYear,
   };
 
   return {
-    amendmentEffectiveDate,
+    effectiveDate,
     errorsObject,
-    amendmentEffectiveDateErrors,
+    effectiveDateErrors,
   };
 };
 
-module.exports = { amendmentEffectiveDateValidation };
+module.exports = { effectiveDateValidation };
