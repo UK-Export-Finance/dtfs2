@@ -19,6 +19,7 @@ const getAmendmentRequestApproval = async (req, res) => {
       facilityId,
       isEditable,
       requireUkefApproval,
+      user: req.session.user,
     });
   } catch (err) {
     console.error('Unable to get the amendment approval page %O', { err });
@@ -26,9 +27,6 @@ const getAmendmentRequestApproval = async (req, res) => {
   }
 };
 
-/**
- * posts amendment request approval when continue button clicked
- */
 const postAmendmentRequestApproval = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { requireUkefApproval } = req.body;
@@ -38,7 +36,7 @@ const postAmendmentRequestApproval = async (req, res) => {
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
   const { dealId } = amendment;
 
-  if (amendmentRequestApprovalErrors.length > 0) {
+  if (amendmentRequestApprovalErrors.length) {
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
     return res.render('case/amendments/amendment-request-approval.njk', {
       errors: errorsObject.errors,
@@ -46,6 +44,7 @@ const postAmendmentRequestApproval = async (req, res) => {
       facilityId,
       isEditable,
       requireUkefApproval,
+      user: req.session.user,
     });
   }
 
@@ -56,21 +55,20 @@ const postAmendmentRequestApproval = async (req, res) => {
     if (!approval) {
       payload = { ...payload, changeFacilityValue: false, changeCoverEndDate: false };
     }
-    const update = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
-    if (update) {
+    if (status === 200) {
       if (approval) {
         return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
       }
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-effective-date`);
     }
-    console.error('Unable to update the amendment');
+    console.error('Unable to update the amendment request approval');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-approval`);
   } catch (err) {
     console.error('There was a problem creating the amendment approval %O', { response: err?.response?.data });
+    return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
-
-  return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
 };
 
 module.exports = { getAmendmentRequestApproval, postAmendmentRequestApproval };
