@@ -632,10 +632,10 @@ describe('controllers - case', () => {
           facilityId: req.params.facilityId,
           user: session.user,
           showAmendmentButton: false,
-          showContinueAmendmentButton: true,
+          showContinueAmendmentButton: false,
           amendmentId: '626bae8c43c01e02076352e1',
           amendmentVersion: 1,
-          hasAmendmentInProgress: true,
+          hasAmendmentInProgress: false,
         });
       });
     });
