@@ -16,7 +16,7 @@ const getCaseDeal = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const amendmentInProgress = status !== CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.COMPLETED;
+  const amendmentInProgress = status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
   if (amendmentInProgress) {
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
@@ -184,7 +184,7 @@ const getCaseFacility = async (req, res) => {
   const { dealId } = facility.facilitySnapshot;
   const deal = await api.getDeal(dealId);
 
-  const amendmentInProgress = status !== CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.COMPLETED;
+  const amendmentInProgress = status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
