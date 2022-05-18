@@ -20,6 +20,7 @@ const DEAL_STAGE = {
   APPROVED_WITHOUT_CONDITIONS: 'Approved (without conditions)',
   DECLINED: 'Declined',
   CONFIRMED: 'Confirmed',
+  AMENDMENT_IN_PROGRESS: 'Amendment in progress',
 };
 
 module.exports = {
