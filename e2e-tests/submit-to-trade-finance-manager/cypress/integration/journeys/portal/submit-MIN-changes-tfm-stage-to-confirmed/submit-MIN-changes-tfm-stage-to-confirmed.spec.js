@@ -3,6 +3,8 @@ import portalPages from '../../../../../../portal/cypress/integration/pages';
 
 import tfmPartials from '../../../../../../trade-finance-manager/cypress/integration/partials';
 
+import CONSTANTS from '../../../../../../trade-finance-manager/cypress/fixtures/constants';
+
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_MIN_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal/dealReadyToSubmit';
 
@@ -51,7 +53,7 @@ context('Portal to TFM deal submission - MIN changes TFM deal stage to Confirmed
     portalPages.contract.visit(deal);
 
     portalPages.contract.status().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Ready for Checker\'s approval');
+      expect(text.trim()).to.equal(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
 
     portalPages.contract.proceedToSubmit().click();
@@ -72,6 +74,6 @@ context('Portal to TFM deal submission - MIN changes TFM deal stage to Confirmed
     const tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
     cy.forceVisit(tfmDealPage);
 
-    tfmPartials.caseSummary.ukefDealStage().contains('Confirmed');
+    tfmPartials.caseSummary.ukefDealStage().contains(CONSTANTS.DEAL_STAGE_TFM.CONFIRMED);
   });
 });
