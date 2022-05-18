@@ -81,8 +81,6 @@ const updateAllTasks = async (
 
         if (isTaskThatIsBeingUpdated) {
           updatedTask.history.push(mapTaskHistoryObject({
-            taskId: task.id,
-            groupId: task.groupId,
             statusFrom,
             statusTo: taskUpdate.status,
             assignedUserId: taskUpdate.assignedTo.userId,
@@ -103,7 +101,7 @@ const updateAllTasks = async (
 
   /**
    * If 'Complete an adverse history check' task is completed
-   * All tasks in the Underwriting Group Task become unlocked and are able to be started
+   * All tasks in the Underwriting Group become unlocked and are able to be started
    * */
   const canUnlockUnderWritingGroupTasks = isAdverseHistoryTaskIsComplete(taskGroups);
 
@@ -200,6 +198,7 @@ const updateAllTasks = async (
  * - Gets the deal and all tasks.
  * - Maps the taskUpdate input into schema format, adding dates.
  * - Finds the group the task belongs to and updates the task in that group.
+ * - Checks if the task can be updated.
  * - Maps over all tasks in every group and updates their status/canEdit flag.
  * - If previous task is complete, a sendEmail flag for that task is returned.
  * - If the task is the task that is being updated (by user), task.history is updated.
