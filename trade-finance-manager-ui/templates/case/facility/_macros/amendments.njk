@@ -8,6 +8,7 @@
   {% set hasAmendmentInProgress = params.hasAmendmentInProgress %}
   {% set amendmentId = params.amendmentId %}
   {% set amendmentVersion = params.amendmentVersion %}
+  {% set showContinueAmendmentButton = params.showContinueAmendmentButton %}
 
   <div class="govuk-grid-row" data-cy="amendments">
     <div class="govuk-grid-column-full">
@@ -21,7 +22,7 @@
             }
           }) }}
         </form>
-      {% elif hasAmendmentInProgress === true %}
+      {% elif showContinueAmendmentButton === true %}
         {{ govukButton({
           text: "Continue with amendment request " + amendmentVersion,
           attributes: {
