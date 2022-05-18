@@ -3,7 +3,6 @@ const MANDATORY_CRITERIA_VERSIONED = [
     version: 33,
     createdAt: new Date('2021-01-03T00:00'),
     updatedAt: null,
-    product: 'GEF',
     isInDraft: false,
     title: 'Confirm eligibility (mandatory criteria)',
     introText: 'You must confirm that all the following will be true for this application on the date that cover starts.',

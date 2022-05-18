@@ -1,7 +1,6 @@
 module.exports = [
   {
     version: 1,
-    product: 'BSS/EWCS',
     criteria: [
       {
         id: 1,
@@ -107,7 +106,6 @@ module.exports = [
   },
   {
     version: 2,
-    product: 'BSS/EWCS',
     criteria: [
       {
         id: 11,
@@ -145,7 +143,6 @@ module.exports = [
   },
   {
     version: 3,
-    product: 'BSS/EWCS',
     criteria: [
       {
         id: 11,
@@ -183,7 +180,6 @@ module.exports = [
   },
   {
     version: 4,
-    product: 'BSS/EWCS',
     criteria: [
       {
         id: 11,
@@ -221,7 +217,6 @@ module.exports = [
   },
   {
     version: 5,
-    product: 'BSS/EWCS',
     criteria: [
       {
         id: 11,
