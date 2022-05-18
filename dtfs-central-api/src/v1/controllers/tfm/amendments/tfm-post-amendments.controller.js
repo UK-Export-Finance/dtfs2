@@ -2,22 +2,22 @@ const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
-const { findAmendmentStatus, findLatestCompletedAmendment } = require('./tfm-get-amendments.controller');
+const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendmentByFacilityId } = require('./tfm-get-amendments.controller');
 const { findOneFacility } = require('../facility/tfm-get-facility.controller');
 
 exports.postTfmAmendment = async (req, res) => {
-  const { id: facilityId } = req.params;
+  const { facilityId } = req.params;
   // check if the facility Id is valid
   if (ObjectId.isValid(facilityId)) {
     const facility = await findOneFacility(facilityId);
 
     // check if the facility exists
     if (facility) {
-      const amendmentInProgress = await findAmendmentStatus(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS);
+      const amendmentInProgress = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS);
       // check if there is an amendment in progress
       if (!amendmentInProgress) {
         const { dealId } = facility.facilitySnapshot;
-        const latestCompletedAmendment = await findLatestCompletedAmendment(facilityId);
+        const latestCompletedAmendment = await findLatestCompletedAmendmentByFacilityId(facilityId);
 
         const amendment = {
           amendmentId: new ObjectId(),
@@ -25,7 +25,7 @@ exports.postTfmAmendment = async (req, res) => {
           dealId,
           createdAt: getUnixTime(new Date()),
           updatedAt: getUnixTime(new Date()),
-          status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS,
+          status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED,
           version: 1
         };
         if (latestCompletedAmendment) {
