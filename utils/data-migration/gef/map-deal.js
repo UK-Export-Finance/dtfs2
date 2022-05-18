@@ -270,7 +270,6 @@ const mapV1Deal = async (token, v1Deal, v2Banks, v2Users) => {
   if (isManualSubmission) {
     mapped.supportingInformation = mapSupportingInformation(v1Deal.children.eligiblity);
   }
-  // console.log(mapped);
 
   return mapped;
 };

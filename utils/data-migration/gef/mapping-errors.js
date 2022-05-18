@@ -22,9 +22,8 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
   if (!isNumber(v2Deal.submissionDate)) {
     errors.push('submissionDate');
   }
-  // if (!hasValue(v2Deal.ukefDealId)) {
-  //   errors.push('ukefDealId');
-  // }
+
+
   if (!hasObjectValues(v2Deal.exporter)) {
     errors.push('exporter');
   }
