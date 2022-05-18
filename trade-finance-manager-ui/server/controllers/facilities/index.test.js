@@ -42,6 +42,7 @@ describe('controllers - facilities', () => {
     describe('when there are facilities', () => {
       beforeEach(() => {
         api.getFacilities = () => Promise.resolve(mockGetFacilities);
+        api.getAllAmendmentsInProgress = () => Promise.resolve({ data: [] });
       });
 
       it('should render facilities template with data', async () => {
