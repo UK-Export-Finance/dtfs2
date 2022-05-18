@@ -26,12 +26,12 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
     log.addWarning(portalDealId, error);
   };
 
-  const copyDealFile = async (dealFiles) => {
-    for (let i = 0; i < dealFiles.length; i += 1) {
+  const copyDealFile = async (supportingInformation) => {
+    for (let i = 0; i < supportingInformation.length; i += 1) {
       const from = {
         fileshare: AZURE_WORKFLOW_FILESHARE_CONFIG.FILESHARE_NAME,
         folder: `${AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER}/${portalDealId}`,
-        filename: dealFiles[i].filename,
+        filename: supportingInformation[i].filename,
       };
 
       fileshare.setConfig(AZURE_WORKFLOW_FILESHARE_CONFIG);
@@ -95,36 +95,36 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
     },
   } = v1Deal;
 
-  const dealFiles = {
+  const supportingInformation = {
     security: exporterInfo.Bank_security,
   };
 
   if (v1ExporterQuestionnaire) {
-    dealFiles.exporterQuestionnaire = await v2DealFile(v1ExporterQuestionnaire, 'general_correspondence');
+    supportingInformation.exporterQuestionnaire = await v2DealFile(v1ExporterQuestionnaire, 'general_correspondence');
   }
 
   if (v1AuditedFinancialStatements) {
-    dealFiles.auditedFinancialStatements = await v2DealFile(v1AuditedFinancialStatements, 'financials');
+    supportingInformation.auditedFinancialStatements = await v2DealFile(v1AuditedFinancialStatements, 'financials');
   }
 
   if (v1YearToDateManagement) {
-    dealFiles.yearToDateManagement = await v2DealFile(v1YearToDateManagement, 'financials');
+    supportingInformation.yearToDateManagement = await v2DealFile(v1YearToDateManagement, 'financials');
   }
 
   if (v1FinancialForecasts) {
-    dealFiles.financialForecasts = await v2DealFile(v1FinancialForecasts, 'financials');
+    supportingInformation.financialForecasts = await v2DealFile(v1FinancialForecasts, 'financials');
   }
 
   if (v1FinancialInformationCommentary) {
-    dealFiles.financialInformationCommentary = await v2DealFile(v1FinancialInformationCommentary, 'financials');
+    supportingInformation.financialInformationCommentary = await v2DealFile(v1FinancialInformationCommentary, 'financials');
   }
 
   if (v1CorporateStructure) {
-    dealFiles.corporateStructure = await v2DealFile(v1CorporateStructure, 'general_correspondence');
+    supportingInformation.corporateStructure = await v2DealFile(v1CorporateStructure, 'general_correspondence');
   }
 
   return [
-    dealFiles,
+    supportingInformation,
     hasError,
   ];
 };

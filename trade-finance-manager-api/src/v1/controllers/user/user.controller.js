@@ -14,8 +14,7 @@ exports.findOne = async (_id, callback) => {
 
 exports.findByUsername = async (username, callback) => {
   const collection = await db.getCollection('tfm-users');
-
-  collection.findOne({ username }, callback);
+  collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.create = async (user, callback) => {

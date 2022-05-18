@@ -1,8 +1,9 @@
 const { now } = require('../../helpers/date');
-const { getSmeType, getPartyNames } = require('./helpers');
+const { getPartyNames } = require('./helpers');
+const CONSTANTS = require('../../constants');
 
 /*
-Field mapping based on email from Gareth Ashby 15/03/2021
+Field mapping based on email from GA 15/03/2021
   partyAlternateIdentifier  string  UKEF Party URN
   industryClassification    string  4 digit industry class, banks = 2501, if not known then use 0001, default to 0116
   name1                     string  First 35 characters of Party name
@@ -17,14 +18,15 @@ const bondBeneficiary = ({ deal, facility }) => {
   const { submissionDetails } = deal.dealSnapshot;
 
   const countryCode = submissionDetails['supplier-address-country'] && submissionDetails['supplier-address-country'].code;
-  const citizenshipClass = countryCode === 'GBR' ? '1' : '2';
-
+  const citizenshipClass = countryCode === CONSTANTS.DEAL.COUNTRY.DEFAULT
+    ? CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM
+    : CONSTANTS.PARTY.CITIZENSHIP_CLASS.ROW;
   const partyNames = getPartyNames(facility.facilitySnapshot.bondBeneficiary);
 
   return {
     alternateIdentifier: facility.tfm.bondBeneficiaryPartyUrn,
-    industryClassification: '0001',
-    smeType: getSmeType(''),
+    industryClassification: CONSTANTS.PARTY.INDUSTRY_CLASSFICATION.DEFAULT,
+    smeType: CONSTANTS.PARTY.SME_TYPE.NOT_KNOWN,
     citizenshipClass,
     officerRiskDate: now(),
     countryCode,

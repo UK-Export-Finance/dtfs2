@@ -67,7 +67,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
   const [details, detailsError] = mapDetails(portalDealId, v1Deal, dealRoot.submissionType);
   const [eligibility, eligibilityError] = mapEligibility(portalDealId, v1Deal);
   const [submissionDetails, submissionDetailsError] = mapSubmissionDetails(portalDealId, v1Deal);
-  const [dealFiles, dealFilesError] = await mapDealFiles(portalDealId, v1Deal);
+  const [supportingInformation, dealFilesError] = await mapDealFiles(portalDealId, v1Deal);
   const [bondTransactions, bondTransactionsError] = mapBondTransactions(portalDealId, v1Deal);
   const [loanTransactions, loanTransactionsError] = mapLoanTransactions(portalDealId, v1Deal);
   const comments = mapComments(v1Deal);
@@ -93,7 +93,7 @@ const mapV2 = async (portalDealId, v1Deal) => {
     details,
     eligibility,
     submissionDetails,
-    dealFiles,
+    supportingInformation,
     bondTransactions,
     loanTransactions,
     ...comments,

@@ -47,7 +47,7 @@ router.post('/feedback', async (req, res) => {
   }
 
   return res.render('feedback/feedback-form.njk', {
-    feedack: req.body,
+    feedback: req.body,
     user: req.session.user,
   });
 });

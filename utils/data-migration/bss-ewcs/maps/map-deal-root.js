@@ -2,7 +2,7 @@ const findPortalValue = require('./findPortalValue');
 const mapSubmissionType = require('./map-submission-type');
 const { getBankByName } = require('../../helpers/banks');
 const { convertV1Date } = require('../helpers/date-helpers');
-const { getUserByEmail } = require('../../helpers/users');
+const { getBssUserByEmail } = require('../../helpers/users');
 const CONSTANTS = require('../../../../portal-api/src/constants');
 
 const mapDealRoot = (portalDealId, v1Deal, banks) => {
@@ -42,7 +42,7 @@ const mapDealRoot = (portalDealId, v1Deal, banks) => {
     ? v1Deal.Deal_information.Extra_fields.All_Makers.Maker[0].username
     : v1Deal.Deal_information.Extra_fields.All_Makers.Maker.username;
 
-  const maker = minUsername ? getUserByEmail(minUsername) : getUserByEmail(makerUsername);
+  const maker = minUsername ? getBssUserByEmail(minUsername) : getBssUserByEmail(makerUsername);
 
   dealRoot.maker = maker;
 

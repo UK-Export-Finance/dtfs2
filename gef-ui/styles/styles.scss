@@ -118,3 +118,13 @@ $govuk-new-link-styles: true;
 .colour-light-grey {
   color: govuk-colour("dark-grey");
 }
+
+#application-details-comments-submit,
+#return-to-maker-submit,
+#submit-to-ukef-submit {
+  vertical-align: middle;
+}
+
+#application-reference-annd-actions-actions {
+  text-align: right;
+}

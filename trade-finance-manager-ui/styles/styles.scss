@@ -29,6 +29,33 @@ $govuk-new-link-styles: true;
 @import "./deal-parties.scss";
 @import "./search-form.scss";
 
+@import "./accessibility.scss";
+@import "./footer.scss";
+
 .js-enabled .js-hidden {
   display: none;
+}
+
+#deal-ukef-heading,
+#deal-supporting-information-bank-security,
+#deal-bank-details-ukef-heading {
+  padding-top: 30px;
+}
+
+#deal-bank-security-text,
+#deal-bank-security-facility-text {
+  white-space: pre-line;
+}
+
+#facility-ukef-heading-grey {
+padding-top: 90px;
+}
+
+#facility-covered-percentage {
+  float: right;
+}
+
+#parties-bond-beneficiary-area-ukef-hint,
+#parties-bond-issuer-area-ukef-hint {
+margin-top: -36px;
 }

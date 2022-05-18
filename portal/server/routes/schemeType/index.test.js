@@ -1,11 +1,10 @@
 import { get, post, use } from '../../helpers/routerMock';
 
-import validateToken from '../middleware/validate-token';
-import isMaker from '../middleware/isMaker';
+import { validateToken } from '../middleware';
 
 import { getSchemeType, postSchemeType } from '../../controllers/schemeType';
 
-jest.mock('../middleware/validate-token');
+jest.mock('../middleware/validateToken');
 jest.mock('../middleware/isMaker');
 
 describe('routes/site-notices', () => {
@@ -20,7 +19,7 @@ describe('routes/site-notices', () => {
     });
 
     it('should define the expected routes', () => {
-      expect(use).toHaveBeenCalledWith('/select-scheme/*', [validateToken, isMaker]);
+      expect(use).toHaveBeenCalledWith('/select-scheme/*', [validateToken, expect.any(Function)]);
 
       expect(get).toHaveBeenCalledWith('/select-scheme', getSchemeType);
 

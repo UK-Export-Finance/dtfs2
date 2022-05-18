@@ -60,8 +60,10 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT);
         cy.submitDealAfterUkefIds(dealId, 'GEF', MOCK_USER_CHECKER);
         cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
-          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE));
+          cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+            MOCK_FACILITY_ONE._id = facility.body.details._id;
+            cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+          });
           cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
             facilityTwoId = facility.body.details._id;
             cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO_NULL_MIA);
@@ -86,6 +88,12 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
     });
 
     it('relevant fields are locked ', () => {
+      applicationPreview.facilityGuidance();
+      applicationPreview.facilityGuidance().contains('Guidance on cash and contingent facilities');
+      applicationPreview.facilityGuidance().contains('Cash facilities');
+      applicationPreview.facilityGuidance().contains('Contingent facilities');
+      applicationPreview.facilityGuidance().contains('How many you can add');
+
       //  makes sure no action buttons exist (change or add)
       applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(2, 1).should('not.exist');
@@ -288,6 +296,12 @@ context('Return to maker', () => {
     });
 
     it('should not be able to edit any facilities', () => {
+      applicationPreview.facilityGuidance();
+      applicationPreview.facilityGuidance().contains('Guidance on cash and contingent facilities');
+      applicationPreview.facilityGuidance().contains('Cash facilities');
+      applicationPreview.facilityGuidance().contains('Contingent facilities');
+      applicationPreview.facilityGuidance().contains('How many you can add');
+
       // 1st facility table - makes sure no action buttons exist (change or add)
       applicationPreview.facilitySummaryListRowAction(0, 0).should('not.exist');
       applicationPreview.facilitySummaryListRowAction(0, 1).should('not.exist');
@@ -515,7 +529,7 @@ context('Check activity feed', () => {
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
         .contains(`${unissuedFacilitiesArray[0].type} facility ${unissuedFacilitiesArray[0].ukefFacilityId}`);
       applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[0].ukefFacilityId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[0]._id}`));
 
       applicationActivities.subNavigationBarActivities().click();
     });

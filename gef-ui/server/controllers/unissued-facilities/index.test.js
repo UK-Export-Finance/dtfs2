@@ -189,6 +189,8 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
     mockRequest.body['issue-date-day'] = format(now, 'd');
     mockRequest.body['issue-date-month'] = format(now, 'M');
     mockRequest.body['issue-date-year'] = format(now, 'yyyy');
@@ -209,7 +211,7 @@ describe('postChangeUnissuedFacility()', () => {
         coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
         coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
         issueDate: format(now, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: null,
+        shouldCoverStartOnSubmission: false,
         monthsOfCover: 30,
         name: 'UKEF123',
         hasBeenIssued: true,
@@ -302,6 +304,8 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
     mockRequest.body['issue-date-day'] = format(yesterday, 'd');
     mockRequest.body['issue-date-month'] = format(yesterday, 'M');
     mockRequest.body['issue-date-year'] = format(yesterday, 'yyyy');
@@ -322,7 +326,7 @@ describe('postChangeUnissuedFacility()', () => {
         coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
         coverStartDate: format(yesterday, 'MMMM d, yyyy'),
         issueDate: format(yesterday, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: null,
+        shouldCoverStartOnSubmission: false,
         monthsOfCover: 30,
         name: 'UKEF123',
         hasBeenIssued: true,
@@ -439,6 +443,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
 
     mockRequest.body['issue-date-day'] = format(now, 'd');
     mockRequest.body['issue-date-month'] = format(now, 'M');
@@ -460,7 +465,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
         coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
         coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
         issueDate: format(now, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: null,
+        shouldCoverStartOnSubmission: false,
         monthsOfCover: 30,
         name: 'UKEF123',
         hasBeenIssued: true,

@@ -22,7 +22,7 @@ exports.MOCK_FACILITY_ONE = {
   ukefExposure: 1600,
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
-  feeType: 'in advance',
+  feeType: 'In advance',
   feeFrequency: 'Monthly',
   ukefFacilityId: '1',
   dayCountBasis: 365,

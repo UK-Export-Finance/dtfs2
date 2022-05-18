@@ -11,7 +11,7 @@ const insertMocks = async () => {
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['maker', 'editor', 'checker', 'data-admin'],
-    email: 'maker1@ukexportfinance.gov.uk',
+    email: 're-insert-mocks-gef',
   });
 
   const allUsers = await portalApi.listUsers();

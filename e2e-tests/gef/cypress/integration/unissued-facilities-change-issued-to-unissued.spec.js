@@ -17,6 +17,8 @@ import aboutFacilityUnissued from './pages/unissued-facilities-about-facility';
 import CREDENTIALS from '../fixtures/credentials.json';
 import statusBanner from './pages/application-status-banner';
 import facilities from './pages/facilities';
+import applicationSubmission from './pages/application-submission';
+import returnToMaker from './pages/return-to-maker';
 
 let dealId;
 let token;
@@ -57,7 +59,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    // ensures the task comment box exists with correct headers and link
+    //   // ensures the task comment box exists with correct headers and link
     it('task comment box exists with correct header and unissued facilities link', () => {
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
@@ -68,8 +70,8 @@ context('Change issued facilities back to unissued (changed to issued facilities
     });
 
     /* application preview should not have unlocked ability to change unissued facilities until
-       at least 1 changed from unissued table
-    */
+         at least 1 changed from unissued table
+      */
     it('facilities table does not contain any add or change links as have not changed any facilities to issued yet', () => {
       applicationPreview.facilitySummaryListRowValue(0, 0).contains(MOCK_FACILITY_THREE.name);
       applicationPreview.facilitySummaryListRowAction(0, 0).should('not.exist');
@@ -322,6 +324,46 @@ context('Change issued facilities back to unissued (changed to issued facilities
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
       applicationPreview.submitButtonPostApproval().should('not.exist');
+    });
+
+    it('changing to unissued when returning to maker should hide submit button if no issued facilities', () => {
+      // issue facility
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
+      aboutFacilityUnissued.issueDateDay().type(dateConstants.threeDaysDay);
+      aboutFacilityUnissued.issueDateMonth().type(dateConstants.threeDaysMonth);
+      aboutFacilityUnissued.issueDateYear().type(dateConstants.threeDaysYear);
+
+      aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.threeDaysDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.threeDaysMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.threeDaysYear);
+
+      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
+      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
+      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+      aboutFacilityUnissued.continueButton().click();
+      unissuedFacilityTable.updateFacilitiesLater().click();
+
+      // submit to checker
+      applicationPreview.submitButtonPostApproval().click();
+      applicationSubmission.submitButton().click();
+      // log in
+      cy.login(CREDENTIALS.CHECKER);
+      cy.visit(relative(`/gef/application-details/${dealId}`));
+      // return to maker
+      applicationPreview.returnButton().click();
+      returnToMaker.submitButton().click();
+
+      cy.login(CREDENTIALS.MAKER);
+      cy.visit(relative(`/gef/application-details/${dealId}`));
+      // unissue facility
+      applicationPreview.facilitySummaryListRowAction(2, 2).click();
+      facilities.hasBeenIssuedRadioNoRadioButton().click();
+      facilities.continueButton().click();
+
+      applicationPreview.submitButton().should('not.exist');
     });
   });
 });

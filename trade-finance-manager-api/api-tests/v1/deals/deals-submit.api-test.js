@@ -28,6 +28,8 @@ const sendEmailApiSpy = jest.fn(() => Promise.resolve(
 
 const updatePortalBssDealStatusSpy = jest.fn(() => Promise.resolve({}));
 const updatePortalGefDealStatusSpy = jest.fn(() => Promise.resolve({}));
+const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
+const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
 jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
@@ -66,6 +68,12 @@ describe('/v1/deals', () => {
 
     updateGefFacilitySpy.mockClear();
     externalApis.updateGefFacility = updateGefFacilitySpy;
+
+    findBankByIdSpy.mockClear();
+    externalApis.findBankById = findBankByIdSpy;
+
+    findOneTeamSpy.mockClear();
+    externalApis.findOneTeam = findOneTeamSpy;
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -197,10 +205,10 @@ describe('/v1/deals', () => {
       });
 
       describe('when deal is MIN', () => {
-        it('should NOT add tfm stage', async () => {
+        it('should add `Confirmed` tfm stage', async () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_GEF_DEAL_MIN));
           expect(status).toEqual(200);
-          expect(body.tfm.stage).toBeUndefined();
+          expect(body.tfm.stage).toEqual(CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED);
         });
       });
     });

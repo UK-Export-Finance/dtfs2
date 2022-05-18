@@ -50,3 +50,4 @@ npm run component-test ./component-tests/path/to/file.component-test.js
 ### **End to end tests**
 
 See e2e-tests README.md
+

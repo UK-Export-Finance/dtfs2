@@ -17,6 +17,7 @@ import {
   futureDateInRange,
   displayChangeSupportingInfo,
   canUpdateUnissuedFacilitiesCheck,
+  returnToMakerNoFacilitiesChanged,
 } from './helpers';
 
 import {
@@ -1506,6 +1507,50 @@ describe('futureDateInRange', () => {
     it('if MIA, returns false if unissuedFacilities and no facilitiesChanged to issued and ukefDecisionAccepted is false', () => {
       const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, true, [], false);
       expect(result).toEqual(false);
+    });
+  });
+
+  describe('displayChangeSupportingInfo()', () => {
+    it('Should return false if preview mode', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
+      expect(result).toEqual(false);
+    });
+
+    it('Should return false if preview mode and submission count over 0', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
+      expect(result).toEqual(false);
+    });
+
+    it('Should return true if not preview mode and submission count is 0', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
+      expect(result).toEqual(true);
+    });
+
+    it('Should return true if not preview mode and submission count is 0', () => {
+      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
+      expect(result).toEqual(true);
+    });
+  });
+
+  describe('returnToMakerNoFacilitiesChanged()', () => {
+    it('returns false if wrong status and no hasChangedFacilities', () => {
+      const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false);
+      expect(result).toEqual(false);
+    });
+
+    it('returns false if wrong status and hasChangedFacilities', () => {
+      const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_UNISSUED_ONLY, true);
+      expect(result).toEqual(false);
+    });
+
+    it('returns false if right status and hasChangedFacilities', () => {
+      const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_RETURN_MAKER, true);
+      expect(result).toEqual(false);
+    });
+
+    it('returns true changes required and no hasChangedFacilities', () => {
+      const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_RETURN_MAKER, false);
+      expect(result).toEqual(true);
     });
   });
 });

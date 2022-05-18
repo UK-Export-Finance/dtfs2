@@ -1,6 +1,6 @@
 const { getCurrencyById, formatCurrency } = require('../helpers/currencies');
 const { convertV1Date } = require('../helpers/date-helpers');
-const { getUserByEmail } = require('../../helpers/users');
+const { getBssUserByEmail } = require('../../helpers/users');
 const formatUkefId = require('../helpers/formatUkefId');
 
 const findPortalValue = require('./findPortalValue');
@@ -22,12 +22,13 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     };
 
     const facilityStage = findPortalValue(loan.EWCS_Guarantee_details.EWCS_stage, 'EWCS_stage', 'FACILITIES', 'STAGE_LOAN', logError);
-
+    const hasBeenIssued = facilityStage === 'Issued';
     const v2loan = {
       type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
       ukefFacilityId: formatUkefId(loan.UKEF_EWCS_facility_id),
       name: loan.EWCS_Guarantee_details.EWCS_bank_id,
       facilityStage,
+      hasBeenIssued,
       value: loan.EWCS_Financial_details.EWCS_value,
       currency: getCurrencyById(loan.EWCS_Financial_details.EWCS_currency_code),
       currencySameAsSupplyContractCurrency: (loan.EWCS_Financial_details.EWCS_currency_code === v1Deal.Deal_information.Financial.Deal_currency_code).toString(),
@@ -46,7 +47,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     };
 
     if (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL) {
-      v2loan.status = CONSTANTS.FACILITIES.STATUS.NOT_STARTED;
+      v2loan.status = CONSTANTS.FACILITIES.DEAL_STATUS.NOT_STARTED;
     }
 
     if (loan.EWCS_Financial_details.EWCS_conversion_date_deal) {
@@ -92,7 +93,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     }
 
     if (loan.Extra_fields.User_who_issued && loan.Extra_fields.User_who_issued.username) {
-      v2loan.submittedAsIssuedBy = getUserByEmail(loan.Extra_fields.User_who_issued.username);
+      v2loan.submittedAsIssuedBy = getBssUserByEmail(loan.Extra_fields.User_who_issued.username);
     }
 
     return v2loan;

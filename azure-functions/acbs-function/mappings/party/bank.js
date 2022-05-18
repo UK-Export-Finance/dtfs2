@@ -1,8 +1,9 @@
 const { now } = require('../../helpers/date');
 const { getPartyNames } = require('./helpers');
+const CONSTANTS = require('../../constants');
 
 /*
-Field mapping based on email from Gareth Ashby 15/03/2021
+Field mapping based on email from GA 15/03/2021
   partyAlternateIdentifier  string  UKEF Party URN (Maximum 20 character)
   industryClassification    string  4 digit industry class, banks = 2501, if not known then use 0001, default to 0116
   name1                     string  First 35 characters of Party name
@@ -18,11 +19,11 @@ const bankMap = ({ bank }) => {
 
   return {
     alternateIdentifier: bank.partyUrn.substring(0, 20),
-    industryClassification: '2501',
-    smeType: '5',
-    citizenshipClass: '1',
+    industryClassification: CONSTANTS.PARTY.INDUSTRY_CLASSFICATION.BANK,
+    smeType: CONSTANTS.PARTY.SME_TYPE.NON_SME,
+    citizenshipClass: CONSTANTS.PARTY.CITIZENSHIP_CLASS.UNITED_KINGDOM,
     officerRiskDate: now(),
-    countryCode: 'GBR',
+    countryCode: CONSTANTS.DEAL.COUNTRY.DEFAULT,
     ...partyNames,
   };
 };

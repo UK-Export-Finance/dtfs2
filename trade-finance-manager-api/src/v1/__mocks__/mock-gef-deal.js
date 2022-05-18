@@ -1,5 +1,5 @@
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
-const MOCK_USERS = require('./mock-users');
+const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 const CONSTANTS = require('../../constants');
 
 const MOCK_GEF_DEAL = {
@@ -68,7 +68,7 @@ const MOCK_GEF_DEAL = {
   status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.SUBMITTED_TO_UKEF,
   ukefDealId: '123',
   updatedAt: null,
-  maker: MOCK_USERS[0],
+  maker: MOCK_PORTAL_USERS[0],
   checkerId: '60a705d74bf03d1300d96383',
   comments: [
     {

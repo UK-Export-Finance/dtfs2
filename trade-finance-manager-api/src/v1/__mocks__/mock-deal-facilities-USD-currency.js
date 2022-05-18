@@ -1,3 +1,4 @@
+const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 const MOCK_FACILITIES_USD_CURRENCY = require('./mock-facilities-USD-currency');
 
 const MOCK_DEAL = {
@@ -15,11 +16,7 @@ const MOCK_DEAL = {
       'test2@mock.com',
     ],
   },
-  maker: {
-    username: 'JOE',
-    firstname: 'Joe',
-    surname: 'Bloggs',
-  },
+  maker: MOCK_PORTAL_USERS[0],
   details: {
     bank: 'Mock bank',
     ukefDealId: '20010739',

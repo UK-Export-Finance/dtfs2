@@ -92,6 +92,7 @@ describe('a user', () => {
         users: [
           {
             username: aMaker.username,
+            email: aMaker.email,
             roles: aMaker.roles,
             bank: aMaker.bank,
             _id: expect.any(String),
@@ -184,7 +185,7 @@ describe('a user', () => {
       success: true,
       token: expect.any(String),
       user: expectedUserData,
-      expiresIn: '1d',
+      expiresIn: '12h',
     });
   });
 
@@ -207,5 +208,15 @@ describe('a user', () => {
     const { status } = await as({ token }).get('/v1/validate');
 
     expect(status).toEqual(401);
+  });
+
+  it('User already exists', async () => {
+    // User creation - first instance
+    const first = await as().post(aMaker).to('/v1/users');
+    expect(first.status).toEqual(200);
+
+    // User creation - second instance
+    const second = await as().post(aMaker).to('/v1/users');
+    expect(second.status).toEqual(400);
   });
 });

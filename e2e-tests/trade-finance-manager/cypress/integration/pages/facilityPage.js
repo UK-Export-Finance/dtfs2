@@ -18,6 +18,8 @@ const facilityPage = {
   facilityDealCreditRating: () => cy.get('[data-cy="credit-rating-value"]'),
   facilityDealCreditRatingNotSet: () => cy.get('[data-cy="credit-rating-not-set-tag"]'),
 
+  facilityFeeType: () => cy.get('[data-cy="facility-premium-type"]'),
+
   premiumScheduleTable: {
     total: () => cy.get('[data-cy="premium-total"]'),
   },

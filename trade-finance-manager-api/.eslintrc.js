@@ -17,6 +17,9 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
+    'object-curly-newline': ['error', {
+      consistent: true,
+    }],
   },
   parserOptions: {
     ecmaVersion: 2020,

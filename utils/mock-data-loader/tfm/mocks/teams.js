@@ -1,13 +1,5 @@
 module.exports = [
   {
-    id: 'TEAM1',
-    name: 'Mock Team 1',
-  },
-  {
-    id: 'TEAM2',
-    name: 'Mock Team 2',
-  },
-  {
     id: 'UNDERWRITING_SUPPORT',
     name: 'Underwriting support',
     email: 'maker1@ukexportfinance.gov.uk',
@@ -31,5 +23,10 @@ module.exports = [
     id: 'RISK_MANAGERS',
     name: 'Risk managers',
     email: 'checker1@ukexportfinance.gov.uk',
+  },
+  {
+    id: 'PIM',
+    name: 'PIM',
+    email: 'checker2@ukexportfinance.gov.uk',
   },
 ];

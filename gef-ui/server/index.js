@@ -14,17 +14,21 @@ const routes = require('./routes');
 const supportingDocuments = require('./routes/supporting-documents.route');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const csrfToken = require('./middleware/csrf');
+const { csrf: csrfToken, security, seo } = require('./middleware');
 
 const app = express();
-const seo = require('./middleware/headers/seo');
-const security = require('./middleware/headers/security');
 
 const PORT = process.env.PORT || 5006;
+const https = Boolean(process.env.HTTPS || 0);
+
+if (https) {
+  app.set('trust proxy', 1);
+}
+
 const cookie = {
   path: '/',
   httpOnly: true,
-  secure: false,
+  secure: https,
   sameSite: 'strict',
   maxAge: 604800000, // 7 days
 };

@@ -123,7 +123,6 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       expect(updatedInvalidDeal.status).toEqual(200);
       expect(updatedInvalidDeal.body.eligibility.status).toEqual('Incomplete');
     });
-
     it('uploads a file with the correct type', async () => {
       const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
       const newId = postResult.body._id;
@@ -142,8 +141,8 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
       expect(status).toEqual(200);
       expect(body.supportingInformation[fieldname][0]).toMatchObject({
-        filename,
-        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename}`,
+        filename: 'test_file_1.txt',
+        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/test_file_1.txt`,
         type,
       });
     });
@@ -218,8 +217,8 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       ];
 
       const expectedFiles = files.map(({ filename, type }) => ({
-        filename,
-        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename}`,
+        filename: filename.replaceAll(/-/g, '_'),
+        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename.replaceAll(/-/g, '_')}`,
         type,
       }));
 
@@ -250,8 +249,8 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       ];
 
       const expectedFiles = files.map(({ filename, fieldname, type }) => ([{
-        filename,
-        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename}`,
+        filename: filename.replaceAll(/-/g, '_'),
+        fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename.replaceAll(/-/g, '_')}`,
         type,
       }]));
 
@@ -302,10 +301,10 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       }];
 
       await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
-      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/${newId}/eligibility-documentation/${fieldname}/${filename}`);
+      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/${newId}/eligibility-documentation/${fieldname}/${filename.replaceAll(/-/g, '_')}`);
 
       expect(status).toEqual(200);
-      expect(header['content-disposition']).toEqual(`attachment; filename=${filename}`);
+      expect(header['content-disposition']).toEqual(`attachment; filename=${filename.replaceAll(/-/g, '_')}`);
       expect(text).toEqual('mockFile');
     });
 
@@ -346,7 +345,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
       }];
 
       await as(aBarclaysMaker).putMultipartForm({}, files).to(`/v1/deals/${newId}/eligibility-documentation`);
-      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/123456789012/eligibility-documentation/${fieldname}/${filename}`);
+      const { status, text, header } = await as(aBarclaysMaker).get(`/v1/deals/620a1aa095a618b12da38c7b/eligibility-documentation/${fieldname}/${filename}`);
 
       expect(status).toEqual(404);
       expect(header['content-disposition']).toBeUndefined();

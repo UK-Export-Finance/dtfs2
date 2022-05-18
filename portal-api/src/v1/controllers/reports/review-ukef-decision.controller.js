@@ -100,19 +100,19 @@ exports.reviewUkefDecisionReports = async (req, res) => {
 
           // check if the date created is not null
           defaultDate = item.dateCreatedEpoch || '';
-          setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(0, 0, 1, 0);
+          setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(2, 0, 1, 0);
           // format the date DD LLL YYYY (i.e. 18 April 2022)
           deal.dateCreated = deal.dateCreatedEpoch ? format(setDateToMidnight, 'dd LLL yyyy') : '';
 
           // check if the submission date is not null
           defaultDate = item.submissionDateEpoch || '';
-          setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(0, 0, 1, 0);
+          setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(2, 0, 1, 0);
           // format the date DD LLL YYYY (i.e. 18 April 2022)
           deal.submissionDate = deal.submissionDateEpoch ? format(setDateToMidnight, 'dd LLL yyyy') : '';
 
           // check if the date of approval is not null
           defaultDate = item.dateOfApprovalEpoch || '';
-          setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(0, 0, 1, 0);
+          setDateToMidnight = (new Date(parseInt(defaultDate, 10))).setHours(2, 0, 1, 0);
           // format the date DD LLL YYYY (i.e. 18 April 2022)
           deal.dateOfApproval = deal.dateOfApprovalEpoch ? format(setDateToMidnight, 'dd LLL yyyy') : '';
 
