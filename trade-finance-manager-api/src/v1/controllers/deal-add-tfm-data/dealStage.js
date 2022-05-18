@@ -13,6 +13,10 @@ const dealStage = (status, submissionType) => {
     if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
       tfmDealStage = CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION;
     }
+
+    if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
+      tfmDealStage = CONSTANTS.DEALS.DEAL_STAGE_TFM.CONFIRMED;
+    }
   }
 
   return tfmDealStage;
