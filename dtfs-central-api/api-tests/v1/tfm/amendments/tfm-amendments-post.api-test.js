@@ -67,7 +67,9 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      await api.post().to(`/v1/tfm/facilities/${newId}/amendment`);
+      const { body: bodyPostResponse1 } = await api.post().to(`/v1/tfm/facilities/${newId}/amendment`);
+      const updatePayload1 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
+      await api.put(updatePayload1).to(`/v1/tfm/facilities/${newId}/amendment/${bodyPostResponse1.amendmentId}`);
       const { body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendment`);
       expect(body).toEqual({ status: 400, message: 'The current facility already has an amendment in progress' });
     });
