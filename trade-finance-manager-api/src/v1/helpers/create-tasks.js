@@ -10,6 +10,13 @@ const NEW_TASK = ({
   history: [],
 });
 
+/**
+ * Create tasks for a single group
+ * @param {Array} tasks to add to a group
+ * @param {Number} group ID
+ * @param {Array} additional/special tasks to add to the group
+ * @returns {Array} created tasks
+ */
 const createGroupTasks = (
   tasks,
   groupId,
@@ -25,7 +32,7 @@ const createGroupTasks = (
      * Only create the task if:
      * - task title is NOT conditional and always applies.
      * - OR the task is conditional and the task title is listed in additionalTasks array
-     * */
+     */
     const shouldCreateTask = (
       !task.isConditional
       || (task.isConditional && additionalTasks.includes(task.title)));
@@ -55,6 +62,11 @@ const createGroupTasks = (
   return mappedTasks;
 };
 
+/**
+ * Create AIN tasks/task groups
+ * @param {Array} additional/special tasks to add to the group
+ * @returns {Array} created task groups
+ */
 const createTasksAIN = (additionalTasks) => [
   {
     groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
@@ -67,6 +79,11 @@ const createTasksAIN = (additionalTasks) => [
   },
 ];
 
+/**
+ * Create MIA tasks/task groups
+ * @param {Array} additional/special tasks to add to the group
+ * @returns {Array} created task groups
+ */
 const createTasksMIA = (additionalTasks) => [
   {
     groupTitle: CONSTANTS.TASKS.MIA.GROUP_1.GROUP_TITLE,
@@ -106,6 +123,12 @@ const createTasksMIA = (additionalTasks) => [
   },
 ];
 
+/**
+ * Create tasks/task groups depending on the deal type
+ * @param {String} deal submission type
+ * @param {Array} additional/special tasks to add to the group
+ * @returns {Array} created task groups
+ */
 const createTasks = (
   submissionType,
   additionalTasks,

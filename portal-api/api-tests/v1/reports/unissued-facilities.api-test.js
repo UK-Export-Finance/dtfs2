@@ -102,6 +102,30 @@ describe('v1/reports/unissued-facilities', () => {
       currencyAndValue: expect.any(String)
     }]);
   });
+  it('retrieves an empty array if the MIN date is empty', async () => {
+    const updated = {
+      submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
+      submissionDate: '1639180800000',
+      manualInclusionNoticeSubmissionDate: ''
+    };
+    // update the submissionType to MIN
+    const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    // ensure that the update is successful
+    expect(submissionTypeStatus).toEqual(200);
+
+    // update the `status` to 'Submitted'
+    const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${gefDealUrl}/status/${mockApplication.body._id}`);
+    // ensure that the update was successful
+    expect(putResponse.status).toEqual(200);
+    // ensure that the submission date has a string format - usually EPOCH
+    expect(putResponse.body.submissionDate).toEqual(expect.any(String));
+
+    // perform a GET request to retrieve the unissued facilities for reports
+    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get('/v1/reports/unissued-facilities');
+    expect(reportsStatus).toEqual(200);
+    // ensure that the body has the following format:
+    expect(reportsBody).toEqual([]);
+  });
 
   it('retrieves an empty array if submission type is MIA', async () => {
     const updated = { submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA };

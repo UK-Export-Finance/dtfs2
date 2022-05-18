@@ -131,8 +131,7 @@ exports.update = async (req, res) => {
   const update = new Application(req.body);
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
-    return res.status(422)
-      .send(validateErrs);
+    return res.status(422).send((validateErrs));
   }
 
   // TODO: DTFS2-4987 Write unit tests for editorId
@@ -227,17 +226,13 @@ exports.changeStatus = async (req, res) => {
   const enumValidationErr = validatorStatusCheckEnums(req.body);
 
   if (enumValidationErr) {
-    return res.status(422)
-      .send(enumValidationErr);
+    return res.status(422).send(enumValidationErr);
   }
 
   const collection = await db.getCollection(dealsCollection);
-  const existingApplication = await collection.findOne({
-    _id: ObjectId(String(dealId)),
-  });
+  const existingApplication = await collection.findOne({ _id: ObjectId(String(dealId)) });
   if (!existingApplication) {
-    return res.status(404)
-      .send();
+    return res.status(404).send();
   }
 
   const { status } = req.body;
@@ -246,10 +241,7 @@ exports.changeStatus = async (req, res) => {
 
   // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
   if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    const submissionData = await addSubmissionData(
-      dealId,
-      existingApplication,
-    );
+    const submissionData = await addSubmissionData(dealId, existingApplication);
 
     applicationUpdate = {
       ...applicationUpdate,
@@ -259,9 +251,7 @@ exports.changeStatus = async (req, res) => {
 
   const updatedDocument = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(dealId)) } },
-    {
-      $set: applicationUpdate,
-    },
+    { $set: applicationUpdate },
     { returnOriginal: false },
   );
 
@@ -272,28 +262,20 @@ exports.changeStatus = async (req, res) => {
 
     // TODO: DTFS2-4705 - protect so that only a user with checker role and associated bank can submit to UKEF.
     if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-      await api.tfmDealSubmit(
-        dealId,
-        existingApplication.dealType,
-        req.user,
-      );
+      await api.tfmDealSubmit(dealId, existingApplication.dealType, req.user);
     }
   }
 
   // If status of correct type, send update email
-  if (
-    [
-      DEAL_STATUS.READY_FOR_APPROVAL,
-      DEAL_STATUS.CHANGES_REQUIRED,
-      DEAL_STATUS.SUBMITTED_TO_UKEF,
-    ].includes(status)
-  ) {
+  if ([DEAL_STATUS.READY_FOR_APPROVAL,
+    DEAL_STATUS.CHANGES_REQUIRED,
+    DEAL_STATUS.SUBMITTED_TO_UKEF]
+    .includes(status)) {
     const { user } = req;
     await sendStatusUpdateEmail(user, existingApplication, status);
   }
 
-  return res.status(utils.mongoStatus(updatedDocument))
-    .send(response);
+  return res.status(utils.mongoStatus(updatedDocument)).send(response);
 };
 
 exports.delete = async (req, res) => {

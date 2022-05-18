@@ -17,16 +17,13 @@ const sendTfmEmail = require('./send-tfm-email');
  * we might not want to send an email.
  * */
 const shouldSendFirstTaskEmail = (firstTask) =>
-  ((firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES
-  || firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE)
-  && !firstTask.emailSent);
+  (firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES
+    || firstTask.title === CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE)
+  && !firstTask.emailSent;
 
 const sendFirstTaskEmail = async (deal) => {
   const {
-    _id: dealId,
-    ukefDealId,
-    exporter,
-    tfm,
+    _id: dealId, ukefDealId, exporter, tfm,
   } = deal;
 
   const { tasks } = tfm;
@@ -41,20 +38,9 @@ const sendFirstTaskEmail = async (deal) => {
       const { team } = firstTask;
       const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
 
-      const emailVariables = generateTaskEmailVariables(
-        urlOrigin,
-        firstTask,
-        dealId,
-        exporter.companyName,
-        ukefDealId,
-      );
+      const emailVariables = generateTaskEmailVariables(urlOrigin, firstTask, dealId, exporter.companyName, ukefDealId);
 
-      const emailResponse = await sendTfmEmail(
-        templateId,
-        sendToEmailAddress,
-        emailVariables,
-        deal,
-      );
+      const emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
       return emailResponse;
     }
   }
@@ -63,35 +49,31 @@ const sendFirstTaskEmail = async (deal) => {
 };
 
 const sendMiaAcknowledgement = async (deal) => {
-  const {
-    dealType,
-    submissionType,
-    maker,
-  } = deal;
+  const { dealType, submissionType, maker } = deal;
 
   if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
     return null;
   }
 
   const { email: sendToEmailAddress } = maker;
+  const bankId = maker.bank.id;
+  const { emails: bankEmails } = await api.findBankById(bankId);
 
   let templateId;
   let emailVariables;
   let emailResponse;
+  let bankResponse;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_MIA_RECEIVED;
 
     emailVariables = generateMiaConfirmationEmailVars(deal);
 
-    emailResponse = await sendTfmEmail(
-      templateId,
-      sendToEmailAddress,
-      emailVariables,
-      deal,
-    );
-
-    return emailResponse;
+    // send an email to the maker
+    emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
+    // send a copy of the email to the bank's general email address
+    bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
+    return { emailResponse, bankResponse };
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
@@ -99,14 +81,11 @@ const sendMiaAcknowledgement = async (deal) => {
 
     emailVariables = generateMiaConfirmationEmailVars(deal);
 
-    emailResponse = await sendTfmEmail(
-      templateId,
-      sendToEmailAddress,
-      emailVariables,
-      deal,
-    );
-
-    return emailResponse;
+    // send an email to the maker
+    emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
+    // send a copy of the email to the bank's general email address
+    bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
+    return { emailResponse, bankResponse };
   }
 
   return null;
@@ -114,11 +93,7 @@ const sendMiaAcknowledgement = async (deal) => {
 
 const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) => {
   const {
-    ukefDealId,
-    bankInternalRefName,
-    submissionType,
-    maker,
-    exporter,
+    ukefDealId, bankInternalRefName, submissionType, maker, exporter,
   } = deal;
 
   const { firstname, surname } = maker;
@@ -142,22 +117,25 @@ const generateBssDealAinMinConfirmationEmailVariables = (deal, facilityLists) =>
 
 const sendAinMinAcknowledgement = async (deal) => {
   const {
-    dealType,
-    submissionType,
-    maker,
-    facilities,
+    dealType, submissionType, maker, facilities,
   } = deal;
 
-  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
-    && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+  if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
+    console.info('The current deal is not an AIN or MIN deal', deal?._id);
     return null;
   }
 
   let facilityLists;
   let templateId;
   let emailVariables;
-  let emailResponse;
-  const { email: sendToEmailAddress } = maker;
+  let makerEmailResponse;
+  let pimEmailResponse;
+  let bankResponse;
+  const bankId = maker.bank.id;
+  const { email: makerEmailAddress } = maker;
+  const { emails: bankEmails } = await api.findBankById(bankId);
+  // get the email address for PIM user
+  const { email: pimEmail } = await api.findOneTeam(CONSTANTS.TEAMS.PIM.id);
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     facilityLists = generateFacilityLists(dealType, facilities);
@@ -166,13 +144,13 @@ const sendAinMinAcknowledgement = async (deal) => {
 
     emailVariables = generateBssDealAinMinConfirmationEmailVariables(deal, facilityLists);
 
-    emailResponse = await sendTfmEmail(
-      templateId,
-      sendToEmailAddress,
-      emailVariables,
-      deal,
-    );
-    return emailResponse;
+    // send an email to the maker
+    makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
+    // send a copy of the email to PIM
+    pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+    // send a copy of the email to the bank's general email address
+    bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
+    return { makerEmailResponse, pimEmailResponse, bankResponse };
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
@@ -182,13 +160,13 @@ const sendAinMinAcknowledgement = async (deal) => {
 
     emailVariables = generateAinMinConfirmationEmailVars(deal, facilityLists);
 
-    emailResponse = await sendTfmEmail(
-      templateId,
-      sendToEmailAddress,
-      emailVariables,
-      deal,
-    );
-    return emailResponse;
+    makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
+    // send a copy of the email to PIM
+    pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+    // send a copy of the email to the bank's general email address
+    bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
+
+    return { makerEmailResponse, pimEmailResponse, bankResponse };
   }
 
   return null;
@@ -210,6 +188,23 @@ const sendDealSubmitEmails = async (deal) => {
   };
 };
 
+const sendMigratedDealEmail = async (dealId) => {
+  if (!dealId) {
+    return false;
+  }
+
+  const sendToEmailAddress = process.env.INTERNAL_EMAIL_GROUP;
+  const emailVariables = {
+    dealId,
+  };
+
+  return sendTfmEmail(
+    CONSTANTS.EMAIL_TEMPLATE_IDS.MIGRATED_DEAL_SUBMITTED,
+    sendToEmailAddress,
+    emailVariables,
+  );
+};
+
 module.exports = {
   shouldSendFirstTaskEmail,
   sendFirstTaskEmail,
@@ -217,4 +212,5 @@ module.exports = {
   sendMiaAcknowledgement,
   generateBssDealAinMinConfirmationEmailVariables,
   sendAinMinAcknowledgement,
+  sendMigratedDealEmail,
 };

@@ -1,3 +1,5 @@
+const { ObjectId } = require('bson');
+const { getCollection } = require('../../drivers/db-client');
 const {
   findOneTfmDeal,
   findOnePortalDeal,
@@ -10,6 +12,7 @@ const { updateFacilities } = require('./update-facilities');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
 
 const addTfmDealData = require('./deal-add-tfm-data');
+const dealStage = require('./deal-add-tfm-data/dealStage');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const { updatePortalDealStatus } = require('./update-portal-deal-status');
 const CONSTANTS = require('../../constants');
@@ -19,7 +22,11 @@ const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
-const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
+const {
+  sendDealSubmitEmails,
+  sendAinMinAcknowledgement,
+  sendMigratedDealEmail,
+} = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const dealHasAllUkefIds = require('../helpers/dealHasAllUkefIds');
 
@@ -153,6 +160,10 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
       await sendAinMinAcknowledgement(updatedDeal);
+
+      // if changed to MIN, status should be updated to confirmed
+      const updatedDealStage = dealStage(mappedDeal.status, mappedDeal.submissionType);
+      updatedDeal.tfm.stage = updatedDealStage;
     }
     await updatePortalDealStatus(updatedDeal);
 
@@ -163,20 +174,100 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
 
+// function used only for deals that have been migrated
+// note: this should not be used anymore once the migration for Amendments is complete
+const submitMigratedDeal = async (dealId, dealType, checker) => {
+  const deal = await getDeal(dealId, dealType);
+
+  if (!deal) {
+    console.error('TFM API - submitDealAfterUkefIds - deal not found ', dealId);
+    return false;
+  }
+  const facilitiesCollection = await getCollection('facilities');
+  const facilities = await facilitiesCollection.find({ dealId: ObjectId(deal._id) }).toArray();
+  if (facilities) {
+    deal.facilities = facilities;
+  }
+
+  const mappedDeal = mapSubmittedDeal({ dealSnapshot: deal });
+
+  const updatedDeal = await updatedIssuedFacilities(mappedDeal);
+
+  const isUpdatingToMIN = deal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
+
+  if (isUpdatingToMIN) {
+    const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker);
+    updatedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
+    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+      updatedDeal.manualInclusionNoticeSubmissionDate = portalMINUpdate.manualInclusionNoticeSubmissionDate;
+      updatedDeal.checkerMIN = portalMINUpdate.checkerMIN;
+    } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+      updatedDeal.manualInclusionNoticeSubmissionDate = portalMINUpdate.details.manualInclusionNoticeSubmissionDate;
+      updatedDeal.checkerMIN = portalMINUpdate.details.checkerMIN;
+    }
+
+    await sendAinMinAcknowledgement(updatedDeal);
+  }
+
+  // ACBS interaction : AIN or MIN only
+  if (dealController.canDealBeSubmittedToACBS(updatedDeal.submissionType)) {
+    console.info('Migrated deal ACBS interaction initiated: ', dealId);
+
+    // Add `updatedDeal` deal object to `migratedDeals` collection
+    const migratedDealToGo = {
+      ...updatedDeal,
+      issueFacility: [],
+    };
+
+    // Issue facility ACBS JSON
+    updatedDeal.facilities.filter((facility) => facility.hasBeenIssued).map((facility) => migratedDealToGo.issueFacility.push(
+      {
+        facilityId: facility.ukefFacilityId,
+        facility,
+        deal: {
+          dealSnapshot: {
+            dealType: deal.dealType,
+            submissionType: deal.submissionType,
+            submissionDate: deal.submissionDate,
+          },
+          exporter: {
+            ...deal.exporter,
+          },
+        },
+      },
+    ));
+
+    const migratedDeals = await getCollection('migratedDeals');
+    migratedDeals.insertOne(migratedDealToGo);
+
+    // ACBS
+    await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+
+    // Send notification email
+    await sendMigratedDealEmail(dealId);
+  }
+
+  await updatePortalDealStatus(updatedDeal);
+
+  return true;
+};
+
 const submitDealPUT = async (req, res) => {
-  const {
-    dealId,
-    dealType,
-    checker,
-  } = req.body;
+  const { dealId, dealType, checker } = req.body;
   let deal;
 
-  const canSubmitDealAfterUkefIds = await dealHasAllUkefIds(dealId);
-
-  if (canSubmitDealAfterUkefIds) {
-    deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+  const { status: canSubmitDealAfterUkefIds, message } = await dealHasAllUkefIds(dealId);
+  // check if the deal has been migrated from Portal V1 to Portal v2
+  if (message === 'Migrated deal') {
+    console.info('Submitting a migrated deal', dealId);
+    deal = await submitMigratedDeal(dealId, dealType, checker);
   } else {
-    deal = await submitDealBeforeUkefIds(dealId, dealType);
+    console.info('Submitting a brand new deal', dealId);
+    if (canSubmitDealAfterUkefIds) {
+      deal = await submitDealAfterUkefIds(dealId, dealType, checker);
+    } else {
+      deal = await submitDealBeforeUkefIds(dealId, dealType);
+    }
   }
 
   if (!deal) {
@@ -189,11 +280,7 @@ const submitDealPUT = async (req, res) => {
 exports.submitDealPUT = submitDealPUT;
 
 const submitDealAfterUkefIdsPUT = async (req, res) => {
-  const {
-    dealId,
-    dealType,
-    checker,
-  } = req.body;
+  const { dealId, dealType, checker } = req.body;
 
   const deal = await submitDealAfterUkefIds(dealId, dealType, checker);
 

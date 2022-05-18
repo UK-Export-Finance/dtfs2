@@ -1,3 +1,5 @@
+const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
+
 const MOCK_DEAL_NO_UKEF_ID = {
   _id: 'NO_UKEF_ID',
   dealType: 'BSS/EWCS',
@@ -6,11 +8,7 @@ const MOCK_DEAL_NO_UKEF_ID = {
   additionalRefName: 'Mock supply contract name',
   status: 'Acknowledged',
   previousStatus: 'Submitted',
-  maker: {
-    username: 'JOE',
-    firstname: 'Joe',
-    surname: 'Bloggs',
-  },
+  maker: MOCK_PORTAL_USERS[0],
   details: {
     bank: 'Mock bank',
     checker: {

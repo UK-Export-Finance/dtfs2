@@ -24,4 +24,9 @@ module.exports = [
     name: 'Risk managers',
     email: 'checker1@ukexportfinance.gov.uk',
   },
+  {
+    id: 'PIM',
+    name: 'PIM',
+    email: 'checker2@ukexportfinance.gov.uk',
+  },
 ];

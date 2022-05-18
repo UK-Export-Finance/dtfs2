@@ -22,6 +22,7 @@ const DEAL_STAGE_TFM = {
   UKEF_APPROVED_WITH_CONDITIONS: 'Approved (with conditions)',
   UKEF_APPROVED_WITHOUT_CONDITIONS: 'Approved (without conditions)',
   DECLINED: 'Declined',
+  ABANDONED: 'Abandoned',
 };
 
 const CREDIT_RATING = {

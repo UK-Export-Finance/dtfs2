@@ -68,7 +68,7 @@ context('Eligibility Criterion 16', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
 
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
-      manualInclusion.uploadSuccess('upload-file-valid.doc');
+      manualInclusion.uploadSuccess('upload_file_valid.doc');
     });
 
     it('successfully uploading file takes you to security details page', () => {

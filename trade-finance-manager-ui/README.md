@@ -28,6 +28,7 @@ See mock users: utils/mock-data-loader/tfm/users.js
 ```shell
 npm run test
 ```
+
 ### **Run a single UI test**
 
 ```shell
@@ -49,3 +50,4 @@ npm run component-test ./component-tests/path/to/file.component-test.js
 ### **End to end tests**
 
 See e2e-tests README.md
+

@@ -52,6 +52,9 @@ const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.res
   facilityUpdate,
 ));
 
+const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
+const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
+
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
   dealType: mockDeal.dealType,
@@ -100,6 +103,11 @@ describe('/v1/deals', () => {
 
     externalApis.updatePortalBssDealStatus = jest.fn();
     externalApis.updatePortalGefDealStatus = jest.fn();
+    findBankByIdSpy.mockClear();
+    externalApis.findBankById = findBankByIdSpy;
+
+    findOneTeamSpy.mockClear();
+    externalApis.findOneTeam = findOneTeamSpy;
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
@@ -301,7 +309,7 @@ describe('/v1/deals', () => {
         const mockDeal = MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
         await submitDeal(createSubmitBody(mockDeal));
 
-        expect(sendEmailApiSpy).toBeCalledTimes(1);
+        expect(sendEmailApiSpy).toBeCalledTimes(2);
 
         const allFacilities = [
           ...mockDeal.bondTransactions.items,
@@ -530,7 +538,7 @@ describe('/v1/deals', () => {
         const mockDeal = MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED;
         await submitDeal(createSubmitBody(mockDeal));
 
-        expect(sendEmailApiSpy).toBeCalledTimes(1);
+        expect(sendEmailApiSpy).toBeCalledTimes(2);
 
         const allFacilities = [
           ...mockDeal.bondTransactions.items,
@@ -585,6 +593,7 @@ describe('/v1/deals', () => {
       });
 
       it('adds fee record to issued facilities', async () => {
+        // console.log(mockDeal);
         const { status, body } = await submitDeal(createSubmitBody(mockDeal));
 
         expect(status).toEqual(200);

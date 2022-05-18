@@ -56,7 +56,7 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
       data: response.data,
     };
   } catch (error) {
-    console.error('Reset password failed', { error });
+    console.error('Reset password failed', error?.response?.data);
     return {
       status: error.response.status,
       data: error.response.data,
@@ -492,6 +492,24 @@ const validateToken = async (token) => {
   return response.status === 200;
 };
 
+const validateBank = async (dealId, bankId, token) => {
+  try {
+    const { data } = await axios({
+      method: 'get',
+      url: `${portalApi}/v1/validate/bank`,
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      data: { dealId, bankId },
+    });
+    return data;
+  } catch (err) {
+    console.error('Unable to validate the bank %O', err?.response?.data);
+    return err?.response?.data;
+  }
+};
+
 const users = async (token) => {
   if (!token) return false;
 
@@ -673,6 +691,7 @@ module.exports = {
   getSubmissionDetails,
   updateSubmissionDetails,
   validateToken,
+  validateBank,
   users,
   user,
   createUser,

@@ -235,8 +235,6 @@ type TFMTaskGroup {
 }
 
 type TFMTaskHistory {
-  taskId: String
-  groupId: String
   statusFrom: String
   statusTo: String
   assignedUserId: String

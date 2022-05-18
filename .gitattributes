@@ -40,3 +40,7 @@
 *.xls           binary
 *.xlsx          binary
 *.pdf           binary
+*.doc           binary
+*.docx           binary
+*.xls           binary
+*.xlsx           binary

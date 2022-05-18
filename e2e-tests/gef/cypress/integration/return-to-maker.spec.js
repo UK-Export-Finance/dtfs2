@@ -25,7 +25,7 @@ context('Return to Maker', () => {
         cy.apiSetApplicationStatus(dealIds[2], token, 'Ready for Checker\'s approval');
       });
 
-    cy.login(CREDENTIALS.MAKER);
+    cy.login(CREDENTIALS.CHECKER);
     cy.visit(relative(`/gef/application-details/${dealIds[2]}/return-to-maker`));
   });
 

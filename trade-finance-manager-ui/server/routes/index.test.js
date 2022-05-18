@@ -6,6 +6,7 @@ import facilitiesRoutes from './facilities';
 import feedbackRoutes from './feedback';
 import feedbackThankYouRoutes from './feedback-thank-you';
 import userRoutes from './user';
+import footerRoutes from './footer';
 import { validateUser } from '../middleware/user-validation';
 
 describe('routes index', () => {
@@ -18,7 +19,7 @@ describe('routes index', () => {
   });
 
   it('should setup all routes', () => {
-    expect(use).toHaveBeenCalledTimes(7);
+    expect(use).toHaveBeenCalledTimes(8);
     expect(use).toHaveBeenCalledWith('/', loginRoutes);
     expect(use).toHaveBeenCalledWith('/case', validateUser, caseRoutes);
     expect(use).toHaveBeenCalledWith('/deals', validateUser, dealsRoutes);
@@ -26,5 +27,6 @@ describe('routes index', () => {
     expect(use).toHaveBeenCalledWith('/feedback', feedbackRoutes);
     expect(use).toHaveBeenCalledWith('/thank-you-feedback', feedbackThankYouRoutes);
     expect(use).toHaveBeenCalledWith('/user', userRoutes);
+    expect(use).toHaveBeenCalledWith('/', footerRoutes);
   });
 });

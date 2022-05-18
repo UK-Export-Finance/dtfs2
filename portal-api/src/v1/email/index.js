@@ -7,14 +7,11 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   const personalisation = emailVariables;
 
   await notifyClient
-    .sendEmail(templateId, sendToEmailAddress, {
-      personalisation,
-      reference: null,
-    })
+    .sendEmail(templateId, sendToEmailAddress, { personalisation, reference: null })
     .then((response) => response)
     .catch((err) => {
-      console.error(`Portal API - Failed to send email to address: ${sendToEmailAddress} with templateId ${templateId}`, { err });
-      return err.response;
+      console.error('Portal API - Failed to send email', err?.response.data);
+      return err?.response?.data;
     });
 };
 

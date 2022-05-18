@@ -1,20 +1,17 @@
 const express = require('express');
 const multer = require('multer');
-
 const { multerFilter } = require('../utils/multer-filter.utils');
-
 const {
   getSupportingDocuments, postSupportingDocuments, uploadSupportingDocument, deleteSupportingDocument,
 } = require('../controllers/supporting-information/supporting-documents');
-
-const validateToken = require('../middleware/validateToken');
+const { validateRole, validateToken, validateBank } = require('../middleware');
 
 const router = express.Router();
 
 const upload = multer({ fileFilter: multerFilter }).single('documents');
-router.get('/application-details/:dealId/supporting-information/document/:documentType', [validateToken], getSupportingDocuments);
-router.post('/application-details/:dealId/supporting-information/document/:documentType', [validateToken, multer().array('documents', 20)], postSupportingDocuments);
-router.post('/application-details/:dealId/supporting-information/document/:documentType/upload', [validateToken], (req, res, next) => {
+router.get('/application-details/:dealId/supporting-information/document/:documentType', [validateToken, validateBank, validateRole({ role: ['maker'] })], getSupportingDocuments);
+router.post('/application-details/:dealId/supporting-information/document/:documentType', [validateToken, validateBank, multer().array('documents', 20)], postSupportingDocuments);
+router.post('/application-details/:dealId/supporting-information/document/:documentType/upload', [validateToken, validateBank, validateRole({ role: ['maker'] })], (req, res, next) => {
   // eslint-disable-next-line consistent-return
   upload(req, res, (err) => {
     if (!err) {
@@ -25,6 +22,6 @@ router.post('/application-details/:dealId/supporting-information/document/:docum
     }
   });
 }, uploadSupportingDocument);
-router.post('/application-details/:dealId/supporting-information/document/:documentType/delete', [validateToken], deleteSupportingDocument);
+router.post('/application-details/:dealId/supporting-information/document/:documentType/delete', [validateToken, validateBank, validateRole({ role: ['maker'] })], deleteSupportingDocument);
 
 module.exports = router;

@@ -16,7 +16,7 @@ const validate = (opts) => {
     if (userRoleIsValid(requiredRoles, req.user)) {
       next();
     } else {
-      res.status(401).json({ success: false, msg: "you don't have the right role" });
+      res.status(401).json({ success: false, msg: "You don't have access to this page" });
     }
   };
 };

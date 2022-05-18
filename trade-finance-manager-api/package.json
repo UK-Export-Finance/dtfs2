@@ -15,7 +15,7 @@
     "start:dev": "npx nodemon src/index.js",
     "unit-test": "jest --notify --coverage --verbose --config=unit.jest.config.js ",
     "unit-test-quick": "jest --config=unit.jest.config.js --testTimeout=10000",
-    "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js ",
+    "api-test": "jest --notify --coverage --verbose --runInBand --forceExit --config=api-test.jest.config.js",
     "api-test-dev": "jest --notify --verbose --runInBand --detectOpenHandles --config=api-test.jest.config.js ",
     "api-test-file": "jest --config=api-test-file.jest.config.js --runInBand --verbose --testMatch ",
     "api-test-quick": "jest --config=api-test.jest.config.js --runInBand --testTimeout=10000"
@@ -53,12 +53,14 @@
     "graphql-tag": "^2.12.6",
     "is-port-reachable": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.34",
     "mongo-dot-notation": "^2.0.0",
     "mongodb": "4.0.0",
     "node-cron": "^3.0.0",
     "node-notifier": "^10.0.1",
+    "nodemon": "^2.0.15",
+    "sanitize-html": "^2.7.0",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.3.0"
   },
@@ -72,7 +74,6 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "jest": "27.5.1",
-    "nodemon": "^2.0.15",
     "supertest": "^6.2.2"
   }
 }

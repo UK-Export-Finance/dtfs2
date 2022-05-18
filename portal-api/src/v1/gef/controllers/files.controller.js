@@ -64,10 +64,12 @@ exports.create = async (req, res) => {
   if (!userHasAccess(req.user, deal, ['maker'])) return res.sendStatus(401);
 
   try {
-    const processedFiles = await Promise.all(files.map(async (file) => {
+    const processedFiles = await Promise.all(files.map(async (item) => {
+      const file = item;
       const error = fileError(file, maxFileSize);
       if (error) return errorFormat(file, parentId, error);
 
+      file.originalname = formatFilenameForSharepoint(file.originalname);
       const fileResult = await fileshare.uploadFile({
         buffer: fs.readFileSync(file.path),
         fileshare: FILESHARE,

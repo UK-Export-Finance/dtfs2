@@ -56,9 +56,10 @@
     "govuk-frontend": "^4.0.1",
     "http-errors": "^2.0.0",
     "imask": "^6.4.2",
+    "joi": "^17.6.0",
     "jquery": "3.6.0",
     "lodash": "^4.17.21",
-    "moment": "2.29.1",
+    "moment": "2.29.2",
     "moment-timezone": "0.5.34",
     "morgan": "1.10.0",
     "multer": "1.4.4",
@@ -67,7 +68,8 @@
     "nunjucks": "3.2.3",
     "path": "0.12.7",
     "redis": "^3.1.2",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "sanitize-html": "^2.7.0"
   },
   "devDependencies": {
     "@babel/core": "7.17.8",

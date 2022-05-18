@@ -36,6 +36,8 @@ describe('validation()', () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
     mockRequest.body['cover-start-date-day'] = format(now, 'd');
     mockRequest.body['cover-start-date-month'] = format(now, 'M');
     mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
@@ -45,7 +47,55 @@ describe('validation()', () => {
     mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
     const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+    const expected = {
+      coverStartDate: now,
+      coverEndDate: tomorrow,
+      aboutFacilityErrors: [],
+      facilityId: 'xyz',
+      dealId: '123',
+    };
 
+    // formatted to remove the millisecond mismatch (lag)
+    const resultCoverStartFormatted = format(result.coverStartDate, 'dd mm yyyy');
+    const resultCoverEndFormatted = format(result.coverEndDate, 'dd mm yyyy');
+    const expectedCoverStartFormatted = format(expected.coverStartDate, 'dd mm yyyy');
+    const expectedCoverEndFormatted = format(expected.coverEndDate, 'dd mm yyyy');
+
+    // as no errors expected, compare objects being passed back
+    expect(resultCoverStartFormatted).toEqual(expectedCoverStartFormatted);
+    expect(resultCoverEndFormatted).toEqual(expectedCoverEndFormatted);
+    expect(result.facilityId).toEqual('xyz');
+    expect(result.dealId).toEqual('123');
+    expect(result.aboutFacilityErrors).toEqual(expected.aboutFacilityErrors);
+  });
+
+  it('Should return no error when cover start date is pre-populated from previous submission but cover start date is now same as issuance date', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+
+    // Issue date set to submission date
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+    // Cover start date to be set as issue date (today)
+    mockRequest.body.shouldCoverStartOnSubmission = 'true';
+
+    // Cover start date set to yesterday - should be ignored due to cover start date set to issue date
+    mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
+    mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
+    mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
+
+    // Cover end date set to tomorrow
+    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+    // Validate
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+
+    // Compare
     const expected = {
       coverStartDate: now,
       coverEndDate: tomorrow,
@@ -71,6 +121,7 @@ describe('validation()', () => {
   it('should return object with errors populated if end date before start date', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = '';
@@ -116,6 +167,7 @@ describe('validation()', () => {
   it('should return object with errors populated if start date before issue date', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = format(now, 'd');
@@ -157,6 +209,7 @@ describe('validation()', () => {
   it('should return object with errors populated if end date before issue date', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'true';
     mockRequest.query.saveAndReturn = 'true';
 
     mockRequest.body['issue-date-day'] = format(now, 'd');
