@@ -17,7 +17,7 @@ const getAmendmentRequestDate = async (req, res) => {
     let amendmentRequestDateMonth = '';
     let amendmentRequestDateYear = '';
 
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status !== AMENDMENT_STATUS.COMPLETED;
     if (amendment.requestDate) {
       amendmentRequestDateDay = format(fromUnixTime(amendment.requestDate), 'dd');
       amendmentRequestDateMonth = format(fromUnixTime(amendment.requestDate), 'M');
@@ -31,6 +31,7 @@ const getAmendmentRequestDate = async (req, res) => {
       amendmentRequestDateDay,
       amendmentRequestDateMonth,
       amendmentRequestDateYear,
+      user: req.session.user,
     });
   } catch (err) {
     console.error('Unable to get the amendment request date page', { err });
@@ -51,8 +52,8 @@ const postAmendmentRequestDate = async (req, res) => {
   const { amendmentRequestDate, errorsObject, amendmentRequestDateErrors } = await amendmentRequestDateValidation(req.body, facility);
   const { dealId } = amendment;
 
-  if (amendmentRequestDateErrors.length > 0) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  if (amendmentRequestDateErrors.length) {
+    const isEditable = amendment.status !== AMENDMENT_STATUS.COMPLETED;
     return res.render('case/amendments/amendment-request-date.njk', {
       dealId,
       facilityId,
@@ -61,12 +62,14 @@ const postAmendmentRequestDate = async (req, res) => {
       amendmentRequestDateMonth: errorsObject.amendmentRequestDateMonth,
       amendmentRequestDateYear: errorsObject.amendmentRequestDateYear,
       errors: errorsObject.errors,
+      user: req.session.user,
     });
   }
 
   try {
     const payload = {
       requestDate: amendmentRequestDate,
+      status: AMENDMENT_STATUS.IN_PROGRESS,
       createdBy: {
         username: user.username,
         name: `${user.firstName} ${user.lastName}`,
@@ -75,16 +78,17 @@ const postAmendmentRequestDate = async (req, res) => {
       },
     };
 
-    const update = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
-    if (update) {
+    if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-approval`);
     }
+    console.error('Unable to update the amendment request date');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-date`);
   } catch (err) {
     console.error('There was a problem creating the amendment request date %O', { response: err?.response?.data });
+    return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
-  return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
 };
 
 module.exports = { getAmendmentRequestDate, postAmendmentRequestDate };

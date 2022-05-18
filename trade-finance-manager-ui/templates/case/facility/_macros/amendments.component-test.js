@@ -12,14 +12,14 @@ describe(component, () => {
       const params = { showAmendmentButton: true };
       wrapper = render(params);
 
-      wrapper.expectElement('[data-cy="add-amendment-button"]').toExist();
+      wrapper.expectElement('[data-cy="amendment--add-amendment-button"]').toExist();
     });
 
     it('should render add amendment button if showAmendmentButton is false', () => {
       const params = { showAmendmentButton: false };
       wrapper = render(params);
 
-      wrapper.expectElement('[data-cy="add-amendment-button"]').notToExist();
+      wrapper.expectElement('[data-cy="amendment--add-amendment-button"]').notToExist();
     });
   });
 });

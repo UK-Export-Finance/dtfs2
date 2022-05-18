@@ -34,6 +34,12 @@ describe('controllers - case', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentInProgressByDealId = () => Promise.resolve({
+          status: 200,
+          data: {
+            ukefFacilityId: '1234', facilityId: '12345', submittedByPim: false, type: 'Cash', status: 'In progress',
+          },
+        });
       });
 
       it('should render deal template with data', async () => {
@@ -53,6 +59,10 @@ describe('controllers - case', () => {
           activeSubNavigation: 'deal',
           dealId: req.params._id,
           user: session.user,
+          facilityType: 'Cash',
+          ukefFacilityId: '1234',
+          facilityId: '12345',
+          hasAmendmentInProgress: true,
         });
       });
     });
@@ -598,7 +608,7 @@ describe('controllers - case', () => {
       beforeEach(() => {
         api.getFacility = () => Promise.resolve(mockFacility);
         api.getDeal = () => Promise.resolve(mockDeal);
-        api.getAmendmentInProgress = () => Promise.resolve({ amendmentId: '626bae8c43c01e02076352e1' });
+        api.getAmendmentInProgress = () => Promise.resolve({ status: 200, data: { amendmentId: '626bae8c43c01e02076352e1', version: 1 } });
       });
 
       it('should render deal template with data', async () => {
@@ -624,6 +634,8 @@ describe('controllers - case', () => {
           showAmendmentButton: false,
           showContinueAmendmentButton: false,
           amendmentId: '626bae8c43c01e02076352e1',
+          amendmentVersion: 1,
+          hasAmendmentInProgress: false,
         });
       });
     });
