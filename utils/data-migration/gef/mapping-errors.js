@@ -22,9 +22,8 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
   if (!isNumber(v2Deal.submissionDate)) {
     errors.push('submissionDate');
   }
-  // if (!hasValue(v2Deal.ukefDealId)) {
-  //   errors.push('ukefDealId');
-  // }
+
+
   if (!hasObjectValues(v2Deal.exporter)) {
     errors.push('exporter');
   }
@@ -76,9 +75,6 @@ const facilityMappingErrors = (v2Facility) => {
   if (!hasValue(v2Facility.type)) {
     errors.push('type');
   }
-  // if (!hasValue(v2Facility.ukefFacilityId)) {
-  //   errors.push('ukefFacilityId');
-  // }
   if (!hasBooleanValue(v2Facility.hasBeenIssued)) {
     errors.push('v2Facility');
   }
@@ -111,9 +107,6 @@ const facilityMappingErrors = (v2Facility) => {
   }
   if (!isNumber(v2Facility.coverStartDate)) {
     errors.push('coverStartDate');
-  }
-  if (!isNumber(v2Facility.coverEndDate)) {
-    errors.push('coverEndDate');
   }
   if (!hasBooleanValue(v2Facility.coverDateConfirmed)) {
     errors.push('coverDateConfirmed');
