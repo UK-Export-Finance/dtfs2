@@ -7,7 +7,9 @@ ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
     WEBSITES_ENABLE_APP_SERVICE_STORAGE=false\
     FUNCTIONS_WORKER_RUNTIME=node
 
-COPY . /home/site/wwwroot
-
 WORKDIR /home/site/wwwroot
+
+COPY package.json .
 RUN npm install --legacy-peer-deps
+
+COPY . /home/site/wwwroot
