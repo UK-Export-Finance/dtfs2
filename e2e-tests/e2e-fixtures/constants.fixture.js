@@ -37,3 +37,12 @@ export const DEAL_STATUS = {
   UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted by UKEF (without conditions)',
   UKEF_REFUSED: 'Rejected by UKEF',
 };
+
+export const UNDERWRITER_MANAGER_DECISIONS = {
+  APPROVED_WITH_CONDITIONS: 'Approve with conditions',
+  APPROVED_WITHOUT_CONDITIONS: 'Approve without conditions',
+  DECLINED: 'Declined',
+  NOT_ADDED: 'Not added',
+  AUTOMATIC_APPROVAL: 'Automatic approval',
+  AWAITING_DECISION: 'Awaiting decision',
+};

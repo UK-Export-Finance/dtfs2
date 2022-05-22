@@ -648,8 +648,6 @@ describe('controllers - case', () => {
           amendmentVersion: 1,
           hasAmendmentInProgress: false,
           allAmendments: expect.any(Array),
-          currentCoverEndDate: '12 August 2030',
-          currentFacilityValue: 'GBP 1,000,000.00',
         });
       });
     });

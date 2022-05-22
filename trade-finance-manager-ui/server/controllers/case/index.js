@@ -196,11 +196,11 @@ const formatAmendmentDetails = (allAmendments) => {
         item.ukefDecisionCoverEndDate = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
       }
 
-      if (value?.changeCoverEndDate) {
+      if (value?.changeCoverEndDate && value?.currentCoverEndDate) {
         item.currentCoverEndDate = format(fromUnixTime(value?.currentCoverEndDate), 'dd MMMM yyyy');
       }
 
-      if (value?.changeFacilityValue) {
+      if (value?.changeFacilityValue && value?.currentValue) {
         item.currentValue = `${value.currentCurrency} ${formattedNumber(value.currentValue)}`;
       }
       allCompletedAmendments.push(item);
