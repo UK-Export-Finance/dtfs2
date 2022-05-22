@@ -28,6 +28,7 @@ See mock users: utils/mock-data-loader/tfm/users.js
 ```shell
 npm run test
 ```
+
 ### **Run a single UI test**
 
 ```shell
