@@ -33,6 +33,10 @@ export const createEstore = async (req: Request, res: Response) => {
 
   // check if the body is not empty
   if (Object.keys(eStoreData).length) {
+    // prevent test deals from triggering calls to eStore
+    if (eStoreData.dealIdentifier.includes('100000')) {
+      return res.status(200).send();
+    }
     // send a 200 response back to tfm-api
     // this is because we are not waiting for the cron-jobs to finish
     res.status(200).send();
