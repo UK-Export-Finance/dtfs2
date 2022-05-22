@@ -1,8 +1,7 @@
-/* eslint-disable no-underscore-dangle */
 import underwriterManagersDecisionController from '.';
 import canUserEditManagersDecision from './helpers';
 import { validateSubmittedValues } from './validateSubmittedValues';
-import { mapDecisionObject } from './mapDecisionObject';
+import { mapDecisionObject } from '../../../helpers';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 
@@ -32,11 +31,7 @@ const mockDeal = {
 const dealId = mockDeal._id;
 
 describe('GET underwriting - underwriting managers decision', () => {
-  const userCanEdit = canUserEditManagersDecision(
-    session.user,
-    mockDeal.dealSnapshot.submissionType,
-    mockDeal.tfm,
-  );
+  const userCanEdit = canUserEditManagersDecision(session.user, mockDeal.dealSnapshot.submissionType, mockDeal.tfm);
 
   describe('when deal exists', () => {
     it('should return object with data', async () => {
@@ -123,9 +118,10 @@ describe('GET underwriting - underwriting managers decision edit', () => {
 
 describe('POST underwriting - underwriting managers decision edit', () => {
   describe('when there are NO validation errors', () => {
-    const apiUpdateSpy = jest.fn(() => Promise.resolve({
-      test: true,
-    }));
+    const apiUpdateSpy = jest.fn(() =>
+      Promise.resolve({
+        test: true,
+      }));
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
@@ -145,10 +141,7 @@ describe('POST underwriting - underwriting managers decision edit', () => {
 
       await underwriterManagersDecisionController.postUnderwriterManagersDecision(req, res);
 
-      expect(apiUpdateSpy).toHaveBeenCalledWith(
-        dealId,
-        mapDecisionObject(req.body, req.session.user),
-      );
+      expect(apiUpdateSpy).toHaveBeenCalledWith(dealId, mapDecisionObject(req.body, req.session.user));
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/underwriting`);
     });

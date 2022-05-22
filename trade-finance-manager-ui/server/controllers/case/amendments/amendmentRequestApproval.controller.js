@@ -49,12 +49,8 @@ const postAmendmentRequestApproval = async (req, res) => {
   }
 
   try {
-    let payload = { requireUkefApproval: approval };
+    const payload = { requireUkefApproval: approval };
 
-    // reset the cover end date and facility value options if the amendment does not require approval
-    if (!approval) {
-      payload = { ...payload, changeFacilityValue: false, changeCoverEndDate: false };
-    }
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
     if (status === 200) {

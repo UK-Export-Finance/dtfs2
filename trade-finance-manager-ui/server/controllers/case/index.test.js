@@ -2,8 +2,9 @@
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import { getTask } from './helpers';
+import { getTask } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
+import CONSTANTS from '../../constants';
 
 const res = mockRes();
 
@@ -34,12 +35,17 @@ describe('controllers - case', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
-        api.getAmendmentInProgressByDealId = () => Promise.resolve({
-          status: 200,
-          data: {
-            ukefFacilityId: '1234', facilityId: '12345', submittedByPim: false, type: 'Cash', status: 'In progress',
-          },
-        });
+        api.getAmendmentInProgressByDealId = () =>
+          Promise.resolve({
+            status: 200,
+            data: {
+              ukefFacilityId: '1234',
+              facilityId: '12345',
+              submittedByPim: false,
+              type: 'Cash',
+              status: 'In progress',
+            },
+          });
       });
 
       it('should render deal template with data', async () => {
@@ -121,10 +127,7 @@ describe('controllers - case', () => {
           userId: req.session.user._id,
         };
 
-        expect(apiGetDealSpy).toHaveBeenCalledWith(
-          mockDeal._id,
-          expectedTaskFiltersObj,
-        );
+        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, expectedTaskFiltersObj);
 
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
@@ -197,10 +200,7 @@ describe('controllers - case', () => {
           userId: req.session.user._id,
         };
 
-        expect(apiGetDealSpy).toHaveBeenCalledWith(
-          mockDeal._id,
-          expectedTaskFiltersObj,
-        );
+        expect(apiGetDealSpy).toHaveBeenCalledWith(mockDeal._id, expectedTaskFiltersObj);
 
         expect(res.render).toHaveBeenCalledWith('case/tasks/tasks.njk', {
           deal: mockDeal.dealSnapshot,
@@ -315,11 +315,7 @@ describe('controllers - case', () => {
           session,
         };
 
-        const expectedTask = getTask(
-          Number(req.params.groupId),
-          req.params.taskId,
-          mockDeal.tfm.tasks,
-        );
+        const expectedTask = getTask(Number(req.params.groupId), req.params.taskId, mockDeal.tfm.tasks);
 
         await caseController.getCaseTask(req, res);
 
@@ -331,11 +327,7 @@ describe('controllers - case', () => {
           dealId: req.params._id,
           user: session.user,
           task: expectedTask,
-          assignToSelectOptions: mapAssignToSelectOptions(
-            expectedTask.assignedTo.userId,
-            session.user,
-            mockTeamMembers,
-          ),
+          assignToSelectOptions: mapAssignToSelectOptions(expectedTask.assignedTo.userId, session.user, mockTeamMembers),
         });
       });
     });
@@ -446,9 +438,7 @@ describe('controllers - case', () => {
             {
               groupTitle: 'Testing',
               id: 1,
-              groupTasks: [
-                { id: '123', groupId: 1, canEdit: false },
-              ],
+              groupTasks: [{ id: '123', groupId: 1, canEdit: false }],
             },
           ],
         },
@@ -495,9 +485,10 @@ describe('controllers - case', () => {
 
   describe('POST case task', () => {
     describe('when deal exists', () => {
-      const apiUpdateSpy = jest.fn(() => Promise.resolve({
-        test: true,
-      }));
+      const apiUpdateSpy = jest.fn(() =>
+        Promise.resolve({
+          test: true,
+        }));
 
       const mockDeal = {
         _id: '61f6ac5b02ffda01b1e8efef',
@@ -506,10 +497,7 @@ describe('controllers - case', () => {
         },
         tfm: {
           parties: [],
-          tasks: [
-            { id: '123' },
-            { id: '456' },
-          ],
+          tasks: [{ id: '123' }, { id: '456' }],
         },
         mock: true,
       };
@@ -549,10 +537,7 @@ describe('controllers - case', () => {
           urlOrigin: req.headers.origin,
         };
 
-        expect(apiUpdateSpy).toHaveBeenCalledWith(
-          mockDeal._id,
-          expectedUpdateObj,
-        );
+        expect(apiUpdateSpy).toHaveBeenCalledWith(mockDeal._id, expectedUpdateObj);
 
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/tasks`);
       });
@@ -590,11 +575,35 @@ describe('controllers - case', () => {
           _id: '61f6ac5b02ffda01b1e8efef',
           dealId: '12345678',
           mock: true,
+          value: 'GBP 1,000,000.00',
+          dates: {
+            coverEndDate: '2030-08-12T00:00:00.000+00:00',
+          },
         },
         tfm: {
           ukefExposure: { exposure: 'GBP 57.21', timestamp: '1614954617041' },
           facilityValueInGBP: 238.39322963227846,
         },
+      };
+
+      const mockAmendment = {
+        amendmentId: '6284bde5241c63001e40702d',
+        facilityId: '625e99cb88eeeb001e33bf4b',
+        dealId: '625e99cb88eeeb001e33bf47',
+        createdAt: 1652866533,
+        updatedAt: 1652876975,
+        status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+        version: 1,
+        createdBy: {},
+        requestDate: 1652876967,
+        changeCoverEndDate: true,
+        changeFacilityValue: true,
+        requireUkefApproval: false,
+        coverEndDate: 1660307372,
+        submittedByPim: true,
+        effectiveDate: 1655027294,
+        submissionDate: 1652867309,
+        value: 112,
       };
 
       const mockDeal = {
@@ -609,6 +618,8 @@ describe('controllers - case', () => {
         api.getFacility = () => Promise.resolve(mockFacility);
         api.getDeal = () => Promise.resolve(mockDeal);
         api.getAmendmentInProgress = () => Promise.resolve({ status: 200, data: { amendmentId: '626bae8c43c01e02076352e1', version: 1 } });
+        api.getAmendmentsByFacilityId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
+        api.getLatestCompletedAmendment = () => Promise.resolve({ status: 200, data: { amendmentId: '626bae8c43c01e02076352e1', version: 1 } });
       });
 
       it('should render deal template with data', async () => {
@@ -636,6 +647,9 @@ describe('controllers - case', () => {
           amendmentId: '626bae8c43c01e02076352e1',
           amendmentVersion: 1,
           hasAmendmentInProgress: false,
+          allAmendments: expect.any(Array),
+          currentCoverEndDate: '12 August 2030',
+          currentFacilityValue: 'GBP 1,000,000.00',
         });
       });
     });

@@ -4,7 +4,7 @@
 {% macro render(params) %}
   {% set decision = params.decision %}
   {% set user = params.user %}
- 
+
   <div class="govuk-grid-row" data-cy="managers-decision-submitted">
       <div class="govuk-grid-column-full">
 
@@ -39,7 +39,7 @@
       {% if decision.comments %}
         <div class="govuk-grid-row govuk-!-padding-bottom-4">
           <div class="govuk-grid-column-full">
-            
+
             {% if decision.decision === 'Declined' %}
               {% set commentsHeadingText = 'Reasons' %}
             {% else %}

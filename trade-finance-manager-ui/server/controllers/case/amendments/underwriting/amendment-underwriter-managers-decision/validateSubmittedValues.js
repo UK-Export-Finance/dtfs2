@@ -4,7 +4,7 @@ const {
   hasValue,
   isAlphanumeric,
 } = require('../../../../../helpers/string');
-const increment = require('../../../../../helpers/number');
+const { increment } = require('../../../../../helpers/number');
 const generateValidationErrors = require('../../../../../helpers/validation');
 
 const MAX_COMMENTS_LENGTH = 1000;
@@ -101,7 +101,7 @@ const validateSubmittedValues = (submittedValues) => {
     }
   }
 
-  if (decision === CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINE) {
+  if (decision === CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED) {
     if (!hasValue(declineComments)) {
       errorsCount = increment(errorsCount);
 
