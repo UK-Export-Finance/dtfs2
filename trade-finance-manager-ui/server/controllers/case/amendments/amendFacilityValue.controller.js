@@ -15,7 +15,7 @@ const getAmendFacilityValue = async (req, res) => {
 
   const { dealId, value } = amendment;
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
-  let currentFacilityValue = facility.facilitySnapshot.value;
+  let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
   if (latestAmendment?.value) {
     currentFacilityValue = latestAmendment.value.toLocaleString('en', {
       minimumFractionDigits: 2,
