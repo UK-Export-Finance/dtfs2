@@ -60,7 +60,7 @@ const postAmendFacilityValue = async (req, res) => {
   try {
     const currentValueAndCurrency = currentFacilityValue.split(' ');
     const currentCurrency = currentValueAndCurrency[0];
-    const currentValue = Number(currentValueAndCurrency[1].replaceAll(',', ''));
+    const currentValue = Number(currentValueAndCurrency[1].replace(/,/g, ''));
     const payload = { value: Number(value), currentValue, currentCurrency };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
