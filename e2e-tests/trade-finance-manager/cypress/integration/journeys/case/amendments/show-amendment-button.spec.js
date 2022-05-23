@@ -100,52 +100,7 @@ context('Amendments page', () => {
     });
   });
 
-  describe('MIN - not confirmed', () => {
-    let dealId;
-    const dealFacilities = [];
-
-    before(() => {
-      MOCK_DEAL_MIA.submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.MIN;
-      cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
-        dealId = insertedDeal._id;
-
-        const { dealType, mockFacilities } = MOCK_DEAL_AIN;
-
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
-          dealFacilities.push(...createdFacilities);
-        });
-
-        cy.submitDeal(dealId, dealType);
-      });
-    });
-
-    after(() => {
-      cy.deleteDeals(dealId, ADMIN_LOGIN);
-      dealFacilities.forEach((facility) => {
-        cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
-      });
-    });
-
-    it('should NOT render `add amendment` button if MIN and not confirmed and PIM user', () => {
-      cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
-      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
-      facilityPage.facilityTabAmendments().click();
-      amendmentsPage.addAmendmentButton().should('not.exist');
-    });
-
-    it('should NOT render `add amendment` button if MIN and confirmed and PIM user', () => {
-      cy.login(T1_USER_1);
-      const facilityId = dealFacilities[0]._id;
-      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
-      facilityPage.facilityTabAmendments().click();
-      amendmentsPage.addAmendmentButton().should('not.exist');
-    });
-  });
-
-  describe('MIN - confirmed', () => {
+  describe('MIN', () => {
     let dealId;
     let dealFacilities;
 

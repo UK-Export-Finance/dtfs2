@@ -6,12 +6,9 @@ const canUserEditManagersDecision = (user, dealSubmissionType, dealTfm) => {
 
   const isMIA = dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
 
-  const hasDecision = (dealTfm.underwriterManagersDecision
-    && dealTfm.underwriterManagersDecision.decision);
+  const hasDecision = dealTfm.underwriterManagersDecision && dealTfm.underwriterManagersDecision.decision;
 
-  if (isManager
-    && isMIA
-    && !hasDecision) {
+  if (isManager && isMIA && !hasDecision) {
     return true;
   }
 
