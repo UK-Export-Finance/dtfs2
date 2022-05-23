@@ -128,7 +128,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
     describe('when `decision` is `Decline`', () => {
       it('should return validationErrors when there is no `declineComments`', () => {
         const result = validateSubmittedValues({
-          decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINE,
+          decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED,
           declineComments: '',
         });
 

@@ -15,7 +15,7 @@ const getAmendFacilityValue = async (req, res) => {
 
   const { dealId, value } = amendment;
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
-  let currentFacilityValue = facility.facilitySnapshot.value;
+  let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
   if (latestAmendment?.value) {
     currentFacilityValue = latestAmendment.value.toLocaleString('en', {
       minimumFractionDigits: 2,
@@ -58,7 +58,10 @@ const postAmendFacilityValue = async (req, res) => {
   }
 
   try {
-    const payload = { value: Number(value) };
+    const currentValueAndCurrency = currentFacilityValue.split(' ');
+    const currentCurrency = currentValueAndCurrency[0];
+    const currentValue = Number(currentValueAndCurrency[1].replace(',', ''));
+    const payload = { value: Number(value), currentValue, currentCurrency };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
     if (status === 200) {
