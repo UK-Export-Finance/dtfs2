@@ -1,16 +1,6 @@
-const generateHeadingText = (count, submittedValue) => {
-  if (submittedValue) {
-    if (count === 1) {
-      return `${count} result for "${submittedValue}"`;
-    }
-    if (count > 1) {
-      return `${count} results for "${submittedValue}"`;
-    }
+const { showAmendmentButton } = require('./amendments.helper');
+const { generateHeadingText } = require('./generateHeadingText.helper');
+const { mapDecisionObject, mapDecisionValue } = require('./mapDecisionObject.helper');
+const { getGroup, getTask } = require('./tasks.helper');
 
-    return `0 results for "${submittedValue}"`;
-  }
-
-  return 'All deals';
-};
-
-module.exports = generateHeadingText;
+module.exports = { showAmendmentButton, generateHeadingText, mapDecisionObject, mapDecisionValue, getGroup, getTask };
