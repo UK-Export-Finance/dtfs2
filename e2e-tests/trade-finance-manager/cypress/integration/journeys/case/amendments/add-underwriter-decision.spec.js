@@ -74,11 +74,11 @@ context('Amendments underwriting - add underwriter decision', () => {
       pages.amendmentsPage.underWriterManagerDecisionHeading().contains('What\'s your decision?');
 
       pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions();
-      pages.amendmentsPage.underWriterManagerDecisionApproveWithoutConditionsHint().contains('You’ll be able to add comments that only UKEF can see later.');
+      pages.amendmentsPage.underWriterManagerDecisionApproveWithoutConditionsHint().contains('You\'ll be able to add comments that only UKEF can see later.');
       pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions();
-      pages.amendmentsPage.underWriterManagerDecisionApproveWithConditionsHint().contains('You’ll be able to add conditions to the approval later.');
+      pages.amendmentsPage.underWriterManagerDecisionApproveWithConditionsHint().contains('You\'ll be able to add conditions to the approval later.');
       pages.amendmentsPage.underWriterManagerDecisionRadioInputDecline();
-      pages.amendmentsPage.underWriterManagerDecisionDeclineHint().contains('You’ll be able to add the reasons why you are declining the change later.');
+      pages.amendmentsPage.underWriterManagerDecisionDeclineHint().contains('You\'ll be able to add the reasons why you are declining the change later.');
     });
   });
 });

@@ -60,6 +60,25 @@ const amendmentsPage = {
   amendmentAnswerCoverEndDate: () => cy.get('[data-cy="amendment--cover-end-date-response"]'),
   amendmentAnswerFacilityValue: () => cy.get('[data-cy="amendment--facility-value-response"]'),
 
+  amendmentDetails: {
+    row: (version) => {
+      cy.get(`[data-cy="amendment--details-${version}"]`).as('row');
+      return {
+        heading: () => cy.get('@row').get(`[data-cy="amendment--heading-version-${version}"]`),
+        bankDecision: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-banks-decision"]`),
+
+        ukefDecisionCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-cover-end-date-decision"]`),
+        currentCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-current-cover-end-date"]`),
+        newCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-new-cover-end-date"]`),
+
+        ukefDecisionFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-facility-value-decision"]`),
+        currentFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-current-facility-value"]`),
+        newFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-new-facility-value"]`),
+
+      };
+    },
+  },
+
 };
 
 module.exports = amendmentsPage;

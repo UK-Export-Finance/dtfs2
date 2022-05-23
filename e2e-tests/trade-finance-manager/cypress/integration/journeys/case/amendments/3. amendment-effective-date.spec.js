@@ -6,7 +6,7 @@ import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
-context('Amendments request page', () => {
+context('Amendments - Effective date', () => {
   let dealId;
   const dealFacilities = [];
 
@@ -16,7 +16,7 @@ context('Amendments request page', () => {
 
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createFacilities(dealId, [mockFacilities[0]], MOCK_MAKER_TFM).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
       });
 
@@ -42,9 +42,9 @@ context('Amendments request page', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().type(dateConstants.todayYear);
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'request-approval');
 
@@ -64,9 +64,9 @@ context('Amendments request page', () => {
     amendmentsPage.continueAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().type(dateConstants.todayYear);
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'request-approval');
 
@@ -91,9 +91,9 @@ context('Amendments request page', () => {
     amendmentsPage.continueAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().type(dateConstants.todayYear);
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'request-approval');
 
@@ -101,9 +101,9 @@ context('Amendments request page', () => {
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'amendment-effective-date');
 
-    amendmentsPage.amendmentEffectiveDayInput().type(dateConstants.todayDay);
-    amendmentsPage.amendmentEffectiveMonthInput().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentEffectiveYearInput().type(dateConstants.todayYear);
+    amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentEffectiveYearInput().clear().focused().type(dateConstants.todayYear);
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'amendment-options');
