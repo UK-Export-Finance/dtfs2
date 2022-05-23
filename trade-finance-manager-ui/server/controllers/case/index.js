@@ -226,6 +226,7 @@ const getCaseFacility = async (req, res) => {
   const deal = await api.getDeal(dealId);
 
   const hasAmendmentInProgress = status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+  const showContinueAmendmentButton = hasAmendmentInProgress && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
@@ -238,7 +239,7 @@ const getCaseFacility = async (req, res) => {
     facilityTfm: facility.tfm,
     user: req.session.user,
     showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendmentId,
-    showContinueAmendmentButton: hasAmendmentInProgress && !amendment.submittedByPim,
+    showContinueAmendmentButton,
     amendmentId: amendment?.amendmentId,
     amendmentVersion: amendment?.version,
     hasAmendmentInProgress,
