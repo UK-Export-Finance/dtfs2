@@ -135,7 +135,7 @@ const mapEligibility = (portalDealId, v1Deal) => {
     criteria: getCriteria(ecList, idMap, hasMandatoryCriteria),
     v1ExtraInfo: getV1ExtraInfo(ecList),
     agentName: ecList.Agent_name,
-    agentAddressCountry: country ? country.code : '',
+    agentAddressCountry: country ? { name: country.code } : { name: '' },
     agentAddressLine1: ecList.Agent_address.Line1,
     agentAddressLine2: ecList.Agent_address.Line2,
     agentAddressLine3: ecList.Agent_address.Line3,

@@ -626,7 +626,6 @@ describe('controllers - case', () => {
         const req = {
           params: {
             facilityId: mockFacility._id,
-            amendmentId: '626bae8c43c01e02076352e1',
           },
           session,
         };
