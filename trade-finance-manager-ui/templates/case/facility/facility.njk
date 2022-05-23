@@ -1,9 +1,9 @@
 {% extends "case/case.njk" %}
 {% import './_macros/facility_details.njk' as details %}
 {% import './_macros/premium_schedule.njk' as schedule %}
-{% import './_macros/amendments.njk' as amendments %}
+{% import './_macros/add-amendment.njk' as addAmendment %}
+{% import './_macros/amendment-details.njk' as amendmentDetails %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
-{% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "moj/components/banner/macro.njk" import mojBanner %}
 
 {% block sub_content %}
@@ -37,9 +37,11 @@
       showContinueAmendmentButton: showContinueAmendmentButton,
       amendmentId: amendmentId,
       amendmentVersion: amendmentVersion,
-      csrfToken: csrfToken
+      csrfToken: csrfToken,
+      allAmendments: allAmendments
     } %}
-    {{ amendments.render(amendmentsComponentData) }}
+    {{ addAmendment.render(amendmentsComponentData) }}
+    {{ amendmentDetails.render(amendmentsComponentData) }}
   {% endset %}
 
   {% if hasAmendmentInProgress === true %}
