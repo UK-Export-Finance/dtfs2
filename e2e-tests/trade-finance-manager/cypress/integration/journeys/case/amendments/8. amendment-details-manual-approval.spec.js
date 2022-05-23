@@ -118,7 +118,7 @@ context('Amendments - Manual approval journey', () => {
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2020');
       amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
-      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.todayDay);
+      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
       amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
@@ -230,7 +230,7 @@ context('Amendments - Manual approval journey', () => {
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2020');
       amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
-      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.todayDay);
+      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
       amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('not.exist');
