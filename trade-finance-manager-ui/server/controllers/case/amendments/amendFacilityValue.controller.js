@@ -39,7 +39,7 @@ const postAmendFacilityValue = async (req, res) => {
   const { value } = req.body;
 
   const facility = await api.getFacility(facilityId);
-  const currentFacilityValue = facility.facilitySnapshot.value;
+  const currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
   const { errorsObject, amendFacilityValueErrors } = amendFacilityValueValidation(currentFacilityValue, value);
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
   const { dealId } = amendment;
@@ -60,7 +60,7 @@ const postAmendFacilityValue = async (req, res) => {
   try {
     const currentValueAndCurrency = currentFacilityValue.split(' ');
     const currentCurrency = currentValueAndCurrency[0];
-    const currentValue = Number(currentValueAndCurrency[1].replace(',', ''));
+    const currentValue = Number(currentValueAndCurrency[1].replaceAll(',', ''));
     const payload = { value: Number(value), currentValue, currentCurrency };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
