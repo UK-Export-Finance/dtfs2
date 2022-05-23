@@ -14,7 +14,7 @@ const coverEndDateValidation = async (body, currentEndDate) => {
   const coverEndDateErrors = [];
   let coverEndDate = null;
 
-  if (!coverEndDay && !coverEndMonth && !coverEndYear) {
+  if (!coverEndDay || !coverEndMonth || !coverEndYear) {
     coverEndDateErrors.push({
       errRef: 'coverEndDate',
       errMsg: 'Enter the new cover end date',
