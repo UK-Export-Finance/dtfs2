@@ -56,8 +56,8 @@ const getAmendmentById = async (req, res) => {
 };
 
 const getAmendmentByFacilityId = async (req, res) => {
-  const { facilityId, amendmentId } = req.params;
-  const amendment = await api.getAmendmentByFacilityId(facilityId, amendmentId);
+  const { facilityId } = req.params;
+  const amendment = await api.getAmendmentByFacilityId(facilityId);
   if (amendment) {
     return res.status(200).send(amendment);
   }

@@ -49,6 +49,11 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
     const amendment = await collection.aggregate([
       { $match: { _id: ObjectId(facilityId) } },
       { $project: { _id: 0, amendments: '$amendments' } },
+      { $unwind: '$amendments' },
+      { $sort: { 'amendments.version': -1 } },
+      { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED } } },
+      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+      { $project: { _id: 0, amendments: 1 } },
     ]).toArray();
 
     // returns the amendment object for the given facilityId and amendmentId
@@ -62,7 +67,7 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
 exports.getAllAmendmentsByFacilityId = async (req, res) => {
   const { facilityId } = req.params;
   if (ObjectId.isValid(facilityId)) {
-    const amendment = await findAllAmendmentsByFacilityId(facilityId) ?? {};
+    const amendment = await findAllAmendmentsByFacilityId(facilityId) ?? [];
     return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });

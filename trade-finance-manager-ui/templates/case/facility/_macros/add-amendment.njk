@@ -1,11 +1,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% macro render(params) %}
-  {% set deal = params.deal %}
   {% set csrfToken = params.csrfToken %}
   {% set facilityId = params.facilityId %}
   {% set showAmendmentButton = params.showAmendmentButton %}
-  {% set hasAmendmentInProgress = params.hasAmendmentInProgress %}
   {% set amendmentId = params.amendmentId %}
   {% set amendmentVersion = params.amendmentVersion %}
   {% set showContinueAmendmentButton = params.showContinueAmendmentButton %}
@@ -33,6 +31,4 @@
       {% endif %}
     </div>
   </div>
-
-  <div class="govuk-grid-row separator-line govuk-!-margin-top-53 govuk-!-padding-top-6" data-cy=""> </div>
 {% endmacro %}
