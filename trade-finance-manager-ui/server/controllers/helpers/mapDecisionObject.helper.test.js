@@ -1,12 +1,7 @@
-import CONSTANTS from '../../../../../constants';
+import { userFullName } from '../../helpers/user';
+import { mapDecisionValue, mapDecisionObject } from './mapDecisionObject.helper';
 
-import {
-  mapDecisionValue,
-  mapDecisionObject,
-} from './mapDecisionObject';
-import {
-  userFullName,
-} from '../../../../../helpers/user';
+const CONSTANTS = require('../../constants');
 
 describe('POST underwriting - map decision object', () => {
   describe('mapDecisionValue', () => {
@@ -26,7 +21,7 @@ describe('POST underwriting - map decision object', () => {
 
     describe('when value is `Declined`', () => {
       it('should return mapped value', () => {
-        const result = mapDecisionValue(CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINE);
+        const result = mapDecisionValue(CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED);
         expect(result).toEqual('Declined');
       });
     });
@@ -80,7 +75,7 @@ describe('POST underwriting - map decision object', () => {
     describe('when decision is `Decline` with declineComments', () => {
       it('should return object with comment as declineComments', () => {
         const submittedValues = {
-          decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINE,
+          decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED,
           declineComments: 'decline comments',
         };
 

@@ -1,19 +1,9 @@
 const Joi = require('joi');
 
-const generateHeadingText = (count, submittedValue) => {
-  if (submittedValue) {
-    if (count === 1) {
-      return `${count} result for "${submittedValue}"`;
-    }
-    if (count > 1) {
-      return `${count} results for "${submittedValue}"`;
-    }
-
-    return `0 results for "${submittedValue}"`;
-  }
-
-  return 'All deals';
-};
+const { showAmendmentButton } = require('./amendments.helper');
+const { generateHeadingText } = require('./generateHeadingText.helper');
+const { mapDecisionObject, mapDecisionValue } = require('./mapDecisionObject.helper');
+const { getGroup, getTask } = require('./tasks.helper');
 
 /**
  * function to validate probability of default
@@ -41,4 +31,4 @@ const probabilityOfDefaultValidation = ((probabilityofDefaultPercentage) => {
   return true;
 });
 
-module.exports = { generateHeadingText, probabilityOfDefaultValidation };
+module.exports = { showAmendmentButton, generateHeadingText, mapDecisionObject, mapDecisionValue, getGroup, getTask, probabilityOfDefaultValidation };

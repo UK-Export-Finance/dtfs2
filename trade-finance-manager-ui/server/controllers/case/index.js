@@ -1,25 +1,32 @@
+const { format, fromUnixTime } = require('date-fns');
 const api = require('../../api');
-const { getTask, showAmendmentButton } = require('./helpers');
+const { getTask, showAmendmentButton } = require('../helpers');
+const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
+
+const {
+  DEAL,
+  TASKS,
+  AMENDMENTS,
+  DECISIONS: { UNDERWRITER_MANAGER_DECISIONS, UNDERWRITER_MANAGER_DECISIONS_TAGS },
+} = CONSTANTS;
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
 
   const deal = await api.getDeal(dealId);
   const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
-  const {
-    facilityId, type, ukefFacilityId, status,
-  } = amendment;
+  const { facilityId, type, ukefFacilityId, status } = amendment;
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const amendmentInProgress = status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+  const hasAmendmentInProgress = status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
 
-  if (amendmentInProgress) {
-    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
   return res.render('case/deal/deal.njk', {
@@ -32,7 +39,7 @@ const getCaseDeal = async (req, res) => {
     facilityType: type,
     ukefFacilityId,
     facilityId,
-    hasAmendmentInProgress: amendmentInProgress,
+    hasAmendmentInProgress,
   });
 };
 
@@ -43,7 +50,7 @@ const getCaseTasks = async (req, res) => {
 
   // default filter
   const tasksFilters = {
-    filterType: CONSTANTS.TASKS.FILTER_TYPES.USER,
+    filterType: TASKS.FILTER_TYPES.USER,
     userId,
   };
 
@@ -61,7 +68,7 @@ const getCaseTasks = async (req, res) => {
     activeSubNavigation: 'tasks',
     dealId,
     user: req.session.user,
-    selectedTaskFilter: CONSTANTS.TASKS.FILTER_TYPES.USER,
+    selectedTaskFilter: TASKS.FILTER_TYPES.USER,
   });
 };
 
@@ -121,11 +128,7 @@ const getCaseTask = async (req, res) => {
 
   const allTeamMembers = await api.getTeamMembers(task.team.id);
 
-  const assignToSelectOptions = mapAssignToSelectOptions(
-    task.assignedTo.userId,
-    user,
-    allTeamMembers,
-  );
+  const assignToSelectOptions = mapAssignToSelectOptions(task.assignedTo.userId, user, allTeamMembers);
 
   return res.render('case/tasks/task.njk', {
     deal: deal.dealSnapshot,
@@ -171,20 +174,59 @@ const putCaseTask = async (req, res) => {
   return res.redirect(`/case/${dealId}/tasks`);
 };
 
+const formatAmendmentDetails = (allAmendments) => {
+  const allCompletedAmendments = [];
+  if (allAmendments.length) {
+    Object.values(allAmendments).forEach((value) => {
+      // deep clone the object
+      const item = { ...value };
+      item.effectiveDate = value?.effectiveDate ? format(fromUnixTime(item.effectiveDate), 'dd MMMM yyyy') : null;
+      item.requestDate = value?.requestDate ? format(fromUnixTime(item.requestDate), 'dd MMMM yyyy') : null;
+      item.coverEndDate = value?.coverEndDate ? format(fromUnixTime(item.coverEndDate), 'dd MMMM yyyy') : null;
+      item.value = value?.value ? `GBP ${formattedNumber(value.value)}` : null;
+      item.requireUkefApproval = value?.requireUkefApproval ? 'Yes' : 'No';
+      item.banksDecision = value?.requireUkefApproval ? UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION : '';
+      item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+
+      if (value?.requireUkefApproval) {
+        item.ukefDecisionValue = value?.facilityValueDecision || UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+        item.ukefDecisionCoverEndDate = value?.coverEndDateDecision || UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+      } else {
+        item.ukefDecisionValue = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
+        item.ukefDecisionCoverEndDate = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
+      }
+
+      if (value?.changeCoverEndDate && value?.currentCoverEndDate) {
+        item.currentCoverEndDate = format(fromUnixTime(value?.currentCoverEndDate), 'dd MMMM yyyy');
+      }
+
+      if (value?.changeFacilityValue && value?.currentValue) {
+        item.currentValue = `${value.currentCurrency} ${formattedNumber(value.currentValue)}`;
+      }
+      allCompletedAmendments.push(item);
+    });
+  }
+  return allCompletedAmendments;
+};
+
 const getCaseFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
   const { data: amendment } = await api.getAmendmentInProgress(facilityId);
   const { status, amendmentId } = amendment;
+  const { data: allAmendmentsByFacilityId } = await api.getAmendmentsByFacilityId(facilityId);
 
   if (!facility) {
     return res.redirect('/not-found');
   }
 
+  const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
+
   const { dealId } = facility.facilitySnapshot;
   const deal = await api.getDeal(dealId);
 
-  const amendmentInProgress = status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+  const hasAmendmentInProgress = status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+  const showContinueAmendmentButton = hasAmendmentInProgress && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
@@ -197,10 +239,11 @@ const getCaseFacility = async (req, res) => {
     facilityTfm: facility.tfm,
     user: req.session.user,
     showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendmentId,
-    showContinueAmendmentButton: amendmentInProgress && !amendment.submittedByPim,
+    showContinueAmendmentButton,
     amendmentId: amendment?.amendmentId,
     amendmentVersion: amendment?.version,
-    hasAmendmentInProgress: amendmentInProgress,
+    hasAmendmentInProgress,
+    allAmendments,
   });
 };
 

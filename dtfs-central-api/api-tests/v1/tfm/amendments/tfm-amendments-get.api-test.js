@@ -5,7 +5,7 @@ const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 
-describe('/v1/tfm/facilities/:id/amendment', () => {
+describe('GET TFM amendments', () => {
   let dealId;
 
   const mockUser = {
@@ -50,12 +50,15 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
   describe('GET /v1/tfm/facilities/:id/amendment', () => {
     it('should return all amendments based on facilityId', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      const newId = postResult.body._id;
+      const facilityId = postResult.body._id;
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      await api.post().to(`/v1/tfm/facilities/${newId}/amendment`);
-      const { status, body } = await api.get(`/v1/tfm/facilities/${newId}/amendment`);
+      const { body: bodyPostResponse } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendment`);
+      const updatePayload = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
+      await api.put(updatePayload).to(`/v1/tfm/facilities/${facilityId}/amendment/${bodyPostResponse.amendmentId}`);
+
+      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendment`);
 
       expect(status).toEqual(200);
 
@@ -83,7 +86,7 @@ describe('/v1/tfm/facilities/:id/amendment', () => {
     it('should return 200 with an empty array if the facility does not have any amendments', async () => {
       const { status, body } = await api.get('/v1/tfm/facilities/626a9270184ded001357c010/amendment');
       expect(status).toEqual(200);
-      expect(body).toEqual({});
+      expect(body).toEqual([]);
     });
   });
 

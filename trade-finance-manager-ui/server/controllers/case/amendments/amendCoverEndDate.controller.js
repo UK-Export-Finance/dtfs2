@@ -1,4 +1,4 @@
-const { format, fromUnixTime } = require('date-fns');
+const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
@@ -24,7 +24,7 @@ const getAmendCoverEndDate = async (req, res) => {
   }
 
   const facility = await api.getFacility(facilityId);
-  const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId);
+  const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId, amendmentId);
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
   if (latestAmendment?.coverEndDate) {
     currentCoverEndDate = format(fromUnixTime(latestAmendment.coverEndDate), 'dd MMMM yyyy');
@@ -71,7 +71,10 @@ const postAmendCoverEndDate = async (req, res) => {
   }
 
   try {
-    const payload = { coverEndDate };
+    let formatCurrentCoverEndDate = currentCoverEndDate;
+    // convert the current end date to EPOCH format
+    formatCurrentCoverEndDate = getUnixTime((new Date(formatCurrentCoverEndDate)).setHours(2, 2, 2, 2));
+    const payload = { coverEndDate, currentCoverEndDate: formatCurrentCoverEndDate };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
     if (status === 200) {
