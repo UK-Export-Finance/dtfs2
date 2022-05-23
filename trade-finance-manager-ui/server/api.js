@@ -330,10 +330,10 @@ const getCompletedAmendment = async (facilityId) => {
       headers: { 'Content-Type': 'application/json' },
     });
 
-    return response.data;
+    return { status: 200, data: response.data };
   } catch (err) {
     console.error('Unable to get the completed amendment %O', { response: err?.response?.data });
-    return err?.response?.data;
+    return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
@@ -367,7 +367,7 @@ const getAmendmentById = async (facilityId, amendmentId) => {
   }
 };
 
-const getAmendmentByFacilityId = async (facilityId) => {
+const getAmendmentsByFacilityId = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
@@ -468,7 +468,7 @@ module.exports = {
   getCompletedAmendment,
   getLatestCompletedAmendment,
   getAmendmentById,
-  getAmendmentByFacilityId,
+  getAmendmentsByFacilityId,
   getAmendmentByDealId,
   getAmendmentInProgressByDealId,
   getCompletedAmendmentByDealId,
