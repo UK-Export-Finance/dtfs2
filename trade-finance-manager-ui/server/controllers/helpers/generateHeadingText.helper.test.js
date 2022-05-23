@@ -1,4 +1,4 @@
-import generateHeadingText from './index';
+import { generateHeadingText } from './index';
 
 describe('deal - helpers', () => {
   describe('generateHeadingText', () => {

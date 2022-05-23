@@ -1,5 +1,5 @@
 import caseController from '.';
-import generateHeadingText from '../helpers';
+import { generateHeadingText } from '../helpers';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
 

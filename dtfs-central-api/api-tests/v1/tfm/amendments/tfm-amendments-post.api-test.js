@@ -5,7 +5,7 @@ const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 
-describe('/v1/tfm/facilities/:id/amendment', () => {
+describe('POST TFM amendments', () => {
   let dealId;
 
   const mockUser = {

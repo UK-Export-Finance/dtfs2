@@ -44,11 +44,30 @@ const postAmendmentAnswers = async (req, res) => {
   const { dealId, requireUkefApproval } = amendment;
 
   try {
-    const payload = { submittedByPim: true };
+    const payload = {
+      submittedByPim: true,
+      value: amendment.value,
+      coverEndDate: amendment.coverEndDate,
+    };
+
     if (!requireUkefApproval) {
       payload.status = AMENDMENT_STATUS.COMPLETED;
       payload.submissionDate = getUnixTime(new Date());
     }
+
+    // if the facility value should not be changed, then re-set the `value` properties to `null`
+    if (!amendment.changeFacilityValue) {
+      payload.value = null;
+      payload.currentValue = null;
+      payload.currentCurrency = null;
+    }
+
+    // if the cover end date should not be changed, then re-set the `coverEndDate` properties to `null`
+    if (!amendment.changeCoverEndDate) {
+      payload.coverEndDate = null;
+      payload.currentCoverEndDate = null;
+    }
+
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
     if (status === 200) {
