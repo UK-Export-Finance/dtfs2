@@ -8,6 +8,13 @@ const {
   getCollection,
   disconnect,
 } = require('../helpers/database');
+const {
+  getDDMMYYYY,
+  epochInSeconds,
+} = require('../helpers/date');
+const {
+  getDealTfmStage,
+} = require('../helpers/deal');
 const { ObjectId } = require('mongodb');
 const CONSTANTS = require('../constant');
 
@@ -55,21 +62,6 @@ const buildDealsnapshot = (deal) => (
 );
 
 /**
- * Evaluates deal tfm status / stage.
- * @param {Object} deal Deal object
- * @returns {String} TFM deal status
- */
-const getDealTfmStage = (deal) => {
-  if (deal.status === CONSTANTS.DEAL.PORTAL_STATUS.ABANDONED) {
-    return CONSTANTS.DEAL.TFM_STATUS.ABANDONED;
-  }
-
-  return deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-    ? CONSTANTS.DEAL.TFM_STATUS.IN_PROGRESS_BY_UKEF
-    : CONSTANTS.DEAL.TFM_STATUS.CONFIRMED;
-};
-
-/**
  * Construct deal's `tfm` object.
  * @param {Object} deal Deal object
  * @returns {Object} tfm TFM Object
@@ -77,11 +69,11 @@ const getDealTfmStage = (deal) => {
 const buildDealTfm = (deal) => (
   {
     tfm: {
-      dateReceived: '',
-      dateReceivedTimestamp: deal.submissionDate,
+      dateReceived: getDDMMYYYY(deal.submissionDate),
+      dateReceivedTimestamp: epochInSeconds(deal.submissionDate),
       product: deal.dealType,
       stage: getDealTfmStage(deal),
-      lossGivenDefault: '',
+      lossGivenDefault: CONSTANTS.DEAL.LOSS_GIVEN_DEFAULT.DEFAULT,
       exporterCreditRating: '',
       probabilityOfDefault: '',
       lastUpdated: 0,
