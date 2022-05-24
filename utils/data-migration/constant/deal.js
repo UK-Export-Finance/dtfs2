@@ -33,9 +33,14 @@ const PORTAL_STATUS = {
   WITHDRAWN: 'Withdrawn',
 };
 
+const LOSS_GIVEN_DEFAULT = {
+  DEFAULT: 50,
+};
+
 module.exports = {
   DEAL_TYPE,
   SUBMISSION_TYPE,
   TFM_STATUS,
   PORTAL_STATUS,
+  LOSS_GIVEN_DEFAULT,
 };
