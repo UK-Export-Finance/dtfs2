@@ -1,7 +1,7 @@
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 
-import MOCKS from './test-mocks/amendment-test-mocks';
+import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 import underwriterController from '.';
 

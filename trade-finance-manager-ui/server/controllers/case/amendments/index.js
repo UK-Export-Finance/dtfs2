@@ -5,6 +5,21 @@ const { getAmendmentEffectiveDate, postAmendmentEffectiveDate } = require('./ame
 const { getAmendFacilityValue, postAmendFacilityValue } = require('./amendFacilityValue.controller');
 const { getAmendCoverEndDate, postAmendCoverEndDate } = require('./amendCoverEndDate.controller');
 const { getAmendmentAnswers, postAmendmentAnswers } = require('./amendmentAnswers.controller');
+const { getAmendmentLeadUnderwriter, getAssignAmendmentLeadUnderwriter, postAssignAmendmentLeadUnderwriter } = require('./leadUnderwriter.controller');
+const { getAmendmentBankDecision, getBanksDecisionEdit } = require('./bankDecision.controller');
+const {
+  getManagersConditionsAndComments,
+  postManagersConditionsAndComments,
+  getManagersConditionsAndCommentsSummary,
+  postManagersConditionsAndCommentsSummary,
+} = require('./managersConditionsAndComments.controller');
+const {
+  getAmendmentUnderwriterManagersDecision,
+  getAmendmentAddUnderwriterManagersDecisionCoverEndDate,
+  postAmendmentAddUnderwriterManagersDecisionCoverEndDate,
+  getAmendmentAddUnderwriterManagersFacilityValue,
+  postAmendmentAddUnderwriterManagersFacilityValue,
+} = require('./underwriterManagerDecision.controller');
 
 module.exports = {
   getAmendmentRequestDate,
@@ -21,4 +36,18 @@ module.exports = {
   postAmendCoverEndDate,
   getAmendmentAnswers,
   postAmendmentAnswers,
+  getAmendmentUnderwriterManagersDecision,
+  getAmendmentLeadUnderwriter,
+  getAssignAmendmentLeadUnderwriter,
+  postAssignAmendmentLeadUnderwriter,
+  getAmendmentBankDecision,
+  getBanksDecisionEdit,
+  getAmendmentAddUnderwriterManagersDecisionCoverEndDate,
+  postAmendmentAddUnderwriterManagersDecisionCoverEndDate,
+  getAmendmentAddUnderwriterManagersFacilityValue,
+  postAmendmentAddUnderwriterManagersFacilityValue,
+  getManagersConditionsAndComments,
+  postManagersConditionsAndComments,
+  getManagersConditionsAndCommentsSummary,
+  postManagersConditionsAndCommentsSummary,
 };

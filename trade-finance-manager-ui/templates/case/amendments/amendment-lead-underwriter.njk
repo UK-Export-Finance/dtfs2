@@ -1,0 +1,64 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% set leadUnderwriter = params.leadUnderwriter %}
+  {% set currentLeadUnderWriter = leadUnderwriter.currentLeadUnderWriter %}
+  {% set amendment = params.amendment %}
+  {% set dealId = amendment.dealId %}
+  {% set facilityId = amendment.facilityId %}
+  {% set amendmentId = amendment.amendmentId %}
+
+  {% block underwriting_content %}
+    {% if currentLeadUnderWriter %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-three-quarters">
+          {% set leadUnderwriterHtml = [] %}
+          {% if leadUnderwriter.isEditable === true %}
+            {% set leadUnderwriterHtml =
+              [{
+                href: "/case/" + dealId + "/facility/" + facilityId + "/amendment/" + amendmentId + "/lead-underwriter",
+                text: "Change",
+                visuallyHiddenText: "contact details",
+                attributes: { "data-cy": "amendment-change-lead-underwriter-link" }
+              }] %}
+          {% endif %}
+
+          {{ govukSummaryList({
+            classes: "govuk-!-margin-bottom-0 govuk-summary-list--no-border",
+            rows: [
+              {
+                key: {
+                  text: currentLeadUnderWriter.firstName + " " + currentLeadUnderWriter.lastName
+                },
+                value: {
+                  html: '<a class="govuk-link" href="mailto:'+currentLeadUnderWriter.email+'" data-cy="lead-underwriter-email">'+currentLeadUnderWriter.email+'</a>'
+                },
+                actions: {
+                  items: leadUnderwriterHtml
+                }
+              }
+            ]
+          }) }}
+        </div>
+      </div>
+
+      {% else %}
+
+        {% if leadUnderwriter.isEditable %}
+          {{ govukButton({
+            text: "Add underwriter",
+            href: "/case/" + dealId + "/facility/" + facilityId + "/amendment/" + amendmentId + "/lead-underwriter",
+            attributes: {
+              "data-cy":"amendment-assign-lead-underwriter-link"
+            }
+          }) }}
+        {% else %}
+          <p class="govuk-!-margin-top-0" data-cy="amendment-unassigned-underwriter-readonly">Unassigned</p>
+        {% endif %}
+    {% endif %}
+
+  {% endblock %}
+{% endmacro %}

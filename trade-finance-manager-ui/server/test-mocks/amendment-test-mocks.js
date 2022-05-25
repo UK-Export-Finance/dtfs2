@@ -1,4 +1,4 @@
-const CONSTANTS = require('../../../../../constants');
+const CONSTANTS = require('../constants');
 
 const MOCK_DEAL = {
   _id: '61f6ac5b02ffda01b1e8efef',

@@ -1,15 +1,15 @@
 import amendmentUnderwritersDecision from '.';
-import { canUserEditManagersDecision } from '../helpers';
+import { userCanEditManagersDecision } from './helpers';
 // import { validateSubmittedValues } from './validateSubmittedValues';
 // import { mapDecisionObject } from './mapDecisionObject';
-import api from '../../../../../api';
-import { mockRes } from '../../../../../test-mocks';
-import MOCKS from '../test-mocks/amendment-test-mocks';
+import api from '../../../api';
+import { mockRes } from '../../../test-mocks';
+import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 const res = mockRes();
 
 describe('getAmendmentUnderwriterManagersDecision()', () => {
-  const isEditable = canUserEditManagersDecision(
+  const isEditable = userCanEditManagersDecision(
     MOCKS.session.user,
     MOCKS.MOCK_AMENDMENT,
   );
@@ -51,7 +51,7 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
 
       await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-managers-decision/amendment-edit-managers-decision.njk', {
+      expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-add-managers-decision.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
         isEditable: true,
@@ -83,7 +83,7 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
 
       await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-managers-decision/amendment-edit-managers-decision.njk', {
+      expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-add-managers-decision.njk', {
         dealId: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
         isEditable: false,

@@ -1,14 +1,14 @@
-import api from '../../../../../api';
-import { mockRes } from '../../../../../test-mocks';
-import mapAssignToSelectOptions from '../../../../../helpers/map-assign-to-select-options';
+import api from '../../../api';
+import { mockRes } from '../../../test-mocks';
+import mapAssignToSelectOptions from '../../../helpers/map-assign-to-select-options';
 import amendmentLeadUnderwriterController from '.';
-import { canUserEditLeadUnderwriter } from '../helpers';
-import { sortArrayOfObjectsAlphabetically } from '../../../../../helpers/array';
+import { userCanEditLeadUnderwriter } from '../../helpers';
+import { sortArrayOfObjectsAlphabetically } from '../../../helpers/array';
 
-import MOCKS from '../test-mocks/amendment-test-mocks';
+import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 describe('GET getAmendmentLeadUnderwriter()', () => {
-  const isEditable = canUserEditLeadUnderwriter(MOCKS.session.user);
+  const isEditable = userCanEditLeadUnderwriter(MOCKS.session.user);
 
   const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCKS.MOCK_USER_UNDERWRITER_MANAGER));
 
@@ -90,7 +90,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
         alphabeticalTeamMembers,
       );
 
-      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-lead-underwriter/amendment-assign-lead-underwriter.njk', {
+      expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-assign-lead-underwriter.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         assignToSelectOptions: expectedAssignToSelectOptions,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
@@ -114,7 +114,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
         alphabeticalTeamMembers,
       );
 
-      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-lead-underwriter/amendment-assign-lead-underwriter.njk', {
+      expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-assign-lead-underwriter.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         assignToSelectOptions: expectedAssignToSelectOptions,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,

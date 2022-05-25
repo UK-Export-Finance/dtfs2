@@ -1,6 +1,6 @@
-const api = require('../../../../../api');
+const api = require('../../../api');
 
-const { canUserEditBankDecision } = require('../helpers');
+const { userCanEditBankDecision } = require('./helpers');
 
 /**
  * @param {Object} deal
@@ -11,7 +11,7 @@ const { canUserEditBankDecision } = require('../helpers');
  * if true, then returns object containing userCanEdit flag
  */
 const getAmendmentBankDecision = async (amendment, user) => {
-  const isEditable = canUserEditBankDecision(
+  const isEditable = userCanEditBankDecision(
     user,
     amendment,
   );
@@ -31,7 +31,7 @@ const getAmendmentBankDecision = async (amendment, user) => {
  * @param {*} req
  * @returns {*} res
  * gets deal and amendment by id
- * checks if can be editted, and if so, then renders template
+ * checks if can be edited, and if so, then renders template
  */
 const getBanksDecisionEdit = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
@@ -45,12 +45,12 @@ const getBanksDecisionEdit = async (req, res) => {
 
   const { user } = req.session;
 
-  const isEditable = canUserEditBankDecision(
+  const isEditable = userCanEditBankDecision(
     user,
     amendment,
   );
 
-  return res.render('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
+  return res.render('case/amendments/amendment-edit-banks-decision.njk', {
     amendment,
     dealId,
     isEditable,

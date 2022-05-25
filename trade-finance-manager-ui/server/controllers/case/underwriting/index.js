@@ -3,9 +3,7 @@ const api = require('../../../api');
 const leadUnderwriter = require('./lead-underwriter');
 const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
-const amendmentLeadUnderwriter = require('../amendments/underwriting/amendment-lead-underwriter');
-const amendmentUnderwriterManagersDecision = require('../amendments/underwriting/amendment-underwriter-managers-decision');
-const amendmentBanksDecision = require('../amendments/underwriting/amendment-banks-decision');
+const { getAmendmentLeadUnderwriter, getAmendmentUnderwriterManagersDecision, getAmendmentBankDecision } = require('../amendments');
 
 /**
  * controller for underwriting tab
@@ -20,26 +18,24 @@ const getUnderwriterPage = async (req, res) => {
 
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
-    return res.redirect('/not-found');
-  }
-
-  const leadUnderWriterData = await leadUnderwriter.getLeadUnderwriter(deal, user);
-  const pricingAndRiskData = await pricingAndRisk.getUnderWritingPricingAndRisk(deal, user);
-  const underwriterManagersDecisionData = await underwriterManagersDecision.getUnderwriterManagersDecision(deal, user);
+  const dealLeadUnderWriter = await leadUnderwriter.getLeadUnderwriter(deal, user);
+  const dealPricingAndRisk = await pricingAndRisk.getUnderWritingPricingAndRisk(deal, user);
+  const dealUnderwriterManagersDecision = await underwriterManagersDecision.getUnderwriterManagersDecision(deal, user);
 
   // gets latest in progress amendment
-  const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
-
-  let amendmentLeadUnderwriterData = {};
-  let amendmentUnderwriterManagersDecisionData = {};
-  let amendmentBanksDecisionData = {};
+  let { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
 
   // if amendments object exists then populate fields
-  if (amendment) {
-    amendmentLeadUnderwriterData = await amendmentLeadUnderwriter.getAmendmentLeadUnderwriter(amendment, user);
-    amendmentUnderwriterManagersDecisionData = await amendmentUnderwriterManagersDecision.getAmendmentUnderwriterManagersDecision(amendment, user);
-    amendmentBanksDecisionData = await amendmentBanksDecision.getAmendmentBankDecision(amendment, user);
+  if (amendment?.submittedByPim) {
+    const amendmentLeadUnderwriter = await getAmendmentLeadUnderwriter(amendment, user);
+    const amendmentUnderwriterManagerDecision = await getAmendmentUnderwriterManagersDecision(amendment, user);
+    const amendmentBankDecision = await getAmendmentBankDecision(amendment, user);
+    amendment = {
+      ...amendment,
+      leadUnderwriter: amendmentLeadUnderwriter,
+      underwriterManagerDecision: amendmentUnderwriterManagerDecision,
+      banksDecision: amendmentBankDecision,
+    };
   }
 
   return res.render('case/underwriting/underwriting.njk', {
@@ -49,13 +45,10 @@ const getUnderwriterPage = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
     user: req.session.user,
-    leadUnderwriter: leadUnderWriterData,
-    pricingAndRisk: pricingAndRiskData,
-    underwriterManagersDecision: underwriterManagersDecisionData,
-    amendmentData: amendment,
-    amendmentLeadUnderwriter: amendmentLeadUnderwriterData,
-    amendmentUnderwriterManagersDecision: amendmentUnderwriterManagersDecisionData,
-    amendmentBanksDecision: amendmentBanksDecisionData,
+    leadUnderwriter: dealLeadUnderWriter,
+    pricingAndRisk: dealPricingAndRisk,
+    underwriterManagersDecision: dealUnderwriterManagersDecision,
+    amendment,
   });
 };
 
@@ -63,8 +56,5 @@ module.exports = {
   ...leadUnderwriter,
   ...pricingAndRisk,
   ...underwriterManagersDecision,
-  ...amendmentLeadUnderwriter,
-  ...amendmentUnderwriterManagersDecision,
-  ...amendmentBanksDecision,
   getUnderwriterPage,
 };

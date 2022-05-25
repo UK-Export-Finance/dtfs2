@@ -1,8 +1,8 @@
-import api from '../../../../../api';
-import { mockRes } from '../../../../../test-mocks';
+import api from '../../../api';
+import { mockRes } from '../../../test-mocks';
 import amendmentBanksDecisionController from '.';
 
-import MOCKS from '../test-mocks/amendment-test-mocks';
+import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 const res = mockRes();
 
@@ -80,7 +80,7 @@ describe('GET getBanksDecisionEdit()', () => {
 
       await amendmentBanksDecisionController.getBanksDecisionEdit(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
+      expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-edit-banks-decision.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments,
         isEditable: true,
@@ -109,7 +109,7 @@ describe('GET getBanksDecisionEdit()', () => {
 
       await amendmentBanksDecisionController.getBanksDecisionEdit(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
+      expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-edit-banks-decision.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments,
         isEditable: false,
@@ -136,7 +136,7 @@ describe('GET getBanksDecisionEdit()', () => {
 
       await amendmentBanksDecisionController.getBanksDecisionEdit(req, res);
 
-      expect(res.render).toHaveBeenCalledWith('case/amendments/underwriting/amendment-banks-decision/amendment-edit-banks-decision.njk', {
+      expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-edit-banks-decision.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
         amendment: MOCKS.MOCK_AMENDMENT.amendments,
         isEditable: false,

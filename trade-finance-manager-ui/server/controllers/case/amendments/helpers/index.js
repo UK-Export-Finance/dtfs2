@@ -1,35 +1,28 @@
 const CONSTANTS = require('../../../../constants');
 const { userIsInTeam } = require('../../../../helpers/user');
 
-const canUserEditLeadUnderwriter = (user) =>
-  userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
+const userCanEditLeadUnderwriter = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
-const canUserEditManagersDecision = (user, amendment) => {
+const userCanEditManagersDecision = (user, amendment) => {
   const isManager = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
-
   const hasDecision = amendment?.underwriterManagersDecision?.decision;
-
   if (isManager && !hasDecision) {
     return true;
   }
-
   return false;
 };
 
-const canUserEditBankDecision = (user, amendment) => {
+const userCanEditBankDecision = (user, amendment) => {
   const isPim = userIsInTeam(user, [CONSTANTS.TEAMS.PIM]);
-
   const hasDecision = amendment?.underwriterManagersDecision?.decision;
-
   if (isPim && hasDecision) {
     return true;
   }
-
   return false;
 };
 
 module.exports = {
-  canUserEditLeadUnderwriter,
-  canUserEditManagersDecision,
-  canUserEditBankDecision,
+  userCanEditLeadUnderwriter,
+  userCanEditManagersDecision,
+  userCanEditBankDecision,
 };

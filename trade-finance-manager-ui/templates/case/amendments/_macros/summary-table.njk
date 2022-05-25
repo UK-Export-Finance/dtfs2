@@ -1,0 +1,93 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% macro render(amendment) %}
+
+  <p class="govuk-body-l govuk-!-margin-top-4 govuk-!-margin-bottom-0">{{amendment.type}} {{amendment.ukefFacilityId}}</p>
+  <div class="govuk-grid-row govuk-!-margin-top-5" data-cy="amendment--managers-conditions-and-comments">
+    <div class="govuk-grid-column-three-quarters">
+      {% set rows = [] %}
+      {% if amendment.changeCoverEndDate === true %}
+        {% set coverEndDateDecisionHtml %}
+            {{govukTag({
+              text: amendment.ukefDecision.coverEndDate,
+              classes: amendment.tags[amendment.ukefDecision.coverEndDate],
+              attributes: { "data-cy": "amendment--details-"+amendment.version+"-cover-end-date-decision" }
+            })}}
+        {% endset %}
+
+        {% set defaultCoverEndDate =
+          [
+            { text: 'Cover end date' },
+            { text: amendment.currentCoverEndDate, attributes: { "data-cy": "amendment--details-"+amendment.version+"-current-cover-end-date" } },
+            { text: amendment.coverEndDate, attributes: { "data-cy": "amendment--details-"+amendment.version+"-new-cover-end-date" } },
+            { html: coverEndDateDecisionHtml }
+          ]
+        %}
+
+        {% if amendment.summary === true %}
+          {% set changeLinkHtml %}
+            <a href="/case/{{amendment.dealId}}/facility/{{amendment.facilityId}}/amendment/{{amendment.amendmentId}}/cover-end-date/managers-decision">Change</a>
+          {% endset %}
+          {% set changeLink = { html: changeLinkHtml } %}
+          {% set defaultCoverEndDate = (defaultCoverEndDate.push(changeLink), defaultCoverEndDate) %}
+        {% endif %}
+
+        {% set rows = (rows.push(defaultCoverEndDate), rows) %}
+      {% endif %}
+
+
+      {% if amendment.changeFacilityValue === true %}
+        {% set facilityValueDecisionHtml %}
+            {{govukTag({
+              text: amendment.ukefDecision.value,
+              classes: amendment.tags[amendment.ukefDecision.value],
+              attributes: { "data-cy": "amendment--details-"+amendment.version+"-facility-value-decision" }
+            })}}
+        {% endset %}
+
+        {% set defaultFacilityValue =
+          [
+            { text: 'Value (facility currency)' },
+            { text: amendment.currentValue, attributes: { "data-cy": "amendment--details-"+amendment.version+"-current-facility-value" } },
+            { text: amendment.value, attributes: { "data-cy": "amendment--details-"+amendment.version+"-new-facility-value" } },
+            { html: facilityValueDecisionHtml }
+          ]
+        %}
+
+        {% if amendment.summary === true %}
+          {% set changeLinkHtml %}
+            <a href="/case/{{amendment.dealId}}/facility/{{amendment.facilityId}}/amendment/{{amendment.amendmentId}}/facility-value/managers-decision">Change</a>
+          {% endset %}
+          {% set changeLink = { html: changeLinkHtml } %}
+          {% set defaultFacilityValue = (defaultFacilityValue.push(changeLink), defaultFacilityValue) %}
+        {% endif %}
+
+        {% set rows = (rows.push(defaultFacilityValue), rows) %}
+      {% endif %}
+
+      {% set head =
+        [
+          { text: "" },
+          { text: "Change from" },
+          { text: "Change to" },
+          { text: "Underwriter manager's decision" }
+        ]
+      %}
+
+      {% if amendment.summary === true %}
+        {% set changeLink = { text: "" } %}
+        {% set head = (head.push(changeLink), head) %}
+      {% endif %}
+
+
+      {{ govukTable({
+        captionClasses: "govuk-table__caption--m",
+        firstCellIsHeader: true,
+        head: head,
+        rows: rows
+      }) }}
+
+    </div>
+  </div>
+{% endmacro %}

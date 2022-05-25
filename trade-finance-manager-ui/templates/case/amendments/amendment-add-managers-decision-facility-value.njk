@@ -1,0 +1,114 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendment - What's your decision (Value - facility currency)
+{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+          'data-cy': 'error-summary'
+        }
+      }) }}
+  {% endif %}
+
+
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--managers-decision-facility-value" aria-label="What's your decision?">What's your decision?</h1>
+  <h3 class="govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-4" data-cy="amendment--managers-decision-facility-value" aria-label="Value (facility currency)">Value (facility currency)</h3>
+
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+        <h4 class="govuk-heading-s govuk-body-s govuk-!-margin-bottom-2 govuk-!-font-weight-bold">Change from</h4>
+      </div>
+
+      <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body-s govuk-!-margin-bottom-2" data-cy="amendment--current-facility-value">{{amendment.currentValue}}</p>
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+        <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Change to</h4>
+      </div>
+
+      <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body-s" data-cy="amendment--facility-value">{{amendment.value}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {{ govukRadios({
+            name: "underwriterManagerDecisionFacilityValue",
+            items: [
+              {
+                value: "Approved without conditions",
+                text: "Approve without conditions",
+                hint: {
+                  text: "You'll be able to add comments that only UKEF can see later."
+                },
+                checked: amendment.ukefDecision.value === 'Approved without conditions',
+                attributes: {
+                  'data-cy': 'amendment--approve-without-conditions-radio-button'
+                }
+              },
+              {
+                value: "Approved with conditions",
+                text: "Approve with conditions",
+                hint: {
+                  text: "You'll be able to add conditions to the approval later."
+                },
+                checked: amendment.ukefDecision.value === 'Approved with conditions',
+                attributes: {
+                  'data-cy': 'amendment--approve-with-conditions-radio-button'
+                }
+              },
+              {
+                value: "Declined",
+                text: "Decline",
+                hint: {
+                  text: "You'll be able to add the reasons why you are declining the change later."
+                },
+                checked: amendment.ukefDecision.value === 'Declined',
+                attributes: {
+                  'data-cy': 'amendment--decline-radio-button'
+                }
+              }
+            ],
+            errorMessage: errors and errors.fieldErrors.amendmentUnderwriterManagerDecision and {
+            text: errors.fieldErrors.amendmentUnderwriterManagerDecision.text,
+            attributes: {
+              'data-cy': 'amendment--inline-error'
+            }
+          }
+          }) }}
+
+          <div class="govuk-button-group">
+            {% if isEditable %}
+              {{ govukButton({
+                text: "Continue",
+                attributes: {
+                    "data-cy": "amendment--continue-button"
+                }
+                })
+              }}
+            {% endif %}
+            <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ amendment.dealId }}/underwriting" data-cy="amendment--cancel-button">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+{% endblock %}
