@@ -3,19 +3,37 @@ const moment = require('moment');
 const CONSTANTS = require('../../../constants');
 const { formatYear, formatTimestamp } = require('../../../helpers/date');
 
+/**
+ * Evalutes facility's exposure period in months.
+ * If `Unissued` then guarantee month value is returned.
+ * If `Issued` then cover start and end date difference in months.
+ * @param {Object} facility Facility object
+ * @param {String} dealType Deal type `GEF`, `BSS`, `EWCS`
+ * @returns {Integer} Exposure period in months
+ */
 const getExposurePeriod = (facility, dealType) => {
-  let coverStartDate;
   const { facilitySnapshot } = facility;
 
+  // GEF
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    return facility.tfm.exposurePeriodInMonths || 0;
+    const exposurePeriodInMonths = facility.tfm.exposurePeriodInMonths || 0;
+    const monthsOfCover = facilitySnapshot.monthsOfCover || 0;
+    const { hasBeenIssued } = facilitySnapshot;
+
+    return hasBeenIssued ? exposurePeriodInMonths : monthsOfCover;
   }
 
+  // BSS/EWCS
   if (facilitySnapshot) {
-    if (facilitySnapshot.requestedCoverStartDate) {
-      const startDate = moment(formatTimestamp(facilitySnapshot.requestedCoverStartDate));
+    let coverStartDate;
+    const {
+      requestedCoverStartDate,
+      ukefGuaranteeInMonths,
+    } = facilitySnapshot;
 
-      // Need a date without the h:m:s elements as this effects the diff calculation
+    if (requestedCoverStartDate) {
+      const startDate = moment(formatTimestamp(requestedCoverStartDate));
+
       coverStartDate = moment([
         formatYear(startDate.year()),
         startDate.month(),
@@ -36,17 +54,16 @@ const getExposurePeriod = (facility, dealType) => {
     ]);
 
     if (!coverStartDate.isValid() || !coverEndDate.isValid()) {
-      return facilitySnapshot.ukefGuaranteeInMonths;
+      return Number(ukefGuaranteeInMonths) || 0;
     }
 
     const durationMonths = coverEndDate.diff(coverStartDate, 'months') + 1;
-
     const monthOffset = moment(coverStartDate).date() === moment(coverEndDate).date() ? -1 : 0;
 
     return durationMonths + monthOffset;
   }
 
-  return facility.ukefGuaranteeInMonths;
+  return 0;
 };
 
 module.exports = getExposurePeriod;
