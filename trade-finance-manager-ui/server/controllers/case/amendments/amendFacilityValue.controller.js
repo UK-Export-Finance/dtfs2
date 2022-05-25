@@ -47,6 +47,7 @@ const postAmendFacilityValue = async (req, res) => {
   }
 
   const { errorsObject, amendFacilityValueErrors } = amendFacilityValueValidation(currentFacilityValue, value, currency);
+
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
   const { dealId } = amendment;
 
