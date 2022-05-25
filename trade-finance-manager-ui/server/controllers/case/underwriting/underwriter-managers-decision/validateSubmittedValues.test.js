@@ -108,7 +108,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
       expect(result).toEqual(expected);
     });
 
-    describe('when `decision` is `Approved with conditions`', () => {
+    describe('when `decision` is `Approve with conditions`', () => {
       it('should return validationErrors when there is no `approveWithConditionsComments`', () => {
         const result = validateSubmittedValues({
           decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,

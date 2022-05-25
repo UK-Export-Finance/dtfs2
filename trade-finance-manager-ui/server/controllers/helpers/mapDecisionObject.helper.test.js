@@ -55,7 +55,7 @@ describe('POST underwriting - map decision object', () => {
       });
     });
 
-    describe('when decision is `Approved with conditions` with approveWithConditionsComments', () => {
+    describe('when decision is `Approve with conditions` with approveWithConditionsComments', () => {
       it('should return object with comment as approveWithConditionsComments', () => {
         const submittedValues = {
           decision: CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,

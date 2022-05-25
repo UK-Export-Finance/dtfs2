@@ -1,6 +1,6 @@
 const UNDERWRITER_MANAGER_DECISIONS = {
-  APPROVED_WITH_CONDITIONS: 'Approved with conditions',
-  APPROVED_WITHOUT_CONDITIONS: 'Approved without conditions',
+  APPROVED_WITH_CONDITIONS: 'Approve with conditions',
+  APPROVED_WITHOUT_CONDITIONS: 'Approve without conditions',
   DECLINED: 'Declined',
   NOT_ADDED: 'Not added',
   AUTOMATIC_APPROVAL: 'Automatic approval',

@@ -10,8 +10,8 @@ const DEAL_TYPE = {
 };
 
 const UNDERWRITING_MANAGERS_DECISION_INPUT = {
-  APPROVE_WITH_CONDITIONS: 'Approved with conditions',
-  APPROVE_WITHOUT_CONDITIONS: 'Approved without conditions',
+  APPROVE_WITH_CONDITIONS: 'Approve with conditions',
+  APPROVE_WITHOUT_CONDITIONS: 'Approve without conditions',
   DECLINED: 'Declined',
 };
 

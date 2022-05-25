@@ -24,7 +24,7 @@ describe(page, () => {
         wrapper.expectElement('[data-cy="approve-without-conditions-radio-button"]').toExist();
       });
 
-      it('should render `Approved with conditions` radio button', () => {
+      it('should render `Approve with conditions` radio button', () => {
         wrapper.expectElement('[data-cy="approve-with-conditions-radio-button"]').toExist();
       });
 
