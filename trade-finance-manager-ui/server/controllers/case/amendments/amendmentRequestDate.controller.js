@@ -74,7 +74,6 @@ const postAmendmentRequestDate = async (req, res) => {
         username: user.username,
         name: `${user.firstName} ${user.lastName}`,
         email: user.email,
-        team: user.teams,
       },
     };
 
