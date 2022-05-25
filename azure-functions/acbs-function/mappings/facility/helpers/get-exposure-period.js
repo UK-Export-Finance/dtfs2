@@ -16,17 +16,23 @@ const getExposurePeriod = (facility, dealType) => {
 
   // GEF
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    return facilitySnapshot.hasBeenIssued
-      ? facility.tfm.exposurePeriodInMonths || 0
-      : facilitySnapshot.monthsOfCover || 0;
+    const exposurePeriodInMonths = facility.tfm.exposurePeriodInMonths || 0;
+    const monthsOfCover = facilitySnapshot.monthsOfCover || 0;
+    const { hasBeenIssued } = facilitySnapshot;
+
+    return hasBeenIssued ? exposurePeriodInMonths : monthsOfCover;
   }
 
   // BSS/EWCS
   if (facilitySnapshot) {
     let coverStartDate;
+    const {
+      requestedCoverStartDate,
+      ukefGuaranteeInMonths,
+    } = facilitySnapshot;
 
-    if (facilitySnapshot.requestedCoverStartDate) {
-      const startDate = moment(formatTimestamp(facilitySnapshot.requestedCoverStartDate));
+    if (requestedCoverStartDate) {
+      const startDate = moment(formatTimestamp(requestedCoverStartDate));
 
       coverStartDate = moment([
         formatYear(startDate.year()),
@@ -48,7 +54,7 @@ const getExposurePeriod = (facility, dealType) => {
     ]);
 
     if (!coverStartDate.isValid() || !coverEndDate.isValid()) {
-      return Number(facilitySnapshot.ukefGuaranteeInMonths) || 0;
+      return Number(ukefGuaranteeInMonths) || 0;
     }
 
     const durationMonths = coverEndDate.diff(coverStartDate, 'months') + 1;
@@ -57,7 +63,7 @@ const getExposurePeriod = (facility, dealType) => {
     return durationMonths + monthOffset;
   }
 
-  return Number(facilitySnapshot.ukefGuaranteeInMonths) || 0;
+  return 0;
 };
 
 module.exports = getExposurePeriod;
