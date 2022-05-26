@@ -1,6 +1,7 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const api = require('../../../api');
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
+const { formattedNumber } = require('../../../helpers/number');
 
 const getAmendmentAnswers = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -18,8 +19,7 @@ const getAmendmentAnswers = async (req, res) => {
   const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMMM yyyy');
   const coverEndDate = amendment?.coverEndDate ? format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy') : '';
   const effectiveDate = amendment?.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), 'dd MMMM yyyy') : '';
-  let value = amendment.value ? amendment.value.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
-  value = `GBP ${value}`;
+  const value = amendment.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : '';
 
   return res.render('case/amendments/amendment-answers.njk', {
     dealId,
@@ -59,7 +59,7 @@ const postAmendmentAnswers = async (req, res) => {
     if (!amendment.changeFacilityValue) {
       payload.value = null;
       payload.currentValue = null;
-      payload.currentCurrency = null;
+      payload.currency = null;
     }
 
     // if the cover end date should not be changed, then re-set the `coverEndDate` properties to `null`
