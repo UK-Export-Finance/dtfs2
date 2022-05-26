@@ -9,7 +9,7 @@
 
   {% for amendment in allAmendments %}
     {% if amendment.submittedByPim === true %}
-      <div class="govuk-grid-row govuk-!-margin-top-53 govuk-!-padding-top-6 amendment-details" data-cy="amendment--details-{{amendment.version}}">
+      <div class="govuk-grid-row govuk-!-margin-top-5 govuk-!-padding-top-6 amendment-details" data-cy="amendment--details-{{amendment.version}}">
         <div class="govuk-grid-column-full">
           <h2 class="govuk-heading-l" data-cy="amendment--heading-version-{{amendment.version}}"> Amendment {{amendment.version}} </h2>
           <div class="govuk-grid-row">
@@ -61,7 +61,7 @@
               ]
             %}
 
-            {% if amendment.requireUkefApproval == 'Yes' %}
+            {% if amendment.requireUkefApproval === 'Yes' %}
               {% set banksDecisionHtml %}
                 {{govukTag({
                   text: amendment.banksDecision,
@@ -95,7 +95,7 @@
               ]
             %}
 
-            {% if amendment.requireUkefApproval == 'Yes' %}
+            {% if amendment.requireUkefApproval === 'Yes' %}
               {% set banksDecisionHtml = '' %}
               {% if amendment.changeCoverEndDate === false %}
                 {% set banksDecisionHtml %}
@@ -122,7 +122,7 @@
               { text: "UKEF decision" }
             ]
           %}
-          {% if amendment.requireUkefApproval == 'Yes' %}
+          {% if amendment.requireUkefApproval === 'Yes' %}
             {% set bankDecision = { text: "Bank's decision" } %}
             {% set head = (head.push(bankDecision), head) %}
           {% endif %}
