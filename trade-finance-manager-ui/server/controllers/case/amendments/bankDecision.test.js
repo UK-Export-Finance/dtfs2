@@ -128,7 +128,7 @@ describe('GET getBanksDecisionEdit()', () => {
       const req = {
         params: {
           _id: MOCKS.MOCK_DEAL._id,
-          amendmentId: MOCKS.MOCK_AMENDMENT.amendments.amendmentId,
+          amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
           facilityId: '12345',
         },
         session: MOCKS.sessionPIMUser,
@@ -156,7 +156,7 @@ describe('GET getBanksDecisionEdit()', () => {
         const req = {
           params: {
             _id: MOCKS.MOCK_DEAL._id,
-            amendmentId: MOCKS.MOCK_AMENDMENT.amendments.amendmentId,
+            amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
             facilityId: '12345',
           },
           session: MOCKS.sessionPIMUser,
@@ -178,7 +178,7 @@ describe('GET getBanksDecisionEdit()', () => {
         const req = {
           params: {
             _id: MOCKS.MOCK_DEAL._id,
-            amendmentId: MOCKS.MOCK_AMENDMENT.amendments.amendmentId,
+            amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
             facilityId: '12345',
           },
           session: MOCKS.sessionPIMUser,

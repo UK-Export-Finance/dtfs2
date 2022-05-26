@@ -47,11 +47,9 @@ const session = {
 };
 
 const MOCK_AMENDMENT = {
-  amendments: {
-    amendmentId: '12345',
-    facilityId: '45678',
-    dealId: '999',
-  },
+  amendmentId: '12345',
+  facilityId: '45678',
+  dealId: '999',
   type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
   ukefFacilityId: '123',
 };

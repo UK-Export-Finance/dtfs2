@@ -3,19 +3,19 @@ import { userCanEditBankDecision, userCanEditLeadUnderwriter, userCanEditManager
 import MOCKS from '../../../../test-mocks/amendment-test-mocks';
 
 describe('userCanEditLeadUnderwriter()', () => {
-  it('should return true if user is in underwriter managers team', () => {
+  it('should return `true` if user is in underwriter managers team', () => {
     const result = userCanEditLeadUnderwriter(MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
     expect(result).toEqual(true);
   });
 
-  it('should return false if user is in PIM team', () => {
+  it('should return `false` if user is in PIM team', () => {
     const result = userCanEditLeadUnderwriter(MOCKS.MOCK_USER_PIM);
     expect(result).toEqual(false);
   });
 
-  it('should return false if user is in underwriting team', () => {
+  it('should return `true` if user is in underwriting team', () => {
     const result = userCanEditLeadUnderwriter(MOCKS.MOCK_USER_UNDERWRITER);
-    expect(result).toEqual(false);
+    expect(result).toEqual(true);
   });
 });
 
@@ -48,7 +48,7 @@ describe('userCanEditBankDecision()', () => {
   });
 
   it('should return true if user is in PIM team and amendment has an underwriter managers decision', () => {
-    MOCKS.MOCK_AMENDMENT.amendments.underwriterManagersDecision = { decision: 'test' };
+    MOCKS.MOCK_AMENDMENT.underwriterManagersDecision = { decision: 'test' };
     const result = userCanEditBankDecision(MOCKS.MOCK_USER_PIM, MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments);
     expect(result).toEqual(true);
   });

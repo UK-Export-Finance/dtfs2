@@ -15,7 +15,7 @@ describe('GET getUnderwriterPage', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(MOCKS.MOCK_DEAL);
       api.getUser = apiGetUserSpy;
-      api.getAmendmentInProgressByDealId = () => Promise.resolve(MOCKS.MOCK_AMENDMENT_PROGRESS_FULL);
+      api.getAmendmentInProgressByDealId = () => Promise.resolve(MOCKS.MOCK_AMENDMENT_FULL);
     });
 
     it('should render template with data', async () => {

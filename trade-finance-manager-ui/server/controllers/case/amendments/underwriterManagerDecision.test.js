@@ -32,7 +32,7 @@ describe('getAmendmentUnderwriterManagersDecision()', () => {
   });
 });
 
-describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
+describe('getAmendmentAddUnderwriterManagersDecisionCoverEndDate()', () => {
   describe('when deal exist and amendments exist', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER);
@@ -43,17 +43,17 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
       const req = {
         params: {
           _id: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER._id,
-          amendmentId: MOCKS.MOCK_AMENDMENT.amendments.amendmentId,
+          amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
           facilityId: '12345',
         },
         session: MOCKS.session,
       };
 
-      await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
+      await amendmentUnderwritersDecision.getAmendmentAddUnderwriterManagersDecisionCoverEndDate(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-add-managers-decision.njk', {
         dealId: MOCKS.MOCK_DEAL.dealSnapshot._id,
-        amendment: MOCKS.MOCK_AMENDMENT.amendments,
+        amendment: MOCKS.MOCK_AMENDMENT,
         isEditable: true,
         user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
       });
@@ -70,7 +70,7 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
       const req = {
         params: {
           _id: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER._id,
-          amendmentId: MOCKS.MOCK_AMENDMENT.amendments.amendmentId,
+          amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
           facilityId: '12345',
         },
         session: {
@@ -81,11 +81,11 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
         },
       };
 
-      await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
+      await amendmentUnderwritersDecision.getAmendmentAddUnderwriterManagersDecisionCoverEndDate(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-add-managers-decision.njk', {
         dealId: MOCKS.MOCK_DEAL_NO_LEAD_UNDERWRITER.dealSnapshot._id,
-        amendment: MOCKS.MOCK_AMENDMENT.amendments,
+        amendment: MOCKS.MOCK_AMENDMENT,
         isEditable: false,
         user: req.session.user,
       });
@@ -106,7 +106,7 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
         session: MOCKS.session,
       };
 
-      await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
+      await amendmentUnderwritersDecision.getAmendmentAddUnderwriterManagersDecisionCoverEndDate(req, res);
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
@@ -124,7 +124,7 @@ describe('getAmendmentUnderwriterManagersDecisionEdit()', () => {
         session: MOCKS.session,
       };
 
-      await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecisionEdit(req, res);
+      await amendmentUnderwritersDecision.getAmendmentAddUnderwriterManagersDecisionCoverEndDate(req, res);
       expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
