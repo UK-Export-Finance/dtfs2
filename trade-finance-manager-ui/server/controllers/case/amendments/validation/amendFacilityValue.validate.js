@@ -1,7 +1,7 @@
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
 const { formattedNumber } = require('../../../../helpers/number');
 
-const amendFacilityValueValidation = (currentFacilityValue, newValue) => {
+const amendFacilityValueValidation = (currentFacilityValue, newValue, currency) => {
   const newFacilityValue = Number(newValue);
   const amendFacilityValueErrors = [];
   if (!newValue) {
