@@ -97,6 +97,7 @@ context('Portal to TFM deal submission', () => {
     cy.clearCookie('connect.sid');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
+
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
 

@@ -186,7 +186,7 @@ const queryAllDeals = async (
         product: '$dealType',
         submissionType: '$submissionType',
         exporter: '$exporter.companyName',
-        updatedAt: '$updatedAt',
+        updatedAt: { $toDouble: '$updatedAt' },
       },
     },
     {

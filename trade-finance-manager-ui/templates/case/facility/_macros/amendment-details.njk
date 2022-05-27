@@ -61,7 +61,7 @@
               ]
             %}
 
-            {% if amendment.requireUkefApproval == 'Yes' %}
+            {% if amendment.requireUkefApproval === 'Yes' %}
               {% set banksDecisionHtml %}
                 {{govukTag({
                   text: amendment.banksDecision,
@@ -95,7 +95,7 @@
               ]
             %}
 
-            {% if amendment.requireUkefApproval == 'Yes' %}
+            {% if amendment.requireUkefApproval === 'Yes' %}
               {% set banksDecisionHtml = '' %}
               {% if amendment.changeCoverEndDate === false %}
                 {% set banksDecisionHtml %}
@@ -122,7 +122,7 @@
               { text: "UKEF decision" }
             ]
           %}
-          {% if amendment.requireUkefApproval == 'Yes' %}
+          {% if amendment.requireUkefApproval === 'Yes' %}
             {% set bankDecision = { text: "Bank's decision" } %}
             {% set head = (head.push(bankDecision), head) %}
           {% endif %}

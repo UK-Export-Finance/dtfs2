@@ -4,6 +4,8 @@ const DEAL = {
   STATUS: 'status',
   BANK_INTERNAL_REF_NAME: 'bankInternalRefName',
   EXPORTER_COMPANY_NAME: 'exporter.companyName',
+  GEF_UKEF_DEAL_ID: 'ukefDealId',
+  BSS_EWCS_UKEF_DEAL_ID: 'details.ukefDealId',
 };
 
 const FACILITY = {

@@ -183,7 +183,7 @@ const formatAmendmentDetails = (allAmendments) => {
       item.effectiveDate = value?.effectiveDate ? format(fromUnixTime(item.effectiveDate), 'dd MMMM yyyy') : null;
       item.requestDate = value?.requestDate ? format(fromUnixTime(item.requestDate), 'dd MMMM yyyy') : null;
       item.coverEndDate = value?.coverEndDate ? format(fromUnixTime(item.coverEndDate), 'dd MMMM yyyy') : null;
-      item.value = value?.value ? `GBP ${formattedNumber(value.value)}` : null;
+      item.value = value?.value ? `${value.currency} ${formattedNumber(value.value)}` : null;
       item.requireUkefApproval = value?.requireUkefApproval ? 'Yes' : 'No';
       item.banksDecision = value?.requireUkefApproval ? UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION : '';
       item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
@@ -201,7 +201,7 @@ const formatAmendmentDetails = (allAmendments) => {
       }
 
       if (value?.changeFacilityValue && value?.currentValue) {
-        item.currentValue = `${value.currentCurrency} ${formattedNumber(value.currentValue)}`;
+        item.currentValue = `${value.currency} ${formattedNumber(value.currentValue)}`;
       }
       allCompletedAmendments.push(item);
     });

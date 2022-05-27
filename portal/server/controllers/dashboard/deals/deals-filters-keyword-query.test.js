@@ -12,6 +12,8 @@ describe('controllers/dashboard/deals - filters - keyword query', () => {
       CONSTANTS.FIELD_NAMES.DEAL.DEAL_TYPE,
       CONSTANTS.FIELD_NAMES.DEAL.SUBMISSION_TYPE,
       CONSTANTS.FIELD_NAMES.DEAL.EXPORTER_COMPANY_NAME,
+      CONSTANTS.FIELD_NAMES.DEAL.GEF_UKEF_DEAL_ID,
+      CONSTANTS.FIELD_NAMES.DEAL.BSS_EWCS_UKEF_DEAL_ID,
     ];
 
     const result = dealsKeywordQuery(keywordValue);

@@ -1,4 +1,5 @@
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
+const { formattedNumber } = require('../../../../helpers/number');
 
 const amendFacilityValueValidation = (currentFacilityValue, newValue) => {
   const newFacilityValue = Number(newValue);
@@ -27,11 +28,7 @@ const amendFacilityValueValidation = (currentFacilityValue, newValue) => {
     return { errorsObject, amendFacilityValueErrors };
   }
 
-  let value = newFacilityValue.toLocaleString('en', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  value = `GBP ${value}`;
+  const value = `${currency} ${formattedNumber(newFacilityValue)}`;
 
   if (currentFacilityValue === value) {
     amendFacilityValueErrors.push({
