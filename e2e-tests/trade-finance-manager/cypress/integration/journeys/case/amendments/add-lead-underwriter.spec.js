@@ -18,7 +18,7 @@ context('Amendments underwriting - add lead underwriter', () => {
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, [mockFacilities[0]], MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
 
@@ -33,8 +33,7 @@ context('Amendments underwriting - add lead underwriter', () => {
       });
     });
 
-    it('should add an amendment request', () => {
-      // adds the amendment
+    it('should submit an amendment request', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -44,17 +43,40 @@ context('Amendments underwriting - add lead underwriter', () => {
       amendmentsPage.addAmendmentButton().contains('Add an amendment request');
       amendmentsPage.addAmendmentButton().click();
       cy.url().should('contain', 'request-date');
-      amendmentsPage.amendmentRequestHeading().contains('What date did the bank request the amendment?');
-      amendmentsPage.amendmentRequestHint().contains('For example, 31 3 1980');
-      amendmentsPage.amendmentRequestDayInput();
-      amendmentsPage.amendmentRequestMonthInput();
-      amendmentsPage.amendmentRequestYearInput();
-      amendmentsPage.continueAmendment();
 
-      amendmentsPage.amendmentRequestDayInput().type(dateConstants.todayDay);
-      amendmentsPage.amendmentRequestMonthInput().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentRequestYearInput().type(dateConstants.todayYear);
+      amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+      amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+      amendmentsPage.continueAmendment().click();
 
+      cy.url().should('contain', 'request-approval');
+      // manual approval
+      amendmentsPage.amendmentRequestApprovalYes().click();
+      amendmentsPage.continueAmendment().click();
+
+      cy.url().should('contain', 'amendment-options');
+      amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
+      amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
+
+      // update both the cover end date and the facility value
+      amendmentsPage.amendmentCoverEndDateCheckbox().click();
+      amendmentsPage.amendmentFacilityValueCheckbox().click();
+      amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
+      amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
+      amendmentsPage.continueAmendment().click();
+      cy.url().should('contain', 'cover-end-date');
+
+      amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
+      amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+      amendmentsPage.continueAmendment().click();
+
+      cy.url().should('contain', 'facility-value');
+      amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
+      amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
+
+      amendmentsPage.continueAmendment().click();
+      cy.url().should('contain', 'check-answers');
       amendmentsPage.continueAmendment().click();
     });
 
@@ -71,7 +93,7 @@ context('Amendments underwriting - add lead underwriter', () => {
       cy.url().should('contain', `case/${dealId}/facility/${_id}/amendment`);
       cy.url().should('contain', '/lead-underwriter');
 
-      pages.amendmentsPage.leadUnderwriterheading().contains('Assign a lead underwriter');
+      pages.amendmentsPage.leadUnderwriterHeading().contains('Assign a lead underwriter');
       pages.amendmentsPage.assignedToSelectInput();
       pages.amendmentsPage.assignedToSelectInputOption();
       pages.amendmentsPage.assignedToSelectInputSelectedOption();
@@ -105,8 +127,7 @@ context('Amendments underwriting - add lead underwriter', () => {
 
       pages.underwritingPage.assignAmendmentLeadUnderwriterButton().should('not.exist');
 
-      pages.underwritingPage.amendmentLeadUnderwriterName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
-      pages.underwritingPage.amendmentLleadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
+      pages.underwritingPage.amendmentLeadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().contains('Change');
 
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().click({ force: true });
@@ -121,15 +142,13 @@ context('Amendments underwriting - add lead underwriter', () => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      pages.underwritingPage.amendmentLeadUnderwriterName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
-      pages.underwritingPage.amendmentLleadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
+      pages.underwritingPage.amendmentLeadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
 
       cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      pages.underwritingPage.amendmentLeadUnderwriterName().contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
-      pages.underwritingPage.amendmentLleadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
+      pages.underwritingPage.amendmentLeadUnderwriterEmail().contains(`${UNDERWRITER_MANAGER_1.email}`);
       pages.underwritingPage.amendmentChangeLeadUnderwriterLink().should('not.exist');
     });
   });

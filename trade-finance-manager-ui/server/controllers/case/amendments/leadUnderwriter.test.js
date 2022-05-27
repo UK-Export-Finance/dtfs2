@@ -8,7 +8,7 @@ import { sortArrayOfObjectsAlphabetically } from '../../../helpers/array';
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 describe('GET getAmendmentLeadUnderwriter()', () => {
-  const isEditable = userCanEditLeadUnderwriter(MOCKS.session.user);
+  const isEditable = userCanEditLeadUnderwriter(MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
 
   const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCKS.MOCK_USER_UNDERWRITER_MANAGER));
 
@@ -18,39 +18,38 @@ describe('GET getAmendmentLeadUnderwriter()', () => {
 
   it('should return an object with the correct parameters when no lead underwriter set', async () => {
     const result = await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(
-      MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
+      MOCKS.MOCK_AMENDMENT,
       MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
     );
 
     expect(result).toEqual({
       isEditable,
-      amendment: MOCKS.MOCK_AMENDMENT_BY_PROGRESS,
-      dealId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.dealId,
-      facilityId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.facilityId,
-      amendmentId: MOCKS.MOCK_AMENDMENT_BY_PROGRESS.amendmentId,
       currentLeadUnderWriter: undefined,
     });
   });
 
   it('should not call getUser API to get current lead underwriter user data', async () => {
-    await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(MOCKS.MOCK_AMENDMENT_BY_PROGRESS, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
+    await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
 
     expect(apiGetUserSpy).not.toHaveBeenCalled();
   });
 
   it('should return an object with the lead underwriter when lead underwriter set', async () => {
     const result = await amendmentLeadUnderwriterController.getAmendmentLeadUnderwriter(
-      MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS,
+      MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER,
       MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
     );
 
     expect(result).toEqual({
       isEditable,
-      amendment: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS,
-      currentLeadUnderWriter: MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
-      dealId: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS.dealId,
-      facilityId: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS.facilityId,
-      amendmentId: MOCKS.MOCK_AMENDMENT_LEAD_UNDERWRITER_IN_PROGRESS.amendmentId,
+      currentLeadUnderWriter: {
+        _id: expect.any(String),
+        firstName: expect.any(String),
+        lastName: expect.any(String),
+        teams: expect.any(Array),
+        username: expect.any(String),
+
+      },
     });
   });
 });
@@ -62,7 +61,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
       amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
       facilityId: '12345',
     },
-    session: MOCKS.session,
+    session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
   };
 
   const getTeamMembersSpy = jest.fn(() => Promise.resolve(MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS));
@@ -86,7 +85,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
 
       const expectedAssignToSelectOptions = mapAssignToSelectOptions(
         '',
-        MOCKS.session.user,
+        MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
         alphabeticalTeamMembers,
       );
 
@@ -110,7 +109,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
 
       const expectedAssignToSelectOptions = mapAssignToSelectOptions(
         MOCKS.MOCK_AMENDMENT.leadUnderwriterId,
-        MOCKS.session.user,
+        MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
         alphabeticalTeamMembers,
       );
 
@@ -138,7 +137,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
           amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
           facilityId: '12345',
         },
-        session: MOCKS.session,
+        session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
       };
       await amendmentLeadUnderwriterController.getAssignAmendmentLeadUnderwriter(reqNoDeal, res);
 
@@ -158,7 +157,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
           amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
           facilityId: '12345',
         },
-        session: MOCKS.session,
+        session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
       };
       await amendmentLeadUnderwriterController.getAssignAmendmentLeadUnderwriter(reqNoAmendment, res);
 
@@ -190,7 +189,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
         amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
         facilityId: '9999',
       },
-      session: MOCKS.session,
+      session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
       body: {
         assignedTo: '12345678',
       },
@@ -218,7 +217,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
         // amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
         // facilityId: '9999',
       },
-      session: MOCKS.session,
+      session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
       body: {
         assignedTo: 'Unassigned',
       },
@@ -252,7 +251,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
           amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
           facilityId: '9999',
         },
-        session: MOCKS.session,
+        session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
         body: {
           assignedTo: 'Unassigned',
         },

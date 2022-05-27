@@ -32,10 +32,6 @@ const getAmendmentLeadUnderwriter = async (amendment, user) => {
   return {
     isEditable,
     currentLeadUnderWriter,
-    dealId: amendment.dealId,
-    facilityId: amendment.facilityId,
-    amendmentId: amendment.amendmentId,
-    amendment,
   };
 };
 

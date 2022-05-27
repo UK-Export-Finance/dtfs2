@@ -30,24 +30,19 @@ const amendmentsPage = {
   continueAmendment: () => cy.get('[data-cy="amendment--continue-button"]'),
   cancelLink: () => cy.get('[data-cy="amendment--cancel-button"]'),
 
-  leadUnderwriterheading: () => cy.get('[data-cy="amendment-assign-lead-underwriter-heading"]'),
+  leadUnderwriterHeading: () => cy.get('[data-cy="amendment-assign-lead-underwriter-heading"]'),
 
   assignedToSelectInput: () => cy.get('[data-cy="assigned-to-select-input"]').first(),
   assignedToSelectInputOption: () => cy.get('[data-cy="assigned-to-select-input"] option'),
   assignedToSelectInputSelectedOption: () => cy.get('[data-cy="assigned-to-select-input"]').first().find('option:selected'),
 
-  underWriterManagerDecisionHeading: () => cy.get('[data-cy="amendment-managers-decision"]'),
+  underWriterManagerDecisionCoverEndDateHeading: () => cy.get('[data-cy="amendment--managers-decision-cover-end-date-heading"]'),
 
   underWriterManagerDecisionErrorSummaryItems: () => cy.get('[data-cy="error-summary"] li'),
 
-  underWriterManagerDecisionRadioInputApproveWithoutConditions: () => cy.get('[data-cy="approve-without-conditions-radio-button"]'),
-  underWriterManagerDecisionApproveWithoutConditionsHint: () => cy.get('[data-cy="approve-without-conditions-hint"]'),
-
-  underWriterManagerDecisionRadioInputApproveWithConditions: () => cy.get('[data-cy="approve-with-conditions-radio-button"]'),
-  underWriterManagerDecisionApproveWithConditionsHint: () => cy.get('[data-cy="approve-with-conditions-hint"]'),
-
-  underWriterManagerDecisionRadioInputDecline: () => cy.get('[data-cy="decline-radio-button"]'),
-  underWriterManagerDecisionDeclineHint: () => cy.get('[data-cy="decline-hint"]'),
+  underWriterManagerDecisionRadioInputApproveWithoutConditions: () => cy.get('[data-cy="amendment--approve-without-conditions-radio-button"]'),
+  underWriterManagerDecisionRadioInputApproveWithConditions: () => cy.get('[data-cy="amendment--approve-with-conditions-radio-button"]'),
+  underWriterManagerDecisionRadioInputDecline: () => cy.get('[data-cy="amendment--decline-radio-button"]'),
 
   underWriterManagerDecisionRadioInputValidationError: () => cy.get('[data-cy="decision-input-error"]'),
 

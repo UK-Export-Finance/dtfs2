@@ -228,6 +228,10 @@ const getCaseFacility = async (req, res) => {
   const hasAmendmentInProgress = status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgress && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,

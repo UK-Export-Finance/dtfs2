@@ -21,35 +21,39 @@ describe('userCanEditLeadUnderwriter()', () => {
 
 describe('userCanEditManagersDecision()', () => {
   it('should return true if user is in underwriter managers team and does not have underwriter managers decision', () => {
-    const result = userCanEditManagersDecision(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, MOCKS.MOCK_AMENDMENT.amendments);
+    const result = userCanEditManagersDecision(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED);
     expect(result).toEqual(true);
   });
 
   it('should return false if user is in not in underwriting team', () => {
-    const result = userCanEditManagersDecision(MOCKS.MOCK_USER_UNDERWRITER, MOCKS.MOCK_AMENDMENT.amendments);
+    const result = userCanEditManagersDecision(MOCKS.MOCK_USER_UNDERWRITER, MOCKS.MOCK_AMENDMENT);
     expect(result).toEqual(false);
   });
 
   it('should return false if user is in underwriter managers team and amendment has underwriter managers decision', () => {
-    const result = userCanEditManagersDecision(MOCKS.MOCK_USER_PIM, MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments);
+    const result = userCanEditManagersDecision(MOCKS.MOCK_USER_PIM, MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED);
     expect(result).toEqual(false);
   });
 });
 
 describe('userCanEditBankDecision()', () => {
   it('should return false if user is in PIM team and amendment does not have underwriter managers decision', () => {
-    const result = userCanEditBankDecision(MOCKS.MOCK_USER_PIM, MOCKS.MOCK_AMENDMENT.amendments);
+    const result = userCanEditBankDecision(MOCKS.MOCK_USER_PIM, MOCKS.MOCK_AMENDMENT);
     expect(result).toEqual(false);
   });
 
   it('should return false if user is in not in PIM team', () => {
-    const result = userCanEditBankDecision(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments);
+    const result = userCanEditBankDecision(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_NOT_SUBMITTED);
     expect(result).toEqual(false);
   });
 
-  it('should return true if user is in PIM team and amendment has an underwriter managers decision', () => {
-    MOCKS.MOCK_AMENDMENT.underwriterManagersDecision = { decision: 'test' };
-    const result = userCanEditBankDecision(MOCKS.MOCK_USER_PIM, MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION.amendments);
+  it('should return true if user is in PIM team and bank\'s has been NOT submitted', () => {
+    const amendment = {
+      ...MOCKS.MOCK_AMENDMENT_UNDERWRITER_DECISION_SUBMITTED,
+      bankDecision: { submitted: false },
+    };
+
+    const result = userCanEditBankDecision(MOCKS.MOCK_USER_PIM, amendment);
     expect(result).toEqual(true);
   });
 });

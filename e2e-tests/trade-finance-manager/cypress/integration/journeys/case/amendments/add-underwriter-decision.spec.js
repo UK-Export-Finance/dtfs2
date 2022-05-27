@@ -18,7 +18,7 @@ context('Amendments underwriting - add underwriter decision', () => {
 
         const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-        cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        cy.createFacilities(dealId, [mockFacilities[0]], MOCK_MAKER_TFM).then((createdFacilities) => {
           dealFacilities.push(...createdFacilities);
         });
 
@@ -33,8 +33,7 @@ context('Amendments underwriting - add underwriter decision', () => {
       });
     });
 
-    it('should add an amendment request', () => {
-      // adds the amendment
+    it('should submit an amendment request', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -44,17 +43,40 @@ context('Amendments underwriting - add underwriter decision', () => {
       amendmentsPage.addAmendmentButton().contains('Add an amendment request');
       amendmentsPage.addAmendmentButton().click();
       cy.url().should('contain', 'request-date');
-      amendmentsPage.amendmentRequestHeading().contains('What date did the bank request the amendment?');
-      amendmentsPage.amendmentRequestHint().contains('For example, 31 3 1980');
-      amendmentsPage.amendmentRequestDayInput();
-      amendmentsPage.amendmentRequestMonthInput();
-      amendmentsPage.amendmentRequestYearInput();
-      amendmentsPage.continueAmendment();
 
-      amendmentsPage.amendmentRequestDayInput().type(dateConstants.todayDay);
-      amendmentsPage.amendmentRequestMonthInput().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentRequestYearInput().type(dateConstants.todayYear);
+      amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+      amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+      amendmentsPage.continueAmendment().click();
 
+      cy.url().should('contain', 'request-approval');
+      // manual approval
+      amendmentsPage.amendmentRequestApprovalYes().click();
+      amendmentsPage.continueAmendment().click();
+
+      cy.url().should('contain', 'amendment-options');
+      amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
+      amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
+
+      // update both the cover end date and the facility value
+      amendmentsPage.amendmentCoverEndDateCheckbox().click();
+      amendmentsPage.amendmentFacilityValueCheckbox().click();
+      amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
+      amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
+      amendmentsPage.continueAmendment().click();
+      cy.url().should('contain', 'cover-end-date');
+
+      amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
+      amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+      amendmentsPage.continueAmendment().click();
+
+      cy.url().should('contain', 'facility-value');
+      amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
+      amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
+
+      amendmentsPage.continueAmendment().click();
+      cy.url().should('contain', 'check-answers');
       amendmentsPage.continueAmendment().click();
     });
 
@@ -69,16 +91,13 @@ context('Amendments underwriting - add underwriter decision', () => {
       pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
 
       cy.url().should('contain', `case/${dealId}/facility/${_id}/amendment`);
-      cy.url().should('contain', '/managers-decision');
+      cy.url().should('contain', '/cover-end-date/managers-decision');
 
-      pages.amendmentsPage.underWriterManagerDecisionHeading().contains('What\'s your decision?');
+      pages.amendmentsPage.underWriterManagerDecisionCoverEndDateHeading().contains('What\'s your decision?');
 
-      pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions();
-      pages.amendmentsPage.underWriterManagerDecisionApproveWithoutConditionsHint().contains('You\'ll be able to add comments that only UKEF can see later.');
-      pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions();
-      pages.amendmentsPage.underWriterManagerDecisionApproveWithConditionsHint().contains('You\'ll be able to add conditions to the approval later.');
-      pages.amendmentsPage.underWriterManagerDecisionRadioInputDecline();
-      pages.amendmentsPage.underWriterManagerDecisionDeclineHint().contains('You\'ll be able to add the reasons why you are declining the change later.');
+      pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions().should('exist');
+      pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('exist');
+      pages.amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('exist');
     });
   });
 });

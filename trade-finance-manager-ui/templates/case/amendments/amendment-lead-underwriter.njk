@@ -22,7 +22,7 @@
                 href: "/case/" + dealId + "/facility/" + facilityId + "/amendment/" + amendmentId + "/lead-underwriter",
                 text: "Change",
                 visuallyHiddenText: "contact details",
-                attributes: { "data-cy": "amendment-change-lead-underwriter-link" }
+                attributes: { "data-cy": "amendment--change-lead-underwriter-link" }
               }] %}
           {% endif %}
 
@@ -34,7 +34,7 @@
                   text: currentLeadUnderWriter.firstName + " " + currentLeadUnderWriter.lastName
                 },
                 value: {
-                  html: '<a class="govuk-link" href="mailto:'+currentLeadUnderWriter.email+'" data-cy="lead-underwriter-email">'+currentLeadUnderWriter.email+'</a>'
+                  html: '<a class="govuk-link" href="mailto:'+currentLeadUnderWriter.email+'" data-cy="amendment--lead-underwriter-email">'+currentLeadUnderWriter.email+'</a>'
                 },
                 actions: {
                   items: leadUnderwriterHtml
