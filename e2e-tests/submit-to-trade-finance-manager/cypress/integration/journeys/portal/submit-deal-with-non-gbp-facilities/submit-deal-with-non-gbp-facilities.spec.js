@@ -58,6 +58,9 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // user can login to TFM and view the submitted deal
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
 
     cy.forceVisit(TFM_URL);
 
