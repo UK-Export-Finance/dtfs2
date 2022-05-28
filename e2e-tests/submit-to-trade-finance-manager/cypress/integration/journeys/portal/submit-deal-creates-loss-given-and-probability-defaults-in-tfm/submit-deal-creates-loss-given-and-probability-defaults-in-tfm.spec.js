@@ -25,7 +25,16 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+  });
+
+  after(() => {
+    cy.clearCookies();
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
   });
 
   it('Portal deal is submitted to UKEF - deal `loss given default` defaults to `50%`, `probability of default` defaults to `Less than 14.1%`', () => {

@@ -107,5 +107,7 @@ export const createEstore = async (req: Request, res: Response) => {
     }
   } else {
     console.error('eStore body is empty', eStoreData);
+    return res.status(200).send();
   }
+  return res.status(200).send();
 };
