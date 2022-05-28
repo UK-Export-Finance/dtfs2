@@ -6,24 +6,23 @@ const { userCanEditLeadUnderwriter } = require('./helpers');
 const { sortArrayOfObjectsAlphabetically } = require('../../../helpers/array');
 
 /**
- * @param {Object} deal
  * @param {Object} amendment
  * @param {Object} user
  * @returns {Object}
  * checks if leadUnderwriter already set and returns an object with currentLeadUnderwriter if set
  */
 const getAmendmentLeadUnderwriter = async (amendment, user) => {
-  let currentLeadUnderWriter;
-  let currentLeadUnderWriterUserId;
+  let leadUnderwriter;
+  let leadUnderwriterId;
 
   // checks if leadUnderwriter exists in amendments object and sets currentLeadUnderWriterUserId
   if (amendment?.leadUnderwriterId) {
-    currentLeadUnderWriterUserId = amendment.leadUnderwriterId;
+    leadUnderwriterId = amendment.leadUnderwriterId;
   }
 
   // checks if set and not unassigned and gets details
-  if (currentLeadUnderWriterUserId && currentLeadUnderWriterUserId !== CONSTANTS.TASKS.UNASSIGNED) {
-    currentLeadUnderWriter = await api.getUser(currentLeadUnderWriterUserId);
+  if (leadUnderwriterId && leadUnderwriterId !== CONSTANTS.TASKS.UNASSIGNED) {
+    leadUnderwriter = await api.getUser(leadUnderwriterId);
   }
 
   // checks if user has ability to assign or change lead-underwriter to render change link or add button
@@ -31,7 +30,7 @@ const getAmendmentLeadUnderwriter = async (amendment, user) => {
 
   return {
     isEditable,
-    currentLeadUnderWriter,
+    leadUnderwriter,
   };
 };
 

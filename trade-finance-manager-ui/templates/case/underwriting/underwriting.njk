@@ -32,7 +32,7 @@
                   text: "Lead underwriter"
                 },
                 content: {
-                  html: amendmentLeadUnderWriterMacro.render({ leadUnderwriter: amendment.leadUnderwriter, amendment: amendment })
+                  html: amendmentLeadUnderWriterMacro.render(amendment)
                 },
                 expanded: false
               },
@@ -41,7 +41,7 @@
                   text: "Underwriter manager's decision"
                 },
                 content: {
-                  html: amendmentManagersDecisionMacro.render({ underwriterManagerDecision: amendment.underwriterManagerDecision, amendment: amendment })
+                  html: amendmentManagersDecisionMacro.render(amendment)
                 },
                 expanded: false
               },

@@ -23,7 +23,12 @@
 
   <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" aria-label="What's your decision?">What's your decision?</h1>
 
-  {{ summary.render(amendment) }}
+  <p class="govuk-body-l govuk-!-margin-top-4 govuk-!-margin-bottom-0">{{amendment.facilityType}} {{amendment.ukefFacilityId}}</p>
+  <div class="govuk-grid-row govuk-!-margin-top-5" data-cy="amendment--managers-conditions-and-comments">
+    <div class="govuk-grid-column-three-quarters">
+      {{ summary.render(amendment) }}
+    </div>
+  </div>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">

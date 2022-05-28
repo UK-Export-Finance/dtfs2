@@ -3,16 +3,14 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% macro render(params) %}
-  {% set leadUnderwriter = params.leadUnderwriter %}
-  {% set currentLeadUnderWriter = leadUnderwriter.currentLeadUnderWriter %}
-  {% set amendment = params.amendment %}
+{% macro render(amendment) %}
+  {% set leadUnderwriter = amendment.leadUnderwriter %}
   {% set dealId = amendment.dealId %}
   {% set facilityId = amendment.facilityId %}
   {% set amendmentId = amendment.amendmentId %}
 
   {% block underwriting_content %}
-    {% if currentLeadUnderWriter %}
+    {% if leadUnderwriter.email %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-three-quarters">
           {% set leadUnderwriterHtml = [] %}
@@ -31,10 +29,10 @@
             rows: [
               {
                 key: {
-                  text: currentLeadUnderWriter.firstName + " " + currentLeadUnderWriter.lastName
+                  text: leadUnderwriter.firstName + " " + leadUnderwriter.lastName
                 },
                 value: {
-                  html: '<a class="govuk-link" href="mailto:'+currentLeadUnderWriter.email+'" data-cy="amendment--lead-underwriter-email">'+currentLeadUnderWriter.email+'</a>'
+                  html: '<a class="govuk-link" href="mailto:'+leadUnderwriter.email+'" data-cy="amendment--lead-underwriter-email">'+leadUnderwriter.email+'</a>'
                 },
                 actions: {
                   items: leadUnderwriterHtml

@@ -1,9 +1,13 @@
+const { format, fromUnixTime } = require('date-fns');
 const api = require('../../../api');
 
 const leadUnderwriter = require('./lead-underwriter');
 const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
-const { getAmendmentLeadUnderwriter, getAmendmentUnderwriterManagersDecision, getAmendmentBankDecision } = require('../amendments');
+const { getAmendmentLeadUnderwriter } = require('../amendments');
+const { userCanEditManagersDecision, userCanEditBankDecision } = require('../amendments/helpers');
+const { formattedNumber } = require('../../../helpers/number');
+const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 
 /**
  * controller for underwriting tab
@@ -22,20 +26,42 @@ const getUnderwriterPage = async (req, res) => {
   const dealPricingAndRisk = await pricingAndRisk.getUnderWritingPricingAndRisk(deal, user);
   const dealUnderwriterManagersDecision = await underwriterManagersDecision.getUnderwriterManagersDecision(deal, user);
 
-  // gets latest in progress amendment
-  let { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
+  // gets latest amendment in progress
+  const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
 
   // if amendments object exists then populate fields
   if (amendment?.submittedByPim) {
-    const amendmentLeadUnderwriter = await getAmendmentLeadUnderwriter(amendment, user);
-    const amendmentUnderwriterManagerDecision = await getAmendmentUnderwriterManagersDecision(amendment, user);
-    const amendmentBankDecision = await getAmendmentBankDecision(amendment, user);
-    amendment = {
-      ...amendment,
-      leadUnderwriter: amendmentLeadUnderwriter,
-      underwriterManagerDecision: amendmentUnderwriterManagerDecision,
-      banksDecision: amendmentBankDecision,
+    if (amendment?.ukefDecision) {
+      amendment.ukefDecision.isEditable = userCanEditManagersDecision(amendment, user);
+    } else {
+      amendment.ukefDecision = { isEditable: userCanEditManagersDecision(amendment, user) };
+    }
+
+    const response = await getAmendmentLeadUnderwriter(amendment, user);
+    amendment.leadUnderwriter = {
+      isEditable: response.isEditable,
+      ...response.leadUnderwriter,
     };
+    if (amendment.banksDecision) {
+      amendment.banksDecision.isEditable = userCanEditBankDecision(amendment, user);
+    }
+
+    if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
+      amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
+      amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+    }
+
+    if (amendment?.changeFacilityValue && amendment?.value) {
+      amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
+      amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
+    }
+
+    if (amendment.ukefDecision.submitted) {
+      const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'dd MMMM yyyy');
+      const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'HH:mm aaa');
+      amendment.ukefDecision.submittedAt = `${date} at ${time}`;
+    }
+    amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
   }
 
   return res.render('case/underwriting/underwriting.njk', {

@@ -42,13 +42,12 @@ describe('GET getAmendmentLeadUnderwriter()', () => {
 
     expect(result).toEqual({
       isEditable,
-      currentLeadUnderWriter: {
+      leadUnderwriter: {
         _id: expect.any(String),
         firstName: expect.any(String),
         lastName: expect.any(String),
         teams: expect.any(Array),
         username: expect.any(String),
-
       },
     });
   });

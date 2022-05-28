@@ -7,26 +7,6 @@ const { amendmentUnderwriterManagerDecisionValidation } = require('./validation/
 const { formattedNumber } = require('../../../helpers/number');
 
 /**
- * @param {Object} deal
- * @param {Object} amendment
- * @param {Object} user
- * @returns {Object}
- * checks if user can edit managers decision and returns object
- */
-const getAmendmentUnderwriterManagersDecision = async (amendment, user) => {
-  const isEditable = userCanEditManagersDecision(user, amendment);
-
-  return {
-    isEditable,
-    dealId: amendment.dealId,
-    facilityId: amendment.facilityId,
-    amendmentId: amendment.amendmentId,
-    underwriterManagersDecision: amendment.underwriterManagersDecision,
-    amendment,
-  };
-};
-
-/**
  * @param {*} req
  * @param {*} res
  * renders first page of amendment managers decision if can be edited by user
@@ -40,7 +20,7 @@ const getAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) 
   }
 
   const { user } = req.session;
-  const isEditable = userCanEditManagersDecision(user, amendment) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
     amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
@@ -63,7 +43,7 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
 
   if (amendmentUnderwriterManagerValidationErrors.length) {
-    const isEditable = userCanEditManagersDecision(user, amendment) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
       amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
@@ -105,10 +85,10 @@ const getAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
   }
 
   const { user } = req.session;
-  const isEditable = userCanEditManagersDecision(user, amendment) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   if (amendment?.changeFacilityValue && amendment?.value) {
-    amendment.value = amendment?.value ? `GBP ${formattedNumber(amendment.value)}` : null;
+    amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
     amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
   }
 
@@ -128,9 +108,9 @@ const postAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
 
   if (amendmentUnderwriterManagerValidationErrors.length) {
-    const isEditable = userCanEditManagersDecision(user, amendment) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
     if (amendment?.changeFacilityValue && amendment?.value) {
-      amendment.value = amendment?.value ? `GBP ${formattedNumber(amendment.value)}` : null;
+      amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
       amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
     }
 
@@ -159,7 +139,6 @@ const postAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
 };
 
 module.exports = {
-  getAmendmentUnderwriterManagersDecision,
   getAmendmentAddUnderwriterManagersDecisionCoverEndDate,
   postAmendmentAddUnderwriterManagersDecisionCoverEndDate,
   getAmendmentAddUnderwriterManagersFacilityValue,

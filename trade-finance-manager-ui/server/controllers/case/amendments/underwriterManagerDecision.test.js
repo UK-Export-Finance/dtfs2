@@ -1,25 +1,9 @@
 import amendmentUnderwritersDecision from '.';
-import { userCanEditManagersDecision } from './helpers';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 const res = mockRes();
-
-describe('getAmendmentUnderwriterManagersDecision()', () => {
-  const isEditable = userCanEditManagersDecision(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, MOCKS.MOCK_AMENDMENT);
-
-  it('should return an object with the data when the deal exists', async () => {
-    const result = await amendmentUnderwritersDecision.getAmendmentUnderwriterManagersDecision(MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
-    expect(result).toEqual({
-      isEditable,
-      amendment: MOCKS.MOCK_AMENDMENT,
-      dealId: MOCKS.MOCK_AMENDMENT.dealId,
-      facilityId: MOCKS.MOCK_AMENDMENT.facilityId,
-      amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
-    });
-  });
-});
 
 describe('getAmendmentAddUnderwriterManagersDecisionCoverEndDate()', () => {
   it('should render template with data if user can edit decision', async () => {

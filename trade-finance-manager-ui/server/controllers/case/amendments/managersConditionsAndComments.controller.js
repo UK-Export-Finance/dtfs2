@@ -1,4 +1,4 @@
-const { format, fromUnixTime } = require('date-fns');
+const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const api = require('../../../api');
 
 const { userCanEditManagersDecision } = require('./helpers');
@@ -16,7 +16,7 @@ const getManagersConditionsAndComments = async (req, res) => {
   }
   const facility = await api.getFacility(facilityId);
 
-  const isEditable = userCanEditManagersDecision(user, amendment) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
     amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
@@ -24,11 +24,11 @@ const getManagersConditionsAndComments = async (req, res) => {
   }
 
   if (amendment?.changeFacilityValue && amendment?.value) {
-    amendment.value = amendment?.value ? `GBP ${formattedNumber(amendment.value)}` : null;
+    amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
     amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
   }
   amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
-  amendment.type = facility.facilitySnapshot.type;
+  amendment.facilityType = facility.facilitySnapshot.type;
   amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
 
   return res.render('case/amendments/amendment-managers-conditions-and-comments.njk', {
@@ -74,7 +74,7 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
   }
   const facility = await api.getFacility(facilityId);
 
-  const isEditable = userCanEditManagersDecision(user, amendment) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
     amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
@@ -82,13 +82,13 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
   }
 
   if (amendment?.changeFacilityValue && amendment?.value) {
-    amendment.value = amendment?.value ? `GBP ${formattedNumber(amendment.value)}` : null;
+    amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
     amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
   }
   amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
-  amendment.type = facility.facilitySnapshot.type;
+  amendment.facilityType = facility.facilitySnapshot.type;
   amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
-  amendment.summary = true;
+  amendment.summary = { isEditable: true };
 
   return res.render('case/amendments/amendment-managers-conditions-and-comments-summary.njk', {
     amendment,
@@ -97,7 +97,35 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
   });
 };
 
-const postManagersConditionsAndCommentsSummary = async (req, res) => res.status(200).send('OK');
+const postManagersConditionsAndCommentsSummary = async (req, res) => {
+  const { _id: dealId, amendmentId, facilityId } = req.params;
+
+  try {
+    const payload = {
+      ukefDecision: {
+        submitted: true,
+        submittedAt: getUnixTime(new Date()),
+        submittedBy: {
+          _id: req?.session?.user?._id,
+          username: req?.session?.user?.username,
+          name: `${req?.session?.user?.firstName} ${req?.session?.user?.lastName}`,
+          email: req?.session?.user?.email,
+        },
+      },
+    };
+
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+
+    if (status === 200) {
+      return res.redirect(`/case/${dealId}/underwriting`);
+    }
+    console.error('Unable to submit the underwriter managers decision');
+    return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
+  } catch (err) {
+    console.error("There was a problem submitting the manager's decision %O", { response: err?.response?.data });
+    return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
+  }
+};
 
 module.exports = {
   getManagersConditionsAndComments,
