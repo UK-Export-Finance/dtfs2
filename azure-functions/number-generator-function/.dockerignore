@@ -1,10 +1,8 @@
 node_modules
-README.md
-run.sh
-LICENSE
-Dockerfile
-docker-compose.yml
 generated_reports
-.git
-.cache
-*.md
+README.md
+Dockerfile
+.env
+.prettierrc.json
+.env.sample
+.eslintignore
