@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "api-test": "jest --notify --coverage --verbose --runInBand --config=api-test.jest.config.js "
+    "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js "
   },
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=6.0.0"
   },
   "dependencies": {
-    "axios": "^0.26.0",
-    "dotenv": "^16.0.0",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
     "durable-functions": "^1.5.4"
   }
 }
