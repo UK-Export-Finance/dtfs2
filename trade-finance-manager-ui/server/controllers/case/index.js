@@ -190,8 +190,8 @@ const formatAmendmentDetails = (allAmendments) => {
       item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
 
       if (value?.requireUkefApproval) {
-        item.ukefDecisionValue = value?.ukefDecision?.value || UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
-        item.ukefDecisionCoverEndDate = value?.ukefDecision?.coverEndDate || UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+        item.ukefDecisionValue = value?.ukefDecision?.submitted ? value?.ukefDecision?.value : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+        item.ukefDecisionCoverEndDate = value?.ukefDecision?.submitted ? value?.ukefDecision?.coverEndDate : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
       } else {
         item.ukefDecisionValue = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
         item.ukefDecisionCoverEndDate = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
