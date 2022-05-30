@@ -15,7 +15,7 @@
         titleText: "There is a problem",
         errorList: errors.errorSummary,
         attributes: {
-          'data-cy': 'error-summary'
+          'data-cy': 'amendment--error-summary'
         },
         classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
       }) }}
@@ -24,7 +24,7 @@
   <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" aria-label="What's your decision?">What's your decision?</h1>
 
   <p class="govuk-body-l govuk-!-margin-top-4 govuk-!-margin-bottom-0">{{amendment.facilityType}} {{amendment.ukefFacilityId}}</p>
-  <div class="govuk-grid-row govuk-!-margin-top-5" data-cy="amendment--managers-conditions-and-comments">
+  <div class="govuk-grid-row govuk-!-margin-top-5" data-cy="amendment--details-{{amendment.version}}">
     <div class="govuk-grid-column-three-quarters">
       {{ summary.render(amendment) }}
     </div>
@@ -37,7 +37,7 @@
         {% if amendment.ukefDecision.coverEndDate === 'Approved with conditions' or amendment.ukefDecision.value === 'Approved with conditions' %}
             {{ govukCharacterCount({
               name: "ukefDecisionConditions",
-              id: "ukefDecisionConditions",
+              id: "ukef-decision-conditions",
               maxlength: 1000,
               rows: 9,
               label: {
@@ -47,7 +47,7 @@
                 text: "These will be sent to the bank"
               },
               attributes: {
-                'data-cy': 'amendments--managers-decision-conditions'
+                'data-cy': 'amendment--managers-decision-conditions'
               },
               value: amendment.ukefDecision.conditions,
               errorMessage: validationErrors.errorList.ukefDecisionConditions and {
@@ -59,7 +59,7 @@
         {% if amendment.ukefDecision.coverEndDate === 'Declined' or amendment.ukefDecision.value === 'Declined' %}
             {{ govukCharacterCount({
               name: "ukefDecisionDeclined",
-              id: "ukefDecisionDeclined",
+              id: "ukef-decision-declined",
               maxlength: 1000,
               rows: 9,
               label: {
@@ -69,7 +69,7 @@
                 text: "These will be sent to the bank"
               },
               attributes: {
-                'data-cy': 'amendments--managers-decision-reasons'
+                'data-cy': 'amendment--managers-decision-reasons'
               },
               value: amendment.ukefDecision.declined,
               errorMessage: validationErrors.errorList.ukefDecisionDeclined and {
@@ -80,7 +80,7 @@
 
         {{ govukCharacterCount({
           name: "ukefDecisionComments",
-          id: "ukefDecisionComments",
+          id: "ukef-decision-comments",
           maxlength: 1000,
           rows: 9,
           label: {
@@ -90,7 +90,7 @@
             text: "Only UKEF staff will see this."
           },
           attributes: {
-            'data-cy': 'amendments--managers-decision-comments'
+            'data-cy': 'amendment--managers-decision-comments'
           },
           value: amendment.ukefDecision.comments,
           errorMessage: validationErrors.errorList.ukefDecisionComments and {

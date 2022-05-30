@@ -5,6 +5,7 @@ const amendmentsPage = {
   amendmentRequestMonthInput: () => cy.get('[data-cy="amendment--request-date-month"]'),
   amendmentRequestYearInput: () => cy.get('[data-cy="amendment--request-date-year"]'),
 
+  amendmentNewCoverEndDateDay: () => cy.get('[data-cy="amendment--cover-end-date"]'),
   amendmentCoverEndDateDayInput: () => cy.get('[data-cy="amendment--cover-end-date-day"]'),
   amendmentCoverEndDateMonthInput: () => cy.get('[data-cy="amendment--cover-end-date-month"]'),
   amendmentCoverEndDateYearInput: () => cy.get('[data-cy="amendment--cover-end-date-year"]'),
@@ -28,6 +29,7 @@ const amendmentsPage = {
   addAmendmentButton: () => cy.get('[data-cy="amendment--add-amendment-button"]'),
   continueAmendmentButton: () => cy.get('[data-cy="amendment--continue-amendment-button"]'),
   continueAmendment: () => cy.get('[data-cy="amendment--continue-button"]'),
+  amendmentSendToBankButton: () => cy.get('[data-cy="amendment--send-to-bank-button"]'),
   cancelLink: () => cy.get('[data-cy="amendment--cancel-button"]'),
 
   leadUnderwriterHeading: () => cy.get('[data-cy="amendment-assign-lead-underwriter-heading"]'),
@@ -69,11 +71,13 @@ const amendmentsPage = {
         ukefDecisionFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-facility-value-decision"]`),
         currentFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-current-facility-value"]`),
         newFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-new-facility-value"]`),
-
       };
     },
   },
 
+  amendmentsManagersDecisionConditions: () => cy.get('[data-cy="amendment--managers-decision-conditions"]'),
+  amendmentsManagersDecisionReasons: () => cy.get('[data-cy="amendment--managers-decision-reasons"]'),
+  amendmentsManagersDecisionComments: () => cy.get('[data-cy="amendment--managers-decision-comments"]'),
 };
 
 module.exports = amendmentsPage;

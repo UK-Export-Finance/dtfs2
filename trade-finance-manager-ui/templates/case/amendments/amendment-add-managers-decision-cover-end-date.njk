@@ -15,7 +15,7 @@
         titleText: "There is a problem",
         errorList: errors.errorSummary,
         attributes: {
-          'data-cy': 'error-summary'
+          'data-cy': 'amendment--error-summary'
         },
         classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
       }) }}
@@ -87,8 +87,8 @@
                 }
               }
             ],
-            errorMessage: errors and errors.fieldErrors.amendmentUnderwriterManagerDecision and {
-            text: errors.fieldErrors.amendmentUnderwriterManagerDecision.text,
+            errorMessage: errors and errors.fieldErrors.underwriterManagerDecisionCoverEndDate and {
+            text: errors.fieldErrors.underwriterManagerDecisionCoverEndDate.text,
             attributes: {
               'data-cy': 'amendment--inline-error'
             }
