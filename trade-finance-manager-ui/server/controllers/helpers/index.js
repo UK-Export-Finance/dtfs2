@@ -1,4 +1,4 @@
-const { showAmendmentButton } = require('./amendments.helper');
+const { showAmendmentButton, userCanEditLeadUnderwriter, userCanEditManagersDecision, userCanEditBankDecision } = require('./amendments.helper');
 const { generateHeadingText } = require('./generateHeadingText.helper');
 const { mapDecisionObject, mapDecisionValue } = require('./mapDecisionObject.helper');
 const { getGroup, getTask } = require('./tasks.helper');
@@ -6,6 +6,9 @@ const { validateCommentField, validateSubmittedValues } = require('./validateSub
 
 module.exports = {
   showAmendmentButton,
+  userCanEditLeadUnderwriter,
+  userCanEditManagersDecision,
+  userCanEditBankDecision,
   generateHeadingText,
   mapDecisionObject,
   mapDecisionValue,

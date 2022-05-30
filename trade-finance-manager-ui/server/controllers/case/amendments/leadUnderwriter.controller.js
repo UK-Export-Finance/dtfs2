@@ -2,7 +2,7 @@ const api = require('../../../api');
 const CONSTANTS = require('../../../constants');
 
 const mapAssignToSelectOptions = require('../../../helpers/map-assign-to-select-options');
-const { userCanEditLeadUnderwriter } = require('./helpers');
+const { userCanEditLeadUnderwriter } = require('../../helpers');
 const { sortArrayOfObjectsAlphabetically } = require('../../../helpers/array');
 
 /**

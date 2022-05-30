@@ -2,7 +2,7 @@ import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import mapAssignToSelectOptions from '../../../helpers/map-assign-to-select-options';
 import amendmentLeadUnderwriterController from '.';
-import { userCanEditLeadUnderwriter } from './helpers';
+import { userCanEditLeadUnderwriter } from '../../helpers';
 import { sortArrayOfObjectsAlphabetically } from '../../../helpers/array';
 
 import MOCKS from '../../../test-mocks/amendment-test-mocks';

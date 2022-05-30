@@ -5,7 +5,7 @@ const leadUnderwriter = require('./lead-underwriter');
 const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
 const { getAmendmentLeadUnderwriter } = require('../amendments');
-const { userCanEditManagersDecision, userCanEditBankDecision } = require('../amendments/helpers');
+const { userCanEditManagersDecision, userCanEditBankDecision } = require('../../helpers');
 const { formattedNumber } = require('../../../helpers/number');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 

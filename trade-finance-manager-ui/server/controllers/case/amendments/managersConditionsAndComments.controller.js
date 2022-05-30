@@ -1,7 +1,7 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const api = require('../../../api');
 
-const { userCanEditManagersDecision } = require('./helpers');
+const { userCanEditManagersDecision } = require('../../helpers');
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 const { formattedNumber } = require('../../../helpers/number');
