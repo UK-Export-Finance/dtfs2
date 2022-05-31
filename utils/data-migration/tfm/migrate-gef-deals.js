@@ -14,6 +14,9 @@ const {
 } = require('../helpers/date');
 const {
   getDealTfmStage,
+  getDealProduct,
+  getProbabilityOfDefault,
+  getexporterCreditRating,
 } = require('../helpers/deal');
 const { ObjectId } = require('mongodb');
 const CONSTANTS = require('../constant');
@@ -71,12 +74,12 @@ const buildDealTfm = (deal) => (
     tfm: {
       dateReceived: getDDMMYYYY(deal.submissionDate),
       dateReceivedTimestamp: epochInSeconds(deal.submissionDate),
-      product: deal.dealType,
+      product: getDealProduct(deal),
       stage: getDealTfmStage(deal),
       lossGivenDefault: CONSTANTS.DEAL.LOSS_GIVEN_DEFAULT.DEFAULT,
-      exporterCreditRating: '',
-      probabilityOfDefault: '',
-      lastUpdated: 0,
+      exporterCreditRating: getexporterCreditRating(deal),
+      probabilityOfDefault: getProbabilityOfDefault(deal),
+      lastUpdated: new Date().valueOf(),
       activities: [],
       tasks: [],
       parties: {
