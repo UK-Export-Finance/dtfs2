@@ -45,10 +45,19 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
   });
 
-  it('MIN deal with unissued facilities that then become issued updates facilties in TFM', () => {
+  after(() => {
+    cy.clearCookies();
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+  });
+
+  it('MIN deal with unissued facilities that then become issued updates facilites in TFM', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
@@ -76,6 +85,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker completes bond issuance form
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
 
@@ -89,6 +102,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker completes loan issuance form
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
 
@@ -102,6 +119,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToReview().click();
@@ -113,6 +134,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToSubmit().click();
@@ -126,6 +151,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // login to TFM
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.forceVisit(TFM_URL);
 
     cy.tfmLogin(UNDERWRITER_MANAGER_1);
