@@ -3,7 +3,7 @@ import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 import mapAssignToSelectOptions from '../../../../helpers/map-assign-to-select-options';
 import underwriterLeadUnderwriterController from '.';
-import canUserEditLeadUnderwriter from './helpers';
+import userCanEditLeadUnderwriter from './helpers';
 import CONSTANTS from '../../../../constants';
 import { sortArrayOfObjectsAlphabetically } from '../../../../helpers/array';
 
@@ -47,7 +47,7 @@ const MOCK_DEAL = {
 const dealId = MOCK_DEAL._id;
 
 describe('GET underwriting - lead underwriter', () => {
-  const userCanEdit = canUserEditLeadUnderwriter(
+  const userCanEdit = userCanEditLeadUnderwriter(
     session.user,
   );
 

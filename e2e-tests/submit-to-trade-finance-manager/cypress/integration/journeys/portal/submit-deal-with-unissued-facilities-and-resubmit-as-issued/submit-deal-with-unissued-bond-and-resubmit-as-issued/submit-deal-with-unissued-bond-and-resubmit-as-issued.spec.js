@@ -36,7 +36,16 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+  });
+
+  after(() => {
+    cy.clearCookies();
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
   });
 
   it('Portal deal with unissued bond is submitted to UKEF, bond displays correctly in TFM with Premium schedule populated. Bond is then issued in Portal and resubmitted; displays correctly in TFM, Portal facility status is updated to `Acknowledged`', () => {
@@ -68,6 +77,9 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM bond values should render in an unissued state
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
 
     cy.forceVisit(TFM_URL);
 
@@ -100,6 +112,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker completes bond insurance form
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
     const bondRow = portalPages.contract.bondTransactionsTable.row(bondId);
@@ -137,6 +153,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM bond values should be updated
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.forceVisit(TFM_URL);
     cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
 
@@ -189,6 +209,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal bond status should be updated to `Acknowledged`
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
 
@@ -208,5 +232,3 @@ context('Portal to TFM deal submission', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */
