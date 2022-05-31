@@ -24,19 +24,13 @@ const userCanEditLeadUnderwriter = (user) => userIsInTeam(user, [CONSTANTS.TEAMS
 const userCanEditManagersDecision = (amendment, user) => {
   const isManager = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
   const hasSubmittedDecision = amendment?.ukefDecision?.submitted;
-  if (isManager && !hasSubmittedDecision) {
-    return true;
-  }
-  return false;
+  return isManager && !hasSubmittedDecision ? true : false;
 };
 
 const userCanEditBankDecision = (amendment, user) => {
   const isPim = userIsInTeam(user, [CONSTANTS.TEAMS.PIM]);
   const hasSubmittedDecision = amendment?.ukefDecision?.submitted && !amendment?.bankDecision?.submitted;
-  if (isPim && hasSubmittedDecision) {
-    return true;
-  }
-  return false;
+  return isPim && hasSubmittedDecision ? true : false;
 };
 
 module.exports = {

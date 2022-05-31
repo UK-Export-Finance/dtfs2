@@ -7,35 +7,40 @@ const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decis
 const { formattedNumber } = require('../../../helpers/number');
 
 const getManagersConditionsAndComments = async (req, res) => {
-  const { amendmentId, facilityId } = req.params;
-  const { user } = req.session;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
-
-  if (!amendment?.amendmentId) {
-    return res.redirect('/not-found');
+  try {
+    const { amendmentId, facilityId } = req.params;
+    const { user } = req.session;
+    const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  
+    if (!amendment?.amendmentId) {
+      return res.redirect('/not-found');
+    }
+    const facility = await api.getFacility(facilityId);
+  
+    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  
+    if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
+      amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
+      amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+    }
+  
+    if (amendment?.changeFacilityValue && amendment?.value) {
+      amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
+      amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
+    }
+    amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+    amendment.facilityType = facility.facilitySnapshot.type;
+    amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
+  
+    return res.render('case/amendments/amendment-managers-conditions-and-comments.njk', {
+      amendment,
+      isEditable,
+      user,
+    });
+  } catch (error) {
+    console.error('Unable to load the Underwriter\'s manager - conditions and comments page %O', { response: error })
+    return res.redirect('/');
   }
-  const facility = await api.getFacility(facilityId);
-
-  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
-
-  if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
-    amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
-    amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
-  }
-
-  if (amendment?.changeFacilityValue && amendment?.value) {
-    amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
-    amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
-  }
-  amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
-  amendment.facilityType = facility.facilitySnapshot.type;
-  amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
-
-  return res.render('case/amendments/amendment-managers-conditions-and-comments.njk', {
-    amendment,
-    isEditable,
-    user,
-  });
 };
 
 const postManagersConditionsAndComments = async (req, res) => {
@@ -65,36 +70,41 @@ const postManagersConditionsAndComments = async (req, res) => {
 };
 
 const getManagersConditionsAndCommentsSummary = async (req, res) => {
-  const { amendmentId, facilityId } = req.params;
-  const { user } = req.session;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
-
-  if (!amendment?.amendmentId) {
-    return res.redirect('/not-found');
+  try {
+    const { amendmentId, facilityId } = req.params;
+    const { user } = req.session;
+    const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  
+    if (!amendment?.amendmentId) {
+      return res.redirect('/not-found');
+    }
+    const facility = await api.getFacility(facilityId);
+  
+    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  
+    if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
+      amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
+      amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+    }
+  
+    if (amendment?.changeFacilityValue && amendment?.value) {
+      amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
+      amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
+    }
+    amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+    amendment.facilityType = facility.facilitySnapshot.type;
+    amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
+    amendment.summary = { isEditable: true };
+  
+    return res.render('case/amendments/amendment-managers-conditions-and-comments-summary.njk', {
+      amendment,
+      isEditable,
+      user,
+    });
+  } catch (error) {
+    console.error('Unable to load the Underwriter\'s manager - conditions and comments summary page %O', { response: error })
+    return res.redirect('/');
   }
-  const facility = await api.getFacility(facilityId);
-
-  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
-
-  if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
-    amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
-    amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
-  }
-
-  if (amendment?.changeFacilityValue && amendment?.value) {
-    amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
-    amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
-  }
-  amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
-  amendment.facilityType = facility.facilitySnapshot.type;
-  amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
-  amendment.summary = { isEditable: true };
-
-  return res.render('case/amendments/amendment-managers-conditions-and-comments-summary.njk', {
-    amendment,
-    isEditable,
-    user,
-  });
 };
 
 const postManagersConditionsAndCommentsSummary = async (req, res) => {
