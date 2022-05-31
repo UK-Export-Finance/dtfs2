@@ -1,0 +1,115 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendment - What's your decision (Cover End Date)
+{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+          'data-cy': 'amendment--error-summary'
+        },
+        classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+      }) }}
+  {% endif %}
+
+
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--managers-decision-cover-end-date-heading" aria-label="What's your decision?">What's your decision?</h1>
+  <h3 class="govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-4" aria-label="Cover end date">Cover end date</h3>
+
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+        <h4 class="govuk-heading-s govuk-body-s govuk-!-margin-bottom-2 govuk-!-font-weight-bold">Change from</h4>
+      </div>
+
+      <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body-s govuk-!-margin-bottom-2" data-cy="amendment--current-cover-end-date">{{amendment.currentCoverEndDate}}</p>
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+        <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold">Change to</h4>
+      </div>
+
+      <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body-s" data-cy="amendment--cover-end-date">{{amendment.coverEndDate}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {{ govukRadios({
+            name: "underwriterManagerDecisionCoverEndDate",
+            items: [
+              {
+                value: "Approved without conditions",
+                text: "Approve without conditions",
+                hint: {
+                  text: "You'll be able to add comments that only UKEF can see later."
+                },
+                checked: amendment.ukefDecision.coverEndDate === 'Approved without conditions',
+                attributes: {
+                  'data-cy': 'amendment--approve-without-conditions-radio-button'
+                }
+              },
+              {
+                value: "Approved with conditions",
+                text: "Approve with conditions",
+                hint: {
+                  text: "You'll be able to add conditions to the approval later."
+                },
+                checked: amendment.ukefDecision.coverEndDate === 'Approved with conditions',
+                attributes: {
+                  'data-cy': 'amendment--approve-with-conditions-radio-button'
+                }
+              },
+              {
+                value: "Declined",
+                text: "Decline",
+                hint: {
+                  text: "You'll be able to add the reasons why you are declining the change later."
+                },
+                checked: amendment.ukefDecision.coverEndDate === 'Declined',
+                attributes: {
+                  'data-cy': 'amendment--decline-radio-button'
+                }
+              }
+            ],
+            errorMessage: errors and errors.fieldErrors.underwriterManagerDecisionCoverEndDate and {
+            text: errors.fieldErrors.underwriterManagerDecisionCoverEndDate.text,
+            attributes: {
+              'data-cy': 'amendment--inline-error'
+            }
+          }
+          }) }}
+
+          <div class="govuk-button-group">
+            {% if isEditable %}
+              {{ govukButton({
+                text: "Continue",
+                attributes: {
+                    "data-cy": "amendment--continue-button"
+                }
+                })
+              }}
+            {% endif %}
+            <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ amendment.dealId }}/underwriting" data-cy="amendment--cancel-button">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+{% endblock %}
