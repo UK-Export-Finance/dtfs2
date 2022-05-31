@@ -1,14 +1,9 @@
 const api = require('../../../../api');
-const canUserEditManagersDecision = require('./helpers');
-const { validateSubmittedValues } = require('./validateSubmittedValues');
-const { mapDecisionObject } = require('../../../helpers');
+const userCanEditManagersDecision = require('./helpers');
+const { mapDecisionObject, validateSubmittedValues } = require('../../../helpers');
 
 const getUnderwriterManagersDecision = async (deal, user) => {
-  const userCanEdit = canUserEditManagersDecision(
-    user,
-    deal.dealSnapshot.submissionType,
-    deal.tfm,
-  );
+  const userCanEdit = userCanEditManagersDecision(user, deal.dealSnapshot.submissionType, deal.tfm);
 
   return {
     userCanEdit,
@@ -31,11 +26,7 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const userCanEdit = canUserEditManagersDecision(
-    user,
-    deal.dealSnapshot.submissionType,
-    deal.tfm,
-  );
+  const userCanEdit = userCanEditManagersDecision(user, deal.dealSnapshot.submissionType, deal.tfm);
 
   if (!userCanEdit) {
     return res.redirect('/not-found');
@@ -61,22 +52,13 @@ const postUnderwriterManagersDecision = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const userCanEdit = canUserEditManagersDecision(
-    user,
-    deal.dealSnapshot.submissionType,
-    deal.tfm,
-  );
+  const userCanEdit = userCanEditManagersDecision(user, deal.dealSnapshot.submissionType, deal.tfm);
 
   if (!userCanEdit) {
     return res.redirect('/not-found');
   }
 
-  const {
-    decision,
-    approveWithConditionsComments,
-    declineComments,
-    internalComments,
-  } = req.body;
+  const { decision, approveWithConditionsComments, declineComments, internalComments } = req.body;
 
   const submittedValues = {
     decision,
