@@ -62,7 +62,7 @@ router.route('/mandatory-criteria-versioned')
   .post(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.create);
 
 router.route('/mandatory-criteria-versioned/latest')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findLatest);
+  .get(validate({ role: ['maker'] }), mandatoryCriteriaVersioned.findLatest);
 
 router.route('/mandatory-criteria-versioned/:id')
   .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findOne)

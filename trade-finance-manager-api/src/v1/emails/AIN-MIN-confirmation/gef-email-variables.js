@@ -1,6 +1,8 @@
 const { format } = require('date-fns');
 const { generateAddressString } = require('../../helpers/generate-address-string');
 const getSubmissionDate = require('../../helpers/get-submission-date');
+const { generateEligibilityCriteriaString } = require('../../helpers/generate-eligibility-criteria-string');
+const { generateMandatoryCriteriaString } = require('../../helpers/generate-mandatory-criteria-string');
 
 const gefEmailVariables = (deal, facilityLists) => {
   const {
@@ -31,6 +33,8 @@ const gefEmailVariables = (deal, facilityLists) => {
     probabilityOfDefault: exporter.probabilityOfDefault,
     cashFacilitiesList: facilityLists.cashes,
     contingentFacilitiesList: facilityLists.contingents,
+    eligibility: generateEligibilityCriteriaString(deal.eligibility.criteria),
+    mandatoryCriteria: generateMandatoryCriteriaString(deal.mandatoryVersionId),
   };
 
   return emailVariables;

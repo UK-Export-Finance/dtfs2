@@ -30,13 +30,12 @@ const findOneMandatoryCriteria = async (id, callback) => {
   });
 };
 
-const findLatestMandatoryCriteria = async (callback) => {
+const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection(collectionName);
-  collection.find({ isInDraft: false }).sort({ version: -1 }).limit(1).toArray((err, result) => {
-    assert.equal(err, null);
-    callback(result[0]);
-  });
+  const [criteria] = await collection.find({ isInDraft: false }).sort({ version: -1 }).limit(1).toArray();
+  return criteria;
 };
+exports.findLatestMandatoryCriteria = findLatestMandatoryCriteria;
 
 exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
@@ -60,11 +59,10 @@ exports.findOne = (req, res) => (
   )
 );
 
-exports.findLatest = (req, res) => (
-  findLatestMandatoryCriteria(
-    (mandatoryCriteria) => res.status(200).send(mandatoryCriteria),
-  )
-);
+exports.findLatest = async (req, res) => {
+  const criteria = await findLatestMandatoryCriteria();
+  return res.status(200).send(criteria);
+};
 
 exports.update = async (req, res) => {
   const collection = await db.getCollection(collectionName);
