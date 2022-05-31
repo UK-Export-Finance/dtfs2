@@ -104,3 +104,14 @@
 .ukef-warning .govuk-warning-text__text {
     font-weight: normal;
 }
+
+.ukef-decision-formatted {
+  p {
+    white-space: pre-line;
+    word-break: break-word;
+  }
+}
+
+.ukef-conditions--hint {
+  color: $govuk-secondary-text-colour;
+}

@@ -185,12 +185,13 @@ const formatAmendmentDetails = (allAmendments) => {
       item.coverEndDate = value?.coverEndDate ? format(fromUnixTime(item.coverEndDate), 'dd MMMM yyyy') : null;
       item.value = value?.value ? `${value.currency} ${formattedNumber(value.value)}` : null;
       item.requireUkefApproval = value?.requireUkefApproval ? 'Yes' : 'No';
+      // TODO: update once the bank's decision has been added
       item.banksDecision = value?.requireUkefApproval ? UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION : '';
       item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
 
       if (value?.requireUkefApproval) {
-        item.ukefDecisionValue = value?.facilityValueDecision || UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
-        item.ukefDecisionCoverEndDate = value?.coverEndDateDecision || UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+        item.ukefDecisionValue = value?.ukefDecision?.submitted ? value?.ukefDecision?.value : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+        item.ukefDecisionCoverEndDate = value?.ukefDecision?.submitted ? value?.ukefDecision?.coverEndDate : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
       } else {
         item.ukefDecisionValue = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
         item.ukefDecisionCoverEndDate = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
@@ -227,6 +228,10 @@ const getCaseFacility = async (req, res) => {
 
   const hasAmendmentInProgress = status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgress && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
+
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
 
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,

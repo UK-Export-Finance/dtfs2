@@ -1,10 +1,10 @@
 /* eslint-disable no-underscore-dangle */
-import canUserEditLeadUnderwriter from './helpers';
+import userCanEditLeadUnderwriter from './helpers';
 
 describe('case - lead-underwriter - helpers', () => {
-  describe('canUserEditLeadUnderwriter', () => {
+  describe('userCanEditLeadUnderwriter', () => {
     it('should return true', () => {
-      const result = canUserEditLeadUnderwriter(
+      const result = userCanEditLeadUnderwriter(
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
@@ -17,7 +17,7 @@ describe('case - lead-underwriter - helpers', () => {
 
     describe('when user is NOT in UNDERWRITER_MANAGERS team', () => {
       it('should return false', () => {
-        const result = canUserEditLeadUnderwriter(
+        const result = userCanEditLeadUnderwriter(
           {
             firstName: 'Joe',
             lastName: 'Bloggs',

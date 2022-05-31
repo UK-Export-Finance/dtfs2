@@ -1,11 +1,13 @@
+const { format, fromUnixTime } = require('date-fns');
 const api = require('../../../api');
 
 const leadUnderwriter = require('./lead-underwriter');
 const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
-const amendmentLeadUnderwriter = require('../amendments/underwriting/amendment-lead-underwriter');
-const amendmentUnderwriterManagersDecision = require('../amendments/underwriting/amendment-underwriter-managers-decision');
-const amendmentBanksDecision = require('../amendments/underwriting/amendment-banks-decision');
+const { getAmendmentLeadUnderwriter } = require('../amendments');
+const { userCanEditManagersDecision, userCanEditBankDecision } = require('../../helpers');
+const { formattedNumber } = require('../../../helpers/number');
+const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 
 /**
  * controller for underwriting tab
@@ -20,26 +22,46 @@ const getUnderwriterPage = async (req, res) => {
 
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
-    return res.redirect('/not-found');
-  }
+  const dealLeadUnderWriter = await leadUnderwriter.getLeadUnderwriter(deal, user);
+  const dealPricingAndRisk = await pricingAndRisk.getUnderWritingPricingAndRisk(deal, user);
+  const dealUnderwriterManagersDecision = await underwriterManagersDecision.getUnderwriterManagersDecision(deal, user);
 
-  const leadUnderWriterData = await leadUnderwriter.getLeadUnderwriter(deal, user);
-  const pricingAndRiskData = await pricingAndRisk.getUnderWritingPricingAndRisk(deal, user);
-  const underwriterManagersDecisionData = await underwriterManagersDecision.getUnderwriterManagersDecision(deal, user);
-
-  // gets latest in progress amendment
+  // gets latest amendment in progress
   const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
 
-  let amendmentLeadUnderwriterData = {};
-  let amendmentUnderwriterManagersDecisionData = {};
-  let amendmentBanksDecisionData = {};
-
   // if amendments object exists then populate fields
-  if (amendment) {
-    amendmentLeadUnderwriterData = await amendmentLeadUnderwriter.getAmendmentLeadUnderwriter(amendment, user);
-    amendmentUnderwriterManagersDecisionData = await amendmentUnderwriterManagersDecision.getAmendmentUnderwriterManagersDecision(amendment, user);
-    amendmentBanksDecisionData = await amendmentBanksDecision.getAmendmentBankDecision(amendment, user);
+  if (amendment?.submittedByPim) {
+    if (amendment?.ukefDecision) {
+      amendment.ukefDecision.isEditable = userCanEditManagersDecision(amendment, user);
+    } else {
+      amendment.ukefDecision = { isEditable: userCanEditManagersDecision(amendment, user) };
+    }
+
+    const response = await getAmendmentLeadUnderwriter(amendment, user);
+    amendment.leadUnderwriter = {
+      isEditable: response.isEditable,
+      ...response.leadUnderwriter,
+    };
+    if (amendment.banksDecision) {
+      amendment.banksDecision.isEditable = userCanEditBankDecision(amendment, user);
+    }
+
+    if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
+      amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
+      amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+    }
+
+    if (amendment?.changeFacilityValue && amendment?.value) {
+      amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
+      amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
+    }
+
+    if (amendment.ukefDecision.submitted) {
+      const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'dd MMMM yyyy');
+      const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'HH:mm aaa');
+      amendment.ukefDecision.submittedAt = `${date} at ${time}`;
+    }
+    amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
   }
 
   return res.render('case/underwriting/underwriting.njk', {
@@ -49,13 +71,10 @@ const getUnderwriterPage = async (req, res) => {
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
     user: req.session.user,
-    leadUnderwriter: leadUnderWriterData,
-    pricingAndRisk: pricingAndRiskData,
-    underwriterManagersDecision: underwriterManagersDecisionData,
-    amendmentData: amendment,
-    amendmentLeadUnderwriter: amendmentLeadUnderwriterData,
-    amendmentUnderwriterManagersDecision: amendmentUnderwriterManagersDecisionData,
-    amendmentBanksDecision: amendmentBanksDecisionData,
+    leadUnderwriter: dealLeadUnderWriter,
+    pricingAndRisk: dealPricingAndRisk,
+    underwriterManagersDecision: dealUnderwriterManagersDecision,
+    amendment,
   });
 };
 
@@ -63,8 +82,5 @@ module.exports = {
   ...leadUnderwriter,
   ...pricingAndRisk,
   ...underwriterManagersDecision,
-  ...amendmentLeadUnderwriter,
-  ...amendmentUnderwriterManagersDecision,
-  ...amendmentBanksDecision,
   getUnderwriterPage,
 };

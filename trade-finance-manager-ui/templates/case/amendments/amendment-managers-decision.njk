@@ -1,0 +1,41 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(amendment) %}
+  {% set ukefDecision = amendment.ukefDecision %}
+  {% set dealId = amendment.dealId %}
+  {% set facilityId = amendment.facilityId %}
+  {% set amendmentId = amendment.amendmentId %}
+
+  {% block underwriting_content %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        {% if ukefDecision.submitted %}
+          {% include "./_includes/amendment-ukef-decision-submitted-summary.njk" %}
+        {% else %}
+          {% if ukefDecision.isEditable %}
+            {% if amendment.changeCoverEndDate %}
+              <div class="govuk-!-padding-top-0">
+                {{ govukButton({
+                    text: "Add decision",
+                    href: "/case/" + dealId + "/facility/" + facilityId + "/amendment/" + amendmentId + "/cover-end-date/managers-decision",
+                    attributes: { "data-cy":"amendment-manager-add-decision-link" }
+                  }) }}
+              </div>
+            {% elif amendment.changeFacilityValue %}
+              <div class="govuk-!-padding-top-0">
+                {{ govukButton({
+                    text: "Add decision",
+                    href: "/case/" + dealId + "/facility/" + facilityId + "/amendment/" + amendmentId + "/facility-value/managers-decision",
+                    attributes: { "data-cy":"amendment-manager-add-decision-link" }
+                  }) }}
+              </div>
+            {% endif %}
+          {% else %}
+            <p class="govuk-!-margin-top-0" data-cy="amendment-manager-decision-not-added-readonly">Not added yet</p>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  {% endblock %}
+{% endmacro %}
