@@ -21,6 +21,7 @@ module.exports = {
     'object-curly-newline': ['error', {
       consistent: true,
     }],
+    'no-unneeded-ternary': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

@@ -1,7 +1,7 @@
 const api = require('../../../../api');
 const CONSTANTS = require('../../../../constants');
 const mapAssignToSelectOptions = require('../../../../helpers/map-assign-to-select-options');
-const canUserEditLeadUnderwriter = require('./helpers');
+const userCanEditLeadUnderwriter = require('./helpers');
 const { sortArrayOfObjectsAlphabetically } = require('../../../../helpers/array');
 
 const getLeadUnderwriter = async (deal, user) => {
@@ -16,7 +16,7 @@ const getLeadUnderwriter = async (deal, user) => {
     currentLeadUnderWriter = await api.getUser(currentLeadUnderWriterUserId);
   }
 
-  const userCanEdit = canUserEditLeadUnderwriter(user);
+  const userCanEdit = userCanEditLeadUnderwriter(user);
 
   return {
     userCanEdit,
@@ -40,7 +40,7 @@ const getAssignLeadUnderwriter = async (req, res) => {
 
   const { user } = req.session;
 
-  const userCanEdit = canUserEditLeadUnderwriter(user);
+  const userCanEdit = userCanEditLeadUnderwriter(user);
 
   if (!userCanEdit) {
     return res.redirect('/not-found');
@@ -82,7 +82,7 @@ const postAssignLeadUnderwriter = async (req, res) => {
 
   const { user } = req.session;
 
-  const userCanEdit = canUserEditLeadUnderwriter(user);
+  const userCanEdit = userCanEditLeadUnderwriter(user);
 
   if (!userCanEdit) {
     return res.redirect('/not-found');

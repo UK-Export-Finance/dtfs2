@@ -40,9 +40,17 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
   });
 
+  after(() => {
+    cy.clearCookies();
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+  });
   it('Portal deal with unissued loan is submitted to UKEF, loan displays correctly in TFM. Loan is then issued in Portal and resubmitted; displays correctly in TFM with Premium schedule populated, Portal facility status is updated to `Acknowledged`', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
@@ -73,6 +81,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM loan values should render in an unissued state
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.forceVisit(TFM_URL);
 
     cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
@@ -106,6 +118,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker completes loan insurance form
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
     const loanRow = portalPages.contract.loansTransactionsTable.row(loanId);
@@ -130,6 +146,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToSubmit().click();
@@ -143,6 +163,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM loan values should be updated
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.forceVisit(TFM_URL);
 
     cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
@@ -206,6 +230,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal loan status should be updated to `Acknowledged`
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
 

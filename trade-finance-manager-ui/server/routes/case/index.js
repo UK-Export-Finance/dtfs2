@@ -30,23 +30,29 @@ router.post('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.getAmendmentEffectiveDate);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.postAmendmentEffectiveDate);
 
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', underwritingController.getAssignAmendmentLeadUnderwriter);
-router.post('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', underwritingController.postAssignAmendmentLeadUnderwriter);
-
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.getAmendmentUnderwriterManagersDecisionEdit);
-// router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.postUnderwriterManagersDecision);
-
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', underwritingController.getBanksDecisionEdit);
-// router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-decision', underwritingController.postUnderwriterManagersDecision);
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', amendmentsController.getAssignAmendmentLeadUnderwriter);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', amendmentsController.postAssignAmendmentLeadUnderwriter);
 
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.getAmendFacilityValue);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.postAmendFacilityValue);
 
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision', amendmentsController.getAmendmentAddUnderwriterManagersFacilityValue);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision', amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue);
+
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.getAmendCoverEndDate);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.postAmendCoverEndDate);
 
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision', amendmentsController.getAmendmentAddUnderwriterManagersDecisionCoverEndDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision', amendmentsController.postAmendmentAddUnderwriterManagersDecisionCoverEndDate);
+
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', amendmentsController.getAmendmentAnswers);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', amendmentsController.postAmendmentAnswers);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions', amendmentsController.getManagersConditionsAndComments);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions', amendmentsController.postManagersConditionsAndComments);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions/summary', amendmentsController.getManagersConditionsAndCommentsSummary);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions/summary', amendmentsController.postManagersConditionsAndCommentsSummary);
 
 router.get('/:_id/parties', partiesController.getCaseParties);
 
