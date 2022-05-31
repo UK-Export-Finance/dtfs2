@@ -1,9 +1,10 @@
 const Joi = require('joi');
 
-const { showAmendmentButton } = require('./amendments.helper');
+const { showAmendmentButton, userCanEditLeadUnderwriter, userCanEditManagersDecision, userCanEditBankDecision } = require('./amendments.helper');
 const { generateHeadingText } = require('./generateHeadingText.helper');
 const { mapDecisionObject, mapDecisionValue } = require('./mapDecisionObject.helper');
 const { getGroup, getTask } = require('./tasks.helper');
+const { validateCommentField, validateSubmittedValues } = require('./validateSubmittedValues.helper');
 
 /**
  * function to validate probability of default
@@ -31,4 +32,17 @@ const probabilityOfDefaultValidation = ((probabilityofDefaultPercentage) => {
   return true;
 });
 
-module.exports = { showAmendmentButton, generateHeadingText, mapDecisionObject, mapDecisionValue, getGroup, getTask, probabilityOfDefaultValidation };
+module.exports = {
+  showAmendmentButton,
+  userCanEditLeadUnderwriter,
+  userCanEditManagersDecision,
+  userCanEditBankDecision,
+  generateHeadingText,
+  mapDecisionObject,
+  mapDecisionValue,
+  getGroup,
+  getTask,
+  validateCommentField,
+  validateSubmittedValues,
+  probabilityOfDefaultValidation
+};

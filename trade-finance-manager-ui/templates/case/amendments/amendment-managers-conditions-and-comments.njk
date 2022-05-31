@@ -1,0 +1,115 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import './_macros/summary-table.njk' as summary %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendment - Manager's decision summary
+{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+          'data-cy': 'amendment--error-summary'
+        },
+        classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+      }) }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" aria-label="What's your decision?">What's your decision?</h1>
+
+  <p class="govuk-body-l govuk-!-margin-top-4 govuk-!-margin-bottom-0">{{amendment.facilityType}} {{amendment.ukefFacilityId}}</p>
+  <div class="govuk-grid-row govuk-!-margin-top-5" data-cy="amendment--details-{{amendment.version}}">
+    <div class="govuk-grid-column-three-quarters">
+      {{ summary.render(amendment) }}
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+    <form method="post" data-cy="form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {% if amendment.ukefDecision.coverEndDate === 'Approved with conditions' or amendment.ukefDecision.value === 'Approved with conditions' %}
+            {{ govukCharacterCount({
+              name: "ukefDecisionConditions",
+              id: "ukef-decision-conditions",
+              maxlength: 1000,
+              rows: 9,
+              label: {
+                text: "Enter conditions"
+              },
+              hint: {
+                text: "These will be sent to the bank"
+              },
+              attributes: {
+                'data-cy': 'amendment--managers-decision-conditions'
+              },
+              value: amendment.ukefDecision.conditions,
+              errorMessage: validationErrors.errorList.ukefDecisionConditions and {
+                text: validationErrors.errorList.ukefDecisionConditions.text
+              }
+            }) }}
+        {% endif %}
+
+        {% if amendment.ukefDecision.coverEndDate === 'Declined' or amendment.ukefDecision.value === 'Declined' %}
+            {{ govukCharacterCount({
+              name: "ukefDecisionDeclined",
+              id: "ukef-decision-declined",
+              maxlength: 1000,
+              rows: 9,
+              label: {
+                text: "Enter reasons"
+              },
+              hint: {
+                text: "These will be sent to the bank"
+              },
+              attributes: {
+                'data-cy': 'amendment--managers-decision-reasons'
+              },
+              value: amendment.ukefDecision.declined,
+              errorMessage: validationErrors.errorList.ukefDecisionDeclined and {
+                text: validationErrors.errorList.ukefDecisionDeclined.text
+              }
+            }) }}
+        {% endif %}
+
+        {{ govukCharacterCount({
+          name: "ukefDecisionComments",
+          id: "ukef-decision-comments",
+          maxlength: 1000,
+          rows: 9,
+          label: {
+            text: "Comments"
+          },
+          hint: {
+            text: "Only UKEF staff will see this."
+          },
+          attributes: {
+            'data-cy': 'amendment--managers-decision-comments'
+          },
+          value: amendment.ukefDecision.comments,
+          errorMessage: validationErrors.errorList.ukefDecisionComments and {
+            text: validationErrors.errorList.ukefDecisionComments.text
+          }
+        }) }}
+
+        <div class="govuk-button-group">
+          {% if isEditable %}
+            {{ govukButton({
+              text: "Continue",
+              attributes: { "data-cy": "amendment--continue-button" }
+              })
+            }}
+          {% endif %}
+          <a class="govuk-link" href="/case/{{ amendment.dealId }}/underwriting" data-cy="amendment--cancel-button">Cancel</a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+{% endblock %}
