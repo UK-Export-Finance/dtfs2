@@ -55,6 +55,9 @@ const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.res
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
+const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
+externalApis.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
+
 const createSubmitBody = (mockDeal) => ({
   dealId: mockDeal._id,
   dealType: mockDeal.dealType,

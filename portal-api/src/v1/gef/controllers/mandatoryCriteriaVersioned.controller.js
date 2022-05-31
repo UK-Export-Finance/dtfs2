@@ -4,6 +4,7 @@ const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const { MandatoryCriteria } = require('../models/mandatoryCriteria');
 const utils = require('../utils.service');
+const api = require('../../api');
 
 const collectionName = 'gef-mandatoryCriteriaVersioned';
 
@@ -30,13 +31,6 @@ const findOneMandatoryCriteria = async (id, callback) => {
   });
 };
 
-const findLatestMandatoryCriteria = async () => {
-  const collection = await db.getCollection(collectionName);
-  const [criteria] = await collection.find({ isInDraft: false }).sort({ version: -1 }).limit(1).toArray();
-  return criteria;
-};
-exports.findLatestMandatoryCriteria = findLatestMandatoryCriteria;
-
 exports.create = async (req, res) => {
   const collection = await db.getCollection(collectionName);
   const mandatoryCriteria = await collection.insertOne(new MandatoryCriteria(req.body));
@@ -60,7 +54,7 @@ exports.findOne = (req, res) => (
 );
 
 exports.findLatest = async (req, res) => {
-  const criteria = await findLatestMandatoryCriteria();
+  const criteria = await api.findLatestGefMandatoryCriteria();
   return res.status(200).send(criteria);
 };
 

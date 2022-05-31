@@ -4,18 +4,11 @@ const getSubmissionDate = require('../../helpers/get-submission-date');
 const { generateEligibilityCriteriaString } = require('../../helpers/generate-eligibility-criteria-string');
 const { generateMandatoryCriteriaString } = require('../../helpers/generate-mandatory-criteria-string');
 
-const gefEmailVariables = (deal, facilityLists) => {
-  const {
-    submissionType,
-    maker,
-    exporter,
-    bankInternalRefName,
-    additionalRefName,
-    ukefDealId,
-  } = deal;
+const gefEmailVariables = async (deal, facilityLists) => {
+  const { submissionType, maker, exporter, bankInternalRefName, additionalRefName, ukefDealId } = deal;
 
   const { firstname, surname } = maker;
-
+  const mandatoryCriteria = await generateMandatoryCriteriaString(deal.mandatoryVersionId);
   const emailVariables = {
     submissionType,
     firstname,
@@ -33,8 +26,8 @@ const gefEmailVariables = (deal, facilityLists) => {
     probabilityOfDefault: exporter.probabilityOfDefault,
     cashFacilitiesList: facilityLists.cashes,
     contingentFacilitiesList: facilityLists.contingents,
-    eligibility: generateEligibilityCriteriaString(deal.eligibility.criteria),
-    mandatoryCriteria: generateMandatoryCriteriaString(deal.mandatoryVersionId),
+    eligibilityCriteria: generateEligibilityCriteriaString(deal.eligibility.criteria),
+    mandatoryCriteria,
   };
 
   return emailVariables;

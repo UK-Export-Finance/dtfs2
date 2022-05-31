@@ -689,6 +689,21 @@ const findBankById = async (bankId) => {
   }
 };
 
+const getGefMandatoryCriteriaByVersion = async (version) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/version/${version}`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error('Unable to get the latest mandatory criteria for GEF deals %O', err);
+    return err;
+  }
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -726,4 +741,5 @@ module.exports = {
   addUnderwriterCommentToGefDeal,
   updateGefMINActivity,
   findBankById,
+  getGefMandatoryCriteriaByVersion,
 };

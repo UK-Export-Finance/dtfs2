@@ -33,6 +33,8 @@ const updateGefFacilityController = require('../controllers/portal/gef-facility/
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
 
+const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
+
 const { PORTAL_ROUTE } = require('../../constants/routes');
 
 portalRouter.use((req, res, next) => {
@@ -864,5 +866,8 @@ portalRouter.route('/durable-functions').delete(durableFunctionsController.delet
  *
  */
 portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
+
+portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLatestGefMandatoryCriteria);
+portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
 
 module.exports = portalRouter;

@@ -15,8 +15,6 @@ const api = require('../../api');
 const { sendEmail } = require('../../../reference-data/api');
 const { EMAIL_TEMPLATE_IDS, DEAL: { DEAL_STATUS, DEAL_TYPE } } = require('../../../constants');
 
-const mandatoryCriteriaVersioned = require('./mandatoryCriteriaVersioned.controller');
-
 const dealsCollection = 'deals';
 const facilitiesCollection = 'facilities';
 
@@ -44,7 +42,7 @@ exports.create = async (req, res) => {
       newDeal.exporter.updatedAt = Date.now();
     }
 
-    const { version } = await mandatoryCriteriaVersioned.findLatestMandatoryCriteria();
+    const { version } = await api.findLatestGefMandatoryCriteria();
 
     newDeal.mandatoryVersionId = version;
 
