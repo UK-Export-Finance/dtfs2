@@ -37,10 +37,21 @@ const LOSS_GIVEN_DEFAULT = {
   DEFAULT: 50,
 };
 
+const PROBABILITY_OF_DEFAULT = {
+  DEFAULT_VALUE: 14.1,
+};
+
+const CREDIT_RATING = {
+  GOOD: 'Good (BB-)',
+  ACCEPTABLE: 'Acceptable (B+)',
+};
+
 module.exports = {
   DEAL_TYPE,
   SUBMISSION_TYPE,
   TFM_STATUS,
   PORTAL_STATUS,
   LOSS_GIVEN_DEFAULT,
+  PROBABILITY_OF_DEFAULT,
+  CREDIT_RATING,
 };
