@@ -1,6 +1,4 @@
-const {
-  isBefore, set, getUnixTime,
-} = require('date-fns');
+const { isBefore, set, getUnixTime } = require('date-fns');
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
 
 /**
