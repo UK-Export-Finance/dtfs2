@@ -1,7 +1,6 @@
 import underwriterManagersDecisionController from '.';
-import canUserEditManagersDecision from './helpers';
-import { validateSubmittedValues } from './validateSubmittedValues';
-import { mapDecisionObject } from '../../../helpers';
+import userCanEditManagersDecision from './helpers';
+import { mapDecisionObject, validateSubmittedValues } from '../../../helpers';
 import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 
@@ -31,7 +30,7 @@ const mockDeal = {
 const dealId = mockDeal._id;
 
 describe('GET underwriting - underwriting managers decision', () => {
-  const userCanEdit = canUserEditManagersDecision(session.user, mockDeal.dealSnapshot.submissionType, mockDeal.tfm);
+  const userCanEdit = userCanEditManagersDecision(session.user, mockDeal.dealSnapshot.submissionType, mockDeal.tfm);
 
   describe('when deal exists', () => {
     it('should return object with data', async () => {

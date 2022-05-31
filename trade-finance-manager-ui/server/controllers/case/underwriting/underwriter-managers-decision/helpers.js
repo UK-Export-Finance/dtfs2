@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../../../constants');
 const { userIsInTeam } = require('../../../../helpers/user');
 
-const canUserEditManagersDecision = (user, dealSubmissionType, dealTfm) => {
+const userCanEditManagersDecision = (user, dealSubmissionType, dealTfm) => {
   const isManager = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
 
   const isMIA = dealSubmissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
@@ -15,4 +15,4 @@ const canUserEditManagersDecision = (user, dealSubmissionType, dealTfm) => {
   return false;
 };
 
-module.exports = canUserEditManagersDecision;
+module.exports = userCanEditManagersDecision;

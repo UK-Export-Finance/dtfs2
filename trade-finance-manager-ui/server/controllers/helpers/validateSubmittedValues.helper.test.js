@@ -1,10 +1,7 @@
-import {
-  validateCommentField,
-  validateSubmittedValues,
-} from './validateSubmittedValues';
-import generateValidationErrors from '../../../../../helpers/validation';
+import CONSTANTS from '../../constants';
 
-import CONSTANTS from '../../../../../constants';
+import { validateCommentField, validateSubmittedValues } from './validateSubmittedValues.helper';
+import generateValidationErrors from '../../helpers/validation';
 
 describe('POST underwriting - managers decision - validate submitted values', () => {
   describe('validateCommentField', () => {
@@ -15,13 +12,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
         const fieldLabel = 'the field label';
         const fieldId = 'fieldId';
 
-        const result = validateCommentField(
-          errors,
-          count,
-          fieldLabel,
-          fieldId,
-          '!@£$%^&*()',
-        );
+        const result = validateCommentField(errors, count, fieldLabel, fieldId, '!@£$%^&*()');
 
         const expected = {
           errorsCount: 1,
@@ -44,22 +35,11 @@ describe('POST underwriting - managers decision - validate submitted values', ()
         const fieldLabel = 'the field label';
         const fieldId = 'fieldId';
 
-        const result = validateCommentField(
-          errors,
-          count,
-          fieldLabel,
-          fieldId,
-          'a'.repeat(1001),
-        );
+        const result = validateCommentField(errors, count, fieldLabel, fieldId, 'a'.repeat(1001));
 
         const expected = {
           errorsCount: 1,
-          validationErrors: generateValidationErrors(
-            fieldId,
-            `${fieldLabel} must be 1000 characters or fewer`,
-            count + 1,
-            errors,
-          ),
+          validationErrors: generateValidationErrors(fieldId, `${fieldLabel} must be 1000 characters or fewer`, count + 1, errors),
         };
 
         expect(result).toEqual(expected);
@@ -75,13 +55,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
         const fieldLabel = 'the field label';
         const fieldId = 'fieldId';
 
-        const result = validateCommentField(
-          errors,
-          count,
-          fieldLabel,
-          fieldId,
-          'valid',
-        );
+        const result = validateCommentField(errors, count, fieldLabel, fieldId, 'valid');
 
         const expected = {
           errorsCount: 1,
@@ -99,11 +73,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
         decision: '',
       });
 
-      const expected = generateValidationErrors(
-        'decision',
-        'Select if you approve or decline',
-        1,
-      );
+      const expected = generateValidationErrors('decision', 'Select if you approve or decline', 1);
 
       expect(result).toEqual(expected);
     });
@@ -115,11 +85,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
           approveWithConditionsComments: '',
         });
 
-        const expected = generateValidationErrors(
-          'approveWithConditionsComments',
-          'Enter conditions',
-          1,
-        );
+        const expected = generateValidationErrors('approveWithConditionsComments', 'Enter conditions', 1);
 
         expect(result).toEqual(expected);
       });
@@ -132,11 +98,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
           declineComments: '',
         });
 
-        const expected = generateValidationErrors(
-          'declineComments',
-          'Enter reasons',
-          1,
-        );
+        const expected = generateValidationErrors('declineComments', 'Enter reasons', 1);
 
         expect(result).toEqual(expected);
       });
@@ -150,19 +112,11 @@ describe('POST underwriting - managers decision - validate submitted values', ()
 
       expect(result.count).toEqual(2);
 
-      const decisionError = generateValidationErrors(
-        'decision',
-        'Select if you approve or decline',
-        1,
-      ).errorList.decision;
+      const decisionError = generateValidationErrors('decision', 'Select if you approve or decline', 1).errorList.decision;
 
       expect(result.errorList.decision).toEqual(decisionError);
 
-      const internalCommentsError = generateValidationErrors(
-        'internalComments',
-        'Comments must be 1000 characters or fewer',
-        2,
-      ).errorList.internalComments;
+      const internalCommentsError = generateValidationErrors('internalComments', 'Comments must be 1000 characters or fewer', 2).errorList.internalComments;
 
       expect(result.errorList.internalComments).toEqual(internalCommentsError);
     });

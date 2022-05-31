@@ -5,7 +5,7 @@
 
 {% macro render(params) %}
 
-  {% set banksDecision = params.amendmentBanksDecision %}
+  {% set banksDecision = params.banksDecision %}
 
   {% block underwriting_content %}
 
@@ -48,7 +48,7 @@
 
         {% else %}
 
-          <p class="govuk-!-margin-top-0" data-cy="amendment-bank-decision-dependent">Dependent on the Underwriter manager’s decision</p>
+          <p class="govuk-!-margin-top-0" data-cy="amendment-bank-decision-dependent">Dependent on the Underwriter manager's decision</p>
 
         {% endif %}
 

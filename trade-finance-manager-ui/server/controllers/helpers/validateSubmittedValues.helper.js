@@ -1,8 +1,8 @@
-const CONSTANTS = require('../../../../constants');
+const CONSTANTS = require('../../constants');
 
-const { hasValue, isAlphanumeric } = require('../../../../helpers/string');
-const { increment } = require('../../../../helpers/number');
-const generateValidationErrors = require('../../../../helpers/validation');
+const { hasValue, isAlphanumeric } = require('../../helpers/string');
+const { increment } = require('../../helpers/number');
+const generateValidationErrors = require('../../helpers/validation');
 
 const MAX_COMMENTS_LENGTH = 1000;
 

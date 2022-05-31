@@ -1,4 +1,5 @@
 const CONSTANTS = require('../../constants');
+const { userIsInTeam } = require('../../helpers/user');
 
 /**
  * @param {Object} deal
@@ -18,4 +19,23 @@ const showAmendmentButton = (deal, userTeam) => {
   return false;
 };
 
-module.exports = { showAmendmentButton };
+const userCanEditLeadUnderwriter = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
+
+const userCanEditManagersDecision = (amendment, user) => {
+  const isManager = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
+  const hasSubmittedDecision = amendment?.ukefDecision?.submitted;
+  return isManager && !hasSubmittedDecision ? true : false;
+};
+
+const userCanEditBankDecision = (amendment, user) => {
+  const isPim = userIsInTeam(user, [CONSTANTS.TEAMS.PIM]);
+  const hasSubmittedDecision = amendment?.ukefDecision?.submitted && !amendment?.bankDecision?.submitted;
+  return isPim && hasSubmittedDecision ? true : false;
+};
+
+module.exports = {
+  showAmendmentButton,
+  userCanEditLeadUnderwriter,
+  userCanEditManagersDecision,
+  userCanEditBankDecision,
+};
