@@ -1,9 +1,8 @@
-*/node_modules*
-*/generated_reports*
-*/api-tests*
-*.md
-*.yml
-LICENSE
+node_modules
+generated_reports
+README.md
 Dockerfile
+.env
+.prettierrc.json
 .env.sample
-package-lock.json
+.eslintignore
