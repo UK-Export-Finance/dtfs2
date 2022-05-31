@@ -41,7 +41,7 @@
       {% if amendment.ukefDecision.conditions %}
         {% set ukefConditionsHtml %}
           <div class="ukef-decision-formatted">
-            <p class="govuk-body"> {{amendment.ukefDecision.conditions | safe }} </p>
+            <p class="govuk-body"> {{ amendment.ukefDecision.conditions | safe }} </p>
           <div>
         {% endset %}
 
@@ -69,7 +69,7 @@
       {% if amendment.ukefDecision.declined %}
         {% set ukefDeclinedHtml %}
           <div class="ukef-decision-formatted">
-            <p class="govuk-body"> {{amendment.ukefDecision.declined | safe }} </p>
+            <p class="govuk-body"> {{ amendment.ukefDecision.declined | safe }} </p>
           <div>
         {% endset %}
 
@@ -98,7 +98,7 @@
       {% if amendment.ukefDecision.comments %}
         {% set ukefCommentsHtml %}
           <div class="ukef-decision-formatted">
-            <p class="govuk-body"> {{amendment.ukefDecision.comments | safe }} </p>
+            <p class="govuk-body"> {{ amendment.ukefDecision.comments | safe }} </p>
           <div>
         {% endset %}
 
