@@ -40,8 +40,8 @@ const validateApplicationReferences = (body = {}) => {
   let validationErrors = [];
 
   if (Object.keys(body).includes('bankInternalRefName')) {
-    validationErrors.push(validateMandatoryField('bankInternalRefName', sanitizeHtml(body.bankInternalRefName)));
-    validationErrors.push(validateNameFieldValue('bankInternalRefName', sanitizeHtml(body.bankInternalRefName)));
+    validationErrors.push(validateMandatoryField('bankInternalRefName', body.bankInternalRefName));
+    validationErrors.push(validateNameFieldValue('bankInternalRefName', body.bankInternalRefName));
   }
   if (body.additionalRefName) validationErrors.push(validateNameFieldValue('additionalRefName', sanitizeHtml(body.additionalRefName)));
 

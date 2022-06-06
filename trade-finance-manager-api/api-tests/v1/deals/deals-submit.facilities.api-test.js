@@ -34,6 +34,9 @@ const createSubmitBody = (mockDeal) => ({
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
+const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
+externalApis.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();

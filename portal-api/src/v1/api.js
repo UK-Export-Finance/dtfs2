@@ -202,6 +202,21 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
   }
 };
 
+const findLatestGefMandatoryCriteria = async () => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/latest`,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the latest mandatory criteria for GEF deals %O', { response: err?.response?.data });
+    return { status: 500, data: err?.response?.data };
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -214,4 +229,5 @@ module.exports = {
   updateFacility,
   deleteFacility,
   tfmDealSubmit,
+  findLatestGefMandatoryCriteria,
 };
