@@ -90,6 +90,7 @@ module.exports = {
         answer: true,
       },
     ],
+    version: 5,
     agentName: '',
     agentAddressCountry: '',
     agentAddressLine1: '',
