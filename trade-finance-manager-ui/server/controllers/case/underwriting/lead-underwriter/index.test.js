@@ -3,7 +3,7 @@ import api from '../../../../api';
 import { mockRes } from '../../../../test-mocks';
 import mapAssignToSelectOptions from '../../../../helpers/map-assign-to-select-options';
 import underwriterLeadUnderwriterController from '.';
-import userCanEditLeadUnderwriter from './helpers';
+import { userIsInTeam } from '../../../../helpers/user';
 import CONSTANTS from '../../../../constants';
 import { sortArrayOfObjectsAlphabetically } from '../../../../helpers/array';
 
@@ -25,9 +25,7 @@ const MOCK_USER_UNDERWRITER = {
   teams: ['UNDERWRITERS'],
 };
 
-const MOCK_TEAM_UNDERWRITER_MANAGERS = [
-  MOCK_USER_UNDERWRITER_MANAGER,
-];
+const MOCK_TEAM_UNDERWRITER_MANAGERS = [MOCK_USER_UNDERWRITER_MANAGER];
 
 const session = {
   user: MOCK_USER_UNDERWRITER_MANAGER,
@@ -47,9 +45,7 @@ const MOCK_DEAL = {
 const dealId = MOCK_DEAL._id;
 
 describe('GET underwriting - lead underwriter', () => {
-  const userCanEdit = userCanEditLeadUnderwriter(
-    session.user,
-  );
+  const userCanEdit = userIsInTeam(session.user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
   describe('when deal exists', () => {
     const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCK_USER_UNDERWRITER_MANAGER));
@@ -135,10 +131,7 @@ describe('GET underwriting - assign lead underwriter', () => {
 
       expect(getTeamMembersSpy).toBeCalledTimes(2);
 
-      expect(getTeamMembersSpy.mock.calls).toEqual([
-        [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS],
-        [CONSTANTS.TEAMS.UNDERWRITERS],
-      ]);
+      expect(getTeamMembersSpy.mock.calls).toEqual([[CONSTANTS.TEAMS.UNDERWRITER_MANAGERS], [CONSTANTS.TEAMS.UNDERWRITERS]]);
     });
 
     it('should render template with data', async () => {
@@ -147,11 +140,7 @@ describe('GET underwriting - assign lead underwriter', () => {
       // NOTE: api.getTeamMembers stub only returns one team.
       const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
 
-      const expectedAssignToSelectOptions = mapAssignToSelectOptions(
-        MOCK_DEAL.tfm.leadUnderwriter,
-        session.user,
-        alphabeticalTeamMembers,
-      );
+      const expectedAssignToSelectOptions = mapAssignToSelectOptions(MOCK_DEAL.tfm.leadUnderwriter, session.user, alphabeticalTeamMembers);
 
       expect(res.render).toHaveBeenCalledWith('case/underwriting/lead-underwriter/assign-lead-underwriter.njk', {
         activeSubNavigation: 'underwriting',
@@ -201,9 +190,10 @@ describe('GET underwriting - assign lead underwriter', () => {
 });
 
 describe('POST underwriting - assign lead underwriter', () => {
-  const apiUpdateSpy = jest.fn(() => Promise.resolve({
-    test: true,
-  }));
+  const apiUpdateSpy = jest.fn(() =>
+    Promise.resolve({
+      test: true,
+    }));
 
   beforeEach(() => {
     api.getDeal = () => Promise.resolve(MOCK_DEAL);
@@ -227,10 +217,7 @@ describe('POST underwriting - assign lead underwriter', () => {
       userId: req.body.assignedTo,
     };
 
-    expect(apiUpdateSpy).toHaveBeenCalledWith(
-      MOCK_DEAL._id,
-      expectedUpdateObj,
-    );
+    expect(apiUpdateSpy).toHaveBeenCalledWith(MOCK_DEAL._id, expectedUpdateObj);
   });
 
   describe('when user cannot edit (i.e, NOT in UNDERWRITER_MANAGERS team)', () => {

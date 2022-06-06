@@ -137,7 +137,18 @@ const findAmendmentsByDealId = async (dealId) => {
     const collection = await db.getCollection('tfm-facilities');
     const amendment = await collection.aggregate([
       { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
-      { $project: { _id: 0, amendments: 1 } }
+      {
+        $addFields: {
+          'amendments.type': '$facilitySnapshot.type',
+          'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId'
+        }
+      },
+      { $project: { _id: 0, amendments: 1 } },
+      { $unwind: '$amendments' },
+      { $sort: { 'amendments.version': -1 } },
+      { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED }, 'amendments.submittedByPim': true } },
+      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+      { $project: { _id: 0, amendments: 1 } },
     ]).toArray();
     // returns the amendment object for the given dealId
     return amendment[0]?.amendments ?? null;
@@ -148,7 +159,7 @@ const findAmendmentsByDealId = async (dealId) => {
 };
 exports.findAmendmentByDealId = findAmendmentsByDealId;
 
-exports.getAmendmentByDealId = async (req, res) => {
+exports.getAmendmentsByDealId = async (req, res) => {
   const { dealId } = req.params;
   if (ObjectId.isValid(dealId)) {
     const amendment = await findAmendmentsByDealId(dealId) ?? [];
@@ -254,8 +265,7 @@ exports.findAmendmentByStatusAndDealId = findAmendmentByStatusAndDealId;
 exports.getAmendmentInProgressByDealId = async (req, res) => {
   const { dealId } = req.params;
   if (ObjectId.isValid(dealId)) {
-    let amendment = await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
-    amendment = amendment[0] ?? {};
+    const amendment = await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
     return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid deal Id' });

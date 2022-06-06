@@ -9,6 +9,7 @@ const { userCanEditManagersDecision, userCanEditBankDecision, ukefDecisionReject
 const { formattedNumber } = require('../../../helpers/number');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
+const CONSTANTS = require('../../../constants');
 
 /**
  * controller for underwriting tab
@@ -28,10 +29,12 @@ const getUnderwriterPage = async (req, res) => {
   const dealUnderwriterManagersDecision = await underwriterManagersDecision.getUnderwriterManagersDecision(deal, user);
 
   // gets latest amendment in progress
-  const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
-
+  let { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
+  amendment = amendment.filter(({ submittedByPim }) => submittedByPim);
   // if amendments object exists then populate fields
-  if (amendment?.submittedByPim) {
+  if (amendment.length) {
+    // TODO: change so that the underwriting tab has all amendments listed
+    [amendment] = amendment;
     if (amendment?.ukefDecision) {
       amendment.ukefDecision.isEditable = userCanEditManagersDecision(amendment, user);
       // if bank decision then set isEditable in relevant way
@@ -77,6 +80,13 @@ const getUnderwriterPage = async (req, res) => {
     }
     if (amendment?.bankDecision?.effectiveDate) {
       amendment.bankDecision.effectiveDateFormatted = format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd MMM yyyy');
+    }
+  }
+
+  if (amendment.length) {
+    const hasAmendmentInProgress = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+    if (hasAmendmentInProgress) {
+      deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
   }
 

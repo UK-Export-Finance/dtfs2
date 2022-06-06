@@ -1,4 +1,5 @@
 const api = require('../api');
+const { createAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
 
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
@@ -12,6 +13,12 @@ const createFacilityAmendment = async (req, res) => {
 const updateFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const payload = req.body;
+  if (payload.createTasks && payload.submittedByPim) {
+    const tasks = createAmendmentTasks(payload.requireUkefApproval);
+    payload.tasks = tasks;
+    delete payload.createTasks;
+    delete payload.requireUkefApproval;
+  }
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
   if (createdAmendment) {
     return res.status(200).send(createdAmendment);
@@ -64,9 +71,9 @@ const getAmendmentByFacilityId = async (req, res) => {
   return res.status(422).send({ data: 'Unable to get the amendment by facilityId' });
 };
 
-const getAmendmentByDealId = async (req, res) => {
+const getAmendmentsByDealId = async (req, res) => {
   const { dealId } = req.params;
-  const amendment = await api.getAmendmentByDealId(dealId);
+  const amendment = await api.getAmendmentsByDealId(dealId);
   if (amendment) {
     return res.status(200).send(amendment);
   }
@@ -116,7 +123,7 @@ module.exports = {
   getLatestCompletedAmendment,
   getAmendmentById,
   getAmendmentByFacilityId,
-  getAmendmentByDealId,
+  getAmendmentsByDealId,
   getAmendmentInProgressByDealId,
   getCompletedAmendmentByDealId,
   getLatestCompletedAmendmentByDealId,

@@ -2,7 +2,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% macro render(params) %}
-  {% set tasks = params.tasks %}
   {% set selectedTaskFilter = params.selectedTaskFilter %}
   {% set csrfToken = params.csrfToken %}
 
@@ -32,7 +31,7 @@
           },
           {
             value: "team",
-            text: "Your team’s tasks",
+            text: "Your team's tasks",
             checked: selectedTaskFilter === 'team',
             attributes: {
               'data-cy': 'task-radio-button-your-team',

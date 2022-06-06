@@ -2,13 +2,14 @@ import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import mapAssignToSelectOptions from '../../../helpers/map-assign-to-select-options';
 import amendmentLeadUnderwriterController from '.';
-import { userCanEditLeadUnderwriter } from '../../helpers';
+import { userIsInTeam } from '../../../helpers/user';
 import { sortArrayOfObjectsAlphabetically } from '../../../helpers/array';
+import CONSTANTS from '../../../constants';
 
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
 
 describe('GET getAmendmentLeadUnderwriter()', () => {
-  const isEditable = userCanEditLeadUnderwriter(MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
+  const isEditable = userIsInTeam(MOCKS.MOCK_USER_UNDERWRITER_MANAGER, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
   const apiGetUserSpy = jest.fn(() => Promise.resolve(MOCKS.MOCK_USER_UNDERWRITER_MANAGER));
 

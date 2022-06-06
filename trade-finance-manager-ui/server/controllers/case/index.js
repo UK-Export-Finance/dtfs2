@@ -17,14 +17,13 @@ const getCaseDeal = async (req, res) => {
 
   const deal = await api.getDeal(dealId);
   const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
-  const { facilityId, type, ukefFacilityId, status } = amendment;
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
-
+  const amendmentsInProgress = amendment.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
@@ -36,9 +35,7 @@ const getCaseDeal = async (req, res) => {
     activeSubNavigation: 'deal',
     dealId,
     user: req.session.user,
-    facilityType: type,
-    ukefFacilityId,
-    facilityId,
+    amendmentsInProgress,
     hasAmendmentInProgress,
   });
 };
@@ -55,9 +52,15 @@ const getCaseTasks = async (req, res) => {
   };
 
   const deal = await api.getDeal(dealId, tasksFilters);
-
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
   if (!deal) {
     return res.redirect('/not-found');
+  }
+
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
   return res.render('case/tasks/tasks.njk', {
@@ -69,6 +72,8 @@ const getCaseTasks = async (req, res) => {
     dealId,
     user: req.session.user,
     selectedTaskFilter: TASKS.FILTER_TYPES.USER,
+    amendments,
+    hasAmendmentInProgress,
   });
 };
 

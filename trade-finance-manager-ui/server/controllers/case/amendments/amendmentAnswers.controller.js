@@ -48,6 +48,8 @@ const postAmendmentAnswers = async (req, res) => {
       submittedByPim: true,
       value: amendment.value,
       coverEndDate: amendment.coverEndDate,
+      createTasks: true,
+      requireUkefApproval: amendment.requireUkefApproval,
     };
 
     if (!requireUkefApproval) {

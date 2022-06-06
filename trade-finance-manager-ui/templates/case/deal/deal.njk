@@ -9,7 +9,14 @@
 {% block sub_content %}
   {% if hasAmendmentInProgress === true %}
     {% set bannerHtml %}
-      <p class="govuk-body">Amendment in progress for <a href="/case/{{dealId}}/facility/{{facilityId}}#amendments">{{facilityType}} {{ukefFacilityId}}</a></p>
+      <p class="govuk-body">Amendment in progress for
+      {% for amendment in amendmentsInProgress %}
+        <a href="/case/{{dealId}}/facility/{{amendment.facilityId}}#amendments"> {{amendment.type}} {{amendment.ukefFacilityId}} </a>
+        {% if loop.index < amendments.length %}
+          ,
+        {% endif %}
+      {% endfor %}
+      </p>
     {% endset %}
 
     {{ mojBanner({

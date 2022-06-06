@@ -2,7 +2,7 @@ const api = require('../../../api');
 const CONSTANTS = require('../../../constants');
 
 const mapAssignToSelectOptions = require('../../../helpers/map-assign-to-select-options');
-const { userCanEditLeadUnderwriter } = require('../../helpers');
+const { userIsInTeam } = require('../../../helpers/user');
 const { sortArrayOfObjectsAlphabetically } = require('../../../helpers/array');
 
 /**
@@ -26,7 +26,7 @@ const getAmendmentLeadUnderwriter = async (amendment, user) => {
   }
 
   // checks if user has ability to assign or change lead-underwriter to render change link or add button
-  const isEditable = userCanEditLeadUnderwriter(user);
+  const isEditable = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
   return {
     isEditable,
@@ -53,7 +53,7 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
   const { user } = req.session;
 
   // checks if can edit
-  const isEditable = userCanEditLeadUnderwriter(user);
+  const isEditable = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
   let currentLeadUnderWriterUserId;
   // if already set then shows name of assigned underwriter
