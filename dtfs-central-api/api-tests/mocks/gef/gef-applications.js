@@ -8,7 +8,7 @@ const baseApplication = {
   additionalRefName: 'Team 1',
   exporter: {},
   createdAt: '2021-01-01T00:00',
-  mandatoryVersionId: '123',
+  mandatoryVersionId: 33,
   status: CONSTANTS.DEALS.DEAL_STATUS.IN_PROGRESS,
   updatedAt: null,
   editedBy: [null],

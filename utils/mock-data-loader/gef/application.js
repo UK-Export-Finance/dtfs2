@@ -11,7 +11,7 @@ const APPLICATION = [{
   bank: { id: '9' },
   bankInternalRefName: 'Barclays 123',
   additionalRefName: null,
-  mandatoryVersionId: '123', // further down the line you may want exact mongoIDs
+  mandatoryVersionId: 33,
   exporter: EXPORTER_COMPLETED,
   maker: MAKER,
 }, {
@@ -19,7 +19,7 @@ const APPLICATION = [{
   bank: { id: '9' },
   bankInternalRefName: 'UKEF Test 123',
   additionalRefName: '',
-  mandatoryVersionId: '123',
+  mandatoryVersionId: 33,
   exporter: EXPORTER_NO_INDUSTRIES,
   maker: MAKER,
 }, {
@@ -27,7 +27,7 @@ const APPLICATION = [{
   bank: { id: '9' },
   bankInternalRefName: 'HSBC 123',
   additionalRefName: 'Some Additional Reference',
-  mandatoryVersionId: '123',
+  mandatoryVersionId: 33,
   exporter: EXPORTER_COMPLETED,
   maker: MAKER,
 }, {
@@ -35,7 +35,7 @@ const APPLICATION = [{
   bank: { id: '9' },
   bankInternalRefName: 'UKEF Test 123',
   additionalRefName: '',
-  mandatoryVersionId: '123',
+  mandatoryVersionId: 33,
   exporter: {},
   maker: MAKER,
 }];

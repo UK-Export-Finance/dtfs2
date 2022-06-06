@@ -43,8 +43,8 @@ exports.create = async (req, res) => {
     }
 
     const response = await api.findLatestGefMandatoryCriteria();
-    if (response?.version) {
-      newDeal.mandatoryVersionId = response.version;
+    if (response?.data?.version) {
+      newDeal.mandatoryVersionId = response.data.version;
     }
 
     const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
