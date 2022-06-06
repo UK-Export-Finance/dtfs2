@@ -14,6 +14,6 @@ exports.findAll = async (req, res) => {
 
 exports.findOne = async (req, res) => {
   const currency = await findOneCurrency(req.params.id);
-  const status = currency ? '200' : '404';
+  const status = currency ? 200 : 404;
   return res.status(status).send(currency);
 };

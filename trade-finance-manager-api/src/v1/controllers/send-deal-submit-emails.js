@@ -158,7 +158,7 @@ const sendAinMinAcknowledgement = async (deal) => {
 
     templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION;
 
-    emailVariables = generateAinMinConfirmationEmailVars(deal, facilityLists);
+    emailVariables = await generateAinMinConfirmationEmailVars(deal, facilityLists);
 
     makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
     // send a copy of the email to PIM

@@ -40,23 +40,6 @@ describe(baseUrl, () => {
       const { status } = await as(aMaker).get(baseUrl);
       expect(status).toEqual(200);
     });
-
-    // it('returns a list of mandatory-criteria-versioned sorted by version', async () => {
-    //   await as(anEditor).post(allMandatoryCriteria[0]).to(baseUrl);
-    //   await as(anEditor).post(allMandatoryCriteria[1]).to(baseUrl);
-    //   await as(anEditor).post(allMandatoryCriteria[2]).to(baseUrl);
-
-    //   const { body } = await as(aMaker).get(baseUrl);
-
-    //   expect(body).toEqual({
-    //     count: 3,
-    //     mandatoryCriteria: expect.arrayContaining([
-    //       expect.objectContaining(expectMongoId(allMandatoryCriteria[0])),
-    //       expect.objectContaining(expectMongoId(allMandatoryCriteria[1])),
-    //       expect.objectContaining(expectMongoId(allMandatoryCriteria[2]))
-    //     ]),
-    //   });
-    // });
   });
 
   describe('GET /v1/gef/mandatory-criteria-versioned/latest', () => {
@@ -64,12 +47,6 @@ describe(baseUrl, () => {
       const { status } = await as().get(`${baseUrl}/latest`);
 
       expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token', async () => {
-      const { status } = await as(aMaker).get(`${baseUrl}/latest`);
-
-      expect(status).toEqual(200);
     });
 
     it('returns the latest mandatory-criteria version', async () => {

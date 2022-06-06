@@ -2,7 +2,7 @@ const CONSTANTS = require('../../../constants');
 const gefEmailVariables = require('./gef-email-variables');
 const bssEmailVariables = require('./bss-email-variables');
 
-const generateAinMinConfirmationEmailVars = (deal, facilityLists) => {
+const generateAinMinConfirmationEmailVars = async (deal, facilityLists) => {
   const { dealType } = deal;
 
   switch (dealType) {
@@ -10,7 +10,8 @@ const generateAinMinConfirmationEmailVars = (deal, facilityLists) => {
       return bssEmailVariables(deal, facilityLists);
 
     case CONSTANTS.DEALS.DEAL_TYPE.GEF:
-      return gefEmailVariables(deal, facilityLists);
+      // eslint-disable-next-line no-return-await
+      return await gefEmailVariables(deal, facilityLists);
 
     default:
       return {};
