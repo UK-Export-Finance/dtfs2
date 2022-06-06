@@ -55,7 +55,10 @@ exports.findOne = (req, res) => (
 
 exports.findLatest = async (req, res) => {
   const criteria = await api.findLatestGefMandatoryCriteria();
-  return res.status(200).send(criteria);
+  if (criteria.status === 200) {
+    return res.status(200).send(criteria.data);
+  }
+  return res.status(criteria.status).send();
 };
 
 exports.update = async (req, res) => {

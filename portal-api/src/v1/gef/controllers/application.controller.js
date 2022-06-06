@@ -42,9 +42,10 @@ exports.create = async (req, res) => {
       newDeal.exporter.updatedAt = Date.now();
     }
 
-    const { version } = await api.findLatestGefMandatoryCriteria();
-
-    newDeal.mandatoryVersionId = version;
+    const response = await api.findLatestGefMandatoryCriteria();
+    if (response?.version) {
+      newDeal.mandatoryVersionId = response.version;
+    }
 
     const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
 
@@ -106,7 +107,7 @@ exports.update = async (req, res) => {
   const update = new Application(req.body);
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
-    return res.status(400).send(validateErrs);
+    return res.status(422).send(validateErrs);
   }
 
   // TODO: DTFS2-4987 Write unit tests for editorId
@@ -123,7 +124,11 @@ exports.update = async (req, res) => {
 
   updateAction.$set = update;
 
-  const result = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(String(req.params.id)) } }, updateAction, { returnOriginal: false });
+  const result = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectId(String(req.params.id)) } },
+    updateAction,
+    { returnOriginal: false }
+  );
   let response;
   if (result.value) {
     response = result.value;
@@ -213,7 +218,11 @@ exports.changeStatus = async (req, res) => {
     };
   }
 
-  const updatedDocument = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(String(dealId)) } }, { $set: applicationUpdate }, { returnOriginal: false });
+  const updatedDocument = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectId(String(dealId)) } },
+    { $set: applicationUpdate },
+    { returnOriginal: false }
+  );
 
   let response;
 

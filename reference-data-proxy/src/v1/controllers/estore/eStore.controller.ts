@@ -1,11 +1,23 @@
 import { Request, Response } from 'express';
 import { getCollection } from '../../../database';
 import { Estore } from '../../../interfaces';
-import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
+import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, UKEF_ID } from '../../../constants';
 import { eStoreCronJobManager, eStoreTermStoreAndBuyerFolder, eStoreSiteCreationJob } from '../../../cronJobs';
 import { createExporterSite, siteExists } from './eStoreApi';
 
 const siteCreationTimer = '50 * * * * *'; // ~ 50 seconds
+
+const validateEstoreInput = (eStoreData: any) => {
+  const { dealIdentifier, facilityIdentifiers } = eStoreData;
+  if (dealIdentifier.includes('100000') || dealIdentifier.includes(UKEF_ID.PENDING)) {
+    return false;
+  }
+
+  if (facilityIdentifiers.includes(100000) || facilityIdentifiers.includes(UKEF_ID.PENDING)) {
+    return false;
+  }
+  return true;
+};
 
 const checkExistingCronJobs = async () => {
   const cronJobLogsCollection = await getCollection('cron-job-logs');
@@ -34,7 +46,7 @@ export const createEstore = async (req: Request, res: Response) => {
   // check if the body is not empty
   if (Object.keys(eStoreData).length) {
     // prevent test deals from triggering calls to eStore
-    if (eStoreData.dealIdentifier.includes('100000')) {
+    if (!validateEstoreInput(eStoreData)) {
       return res.status(200).send();
     }
     // send a 200 response back to tfm-api
@@ -103,10 +115,12 @@ export const createEstore = async (req: Request, res: Response) => {
         await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteExistsResponse } });
       }
     } else {
-      console.info('eStore API call is being re-triggered ', eStoreData.dealId);
+      console.info('eStore API call is being re-triggered with the same payload', eStoreData.dealId);
+      return res.status(200).send();
     }
   } else {
     console.error('eStore body is empty', eStoreData);
+    return res.status(200).send();
   }
   return res.status(200).send();
 };

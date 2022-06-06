@@ -699,7 +699,7 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
 
     return response.data;
   } catch (err) {
-    console.error('Unable to get the latest mandatory criteria for GEF deals %O', err);
+    console.error('Unable to get the mandatory criteria by version for GEF deals %O', err);
     return err;
   }
 };

@@ -9,6 +9,7 @@ const gefEmailVariables = async (deal, facilityLists) => {
 
   const { firstname, surname } = maker;
   const mandatoryCriteria = await generateMandatoryCriteriaString(deal.mandatoryVersionId);
+  const eligibilityCriteria = generateEligibilityCriteriaString(deal.eligibility.criteria);
   const emailVariables = {
     submissionType,
     firstname,
@@ -26,7 +27,7 @@ const gefEmailVariables = async (deal, facilityLists) => {
     probabilityOfDefault: exporter.probabilityOfDefault,
     cashFacilitiesList: facilityLists.cashes,
     contingentFacilitiesList: facilityLists.contingents,
-    eligibilityCriteria: generateEligibilityCriteriaString(deal.eligibility.criteria),
+    eligibilityCriteria,
     mandatoryCriteria,
   };
 
