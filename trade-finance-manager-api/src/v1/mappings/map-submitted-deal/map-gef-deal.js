@@ -18,6 +18,8 @@ const mapGefDeal = (deal) => {
     maker,
     facilities,
     supportingInformation,
+    eligibility,
+    mandatoryVersionId,
   } = dealSnapshot;
 
   const mapped = {
@@ -57,6 +59,8 @@ const mapGefDeal = (deal) => {
     smeType: exporter.smeType,
   };
 
+  mapped.eligibility = eligibility;
+  mapped.mandatoryVersionId = mandatoryVersionId;
   return mapped;
 };
 

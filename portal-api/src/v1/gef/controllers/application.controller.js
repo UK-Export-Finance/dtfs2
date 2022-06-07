@@ -1,20 +1,11 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 const utils = require('../utils.service');
-const {
-  validateApplicationReferences,
-  validatorStatusCheckEnums,
-} = require('./validation/application');
-const {
-  exporterStatus,
-} = require('./validation/exporter');
-const {
-  supportingInfoStatus,
-} = require('./validation/supportingInfo');
+const { validateApplicationReferences, validatorStatusCheckEnums } = require('./validation/application');
+const { exporterStatus } = require('./validation/exporter');
+const { supportingInfoStatus } = require('./validation/supportingInfo');
 
-const {
-  eligibilityCriteriaStatus,
-} = require('./validation/eligibilityCriteria');
+const { eligibilityCriteriaStatus } = require('./validation/eligibilityCriteria');
 const { isSuperUser } = require('../../users/checks');
 const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
@@ -22,10 +13,7 @@ const { Application } = require('../models/application');
 const { addSubmissionData } = require('./application-submit');
 const api = require('../../api');
 const { sendEmail } = require('../../../reference-data/api');
-const {
-  EMAIL_TEMPLATE_IDS,
-  DEAL: { DEAL_STATUS, DEAL_TYPE },
-} = require('../../../constants');
+const { EMAIL_TEMPLATE_IDS, DEAL: { DEAL_STATUS, DEAL_TYPE } } = require('../../../constants');
 
 const dealsCollection = 'deals';
 const facilitiesCollection = 'facilities';
@@ -41,13 +29,10 @@ exports.create = async (req, res) => {
 
   const applicationCollection = await db.getCollection(dealsCollection);
 
-  const validateErrs = validateApplicationReferences(
-    newDeal,
-  );
+  const validateErrs = validateApplicationReferences(newDeal);
 
   if (validateErrs) {
-    res.status(422)
-      .send(validateErrs);
+    res.status(422).send(validateErrs);
   } else {
     const eligibility = await getLatestEligibilityCriteria();
 
@@ -57,45 +42,39 @@ exports.create = async (req, res) => {
       newDeal.exporter.updatedAt = Date.now();
     }
 
-    const createdApplication = await applicationCollection.insertOne(
-      new Application(
-        newDeal,
-        eligibility,
-      ),
-    );
+    const response = await api.findLatestGefMandatoryCriteria();
+    if (response?.data?.version) {
+      newDeal.mandatoryVersionId = response.data.version;
+    }
+
+    const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
 
     const application = await applicationCollection.findOne({
       _id: ObjectId(String(createdApplication.insertedId)),
     });
 
-    res.status(201)
-      .json(application);
+    res.status(201).json(application);
   }
 };
 
 exports.getAll = async (req, res) => {
   const collection = await db.getCollection(dealsCollection);
 
-  const doc = await collection.find({
-    dealType: DEAL_TYPE.GEF,
-  }).toArray();
+  const doc = await collection.find({ dealType: DEAL_TYPE.GEF, }).toArray();
 
   if (doc.length && doc.supportingInformation) {
     doc.supportingInformation.status = supportingInfoStatus(doc.supportingInformation);
   }
 
-  res.status(200)
-    .send({
-      items: doc,
-    });
+  res.status(200).send({
+    items: doc,
+  });
 };
 
 exports.getById = async (req, res) => {
   const collection = await db.getCollection(dealsCollection);
 
-  const doc = await collection.findOne({
-    _id: ObjectId(String(req.params.id)),
-  });
+  const doc = await collection.findOne({ _id: ObjectId(String(req.params.id)) });
 
   if (doc) {
     if (doc.supportingInformation) {
@@ -107,8 +86,7 @@ exports.getById = async (req, res) => {
     }
     res.status(200).send(doc);
   } else {
-    res.status(204)
-      .send();
+    res.status(204).send();
   }
 };
 
@@ -118,11 +96,9 @@ exports.getStatus = async (req, res) => {
     _id: ObjectId(String(req.params.id)),
   });
   if (doc) {
-    res.status(200)
-      .send({ status: doc.status });
+    res.status(200).send({ status: doc.status });
   } else {
-    res.status(204)
-      .send();
+    res.status(204).send();
   }
 };
 
@@ -131,7 +107,7 @@ exports.update = async (req, res) => {
   const update = new Application(req.body);
   const validateErrs = validateApplicationReferences(update);
   if (validateErrs) {
-    return res.status(422).send((validateErrs));
+    return res.status(422).send(validateErrs);
   }
 
   // TODO: DTFS2-4987 Write unit tests for editorId
@@ -151,15 +127,14 @@ exports.update = async (req, res) => {
   const result = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(req.params.id)) } },
     updateAction,
-    { returnOriginal: false },
+    { returnOriginal: false }
   );
   let response;
   if (result.value) {
     response = result.value;
   }
 
-  return res.status(utils.mongoStatus(result))
-    .send(response);
+  return res.status(utils.mongoStatus(result)).send(response);
 };
 
 exports.updateSupportingInformation = async (req, res) => {
@@ -176,8 +151,8 @@ exports.updateSupportingInformation = async (req, res) => {
       // set the updatedAt property to the current time in EPOCH format
       $set: { updatedAt: Date.now() },
       // insert new documents into the supportingInformation object -> array. i.e. supportingInformation.manualInclusion
-      $push: { [`supportingInformation.${field}`]: application }
-    }
+      $push: { [`supportingInformation.${field}`]: application },
+    },
   );
 
   let response;
@@ -190,17 +165,11 @@ exports.updateSupportingInformation = async (req, res) => {
 
 const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   const {
-    maker,
-    status: previousStatus,
-    bankInternalRefName,
-    exporter,
+    maker, status: previousStatus, bankInternalRefName, exporter
   } = existingApplication;
 
   // get maker user details
-  const {
-    firstname: firstName = '',
-    surname = '',
-  } = maker;
+  const { firstname: firstName = '', surname = '' } = maker;
 
   // get exporter name
   const { companyName = '' } = exporter;
@@ -252,7 +221,7 @@ exports.changeStatus = async (req, res) => {
   const updatedDocument = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(dealId)) } },
     { $set: applicationUpdate },
-    { returnOriginal: false },
+    { returnOriginal: false }
   );
 
   let response;
@@ -267,10 +236,7 @@ exports.changeStatus = async (req, res) => {
   }
 
   // If status of correct type, send update email
-  if ([DEAL_STATUS.READY_FOR_APPROVAL,
-    DEAL_STATUS.CHANGES_REQUIRED,
-    DEAL_STATUS.SUBMITTED_TO_UKEF]
-    .includes(status)) {
+  if ([DEAL_STATUS.READY_FOR_APPROVAL, DEAL_STATUS.CHANGES_REQUIRED, DEAL_STATUS.SUBMITTED_TO_UKEF].includes(status)) {
     const { user } = req;
     await sendStatusUpdateEmail(user, existingApplication, status);
   }
@@ -279,9 +245,7 @@ exports.changeStatus = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const applicationCollection = await db.getCollection(
-    dealsCollection,
-  );
+  const applicationCollection = await db.getCollection(dealsCollection);
   const applicationResponse = await applicationCollection.findOneAndDelete({
     _id: ObjectId(String(req.params.id)),
   });
@@ -290,9 +254,7 @@ exports.delete = async (req, res) => {
     const query = await db.getCollection(facilitiesCollection);
     await query.deleteMany({ dealId: ObjectId(req.params.id) });
   }
-  res
-    .status(utils.mongoStatus(applicationResponse))
-    .send(applicationResponse.value ? applicationResponse.value : null);
+  res.status(utils.mongoStatus(applicationResponse)).send(applicationResponse.value ? applicationResponse.value : null);
 };
 
 const dealsFilters = (user, filters = []) => {
@@ -315,12 +277,7 @@ const dealsFilters = (user, filters = []) => {
   return result;
 };
 
-exports.findDeals = async (
-  requestingUser,
-  filters,
-  start = 0,
-  pagesize = 0,
-) => {
+exports.findDeals = async (requestingUser, filters, start = 0, pagesize = 0) => {
   const sanitisedFilters = dealsFilters(requestingUser, filters);
 
   const collection = await db.getCollection(dealsCollection);
@@ -337,10 +294,7 @@ exports.findDeals = async (
       {
         $facet: {
           count: [{ $count: 'total' }],
-          deals: [
-            { $skip: start },
-            ...(pagesize ? [{ $limit: pagesize }] : []),
-          ],
+          deals: [{ $skip: start }, ...(pagesize ? [{ $limit: pagesize }] : [])],
         },
       },
       { $unwind: '$count' },
