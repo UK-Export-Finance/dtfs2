@@ -16,8 +16,9 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     const termStoreResponse: TermStoreResponse[] = await Promise.all(
       eStoreData.facilityIdentifiers.map((id: number) => {
         if (id) {
-          return addFacilityToTermStore({ id: id.toString() })
+          return addFacilityToTermStore({ id: id.toString() });
         }
+        return id;
       }),
     );
     if (termStoreResponse.every((term) => term?.status === 201)) {

@@ -18,6 +18,9 @@ const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
+const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
+api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
+
 describe('send-deal-submit-emails - GEF', () => {
   const emailAcknowledgementAinMin = {
     pimEmailResponse: {
@@ -72,7 +75,7 @@ describe('send-deal-submit-emails - GEF', () => {
 
       const facilityLists = gefFacilitiesList(mappedDeal.facilities);
 
-      const expectedEmailVariables = generateAinMinConfirmationEmailVars(
+      const expectedEmailVariables = await generateAinMinConfirmationEmailVars(
         mappedDeal,
         facilityLists,
       );
@@ -141,7 +144,7 @@ describe('send-deal-submit-emails - GEF', () => {
 
       const facilityLists = gefFacilitiesList(mappedDeal.facilities);
 
-      const expectedEmailVariables = generateAinMinConfirmationEmailVars(
+      const expectedEmailVariables = await generateAinMinConfirmationEmailVars(
         mappedDeal,
         facilityLists,
       );

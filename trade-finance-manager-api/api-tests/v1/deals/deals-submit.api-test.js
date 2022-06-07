@@ -52,6 +52,9 @@ const createSubmitBody = (mockDeal) => ({
 
 const updateGefFacilitySpy = jest.fn(() => Promise.resolve({}));
 
+const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
+externalApis.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
