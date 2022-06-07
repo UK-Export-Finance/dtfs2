@@ -4,24 +4,16 @@
  * Purpose of this script is to migrate GEF deals to TFM.
  * Since GEF deals are not subjected to execution on Workflow.
  */
+
+const axios = require('axios');
+const CONSTANTS = require('../constant');
 const {
   getCollection,
   disconnect,
 } = require('../helpers/database');
-const {
-  getDDMMYYYY,
-  epochInSeconds,
-} = require('../helpers/date');
-const {
-  getDealTfmStage,
-  getDealProduct,
-  getProbabilityOfDefault,
-  getexporterCreditRating,
-} = require('../helpers/deal');
-const { ObjectId } = require('mongodb');
-const CONSTANTS = require('../constant');
 
 const version = '0.0.1';
+const { TFM_API } = process.env;
 
 // ******************** DEALS *************************
 
@@ -37,116 +29,62 @@ const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL
  * @param {Object} filter Mongo filter
  * @returns {Object} Collection object
  */
-const getTfmDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, filter);
 
-/**
- * Save deal to `tfm-deals` collection.
- * @param {Object} deal Deal object
- * @returns {Boolean} Execution status
- */
-const setTfmDeal = (deal) => new Promise((response, reject) => {
-  getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, null, true)
-    .then((collection) => collection.insertOne(deal))
-    .then((result) => response(result))
-    .catch((error) => reject(error));
-});
-
-/**
- * Construct deal's `dealSnapshot` object.
- * @param {Object} deal Deal object
- * @returns {Object} dealSnapshot Deal snapshot
- */
-const buildDealsnapshot = (deal) => (
-  {
-    dealSnapshot: {
-      ...deal,
-    }
-  }
-);
-
-/**
- * Construct deal's `tfm` object.
- * @param {Object} deal Deal object
- * @returns {Object} tfm TFM Object
- */
-const buildDealTfm = (deal) => (
-  {
-    tfm: {
-      dateReceived: getDDMMYYYY(deal.submissionDate),
-      dateReceivedTimestamp: epochInSeconds(deal.submissionDate),
-      product: getDealProduct(deal),
-      stage: getDealTfmStage(deal),
-      lossGivenDefault: CONSTANTS.DEAL.LOSS_GIVEN_DEFAULT.DEFAULT,
-      exporterCreditRating: getexporterCreditRating(deal),
-      probabilityOfDefault: getProbabilityOfDefault(deal),
-      lastUpdated: new Date().valueOf(),
-      activities: [],
-      tasks: [],
-      parties: {
-        exporter: {
-          partyUrn: '',
-          partyUrnRequired: true
-        },
-        buyer: {
-          partyUrn: '',
-          partyUrnRequired: false
-        },
-        indemnifier: {
-          partyUrn: '',
-          partyUrnRequired: false
-        },
-        agent: {
-          partyUrn: '',
-          partyUrnRequired: false
-        }
-      },
-      estore: {
-        siteName: 0
-      }
-    }
-  }
-);
-
-/**
- * Initiates object creation and save for all the deal to
- * `tfm-deals` collection.
- * @returns {Boolean} Execution status
- */
-const createTfmDeal = async () => {
+const submitTfmDeal = async () => {
   console.info('\x1b[33m%s\x1b[0m', '➕ 1. Deals', '\n');
 
   let counter = 0;
-  let object;
   const filter = {
     dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+  };
+  const checker = {
+    username: 'BANK1_CHECKER1',
+    roles: ['checker'],
+    bank: {
+      id: '9',
+      name: 'UKEF test bank (Delegated)',
+      mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
+      emails: [
+        'maker1@ukexportfinance.gov.uk',
+        'checker1@ukexportfinance.gov.uk'
+      ],
+      companiesHouseNo: 'UKEF0001',
+      partyUrn: '00318345'
+    },
+    lastLogin: String(new Date().valueOf()),
+    firstname: 'Abhi',
+    surname: 'Markan',
+    email: 'checker1@ukexportfinance.gov.uk',
+    timezone: 'Europe/London',
+    'user-status': 'active',
+    _id: '627b70305ac41e001d37294a',
   };
 
   return getDeals(filter)
     .then(async (deals) => {
       const insertions = deals.map(async (deal) => {
-        const dealSnapshot = buildDealsnapshot(deal);
-        const tfm = buildDealTfm(deal);
-
-        object = {
-          _id: ObjectId(deal._id),
-          ...dealSnapshot,
-          ...tfm,
-        };
-
-        await setTfmDeal(object)
+        await axios({
+          method: 'put',
+          url: `${TFM_API}/v1/deals/submit`,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          data: {
+            dealId: deal._id,
+            dealType: deal.dealType,
+            checker,
+          },
+        })
           .then((inserted) => {
-            if (!inserted) {
-              console.error('\x1b[31m%s\x1b[0m', `🚩 Failed ${counter}/${deals.length}`);
-            } else {
+            if (inserted.status === 200) {
               counter += 1;
               console.info('\x1b[33m%s\x1b[0m', `✅ Inserted ${counter}/${deals.length}`);
+              Promise.resolve(inserted);
+            } else {
+              Promise.reject(new Error('\x1b[31m%s\x1b[0m', `🚩 Error inserting deal ${inserted}`));
             }
-            return Promise.resolve(inserted);
           })
-          .catch(() => {
-            console.error('\x1b[31m%s\x1b[0m', `🚩 Error inserting deal ${deal._id}`);
-            return Promise.reject(new Error(`Error inserting deal ${deal._id}`));
-          });
+          .catch((error) => Promise.reject(new Error('\x1b[31m%s\x1b[0m', `🚩 Error inserting deal ${error}`)));
       });
 
       return Promise.all(insertions)
@@ -168,7 +106,7 @@ const createTfmDeal = async () => {
 const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating GEF TFM migration v${version}.`, '\n\n');
 
-  createTfmDeal()
+  submitTfmDeal()
     .then((result) => {
       if (result) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully inserted ${result} TFM deals.\n`);
     })
