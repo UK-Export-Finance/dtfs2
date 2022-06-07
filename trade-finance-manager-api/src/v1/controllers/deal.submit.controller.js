@@ -66,6 +66,7 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
+  const migrationScript = Boolean(process.env.DATA_MIGRATION_SCRIPT);
   console.info('UKEF IDs verified');
 
   if (!deal) {
@@ -79,17 +80,19 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
 
-  if (firstDealSubmission) {
+  if (firstDealSubmission || migrationScript) {
     await updatePortalDealStatus(mappedDeal);
     const dealWithTfmData = await addTfmDealData(mappedDeal);
     const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData);
     const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn);
     const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions);
     const updatedDealWithCreateEstore = await createEstoreFolders(updatedDealWithUpdatedFacilities);
+    const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
     if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
+      // Below is commented soley for the purpose of GEF TFM data migration
+      // const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       /**
        * Current requirement only allows AIN & MIN deals to be sent to ACBS
@@ -257,13 +260,14 @@ const submitDealPUT = async (req, res) => {
   let deal;
 
   const { status: canSubmitDealAfterUkefIds, message } = await dealHasAllUkefIds(dealId);
+  const migrationScript = Boolean(process.env.DATA_MIGRATION_SCRIPT);
   // check if the deal has been migrated from Portal V1 to Portal v2
-  if (message === 'Migrated deal') {
+  if (message === 'Migrated deal' && !migrationScript) {
     console.info('Submitting a migrated deal', dealId);
     deal = await submitMigratedDeal(dealId, dealType, checker);
   } else {
-    console.info('Submitting a brand new deal', dealId);
-    if (canSubmitDealAfterUkefIds) {
+    console.info('Submitting a brand new deal', dealId, canSubmitDealAfterUkefIds);
+    if (canSubmitDealAfterUkefIds || migrationScript) {
       deal = await submitDealAfterUkefIds(dealId, dealType, checker);
     } else {
       deal = await submitDealBeforeUkefIds(dealId, dealType);
