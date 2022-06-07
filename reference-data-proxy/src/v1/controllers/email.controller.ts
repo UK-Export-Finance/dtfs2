@@ -6,7 +6,7 @@ import axios from 'axios';
 dotenv.config();
 
 const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
-const notifyKey: any = process.env.GOV_NOTIFY_API_KEY;
+const notifyKey: any = '0';
 const notifyClient = new NotifyClient(notifyKey);
 
 export const emailNotification = async (req: Request, res: Response) => {

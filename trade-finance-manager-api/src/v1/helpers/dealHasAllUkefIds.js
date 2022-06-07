@@ -8,8 +8,18 @@ const CONSTANTS = require('../../constants');
  */
 const dealHasAllUkefIds = async (dealId) => {
   const portalDeal = await findOnePortalDeal(dealId);
-  // check if the deal has NOT been migrated
-  if (!Object.prototype.hasOwnProperty.call(portalDeal, 'dataMigration')) {
+  const migrationScript = Boolean(process.env.DATA_MIGRATION_SCRIPT);
+  console.log('===', migrationScript);
+  /**
+   * Checks if the deals is migrated or not,
+   * only whe the deal migration is not running i.e. set to `false`
+   */
+
+  const migrated = migrationScript
+    ? false
+    : Object.prototype.hasOwnProperty.call(portalDeal, 'dataMigration');
+
+  if (!migrated) {
     const tfmDeal = await findOneTfmDeal(dealId);
 
     if (tfmDeal && tfmDeal.dealSnapshot && tfmDeal.dealSnapshot.facilities) {

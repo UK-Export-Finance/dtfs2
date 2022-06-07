@@ -10,17 +10,9 @@ const CONSTANTS = require('../constant');
  */
 const getDealTfmStage = (deal) => {
   if (deal.status === CONSTANTS.DEAL.PORTAL_STATUS.SUBMITTED_TO_UKEF || deal.status === CONSTANTS.DEAL.PORTAL_STATUS.UKEF_ACKNOWLEDGED) {
-    if (deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
-      return CONSTANTS.DEAL.TFM_STATUS.CONFIRMED;
-    }
-
-    if (deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA) {
-      return CONSTANTS.DEAL.TFM_STATUS.APPLICATION;
-    }
-
-    if (deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
-      return CONSTANTS.DEAL.TFM_STATUS.CONFIRMED;
-    }
+    return deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN || deal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+      ? CONSTANTS.DEAL.TFM_STATUS.CONFIRMED
+      : CONSTANTS.DEAL.TFM_STATUS.APPLICATION;
   }
 
   if (deal.status === CONSTANTS.DEAL.PORTAL_STATUS.ABANDONED) {
