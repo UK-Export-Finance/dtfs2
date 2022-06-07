@@ -34,8 +34,16 @@ const submitTfmDeal = async () => {
   console.info('\x1b[33m%s\x1b[0m', '➕ 1. Deals', '\n');
 
   let counter = 0;
+  /**
+   * AND condition
+   * 1. Deal type : GEF
+   * 2. Property exists : dataMigration
+   */
   const filter = {
-    dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+    $and: [
+      { dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF },
+      { dataMigration: { $exists: true } }
+    ]
   };
   const checker = {
     username: 'BANK1_CHECKER1',
@@ -113,7 +121,7 @@ const migrate = () => {
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {
-      console.error('\n\x1b[31m%s\x1b[0m', '🚩 Migration failed.\n', error);
+      console.error('\n\x1b[31m%s\x1b[0m', '🚩 Migration failed.\n', { error });
       process.exit(1);
     });
 };
