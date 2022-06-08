@@ -15,6 +15,15 @@
     {% set statusClass = 'govuk-tag--green' %}
   {% endif %}
 
+  {% if decision === 'Proceed' %}
+    {% set statusClass = 'govuk-tag--green' %}
+  {% endif %}
+
+  {% if decision === 'Withdraw' %}
+    {% set decision = 'Withdrawn' %}
+    {% set statusClass = 'govuk-tag--red' %}
+  {% endif %}
+
   {{govukTag({
     text: decision,
     classes: statusClass,

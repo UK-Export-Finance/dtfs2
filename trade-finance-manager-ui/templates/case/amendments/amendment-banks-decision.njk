@@ -21,12 +21,7 @@
 
           {% if bankDecision %}
 
-            {% set banksDecisionSubmittedComponentData = {
-              decision: banksDecision.banksDecision.decision,
-              user: banksDecision.banksDecision.user
-            } %}
-
-            {{banksDecisionSubmitted.render(banksDecisionSubmittedComponentData)}}
+            {{banksDecisionSubmitted.render(amendment)}}
 
           {% else %}
 

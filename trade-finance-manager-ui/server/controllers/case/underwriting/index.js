@@ -69,6 +69,13 @@ const getUnderwriterPage = async (req, res) => {
       amendment.ukefDecision.submittedAt = `${date} at ${time}`;
     }
     amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+
+    if (amendment?.bankDecision?.receivedDate) {
+      amendment.bankDecision.receivedDateFormatted = format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd MMM yyyy');
+    }
+    if (amendment?.bankDecision?.effectiveDate) {
+      amendment.bankDecision.effectiveDateFormatted = format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd MMM yyyy');
+    }
   }
 
   return res.render('case/underwriting/underwriting.njk', {
