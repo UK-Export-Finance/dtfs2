@@ -63,11 +63,31 @@
 
             {% if amendment.requireUkefApproval === 'Yes' %}
               {% set banksDecisionHtml %}
-                {{govukTag({
-                  text: amendment.banksDecision,
-                  classes: "govuk-tag--yellow",
-                  attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
-                })}}
+                {% if amendment.bankDecision.decision === 'Proceed'%}
+                       {{govukTag({
+                        text: "Proceed",
+                        classes: "govuk-tag--green",
+                        attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
+                      })}}
+                    {% elif amendment.bankDecision.decision === 'Withdraw' %}
+                      {{govukTag({
+                        text: "Withdrawn",
+                        classes: "govuk-tag--red",
+                        attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
+                      })}}
+                    {% elif amendment.isDeclined %}
+                      {{govukTag({
+                        text: "Not applicable",
+                        classes: "govuk-tag--red",
+                        attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
+                      })}}
+                    {% else %}
+                      {{govukTag({
+                        text: "Awaiting decision",
+                        classes: "govuk-tag--yellow",
+                        attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
+                      })}}
+                    {% endif %}
               {% endset %}
               {% set bankDecision = { html: banksDecisionHtml, rowspan: 2, classes: "gov-table__grey-table-column gov-table_cell-vertical-align-middle" } %}
               {% set defaultCoverEndDate = (defaultCoverEndDate.push(bankDecision), defaultCoverEndDate) %}
@@ -99,11 +119,31 @@
               {% set banksDecisionHtml = '' %}
               {% if amendment.changeCoverEndDate === false %}
                 {% set banksDecisionHtml %}
-                    {{govukTag({
-                      text: "Awaiting decision",
-                      classes: "govuk-tag--yellow",
-                      attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
-                    })}}
+                    {% if amendment.bankDecision.decision === 'Proceed'%}
+                       {{govukTag({
+                        text: "Proceed",
+                        classes: "govuk-tag--green",
+                        attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
+                      })}}
+                    {% elif amendment.bankDecision.decision === 'Withdraw' %}
+                      {{govukTag({
+                        text: "Withdrawn",
+                        classes: "govuk-tag--red",
+                        attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
+                      })}}
+                    {% elif amendment.isDeclined %}
+                      {{govukTag({
+                        text: "Not applicable",
+                        classes: "govuk-tag--red",
+                        attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
+                      })}}
+                    {% else %}
+                      {{govukTag({
+                        text: "Awaiting decision",
+                        classes: "govuk-tag--yellow",
+                        attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
+                      })}}
+                    {% endif %}
                 {% endset %}
               {% endif %}
               {% set bankDecision = { html: banksDecisionHtml, classes: "gov-table__grey-table-column gov-table_cell-vertical-align-middle", rowspan: 2 } %}

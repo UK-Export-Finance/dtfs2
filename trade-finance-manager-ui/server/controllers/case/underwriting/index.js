@@ -5,7 +5,7 @@ const leadUnderwriter = require('./lead-underwriter');
 const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
 const { getAmendmentLeadUnderwriter } = require('../amendments');
-const { userCanEditManagersDecision, userCanEditBankDecision } = require('../../helpers');
+const { userCanEditManagersDecision, userCanEditBankDecision, ukefDecisionRejected } = require('../../helpers');
 const { formattedNumber } = require('../../../helpers/number');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 
@@ -33,6 +33,16 @@ const getUnderwriterPage = async (req, res) => {
   if (amendment?.submittedByPim) {
     if (amendment?.ukefDecision) {
       amendment.ukefDecision.isEditable = userCanEditManagersDecision(amendment, user);
+      // if bank decision then set isEditable in relevant way
+      if (amendment?.bankDecision) {
+        amendment.bankDecision.isEditable = userCanEditBankDecision(amendment, user);
+      } else {
+        amendment.bankDecision = { isEditable: userCanEditBankDecision(amendment, user) };
+      }
+      // checks if declined by UKEF
+      if (amendment.ukefDecision?.submitted) {
+        amendment.ukefDecision.isDeclined = ukefDecisionRejected(amendment);
+      }
     } else {
       amendment.ukefDecision = { isEditable: userCanEditManagersDecision(amendment, user) };
     }
@@ -42,9 +52,6 @@ const getUnderwriterPage = async (req, res) => {
       isEditable: response.isEditable,
       ...response.leadUnderwriter,
     };
-    if (amendment.banksDecision) {
-      amendment.banksDecision.isEditable = userCanEditBankDecision(amendment, user);
-    }
 
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');

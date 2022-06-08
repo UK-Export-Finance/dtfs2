@@ -3,9 +3,13 @@
 
 {% import './_macros/banks-decision-submitted.njk' as banksDecisionSubmitted %}
 
-{% macro render(params) %}
+{% macro render(amendment) %}
 
-  {% set banksDecision = params.banksDecision %}
+  {% set isEditable = amendment.bankDecision.isEditable %}
+  {% set ukefDecision = amendment.ukefDecision.submitted %}
+  {% set bankDecision = amendment.bankDecision.submitted %}
+  {% set isDeclined = amendment.ukefDecision.isDeclined %}
+
 
   {% block underwriting_content %}
 
@@ -13,9 +17,9 @@
 
       <div class="govuk-grid-column-three-quarters">
 
-        {% if banksDecision.underwriterManagersDecision.decision %}
+        {% if ukefDecision %}
 
-          {% if banksDecision.banksDecision.decision %}
+          {% if bankDecision %}
 
             {% set banksDecisionSubmittedComponentData = {
               decision: banksDecision.banksDecision.decision,
@@ -26,11 +30,15 @@
 
           {% else %}
 
-            {% if banksDecision.isEditable %}
+           {% if isDeclined %}
+
+              <p class="govuk-!-margin-top-0" data-cy="amendment-bank-decision-not-applicable-readonly">Not applicable</p>
+
+            {% elif isEditable %}
               <div class="govuk-!-padding-top-0">
                 {{ govukButton({
                     text: "Add decision",
-                    href: "/case/" + banksDecision.dealId + "/facility/" + banksDecision.facilityId + "/amendment/" + banksDecision.amendmentId + "/banks-decision",
+                    href: "/case/" + amendment.dealId + "/facility/" + amendment.facilityId + "/amendment/" + amendment.amendmentId + "/banks-decision",
                     attributes: {
                       "data-cy":"add-amendment-bank-decision-link"
                     }
@@ -39,7 +47,7 @@
 
             {% else %}
 
-              <p class="govuk-!-margin-top-0" data-cy="amendment-bank-decision-not-added-readonly">{{banksDecision.isEditable }}Not added yet</p>
+              <p class="govuk-!-margin-top-0" data-cy="amendment-bank-decision-not-added-readonly">Not added yet</p>
 
             {% endif %}
 

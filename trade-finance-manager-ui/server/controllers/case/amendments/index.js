@@ -18,6 +18,14 @@ const {
   getAmendmentAddUnderwriterManagersFacilityValue,
   postAmendmentAddUnderwriterManagersFacilityValue,
 } = require('./underwriterManagerDecision.controller');
+const { getAmendmentBankDecisionChoice,
+  postAmendmentBankDecisionChoice,
+  getAmendmentBankDecisionReceivedDate,
+  postAmendmentBankDecisionReceivedDate,
+  getAmendmentBankDecisionEffectiveDate,
+  postAmendmentBankDecisionEffectiveDate,
+  getAmendmentBankDecisionCheckAnswers,
+  postAmendmentBankDecisionCheckAnswers } = require('./bankDecision.controller');
 
 module.exports = {
   getAmendmentRequestDate,
@@ -45,4 +53,12 @@ module.exports = {
   postManagersConditionsAndComments,
   getManagersConditionsAndCommentsSummary,
   postManagersConditionsAndCommentsSummary,
+  getAmendmentBankDecisionChoice,
+  postAmendmentBankDecisionChoice,
+  getAmendmentBankDecisionReceivedDate,
+  postAmendmentBankDecisionReceivedDate,
+  getAmendmentBankDecisionEffectiveDate,
+  postAmendmentBankDecisionEffectiveDate,
+  getAmendmentBankDecisionCheckAnswers,
+  postAmendmentBankDecisionCheckAnswers,
 };

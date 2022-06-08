@@ -4,6 +4,12 @@ const AMENDMENT_STATUS = {
   NOT_STARTED: 'Not started',
 };
 
+const AMENDMENT_BANK_DECISION = {
+  PROCEED: 'Proceed',
+  WITHDRAW: 'Withdraw',
+};
+
 module.exports = {
   AMENDMENT_STATUS,
+  AMENDMENT_BANK_DECISION,
 };

@@ -1,0 +1,106 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendment - Bank Decision Check answers
+{% endblock %}
+
+{% block sub_content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'amendment--error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  {% set optionsWithHTML = [] %}
+
+  {% set bankDecisionChoiceUrl %}
+      <a
+        class="govuk-link"
+        href="/case/{{ amendment.dealId }}/facility/{{ amendment.facilityId }}/amendment/{{ amendment.amendmentId }}/banks-decision"
+        aria-label="Change banks decision"
+        data-cy="amendment--change-bank-decision-link">
+        Change
+      </a>
+  {% endset %}
+
+  {% set bankDecisionChoice =
+    [
+      { text: 'Bank\'s decision' },
+      { text: decision, attributes: { "data-cy": "amendment--bank-decision-choice-response" } },
+      { html: bankDecisionChoiceUrl, attributes: { "data-cy": "amendment--bank-decision-choice-link" } }
+    ]
+  %}
+  {% set optionsWithHTML = (optionsWithHTML.push(bankDecisionChoice), optionsWithHTML) %}
+
+  {% set decisionReceivedDateUrl %}
+      <a
+        class="govuk-link"
+        href="/case/{{ amendment.dealId }}/facility/{{ amendment.facilityId }}/amendment/{{ amendment.amendmentId }}/banks-decision/received-date"
+        aria-label="Change bank's date decision received"
+        data-cy="amendment--change-date-received-link">
+        Change
+      </a>
+  {% endset %}
+
+  {% set bankDecisionReceivedDate =
+    [
+      { text: 'Date decision received' },
+      { text: receivedDate, attributes: { "data-cy": "amendment--require-approval-response" } },
+      { html: decisionReceivedDateUrl, attributes: { "data-cy": "amendment--date-received-link" } }
+    ]
+  %}
+  {% set optionsWithHTML = (optionsWithHTML.push(bankDecisionReceivedDate), optionsWithHTML) %}
+
+  {% if effectiveDate %}
+    {% set effectiveDateUrl %}
+        <a
+          class="govuk-link"
+          href="/case/{{ amendment.dealId }}/facility/{{ amendment.facilityId }}/amendment/{{ amendment.amendmentId }}/banks-decision/effective-date"
+          aria-label="Change bank's decision's effective date"
+          data-cy="amendment--change-effective-date-link">
+          Change
+        </a>
+    {% endset %}
+    {% set bankDecisionEffectiveDate =
+      [
+        { text: 'Date the amendment will be effective from' },
+        { text:  effectiveDate, attributes: { "data-cy": "amendment--effective-date-response" } },
+        { html: effectiveDateUrl, attributes: { "data-cy": "amendment--effective-date-link" } }
+      ]
+    %}
+    {% set optionsWithHTML = (optionsWithHTML.push(bankDecisionEffectiveDate), optionsWithHTML) %}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-4" data-cy="amendment--answers-heading" aria-label="Check your answers">Check your answers</h1>
+
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukTable({
+          rows: optionsWithHTML
+        }) }}
+
+        <div class="govuk-button-group govuk-!-margin-top-4">
+          {% if isEditable %}
+            {{ govukButton({
+              text: "Submit",
+              attributes: { "data-cy": "amendment--continue-button" }
+              })
+            }}
+          {% endif %}
+          <a class="govuk-link" href="/case/{{ amendment.dealId }}/underwriting" data-cy="amendment--cancel-button">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

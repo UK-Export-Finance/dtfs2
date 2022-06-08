@@ -1,6 +1,6 @@
 const { format, fromUnixTime } = require('date-fns');
 const api = require('../../api');
-const { getTask, showAmendmentButton } = require('../helpers');
+const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
@@ -203,6 +203,10 @@ const formatAmendmentDetails = (allAmendments) => {
 
       if (value?.changeFacilityValue && value?.currentValue) {
         item.currentValue = `${value.currency} ${formattedNumber(value.currentValue)}`;
+      }
+      // if ukef for both if both amendments, or for single if only one amendment
+      if (value?.ukefDecision?.submitted) {
+        item.isDeclined = ukefDecisionRejected(value);
       }
       allCompletedAmendments.push(item);
     });

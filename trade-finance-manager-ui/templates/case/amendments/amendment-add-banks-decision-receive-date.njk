@@ -1,0 +1,93 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendment - What date did UKEF receive bank's decision
+{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+          'data-cy': 'amendment--error-summary'
+        },
+        classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+      }) }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--banks-decision-receive-date-heading" aria-label="What date did UKEF receive the bank’s decision??">What date did UKEF receive the bank’s decision?</h1>
+
+
+   <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {{ govukDateInput({
+            id: "bankDecisionDate",
+            namePrefix: "amendment--bank-decision-date",
+            hint: {
+              text: "For example, 31 3 1980",
+              attributes: {
+                "data-cy": "receive-bank-decision-date-hint"
+              }
+            },
+            errorMessage: errors and errors.fieldErrors.bankDecisionDate and {
+              text: errors.fieldErrorsbankDecisionDate.text,
+              attributes: {
+                'data-cy': 'amendment--inline-error'
+              }
+            },
+            items: [
+              {
+                label: "Day",
+                classes: errors.fieldErrors.bankDecisionDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+                name: "day",
+                value: bankDecisionDateDay,
+                attributes: {
+                  'data-cy': "amendment--bank-decision-date-day"
+                }
+              },
+              {
+                label: "Month",
+                classes: errors.fieldErrors.bankDecisionDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+                name: "month",
+                value: bankDecisionDateMonth,
+                attributes: {
+                  'data-cy': "amendment--bank-decision-date-month"
+                }
+              },
+              {
+                label: "Year",
+                classes: errors.fieldErrors.bankDecisionDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+                name: "year",
+                value: bankDecisionDateYear,
+                attributes: {
+                  'data-cy': "amendment--bank-decision-date-year"
+                }
+              }
+            ]
+          }) }}
+
+          <div class="govuk-button-group">
+            {% if isEditable %}
+              {{ govukButton({
+                text: "Continue",
+                attributes: {
+                    "data-cy": "amendment--continue-button"
+                }
+                })
+              }}
+            {% endif %}
+            <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ amendment.dealId }}/underwriting" data-cy="amendment--cancel-button">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+{% endblock %}
