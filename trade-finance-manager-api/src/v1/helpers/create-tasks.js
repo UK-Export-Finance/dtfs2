@@ -1,7 +1,11 @@
 const CONSTANTS = require('../../constants');
 
+const migrationScript = Boolean(process.env.DATA_MIGRATION_SCRIPT);
+
 const NEW_TASK = ({
-  status: CONSTANTS.TASKS.STATUS.CANNOT_START,
+  status: migrationScript
+    ? CONSTANTS.TASKS.STATUS.COMPLETED
+    : CONSTANTS.TASKS.STATUS.CANNOT_START,
   assignedTo: {
     userId: CONSTANTS.TASKS.UNASSIGNED,
     userFullName: CONSTANTS.TASKS.UNASSIGNED,
@@ -52,7 +56,9 @@ const createGroupTasks = (
       // only the first task in the first group can be started/edited straight away.
       if (groupId === 1 && taskIdCount === 1) {
         task.canEdit = true;
-        task.status = CONSTANTS.TASKS.STATUS.TO_DO;
+        task.status = migrationScript
+          ? CONSTANTS.TASKS.STATUS.COMPLETED
+          : CONSTANTS.TASKS.STATUS.TO_DO;
       }
 
       mappedTasks.push(task);

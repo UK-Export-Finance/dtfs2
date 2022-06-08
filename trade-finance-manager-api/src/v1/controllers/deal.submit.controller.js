@@ -99,7 +99,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
        * This calls CREATES Deal & Facility ACBS records
        */
       if (dealController.canDealBeSubmittedToACBS(mappedDeal.submissionType)) {
-        await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+        // await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
 
       const { firstTaskEmail } = await sendDealSubmitEmails(dealWithTasks);

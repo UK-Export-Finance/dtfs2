@@ -27,7 +27,7 @@ const addTfmDealData = async (deal) => {
       ...addDealPricingAndRisk(deal),
     },
   };
-
+  console.log({ dealUpdate });
   const updatedDeal = await api.updateDeal(dealId, dealUpdate);
 
   return {
