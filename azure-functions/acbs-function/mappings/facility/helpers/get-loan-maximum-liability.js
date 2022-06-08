@@ -15,19 +15,9 @@ const getLoanMaximumLiability = (amount, facility, dealType) => {
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
     ukefExposure = amount * 0.10;
   } else {
-    let { disbursementAmount, coveredPercentage } = facility.facilitySnapshot;
-
-    if (typeof disbursementAmount !== 'number') {
-      disbursementAmount = disbursementAmount.replace(/,/g, '');
-    }
-
-    if (typeof coveredPercentage !== 'number') {
-      coveredPercentage = coveredPercentage.replace(/,/g, '');
-    }
-
-    // BSS/EWCS
+  // BSS/EWCS
     ukefExposure = facility.facilitySnapshot.type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN
-      ? (disbursementAmount * (coveredPercentage / 100)) // EWCS
+      ? (facility.facilitySnapshot.disbursementAmount * (facility.facilitySnapshot.coveredPercentage / 100)) // EWCS
       : amount; // BSS
   }
 
