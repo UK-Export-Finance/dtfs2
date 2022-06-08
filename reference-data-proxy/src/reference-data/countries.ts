@@ -162,9 +162,16 @@ export const COUNTRIES: Country[] = [
     code: 'BGR',
   },
   {
+    id: 854,
+    name: 'Burkina Faso',
+    code: 'BFA',
+    disabled: true,
+  },
+  {
     id: 104,
     name: 'Burma or Myanmar',
     code: 'MMR',
+    disabled: true,
   },
   {
     id: 108,
