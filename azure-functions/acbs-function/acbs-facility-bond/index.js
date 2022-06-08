@@ -22,9 +22,9 @@ module.exports = df.orchestrator(function* createACBSfacilityBond(context) {
   const { facilitySnapshot } = facility;
 
   // BOND specific data
-  const convenantCode = facilitySnapshot.currency.id === 'GDP'
-    ? CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_GDP
-    : CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_NON_GDP;
+  const convenantCode = facilitySnapshot.currency.id === 'GBP'
+    ? CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_GBP
+    : CONSTANTS.FACILITY.COVENANT_TYPE.CHARGEABLE_AMOUNT_NON_GBP;
 
   // Facility Covenant
   const acbsFacilityBondCovenantInput = mappings.facility.facilityCovenant(deal, facility, convenantCode);
