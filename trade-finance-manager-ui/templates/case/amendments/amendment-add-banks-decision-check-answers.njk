@@ -33,7 +33,7 @@
 
   {% set bankDecisionChoice =
     [
-      { text: 'Bank\'s decision' },
+      { text: 'Bank\'s decision', attributes: { "data-cy": "amendment--bank-decision-choice-heading" } },
       { text: decision, attributes: { "data-cy": "amendment--bank-decision-choice-response" } },
       { html: bankDecisionChoiceUrl, attributes: { "data-cy": "amendment--bank-decision-choice-link" } }
     ]
@@ -52,9 +52,9 @@
 
   {% set bankDecisionReceivedDate =
     [
-      { text: 'Date decision received' },
-      { text: receivedDate, attributes: { "data-cy": "amendment--require-approval-response" } },
-      { html: decisionReceivedDateUrl, attributes: { "data-cy": "amendment--date-received-link" } }
+      { text: 'Date decision received', attributes: { "data-cy": "amendment--bank-decision-received-heading" } },
+      { text: receivedDate, attributes: { "data-cy": "amendment--bank-decision-received-response" } },
+      { html: decisionReceivedDateUrl, attributes: { "data-cy": "amendment--bank-decision-received-link" } }
     ]
   %}
   {% set optionsWithHTML = (optionsWithHTML.push(bankDecisionReceivedDate), optionsWithHTML) %}
@@ -71,9 +71,9 @@
     {% endset %}
     {% set bankDecisionEffectiveDate =
       [
-        { text: 'Date the amendment will be effective from' },
-        { text:  effectiveDate, attributes: { "data-cy": "amendment--effective-date-response" } },
-        { html: effectiveDateUrl, attributes: { "data-cy": "amendment--effective-date-link" } }
+        { text: 'Date the amendment will be effective from', attributes: { "data-cy": "amendment--bank-decision-effective-heading" } },
+        { text:  effectiveDate, attributes: { "data-cy": "amendment--bank-decision-effective-response" } },
+        { html: effectiveDateUrl, attributes: { "data-cy": "amendment--bank-decision-effective-link" } }
       ]
     %}
     {% set optionsWithHTML = (optionsWithHTML.push(bankDecisionEffectiveDate), optionsWithHTML) %}
@@ -83,13 +83,12 @@
     <div class="govuk-grid-column-one-half">
       <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-4" data-cy="amendment--answers-heading" aria-label="Check your answers">Check your answers</h1>
 
-      <form method="POST" autocomplete="off">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
         {{ govukTable({
           rows: optionsWithHTML
         }) }}
 
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <div class="govuk-button-group govuk-!-margin-top-4">
           {% if isEditable %}
             {{ govukButton({

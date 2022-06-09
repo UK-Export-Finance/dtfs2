@@ -204,7 +204,7 @@ const formatAmendmentDetails = (allAmendments) => {
       if (value?.changeFacilityValue && value?.currentValue) {
         item.currentValue = `${value.currency} ${formattedNumber(value.currentValue)}`;
       }
-      // if ukef for both if both amendments, or for single if only one amendment
+      // checks if coverEndDate/facility value or both on an amendment request are declined
       if (value?.ukefDecision?.submitted) {
         item.isDeclined = ukefDecisionRejected(value);
       }

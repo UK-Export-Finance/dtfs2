@@ -28,7 +28,7 @@
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
           {{ govukRadios({
-            name: "banksDecisionChoiceValue",
+            name: "banksDecision",
             items: [
               {
                 value: "Proceed",
@@ -47,8 +47,8 @@
                 }
               }
             ],
-            errorMessage: errors and errors.fieldErrors.banksDecisionChoiceValue and {
-            text: errors.fieldErrors.banksDecisionChoiceValue.text,
+            errorMessage: errors and errors.fieldErrors.banksDecision and {
+            text: errors.fieldErrors.banksDecision.text,
             attributes: {
               'data-cy': 'amendment--inline-error'
             }

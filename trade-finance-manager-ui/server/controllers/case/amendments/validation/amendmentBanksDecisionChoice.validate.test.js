@@ -1,8 +1,8 @@
-import { amendmentBankDecisionChoiceValidation } from './amendmentBanksDecisionChoice.validate';
+import { amendmentBankDecisionValidation } from './amendmentBanksDecisionChoice.validate';
 
-describe('amendmentBankDecisionChoiceValidation()', () => {
+describe('amendmentBankDecisionValidation()', () => {
   it('should return an error if no choice is selected', async () => {
-    const result = amendmentBankDecisionChoiceValidation(null);
+    const result = amendmentBankDecisionValidation(null);
 
     const expected = {
       errorsObject: {
@@ -10,17 +10,17 @@ describe('amendmentBankDecisionChoiceValidation()', () => {
           errorSummary: [
             {
               text: 'Select if the bank wants to proceed or withdraw',
-              href: '#banksDecisionChoiceValue',
+              href: '#banksDecision',
             },
           ],
           fieldErrors: {
-            banksDecisionChoiceValue: { text: 'Select if the bank wants to proceed or withdraw' },
+            banksDecision: { text: 'Select if the bank wants to proceed or withdraw' },
           },
         },
       },
       amendmentBankDecisionValidationErrors: [
         {
-          errRef: 'banksDecisionChoiceValue',
+          errRef: 'banksDecision',
           errMsg: 'Select if the bank wants to proceed or withdraw',
         },
       ],
@@ -30,7 +30,7 @@ describe('amendmentBankDecisionChoiceValidation()', () => {
   });
 
   it('should return no errors if choice selected', async () => {
-    const result = amendmentBankDecisionChoiceValidation('Proceed');
+    const result = amendmentBankDecisionValidation('Proceed');
 
     const expected = {
       errorsObject: {},

@@ -1,7 +1,7 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const api = require('../../../api');
 
-const { userCanEditManagersDecision, ukefDecisionRejected, underwritingDecisionCheck } = require('../../helpers');
+const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } = require('../../helpers');
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS, UNDERWRITER_MANAGER_DECISIONS } = require('../../../constants/decisions.constant');
 const { formattedNumber } = require('../../../helpers/number');
@@ -59,11 +59,11 @@ const postManagersConditionsAndComments = async (req, res) => {
     };
 
     // sets conditions or declined to null if neither decision is approved with conditions or declined
-    if (!underwritingDecisionCheck(amendment, UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS)) {
+    if (!validateUkefDecision(amendment.ukefDecision, UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS)) {
       payload.ukefDecision.conditions = null;
     }
 
-    if (!underwritingDecisionCheck(amendment, UNDERWRITER_MANAGER_DECISIONS.DECLINED)) {
+    if (!validateUkefDecision(amendment.ukefDecision, UNDERWRITER_MANAGER_DECISIONS.DECLINED)) {
       payload.ukefDecision.declined = null;
     }
 

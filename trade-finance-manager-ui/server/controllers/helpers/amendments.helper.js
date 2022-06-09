@@ -64,9 +64,7 @@ const ukefDecisionRejected = (amendment) => {
  * @returns {Boolean}
  * checks if amendment has declined or approved with conditions and returns true if so
  */
-const underwritingDecisionCheck = (amendment, decisionType) => {
-  const { ukefDecision } = amendment;
-
+const validateUkefDecision = (ukefDecision, decisionType) => {
   if (ukefDecision?.coverEndDate === decisionType || ukefDecision?.value === decisionType) {
     return true;
   }
@@ -80,5 +78,5 @@ module.exports = {
   userCanEditManagersDecision,
   userCanEditBankDecision,
   ukefDecisionRejected,
-  underwritingDecisionCheck,
+  validateUkefDecision,
 };

@@ -73,7 +73,7 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.getAmendmentBankDecisionChoice);
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date', amendmentsController.getAmendmentBankDecisionReceivedDate);
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date', amendmentsController.getAmendmentBankDecisionEffectiveDate);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.getAmendmentBankDecisionCheckAnswers);
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.getAmendmentBankDecisionAnswers);
 
     // POST routes
     expect(post).toHaveBeenCalledTimes(33);
@@ -120,6 +120,6 @@ describe('routes - case', () => {
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.postAmendmentBankDecisionChoice);
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date', amendmentsController.postAmendmentBankDecisionReceivedDate);
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date', amendmentsController.postAmendmentBankDecisionEffectiveDate);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.postAmendmentBankDecisionCheckAnswers);
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.postAmendmentBankDecisionAnswers);
   });
 });

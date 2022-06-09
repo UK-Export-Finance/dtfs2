@@ -21,8 +21,6 @@
   {% endif %}
 
   <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--banks-decision-effective-date-heading" aria-label="What date will the amendment be effective from?">What date will the amendment be effective from?</h1>
-
-
    <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <form method="POST">
@@ -33,11 +31,11 @@
             hint: {
               text: "For example, 31 3 1980",
               attributes: {
-                "data-cy": "receive-bank-decision-date-hint"
+                "data-cy": "amendment--receive-bank-decision-date-hint"
               }
             },
             errorMessage: errors and errors.fieldErrors.bankDecisionDate and {
-              text: errors.fieldErrorsbankDecisionDate.text,
+              text: errors.fieldErrors.bankDecisionDate.text,
               attributes: {
                 'data-cy': 'amendment--inline-error'
               }
@@ -85,7 +83,6 @@
             {% endif %}
             <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ amendment.dealId }}/underwriting" data-cy="amendment--cancel-button">Cancel</a>
           </div>
-
         </form>
       </div>
     </div>

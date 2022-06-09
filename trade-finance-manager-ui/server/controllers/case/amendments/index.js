@@ -24,8 +24,8 @@ const { getAmendmentBankDecisionChoice,
   postAmendmentBankDecisionReceivedDate,
   getAmendmentBankDecisionEffectiveDate,
   postAmendmentBankDecisionEffectiveDate,
-  getAmendmentBankDecisionCheckAnswers,
-  postAmendmentBankDecisionCheckAnswers } = require('./bankDecision.controller');
+  getAmendmentBankDecisionAnswers,
+  postAmendmentBankDecisionAnswers } = require('./bankDecision.controller');
 
 module.exports = {
   getAmendmentRequestDate,
@@ -59,6 +59,6 @@ module.exports = {
   postAmendmentBankDecisionReceivedDate,
   getAmendmentBankDecisionEffectiveDate,
   postAmendmentBankDecisionEffectiveDate,
-  getAmendmentBankDecisionCheckAnswers,
-  postAmendmentBankDecisionCheckAnswers,
+  getAmendmentBankDecisionAnswers,
+  postAmendmentBankDecisionAnswers,
 };

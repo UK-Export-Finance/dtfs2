@@ -4,14 +4,10 @@ const api = require('../../../api');
 const { AMENDMENT_STATUS, AMENDMENT_BANK_DECISION } = require('../../../constants/amendments');
 
 const { userCanEditBankDecision } = require('../../helpers');
-const { amendmentBankDecisionChoiceValidation } = require('./validation/amendmentBanksDecisionChoice.validate');
+const { amendmentBankDecisionValidation } = require('./validation/amendmentBanksDecisionChoice.validate');
 const { amendmentBankDecisionDateValidation } = require('./validation/amendmentBankDecisionDate.validate');
 
-/**
- * @param {*} req
- * @param {*} res
- * renders first page of amendment managers decision if can be edited by user
- */
+// renders first page of amendment managers decision if can be edited by user
 const getAmendmentBankDecisionChoice = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
@@ -30,14 +26,10 @@ const getAmendmentBankDecisionChoice = async (req, res) => {
   });
 };
 
-/**
- * @param {*} req
- * @param {*} res
- * posts the bank's decision for proceed or withdraw and redirects to next page in journey or renders template with errors
- */
+// posts the bank's decision for proceed or withdraw and redirects to next page in journey or renders template with errors
 const postAmendmentBankDecisionChoice = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
-  const { banksDecisionChoiceValue: decision } = req.body;
+  const { banksDecision: decision } = req.body;
   const { user } = req.session;
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
@@ -50,7 +42,7 @@ const postAmendmentBankDecisionChoice = async (req, res) => {
   const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   // checks that choice has been filled
-  const { errorsObject, amendmentBankDecisionValidationErrors } = amendmentBankDecisionChoiceValidation(decision);
+  const { errorsObject, amendmentBankDecisionValidationErrors } = amendmentBankDecisionValidation(decision);
 
   if (amendmentBankDecisionValidationErrors.length) {
     return res.render('case/amendments/amendment-add-banks-decision.njk', {
@@ -79,11 +71,7 @@ const postAmendmentBankDecisionChoice = async (req, res) => {
   }
 };
 
-/**
- * @param {*} req
- * @param {*} res
- * get request for date bank decision was received page
- */
+// get request for date bank decision was received page
 const getAmendmentBankDecisionReceivedDate = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
@@ -110,11 +98,7 @@ const getAmendmentBankDecisionReceivedDate = async (req, res) => {
   });
 };
 
-/**
- * @param {*} req
- * @param {*} res
- * posts date that decision was received or renders template with errors and redirects to next page
- */
+// posts date that decision was received or renders template with errors and redirects to next page
 const postAmendmentBankDecisionReceivedDate = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { body } = req;
@@ -167,11 +151,7 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
   }
 };
 
-/**
- * @param {*} req
- * @param {*} res
- * gets template for effective date for banks decision
- */
+// gets template for effective date for banks decision
 const getAmendmentBankDecisionEffectiveDate = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
@@ -198,11 +178,7 @@ const getAmendmentBankDecisionEffectiveDate = async (req, res) => {
   });
 };
 
-/**
- * @param {*} req
- * @param {*} res
- * posts effective date of bank decision and redirects to next page or renders template with errors
- */
+// posts effective date of bank decision and redirects to next page or renders template with errors
 const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { body } = req;
@@ -219,7 +195,9 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
   const type = 'bankDecisionDate';
   const message = 'Enter the date the amendment will be effective from';
 
-  const { errorsObject, amendmentBankDecisionDateErrors, amendmentBankRequestDate } = await amendmentBankDecisionDateValidation(body, type, message);
+  const { errorsObject,
+    amendmentBankDecisionDateErrors,
+    amendmentBankRequestDate: amendmentBankEffectiveDate } = await amendmentBankDecisionDateValidation(body, type, message);
 
   if (amendmentBankDecisionDateErrors.length) {
     return res.render('case/amendments/amendment-add-banks-decision-effective-date.njk', {
@@ -234,7 +212,7 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
   }
 
   try {
-    const payload = { bankDecision: { effectiveDate: amendmentBankRequestDate } };
+    const payload = { bankDecision: { effectiveDate: amendmentBankEffectiveDate } };
 
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
@@ -250,12 +228,8 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
   }
 };
 
-/**
- * @param {*} req
- * @param {*} res
- * gets check your answers page for bank decision
- */
-const getAmendmentBankDecisionCheckAnswers = async (req, res) => {
+// gets check your answers page for bank decision
+const getAmendmentBankDecisionAnswers = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
 
@@ -280,12 +254,8 @@ const getAmendmentBankDecisionCheckAnswers = async (req, res) => {
   });
 };
 
-/**
- * @param {*} req
- * @param {*} res
- * posts bank decision and completes process by changing status to complete and redirects to underwriting page
- */
-const postAmendmentBankDecisionCheckAnswers = async (req, res) => {
+// posts bank decision and completes process by changing status to complete and redirects to underwriting page
+const postAmendmentBankDecisionAnswers = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
 
@@ -297,13 +267,8 @@ const postAmendmentBankDecisionCheckAnswers = async (req, res) => {
     // updates amendment with status to completed and submitted flag as true on bank decision
     const payload = { status: AMENDMENT_STATUS.COMPLETED, bankDecision: { submitted: true } };
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    await api.updateAmendment(facilityId, amendmentId, payload);
 
-    if (status === 200) {
-      return res.redirect(`/case/${dealId}/underwriting`);
-    }
-
-    console.error('Unable to submit bank\'s decision');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (err) {
     console.error('There was a problem submitting the bank\'s decision', { response: err?.response?.data });
@@ -318,6 +283,6 @@ module.exports = {
   postAmendmentBankDecisionReceivedDate,
   getAmendmentBankDecisionEffectiveDate,
   postAmendmentBankDecisionEffectiveDate,
-  getAmendmentBankDecisionCheckAnswers,
-  postAmendmentBankDecisionCheckAnswers,
+  getAmendmentBankDecisionAnswers,
+  postAmendmentBankDecisionAnswers,
 };

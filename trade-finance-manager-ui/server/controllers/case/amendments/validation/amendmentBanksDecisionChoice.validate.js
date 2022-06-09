@@ -8,12 +8,12 @@ const { validationErrorHandler } = require('../../../../helpers/validationErrorH
  * if decision blank, then produces error and returns
  * if decision, then returns blank error object
  */
-const amendmentBankDecisionChoiceValidation = (decision) => {
+const amendmentBankDecisionValidation = (decision) => {
   if (!decision) {
     const amendmentBankDecisionValidationErrors = [];
 
     amendmentBankDecisionValidationErrors.push({
-      errRef: 'banksDecisionChoiceValue',
+      errRef: 'banksDecision',
       errMsg: 'Select if the bank wants to proceed or withdraw',
     });
 
@@ -27,4 +27,4 @@ const amendmentBankDecisionChoiceValidation = (decision) => {
   return { errorsObject: {}, amendmentBankDecisionValidationErrors: [] };
 };
 
-module.exports = { amendmentBankDecisionChoiceValidation };
+module.exports = { amendmentBankDecisionValidation };

@@ -3,7 +3,7 @@ const { showAmendmentButton,
   userCanEditManagersDecision,
   userCanEditBankDecision,
   ukefDecisionRejected,
-  underwritingDecisionCheck } = require('./amendments.helper');
+  validateUkefDecision } = require('./amendments.helper');
 const { generateHeadingText } = require('./generateHeadingText.helper');
 const { mapDecisionObject, mapDecisionValue } = require('./mapDecisionObject.helper');
 const { getGroup, getTask } = require('./tasks.helper');
@@ -22,5 +22,5 @@ module.exports = {
   validateCommentField,
   validateSubmittedValues,
   ukefDecisionRejected,
-  underwritingDecisionCheck,
+  validateUkefDecision,
 };
