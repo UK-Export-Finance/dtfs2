@@ -10,7 +10,7 @@ const mapFeeType = (facilitySnapshot) => {
 
   if (facilitySnapshot.premiumType) {
     return facilitySnapshot.premiumType;
-}
+  }
 
   return null;
 };
