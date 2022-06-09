@@ -35,7 +35,7 @@ const getFeeFrequency = (facility) => {
       return CONSTANTS.FACILITY.FEE_FREQUENCY_ACBS_CODE.BI_ANNUALLY;
 
     default:
-      return '';
+      return CONSTANTS.FACILITY.FEE_FREQUENCY_ACBS_CODE.ANNUALLY;
   }
 };
 
