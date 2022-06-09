@@ -23,7 +23,7 @@ const getFeeFrequencyMonths = (facility) => {
       return CONSTANTS.FACILITY.FEE_FREQUENCY_NUMERICAL_VALUE.ANNUALLY;
 
     default:
-      return '';
+      return CONSTANTS.FACILITY.FEE_FREQUENCY_NUMERICAL_VALUE.ANNUALLY;
   }
 };
 
