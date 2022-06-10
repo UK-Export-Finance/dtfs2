@@ -66,7 +66,7 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
       if (amendment.changeFacilityValue) {
         return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value/managers-decision`);
       }
-      return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-approval`);
+      return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions`);
     }
     console.error('Unable to add the underwriter managers decision');
     return res.redirect(`/case/${dealId}/underwriting`);
