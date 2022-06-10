@@ -2,10 +2,11 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
+import MOCK_DEAL from '../../../../fixtures/deal-AIN';
 import { T1_USER_1, UNDERWRITER_MANAGER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
-context('Case Underwriting - Pricing and risk', () => {
+context('Case Underwriting - Underwriter Manager\'s Decision', () => {
   let dealId;
   const dealFacilities = [];
 
@@ -145,5 +146,46 @@ context('Case Underwriting - Pricing and risk', () => {
       // text formatting is slightly different to the submitted form value
       expect(text.trim()).to.equal('Approved (with conditions)');
     });
+  });
+});
+
+context('Case Underwriting - Underwriter Manager\'s Decision AIN', () => {
+  let dealId;
+  const dealFacilities = [];
+
+  before(() => {
+    cy.insertOneDeal(MOCK_DEAL, MOCK_MAKER_TFM).then((insertedDeal) => {
+      dealId = insertedDeal._id;
+
+      const { dealType, mockFacilities } = MOCK_DEAL_MIA;
+
+      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
+      });
+
+      cy.submitDeal(dealId, dealType);
+    });
+  });
+
+  beforeEach(() => {
+    cy.login(UNDERWRITER_MANAGER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+
+    // go to underwriter managers decision page
+    partials.caseSubNavigation.underwritingLink().click();
+    partials.underwritingSubNav.underwriterManagerDecisionLink().click();
+  });
+
+  after(() => {
+    cy.deleteDeals(dealId, ADMIN_LOGIN);
+    dealFacilities.forEach((facility) => {
+      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
+    });
+  });
+
+  it('should show `not applicable` for underwriter managers decision as deal is AIN', () => {
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
+    partials.underwritingSubNav.underwritingHeading().contains('Underwriting');
+    partials.underwritingSubNav.underwritingNotApplicable().contains('Not applicable');
   });
 });
