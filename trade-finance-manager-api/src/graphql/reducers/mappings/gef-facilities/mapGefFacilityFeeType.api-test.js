@@ -29,8 +29,8 @@ describe('mapGefFacilityFeeType', () => {
     });
   });
 
-  it('should return null', () => {
-    const result = mapGefFacilityFeeType();
-    expect(result).toEqual(null);
+  it('should return feeType when none matches', () => {
+    const result = mapGefFacilityFeeType('In arrear');
+    expect(result).toEqual('In arrear');
   });
 });
