@@ -1,5 +1,5 @@
 import { showAmendmentButton } from './amendments.helper';
-import { userCanEditBankDecision, userCanEditLeadUnderwriter, userCanEditManagersDecision } from '.';
+import { userCanEditBankDecision, userCanEditLeadUnderwriter, userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } from '.';
 
 import MOCKS from '../../test-mocks/amendment-test-mocks';
 
@@ -146,5 +146,81 @@ describe('userCanEditBankDecision()', () => {
 
     const result = userCanEditBankDecision(amendment, MOCKS.MOCK_USER_PIM);
     expect(result).toEqual(true);
+  });
+});
+
+describe('ukefDecisionRejected()', () => {
+  it('should return `true` when facility value and coverEndDate are both declined', () => {
+    const result = ukefDecisionRejected(MOCKS.MOCK_AMENDMENT_BOTH_DECLINED);
+    expect(result).toEqual(true);
+  });
+
+  it('should return `false` when only one of coverEndDate or facility value is declined', () => {
+    const result = ukefDecisionRejected(MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED);
+    expect(result).toEqual(false);
+  });
+
+  it('should return `true` when only facility value is declined', () => {
+    const result = ukefDecisionRejected(MOCKS.MOCK_AMENDMENT_FACILITYVALUE);
+    expect(result).toEqual(true);
+  });
+
+  it('should return `true` when only coverEndDate is declined', () => {
+    const result = ukefDecisionRejected(MOCKS.MOCK_AMENDMENT_COVERENDDATE);
+    expect(result).toEqual(true);
+  });
+
+  it('should return `false` when only facility value is approved', () => {
+    MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
+    const result = ukefDecisionRejected(MOCKS.MOCK_AMENDMENT_FACILITYVALUE);
+    expect(result).toEqual(false);
+  });
+
+  it('should return `true` when only coverEndDate is approved', () => {
+    MOCKS.MOCK_AMENDMENT_COVERENDDATE.ukefDecision.coverEndDate = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
+    const result = ukefDecisionRejected(MOCKS.MOCK_AMENDMENT_COVERENDDATE);
+    expect(result).toEqual(false);
+  });
+});
+
+describe('validateUkefDecision()', () => {
+  it('should return `true` when facility value and coverEndDate are both declined', () => {
+    const result = validateUkefDecision(MOCKS.MOCK_AMENDMENT_BOTH_DECLINED.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    expect(result).toEqual(true);
+  });
+
+  it('should return `true` when only one of coverEndDate or facility value is declined', () => {
+    const result = validateUkefDecision(
+      MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED.ukefDecision,
+      CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED,
+    );
+    expect(result).toEqual(true);
+  });
+
+  it('should return `false` when only none of coverEndDate or facility value is declined', () => {
+    MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
+    const result = validateUkefDecision(
+      MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED.ukefDecision,
+      CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED,
+    );
+    expect(result).toEqual(false);
+  });
+
+  it('should return `true` when only facility value is declined', () => {
+    MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    const result = validateUkefDecision(MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    expect(result).toEqual(true);
+  });
+
+  it('should return `true` when only coverEndDate is declined', () => {
+    MOCKS.MOCK_AMENDMENT_COVERENDDATE.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    const result = validateUkefDecision(MOCKS.MOCK_AMENDMENT_COVERENDDATE.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    expect(result).toEqual(true);
+  });
+
+  it('should return `false` when only facility value is approved', () => {
+    MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
+    const result = validateUkefDecision(MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    expect(result).toEqual(false);
   });
 });
