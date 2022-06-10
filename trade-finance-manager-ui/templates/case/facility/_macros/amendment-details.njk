@@ -65,7 +65,7 @@
               {% set banksDecisionHtml %}
                 {{govukTag({
                   text: amendment.banksDecision,
-                  classes: "govuk-tag--yellow",
+                  classes: amendment.bankDecisionTags[amendment.banksDecision],
                   attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
                 })}}
               {% endset %}
@@ -99,11 +99,11 @@
               {% set banksDecisionHtml = '' %}
               {% if amendment.changeCoverEndDate === false %}
                 {% set banksDecisionHtml %}
-                    {{govukTag({
-                      text: "Awaiting decision",
-                      classes: "govuk-tag--yellow",
-                      attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
-                    })}}
+                  {{govukTag({
+                    text: amendment.banksDecision,
+                    classes: amendment.bankDecisionTags[amendment.banksDecision],
+                    attributes: { "data-cy": "amendment--details-"+amendment.version+"-banks-decision" }
+                  })}}
                 {% endset %}
               {% endif %}
               {% set bankDecision = { html: banksDecisionHtml, classes: "gov-table__grey-table-column gov-table_cell-vertical-align-middle", rowspan: 2 } %}

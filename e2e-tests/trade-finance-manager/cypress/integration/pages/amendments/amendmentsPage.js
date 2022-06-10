@@ -71,6 +71,8 @@ const amendmentsPage = {
         ukefDecisionFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-facility-value-decision"]`),
         currentFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-current-facility-value"]`),
         newFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-new-facility-value"]`),
+
+        bankDecisionTag: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-banks-decision"]`),
       };
     },
   },
@@ -78,6 +80,39 @@ const amendmentsPage = {
   amendmentsManagersDecisionConditions: () => cy.get('[data-cy="amendment--managers-decision-conditions"]'),
   amendmentsManagersDecisionReasons: () => cy.get('[data-cy="amendment--managers-decision-reasons"]'),
   amendmentsManagersDecisionComments: () => cy.get('[data-cy="amendment--managers-decision-comments"]'),
+
+  addBankDecisionButton: () => cy.get('[data-cy="add-amendment-bank-decision-link"]'),
+
+  amendmentBankChoiceHeading: () => cy.get('[data-cy="amendment--banks-decision-choice-heading"]'),
+  amendmentBankChoiceProceedRadio: () => cy.get('[data-cy="amendment--bank-decision-proceed-radio-button"]'),
+  amendmentBankChoiceWithdrawRadio: () => cy.get('[data-cy="amendment--bank-decision-Withdraw-radio-button"]'),
+
+  amendmentBankDecisionReceivedDateHeading: () => cy.get('[data-cy="amendment--banks-decision-receive-date-heading"]'),
+  amendmentBankDecisionReceivedDateHint: () => cy.get('[data-cy="amendment--receive-bank-decision-date-hint"]'),
+  amendmentBankDecisionReceivedDateDay: () => cy.get('[data-cy="amendment--bank-decision-date-day"]'),
+  amendmentBankDecisionReceivedDateMonth: () => cy.get('[data-cy="amendment--bank-decision-date-month"]'),
+  amendmentBankDecisionReceivedDateYear: () => cy.get('[data-cy="amendment--bank-decision-date-year"]'),
+
+  amendmentBankDecisionEffectiveDateHeading: () => cy.get('[data-cy="amendment--banks-decision-effective-date-heading"]'),
+  amendmentBankDecisionEffectiveDateHint: () => cy.get('[data-cy="amendment--receive-bank-decision-date-hint"]'),
+  amendmentBankDecisionEffectiveDateDay: () => cy.get('[data-cy="amendment--bank-decision-date-day"]'),
+  amendmentBankDecisionEffectiveDateMonth: () => cy.get('[data-cy="amendment--bank-decision-date-month"]'),
+  amendmentBankDecisionEffectiveDateYear: () => cy.get('[data-cy="amendment--bank-decision-date-year"]'),
+
+  amendmentBankDecisionCheckAnswersHeading: () => cy.get('[data-cy="amendment--answers-heading"]'),
+
+  amendmentBankDecisionCheckDecisionHeading: () => cy.get('[data-cy="amendment--bank-decision-choice-heading"]'),
+  amendmentBankDecisionCheckDecisionValue: () => cy.get('[data-cy="amendment--bank-decision-choice-response"]'),
+  amendmentBankDecisionCheckDecisionLink: () => cy.get('[data-cy="amendment--bank-decision-choice-link"]'),
+
+  amendmentBankDecisionCheckReceivedHeading: () => cy.get('[data-cy="amendment--bank-decision-received-heading"]'),
+  amendmentBankDecisionCheckReceivedValue: () => cy.get('[data-cy="amendment--bank-decision-received-response"]'),
+  amendmentBankDecisionCheckReceivedLink: () => cy.get('[data-cy="amendment--change-date-received-link"]'),
+
+  amendmentBankDecisionCheckEffectiveHeading: () => cy.get('[data-cy="amendment--bank-decision-effective-heading"]'),
+  amendmentBankDecisionCheckEffectiveValue: () => cy.get('[data-cy="amendment--bank-decision-effective-response"]'),
+  amendmentBankDecisionCheckEffectiveLink: () => cy.get('[data-cy="amendment--change-effective-date-link"]'),
+
 };
 
 module.exports = amendmentsPage;

@@ -37,61 +37,64 @@
       <h1 class="govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-2" aria-label="Conditions and comments">Conditions and comments</h1>
 
       {% set rows = [] %}
+      {% if amendment.ukefDecision.coverEndDate === 'Approved with conditions' or amendment.ukefDecision.value === 'Approved with conditions' %}
+        {% if amendment.ukefDecision.conditions %}
+          {% set ukefConditionsHtml %}
+            <div class="ukef-decision-formatted">
+              <p class="govuk-body"> {{ amendment.ukefDecision.conditions | safe }} </p>
+            <div>
+          {% endset %}
 
-      {% if amendment.ukefDecision.conditions %}
-        {% set ukefConditionsHtml %}
-          <div class="ukef-decision-formatted">
-            <p class="govuk-body"> {{ amendment.ukefDecision.conditions | safe }} </p>
-          <div>
-        {% endset %}
+          {% set labelHtml %}
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Conditions</h3>
+              <p class="govuk-body ukef-conditions--hint">  Sent to the bank. </p>
+          {% endset %}
 
-        {% set labelHtml %}
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Conditions</h3>
-            <p class="govuk-body ukef-conditions--hint">  Sent to the bank. </p>
-        {% endset %}
-
-        {% set conditionsRow = {
-          key: { html: labelHtml },
-          value: { html: ukefConditionsHtml },
-          actions: {
-            items: [
-              {
-                href: "/case/"+amendment.dealId+"/facility/"+amendment.facilityId+"/amendment/"+amendment.amendmentId+"/managers-conditions#ukef-decision-conditions",
-                text: "Change",
-                visuallyHiddenText: "Change conditions"
-              }
-            ]
-          }
-        } %}
-        {% set rows = (rows.push(conditionsRow), rows) %}
+          {% set conditionsRow = {
+            key: { html: labelHtml },
+            value: { html: ukefConditionsHtml },
+            actions: {
+              items: [
+                {
+                  href: "/case/"+amendment.dealId+"/facility/"+amendment.facilityId+"/amendment/"+amendment.amendmentId+"/managers-conditions#ukef-decision-conditions",
+                  text: "Change",
+                  visuallyHiddenText: "Change conditions"
+                }
+              ]
+            }
+          } %}
+          {% set rows = (rows.push(conditionsRow), rows) %}
+        {% endif %}
       {% endif %}
 
-      {% if amendment.ukefDecision.declined %}
-        {% set ukefDeclinedHtml %}
-          <div class="ukef-decision-formatted">
-            <p class="govuk-body"> {{ amendment.ukefDecision.declined | safe }} </p>
-          <div>
-        {% endset %}
+      {% if amendment.ukefDecision.coverEndDate === 'Declined' or amendment.ukefDecision.value === 'Declined' %}
+        {% if amendment.ukefDecision.declined %}
+          {% set ukefDeclinedHtml %}
+            <div class="ukef-decision-formatted">
+              <p class="govuk-body"> {{ amendment.ukefDecision.declined | safe }} </p>
+            <div>
+          {% endset %}
 
-        {% set labelHtml %}
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Reasons</h3>
-            <p class="govuk-body ukef-conditions--hint">  Sent to the bank. </p>
-        {% endset %}
+          {% set labelHtml %}
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Reasons</h3>
+              <p class="govuk-body ukef-conditions--hint">  Sent to the bank. </p>
+          {% endset %}
 
-        {% set declinedRow = {
-          key: { html: labelHtml },
-          value: { html: ukefDeclinedHtml },
-          actions: {
-            items: [
-              {
-                href: "/case/"+amendment.dealId+"/facility/"+amendment.facilityId+"/amendment/"+amendment.amendmentId+"/managers-conditions#ukef-decision-declined",
-                text: "Change",
-                visuallyHiddenText: "Change reasons"
-              }
-            ]
-          }
-        } %}
-        {% set rows = (rows.push(declinedRow), rows) %}
+          {% set declinedRow = {
+            key: { html: labelHtml },
+            value: { html: ukefDeclinedHtml },
+            actions: {
+              items: [
+                {
+                  href: "/case/"+amendment.dealId+"/facility/"+amendment.facilityId+"/amendment/"+amendment.amendmentId+"/managers-conditions#ukef-decision-declined",
+                  text: "Change",
+                  visuallyHiddenText: "Change reasons"
+                }
+              ]
+            }
+          } %}
+          {% set rows = (rows.push(declinedRow), rows) %}
+        {% endif %}
       {% endif %}
 
 
