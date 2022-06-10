@@ -1,6 +1,6 @@
 const { format, fromUnixTime } = require('date-fns');
 const api = require('../../api');
-const { getTask, showAmendmentButton } = require('../helpers');
+const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
@@ -185,9 +185,17 @@ const formatAmendmentDetails = (allAmendments) => {
       item.coverEndDate = value?.coverEndDate ? format(fromUnixTime(item.coverEndDate), 'dd MMMM yyyy') : null;
       item.value = value?.value ? `${value.currency} ${formattedNumber(value.value)}` : null;
       item.requireUkefApproval = value?.requireUkefApproval ? 'Yes' : 'No';
-      // TODO: update once the bank's decision has been added
-      item.banksDecision = value?.requireUkefApproval ? UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION : '';
+      // if bankDecision submitted, then adds decision, else adds awaiting decision (locally)
+      item.banksDecision = value?.bankDecision?.submitted ? value?.bankDecision?.decision : AMENDMENTS.AMENDMENT_BANK_DECISION.AWAITING_DECISION;
+      // checks if coverEndDate/facility value or both on an amendment request are declined
+      if (value?.ukefDecision?.submitted) {
+        if (ukefDecisionRejected(value)) {
+          // sets bank decision to not applicable locally
+          item.banksDecision = AMENDMENTS.AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
+        }
+      }
       item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+      item.bankDecisionTags = AMENDMENTS.BANK_DECISIONS_TAGS;
 
       if (value?.requireUkefApproval) {
         item.ukefDecisionValue = value?.ukefDecision?.submitted ? value?.ukefDecision?.value : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
@@ -204,6 +212,7 @@ const formatAmendmentDetails = (allAmendments) => {
       if (value?.changeFacilityValue && value?.currentValue) {
         item.currentValue = `${value.currency} ${formattedNumber(value.currentValue)}`;
       }
+
       allCompletedAmendments.push(item);
     });
   }

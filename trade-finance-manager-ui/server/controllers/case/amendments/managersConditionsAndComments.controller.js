@@ -1,9 +1,9 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const api = require('../../../api');
 
-const { userCanEditManagersDecision } = require('../../helpers');
+const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } = require('../../helpers');
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
-const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
+const { UNDERWRITER_MANAGER_DECISIONS_TAGS, UNDERWRITER_MANAGER_DECISIONS } = require('../../../constants/decisions.constant');
 const { formattedNumber } = require('../../../helpers/number');
 
 const getManagersConditionsAndComments = async (req, res) => {
@@ -47,6 +47,8 @@ const postManagersConditionsAndComments = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { ukefDecisionConditions, ukefDecisionDeclined, ukefDecisionComments } = req.body;
 
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+
   try {
     const payload = {
       ukefDecision: {
@@ -55,6 +57,15 @@ const postManagersConditionsAndComments = async (req, res) => {
         comments: ukefDecisionComments,
       },
     };
+
+    // sets conditions or declined to null if neither decision is approved with conditions or declined
+    if (!validateUkefDecision(amendment.ukefDecision, UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS)) {
+      payload.ukefDecision.conditions = null;
+    }
+
+    if (!validateUkefDecision(amendment.ukefDecision, UNDERWRITER_MANAGER_DECISIONS.DECLINED)) {
+      payload.ukefDecision.declined = null;
+    }
 
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
@@ -110,6 +121,8 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
 const postManagersConditionsAndCommentsSummary = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
 
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+
   try {
     const payload = {
       ukefDecision: {
@@ -123,6 +136,11 @@ const postManagersConditionsAndCommentsSummary = async (req, res) => {
         },
       },
     };
+
+    // sets amendment to complete if declined
+    if (ukefDecisionRejected(amendment)) {
+      payload.status = AMENDMENT_STATUS.COMPLETED;
+    }
 
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
