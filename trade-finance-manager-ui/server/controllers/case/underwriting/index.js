@@ -8,6 +8,7 @@ const { getAmendmentLeadUnderwriter } = require('../amendments');
 const { userCanEditManagersDecision, userCanEditBankDecision, ukefDecisionRejected } = require('../../helpers');
 const { formattedNumber } = require('../../../helpers/number');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
+const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
 
 /**
  * controller for underwriting tab
@@ -69,6 +70,7 @@ const getUnderwriterPage = async (req, res) => {
       amendment.ukefDecision.submittedAt = `${date} at ${time}`;
     }
     amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+    amendment.bankDecisionTags = BANK_DECISIONS_TAGS;
 
     if (amendment?.bankDecision?.receivedDate) {
       amendment.bankDecision.receivedDateFormatted = format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd MMM yyyy');

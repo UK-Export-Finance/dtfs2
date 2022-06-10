@@ -159,14 +159,12 @@ context('Amendments underwriting - add banks decision - declined by underwriter'
     amendmentsPage.amendmentSendToBankButton().click();
   });
 
-  it('Amendments page should show not applicable badge for banks decision since declined by underwriter', () => {
+  it('should show not applicable badge for banks decision on amendments page since declined by underwriter', () => {
     cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     caseSubNavigation.dealLink().click();
-
     caseDealPage.dealFacilitiesTable.row(dealFacilities[0]._id).facilityId().click();
-
     facilityPage.facilityTabAmendments().click();
 
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Not applicable');

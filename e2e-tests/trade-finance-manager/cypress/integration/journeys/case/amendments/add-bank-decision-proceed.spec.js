@@ -178,11 +178,11 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
-
+    cy.url().should('contain', '/banks-decision');
     amendmentsPage.continueAmendment().click();
 
+    cy.url().should('contain', '/banks-decision');
     amendmentsPage.errorSummary().contains('Select if the bank wants to proceed or withdraw');
-
     amendmentsPage.errorMessage().contains('Select if the bank wants to proceed or withdraw');
 
     amendmentsPage.cancelLink().click();
@@ -199,7 +199,6 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', '/banks-decision/received-date');
-
     amendmentsPage.amendmentBankDecisionReceivedDateHeading().contains('What date did UKEF receive the bank’s decision?');
     amendmentsPage.amendmentBankDecisionReceivedDateHint().contains('For example, 31 3 1980');
   });
@@ -209,23 +208,20 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
-
+    cy.url().should('contain', '/banks-decision');
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/received-date');
     amendmentsPage.continueAmendment().click();
 
     amendmentsPage.errorSummary().contains('Enter the date UKEF received the bank\'s decision');
-
     amendmentsPage.errorMessage().contains('Enter the date UKEF received the bank\'s decision');
 
     amendmentsPage.amendmentBankDecisionReceivedDateDay().type('05');
-
     amendmentsPage.amendmentBankDecisionReceivedDateYear().type('2022');
 
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/received-date');
     amendmentsPage.errorSummary().contains('Enter the date UKEF received the bank\'s decision');
-
     amendmentsPage.errorMessage().contains('Enter the date UKEF received the bank\'s decision');
   });
 
@@ -234,19 +230,16 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
-
+    cy.url().should('contain', '/banks-decision');
     amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/received-date');
 
     amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
-
     amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('06');
-
     amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2022');
-
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', '/banks-decision/effective-date');
-
     amendmentsPage.amendmentBankDecisionEffectiveDateHeading().contains('What date will the amendment be effective from?');
     amendmentsPage.amendmentBankDecisionEffectiveDateHint().contains('For example, 31 3 1980');
   });
@@ -256,25 +249,23 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
-
+    cy.url().should('contain', '/banks-decision');
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/received-date');
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/effective-date');
     amendmentsPage.continueAmendment().click();
 
-    amendmentsPage.continueAmendment().click();
-
-    amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/effective-date');
     amendmentsPage.errorSummary().contains('Enter the date the amendment will be effective from');
-
     amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
 
     amendmentsPage.amendmentBankDecisionEffectiveDateDay().type('05');
-
     amendmentsPage.amendmentBankDecisionEffectiveDateYear().type('2022');
-
     amendmentsPage.continueAmendment().click();
 
+    cy.url().should('contain', '/banks-decision/effective-date');
     amendmentsPage.errorSummary().contains('Enter the date the amendment will be effective from');
-
     amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
   });
 
@@ -283,23 +274,19 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
-
+    cy.url().should('contain', '/banks-decision');
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/received-date');
     amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/effective-date');
 
     amendmentsPage.amendmentBankDecisionEffectiveDateDay().clear().focused().type('05');
-
     amendmentsPage.amendmentBankDecisionEffectiveDateMonth().clear().focused().type('06');
-
     amendmentsPage.amendmentBankDecisionEffectiveDateYear().clear().focused().type('2022');
-
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', '/banks-decision/check-answers');
-
     amendmentsPage.amendmentBankDecisionCheckAnswersHeading().contains('Check your answers');
-
     amendmentsPage.amendmentBankDecisionCheckDecisionHeading().contains('Bank\'s decision');
     amendmentsPage.amendmentBankDecisionCheckDecisionValue().contains('Proceed');
     amendmentsPage.amendmentBankDecisionCheckDecisionLink().contains('Change');
@@ -318,60 +305,52 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
-
+    cy.url().should('contain', '/banks-decision');
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/received-date');
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/effective-date');
     amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/check-answers');
 
     amendmentsPage.amendmentBankDecisionCheckDecisionLink().click();
-
     cy.url().should('contain', '/banks-decision');
-
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/received-date');
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/effective-date');
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/check-answers');
     amendmentsPage.amendmentBankDecisionCheckReceivedLink().click();
 
     cy.url().should('contain', '/banks-decision/received-date');
-
     amendmentsPage.amendmentBankDecisionReceivedDateDay().invoke('attr', 'value').then((value) => {
       expect(value).to.equal('05');
     });
-
     amendmentsPage.amendmentBankDecisionReceivedDateMonth().invoke('attr', 'value').then((value) => {
       expect(value).to.equal('06');
     });
-
     amendmentsPage.amendmentBankDecisionReceivedDateYear().invoke('attr', 'value').then((value) => {
       expect(value).to.equal('2022');
     });
-
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/effective-date');
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/check-answers');
     amendmentsPage.amendmentBankDecisionCheckEffectiveLink().click();
 
     cy.url().should('contain', '/banks-decision/effective-date');
-
     amendmentsPage.amendmentBankDecisionEffectiveDateDay().invoke('attr', 'value').then((value) => {
       expect(value).to.equal('05');
     });
-
     amendmentsPage.amendmentBankDecisionEffectiveDateMonth().invoke('attr', 'value').then((value) => {
       expect(value).to.equal('06');
     });
-
     amendmentsPage.amendmentBankDecisionEffectiveDateYear().invoke('attr', 'value').then((value) => {
       expect(value).to.equal('2022');
     });
-
     amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/check-answers');
   });
 
   it('should take you to underwriting page once submit bank decision.  Amendments page should show proceed badge for banks decision', () => {
@@ -379,19 +358,17 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.addBankDecisionButton().click({ force: true });
-
+    cy.url().should('contain', '/banks-decision');
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/received-date');
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/effective-date');
     amendmentsPage.continueAmendment().click();
-
+    cy.url().should('contain', '/banks-decision/check-answers');
     amendmentsPage.underWritingSubmitButton().click();
 
     caseSubNavigation.dealLink().click();
-
     caseDealPage.dealFacilitiesTable.row(dealFacilities[0]._id).facilityId().click();
-
     facilityPage.facilityTabAmendments().click();
 
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Proceed');
