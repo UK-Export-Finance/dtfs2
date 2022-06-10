@@ -185,8 +185,7 @@ services:
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-      - ELASTIC_APM_ACTIVE=false
-      - ELASTIC_APM_ENVIRONMENT=development
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
     entrypoint: npx nodemon src/index.ts -L --max-old-space-size=300
 
   gef-ui:
