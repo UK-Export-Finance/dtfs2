@@ -22,18 +22,16 @@
 
         {{managersDecisionSubmitted.render(managersDecisionSubmittedComponentData)}}
 
-      {% elseif userCanEdit %}
+      {% elif userCanEdit %}
         <div class="separator-line govuk-!-padding-top-7">
           <p class="govuk-body-l"><a class="govuk-link govuk-link--no-visited-state" href="/case/{{ dealId }}/underwriting/managers-decision/edit" data-cy="add-decision-link">Add your decision</a></p>
         </div>
 
-      {%elseif dealType === 'Automatic Inclusion Notice'%}
+      {% elif dealType === 'Automatic Inclusion Notice' %}
         <div class="separator-line govuk-!-padding-top-7">
           <p class="govuk-!-margin-top-0" data-cy="managers-decision-not-applicable">Not applicable</p>
         </div>
       {% endif %}
-
-
     </div>
 
   </div>
