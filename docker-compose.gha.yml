@@ -176,7 +176,7 @@ services:
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-      - SENTRY_DSN=${SENTRY_DSN}
+      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
     entrypoint: npx nodemon src/index.ts -L
 
   gef-ui:
