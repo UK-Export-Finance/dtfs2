@@ -28,7 +28,6 @@ const postToEstore = async (
   apiEndpoint: string,
   apiPayload: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
   timeout = 0,
-  headers = { 'Content-Type': 'application/json' },
 ) => {
   const eStoreUrl: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_URL;
   const username: any = process.env.MULESOFT_API_UKEF_ESTORE_EA_KEY;
@@ -39,7 +38,7 @@ const postToEstore = async (
     method: 'post',
     url: `${eStoreUrl}/${apiEndpoint}`,
     auth: { username, password },
-    headers,
+    headers: { 'Content-Type': 'application/json' },
     data: apiPayload,
     timeout,
   }).catch(async (error: any) => {
@@ -64,7 +63,7 @@ const postToEstore = async (
 };
 
 export const siteExists = async (exporterName: EstoreSite): Promise<SiteExistsResponse> => {
-  const timeout = 1000 * 120; // 50 seconds timeout to handle long timeouts
+  const timeout = 1000 * 30; // 30 seconds timeout to handle long timeouts
   const response = await postToEstore(`site/exist`, [exporterName], timeout);
   return response;
 };
@@ -83,17 +82,16 @@ export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promi
 
 export const createBuyerFolder = async (siteName: string, buyerName: EstoreBuyer): Promise<BuyerFolderResponse> => {
   const timeout = 1000 * 50; // 50 seconds timeout to handle long timeouts
-  const headers = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };
-  const response = await postToEstore(`site/${siteName}/buyer`, [buyerName], timeout, headers);
+  const response = await postToEstore(`site/${siteName}/buyer`, [buyerName], timeout);
   return response;
 };
 export const createDealFolder = async (siteName: string, data: EstoreDealFolder): Promise<DealFolderResponse> => {
-  const timeout = 1000 * 120; // 50 seconds timeout to handle long timeouts
+  const timeout = 1000 * 120; // 120 seconds timeout to handle long timeouts
   const response = await postToEstore(`site/${siteName}/deal`, [data], timeout);
   return response;
 };
 export const createFacilityFolder = async (siteName: string, dealIdentifier: string, data: EstoreFacilityFolder): Promise<FacilityFolderResponse> => {
-  const timeout = 1000 * 120; // 50 seconds timeout to handle long timeouts
+  const timeout = 1000 * 120; // 120 seconds timeout to handle long timeouts
   const response = await postToEstore(`site/${siteName}/deal/${dealIdentifier}/facility`, [data], timeout);
   return response;
 };
