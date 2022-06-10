@@ -54,6 +54,18 @@ router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditio
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions/summary', amendmentsController.getManagersConditionsAndCommentsSummary);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions/summary', amendmentsController.postManagersConditionsAndCommentsSummary);
 
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.getAmendmentBankDecisionChoice);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.postAmendmentBankDecisionChoice);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date', amendmentsController.getAmendmentBankDecisionReceivedDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date', amendmentsController.postAmendmentBankDecisionReceivedDate);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date', amendmentsController.getAmendmentBankDecisionEffectiveDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date', amendmentsController.postAmendmentBankDecisionEffectiveDate);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.getAmendmentBankDecisionAnswers);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.postAmendmentBankDecisionAnswers);
+
 router.get('/:_id/parties', partiesController.getCaseParties);
 
 router.get('/:_id/parties/exporter', partiesController.getExporterPartyDetails);

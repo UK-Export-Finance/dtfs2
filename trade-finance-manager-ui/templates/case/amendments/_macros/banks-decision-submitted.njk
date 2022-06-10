@@ -1,70 +1,46 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
-{% import './status-tag.njk' as statusTag %}
 
-{% macro render(params) %}
-  {% set decision = params.decision %}
-  {% set user = params.user %}
+{% macro render(amendment) %}
+  {% set bankDecision = amendment.bankDecision.decision %}
+  {% set bankDecisionTags = amendment.bankDecisionTags %}
+  {% set effectiveDate = amendment.bankDecision.effectiveDate %}
+  {% set effectiveDateFormatted = amendment.bankDecision.effectiveDateFormatted %}
+  {% set receivedDateFormatted = amendment.bankDecision.receivedDateFormatted %}
 
-  <div class="govuk-grid-row" data-cy="amendment-bank-decision-submitted">
+
+  <div class="govuk-grid-row" data-cy="amendment--bank-decision-submitted">
       <div class="govuk-grid-column-full">
 
-      <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6 govuk-!-margin-bottom-2" data-cy="amendment-bank-decision-subheading">Decision</h4>
-
       <div class="govuk-!-padding-bottom-7">
-        {{statusTag.render({
-          decision: decision.decision
+        {{govukTag({
+          text: bankDecision,
+          classes: bankDecisionTags[bankDecision],
+          attributes: { "data-cy": "decision-status-tag" }
         })}}
       </div>
 
+      {% if effectiveDate %}
       <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="amendment-bank-decision-made-by-heading">Decision made by</h4>
+        <div class="govuk-grid-column-one-half">
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="amendment--bank-decision-effective">Date ammendment is effective from</h4>
         </div>
 
-        <div class="govuk-grid-column-three-quarters">
-          <p class="govuk-body-s" data-cy="amendment-bank-decision-made-by-value">{{ decision.userFullName }}</p>
-        </div>
-      </div>
-
-      <div class="govuk-grid-row govuk-!-padding-bottom-4">
-        <div class="govuk-grid-column-one-quarter">
-          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="date-time-heading">Date and time</h4>
-        </div>
-
-        <div class="govuk-grid-column-three-quarters">
-          <p class="govuk-body-s" data-cy="date-time-value">{{ decision.timestamp | localiseTimestamp('DD MMMM YYYY', user.timezone) }} at {{ decision.timestamp | localiseTimestamp('HH:mm', user.timezone) }}</p>
+        <div class="govuk-grid-column-one-half">
+          <p class="govuk-body-s" data-cy="amendment--bank-decision-effective-date">{{ effectiveDateFormatted }}</p>
         </div>
       </div>
 
-      {% if decision.comments %}
-        <div class="govuk-grid-row govuk-!-padding-bottom-4">
-          <div class="govuk-grid-column-full">
-
-            {% if decision.decision === 'Declined' %}
-              {% set commentsHeadingText = 'Reasons' %}
-            {% else %}
-              {% set commentsHeadingText = 'Conditions' %}
-            {% endif %}
-
-            <h4 class="govuk-heading-m govuk-!-font-weight-bold" data-cy="comments-heading">{{commentsHeadingText }} </h4>
-
-            <p class="ukef-preserve-white-space" data-cy="conditions-value">{{ decision.comments | safe }}</p>
-
-          </div>
-        </div>
       {% endif %}
 
-      {% if decision.internalComments %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
-
-            <h4 class="govuk-heading-m govuk-!-font-weight-bold govuk-!-margin-bottom-1" data-cy="internal-comments-heading">Comments</h4>
-            <p class="ukef-heading-grey govuk-!-margin-top-0">Only UKEF staff will see this.</p>
-            <p class="ukef-preserve-white-space" data-cy="internal-comments-value">{{ decision.internalComments | safe }}<p>
-
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="amendment--bank-decision-received">Date decision received</h4>
         </div>
-      {% endif %}
+
+        <div class="govuk-grid-column-one-half">
+          <p class="govuk-body-s" data-cy="amendment--bank-decision-received-date">{{ receivedDateFormatted }} </p>
+        </div>
+      </div>
 
     </div>
 

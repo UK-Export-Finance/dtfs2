@@ -16,9 +16,9 @@ const getAmendmentAnswers = async (req, res) => {
   } = amendment;
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
-  const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMMM yyyy');
-  const coverEndDate = amendment?.coverEndDate ? format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy') : '';
-  const effectiveDate = amendment?.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), 'dd MMMM yyyy') : '';
+  const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMM yyyy');
+  const coverEndDate = amendment?.coverEndDate ? format(fromUnixTime(amendment.coverEndDate), 'dd MMM yyyy') : '';
+  const effectiveDate = amendment?.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), 'dd MMM yyyy') : '';
   const value = amendment.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : '';
 
   return res.render('case/amendments/amendment-answers.njk', {

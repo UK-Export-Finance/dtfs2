@@ -1,6 +1,11 @@
 const Joi = require('joi');
 
-const { showAmendmentButton, userCanEditLeadUnderwriter, userCanEditManagersDecision, userCanEditBankDecision } = require('./amendments.helper');
+const { showAmendmentButton,
+  userCanEditLeadUnderwriter,
+  userCanEditManagersDecision,
+  userCanEditBankDecision,
+  ukefDecisionRejected,
+  validateUkefDecision } = require('./amendments.helper');
 const { generateHeadingText } = require('./generateHeadingText.helper');
 const { mapDecisionObject, mapDecisionValue } = require('./mapDecisionObject.helper');
 const { getGroup, getTask } = require('./tasks.helper');
@@ -44,5 +49,7 @@ module.exports = {
   getTask,
   validateCommentField,
   validateSubmittedValues,
+  ukefDecisionRejected,
+  validateUkefDecision,
   probabilityOfDefaultValidation
 };
