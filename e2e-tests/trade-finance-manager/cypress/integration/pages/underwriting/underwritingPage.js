@@ -24,6 +24,7 @@ const underwritingPage = {
 
   addUnderwriterManagerDecisionButton: () => cy.get('[data-cy="add-decision-link"]'),
   underwriterManagerDecisionNotAdded: () => cy.get('[data-cy="decision-not-added-readonly"]'),
+  underwriterManagerDecisionNotApplicable: () => cy.get('[data-cy="decision-not-applicable"]'),
 
   amendmentHeading: () => cy.get('[data-cy="underwriting-heading-amendment"]'),
 

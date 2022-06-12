@@ -6,6 +6,7 @@
 {% macro render(params) %}
 
   {% set underWriterDecision = params.underwriterManagersDecision %}
+  {% set submissionType = params.underwriterManagersDecision.deal.submissionType %}
 
   {% block underwriting_content %}
 
@@ -34,6 +35,8 @@
                   }
                 }) }}
             </div>
+          {% elif submissionType === 'Automatic Inclusion Notice' %}
+            <p class="govuk-!-margin-top-0" data-cy="decision-not-applicable">Not applicable</p>
           {% else %}
 
             <p class="govuk-!-margin-top-0" data-cy="decision-not-added-readonly">Not added yet</p>
