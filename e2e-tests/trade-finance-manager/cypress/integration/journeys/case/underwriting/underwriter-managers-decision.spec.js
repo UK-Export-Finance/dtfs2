@@ -6,7 +6,7 @@ import MOCK_DEAL from '../../../../fixtures/deal-AIN';
 import { T1_USER_1, UNDERWRITER_MANAGER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
-context('Case Underwriting - Underwriter Manager\'s Decision', () => {
+context('Case Underwriting - Underwriter Manager\'s decision', () => {
   let dealId;
   const dealFacilities = [];
 
@@ -143,7 +143,7 @@ context('Case Underwriting - Underwriter Manager\'s Decision', () => {
   });
 });
 
-context('Case Underwriting - Underwriter Manager\'s Decision AIN', () => {
+context('Case Underwriting - Underwriter Manager\'s decision AIN', () => {
   let dealId;
   const dealFacilities = [];
 
@@ -167,7 +167,6 @@ context('Case Underwriting - Underwriter Manager\'s Decision AIN', () => {
 
     // go to underwriter managers decision page
     partials.caseSubNavigation.underwritingLink().click();
-    partials.underwritingSubNav.underwriterManagerDecisionLink().click();
   });
 
   after(() => {
@@ -177,9 +176,8 @@ context('Case Underwriting - Underwriter Manager\'s Decision AIN', () => {
     });
   });
 
-  it('should show `not applicable` for underwriter managers decision as deal is AIN', () => {
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/managers-decision`));
-    partials.underwritingSubNav.underwritingHeading().contains('Underwriting');
-    partials.underwritingSubNav.underwritingNotApplicable().contains('Not applicable');
+  it('should show not applicable for manager\'s decision for AIN', () => {
+    pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
+    pages.underwritingPage.underwriterManagerDecisionNotApplicable().contains('Not applicable');
   });
 });
