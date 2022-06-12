@@ -960,27 +960,6 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
   }
 };
 
-const getAmendmentInProgressByDealId = async (dealId) => {
-  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
-  if (isValid) {
-    try {
-      const response = await axios({
-        method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/status/in-progress`,
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      return response.data;
-    } catch (err) {
-      console.error('Unable to get the amendment in progress by deal Id %O', { response: err?.response?.data });
-      return { status: 500, data: err?.response?.data };
-    }
-  } else {
-    console.error('Invalid deal Id');
-    return { status: 400, message: 'Invalid deal Id provided' };
-  }
-};
-
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1031,5 +1010,4 @@ module.exports = {
   updateGefMINActivity,
   findBankById,
   getGefMandatoryCriteriaByVersion,
-  getAmendmentInProgressByDealId,
 };
