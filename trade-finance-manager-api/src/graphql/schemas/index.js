@@ -450,7 +450,7 @@ input TFMLossGivenDefaultInput {
 }
 
 input TFMProbabilityOfDefaultInput {
-  probabilityOfDefault: Int
+  probabilityOfDefault: Float
 }
 
 input TFMFacilityRiskProfileInput {
