@@ -33,8 +33,14 @@ const getUnissuedFacilities = async (bankId) => {
       },
     },
     { $unwind: '$dealsTable' },
-    // ensure that only records for the given bank are returned
-    { $match: { 'dealsTable.bank.id': bankId } },
+    {
+      $match: {
+        // ensure that only records for the given bank are returned
+        'dealsTable.bank.id': bankId,
+        // ensure that the deal status is NOT `Abandoned`
+        'dealsTable.status': { $ne: CONSTANTS.DEAL.DEAL_STATUS.ABANDONED },
+      }
+    },
     {
       $project: {
         _id: 0,
