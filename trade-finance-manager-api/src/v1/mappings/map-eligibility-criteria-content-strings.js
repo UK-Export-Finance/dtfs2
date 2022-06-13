@@ -5,13 +5,12 @@ const mapEligibilityCriteriaContentStrings = (eligibility, dealType) => {
   const mappedCriteria = eligibility.criteria;
   const contentStrings = CONTENT_STRINGS.DEAL.ELIGIBILITY_CRITERIA[dealType];
 
-  const versionContentStrings = contentStrings[eligibility.version];
+  const versionContentStrings = contentStrings[Number(eligibility.version)];
 
   return mappedCriteria.map((criterion) => {
     const mappedCriterion = criterion;
 
-    const contentObj = versionContentStrings[String(criterion.id)];
-
+    const contentObj = versionContentStrings[Number(criterion.id)];
     mappedCriterion.text = contentObj.text;
     mappedCriterion.textList = contentObj.textList;
 
