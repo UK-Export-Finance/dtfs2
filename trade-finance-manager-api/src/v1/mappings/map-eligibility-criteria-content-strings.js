@@ -11,10 +11,9 @@ const mapEligibilityCriteriaContentStrings = (eligibility, dealType) => {
     const mappedCriterion = criterion;
 
     const contentObj = versionContentStrings[Number(criterion.id)];
-    if (contentObj) {
-      mappedCriterion.text = contentObj.text;
-      mappedCriterion.textList = contentObj.textList;
-    }
+    mappedCriterion.text = contentObj.text;
+    mappedCriterion.textList = contentObj.textList;
+
     return mappedCriterion;
   });
 };
