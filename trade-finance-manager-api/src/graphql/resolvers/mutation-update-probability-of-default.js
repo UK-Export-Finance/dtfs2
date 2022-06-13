@@ -2,6 +2,7 @@ const { updateTfmProbabilityOfDefault } = require('../../v1/controllers/deal.con
 
 const updateProbabilityOfDefault = async ({ dealId, probabilityOfDefaultUpdate }) => {
   const { probabilityOfDefault } = probabilityOfDefaultUpdate;
+
   const update = await updateTfmProbabilityOfDefault(dealId, probabilityOfDefault);
   return update;
 };
