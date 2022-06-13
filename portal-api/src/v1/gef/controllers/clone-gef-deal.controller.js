@@ -5,6 +5,7 @@ const { cloneAzureFiles } = require('../utils/clone-azure-files.utils');
 const { validateApplicationReferences } = require('./validation/application');
 const { exporterStatus } = require('./validation/exporter');
 const CONSTANTS = require('../../../constants');
+const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
 const cloneExporter = (currentExporter) => {
   const clonedExporter = currentExporter;
@@ -117,6 +118,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
   const existingDeal = await collection.findOne({ _id: ObjectId(dealId), 'bank.id': bank.id });
   if (existingDeal) {
     const clonedDeal = existingDeal;
+    const eligibility = await getLatestEligibilityCriteria();
 
     // delete unused properties
     unusedProperties.forEach((property) => {
@@ -132,6 +134,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
     clonedDeal.createdAt = Date.now();
     clonedDeal.updatedAt = Date.now();
     clonedDeal.facilitiesUpdated = Date.now();
+    clonedDeal.eligibility = eligibility;
     clonedDeal.eligibility.updatedAt = Date.now();
     if (clonedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
       clonedDeal.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;

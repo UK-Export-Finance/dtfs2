@@ -22,24 +22,7 @@ const findOneDeal = async (_id, callback) => {
 
 exports.findOneDeal = findOneDeal;
 
-const createDealEligibility = async (eligibility) => {
-  const beingGivenEligibility = (eligibility && eligibility.criteria);
-
-  if (beingGivenEligibility) {
-    const eligibilityObj = {
-      ...eligibility,
-      lastUpdated: null,
-    };
-
-    if (eligibility.status) {
-      eligibilityObj.status = eligibility.status;
-    } else {
-      eligibilityObj.status = DEFAULTS.DEAL.eligibility.status;
-    }
-
-    return eligibilityObj;
-  }
-
+const createDealEligibility = async () => {
   const latestEligibility = await findLatestEligibilityCriteria();
 
   return {
