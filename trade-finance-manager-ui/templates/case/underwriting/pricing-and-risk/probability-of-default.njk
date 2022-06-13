@@ -47,7 +47,13 @@
             suffix: {
               text: "%"
             },
-            spellcheck: false
+            spellcheck: false,
+            errorMessage: validationErrors and validationErrors.errorList.probabilityOfDefault and {
+              text: validationErrors.errorList.probabilityOfDefault.text,
+              attributes: {
+                'data-cy': 'probability-of-default-error'
+              }
+            }
           }) }}
 
           {{ govukButton({
