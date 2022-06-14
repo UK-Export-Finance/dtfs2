@@ -124,6 +124,7 @@ const dealQuery = gql`
             bankFacilityReference,
             ukefExposure,
             banksInterestMargin,
+            guaranteeFeePayableToUkef,
             firstDrawdownAmountInExportCurrency,
             dates {
               inclusionNoticeReceived,
