@@ -1,4 +1,4 @@
-import generateHeadingText from './index';
+import { generateHeadingText, probabilityOfDefaultValidation } from './index';
 
 describe('deal - helpers', () => {
   describe('generateHeadingText', () => {
@@ -41,6 +41,78 @@ describe('deal - helpers', () => {
 
         const expected = 'All deals';
         expect(result).toEqual(expected);
+      });
+    });
+  });
+
+  describe('probabilityOfDefaultValidation()', () => {
+    describe('when probabilityOfDefault is 14', () => {
+      it('should return true', () => {
+        const probabilityofDefaultPercentage = '14';
+
+        const result = probabilityOfDefaultValidation(probabilityofDefaultPercentage);
+
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when probabilityOfDefault is 14.09', () => {
+      it('should return true', () => {
+        const probabilityofDefaultPercentage = '14.09';
+
+        const result = probabilityOfDefaultValidation(probabilityofDefaultPercentage);
+
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when probabilityOfDefault is 0.01', () => {
+      it('should return true', () => {
+        const probabilityofDefaultPercentage = '0.01';
+
+        const result = probabilityOfDefaultValidation(probabilityofDefaultPercentage);
+
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when probabilityOfDefault is 0', () => {
+      it('should return false', () => {
+        const probabilityofDefaultPercentage = '0';
+
+        const result = probabilityOfDefaultValidation(probabilityofDefaultPercentage);
+
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe('when probabilityOfDefault is 14.1', () => {
+      it('should return false', () => {
+        const probabilityofDefaultPercentage = '14.1';
+
+        const result = probabilityOfDefaultValidation(probabilityofDefaultPercentage);
+
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe('when probabilityOfDefault is 12.552', () => {
+      it('should return false', () => {
+        const probabilityofDefaultPercentage = '12.552';
+
+        const result = probabilityOfDefaultValidation(probabilityofDefaultPercentage);
+
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe('when probabilityOfDefault is a', () => {
+      it('should return false', () => {
+        const probabilityofDefaultPercentage = 'a';
+
+        const result = probabilityOfDefaultValidation(probabilityofDefaultPercentage);
+
+        expect(result).toEqual(false);
       });
     });
   });

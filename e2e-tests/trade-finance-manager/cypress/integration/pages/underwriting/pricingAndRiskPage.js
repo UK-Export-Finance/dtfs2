@@ -13,6 +13,8 @@ const pricingAndRiskPage = {
     return {
       facilityLink: () => cy.get('@table').get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
       riskProfile: () => cy.get('@table').get(`[data-cy="facility-${facilityId}-risk-profile-value"]`),
+      guaranteeFee: () => cy.get('@table').get(`[data-cy="facility-${facilityId}-bank-guarantee-fee-value"]`),
+      bankInterestMargin: () => cy.get('@table').get(`[data-cy="facility-${facilityId}-bank-interest-value"]`),
       changeRiskProfileLink: () => cy.get('@table').get(`[data-cy="facility-${facilityId}-change-risk-profile-link"]`),
     };
   },

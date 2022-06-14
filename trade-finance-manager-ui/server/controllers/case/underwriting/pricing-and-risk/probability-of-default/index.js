@@ -2,6 +2,7 @@ const api = require('../../../../../api');
 const {
   userIsInTeam,
 } = require('../../../../../helpers/user');
+const { probabilityOfDefaultValidation } = require('../../../../helpers');
 const CONSTANTS = require('../../../../../constants');
 
 const getUnderWritingProbabilityOfDefault = async (req, res) => {
@@ -44,11 +45,9 @@ const postUnderWritingProbabilityOfDefault = async (req, res) => {
 
   if (!probabilityOfDefault) {
     errorMsg = 'Enter a probability of default';
-  }
-
-  // eslint-disable-next-line eqeqeq
-  if (Number(probabilityOfDefault) != probabilityOfDefault) {
-    errorMsg = 'Enter a numeric value';
+    // checks that value is between 0.01 and 14.09 and only up to 2dp
+  } else if (!probabilityOfDefaultValidation(probabilityOfDefault)) {
+    errorMsg = 'You must enter a percentage between 0.01% to 14.09%';
   }
 
   if (errorMsg) {

@@ -29,8 +29,8 @@ const getDeal = async (id, tasksFilters, activityFilters) => {
 
   const response = await apollo('GET', dealQuery, queryParams);
 
-  if (response.errors) {
-    console.error('TFM UI - GraphQL error querying deal ', response.errors);
+  if (response.errors || response.networkError) {
+    console.error('TFM UI - GraphQL error querying deal ', response.errors || response.networkError.result.errors);
   }
 
   return response.data.deal;
