@@ -7,9 +7,6 @@
 
   <div class="govuk-grid-row" data-cy="managers-decision-submitted">
       <div class="govuk-grid-column-full">
-
-      <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6 govuk-!-margin-bottom-2" data-cy="managers-decision-subheading">Decision</h4>
-
       <div class="govuk-!-padding-bottom-7">
         {{statusTag.render({
           decision: decision.decision
@@ -59,7 +56,7 @@
           <div class="govuk-grid-column-full">
 
             <h4 class="govuk-heading-m govuk-!-font-weight-bold govuk-!-margin-bottom-1" data-cy="internal-comments-heading">Comments</h4>
-            <p class="ukef-heading-grey govuk-!-margin-top-0">Only UKEF staff will see this.</p>
+            <p class="ukef-hint-grey govuk-!-margin-top-0">Only UKEF staff will see this.</p>
             <p class="ukef-preserve-white-space" data-cy="internal-comments-value">{{ decision.internalComments | safe }}<p>
 
           </div>
