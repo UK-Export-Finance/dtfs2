@@ -134,6 +134,11 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
     // updates amendment with receivedDate
     const payload = { bankDecision: { receivedDate: amendmentBankRequestDate } };
 
+    // if amendment changed to withdrawn and effective date set, then change to null
+    if (amendment.bankDecision.decision === AMENDMENT_BANK_DECISION.WITHDRAW && amendment?.bankDecision?.effectiveDate) {
+      payload.bankDecision.effectiveDate = null;
+    }
+
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
     if (status === 200) {
