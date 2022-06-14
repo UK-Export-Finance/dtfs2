@@ -86,7 +86,7 @@ exports.clone = async (req, res) => {
         maker: req.user,
       },
       mandatoryCriteria: await findLatestMandatoryCriteria(),
-      eligibility: await createDealEligibility(existingDeal.eligibility),
+      eligibility: await createDealEligibility(),
       editedBy: [],
       comments: [],
       ukefComments: [],

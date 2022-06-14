@@ -104,7 +104,7 @@ describe('POST underwriting - probability of default', () => {
     });
 
     it('should call api.updateProbabilityOfDefault with probabilityOfDefault as a number', async () => {
-      const submittedProbabilityOfDefault = '45';
+      const submittedProbabilityOfDefault = '13';
 
       const req = {
         params: {
@@ -135,7 +135,89 @@ describe('POST underwriting - probability of default', () => {
         },
         session,
         body: {
-          probabilityOfDefault: '45',
+          probabilityOfDefault: '13',
+        },
+      };
+
+      await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
+
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+    });
+
+    it('should call api.updateProbabilityOfDefault with probabilityOfDefault as a 0.01 as lowest limit', async () => {
+      const submittedProbabilityOfDefault = '0.01';
+
+      const req = {
+        params: {
+          _id: mockDeal._id,
+        },
+        session,
+        body: {
+          probabilityOfDefault: submittedProbabilityOfDefault,
+        },
+      };
+
+      await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
+
+      const expectedUpdateObj = {
+        probabilityOfDefault: Number(submittedProbabilityOfDefault),
+      };
+
+      expect(apiUpdateSpy).toHaveBeenCalledWith(
+        mockDeal._id,
+        expectedUpdateObj,
+      );
+    });
+
+    it('should redirect to /pricing-and-risk', async () => {
+      const req = {
+        params: {
+          _id: mockDeal._id,
+        },
+        session,
+        body: {
+          probabilityOfDefault: '0.01',
+        },
+      };
+
+      await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
+
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+    });
+
+    it('should call api.updateProbabilityOfDefault with probabilityOfDefault as a 14.09 as upper limit', async () => {
+      const submittedProbabilityOfDefault = '14.09';
+
+      const req = {
+        params: {
+          _id: mockDeal._id,
+        },
+        session,
+        body: {
+          probabilityOfDefault: submittedProbabilityOfDefault,
+        },
+      };
+
+      await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
+
+      const expectedUpdateObj = {
+        probabilityOfDefault: Number(submittedProbabilityOfDefault),
+      };
+
+      expect(apiUpdateSpy).toHaveBeenCalledWith(
+        mockDeal._id,
+        expectedUpdateObj,
+      );
+    });
+
+    it('should redirect to /pricing-and-risk', async () => {
+      const req = {
+        params: {
+          _id: mockDeal._id,
+        },
+        session,
+        body: {
+          probabilityOfDefault: '14.09',
         },
       };
 
@@ -209,12 +291,153 @@ describe('POST underwriting - probability of default', () => {
           count: 1,
           errorList: {
             probabilityOfDefault: {
-              text: 'Enter a numeric value',
+              text: 'You must enter a percentage between 0.01% to 14.09%',
               order: '1',
             },
           },
           summary: [{
-            text: 'Enter a numeric value',
+            text: 'You must enter a percentage between 0.01% to 14.09%',
+            href: '#probabilityOfDefault',
+          }],
+        };
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/probability-of-default.njk',
+          {
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'underwriting',
+            activeSideNavigation: 'pricing and risk',
+            deal: mockDeal.dealSnapshot,
+            tfm: {
+              ...mockDeal.tfm,
+              probabilityOfDefault: req.body.probabilityOfDefault,
+            },
+            dealId: mockDeal.dealSnapshot._id,
+            user: session.user,
+            validationErrors: expectedValidationErrors,
+          },
+        );
+      });
+    });
+
+    describe('when numeric probability of default is submitted below 0.01', () => {
+      it('should return template with validation errors', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+          body: {
+            probabilityOfDefault: '0',
+          },
+        };
+
+        await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
+
+        const expectedValidationErrors = {
+          count: 1,
+          errorList: {
+            probabilityOfDefault: {
+              text: 'You must enter a percentage between 0.01% to 14.09%',
+              order: '1',
+            },
+          },
+          summary: [{
+            text: 'You must enter a percentage between 0.01% to 14.09%',
+            href: '#probabilityOfDefault',
+          }],
+        };
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/probability-of-default.njk',
+          {
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'underwriting',
+            activeSideNavigation: 'pricing and risk',
+            deal: mockDeal.dealSnapshot,
+            tfm: {
+              ...mockDeal.tfm,
+              probabilityOfDefault: req.body.probabilityOfDefault,
+            },
+            dealId: mockDeal.dealSnapshot._id,
+            user: session.user,
+            validationErrors: expectedValidationErrors,
+          },
+        );
+      });
+    });
+
+    describe('when numeric probability of default is submitted above 14.09', () => {
+      it('should return template with validation errors', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+          body: {
+            probabilityOfDefault: '14.10',
+          },
+        };
+
+        await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
+
+        const expectedValidationErrors = {
+          count: 1,
+          errorList: {
+            probabilityOfDefault: {
+              text: 'You must enter a percentage between 0.01% to 14.09%',
+              order: '1',
+            },
+          },
+          summary: [{
+            text: 'You must enter a percentage between 0.01% to 14.09%',
+            href: '#probabilityOfDefault',
+          }],
+        };
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/underwriting/pricing-and-risk/probability-of-default.njk',
+          {
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'underwriting',
+            activeSideNavigation: 'pricing and risk',
+            deal: mockDeal.dealSnapshot,
+            tfm: {
+              ...mockDeal.tfm,
+              probabilityOfDefault: req.body.probabilityOfDefault,
+            },
+            dealId: mockDeal.dealSnapshot._id,
+            user: session.user,
+            validationErrors: expectedValidationErrors,
+          },
+        );
+      });
+    });
+
+    describe('when numeric probability of default is submitted above 2 d.p', () => {
+      it('should return template with validation errors', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+          body: {
+            probabilityOfDefault: '13.102',
+          },
+        };
+
+        await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
+
+        const expectedValidationErrors = {
+          count: 1,
+          errorList: {
+            probabilityOfDefault: {
+              text: 'You must enter a percentage between 0.01% to 14.09%',
+              order: '1',
+            },
+          },
+          summary: [{
+            text: 'You must enter a percentage between 0.01% to 14.09%',
             href: '#probabilityOfDefault',
           }],
         };
