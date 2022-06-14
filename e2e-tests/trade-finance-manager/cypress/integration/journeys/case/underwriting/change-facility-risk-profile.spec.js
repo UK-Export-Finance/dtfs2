@@ -54,6 +54,21 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
     });
   });
 
+  it('should show Guarantee fee, interest margin and risk profile correctly', () => {
+    cy.login(UNDERWRITER_MANAGER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+
+    // go to pricing and risk page
+    partials.caseSubNavigation.underwritingLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+
+    const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
+
+    facilityRow.bankInterestMargin().contains(`${dealFacilities[0].banksInterestMargin}%`);
+    facilityRow.guaranteeFee().contains(`${dealFacilities[0].guaranteeFeePayableByBank}%`);
+    facilityRow.changeRiskProfileLink().should('be.visible');
+  });
+
   it('clicking `Change` link in facilities table goes to Facility Risk profile page', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));

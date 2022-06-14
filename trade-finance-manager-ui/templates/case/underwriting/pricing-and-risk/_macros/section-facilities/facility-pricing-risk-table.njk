@@ -18,13 +18,13 @@
     <tbody class="govuk-table__body">
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header govuk-body-s width-half govuk-table__cell--border-top">Guarantee fee % payable to UKEF</th>
-        <td class="govuk-table__cell govuk-table__cell--border-top">-</td>
+        <td class="govuk-table__cell govuk-table__cell--border-top" data-cy="facility-{{ facility._id}}-bank-guarantee-fee-value">{{ facility.facilitySnapshot.guaranteeFeePayableToUkef | dashIfEmpty}}</td>
         <td class="govuk-table__cell govuk-table__cell--border-top"></td>
       </tr>
 
       <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header govuk-body-s width-half">Bank’s interest margin</th>
-        <td class="govuk-table__cell">-</td>
+        <td class="govuk-table__cell" data-cy="facility-{{ facility._id}}-bank-interest-value">{{ facility.facilitySnapshot.banksInterestMargin | dashIfEmpty}}</td>
         <td class="govuk-table__cell"></td>
       </tr>
 
