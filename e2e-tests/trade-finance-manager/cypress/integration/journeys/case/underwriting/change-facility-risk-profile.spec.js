@@ -60,13 +60,13 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     // go to pricing and risk page
     partials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
 
     facilityRow.bankInterestMargin().contains(`${dealFacilities[0].banksInterestMargin}%`);
     facilityRow.guaranteeFee().contains(`${dealFacilities[0].guaranteeFeePayableByBank}%`);
-    facilityRow.changeRiskProfileLink().should('be.visible');
+    facilityRow.changeRiskProfileLink().should('exist');
   });
 
   it('clicking `Change` link in facilities table goes to Facility Risk profile page', () => {
