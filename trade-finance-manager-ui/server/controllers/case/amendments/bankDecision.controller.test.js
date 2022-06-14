@@ -1,3 +1,4 @@
+import { getUnixTime, set } from 'date-fns';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import amendmentsController from './bankDecision.controller';
@@ -339,6 +340,47 @@ describe('POST postAmendmentBankDecisionReceivedDate', () => {
       await amendmentsController.postAmendmentBankDecisionReceivedDate(req, res);
 
       expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/facility/${req.params.facilityId}/amendment/${req.params.amendmentId}/banks-decision/check-answers`);
+    });
+
+    it('should redirect to check answers page when no errors and bank decision is declined and removes effective date if exists', async () => {
+      const apiUpdateSpy = jest.fn(() => Promise.resolve({
+        status: 200,
+      }));
+      api.getAmendmentById = () => Promise.resolve({ status: 200, data: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITHDRAW_EFFECTIVE_DATE });
+      api.updateAmendment = apiUpdateSpy;
+
+      const req = {
+        params: {
+          _id: MOCKS.MOCK_DEAL._id,
+          amendmentId: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITHDRAW_EFFECTIVE_DATE.amendmentId,
+          facilityId: '12345',
+        },
+        body: {
+          'amendment--bank-decision-date-day': '08',
+          'amendment--bank-decision-date-month': '06',
+          'amendment--bank-decision-date-year': '2022',
+        },
+        session,
+      };
+
+      await amendmentsController.postAmendmentBankDecisionReceivedDate(req, res);
+
+      const expectedUpdateObj = {
+        bankDecision: {
+          receivedDate: getUnixTime(set(new Date(), {
+            year: '2022',
+            month: '06' - 1,
+            date: '08',
+          })),
+          effectiveDate: null,
+        },
+      };
+
+      expect(apiUpdateSpy).toHaveBeenCalledWith(
+        req.params.facilityId,
+        req.params.amendmentId,
+        expectedUpdateObj,
+      );
     });
 
     it('should render template with errors if no date provided in body', async () => {
