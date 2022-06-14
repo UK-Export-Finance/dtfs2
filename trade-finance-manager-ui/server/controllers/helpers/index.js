@@ -51,5 +51,5 @@ module.exports = {
   validateSubmittedValues,
   ukefDecisionRejected,
   validateUkefDecision,
-  probabilityOfDefaultValidation
+  probabilityOfDefaultValidation,
 };
