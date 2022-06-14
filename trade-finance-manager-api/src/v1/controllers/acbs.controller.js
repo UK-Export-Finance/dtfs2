@@ -112,14 +112,14 @@ const checkAzureAcbsFunction = async () => {
 };
 
 const issueAcbsFacilities = async (deal) => {
-  if (!deal.tfm || !deal.tfm.acbs) {
-    /**
-     * A facility can only be issued (if unissued),
-     * the deal has been submitted to ACBS and acknowledged by the TFM.
-     * If the above is false, please do not proceed.
-     */
-    return false;
-  }
+  // if (!deal.tfm || !deal.tfm.acbs) {
+  //   /**
+  //    * A facility can only be issued (if unissued),
+  //    * the deal has been submitted to ACBS and acknowledged by the TFM.
+  //    * If the above is false, please do not proceed.
+  //    */
+  //   return false;
+  // }
   /**
    * ACBS verification has been removed due to an ongoing bug of not receiving
    * the `acbs` object imperative data thus preventing maker from issuing the facility.
