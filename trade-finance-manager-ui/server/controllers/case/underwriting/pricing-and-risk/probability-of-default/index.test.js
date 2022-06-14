@@ -86,14 +86,14 @@ describe('POST underwriting - probability of default', () => {
         },
       },
       tfm: {
-        probabilityOfDefault: 25,
+        probabilityOfDefault: 13,
       },
       mock: true,
     };
 
     const apiUpdateSpy = jest.fn(() => Promise.resolve({
       updateProbabilityOfDefault: {
-        probabilityOfDefault: 45,
+        probabilityOfDefault: 12,
       },
     }));
 
@@ -127,7 +127,7 @@ describe('POST underwriting - probability of default', () => {
       );
     });
 
-    it('should redirect to /pricing-and-risk', async () => {
+    it('should redirect to /underwriting', async () => {
       const req = {
         params: {
           _id: mockDeal._id,
@@ -140,7 +140,7 @@ describe('POST underwriting - probability of default', () => {
 
       await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);
     });
 
     it('should call api.updateProbabilityOfDefault with probabilityOfDefault as a 0.01 as lowest limit', async () => {
@@ -168,7 +168,7 @@ describe('POST underwriting - probability of default', () => {
       );
     });
 
-    it('should redirect to /pricing-and-risk', async () => {
+    it('should redirect to /underwriting', async () => {
       const req = {
         params: {
           _id: mockDeal._id,
@@ -181,7 +181,7 @@ describe('POST underwriting - probability of default', () => {
 
       await probabilityOfDefaultController.postUnderWritingProbabilityOfDefault(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);
     });
 
     it('should call api.updateProbabilityOfDefault with probabilityOfDefault as a 14.09 as upper limit', async () => {
@@ -209,7 +209,7 @@ describe('POST underwriting - probability of default', () => {
       );
     });
 
-    it('should redirect to /pricing-and-risk', async () => {
+    it('should redirect to /underwriting', async () => {
       const req = {
         params: {
           _id: mockDeal._id,
@@ -304,7 +304,6 @@ describe('POST underwriting - probability of default', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,
@@ -351,7 +350,6 @@ describe('POST underwriting - probability of default', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,
@@ -398,7 +396,6 @@ describe('POST underwriting - probability of default', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,
