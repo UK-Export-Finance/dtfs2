@@ -49,15 +49,15 @@ export const createEstore = async (req: Request, res: Response) => {
     if (!validateEstoreInput(eStoreData)) {
       return res.status(200).send();
     }
-    // send a 200 response back to tfm-api
-    // this is because we are not waiting for the cron-jobs to finish
-    res.status(200).send();
-
+    
     const cronJobLogsCollection = await getCollection('cron-job-logs');
-    const cronAlreadyExists = await cronJobLogsCollection.findOne({ siteName: eStoreData.siteName, dealId: eStoreData.dealId });
-
+    const cronAlreadyExists = await cronJobLogsCollection.findOne({ dealIdentifier: eStoreData.dealIdentifier, dealId: eStoreData.dealId });
+    
     // check if the deal doesn't exist in the cron-job-logs collection
     if (!cronAlreadyExists) {
+      // send a 200 response back to tfm-api
+      // this is because we are not waiting for the cron-jobs to finish
+      res.status(200).send();
       // keep track of new submissions
       // add a record in the database only if the site does not exist
       await cronJobLogsCollection.insertOne({
@@ -116,7 +116,7 @@ export const createEstore = async (req: Request, res: Response) => {
       }
     } else {
       console.info('eStore API call is being re-triggered with the same payload', eStoreData.dealId);
-      return res.status(200).send();
+      res.status(200).send();
     }
   } else {
     console.error('eStore body is empty', eStoreData);
