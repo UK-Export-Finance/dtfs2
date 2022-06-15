@@ -16,9 +16,9 @@ import {
   UploadDocumentsResponse,
   TermStoreResponse,
 } from '../../../interfaces';
+import { Request, Response } from 'express';
 import { sendEmail } from '../email.controller';
 import { getCollection } from '../../../database';
-
 import { EMAIL_TEMPLATES } from '../../../constants';
 
 dotenv.config();
@@ -60,6 +60,20 @@ const postToEstore = async (
   });
 
   return { data: response.data, status: response.status };
+};
+
+/**
+ * Returns eStore site name
+ * @param req Request object
+ * @param res Response object
+ * @returns {Object} Response
+ */
+export const siteName = async (req: Request, res: Response) => {
+  const eStoreData: Estore = req.body;
+  const siteExistsResponse = await siteExists({ exporterName: eStoreData.exporterName });
+  const siteName = siteExistsResponse.data.siteName || '';
+  // Send response `200` regardless of the status code response from the API
+  return res.status(200).send(siteName);
 };
 
 export const siteExists = async (exporterName: EstoreSite): Promise<SiteExistsResponse> => {
