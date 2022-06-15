@@ -116,7 +116,7 @@ export const createEstore = async (req: Request, res: Response) => {
       }
     } else {
       console.info('eStore API call is being re-triggered with the same payload', eStoreData.dealId);
-      return res.status(200).send();
+      res.status(200).send();
     }
   } else {
     console.error('eStore body is empty', eStoreData);
