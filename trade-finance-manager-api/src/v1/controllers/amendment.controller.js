@@ -11,26 +11,27 @@ const createFacilityAmendment = async (req, res) => {
 };
 
 const sendAmendmentEmail = async (amendmentId, facilityId) => {
-  const amendment = await api.getAmendmentById(facilityId, amendmentId);
+  try {
+    const amendment = await api.getAmendmentById(facilityId, amendmentId);
 
-  // if amendment exists and if automaticApprovalEmail field is present
-  if (amendmentEmailEligible(amendment)) {
-    const { dealSnapshot } = await api.findOneDeal(amendment.dealId);
+    // if amendment exists and if automaticApprovalEmail field is present
+    if (amendmentEmailEligible(amendment)) {
+      const { dealSnapshot } = await api.findOneDeal(amendment.dealId);
 
-    if (dealSnapshot) {
+      if (dealSnapshot) {
       // gets portal user to ensure latest details
-      const user = await api.findPortalUserById(dealSnapshot.maker._id);
-      try {
+        const user = await api.findPortalUserById(dealSnapshot.maker._id);
+
         // if automaticApprovalEmail and !automaticApprovalEmailSent (email not sent before)
         if (amendment?.automaticApprovalEmail && !amendment?.automaticApprovalEmailSent) {
           const automaticAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
           // sends email and updates flag if sent
           await sendAutomaticAmendmentEmail(automaticAmendmentVariables);
         }
-      } catch (err) {
-        console.error('Error sending amendment email', { err });
       }
     }
+  } catch (err) {
+    console.error('Error sending amendment email', { err });
   }
 };
 

@@ -608,6 +608,7 @@ const findPortalUserById = async (userId) => {
     });
     return response.data;
   } catch ({ response }) {
+    console.error('Error finding portal user', response);
     return false;
   }
 };
