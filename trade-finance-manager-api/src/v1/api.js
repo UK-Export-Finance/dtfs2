@@ -538,6 +538,23 @@ const createEstoreFolders = async (data) => {
   }
 };
 
+const getEstoreFolders = async (data) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${refDataUrl}/estore/site`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+    });
+    return response.data;
+  } catch (err) {
+    console.error('Error getting eStore site folder', { err });
+    return {};
+  }
+};
+
 const sendEmail = async (
   templateId,
   sendToEmailAddress,
@@ -734,6 +751,7 @@ module.exports = {
   updateACBSfacility,
   getFunctionsAPI,
   createEstoreFolders,
+  getEstoreFolders,
   sendEmail,
   findOneGefDeal,
   updatePortalGefDealStatus,

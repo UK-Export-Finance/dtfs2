@@ -12,6 +12,7 @@ import * as exposurePeriod from '../controllers/exposure-period.controller';
 import * as companiesHouse from '../controllers/companies-house.controller';
 import * as ordnanceSurvey from '../controllers/ordnance-survey.controller';
 import * as eStore from '../controllers/estore/eStore.controller';
+import * as eStoreApi from '../controllers/estore/eStoreApi';
 import * as premiumSchedule from '../controllers/premium-schedule.controller';
 import * as email from '../controllers/email.controller';
 
@@ -498,6 +499,30 @@ apiRoutes.get('/ordnance-survey/:OSPostcode', ordnanceSurvey.lookup);
  *               $ref: '#/definitions/EstoreResponseBody'
  */
 apiRoutes.post('/estore/', eStore.createEstore);
+
+/**
+ * @openapi
+ * /estore:
+ *   post:
+ *     summary: Estore site exists check.
+ *     tags: [Estore, Mulesoft]
+ *     description: Check whether site exists, if it does then return the site name.
+ *     requestBody:
+ *       required: true
+ *       description: Fields required for each Estore API call
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/EstoreRequestBody'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/EstoreResponseBody'
+ */
+apiRoutes.post('/estore/site', eStoreApi.siteName);
 
 /**
  * @openapi
