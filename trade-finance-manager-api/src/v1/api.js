@@ -597,6 +597,21 @@ const findUserById = async (userId) => {
   }
 };
 
+const findPortalUserById = async (userId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/user/${userId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch ({ response }) {
+    return false;
+  }
+};
+
 const updateUserTasks = async (userId, updatedTasks) => {
   try {
     const response = await axios({
@@ -992,6 +1007,7 @@ module.exports = {
   getPartyDbInfo,
   findUser,
   findUserById,
+  findPortalUserById,
   updateUserTasks,
   findOneTeam,
   findTeamMembers,

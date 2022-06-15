@@ -1,4 +1,5 @@
 const api = require('../api');
+const { amendmentEmailEligible, sendAutomaticAmendmentEmail } = require('../helpers/amendment.helpers');
 
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
@@ -9,10 +10,38 @@ const createFacilityAmendment = async (req, res) => {
   return res.status(422).send({ data: 'Unable to create amendment' });
 };
 
+const sendAmendmentEmail = async (amendmentId, facilityId) => {
+  const amendment = await api.getAmendmentById(facilityId, amendmentId);
+
+  // if amendment exists and if automaticApprovalEmail field is present
+  if (amendmentEmailEligible(amendment)) {
+    const { dealSnapshot } = await api.findOneDeal(amendment.dealId);
+
+    if (dealSnapshot) {
+      // gets portal user to ensure latest details
+      const user = await api.findPortalUserById(dealSnapshot.maker._id);
+      try {
+        // if automaticApprovalEmail and !automaticApprovalEmailSent (email not sent before)
+        if (amendment?.automaticApprovalEmail && !amendment?.automaticApprovalEmailSent) {
+          const automaticAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
+          // sends email and updates flag if sent
+          await sendAutomaticAmendmentEmail(automaticAmendmentVariables);
+        }
+      } catch (err) {
+        console.error('Error sending amendment email', { err });
+      }
+    }
+  }
+};
+
 const updateFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const payload = req.body;
+
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+  // sends email if conditions are met
+  await sendAmendmentEmail(amendmentId, facilityId);
+
   if (createdAmendment) {
     return res.status(200).send(createdAmendment);
   }
@@ -121,4 +150,5 @@ module.exports = {
   getCompletedAmendmentByDealId,
   getLatestCompletedAmendmentByDealId,
   getAllAmendmentsInProgress,
+  sendAmendmentEmail,
 };
