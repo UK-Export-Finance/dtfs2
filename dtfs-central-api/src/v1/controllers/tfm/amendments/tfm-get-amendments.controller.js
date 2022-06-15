@@ -89,6 +89,11 @@ const findAmendmentById = async (facilityId, amendmentId) => {
     const amendment = await collection.aggregate([
       { $match: { _id: ObjectId(facilityId), 'amendments.amendmentId': ObjectId(amendmentId) } },
       {
+        $addFields: {
+          'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId'
+        }
+      },
+      {
         $project: {
           _id: 0,
           amendments: {
