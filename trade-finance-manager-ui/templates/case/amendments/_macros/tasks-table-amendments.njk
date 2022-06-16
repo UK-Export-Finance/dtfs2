@@ -8,7 +8,7 @@
   {% set ukefFacilityId = amendment.ukefFacilityId %}
   {% set facilityId = amendment.facilityId %}
   {% set amendmentId = amendment.amendmentId %}
-  {% set userTimezone = amendment.userTimezone %}
+  {% set userTimezone = params.user.timezone %}
 
   <h3 class="govuk-heading-s ukef-heading-background" data-cy="tasks-deal-submission-type">Amendment request for {{type}} {{ukefFacilityId}}</h3>
   <div data-cy="tasks-table">
@@ -35,7 +35,7 @@
 
                 <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 ukef-tasks-table__cell-width-28">
                   {% if task.canEdit %}
-                    <a class="govuk-link" href="/case/{{ dealId }}/facility/{{facilityId}}/amendment/{{amendmentId}}/tasks/{{ task.groupId }}/{{ task.id }}" data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-link">{{ task.title }}</a>
+                    <a class="govuk-link" href="/case/{{ dealId }}/facility/{{facilityId}}/amendment/{{amendmentId}}/task/{{ task.id }}/group/{{ task.groupId }}" data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-link">{{ task.title }}</a>
                     {% else %}
                       <span data-cy="task-table-row-group-{{task.groupId}}-task-{{ task.id }}-title">{{ task.title }}</span>
                   {% endif %}

@@ -1,13 +1,10 @@
 const CONSTANTS = require('../../constants');
 
-const NEW_TASK = {
-  status: CONSTANTS.TASKS.STATUS.CANNOT_START,
-  assignedTo: {
-    userId: CONSTANTS.TASKS.UNASSIGNED,
-    userFullName: CONSTANTS.TASKS.UNASSIGNED,
-  },
-  canEdit: false,
-};
+const api = require('../api');
+const { getGroupById, getTaskInGroupById, isAdverseHistoryTaskIsComplete } = require('./tasks');
+const mapTaskObject = require('../tasks/map-task-object');
+const { previousTaskIsComplete, taskCanBeEditedWithoutPreviousTaskComplete, handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
+const sendUpdatedTaskEmail = require('../controllers/task-emails');
 
 /**
  * Create tasks for a single group
@@ -38,7 +35,12 @@ const createGroupTasks = (tasks, groupId) => {
         id: String(taskIdCount),
         groupId,
         ...task,
-        ...NEW_TASK,
+        status: CONSTANTS.TASKS.STATUS.CANNOT_START,
+        assignedTo: {
+          userId: CONSTANTS.TASKS.UNASSIGNED,
+          userFullName: CONSTANTS.TASKS.UNASSIGNED,
+        },
+        canEdit: false,
       };
 
       // only the first task in the first group can be started/edited straight away.
@@ -111,10 +113,184 @@ const createAmendmentTasks = (requireUkefApproval) => {
   return tasks;
 };
 
+/**
+ * Update a task in the task's group.
+ * */
+const updateTask = (allTaskGroups, taskUpdate) =>
+  allTaskGroups.map((tGroup) => {
+    let group = tGroup;
+
+    group = {
+      ...group,
+      groupTasks: group.groupTasks.map((t) => {
+        let task = t;
+
+        if (task.id === taskUpdate.id && task.groupId === taskUpdate.groupId) {
+          task = {
+            ...task,
+            ...taskUpdate,
+          };
+        }
+
+        return task;
+      }),
+    };
+
+    return group;
+  });
+
+/**
+ * Update all tasks canEdit flag and status
+ * Depending on what task has been changed.
+ * */
+const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
+  const taskEmailsToSend = [];
+
+  let taskGroups = allTaskGroups.map((tGroup) => {
+    let group = tGroup;
+
+    group = {
+      ...group,
+      groupTasks: group.groupTasks.map((t) => {
+        const task = t;
+
+        const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
+
+        const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(allTaskGroups, group, task, isTaskThatIsBeingUpdated);
+
+        if (sendEmail) {
+          taskEmailsToSend.push(updatedTask);
+        }
+
+        return updatedTask;
+      }),
+    };
+
+    return group;
+  });
+
+  /**
+   * If 'Complete an adverse history check' task is completed
+   * All tasks in the Underwriting Group become unlocked and are able to be started
+   * */
+  const canUnlockUnderWritingGroupTasks = isAdverseHistoryTaskIsComplete(taskGroups);
+
+  if (canUnlockUnderWritingGroupTasks) {
+    taskGroups = taskGroups.map((g) => {
+      const group = g;
+
+      if (group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING) {
+        group.groupTasks = group.groupTasks.map((task) => {
+          const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
+
+          // add the task to list of emails to be sent
+          const shouldSendEmail = !isTaskThatIsBeingUpdated && !task.emailSent;
+          if (shouldSendEmail) {
+            taskEmailsToSend.push(task);
+          }
+
+          // unlock the task
+          const shouldUnlock = !isTaskThatIsBeingUpdated && !task.canEdit && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START;
+
+          if (shouldUnlock) {
+            return {
+              ...task,
+              canEdit: true,
+              status: CONSTANTS.TASKS.STATUS.TO_DO,
+            };
+          }
+
+          return task;
+        });
+      }
+
+      return group;
+    });
+  }
+
+  const emailsResponse = await Promise.all(taskEmailsToSend.map((task) => sendUpdatedTaskEmail(task, deal, urlOrigin)));
+
+  /**
+   * Add emailSent=true flag to each task that successfully sent an email
+   * */
+  const tasksToAddEmailSentFlag = [];
+  emailsResponse.map((response, index) => {
+    if (!response.errors) {
+      tasksToAddEmailSentFlag.push(taskEmailsToSend[index]);
+    }
+    return response;
+  });
+
+  taskGroups = taskGroups.map((g) => {
+    const group = g;
+
+    const groupHasTaskToUpdate = tasksToAddEmailSentFlag.find((task) => task.groupId === group.id);
+
+    if (groupHasTaskToUpdate) {
+      group.groupTasks = group.groupTasks.map((t) => {
+        const task = t;
+
+        const taskShouldAddEmailSentFlag = tasksToAddEmailSentFlag.find((taskForEmail) => taskForEmail.id === task.id);
+
+        if (taskShouldAddEmailSentFlag) {
+          task.emailSent = true;
+        }
+
+        return task;
+      });
+    }
+
+    return group;
+  });
+
+  return taskGroups;
+};
+
+/**
+ * Function that is first triggered. This:
+ * - Gets the deal and all tasks.
+ * - Maps the taskUpdate input into schema format, adding dates.
+ * - Finds the group the task belongs to and updates the task in that group.
+ * - Checks if the task can be updated.
+ * - Maps over all tasks in every group and updates their status/canEdit flag.
+ * - If previous task is complete, a sendEmail flag for that task is returned.
+ * - If the task is the task that is being updated (by user), task.history is updated.
+ * - Sends emails ('task is ready to start') for any tasks that return sendEmail flag.
+ * - Adds emailSent flag to any task that successfully sent an email.
+ * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task).
+ * - Updates the deal.
+ * */
+const updateAmendmentTask = async (facilityId, amendmentId, taskUpdate) => {
+  const amendment = await api.getAmendmentById(facilityId, amendmentId);
+  const { dealSnapshot } = await api.findOneDeal(amendment.dealId);
+
+  const allTasks = amendment.tasks;
+
+  const { id: taskIdToUpdate, groupId, urlOrigin } = taskUpdate;
+
+  const group = getGroupById(allTasks, groupId);
+  const originalTask = getTaskInGroupById(group.groupTasks, taskIdToUpdate);
+  const statusFrom = originalTask.status;
+
+  const updatedTask = await mapTaskObject(originalTask, taskUpdate, statusFrom);
+
+  const canUpdateTask = previousTaskIsComplete(allTasks, group, updatedTask.id) || taskCanBeEditedWithoutPreviousTaskComplete(group, updatedTask);
+
+  if (canUpdateTask) {
+    const modifiedTasks = updateTask(allTasks, updatedTask);
+    const modifiedTasksWithEditStatus = await updateAllTasks(modifiedTasks, updatedTask, urlOrigin, dealSnapshot);
+    return modifiedTasksWithEditStatus;
+  }
+
+  return originalTask;
+};
+
 module.exports = {
-  NEW_TASK,
   createGroupTasks,
   createTasksAutomaticAmendment,
   createTasksManualAmendment,
   createAmendmentTasks,
+  updateTask,
+  updateAllTasks,
+  updateAmendmentTask,
 };

@@ -79,7 +79,7 @@ const isTaskInUnderwritingGroup = (group, taskTitle) => {
  * - This currently only applies to the Underwriting group.
  * - If required, can be easily extended for other groups.
  * @param {Object} group
- * @param {Objject} task
+ * @param {Object} task
  * @returns {Boolean}
  */
 const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
@@ -107,7 +107,7 @@ const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
  * Rules/conditions for task.canEdit and task.status
  * When a task is updated, all tasks are mapped over and call this function.
  * @param {Object} group
- * @param {Objject} task
+ * @param {Object} task
  * @returns {Boolean}
  */
 const handleTaskEditFlagAndStatus = (

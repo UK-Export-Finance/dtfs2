@@ -43,7 +43,7 @@
 
       {% if amendments.length %}
         {% for amendment in amendments %}
-          {{ amendmentsTasksTable.render({ tasks: amendment.tasks, amendment: amendment }) }}
+          {{ amendmentsTasksTable.render({ tasks: amendment.tasks, amendment: amendment, user: user }) }}
         {% endfor %}
       {% endif %}
 

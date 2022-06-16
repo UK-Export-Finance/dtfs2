@@ -1,5 +1,5 @@
 const api = require('../api');
-const { createAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
+const { createAmendmentTasks, updateAmendmentTask } = require('../helpers/create-tasks-amendment.helper');
 
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
@@ -19,6 +19,12 @@ const updateFacilityAmendment = async (req, res) => {
     delete payload.createTasks;
     delete payload.requireUkefApproval;
   }
+
+  if (payload.taskUpdate.updateTask) {
+    payload.tasks = await updateAmendmentTask(facilityId, amendmentId, payload.taskUpdate);
+    delete payload.taskUpdate;
+  }
+
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
   if (createdAmendment) {
     return res.status(200).send(createdAmendment);

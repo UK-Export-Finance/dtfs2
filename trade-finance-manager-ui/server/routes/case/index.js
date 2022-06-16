@@ -65,6 +65,8 @@ router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/ef
 
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.getAmendmentBankDecisionAnswers);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.postAmendmentBankDecisionAnswers);
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.getAmendmentTask);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.postAmendmentTask);
 
 router.get('/:_id/parties', partiesController.getCaseParties);
 
