@@ -1,7 +1,7 @@
 const automaticAmendmentEmailVariables = (amendmentVariables) => {
-  const { amendment, deal, user } = amendmentVariables;
+  const { amendment, dealSnapshot, user } = amendmentVariables;
   const { ukefFacilityId } = amendment;
-  const { exporter, ukefDealId, bankInternalRefName } = deal;
+  const { exporter, ukefDealId, bankInternalRefName } = dealSnapshot;
   const { firstname, surname } = user;
 
   return {
