@@ -134,6 +134,7 @@ const postManagersConditionsAndCommentsSummary = async (req, res) => {
           name: `${req?.session?.user?.firstName} ${req?.session?.user?.lastName}`,
           email: req?.session?.user?.email,
         },
+        managersDecisionEmail: true,
       },
     };
 

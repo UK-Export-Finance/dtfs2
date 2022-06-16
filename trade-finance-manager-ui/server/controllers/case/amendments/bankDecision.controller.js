@@ -270,7 +270,11 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
 
   try {
     // updates amendment with status to completed and submitted flag as true on bank decision
-    const payload = { status: AMENDMENT_STATUS.COMPLETED, bankDecision: { submitted: true } };
+    const payload = { status: AMENDMENT_STATUS.COMPLETED,
+      bankDecision: {
+        submitted: true,
+        banksDecisionEmail: true,
+      } };
 
     await api.updateAmendment(facilityId, amendmentId, payload);
 
