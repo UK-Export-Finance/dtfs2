@@ -1,7 +1,7 @@
 const { AMENDMENT_UW_DECISION, AMENDMENT_TYPE } = require('../../../constants/deals');
 
 // email variables if amendment includes approved with conditions but not declined
-const approvedWithConditionsDecision = (amendmentVariables) => {
+const approvedWithWithoutConditionsDecision = (amendmentVariables) => {
   const { amendment, dealSnapshot, user } = amendmentVariables;
   const { ukefFacilityId, ukefDecision } = amendment;
   const { exporter, ukefDealId, bankInternalRefName } = dealSnapshot;
@@ -14,22 +14,6 @@ const approvedWithConditionsDecision = (amendmentVariables) => {
     bankReferenceNumber: bankInternalRefName,
     ukefDealId,
     conditions: ukefDecision.conditions,
-  };
-};
-
-// email variables if amendment is approved without conditions only
-const approvedWithoutConditionsDecision = (amendmentVariables) => {
-  const { amendment, dealSnapshot, user } = amendmentVariables;
-  const { ukefFacilityId } = amendment;
-  const { exporter, ukefDealId, bankInternalRefName } = dealSnapshot;
-  const { firstname, surname } = user;
-
-  return {
-    recipientName: `${firstname} ${surname}`,
-    ukefFacilityId,
-    exporterName: exporter.companyName,
-    bankReferenceNumber: bankInternalRefName,
-    ukefDealId,
   };
 };
 
@@ -114,8 +98,7 @@ const banksDecisionEmailVariables = (amendmentVariables) => {
 };
 
 module.exports = {
-  approvedWithConditionsDecision,
-  approvedWithoutConditionsDecision,
+  approvedWithWithoutConditionsDecision,
   approvedWithConditionsDeclinedDecision,
   approvedWithoutConditionsDeclinedDecision,
   declinedDecision,

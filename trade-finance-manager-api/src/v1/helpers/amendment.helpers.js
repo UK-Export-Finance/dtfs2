@@ -3,12 +3,13 @@ const sendTfmEmail = require('../controllers/send-tfm-email');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
 const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { automaticAmendmentEmailVariables } = require('../emails/amendments/automatic-approval-email-variables');
-const { approvedWithConditionsDecision,
-  approvedWithoutConditionsDecision,
+const {
+  approvedWithWithoutConditionsDecision,
   approvedWithConditionsDeclinedDecision,
   approvedWithoutConditionsDeclinedDecision,
   declinedDecision,
-  banksDecisionEmailVariables } = require('../emails/amendments/manual-amendment-decision-email-variables');
+  banksDecisionEmailVariables,
+} = require('../emails/amendments/manual-amendment-decision-email-variables');
 
 // checks if amendment exists and if eligble to send email
 const amendmentEmailEligible = (amendment) => {
@@ -50,8 +51,9 @@ const isApprovedWithoutConditions = (ukefDecision) => {
 const sendAutomaticAmendmentEmail = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
   const template = EMAIL_TEMPLATE_IDS.AUTOMATIC_AMENDMENT;
+  const emailVariables = automaticAmendmentEmailVariables(amendmentVariables);
 
-  const emailResponse = await sendTfmEmail(template, user.email, automaticAmendmentEmailVariables(amendmentVariables));
+  const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
   // if successful, then updates flag to say email has been sent
   if (emailResponse) {
     await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true });
@@ -71,8 +73,9 @@ const managersDecisionUpdateEmailConfirmation = async (facilityId, amendmentId) 
 const emailApprovedWithWithoutConditions = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
   const template = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS;
+  const emailVariables = approvedWithWithoutConditionsDecision(amendmentVariables);
 
-  const emailResponse = await sendTfmEmail(template, user.email, approvedWithConditionsDecision(amendmentVariables));
+  const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
   // if successful, then updates flag to say email has been sent
   if (emailResponse) {
     await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
@@ -82,8 +85,9 @@ const emailApprovedWithWithoutConditions = async (amendmentVariables) => {
 const emailApprovedWithoutConditions = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
   const template = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS;
+  const emailVariables = approvedWithWithoutConditionsDecision(amendmentVariables);
 
-  const emailResponse = await sendTfmEmail(template, user.email, approvedWithoutConditionsDecision(amendmentVariables));
+  const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
   // if successful, then updates flag to say email has been sent
   if (emailResponse) {
     await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
@@ -93,8 +97,9 @@ const emailApprovedWithoutConditions = async (amendmentVariables) => {
 const emailApprovedWithConditionsDeclined = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
   const template = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED;
+  const emailVariables = approvedWithConditionsDeclinedDecision(amendmentVariables);
 
-  const emailResponse = await sendTfmEmail(template, user.email, approvedWithConditionsDeclinedDecision(amendmentVariables));
+  const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
   // if successful, then updates flag to say email has been sent
   if (emailResponse) {
     await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
@@ -104,8 +109,9 @@ const emailApprovedWithConditionsDeclined = async (amendmentVariables) => {
 const emailApprovedWithoutConditionsDeclined = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
   const template = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED;
+  const emailVariables = approvedWithoutConditionsDeclinedDecision(amendmentVariables);
 
-  const emailResponse = await sendTfmEmail(template, user.email, approvedWithoutConditionsDeclinedDecision(amendmentVariables));
+  const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
   // if successful, then updates flag to say email has been sent
   if (emailResponse) {
     await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
@@ -115,8 +121,9 @@ const emailApprovedWithoutConditionsDeclined = async (amendmentVariables) => {
 const emailDeclined = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
   const template = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED;
+  const emailVariables = declinedDecision(amendmentVariables);
 
-  const emailResponse = await sendTfmEmail(template, user.email, declinedDecision(amendmentVariables));
+  const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
   // if successful, then updates flag to say email has been sent
   if (emailResponse) {
     await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
@@ -167,8 +174,9 @@ const banksDecisionUpdateEmailConfirmation = async (facilityId, amendmentId) => 
 
 const emailBankDecision = async (amendmentVariables, template) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
+  const emailVariables = banksDecisionEmailVariables(amendmentVariables);
 
-  const emailResponse = await sendTfmEmail(template, user.email, banksDecisionEmailVariables(amendmentVariables));
+  const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
   // if successful, then updates flag to say email has been sent
   if (emailResponse) {
     await banksDecisionUpdateEmailConfirmation(facilityId, amendmentId);
@@ -195,7 +203,9 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
   }
 };
 
-module.exports = { amendmentEmailEligible,
+module.exports = {
+  amendmentEmailEligible,
   sendAutomaticAmendmentEmail,
   sendManualDecisionAmendmentEmail,
-  sendManualBankDecisionEmail };
+  sendManualBankDecisionEmail,
+};

@@ -5,6 +5,7 @@ const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision 
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS, UNDERWRITER_MANAGER_DECISIONS } = require('../../../constants/decisions.constant');
 const { formattedNumber } = require('../../../helpers/number');
+const { amendmentManagersDecisionConditionsValidation } = require('./validation/amendmentUnderwriterManagersDecisionConditions.validate');
 
 const getManagersConditionsAndComments = async (req, res) => {
   try {
@@ -45,9 +46,22 @@ const getManagersConditionsAndComments = async (req, res) => {
 
 const postManagersConditionsAndComments = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
+  const { user } = req.session;
   const { ukefDecisionConditions, ukefDecisionDeclined, ukefDecisionComments } = req.body;
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+
+  const { errorsObject, amendmentManagersDecisionConditionsErrors } = amendmentManagersDecisionConditionsValidation(req.body, amendment);
+
+  if (amendmentManagersDecisionConditionsErrors.length) {
+    return res.render('case/amendments/amendment-managers-conditions-and-comments.njk', {
+      amendment,
+      isEditable,
+      user,
+      errors: errorsObject.errors,
+    });
+  }
 
   try {
     const payload = {

@@ -166,7 +166,8 @@ const wrongAmendments = {
   },
 };
 
-module.exports = { approvedWithoutConditionsBothAmendments,
+module.exports = {
+  approvedWithoutConditionsBothAmendments,
   approvedWithoutConditionsOneAmendment,
   approvedWithConditionsBothAmendments,
   approvedWithConditionsOneAmendment,
@@ -177,4 +178,5 @@ module.exports = { approvedWithoutConditionsBothAmendments,
   approvedWithoutConditionsDeclinedSwapped,
   declinedBothAmendments,
   declinedOneAmendment,
-  wrongAmendments };
+  wrongAmendments,
+};
