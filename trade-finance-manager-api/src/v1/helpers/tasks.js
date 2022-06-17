@@ -5,8 +5,7 @@ const CONSTANTS = require('../../constants');
  * @param {Array} all task groups array
  * @returns {Object} Task
  */
-const getFirstTask = (tasks) =>
-  tasks[0].groupTasks[0];
+const getFirstTask = (tasks) => tasks[0].groupTasks[0];
 
 /**
  * Get a task in a group by task ID
@@ -14,8 +13,7 @@ const getFirstTask = (tasks) =>
  * @param {String} task ID
  * @returns {Object} Task
  */
-const getTaskInGroupById = (groupTasks, taskId) =>
-  groupTasks.find((t) => t.id === taskId);
+const getTaskInGroupById = (groupTasks, taskId) => groupTasks.find((t) => t.id === taskId);
 
 /**
  * Get a task in a group by task title
@@ -23,8 +21,7 @@ const getTaskInGroupById = (groupTasks, taskId) =>
  * @param {String} task title
  * @returns {Object} Task
  */
-const getTaskInGroupByTitle = (groupTasks, title) =>
-  groupTasks.find((task) => task.title === title);
+const getTaskInGroupByTitle = (groupTasks, title) => groupTasks.find((task) => task.title === title);
 
 /**
  * Get a group by group ID
@@ -44,8 +41,7 @@ const getGroupById = (allTaskGroups, groupId) => {
  * @param {String} group title
  * @returns {Object} Group
  */
-const getGroupByTitle = (allTaskGroups, title) =>
-  allTaskGroups.find(({ groupTitle }) => groupTitle === title);
+const getGroupByTitle = (allTaskGroups, title) => allTaskGroups.find(({ groupTitle }) => groupTitle === title);
 
 /**
  * Check if a given task ID is the first task in a group
@@ -53,8 +49,7 @@ const getGroupByTitle = (allTaskGroups, title) =>
  * @param {Number} group ID
  * @returns {Boolean}
  */
-const isFirstTaskInAGroup = (taskId, groupId) =>
-  (taskId === '1' && groupId > 1);
+const isFirstTaskInAGroup = (taskId, groupId) => taskId === '1' && groupId > 1;
 
 /**
  * Check if a given task ID and group ID is the first task in the first group
@@ -62,8 +57,7 @@ const isFirstTaskInAGroup = (taskId, groupId) =>
  * @param {Number} group ID
  * @returns {Boolean}
  */
-const isFirstTaskInFirstGroup = (taskId, groupId) =>
-  (taskId === '1' && groupId === 1);
+const isFirstTaskInFirstGroup = (taskId, groupId) => taskId === '1' && groupId === 1;
 
 /**
  * Check if a group has all tasks completed
@@ -73,8 +67,7 @@ const isFirstTaskInFirstGroup = (taskId, groupId) =>
 const groupHasAllTasksCompleted = (groupTasks = []) => {
   const totalTasks = groupTasks.length;
 
-  const completedTasks = groupTasks.filter((task) =>
-    task.status === CONSTANTS.TASKS.STATUS.COMPLETED);
+  const completedTasks = groupTasks.filter((task) => task.status === CONSTANTS.TASKS.STATUS.COMPLETED);
 
   if (completedTasks.length === totalTasks) {
     return true;
@@ -90,8 +83,7 @@ const groupHasAllTasksCompleted = (groupTasks = []) => {
  * @returns {Boolean}
  */
 const taskIsCompletedImmediately = (statusFrom, statusTo) => {
-  if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO
-    && statusTo === CONSTANTS.TASKS.STATUS.COMPLETED) {
+  if (statusFrom === CONSTANTS.TASKS.STATUS.TO_DO && statusTo === CONSTANTS.TASKS.STATUS.COMPLETED) {
     return true;
   }
 
@@ -111,8 +103,23 @@ const isAdverseHistoryTaskIsComplete = (allTaskGroups) => {
 
     const adverseTask = getTaskInGroupByTitle(adverseGroup.groupTasks, adverseTaskTitle);
 
-    if (adverseTask
-      && adverseTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+    if (adverseTask && adverseTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const isRiskAnalysisCompleted = (allTaskGroups) => {
+  const approvalsGroup = getGroupByTitle(allTaskGroups, CONSTANTS.TASKS_AMENDMENT.GROUP_TITLES.APPROVALS);
+
+  if (approvalsGroup) {
+    const riskAnalysisTaskTitle = CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS;
+
+    const riskTask = getTaskInGroupByTitle(approvalsGroup.groupTasks, riskAnalysisTaskTitle);
+
+    if (riskTask && riskTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
       return true;
     }
   }
@@ -132,13 +139,11 @@ const isAdverseHistoryTaskIsComplete = (allTaskGroups) => {
  * @returns {Boolean}
  */
 const shouldUpdateDealStage = (submissionType, taskId, groupId, statusFrom, statusTo) => {
-  const isMiaDeal = (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+  const isMiaDeal = submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
   const firstTaskInFirstGroup = isFirstTaskInFirstGroup(taskId, groupId);
   const taskCompletedImmediately = taskIsCompletedImmediately(statusFrom, statusTo);
 
-  if (isMiaDeal
-    && firstTaskInFirstGroup
-    && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately)) {
+  if (isMiaDeal && firstTaskInFirstGroup && (statusTo === CONSTANTS.TASKS.STATUS.IN_PROGRESS || taskCompletedImmediately)) {
     return true;
   }
 
@@ -157,4 +162,5 @@ module.exports = {
   taskIsCompletedImmediately,
   isAdverseHistoryTaskIsComplete,
   shouldUpdateDealStage,
+  isRiskAnalysisCompleted,
 };

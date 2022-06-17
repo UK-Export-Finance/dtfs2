@@ -10,12 +10,7 @@ const generateTaskDates = require('./generate-task-dates');
 const mapTaskObject = async (originalTask, updateInput) => {
   const statusFrom = originalTask.status;
 
-  const {
-    id: taskIdToUpdate,
-    groupId,
-    assignedTo,
-    status: statusTo,
-  } = updateInput;
+  const { id: taskIdToUpdate, groupId, assignedTo, status: statusTo } = updateInput;
 
   const { userId: assignedUserId } = assignedTo;
 

@@ -4,6 +4,7 @@ const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpe
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
+const { filterTasks } = require('../helpers/tasks.helper');
 
 const {
   DEAL,
@@ -63,6 +64,14 @@ const getCaseTasks = async (req, res) => {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
+  if (amendments.length > 0) {
+    amendments.map((a) => {
+      const amendment = a;
+      amendment.tasks = filterTasks(amendment.tasks, tasksFilters);
+      return amendment;
+    });
+  }
+
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
@@ -98,6 +107,25 @@ const filterCaseTasks = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+
+  if (amendments.length > 0) {
+    amendments.map((a) => {
+      const amendment = a;
+      amendment.tasks = filterTasks(amendment.tasks, tasksFilters);
+      return amendment;
+    });
+  }
+
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
@@ -107,6 +135,8 @@ const filterCaseTasks = async (req, res) => {
     dealId,
     user: req.session.user,
     selectedTaskFilter: filterType,
+    amendments,
+    hasAmendmentInProgress,
   });
 };
 

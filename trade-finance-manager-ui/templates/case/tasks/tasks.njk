@@ -43,7 +43,7 @@
 
       {% if amendments.length %}
         {% for amendment in amendments %}
-          {{ amendmentsTasksTable.render({ tasks: amendment.tasks, amendment: amendment, user: user }) }}
+          {{ amendmentsTasksTable.render({ tasks: amendment.tasks, amendment: amendment, user: user, selectedTaskFilter: selectedTaskFilter }) }}
         {% endfor %}
       {% endif %}
 
@@ -62,7 +62,8 @@
       {% else %}
 
         {% set noTasksComponentData = {
-          selectedTaskFilter: selectedTaskFilter
+          selectedTaskFilter: selectedTaskFilter,
+          taskType: 'deal'
         } %}
 
         {{ noTasksMessage.render(noTasksComponentData)}}
