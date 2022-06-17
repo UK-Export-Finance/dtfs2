@@ -814,7 +814,8 @@ jobs:
               MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} \
               MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }} \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-              WEBSITE_USE_PLACEHOLDER=0
+              WEBSITE_USE_PLACEHOLDER=0 \
+              TZ=Europe/London
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
@@ -941,7 +942,8 @@ jobs:
               MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} \
               MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-              WEBSITE_USE_PLACEHOLDER=0
+              WEBSITE_USE_PLACEHOLDER=0 \
+              TZ=Europe/London
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
@@ -1200,7 +1202,8 @@ jobs:
               AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
-              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
+              TZ=Europe/London
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1338,7 +1341,8 @@ jobs:
               WEBSITE_VNET_ROUTE_ALL=1 \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
+              TZ=Europe/London
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -1496,7 +1500,8 @@ jobs:
               WEBSITE_VNET_ROUTE_ALL=1 \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
+              TZ=Europe/London
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -1679,7 +1684,8 @@ jobs:
               WEBSITE_VNET_ROUTE_ALL=1 \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
+              TZ=Europe/London
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -1864,7 +1870,8 @@ jobs:
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               HTTPS=1 \
               START_PAGE_REDIRECT=1 \
-              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
+              TZ=Europe/London
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -2027,7 +2034,8 @@ jobs:
               UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
               ESTORE_URL="${{ secrets.ESTORE_URL }}" \
               HTTPS=1 \
-              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
+              TZ=Europe/London
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -2188,7 +2196,8 @@ jobs:
               REDIS_KEY="$redis_key" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               HTTPS=1 \
-              LOG4J_FORMAT_MSG_NO_LOOKUPS=true
+              LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
+              TZ=Europe/London
 
     - name: Secrets
       uses: azure/cli@v1.0.0
