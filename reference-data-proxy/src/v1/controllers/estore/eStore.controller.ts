@@ -19,27 +19,6 @@ const validateEstoreInput = (eStoreData: any) => {
   return true;
 };
 
-const checkExistingCronJobs = async () => {
-  const cronJobLogsCollection = await getCollection('cron-job-logs');
-  console.info('Cron Job: Checking for running CronJobs');
-  const runningCronJobs = await cronJobLogsCollection.find({ 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING }).toArray();
-
-  if (runningCronJobs.length) {
-    console.info('Cron Job: The following jobs are running ', runningCronJobs);
-    // eslint-disable-next-line no-restricted-syntax
-    for (const job of runningCronJobs) {
-      eStoreCronJobManager.add(job.siteName, siteCreationTimer, async () => {
-        await eStoreSiteCreationJob(job);
-      });
-      eStoreCronJobManager.start(job.siteName);
-    }
-  } else {
-    console.info('Cron Job: There are no active CronJobs');
-  }
-};
-
-checkExistingCronJobs();
-
 export const createEstore = async (req: Request, res: Response) => {
   const eStoreData: Estore = req.body;
 
