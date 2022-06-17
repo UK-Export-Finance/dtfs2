@@ -18,7 +18,7 @@ const commonDealItems = {
     status: CONSTANTS.DEAL_STATUS.COMPLETED,
   },
   bankInternalRefName: chance.string({ length: 5 }),
-  mandatoryVersionId: null,
+  mandatoryVersionId: 33,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
   submissionDate: '1638363716309',

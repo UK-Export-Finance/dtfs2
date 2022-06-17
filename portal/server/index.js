@@ -13,9 +13,7 @@ const eligibilityRoutes = require('./routes/contract/eligibility');
 const healthcheck = require('./healthcheck');
 const uploadTest = require('./upload-test');
 const configureNunjucks = require('./nunjucks-configuration');
-const csrfToken = require('./routes/middleware/csrf-token.middleware');
-const seo = require('./routes/middleware/headers/seo');
-const security = require('./routes/middleware/headers/security');
+const { csrf: csrfToken, seo, security } = require('./routes/middleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;

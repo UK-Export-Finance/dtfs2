@@ -235,8 +235,6 @@ type TFMTaskGroup {
 }
 
 type TFMTaskHistory {
-  taskId: String
-  groupId: String
   statusFrom: String
   statusTo: String
   assignedUserId: String
@@ -452,7 +450,7 @@ input TFMLossGivenDefaultInput {
 }
 
 input TFMProbabilityOfDefaultInput {
-  probabilityOfDefault: Int
+  probabilityOfDefault: Float
 }
 
 input TFMFacilityRiskProfileInput {

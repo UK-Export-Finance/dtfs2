@@ -33,7 +33,7 @@ exports.findAll = async (req, res) => {
 
 exports.findOne = async (req, res) => {
   const country = await findOneCountry(req.params.code);
-  const status = country ? '200' : '404';
+  const status = country ? 200 : 404;
 
   res.status(status).send(country);
 };

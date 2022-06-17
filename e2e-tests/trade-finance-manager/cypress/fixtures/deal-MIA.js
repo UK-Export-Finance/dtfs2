@@ -182,6 +182,7 @@ const MOCK_DEAL = {
       ukefGuaranteeInMonths: '10',
       bondBeneficiary: 'test',
       guaranteeFeePayableByBank: '9.0000',
+      banksInterestMargin: '10',
       value: '12345.00',
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '10',

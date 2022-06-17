@@ -33,6 +33,7 @@ jobs:
   # this action is used to cancel previous runs for the current branch
   cancel-previous-tests:
     name: "Cancel previous tests"
+    needs: set-environment
     runs-on: [self-hosted, api-tests]
     timeout-minutes: 3
     steps:
@@ -88,6 +89,7 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
+        docker network prune -f
         docker-compose -f docker-compose.gha.yml up --build -d
         echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
         sleep 10

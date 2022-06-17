@@ -68,7 +68,7 @@ const mapCoverEndDate = (coverStartDate, exposurePeriod) => {
     months: exposurePeriod,
   });
 
-  return getUnixTime(date);
+  return new Date(getUnixTime(date));
 };
 
 const mapV1Facilities = (

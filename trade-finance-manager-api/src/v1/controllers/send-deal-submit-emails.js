@@ -158,7 +158,7 @@ const sendAinMinAcknowledgement = async (deal) => {
 
     templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION;
 
-    emailVariables = generateAinMinConfirmationEmailVars(deal, facilityLists);
+    emailVariables = await generateAinMinConfirmationEmailVars(deal, facilityLists);
 
     makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
     // send a copy of the email to PIM
@@ -188,6 +188,23 @@ const sendDealSubmitEmails = async (deal) => {
   };
 };
 
+const sendMigratedDealEmail = async (dealId) => {
+  if (!dealId) {
+    return false;
+  }
+
+  const sendToEmailAddress = process.env.INTERNAL_EMAIL_GROUP;
+  const emailVariables = {
+    dealId,
+  };
+
+  return sendTfmEmail(
+    CONSTANTS.EMAIL_TEMPLATE_IDS.MIGRATED_DEAL_SUBMITTED,
+    sendToEmailAddress,
+    emailVariables,
+  );
+};
+
 module.exports = {
   shouldSendFirstTaskEmail,
   sendFirstTaskEmail,
@@ -195,4 +212,5 @@ module.exports = {
   sendMiaAcknowledgement,
   generateBssDealAinMinConfirmationEmailVariables,
   sendAinMinAcknowledgement,
+  sendMigratedDealEmail,
 };

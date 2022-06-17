@@ -1,11 +1,6 @@
 const express = require('express');
 const api = require('../../api');
-const {
-  getApiData,
-  requestParams,
-  errorHref,
-  generateErrorSummary,
-} = require('../../helpers');
+const { getApiData, requestParams, errorHref, generateErrorSummary } = require('../../helpers');
 
 const router = express.Router();
 
@@ -14,32 +9,23 @@ router.get('/:_id', async (req, res) => {
 
   const { _id } = req.session.user;
 
-  const user = await getApiData(
-    api.user(_id, userToken),
-    res,
-  );
+  const user = await getApiData(api.user(_id, userToken), res);
 
-  return res.render(
-    'user/profile.njk',
-    {
-      _id,
-      user,
-    },
-  );
+  return res.render('user/profile.njk', {
+    _id,
+    user,
+  });
 });
 
 // When user is logged in and would like to change the password
 router.get('/:_id/change-password', async (req, res) => {
   const { _id } = requestParams(req);
 
-  return res.render(
-    'user/change-password.njk',
-    {
-      _id,
-      user: req.session.user,
-      requireCurrentPassword: true,
-    },
-  );
+  return res.render('user/change-password.njk', {
+    _id,
+    user: req.session.user,
+    requireCurrentPassword: true,
+  });
 });
 
 // When user is logged in and would like to change the password
@@ -54,8 +40,7 @@ router.post('/:_id/change-password', async (req, res) => {
     if (!currentPassword || !password || !passwordConfirm) {
       const error = {
         count: 0,
-        errorList: {
-        },
+        errorList: {},
       };
 
       if (!currentPassword) {
@@ -82,31 +67,22 @@ router.post('/:_id/change-password', async (req, res) => {
         };
       }
 
-      formattedValidationErrors = generateErrorSummary(
-        error,
-        errorHref,
-      );
+      formattedValidationErrors = generateErrorSummary(error, errorHref);
     } else {
       const { status, data } = await api.updateUser(_id, req.body, req.session.userToken);
 
       if (status === 200) {
         return res.redirect(`/user/${_id}`);
       }
-      formattedValidationErrors = generateErrorSummary(
-        data.errors,
-        errorHref,
-      );
+      formattedValidationErrors = generateErrorSummary(data.errors, errorHref);
     }
 
-    return res.render(
-      'user/change-password.njk',
-      {
-        _id,
-        user: req.session.user,
-        validationErrors: formattedValidationErrors,
-        requireCurrentPassword: true,
-      },
-    );
+    return res.render('user/change-password.njk', {
+      _id,
+      user: req.session.user,
+      validationErrors: formattedValidationErrors,
+      requireCurrentPassword: true,
+    });
   }
   return res.redirect('/');
 });

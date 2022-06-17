@@ -19,12 +19,12 @@ const MockPostRequest = () => {
     _id: 'abc',
     bank: { id: 'mock-bank' },
   };
-  req.params = { id: '1234' };
+  req.params = { dealId: '1234' };
   return req;
 };
 const MockRequestWithIdParam = () => {
   const req = {};
-  req.params = { id: '1234' };
+  req.params = { dealId: '1234' };
   return req;
 };
 const MockApplicationResponse = () => {

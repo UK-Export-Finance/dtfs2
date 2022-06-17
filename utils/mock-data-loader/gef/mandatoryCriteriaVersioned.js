@@ -64,17 +64,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
         ],
       },
     ],
-  },
-  {
-    version: 34,
-    createdAt: new Date('2021-01-04T00:00'),
-    updatedAt: null,
-    isInDraft: true,
-    title: 'Example draft new version',
-    criteria: [
-      { id: '1', body: 'Test is a mock test' },
-    ],
-  },
+  }
 ];
 
 module.exports = MANDATORY_CRITERIA_VERSIONED;

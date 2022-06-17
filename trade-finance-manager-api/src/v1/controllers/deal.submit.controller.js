@@ -12,6 +12,7 @@ const { updateFacilities } = require('./update-facilities');
 const { convertDealCurrencies } = require('./deal.convert-deal-currencies');
 
 const addTfmDealData = require('./deal-add-tfm-data');
+const dealStage = require('./deal-add-tfm-data/dealStage');
 const { updatedIssuedFacilities } = require('./update-issued-facilities');
 const { updatePortalDealStatus } = require('./update-portal-deal-status');
 const CONSTANTS = require('../../constants');
@@ -21,7 +22,11 @@ const acbsController = require('./acbs.controller');
 const dealController = require('./deal.controller');
 const { shouldUpdateDealFromMIAtoMIN } = require('./should-update-deal-from-MIA-to-MIN');
 const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-to-MIN');
-const { sendDealSubmitEmails, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
+const {
+  sendDealSubmitEmails,
+  sendAinMinAcknowledgement,
+  sendMigratedDealEmail,
+} = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const dealHasAllUkefIds = require('../helpers/dealHasAllUkefIds');
 
@@ -155,6 +160,10 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
         await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
       }
       await sendAinMinAcknowledgement(updatedDeal);
+
+      // if changed to MIN, status should be updated to confirmed
+      const updatedDealStage = dealStage(mappedDeal.status, mappedDeal.submissionType);
+      updatedDeal.tfm.stage = updatedDealStage;
     }
     await updatePortalDealStatus(updatedDeal);
 
@@ -196,8 +205,48 @@ const submitMigratedDeal = async (dealId, dealType, checker) => {
       updatedDeal.manualInclusionNoticeSubmissionDate = portalMINUpdate.details.manualInclusionNoticeSubmissionDate;
       updatedDeal.checkerMIN = portalMINUpdate.details.checkerMIN;
     }
+
     await sendAinMinAcknowledgement(updatedDeal);
   }
+
+  // ACBS interaction : AIN or MIN only
+  if (dealController.canDealBeSubmittedToACBS(updatedDeal.submissionType)) {
+    console.info('Migrated deal ACBS interaction initiated: ', dealId);
+
+    // Add `updatedDeal` deal object to `migratedDeals` collection
+    const migratedDealToGo = {
+      ...updatedDeal,
+      issueFacility: [],
+    };
+
+    // Issue facility ACBS JSON
+    updatedDeal.facilities.filter((facility) => facility.hasBeenIssued).map((facility) => migratedDealToGo.issueFacility.push(
+      {
+        facilityId: facility.ukefFacilityId,
+        facility,
+        deal: {
+          dealSnapshot: {
+            dealType: deal.dealType,
+            submissionType: deal.submissionType,
+            submissionDate: deal.submissionDate,
+          },
+          exporter: {
+            ...deal.exporter,
+          },
+        },
+      },
+    ));
+
+    const migratedDeals = await getCollection('migratedDeals');
+    migratedDeals.insertOne(migratedDealToGo);
+
+    // ACBS
+    await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
+
+    // Send notification email
+    await sendMigratedDealEmail(dealId);
+  }
+
   await updatePortalDealStatus(updatedDeal);
 
   return true;

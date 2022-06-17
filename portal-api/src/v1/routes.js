@@ -177,7 +177,7 @@ openRouter.route('/users/:_id/disable').delete(users.disable);
 
 openRouter.route('/login').post(users.login);
 
-// 1. Request pasword reset
+// 1. Request password reset
 openRouter.route('/users/reset-password').post(users.resetPassword);
 
 // 2. Password reset post request
@@ -191,5 +191,8 @@ authRouter.route('/reports/review-ukef-decision').get(validate({ role: ['maker',
 authRouter.get('/validate', validate(), (req, res) => {
   res.status(200).send();
 });
+
+// bank-validator
+authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
 module.exports = { authRouter, openRouter, authRouterAllowXss };

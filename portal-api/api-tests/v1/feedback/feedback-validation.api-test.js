@@ -1,9 +1,7 @@
-const moment = require('moment');
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
-const { dateValidationText } = require('../../../src/v1/validation/fields/date');
 
 describe('/v1/deals/:id/bond', () => {
   const allFeedbackFields = {
@@ -37,7 +35,7 @@ describe('/v1/deals/:id/bond', () => {
     it('returns 400 with validation errors', async () => {
       const { status, body } = await postFeedback();
 
-      expect(status).toEqual(400); 
+      expect(status).toEqual(400);
       expect(body.validationErrors.count).toEqual(6);
       expect(body.validationErrors).toBeDefined();
     });
@@ -159,7 +157,7 @@ describe('/v1/deals/:id/bond', () => {
           const postInvalidEmail = async (emailAddress) => {
             const feedback = {
               ...allFeedbackFields,
-              emailAddress: emailAddress,
+              emailAddress,
             };
             const { body } = await postFeedback(feedback);
             return body.validationErrors;
@@ -170,13 +168,13 @@ describe('/v1/deals/:id/bond', () => {
           let validationErrors = await postInvalidEmail('hello');
           expect(validationErrors.errorList.emailAddress.text).toEqual(expectedText);
 
-          validationErrors = await postInvalidEmail('hello@')
+          validationErrors = await postInvalidEmail('hello@');
           expect(validationErrors.errorList.emailAddress.text).toEqual(expectedText);
 
-          validationErrors = await postInvalidEmail('hello@test')
+          validationErrors = await postInvalidEmail('hello@test');
           expect(validationErrors.errorList.emailAddress.text).toEqual(expectedText);
 
-          validationErrors = await postInvalidEmail('hello@test.')
+          validationErrors = await postInvalidEmail('hello@test.');
           expect(validationErrors.errorList.emailAddress.text).toEqual(expectedText);
         });
       });

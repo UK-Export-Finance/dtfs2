@@ -2,14 +2,18 @@ const mapGefDeal = require('./map-gef-deal');
 const { mapCashContingentFacility } = require('./map-cash-contingent-facility');
 
 const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
-const MOCK_CASH_CONTINGENT_FACILIIES = require('../../__mocks__/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITES = require('../../__mocks__/mock-cash-contingent-facilities');
+const api = require('../../api');
+
+const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
+api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
 describe('mappings - map submitted deal - mapGefDeal', () => {
   it('should return mapped deal', () => {
     const mockDeal = {
       dealSnapshot: {
         ...MOCK_GEF_DEAL,
-        facilities: MOCK_CASH_CONTINGENT_FACILIIES,
+        facilities: MOCK_CASH_CONTINGENT_FACILITES,
       },
       tfm: {},
     };
@@ -47,6 +51,8 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
       bank: {
         emails: dealSnapshot.bank.emails,
       },
+      mandatoryVersionId: null,
+      eligibility: expect.any(Object),
       tfm: mockDeal.tfm,
     };
 

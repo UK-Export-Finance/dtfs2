@@ -14,7 +14,7 @@ context('Dashboard: Unissued facilities report', () => {
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 90 days left
-      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
+      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(2, 0, 1, 0);
       // let daysInThePast = sub(setDateToMidnight, { days: 0 });
       const date = new Date(setDateToMidnight).valueOf().toString();
 
@@ -35,7 +35,7 @@ context('Dashboard: Unissued facilities report', () => {
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 6 days left
-      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
+      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(2, 0, 1, 0);
       let daysInThePast = sub(setDateToMidnight, { days: 85 });
       daysInThePast = new Date(daysInThePast).valueOf().toString();
 
@@ -57,7 +57,7 @@ context('Dashboard: Unissued facilities report', () => {
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       // 4 days overdue
-      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(0, 0, 1, 0);
+      const setDateToMidnight = (new Date(parseInt(Date.now(), 10))).setHours(2, 0, 1, 0);
       let daysInThePast = sub(setDateToMidnight, { days: 95 });
       daysInThePast = new Date(daysInThePast).valueOf().toString();
 

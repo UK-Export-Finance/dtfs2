@@ -31,6 +31,11 @@ exports.cloneDealCreateApplication = async (req, res, next) => {
 
     return res.redirect('/dashboard');
   } catch (err) {
+    // check if the user has access to the resource
+    if (err.status === 404) {
+      // redirect to the dashboard
+      return res.redirect('/not-found');
+    }
     return next(err);
   }
 };
