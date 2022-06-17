@@ -20,7 +20,7 @@ const updateFacilityAmendment = async (req, res) => {
     delete payload.requireUkefApproval;
   }
 
-  if (payload.taskUpdate.updateTask) {
+  if (payload?.taskUpdate?.updateTask) {
     payload.tasks = await updateAmendmentTask(facilityId, amendmentId, payload.taskUpdate);
     delete payload.taskUpdate;
   }
