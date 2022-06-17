@@ -1,16 +1,20 @@
 /**
- * DATA MIGRATION
- * **************
- * Purpose of this script is to migrate GEF deals to TFM.
- * Since GEF deals are not subjected to execution on Workflow.
- */
+* DATA MIGRATION
+* **************
+* Purpose of this script is to migrate GEF deals to TFM.
+* Since GEF deals are not subjected to execution on Workflow.
+*/
 
+const fs = require('fs');
 const axios = require('axios');
 const CONSTANTS = require('../constant');
 const {
   getCollection,
   disconnect,
 } = require('../helpers/database');
+const {
+  open,
+} = require('../helpers/actionsheets');
 
 const version = '0.0.1';
 const { TFM_API } = process.env;
@@ -18,27 +22,27 @@ const { TFM_API } = process.env;
 // ******************** DEALS *************************
 
 /**
- * Return all the portal deals, without (default) or with filter specified.
- * @param {Object} filter Mongo filter
- * @returns {Object} Collection object
- */
+* Return all the portal deals, without (default) or with filter specified.
+* @param {Object} filter Mongo filter
+* @returns {Object} Collection object
+*/
 const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL, filter);
 
 /**
- * Returns all TFM deals.
- * @param {Object} filter Mongo filter
- * @returns {Object} Collection object
- */
+* Returns all TFM deals.
+* @param {Object} filter Mongo filter
+* @returns {Object} Collection object
+*/
 
 const submitTfmDeal = async () => {
-  console.info('\x1b[33m%s\x1b[0m', '➕ 1. Deals', '\n');
+  console.info('\x1b[33m%s\x1b[0m', '➕ 1. Creating deals', '\n');
 
   let counter = 0;
   /**
-   * AND condition
-   * 1. Deal type : GEF
-   * 2. Property exists : dataMigration
-   */
+  * AND condition
+  * 1. Deal type : GEF
+  * 2. Property exists : dataMigration
+  */
   const filter = {
     $and: [
       { dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF },
@@ -102,15 +106,40 @@ const submitTfmDeal = async () => {
     .catch((e) => Promise.reject(e));
 };
 
-// ******************** FACILITIES *************************
+const updateTfmDeal = () => {
+
+};
+
+// ******************** ACTION SHEETS *************************
+
+const actionSheets = () => {
+  console.info('\x1b[33m%s\x1b[0m', '➕ 2. Parsing action sheets', '\n');
+  const path = './actionsheets';
+
+  try {
+    const files = fs.readdirSync(path);
+
+    files.forEach((file) => {
+      const uri = `${path}/${file}`;
+      open(uri)
+        .then((r) => {
+          console.log(r);
+        });
+    });
+
+    return Promise.resolve(true);
+  } catch (e) {
+    return Promise.reject(new Error(`🚩 Unable to read the directory ${e}`));
+  }
+};
 
 // ******************** MAIN *************************
 
 /**
- * Entry point function.
- * Initiates Deal and Facilities creation and save process.
- * @returns {Boolean} Execution status
- */
+* Entry point function.
+* Initiates Deal and Facilities creation and save process.
+* @returns {Boolean} Execution status
+*/
 const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating GEF TFM migration v${version}.`, '\n\n');
 
@@ -118,6 +147,8 @@ const migrate = () => {
     .then((result) => {
       if (result) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully inserted ${result} TFM deals.\n`);
     })
+    .then(() => actionSheets())
+    .then(() => updateTfmDeal())
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {
@@ -126,4 +157,5 @@ const migrate = () => {
     });
 };
 
-migrate();
+// migrate();
+actionSheets().then((r) => console.log(r));
