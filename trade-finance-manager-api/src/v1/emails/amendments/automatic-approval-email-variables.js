@@ -1,6 +1,7 @@
-const amendmentEmailVariables = (amendment, deal, user) => {
+const automaticAmendmentEmailVariables = (amendmentVariables) => {
+  const { amendment, dealSnapshot, user } = amendmentVariables;
   const { ukefFacilityId } = amendment;
-  const { exporter, ukefDealId, bankInternalRefName } = deal;
+  const { exporter, ukefDealId, bankInternalRefName } = dealSnapshot;
   const { firstname, surname } = user;
 
   return {
@@ -12,4 +13,4 @@ const amendmentEmailVariables = (amendment, deal, user) => {
   };
 };
 
-module.exports = { amendmentEmailVariables };
+module.exports = { automaticAmendmentEmailVariables };
