@@ -1,5 +1,5 @@
 const api = require('../api');
-const { amendmentEmailEligible, sendAutomaticAmendmentEmail } = require('../helpers/amendment.helpers');
+const { amendmentEmailEligible, sendAutomaticAmendmentEmail, sendManualDecisionAmendmentEmail, sendManualBankDecisionEmail } = require('../helpers/amendment.helpers');
 
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
@@ -27,6 +27,15 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
           const automaticAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
           // sends email and updates flag if sent
           await sendAutomaticAmendmentEmail(automaticAmendmentVariables);
+        }
+        if (amendment?.ukefDecision?.managersDecisionEmail && !amendment?.ukefDecision?.managersDecisionEmailSent) {
+          // if managers decision email to be sent and not already sent
+          const ukefDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
+          await sendManualDecisionAmendmentEmail(ukefDecisionAmendmentVariables);
+        }
+        if (amendment?.bankDecision?.banksDecisionEmail && !amendment?.bankDecision?.banksDecisionEmailSent) {
+          const bankDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
+          await sendManualBankDecisionEmail(bankDecisionAmendmentVariables);
         }
       }
     }
