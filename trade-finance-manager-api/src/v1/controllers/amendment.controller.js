@@ -1,6 +1,7 @@
 const api = require('../api');
 const { createAmendmentTasks, updateAmendmentTask } = require('../helpers/create-tasks-amendment.helper');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
+const { amendmentEmailEligible, sendAutomaticAmendmentEmail, sendManualDecisionAmendmentEmail, sendManualBankDecisionEmail } = require('../helpers/amendment.helpers');
 
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
@@ -9,6 +10,40 @@ const createFacilityAmendment = async (req, res) => {
     return res.status(200).send({ amendmentId });
   }
   return res.status(422).send({ data: 'Unable to create amendment' });
+};
+
+const sendAmendmentEmail = async (amendmentId, facilityId) => {
+  try {
+    const amendment = await api.getAmendmentById(facilityId, amendmentId);
+
+    // if amendment exists and if automaticApprovalEmail field is present
+    if (amendmentEmailEligible(amendment)) {
+      const { dealSnapshot } = await api.findOneDeal(amendment.dealId);
+
+      if (dealSnapshot) {
+      // gets portal user to ensure latest details
+        const user = await api.findPortalUserById(dealSnapshot.maker._id);
+
+        // if automaticApprovalEmail and !automaticApprovalEmailSent (email not sent before)
+        if (amendment?.automaticApprovalEmail && !amendment?.automaticApprovalEmailSent) {
+          const automaticAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
+          // sends email and updates flag if sent
+          await sendAutomaticAmendmentEmail(automaticAmendmentVariables);
+        }
+        if (amendment?.ukefDecision?.managersDecisionEmail && !amendment?.ukefDecision?.managersDecisionEmailSent) {
+          // if managers decision email to be sent and not already sent
+          const ukefDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
+          await sendManualDecisionAmendmentEmail(ukefDecisionAmendmentVariables);
+        }
+        if (amendment?.bankDecision?.banksDecisionEmail && !amendment?.bankDecision?.banksDecisionEmailSent) {
+          const bankDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
+          await sendManualBankDecisionEmail(bankDecisionAmendmentVariables);
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Error sending amendment email', { err });
+  }
 };
 
 const updateFacilityAmendment = async (req, res) => {
@@ -29,6 +64,9 @@ const updateFacilityAmendment = async (req, res) => {
   }
 
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+  // sends email if conditions are met
+  await sendAmendmentEmail(amendmentId, facilityId);
+
   if (createdAmendment) {
     return res.status(200).send(createdAmendment);
   }
@@ -137,4 +175,5 @@ module.exports = {
   getCompletedAmendmentByDealId,
   getLatestCompletedAmendmentByDealId,
   getAllAmendmentsInProgress,
+  sendAmendmentEmail,
 };

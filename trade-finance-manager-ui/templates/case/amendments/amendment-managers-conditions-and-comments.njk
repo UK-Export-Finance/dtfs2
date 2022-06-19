@@ -37,7 +37,7 @@
         {% if amendment.ukefDecision.coverEndDate === 'Approved with conditions' or amendment.ukefDecision.value === 'Approved with conditions' %}
             {{ govukCharacterCount({
               name: "ukefDecisionConditions",
-              id: "ukef-decision-conditions",
+              id: "ukefDecisionConditions",
               maxlength: 1000,
               rows: 9,
               label: {
@@ -50,8 +50,11 @@
                 'data-cy': 'amendment--managers-decision-conditions'
               },
               value: amendment.ukefDecision.conditions,
-              errorMessage: validationErrors.errorList.ukefDecisionConditions and {
-                text: validationErrors.errorList.ukefDecisionConditions.text
+              errorMessage: errors and errors.fieldErrors.ukefDecisionConditions and {
+                text: errors.fieldErrors.ukefDecisionConditions.text,
+                attributes: {
+                  'data-cy': 'amendment--inline-error'
+                }
               }
             }) }}
         {% endif %}
@@ -59,7 +62,7 @@
         {% if amendment.ukefDecision.coverEndDate === 'Declined' or amendment.ukefDecision.value === 'Declined' %}
             {{ govukCharacterCount({
               name: "ukefDecisionDeclined",
-              id: "ukef-decision-declined",
+              id: "ukefDecisionDeclined",
               maxlength: 1000,
               rows: 9,
               label: {
@@ -72,8 +75,11 @@
                 'data-cy': 'amendment--managers-decision-reasons'
               },
               value: amendment.ukefDecision.declined,
-              errorMessage: validationErrors.errorList.ukefDecisionDeclined and {
-                text: validationErrors.errorList.ukefDecisionDeclined.text
+              errorMessage: errors and errors.fieldErrors.ukefDecisionDeclined and {
+                text: errors.fieldErrors.ukefDecisionDeclined.text,
+                attributes: {
+                  'data-cy': 'amendment--inline-error'
+                }
               }
             }) }}
         {% endif %}

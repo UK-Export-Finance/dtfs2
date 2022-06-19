@@ -1,4 +1,4 @@
-const { format, fromUnixTime } = require('date-fns');
+const { format, fromUnixTime, getUnixTime } = require('date-fns');
 
 const api = require('../../../api');
 const { AMENDMENT_STATUS, AMENDMENT_BANK_DECISION } = require('../../../constants/amendments');
@@ -134,6 +134,11 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
     // updates amendment with receivedDate
     const payload = { bankDecision: { receivedDate: amendmentBankRequestDate } };
 
+    // if amendment changed to withdrawn and effective date set, then change to null
+    if (amendment.bankDecision.decision === AMENDMENT_BANK_DECISION.WITHDRAW && amendment?.bankDecision?.effectiveDate) {
+      payload.bankDecision.effectiveDate = null;
+    }
+
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
     if (status === 200) {
@@ -265,7 +270,20 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
 
   try {
     // updates amendment with status to completed and submitted flag as true on bank decision
-    const payload = { status: AMENDMENT_STATUS.COMPLETED, bankDecision: { submitted: true } };
+    const payload = {
+      status: AMENDMENT_STATUS.COMPLETED,
+      bankDecision: {
+        submitted: true,
+        banksDecisionEmail: true,
+        submittedAt: getUnixTime(new Date()),
+        submittedBy: {
+          _id: req?.session?.user?._id,
+          username: req?.session?.user?.username,
+          name: `${req?.session?.user?.firstName} ${req?.session?.user?.lastName}`,
+          email: req?.session?.user?.email,
+        },
+      },
+    };
 
     await api.updateAmendment(facilityId, amendmentId, payload);
 
