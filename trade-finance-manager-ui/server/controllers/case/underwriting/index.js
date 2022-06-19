@@ -32,7 +32,7 @@ const getUnderwriterPage = async (req, res) => {
   let { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
   amendment = amendment.filter(({ submittedByPim }) => submittedByPim);
   // if amendments object exists then populate fields
-  if (amendment.length) {
+  if (amendment.length && amendment?.submittedByPim) {
     // TODO: change so that the underwriting tab has all amendments listed
     [amendment] = amendment;
     if (amendment?.ukefDecision) {
