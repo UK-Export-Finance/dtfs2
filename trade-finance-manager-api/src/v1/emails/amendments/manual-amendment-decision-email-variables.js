@@ -13,7 +13,7 @@ const approvedWithWithoutConditionsDecision = (amendmentVariables) => {
     exporterName: exporter.companyName,
     bankReferenceNumber: bankInternalRefName,
     ukefDealId,
-    conditions: ukefDecision.conditions,
+    conditions: ukefDecision?.conditions,
   };
 };
 

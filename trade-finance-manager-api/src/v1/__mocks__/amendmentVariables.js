@@ -1,4 +1,11 @@
-const CONSTANTS = require('../../constants');
+const { DEALS: { AMENDMENT_UW_DECISION } } = require('../../constants');
+
+const ukefDealId = '3333';
+const ukefFacilityId = '4444';
+const facilityId = '1111';
+const amendmentId = '2222'
+const conditions = 'ABCD';
+const declined = 'EFGH',
 
 const approvedWithoutConditionsBothAmendments = {
   user: {
@@ -7,7 +14,6 @@ const approvedWithoutConditionsBothAmendments = {
     email: 'test@test.com',
   },
   dealSnapshot: {
-    ukefDealId: '3333',
     exporter: {
       companyName: 'Tester',
     },
@@ -15,24 +21,24 @@ const approvedWithoutConditionsBothAmendments = {
   },
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
-      coverEndDate: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
+      value: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
+      coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
       managersDecisionEmail: true,
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
-  facilityId: '1111',
-  amendmentId: '2222',
+  facilityId,
+  amendmentId,
 };
 
 const approvedWithoutConditionsOneAmendment = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
+      value: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
       managersDecisionEmail: true,
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 
@@ -40,12 +46,12 @@ const approvedWithConditionsBothAmendments = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
-      coverEndDate: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
+      value: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
+      coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
       managersDecisionEmail: true,
-      conditions: 'ABCD',
+      conditions
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 
@@ -53,11 +59,11 @@ const approvedWithConditionsOneAmendment = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
+      value: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
       managersDecisionEmail: true,
-      conditions: 'ABCD',
+      conditions
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 
@@ -65,12 +71,12 @@ const approvedWithWithoutConditionsBothAmendments = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
-      coverEndDate: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
+      value: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
+      coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
       managersDecisionEmail: true,
-      conditions: 'ABCD',
+      conditions
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 
@@ -78,13 +84,13 @@ const approvedWithConditionsDeclined = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
-      coverEndDate: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.DECLINED,
+      value: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
+      coverEndDate: AMENDMENT_UW_DECISION.DECLINED,
       managersDecisionEmail: true,
-      conditions: 'ABCD',
-      declined: 'EFGH',
+      conditions,
+      declined
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 
@@ -92,13 +98,13 @@ const approvedWithConditionsDeclinedSwapped = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.DECLINED,
-      coverEndDate: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
+      value: AMENDMENT_UW_DECISION.DECLINED,
+      coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
       managersDecisionEmail: true,
-      conditions: 'ABCD',
-      declined: 'EFGH',
+      conditions,
+      declined
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 
@@ -106,12 +112,12 @@ const approvedWithoutConditionsDeclined = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
-      coverEndDate: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.DECLINED,
+      value: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
+      coverEndDate: AMENDMENT_UW_DECISION.DECLINED,
       managersDecisionEmail: true,
-      declined: 'EFGH',
+      declined
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 
@@ -119,12 +125,12 @@ const approvedWithoutConditionsDeclinedSwapped = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.DECLINED,
-      coverEndDate: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
+      value: AMENDMENT_UW_DECISION.DECLINED,
+      coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
       managersDecisionEmail: true,
-      declined: 'EFGH',
+      declined
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 
@@ -132,12 +138,12 @@ const declinedBothAmendments = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.DECLINED,
-      coverEndDate: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.DECLINED,
+      value: AMENDMENT_UW_DECISION.DECLINED,
+      coverEndDate: AMENDMENT_UW_DECISION.DECLINED,
       managersDecisionEmail: true,
-      declined: 'EFGH',
+      declined
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 
@@ -145,11 +151,11 @@ const declinedOneAmendment = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
     ukefDecision: {
-      value: CONSTANTS.DEALS.AMENDMENT_UW_DECISION.DECLINED,
+      value: AMENDMENT_UW_DECISION.DECLINED,
       managersDecisionEmail: true,
-      declined: 'EFGH',
+      declined
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 
@@ -160,9 +166,9 @@ const wrongAmendments = {
       value: 'test',
       coverEndDate: 'test',
       managersDecisionEmail: true,
-      declined: 'EFGH',
+      declined
     },
-    ukefFacilityId: '4444',
+    ukefFacilityId,
   },
 };
 

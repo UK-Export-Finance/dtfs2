@@ -50,7 +50,7 @@ const isApprovedWithoutConditions = (ukefDecision) => {
 
 const sendAutomaticAmendmentEmail = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
-  const template = EMAIL_TEMPLATE_IDS.AUTOMATIC_AMENDMENT;
+  const templateId = EMAIL_TEMPLATE_IDS.AUTOMATIC_AMENDMENT;
   const emailVariables = automaticAmendmentEmailVariables(amendmentVariables);
 
   const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
@@ -72,7 +72,7 @@ const managersDecisionUpdateEmailConfirmation = async (facilityId, amendmentId) 
 
 const emailApprovedWithWithoutConditions = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
-  const template = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS;
+  const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS;
   const emailVariables = approvedWithWithoutConditionsDecision(amendmentVariables);
 
   const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
@@ -84,7 +84,7 @@ const emailApprovedWithWithoutConditions = async (amendmentVariables) => {
 
 const emailApprovedWithoutConditions = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
-  const template = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS;
+  const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS;
   const emailVariables = approvedWithWithoutConditionsDecision(amendmentVariables);
 
   const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
@@ -96,7 +96,7 @@ const emailApprovedWithoutConditions = async (amendmentVariables) => {
 
 const emailApprovedWithConditionsDeclined = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
-  const template = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED;
+  const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED;
   const emailVariables = approvedWithConditionsDeclinedDecision(amendmentVariables);
 
   const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
@@ -108,7 +108,7 @@ const emailApprovedWithConditionsDeclined = async (amendmentVariables) => {
 
 const emailApprovedWithoutConditionsDeclined = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
-  const template = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED;
+  const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED;
   const emailVariables = approvedWithoutConditionsDeclinedDecision(amendmentVariables);
 
   const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
@@ -120,7 +120,7 @@ const emailApprovedWithoutConditionsDeclined = async (amendmentVariables) => {
 
 const emailDeclined = async (amendmentVariables) => {
   const { user, facilityId, amendmentId } = amendmentVariables;
-  const template = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED;
+  const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED;
   const emailVariables = declinedDecision(amendmentVariables);
 
   const emailResponse = await sendTfmEmail(template, user.email, emailVariables);
@@ -187,13 +187,12 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
   const { amendment } = amendmentVariables;
   const { bankDecision } = amendment;
 
-  const proceed = AMENDMENT_BANK_DECISION.PROCEED;
-  const withdraw = AMENDMENT_BANK_DECISION.WITHDRAW;
+  const { PROCEED, WITHDRAW } = AMENDMENT_BANK_DECISION;
 
   try {
-    if (bankDecision.decision === proceed) {
+    if (bankDecision.decision === PROCEED) {
       await emailBankDecision(amendmentVariables, EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_BANK_PROCEED);
-    } else if (bankDecision.decision === withdraw) {
+    } else if (bankDecision.decision === WITHDRAW) {
       await emailBankDecision(amendmentVariables, EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_BANK_WITHDRAW);
     } else {
       console.error('Incorrect bankDecision passed for manual amendment email');
