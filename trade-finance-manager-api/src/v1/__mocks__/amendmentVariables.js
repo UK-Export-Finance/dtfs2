@@ -3,9 +3,9 @@ const { DEALS: { AMENDMENT_UW_DECISION } } = require('../../constants');
 const ukefDealId = '3333';
 const ukefFacilityId = '4444';
 const facilityId = '1111';
-const amendmentId = '2222'
+const amendmentId = '2222';
 const conditions = 'ABCD';
-const declined = 'EFGH',
+const declined = 'EFGH';
 
 const approvedWithoutConditionsBothAmendments = {
   user: {
@@ -14,6 +14,7 @@ const approvedWithoutConditionsBothAmendments = {
     email: 'test@test.com',
   },
   dealSnapshot: {
+    ukefDealId,
     exporter: {
       companyName: 'Tester',
     },
@@ -49,7 +50,7 @@ const approvedWithConditionsBothAmendments = {
       value: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
       coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
       managersDecisionEmail: true,
-      conditions
+      conditions,
     },
     ukefFacilityId,
   },
@@ -61,7 +62,7 @@ const approvedWithConditionsOneAmendment = {
     ukefDecision: {
       value: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
       managersDecisionEmail: true,
-      conditions
+      conditions,
     },
     ukefFacilityId,
   },
@@ -74,7 +75,7 @@ const approvedWithWithoutConditionsBothAmendments = {
       value: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
       coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
       managersDecisionEmail: true,
-      conditions
+      conditions,
     },
     ukefFacilityId,
   },
@@ -88,7 +89,7 @@ const approvedWithConditionsDeclined = {
       coverEndDate: AMENDMENT_UW_DECISION.DECLINED,
       managersDecisionEmail: true,
       conditions,
-      declined
+      declined,
     },
     ukefFacilityId,
   },
@@ -102,7 +103,7 @@ const approvedWithConditionsDeclinedSwapped = {
       coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS,
       managersDecisionEmail: true,
       conditions,
-      declined
+      declined,
     },
     ukefFacilityId,
   },
@@ -115,7 +116,7 @@ const approvedWithoutConditionsDeclined = {
       value: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
       coverEndDate: AMENDMENT_UW_DECISION.DECLINED,
       managersDecisionEmail: true,
-      declined
+      declined,
     },
     ukefFacilityId,
   },
@@ -128,7 +129,7 @@ const approvedWithoutConditionsDeclinedSwapped = {
       value: AMENDMENT_UW_DECISION.DECLINED,
       coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
       managersDecisionEmail: true,
-      declined
+      declined,
     },
     ukefFacilityId,
   },
@@ -141,7 +142,7 @@ const declinedBothAmendments = {
       value: AMENDMENT_UW_DECISION.DECLINED,
       coverEndDate: AMENDMENT_UW_DECISION.DECLINED,
       managersDecisionEmail: true,
-      declined
+      declined,
     },
     ukefFacilityId,
   },
@@ -153,7 +154,7 @@ const declinedOneAmendment = {
     ukefDecision: {
       value: AMENDMENT_UW_DECISION.DECLINED,
       managersDecisionEmail: true,
-      declined
+      declined,
     },
     ukefFacilityId,
   },
@@ -166,7 +167,7 @@ const wrongAmendments = {
       value: 'test',
       coverEndDate: 'test',
       managersDecisionEmail: true,
-      declined
+      declined,
     },
     ukefFacilityId,
   },
