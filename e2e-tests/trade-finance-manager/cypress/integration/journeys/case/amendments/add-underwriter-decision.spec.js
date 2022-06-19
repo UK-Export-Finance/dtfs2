@@ -171,7 +171,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.continueAmendment().should('be.visible');
   });
 
-  it('should take you to `Add conditions, reasons and comments` summary page', () => {
+  it('should take you to `Add conditions, reasons and comments` summary page if no errors', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
@@ -186,6 +186,14 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('be.checked');
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions');
+
+    amendmentsPage.continueAmendment().click();
+    // testing errors if conditions and decline boxes not filled
+    amendmentsPage.errorSummary().contains('Enter the conditions for the approval');
+    amendmentsPage.errorSummary().contains('Enter the reasons for declining the change');
+
+    amendmentsPage.errorMessage().contains('Enter the conditions for the approval');
+    amendmentsPage.errorMessage().contains('Enter the reasons for declining the change');
 
     amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
     amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment');
