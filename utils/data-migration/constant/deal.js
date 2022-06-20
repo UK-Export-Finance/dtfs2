@@ -42,8 +42,8 @@ const PROBABILITY_OF_DEFAULT = {
 };
 
 const CREDIT_RATING = {
-  GOOD: 'Good (BB-)',
-  ACCEPTABLE: 'Acceptable (B+)',
+  'BB-': 'Good (BB-)',
+  'B+': 'Acceptable (B+)',
 };
 
 module.exports = {

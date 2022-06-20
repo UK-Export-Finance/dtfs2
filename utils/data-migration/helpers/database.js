@@ -40,21 +40,47 @@ const getCollection = async (name, filter = null, raw = null) => {
   if (raw) {
     rows = await connection.collection(name);
   } else {
-    rows = filter
-      ? await connection.collection(name).find(filter).toArray()
-      : await connection.collection(name).find({}).toArray();
+    rows = filter ? await connection.collection(name).find(filter).toArray() : await connection.collection(name).find({}).toArray();
   }
 
   return new Promise((resolve, reject) => {
     if (rows) {
       resolve(rows);
     } else {
-      reject();
+      reject(new Error(`🚩 Unable to get collection ${name}`));
+    }
+  });
+};
+
+/**
+ * Updates collection property(ies)
+ * @param {String} name Collection name
+ * @param {String} ukefDealId UKEF Deal ID
+ * @param {Object} updates Properties to update
+ * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
+ */
+const update = async (name, ukefDealId, updates) => {
+  if (!connection) await connect();
+  const response = await connection.collection(name).updateOne(
+    { 'dealSnapshot.ukefDealId': ukefDealId },
+    {
+      $set: {
+        ...updates,
+      },
+    },
+  );
+
+  return new Promise((resolve, reject) => {
+    if (Object.prototype.hasOwnProperty.call(response, 'acknowledged')) {
+      resolve(true);
+    } else {
+      reject(new Error(`🚩 Unable to update TFM deal property ${ukefDealId}`));
     }
   });
 };
 
 module.exports = {
   getCollection,
+  update,
   disconnect,
 };
