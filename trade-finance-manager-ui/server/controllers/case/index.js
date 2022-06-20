@@ -270,8 +270,7 @@ const getCaseFacility = async (req, res) => {
 
   const deal = await api.getDeal(dealId);
 
-  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  const hasAmendmentInProgress = amendment.status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgress && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
