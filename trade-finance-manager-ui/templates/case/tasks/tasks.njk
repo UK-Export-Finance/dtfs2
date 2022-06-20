@@ -13,7 +13,7 @@
     {% set bannerHtml %}
       <p class="govuk-body">Amendment in progress for
       {% for amendment in amendments %}
-        <a href="/case/{{dealId}}/facility/{{amendment.facilityId}}#amendments"> {{amendment.type}} {{amendment.ukefFacilityId}} </a>
+        <a href="/case/{{dealId}}/facility/{{amendment.facilityId}}#amendments"> facility {{amendment.ukefFacilityId}} </a>
         {% if loop.index < amendments.length %}
           ,
         {% endif %}

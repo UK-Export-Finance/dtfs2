@@ -248,7 +248,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
 
 /**
  * Function that is first triggered. This:
- * - Gets the deal and all tasks.
+ * - Gets the amendment and all tasks.
  * - Maps the taskUpdate input into schema format, adding dates.
  * - Finds the group the task belongs to and updates the task in that group.
  * - Checks if the task can be updated.
@@ -257,8 +257,6 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
  * - If the task is the task that is being updated (by user), task.history is updated.
  * - Sends emails ('task is ready to start') for any tasks that return sendEmail flag.
  * - Adds emailSent flag to any task that successfully sent an email.
- * - Change the TFM dealStage (if deal is MIA and taskUpdate is first task).
- * - Updates the deal.
  * */
 const updateAmendmentTask = async (facilityId, amendmentId, taskUpdate) => {
   const amendment = await api.getAmendmentById(facilityId, amendmentId);

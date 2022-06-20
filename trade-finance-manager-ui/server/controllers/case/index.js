@@ -17,13 +17,13 @@ const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
 
   const deal = await api.getDeal(dealId);
-  const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const amendmentsInProgress = amendment.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
   const hasAmendmentInProgress = amendmentsInProgress.length > 0;
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
@@ -36,6 +36,7 @@ const getCaseDeal = async (req, res) => {
     activeSubNavigation: 'deal',
     dealId,
     user: req.session.user,
+    amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
   });
@@ -255,10 +256,10 @@ const formatAmendmentDetails = (allAmendments) => {
 };
 
 const getCaseFacility = async (req, res) => {
-  const { facilityId } = req.params;
+  const { _id: dealId, facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
   const { data: amendment } = await api.getAmendmentInProgress(facilityId);
-  const { status, amendmentId } = amendment;
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
   const { data: allAmendmentsByFacilityId } = await api.getAmendmentsByFacilityId(facilityId);
 
   if (!facility) {
@@ -267,12 +268,11 @@ const getCaseFacility = async (req, res) => {
 
   const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
 
-  const { dealId } = facility.facilitySnapshot;
   const deal = await api.getDeal(dealId);
 
-  const hasAmendmentInProgress = status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
   const showContinueAmendmentButton = hasAmendmentInProgress && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
-
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
@@ -287,12 +287,13 @@ const getCaseFacility = async (req, res) => {
     facilityId,
     facilityTfm: facility.tfm,
     user: req.session.user,
-    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendmentId,
+    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendment.amendmentId,
     showContinueAmendmentButton,
     amendmentId: amendment?.amendmentId,
     amendmentVersion: amendment?.version,
     hasAmendmentInProgress,
     allAmendments,
+    amendments,
   });
 };
 

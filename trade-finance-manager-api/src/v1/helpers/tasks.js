@@ -99,11 +99,11 @@ const isAdverseHistoryTaskIsComplete = (allTaskGroups) => {
   const adverseGroup = getGroupByTitle(allTaskGroups, CONSTANTS.TASKS.GROUP_TITLES.ADVERSE_HISTORY);
 
   if (adverseGroup) {
-    const adverseTaskTitle = CONSTANTS.TASKS.MIA_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK;
+    const { COMPLETE_ADVERSE_HISTORY_CHECK } = CONSTANTS.TASKS.MIA_ADVERSE_HISTORY_GROUP_TASKS;
 
-    const adverseTask = getTaskInGroupByTitle(adverseGroup.groupTasks, adverseTaskTitle);
+    const adverseTask = getTaskInGroupByTitle(adverseGroup.groupTasks, COMPLETE_ADVERSE_HISTORY_CHECK);
 
-    if (adverseTask && adverseTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+    if (adverseTask?.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
       return true;
     }
   }
@@ -115,11 +115,11 @@ const isRiskAnalysisCompleted = (allTaskGroups) => {
   const approvalsGroup = getGroupByTitle(allTaskGroups, CONSTANTS.TASKS_AMENDMENT.GROUP_TITLES.APPROVALS);
 
   if (approvalsGroup) {
-    const riskAnalysisTaskTitle = CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT_GROUP_4_TASKS.COMPLETE_RISK_ANALYSIS;
+    const { COMPLETE_RISK_ANALYSIS } = CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT_GROUP_4_TASKS;
 
-    const riskTask = getTaskInGroupByTitle(approvalsGroup.groupTasks, riskAnalysisTaskTitle);
+    const riskTask = getTaskInGroupByTitle(approvalsGroup.groupTasks, COMPLETE_RISK_ANALYSIS);
 
-    if (riskTask && riskTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+    if (riskTask?.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
       return true;
     }
   }
