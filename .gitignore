@@ -5,6 +5,7 @@
 .env.prod
 **/.env
 **/.env.prod
+**/actionsheets/*
 pipeline.log
 dist
 node_modules
