@@ -8,7 +8,7 @@
 const fs = require('fs');
 const axios = require('axios');
 const CONSTANTS = require('../constant');
-const { getCollection, disconnect } = require('../helpers/database');
+const { getCollection, update, disconnect } = require('../helpers/database');
 const { open, get } = require('../helpers/actionsheets');
 
 const version = '0.0.1';
@@ -24,11 +24,12 @@ const { TFM_API } = process.env;
 const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL, filter);
 
 /**
- * Returns all TFM deals.
- * @param {Object} filter Mongo filter
- * @returns {Object} Collection object
+ * Updates TFM deal with provided updates object.
+ * @param {String} ukefDealId UKEF Deal ID
+ * @param {Object} updates Updates object in JSON
+ * @returns {Promise} Resolve if successfull otherwise Reject
  */
-const getTfmDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, filter);
+const setTfmDeal = (ukefDealId, updates) => update(CONSTANTS.DATABASE.TABLES.TFM_DEAL, ukefDealId, updates);
 
 /**
  * Submits deal to the TFM as a `Checker` from `UKEF test bank (Delegated)`
@@ -109,10 +110,11 @@ const submitTfmDeal = async () => {
  * @param {Object} update Object comprising of updates to be applied
  * @returns {Promise} Resolve is success, otherwise Reject accomplied with an error message.
  */
-const updateTfmDeal = (ukefDealId, update) => {
+const updateTfmDeal = (ukefDealId, updates) => {
   try {
-    console.log(ukefDealId, update);
-    return Promise.resolve(true);
+    return setTfmDeal(ukefDealId, updates)
+      .then((r) => Promise.resolve(r))
+      .catch((e) => Promise.reject(new Error(e)));
   } catch (e) {
     return Promise.reject(new Error(`🚩 Unable to update deal TFM ${ukefDealId} ${e}`));
   }
@@ -123,7 +125,7 @@ const updateTfmDeal = (ukefDealId, update) => {
 /**
  * Parses action sheets from defined directory.
  * Interested cell looksups are defined in `searches` in following format:
- * [property name, cell name, response field index]
+ * [property path, cell name, response field index]
  * @returns {Promise} Parsed data from the action sheets in `JSON` as promise resolve, otherwise reject.
  */
 const actionSheets = async () => {
@@ -132,7 +134,7 @@ const actionSheets = async () => {
   const results = [];
   const searches = [
     ['ukefDealId', 'Deal Number', 1],
-    ['exporterCreditRating', 'Credit Rating Code', 3],
+    ['tfm.exporterCreditRating', 'Credit Rating Code', 3],
   ];
 
   try {
@@ -167,6 +169,45 @@ const actionSheets = async () => {
   }
 };
 
+/**
+ * Processes all the data provided in array of object.
+ * If multiple action sheets were parsed then all promises
+ * are resolved and final update counter is provided.
+ * Otherwise rejected with an error.
+ * @param {Array} data Action sheet parsed data provided in JSON format
+ * @returns {Promise} Update counter if resolved otherwise reject error.
+ */
+const processActionSheets = (data) => {
+  if (data && data.length > 0) {
+    let counter = 0;
+
+    const responses = data.map((deal) => {
+      const { ukefDealId } = deal;
+      const updates = {
+        ...deal,
+      };
+
+      delete updates.ukefDealId;
+      return updateTfmDeal(ukefDealId, updates)
+        .then((r) => {
+          if (r) {
+            counter += 1;
+            console.info('\x1b[33m%s\x1b[0m', `✅ Deal updated successfully ${ukefDealId}`);
+            return Promise.resolve();
+          }
+          return Promise.reject(new Error(`🚩 Unable to update deal ${ukefDealId}`));
+        })
+        .catch((e) => Promise.reject(new Error(e)));
+    });
+
+    return Promise.all(responses)
+      .then(() => Promise.resolve(counter))
+      .catch((e) => Promise.reject(e));
+  }
+
+  return Promise.reject(new Error('🚩 Empty data set provided.'));
+};
+
 // ******************** MAIN *************************
 
 /**
@@ -178,11 +219,14 @@ const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating GEF TFM migration v${version}.`, '\n\n');
 
   submitTfmDeal()
-    .then((result) => {
-      if (result) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully inserted ${result} TFM deals.\n`);
+    .then((r) => {
+      if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully inserted ${r} TFM deals.\n`);
     })
     .then(() => actionSheets())
-    // .then(() => updateTfmDeal())
+    .then((r) => processActionSheets(r))
+    .then((r) => {
+      if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully updated ${r} TFM deals from Action Sheets.\n`);
+    })
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {

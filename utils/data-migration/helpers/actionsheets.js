@@ -1,8 +1,8 @@
 /**
  * Action Sheets (XLXS) helper functions
  */
-
 const excel = require('xlsx');
+const CONSTANTS = require('../constant');
 
 const actionSheet = 'Action Sheet';
 
@@ -23,6 +23,22 @@ const open = (uri, sheet = actionSheet) => {
 };
 
 /**
+ * Format's raw value parsed from the action sheet to TFM compliant value
+ * @param {String} lookup Lookup text
+ * @param {String} value Parsed value from the action sheet
+ * @returns {String} TFM compliant value
+ */
+const format = (lookup, value) => {
+  if (lookup && value) {
+    if (lookup === 'Credit Rating Code') {
+      return CONSTANTS.DEAL.CREDIT_RATING[value];
+    }
+  }
+
+  return value;
+};
+
+/**
  * Returns data from interested cell parsed from the action sheet.
  * @param {Object} data JSON data object parsed from the action sheet
  * @param {Array} search Search list array
@@ -35,7 +51,9 @@ const get = (data, search) => {
 
     const match = data.find((row) => Object.values(row).includes(lookup));
     const cells = Object.values(match);
-    return cells[cell];
+    const value = cells[cell];
+
+    return format(lookup, value);
   }
   return null;
 };
