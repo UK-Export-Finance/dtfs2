@@ -1,20 +1,15 @@
 /**
-* DATA MIGRATION
-* **************
-* Purpose of this script is to migrate GEF deals to TFM.
-* Since GEF deals are not subjected to execution on Workflow.
-*/
+ * DATA MIGRATION
+ * **************
+ * Purpose of this script is to migrate GEF deals to TFM.
+ * Since GEF deals are not subjected to execution on Workflow.
+ */
 
 const fs = require('fs');
 const axios = require('axios');
 const CONSTANTS = require('../constant');
-const {
-  getCollection,
-  disconnect,
-} = require('../helpers/database');
-const {
-  open,
-} = require('../helpers/actionsheets');
+const { getCollection, disconnect } = require('../helpers/database');
+const { open, get } = require('../helpers/actionsheets');
 
 const version = '0.0.1';
 const { TFM_API } = process.env;
@@ -22,32 +17,37 @@ const { TFM_API } = process.env;
 // ******************** DEALS *************************
 
 /**
-* Return all the portal deals, without (default) or with filter specified.
-* @param {Object} filter Mongo filter
-* @returns {Object} Collection object
-*/
+ * Return all the portal deals, without (default) or with filter specified.
+ * @param {Object} filter Mongo filter
+ * @returns {Object} Collection object
+ */
 const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL, filter);
 
 /**
-* Returns all TFM deals.
-* @param {Object} filter Mongo filter
-* @returns {Object} Collection object
-*/
+ * Returns all TFM deals.
+ * @param {Object} filter Mongo filter
+ * @returns {Object} Collection object
+ */
+const getTfmDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, filter);
 
+/**
+ * Submits deal to the TFM as a `Checker` from `UKEF test bank (Delegated)`
+ * for following deals:
+ * 1. Deal Type: `GEF`
+ * 2. Property exists check: `dataMigration`
+ * @returns {Promise} Response on success, Reject upon a failure.
+ */
 const submitTfmDeal = async () => {
   console.info('\x1b[33m%s\x1b[0m', '➕ 1. Creating deals', '\n');
 
   let counter = 0;
   /**
-  * AND condition
-  * 1. Deal type : GEF
-  * 2. Property exists : dataMigration
-  */
+   * AND condition
+   * 1. Deal type : GEF
+   * 2. Property exists : dataMigration
+   */
   const filter = {
-    $and: [
-      { dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF },
-      { dataMigration: { $exists: true } }
-    ]
+    $and: [{ dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF }, { dataMigration: { $exists: true } }],
   };
   const checker = {
     username: 'BANK1_CHECKER1',
@@ -56,12 +56,9 @@ const submitTfmDeal = async () => {
       id: '9',
       name: 'UKEF test bank (Delegated)',
       mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
-      emails: [
-        'maker1@ukexportfinance.gov.uk',
-        'checker1@ukexportfinance.gov.uk'
-      ],
+      emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
       companiesHouseNo: 'UKEF0001',
-      partyUrn: '00318345'
+      partyUrn: '00318345',
     },
     lastLogin: String(new Date().valueOf()),
     firstname: 'Abhi',
@@ -106,28 +103,65 @@ const submitTfmDeal = async () => {
     .catch((e) => Promise.reject(e));
 };
 
-const updateTfmDeal = () => {
-
+/**
+ * Updates `tfm-deals` collection with update object.
+ * @param {String} ukefDealId UKEF Deal ID
+ * @param {Object} update Object comprising of updates to be applied
+ * @returns {Promise} Resolve is success, otherwise Reject accomplied with an error message.
+ */
+const updateTfmDeal = (ukefDealId, update) => {
+  try {
+    console.log(ukefDealId, update);
+    return Promise.resolve(true);
+  } catch (e) {
+    return Promise.reject(new Error(`🚩 Unable to update deal TFM ${ukefDealId} ${e}`));
+  }
 };
 
 // ******************** ACTION SHEETS *************************
 
-const actionSheets = () => {
+/**
+ * Parses action sheets from defined directory.
+ * Interested cell looksups are defined in `searches` in following format:
+ * [property name, cell name, response field index]
+ * @returns {Promise} Parsed data from the action sheets in `JSON` as promise resolve, otherwise reject.
+ */
+const actionSheets = async () => {
   console.info('\x1b[33m%s\x1b[0m', '➕ 2. Parsing action sheets', '\n');
   const path = './actionsheets';
+  const results = [];
+  const searches = [
+    ['ukefDealId', 'Deal Number', 1],
+    ['exporterCreditRating', 'Credit Rating Code', 3],
+  ];
 
   try {
     const files = fs.readdirSync(path);
 
-    files.forEach((file) => {
+    await files.forEach((file) => {
       const uri = `${path}/${file}`;
       open(uri)
-        .then((r) => {
-          console.log(r);
-        });
+        .then((data) => {
+          if (data) return Promise.resolve(data);
+          return Promise.reject(new Error(`🚩 Empty action sheet ${uri}`));
+        })
+        .then((data) => {
+          let lookups = {};
+          searches.forEach((lookup) => {
+            const propertyName = lookup[0];
+            lookups = {
+              ...lookups,
+              [propertyName]: get(data, lookup),
+            };
+          });
+          results.push(lookups);
+
+          Promise.resolve(results);
+        })
+        .catch((e) => Promise.reject(new Error(e)));
     });
 
-    return Promise.resolve(true);
+    return Promise.resolve(results);
   } catch (e) {
     return Promise.reject(new Error(`🚩 Unable to read the directory ${e}`));
   }
@@ -136,10 +170,10 @@ const actionSheets = () => {
 // ******************** MAIN *************************
 
 /**
-* Entry point function.
-* Initiates Deal and Facilities creation and save process.
-* @returns {Boolean} Execution status
-*/
+ * Entry point function.
+ * Initiates Deal and Facilities creation and save process.
+ * @returns {Boolean} Execution status
+ */
 const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating GEF TFM migration v${version}.`, '\n\n');
 
@@ -148,7 +182,7 @@ const migrate = () => {
       if (result) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully inserted ${result} TFM deals.\n`);
     })
     .then(() => actionSheets())
-    .then(() => updateTfmDeal())
+    // .then(() => updateTfmDeal())
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {
@@ -157,5 +191,4 @@ const migrate = () => {
     });
 };
 
-// migrate();
-actionSheets().then((r) => console.log(r));
+migrate();
