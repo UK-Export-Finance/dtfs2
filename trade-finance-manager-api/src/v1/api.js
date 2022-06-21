@@ -612,7 +612,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error updating GEF deal status ${dealId}`);
+    // console.error(`TFM API - error updating GEF deal status ${dealId}`);
 
     return false;
   }

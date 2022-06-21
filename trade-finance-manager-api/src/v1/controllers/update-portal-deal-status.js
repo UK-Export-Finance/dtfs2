@@ -2,9 +2,14 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 
 const updatePortalDealStatus = async (deal) => {
-  const { _id: dealId, dealType, submissionType } = deal;
+  const { _id: dealId, dealType, submissionType, status } = deal;
 
   let newStatus;
+  const allowedStatus = [CONSTANTS.DEALS.PORTAL_DEAL_STATUS.ABANDONED, CONSTANTS.DEALS.PORTAL_DEAL_STATUS.SUBMITTED_TO_UKEF];
+
+  if (allowedStatus.includes(status)) {
+    return deal;
+  }
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
     newStatus = CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED;
