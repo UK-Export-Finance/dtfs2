@@ -122,7 +122,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
     return api.updateDeal(dealId, updatedDealWithCreateEstore);
   }
 
-  if (dealHasBeenResubmit || migrationScript) {
+  if (dealHasBeenResubmit && migrationScript) {
     const { tfm: tfmDeal } = await findOneTfmDeal(dealId);
 
     /**

@@ -15,7 +15,7 @@ const createEstoreFolders = async (deal) => {
     },
   };
 
-  if (migrationScript && siteName) {
+  if (migrationScript) {
     tfmDeal.tfm.estore = {
       siteName,
     };
