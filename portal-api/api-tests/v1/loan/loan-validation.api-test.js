@@ -248,7 +248,7 @@ describe('/v1/deals/:id/loan', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const expectedText = 'Requested Cover Start Date must be today or in the future';
+            const expectedText = 'Requested Cover Start Date must be on the application submission date or in the future';
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });

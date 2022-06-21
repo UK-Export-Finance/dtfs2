@@ -271,6 +271,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
             details: {
               ...newDeal.details,
               submissionDate: moment().subtract(1, 'week').utc().valueOf(),
+              manualInclusionApplicationSubmissionDate: moment().subtract(4, 'day').utc().valueOf(),
               manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
             },
           };
@@ -278,23 +279,24 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
           await updateDeal(dealId, updatedDeal);
         });
 
-        describe('when is before today', () => {
+        describe('when is before manualInclusionApplicationSubmissionDate', () => {
           it('should return validationError', async () => {
-            const yesterday = moment().subtract(1, 'day');
+            const fiveDaysAgo = moment().subtract(5, 'day');
             const requestedCoverStartDateFields = {
-              'requestedCoverStartDate-day': moment(yesterday).format('DD'),
-              'requestedCoverStartDate-month': moment(yesterday).format('MM'),
-              'requestedCoverStartDate-year': moment(yesterday).format('YYYY'),
+              'requestedCoverStartDate-day': moment(fiveDaysAgo).format('DD'),
+              'requestedCoverStartDate-month': moment(fiveDaysAgo).format('MM'),
+              'requestedCoverStartDate-year': moment(fiveDaysAgo).format('YYYY'),
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const todayFormatted = moment().format('Do MMMM YYYY');
+            const fourDaysAgo = moment().subtract(4, 'day');
+            const fourDaysAgoFormatted = moment(fourDaysAgo).format('Do MMMM YYYY');
             const todayPlus3Months = moment().add(3, 'month');
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${fourDaysAgoFormatted} and ${todayPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
@@ -312,10 +314,11 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const todayFormatted = moment().format('Do MMMM YYYY');
+            const fourDaysAgo = moment().subtract(4, 'day');
+            const fourDaysAgoFormatted = moment(fourDaysAgo).format('Do MMMM YYYY');
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${fourDaysAgoFormatted} and ${todayPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });

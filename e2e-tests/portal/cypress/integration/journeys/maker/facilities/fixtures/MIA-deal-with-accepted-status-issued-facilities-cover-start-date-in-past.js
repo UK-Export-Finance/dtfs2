@@ -65,6 +65,7 @@ const deal = {
       username: 'CHECKER',
     },
     submissionDate: now,
+    manualInclusionApplicationSubmissionDate: now,
   },
   eligibility: {
     status: 'Completed',
