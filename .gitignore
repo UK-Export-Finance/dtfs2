@@ -11,6 +11,7 @@ node_modules
 dtfs-submissions-data-volume*
 **/cypress/videos
 **/cypress/screenshots
+**/actionsheets/*
 
 trade-finance-manager/salesforce.json
 
