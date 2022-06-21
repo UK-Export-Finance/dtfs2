@@ -74,6 +74,7 @@ services:
       - TFM_URI=http://localhost:5003
       - SENTRY_DSN=${SENTRY_DSN}
       - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
+      - DATA_MIGRATION_SCRIPT=true
     entrypoint: npx nodemon src/index.js -L
 
   portal:
