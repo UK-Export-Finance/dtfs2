@@ -62,24 +62,24 @@ const postToEstore = async (
   return { data: response.data, status: response.status };
 };
 
+export const siteExists = async (exporterName: EstoreSite): Promise<SiteExistsResponse> => {
+  const timeout = 1000 * 30; // 30 seconds timeout to handle long timeouts
+  const response = await postToEstore(`site/exist`, [exporterName], timeout);
+  return response;
+};
+
 /**
  * Returns eStore site name
  * @param req Request object
  * @param res Response object
  * @returns {Object} Response
  */
-export const siteName = async (req: Request, res: Response) => {
+export const siteNameExists = async (req: Request, res: Response) => {
   const eStoreData: Estore = req.body;
   const siteExistsResponse = await siteExists({ exporterName: eStoreData.exporterName });
-  const siteName = siteExistsResponse.data.siteName || '';
+  const name = siteExistsResponse.data.siteName || '';
   // Send response `200` regardless of the status code response from the API
-  return res.status(200).send(siteName);
-};
-
-export const siteExists = async (exporterName: EstoreSite): Promise<SiteExistsResponse> => {
-  const timeout = 1000 * 30; // 30 seconds timeout to handle long timeouts
-  const response = await postToEstore(`site/exist`, [exporterName], timeout);
-  return response;
+  return res.status(200).send(name);
 };
 
 export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse> => {

@@ -522,7 +522,7 @@ apiRoutes.post('/estore/', eStore.createEstore);
  *             schema:
  *               $ref: '#/definitions/EstoreResponseBody'
  */
-apiRoutes.post('/estore/site', eStoreApi.siteName);
+apiRoutes.post('/estore/site', eStoreApi.siteNameExists);
 
 /**
  * @openapi

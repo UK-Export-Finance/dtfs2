@@ -32,7 +32,15 @@ const getDDMMYYYY = (epoch) => {
  */
 const epochInSeconds = (epoch) => (epoch ? epoch / 1000 : 0);
 
+/**
+ * Converts an excel date to ISO Date string
+ * @param {Integer} excelDateNumber
+ * @returns ISO date
+ */
+const excelDateToISODateString = (excelDateNumber) => new Date(Math.round((excelDateNumber - 25569) * 86400 * 1000)).toISOString().substring(0, 10);
+
 module.exports = {
   getDDMMYYYY,
   epochInSeconds,
+  excelDateToISODateString
 };
