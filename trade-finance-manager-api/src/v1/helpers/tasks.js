@@ -111,6 +111,27 @@ const isAdverseHistoryTaskIsComplete = (allTaskGroups) => {
   return false;
 };
 
+/**
+ * Check if the Adverse History Check task is completed for an amendment
+ * @param {Array} all task groups array
+ * @returns {Boolean}
+ */
+const hasAmendmentAdverseHistoryTaskCompleted = (allTaskGroups) => {
+  const adverseGroup = getGroupByTitle(allTaskGroups, CONSTANTS.TASKS.GROUP_TITLES.ADVERSE_HISTORY);
+
+  if (adverseGroup) {
+    const { COMPLETE_ADVERSE_HISTORY_CHECK } = CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT_ADVERSE_HISTORY_GROUP_TASKS;
+
+    const adverseTask = getTaskInGroupByTitle(adverseGroup.groupTasks, COMPLETE_ADVERSE_HISTORY_CHECK);
+
+    if (adverseTask?.status === CONSTANTS.TASKS_AMENDMENT.STATUS.COMPLETED) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 const isRiskAnalysisCompleted = (allTaskGroups) => {
   const approvalsGroup = getGroupByTitle(allTaskGroups, CONSTANTS.TASKS_AMENDMENT.GROUP_TITLES.APPROVALS);
 
@@ -119,7 +140,7 @@ const isRiskAnalysisCompleted = (allTaskGroups) => {
 
     const riskTask = getTaskInGroupByTitle(approvalsGroup.groupTasks, COMPLETE_RISK_ANALYSIS);
 
-    if (riskTask?.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+    if (riskTask?.status === CONSTANTS.TASKS_AMENDMENT.STATUS.COMPLETED) {
       return true;
     }
   }
@@ -163,4 +184,5 @@ module.exports = {
   isAdverseHistoryTaskIsComplete,
   shouldUpdateDealStage,
   isRiskAnalysisCompleted,
+  hasAmendmentAdverseHistoryTaskCompleted,
 };

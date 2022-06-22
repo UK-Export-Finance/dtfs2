@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../constants');
 
 const api = require('../api');
-const { getGroupById, getTaskInGroupById, isAdverseHistoryTaskIsComplete } = require('./tasks');
+const { getGroupById, getTaskInGroupById, hasAmendmentAdverseHistoryTaskCompleted } = require('./tasks');
 const mapTaskObject = require('../tasks/map-task-object');
 const { previousTaskIsComplete, taskCanBeEditedWithoutPreviousTaskComplete, handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const sendUpdatedTaskEmail = require('../controllers/task-emails');
@@ -35,10 +35,10 @@ const createGroupTasks = (tasks, groupId) => {
         id: String(taskIdCount),
         groupId,
         ...task,
-        status: CONSTANTS.TASKS.STATUS.CANNOT_START,
+        status: CONSTANTS.TASKS_AMENDMENT.STATUS.CANNOT_START,
         assignedTo: {
-          userId: CONSTANTS.TASKS.UNASSIGNED,
-          userFullName: CONSTANTS.TASKS.UNASSIGNED,
+          userId: CONSTANTS.TASKS_AMENDMENT.UNASSIGNED,
+          userFullName: CONSTANTS.TASKS_AMENDMENT.UNASSIGNED,
         },
         canEdit: false,
       };
@@ -46,7 +46,7 @@ const createGroupTasks = (tasks, groupId) => {
       // only the first task in the first group can be started/edited straight away.
       if (groupId === 1 && taskIdCount === 1) {
         task.canEdit = true;
-        task.status = CONSTANTS.TASKS.STATUS.TO_DO;
+        task.status = CONSTANTS.TASKS_AMENDMENT.STATUS.TO_DO;
       }
 
       mappedTasks.push(task);
@@ -173,13 +173,13 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
    * If 'Complete an adverse history check' task is completed
    * All tasks in the Underwriting Group become unlocked and are able to be started
    * */
-  const canUnlockUnderWritingGroupTasks = isAdverseHistoryTaskIsComplete(taskGroups);
+  const canUnlockUnderWritingGroupTasks = hasAmendmentAdverseHistoryTaskCompleted(taskGroups);
 
   if (canUnlockUnderWritingGroupTasks) {
     taskGroups = taskGroups.map((g) => {
       const group = g;
 
-      if (group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING) {
+      if (group.groupTitle === CONSTANTS.TASKS_AMENDMENT.GROUP_TITLES.UNDERWRITING) {
         group.groupTasks = group.groupTasks.map((task) => {
           const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
@@ -190,13 +190,13 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
           }
 
           // unlock the task
-          const shouldUnlock = !isTaskThatIsBeingUpdated && !task.canEdit && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START;
+          const shouldUnlock = !isTaskThatIsBeingUpdated && !task.canEdit && task.status === CONSTANTS.TASKS_AMENDMENT.STATUS.CANNOT_START;
 
           if (shouldUnlock) {
             return {
               ...task,
               canEdit: true,
-              status: CONSTANTS.TASKS.STATUS.TO_DO,
+              status: CONSTANTS.TASKS_AMENDMENT.STATUS.TO_DO,
             };
           }
 
