@@ -27,18 +27,14 @@ module.exports = (facility, errorList, deal) => {
   const issuedDate = formattedTimestamp(facility.issuedDate);
   const today = moment();
 
-  let dateOfSubmission;
+  let dateOfSubmission = moment().utc().valueOf();
 
   if (dealSubmissionDateTimestamp || minSubmissionDateTimestamp) {
     if (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
       dateOfSubmission = dealSubmissionDate;
     } else if (minSubmissionDateTimestamp) {
       dateOfSubmission = minSubmissionDate;
-    } else {
-      dateOfSubmission = moment().utc().valueOf();
     }
-  } else {
-    dateOfSubmission = moment().utc().valueOf();
   }
 
   if (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {

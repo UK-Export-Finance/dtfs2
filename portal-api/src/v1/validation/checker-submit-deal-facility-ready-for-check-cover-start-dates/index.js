@@ -10,7 +10,7 @@ const facilityReadyForCheckRequestedCoverStartDateRule = (deal, facility, errorL
   } = facility;
   const { details, submissionType } = deal;
   const { submissionDate, manualInclusionNoticeSubmissionDate } = details;
-  let dateOfSubmission;
+  let dateOfSubmission = moment().utc().valueOf();
   const newErrorList = errorList;
 
   if (submissionDate || manualInclusionNoticeSubmissionDate) {
@@ -18,11 +18,7 @@ const facilityReadyForCheckRequestedCoverStartDateRule = (deal, facility, errorL
       dateOfSubmission = submissionDate;
     } else if (manualInclusionNoticeSubmissionDate) {
       dateOfSubmission = manualInclusionNoticeSubmissionDate;
-    } else {
-      dateOfSubmission = moment().utc().valueOf();
     }
-  } else {
-    dateOfSubmission = moment().utc().valueOf();
   }
 
   if (requestedCoverStartDate) {
