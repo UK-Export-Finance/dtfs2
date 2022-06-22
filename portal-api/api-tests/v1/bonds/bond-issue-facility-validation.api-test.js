@@ -138,7 +138,7 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
           const { validationErrors } = await updateIssuedDate(issuedDateFields);
           expect(validationErrors.errorList.issuedDate.order).toBeDefined();
 
-          const formattedSubmissionDate = moment(formattedTimestamp(newDeal.details.submissionDate)).format('Do MMMM YYYY');
+          const formattedSubmissionDate = moment(formattedTimestamp(moment().utc().valueOf())).format('Do MMMM YYYY');
           const expectedText = `Issued Date must be on or after ${formattedSubmissionDate}`;
           expect(validationErrors.errorList.issuedDate.text).toEqual(expectedText);
         });
@@ -291,12 +291,12 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const fourDaysAgo = moment().subtract(4, 'day');
-            const fourDaysAgoFormatted = moment(fourDaysAgo).format('Do MMMM YYYY');
+            const today = moment().utc().valueOf();
+            const todayFormatted = moment(today).format('Do MMMM YYYY');
             const todayPlus3Months = moment().add(3, 'month');
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${fourDaysAgoFormatted} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
@@ -314,11 +314,11 @@ describe('/v1/deals/:id/bond/:bondId/issue-facility', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const fourDaysAgo = moment().subtract(4, 'day');
-            const fourDaysAgoFormatted = moment(fourDaysAgo).format('Do MMMM YYYY');
+            const today = moment().utc().valueOf();
+            const todayFormatted = moment(today).format('Do MMMM YYYY');
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${fourDaysAgoFormatted} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });

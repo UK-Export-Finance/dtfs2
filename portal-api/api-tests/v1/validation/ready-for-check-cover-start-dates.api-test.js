@@ -57,7 +57,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
       expect(errors.requestedCoverStartDate.text).toEqual(errorMessage);
     });
 
-    it('should not throw validation error if requestedCoverStartDate is today and not yet submitted', () => {
+    it('should not throw validation error if requestedCoverStartDate is today and submitted', () => {
       const facility = {
         requestedCoverStartDate: moment().utc().valueOf(),
         status: CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL,
@@ -109,9 +109,9 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
       expect(errors).toEqual({});
     });
 
-    it('should throw validation error if requestedCoverStartDate is before manualInclusionApplicationSubmissionDate', () => {
+    it('should throw validation error if requestedCoverStartDate is before today', () => {
       const facility = {
-        requestedCoverStartDate: moment().subtract(3, 'day').utc().valueOf(),
+        requestedCoverStartDate: moment().subtract(1, 'day').utc().valueOf(),
         status: CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL,
       };
 
@@ -128,7 +128,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
       expect(errors.requestedCoverStartDate.text).toEqual(errorMessage);
     });
 
-    it('should not throw validation error if requestedCoverStartDate is today and not yet submitted', () => {
+    it('should not throw validation error if requestedCoverStartDate is today and submitted', () => {
       const facility = {
         requestedCoverStartDate: moment().utc().valueOf(),
         status: CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL,
@@ -149,22 +149,6 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
   });
 
   describe('MIN', () => {
-    it('should throw validation error if requestedCoverStartDate is before today and not yet submitted', () => {
-      const facility = {
-        requestedCoverStartDate: moment().subtract(1, 'day').utc().valueOf(),
-        status: CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL,
-      };
-
-      const deal = {
-        details: {},
-        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
-      };
-
-      const errors = checkCoverStartDate(deal, facility);
-
-      expect(errors.requestedCoverStartDate.text).toEqual(errorMessage);
-    });
-
     it('should not throw validation error if requestedCoverStartDate is today and not yet submitted', () => {
       const facility = {
         requestedCoverStartDate: moment().utc().valueOf(),
@@ -201,7 +185,7 @@ describe('validation - coverStartDate on ready for checkers approval', () => {
       expect(errors.requestedCoverStartDate.text).toEqual(errorMessage);
     });
 
-    it('should not throw validation error if requestedCoverStartDate is today and not yet submitted', () => {
+    it('should not throw validation error if requestedCoverStartDate is today and submitted', () => {
       const facility = {
         requestedCoverStartDate: moment().utc().valueOf(),
         status: CONSTANTS.FACILITIES.DEAL_STATUS.READY_FOR_APPROVAL,

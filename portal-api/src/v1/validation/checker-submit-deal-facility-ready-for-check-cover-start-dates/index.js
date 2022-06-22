@@ -9,17 +9,17 @@ const facilityReadyForCheckRequestedCoverStartDateRule = (deal, facility, errorL
     status,
   } = facility;
   const { details, submissionType } = deal;
-  const { submissionDate, manualInclusionApplicationSubmissionDate, manualInclusionNoticeSubmissionDate } = details;
+  const { submissionDate, manualInclusionNoticeSubmissionDate } = details;
   let dateOfSubmission;
   const newErrorList = errorList;
 
-  if (submissionDate || manualInclusionApplicationSubmissionDate || manualInclusionNoticeSubmissionDate) {
+  if (submissionDate || manualInclusionNoticeSubmissionDate) {
     if (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
       dateOfSubmission = submissionDate;
     } else if (manualInclusionNoticeSubmissionDate) {
       dateOfSubmission = manualInclusionNoticeSubmissionDate;
     } else {
-      dateOfSubmission = manualInclusionApplicationSubmissionDate;
+      dateOfSubmission = moment().utc().valueOf();
     }
   } else {
     dateOfSubmission = moment().utc().valueOf();

@@ -208,11 +208,11 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
             const todayPlus3Months = moment().add(3, 'month');
-            const todayMinusThreeDays = moment().subtract(3, 'day');
-            const todayMinusThreeDaysFormatted = moment(todayMinusThreeDays).format('Do MMMM YYYY');
+            const today = moment().utc().valueOf();
+            const todayFormatted = moment(today).format('Do MMMM YYYY');
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${todayMinusThreeDaysFormatted} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
@@ -230,11 +230,11 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const todayMinusThreeDays = moment().subtract(3, 'day');
-            const todayMinusThreeDaysFormatted = moment(todayMinusThreeDays).format('Do MMMM YYYY');
+            const today = moment().utc().valueOf();
+            const todayFormatted = moment(today).format('Do MMMM YYYY');
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${todayMinusThreeDaysFormatted} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
