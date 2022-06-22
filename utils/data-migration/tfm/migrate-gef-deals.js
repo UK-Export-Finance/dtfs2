@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /**
  * DATA MIGRATION
  * **************
@@ -10,6 +11,7 @@ const axios = require('axios');
 const CONSTANTS = require('../constant');
 const { getCollection, update, disconnect } = require('../helpers/database');
 const { open, get } = require('../helpers/actionsheets');
+const { excelDateToISODateString } = require('../helpers/date');
 
 const version = '0.0.1';
 const { TFM_API } = process.env;
@@ -206,6 +208,52 @@ const processActionSheets = (data) => {
   }
 
   return Promise.reject(new Error('🚩 Empty data set provided.'));
+};
+
+const migrateGefAmendments = async () => {
+  const amendmentType = [
+    'Decrease in Value',
+    'Increase in Value',
+    'Increase in value',
+    'Extension',
+    'Extension,Value Increase, UKEF ML % reduction',
+    'Cover period increase',
+    'GE Extension',
+    'GE Extension, Increase in Value',
+  ];
+  const { MANUAL } = CONSTANTS.AMENDMENT.AMENDMENT_TYPE;
+  const allGefAmendments = [];
+  let amendments22To23 = await open('../gef-amendments/gef-amendments2.xlsx', 'Amendments Apr 22 to Apr 23');
+  amendments22To23 = amendments22To23.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()));
+  allGefAmendments.push(...amendments22To23);
+
+  let amendments21To22 = await open('../gef-amendments/gef-amendments2.xlsx', 'Amendments Apr 21 to Apr 22');
+  amendments21To22 = amendments21To22.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()));
+  allGefAmendments.push(...amendments21To22);
+
+  const json = [];
+  for (const amendment of allGefAmendments) {
+    const output = {};
+    output.requestDate = excelDateToISODateString(amendment.requestDate);
+    output.exporter = amendment.Exporter;
+    output.ukefDealId = `00${amendment['Deal ID']}`;
+    output.ukefFacilityId = `00${amendment['Facility ID']}`;
+    output.status = amendment.Stage;
+    output.submittedByPim = true;
+    output.submittedAt = amendment.Moved ? excelDateToISODateString(amendment.Moved) : '';
+    output.ukefDecision = {};
+    output.requireUkefApproval = amendment['Original Channel'] === MANUAL && amendment['Notification or Request'] === MANUAL;
+    output.banksDecision = {
+      banksDecisionEmail: true,
+      submittedAt: amendment.submittedAt ? excelDateToISODateString(amendment.submittedAt) : '',
+    };
+    json.push(output);
+  }
+
+  fs.writeFile('./gef-amendments.json', JSON.stringify(json, null, 2), (err) => {
+    if (err) throw err;
+    console.info('The CSV file has been saved!');
+  });
 };
 
 // ******************** MAIN *************************
