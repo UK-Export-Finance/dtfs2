@@ -30,7 +30,7 @@ module.exports = (submittedValues, deal, errorList) => {
     if (!dealHasBeenSubmitted) {
       if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
         newErrorList.requestedCoverStartDate = {
-          text: 'Requested Cover Start Date must be today or in the future',
+          text: 'Requested Cover Start Date must be on the application submission date or in the future',
           order: orderNumber(newErrorList),
         };
       } else if (!canEnterDateGreaterThan3Months) {

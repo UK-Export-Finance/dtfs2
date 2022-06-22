@@ -1,4 +1,5 @@
 const moment = require('moment');
+const CONSTANTS = require('../../../constants');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
   dateHasAllValues,
@@ -15,17 +16,30 @@ module.exports = (facility, errorList, deal) => {
     'issuedDate-year': issuedDateYear,
   } = facility;
 
+  const { submissionType } = deal;
   const {
     submissionDate: dealSubmissionDateTimestamp,
+    manualInclusionNoticeSubmissionDate: minSubmissionDateTimestamp,
   } = deal.details;
 
   const dealSubmissionDate = formattedTimestamp(dealSubmissionDateTimestamp);
+  const minSubmissionDate = formattedTimestamp(minSubmissionDateTimestamp);
   const issuedDate = formattedTimestamp(facility.issuedDate);
   const today = moment();
 
+  let dateOfSubmission = moment().utc().valueOf();
+
+  if (dealSubmissionDateTimestamp || minSubmissionDateTimestamp) {
+    if (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN) {
+      dateOfSubmission = dealSubmissionDate;
+    } else if (minSubmissionDateTimestamp) {
+      dateOfSubmission = minSubmissionDate;
+    }
+  }
+
   if (dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear)) {
-    if (!moment(issuedDate).isSameOrAfter(dealSubmissionDate, 'day')) {
-      const formattedDealSubmissionDate = moment(dealSubmissionDate).format('Do MMMM YYYY');
+    if (!moment(issuedDate).isSameOrAfter(dateOfSubmission, 'day')) {
+      const formattedDealSubmissionDate = moment(dateOfSubmission).format('Do MMMM YYYY');
 
       newErrorList.issuedDate = {
         text: `Issued Date must be on or after ${formattedDealSubmissionDate}`,
