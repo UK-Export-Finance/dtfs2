@@ -44,7 +44,6 @@ const AUTOMATIC_AMENDMENT = {
       {
         title: MANUAL_AMENDMENT_GROUP_1_TASKS.FILE_ALL_AMENDMENT_EMAILS,
         team: TEAMS.PIM,
-        isConditional: true,
       },
     ],
   },
