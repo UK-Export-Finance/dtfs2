@@ -1,7 +1,7 @@
 const api = require('../../../../api');
 const CONSTANTS = require('../../../../constants');
 const mapAssignToSelectOptions = require('../../../../helpers/map-assign-to-select-options');
-const userCanEditLeadUnderwriter = require('./helpers');
+const { userIsInTeam } = require('../../../../helpers/user');
 const { sortArrayOfObjectsAlphabetically } = require('../../../../helpers/array');
 
 const getLeadUnderwriter = async (deal, user) => {
@@ -16,7 +16,7 @@ const getLeadUnderwriter = async (deal, user) => {
     currentLeadUnderWriter = await api.getUser(currentLeadUnderWriterUserId);
   }
 
-  const userCanEdit = userCanEditLeadUnderwriter(user);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
   return {
     userCanEdit,
@@ -40,7 +40,7 @@ const getAssignLeadUnderwriter = async (req, res) => {
 
   const { user } = req.session;
 
-  const userCanEdit = userCanEditLeadUnderwriter(user);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
   if (!userCanEdit) {
     return res.redirect('/not-found');
@@ -55,10 +55,7 @@ const getAssignLeadUnderwriter = async (req, res) => {
   const allUnderwriterManagers = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITER_MANAGERS);
   const allUnderwriters = await api.getTeamMembers(CONSTANTS.TEAMS.UNDERWRITERS);
 
-  const allTeamMembers = [
-    ...allUnderwriterManagers,
-    ...allUnderwriters,
-  ];
+  const allTeamMembers = [...allUnderwriterManagers, ...allUnderwriters];
 
   const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(allTeamMembers, 'firstName');
 
@@ -82,7 +79,7 @@ const postAssignLeadUnderwriter = async (req, res) => {
 
   const { user } = req.session;
 
-  const userCanEdit = userCanEditLeadUnderwriter(user);
+  const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
 
   if (!userCanEdit) {
     return res.redirect('/not-found');

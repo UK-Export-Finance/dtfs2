@@ -19,8 +19,6 @@ const showAmendmentButton = (deal, userTeam) => {
   return false;
 };
 
-const userCanEditLeadUnderwriter = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);
-
 const userCanEditManagersDecision = (amendment, user) => {
   const isManager = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS]);
   const hasSubmittedDecision = amendment?.ukefDecision?.submitted;
@@ -74,7 +72,6 @@ const validateUkefDecision = (ukefDecision, decisionType) => {
 
 module.exports = {
   showAmendmentButton,
-  userCanEditLeadUnderwriter,
   userCanEditManagersDecision,
   userCanEditBankDecision,
   ukefDecisionRejected,

@@ -29,6 +29,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - TZ=Europe/London
     command: npx nodemon --inspect=0.0.0.0:9223 src/index.js -L
 
   trade-finance-manager-ui:
