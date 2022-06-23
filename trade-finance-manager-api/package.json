@@ -56,7 +56,7 @@
     "mongo-dot-notation": "^2.0.0",
     "mongodb": "4.0.0",
     "node-cron": "^3.0.0",
-    "nodemon": "^2.0.16",
+    "nodemon": "^2.0.17",
     "sanitize-html": "^2.7.0",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.3.0"
