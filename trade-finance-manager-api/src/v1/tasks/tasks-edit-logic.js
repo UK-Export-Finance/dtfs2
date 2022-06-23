@@ -1,4 +1,4 @@
-const CONSTANTS = require('../../constants');
+const { TASKS, TASKS_AMENDMENT } = require('../../constants');
 const {
   getGroupById,
   getTaskInGroupById,
@@ -48,7 +48,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
 
   const previousTask = getTaskInGroupById(group.groupTasks, previousTaskId);
 
-  if (previousTask?.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+  if (previousTask?.status === TASKS.STATUS.COMPLETED) {
     return true;
   }
 
@@ -62,7 +62,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
  * @returns {Boolean}
  */
 const isTaskInUnderwritingGroup = (group, taskTitle) => {
-  const isUnderwritingGroupTitle = group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING;
+  const isUnderwritingGroupTitle = group.groupTitle === TASKS.GROUP_TITLES.UNDERWRITING || group.groupTitle === TASKS_AMENDMENT.GROUP_TITLES.UNDERWRITING;
 
   const taskTitleIsInGroup = getTaskInGroupByTitle(group.groupTasks, taskTitle);
 
@@ -85,18 +85,13 @@ const isTaskInUnderwritingGroup = (group, taskTitle) => {
 const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
   const { previousStatus } = task;
 
-  if (previousStatus === CONSTANTS.TASKS.STATUS.COMPLETED
-    || previousStatus === CONSTANTS.TASKS.STATUS.CANNOT_START) {
+  if (previousStatus === TASKS.STATUS.COMPLETED || previousStatus === TASKS.STATUS.CANNOT_START) {
     return false;
   }
 
-  const taskIsInUnderwritingGroup = isTaskInUnderwritingGroup(
-    group,
-    task.title,
-  );
+  const taskIsInUnderwritingGroup = isTaskInUnderwritingGroup(group, task.title);
 
-  if (taskIsInUnderwritingGroup
-    && task.canEdit) {
+  if (taskIsInUnderwritingGroup && task.canEdit) {
     return true;
   }
 
@@ -110,12 +105,7 @@ const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
  * @param {Object} task
  * @returns {Boolean}
  */
-const handleTaskEditFlagAndStatus = (
-  allTaskGroups,
-  group,
-  task,
-  isTaskThatIsBeingUpdated,
-) => {
+const handleTaskEditFlagAndStatus = (allTaskGroups, group, task, isTaskThatIsBeingUpdated) => {
   const updatedTask = task;
   let sendEmail = false;
 
@@ -124,8 +114,7 @@ const handleTaskEditFlagAndStatus = (
    * Therefore return the existing task as it is
    * and prevent execution of other conditions below
    */
-  if (!isTaskThatIsBeingUpdated
-    && task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+  if (!isTaskThatIsBeingUpdated && task.status === TASKS.STATUS.COMPLETED) {
     return { updatedTask: task };
   }
 
@@ -136,7 +125,7 @@ const handleTaskEditFlagAndStatus = (
      * But, if the task is completed, mark as cannot edit.
      */
     if (isTaskThatIsBeingUpdated) {
-      if (updatedTask.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+      if (updatedTask.status === TASKS.STATUS.COMPLETED) {
         updatedTask.canEdit = false;
       }
       return { updatedTask };
@@ -149,10 +138,9 @@ const handleTaskEditFlagAndStatus = (
      * - change status to 'To do'
      * - return sendEmail flag (to alert user that the task is ready)
      */
-    if (!isTaskThatIsBeingUpdated
-      && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START) {
+    if (!isTaskThatIsBeingUpdated && task.status === TASKS.STATUS.CANNOT_START) {
       updatedTask.canEdit = true;
-      updatedTask.status = CONSTANTS.TASKS.STATUS.TO_DO;
+      updatedTask.status = TASKS.STATUS.TO_DO;
 
       if (!task.emailSent) {
         sendEmail = true;
@@ -166,7 +154,7 @@ const handleTaskEditFlagAndStatus = (
    */
   if (taskCanBeEditedWithoutPreviousTaskComplete(group, task)) {
     if (isTaskThatIsBeingUpdated) {
-      if (task.status === CONSTANTS.TASKS.STATUS.COMPLETED) {
+      if (task.status === TASKS.STATUS.COMPLETED) {
         updatedTask.canEdit = false;
       }
 
