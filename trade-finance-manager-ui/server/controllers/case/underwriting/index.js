@@ -9,6 +9,7 @@ const { userCanEditManagersDecision, userCanEditBankDecision, ukefDecisionReject
 const { formattedNumber } = require('../../../helpers/number');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
+const CONSTANTS = require('../../../constants');
 
 /**
  * controller for underwriting tab
@@ -26,57 +27,70 @@ const getUnderwriterPage = async (req, res) => {
   const dealLeadUnderWriter = await leadUnderwriter.getLeadUnderwriter(deal, user);
   const dealPricingAndRisk = await pricingAndRisk.getUnderWritingPricingAndRisk(deal, user);
   const dealUnderwriterManagersDecision = await underwriterManagersDecision.getUnderwriterManagersDecision(deal, user);
-
+  const submittedAmendments = [];
   // gets latest amendment in progress
-  const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
+  let { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  // filters the amendments submittedByPim and also which are not automatic
+  amendments = amendments.filter(({ submittedByPim, requireUkefApproval }) => submittedByPim && requireUkefApproval);
 
   // if amendments object exists then populate fields
-  if (amendment?.submittedByPim) {
-    if (amendment?.ukefDecision) {
-      amendment.ukefDecision.isEditable = userCanEditManagersDecision(amendment, user);
-      // if bank decision then set isEditable in relevant way
-      if (amendment?.bankDecision) {
-        amendment.bankDecision.isEditable = userCanEditBankDecision(amendment, user);
+  if (amendments.length) {
+    /* eslint-disable no-await-in-loop */
+    /* eslint-disable no-restricted-syntax */
+    for (const amendment of amendments) {
+      if (amendment?.ukefDecision) {
+        amendment.ukefDecision.isEditable = userCanEditManagersDecision(amendment, user);
+        // if bank decision then set isEditable in relevant way
+        if (amendment?.bankDecision) {
+          amendment.bankDecision.isEditable = userCanEditBankDecision(amendment, user);
+        } else {
+          amendment.bankDecision = { isEditable: userCanEditBankDecision(amendment, user) };
+        }
+        // checks if declined by UKEF
+        if (amendment.ukefDecision?.submitted) {
+          amendment.ukefDecision.isDeclined = ukefDecisionRejected(amendment);
+        }
       } else {
-        amendment.bankDecision = { isEditable: userCanEditBankDecision(amendment, user) };
+        amendment.ukefDecision = { isEditable: userCanEditManagersDecision(amendment, user) };
       }
-      // checks if declined by UKEF
-      if (amendment.ukefDecision?.submitted) {
-        amendment.ukefDecision.isDeclined = ukefDecisionRejected(amendment);
+
+      const response = await getAmendmentLeadUnderwriter(amendment, user);
+      amendment.leadUnderwriter = {
+        isEditable: response.isEditable,
+        ...response.leadUnderwriter,
+      };
+
+      if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
+        amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
+        amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
       }
-    } else {
-      amendment.ukefDecision = { isEditable: userCanEditManagersDecision(amendment, user) };
-    }
 
-    const response = await getAmendmentLeadUnderwriter(amendment, user);
-    amendment.leadUnderwriter = {
-      isEditable: response.isEditable,
-      ...response.leadUnderwriter,
-    };
+      if (amendment?.changeFacilityValue && amendment?.value) {
+        amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
+        amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
+      }
 
-    if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
-      amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
-      amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
-    }
+      if (amendment?.ukefDecision?.submitted) {
+        const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'dd MMMM yyyy');
+        const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'HH:mm aaa');
+        amendment.ukefDecision.submittedAt = `${date} at ${time}`;
+      }
+      amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+      amendment.bankDecisionTags = BANK_DECISIONS_TAGS;
 
-    if (amendment?.changeFacilityValue && amendment?.value) {
-      amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
-      amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
-    }
+      if (amendment?.bankDecision?.receivedDate) {
+        amendment.bankDecision.receivedDateFormatted = format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd MMM yyyy');
+      }
+      if (amendment?.bankDecision?.effectiveDate) {
+        amendment.bankDecision.effectiveDateFormatted = format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd MMM yyyy');
+      }
 
-    if (amendment.ukefDecision.submitted) {
-      const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'dd MMMM yyyy');
-      const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'HH:mm aaa');
-      amendment.ukefDecision.submittedAt = `${date} at ${time}`;
-    }
-    amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
-    amendment.bankDecisionTags = BANK_DECISIONS_TAGS;
+      const hasAmendmentInProgress = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+      if (hasAmendmentInProgress) {
+        deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+      }
 
-    if (amendment?.bankDecision?.receivedDate) {
-      amendment.bankDecision.receivedDateFormatted = format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd MMM yyyy');
-    }
-    if (amendment?.bankDecision?.effectiveDate) {
-      amendment.bankDecision.effectiveDateFormatted = format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd MMM yyyy');
+      submittedAmendments.push(amendment);
     }
   }
 
@@ -90,7 +104,7 @@ const getUnderwriterPage = async (req, res) => {
     leadUnderwriter: dealLeadUnderWriter,
     pricingAndRisk: dealPricingAndRisk,
     underwriterManagersDecision: dealUnderwriterManagersDecision,
-    amendment,
+    amendments: submittedAmendments,
   });
 };
 

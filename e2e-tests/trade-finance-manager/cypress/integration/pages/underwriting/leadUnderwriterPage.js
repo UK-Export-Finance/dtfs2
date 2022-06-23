@@ -11,7 +11,7 @@ const leadUnderwriterPage = {
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
 
   // submitted values
-  leadUnderwriterName: () => cy.get('[data-cy="lead-underwriter-name"]'),
+  leadUnderwriterSummaryList: () => cy.get('[data-cy="lead-underwriter-summary-list"]'),
   leadUnderwriterEmail: () => cy.get('[data-cy="lead-underwriter-email"]'),
   changeLeadUnderwriterLink: () => cy.get('[data-cy="change-lead-underwriter-link"]'),
 };

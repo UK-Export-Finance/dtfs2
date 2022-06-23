@@ -92,9 +92,9 @@ context('Amendments underwriting page', () => {
       cy.login(T1_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      const { ukefFacilityId, type } = dealFacilities[0];
+      const { ukefFacilityId } = dealFacilities[0];
 
-      pages.underwritingPage.amendmentHeading().contains(`Amendment for ${type.toLowerCase()} facility ${ukefFacilityId}`);
+      pages.underwritingPage.amendmentHeading().contains(`Amendment for facility ${ukefFacilityId}`);
 
       pages.underwritingPage.amendmentLeadUnderwriterUnassigned().contains('Unassigned');
 
@@ -108,9 +108,9 @@ context('Amendments underwriting page', () => {
       cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      const { ukefFacilityId, type } = dealFacilities[0];
+      const { ukefFacilityId } = dealFacilities[0];
 
-      pages.underwritingPage.amendmentHeading().contains(`Amendment for ${type.toLowerCase()} facility ${ukefFacilityId}`);
+      pages.underwritingPage.amendmentHeading().contains(`Amendment for facility ${ukefFacilityId}`);
 
       pages.underwritingPage.assignAmendmentLeadUnderwriterButton().contains('Add underwriter');
 
@@ -124,9 +124,9 @@ context('Amendments underwriting page', () => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
-      const { ukefFacilityId, type } = dealFacilities[0];
+      const { ukefFacilityId } = dealFacilities[0];
 
-      pages.underwritingPage.amendmentHeading().contains(`Amendment for ${type.toLowerCase()} facility ${ukefFacilityId}`);
+      pages.underwritingPage.amendmentHeading().contains(`Amendment for facility ${ukefFacilityId}`);
 
       pages.underwritingPage.amendmentLeadUnderwriterUnassigned().contains('Unassigned');
 

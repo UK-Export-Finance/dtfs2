@@ -382,11 +382,11 @@ const getAmendmentsByFacilityId = async (facilityId) => {
   }
 };
 
-const getAmendmentByDealId = async (dealId) => {
+const getAmendmentsByDealId = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deal/${dealId}/amendment`,
+      url: `${tfmAPIurl}/v1/deal/${dealId}/amendments`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -469,7 +469,7 @@ module.exports = {
   getLatestCompletedAmendment,
   getAmendmentById,
   getAmendmentsByFacilityId,
-  getAmendmentByDealId,
+  getAmendmentsByDealId,
   getAmendmentInProgressByDealId,
   getCompletedAmendmentByDealId,
   getLatestCompletedAmendmentByDealId,

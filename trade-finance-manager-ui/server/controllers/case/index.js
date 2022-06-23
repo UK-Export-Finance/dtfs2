@@ -4,6 +4,7 @@ const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpe
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
+const { filterTasks } = require('../helpers/tasks.helper');
 
 const {
   DEAL,
@@ -16,15 +17,14 @@ const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
 
   const deal = await api.getDeal(dealId);
-  const { data: amendment } = await api.getAmendmentInProgressByDealId(dealId);
-  const { facilityId, type, ukefFacilityId, status } = amendment;
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
-
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
@@ -36,9 +36,8 @@ const getCaseDeal = async (req, res) => {
     activeSubNavigation: 'deal',
     dealId,
     user: req.session.user,
-    facilityType: type,
-    ukefFacilityId,
-    facilityId,
+    amendments,
+    amendmentsInProgress,
     hasAmendmentInProgress,
   });
 };
@@ -55,9 +54,23 @@ const getCaseTasks = async (req, res) => {
   };
 
   const deal = await api.getDeal(dealId, tasksFilters);
-
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
   if (!deal) {
     return res.redirect('/not-found');
+  }
+
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+
+  if (amendments.length > 0) {
+    amendments.map((a) => {
+      const amendment = a;
+      amendment.tasks = filterTasks(amendment.tasks, tasksFilters);
+      return amendment;
+    });
   }
 
   return res.render('case/tasks/tasks.njk', {
@@ -69,6 +82,8 @@ const getCaseTasks = async (req, res) => {
     dealId,
     user: req.session.user,
     selectedTaskFilter: TASKS.FILTER_TYPES.USER,
+    amendments,
+    hasAmendmentInProgress,
   });
 };
 
@@ -93,6 +108,25 @@ const filterCaseTasks = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+
+  if (amendments.length > 0) {
+    amendments.map((a) => {
+      const amendment = a;
+      amendment.tasks = filterTasks(amendment.tasks, tasksFilters);
+      return amendment;
+    });
+  }
+
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
@@ -102,6 +136,8 @@ const filterCaseTasks = async (req, res) => {
     dealId,
     user: req.session.user,
     selectedTaskFilter: filterType,
+    amendments,
+    hasAmendmentInProgress,
   });
 };
 
@@ -220,10 +256,10 @@ const formatAmendmentDetails = (allAmendments) => {
 };
 
 const getCaseFacility = async (req, res) => {
-  const { facilityId } = req.params;
+  const { _id: dealId, facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
   const { data: amendment } = await api.getAmendmentInProgress(facilityId);
-  const { status, amendmentId } = amendment;
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
   const { data: allAmendmentsByFacilityId } = await api.getAmendmentsByFacilityId(facilityId);
 
   if (!facility) {
@@ -232,12 +268,10 @@ const getCaseFacility = async (req, res) => {
 
   const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
 
-  const { dealId } = facility.facilitySnapshot;
   const deal = await api.getDeal(dealId);
 
-  const hasAmendmentInProgress = status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+  const hasAmendmentInProgress = amendment.status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgress && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
-
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
@@ -252,12 +286,13 @@ const getCaseFacility = async (req, res) => {
     facilityId,
     facilityTfm: facility.tfm,
     user: req.session.user,
-    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendmentId,
+    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendment.amendmentId,
     showContinueAmendmentButton,
     amendmentId: amendment?.amendmentId,
     amendmentVersion: amendment?.version,
     hasAmendmentInProgress,
     allAmendments,
+    amendments,
   });
 };
 
