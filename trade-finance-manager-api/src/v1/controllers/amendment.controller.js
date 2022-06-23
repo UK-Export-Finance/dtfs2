@@ -1,4 +1,6 @@
 const api = require('../api');
+const { createAmendmentTasks, updateAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
+const { isRiskAnalysisCompleted } = require('../helpers/tasks');
 const { amendmentEmailEligible, sendAutomaticAmendmentEmail, sendManualDecisionAmendmentEmail, sendManualBankDecisionEmail } = require('../helpers/amendment.helpers');
 
 const createFacilityAmendment = async (req, res) => {
@@ -47,6 +49,19 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
 const updateFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const payload = req.body;
+  if (payload.createTasks && payload.submittedByPim) {
+    const tasks = createAmendmentTasks(payload.requireUkefApproval);
+    payload.tasks = tasks;
+    delete payload.createTasks;
+    delete payload.requireUkefApproval;
+  }
+
+  if (payload?.taskUpdate?.updateTask) {
+    const tasks = await updateAmendmentTasks(facilityId, amendmentId, payload.taskUpdate);
+    payload.tasks = tasks;
+    payload.ukefDecision = { isReadyForApproval: isRiskAnalysisCompleted(tasks) };
+    delete payload.taskUpdate;
+  }
 
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
   // sends email if conditions are met
@@ -103,9 +118,9 @@ const getAmendmentByFacilityId = async (req, res) => {
   return res.status(422).send({ data: 'Unable to get the amendment by facilityId' });
 };
 
-const getAmendmentByDealId = async (req, res) => {
+const getAmendmentsByDealId = async (req, res) => {
   const { dealId } = req.params;
-  const amendment = await api.getAmendmentByDealId(dealId);
+  const amendment = await api.getAmendmentsByDealId(dealId);
   if (amendment) {
     return res.status(200).send(amendment);
   }
@@ -155,7 +170,7 @@ module.exports = {
   getLatestCompletedAmendment,
   getAmendmentById,
   getAmendmentByFacilityId,
-  getAmendmentByDealId,
+  getAmendmentsByDealId,
   getAmendmentInProgressByDealId,
   getCompletedAmendmentByDealId,
   getLatestCompletedAmendmentByDealId,

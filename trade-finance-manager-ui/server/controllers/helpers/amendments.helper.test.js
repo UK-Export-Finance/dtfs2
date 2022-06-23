@@ -1,5 +1,5 @@
 import { showAmendmentButton } from './amendments.helper';
-import { userCanEditBankDecision, userCanEditLeadUnderwriter, userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } from '.';
+import { userCanEditBankDecision, userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } from '.';
 
 import MOCKS from '../../test-mocks/amendment-test-mocks';
 
@@ -90,23 +90,6 @@ describe('showAmendmentButton()', () => {
 
     const result = showAmendmentButton(deal, userTeam);
     expect(result).toEqual(false);
-  });
-});
-
-describe('userCanEditLeadUnderwriter()', () => {
-  it('should return `true` if the user is in Underwriter Managers team', () => {
-    const result = userCanEditLeadUnderwriter(MOCKS.MOCK_USER_UNDERWRITER_MANAGER);
-    expect(result).toEqual(true);
-  });
-
-  it('should return `false` if the user is in PIM team', () => {
-    const result = userCanEditLeadUnderwriter(MOCKS.MOCK_USER_PIM);
-    expect(result).toEqual(false);
-  });
-
-  it('should return `true` if the user is in underwriting team', () => {
-    const result = userCanEditLeadUnderwriter(MOCKS.MOCK_USER_UNDERWRITER);
-    expect(result).toEqual(true);
   });
 });
 

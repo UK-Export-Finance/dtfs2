@@ -415,7 +415,7 @@ tfmRouter.route('/facilities/:facilityId/amendment/status/in-progress').get(tfmG
 tfmRouter.route('/facilities/:facilityId/amendment/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendmentsByFacilityId);
 tfmRouter.route('/facilities/:facilityId/amendment/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendment);
 tfmRouter.route('/facilities/:facilityId/amendment/:amendmentId').get(tfmGetAmendmentController.getAmendmentById);
-tfmRouter.route('/deals/:dealId/amendment').get(tfmGetAmendmentController.getAmendmentByDealId);
+tfmRouter.route('/deals/:dealId/amendments').get(tfmGetAmendmentController.getAmendmentsByDealId);
 tfmRouter.route('/deals/:dealId/amendment/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgressByDealId);
 tfmRouter.route('/deals/:dealId/amendment/status/completed').get(tfmGetAmendmentController.getCompletedAmendmentByDealId);
 tfmRouter.route('/deals/:dealId/amendment/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendmentByDealId);

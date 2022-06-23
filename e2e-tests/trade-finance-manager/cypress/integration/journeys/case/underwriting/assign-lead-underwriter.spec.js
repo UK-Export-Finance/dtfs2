@@ -2,7 +2,9 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import { UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_2, UNDERWRITER_1 } from '../../../../../../e2e-fixtures';
+import {
+  UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_2, UNDERWRITER_1, T1_USER_1,
+} from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
@@ -50,8 +52,8 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     });
   });
 
-  it('should show unassigned on lead underwriter section on underwriting page', () => {
-    cy.login(UNDERWRITER_1);
+  it('should show unassigned on lead underwriter section on underwriting page when not UW or UW_MANAGER', () => {
+    cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to lead underwriter page
@@ -64,13 +66,13 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   });
 
   it('a user that is NOT in UNDERWRITER_MANAGERS or UNDERWRITERS team cannot manually navigate to assign-lead-underwriter page', () => {
-    cy.login(UNDERWRITER_1);
+    cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter/assign`));
     cy.url().should('eq', relative('/not-found'));
   });
 
   it('a user that is NOT in UNDERWRITER_MANAGERS or UNDERWRITERS team should NOT see `Assign lead underwriter` link', () => {
-    cy.login(UNDERWRITER_1);
+    cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
@@ -105,8 +107,8 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
       expect(text.trim()).equal(UNDERWRITER_1.email);
     });
 
-    pages.leadUnderwriterPage.leadUnderwriterName().invoke('text').then((text) => {
-      expect(text.trim()).equal(`${underwriterFullName}`);
+    pages.leadUnderwriterPage.leadUnderwriterSummaryList().invoke('text').then((text) => {
+      expect(text.trim()).contains(`${underwriterFullName}`);
     });
 
     pages.leadUnderwriterPage.changeLeadUnderwriterLink().should('exist');

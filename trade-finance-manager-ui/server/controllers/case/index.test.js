@@ -33,18 +33,19 @@ describe('controllers - case', () => {
         mock: true,
       };
 
+      const mockAmendments = [{
+        ukefFacilityId: '1234',
+        facilityId: '12345',
+        submittedByPim: false,
+        status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+      }];
+
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
-        api.getAmendmentInProgressByDealId = () =>
+        api.getAmendmentsByDealId = () =>
           Promise.resolve({
             status: 200,
-            data: {
-              ukefFacilityId: '1234',
-              facilityId: '12345',
-              submittedByPim: false,
-              type: 'Cash',
-              status: 'In progress',
-            },
+            data: mockAmendments,
           });
       });
 
@@ -65,10 +66,9 @@ describe('controllers - case', () => {
           activeSubNavigation: 'deal',
           dealId: req.params._id,
           user: session.user,
-          facilityType: 'Cash',
-          ukefFacilityId: '1234',
-          facilityId: '12345',
           hasAmendmentInProgress: true,
+          amendments: mockAmendments,
+          amendmentsInProgress: mockAmendments,
         });
       });
     });
@@ -110,6 +110,11 @@ describe('controllers - case', () => {
 
       beforeEach(() => {
         api.getDeal = apiGetDealSpy;
+        api.getAmendmentsByDealId = () =>
+          Promise.resolve({
+            status: 200,
+            data: [],
+          });
       });
 
       it('should render tasks template with data', async () => {
@@ -138,6 +143,8 @@ describe('controllers - case', () => {
           dealId: req.params._id,
           user: session.user,
           selectedTaskFilter: 'user',
+          amendments: [],
+          hasAmendmentInProgress: false,
         });
       });
     });
@@ -179,6 +186,11 @@ describe('controllers - case', () => {
 
       beforeEach(() => {
         api.getDeal = apiGetDealSpy;
+        api.getAmendmentsByDealId = () =>
+          Promise.resolve({
+            status: 200,
+            data: [],
+          });
       });
 
       it('should render tasks template with data', async () => {
@@ -211,6 +223,8 @@ describe('controllers - case', () => {
           dealId: req.params._id,
           user: session.user,
           selectedTaskFilter: req.body.filterType,
+          amendments: [],
+          hasAmendmentInProgress: false,
         });
       });
     });
@@ -619,7 +633,7 @@ describe('controllers - case', () => {
         api.getDeal = () => Promise.resolve(mockDeal);
         api.getAmendmentInProgress = () => Promise.resolve({ status: 200, data: { amendmentId: '626bae8c43c01e02076352e1', version: 1 } });
         api.getAmendmentsByFacilityId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
-        api.getLatestCompletedAmendment = () => Promise.resolve({ status: 200, data: { amendmentId: '626bae8c43c01e02076352e1', version: 1 } });
+        api.getAmendmentsByDealId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
       });
 
       it('should render deal template with data', async () => {
@@ -647,6 +661,7 @@ describe('controllers - case', () => {
           amendmentVersion: 1,
           hasAmendmentInProgress: false,
           allAmendments: expect.any(Array),
+          amendments: expect.any(Array),
         });
       });
     });
