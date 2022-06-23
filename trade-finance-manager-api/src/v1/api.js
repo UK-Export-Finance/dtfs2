@@ -405,13 +405,13 @@ const getAmendmentByFacilityId = async (facilityId) => {
   }
 };
 
-const getAmendmentByDealId = async (dealId) => {
+const getAmendmentsByDealId = async (dealId) => {
   const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -998,7 +998,7 @@ module.exports = {
   getLatestCompletedAmendment,
   getAmendmentById,
   getAmendmentByFacilityId,
-  getAmendmentByDealId,
+  getAmendmentsByDealId,
   getAmendmentInProgressByDealId,
   getCompletedAmendmentByDealId,
   getLatestCompletedAmendmentByDealId,

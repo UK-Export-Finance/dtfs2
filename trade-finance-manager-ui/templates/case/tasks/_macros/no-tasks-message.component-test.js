@@ -1,4 +1,5 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
+
 const component = '../templates/case/tasks/_macros/no-tasks-message.njk';
 
 const render = componentRenderer(component);
@@ -10,6 +11,7 @@ describe(component, () => {
     it('should render `no tasks` message', () => {
       const params = {
         selectedTaskFilter: 'user',
+        taskType: 'deal',
       };
       wrapper = render(params);
 
@@ -19,11 +21,12 @@ describe(component, () => {
       wrapper.expectElement('[data-cy="no-tasks-deal"]').notToExist();
     });
   });
-  
+
   describe('when params.selectedTaskFilter is `team`', () => {
     it('should render `no tasks` message', () => {
       const params = {
         selectedTaskFilter: 'team',
+        taskType: 'deal',
       };
       wrapper = render(params);
 
@@ -38,6 +41,7 @@ describe(component, () => {
     it('should render `no tasks` message', () => {
       const params = {
         selectedTaskFilter: 'all',
+        taskType: 'deal',
       };
       wrapper = render(params);
 

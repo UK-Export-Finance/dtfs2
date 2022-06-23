@@ -6,6 +6,8 @@ const today = new Date();
 const todayDay = format(today, 'dd');
 const todayMonth = format(today, 'M');
 const todayYear = format(today, 'yyyy');
+const todayTaskFormat = format(today, 'dd MMM yyyy');
+
 // to test cannot be issued in past
 const fourDaysAgo = sub(today, { days: 4 });
 const fourDaysAgoDay = format(fourDaysAgo, 'dd');
@@ -93,4 +95,5 @@ export default {
   todayUnixMonth,
   todayUnixYear,
   threeDaysAgoPlusMonth,
+  todayTaskFormat,
 };

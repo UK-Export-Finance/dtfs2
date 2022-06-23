@@ -44,8 +44,7 @@ const filterTeamTasksInGroup = (task, group, FILTER_VALUE) => {
   return group;
 };
 
-const filterTeamTasks = (tasks, FILTER_TEAM_ID) =>
-  mapAndFilter(tasks, filterTeamTasksInGroup, FILTER_TEAM_ID);
+const filterTeamTasks = (tasks, FILTER_TEAM_ID) => mapAndFilter(tasks, filterTeamTasksInGroup, FILTER_TEAM_ID);
 
 const filterUserTasksInGroup = (task, group, FILTER_VALUE) => {
   const filteredGroup = group;
@@ -59,13 +58,10 @@ const filterUserTasksInGroup = (task, group, FILTER_VALUE) => {
   return group;
 };
 
-const filterUserTasks = (tasks, FILTER_USER_ID) =>
-  mapAndFilter(tasks, filterUserTasksInGroup, FILTER_USER_ID);
+const filterUserTasks = (tasks, FILTER_USER_ID) => mapAndFilter(tasks, filterUserTasksInGroup, FILTER_USER_ID);
 
 const filterTasks = (tasks, filtersObj) => {
-  if (!filtersObj
-    || !filtersObj.filterType
-    || filtersObj.filterType === FILTER_TYPE.ALL) {
+  if (!filtersObj || !filtersObj.filterType || filtersObj.filterType === FILTER_TYPE.ALL) {
     return tasks;
   }
 
