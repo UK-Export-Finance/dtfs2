@@ -44,7 +44,7 @@
     "mongodb": "~3.6.12",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.4.0",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.17"
   },
   "devDependencies": {
     "eslint": "^8.16.0",
