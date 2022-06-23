@@ -15,7 +15,7 @@
   <h3 class="govuk-heading-s ukef-heading-background" data-cy="tasks-deal-submission-type">Amendment for facility {{ukefFacilityId}}</h3>
 
   {% if tasks.length %}
-    <div data-cy="tasks-table">
+    <div class="govuk-!-padding-left-7" data-cy="tasks-table">
       {% for taskGroup in tasks %}
           <table class="govuk-table" data-cy="task-group-table">
             <caption class="govuk-table__caption govuk-heading-l govuk-!-margin-bottom-0" data-cy="task-group-title">{{ taskGroup.groupTitle }}</caption>
@@ -53,7 +53,7 @@
 
                   <td
                     class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 govuk-body-s ukef-tasks-table__cell-width-14-5"
-                    data-cy="task-table-row-{{ task.id }}-team-name">
+                    data-cy="task-table-row-group-{{ taskGroup.id }}-task-{{ task.id }}-team-name">
                     {{ task.team.name }}
                   </td>
 

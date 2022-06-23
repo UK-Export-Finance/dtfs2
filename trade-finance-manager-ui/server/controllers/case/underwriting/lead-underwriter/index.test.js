@@ -17,12 +17,12 @@ const MOCK_USER_UNDERWRITER_MANAGER = {
   teams: ['UNDERWRITER_MANAGERS'],
 };
 
-const MOCK_USER_UNDERWRITER = {
-  _id: '100200300',
+const MOCK_USER_TEAM_USER = {
+  _id: '100200301',
   username: 'UNDERWRITER_1',
   firstName: 'Joe',
   lastName: 'Bloggs',
-  teams: ['UNDERWRITERS'],
+  teams: ['TEAM1'],
 };
 
 const MOCK_TEAM_UNDERWRITER_MANAGERS = [MOCK_USER_UNDERWRITER_MANAGER];
@@ -160,7 +160,7 @@ describe('GET underwriting - assign lead underwriter', () => {
           _id: dealId,
         },
         session: {
-          user: MOCK_USER_UNDERWRITER,
+          user: MOCK_USER_TEAM_USER,
         },
       };
 
@@ -227,7 +227,7 @@ describe('POST underwriting - assign lead underwriter', () => {
           _id: dealId,
         },
         session: {
-          user: MOCK_USER_UNDERWRITER,
+          user: MOCK_USER_TEAM_USER,
         },
       };
 

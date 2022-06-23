@@ -31,13 +31,16 @@
                   text: currentLeadUnderWriter.firstName + " " + currentLeadUnderWriter.lastName
                 },
                 value: {
-                  html: '<a class="govuk-link" href="mailto:'+currentLeadUnderWriter.email+'" data-cy="amendment--lead-underwriter-email">'+currentLeadUnderWriter.email+'</a>'
+                  html: '<a class="govuk-link" href="mailto:'+currentLeadUnderWriter.email+'" data-cy="lead-underwriter-email">'+currentLeadUnderWriter.email+'</a>'
                 },
                 actions: {
                   items: leadUnderwriterHtml
                 }
               }
-            ]
+            ],
+            attributes: {
+              'data-cy': 'lead-underwriter-summary-list'
+            }
           }) }}
         </div>
       </div>

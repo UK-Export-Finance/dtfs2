@@ -29,12 +29,12 @@ describe(page, () => {
   it('should render lead underwriter name', () => {
     const wrapper = render(params);
     const expected = `${params.leadUnderwriter.currentLeadUnderWriter.firstName} ${params.leadUnderwriter.currentLeadUnderWriter.lastName}`;
-    wrapper.expectText('[data-cy="lead-underwriter-name"]').toRead(expected);
+    wrapper.expectText('[data-cy="lead-underwriter-summary-list"]').toContain(expected);
   });
 
   it('should render lead underwriter email', () => {
     const wrapper = render(params);
-    wrapper.expectText('[data-cy="lead-underwriter-email"]').toRead(params.leadUnderwriter.currentLeadUnderWriter.email);
+    wrapper.expectText('[data-cy="lead-underwriter-summary-list"]').toContain(params.leadUnderwriter.currentLeadUnderWriter.email);
   });
 
   describe('with params.userCanEdit', () => {
@@ -51,7 +51,7 @@ describe(page, () => {
       const wrapper = render(params);
       wrapper.expectLink('[data-cy="change-lead-underwriter-link"]').toLinkTo(
         `/case/${params.leadUnderwriter.dealId}/underwriting/lead-underwriter/assign`,
-        'Change',
+        'Change contact details',
       );
     });
   });

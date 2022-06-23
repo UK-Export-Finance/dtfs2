@@ -144,7 +144,6 @@ const findAmendmentsByDealId = async (dealId) => {
       { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
       {
         $addFields: {
-          'amendments.type': '$facilitySnapshot.type',
           'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId'
         }
       },
@@ -244,7 +243,6 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
         { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
         {
           $addFields: {
-            'amendments.type': '$facilitySnapshot.type',
             'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId'
           }
         },

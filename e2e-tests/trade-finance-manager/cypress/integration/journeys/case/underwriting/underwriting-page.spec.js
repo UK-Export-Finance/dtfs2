@@ -98,8 +98,8 @@ context('Underwriting page', () => {
 
     pages.underwritingPage.showAllButton().click();
 
-    pages.underwritingPage.leadUnderwriterUnassigned().contains('Unassigned');
-    pages.underwritingPage.assignLeadUnderwriterButton().should('not.exist');
+    pages.underwritingPage.leadUnderwriterUnassigned().should('not.exist');
+    pages.underwritingPage.assignLeadUnderwriterButton().contains('Add underwriter');
 
     pages.underwritingPage.underwriterManagerDecisionNotAdded().contains('Not added yet');
     pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
@@ -110,5 +110,28 @@ context('Underwriting page', () => {
     pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().contains('Change');
 
     pages.underwritingPage.facilityTable(dealFacilities[0]._id).changeRiskProfileLink().contains('Change');
+  });
+
+  it('should show correct links and buttons if logged in as T1_USER', () => {
+    cy.login(T1_USER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+
+    // go to lead underwriter page
+    partials.caseSubNavigation.underwritingLink().click();
+
+    pages.underwritingPage.showAllButton().click();
+
+    pages.underwritingPage.leadUnderwriterUnassigned().contains('Unassigned');
+    pages.underwritingPage.assignLeadUnderwriterButton().should('not.exist');
+
+    pages.underwritingPage.underwriterManagerDecisionNotAdded().contains('Not added yet');
+    pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
+
+    pages.underwritingPage.addCreditRatingButton().should('not.exist');
+    pages.underwritingPage.exporterTableChangeCreditRatingLink().should('not.exist');
+    pages.underwritingPage.exporterTableChangeLossGivenDefaultLink().should('not.exist');
+    pages.underwritingPage.exporterTableChangeProbabilityOfDefaultLink().should('not.exist');
+
+    pages.underwritingPage.facilityTable(dealFacilities[0]._id).changeRiskProfileLink().should('not.exist');
   });
 });

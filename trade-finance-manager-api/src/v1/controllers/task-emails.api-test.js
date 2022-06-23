@@ -248,14 +248,6 @@ describe('task emails functions', () => {
 
       expect(api.sendEmail).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START, underwritersTeam.email, expectedEmailVars);
     });
-
-    it('should not send a task email if not necessary', async () => {
-      const nonSalesforceTask = MOCK_AIN_TASKS[0].groupTasks.find((t) => t.title !== CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE);
-
-      await sendUpdatedTaskEmail(nonSalesforceTask, mockDeal);
-
-      expect(api.sendEmail).not.toHaveBeenCalled();
-    });
   });
 });
 

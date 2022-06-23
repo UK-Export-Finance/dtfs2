@@ -22,6 +22,7 @@ const getAmendmentTask = async (req, res) => {
       task,
       assignToSelectOptions,
       amendment,
+      dealId,
     });
   } catch (error) {
     console.error('Unable to get the amendment request date page', { error });
@@ -48,7 +49,7 @@ const postAmendmentTask = async (req, res) => {
     };
 
     await api.updateAmendment(facilityId, amendmentId, update);
-    return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/task/${taskId}/group/${groupId}`);
+    return res.redirect(`/case/${dealId}/tasks`);
   } catch (error) {
     return res.redirect('/');
   }
