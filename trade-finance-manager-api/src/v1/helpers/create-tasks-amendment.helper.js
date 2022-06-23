@@ -258,7 +258,7 @@ const updateAllTasks = async (allTaskGroups, taskUpdate, urlOrigin, deal) => {
  * - Sends emails ('task is ready to start') for any tasks that return sendEmail flag.
  * - Adds emailSent flag to any task that successfully sent an email.
  * */
-const updateAmendmentTask = async (facilityId, amendmentId, taskUpdate) => {
+const updateAmendmentTasks = async (facilityId, amendmentId, taskUpdate) => {
   const amendment = await api.getAmendmentById(facilityId, amendmentId);
   const { dealSnapshot } = await api.findOneDeal(amendment.dealId);
 
@@ -290,5 +290,5 @@ module.exports = {
   createAmendmentTasks,
   updateTask,
   updateAllTasks,
-  updateAmendmentTask,
+  updateAmendmentTasks,
 };

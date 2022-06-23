@@ -28,8 +28,9 @@ const shouldCreateAgentCheckTask = (deal) => {
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS && submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
     const { eligibility } = deal;
+    const eligibilityCriterionId = 11;
 
-    const eligibilityCriterion11 = eligibility.criteria.find((criterion) => criterion.id === 11);
+    const eligibilityCriterion11 = eligibility.criteria.find((criterion) => criterion.id === eligibilityCriterionId);
 
     const eligibilityCriteria11isFalse = eligibilityCriterion11.answer === false;
 

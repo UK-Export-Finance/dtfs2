@@ -1,5 +1,5 @@
 const api = require('../api');
-const { createAmendmentTasks, updateAmendmentTask } = require('../helpers/create-tasks-amendment.helper');
+const { createAmendmentTasks, updateAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
 const { amendmentEmailEligible, sendAutomaticAmendmentEmail, sendManualDecisionAmendmentEmail, sendManualBankDecisionEmail } = require('../helpers/amendment.helpers');
 
@@ -57,7 +57,7 @@ const updateFacilityAmendment = async (req, res) => {
   }
 
   if (payload?.taskUpdate?.updateTask) {
-    const tasks = await updateAmendmentTask(facilityId, amendmentId, payload.taskUpdate);
+    const tasks = await updateAmendmentTasks(facilityId, amendmentId, payload.taskUpdate);
     payload.tasks = tasks;
     payload.ukefDecision = { isReadyForApproval: isRiskAnalysisCompleted(tasks) };
     delete payload.taskUpdate;
