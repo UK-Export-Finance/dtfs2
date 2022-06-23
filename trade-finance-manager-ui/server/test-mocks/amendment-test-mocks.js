@@ -56,22 +56,13 @@ const MOCK_AMENDMENT = {
 };
 
 const MOCK_AMENDMENT_AUTOMATIC_APPROVAL = {
-  amendmentId: '12345',
-  facilityId: '45678',
-  dealId: '999',
-  ukefFacilityId: '123',
-  type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
-  status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
-  submittedByPim: true,
+  ...MOCK_AMENDMENT,
+  status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.COMPLETED,
   requireUkefApproval: false,
 };
 
 const MOCK_AMENDMENT_UNSUBMITTED = {
-  amendmentId: '12345',
-  facilityId: '45678',
-  dealId: '999',
-  ukefFacilityId: '123',
-  type: CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
+  ...MOCK_AMENDMENT,
   status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: false,
 };

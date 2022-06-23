@@ -362,6 +362,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 4).status().contains('Cannot start yet');
     pages.tasksPage.tasks.row(4, 5).status().contains('Cannot start yet');
 
+    // TODO: add when add decision is dependent on tasks
     // cy.login(UNDERWRITER_MANAGER_1);
 
     // cy.visit(relative(`/case/${dealId}/underwriting`));
@@ -403,6 +404,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 4).status().contains('In progress');
     pages.tasksPage.tasks.row(4, 5).status().contains('Cannot start yet');
 
+    // TODO: add when add decision is dependent on tasks
     // cy.login(UNDERWRITER_MANAGER_1);
 
     // cy.visit(relative(`/case/${dealId}/underwriting`));

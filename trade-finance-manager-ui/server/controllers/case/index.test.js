@@ -37,8 +37,7 @@ describe('controllers - case', () => {
         ukefFacilityId: '1234',
         facilityId: '12345',
         submittedByPim: false,
-        type: 'Cash',
-        status: 'In progress',
+        status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
       }];
 
       beforeEach(() => {
