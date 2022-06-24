@@ -24,6 +24,7 @@ import facilitiesPage from './facilitiesPage';
 import amendmentsPage from './amendments/amendmentsPage';
 import feedbackPage from './feedbackPage';
 import footer from './footer';
+import activitiesPage from './activities/activitiesPage';
 
 export default {
   landingPage,
@@ -52,4 +53,5 @@ export default {
   underwritingPage,
   amendmentsPage,
   footer,
+  activitiesPage,
 };

@@ -1,7 +1,10 @@
 const { getUnixTime, fromUnixTime } = require('date-fns');
 const api = require('../../../api');
 const generateValidationErrors = require('../../../helpers/validation');
+const { hasAmendmentInProgressDealStage } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
+
+const { DEAL } = CONSTANTS;
 
 const MAX_COMMENT_LENGTH = 1000;
 
@@ -36,6 +39,11 @@ const getActivity = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(dealId);
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+
   const activities = mappedActivities(deal.tfm.activities);
 
   return res.render('case/activity/activity.njk', {
@@ -65,6 +73,11 @@ const filterActivities = async (req, res) => {
 
   if (!deal) {
     return res.redirect('/not-found');
+  }
+
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(dealId);
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
   const activities = mappedActivities(deal.tfm.activities);

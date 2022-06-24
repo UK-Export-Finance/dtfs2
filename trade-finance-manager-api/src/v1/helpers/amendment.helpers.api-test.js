@@ -31,7 +31,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.approvedWithoutConditionsBothAmendments.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
       },
     );
 
@@ -53,7 +53,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.approvedWithoutConditionsOneAmendment.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.approvedWithoutConditionsOneAmendment.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.approvedWithoutConditionsOneAmendment.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
       },
     );
 
@@ -75,7 +75,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.approvedWithConditionsBothAmendments.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
         conditions: amendmentVariables.approvedWithConditionsBothAmendments.amendment.ukefDecision.conditions,
       },
     );
@@ -98,7 +98,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.approvedWithConditionsOneAmendment.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.approvedWithConditionsOneAmendment.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.approvedWithConditionsOneAmendment.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
         conditions: amendmentVariables.approvedWithConditionsOneAmendment.amendment.ukefDecision.conditions,
       },
     );
@@ -121,7 +121,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.approvedWithWithoutConditionsBothAmendments.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.approvedWithWithoutConditionsBothAmendments.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.approvedWithWithoutConditionsBothAmendments.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
         conditions: amendmentVariables.approvedWithWithoutConditionsBothAmendments.amendment.ukefDecision.conditions,
       },
     );
@@ -144,7 +144,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.approvedWithConditionsDeclined.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.approvedWithConditionsDeclined.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.approvedWithConditionsDeclined.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
         conditions: amendmentVariables.approvedWithConditionsDeclined.amendment.ukefDecision.conditions,
         declined: amendmentVariables.approvedWithConditionsDeclined.amendment.ukefDecision.declined,
         amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
@@ -170,7 +170,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.approvedWithConditionsDeclinedSwapped.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.approvedWithConditionsDeclinedSwapped.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.approvedWithConditionsDeclinedSwapped.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
         conditions: amendmentVariables.approvedWithConditionsDeclinedSwapped.amendment.ukefDecision.conditions,
         declined: amendmentVariables.approvedWithConditionsDeclinedSwapped.amendment.ukefDecision.declined,
         amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
@@ -196,7 +196,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.approvedWithoutConditionsDeclined.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.approvedWithoutConditionsDeclined.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.approvedWithoutConditionsDeclined.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
         declined: amendmentVariables.approvedWithoutConditionsDeclined.amendment.ukefDecision.declined,
         amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
         amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
@@ -221,7 +221,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.approvedWithoutConditionsDeclinedSwapped.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.approvedWithoutConditionsDeclinedSwapped.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.approvedWithoutConditionsDeclinedSwapped.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
         declined: amendmentVariables.approvedWithoutConditionsDeclinedSwapped.amendment.ukefDecision.declined,
         amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
         amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
@@ -246,7 +246,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.declinedBothAmendments.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.declinedBothAmendments.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.declinedBothAmendments.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
         declined: amendmentVariables.declinedBothAmendments.amendment.ukefDecision.declined,
       },
     );
@@ -269,7 +269,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
         exporterName: amendmentVariables.declinedOneAmendment.dealSnapshot.exporter.companyName,
         recipientName: 'Bob Smith',
         ukefDealId: amendmentVariables.declinedOneAmendment.dealSnapshot.ukefDealId,
-        ukefFacilityId: amendmentVariables.declinedOneAmendment.amendment.ukefFacilityId,
+        ukefFacilityId: expect.any(String),
         declined: amendmentVariables.declinedOneAmendment.amendment.ukefDecision.declined,
       },
     );
@@ -282,6 +282,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
   });
 
   it('should not call APIs if does not meet any conditions', async () => {
+    // does not have correct values for value and coverEndDate
     await sendManualDecisionAmendmentEmail(amendmentVariables.wrongAmendments);
 
     expect(sendEmailApiSpy).not.toHaveBeenCalled();

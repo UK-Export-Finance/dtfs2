@@ -1,5 +1,9 @@
 const api = require('../../../api');
 const userCanEdit = require('./helpers');
+const { hasAmendmentInProgressDealStage } = require('../../helpers/amendments.helper');
+const CONSTANTS = require('../../../constants');
+
+const { DEAL } = CONSTANTS;
 
 const getCaseParties = async (req, res) => {
   const dealId = req.params._id;
@@ -7,6 +11,11 @@ const getCaseParties = async (req, res) => {
 
   if (!deal) {
     return res.redirect('/not-found');
+  }
+
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(dealId);
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
   const { user } = req.session;
