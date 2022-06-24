@@ -697,6 +697,7 @@ describe('controllers - case', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should render documents template with data', async () => {
@@ -723,6 +724,7 @@ describe('controllers - case', () => {
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve();
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should redirect to not-found route', async () => {
