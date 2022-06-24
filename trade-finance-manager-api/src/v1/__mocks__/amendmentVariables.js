@@ -160,6 +160,7 @@ const declinedOneAmendment = {
   },
 };
 
+// wrong amendment as has wrong values for value and coverEndDate
 const wrongAmendments = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {

@@ -38,6 +38,11 @@ export const DEAL_STATUS = {
   UKEF_REFUSED: 'Rejected by UKEF',
 };
 
+export const TFM_DEAL_STAGE = {
+  CONFIRMED: 'Confirmed',
+  AMENDMENT_IN_PROGRESS: 'Amendment in progress',
+};
+
 export const UNDERWRITER_MANAGER_DECISIONS = {
   APPROVED_WITH_CONDITIONS: 'Approved with conditions',
   APPROVED_WITHOUT_CONDITIONS: 'Approved without conditions',
