@@ -195,6 +195,17 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.errorMessage().contains('Enter the conditions for the approval');
     amendmentsPage.errorMessage().contains('Enter the reasons for declining the change');
 
+    // ensures these values stay the same
+    amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('have.class', 'govuk-tag--red');
+    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2020');
+
+    amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
+    amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
+    amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
+    amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('have.class', 'govuk-tag--green');
+
     amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
     amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment');
     amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff');

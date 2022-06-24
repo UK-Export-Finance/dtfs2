@@ -5,6 +5,7 @@ const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
 const { filterTasks } = require('../helpers/tasks.helper');
+const { hasAmendmentInProgressDealStage } = require('../helpers/amendments.helper');
 
 const {
   DEAL,
@@ -309,6 +310,10 @@ const getCaseDocuments = async (req, res) => {
 
   if (!deal) {
     return res.redirect('/not-found');
+  }
+
+  if (await hasAmendmentInProgressDealStage(dealId)) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
   return res.render('case/documents/documents.njk', {
