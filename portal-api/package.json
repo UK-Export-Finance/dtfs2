@@ -53,7 +53,7 @@
     "mongodb": "~3.6.12",
     "multer": "1.4.5-lts.1",
     "node-fetch": "^2.6.7",
-    "nodemon": "^2.0.16",
+    "nodemon": "^2.0.17",
     "notifications-node-client": "^5.1.1",
     "passport": "0.6.0",
     "passport-jwt": "4.0.0",
