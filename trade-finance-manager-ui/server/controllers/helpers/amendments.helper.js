@@ -1,5 +1,8 @@
 const CONSTANTS = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
+const api = require('../../api');
+
+const { AMENDMENTS } = CONSTANTS;
 
 /**
  * @param {Object} deal
@@ -70,10 +73,24 @@ const validateUkefDecision = (ukefDecision, decisionType) => {
   return false;
 };
 
+const hasAmendmentInProgressDealStage = async (dealId) => {
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+
+  if (amendments.length) {
+    const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+    if (hasAmendmentInProgress) {
+      return true;
+    }
+  }
+  return false;
+};
+
 module.exports = {
   showAmendmentButton,
   userCanEditManagersDecision,
   userCanEditBankDecision,
   ukefDecisionRejected,
   validateUkefDecision,
+  hasAmendmentInProgressDealStage,
 };

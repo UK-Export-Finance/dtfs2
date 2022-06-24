@@ -50,9 +50,23 @@ const postManagersConditionsAndComments = async (req, res) => {
   const { ukefDecisionConditions, ukefDecisionDeclined, ukefDecisionComments } = req.body;
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const facility = await api.getFacility(facilityId);
   const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   const { errorsObject, amendmentManagersDecisionConditionsErrors } = amendmentManagersDecisionConditionsValidation(req.body, amendment);
+
+  if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
+    amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
+    amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+  }
+
+  if (amendment?.changeFacilityValue && amendment?.value) {
+    amendment.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
+    amendment.currentValue = amendment?.currentValue ? `${amendment.currency} ${formattedNumber(amendment.currentValue)}` : null;
+  }
+  amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+  amendment.facilityType = facility.facilitySnapshot.type;
+  amendment.ukefFacilityId = facility.facilitySnapshot.ukefFacilityId;
 
   if (amendmentManagersDecisionConditionsErrors.length) {
     return res.render('case/amendments/amendment-managers-conditions-and-comments.njk', {

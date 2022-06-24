@@ -16,6 +16,7 @@
     "start": "node server/index.js",
     "dev": "webpack --config webpack.config.dev.js --watch",
     "test": "jest --coverage --verbose --config=jest.config.js",
+    "test-dev": "jest --verbose --config=jest.config.js",
     "test-quick": "jest --config=jest.config.js",
     "test-watch": "jest --watchAll --coverage --verbose --config=jest.config.js --detectOpenHandles",
     "component-test": "jest --config=jest.component-test.config.js"
