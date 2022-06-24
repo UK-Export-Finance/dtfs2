@@ -312,7 +312,8 @@ const getCaseDocuments = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  if (await hasAmendmentInProgressDealStage(dealId)) {
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(dealId);
+  if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
