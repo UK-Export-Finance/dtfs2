@@ -1,10 +1,11 @@
 const {
   showAmendmentButton,
-  userCanEditLeadUnderwriter,
   userCanEditManagersDecision,
   userCanEditBankDecision,
   ukefDecisionRejected,
   validateUkefDecision,
+  latestAmendmentValueAccepted,
+  latestAmendmentCoverEndDateAccepted,
 } = require('./amendments.helper');
 const { generateHeadingText } = require('./generateHeadingText.helper');
 const { mapDecisionObject, mapDecisionValue } = require('./mapDecisionObject.helper');
@@ -14,7 +15,6 @@ const { probabilityOfDefaultValidation } = require('./probabilityOfDefault.valid
 
 module.exports = {
   showAmendmentButton,
-  userCanEditLeadUnderwriter,
   userCanEditManagersDecision,
   userCanEditBankDecision,
   generateHeadingText,
@@ -27,4 +27,6 @@ module.exports = {
   ukefDecisionRejected,
   validateUkefDecision,
   probabilityOfDefaultValidation,
+  latestAmendmentValueAccepted,
+  latestAmendmentCoverEndDateAccepted,
 };
