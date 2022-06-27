@@ -149,9 +149,12 @@ services:
       - V1_AZURE_PORTAL_EXPORT_FOLDER=${V1_AZURE_PORTAL_EXPORT_FOLDER}
       - TZ=Europe/London
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> feat(DTFS2-5856-5857-5842-5845): Amendments - UW and bank decision emails (#1021)
+=======
+>>>>>>> 5fba4f573a19fb707b7d156d0a68950f3d322496
     command: npx nodemon --inspect=0.0.0.0:9227 src/index.js -L
 
   reference-data-proxy:
