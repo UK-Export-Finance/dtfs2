@@ -26,7 +26,13 @@ const getAmendCoverEndDate = async (req, res) => {
 
   const facility = await api.getFacility(facilityId);
   const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId, amendmentId);
-  let currentCoverEndDate = latestAmendment.currentCoverEndDate ? format(fromUnixTime(latestAmendment.currentCoverEndDate), 'dd MMMM yyyy') : format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
+  let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
+
+  // if currentCoverEndDate exists, then use it
+  if (latestAmendment.currentCoverEndDate) {
+    currentCoverEndDate = format(fromUnixTime(latestAmendment.currentCoverEndDate), 'dd MMMM yyyy');
+  }
+
   if (latestAmendmentCoverEndDateAccepted(latestAmendment)) {
     currentCoverEndDate = format(fromUnixTime(latestAmendment.coverEndDate), 'dd MMMM yyyy');
   }
@@ -50,13 +56,11 @@ const postAmendCoverEndDate = async (req, res) => {
   const facility = await api.getFacility(facilityId);
   const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId);
 
-  let currentCoverEndDate;
+  let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
-  // if currentCoverEndDate exists, then use it, else use from snapshot
+  // if currentCoverEndDate exists, then use it
   if (latestAmendment.currentCoverEndDate) {
     currentCoverEndDate = format(fromUnixTime(latestAmendment.currentCoverEndDate), 'dd MMMM yyyy');
-  } else {
-    currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
   }
 
   if (latestAmendmentCoverEndDateAccepted(latestAmendment)) {

@@ -18,15 +18,12 @@ const getAmendFacilityValue = async (req, res) => {
   const { dealId, value } = amendment;
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
   const { currency } = facility.facilitySnapshot;
-  let currentFacilityValue;
+  let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
 
   // if currentValue exists, then use it, else use from snapshot
   if (latestAmendment.currentValue) {
     currentFacilityValue = `${currency} ${formattedNumber(latestAmendment.currentValue)}`;
-  } else {
-    currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
   }
-
   if (latestAmendmentValueAccepted(latestAmendment)) {
     currentFacilityValue = `${currency} ${formattedNumber(latestAmendment.value)}`;
   }
@@ -50,7 +47,13 @@ const postAmendFacilityValue = async (req, res) => {
 
   const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId);
   const { currency } = facility.facilitySnapshot;
-  let currentFacilityValue = latestAmendment.currentValue ? `${currency} ${formattedNumber(latestAmendment.currentValue)}` : facility.facilitySnapshot.facilityValueExportCurrency;
+  let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
+
+  // if currentValue exists, then use it, else use from snapshot
+  if (latestAmendment.currentValue) {
+    currentFacilityValue = `${currency} ${formattedNumber(latestAmendment.currentValue)}`;
+  }
+
   if (latestAmendmentValueAccepted(latestAmendment)) {
     currentFacilityValue = `${currency} ${formattedNumber(latestAmendment.value)}`;
   }
