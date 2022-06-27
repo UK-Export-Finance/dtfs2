@@ -626,6 +626,7 @@ describe('controllers - case', () => {
           _id: '12345678',
           mock: true,
         },
+        tfm: {},
       };
 
       beforeEach(() => {
@@ -659,8 +660,10 @@ describe('controllers - case', () => {
           showContinueAmendmentButton: false,
           amendmentId: '626bae8c43c01e02076352e1',
           amendmentVersion: 1,
-          hasAmendmentInProgress: false,
+          hasAmendmentInProgress: true,
+          hasAmendmentInProgressButton: false,
           allAmendments: expect.any(Array),
+          amendmentsInProgress: expect.any(Array),
           amendments: expect.any(Array),
         });
       });
@@ -717,6 +720,8 @@ describe('controllers - case', () => {
           activeSubNavigation: 'documents',
           dealId: req.params._id,
           user: session.user,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         });
       });
     });

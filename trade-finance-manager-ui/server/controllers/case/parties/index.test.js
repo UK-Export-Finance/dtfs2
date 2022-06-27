@@ -55,6 +55,8 @@ describe('controllers - case - parties', () => {
           activeSubNavigation: 'parties',
           dealId: req.params._id,
           user: session.user,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         });
       });
     });

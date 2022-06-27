@@ -1,6 +1,5 @@
 const CONSTANTS = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
-const api = require('../../api');
 
 const { AMENDMENTS, DECISIONS } = CONSTANTS;
 
@@ -14,7 +13,7 @@ const { AMENDMENTS, DECISIONS } = CONSTANTS;
 const showAmendmentButton = (deal, userTeam) => {
   const acceptableSubmissionType = [CONSTANTS.DEAL.SUBMISSION_TYPE.AIN, CONSTANTS.DEAL.SUBMISSION_TYPE.MIN];
   const acceptableUser = CONSTANTS.TEAMS.PIM;
-  const acceptableStatus = [CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED];
+  const acceptableStatus = [CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED, CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
 
   if (acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) && userTeam.includes(acceptableUser) && acceptableStatus.includes(deal.tfm.stage)) {
     return true;
@@ -73,17 +72,23 @@ const validateUkefDecision = (ukefDecision, decisionType) => {
   return false;
 };
 
-const hasAmendmentInProgressDealStage = async (dealId) => {
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
-
+const hasAmendmentInProgressDealStage = async (amendments) => {
   if (amendments.length) {
-    const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
     if (hasAmendmentInProgress) {
       return true;
     }
   }
   return false;
+};
+
+const amendmentsInProgressByDeal = async (amendments) => {
+  if (amendments.length) {
+    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
+    return amendmentsInProgress;
+  }
+  return [];
 };
 
 const latestAmendmentValueAccepted = (amendment) => {
@@ -133,6 +138,7 @@ module.exports = {
   ukefDecisionRejected,
   validateUkefDecision,
   hasAmendmentInProgressDealStage,
+  amendmentsInProgressByDeal,
   latestAmendmentValueAccepted,
   latestAmendmentCoverEndDateAccepted,
 };
