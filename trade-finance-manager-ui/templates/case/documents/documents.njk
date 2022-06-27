@@ -1,6 +1,14 @@
+{% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
+
 {% extends "case/case.njk" %}
 
 {% block sub_content %}
+   {% set amendmentBarParams = {
+    hasAmendmentInProgress: hasAmendmentInProgress,
+    amendmentsInProgress: amendmentsInProgress
+  } %}
+  {{ amendmentInProgressBar.render(amendmentBarParams) }}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       <h2 class="govuk-heading-xl govuk-!-margin-top-6" data-cy="documents-heading" aria-label="Documents">Documents</h2>

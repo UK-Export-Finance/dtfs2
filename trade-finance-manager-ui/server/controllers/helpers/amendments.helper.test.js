@@ -18,10 +18,20 @@ describe('showAmendmentButton()', () => {
     tfm: {},
   };
   let userTeam;
+
   it('return true if AIN and confirmed and PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-    userTeam = ['PIM'];
+    userTeam = [CONSTANTS.TEAMS.PIM];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
+
+    const result = showAmendmentButton(deal, userTeam);
+    expect(result).toEqual(true);
+  });
+
+  it('return true if AIN and amendment in progress and PIM', () => {
+    deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+    userTeam = [CONSTANTS.TEAMS.PIM];
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
 
     const result = showAmendmentButton(deal, userTeam);
     expect(result).toEqual(true);
@@ -29,8 +39,17 @@ describe('showAmendmentButton()', () => {
 
   it('return false if AIN and confirmed and not PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-    userTeam = ['UNDERWRITER_MANAGERS'];
+    userTeam = [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
+
+    const result = showAmendmentButton(deal, userTeam);
+    expect(result).toEqual(false);
+  });
+
+  it('return false if AIN and amendment in progress and not PIM', () => {
+    deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+    userTeam = [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS];
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
 
     const result = showAmendmentButton(deal, userTeam);
     expect(result).toEqual(false);
@@ -38,7 +57,7 @@ describe('showAmendmentButton()', () => {
 
   it('return false if AIN and not confirmed and PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-    userTeam = ['PIM'];
+    userTeam = [CONSTANTS.TEAMS.PIM];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS;
 
     const result = showAmendmentButton(deal, userTeam);
@@ -47,8 +66,26 @@ describe('showAmendmentButton()', () => {
 
   it('return true if MIN and confirmed and PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
-    userTeam = ['PIM'];
+    userTeam = [CONSTANTS.TEAMS.PIM];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
+
+    const result = showAmendmentButton(deal, userTeam);
+    expect(result).toEqual(true);
+  });
+
+  it('return true if MIN and amendment in progress and PIM', () => {
+    deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+    userTeam = [CONSTANTS.TEAMS.PIM];
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+
+    const result = showAmendmentButton(deal, userTeam);
+    expect(result).toEqual(true);
+  });
+
+  it('return false if MIN and amendment in progress and not PIM', () => {
+    deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+    userTeam = [CONSTANTS.TEAMS.PIM];
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
 
     const result = showAmendmentButton(deal, userTeam);
     expect(result).toEqual(true);
@@ -56,7 +93,7 @@ describe('showAmendmentButton()', () => {
 
   it('return false if MIN and confirmed and not PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
-    userTeam = ['UNDERWRITER_MANAGERS'];
+    userTeam = [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
 
     const result = showAmendmentButton(deal, userTeam);
@@ -65,7 +102,7 @@ describe('showAmendmentButton()', () => {
 
   it('return false if MIN and not confirmed and PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
-    userTeam = ['PIM'];
+    userTeam = [CONSTANTS.TEAMS.PIM];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS;
 
     const result = showAmendmentButton(deal, userTeam);
@@ -74,7 +111,7 @@ describe('showAmendmentButton()', () => {
 
   it('return false if MIA and confirmed and PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-    userTeam = ['PIM'];
+    userTeam = [CONSTANTS.TEAMS.PIM];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
 
     const result = showAmendmentButton(deal, userTeam);
@@ -83,7 +120,7 @@ describe('showAmendmentButton()', () => {
 
   it('return false if MIA and confirmed and not PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-    userTeam = ['UNDERWRITER_MANAGERS'];
+    userTeam = [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
 
     const result = showAmendmentButton(deal, userTeam);
@@ -92,7 +129,7 @@ describe('showAmendmentButton()', () => {
 
   it('return false if MIA and not confirmed and PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-    userTeam = ['PIM'];
+    userTeam = [CONSTANTS.TEAMS.PIM];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS;
 
     const result = showAmendmentButton(deal, userTeam);
