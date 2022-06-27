@@ -2,7 +2,7 @@ const CONSTANTS = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 const api = require('../../api');
 
-const { AMENDMENTS } = CONSTANTS;
+const { AMENDMENTS, DECISIONS } = CONSTANTS;
 
 /**
  * @param {Object} deal
@@ -86,6 +86,46 @@ const hasAmendmentInProgressDealStage = async (dealId) => {
   return false;
 };
 
+const latestAmendmentValueAccepted = (amendment) => {
+  const { ukefDecision, bankDecision, value, requireUkefApproval } = amendment;
+  const { APPROVED_WITH_CONDITIONS: withConditions } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { APPROVED_WITHOUT_CONDITIONS: withoutConditions } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { PROCEED: proceed } = AMENDMENTS.AMENDMENT_BANK_DECISION;
+
+  const ukefDecisionApproved = ukefDecision?.value === withConditions || ukefDecision?.value === withoutConditions;
+  const bankProceed = bankDecision?.decision === proceed;
+
+  if (!requireUkefApproval && value) {
+    return true;
+  }
+
+  if (value && ukefDecisionApproved && bankProceed) {
+    return true;
+  }
+
+  return false;
+};
+
+const latestAmendmentCoverEndDateAccepted = (amendment) => {
+  const { ukefDecision, bankDecision, coverEndDate, requireUkefApproval } = amendment;
+  const { APPROVED_WITH_CONDITIONS: withConditions } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { APPROVED_WITHOUT_CONDITIONS: withoutConditions } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { PROCEED: proceed } = AMENDMENTS.AMENDMENT_BANK_DECISION;
+
+  const ukefDecisionApproved = ukefDecision?.coverEndDate === withConditions || ukefDecision?.coverEndDate === withoutConditions;
+  const bankProceed = bankDecision?.decision === proceed;
+
+  if (!requireUkefApproval && coverEndDate) {
+    return true;
+  }
+
+  if (coverEndDate && ukefDecisionApproved && bankProceed) {
+    return true;
+  }
+
+  return false;
+};
+
 module.exports = {
   showAmendmentButton,
   userCanEditManagersDecision,
@@ -93,4 +133,6 @@ module.exports = {
   ukefDecisionRejected,
   validateUkefDecision,
   hasAmendmentInProgressDealStage,
+  latestAmendmentValueAccepted,
+  latestAmendmentCoverEndDateAccepted,
 };

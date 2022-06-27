@@ -2,6 +2,7 @@ const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
+const { latestAmendmentCoverEndDateAccepted } = require('../../helpers/amendments.helper');
 
 const getAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -25,8 +26,8 @@ const getAmendCoverEndDate = async (req, res) => {
 
   const facility = await api.getFacility(facilityId);
   const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId, amendmentId);
-  let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
-  if (latestAmendment?.coverEndDate) {
+  let currentCoverEndDate = latestAmendment.currentCoverEndDate ? format(fromUnixTime(latestAmendment.currentCoverEndDate), 'dd MMMM yyyy') : format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
+  if (latestAmendmentCoverEndDateAccepted(latestAmendment)) {
     currentCoverEndDate = format(fromUnixTime(latestAmendment.coverEndDate), 'dd MMMM yyyy');
   }
 
@@ -48,8 +49,17 @@ const postAmendCoverEndDate = async (req, res) => {
   const { dealId } = amendment;
   const facility = await api.getFacility(facilityId);
   const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId);
-  let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
-  if (latestAmendment?.coverEndDate) {
+
+  let currentCoverEndDate;
+
+  // if currentCoverEndDate exists, then use it, else use from snapshot
+  if (latestAmendment.currentCoverEndDate) {
+    currentCoverEndDate = format(fromUnixTime(latestAmendment.currentCoverEndDate), 'dd MMMM yyyy');
+  } else {
+    currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
+  }
+
+  if (latestAmendmentCoverEndDateAccepted(latestAmendment)) {
     currentCoverEndDate = format(fromUnixTime(latestAmendment.coverEndDate), 'dd MMMM yyyy');
   }
 
