@@ -41,7 +41,7 @@ const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
     spreadToInvestorsIndicator: true,
   };
 } catch (e) {
-  console.error('Unable to map facility fixed fee record ', { e });
+  console.error('Unable to map facility fixed fee record.', { e });
 }
 };
 
