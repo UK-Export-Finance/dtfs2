@@ -88,12 +88,12 @@ const hasAmendmentInProgressDealStage = async (dealId) => {
 
 const latestAmendmentValueAccepted = (amendment) => {
   const { ukefDecision, bankDecision, value, requireUkefApproval } = amendment;
-  const { APPROVED_WITH_CONDITIONS: withConditions } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
-  const { APPROVED_WITHOUT_CONDITIONS: withoutConditions } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
-  const { PROCEED: proceed } = AMENDMENTS.AMENDMENT_BANK_DECISION;
+  const { APPROVED_WITH_CONDITIONS } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { APPROVED_WITHOUT_CONDITIONS } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { PROCEED } = AMENDMENTS.AMENDMENT_BANK_DECISION;
 
-  const ukefDecisionApproved = ukefDecision?.value === withConditions || ukefDecision?.value === withoutConditions;
-  const bankProceed = bankDecision?.decision === proceed;
+  const ukefDecisionApproved = ukefDecision?.value === APPROVED_WITH_CONDITIONS || ukefDecision?.value === APPROVED_WITHOUT_CONDITIONS;
+  const bankProceed = bankDecision?.decision === PROCEED;
 
   if (!requireUkefApproval && value) {
     return true;
@@ -108,12 +108,12 @@ const latestAmendmentValueAccepted = (amendment) => {
 
 const latestAmendmentCoverEndDateAccepted = (amendment) => {
   const { ukefDecision, bankDecision, coverEndDate, requireUkefApproval } = amendment;
-  const { APPROVED_WITH_CONDITIONS: withConditions } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
-  const { APPROVED_WITHOUT_CONDITIONS: withoutConditions } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
-  const { PROCEED: proceed } = AMENDMENTS.AMENDMENT_BANK_DECISION;
+  const { APPROVED_WITH_CONDITIONS } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { APPROVED_WITHOUT_CONDITIONS } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { PROCEED } = AMENDMENTS.AMENDMENT_BANK_DECISION;
 
-  const ukefDecisionApproved = ukefDecision?.coverEndDate === withConditions || ukefDecision?.coverEndDate === withoutConditions;
-  const bankProceed = bankDecision?.decision === proceed;
+  const ukefDecisionApproved = ukefDecision?.coverEndDate === APPROVED_WITH_CONDITIONS || ukefDecision?.coverEndDate === APPROVED_WITHOUT_CONDITIONS;
+  const bankProceed = bankDecision?.decision === PROCEED;
 
   if (!requireUkefApproval && coverEndDate) {
     return true;
