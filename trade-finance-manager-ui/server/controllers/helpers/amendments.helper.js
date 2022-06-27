@@ -2,7 +2,7 @@ const CONSTANTS = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 const api = require('../../api');
 
-const { AMENDMENTS } = CONSTANTS;
+const { AMENDMENTS, DECISIONS } = CONSTANTS;
 
 /**
  * @param {Object} deal
@@ -86,6 +86,46 @@ const hasAmendmentInProgressDealStage = async (dealId) => {
   return false;
 };
 
+const latestAmendmentValueAccepted = (amendment) => {
+  const { ukefDecision, bankDecision, value, requireUkefApproval } = amendment;
+  const { APPROVED_WITH_CONDITIONS } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { APPROVED_WITHOUT_CONDITIONS } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { PROCEED } = AMENDMENTS.AMENDMENT_BANK_DECISION;
+
+  const ukefDecisionApproved = ukefDecision?.value === APPROVED_WITH_CONDITIONS || ukefDecision?.value === APPROVED_WITHOUT_CONDITIONS;
+  const bankProceed = bankDecision?.decision === PROCEED;
+
+  if (!requireUkefApproval && value) {
+    return true;
+  }
+
+  if (value && ukefDecisionApproved && bankProceed) {
+    return true;
+  }
+
+  return false;
+};
+
+const latestAmendmentCoverEndDateAccepted = (amendment) => {
+  const { ukefDecision, bankDecision, coverEndDate, requireUkefApproval } = amendment;
+  const { APPROVED_WITH_CONDITIONS } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { APPROVED_WITHOUT_CONDITIONS } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { PROCEED } = AMENDMENTS.AMENDMENT_BANK_DECISION;
+
+  const ukefDecisionApproved = ukefDecision?.coverEndDate === APPROVED_WITH_CONDITIONS || ukefDecision?.coverEndDate === APPROVED_WITHOUT_CONDITIONS;
+  const bankProceed = bankDecision?.decision === PROCEED;
+
+  if (!requireUkefApproval && coverEndDate) {
+    return true;
+  }
+
+  if (coverEndDate && ukefDecisionApproved && bankProceed) {
+    return true;
+  }
+
+  return false;
+};
+
 module.exports = {
   showAmendmentButton,
   userCanEditManagersDecision,
@@ -93,4 +133,6 @@ module.exports = {
   ukefDecisionRejected,
   validateUkefDecision,
   hasAmendmentInProgressDealStage,
+  latestAmendmentValueAccepted,
+  latestAmendmentCoverEndDateAccepted,
 };
