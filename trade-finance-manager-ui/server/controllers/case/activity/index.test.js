@@ -58,6 +58,8 @@ describe('GET activity', () => {
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
           activities,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         },
       );
     });
@@ -163,6 +165,8 @@ describe('POST activity (filter)', () => {
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.COMMENT,
           activities,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         },
       );
     });
@@ -327,6 +331,8 @@ describe('POST activity - post-comment', () => {
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
           activities,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         },
       );
     });
@@ -355,6 +361,8 @@ describe('POST activity - post-comment', () => {
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
           activities,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         },
       );
     });

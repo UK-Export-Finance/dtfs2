@@ -10,6 +10,7 @@ const { formattedNumber } = require('../../../helpers/number');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
 const CONSTANTS = require('../../../constants');
+const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 
 /**
  * controller for underwriting tab
@@ -32,6 +33,12 @@ const getUnderwriterPage = async (req, res) => {
   let { data: amendments } = await api.getAmendmentsByDealId(dealId);
   // filters the amendments submittedByPim and also which are not automatic
   amendments = amendments.filter(({ submittedByPim, requireUkefApproval }) => submittedByPim && requireUkefApproval);
+
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
 
   // if amendments object exists then populate fields
   if (amendments.length) {
@@ -85,11 +92,6 @@ const getUnderwriterPage = async (req, res) => {
         amendment.bankDecision.effectiveDateFormatted = format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd MMM yyyy');
       }
 
-      const hasAmendmentInProgress = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
-      if (hasAmendmentInProgress) {
-        deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-      }
-
       submittedAmendments.push(amendment);
     }
   }
@@ -105,6 +107,8 @@ const getUnderwriterPage = async (req, res) => {
     pricingAndRisk: dealPricingAndRisk,
     underwriterManagersDecision: dealUnderwriterManagersDecision,
     amendments: submittedAmendments,
+    amendmentsInProgress,
+    hasAmendmentInProgress,
   });
 };
 
