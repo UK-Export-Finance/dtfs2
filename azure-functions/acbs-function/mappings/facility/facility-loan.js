@@ -27,6 +27,7 @@ const CONSTANTS = require('../../constants');
 const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date');
 
 const facilityLoan = (deal, facility, acbsData) => {
+  try {
   const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
   const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
     ? facility.tfm.facilityGuaranteeDates
@@ -67,6 +68,9 @@ const facilityLoan = (deal, facility, acbsData) => {
       indexRateChangeFrequency: helpers.getFeeFrequency(facility),
     };
   }
+} catch (e) {
+  console.error('Unable to map Facility Loan Record.', { e });
+}
 
   return loanRecord;
 };
