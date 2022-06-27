@@ -72,6 +72,8 @@ describe('GET getUnderwriterPage', () => {
       expect(res.render).toHaveBeenCalledWith('case/underwriting/underwriting.njk', {
         ...expectedBody,
         amendments: [MOCKS.MOCK_AMENDMENT],
+        amendmentsInProgress: expect.any(Array),
+        hasAmendmentInProgress: true,
       });
     });
 
@@ -89,6 +91,8 @@ describe('GET getUnderwriterPage', () => {
       expect(res.render).toHaveBeenCalledWith('case/underwriting/underwriting.njk', {
         ...expectedBody,
         amendments: [MOCKS.MOCK_AMENDMENT],
+        amendmentsInProgress: expect.any(Array),
+        hasAmendmentInProgress: true,
       });
     });
 
@@ -108,6 +112,8 @@ describe('GET getUnderwriterPage', () => {
       expect(res.render).toHaveBeenCalledWith('case/underwriting/underwriting.njk', {
         ...expectedBody,
         amendments: [MOCKS.MOCK_AMENDMENT],
+        amendmentsInProgress: expect.any(Array),
+        hasAmendmentInProgress: true,
       });
     });
 
@@ -127,6 +133,8 @@ describe('GET getUnderwriterPage', () => {
       expect(res.render).toHaveBeenCalledWith('case/underwriting/underwriting.njk', {
         ...expectedBody,
         amendments: [MOCKS.MOCK_AMENDMENT, MOCKS.MOCK_AMENDMENT],
+        amendmentsInProgress: expect.any(Array),
+        hasAmendmentInProgress: true,
       });
     });
   });

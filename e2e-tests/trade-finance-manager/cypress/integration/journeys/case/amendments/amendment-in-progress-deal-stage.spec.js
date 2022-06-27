@@ -9,7 +9,7 @@ import pages from '../../../pages';
 import partials from '../../../partials';
 import { TFM_DEAL_STAGE } from '../../../../../../e2e-fixtures/constants.fixture';
 
-context('Amendments deal stage - amendment in progress', () => {
+context('Amendments deal stage - amendment in progress and in progress amendment bar', () => {
   let dealId;
   const dealFacilities = [];
 
@@ -19,7 +19,7 @@ context('Amendments deal stage - amendment in progress', () => {
 
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-      cy.createFacilities(dealId, [mockFacilities[0]], MOCK_MAKER_TFM).then((createdFacilities) => {
+      cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
       });
 
@@ -34,41 +34,61 @@ context('Amendments deal stage - amendment in progress', () => {
     });
   });
 
-  it('should show confirmed on deal stage as no amendment in progress', () => {
+  it('should show confirmed on deal stage as no amendment in progress and no amendment in progress bar', () => {
     cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.tasksLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    amendmentsPage.amendmentInProgressBar().should('not.exist');
+    amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     pages.tasksPage.filterRadioYourTeam().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    amendmentsPage.amendmentInProgressBar().should('not.exist');
+    amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     pages.tasksPage.filterRadioAllTasks().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    amendmentsPage.amendmentInProgressBar().should('not.exist');
+    amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     partials.caseSubNavigation.dealLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    amendmentsPage.amendmentInProgressBar().should('not.exist');
+    amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    amendmentsPage.amendmentInProgressBar().should('not.exist');
+    amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     partials.caseSubNavigation.partiesLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    amendmentsPage.amendmentInProgressBar().should('not.exist');
+    amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     partials.caseSubNavigation.documentsLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    amendmentsPage.amendmentInProgressBar().should('not.exist');
+    amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     partials.caseSubNavigation.activityLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    amendmentsPage.amendmentInProgressBar().should('not.exist');
+    amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     pages.activitiesPage.filterCommentsOnly().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    amendmentsPage.amendmentInProgressBar().should('not.exist');
+    amendmentsPage.amendmentInProgressBarLink().should('not.exist');
 
     partials.caseSubNavigation.underwritingLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.CONFIRMED);
+    amendmentsPage.amendmentInProgressBar().should('not.exist');
+    amendmentsPage.amendmentInProgressBarLink().should('not.exist');
   });
 
   it('should submit an amendment request', () => {
@@ -118,65 +138,142 @@ context('Amendments deal stage - amendment in progress', () => {
     amendmentsPage.continueAmendment().click();
   });
 
-  it('should show amendment in progress on tasks page', () => {
+  it('should submit an second amendment request', () => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[1]._id;
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+    facilityPage.facilityTabAmendments().click();
+    amendmentsPage.addAmendmentButton().should('exist');
+    amendmentsPage.addAmendmentButton().contains('Add an amendment request');
+    amendmentsPage.addAmendmentButton().click();
+    cy.url().should('contain', 'request-date');
+
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'request-approval');
+    // manual approval
+    amendmentsPage.amendmentRequestApprovalYes().click();
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'amendment-options');
+    amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
+
+    // update the facility value
+    amendmentsPage.amendmentFacilityValueCheckbox().click();
+    amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'facility-value');
+    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
+
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', 'check-answers');
+    amendmentsPage.continueAmendment().click();
+  });
+
+  it('should show amendment in progress on tasks page and show amendment in progress bar', () => {
     cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.tasksLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
+    amendmentsPage.amendmentInProgressBar().contains(',');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
 
     pages.tasksPage.filterRadioYourTeam().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
+    amendmentsPage.amendmentInProgressBar().contains(',');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
 
     pages.tasksPage.filterRadioAllTasks().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
+    amendmentsPage.amendmentInProgressBar().contains(',');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
   });
 
-  it('should show amendment in progress on deal/facility page', () => {
+  it('should show amendment in progress on deal/facility page and show amendment in progress bar', () => {
     cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.dealLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
+    amendmentsPage.amendmentInProgressBar().contains(',');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
 
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
+    amendmentsPage.amendmentInProgressBar().contains(',');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
   });
 
-  it('should show amendment in progress on parties page', () => {
+  it('should show amendment in progress on parties page and show amendment in progress bar', () => {
     cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.partiesLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
+    amendmentsPage.amendmentInProgressBar().contains(',');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
   });
 
-  it('should show amendment in progress on documents page', () => {
+  it('should show amendment in progress on documents page and show amendment in progress bar', () => {
     cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.documentsLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
+    amendmentsPage.amendmentInProgressBar().contains(',');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
   });
 
-  it('should show amendment in progress on activities page', () => {
+  it('should show amendment in progress on activities page and show amendment in progress bar', () => {
     cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.activityLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
+    amendmentsPage.amendmentInProgressBar().contains(',');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
 
     pages.activitiesPage.filterCommentsOnly().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
+    amendmentsPage.amendmentInProgressBar().contains(',');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
   });
 
-  it('should show amendment in progress on underwriting page', () => {
+  it('should show amendment in progress on underwriting page and show amendment in progress bar', () => {
     cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.underwritingLink().click();
     partials.caseSummary.ukefDealStage().contains(TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+    amendmentsPage.amendmentInProgressBar().contains('Amendment in progress for');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[0].ukefFacilityId}`);
+    amendmentsPage.amendmentInProgressBar().contains(',');
+    amendmentsPage.amendmentInProgressBarLink().contains(`facility ${dealFacilities[1].ukefFacilityId}`);
   });
 });
