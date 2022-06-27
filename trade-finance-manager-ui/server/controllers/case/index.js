@@ -5,7 +5,7 @@ const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
 const { filterTasks } = require('../helpers/tasks.helper');
-const { hasAmendmentInProgressDealStage } = require('../helpers/amendments.helper');
+const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
 
 const {
   DEAL,
@@ -271,8 +271,11 @@ const getCaseFacility = async (req, res) => {
 
   const deal = await api.getDeal(dealId);
 
-  const hasAmendmentInProgress = amendment.status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
-  const showContinueAmendmentButton = hasAmendmentInProgress && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
+  const hasAmendmentInProgressButton = amendment.status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+  const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
+
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
@@ -292,8 +295,10 @@ const getCaseFacility = async (req, res) => {
     amendmentId: amendment?.amendmentId,
     amendmentVersion: amendment?.version,
     hasAmendmentInProgress,
+    hasAmendmentInProgressButton,
     allAmendments,
     amendments,
+    amendmentsInProgress,
   });
 };
 
@@ -307,15 +312,17 @@ const postFacilityAmendment = async (req, res) => {
 const getCaseDocuments = async (req, res) => {
   const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(dealId);
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
 
   return res.render('case/documents/documents.njk', {
     deal: deal.dealSnapshot,
@@ -325,6 +332,8 @@ const getCaseDocuments = async (req, res) => {
     activeSubNavigation: 'documents',
     dealId,
     user: req.session.user,
+    hasAmendmentInProgress,
+    amendmentsInProgress,
   });
 };
 

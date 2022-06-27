@@ -20,10 +20,28 @@ describe('showAmendmentButton()', () => {
     expect(result).toEqual(true);
   });
 
+  it('return true if AIN and amendment in progress and PIM', () => {
+    deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+    userTeam = ['PIM'];
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+
+    const result = showAmendmentButton(deal, userTeam);
+    expect(result).toEqual(true);
+  });
+
   it('return false if AIN and confirmed and not PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
     userTeam = ['UNDERWRITER_MANAGERS'];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
+
+    const result = showAmendmentButton(deal, userTeam);
+    expect(result).toEqual(false);
+  });
+
+  it('return false if AIN and amendment in progress and not PIM', () => {
+    deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+    userTeam = ['UNDERWRITER_MANAGERS'];
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
 
     const result = showAmendmentButton(deal, userTeam);
     expect(result).toEqual(false);
@@ -42,6 +60,24 @@ describe('showAmendmentButton()', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
     userTeam = ['PIM'];
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED;
+
+    const result = showAmendmentButton(deal, userTeam);
+    expect(result).toEqual(true);
+  });
+
+  it('return true if MIN and amendment in progress and PIM', () => {
+    deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+    userTeam = ['PIM'];
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+
+    const result = showAmendmentButton(deal, userTeam);
+    expect(result).toEqual(true);
+  });
+
+  it('return false if MIN and amendment in progress and not PIM', () => {
+    deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
+    userTeam = ['PIM'];
+    deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
 
     const result = showAmendmentButton(deal, userTeam);
     expect(result).toEqual(true);

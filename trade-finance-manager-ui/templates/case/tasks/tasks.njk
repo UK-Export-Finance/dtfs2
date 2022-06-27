@@ -11,9 +11,9 @@
 
   {% if hasAmendmentInProgress === true %}
     {% set bannerHtml %}
-      <p class="govuk-body">Amendment in progress for
+      <p class="govuk-body" data-cy="amendment--in-progress-bar">Amendment in progress for
       {% for amendment in amendments %}
-        <a href="/case/{{dealId}}/facility/{{amendment.facilityId}}#amendments"> facility {{amendment.ukefFacilityId}} </a>
+        <a href="/case/{{dealId}}/facility/{{amendment.facilityId}}#amendments" data-cy="amendment--in-progress-bar-link"> facility {{amendment.ukefFacilityId}} </a>
         {% if loop.index < amendments.length %}
           ,
         {% endif %}

@@ -33,7 +33,7 @@
       facilityId: facilityId,
       user: user,
       showAmendmentButton: showAmendmentButton,
-      hasAmendmentInProgress: hasAmendmentInProgress,
+      hasAmendmentInProgress: hasAmendmentInProgressButton,
       showContinueAmendmentButton: showContinueAmendmentButton,
       amendmentId: amendmentId,
       amendmentVersion: amendmentVersion,
@@ -46,10 +46,10 @@
 
   {% if hasAmendmentInProgress === true %}
     {% set bannerHtml %}
-      <p class="govuk-body">Amendment in progress for
-      {% for amendment in amendments %}
-        <a href="/case/{{dealId}}/facility/{{amendment.facilityId}}#amendments"> facility {{amendment.ukefFacilityId}} </a>
-        {% if loop.index < amendments.length %}
+      <p class="govuk-body" data-cy="amendment--in-progress-bar">Amendment in progress for
+      {% for amendment in amendmentsInProgress %}
+        <a href="/case/{{dealId}}/facility/{{amendment.facilityId}}#amendments" data-cy="amendment--in-progress-bar-link"> facility {{amendment.ukefFacilityId}} </a>
+        {% if loop.index < amendmentsInProgress.length %}
           ,
         {% endif %}
       {% endfor %}
