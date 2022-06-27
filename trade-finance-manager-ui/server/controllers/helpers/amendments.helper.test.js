@@ -18,6 +18,7 @@ describe('showAmendmentButton()', () => {
     tfm: {},
   };
   let userTeam;
+
   it('return true if AIN and confirmed and PIM', () => {
     deal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
     userTeam = ['PIM'];

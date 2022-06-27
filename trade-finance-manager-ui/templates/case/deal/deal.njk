@@ -1,30 +1,17 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
-{% from "moj/components/banner/macro.njk" import mojBanner %}
+{% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
 {% import './_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
 {% import './_macros/facilities-table.njk' as facilitiesTable %}
 
 {% extends "case/case.njk" %}
 
 {% block sub_content %}
-  {% if hasAmendmentInProgress === true %}
-    {% set bannerHtml %}
-      <p class="govuk-body" data-cy="amendment--in-progress-bar">Amendment in progress for
-      {% for amendment in amendmentsInProgress %}
-        <a href="/case/{{dealId}}/facility/{{amendment.facilityId}}#amendments" data-cy="amendment--in-progress-bar-link"> facility {{amendment.ukefFacilityId}} </a>
-        {% if loop.index < amendments.length %}
-          ,
-        {% endif %}
-      {% endfor %}
-      </p>
-    {% endset %}
-
-    {{ mojBanner({
-      type: 'information',
-      classes: 'govuk-!-margin-bottom-0 govuk-!-margin-top-6',
-      html: bannerHtml
-    }) }}
-  {% endif %}
+   {% set amendmentBarParams = {
+    hasAmendmentInProgress: hasAmendmentInProgress,
+    amendmentsInProgress: amendmentsInProgress
+  } %}
+  {{ amendmentInProgressBar.render(amendmentBarParams) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
