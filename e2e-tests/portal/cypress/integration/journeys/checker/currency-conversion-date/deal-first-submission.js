@@ -1,16 +1,17 @@
 const { nowPlusDays, nowPlusMonths } = require('../../../../support/utils/dateFuncs');
+const CONSTANTS = require('../../../../fixtures/constants');
 
 const date = new Date();
 const datePlusDay = nowPlusDays(1);
 const datePlusMonth = nowPlusMonths(1);
 
 const deal = {
-  submissionType: 'Automatic Inclusion Notice',
+  submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
   updatedAt: Date.now(),
   bankInternalRefName: 'mock id',
   additionalRefName: 'mock name',
-  status: "Ready for Checker's approval",
-  previousStatus: 'Draft',
+  status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
+  previousStatus: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
   bank: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
