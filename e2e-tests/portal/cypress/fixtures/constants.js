@@ -32,7 +32,9 @@ const FACILITY_TYPE = {
 const FACILITY_STAGE = {
   UNISSUED: 'Unissued',
   ISSUED: 'Issued',
-}
+  CONDITIONAL: 'Conditional',
+  UNCONDITIONAL: 'Unconditional',
+};
 
 module.exports = {
   DEALS: {
