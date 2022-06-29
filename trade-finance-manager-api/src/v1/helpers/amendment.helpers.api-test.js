@@ -42,6 +42,28 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     );
   });
 
+  it('should send approved without conditions email with correct details for both amendments if BSS', async () => {
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsBothAmendmentsBSS);
+
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(
+      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
+      amendmentVariables.approvedWithoutConditionsBothAmendments.user.email,
+      {
+        bankReferenceNumber: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.bankInternalRefName,
+        exporterName: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.exporter.companyName,
+        recipientName: 'Bob Smith',
+        ukefDealId: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.ukefDealId,
+        ukefFacilityId: expect.any(String),
+      },
+    );
+
+    expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
+      amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
+      amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
+      { ukefDecision: { managersDecisionEmailSent: true } },
+    );
+  });
+
   it('should send approved without conditions email with correct details for a single amendment change', async () => {
     await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithoutConditionsOneAmendment);
 
@@ -66,6 +88,29 @@ describe('sendManualDecisionAmendmentEmail()', () => {
 
   it('should send approved with conditions email with correct details for both amendments being approved w/ conditions', async () => {
     await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsBothAmendments);
+
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(
+      CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
+      amendmentVariables.approvedWithConditionsBothAmendments.user.email,
+      {
+        bankReferenceNumber: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.bankInternalRefName,
+        exporterName: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.exporter.companyName,
+        recipientName: 'Bob Smith',
+        ukefDealId: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.ukefDealId,
+        ukefFacilityId: expect.any(String),
+        conditions: amendmentVariables.approvedWithConditionsBothAmendments.amendment.ukefDecision.conditions,
+      },
+    );
+
+    expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
+      amendmentVariables.approvedWithConditionsBothAmendments.facilityId,
+      amendmentVariables.approvedWithConditionsBothAmendments.amendmentId,
+      { ukefDecision: { managersDecisionEmailSent: true } },
+    );
+  });
+
+  it('should send approved with conditions email with correct details for both amendments being approved w/ conditions when BSS', async () => {
+    await sendManualDecisionAmendmentEmail(amendmentVariables.approvedWithConditionsBothAmendmentsBSS);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
