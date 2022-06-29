@@ -100,3 +100,5 @@ BSS could be seperated from Portal and the Portal UI's only purpose is to login 
 1. User login (/portal)
 2. Select product BSS or GEF (/portal)
 3. Product pages served (/bss-ui or /gef-ui)
+
+# Trigger
