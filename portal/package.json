@@ -46,7 +46,7 @@
     "express": "^4.18.1",
     "express-session": "1.17.3",
     "form-data": "3.0.0",
-    "govuk-frontend": "4.2.0",
+    "govuk-frontend": "4.1.0",
     "imask": "^6.4.2",
     "jquery": "^3.6.0",
     "json2csv": "^5.0.7",
