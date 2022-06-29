@@ -28,6 +28,7 @@ const mandatoryFields = [
 ];
 
 const createFacilityFee = async (context) => {
+  try {
   const { acbsFacilityFeeInput } = context.bindingData;
   const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
   if (missingMandatory.length) {
@@ -55,6 +56,9 @@ const createFacilityFee = async (context) => {
     receivedFromACBS: moment().format(),
     ...data,
   };
+} catch (e) {
+  console.error('Unable to create facility fee', { e });
+}
 };
 
 module.exports = createFacilityFee;

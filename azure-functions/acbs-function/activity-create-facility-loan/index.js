@@ -31,6 +31,7 @@ const mandatoryFields = [
 ];
 
 const createFacilityLoan = async (context) => {
+  try {
   const { acbsFacilityLoanInput } = context.bindingData;
   const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
@@ -59,6 +60,9 @@ const createFacilityLoan = async (context) => {
     receivedFromACBS: moment().format(),
     ...data,
   };
+} catch (e) {
+  console.error('Unable to create facility loan.', { e });
+}
 };
 
 module.exports = createFacilityLoan;
