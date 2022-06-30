@@ -28,10 +28,10 @@ export const createEstore = async (req: Request, res: Response) => {
     if (!validateEstoreInput(eStoreData)) {
       return res.status(200).send();
     }
-    
+
     const cronJobLogsCollection = await getCollection('cron-job-logs');
     const cronAlreadyExists = await cronJobLogsCollection.findOne({ dealIdentifier: eStoreData.dealIdentifier, dealId: eStoreData.dealId });
-    
+
     // check if the deal doesn't exist in the cron-job-logs collection
     if (!cronAlreadyExists) {
       // send a 200 response back to tfm-api
