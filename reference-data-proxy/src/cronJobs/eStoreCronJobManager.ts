@@ -13,7 +13,7 @@ export const eStoreCronJobManager = new CronJobManager(
     onComplete: async () => {
       const collection = await getCollection('cron-job-logs');
       await collection.insertOne({ status: 'eStore Cron Job Manager started successfully', timestamp: new Date() });
-      console.info('eStore Cron Job Manager started successfully at', new Date());
+      console.info('eStore Cron Job Manager started successfully at', cronJobTimer);
     },
     timezone: 'Europe/London',
   },
