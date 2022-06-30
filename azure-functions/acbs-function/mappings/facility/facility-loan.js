@@ -68,11 +68,13 @@ const facilityLoan = (deal, facility, acbsData) => {
       indexRateChangeFrequency: helpers.getFeeFrequency(facility),
     };
   }
+
+    return loanRecord;
 } catch (e) {
   console.error('Unable to map Facility Loan Record.', { e });
 }
 
-  return loanRecord;
+
 };
 
 module.exports = facilityLoan;
