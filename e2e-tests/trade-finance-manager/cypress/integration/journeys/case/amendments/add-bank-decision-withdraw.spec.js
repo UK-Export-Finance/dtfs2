@@ -269,6 +269,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     facilityPage.facilityTabAmendments().click();
 
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Withdrawn');
+    amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', '-');
   });
 });
 
@@ -493,5 +494,6 @@ context('Amendments underwriting - add banks decision - change from proceed to w
     facilityPage.facilityTabAmendments().click();
 
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Withdrawn');
+    amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', '-');
   });
 });

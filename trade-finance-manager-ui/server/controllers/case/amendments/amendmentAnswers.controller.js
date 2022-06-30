@@ -51,6 +51,7 @@ const postAmendmentAnswers = async (req, res) => {
       coverEndDate: amendment.coverEndDate,
       createTasks: true,
       requireUkefApproval: amendment.requireUkefApproval,
+      sendFirstTaskEmail: true,
     };
 
     if (!requireUkefApproval) {

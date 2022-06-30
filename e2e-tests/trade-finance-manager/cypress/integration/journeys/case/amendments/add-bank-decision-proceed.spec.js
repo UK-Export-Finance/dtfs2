@@ -372,5 +372,6 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityTabAmendments().click();
 
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Proceed');
+    amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', '05 June 2022');
   });
 });

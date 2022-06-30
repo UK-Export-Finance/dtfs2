@@ -168,5 +168,6 @@ context('Amendments underwriting - add banks decision - declined by underwriter'
     facilityPage.facilityTabAmendments().click();
 
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Not applicable');
+    amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', '-');
   });
 });
