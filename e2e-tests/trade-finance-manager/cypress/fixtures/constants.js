@@ -48,10 +48,20 @@ const DEAL_STAGE_TFM = {
   ABANDONED: 'Abandoned',
 };
 
+const USER_TEAMS = {
+  PIM: 'Post issue management',
+  UNDERWRITERS: 'Underwriters',
+  RISK_MANAGERS: 'Risk managers',
+  BUSINESS_SUPPORT: 'Business support group',
+  UNDERWRITER_MANAGERS: 'Underwriter managers',
+  UNDERWRITING_SUPPORT: 'Underwriting support',
+};
+
 module.exports = {
   DEAL_TYPE,
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
   FACILITY_TYPE,
   DEAL_STAGE_TFM,
+  USER_TEAMS,
 };
