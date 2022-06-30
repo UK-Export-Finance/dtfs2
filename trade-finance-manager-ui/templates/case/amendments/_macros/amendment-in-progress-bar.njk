@@ -9,7 +9,7 @@
         {% set bannerHtml %}
           <p class="govuk-body" data-cy="amendment--in-progress-bar">Amendment in progress for
           {% for amendment in amendmentsInProgress %}
-            <a href="/case/{{dealId}}/facility/{{amendment.facilityId}}#amendments" data-cy="amendment--in-progress-bar-link"> facility {{amendment.ukefFacilityId}} </a>
+            <a href="/case/{{amendment.dealId}}/facility/{{amendment.facilityId}}#amendments" data-cy="amendment--in-progress-bar-link"> facility {{amendment.ukefFacilityId}} </a>
             {% if loop.index < amendmentsInProgress.length %}
               ,
             {% endif %}

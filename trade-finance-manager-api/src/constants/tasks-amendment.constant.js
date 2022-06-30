@@ -78,7 +78,7 @@ const MANUAL_AMENDMENT = {
       {
         groupId: 2,
         title: MANUAL_AMENDMENT_ADVERSE_HISTORY_GROUP_TASKS.COMPLETE_ADVERSE_HISTORY_CHECK,
-        team: TEAMS.UNDERWRITERS,
+        team: TEAMS.UNDERWRITER_MANAGERS,
       },
     ],
   },
