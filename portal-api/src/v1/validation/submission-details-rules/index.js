@@ -36,12 +36,12 @@ const rules = [
   supplyContractConversionRateDateIsRequired,
 ];
 
-module.exports = (submissionDetails, deal) => {
+module.exports = (submissionDetails) => {
   let errorList = {};
 
   if (!submissionDetails.v1Status) {
     for (let i = 0; i < rules.length; i += 1) {
-      errorList = rules[i](submissionDetails, errorList, deal);
+      errorList = rules[i](submissionDetails, errorList);
     }
   }
 
