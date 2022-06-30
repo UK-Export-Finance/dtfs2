@@ -21,7 +21,7 @@ module.exports = (deal) => {
   }
 
   let validationErrors = {
-    ...submissionDetailsRules(deal.submissionDetails),
+    ...submissionDetailsRules(deal.submissionDetails, deal),
   };
 
   deal.bondTransactions.items.filter((bond) => {
