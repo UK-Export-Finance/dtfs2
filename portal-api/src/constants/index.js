@@ -3,7 +3,6 @@ const DEAL = require('./deal');
 const LOGINRESULTS = require('./login-results');
 const USER = require('./user');
 const EMAIL_TEMPLATE_IDS = require('./email-template-ids');
-const CURRENCY = require('./currency');
 
 module.exports = {
   FACILITIES,
@@ -11,5 +10,4 @@ module.exports = {
   LOGINRESULTS,
   USER,
   EMAIL_TEMPLATE_IDS,
-  CURRENCY
 };
