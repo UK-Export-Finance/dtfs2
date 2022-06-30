@@ -1,4 +1,4 @@
-const { DEALS: { AMENDMENT_UW_DECISION } } = require('../../constants');
+const { DEALS: { AMENDMENT_UW_DECISION, DEAL_TYPE } } = require('../../constants');
 
 const ukefDealId = '3333';
 const ukefFacilityId = '4444';
@@ -32,6 +32,14 @@ const approvedWithoutConditionsBothAmendments = {
   amendmentId,
 };
 
+const approvedWithoutConditionsBothAmendmentsBSS = {
+  ...approvedWithoutConditionsBothAmendments,
+  dealType: DEAL_TYPE.BSS_EWCS,
+  details: {
+    ukefDealId,
+  },
+};
+
 const approvedWithoutConditionsOneAmendment = {
   ...approvedWithoutConditionsBothAmendments,
   amendment: {
@@ -53,6 +61,14 @@ const approvedWithConditionsBothAmendments = {
       conditions,
     },
     ukefFacilityId,
+  },
+};
+
+const approvedWithConditionsBothAmendmentsBSS = {
+  ...approvedWithConditionsBothAmendments,
+  dealType: DEAL_TYPE.BSS_EWCS,
+  details: {
+    ukefDealId,
   },
 };
 
@@ -176,8 +192,10 @@ const wrongAmendments = {
 
 module.exports = {
   approvedWithoutConditionsBothAmendments,
+  approvedWithoutConditionsBothAmendmentsBSS,
   approvedWithoutConditionsOneAmendment,
   approvedWithConditionsBothAmendments,
+  approvedWithConditionsBothAmendmentsBSS,
   approvedWithConditionsOneAmendment,
   approvedWithWithoutConditionsBothAmendments,
   approvedWithConditionsDeclined,

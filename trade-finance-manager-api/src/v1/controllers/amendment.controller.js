@@ -19,7 +19,6 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
     // if amendment exists and if automaticApprovalEmail field is present
     if (amendmentEmailEligible(amendment)) {
       const { dealSnapshot } = await api.findOneDeal(amendment.dealId);
-
       if (dealSnapshot) {
       // gets portal user to ensure latest details
         const user = await api.findPortalUserById(dealSnapshot.maker._id);
