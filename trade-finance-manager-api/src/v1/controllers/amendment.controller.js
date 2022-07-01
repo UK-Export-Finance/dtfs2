@@ -1,7 +1,13 @@
 const api = require('../api');
 const { createAmendmentTasks, updateAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
-const { amendmentEmailEligible, sendAutomaticAmendmentEmail, sendManualDecisionAmendmentEmail, sendManualBankDecisionEmail, sendFirstTaskEmail } = require('../helpers/amendment.helpers');
+const {
+  amendmentEmailEligible,
+  sendAutomaticAmendmentEmail,
+  sendManualDecisionAmendmentEmail,
+  sendManualBankDecisionEmail,
+  sendFirstTaskEmail,
+} = require('../helpers/amendment.helpers');
 
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
