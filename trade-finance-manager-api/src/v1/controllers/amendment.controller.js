@@ -2,7 +2,8 @@ const api = require('../api');
 const acbs = require('./acbs.controller');
 const { createAmendmentTasks, updateAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
-const { amendmentEmailEligible,
+const {
+  amendmentEmailEligible,
   sendAutomaticAmendmentEmail,
   sendManualDecisionAmendmentEmail,
   sendManualBankDecisionEmail,

@@ -77,6 +77,34 @@ export const findOne = async (req: Request, res: Response) => {
   return res.status(500).send();
 };
 
+const createAcbsRecord = async (deal: any, bank: any) => {
+  if (deal) {
+    const response = await axios({
+      method: 'post',
+      url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
+      data: {
+        deal,
+        bank,
+      },
+    }).catch((err: any) => err);
+    return response;
+  }
+  return {};
+};
+
+export const createAcbsRecordPOST = async (req: Request, res: Response) => {
+  if (req) {
+    try {
+      const { deal, bank } = req.body;
+      const { status, data } = await createAcbsRecord(deal, bank);
+      return res.status(status).send(data);
+    } catch (error) {
+      console.error('ACBS post failed ', { error });
+    }
+  }
+  return res.status(400).send();
+};
+
 const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
   if (id) {
     const response = await axios({
@@ -103,30 +131,42 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
   return res.status(400).send();
 };
 
-const createAcbsRecord = async (deal: any, bank: any) => {
-  if (deal) {
+/**
+ * Invoked Azure DOF using HTTP `POST` method.
+ * @param {String} id Facility ID
+ * @param {Object} facility Facility object comprising amendments
+ * @returns {Object} DOF Response
+ */
+const amendAcbsFacility = async (id: string, facility: object) => {
+  if (id) {
     const response = await axios({
       method: 'post',
-      url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
+      url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
       data: {
-        deal,
-        bank,
+        facilityId: id,
+        facility,
       },
-    }).catch((err: any) => err);
+    }).catch((e: any) => e);
+
     return response;
   }
   return {};
 };
 
-export const createAcbsRecordPOST = async (req: Request, res: Response) => {
+/**
+ * ACBS facility amendment entry function
+ * @param {Object} req Request
+ * @param {Object} res Response
+ * @return {Object} Response object with HTTP code as `status` and response as `data`.
+ */
+export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   if (req) {
-    try {
-      const { deal, bank } = req.body;
-      const { status, data } = await createAcbsRecord(deal, bank);
-      return res.status(status).send(data);
-    } catch (error) {
-      console.error('ACBS post failed ', { error });
-    }
+    const { id } = req.params;
+    const { facility } = req.body;
+    const { status, data } = await amendAcbsFacility(id, facility);
+    // Successful
+    return res.status(status).send(data);
   }
+  // Bad Request
   return res.status(400).send();
 };

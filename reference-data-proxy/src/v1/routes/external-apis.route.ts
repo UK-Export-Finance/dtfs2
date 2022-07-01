@@ -279,7 +279,7 @@ apiRoutes.get('/acbs/:entityType/:id', acbs.findOne);
  *         description: facility ID
  *     requestBody:
  *       required: true
- *       description: Fields to be consumed consumed/mapped in the Azure Function
+ *       description: Fields to be consumed or mapped in the Azure DOF.
  *       content:
  *         application/json:
  *           schema:
@@ -293,6 +293,38 @@ apiRoutes.get('/acbs/:entityType/:id', acbs.findOne);
  *               $ref: '#/definitions/ACBSIssueFacilityResponseBody'
  */
 apiRoutes.post('/acbs/facility/:id/issue', acbs.issueAcbsFacilityPOST);
+
+/**
+ * @openapi
+ * /acbs/facility/:id/amend:
+ *   post:
+ *     summary: Amend's ACBS facility records. Facility properties are updated as per payload.
+ *     tags: [ACBS, Mulesoft]
+ *     description: Azure DOF `acbs-amend-facility` is invoked.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *           example: 123abc
+ *         required: true
+ *         description: facility ID
+ *     requestBody:
+ *       required: true
+ *       description: Fields to be consumed or mapped in the Azure DOF.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/ACBSAmendFacilityRequestBody'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/ACBSAmendFacilityResponseBody'
+ */
+apiRoutes.post('/acbs/facility/:id/amend', acbs.amendAcbsFacilityPost);
 
 /**
  * @openapi

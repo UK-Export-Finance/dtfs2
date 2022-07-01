@@ -51,7 +51,7 @@ const updateDealAcbs = async (taskOutput) => {
   const { facilities } = taskOutput;
   /**
    * 1. Add `acbs` object to tfm-deal
-   * 2. Add ACBS records to the TFM activites
+   * 2. Add ACBS records to the TFM activities
    */
   await tfmController.updateAcbs(taskOutput);
 
@@ -148,7 +148,7 @@ const issueAcbsFacilities = async (deal) => {
 };
 
 const amendAcbsFacility = async (amendment) => {
-
+  console.info(amendment);
 };
 
 module.exports = {
