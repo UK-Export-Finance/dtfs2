@@ -225,7 +225,15 @@ const canSendToAcbs = (amendment) => {
 
   // Manual amendment
   if (amendment.requireUkefApproval) {
-    return hasBeenAmended && completed && PIM;
+    // Bank Decision
+    const { submitted, decision } = amendment.bankDecision;
+    // Bank has accepted the UW decision
+    const proceed = decision === AMENDMENT_BANK_DECISION.PROCEED;
+    // Ensure not all of the amendment requests are declined
+    const { value, coverEndDate } = amendment.ukefDecision;
+    const declined = value === AMENDMENT_UW_DECISION.DECLINED && coverEndDate === AMENDMENT_UW_DECISION.DECLINED;
+
+    return hasBeenAmended && completed && PIM && Boolean(submitted) && proceed && !declined;
   }
 
   // Automatic amendment
