@@ -8,6 +8,7 @@ const {
   sendManualDecisionAmendmentEmail,
   sendManualBankDecisionEmail,
   canSendToAcbs,
+  sendFirstTaskEmail,
 } = require('../helpers/amendment.helpers');
 
 const createFacilityAmendment = async (req, res) => {
@@ -44,6 +45,11 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
         if (amendment?.bankDecision?.banksDecisionEmail && !amendment?.bankDecision?.banksDecisionEmailSent) {
           const bankDecisionAmendmentVariables = { user, dealSnapshot, amendment, facilityId, amendmentId };
           await sendManualBankDecisionEmail(bankDecisionAmendmentVariables);
+        }
+        // if first amendment task email has not already been sent
+        if (amendment?.sendFirstTaskEmail && !amendment?.firstTaskEmailSent) {
+          const firstTaskVariables = { amendment, dealSnapshot, facilityId, amendmentId };
+          await sendFirstTaskEmail(firstTaskVariables);
         }
       }
     }

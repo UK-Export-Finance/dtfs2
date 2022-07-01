@@ -3,6 +3,8 @@ const sendTfmEmail = require('../controllers/send-tfm-email');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
 const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { automaticAmendmentEmailVariables } = require('../emails/amendments/automatic-approval-email-variables');
+const { generateTaskEmailVariables } = require('./generate-task-email-variables');
+const { getFirstTask } = require('./tasks');
 const {
   approvedWithWithoutConditionsDecision,
   approvedWithConditionsDeclinedDecision,
@@ -13,7 +15,8 @@ const {
 
 // checks if amendment exists and if eligible to send email
 const amendmentEmailEligible = (amendment) => {
-  if (amendment && (amendment?.automaticApprovalEmail || amendment?.ukefDecision?.managersDecisionEmail || amendment?.bankDecision?.banksDecisionEmail)) {
+  if (amendment && (amendment?.automaticApprovalEmail || amendment?.ukefDecision?.managersDecisionEmail || amendment?.bankDecision?.banksDecisionEmail
+    || amendment?.sendFirstTaskEmail)) {
     return true;
   }
   return false;
@@ -212,10 +215,45 @@ const canSendToAcbs = (amendment) => {
   return hasBeenAmended;
 };
 
+// updates flag if managers decision email sent so not sent again
+const firstTaskEmailConfirmation = async (facilityId, amendmentId) => {
+  const payload = {
+    firstTaskEmailSent: true,
+  };
+  await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+};
+
+// sends email for first amendment task when pim submit amendment
+const sendFirstTaskEmail = async (taskVariables) => {
+  const { amendment, dealSnapshot, facilityId, amendmentId } = taskVariables;
+  const { tasks } = amendment;
+  const { dealId, exporter, ukefDealId } = dealSnapshot;
+
+  const firstTask = getFirstTask(tasks);
+  const urlOrigin = process.env.TFM_URI;
+  const templateId = EMAIL_TEMPLATE_IDS.TASK_READY_TO_START;
+
+  try {
+    const { team } = firstTask;
+    const { email: sendToEmailAddress } = await api.findOneTeam(team.id);
+
+    const emailVariables = generateTaskEmailVariables(urlOrigin, firstTask, dealId, exporter.companyName, ukefDealId);
+
+    const emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
+    // if successful, then updates flag to say email has been sent
+    if (emailResponse) {
+      await firstTaskEmailConfirmation(facilityId, amendmentId);
+    }
+  } catch (err) {
+    console.error('Error sending first amendment task email', { err });
+  }
+};
+
 module.exports = {
   amendmentEmailEligible,
   sendAutomaticAmendmentEmail,
   sendManualDecisionAmendmentEmail,
   sendManualBankDecisionEmail,
   canSendToAcbs,
+  sendFirstTaskEmail,
 };

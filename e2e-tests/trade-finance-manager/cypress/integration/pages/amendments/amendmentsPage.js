@@ -65,6 +65,7 @@ const amendmentsPage = {
       cy.get(`[data-cy="amendment--details-${version}"]`).as('row');
       return {
         heading: () => cy.get('@row').get(`[data-cy="amendment--heading-version-${version}"]`),
+        effectiveDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-effective-date"]`),
         bankDecision: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-banks-decision"]`),
 
         ukefDecisionCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-cover-end-date-decision"]`),

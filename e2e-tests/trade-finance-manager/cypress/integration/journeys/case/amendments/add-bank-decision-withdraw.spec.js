@@ -6,6 +6,7 @@ import caseDealPage from '../../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
+import { NOT_ADDED } from '../../../../fixtures/constants';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 import pages from '../../../pages';
 
@@ -269,6 +270,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     facilityPage.facilityTabAmendments().click();
 
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Withdrawn');
+    amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
   });
 });
 
@@ -493,5 +495,6 @@ context('Amendments underwriting - add banks decision - change from proceed to w
     facilityPage.facilityTabAmendments().click();
 
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Withdrawn');
+    amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
   });
 });
