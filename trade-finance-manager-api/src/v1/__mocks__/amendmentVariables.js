@@ -1,4 +1,4 @@
-const { DEALS: { AMENDMENT_UW_DECISION, DEAL_TYPE } } = require('../../constants');
+const { DEALS: { AMENDMENT_UW_DECISION, DEAL_TYPE }, TASKS_AMENDMENT: { AUTOMATIC_AMENDMENT } } = require('../../constants');
 
 const ukefDealId = '3333';
 const ukefFacilityId = '4444';
@@ -190,6 +190,26 @@ const wrongAmendments = {
   },
 };
 
+const firstTaskVariables = {
+  ...approvedWithoutConditionsBothAmendments,
+  amendment: {
+    tasks: [{
+      groupTitle: AUTOMATIC_AMENDMENT.GROUP_1.GROUP_TITLE,
+      id: 1,
+      groupTasks: AUTOMATIC_AMENDMENT.GROUP_1.TASKS,
+    }],
+  },
+};
+
+const noTaskVariables = {
+  ...approvedWithoutConditionsBothAmendments,
+  amendment: {
+    tasks: [{
+      groupTasks: [],
+    }],
+  },
+};
+
 module.exports = {
   approvedWithoutConditionsBothAmendments,
   approvedWithoutConditionsBothAmendmentsBSS,
@@ -205,4 +225,6 @@ module.exports = {
   declinedBothAmendments,
   declinedOneAmendment,
   wrongAmendments,
+  firstTaskVariables,
+  noTaskVariables,
 };
