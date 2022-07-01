@@ -26,12 +26,17 @@ const helpers = require('../mappings/facility/helpers');
 
 module.exports = df.orchestrator(function* amendACBSFacility(context) {
   try {
-  const {
-    facilityId,
-    facility: amendments
-  } = context.df.getInput();
+  const { amendments } = context.df.getInput();
 
-  if (!!facilityId && Object.prototype.hasOwnProperty.call(amendments, 'facilitySnapshot')) {
+  // UKEF Facility ID exists in the payload
+  const hasFacilityId = Object.prototype.hasOwnProperty.call(amendments, 'facilityId');
+  // At least one of the amendment exists in the payload
+  const hasAmendment = Object.prototype.hasOwnProperty.call(amendments, 'amount')
+  || Object.prototype.hasOwnProperty.call(amendments, 'coverEndDate');
+
+  // Payload verification
+  if (hasFacilityId && hasAmendment) {
+    const { facilityId } = amendments;
     //1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
     const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry(
       'activity-get-facility-master',

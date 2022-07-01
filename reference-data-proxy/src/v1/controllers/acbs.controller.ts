@@ -133,18 +133,16 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
 
 /**
  * Invoked Azure DOF using HTTP `POST` method.
- * @param {String} id Facility ID
  * @param {Object} facility Facility object comprising amendments
  * @returns {Object} DOF Response
  */
-const amendAcbsFacility = async (id: string, facility: object) => {
-  if (id) {
+const amendAcbsFacility = async (amendments: object) => {
+  if (amendments) {
     const response = await axios({
       method: 'post',
       url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
       data: {
-        facilityId: id,
-        facility,
+        amendments,
       },
     }).catch((e: any) => e);
 
@@ -154,7 +152,8 @@ const amendAcbsFacility = async (id: string, facility: object) => {
 };
 
 /**
- * ACBS facility amendment entry function
+ * ACBS facility amendment entry function.
+ * Constructs acceptable payload for DOF.
  * @param {Object} req Request
  * @param {Object} res Response
  * @return {Object} Response object with HTTP code as `status` and response as `data`.
@@ -162,8 +161,19 @@ const amendAcbsFacility = async (id: string, facility: object) => {
 export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   if (req) {
     const { id } = req.params;
-    const { facility } = req.body;
-    const { status, data } = await amendAcbsFacility(id, facility);
+    const { amendments } = req.body;
+    // Construct payload
+    const payload = {
+      facilityId: id,
+      coverEndDate: amendments.coverEndDate,
+      amount: amendments.value,
+    };
+
+    // Refine payload
+    if (!amendments.changeCoverEndDate) delete payload.coverEndDate;
+    if (!amendments.changeFacilityValue) delete payload.amount;
+
+    const { status, data } = await amendAcbsFacility(payload);
     // Successful
     return res.status(status).send(data);
   }

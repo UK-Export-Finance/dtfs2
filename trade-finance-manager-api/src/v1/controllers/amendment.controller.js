@@ -81,7 +81,7 @@ const updateFacilityAmendment = async (req, res) => {
 
   // ACBS Interaction
   if (canSendToAcbs(payload)) {
-    acbs.amendAcbsFacility(payload);
+    acbs.amendAcbsFacility(facilityId, payload);
   }
 
   if (createdAmendment) {
