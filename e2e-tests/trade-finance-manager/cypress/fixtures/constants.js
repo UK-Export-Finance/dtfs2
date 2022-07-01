@@ -57,6 +57,10 @@ const USER_TEAMS = {
   UNDERWRITING_SUPPORT: 'Underwriting support',
 };
 
+const NOT_ADDED = {
+  DASH: '-',
+};
+
 module.exports = {
   DEAL_TYPE,
   DEAL_SUBMISSION_TYPE,
@@ -64,4 +68,5 @@ module.exports = {
   FACILITY_TYPE,
   DEAL_STAGE_TFM,
   USER_TEAMS,
+  NOT_ADDED,
 };

@@ -1,5 +1,5 @@
 const api = require('../api');
-const { sendManualDecisionAmendmentEmail } = require('./amendment.helpers');
+const { sendManualDecisionAmendmentEmail, sendFirstTaskEmail } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
 const amendmentVariables = require('../__mocks__/amendmentVariables');
 
@@ -27,10 +27,10 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
       amendmentVariables.approvedWithoutConditionsBothAmendments.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
       },
     );
@@ -49,10 +49,10 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
       amendmentVariables.approvedWithoutConditionsBothAmendments.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithoutConditionsBothAmendments.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
       },
     );
@@ -71,10 +71,10 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS,
       amendmentVariables.approvedWithoutConditionsOneAmendment.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithoutConditionsOneAmendment.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithoutConditionsOneAmendment.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithoutConditionsOneAmendment.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
       },
     );
@@ -93,12 +93,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
       amendmentVariables.approvedWithConditionsBothAmendments.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
-        conditions: amendmentVariables.approvedWithConditionsBothAmendments.amendment.ukefDecision.conditions,
+        conditions: expect.any(String),
       },
     );
 
@@ -116,12 +116,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
       amendmentVariables.approvedWithConditionsBothAmendments.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithConditionsBothAmendments.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
-        conditions: amendmentVariables.approvedWithConditionsBothAmendments.amendment.ukefDecision.conditions,
+        conditions: expect.any(String),
       },
     );
 
@@ -139,12 +139,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
       amendmentVariables.approvedWithConditionsOneAmendment.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithConditionsOneAmendment.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithConditionsOneAmendment.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithConditionsOneAmendment.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
-        conditions: amendmentVariables.approvedWithConditionsOneAmendment.amendment.ukefDecision.conditions,
+        conditions: expect.any(String),
       },
     );
 
@@ -162,12 +162,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS,
       amendmentVariables.approvedWithWithoutConditionsBothAmendments.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithWithoutConditionsBothAmendments.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithWithoutConditionsBothAmendments.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithWithoutConditionsBothAmendments.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
-        conditions: amendmentVariables.approvedWithWithoutConditionsBothAmendments.amendment.ukefDecision.conditions,
+        conditions: expect.any(String),
       },
     );
 
@@ -185,13 +185,13 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED,
       amendmentVariables.approvedWithConditionsDeclined.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithConditionsDeclined.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithConditionsDeclined.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithConditionsDeclined.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
-        conditions: amendmentVariables.approvedWithConditionsDeclined.amendment.ukefDecision.conditions,
-        declined: amendmentVariables.approvedWithConditionsDeclined.amendment.ukefDecision.declined,
+        conditions: expect.any(String),
+        declined: expect.any(String),
         amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
         amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
       },
@@ -211,13 +211,13 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED,
       amendmentVariables.approvedWithConditionsDeclinedSwapped.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithConditionsDeclinedSwapped.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithConditionsDeclinedSwapped.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithConditionsDeclinedSwapped.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
-        conditions: amendmentVariables.approvedWithConditionsDeclinedSwapped.amendment.ukefDecision.conditions,
-        declined: amendmentVariables.approvedWithConditionsDeclinedSwapped.amendment.ukefDecision.declined,
+        conditions: expect.any(String),
+        declined: expect.any(String),
         amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
         amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
       },
@@ -237,12 +237,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED,
       amendmentVariables.approvedWithoutConditionsDeclined.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithoutConditionsDeclined.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithoutConditionsDeclined.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithoutConditionsDeclined.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
-        declined: amendmentVariables.approvedWithoutConditionsDeclined.amendment.ukefDecision.declined,
+        declined: expect.any(String),
         amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
         amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
       },
@@ -262,12 +262,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED,
       amendmentVariables.approvedWithoutConditionsDeclinedSwapped.user.email,
       {
-        bankReferenceNumber: amendmentVariables.approvedWithoutConditionsDeclinedSwapped.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.approvedWithoutConditionsDeclinedSwapped.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.approvedWithoutConditionsDeclinedSwapped.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
-        declined: amendmentVariables.approvedWithoutConditionsDeclinedSwapped.amendment.ukefDecision.declined,
+        declined: expect.any(String),
         amendmentTypeApproved: CONSTANTS.DEALS.AMENDMENT_TYPE.COVER_END_DATE,
         amendmentTypeDeclined: CONSTANTS.DEALS.AMENDMENT_TYPE.VALUE,
       },
@@ -287,10 +287,10 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED,
       amendmentVariables.declinedBothAmendments.user.email,
       {
-        bankReferenceNumber: amendmentVariables.declinedBothAmendments.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.declinedBothAmendments.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.declinedBothAmendments.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
         declined: amendmentVariables.declinedBothAmendments.amendment.ukefDecision.declined,
       },
@@ -310,12 +310,12 @@ describe('sendManualDecisionAmendmentEmail()', () => {
       CONSTANTS.EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED,
       amendmentVariables.declinedOneAmendment.user.email,
       {
-        bankReferenceNumber: amendmentVariables.declinedOneAmendment.dealSnapshot.bankInternalRefName,
-        exporterName: amendmentVariables.declinedOneAmendment.dealSnapshot.exporter.companyName,
-        recipientName: 'Bob Smith',
-        ukefDealId: amendmentVariables.declinedOneAmendment.dealSnapshot.ukefDealId,
+        bankReferenceNumber: expect.any(String),
+        exporterName: expect.any(String),
+        recipientName: expect.any(String),
+        ukefDealId: expect.any(String),
         ukefFacilityId: expect.any(String),
-        declined: amendmentVariables.declinedOneAmendment.amendment.ukefDecision.declined,
+        declined: expect.any(String),
       },
     );
 
@@ -329,6 +329,53 @@ describe('sendManualDecisionAmendmentEmail()', () => {
   it('should not call APIs if does not meet any conditions', async () => {
     // does not have correct values for value and coverEndDate
     await sendManualDecisionAmendmentEmail(amendmentVariables.wrongAmendments);
+
+    expect(sendEmailApiSpy).not.toHaveBeenCalled();
+
+    expect(updateFacilityAmendmentSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('sendFirstTaskEmail()', () => {
+  const sendEmailApiSpy = jest.fn(() => Promise.resolve(
+    MOCK_NOTIFY_EMAIL_RESPONSE,
+  ));
+
+  const updateFacilityAmendmentSpy = jest.fn(() => Promise.resolve({}));
+
+  beforeEach(async () => {
+    sendEmailApiSpy.mockClear();
+    updateFacilityAmendmentSpy.mockClear();
+
+    api.sendEmail = sendEmailApiSpy;
+    api.updateFacilityAmendment = updateFacilityAmendmentSpy;
+    api.findOneTeam = jest.fn(() => Promise.resolve({ email: 'test@test.com' }));
+  });
+
+  it('should send approved without conditions email with correct details for both amendments', async () => {
+    await sendFirstTaskEmail(amendmentVariables.firstTaskVariables);
+
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(
+      CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+      amendmentVariables.approvedWithoutConditionsBothAmendments.user.email,
+      {
+        exporterName: expect.any(String),
+        taskUrl: expect.any(String),
+        ukefDealId: expect.any(String),
+        taskTitle: expect.any(String),
+      },
+    );
+
+    expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
+      amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
+      amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
+      { firstTaskEmailSent: true },
+    );
+  });
+
+  it('should not call APIs if does not meet any conditions', async () => {
+    // does not have correct values for value and coverEndDate
+    await sendFirstTaskEmail(amendmentVariables.noTaskVariables);
 
     expect(sendEmailApiSpy).not.toHaveBeenCalled();
 
