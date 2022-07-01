@@ -1,7 +1,13 @@
 const api = require('../api');
+const acbs = require('./acbs.controller');
 const { createAmendmentTasks, updateAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
-const { amendmentEmailEligible, sendAutomaticAmendmentEmail, sendManualDecisionAmendmentEmail, sendManualBankDecisionEmail } = require('../helpers/amendment.helpers');
+const { amendmentEmailEligible,
+  sendAutomaticAmendmentEmail,
+  sendManualDecisionAmendmentEmail,
+  sendManualBankDecisionEmail,
+  canSendToAcbs,
+} = require('../helpers/amendment.helpers');
 
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
@@ -65,6 +71,11 @@ const updateFacilityAmendment = async (req, res) => {
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
   // sends email if conditions are met
   await sendAmendmentEmail(amendmentId, facilityId);
+
+  // ACBS Interaction
+  if (canSendToAcbs(payload)) {
+    acbs.amendAcbsFacility(payload);
+  }
 
   if (createdAmendment) {
     return res.status(200).send(createdAmendment);

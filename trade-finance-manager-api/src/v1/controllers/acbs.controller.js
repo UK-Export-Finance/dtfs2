@@ -147,10 +147,15 @@ const issueAcbsFacilities = async (deal) => {
   return acbsIssueFacilityTasks;
 };
 
+const amendAcbsFacility = async (amendment) => {
+
+};
+
 module.exports = {
   addToACBSLog,
   clearACBSLog,
   createACBS,
   checkAzureAcbsFunction,
   issueAcbsFacilities,
+  amendAcbsFacility,
 };

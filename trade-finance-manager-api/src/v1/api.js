@@ -759,6 +759,33 @@ const updateACBSfacility = async (facility, deal) => {
   return {};
 };
 
+/**
+ * ACBS facility amendment
+ * @param {Object} facility Facility object comprising of amendments
+ * @returns {Object} updated FMR upon success otherwise error
+ */
+const amendACBSfacility = async (facility) => {
+  if (facility) {
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${refDataUrl}/acbs/facility/${facility.ukefFacilityId}/amend`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          facility,
+        },
+      });
+      return response.data;
+    } catch (err) {
+      console.error('TFM-API Facility amend error', { err });
+      return err;
+    }
+  }
+  return {};
+};
+
 const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => {
   let functionUrl;
   switch (type) {
@@ -1017,6 +1044,7 @@ module.exports = {
   getPremiumSchedule,
   createACBS,
   updateACBSfacility,
+  amendACBSfacility,
   getFunctionsAPI,
   createEstoreFolders,
   sendEmail,

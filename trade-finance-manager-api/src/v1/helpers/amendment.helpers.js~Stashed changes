@@ -204,12 +204,12 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
 
 /**
  * Evaluated whether facility amendment is eligible
- * for ACBS interaction based on myriads of conditions.
+ * for ACBS interaction based on myriads of conditions:
+ * 1. 
  * @param {Object} amendment Facility amendments object
  */
 const canSendToAcbs = (amendment) => {
-  const hasBeenAmended = amendment.changeCoverEndDate || amendment.changeFacilityValue;
-  return hasBeenAmended;
+
 };
 
 module.exports = {
