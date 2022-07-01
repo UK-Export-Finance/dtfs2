@@ -3,6 +3,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { NOT_ADDED } from '../../../../fixtures/constants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
@@ -116,7 +117,7 @@ context('Amendments - Manual approval journey', () => {
 
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', '-');
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2020');
       amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
@@ -229,7 +230,7 @@ context('Amendments - Manual approval journey', () => {
 
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', '-');
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2020');
       amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
@@ -342,7 +343,7 @@ context('Amendments - Manual approval journey', () => {
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', '-');
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('not.exist');
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('not.exist');
       amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('not.exist');
