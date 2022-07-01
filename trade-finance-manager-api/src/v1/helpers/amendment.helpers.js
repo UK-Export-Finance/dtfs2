@@ -1,6 +1,10 @@
 const api = require('../api');
 const sendTfmEmail = require('../controllers/send-tfm-email');
-const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
+const {
+  AMENDMENT_UW_DECISION,
+  AMENDMENT_BANK_DECISION,
+  AMENDMENT_STATUS,
+} = require('../../constants/deals');
 const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { automaticAmendmentEmailVariables } = require('../emails/amendments/automatic-approval-email-variables');
 const { generateTaskEmailVariables } = require('./generate-task-email-variables');
@@ -208,11 +212,24 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
 /**
  * Evaluated whether facility amendment is eligible
  * for ACBS interaction based on myriads of conditions.
+ * This function evaluated across all amendment types.
  * @param {Object} amendment Facility amendments object
  */
 const canSendToAcbs = (amendment) => {
+  // Ensure at least one of the attribute has been amended
   const hasBeenAmended = amendment.changeCoverEndDate || amendment.changeFacilityValue;
-  return hasBeenAmended;
+  // Amendment status is marked as `Completed`
+  const completed = amendment.status === AMENDMENT_STATUS.COMPLETED;
+  // Amendment has been submitted by PIM team
+  const PIM = Boolean(amendment.submittedByPim);
+
+  // Manual amendment
+  if (amendment.requireUkefApproval) {
+    return hasBeenAmended && completed && PIM;
+  }
+
+  // Automatic amendment
+  return hasBeenAmended && completed && PIM;
 };
 
 // updates flag if managers decision email sent so not sent again
