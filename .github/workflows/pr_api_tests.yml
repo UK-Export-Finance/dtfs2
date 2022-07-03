@@ -127,30 +127,19 @@ jobs:
         cd utils/mock-data-loader
         node ./re-insert-mocks.js
 
-    # - name: Run Central API tests
-      # run: |
-        # docker-compose exec -T dtfs-central-api npm run api-test
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-        cache: 'npm'
     - name: Run Central API tests
       run: |
-        cd dtfs-central-api/
-        npm ci --legacy-peer-deps
-        npm run api-test
-        pwd
-
+        docker-compose exec -T dtfs-central-api npm run api-test
 
     - name: Stop containers
       if: always()
       run: docker-compose -f docker-compose.gha.yml down
 
-    # - uses: act10ns/slack@v1
-    #   with:
-    #     status: ${{ job.status }}
-    #     steps: ${{ toJson(steps) }}
-    #     channel: '#dtfs-github-actions'
-    #   env:
-    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    #   if: failure()
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs-github-actions'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
