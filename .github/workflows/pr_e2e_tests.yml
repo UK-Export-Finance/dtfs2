@@ -90,7 +90,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        machines: [ 1, 2, 3, 4 ]
+        containers: [ 1, 2, 3, 4 ]
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
@@ -150,7 +150,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        machines: [ 1, 2, 3, 4 ]
+        containers: [ 1, 2, 3, 4 ]
 
     steps:
     - uses: actions/checkout@v3
@@ -211,7 +211,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        machines: [ 1, 2, 3 ]
+        containers: [ 1, 2, 3 ]
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
@@ -271,7 +271,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        machines: [ 1, 2, 3 ]
+        containers: [ 1, 2, 3 ]
 
     steps:
     - uses: actions/checkout@v3
