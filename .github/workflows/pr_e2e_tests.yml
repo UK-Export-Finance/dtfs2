@@ -103,7 +103,7 @@ jobs:
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
-        npm install --legacy-peer-deps
+        npm ci --legacy-peer-deps
         node ./re-insert-mocks.js
         pwd
     - name: Wake up Azure Function
@@ -111,9 +111,8 @@ jobs:
         sleep 30
         curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run GEF-UI e2e tests
-      uses: cypress-io/github-action@v2
+      uses: cypress-io/github-action@v4
       with:
-        headless: true
         record: true
         parallel: true
         browser: chrome
@@ -198,7 +197,7 @@ jobs:
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
-        npm install --legacy-peer-deps
+        npm ci --legacy-peer-deps
         node ./re-insert-mocks.js
         pwd
     - name: Wake up Azure Function
@@ -206,9 +205,8 @@ jobs:
         sleep 30
         curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run e2e tests
-      uses: cypress-io/github-action@v2
+      uses: cypress-io/github-action@v4
       with:
-        headless: true
         record: true
         parallel: true
         browser: chrome
@@ -292,7 +290,7 @@ jobs:
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
-        npm install --legacy-peer-deps
+        npm ci --legacy-peer-deps
         node ./re-insert-mocks.js
         pwd
     - name: Wake up Azure Function
@@ -300,9 +298,8 @@ jobs:
         sleep 30
         curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run e2e tests
-      uses: cypress-io/github-action@v2
+      uses: cypress-io/github-action@v4
       with:
-        headless: true
         record: true
         parallel: true
         browser: chrome
@@ -387,13 +384,12 @@ jobs:
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
-        npm install --legacy-peer-deps
+        npm ci --legacy-peer-deps
         node ./re-insert-mocks.js
         pwd
     - name: Run e2e tests
-      uses: cypress-io/github-action@v2
+      uses: cypress-io/github-action@v4
       with:
-        headless: true
         record: true
         parallel: true
         browser: chrome

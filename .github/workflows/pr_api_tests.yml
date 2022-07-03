@@ -97,7 +97,7 @@ jobs:
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
-        npm install --legacy-peer-deps
+        npm ci --legacy-peer-deps
         node ./re-insert-mocks.js
 
     - name: Run TFM API tests
