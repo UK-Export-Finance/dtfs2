@@ -1,10 +1,6 @@
 const DEFAULTS = require('../defaults');
 const { findLatestMandatoryCriteria } = require('./mandatoryCriteria.controller');
-const {
-  findOneDeal,
-  createDeal,
-  createDealEligibility,
-} = require('./deal.controller');
+const { findOneDeal, createDeal, createDealEligibility } = require('./deal.controller');
 const { getCloneDealErrors } = require('../validation/clone-bss-deal');
 const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
@@ -63,21 +59,21 @@ exports.clone = async (req, res) => {
       return res.status(404).send();
     }
 
-    const {
-      bankInternalRefName,
-      additionalRefName,
-      cloneTransactions,
-    } = req.body;
+    const { bankInternalRefName, additionalRefName, cloneTransactions } = req.body;
 
-    const {
-      _id, previousStatus, tfm, ...existingDealWithoutCertainFields
-    } = existingDeal;
+    const { _id, previousStatus, tfm, ...existingDealWithoutCertainFields } = existingDeal;
     delete existingDealWithoutCertainFields.dataMigration;
+    if (existingDealWithoutCertainFields?.submissionDetails?.v1Status) {
+      delete existingDealWithoutCertainFields.submissionDetails.v1Status;
+    }
+
+    if (existingDealWithoutCertainFields.submissionType) {
+      delete existingDealWithoutCertainFields.submissionType;
+    }
 
     const modifiedDeal = {
       ...existingDealWithoutCertainFields,
       status: DEFAULTS.DEAL.status,
-      submissionType: existingDeal.submissionType,
       updatedAt: existingDeal.updatedAt,
       bankInternalRefName,
       additionalRefName,
@@ -94,6 +90,8 @@ exports.clone = async (req, res) => {
       bondTransactions: DEFAULTS.DEAL.bondTransactions,
       loanTransactions: DEFAULTS.DEAL.loanTransactions,
       facilities: DEFAULTS.DEAL.facilities,
+      supportingInformation: {},
+      clonedDealId: existingDeal._id,
     };
 
     if (modifiedDeal.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN) {
@@ -109,9 +107,7 @@ exports.clone = async (req, res) => {
       });
     }
 
-    const {
-      data: createdDeal,
-    } = await createDeal(modifiedDeal, req.user);
+    const { data: createdDeal } = await createDeal(modifiedDeal, req.user);
 
     const createdDealId = createdDeal._id;
 
@@ -120,10 +116,7 @@ exports.clone = async (req, res) => {
       const hasLoans = existingDeal.loanTransactions.items.length > 0;
 
       if (hasBonds || hasLoans) {
-        const facilities = [
-          ...existingDeal.bondTransactions.items,
-          ...existingDeal.loanTransactions.items,
-        ];
+        const facilities = [...existingDeal.bondTransactions.items, ...existingDeal.loanTransactions.items];
 
         const strippedFacilities = facilities.map((facility) => {
           if (facility.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
@@ -136,11 +129,7 @@ exports.clone = async (req, res) => {
           return facility;
         });
 
-        await facilitiesController.createMultipleFacilities(
-          strippedFacilities,
-          createdDealId,
-          req.user,
-        );
+        await facilitiesController.createMultipleFacilities(strippedFacilities, createdDealId, req.user);
       }
     }
 
