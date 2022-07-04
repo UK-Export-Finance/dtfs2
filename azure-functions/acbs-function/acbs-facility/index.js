@@ -88,9 +88,9 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       { acbsCodeValueTransactionInput },
       retryOptions,
     );
-
+    
     // Records only created for `Issued` and `Activated` facilities only
-    if (acbsFacilityMasterInput.facilityStageCode === CONSTANTS.FACILITY.STAGE_CODE.ISSUED) {
+    if (helpers.hasFacilityBeenIssued(facility)) {
       // 6. Facility loan record
       const acbsFacilityLoanInput = mappings.facility.facilityLoan(
         deal,
@@ -120,6 +120,8 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       } else {
         facilityFee = yield context.df.callActivityWithRetry('activity-create-facility-fee', retryOptions, { acbsFacilityFeeInput });
       }
+    } else {
+      console.info('Unissued facility: ', acbsFacilityMasterInput.facilityIdentifier);
     }
 
     return {

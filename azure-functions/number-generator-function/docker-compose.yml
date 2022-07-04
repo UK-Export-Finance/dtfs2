@@ -16,3 +16,4 @@ services:
       - MULESOFT_API_KEY
       - MULESOFT_API_SECRET
       - MULESOFT_API_NUMBER_GENERATOR_URL
+      - TZ=Europe/London

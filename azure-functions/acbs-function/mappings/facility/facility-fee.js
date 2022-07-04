@@ -19,6 +19,7 @@ const CONSTANTS = require('../../constants');
 const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date');
 
 const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
+  try {
   const effectiveDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
   const {
     expirationDate,
@@ -39,6 +40,9 @@ const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
     incomeClassCode: helpers.getIncomeClassCode(deal.dealSnapshot.dealType),
     spreadToInvestorsIndicator: true,
   };
+} catch (e) {
+  console.error('Unable to map facility fixed fee record.', { e });
+}
 };
 
 const facilityFee = (deal, facility) => {

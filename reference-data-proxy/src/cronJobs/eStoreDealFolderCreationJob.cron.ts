@@ -1,12 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { ObjectId } = require('mongodb');
+import addSeconds from 'date-fns/addSeconds';
 import { getCollection } from '../database';
 import { Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreFacilityFolderCreationJob } from './eStoreFacilityFolderCreationJob.cron';
 import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
-const facilityCreationTimer = '59 * * * * *';
 
 export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
   try {
@@ -47,6 +47,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       // check if there are any facilityIds
       if (eStoreData.facilityIdentifiers.length) {
         // add a new job to the `Cron Job Manager` to create the Facility Folders for the current Deal
+        const facilityCreationTimer = addSeconds(new Date(), 59);
         eStoreCronJobManager.add(`Facility${eStoreData.dealId}`, facilityCreationTimer, async () => {
           await eStoreFacilityFolderCreationJob(eStoreData);
         });

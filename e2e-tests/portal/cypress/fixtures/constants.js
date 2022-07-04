@@ -16,6 +16,12 @@ const DEAL_STATUS = {
   UKEF_REFUSED: 'Rejected by UKEF',
 };
 
+const SECTION_STATUS = {
+  NOT_STARTED: 'Not started',
+  COMPLETED: 'Completed',
+  INCOMPLETE: 'Incomplete',
+};
+
 const SUBMISSION_TYPE = {
   AIN: 'Automatic Inclusion Notice',
   MIA: 'Manual Inclusion Application',
@@ -32,13 +38,16 @@ const FACILITY_TYPE = {
 const FACILITY_STAGE = {
   UNISSUED: 'Unissued',
   ISSUED: 'Issued',
-}
+  CONDITIONAL: 'Conditional',
+  UNCONDITIONAL: 'Unconditional',
+};
 
 module.exports = {
   DEALS: {
     DEAL_TYPE,
     DEAL_STATUS,
     SUBMISSION_TYPE,
+    SECTION_STATUS,
   },
   FACILITY: {
     FACILITY_TYPE,
