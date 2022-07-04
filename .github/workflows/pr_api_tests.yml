@@ -113,6 +113,7 @@ jobs:
 
     - name: Stop containers
       if: always()
+      working-directory: ./
       run: docker-compose -f docker-compose.gha.yml down
 
     - uses: act10ns/slack@v1
