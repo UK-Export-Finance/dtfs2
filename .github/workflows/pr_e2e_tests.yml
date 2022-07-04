@@ -61,23 +61,14 @@ jobs:
       run: |
         echo Setting environment to ${{ env.environment }}
 
-  # Cancel Previous runs
-  # this action is used to cancel previous runs for the current branch
-  cancel-previous-tests:
-    name: "Cancel previous tests"
-    needs: set-environment
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          all_but_latest: true
-          access_token: ${{ secrets.GITHUB_TOKEN }}
-
   # Run GEF-UI End-To-End tests
   # these tests are part of e2e-tests/gef-ui
   gef-tests:
+    # Cancel Previous runs
+    concurrency:
+      group: gef-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     name: "Run - GEF-UI E2E tests"
     needs: set-environment
     environment:
@@ -97,8 +88,8 @@ jobs:
       run: |
         source secrets/set_jwt_keypair.sh
         docker-compose -f docker-compose.gha.yml up --build -d
-        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
-        sleep 10
+    - name: Sleep for 30 seconds
+      run: sleep 30s
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
@@ -106,9 +97,7 @@ jobs:
         node ./re-insert-mocks.js
         pwd
     - name: Wake up Azure Function
-      run: |
-        sleep 30
-        curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run GEF-UI e2e tests
       uses: cypress-io/github-action@v4
       with:
@@ -127,7 +116,6 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
-
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
@@ -138,6 +126,11 @@ jobs:
       if: failure()
 
   portal-tests:
+    # Cancel Previous runs
+    concurrency:
+      group: portal-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     name: "Run - Portal E2E tests"
     needs: set-environment
     environment:
@@ -158,8 +151,8 @@ jobs:
       run: |
         source secrets/set_jwt_keypair.sh
         docker-compose -f docker-compose.gha.yml up --build -d
-        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
-        sleep 10
+    - name: Sleep for 30 seconds
+      run: sleep 30s
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
@@ -167,9 +160,7 @@ jobs:
         node ./re-insert-mocks.js
         pwd
     - name: Wake up Azure Function
-      run: |
-        sleep 30
-        curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run e2e tests
       uses: cypress-io/github-action@v4
       with:
@@ -188,7 +179,6 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
-
     - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
@@ -199,6 +189,11 @@ jobs:
       if: failure()
 
   tfm-tests:
+    # Cancel Previous runs
+    concurrency:
+      group: tfm-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     name: "Run - Trade Finance Manager E2E tests"
     needs: set-environment
     environment:
@@ -218,8 +213,8 @@ jobs:
       run: |
         source secrets/set_jwt_keypair.sh
         docker-compose -f docker-compose.gha.yml up --build -d
-        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
-        sleep 10
+    - name: Sleep for 30 seconds
+      run: sleep 30s
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
@@ -227,9 +222,7 @@ jobs:
         node ./re-insert-mocks.js
         pwd
     - name: Wake up Azure Function
-      run: |
-        sleep 30
-        curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run e2e tests
       uses: cypress-io/github-action@v4
       with:
@@ -259,6 +252,11 @@ jobs:
 
 
   tfm-submit-tests:
+    # Cancel Previous runs
+    concurrency:
+      group: tfm-submit-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     name: "Run - Submit to TFM End-To-End tests"
     needs: set-environment
     environment:
@@ -279,14 +277,16 @@ jobs:
       run: |
         source secrets/set_jwt_keypair.sh
         docker-compose -f docker-compose.gha.yml up --build -d
-        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
-        sleep 10
+    - name: Sleep for 30 seconds
+      run: sleep 30s
     - name: Load mock data
       run: |
         cd utils/mock-data-loader
         npm ci --legacy-peer-deps
         node ./re-insert-mocks.js
         pwd
+    - name: Wake up Azure Function
+      run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run e2e tests
       uses: cypress-io/github-action@v4
       with:
