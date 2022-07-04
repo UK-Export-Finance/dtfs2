@@ -81,6 +81,7 @@ jobs:
     concurrency:
       group: gef-${{ github.workflow }}-${{ github.ref }}-${{ matrix.containers }}
       cancel-in-progress: true
+
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
@@ -125,11 +126,6 @@ jobs:
       if: failure()
 
   portal-tests:
-    # Cancel Previous runs
-    # concurrency:
-    #   group: portal-${{ github.workflow }}-${{ github.ref }}
-    #   cancel-in-progress: true
-
     name: "Run - Portal E2E tests"
     needs: set-environment
     environment:
@@ -143,6 +139,10 @@ jobs:
       fail-fast: false
       matrix:
         containers: [ 1, 2, 3, 4 ]
+    # Cancel Previous runs
+    concurrency:
+      group: gef-${{ github.workflow }}-${{ github.ref }}-${{ matrix.containers }}
+      cancel-in-progress: true
 
     steps:
     - uses: actions/checkout@v3
