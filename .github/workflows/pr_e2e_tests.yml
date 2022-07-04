@@ -58,13 +58,12 @@ jobs:
       environment: ${{ env.environment }}
     steps:
     - name: Initialise Environment
-      run: |
-        echo Setting environment to ${{ env.environment }}
+      run: echo Setting environment to ${{ env.environment }}
 
   # Run GEF-UI End-To-End tests
   # these tests are part of e2e-tests/gef-ui
   gef-tests:
-    name: "Run - GEF-UI E2E tests"
+    name: "Run - GEF-UI End-To-End tests"
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -77,6 +76,7 @@ jobs:
       fail-fast: false
       matrix:
         containers: [ 1, 2, 3, 4 ]
+
     # Cancel Previous runs
     concurrency:
       group: gef-${{ github.workflow }}-${{ github.ref }}-${{ matrix.containers }}
@@ -85,20 +85,20 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
-      run: |
-        source secrets/set_jwt_keypair.sh
-        docker-compose -f docker-compose.gha.yml up --build -d
+      run: docker-compose -f docker-compose.gha.yml up --build -d
     - name: Sleep for 30 seconds
       run: sleep 30s
+
+    - name: Install mock data dependencies
+      working-directory: utils/mock-data-loader
+      run: npm ci
     - name: Load mock data
-      run: |
-        cd utils/mock-data-loader
-        npm ci --legacy-peer-deps
-        node ./re-insert-mocks.js
-        pwd
+      working-directory: utils/mock-data-loader
+      run: node ./re-insert-mocks.js
+
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: Run GEF-UI e2e tests
+    - name: Run GEF-UI E2E tests
       uses: cypress-io/github-action@v4
       with:
         record: true
@@ -126,7 +126,7 @@ jobs:
       if: failure()
 
   portal-tests:
-    name: "Run - Portal E2E tests"
+    name: "Run - Portal End-To-End tests"
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -139,28 +139,29 @@ jobs:
       fail-fast: false
       matrix:
         containers: [ 1, 2, 3, 4 ]
+
     # Cancel Previous runs
     concurrency:
-      group: gef-${{ github.workflow }}-${{ github.ref }}-${{ matrix.containers }}
+      group: portal-${{ github.workflow }}-${{ github.ref }}-${{ matrix.containers }}
       cancel-in-progress: true
 
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
-      run: |
-        source secrets/set_jwt_keypair.sh
-        docker-compose -f docker-compose.gha.yml up --build -d
+      run: docker-compose -f docker-compose.gha.yml up --build -d
     - name: Sleep for 30 seconds
       run: sleep 30s
+
+    - name: Install mock data dependencies
+      working-directory: utils/mock-data-loader
+      run: npm ci
     - name: Load mock data
-      run: |
-        cd utils/mock-data-loader
-        npm ci --legacy-peer-deps
-        node ./re-insert-mocks.js
-        pwd
+      working-directory: utils/mock-data-loader
+      run: node ./re-insert-mocks.js
+
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: Run e2e tests
+    - name: Run E2E tests
       uses: cypress-io/github-action@v4
       with:
         record: true
@@ -188,12 +189,7 @@ jobs:
       if: failure()
 
   tfm-tests:
-    # Cancel Previous runs
-    # concurrency:
-    #   group: tfm-${{ github.workflow }}-${{ github.ref }}
-    #   cancel-in-progress: true
-
-    name: "Run - Trade Finance Manager E2E tests"
+    name: "Run - Trade Finance Manager End-To-End tests"
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -206,23 +202,29 @@ jobs:
       fail-fast: false
       matrix:
         containers: [ 1, 2, 3 ]
+
+    # Cancel Previous runs
+    concurrency:
+      group: tfm-${{ github.workflow }}-${{ github.ref }}-${{ matrix.containers }}
+      cancel-in-progress: true
+
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
-      run: |
-        source secrets/set_jwt_keypair.sh
-        docker-compose -f docker-compose.gha.yml up --build -d
+      run: docker-compose -f docker-compose.gha.yml up --build -d
     - name: Sleep for 30 seconds
       run: sleep 30s
+
+    - name: Install mock data dependencies
+      working-directory: utils/mock-data-loader
+      run: npm ci
     - name: Load mock data
-      run: |
-        cd utils/mock-data-loader
-        npm ci --legacy-peer-deps
-        node ./re-insert-mocks.js
-        pwd
+      working-directory: utils/mock-data-loader
+      run: node ./re-insert-mocks.js
+
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: Run e2e tests
+    - name: Run E2E tests
       uses: cypress-io/github-action@v4
       with:
         record: true
@@ -251,11 +253,6 @@ jobs:
 
 
   tfm-submit-tests:
-    # Cancel Previous runs
-    # concurrency:
-    #   group: tfm-submit-${{ github.workflow }}-${{ github.ref }}
-    #   cancel-in-progress: true
-
     name: "Run - Submit to TFM End-To-End tests"
     needs: set-environment
     environment:
@@ -270,6 +267,11 @@ jobs:
       matrix:
         containers: [ 1, 2, 3 ]
 
+    # Cancel Previous runs
+    concurrency:
+      group: tfm-submit-${{ github.workflow }}-${{ github.ref }}-${{ matrix.containers }}
+      cancel-in-progress: true
+
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
@@ -278,15 +280,17 @@ jobs:
         docker-compose -f docker-compose.gha.yml up --build -d
     - name: Sleep for 30 seconds
       run: sleep 30s
+
+    - name: Install mock data dependencies
+      working-directory: utils/mock-data-loader
+      run: npm ci
     - name: Load mock data
-      run: |
-        cd utils/mock-data-loader
-        npm ci --legacy-peer-deps
-        node ./re-insert-mocks.js
-        pwd
+      working-directory: utils/mock-data-loader
+      run: node ./re-insert-mocks.js
+
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: Run e2e tests
+    - name: Run E2E tests
       uses: cypress-io/github-action@v4
       with:
         record: true

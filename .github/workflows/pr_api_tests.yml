@@ -55,62 +55,60 @@ jobs:
       environment: ${{ env.environment }}
     steps:
     - name: Initialise Environment
-      run: |
-        echo Setting environment to ${{ env.environment }}
+      run: echo Setting environment to ${{ env.environment }}
 
   api-tests:
     name: "Run API tests"
+
+    # Cancel Previous runs
+    concurrency:
+      group: api-tests-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
+    defaults:
+      run:
+        working-directory: utils/mock-data-loader
     runs-on: [self-hosted, api-tests]
 
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
       run: |
-        source secrets/set_jwt_keypair.sh
         docker network prune -f
         docker-compose -f docker-compose.gha.yml up --build -d
-        echo "waiting 10 seconds to ensure mongo db has started before we run integration tests against it.."
-        sleep 10
+
+    - name: Sleep for 30 seconds
+      run: sleep 30s
+
+    - name: Install mock data dependencies
+      run: npm ci
 
     - name: Load mock data
-      run: |
-        cd utils/mock-data-loader
-        npm ci --legacy-peer-deps
-        node ./re-insert-mocks.js
+      run: node ./re-insert-mocks.js
 
     - name: Run TFM API tests
-      run: |
-        docker-compose exec -T trade-finance-manager-api npm run api-test
+      run: docker-compose exec -T trade-finance-manager-api npm run api-test
 
-    - name: Clear up the database and load mock data
-      run: |
-        cd utils/mock-data-loader
-        node ./re-insert-mocks.js
+    - name: Load mock data
+      run: node ./re-insert-mocks.js
 
     - name: Run Reference Data Proxy API tests
-      run: |
-        docker-compose exec -T reference-data-proxy npm run api-test
+      run: docker-compose exec -T reference-data-proxy npm run api-test
 
-    - name: Clear up the database and load mock data
-      run: |
-        cd utils/mock-data-loader
-        node ./re-insert-mocks.js
+    - name: Load mock data
+      run: node ./re-insert-mocks.js
 
     - name: Run Portal API tests
-      run: |
-        docker-compose exec -T portal-api npm run api-test
+      run: docker-compose exec -T portal-api npm run api-test
 
-    - name: Clear up the database and load mock data
-      run: |
-        cd utils/mock-data-loader
-        node ./re-insert-mocks.js
+    - name: Load mock data
+      run: node ./re-insert-mocks.js
 
     - name: Run Central API tests
-      run: |
-        docker-compose exec -T dtfs-central-api npm run api-test
+      run: docker-compose exec -T dtfs-central-api npm run api-test
 
     - name: Stop containers
       if: always()
