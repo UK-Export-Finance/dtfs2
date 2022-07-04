@@ -58,20 +58,6 @@ jobs:
       run: |
         echo Setting environment to ${{ env.environment }}
 
-  # Cancel Previous runs
-  # this action is used to cancel previous runs for the current branch
-  cancel-previous-tests:
-    name: "Cancel previous tests"
-    needs: set-environment
-    runs-on: [self-hosted, api-tests]
-    timeout-minutes: 3
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          all_but_latest: true
-          access_token: ${{ secrets.GITHUB_TOKEN }}
-
   api-tests:
     name: "Run API tests"
     needs: set-environment
