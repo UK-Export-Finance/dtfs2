@@ -46,7 +46,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
   const createDealAndLoan = async () => {
     const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
-    dealId = deal._id; 
+    dealId = deal._id;
 
     const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     const { loanId: _id } = createLoanResponse.body;
@@ -187,6 +187,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
             details: {
               ...newDeal.details,
               submissionDate: moment().subtract(1, 'week').utc().valueOf(),
+              manualInclusionApplicationSubmissionDate: moment().subtract(4, 'day').utc().valueOf(),
               manualInclusionNoticeSubmissionDate: moment().subtract(2, 'day').utc().valueOf(),
             },
           };
@@ -194,20 +195,21 @@ describe('/v1/deals/:id/loan/:loanId', () => {
           await updateDeal(dealId, updatedDeal);
         });
 
-        describe('when is before today', () => {
-          it('should return validationError', async () => {
-            const yesterday = moment().subtract(1, 'day');
+        describe('when is before manualInclusionApplicationSubmissionDate', () => {
+          it('should return validationError when before manualInclusionApplicationSubmissionDate', async () => {
+            const fiveDaysAgo = moment().subtract(5, 'day');
             const requestedCoverStartDateFields = {
-              'requestedCoverStartDate-day': moment(yesterday).format('DD'),
-              'requestedCoverStartDate-month': moment(yesterday).format('MM'),
-              'requestedCoverStartDate-year': moment(yesterday).format('YYYY'),
+              'requestedCoverStartDate-day': moment(fiveDaysAgo).format('DD'),
+              'requestedCoverStartDate-month': moment(fiveDaysAgo).format('MM'),
+              'requestedCoverStartDate-year': moment(fiveDaysAgo).format('YYYY'),
             };
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
             const todayPlus3Months = moment().add(3, 'month');
-            const todayFormatted = moment().format('Do MMMM YYYY');
+            const today = moment().utc().valueOf();
+            const todayFormatted = moment(today).format('Do MMMM YYYY');
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
             const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
@@ -228,7 +230,8 @@ describe('/v1/deals/:id/loan/:loanId', () => {
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
-            const todayFormatted = moment().format('Do MMMM YYYY');
+            const today = moment().utc().valueOf();
+            const todayFormatted = moment(today).format('Do MMMM YYYY');
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
             const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;

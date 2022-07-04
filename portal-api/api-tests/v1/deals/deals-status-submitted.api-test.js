@@ -257,7 +257,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
       expect(updatedDeal.status).toEqual(200);
-      expect(updatedDeal.body.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be today or in the future');
+      expect(updatedDeal.body.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be on the application submission date or in the future');
     });
   });
 
@@ -283,7 +283,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
 
       const updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
       expect(updatedDeal.status).toEqual(200);
-      expect(updatedDeal.body.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be today or in the future');
+      expect(updatedDeal.body.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be on the application submission date or in the future');
     });
   });
 

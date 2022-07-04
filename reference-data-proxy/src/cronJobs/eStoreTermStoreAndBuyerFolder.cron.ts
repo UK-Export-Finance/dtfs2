@@ -1,11 +1,10 @@
+import addSeconds from 'date-fns/addSeconds';
 import { getCollection } from '../database';
 import { TermStoreResponse, BuyerFolderResponse } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { eStoreCronJobManager } from './eStoreCronJobManager';
 import { eStoreDealFolderCreationJob } from './eStoreDealFolderCreationJob.cron';
 import { createBuyerFolder, addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
-
-const folderCreationTimer = '59 * * * * *';
 
 export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
   const cronJobLogsCollection = await getCollection('cron-job-logs');
@@ -59,8 +58,9 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
     if (buyerFolderResponse?.status === 201) {
       console.info(`API Call finished: The Buyer folder for ${eStoreData.buyerName} was successfully created`);
-      // add a new job to the `Cron Job manager` queue that runes every 35 seconds
-      // in general, the folder creation should take between 20 to 30 seconds
+      const folderCreationTimer = addSeconds(new Date(), 59);
+
+      // add a new job to the `Cron Job manager` queue that executes after 59 seconds
       eStoreCronJobManager.add(`Deal${eStoreData.dealId}`, folderCreationTimer, async () => {
         await eStoreDealFolderCreationJob(eStoreData);
       });

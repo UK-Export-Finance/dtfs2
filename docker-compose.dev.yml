@@ -51,6 +51,7 @@ services:
       - ESTORE_URL=${ESTORE_URL}
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - SESSION_SECRET
+      - TZ=Europe/London
     command: npx nodemon --inspect=0.0.0.0:9224 server/index.js -L
 
   trade-finance-manager-api:
@@ -80,6 +81,7 @@ services:
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
       - DATA_MIGRATION_SCRIPT=true
+      - TZ=Europe/London
     command: npx nodemon --inspect=0.0.0.0:9225 src/index.js -L
 
   portal:
@@ -103,6 +105,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
+      - TZ=Europe/London
     command: npx nodemon --inspect=0.0.0.0:9226 server/index.js -L
 
   portal-api:
@@ -143,6 +146,7 @@ services:
       - V1_FILE_SHARE_ACCOUNT=${V1_FILE_SHARE_ACCOUNT}
       - V1_AZURE_PORTAL_FILESHARE_NAME=${V1_AZURE_PORTAL_FILESHARE_NAME}
       - V1_AZURE_PORTAL_EXPORT_FOLDER=${V1_AZURE_PORTAL_EXPORT_FOLDER}
+      - TZ=Europe/London
 
     command: npx nodemon --inspect=0.0.0.0:9227 src/index.js -L
 
@@ -187,6 +191,7 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - TZ=Europe/London
     entrypoint: npx nodemon src/index.ts -L --max-old-space-size=300
 
   gef-ui:
@@ -212,25 +217,8 @@ services:
       - REDIS_HOSTNAME=redis
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
+      - TZ=Europe/London
     command: npx nodemon --inspect=0.0.0.0:9229 server/index.js -L --max_old_space_size=250
-
-  # ACBS function is causing an out of memory error on github actions. disable for now
-  # acbs-function:
-  #   build: ./azure-functions/acbs-function
-  #   image: dtfs/azure-function-acbs
-  #   restart: always
-  #   ports:
-  #     - "7071:80"
-  #   environment:
-  #     - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
-  #     - FUNCTIONS_WORKER_RUNTIME=node
-  #     - WEBSITE_HOSTNAME=localhost:7071
-  #     - MULESOFT_API_KEY
-  #     - MULESOFT_API_SECRET
-  #     - MULESOFT_API_UKEF_TF_EA_URL
-  #     - MULESOFT_API_UKEF_MDM_EA_URL
-  #     - MULESOFT_API_UKEF_MDM_EA_KEY
-  #     - MULESOFT_API_UKEF_MDM_EA_SECRET
 
   number-generator-function:
     build: ./azure-functions/number-generator-function
@@ -245,6 +233,7 @@ services:
       - MULESOFT_API_UKEF_TF_EA_URL
       - MULESOFT_API_KEY
       - MULESOFT_API_SECRET
+      - TZ=Europe/London
 
   redis:
     image: "redis:alpine"

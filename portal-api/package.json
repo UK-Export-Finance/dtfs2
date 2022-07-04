@@ -53,20 +53,20 @@
     "mongodb": "~3.6.12",
     "multer": "1.4.5-lts.1",
     "node-fetch": "^2.6.7",
-    "nodemon": "^2.0.16",
+    "nodemon": "^2.0.18",
     "notifications-node-client": "^5.1.1",
     "passport": "0.6.0",
     "passport-jwt": "4.0.0",
     "request": "^2.88.2",
     "sanitize-html": "^2.7.0",
-    "xss": "^1.0.11"
+    "xss": "^1.0.13"
   },
   "devDependencies": {
-    "eslint": "^8.16.0",
+    "eslint": "^8.18.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "jest": "^28.1.0",
-    "prettier": "^2.6.2",
+    "jest": "^28.1.1",
+    "prettier": "^2.7.1",
     "supertest": "6.2.3"
   }
 }

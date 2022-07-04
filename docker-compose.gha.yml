@@ -27,6 +27,7 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://localhost:5005
+      - TZ=Europe/London
     entrypoint: npx nodemon src/index.js -L
 
   trade-finance-manager-ui:
@@ -47,6 +48,7 @@ services:
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL=${ESTORE_URL}
       - SESSION_SECRET
+      - TZ=Europe/London
     command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:
@@ -75,6 +77,7 @@ services:
       - SENTRY_DSN=${SENTRY_DSN}
       - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
       - DATA_MIGRATION_SCRIPT=true
+      - TZ=Europe/London
     entrypoint: npx nodemon src/index.js -L
 
   portal:
@@ -97,6 +100,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
+      - TZ=Europe/London
     command: npx nodemon server/index.js -L
 
   portal-api:
@@ -135,6 +139,7 @@ services:
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
       - SENTRY_DSN=${SENTRY_DSN}
+      - TZ=Europe/London
 
     entrypoint: npx nodemon src/index.js -L
 
@@ -178,6 +183,7 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - TZ=Europe/London
     entrypoint: npx nodemon src/index.ts -L
 
   gef-ui:
@@ -200,6 +206,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
+      - TZ=Europe/London
     command: npx nodemon server/index.js -L
 
   acbs-function:
@@ -218,6 +225,7 @@ services:
       - MULESOFT_API_UKEF_MDM_EA_URL
       - MULESOFT_API_UKEF_MDM_EA_KEY
       - MULESOFT_API_UKEF_MDM_EA_SECRET
+      - TZ=Europe/London
 
   number-generator-function:
     build: ./azure-functions/number-generator-function
@@ -232,6 +240,7 @@ services:
       - MULESOFT_API_UKEF_TF_EA_URL
       - MULESOFT_API_KEY
       - MULESOFT_API_SECRET
+      - TZ=Europe/London
 
   redis:
     image: "redis:alpine"

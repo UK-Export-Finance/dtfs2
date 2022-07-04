@@ -3,7 +3,7 @@ const currency = require('./currency');
 const conversionRate = require('./conversion-rate');
 const conversionRateDate = require('./conversion-rate-date');
 
-module.exports = (bond, errorList) => {
+module.exports = (bond, errorList, deal) => {
   let newErrorList = { ...errorList };
   const {
     currencySameAsSupplyContractCurrency,
@@ -13,7 +13,7 @@ module.exports = (bond, errorList) => {
     && currencySameAsSupplyContractCurrency === 'false') {
     newErrorList = currency(bond, newErrorList);
     newErrorList = conversionRate(bond, newErrorList);
-    newErrorList = conversionRateDate(bond, newErrorList);
+    newErrorList = conversionRateDate(bond, newErrorList, deal);
   }
 
   return newErrorList;

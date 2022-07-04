@@ -304,7 +304,7 @@ describe('/v1/deals/:id/bond', () => {
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate).toBeDefined();
-            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be today or in the future');
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual('Requested Cover Start Date must be on the application submission date or in the future');
           });
         });
 

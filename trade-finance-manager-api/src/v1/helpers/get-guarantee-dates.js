@@ -35,11 +35,11 @@ const getGuaranteeDates = (facility, dealSubmissionDate) => {
     guaranteeExpiryDate = dateHelpers.formatDate(coverEndDate);
   } else {
     guaranteeCommencementDate = dateHelpers.formatTimestamp(
-      moment.utc(Number(dealSubmissionDate)).add(3, 'months').valueOf(),
+      moment(Number(dealSubmissionDate)).add(3, 'months').valueOf(),
     );
 
     guaranteeExpiryDate = dateHelpers.formatTimestamp(
-      moment.utc(guaranteeCommencementDate).add(ukefGuaranteeInMonths, 'months').valueOf(),
+      moment(guaranteeCommencementDate).add(ukefGuaranteeInMonths, 'months').valueOf(),
     );
   }
 
