@@ -76,6 +76,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
+      working-directory: ./
       run: |
         docker network prune -f
         docker-compose -f docker-compose.gha.yml up --build -d
