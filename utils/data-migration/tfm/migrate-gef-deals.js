@@ -222,6 +222,7 @@ const migrateGefAmendments = async () => {
     'GE Extension, Increase in Value',
   ];
   const { MANUAL } = CONSTANTS.AMENDMENT.AMENDMENT_TYPE;
+  const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
   const allGefAmendments = [];
   let amendments22To23 = await open('../gef-amendments/gef-amendments2.xlsx', 'Amendments Apr 22 to Apr 23');
   amendments22To23 = amendments22To23.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()));
@@ -235,18 +236,47 @@ const migrateGefAmendments = async () => {
   for (const amendment of allGefAmendments) {
     const output = {};
     output.requestDate = excelDateToISODateString(amendment.requestDate);
-    output.exporter = amendment.Exporter;
+    output.exporter = amendment.Exporter.trim();
     output.ukefDealId = `00${amendment['Deal ID']}`;
     output.ukefFacilityId = `00${amendment['Facility ID']}`;
     output.status = amendment.Stage;
     output.submittedByPim = true;
     output.submittedAt = amendment.Moved ? excelDateToISODateString(amendment.Moved) : '';
-    output.ukefDecision = {};
-    output.requireUkefApproval = amendment['Original Channel'] === MANUAL && amendment['Notification or Request'] === MANUAL;
-    output.banksDecision = {
-      banksDecisionEmail: true,
-      submittedAt: amendment.submittedAt ? excelDateToISODateString(amendment.submittedAt) : '',
-    };
+    output.requireUkefApproval = amendment['Notification or Request'] === MANUAL;
+
+    if (amendment['Notification or Request'] === MANUAL) {
+      output.leadUnderwriterId = amendment.Underwriter; // TODO: change this to an _id
+      output.ukefDecision = {
+        coverEndDate: '', // TODO: add UW Manager decision Approved with or without conditions
+        value: '', // TODO: add UW Manager decision Approved with or without conditions
+        comments: amendment['PIM Comment/Status'],
+        conditions: '', // TODO: add any conditions, if applicable
+        declined: null, // TODO: add any reasons why it was declined. This is probably not applicable
+        managersDecisionEmail: true,
+        submitted: true,
+        submittedAt: amendment['When Finished'] ? excelDateToISODateString(amendment['When Finished']) : '',
+        submittedBy: {
+          _id: '123', // TODO: capture the UW Manager ID
+          name: '', // TODO: capture the UW Manager name
+          email: '', // TODO: capture the UW Manager email
+          username: '', // TODO: capture the UW Manager username
+        },
+      };
+      output.banksDecision = {
+        decision: PROCEED,
+        banksDecisionEmail: true,
+        submittedAt: amendment.submittedAt ? excelDateToISODateString(amendment.submittedAt) : '',
+        effectiveDate: amendment['Date received'] ? excelDateToISODateString(amendment['Date received']) : '',
+        submitted: true,
+        submittedBy: {
+          _id: '123', // TODO: capture the UW Manager _id
+          name: '', // TODO: capture the UW Manager name
+          email: '', // TODO: capture the UW Manager email
+          username: '' // TODO: capture the UW Manager username
+        }
+      };
+    }
+
     json.push(output);
   }
 
@@ -284,3 +314,4 @@ const migrate = () => {
 };
 
 migrate();
+// migrateGefAmendments();
