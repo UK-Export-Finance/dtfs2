@@ -48,9 +48,15 @@
  * @param {Object} amendments Facility amendment(s)
  * @returns {Object} Facility Master Record (FMR) amended
  */
-const facilityMasterAmend = (fmr, amendments) => ({
+const facilityMasterAmend = (fmr, amendments) => {
+  try {
+  return {
   ...fmr,
   maximumLiability: helpers.getMaximumLiability(amendments),
-});
+}
+  } catch (e) {
+    console.error('Unable to map facility master amendment record: ', { e });
+  }
+};
 
 module.exports = facilityMasterAmend;

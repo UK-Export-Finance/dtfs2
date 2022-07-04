@@ -133,7 +133,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
 
 /**
  * Invoked Azure DOF using HTTP `POST` method.
- * @param {Object} facility Facility object comprising amendments
+ * @param {Object} amendments Amendments object comprising facility ID and amends.
  * @returns {Object} DOF Response
  */
 const amendAcbsFacility = async (amendments: object) => {
@@ -153,7 +153,7 @@ const amendAcbsFacility = async (amendments: object) => {
 
 /**
  * ACBS facility amendment entry function.
- * Constructs acceptable payload for DOF.
+ * Constructs acceptable payload by DOF.
  * @param {Object} req Request
  * @param {Object} res Response
  * @return {Object} Response object with HTTP code as `status` and response as `data`.
