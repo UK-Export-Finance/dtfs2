@@ -111,10 +111,8 @@ context('Clone GEF (AIN) deal', () => {
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
         statusBanner.bannerDateCreated().contains(bannerDate);
-        statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
 
         applicationDetails.bankRefName().contains('Cloned AIN deal');
-        applicationDetails.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
         applicationDetails.automaticCoverStatus().contains('Not started');
         applicationDetails.facilityStatus().contains('Completed');
         applicationDetails.exporterStatus().contains('Completed');
@@ -310,10 +308,8 @@ context('Clone GEF (MIA) deal', () => {
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
         statusBanner.bannerDateCreated().contains(bannerDate);
-        statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
 
         applicationDetails.bankRefName().contains('Cloned MIA deal');
-        applicationDetails.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
         applicationDetails.automaticCoverStatus().contains('Not started');
         applicationDetails.facilityStatus().contains('Completed');
         applicationDetails.exporterStatus().contains('Completed');
@@ -362,7 +358,6 @@ context('Clone GEF (MIN) deal', () => {
       nameApplication.form().submit();
 
       cy.get('[data-cy="success-message-link"]').click();
-      statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
       statusBanner.bannerStatus().contains('Draft');
       statusBanner.bannerCheckedBy().contains('-');
     });
