@@ -51,7 +51,7 @@
     "graphql-tag": "^2.12.6",
     "is-port-reachable": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.34",
     "mongo-dot-notation": "^2.0.0",
     "mongodb": "4.0.0",
