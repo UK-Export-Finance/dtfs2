@@ -15,7 +15,7 @@ const getLoanMaximumLiability = (amount, facility, dealType) => {
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
     ukefExposure = amount * 0.10;
   } else {
-    let { disbursementAmount, coveredPercentage } = facility.facilitySnapshot;
+    let { disbursementAmount, coverPercentage, coveredPercentage } = facility.facilitySnapshot;
 
     if (disbursementAmount && typeof disbursementAmount === 'string') {
       disbursementAmount = disbursementAmount.replace(/,/g, '');
@@ -23,6 +23,10 @@ const getLoanMaximumLiability = (amount, facility, dealType) => {
 
     if (coveredPercentage && typeof coveredPercentage === 'string') {
       coveredPercentage = coveredPercentage.replace(/,/g, '');
+    }
+
+    if (coverPercentage && !coveredPercentage) {
+      coveredPercentage = coverPercentage;
     }
 
     // BSS/EWCS
