@@ -6,6 +6,7 @@ const codeValueTransaction = require('./code-value-transaction');
 const facilityLoan = require('./facility-loan');
 const facilityFee = require('./facility-fee');
 const facilityUpdate = require('./facility-update');
+const facilityMasterAmend = require('./facility-master-amend');
 
 module.exports = {
   facilityMaster,
@@ -16,4 +17,5 @@ module.exports = {
   facilityLoan,
   facilityUpdate,
   facilityFee,
+  facilityMasterAmend,
 };

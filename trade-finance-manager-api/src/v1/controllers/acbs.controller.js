@@ -149,7 +149,7 @@ const issueAcbsFacilities = async (deal) => {
 
 const amendAcbsFacility = async (ukefFacilityId, amendments) => {
   api.amendACBSfacility(ukefFacilityId, amendments)
-    .then((r) => console.info(r))
+    .then((r) => console.info('RESPONSE===', r))
     .catch((e) => {
       console.error('Unable to amend facility: ', { e });
     });

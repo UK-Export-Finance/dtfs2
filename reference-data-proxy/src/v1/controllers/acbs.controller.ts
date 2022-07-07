@@ -133,18 +133,18 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
 
 /**
  * Invoked Azure DOF using HTTP `POST` method.
- * @param {Object} amendments Amendments object comprising facility ID and amends.
+ * @param {Object} amendment Amendment object comprising facility ID and amends. A amendment at a time is processed.
  * @returns {Object} DOF Response
  */
-const amendAcbsFacility = async (amendments: object) => {
-  const hasAcceptablePayload = Object.prototype.hasOwnProperty.call(amendments, 'coverEndDate') || Object.prototype.hasOwnProperty.call(amendments, 'amount');
+const amendAcbsFacility = async (amendment: object) => {
+  const hasAcceptablePayload = Object.prototype.hasOwnProperty.call(amendment, 'coverEndDate') || Object.prototype.hasOwnProperty.call(amendment, 'amount');
 
-  if (amendments && hasAcceptablePayload) {
+  if (amendment && hasAcceptablePayload) {
     const response = await axios({
       method: 'post',
       url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
       data: {
-        amendments,
+        amendment,
       },
     }).catch((e: any) => e);
 

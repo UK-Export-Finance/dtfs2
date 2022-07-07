@@ -167,10 +167,22 @@ const updateFacilityAmendment = async (req, res) => {
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
   // sends email if conditions are met
   await sendAmendmentEmail(amendmentId, facilityId);
-  // ACBS Interaction
+  // Fetch Amendment
   const amendment = await api.getAmendmentById(facilityId, amendmentId);
-  if (canSendToAcbs(amendment)) {
-    acbs.amendAcbsFacility(facilityId, amendment);
+  if (amendment) {
+    // Fetch Facility
+    const facility = await api.findOneFacility(facilityId);
+    if (facility && facility.facilitySnapshot) {
+      const { ukefFacilityId } = facility.facilitySnapshot;
+      // ACBS Interaction
+      if (canSendToAcbs(amendment) && ukefFacilityId) {
+        acbs.amendAcbsFacility(ukefFacilityId, amendment);
+      }
+    } else {
+      console.error(`Unable to fetch facility ${facilityId}.`);
+    }
+  } else {
+    console.error(`Unable to fetch amendment ${amendmentId}.`);
   }
 
   if (createdAmendment) {

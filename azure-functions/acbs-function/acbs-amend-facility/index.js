@@ -26,17 +26,17 @@ const helpers = require('../mappings/facility/helpers');
 
 module.exports = df.orchestrator(function* amendACBSFacility(context) {
   try {
-  const { amendments } = context.df.getInput();
+  const { amendment } = context.df.getInput();
 
   // UKEF Facility ID exists in the payload
-  const hasFacilityId = Object.prototype.hasOwnProperty.call(amendments, 'facilityId');
+  const hasFacilityId = Object.prototype.hasOwnProperty.call(amendment, 'facilityId');
   // At least one of the amendment exists in the payload
-  const hasAmendment = Object.prototype.hasOwnProperty.call(amendments, 'amount')
-  || Object.prototype.hasOwnProperty.call(amendments, 'coverEndDate');
+  const hasAmendment = Object.prototype.hasOwnProperty.call(amendment, 'amount')
+  || Object.prototype.hasOwnProperty.call(amendment, 'coverEndDate');
 
   // Payload verification
   if (hasFacilityId && hasAmendment) {
-    const { facilityId } = amendments;
+    const { facilityId } = amendment;
     //1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
     const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry(
       'activity-get-facility-master',
@@ -46,7 +46,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
     if (!!fmr && !!etag) {
       //2.1. FMR amendment mapping
-      const fmrAmended = mappings.facility.facilityMasterAmend(fmr, amendments);
+      const fmrAmended = mappings.facility.facilityMasterAmend(fmr, amendment);
       console.log('==>', { fmrAmended });
     } else {
       console.error('ACBS facility amendment error : Unable to retrieve FMR.');
