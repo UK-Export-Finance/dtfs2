@@ -37,3 +37,17 @@ export const DEAL_STATUS = {
   UKEF_APPROVED_WITHOUT_CONDITIONS: 'Accepted by UKEF (without conditions)',
   UKEF_REFUSED: 'Rejected by UKEF',
 };
+
+export const TFM_DEAL_STAGE = {
+  CONFIRMED: 'Confirmed',
+  AMENDMENT_IN_PROGRESS: 'Amendment in progress',
+};
+
+export const UNDERWRITER_MANAGER_DECISIONS = {
+  APPROVED_WITH_CONDITIONS: 'Approved with conditions',
+  APPROVED_WITHOUT_CONDITIONS: 'Approved without conditions',
+  DECLINED: 'Declined',
+  NOT_ADDED: 'Not added',
+  AUTOMATIC_APPROVAL: 'Automatic approval',
+  AWAITING_DECISION: 'Awaiting decision',
+};

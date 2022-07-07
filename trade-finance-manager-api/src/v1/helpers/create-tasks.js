@@ -2,7 +2,7 @@ const CONSTANTS = require('../../constants');
 
 const migrationScript = Boolean(process.env.DATA_MIGRATION_SCRIPT);
 
-const NEW_TASK = ({
+const NEW_TASK = {
   status: migrationScript
     ? CONSTANTS.TASKS.STATUS.COMPLETED
     : CONSTANTS.TASKS.STATUS.CANNOT_START,
@@ -12,7 +12,7 @@ const NEW_TASK = ({
   },
   canEdit: false,
   history: [],
-});
+};
 
 /**
  * Create tasks for a single group
@@ -21,11 +21,7 @@ const NEW_TASK = ({
  * @param {Array} additional/special tasks to add to the group
  * @returns {Array} created tasks
  */
-const createGroupTasks = (
-  tasks,
-  groupId,
-  additionalTasks = [],
-) => {
+const createGroupTasks = (tasks, groupId, additionalTasks = []) => {
   const mappedTasks = [];
   let taskIdCount = 0;
 
@@ -37,9 +33,7 @@ const createGroupTasks = (
      * - task title is NOT conditional and always applies.
      * - OR the task is conditional and the task title is listed in additionalTasks array
      */
-    const shouldCreateTask = (
-      !task.isConditional
-      || (task.isConditional && additionalTasks.includes(task.title)));
+    const shouldCreateTask = !task.isConditional || (task.isConditional && additionalTasks.includes(task.title));
 
     if (shouldCreateTask) {
       // do not rely on index - otherwise if a task is conditional,
@@ -77,11 +71,7 @@ const createTasksAIN = (additionalTasks) => [
   {
     groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
     id: 1,
-    groupTasks: createGroupTasks(
-      CONSTANTS.TASKS.AIN.GROUP_1.TASKS,
-      1,
-      additionalTasks,
-    ),
+    groupTasks: createGroupTasks(CONSTANTS.TASKS.AIN.GROUP_1.TASKS, 1, additionalTasks),
   },
 ];
 
@@ -94,38 +84,22 @@ const createTasksMIA = (additionalTasks) => [
   {
     groupTitle: CONSTANTS.TASKS.MIA.GROUP_1.GROUP_TITLE,
     id: 1,
-    groupTasks: createGroupTasks(
-      CONSTANTS.TASKS.MIA.GROUP_1.TASKS,
-      1,
-      additionalTasks,
-    ),
+    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_1.TASKS, 1, additionalTasks),
   },
   {
     groupTitle: CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE,
     id: 2,
-    groupTasks: createGroupTasks(
-      CONSTANTS.TASKS.MIA.GROUP_2.TASKS,
-      2,
-      additionalTasks,
-    ),
+    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_2.TASKS, 2, additionalTasks),
   },
   {
     groupTitle: CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE,
     id: 3,
-    groupTasks: createGroupTasks(
-      CONSTANTS.TASKS.MIA.GROUP_3.TASKS,
-      3,
-      additionalTasks,
-    ),
+    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_3.TASKS, 3, additionalTasks),
   },
   {
     groupTitle: CONSTANTS.TASKS.MIA.GROUP_4.GROUP_TITLE,
     id: 4,
-    groupTasks: createGroupTasks(
-      CONSTANTS.TASKS.MIA.GROUP_4.TASKS,
-      4,
-      additionalTasks,
-    ),
+    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_4.TASKS, 4, additionalTasks),
   },
 ];
 
@@ -135,10 +109,7 @@ const createTasksMIA = (additionalTasks) => [
  * @param {Array} additional/special tasks to add to the group
  * @returns {Array} created task groups
  */
-const createTasks = (
-  submissionType,
-  additionalTasks,
-) => {
+const createTasks = (submissionType, additionalTasks) => {
   let tasks = [];
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {

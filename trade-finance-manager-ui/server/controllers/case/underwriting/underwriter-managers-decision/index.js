@@ -1,34 +1,19 @@
 const api = require('../../../../api');
-const canUserEditManagersDecision = require('./helpers');
-const { validateSubmittedValues } = require('./validateSubmittedValues');
-const { mapDecisionObject } = require('./mapDecisionObject');
+const userCanEditManagersDecision = require('./helpers');
+const { mapDecisionObject, validateSubmittedValues } = require('../../../helpers');
 
-const getUnderwriterManagersDecision = async (req, res) => {
-  const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
+const getUnderwriterManagersDecision = async (deal, user) => {
+  const userCanEdit = userCanEditManagersDecision(user, deal.dealSnapshot.submissionType, deal.tfm);
 
-  const { user } = req.session;
-
-  if (!deal) {
-    return res.redirect('/not-found');
-  }
-
-  const userCanEdit = canUserEditManagersDecision(
-    user,
-    deal.dealSnapshot.submissionType,
-    deal.tfm,
-  );
-
-  return res.render('case/underwriting/managers-decision/managers-decision.njk', {
+  return {
     userCanEdit,
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
-    activeSideNavigation: 'underwriter managers decision',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
     user,
-  });
+  };
 };
 
 const getUnderwriterManagersDecisionEdit = async (req, res) => {
@@ -41,11 +26,7 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const userCanEdit = canUserEditManagersDecision(
-    user,
-    deal.dealSnapshot.submissionType,
-    deal.tfm,
-  );
+  const userCanEdit = userCanEditManagersDecision(user, deal.dealSnapshot.submissionType, deal.tfm);
 
   if (!userCanEdit) {
     return res.redirect('/not-found');
@@ -54,7 +35,6 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
   return res.render('case/underwriting/managers-decision/edit-managers-decision.njk', {
     activePrimaryNavigation: 'manage work',
     activeSubNavigation: 'underwriting',
-    activeSideNavigation: 'underwriter managers decision',
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
     dealId: deal.dealSnapshot._id,
@@ -72,22 +52,13 @@ const postUnderwriterManagersDecision = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const userCanEdit = canUserEditManagersDecision(
-    user,
-    deal.dealSnapshot.submissionType,
-    deal.tfm,
-  );
+  const userCanEdit = userCanEditManagersDecision(user, deal.dealSnapshot.submissionType, deal.tfm);
 
   if (!userCanEdit) {
     return res.redirect('/not-found');
   }
 
-  const {
-    decision,
-    approveWithConditionsComments,
-    declineComments,
-    internalComments,
-  } = req.body;
+  const { decision, approveWithConditionsComments, declineComments, internalComments } = req.body;
 
   const submittedValues = {
     decision,
@@ -102,7 +73,6 @@ const postUnderwriterManagersDecision = async (req, res) => {
     return res.render('case/underwriting/managers-decision/edit-managers-decision.njk', {
       activePrimaryNavigation: 'manage work',
       activeSubNavigation: 'underwriting',
-      activeSideNavigation: 'underwriter managers decision',
       deal: deal.dealSnapshot,
       tfm: deal.tfm,
       dealId: deal.dealSnapshot._id,
@@ -116,7 +86,7 @@ const postUnderwriterManagersDecision = async (req, res) => {
 
   await api.updateUnderwriterManagersDecision(dealId, update);
 
-  return res.redirect(`/case/${dealId}/underwriting/managers-decision`);
+  return res.redirect(`/case/${dealId}/underwriting`);
 };
 
 module.exports = {

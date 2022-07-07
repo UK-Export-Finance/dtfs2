@@ -67,3 +67,11 @@ export const UNDERWRITING_SUPPORT_1 = {
   lastName: 'Wilson',
   ...defaultUserDetails,
 };
+
+export const PIM_USER_1 = {
+  username: 'PIM_USER_1',
+  teams: ['PIM'],
+  firstName: 'Adam',
+  lastName: 'Pimson',
+  ...defaultUserDetails,
+};

@@ -18,7 +18,6 @@ describe(page, () => {
     wrapper.expectText('[data-cy="assign-lead-underwriter-heading"]').toRead('Assign a lead underwriter');
   });
 
-
   describe('form', () => {
     it('should render `assigned to` select input', () => {
       wrapper.expectElement('[data-cy="assigned-to-select-input"]').toExist();
@@ -31,7 +30,7 @@ describe(page, () => {
 
     it('should render `cancel` link', () => {
       wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(
-        `/case/${params.dealId}/underwriting/lead-underwriter`,
+        `/case/${params.dealId}/underwriting`,
         'Cancel',
       );
     });

@@ -10,6 +10,9 @@ const tfmSubmitDealController = require('../controllers/tfm/deal/tfm-submit-deal
 const tfmGetFacilitiesController = require('../controllers/tfm/facility/tfm-get-facilities.controller');
 const tfmGetFacilityController = require('../controllers/tfm/facility/tfm-get-facility.controller');
 const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-update-facility.controller');
+const tfmGetAmendmentController = require('../controllers/tfm/amendments/tfm-get-amendments.controller');
+const tfmPutAmendmentController = require('../controllers/tfm/amendments/tfm-put-amendments.controller');
+const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-post-amendments.controller');
 
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
@@ -374,6 +377,99 @@ tfmRouter.route('/facilities/:id')
 tfmRouter.route('/facilities/:id').put(
   tfmUpdateFacilityController.updateFacilityPut,
 );
+
+/**
+ * @openapi
+ * /tfm/facilities/:facilityId/amendments:
+ *   get:
+ *     summary: Finds full amendment object for facility-id
+ *     tags: [TFM, Amendments]
+ *     description: Finds full amendment object for facility-id
+ *     requestBody:
+ *       description: Fields required to update a facility
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               facilityUpdate:
+ *                 type: string
+ *             example:
+ *               facilityUpdate: { aNewField: true }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                {
+ *                 status: 'In progress'
+ *               }
+ *       404:
+ *         description: Not found
+ */
+tfmRouter.route('/amendments/status/in-progress').get(tfmGetAmendmentController.getAllAmendmentsInProgress);
+tfmRouter.route('/facilities/:facilityId/amendment').get(tfmGetAmendmentController.getAllAmendmentsByFacilityId);
+tfmRouter.route('/facilities/:facilityId/amendment/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgress);
+tfmRouter.route('/facilities/:facilityId/amendment/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendmentsByFacilityId);
+tfmRouter.route('/facilities/:facilityId/amendment/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendment);
+tfmRouter.route('/facilities/:facilityId/amendment/:amendmentId').get(tfmGetAmendmentController.getAmendmentById);
+tfmRouter.route('/deals/:dealId/amendments').get(tfmGetAmendmentController.getAmendmentsByDealId);
+tfmRouter.route('/deals/:dealId/amendment/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgressByDealId);
+tfmRouter.route('/deals/:dealId/amendment/status/completed').get(tfmGetAmendmentController.getCompletedAmendmentByDealId);
+tfmRouter.route('/deals/:dealId/amendment/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendmentByDealId);
+
+/**
+ * @openapi
+ * /tfm/facilities/:facilityId/amendment:
+ *   post:
+ *     summary: Creates new amendment object and changes status
+ *     tags: [TFM, Amendments]
+ *     description: Adds new amendment object in amendments array
+ *     requestBody:
+ *       description: Fields required to create amendment
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *               amendment:
+ *                 type: object
+ *               id:
+ *                 type: string
+ *             example:
+ *              {
+ *                requestDate: 1555662,
+ *                creationTimestamp: 1555662,
+ *                createdBy: user
+ *              }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                {
+ *                 updated
+ *                 createdAmendment
+ *               }
+*       404:
+*         description: Not found
+*/
+tfmRouter.route('/facilities/:facilityId/amendment').post(tfmPostAmendmentController.postTfmAmendment);
+
+/**
+* @openapi
+* /tfm/facilities/amendments/:id:
+*
+*       404:
+*         description: Not found
+*/
+tfmRouter.route('/facilities/:facilityId/amendment/:amendmentId').put(tfmPutAmendmentController.updateTfmAmendment);
 
 /**
  * @openapi

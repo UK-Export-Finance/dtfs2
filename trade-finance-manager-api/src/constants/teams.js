@@ -20,12 +20,12 @@ const RISK_MANAGERS = {
 
 const BUSINESS_SUPPORT = {
   id: 'BUSINESS_SUPPORT',
-  name: ' Business support group',
+  name: 'Business support group',
 };
 
 const PIM = {
   id: 'PIM',
-  name: ' PIM',
+  name: 'Post issue management',
 };
 
 module.exports = {

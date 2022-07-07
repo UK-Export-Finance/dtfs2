@@ -1,0 +1,65 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendment - Request approval
+{% endblock %}
+
+{% block sub_content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'amendment--error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--request-approval-heading" aria-label="Does the amendment request need UKEF approval?">Does the amendment request need UKEF approval?</h1>
+
+    <form method="POST" autocomplete="off">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "amendment-request-approval",
+          name: "requireUkefApproval",
+          errorMessage: errors and errors.fieldErrors.requireUkefApproval and {
+            text: errors.fieldErrors.requireUkefApproval.text,
+            attributes: {
+              'data-cy': 'amendment--inline-error'
+            }
+          },
+          items: [
+            {
+              value: "Yes",
+              text: "Yes",
+              checked: requireUkefApproval === true,
+              attributes: { 'data-cy': 'amendment--request-approval-yes' }
+            },
+            {
+              value: "No",
+              text: "No",
+              checked: requireUkefApproval === false,
+              attributes: { 'data-cy': 'amendment--request-approval-no' }
+            }
+          ]
+        }) }}
+
+      <div class="govuk-button-group">
+        {% if isEditable %}
+          {{ govukButton({
+            text: "Continue",
+            attributes: { "data-cy": "amendment--continue-button" }
+            })
+          }}
+        {% endif %}
+        <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
+      </div>
+    </form>
+{% endblock %}

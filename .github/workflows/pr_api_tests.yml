@@ -2,7 +2,7 @@ name: PR - API tests
 
 on:
   pull_request:
-    branches: [ main, main-amendments ]
+    branches: [ main-amendments ]
     paths:
     - 'gef-ui/**'
     - 'portal/**'

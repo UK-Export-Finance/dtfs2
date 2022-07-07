@@ -6,6 +6,7 @@ const openRouter = express.Router();
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const dealSubmit = require('./controllers/deal.submit.controller');
 const feedbackController = require('./controllers/feedback-controller');
+const amendmentController = require('./controllers/amendment.controller');
 const users = require('./controllers/user/user.routes');
 
 openRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
@@ -108,11 +109,45 @@ openRouter.route('/feedback').post(feedbackController.create);
 
 openRouter.route('/users').post(users.createTfmUser);
 
-openRouter.route('/users/:user')
-  .get(users.findTfmUser)
-  .put(users.updateTfmUserById)
-  .delete(users.removeTfmUserById);
+openRouter.route('/users/:user').get(users.findTfmUser).put(users.updateTfmUserById).delete(users.removeTfmUserById);
 
 openRouter.route('/login').post(users.login);
+
+openRouter.route('/facility/:facilityId/amendment').post(amendmentController.createFacilityAmendment);
+
+/**
+ * @openapi
+ * /facility/:facilityId/amendment:amendmentId:
+ *   post:
+ *     summary: Update amendment
+ *     description: Updates the amendment with the given id
+ *     parameters:
+ *       - in: facilityId, amendmentId and payload
+ *         schema:
+ *           type: Object
+ *         required: true
+ *         description: parameters of the amendment object in tfm-facilities
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example: { requestDate: 1555662, creationTimestamp: 1555662, createdBy: user }
+ *       404:
+ *         description: Deal not found
+ *       400:
+ *         description: Cannot update the amendment
+ */
+openRouter.route('/amendments/status/in-progress').get(amendmentController.getAllAmendmentsInProgress);
+openRouter.route('/facility/:facilityId/amendment/').get(amendmentController.getAmendmentByFacilityId);
+openRouter.route('/facility/:facilityId/amendment/:amendmentId').put(amendmentController.updateFacilityAmendment);
+openRouter.route('/facility/:facilityId/amendment/:amendmentId').get(amendmentController.getAmendmentById);
+openRouter.route('/facility/:facilityId/amendment/status/in-progress').get(amendmentController.getAmendmentInProgress);
+openRouter.route('/facility/:facilityId/amendment/status/completed').get(amendmentController.getCompletedAmendment);
+openRouter.route('/facility/:facilityId/amendment/status/completed/latest').get(amendmentController.getLatestCompletedAmendment);
+openRouter.route('/deal/:dealId/amendments/').get(amendmentController.getAmendmentsByDealId);
+openRouter.route('/deal/:dealId/amendment/status/in-progress').get(amendmentController.getAmendmentInProgressByDealId);
+openRouter.route('/deal/:dealId/amendment/status/completed').get(amendmentController.getCompletedAmendmentByDealId);
+openRouter.route('/deal/:dealId/amendment/status/completed/latest').get(amendmentController.getLatestCompletedAmendmentByDealId);
 
 module.exports = openRouter;

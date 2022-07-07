@@ -1,5 +1,7 @@
+{% from "moj/components/banner/macro.njk" import mojBanner %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% import './_macros/tasks-table.njk' as tasksTable %}
+{% import '../amendments/_macros/tasks-table-amendments.njk' as amendmentsTasksTable %}
 {% import './_macros/task-filters.njk' as tasksFilters %}
 {% import './_macros/no-tasks-message.njk' as noTasksMessage %}
 
@@ -7,19 +9,45 @@
 
 {% block sub_content %}
 
+  {% if hasAmendmentInProgress === true %}
+    {% if amendments %}
+      {% set bannerHtml %}
+        <p class="govuk-body" data-cy="amendment--in-progress-bar">Amendment in progress for
+        {% for amendment in amendments %}
+          <a href="/case/{{dealId}}/facility/{{amendment.facilityId}}#amendments" data-cy="amendment--in-progress-bar-link"> facility {{amendment.ukefFacilityId}} </a>
+          {% if loop.index < amendments.length %}
+            ,
+          {% endif %}
+        {% endfor %}
+        </p>
+      {% endset %}
+
+      {{ mojBanner({
+        type: 'information',
+        classes: 'govuk-!-margin-bottom-0 govuk-!-margin-top-6',
+        html: bannerHtml
+      }) }}
+    {% endif %}
+  {% endif %}
+
   <div class="govuk-grid-row" data-cy="case-tasks">
 
     <div class="govuk-grid-column-full">
 
-      <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-5" data-cy="tasks-heading" aria-label="Tasks for this deal">Tasks for this deal</h2>
+      <h2 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-5" data-cy="tasks-heading" aria-label="Tasks for this deal">Tasks</h2>
 
       {% set filtersComponentData = {
-        tasks: tasks,
         selectedTaskFilter: selectedTaskFilter,
         csrfToken: csrfToken
       } %}
 
       {{ tasksFilters.render(filtersComponentData) }}
+
+      {% if amendments.length %}
+        {% for amendment in amendments %}
+          {{ amendmentsTasksTable.render({ tasks: amendment.tasks, amendment: amendment, user: user, selectedTaskFilter: selectedTaskFilter }) }}
+        {% endfor %}
+      {% endif %}
 
       <h3 class="govuk-heading-s ukef-heading-background" data-cy="tasks-deal-submission-type">{{ deal.submissionType }}</h3>
 
@@ -36,7 +64,8 @@
       {% else %}
 
         {% set noTasksComponentData = {
-          selectedTaskFilter: selectedTaskFilter
+          selectedTaskFilter: selectedTaskFilter,
+          taskType: 'deal'
         } %}
 
         {{ noTasksMessage.render(noTasksComponentData)}}

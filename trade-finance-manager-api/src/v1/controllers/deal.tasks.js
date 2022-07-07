@@ -24,19 +24,15 @@ const shouldCreatePartiesTask = (deal) => {
  * @returns {Boolean}
  */
 const shouldCreateAgentCheckTask = (deal) => {
-  const {
-    dealType,
-    submissionType,
-  } = deal;
+  const { dealType, submissionType } = deal;
 
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS
-    && submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS && submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
     const { eligibility } = deal;
+    const eligibilityCriterionId = 11;
 
-    const eligibilityCriterion11 = eligibility.criteria.find((criterion) =>
-      criterion.id === 11);
+    const eligibilityCriterion11 = eligibility.criteria.find((criterion) => criterion.id === eligibilityCriterionId);
 
-    const eligibilityCriteria11isFalse = (eligibilityCriterion11.answer === false);
+    const eligibilityCriteria11isFalse = eligibilityCriterion11.answer === false;
 
     if (eligibilityCriteria11isFalse) {
       return true;
@@ -75,18 +71,11 @@ const createDealTasks = async (deal) => {
     return false;
   }
 
-  const {
-    _id: dealId,
-    submissionType,
-    tfm,
-  } = deal;
+  const { _id: dealId, submissionType, tfm } = deal;
 
   const additionalTasks = listAdditionalTasks(deal);
 
-  const tasks = createTasks(
-    submissionType,
-    additionalTasks,
-  );
+  const tasks = createTasks(submissionType, additionalTasks);
 
   const dealUpdate = {
     tfm: {

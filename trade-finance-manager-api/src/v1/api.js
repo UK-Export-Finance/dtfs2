@@ -1,4 +1,6 @@
 const axios = require('axios');
+const { hasValidObjectId } = require('./helpers/hasValidObjectId.helper');
+const { hasValidUri } = require('./helpers/hasValidUri.helper');
 
 require('dotenv').config();
 
@@ -254,6 +256,260 @@ const updateFacility = async (facilityId, facilityUpdate) => {
   }
 };
 
+const createFacilityAmendment = async (facilityId) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { facilityId },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Error creating facility amendment %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facilityId provided');
+    return { status: 400, data: 'Invalid ObjectId' };
+  }
+};
+
+const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidObjectId(amendmentId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'put',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/${amendmentId}`,
+        headers: { 'Content-Type': 'application/json' },
+        data: payload,
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Error creating facility amendment %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facility Id or amendment Id provided');
+    return { status: 400, data: 'Invalid facility Id or amendment Id provided' };
+  }
+};
+
+const getAmendmentInProgress = async (facilityId) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/in-progress`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return { status: 200, data: response.data };
+    } catch (err) {
+      console.error('Unable to get the amendment in progress %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facility Id');
+    return { status: 400, data: 'Invalid facility Id amendment Id provided' };
+  }
+};
+
+const getCompletedAmendment = async (facilityId) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/completed`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get the completed amendment %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facility Id');
+    return { status: 400, data: 'Invalid facility Id amendment Id provided' };
+  }
+};
+
+const getLatestCompletedAmendment = async (facilityId) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/completed/latest`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get the latest completed amendment %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facility Id');
+    return { status: 400, data: 'Invalid facility Id amendment Id provided' };
+  }
+};
+
+const getAmendmentById = async (facilityId, amendmentId) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidObjectId(amendmentId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/${amendmentId}`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get the amendment %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facility or amendment Id');
+    return { status: 400, data: 'Invalid facility Id or amendment Id provided' };
+  }
+};
+
+const getAmendmentByFacilityId = async (facilityId) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get the amendment by facility Id %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facility Id');
+    return { status: 400, data: 'Invalid facility Id provided' };
+  }
+};
+
+const getAmendmentsByDealId = async (dealId) => {
+  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get the amendment by deal Id %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid deal Id');
+    return { status: 400, data: 'Invalid deal Id provided' };
+  }
+};
+
+const getAmendmentInProgressByDealId = async (dealId) => {
+  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/status/in-progress`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get the amendment in progress by deal Id %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid deal Id');
+    return { status: 400, data: 'Invalid deal Id provided' };
+  }
+};
+
+const getCompletedAmendmentByDealId = async (dealId) => {
+  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/status/completed`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get the completed amendment by deal Id %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid deal Id');
+    return { status: 400, data: 'Invalid deal Id provided' };
+  }
+};
+
+const getLatestCompletedAmendmentByDealId = async (dealId) => {
+  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/status/completed/latest`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get the latest completed amendment by deal Id %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid deal Id');
+    return { status: 400, data: 'Invalid deal Id provided' };
+  }
+};
+
+const getAllAmendmentsInProgress = async () => {
+  const isValid = hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/amendments/status/in-progress`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get all amendments in progress %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid URL for central api');
+    return { status: 400, data: 'Invalid URL for central api' };
+  }
+};
+
 const updateGefFacility = async (facilityId, facilityUpdate) => {
   try {
     const response = await axios({
@@ -337,6 +593,22 @@ const findUserById = async (userId) => {
     });
     return response.data;
   } catch ({ response }) {
+    return false;
+  }
+};
+
+const findPortalUserById = async (userId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${centralApiUrl}/v1/user/${userId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch ({ response }) {
+    console.error('Error finding portal user', response);
     return false;
   }
 };
@@ -736,11 +1008,24 @@ module.exports = {
   findOneFacility,
   findFacilitesByDealId,
   updateFacility,
+  createFacilityAmendment,
+  updateFacilityAmendment,
+  getAmendmentInProgress,
+  getCompletedAmendment,
+  getLatestCompletedAmendment,
+  getAmendmentById,
+  getAmendmentByFacilityId,
+  getAmendmentsByDealId,
+  getAmendmentInProgressByDealId,
+  getCompletedAmendmentByDealId,
+  getLatestCompletedAmendmentByDealId,
+  getAllAmendmentsInProgress,
   updateGefFacility,
   queryDeals,
   getPartyDbInfo,
   findUser,
   findUserById,
+  findPortalUserById,
   updateUserTasks,
   findOneTeam,
   findTeamMembers,
