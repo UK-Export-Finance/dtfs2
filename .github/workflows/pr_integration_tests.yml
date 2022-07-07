@@ -26,12 +26,17 @@ jobs:
       environment: ${{ env.environment }}
     steps:
     - name: Initialise Environment
-      run: |
-        echo Setting environment to ${{ env.environment }}
+      run: echo Setting environment to ${{ env.environment }}
 
   portal-tests:
     name: Portal integration tests
     needs: set-environment
+
+    # Cancel Previous runs
+    concurrency:
+      group: portal-integration-tests-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     defaults:
@@ -40,10 +45,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v3
       with:
         node-version: '16'
-    - run: npm install --legacy-peer-deps
+        cache: 'npm'
+    - run: npm ci --legacy-peer-deps
     - run: npm run lint
     - run: npm t
     - uses: act10ns/slack@v1
@@ -58,6 +64,12 @@ jobs:
   gef-tests:
     name: GEF integration tests
     needs: set-environment
+
+    # Cancel Previous runs
+    concurrency:
+      group: gef-integration-tests-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     defaults:
@@ -66,10 +78,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v3
       with:
         node-version: '16'
-    - run: npm install --legacy-peer-deps
+        cache: 'npm'
+    - run: npm ci --legacy-peer-deps
     - run: npm run lint
     - run: npm t
     - uses: act10ns/slack@v1
@@ -84,6 +97,12 @@ jobs:
   tfm-tests:
     name: TFM integration tests
     needs: set-environment
+
+    # Cancel Previous runs
+    concurrency:
+      group: tfm-integration-tests-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     defaults:
@@ -92,10 +111,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v3
       with:
         node-version: '16'
-    - run: npm install --legacy-peer-deps
+        cache: 'npm'
+    - run: npm ci --legacy-peer-deps
     - run: npm run lint
     - run: npm t
     - uses: act10ns/slack@v1

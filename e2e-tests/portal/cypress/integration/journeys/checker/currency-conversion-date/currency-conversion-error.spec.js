@@ -1,5 +1,6 @@
 const { contract, contractConfirmSubmission } = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
+const { DEALS: { SECTION_STATUS } } = require('../../../../fixtures/constants');
 const { successMessage } = require('../../../partials');
 const firstSubmission = require('./deal-first-submission');
 const secondSubmission = require('./deal-second-submission');
@@ -52,6 +53,9 @@ context('First submission with currency conversion date more than 30 days in the
     cy.login(BANK1_CHECKER1);
 
     contract.visit(deal);
+    contract.aboutSupplierDetailsStatus().should(
+      (status) => expect(status).to.contain(SECTION_STATUS.INCOMPLETE),
+    );
     contract.proceedToSubmit().click();
 
     // submit with checkbox checked
@@ -105,6 +109,9 @@ context('Second submission (has submissionDate) with currency conversion date mo
     cy.login(BANK1_CHECKER1);
 
     contract.visit(deal);
+    contract.aboutSupplierDetailsStatus().should(
+      (status) => expect(status).to.contain(SECTION_STATUS.COMPLETED),
+    );
     contract.proceedToSubmit().click();
 
     // submit with checkbox checked
