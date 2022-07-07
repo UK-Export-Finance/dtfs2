@@ -137,7 +137,9 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
  * @returns {Object} DOF Response
  */
 const amendAcbsFacility = async (amendments: object) => {
-  if (amendments) {
+  const hasAcceptablePayload = Object.prototype.hasOwnProperty.call(amendments, 'coverEndDate') || Object.prototype.hasOwnProperty.call(amendments, 'amount');
+
+  if (amendments && hasAcceptablePayload) {
     const response = await axios({
       method: 'post',
       url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,

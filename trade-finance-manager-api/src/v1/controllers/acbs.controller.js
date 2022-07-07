@@ -148,7 +148,6 @@ const issueAcbsFacilities = async (deal) => {
 };
 
 const amendAcbsFacility = async (ukefFacilityId, amendments) => {
-  console.info(ukefFacilityId, amendments);
   api.amendACBSfacility(ukefFacilityId, amendments)
     .then((r) => console.info(r))
     .catch((e) => {
