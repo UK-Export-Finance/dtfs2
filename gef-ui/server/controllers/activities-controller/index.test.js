@@ -136,13 +136,13 @@ describe('getPortalActivities()', () => {
     jest.resetAllMocks();
   });
 
-  it('it should call getApplication to produce mojTimeline array format', async () => {
+  it('should call getApplication to produce mojTimeline array format', async () => {
     await getPortalActivities(mockRequest, mockResponse);
 
     expect(api.getApplication).toHaveBeenCalledWith(mockRequest.params.dealId);
   });
 
-  it('it should render application-activity template', async () => {
+  it('should render application-activity template', async () => {
     await getPortalActivities(mockRequest, mockResponse);
 
     const checker = await api.getUserDetails(mockApplicationResponse.checkerId, mockRequest.session.userToken);

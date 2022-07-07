@@ -33,11 +33,19 @@
       </a>
     {% endset %}
 
-    {% set facilityStage %}
+    {% set stage %}
       {% if facility.hasBeenIssued %}
         Issued
       {% else %}
         Unissued
+      {% endif %}
+    {% endset %}
+
+    {% set facilityStage %}
+      {% if facility.hasAmendmentInProgress === true %}
+        {{stage}} (amendment in progress)
+      {% else %}
+        {{stage}}
       {% endif %}
     {% endset %}
 

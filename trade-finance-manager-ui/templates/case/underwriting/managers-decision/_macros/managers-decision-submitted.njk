@@ -4,12 +4,9 @@
 {% macro render(params) %}
   {% set decision = params.decision %}
   {% set user = params.user %}
- 
+
   <div class="govuk-grid-row" data-cy="managers-decision-submitted">
       <div class="govuk-grid-column-full">
-
-      <h4 class="govuk-heading-l separator-line govuk-!-padding-top-6 govuk-!-margin-bottom-2" data-cy="managers-decision-subheading">Decision</h4>
-
       <div class="govuk-!-padding-bottom-7">
         {{statusTag.render({
           decision: decision.decision
@@ -39,7 +36,7 @@
       {% if decision.comments %}
         <div class="govuk-grid-row govuk-!-padding-bottom-4">
           <div class="govuk-grid-column-full">
-            
+
             {% if decision.decision === 'Declined' %}
               {% set commentsHeadingText = 'Reasons' %}
             {% else %}
@@ -59,7 +56,7 @@
           <div class="govuk-grid-column-full">
 
             <h4 class="govuk-heading-m govuk-!-font-weight-bold govuk-!-margin-bottom-1" data-cy="internal-comments-heading">Comments</h4>
-            <p class="ukef-heading-grey govuk-!-margin-top-0">Only UKEF staff will see this.</p>
+            <p class="ukef-hint-grey govuk-!-margin-top-0">Only UKEF staff will see this.</p>
             <p class="ukef-preserve-white-space" data-cy="internal-comments-value">{{ decision.internalComments | safe }}<p>
 
           </div>

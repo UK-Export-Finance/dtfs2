@@ -1,0 +1,34 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro render(params) %}
+  {% set csrfToken = params.csrfToken %}
+  {% set facilityId = params.facilityId %}
+  {% set showAmendmentButton = params.showAmendmentButton %}
+  {% set amendmentId = params.amendmentId %}
+  {% set amendmentVersion = params.amendmentVersion %}
+  {% set showContinueAmendmentButton = params.showContinueAmendmentButton %}
+
+  <div class="govuk-grid-row" data-cy="amendments">
+    <div class="govuk-grid-column-full">
+      {% if showAmendmentButton === true %}
+        <form method="post" data-cy="form">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {{ govukButton({
+            text: "Add an amendment request",
+            attributes: {
+              'data-cy': 'amendment--add-amendment-button'
+            }
+          }) }}
+        </form>
+      {% elif showContinueAmendmentButton === true %}
+        {{ govukButton({
+          text: "Continue with amendment request " + amendmentVersion,
+          attributes: {
+            'data-cy': 'amendment--continue-amendment-button'
+          },
+          href: facilityId + '/amendment/' + amendmentId + "/request-date"
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+{% endmacro %}

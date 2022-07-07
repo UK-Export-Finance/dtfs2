@@ -28,7 +28,16 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+  });
+
+  after(() => {
+    cy.clearCookies();
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
   });
 
   it('Portal deal is submitted to UKEF, `Good` credit rating is added to the deal in TFM', () => {
@@ -59,6 +68,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // user login to TFM
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.forceVisit(TFM_URL);
 
     cy.tfmLogin(UNDERWRITER_MANAGER_1);
@@ -67,7 +80,7 @@ context('Portal to TFM deal submission', () => {
     cy.forceVisit(tfmCaseDealPage);
 
     tfmPartials.caseSubNavigation.underwritingLink().click();
-    cy.url().should('eq', `${TFM_URL}/case/${dealId}/underwriting/pricing-and-risk`);
+    cy.url().should('eq', `${TFM_URL}/case/${dealId}/underwriting`);
 
     // assert elements/value in `pricing and risk` page
     tfmPages.underwritingPricingAndRiskPage.addRatingLink().should('not.exist');
@@ -76,6 +89,6 @@ context('Portal to TFM deal submission', () => {
       expect(text.trim()).to.equal('Acceptable (B+)');
     });
 
-    tfmPages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('be.visible');
+    tfmPages.underwritingPricingAndRiskPage.exporterTableChangeCreditRatingLink().should('exist');
   });
 });

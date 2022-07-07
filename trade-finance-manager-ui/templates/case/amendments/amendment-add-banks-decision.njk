@@ -1,0 +1,75 @@
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendment - What is the bank's decision
+{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+          'data-cy': 'amendment--error-summary'
+        },
+        classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+      }) }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--banks-decision-choice-heading" aria-label="What's the bank's decision?">What is the bank's decision?</h1>
+
+
+   <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {{ govukRadios({
+            name: "banksDecision",
+            items: [
+              {
+                value: "Proceed",
+                text: "Proceed",
+                checked: amendment.bankDecision.decision === 'Proceed',
+                attributes: {
+                  'data-cy': 'amendment--bank-decision-proceed-radio-button'
+                }
+              },
+              {
+                value: "Withdrawn",
+                text: "Withdraw",
+                checked: amendment.bankDecision.decision === 'Withdrawn',
+                attributes: {
+                  'data-cy': 'amendment--bank-decision-Withdraw-radio-button'
+                }
+              }
+            ],
+            errorMessage: errors and errors.fieldErrors.banksDecision and {
+            text: errors.fieldErrors.banksDecision.text,
+            attributes: {
+              'data-cy': 'amendment--inline-error'
+            }
+          }
+          }) }}
+
+          <div class="govuk-button-group">
+            {% if isEditable %}
+              {{ govukButton({
+                text: "Continue",
+                attributes: {
+                    "data-cy": "amendment--continue-button"
+                }
+                })
+              }}
+            {% endif %}
+            <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ amendment.dealId }}/underwriting" data-cy="amendment--cancel-button">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+{% endblock %}

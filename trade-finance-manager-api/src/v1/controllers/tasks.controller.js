@@ -1,24 +1,15 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
-const {
-  getGroupById,
-  getTaskInGroupById,
-  isAdverseHistoryTaskIsComplete,
-  shouldUpdateDealStage,
-} = require('../helpers/tasks');
+const { getGroupById, getTaskInGroupById, isAdverseHistoryTaskIsComplete, shouldUpdateDealStage } = require('../helpers/tasks');
 const mapTaskObject = require('../tasks/map-task-object');
 const mapTaskHistoryObject = require('../tasks/map-task-history-object');
-const {
-  previousTaskIsComplete,
-  taskCanBeEditedWithoutPreviousTaskComplete,
-  handleTaskEditFlagAndStatus,
-} = require('../tasks/tasks-edit-logic');
+const { previousTaskIsComplete, taskCanBeEditedWithoutPreviousTaskComplete, handleTaskEditFlagAndStatus } = require('../tasks/tasks-edit-logic');
 const sendUpdatedTaskEmail = require('./task-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 
 /**
-* Update a task in the task's group.
-* */
+ * Update a task in the task's group.
+ * */
 const updateTask = (allTaskGroups, taskUpdate) =>
   allTaskGroups.map((tGroup) => {
     let group = tGroup;
@@ -28,8 +19,7 @@ const updateTask = (allTaskGroups, taskUpdate) =>
       groupTasks: group.groupTasks.map((t) => {
         let task = t;
 
-        if (task.id === taskUpdate.id
-          && task.groupId === taskUpdate.groupId) {
+        if (task.id === taskUpdate.id && task.groupId === taskUpdate.groupId) {
           task = {
             ...task,
             ...taskUpdate,
@@ -47,14 +37,7 @@ const updateTask = (allTaskGroups, taskUpdate) =>
  * Update all tasks canEdit flag and status
  * Depending on what task has been changed.
  * */
-const updateAllTasks = async (
-  allTaskGroups,
-  groupId,
-  taskUpdate,
-  statusFrom,
-  deal,
-  urlOrigin,
-) => {
+const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, statusFrom, deal, urlOrigin) => {
   const taskEmailsToSend = [];
 
   let taskGroups = allTaskGroups.map((tGroup) => {
@@ -65,27 +48,19 @@ const updateAllTasks = async (
       groupTasks: group.groupTasks.map((t) => {
         const task = t;
 
-        const isTaskThatIsBeingUpdated = (
-          task.id === taskUpdate.id
-          && task.groupId === taskUpdate.groupId);
+        const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
-        const {
-          updatedTask,
-          sendEmail,
-        } = handleTaskEditFlagAndStatus(
-          allTaskGroups,
-          group,
-          task,
-          isTaskThatIsBeingUpdated,
-        );
+        const { updatedTask, sendEmail } = handleTaskEditFlagAndStatus(allTaskGroups, group, task, isTaskThatIsBeingUpdated);
 
         if (isTaskThatIsBeingUpdated) {
-          updatedTask.history.push(mapTaskHistoryObject({
-            statusFrom,
-            statusTo: taskUpdate.status,
-            assignedUserId: taskUpdate.assignedTo.userId,
-            updatedBy: taskUpdate.updatedBy,
-          }));
+          updatedTask.history.push(
+            mapTaskHistoryObject({
+              statusFrom,
+              statusTo: taskUpdate.status,
+              assignedUserId: taskUpdate.assignedTo.userId,
+              updatedBy: taskUpdate.updatedBy,
+            }),
+          );
         }
 
         if (sendEmail) {
@@ -111,20 +86,16 @@ const updateAllTasks = async (
 
       if (group.groupTitle === CONSTANTS.TASKS.GROUP_TITLES.UNDERWRITING) {
         group.groupTasks = group.groupTasks.map((task) => {
-          const isTaskThatIsBeingUpdated = (
-            task.id === taskUpdate.id
-            && task.groupId === taskUpdate.groupId);
+          const isTaskThatIsBeingUpdated = task.id === taskUpdate.id && task.groupId === taskUpdate.groupId;
 
           // add the task to list of emails to be sent
-          const shouldSendEmail = (!isTaskThatIsBeingUpdated && !task.emailSent);
+          const shouldSendEmail = !isTaskThatIsBeingUpdated && !task.emailSent;
           if (shouldSendEmail) {
             taskEmailsToSend.push(task);
           }
 
           // unlock the task
-          const shouldUnlock = (!isTaskThatIsBeingUpdated
-            && !task.canEdit
-            && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START);
+          const shouldUnlock = !isTaskThatIsBeingUpdated && !task.canEdit && task.status === CONSTANTS.TASKS.STATUS.CANNOT_START;
 
           if (shouldUnlock) {
             return {
@@ -149,11 +120,7 @@ const updateAllTasks = async (
   const emailPromises = [];
 
   taskEmailsToSend.forEach((task) => {
-    emailPromises.push(sendUpdatedTaskEmail(
-      task,
-      deal,
-      urlOrigin,
-    ));
+    emailPromises.push(sendUpdatedTaskEmail(task, deal, urlOrigin));
   });
 
   const emailsResponse = await Promise.all(emailPromises);
@@ -213,12 +180,7 @@ const updateTfmTask = async (dealId, taskUpdate) => {
 
   const allTasks = deal.tfm.tasks;
 
-  const {
-    id: taskIdToUpdate,
-    groupId,
-    status: statusTo,
-    urlOrigin,
-  } = taskUpdate;
+  const { id: taskIdToUpdate, groupId, status: statusTo, urlOrigin } = taskUpdate;
 
   const group = getGroupById(allTasks, groupId);
   const originalTask = getTaskInGroupById(group.groupTasks, taskIdToUpdate);
@@ -226,9 +188,7 @@ const updateTfmTask = async (dealId, taskUpdate) => {
 
   const updatedTask = await mapTaskObject(originalTask, taskUpdate, statusFrom);
 
-  const canUpdateTask = (
-    previousTaskIsComplete(allTasks, group, updatedTask.id)
-    || taskCanBeEditedWithoutPreviousTaskComplete(group, updatedTask));
+  const canUpdateTask = previousTaskIsComplete(allTasks, group, updatedTask.id) || taskCanBeEditedWithoutPreviousTaskComplete(group, updatedTask);
 
   if (canUpdateTask) {
     /**
@@ -243,14 +203,7 @@ const updateTfmTask = async (dealId, taskUpdate) => {
      * Some other special conditions are in here:
      * - e.g if X task is completed, an entire group of tasks can be started.
      * */
-    const modifiedTasksWithEditStatus = await updateAllTasks(
-      modifiedTasks,
-      groupId,
-      updatedTask,
-      statusFrom,
-      deal,
-      urlOrigin,
-    );
+    const modifiedTasksWithEditStatus = await updateAllTasks(modifiedTasks, groupId, updatedTask, statusFrom, deal, urlOrigin);
 
     /**
      * Construct TFM update object
@@ -266,13 +219,7 @@ const updateTfmTask = async (dealId, taskUpdate) => {
      * and the first task status is being changed to in progress or is completed immediately,
      * the TFM deal stage needs to change to 'in progress'.
      * */
-    const updateDealStage = shouldUpdateDealStage(
-      deal.submissionType,
-      taskIdToUpdate,
-      groupId,
-      statusFrom,
-      statusTo,
-    );
+    const updateDealStage = shouldUpdateDealStage(deal.submissionType, taskIdToUpdate, groupId, statusFrom, statusTo);
 
     if (updateDealStage) {
       tfmDealUpdate.tfm.stage = CONSTANTS.DEALS.DEAL_STAGE_TFM.IN_PROGRESS_BY_UKEF;

@@ -1,15 +1,33 @@
+const { format, fromUnixTime } = require('date-fns');
 const api = require('../../api');
-const { getTask } = require('./helpers');
+const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpers');
+const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
+const { filterTasks } = require('../helpers/tasks.helper');
+const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
+
+const {
+  DEAL,
+  TASKS,
+  AMENDMENTS,
+  DECISIONS: { UNDERWRITER_MANAGER_DECISIONS, UNDERWRITER_MANAGER_DECISIONS_TAGS },
+} = CONSTANTS;
 
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
 
   const deal = await api.getDeal(dealId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
+  }
+
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
   return res.render('case/deal/deal.njk', {
@@ -19,6 +37,9 @@ const getCaseDeal = async (req, res) => {
     activeSubNavigation: 'deal',
     dealId,
     user: req.session.user,
+    amendments,
+    amendmentsInProgress,
+    hasAmendmentInProgress,
   });
 };
 
@@ -29,14 +50,28 @@ const getCaseTasks = async (req, res) => {
 
   // default filter
   const tasksFilters = {
-    filterType: CONSTANTS.TASKS.FILTER_TYPES.USER,
+    filterType: TASKS.FILTER_TYPES.USER,
     userId,
   };
 
   const deal = await api.getDeal(dealId, tasksFilters);
-
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
   if (!deal) {
     return res.redirect('/not-found');
+  }
+
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+
+  if (amendments.length > 0) {
+    amendments.map((a) => {
+      const amendment = a;
+      amendment.tasks = filterTasks(amendment.tasks, tasksFilters);
+      return amendment;
+    });
   }
 
   return res.render('case/tasks/tasks.njk', {
@@ -47,7 +82,9 @@ const getCaseTasks = async (req, res) => {
     activeSubNavigation: 'tasks',
     dealId,
     user: req.session.user,
-    selectedTaskFilter: CONSTANTS.TASKS.FILTER_TYPES.USER,
+    selectedTaskFilter: TASKS.FILTER_TYPES.USER,
+    amendments,
+    hasAmendmentInProgress,
   });
 };
 
@@ -72,6 +109,25 @@ const filterCaseTasks = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  if (!deal) {
+    return res.redirect('/not-found');
+  }
+
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+
+  if (amendments.length > 0) {
+    amendments.map((a) => {
+      const amendment = a;
+      amendment.tasks = filterTasks(amendment.tasks, tasksFilters);
+      return amendment;
+    });
+  }
+
   return res.render('case/tasks/tasks.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
@@ -81,6 +137,8 @@ const filterCaseTasks = async (req, res) => {
     dealId,
     user: req.session.user,
     selectedTaskFilter: filterType,
+    amendments,
+    hasAmendmentInProgress,
   });
 };
 
@@ -107,11 +165,7 @@ const getCaseTask = async (req, res) => {
 
   const allTeamMembers = await api.getTeamMembers(task.team.id);
 
-  const assignToSelectOptions = mapAssignToSelectOptions(
-    task.assignedTo.userId,
-    user,
-    allTeamMembers,
-  );
+  const assignToSelectOptions = mapAssignToSelectOptions(task.assignedTo.userId, user, allTeamMembers);
 
   return res.render('case/tasks/task.njk', {
     deal: deal.dealSnapshot,
@@ -157,16 +211,75 @@ const putCaseTask = async (req, res) => {
   return res.redirect(`/case/${dealId}/tasks`);
 };
 
+const formatAmendmentDetails = (allAmendments) => {
+  const allCompletedAmendments = [];
+  if (allAmendments.length) {
+    Object.values(allAmendments).forEach((value) => {
+      // deep clone the object
+      const item = { ...value };
+      item.requestDate = value?.requestDate ? format(fromUnixTime(item.requestDate), 'dd MMMM yyyy') : null;
+      item.coverEndDate = value?.coverEndDate ? format(fromUnixTime(item.coverEndDate), 'dd MMMM yyyy') : null;
+      item.value = value?.value ? `${value.currency} ${formattedNumber(value.value)}` : null;
+      item.requireUkefApproval = value?.requireUkefApproval ? 'Yes' : 'No';
+      // if bankDecision submitted, then adds decision, else adds awaiting decision (locally)
+      item.banksDecision = value?.bankDecision?.submitted ? value?.bankDecision?.decision : AMENDMENTS.AMENDMENT_BANK_DECISION.AWAITING_DECISION;
+      // checks if coverEndDate/facility value or both on an amendment request are declined
+      if (value?.ukefDecision?.submitted) {
+        if (ukefDecisionRejected(value)) {
+          // sets bank decision to not applicable locally
+          item.banksDecision = AMENDMENTS.AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
+        }
+      }
+      item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+      item.bankDecisionTags = AMENDMENTS.BANK_DECISIONS_TAGS;
+
+      if (value?.requireUkefApproval) {
+        item.ukefDecisionValue = value?.ukefDecision?.submitted ? value?.ukefDecision?.value : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+        item.ukefDecisionCoverEndDate = value?.ukefDecision?.submitted ? value?.ukefDecision?.coverEndDate : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+        item.effectiveDate = value?.bankDecision?.effectiveDate ? format(fromUnixTime(item.bankDecision.effectiveDate), 'dd MMMM yyyy') : null;
+      } else {
+        item.ukefDecisionValue = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
+        item.ukefDecisionCoverEndDate = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
+        item.effectiveDate = value?.effectiveDate ? format(fromUnixTime(item.effectiveDate), 'dd MMMM yyyy') : null;
+      }
+
+      if (value?.changeCoverEndDate && value?.currentCoverEndDate) {
+        item.currentCoverEndDate = format(fromUnixTime(value?.currentCoverEndDate), 'dd MMMM yyyy');
+      }
+
+      if (value?.changeFacilityValue && value?.currentValue) {
+        item.currentValue = `${value.currency} ${formattedNumber(value.currentValue)}`;
+      }
+
+      allCompletedAmendments.push(item);
+    });
+  }
+  return allCompletedAmendments;
+};
+
 const getCaseFacility = async (req, res) => {
-  const { facilityId } = req.params;
+  const { _id: dealId, facilityId } = req.params;
   const facility = await api.getFacility(facilityId);
+  const { data: amendment } = await api.getAmendmentInProgress(facilityId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  const { data: allAmendmentsByFacilityId } = await api.getAmendmentsByFacilityId(facilityId);
 
   if (!facility) {
     return res.redirect('/not-found');
   }
 
-  const { dealId } = facility.facilitySnapshot;
+  const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
+
   const deal = await api.getDeal(dealId);
+
+  const hasAmendmentInProgressButton = amendment.status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+  const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
+
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
 
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
@@ -178,16 +291,39 @@ const getCaseFacility = async (req, res) => {
     facilityId,
     facilityTfm: facility.tfm,
     user: req.session.user,
+    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendment.amendmentId,
+    showContinueAmendmentButton,
+    amendmentId: amendment?.amendmentId,
+    amendmentVersion: amendment?.version,
+    hasAmendmentInProgress,
+    hasAmendmentInProgressButton,
+    allAmendments,
+    amendments,
+    amendmentsInProgress,
   });
+};
+
+const postFacilityAmendment = async (req, res) => {
+  const { _id: dealId, facilityId } = req.params;
+  const { amendmentId } = await api.createFacilityAmendment(facilityId);
+
+  return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-date`);
 };
 
 const getCaseDocuments = async (req, res) => {
   const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
+
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
 
   return res.render('case/documents/documents.njk', {
     deal: deal.dealSnapshot,
@@ -197,6 +333,8 @@ const getCaseDocuments = async (req, res) => {
     activeSubNavigation: 'documents',
     dealId,
     user: req.session.user,
+    hasAmendmentInProgress,
+    amendmentsInProgress,
   });
 };
 
@@ -238,6 +376,7 @@ module.exports = {
   getCaseTask,
   putCaseTask,
   getCaseFacility,
+  postFacilityAmendment,
   getCaseDocuments,
   postTfmFacility,
 };

@@ -1,0 +1,28 @@
+ {% from "moj/components/banner/macro.njk" import mojBanner %}
+
+ {% macro render(params) %}
+  {% set hasAmendmentInProgress = params.hasAmendmentInProgress %}
+  {% set amendmentsInProgress = params.amendmentsInProgress %}
+
+  {% if hasAmendmentInProgress === true %}
+      {% if amendmentsInProgress %}
+        {% set bannerHtml %}
+          <p class="govuk-body" data-cy="amendment--in-progress-bar">Amendment in progress for
+          {% for amendment in amendmentsInProgress %}
+            <a href="/case/{{amendment.dealId}}/facility/{{amendment.facilityId}}#amendments" data-cy="amendment--in-progress-bar-link"> facility {{amendment.ukefFacilityId}} </a>
+            {% if loop.index < amendmentsInProgress.length %}
+              ,
+            {% endif %}
+          {% endfor %}
+          </p>
+        {% endset %}
+
+        {{ mojBanner({
+          type: 'information',
+          classes: 'govuk-!-margin-bottom-0 govuk-!-margin-top-6',
+          html: bannerHtml
+        }) }}
+      {% endif %}
+  {% endif %}
+
+{% endmacro %}

@@ -1,0 +1,64 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% import '../_macros/summary-table.njk' as summary %}
+
+<div class="govuk-grid-row" data-cy="managers-decision-submitted">
+  <div class="govuk-grid-column-full">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="decision-made-by-heading">Decision made by</h4>
+      </div>
+
+      <div class="govuk-grid-column-three-quarters">
+        <p class="govuk-body-s" data-cy="decision-made-by-value">{{ amendment.ukefDecision.submittedBy.name }}</p>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-padding-bottom-4">
+      <div class="govuk-grid-column-one-quarter">
+        <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="date-time-heading">Date and time</h4>
+      </div>
+
+      <div class="govuk-grid-column-three-quarters">
+        <p class="govuk-body-s" data-cy="date-time-value">{{ amendment.ukefDecision.submittedAt }}</p>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row govuk-!-margin-top-5" data-cy="amendment--details-{{amendment.version}}">
+      <div class="govuk-grid-column-full">
+        {{ summary.render(amendment) }}
+      </div>
+    </div>
+
+    {% if amendment.ukefDecision.conditions %}
+      <div class="govuk-grid-row govuk-!-padding-bottom-4">
+        <div class="govuk-grid-column-full">
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Conditions</h3>
+          <p class="govuk-body ukef-conditions--hint">Sent to the bank.</p>
+          <p class="ukef-preserve-white-space" data-cy="conditions-value">{{ amendment.ukefDecision.conditions | safe }}</p>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if amendment.ukefDecision.declined %}
+      <div class="govuk-grid-row govuk-!-padding-bottom-4">
+        <div class="govuk-grid-column-full">
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Reasons</h3>
+          <p class="govuk-body ukef-conditions--hint">Sent to the bank.</p>
+          <p class="ukef-preserve-white-space" data-cy="conditions-value">{{ amendment.ukefDecision.declined | safe }}</p>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if amendment.ukefDecision.comments %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Comments</h3>
+          <p class="govuk-body ukef-conditions--hint">Only UKEF staff will see this.</p>
+          <p class="ukef-preserve-white-space" data-cy="internal-comments-value">{{ amendment.ukefDecision.comments | safe }}<p>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+
+</div>

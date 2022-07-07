@@ -33,6 +33,7 @@ describe('GET activity', () => {
 
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
+      api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
     });
 
     it('should render template with data', async () => {
@@ -57,6 +58,8 @@ describe('GET activity', () => {
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
           activities,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         },
       );
     });
@@ -65,6 +68,7 @@ describe('GET activity', () => {
   describe('when deal does NOT exist', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve();
+      api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
     });
 
     it('should redirect to not-found route', async () => {
@@ -133,6 +137,7 @@ describe('POST activity (filter)', () => {
   describe('when deal exists', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
+      api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
     });
 
     it('should render filtered activities with data', async () => {
@@ -160,6 +165,8 @@ describe('POST activity (filter)', () => {
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.COMMENT,
           activities,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         },
       );
     });
@@ -168,6 +175,7 @@ describe('POST activity (filter)', () => {
   describe('when deal does NOT exist', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve();
+      api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
     });
 
     it('should redirect to not-found route', async () => {
@@ -204,6 +212,7 @@ describe('GET activity - post-comment', () => {
   describe('when deal exists', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
+      api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
     });
 
     it('should render the comment box', async () => {
@@ -229,6 +238,7 @@ describe('GET activity - post-comment', () => {
   describe('when deal does NOT exist', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve();
+      api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
     });
 
     it('should redirect to not-found route', async () => {
@@ -265,6 +275,7 @@ describe('POST activity - post-comment', () => {
   describe('when deal exists', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve(mockDeal);
+      api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
     });
 
     it('should return to comment box with errors if longer than 1000 characters', async () => {
@@ -320,9 +331,12 @@ describe('POST activity - post-comment', () => {
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
           activities,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         },
       );
     });
+
     it('should return render activities page with all-activity filter after not posting a comment', async () => {
       const req = {
         params: {
@@ -347,6 +361,8 @@ describe('POST activity - post-comment', () => {
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
           activities,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         },
       );
     });
@@ -355,6 +371,7 @@ describe('POST activity - post-comment', () => {
   describe('when deal does NOT exist', () => {
     beforeEach(() => {
       api.getDeal = () => Promise.resolve();
+      api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
     });
 
     it('should redirect to not-found route', async () => {

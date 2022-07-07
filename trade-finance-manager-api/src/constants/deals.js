@@ -59,6 +59,22 @@ const TFM_SORT_BY = {
   DESCENDING: 'descending',
 };
 
+const AMENDMENT_UW_DECISION = {
+  APPROVED_WITH_CONDITIONS: 'Approved with conditions',
+  APPROVED_WITHOUT_CONDITIONS: 'Approved without conditions',
+  DECLINED: 'Declined',
+};
+
+const AMENDMENT_TYPE = {
+  VALUE: 'facility value',
+  COVER_END_DATE: 'cover end date',
+};
+
+const AMENDMENT_BANK_DECISION = {
+  PROCEED: 'Proceed',
+  WITHDRAW: 'Withdrawn',
+};
+
 module.exports = {
   DEAL_TYPE,
   DEAL_PRODUCT_CODE,
@@ -70,4 +86,7 @@ module.exports = {
   PORTAL_DEAL_STATUS,
   DEAL_COMMENT_TYPE_PORTAL,
   TFM_SORT_BY,
+  AMENDMENT_UW_DECISION,
+  AMENDMENT_TYPE,
+  AMENDMENT_BANK_DECISION,
 };
