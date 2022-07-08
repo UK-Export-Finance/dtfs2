@@ -556,7 +556,7 @@ const deal = {
   ukefComments: [
     {
       user: {
-        username: 'DigitalService.TradeFinance@ukexportfinance.gov.uk',
+        username: 'test@test.com',
         firstname: 'UKEF',
         surname: '',
         roles: [
