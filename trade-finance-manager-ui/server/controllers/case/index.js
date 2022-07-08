@@ -232,6 +232,13 @@ const formatAmendmentDetails = (allAmendments) => {
           item.banksDecision = AMENDMENTS.AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
         }
       }
+
+      if (value?.ukefDecision?.submitted) {
+        const date = format(fromUnixTime(value.ukefDecision.submittedAt), 'dd MMMM yyyy');
+        const time = format(fromUnixTime(value.ukefDecision.submittedAt), 'HH:mm aaa');
+        item.ukefDecision.submittedAt = `${date} at ${time}`;
+      }
+
       item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
       item.bankDecisionTags = AMENDMENTS.BANK_DECISIONS_TAGS;
 
