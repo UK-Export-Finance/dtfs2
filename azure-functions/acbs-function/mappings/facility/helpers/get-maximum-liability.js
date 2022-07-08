@@ -5,14 +5,22 @@
  * @returns {Float} Facility UKEF exposure amount
  */
 const getMaximumLiability = (facility, overallAmount = false) => {
-  const value = overallAmount
+  let value = 0;
+
+  if (facility.facilitySnapshot) {
+  value = overallAmount
     ? facility.facilitySnapshot.value
     : facility.facilitySnapshot.ukefExposure;
+  } else if (facility.amendment) {
+    // UKEF Exposure pre-calculated
+    value = facility.amendment.amount;
+  }
 
-  const amount = typeof value !== 'number'
+  const amount = typeof value === 'string'
     ? value.replace(/,/g, '')
     : value;
 
   return Number(Number(amount).toFixed(2));
 };
+
 module.exports = getMaximumLiability;

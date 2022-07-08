@@ -765,7 +765,7 @@ const updateACBSfacility = async (facility, deal) => {
  * @param {Object} amendments Facility object comprising of amendments
  * @returns {Object} updated FMR upon success otherwise error
  */
-const amendACBSfacility = async (ukefFacilityId, amendments) => {
+const amendACBSfacility = async (ukefFacilityId, amendments, deal) => {
   if (amendments) {
     try {
       const response = await axios({
@@ -776,6 +776,7 @@ const amendACBSfacility = async (ukefFacilityId, amendments) => {
         },
         data: {
           amendments,
+          deal,
         },
       });
       return response.data;

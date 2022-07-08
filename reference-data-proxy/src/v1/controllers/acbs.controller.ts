@@ -163,12 +163,13 @@ const amendAcbsFacility = async (amendment: object) => {
 export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   if (req) {
     const { id } = req.params;
-    const { amendments } = req.body;
+    const { amendments, deal } = req.body;
     // Construct payload
     const payload = {
       facilityId: id,
       coverEndDate: amendments.coverEndDate,
-      amount: amendments.value,
+      amount: amendments.ukefExposure,
+      deal,
     };
 
     // Refine payload

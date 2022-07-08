@@ -222,9 +222,11 @@ const canSendToAcbs = (amendment) => {
   const completed = amendment.status === AMENDMENT_STATUS.COMPLETED;
   // Amendment has been submitted by PIM team
   const PIM = Boolean(amendment.submittedByPim);
+  // Manual amendment verification
+  const manual = Boolean(amendment.requireUkefApproval) && Boolean(amendment.bankDecision);
 
   // Manual amendment
-  if (amendment.requireUkefApproval) {
+  if (manual) {
     // Bank Decision
     const { submitted, decision } = amendment.bankDecision;
     // Bank has accepted the UW decision
@@ -274,6 +276,23 @@ const sendFirstTaskEmail = async (taskVariables) => {
   }
 };
 
+/**
+ * Calculates UKEF Exposure for the defined facility
+ * based on updated facility amount and original cover percentage.
+ * @param {Object} payload Amendment payload
+ * @returns {Object} Computed payload with `ukefExposure` property calculated.
+ */
+const calculateUkefExposure = (payload) => {
+  if (payload?.value && payload?.coveredPercentage) {
+    return {
+      ...payload,
+      ukefExposure: payload.value * (payload.coveredPercentage / 100),
+    };
+  }
+
+  return payload;
+};
+
 module.exports = {
   amendmentEmailEligible,
   sendAutomaticAmendmentEmail,
@@ -281,4 +300,5 @@ module.exports = {
   sendManualBankDecisionEmail,
   canSendToAcbs,
   sendFirstTaskEmail,
+  calculateUkefExposure,
 };

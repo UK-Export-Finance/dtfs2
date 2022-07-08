@@ -29,14 +29,15 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
   const { amendment } = context.df.getInput();
 
   // UKEF Facility ID exists in the payload
-  const hasFacilityId = Object.prototype.hasOwnProperty.call(amendment, 'facilityId');
+  const hasFacilityId = Boolean(amendment.facilityId);
   // At least one of the amendment exists in the payload
-  const hasAmendment = Object.prototype.hasOwnProperty.call(amendment, 'amount')
-  || Object.prototype.hasOwnProperty.call(amendment, 'coverEndDate');
+  const hasAmendment = Boolean(amendment.amount) || Boolean(amendment.coverEndDate);
+  // Deal properties existence check
+  const hasDeal = amendment.deal && Object.prototype.hasOwnProperty.call(amendment.deal, 'dealSnapshot');
 
   // Payload verification
-  if (hasFacilityId && hasAmendment) {
-    const { facilityId } = amendment;
+  if (hasFacilityId && hasAmendment && hasDeal) {
+    const { deal, facilityId } = amendment;
     //1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
     const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry(
       'activity-get-facility-master',
@@ -45,19 +46,37 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
     );
 
     if (!!fmr && !!etag) {
+      const amendments = {
+        amendment,
+      };
       //2.1. FMR amendment mapping
-      const fmrAmended = mappings.facility.facilityMasterAmend(fmr, amendment);
-      console.log('==>', { fmrAmended });
+      const fmrAmend = mappings.facility.facilityMasterAmend(fmr, amendments, deal);
+
+      //2.2. FMR update
+      const fmrAmended = yield context.df.callActivityWithRetry(
+        'activity-update-facility-master',
+        retryOptions,
+        {
+          facilityId,
+          acbsFacilityMasterInput: fmrAmend,
+          updateType: 'amendAmount',
+          etag,
+        }
+      );
+
+      return {
+        fmrAmended
+      };
     } else {
       console.error('ACBS facility amendment error : Unable to retrieve FMR.');
     }
 
   } else {
-    console.error('ACBS facility amendment error : Empty argument(s) provided');
+    console.error('ACBS facility amendment error : Empty or invalid argument(s) provided');
   }
-
 } catch (e) {
-  console.error('ACBS facility amendment error : ', { e });
-  return {};
+  console.error(`ACBS facility amendment error : ${e}`);
 }
+
+return {};
 });

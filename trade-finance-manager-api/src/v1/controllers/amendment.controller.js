@@ -9,6 +9,7 @@ const {
   sendManualBankDecisionEmail,
   canSendToAcbs,
   sendFirstTaskEmail,
+  calculateUkefExposure,
 } = require('../helpers/amendment.helpers');
 
 const getAmendmentInProgress = async (req, res) => {
@@ -149,7 +150,10 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
 
 const updateFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
-  const payload = req.body;
+  let payload = req.body;
+
+  /** Payload computation */
+  // Tasks
   if (payload.createTasks && payload.submittedByPim) {
     const tasks = createAmendmentTasks(payload.requireUkefApproval);
     payload.tasks = tasks;
@@ -163,26 +167,37 @@ const updateFacilityAmendment = async (req, res) => {
     payload.ukefDecision = { isReadyForApproval: isRiskAnalysisCompleted(tasks) };
     delete payload.taskUpdate;
   }
+  // UKEF Exposure
+  payload = calculateUkefExposure(payload);
 
+  // Update Amendment
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
   // sends email if conditions are met
   await sendAmendmentEmail(amendmentId, facilityId);
-  // Fetch Amendment
+
+  // Fetch complete amendment object
   const amendment = await api.getAmendmentById(facilityId, amendmentId);
-  if (amendment) {
-    // Fetch Facility
-    const facility = await api.findOneFacility(facilityId);
-    if (facility && facility.facilitySnapshot) {
-      const { ukefFacilityId } = facility.facilitySnapshot;
-      // ACBS Interaction
-      if (canSendToAcbs(amendment) && ukefFacilityId) {
-        acbs.amendAcbsFacility(ukefFacilityId, amendment);
-      }
-    } else {
-      console.error(`Unable to fetch facility ${facilityId}.`);
+  // Fetch deal object from deal-tfm
+  const tfmDeal = await api.findOneDeal(amendment.dealId);
+  // Construct acceptable deal object
+  const deal = {
+    dealSnapshot: {
+      dealType: tfmDeal.dealSnapshot.dealType,
+      submissionType: tfmDeal.dealSnapshot.submissionType,
+      submissionDate: tfmDeal.dealSnapshot.submissionDate,
+    },
+    exporter: {
+      companyName: tfmDeal.dealSnapshot.exporter.companyName,
+    },
+  };
+
+  // Amendment null & property existence check
+  if (amendment.ukefFacilityId && tfmDeal.tfm) {
+    const { ukefFacilityId } = amendment;
+    // ACBS Interaction
+    if (canSendToAcbs(amendment)) {
+      acbs.amendAcbsFacility(ukefFacilityId, amendment, deal);
     }
-  } else {
-    console.error(`Unable to fetch amendment ${amendmentId}.`);
   }
 
   if (createdAmendment) {

@@ -147,9 +147,9 @@ const issueAcbsFacilities = async (deal) => {
   return acbsIssueFacilityTasks;
 };
 
-const amendAcbsFacility = async (ukefFacilityId, amendments) => {
-  api.amendACBSfacility(ukefFacilityId, amendments)
-    .then((r) => console.info('RESPONSE===', r))
+const amendAcbsFacility = async (ukefFacilityId, amendments, deal) => {
+  api.amendACBSfacility(ukefFacilityId, amendments, deal)
+    .then((r) => console.log('RESPONSE===', r))
     .catch((e) => {
       console.error('Unable to amend facility: ', { e });
     });

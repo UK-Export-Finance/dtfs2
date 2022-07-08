@@ -46,13 +46,16 @@
  * 2. Facility cover end date
  * @param {Object} fmr Facility Master Record
  * @param {Object} amendments Facility amendment(s)
+ * @param {Object} deal Deal object
  * @returns {Object} Facility Master Record (FMR) amended
  */
-const facilityMasterAmend = (fmr, amendments) => {
+const facilityMasterAmend = (fmr, amendments, deal) => {
   try {
   return {
   ...fmr,
   maximumLiability: helpers.getMaximumLiability(amendments),
+  productTypeName: deal.dealSnapshot.dealType,
+  obligorName: deal.exporter.companyName.substring(0, 35),
 }
   } catch (e) {
     console.error('Unable to map facility master amendment record: ', { e });
