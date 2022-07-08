@@ -1,4 +1,4 @@
-const dealAllAcknowledged = require('./deal');
+const mockDeal = require('../../../../fixtures/deal');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { nowPlusDays } = require('../../../../support/utils/dateFuncs');
 
@@ -6,7 +6,7 @@ const date = new Date();
 const datePlusDay = nowPlusDays(1);
 
 const deal = {
-  ...dealAllAcknowledged,
+  ...mockDeal,
   mockFacilities: [
     {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,

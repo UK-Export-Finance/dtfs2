@@ -8,7 +8,7 @@ const {
 const { SUBMISSION_TYPE } = require('../../../constants/deal');
 const { DEAL_STATUS } = require('../../../constants/facilities');
 
-const isValidForValidation = (deal, submittedValues) => {
+const isReadyForValidation = (deal, submittedValues) => {
   const { submissionType } = deal;
   const { status } = submittedValues;
 
@@ -26,7 +26,7 @@ module.exports = (submittedValues, deal, errorList) => {
     'coverEndDate-year': coverEndDateYear,
   } = submittedValues;
 
-  if (isValidForValidation(deal, submittedValues)) {
+  if (isReadyForValidation(deal, submittedValues)) {
     if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       const formattedDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
       const nowDate = moment().format('YYYY-MM-DD');
