@@ -27,13 +27,18 @@ const getDeal = async (id, tasksFilters, activityFilters) => {
     activityFilters,
   };
 
-  const response = await apollo('GET', dealQuery, queryParams);
+  try {
+    const response = await apollo('GET', dealQuery, queryParams);
 
-  if (response.errors || response.networkError) {
-    console.error('TFM UI - GraphQL error querying deal ', response.errors || response.networkError.result.errors);
+    if (response.errors || response.networkError) {
+      console.error('TFM UI - GraphQL error querying deal ', response.errors || response.networkError.result.errors);
+    }
+
+    return response.data.deal;
+  } catch (err) {
+    console.error(`TFM UI - GraphQL error querying deal ${id}`, { err });
+    return null;
   }
-
-  return response.data.deal;
 };
 
 const getFacilities = async (queryParams) => {
