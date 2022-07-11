@@ -2,8 +2,8 @@ const pages = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 const dealAllAcknowledged = require('./deal');
-const dealCoverEndDatesPast = require('./dealFacilityNotAcknowledged');
 const MOCK_USERS = require('../../../../fixtures/users');
+const CONSTANTS = require('../../../../fixtures/constants');
 
 const {
   ADMIN,
@@ -31,8 +31,8 @@ context('Checker tries to submit a deal that has changed/newly issued facilities
           const { mockFacilities } = dealAllAcknowledged;
 
           cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-            const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-            const loans = createdFacilities.filter((f) => f.type === 'Loan');
+            const bonds = createdFacilities.filter((f) => f.type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND);
+            const loans = createdFacilities.filter((f) => f.type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN);
 
             dealFacilities.bonds = bonds;
             dealFacilities.loans = loans;
@@ -79,12 +79,13 @@ context('Checker tries to submit a deal that has changed/newly issued facilities
 
     before(() => {
       cy.deleteDeals(ADMIN);
-      cy.insertOneDeal(dealCoverEndDatesPast, BANK1_MAKER1)
+      cy.insertOneDeal(dealAllAcknowledged, BANK1_MAKER1)
         .then((insertedDeal) => {
           deal = insertedDeal;
           dealId = deal._id;
 
-          const { mockFacilities } = dealCoverEndDatesPast;
+          const { mockFacilities } = dealAllAcknowledged;
+          mockFacilities[0].status = CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL;
 
           cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
             const bonds = createdFacilities.filter((f) => f.type === 'Bond');
