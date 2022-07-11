@@ -88,8 +88,8 @@ context('Checker tries to submit a deal that has changed/newly issued facilities
           mockFacilities[0].status = CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL;
 
           cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-            const bonds = createdFacilities.filter((f) => f.type === 'Bond');
-            const loans = createdFacilities.filter((f) => f.type === 'Loan');
+            const bonds = createdFacilities.filter((f) => f.type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND);
+            const loans = createdFacilities.filter((f) => f.type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN);
 
             dealFacilities.bonds = bonds;
             dealFacilities.loans = loans;
