@@ -10,6 +10,7 @@ const {
   canSendToAcbs,
   sendFirstTaskEmail,
   calculateUkefExposure,
+  calculateCoverEndDate,
 } = require('../helpers/amendment.helpers');
 
 const getAmendmentInProgress = async (req, res) => {
@@ -167,8 +168,10 @@ const updateFacilityAmendment = async (req, res) => {
     payload.ukefDecision = { isReadyForApproval: isRiskAnalysisCompleted(tasks) };
     delete payload.taskUpdate;
   }
-  // UKEF Exposure
+  // UKEF exposure
   payload = calculateUkefExposure(payload);
+  // Cover end date
+  payload = calculateCoverEndDate(payload);
 
   // Update Amendment
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);

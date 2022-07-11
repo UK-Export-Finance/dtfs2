@@ -293,6 +293,30 @@ const calculateUkefExposure = (payload) => {
   return payload;
 };
 
+/**
+ * Converts non-ms epoch to ms epoch.
+ * @param {Object} payload Amendment payload
+ * @returns {Object} Computed payload with EPOCH sm compatible `coverEndDate`.
+ */
+const calculateCoverEndDate = (payload) => {
+  if (payload?.coverEndDate) {
+    /**
+     * TODO: date-fns and moment.js convergence
+     * Convert EPOCH to millisecond compatible epoch.
+     * date-fns outputs non-ms EPOCH.
+     * */
+    const epoch = payload.coverEndDate.toString().length > 10
+      ? payload.coverEndDate
+      : payload.coverEndDate * 1000;
+
+    return {
+      ...payload,
+      coverEndDate: epoch,
+    };
+  }
+  return payload;
+};
+
 module.exports = {
   amendmentEmailEligible,
   sendAutomaticAmendmentEmail,
@@ -301,4 +325,5 @@ module.exports = {
   canSendToAcbs,
   sendFirstTaskEmail,
   calculateUkefExposure,
+  calculateCoverEndDate,
 };
