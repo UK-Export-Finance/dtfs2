@@ -72,6 +72,7 @@ const updateFacilityMaster = async (context) => {
   }
 
   return {
+    updateType,
     submittedToACBS,
     receivedFromACBS: moment().format(),
     ...data,

@@ -13,9 +13,9 @@
 *
 * Prerequisites
 * -------------
-* 1. Durable activity function (activity-get-facility-master)
-* 2. Durable HTTP starter function (acbs-http)
-* 3. 'npm install durable-functions'
+* 0. 'npm install durable-functions'
+* 1. Durable HTTP starter function (acbs-http)
+* 2. Durable activity function (activity-get-facility-master, activity-update-facility-master)
 */
 
 const df = require('durable-functions');
@@ -50,7 +50,6 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
           const amendments = {
             amendment,
           };
-          console.log('---', { amendments });
 
           /**
            * *************************** AMENDMENT MAPPING ***************************
@@ -60,7 +59,6 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
           const fmrMapped = mappings.facility.facilityMasterAmend(fmr, amendments, deal);
           
           //2.2. FMR update
-          
           //2.2.1 - UKEF Exposure
           if (Boolean(amendment.amount)) {
             const result = yield context.df.callActivityWithRetry(
@@ -75,7 +73,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
               );
               
               facilityMasterRecordAmendments = {
-                result,
+                ...result,
               };
             }
             
@@ -94,7 +92,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
                 
                 facilityMasterRecordAmendments = {
                   ...facilityMasterRecordAmendments,
-                  result,
+                  ...result,
                 };
               }
               
