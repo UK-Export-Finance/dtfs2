@@ -73,7 +73,9 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
               );
               
               facilityMasterRecordAmendments = {
-                ...result,
+                amount: {
+                  ...result,
+                },
               };
             }
             
@@ -92,7 +94,9 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
                 
                 facilityMasterRecordAmendments = {
                   ...facilityMasterRecordAmendments,
-                  ...result,
+                  coverEndDate: {
+                    ...result,
+                  }
                 };
               }
               
