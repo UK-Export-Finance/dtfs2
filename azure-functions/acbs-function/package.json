@@ -13,9 +13,12 @@
   "author": "",
   "dependencies": {
     "axios": "^0.27.2",
+    "date-fns": "^2.28.0",
     "dotenv": "^16.0.1",
     "durable-functions": "^1.5.4",
-    "moment": "^2.29.3",
-    "date-fns": "^2.28.0"
+    "eslint": "^8.19.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "moment": "^2.29.3"
   }
 }

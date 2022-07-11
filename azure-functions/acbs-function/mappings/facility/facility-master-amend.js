@@ -57,12 +57,12 @@ const facilityMasterAmend = (fmr, amendments, deal) => {
       ...fmr,
       productTypeName: deal.dealSnapshot.dealType,
       obligorName: deal.exporter.companyName.substring(0, 35),
-    }
-    
+    };
+
     // Construct amendment record
     if (amendments.amendment) {
-      const { amount, coverEndDate } =  amendments.amendment;
-      
+      const { amount, coverEndDate } = amendments.amendment;
+
       // UKEF Exposure
       if (amount) {
         record = {
@@ -70,7 +70,7 @@ const facilityMasterAmend = (fmr, amendments, deal) => {
           maximumLiability: helpers.getMaximumLiability(amendments),
         };
       }
-      
+
       // Cover end date
       if (coverEndDate) {
         record = {
@@ -79,11 +79,12 @@ const facilityMasterAmend = (fmr, amendments, deal) => {
         };
       }
     }
-    
+
     // Return amended FMR
     return record;
   } catch (e) {
     console.error('Unable to map facility master amendment record: ', { e });
+    return e;
   }
 };
 
