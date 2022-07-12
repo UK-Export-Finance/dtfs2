@@ -298,7 +298,7 @@ const calculateUkefExposure = (payload) => {
  * @param {Object} payload Amendment payload
  * @returns {Object} Computed payload with EPOCH sm compatible `coverEndDate`.
  */
-const calculateCoverEndDate = (payload) => {
+const formatCoverEndDate = (payload) => {
   if (payload?.coverEndDate) {
     /**
      * TODO: date-fns and moment.js convergence
@@ -325,5 +325,5 @@ module.exports = {
   canSendToAcbs,
   sendFirstTaskEmail,
   calculateUkefExposure,
-  calculateCoverEndDate,
+  formatCoverEndDate,
 };

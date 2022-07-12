@@ -10,7 +10,7 @@ const {
   canSendToAcbs,
   sendFirstTaskEmail,
   calculateUkefExposure,
-  calculateCoverEndDate,
+  formatCoverEndDate,
 } = require('../helpers/amendment.helpers');
 
 const getAmendmentInProgress = async (req, res) => {
@@ -171,7 +171,7 @@ const updateFacilityAmendment = async (req, res) => {
   // UKEF exposure
   payload = calculateUkefExposure(payload);
   // Cover end date
-  payload = calculateCoverEndDate(payload);
+  payload = formatCoverEndDate(payload);
 
   // Update Amendment
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
