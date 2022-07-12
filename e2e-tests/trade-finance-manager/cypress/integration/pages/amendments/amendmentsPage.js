@@ -117,6 +117,20 @@ const amendmentsPage = {
   amendmentBankDecisionCheckEffectiveValue: () => cy.get('[data-cy="amendment--bank-decision-effective-response"]'),
   amendmentBankDecisionCheckEffectiveLink: () => cy.get('[data-cy="amendment--change-effective-date-link"]'),
 
+  amendmentManagersDecisionByHeading: () => cy.get('[data-cy="amendment--decision-made-by-heading"]'),
+  amendmentManagersDecisionBy: (version) => cy.get(`[data-cy="amendment--decision-${version}-made-by-value"]`),
+
+  amendmentManagersDecisionDateHeading: () => cy.get('[data-cy="amendment--date-time-heading"]'),
+  amendmentManagersDecisionDate: (version) => cy.get(`[data-cy="amendment--decision-${version}-date-time-value"]`),
+
+  amendmentManagersDecisionConditionsHeading: () => cy.get('[data-cy="amendment--conditions-heading"]'),
+  amendmentManagersDecisionConditions: (version) => cy.get(`[data-cy="amendment--decision-${version}-ukef-decision-conditions"]`),
+
+  amendmentManagersDecisionReasonsHeading: () => cy.get('[data-cy="amendment--reasons-heading"]'),
+  amendmentManagersDecisionReasons: (version) => cy.get(`[data-cy="amendment--decision-${version}-ukef-decision-reasons"]`),
+
+  amendmentManagersDecisionCommentsHeading: () => cy.get('[data-cy="amendment--comments-heading"]'),
+  amendmentManagersDecisionComments: (version) => cy.get(`[data-cy="amendment--decision-${version}-ukef-decision-comments"]`),
 };
 
 module.exports = amendmentsPage;
