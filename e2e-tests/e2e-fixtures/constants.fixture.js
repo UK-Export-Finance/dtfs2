@@ -51,3 +51,37 @@ export const UNDERWRITER_MANAGER_DECISIONS = {
   AUTOMATIC_APPROVAL: 'Automatic approval',
   AWAITING_DECISION: 'Awaiting decision',
 };
+
+export const FEE_TYPE = {
+  ADVANCE: 'In advance',
+  ARREAR: 'In arrear',
+  MATURITY: 'At maturity',
+};
+
+export const FEE_FREQUENCY = {
+  MONTHLY: 'Monthly',
+  QUARTERLY: 'Quarterly',
+  SEMI_ANNUALLY: 'Semi-annually',
+  ANNUALLY: 'Annually',
+};
+
+export const BSS_FACILITY_TYPE = {
+  ADVANCE_PAYMENT_GUARANTEE: 'Advance payment guarantee',
+  BID_BOND: 'Bid bond',
+  MAINTENANCE_BOND: 'Maintenance bond',
+  PERFORMANCE_BOND: 'Performance bond',
+  PROGRESS_PAYMENT_BOND: 'Progress payment bond',
+  RETENTION_BOND: 'Retention bond',
+  STANDBY_LETTER_OF_CREDIT: 'Standby letter of credit',
+  WARRANTY_LETTER: 'Warranty letter',
+};
+
+export const DAY_COUNT_BASIS = {
+  360: '360',
+  365: '365',
+};
+
+export const CURRENCY = {
+  AED: 'AED',
+  AED_TEXT: 'AED - U.A.E. Dirham',
+};
