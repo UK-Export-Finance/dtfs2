@@ -88,7 +88,7 @@ module.exports = df.orchestrator(function* createACBSfacility(context) {
       { acbsCodeValueTransactionInput },
       retryOptions,
     );
-    
+
     // Records only created for `Issued` and `Activated` facilities only
     if (helpers.hasFacilityBeenIssued(facility)) {
       // 6. Facility loan record
