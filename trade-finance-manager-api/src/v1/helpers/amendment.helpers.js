@@ -221,7 +221,7 @@ const canSendToAcbs = (amendment) => {
   // Amendment status is marked as `Completed`
   const completed = amendment.status === AMENDMENT_STATUS.COMPLETED;
   // Amendment has been submitted by PIM team
-  const PIM = Boolean(amendment.submittedByPim);
+  const pim = Boolean(amendment.submittedByPim);
   // Manual amendment verification
   const manual = Boolean(amendment.requireUkefApproval) && Boolean(amendment.bankDecision);
 
@@ -235,11 +235,11 @@ const canSendToAcbs = (amendment) => {
     const { value, coverEndDate } = amendment.ukefDecision;
     const declined = value === AMENDMENT_UW_DECISION.DECLINED && coverEndDate === AMENDMENT_UW_DECISION.DECLINED;
 
-    return hasBeenAmended && completed && PIM && Boolean(submitted) && proceed && !declined;
+    return hasBeenAmended && completed && pim && submitted && proceed && !declined;
   }
 
   // Automatic amendment
-  return hasBeenAmended && completed && PIM;
+  return hasBeenAmended && completed && pim;
 };
 
 // updates flag if managers decision email sent so not sent again

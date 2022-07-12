@@ -770,7 +770,7 @@ const amendACBSfacility = async (ukefFacilityId, amendments, deal) => {
     try {
       const response = await axios({
         method: 'post',
-        url: `${refDataUrl}/acbs/facility/${ukefFacilityId}/amend`,
+        url: `${refDataUrl}/acbs/facility/${ukefFacilityId}/amendments`,
         headers: {
           'Content-Type': 'application/json',
         },

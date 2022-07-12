@@ -296,7 +296,7 @@ apiRoutes.post('/acbs/facility/:id/issue', acbs.issueAcbsFacilityPOST);
 
 /**
  * @openapi
- * /acbs/facility/:id/amend:
+ * /acbs/facility/:id/amendments:
  *   post:
  *     summary: Amend's ACBS facility records. Facility properties are updated as per payload.
  *     tags: [ACBS, Mulesoft]
@@ -324,7 +324,7 @@ apiRoutes.post('/acbs/facility/:id/issue', acbs.issueAcbsFacilityPOST);
  *             schema:
  *               $ref: '#/definitions/ACBSAmendFacilityResponseBody'
  */
-apiRoutes.post('/acbs/facility/:id/amend', acbs.amendAcbsFacilityPost);
+apiRoutes.post('/acbs/facility/:id/amendments', acbs.amendAcbsFacilityPost);
 
 /**
  * @openapi
