@@ -20,29 +20,30 @@ const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date'
 
 const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
   try {
-  const effectiveDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
-  const {
-    expirationDate,
-    nextDueDate,
-    nextAccrueToDate,
-  } = helpers.getFeeDates(facility, deal.dealSnapshot.dealType, premiumScheduleIndex);
+    const effectiveDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
+    const {
+      expirationDate,
+      nextDueDate,
+      nextAccrueToDate,
+    } = helpers.getFeeDates(facility, deal.dealSnapshot.dealType, premiumScheduleIndex);
 
-  return {
-    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
-    effectiveDate,
-    amount: helpers.getFeeAmount(facility, deal.dealSnapshot.dealType, premiumScheduleIndex),
-    expirationDate,
-    nextDueDate,
-    nextAccrueToDate,
-    period: helpers.getFeeRecordPeriod(facility, deal.dealSnapshot.dealType, premiumScheduleIndex),
-    currency: facility.facilitySnapshot.currency.id,
-    lenderTypeCode: CONSTANTS.FACILITY.LENDER_TYPE.TYPE1,
-    incomeClassCode: helpers.getIncomeClassCode(deal.dealSnapshot.dealType),
-    spreadToInvestorsIndicator: true,
-  };
-} catch (e) {
-  console.error('Unable to map facility fixed fee record.', { e });
-}
+    return {
+      facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
+      effectiveDate,
+      amount: helpers.getFeeAmount(facility, deal.dealSnapshot.dealType, premiumScheduleIndex),
+      expirationDate,
+      nextDueDate,
+      nextAccrueToDate,
+      period: helpers.getFeeRecordPeriod(facility, deal.dealSnapshot.dealType, premiumScheduleIndex),
+      currency: facility.facilitySnapshot.currency.id,
+      lenderTypeCode: CONSTANTS.FACILITY.LENDER_TYPE.TYPE1,
+      incomeClassCode: helpers.getIncomeClassCode(deal.dealSnapshot.dealType),
+      spreadToInvestorsIndicator: true,
+    };
+  } catch (e) {
+    console.error('Unable to map facility fixed fee record.', { e });
+    return e;
+  }
 };
 
 const facilityFee = (deal, facility) => {

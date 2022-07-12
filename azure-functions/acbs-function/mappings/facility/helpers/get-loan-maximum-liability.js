@@ -15,7 +15,8 @@ const getLoanMaximumLiability = (amount, facility, dealType) => {
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
     ukefExposure = amount * 0.10;
   } else {
-    let { disbursementAmount, coverPercentage, coveredPercentage } = facility.facilitySnapshot;
+    let { disbursementAmount, coveredPercentage } = facility.facilitySnapshot;
+    const { coverPercentage } = facility.facilitySnapshot;
 
     if (disbursementAmount && typeof disbursementAmount === 'string') {
       disbursementAmount = disbursementAmount.replace(/,/g, '');
