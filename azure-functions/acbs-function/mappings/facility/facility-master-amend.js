@@ -58,10 +58,10 @@ const facilityMasterAmend = (fmr, amendments, deal) => {
       productTypeName: deal.dealSnapshot.dealType,
       obligorName: deal.exporter.companyName.substring(0, 35),
     };
-
+    const { amendment } = amendments;
     // Construct amendment record
-    if (amendments.amendment) {
-      const { amount, coverEndDate } = amendments.amendment;
+    if (amendment) {
+      const { amount, coverEndDate } = amendment;
 
       // UKEF Exposure
       if (amount) {

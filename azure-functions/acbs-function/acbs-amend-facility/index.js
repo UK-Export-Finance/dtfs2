@@ -25,89 +25,90 @@ const mappings = require('../mappings');
 module.exports = df.orchestrator(function* amendACBSFacility(context) {
   try {
     const { amendment } = context.df.getInput();
-
+    if (amendment) {
     // UKEF Facility ID exists in the payload
-    const hasFacilityId = Boolean(amendment.facilityId);
-    // At least one of the amendment exists in the payload
-    const hasAmendment = Boolean(amendment.amount) || Boolean(amendment.coverEndDate);
-    // Deal properties existence check
-    const hasDeal = amendment.deal && Object.prototype.hasOwnProperty.call(amendment.deal, 'dealSnapshot');
+      const hasFacilityId = Boolean(amendment.facilityId);
+      // At least one of the amendment exists in the payload
+      const hasAmendment = Boolean(amendment.amount) || Boolean(amendment.coverEndDate);
+      // Deal properties existence check
+      const hasDeal = amendment.deal && Object.prototype.hasOwnProperty.call(amendment.deal, 'dealSnapshot');
 
-    // Payload verification
-    if (hasFacilityId && hasAmendment && hasDeal) {
-      const { deal, facilityId } = amendment;
+      // Payload verification
+      if (hasFacilityId && hasAmendment && hasDeal) {
+        const { deal, facilityId } = amendment;
 
-      // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
-      const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry(
-        'activity-get-facility-master',
-        retryOptions,
-        { facilityId },
-      );
+        // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
+        const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry(
+          'activity-get-facility-master',
+          retryOptions,
+          { facilityId },
+        );
 
-      if (!!fmr && !!etag) {
-        let facilityMasterRecordAmendments;
-        const amendments = {
-          amendment,
-        };
+        if (!!fmr && !!etag) {
+          let facilityMasterRecordAmendments;
+          const amendments = {
+            amendment,
+          };
 
-        /**
+          /**
           * *************************** AMENDMENT MAPPING ***************************
           */
 
-        // 2.1. Facility Master Record (FMR)
-        const fmrMapped = mappings.facility.facilityMasterAmend(fmr, amendments, deal);
+          // 2.1. Facility Master Record (FMR)
+          const fmrMapped = mappings.facility.facilityMasterAmend(fmr, amendments, deal);
 
-        // 2.2. FMR update
-        // 2.2.1 - UKEF Exposure
-        if (amendment.amount) {
-          const result = yield context.df.callActivityWithRetry(
-            'activity-update-facility-master',
-            retryOptions,
-            {
-              facilityId,
-              acbsFacilityMasterInput: fmrMapped,
-              updateType: 'amendAmount',
-              etag,
-            },
-          );
+          // 2.2. FMR update
+          // 2.2.1 - UKEF Exposure
+          if (amendment.amount) {
+            const result = yield context.df.callActivityWithRetry(
+              'activity-update-facility-master',
+              retryOptions,
+              {
+                facilityId,
+                acbsFacilityMasterInput: fmrMapped,
+                updateType: 'amendAmount',
+                etag,
+              },
+            );
 
-          facilityMasterRecordAmendments = {
-            amount: {
-              ...result,
-            },
+            facilityMasterRecordAmendments = {
+              amount: {
+                ...result,
+              },
+            };
+          }
+
+          // 2.2.2 - Cover end date
+          if (amendment.coverEndDate) {
+            const result = yield context.df.callActivityWithRetry(
+              'activity-update-facility-master',
+              retryOptions,
+              {
+                facilityId,
+                acbsFacilityMasterInput: fmrMapped,
+                updateType: 'amendExpiryDate',
+                etag,
+              },
+            );
+
+            facilityMasterRecordAmendments = {
+              ...facilityMasterRecordAmendments,
+              coverEndDate: {
+                ...result,
+              },
+            };
+          }
+
+          return {
+            facilityId,
+            facilityMasterRecordAmendments,
           };
         }
-
-        // 2.2.2 - Cover end date
-        if (amendment.coverEndDate) {
-          const result = yield context.df.callActivityWithRetry(
-            'activity-update-facility-master',
-            retryOptions,
-            {
-              facilityId,
-              acbsFacilityMasterInput: fmrMapped,
-              updateType: 'amendExpiryDate',
-              etag,
-            },
-          );
-
-          facilityMasterRecordAmendments = {
-            ...facilityMasterRecordAmendments,
-            coverEndDate: {
-              ...result,
-            },
-          };
-        }
-
-        return {
-          facilityId,
-          facilityMasterRecordAmendments,
-        };
+        throw new Error('ACBS facility amendment error : Unable to retrieve FMR.');
       }
-      console.error('ACBS facility amendment error : Unable to retrieve FMR.');
-    } else {
-      console.error('ACBS facility amendment error : Empty or invalid argument(s) provided');
     }
+
+    throw new Error('Empty or invalid argument(s) provided');
   } catch (e) {
     console.error(`ACBS facility amendment error : ${e}`);
   }
