@@ -29,36 +29,37 @@ const mandatoryFields = [
 
 const createFacilityFee = async (context) => {
   try {
-  const { acbsFacilityFeeInput } = context.bindingData;
-  const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
+    const { acbsFacilityFeeInput } = context.bindingData;
+    const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
+
+    const submittedToACBS = moment().format();
+    const { status, data } = await api.createFacilityFee(acbsFacilityFeeInput);
+
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify({
+          name: 'ACBS Facility fee record create error',
+          facilityIdentifier: acbsFacilityFeeInput.facilityIdentifier,
+          submittedToACBS,
+          receivedFromACBS: moment().format(),
+          dataReceived: data,
+          dataSent: acbsFacilityFeeInput,
+        }, null, 4),
+      );
+    }
+
+    return {
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      ...data,
+    };
+  } catch (e) {
+    console.error('Unable to create facility fee', { e });
+    return e;
   }
-
-  const submittedToACBS = moment().format();
-  const { status, data } = await api.createFacilityFee(acbsFacilityFeeInput);
-
-  if (isHttpErrorStatus(status)) {
-    throw new Error(
-      JSON.stringify({
-        name: 'ACBS Facility fee record create error',
-        facilityIdentifier: acbsFacilityFeeInput.facilityIdentifier,
-        submittedToACBS,
-        receivedFromACBS: moment().format(),
-        dataReceived: data,
-        dataSent: acbsFacilityFeeInput,
-      }, null, 4),
-    );
-  }
-
-  return {
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
-} catch (e) {
-  console.error('Unable to create facility fee', { e });
-}
 };
 
 module.exports = createFacilityFee;

@@ -28,53 +28,52 @@ const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date'
 
 const facilityLoan = (deal, facility, acbsData) => {
   try {
-  const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
-  const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
-    ? facility.tfm.facilityGuaranteeDates
-    : facility.update;
-  const ukefExposure = helpers.getMaximumLiability(facility);
+    const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
+    const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
+      ? facility.tfm.facilityGuaranteeDates
+      : facility.update;
+    const ukefExposure = helpers.getMaximumLiability(facility);
 
-  let loanRecord = {
-    portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
-    postingDate: date.now(),
-    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
-    borrowerPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
-    productTypeId: helpers.getProductTypeId(facility),
-    productTypeGroup: helpers.getProductTypeGroup(facility, deal.dealSnapshot.dealType),
-    currency: facility.facilitySnapshot.currency.id,
-    amount: helpers.getLoanMaximumLiability(ukefExposure, facility, deal.dealSnapshot.dealType),
-    issueDate,
-    expiryDate: guaranteeExpiryDate,
-    spreadRate: facility.facilitySnapshot.guaranteeFee || Number(facility.facilitySnapshot.guaranteeFeePayableByBank),
-    nextDueDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
-    yearBasis: helpers.getYearBasis(facility),
-    loanBillingFrequencyType: helpers.getFeeType(facility),
-  };
-
-  // If facility is not in GBP, then set following fields
-  if (facility.tfm.exchangeRate) {
-    loanRecord = {
-      ...loanRecord,
-      dealCustomerUsageRate: helpers.getCurrencyExchangeRate(facility),
-      dealCustomerUsageOperationType: CONSTANTS.FACILITY.CURRENCY_EXCHANGE_RATE_OPERATION.DIVIDE,
+    let loanRecord = {
+      portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
+      postingDate: date.now(),
+      facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
+      borrowerPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
+      productTypeId: helpers.getProductTypeId(facility),
+      productTypeGroup: helpers.getProductTypeGroup(facility, deal.dealSnapshot.dealType),
+      currency: facility.facilitySnapshot.currency.id,
+      amount: helpers.getLoanMaximumLiability(ukefExposure, facility, deal.dealSnapshot.dealType),
+      issueDate,
+      expiryDate: guaranteeExpiryDate,
+      spreadRate: facility.facilitySnapshot.guaranteeFee || Number(facility.facilitySnapshot.guaranteeFeePayableByBank),
+      nextDueDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
+      yearBasis: helpers.getYearBasis(facility),
+      loanBillingFrequencyType: helpers.getFeeType(facility),
     };
-  }
 
-  // BSS/EWCS deals only fields
-  if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS_EWCS) {
-    loanRecord = {
-      ...loanRecord,
-      spreadRateCTL: helpers.getInterestOrFeeRate(facility),
-      indexRateChangeFrequency: helpers.getFeeFrequency(facility),
-    };
-  }
+    // If facility is not in GBP, then set following fields
+    if (facility.tfm.exchangeRate) {
+      loanRecord = {
+        ...loanRecord,
+        dealCustomerUsageRate: helpers.getCurrencyExchangeRate(facility),
+        dealCustomerUsageOperationType: CONSTANTS.FACILITY.CURRENCY_EXCHANGE_RATE_OPERATION.DIVIDE,
+      };
+    }
+
+    // BSS/EWCS deals only fields
+    if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS_EWCS) {
+      loanRecord = {
+        ...loanRecord,
+        spreadRateCTL: helpers.getInterestOrFeeRate(facility),
+        indexRateChangeFrequency: helpers.getFeeFrequency(facility),
+      };
+    }
 
     return loanRecord;
-} catch (e) {
-  console.error('Unable to map Facility Loan Record.', { e });
-}
-
-
+  } catch (e) {
+    console.error('Unable to map Facility Loan Record.', { e });
+    return e;
+  }
 };
 
 module.exports = facilityLoan;
