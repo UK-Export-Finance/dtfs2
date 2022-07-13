@@ -46,6 +46,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
         if (!!fmr && !!etag) {
           let facilityMasterRecordAmendments;
+          let facilityLoanRecordAmendments;
           const amendments = {
             amendment,
           };
@@ -99,9 +100,34 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
             };
           }
 
+          // 2.2. Facility Loan Record (FLR)
+          const flrMApped = mappings.facility.facilityLoanAmend(amendments, deal);
+
+          // 2.3 FLR update
+          // 2.3.1 - UKEF Exposure
+          // 2.3.2 - Cover end date
+          if (amendment.coverEndDate) {
+            const result = yield context.df.callActivityWithRetry(
+              'activity-update-facility-loan',
+              retryOptions,
+              {
+                facilityId,
+                acbsFacilityLoanInput: flrMApped,
+              },
+            );
+
+            facilityLoanRecordAmendments = {
+              ...facilityLoanRecordAmendments,
+              coverEndDate: {
+                ...result,
+              },
+            };
+          }
+
           return {
             facilityId,
             facilityMasterRecordAmendments,
+            facilityLoanRecordAmendments,
           };
         }
         throw new Error('ACBS facility amendment error : Unable to retrieve FMR.');
