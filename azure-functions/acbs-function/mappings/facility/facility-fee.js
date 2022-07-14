@@ -37,7 +37,7 @@ const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
       period: helpers.getFeeRecordPeriod(facility, deal.dealSnapshot.dealType, premiumScheduleIndex),
       currency: facility.facilitySnapshot.currency.id,
       lenderTypeCode: CONSTANTS.FACILITY.LENDER_TYPE.TYPE1,
-      incomeClassCode: helpers.getIncomeClassCode(deal.dealSnapshot.dealType),
+      incomeClassCode: helpers.getIncomeClassCode(facility),
       spreadToInvestorsIndicator: true,
     };
   } catch (e) {
