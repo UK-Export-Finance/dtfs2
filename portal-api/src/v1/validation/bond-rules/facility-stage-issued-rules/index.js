@@ -15,7 +15,7 @@ module.exports = (bond, errorList, deal) => {
   if (isIssued) {
     newErrorList = requestedCoverStartDate(bond, deal, newErrorList);
     newErrorList = coverEndDate(bond, deal, newErrorList);
-    newErrorList = coverDates(bond, newErrorList);
+    newErrorList = coverDates(bond, deal, newErrorList);
     newErrorList = name(bond, newErrorList);
   }
 
