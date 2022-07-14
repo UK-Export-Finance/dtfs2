@@ -1,6 +1,6 @@
 /*
- * Facility master record update DAF
- * **********************************
+ * Facility loan amendment DAF
+ * ***************************
  * This DAF (Durable Activity Function) is never invoked directly.
  * It is invoked via DOF (Durable Orchestrator Function).
  *
@@ -8,7 +8,7 @@
  * --------------
  * 0. 'npm install durable-functions'
  * 1. Durable  HTTP starter function (acbs-http)
- * 2. Durable Orchestrator function (DOF) (acbs-issue-facility)
+ * 2. Durable Orchestrator function (DOF) (acbs-amend-facility)
  *
  * ------------------
  * HTTP -> DOF -> DAF
@@ -21,41 +21,17 @@ const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
 const mandatoryFields = [
-  'dealIdentifier',
-  'facilityIdentifier',
-  'portfolioIdentifier',
-  'dealBorrowerIdentifier',
-  'maximumLiability',
-  'productTypeId',
-  'productTypeName',
-  'currency',
-  'guaranteeCommencementDate',
-  'guaranteeExpiryDate',
-  'nextQuarterEndDate',
-  'delegationType',
-  'intrestOrFeeRate',
-  'facilityStageCode',
-  'exposurePeriod',
-  'creditRatingCode',
-  'guaranteePercentage',
-  'premiumFrequencyCode',
-  'riskCountryCode',
-  'riskStatusCode',
-  'effectiveDate',
-  'foreCastPercentage',
-  'description',
-  'agentBankIdentifier',
-  'obligorPartyIdentifier',
-  'obligorName',
-  'obligorIndustryClassification',
+  'expiryDate',
 ];
 
 const updateFacilityMaster = async (context) => {
   const {
-    acbsFacilityMasterInput, updateType, facilityId, etag,
+    facilityId,
+    loanId,
+    acbsFacilityLoanInput,
   } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
+  const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
   if (missingMandatory.length) {
     return Promise.resolve({ missingMandatory });
@@ -63,23 +39,22 @@ const updateFacilityMaster = async (context) => {
 
   const submittedToACBS = moment().format();
 
-  const { status, data } = await api.updateFacility(facilityId, updateType, acbsFacilityMasterInput, etag);
+  const { status, data } = await api.updateFacilityLoan(facilityId, loanId, acbsFacilityLoanInput);
 
   if (isHttpErrorStatus(status)) {
     throw new Error(
       JSON.stringify({
-        name: 'ACBS Facility update error',
+        name: 'ACBS Facility loan amend error',
         submittedToACBS,
         receivedFromACBS: moment().format(),
         dataReceived: data,
-        dataSent: acbsFacilityMasterInput,
+        dataSent: acbsFacilityLoanInput,
       }, null, 4),
     );
   }
 
   return {
     status,
-    updateType,
     submittedToACBS,
     receivedFromACBS: moment().format(),
     ...data,

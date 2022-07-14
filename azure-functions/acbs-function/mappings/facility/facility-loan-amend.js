@@ -2,7 +2,6 @@
 "amount":   ukefExposure
 */
 
-const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 const { formatDate } = require('../../helpers/date');
 
@@ -17,13 +16,10 @@ const facilityLoanAmend = (amendments, deal) => {
       const { amount, coverEndDate } = amendment;
 
       // UKEF Exposure
-      //   if (amount) {
-      //     const ukefExposure = helpers.getMaximumLiability(amendments);
+      if (amount) {
+        // TODO : Facility loan amount API
+      }
 
-      //     record = {
-      //       amount: helpers.getLoanMaximumLiability(ukefExposure, amendments, deal.dealSnapshot.dealType),
-      //     };
-      //   }
       // Cover end date
       if (coverEndDate) {
         record = {

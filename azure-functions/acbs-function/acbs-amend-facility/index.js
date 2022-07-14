@@ -105,6 +105,8 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
           // 2.3 FLR update
           // 2.3.1 - UKEF Exposure
+          // TODO : Facility loan amount API
+
           // 2.3.2 - Cover end date
           if (amendment.coverEndDate) {
             const result = yield context.df.callActivityWithRetry(
