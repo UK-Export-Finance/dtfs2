@@ -17,7 +17,7 @@ module.exports = (
     deal,
   );
   errorList = coverEndDateRules(submittedValues, deal, errorList);
-  errorList = coverDatesRules(submittedValues, errorList);
+  errorList = coverDatesRules(submittedValues, deal, errorList);
   errorList = nameRules(submittedValues, errorList);
 
   return errorList;
