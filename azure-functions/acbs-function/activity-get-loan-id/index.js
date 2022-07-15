@@ -40,10 +40,20 @@ const getLoanId = async (context) => {
         );
       }
 
-      if (data.loanIdentifier) return data.loanIdentifier;
+      if (data.loanIdentifier) {
+        return data.loanIdentifier;
+      } else {
+        throw new Error(
+          JSON.stringify({
+            name: 'Void dataset returned',
+            facilityId,
+            dataReceived: data,
+          }, null, 4),
+        );
+      }
     }
 
-    return {};
+    return null;
   } catch (e) {
     console.error('Error fetching loan id for facility: ', { e });
     return { e };

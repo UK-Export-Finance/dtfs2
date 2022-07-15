@@ -4,8 +4,9 @@
 
 const CONSTANTS = require('../../constants');
 const { formatDate } = require('../../helpers/date');
+const helpers = require('./helpers');
 
-const facilityLoanAmend = (amendments, deal) => {
+const facilityLoanAmend = (amendments, facilityMasterRecord) => {
   try {
     let record = {
       portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
@@ -17,8 +18,13 @@ const facilityLoanAmend = (amendments, deal) => {
 
       // UKEF Exposure
       if (amount) {
-        console.info(deal);
-        // TODO : Facility loan amount API
+        // Only BSS (Bond) facility types are subjected to loan amount amendment.
+        if (facilityMasterRecord.productTypeId === CONSTANTS.FACILITY.FACILITY_TYPE_CODE.BSS) {
+          record = {
+            ...record,
+            amount: helpers.getMaximumLiability(amendments),
+          };
+        }
       }
 
       // Cover end date

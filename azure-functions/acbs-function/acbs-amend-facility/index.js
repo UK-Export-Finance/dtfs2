@@ -101,7 +101,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
           }
 
           // 2.2. Facility Loan Record (FLR)
-          const flrMApped = mappings.facility.facilityLoanAmend(amendments, deal);
+          const flrMApped = mappings.facility.facilityLoanAmend(amendments, fmrMapped);
 
           // 2.3 FLR update
           // 2.3.1 Extract loan id for facility id
@@ -117,7 +117,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
           // TODO : Facility loan amount API
 
           // 2.3.3 - Cover end date
-          if (amendment.coverEndDate) {
+          if (amendment.coverEndDate && loanId) {
             const result = yield context.df.callActivityWithRetry(
               'activity-update-facility-loan',
               retryOptions,
