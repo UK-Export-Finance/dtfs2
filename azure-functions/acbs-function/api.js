@@ -15,7 +15,7 @@ require('dotenv').config();
 
 const getACBS = async (apiRef) => {
   if (!!apiRef) {
-    const response = await axios({
+    return axios({
       method: 'get',
       url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
       auth: {
@@ -32,14 +32,13 @@ const getACBS = async (apiRef) => {
         data: { error: e.response ? e.response.data : e },
       };
     });
-    return response;
   }
   return {};
 };
 
 const postToAcbs = async (apiRef, acbsInput) => {
   if (!!apiRef && !!acbsInput) {
-    const response = await axios({
+    return axios({
       method: 'post',
       url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
       auth: {
@@ -57,7 +56,6 @@ const postToAcbs = async (apiRef, acbsInput) => {
         data: { error: e.response ? e.response.data : e },
       };
     });
-    return response;
   }
   return {};
 };
@@ -68,7 +66,7 @@ const putToAcbs = async (apiRef, acbsInput, etag) => {
       'If-Match': etag,
     } : null;
 
-    const response = await axios({
+    return axios({
       method: 'put',
       url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
       auth: {
@@ -87,7 +85,6 @@ const putToAcbs = async (apiRef, acbsInput, etag) => {
         data: { error: e.response ? e.response.data : e },
       };
     });
-    return response;
   }
   return {};
 };
@@ -98,7 +95,7 @@ const patchToAcbs = async (apiRef, acbsInput, eTag) => {
       'If-Match': eTag,
     } : null;
 
-    const response = await axios({
+    return axios({
       method: 'patch',
       url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
       auth: {
@@ -117,13 +114,12 @@ const patchToAcbs = async (apiRef, acbsInput, eTag) => {
         data: { error: e.response ? e.response.data : e },
       };
     });
-
-    return response;
   }
   return {};
 };
 
 const getFacility = (facilityId) => getACBS(`facility/${facilityId}`);
+const getLoanId = (facilityId) => getACBS(`facility/${facilityId}/loan`);
 const createParty = (acbsInput) => postToAcbs('party', acbsInput);
 const createDeal = (acbsInput) => postToAcbs('deal', acbsInput);
 const createDealInvestor = (acbsInput) => postToAcbs('deal/investor', acbsInput);
@@ -148,6 +144,7 @@ const updateFacilityLoan = (facilityId, loanId, acbsInput) => patchToAcbs(
 
 module.exports = {
   getFacility,
+  getLoanId,
   createParty,
   createDeal,
   createDealInvestor,

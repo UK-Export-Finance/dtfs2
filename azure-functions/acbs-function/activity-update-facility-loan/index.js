@@ -24,41 +24,46 @@ const mandatoryFields = [
   'expiryDate',
 ];
 
-const updateFacilityMaster = async (context) => {
-  const {
-    facilityId,
-    loanId,
-    acbsFacilityLoanInput,
-  } = context.bindingData;
+const updateFacilityLoan = async (context) => {
+  try {
+    const {
+      loanId,
+      facilityId,
+      acbsFacilityLoanInput,
+    } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
+    const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
+
+    const submittedToACBS = moment().format();
+
+    const { status, data } = await api.updateFacilityLoan(facilityId, loanId, acbsFacilityLoanInput);
+
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify({
+          name: 'ACBS Facility loan amend error',
+          submittedToACBS,
+          receivedFromACBS: moment().format(),
+          dataReceived: data,
+          dataSent: acbsFacilityLoanInput,
+        }, null, 4),
+      );
+    }
+
+    return {
+      status,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      ...data,
+    };
+  } catch (e) {
+    console.error('Error amending facility loan record: ', { e });
+    return { e };
   }
-
-  const submittedToACBS = moment().format();
-
-  const { status, data } = await api.updateFacilityLoan(facilityId, loanId, acbsFacilityLoanInput);
-
-  if (isHttpErrorStatus(status)) {
-    throw new Error(
-      JSON.stringify({
-        name: 'ACBS Facility loan amend error',
-        submittedToACBS,
-        receivedFromACBS: moment().format(),
-        dataReceived: data,
-        dataSent: acbsFacilityLoanInput,
-      }, null, 4),
-    );
-  }
-
-  return {
-    status,
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
 };
 
-module.exports = updateFacilityMaster;
+module.exports = updateFacilityLoan;

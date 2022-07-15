@@ -51,39 +51,47 @@ const mandatoryFields = [
 ];
 
 const updateFacilityMaster = async (context) => {
-  const {
-    acbsFacilityMasterInput, updateType, facilityId, etag,
-  } = context.bindingData;
+  try {
+    const {
+      facilityId,
+      acbsFacilityMasterInput,
+      updateType,
+      etag,
+    } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
+    const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
 
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
+
+    const submittedToACBS = moment().format();
+
+    const { status, data } = await api.updateFacility(facilityId, updateType, acbsFacilityMasterInput, etag);
+
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify({
+          name: 'ACBS Facility update error',
+          submittedToACBS,
+          receivedFromACBS: moment().format(),
+          dataReceived: data,
+          dataSent: acbsFacilityMasterInput,
+        }, null, 4),
+      );
+    }
+
+    return {
+      status,
+      updateType,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      ...data,
+    };
+  } catch (e) {
+    console.error('Error updating facility master record: ', { e });
+    return { e };
   }
-
-  const submittedToACBS = moment().format();
-
-  const { status, data } = await api.updateFacility(facilityId, updateType, acbsFacilityMasterInput, etag);
-
-  if (isHttpErrorStatus(status)) {
-    throw new Error(
-      JSON.stringify({
-        name: 'ACBS Facility update error',
-        submittedToACBS,
-        receivedFromACBS: moment().format(),
-        dataReceived: data,
-        dataSent: acbsFacilityMasterInput,
-      }, null, 4),
-    );
-  }
-
-  return {
-    status,
-    updateType,
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
 };
 
 module.exports = updateFacilityMaster;

@@ -104,15 +104,25 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
           const flrMApped = mappings.facility.facilityLoanAmend(amendments, deal);
 
           // 2.3 FLR update
-          // 2.3.1 - UKEF Exposure
+          // 2.3.1 Extract loan id for facility id
+          const loanId = yield context.df.callActivityWithRetry(
+            'activity-get-loan-id',
+            retryOptions,
+            {
+              facilityId,
+            },
+          );
+
+          // 2.3.2 - UKEF Exposure
           // TODO : Facility loan amount API
 
-          // 2.3.2 - Cover end date
+          // 2.3.3 - Cover end date
           if (amendment.coverEndDate) {
             const result = yield context.df.callActivityWithRetry(
               'activity-update-facility-loan',
               retryOptions,
               {
+                loanId,
                 facilityId,
                 acbsFacilityLoanInput: flrMApped,
               },

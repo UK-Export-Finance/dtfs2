@@ -17,6 +17,7 @@ const facilityLoanAmend = (amendments, deal) => {
 
       // UKEF Exposure
       if (amount) {
+        console.info(deal);
         // TODO : Facility loan amount API
       }
 
