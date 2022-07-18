@@ -1,5 +1,6 @@
 const api = require('../api');
 const sendTfmEmail = require('../controllers/send-tfm-email');
+const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
 const {
   AMENDMENT_UW_DECISION,
   AMENDMENT_BANK_DECISION,
@@ -210,6 +211,26 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
 };
 
 /**
+ * Ascertain whether the requested amendment
+ * have been declined or not.
+ * @param {Object} amendment Amendment object
+ * @returns {Boolean} Whether both the amendments decision has been declined by the underwriter.
+ */
+const amendmentDeclined = (amendment) => {
+  const { changeFacilityValue, changeCoverEndDate } = amendment;
+  const { value, coverEndDate } = amendment.ukefDecision;
+
+  // Ensure not all of the amendment requests are declined
+
+  // Dual amendment request
+  if (changeFacilityValue && changeCoverEndDate) {
+    return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED && coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+  }
+  // Single amendment request
+  return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED || coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+};
+
+/**
  * Evaluated whether facility amendment is eligible
  * for ACBS interaction based on myriads of conditions.
  * This function evaluated across all amendment types.
@@ -231,11 +252,8 @@ const canSendToAcbs = (amendment) => {
     const { submitted, decision } = amendment.bankDecision;
     // Bank has accepted the UW decision
     const proceed = decision === AMENDMENT_BANK_DECISION.PROCEED;
-    // Ensure not all of the amendment requests are declined
-    const { value, coverEndDate } = amendment.ukefDecision;
-    const declined = value === AMENDMENT_UW_DECISION.DECLINED && coverEndDate === AMENDMENT_UW_DECISION.DECLINED;
 
-    return hasBeenAmended && completed && pim && submitted && proceed && !declined;
+    return hasBeenAmended && completed && pim && submitted && proceed && !amendmentDeclined(amendment);
   }
 
   // Automatic amendment

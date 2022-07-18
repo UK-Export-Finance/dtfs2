@@ -7,7 +7,7 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { ENTITY_TYPE } from '../../constants';
+import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
 
 dotenv.config();
 
@@ -167,14 +167,22 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     // Construct payload
     const payload = {
       facilityId: id,
-      coverEndDate: amendments.coverEndDate,
       amount: amendments.ukefExposure,
+      coverEndDate: amendments.coverEndDate,
       deal,
     };
 
     // Refine payload
-    if (!amendments.changeCoverEndDate) delete payload.coverEndDate;
-    if (!amendments.changeFacilityValue) delete payload.amount;
+
+    // Change requested
+    const { changeFacilityValue, changeCoverEndDate } = amendments;
+    // UW Decision
+    const { value, coverEndDate } = amendments.ukefDecision;
+    const valueDeclined = value === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    const coverEndDateDeclined = coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    // Delete frivolous property
+    if (!changeFacilityValue || valueDeclined) delete payload.amount;
+    if (!changeCoverEndDate || coverEndDateDeclined) delete payload.coverEndDate;
 
     const { status, data } = await amendAcbsFacility(payload);
     // Successful
