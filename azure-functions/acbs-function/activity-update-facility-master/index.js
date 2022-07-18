@@ -86,11 +86,12 @@ const updateFacilityMaster = async (context) => {
       updateType,
       submittedToACBS,
       receivedFromACBS: moment().format(),
+      dataSent: acbsFacilityMasterInput,
       ...data,
     };
   } catch (e) {
     console.error('Error updating facility master record: ', { e });
-    return { e };
+    throw new Error(e);
   }
 };
 

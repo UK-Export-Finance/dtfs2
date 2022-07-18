@@ -58,11 +58,12 @@ const updateFacilityLoan = async (context) => {
       status,
       submittedToACBS,
       receivedFromACBS: moment().format(),
+      dataSent: acbsFacilityLoanInput,
       ...data,
     };
   } catch (e) {
     console.error('Error amending facility loan record: ', { e });
-    return { e };
+    throw new Error(e);
   }
 };
 

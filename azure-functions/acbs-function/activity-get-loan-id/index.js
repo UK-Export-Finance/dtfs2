@@ -30,6 +30,7 @@ const getLoanId = async (context) => {
     if (facilityId) {
       const { status, data } = await api.getLoanId(facilityId);
 
+      // Non 200 HTTP response code
       if (isHttpErrorStatus(status)) {
         throw new Error(
           JSON.stringify({
@@ -40,23 +41,27 @@ const getLoanId = async (context) => {
         );
       }
 
-      if (data.loanIdentifier) {
-        return data.loanIdentifier;
-      } else {
-        throw new Error(
-          JSON.stringify({
-            name: 'Void dataset returned',
-            facilityId,
-            dataReceived: data,
-          }, null, 4),
-        );
+      // Validate returned data
+      if (data.length > 0) {
+        const loan = data[0];
+
+        if (loan.loanIdentifier) return loan.loanIdentifier;
       }
+
+      // Throw an error upon data validation failure
+      throw new Error(
+        JSON.stringify({
+          name: 'Void dataset returned',
+          facilityId,
+          dataReceived: data,
+        }, null, 4),
+      );
     }
 
     return null;
   } catch (e) {
     console.error('Error fetching loan id for facility: ', { e });
-    return { e };
+    throw new Error(e);
   }
 };
 

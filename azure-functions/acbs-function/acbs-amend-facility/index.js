@@ -79,8 +79,15 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
             };
           }
 
-          // 2.2.2 - Cover end date
-          if (amendment.coverEndDate) {
+          // 2.2.2. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with new eTag
+          const updatedFmr = yield context.df.callActivityWithRetry(
+            'activity-get-facility-master',
+            retryOptions,
+            { facilityId },
+          );
+
+          // 2.2.3 - Cover end date
+          if (amendment.coverEndDate && updatedFmr.etag) {
             const result = yield context.df.callActivityWithRetry(
               'activity-update-facility-master',
               retryOptions,
@@ -88,7 +95,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
                 facilityId,
                 acbsFacilityMasterInput: fmrMapped,
                 updateType: 'amendExpiryDate',
-                etag,
+                etag: updatedFmr.etag,
               },
             );
 
@@ -113,31 +120,34 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
             },
           );
 
+          if (loanId) {
           // 2.3.2 - UKEF Exposure
           // TODO : Facility loan amount API
 
-          // 2.3.3 - Cover end date
-          if (amendment.coverEndDate && loanId) {
-            const result = yield context.df.callActivityWithRetry(
-              'activity-update-facility-loan',
-              retryOptions,
-              {
-                loanId,
-                facilityId,
-                acbsFacilityLoanInput: flrMApped,
-              },
-            );
+            // 2.3.3 - Cover end date
+            if (amendment.coverEndDate) {
+              const result = yield context.df.callActivityWithRetry(
+                'activity-update-facility-loan',
+                retryOptions,
+                {
+                  loanId,
+                  facilityId,
+                  acbsFacilityLoanInput: flrMApped,
+                },
+              );
 
-            facilityLoanRecordAmendments = {
-              ...facilityLoanRecordAmendments,
-              coverEndDate: {
-                ...result,
-              },
-            };
+              facilityLoanRecordAmendments = {
+                ...facilityLoanRecordAmendments,
+                coverEndDate: {
+                  ...result,
+                },
+              };
+            }
           }
 
           return {
             facilityId,
+            loanId,
             facilityMasterRecordAmendments,
             facilityLoanRecordAmendments,
           };
@@ -146,10 +156,9 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
       }
     }
 
-    throw new Error('Empty or invalid argument(s) provided');
+    throw new Error('Void argument set');
   } catch (e) {
-    console.error(`ACBS facility amendment error : ${e}`);
+    console.error('ACBS facility amendment error: ', { e });
+    return e;
   }
-
-  return {};
 });
