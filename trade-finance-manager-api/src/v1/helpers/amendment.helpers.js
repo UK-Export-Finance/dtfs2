@@ -242,7 +242,7 @@ const canSendToAcbs = (amendment) => {
   // Amendment status is marked as `Completed`
   const completed = amendment.status === AMENDMENT_STATUS.COMPLETED;
   // Amendment has been submitted by PIM team
-  const pim = Boolean(amendment.submittedByPim);
+  const pim = amendment.submittedByPim;
   // Manual amendment verification
   const manual = Boolean(amendment.requireUkefApproval) && Boolean(amendment.bankDecision);
 

@@ -1,7 +1,7 @@
 /*
 "facilityIdentifier":           UKEF facilityId
 "amount":                       feeRecord (GEF)
-"effectiveDate":                SEE Deal + deal investor calcuation
+"effectiveDate":                SEE Deal + deal investor calculation
 "expirationDate":               Facility expiry date
 "nextDueDate":                  Facility expiry date (GEF)
 "nextAccrueToDate":             Facility expiry date (GEF)

@@ -7,6 +7,7 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
+import { Amendment } from '../../interfaces';
 import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
 
 dotenv.config();
@@ -79,27 +80,34 @@ export const findOne = async (req: Request, res: Response) => {
 
 const createAcbsRecord = async (deal: any, bank: any) => {
   if (deal) {
-    const response = await axios({
-      method: 'post',
-      url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
-      data: {
-        deal,
-        bank,
-      },
-    }).catch((err: any) => err);
-    return response;
+    try {
+      await axios({
+        method: 'post',
+        url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
+        data: {
+          deal,
+          bank,
+        },
+      });
+    } catch (error: any) {
+      console.error('Error creating ACBS record: ', { error });
+      return null;
+    }
   }
-  return {};
 };
 
 export const createAcbsRecordPOST = async (req: Request, res: Response) => {
   if (req) {
     try {
       const { deal, bank } = req.body;
-      const { status, data } = await createAcbsRecord(deal, bank);
-      return res.status(status).send(data);
-    } catch (error) {
-      console.error('ACBS post failed ', { error });
+      const response = await createAcbsRecord(deal, bank);
+      if (response) {
+        const { status, data } = response;
+        return res.status(status).send(data);
+      }
+    } catch (error: any) {
+      console.error('ACBS create POST failed ', { error });
+      return res.status(400).send();
     }
   }
   return res.status(400).send();
@@ -107,28 +115,39 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
 
 const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
   if (id) {
-    const response = await axios({
-      method: 'post',
-      url: `${acbsFunctionUrl}/api/orchestrators/acbs-issue-facility`,
-      data: {
-        facilityId: id,
-        facility,
-        deal,
-      },
-    }).catch((err: any) => err);
-    return response;
+    try {
+      await axios({
+        method: 'post',
+        url: `${acbsFunctionUrl}/api/orchestrators/acbs-issue-facility`,
+        data: {
+          facilityId: id,
+          facility,
+          deal,
+        },
+      });
+    } catch (error: any) {
+      console.error('ACBS issue facility POST failed ', { error });
+      return null;
+    }
   }
-  return {};
 };
 
 export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
-  if (req) {
-    const { id } = req.params;
-    const { facility, deal } = req.body;
-    const { status, data } = await issueAcbsFacility(id, facility, deal);
-    return res.status(status).send(data);
+  try {
+    if (req) {
+      const { id } = req.params;
+      const { facility, deal } = req.body;
+      const response = await issueAcbsFacility(id, facility, deal);
+      if (response) {
+        const { status, data } = response;
+        return res.status(status).send(data);
+      }
+    }
+    return res.status(400).send();
+  } catch (e) {
+    console.error('Error during ACBS facility issue POST: ', { e });
+    return res.status(400).send();
   }
-  return res.status(400).send();
 };
 
 /**
@@ -136,21 +155,23 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
  * @param {Object} amendment Amendment object comprising facility ID and amends. A amendment at a time is processed.
  * @returns {Object} DOF Response
  */
-const amendAcbsFacility = async (amendment: object) => {
-  const hasAcceptablePayload = Object.prototype.hasOwnProperty.call(amendment, 'coverEndDate') || Object.prototype.hasOwnProperty.call(amendment, 'amount');
+const amendAcbsFacility = async (amendment: Amendment) => {
+  const hasAcceptablePayload = amendment.coverEndDate || amendment.amount;
 
   if (amendment && hasAcceptablePayload) {
-    const response = await axios({
-      method: 'post',
-      url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
-      data: {
-        amendment,
-      },
-    }).catch((e: any) => e);
-
-    return response;
+    try {
+      await axios({
+        method: 'post',
+        url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
+        data: {
+          amendment,
+        },
+      });
+    } catch (error: any) {
+      console.error('Error amending ACBS facility: ', { error });
+      return null;
+    }
   }
-  return {};
 };
 
 /**
@@ -181,12 +202,19 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     const valueDeclined = value === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
     const coverEndDateDeclined = coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
     // Delete frivolous property
-    if (!changeFacilityValue || valueDeclined) delete payload.amount;
-    if (!changeCoverEndDate || coverEndDateDeclined) delete payload.coverEndDate;
+    if (!changeFacilityValue || valueDeclined) {
+      delete payload.amount;
+    }
+    if (!changeCoverEndDate || coverEndDateDeclined) {
+      delete payload.coverEndDate;
+    }
 
-    const { status, data } = await amendAcbsFacility(payload);
-    // Successful
-    return res.status(status).send(data);
+    const response = await amendAcbsFacility(payload);
+    if (response) {
+      // Successful
+      const { status, data } = response;
+      return res.status(status).send(data);
+    }
   }
   // Bad Request
   return res.status(400).send();
