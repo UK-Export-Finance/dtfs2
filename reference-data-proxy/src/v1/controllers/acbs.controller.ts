@@ -156,9 +156,9 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
  * @returns {Object} DOF Response
  */
 const amendAcbsFacility = async (amendment: Amendment) => {
-  const hasAcceptablePayload = amendment.coverEndDate || amendment.amount;
+  const hasAmendment = amendment.coverEndDate || amendment.amount;
 
-  if (amendment && hasAcceptablePayload) {
+  if (amendment && hasAmendment) {
     try {
       await axios({
         method: 'post',

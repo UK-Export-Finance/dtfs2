@@ -34,28 +34,23 @@ const userCanEditBankDecision = (amendment, user) => {
 };
 
 /**
- * @param {Object} amendment
- * @returns {Boolean}
- * checks if amendment has coverEndDate or facility value amendment
- * if both or just 1, checks if both or 1 have been declined and returns true
- * else returns false
+ * Ascertain whether the requested amendment
+ * have been declined or not.
+ * @param {Object} amendment Amendment object
+ * @returns {Boolean} Whether both the amendments decision has been declined by the underwriter.
  */
 const ukefDecisionRejected = (amendment) => {
-  const { DECLINED } = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
-  // checks for boolean variable for which values amendment is changing
-  const coverEndDateDecision = amendment.ukefDecision.coverEndDate;
-  const facilityValueDecision = amendment.ukefDecision.value;
+  const { changeFacilityValue, changeCoverEndDate } = amendment;
+  const { value, coverEndDate } = amendment.ukefDecision;
 
-  // if both then checks both are declined
-  if (amendment.changeCoverEndDate && amendment.changeFacilityValue) {
-    if (coverEndDateDecision === DECLINED && facilityValueDecision === DECLINED) {
-      return true;
-    }
-  } else if (coverEndDateDecision === DECLINED || facilityValueDecision === DECLINED) {
-    // else if only 1, checks either is declined
-    return true;
+  // Ensure not all of the amendment requests are declined
+
+  // Dual amendment request
+  if (changeFacilityValue && changeCoverEndDate) {
+    return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED && coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
   }
-  return false;
+  // Single amendment request
+  return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED || coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
 };
 
 /**
