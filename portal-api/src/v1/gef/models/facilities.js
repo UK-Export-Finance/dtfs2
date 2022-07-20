@@ -92,7 +92,8 @@ class Facility {
       }
 
       if (req.issueDate != null) {
-        this.issueDate = Date(req.issueDate);
+        const timestamp = convertToTimestamp(req.issueDate);
+        this.issueDate = new Date(timestamp);
       }
 
       if (req.monthsOfCover === null) {

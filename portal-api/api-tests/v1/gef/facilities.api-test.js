@@ -81,7 +81,7 @@ describe(baseUrl, () => {
       monthsOfCover: 12,
       details: ['test', 'test'],
       detailsOther: null,
-      currency: { id: 'GBP' },
+      currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
       value: 10000000,
       coverPercentage: 75,
       interestPercentage: 10,
@@ -156,7 +156,7 @@ describe(baseUrl, () => {
       const update = {
         hasBeenIssued: false,
         name: 'Test',
-        currency: { id: 'GBP' },
+        currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
       };
       const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
@@ -168,7 +168,7 @@ describe(baseUrl, () => {
           ...details,
           hasBeenIssued: false,
           name: 'Test',
-          currency: { id: 'GBP' },
+          currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
           updatedAt: expect.any(Number),
         },
         validation: {
@@ -217,7 +217,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: { id: 'GBP' },
+        currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
@@ -265,7 +265,7 @@ describe(baseUrl, () => {
         monthsOfCover: 12,
         details: ['test'],
         detailsOther: null,
-        currency: { id: 'GBP' },
+        currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
         value: '10000000',
         coverPercentage: 80,
         interestPercentage: 40,
@@ -292,7 +292,7 @@ describe(baseUrl, () => {
         },
       };
 
-      expected.details.currency = { id: 'GBP' };
+      expected.details.currency = { id: CONSTANTS.CURRENCY.CURRENCY.GBP };
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
@@ -341,7 +341,7 @@ describe(baseUrl, () => {
         },
       };
 
-      expected.details.currency = { id: 'GBP' };
+      expected.details.currency = { id: CONSTANTS.CURRENCY.CURRENCY.GBP };
 
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
@@ -372,7 +372,7 @@ describe(baseUrl, () => {
       const update = {
         hasBeenIssued: true,
         name: 'Test',
-        currency: { id: 'GBP' },
+        currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
         coverStartDate: 'July 19, 2022',
         coverEndDate: 'July 19, 2050'
       };
@@ -386,10 +386,76 @@ describe(baseUrl, () => {
           ...details,
           hasBeenIssued: true,
           name: 'Test',
-          currency: { id: 'GBP' },
+          currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
           updatedAt: expect.any(Number),
           coverStartDate: '2022-07-19T00:00:00.000Z',
           coverEndDate: '2050-07-19T00:00:00.000Z'
+        },
+        validation: {
+          required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+        },
+      };
+
+      expect(body).toEqual(expected);
+      expect(status).toEqual(200);
+    });
+
+    it('should update the coverStartDate and coverEndDate in the right format set to midnight if leap year', async () => {
+      const { details } = newFacility;
+      const update = {
+        hasBeenIssued: true,
+        name: 'Test',
+        currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
+        coverStartDate: 'February 29, 2024',
+        coverEndDate: 'February 29, 2040'
+      };
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+
+      const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
+
+      const expected = {
+        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+        details: {
+          ...details,
+          hasBeenIssued: true,
+          name: 'Test',
+          currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
+          updatedAt: expect.any(Number),
+          coverStartDate: '2024-02-29T00:00:00.000Z',
+          coverEndDate: '2040-02-29T00:00:00.000Z'
+        },
+        validation: {
+          required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+        },
+      };
+
+      expect(body).toEqual(expected);
+      expect(status).toEqual(200);
+    });
+
+    it('should update the coverStartDate and coverEndDate in the right format set to midnight if years are 9999 and 10000 (upper edge cases)', async () => {
+      const { details } = newFacility;
+      const update = {
+        hasBeenIssued: true,
+        name: 'Test',
+        currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
+        coverStartDate: 'February 01, 9999',
+        coverEndDate: 'February 01, 10000'
+      };
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+
+      const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
+
+      const expected = {
+        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+        details: {
+          ...details,
+          hasBeenIssued: true,
+          name: 'Test',
+          currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
+          updatedAt: expect.any(Number),
+          coverStartDate: '9999-02-01T00:00:00.000Z',
+          coverEndDate: '+010000-02-01T00:00:00.000Z'
         },
         validation: {
           required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],

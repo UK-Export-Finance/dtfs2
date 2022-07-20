@@ -6,10 +6,13 @@
  * returns in date format
  */
 const convertToTimestamp = (time) => {
-  const date = new Date(time);
-  const utc = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+  if (time) {
+    const date = new Date(time);
+    const utc = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
 
-  return new Date(utc);
+    return new Date(utc);
+  }
+  return null;
 };
 
 module.exports = convertToTimestamp;
