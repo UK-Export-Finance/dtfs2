@@ -366,6 +366,39 @@ describe(baseUrl, () => {
       const { status } = await as(aMaker).put({}).to(`${baseUrl}/doesnotexist`);
       expect(status).toEqual(204);
     });
+
+    it('should update the coverStartDate and coverEndDate in the right format set to midnight', async () => {
+      const { details } = newFacility;
+      const update = {
+        hasBeenIssued: true,
+        name: 'Test',
+        currency: { id: 'GBP' },
+        coverStartDate: 'July 19, 2022',
+        coverEndDate: 'July 19, 2050'
+      };
+      const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+
+      const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
+
+      const expected = {
+        status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
+        details: {
+          ...details,
+          hasBeenIssued: true,
+          name: 'Test',
+          currency: { id: 'GBP' },
+          updatedAt: expect.any(Number),
+          coverStartDate: '2022-07-19T00:00:00.000Z',
+          coverEndDate: '2050-07-19T00:00:00.000Z'
+        },
+        validation: {
+          required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+        },
+      };
+
+      expect(body).toEqual(expected);
+      expect(status).toEqual(200);
+    });
   });
 
   describe(`DELETE ${baseUrl}/:id`, () => {
