@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const convertToTimestamp = require('../../helpers/convertToTimestamp');
 
 const checkType = (type) => {
   if (type) {
@@ -81,15 +82,18 @@ class Facility {
       }
 
       if (req.coverStartDate != null) {
-        this.coverStartDate = new Date(req.coverStartDate);
+        const timestamp = convertToTimestamp(req.coverStartDate);
+        this.coverStartDate = new Date(timestamp);
       }
 
       if (req.coverEndDate != null) {
-        this.coverEndDate = new Date(req.coverEndDate);
+        const timestamp = convertToTimestamp(req.coverEndDate);
+        this.coverEndDate = new Date(timestamp);
       }
 
       if (req.issueDate != null) {
-        this.issueDate = new Date(req.issueDate);
+        const timestamp = convertToTimestamp(req.issueDate);
+        this.issueDate = new Date(timestamp);
       }
 
       if (req.monthsOfCover === null) {
