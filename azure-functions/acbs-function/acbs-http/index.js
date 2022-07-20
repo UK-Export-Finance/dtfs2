@@ -1,4 +1,4 @@
-﻿const df = require('durable-functions');
+const df = require('durable-functions');
 
 const acbsHttp = async (context, req) => {
   const client = df.getClient(context);

@@ -258,7 +258,7 @@ The steps taken are:
 
 1. Deal is created in Portal/GEF and submitted to TFM
 2. TFM calls the Number Generator Azure Function, stores the status endpoint for the function call in the Durable Functions log and returns a ukefID="PENDING"
-3. The Number Generator Function tries the number generator a maximum of 5 times before delaring a failure
+3. The Number Generator Function tries the number generator a maximum of 5 times before declaring a failure
 4. A scheduled job on tfm-api polls the status endpoint for each running job until a result is received
 5. If the result is a success then the deal & facilities are updated with the generated IDs
 6. If the result is an error, then the entry in the durable functions log collection is updated with the error
@@ -302,7 +302,7 @@ Only people/email addresses listed in the UKEF Notify 'team members' page, will 
 
 Currently, all emails are sent to a bank's email address associated with the user(s) that have been involved with the deal creation and submission process.
 
-Therefore, to test eamils we just need to change these emails to your own email that is listed in the Notify team members. To guarantee receiving all possible emails for all services, you should change the emails in the following places:
+Therefore, to test emails we just need to change these emails to your own email that is listed in the Notify team members. To guarantee receiving all possible emails for all services, you should change the emails in the following places:
 
 1) `banks` MongoDB collection > `emails` array. Typically the bank with ID 9 is used.
 2) `users` MongoDB collection > `bank.emails` array. Typically the user `BANK1_MAKER1` is used
@@ -313,9 +313,9 @@ The only exception to this is TFM Task emails - these emails are sent to the tea
 
 ### Notify template limitations
 
-Currenty Notify does not have much support for complex, conditional content - only simple true/false strings. It also doesn't support iteration.
+Currently Notify does not have much support for complex, conditional content - only simple true/false strings. It also doesn't support iteration.
 
-We have a requirement to render multiple lists of facilities, also seperated by facility types. It is not possible to do this out-of-the-box. Therefore, for emails that have lists of facilities, we generate a single string with HTMl/Notify encodings, that will render lists in the Notify template. The single string will be passed as a single email variable to Notify. You can see this in `notify-template-formatters.js`, in TFM API.
+We have a requirement to render multiple lists of facilities, also separated by facility types. It is not possible to do this out-of-the-box. Therefore, for emails that have lists of facilities, we generate a single string with HTMl/Notify encodings, that will render lists in the Notify template. The single string will be passed as a single email variable to Notify. You can see this in `notify-template-formatters.js`, in TFM API.
 
 We have contacted Notify about this asking for more support.
 
