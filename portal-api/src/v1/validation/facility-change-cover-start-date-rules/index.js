@@ -12,7 +12,7 @@ module.exports = (
     errorList,
     deal,
   );
-  errorList = coverDatesRules(submittedValues, errorList);
+  errorList = coverDatesRules(submittedValues, deal, errorList);
 
   return errorList;
 };

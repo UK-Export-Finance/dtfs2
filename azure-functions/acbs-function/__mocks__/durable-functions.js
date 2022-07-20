@@ -1,4 +1,3 @@
-
 const mockClient = {
   startNew: jest.fn(() => 'mockInstanceId'),
   createCheckStatusResponse: jest.fn(),

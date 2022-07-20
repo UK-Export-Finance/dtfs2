@@ -15,8 +15,8 @@ module.exports = (loan, errorList, deal) => {
     && facilityStage === 'Unconditional') {
     newErrorList = name(loan, newErrorList);
     newErrorList = requestedCoverStartDateRules(loan, deal, newErrorList);
-    newErrorList = coverEndDate(loan, newErrorList);
-    newErrorList = coverDates(loan, newErrorList);
+    newErrorList = coverEndDate(loan, deal, newErrorList);
+    newErrorList = coverDates(loan, deal, newErrorList);
     newErrorList = disbursementAmount(loan, newErrorList);
   }
 
