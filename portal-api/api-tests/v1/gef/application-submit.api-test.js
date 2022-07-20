@@ -14,6 +14,8 @@ const {
   getAllFacilitiesByDealId
 } = require('../../../src/v1/gef/controllers/facilities.controller');
 
+const convertToTimestamp = require('../../../src/v1/helpers/convertToTimestamp');
+
 const mockApplications = require('../../fixtures/gef/application');
 
 const wipeDB = require('../../wipeDB');
@@ -408,7 +410,7 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
 
     const expectedCoverStartDate = (new Date()).setHours(0, 0, 0, 0);
     // expect both to have been set
-    expect(updatedFacility[0].coverStartDate).toEqual(new Date(expectedCoverStartDate));
+    expect(updatedFacility[0].coverStartDate).toEqual(new Date(convertToTimestamp(expectedCoverStartDate)));
     expect(updatedFacility[0].submittedAsIssuedDate).toEqual(expect.any(String));
   });
 
