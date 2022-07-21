@@ -45,6 +45,8 @@ const createCodeValueTransaction = async (context) => {
   }
 
   return {
+    status,
+    dataSent: acbsCodeValueTransactionInput,
     submittedToACBS,
     receivedFromACBS: moment().format(),
     ...data,

@@ -70,6 +70,8 @@ const createFacilityMaster = async (context) => {
   }
 
   return {
+    status,
+    dataSent: acbsFacilityMasterInput,
     submittedToACBS,
     receivedFromACBS: moment().format(),
     ...data,
