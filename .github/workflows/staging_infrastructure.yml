@@ -11,7 +11,7 @@ env:
   front_door_access: Allow
   environment: staging
   registry: ${{ secrets.ACR_REGISTRY_TEST }}
-  credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
+  credentials: ${{ secrets.AZURE_DIGITAL_STAGING }}
   app_service_plan: test
   redis_sku: Basic
   database_name: dtfs-submissions
@@ -317,7 +317,7 @@ jobs:
             --source-address-prefixes "AzureFrontDoor.Backend" --source-port-ranges "*" \
             --destination-address-prefixes "*" --destination-port-ranges "*"
 
-    - name: Allow Azure fileshare
+    - name: Allow Azure file share
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
@@ -419,7 +419,7 @@ jobs:
             --virtual-network ${{ env.app_service_plan }}-app-service-plan-egress \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet
 
-    - name: Database with autoscale
+    - name: Database with auto scale
       uses: azure/cli@v1.0.0
       with:
         # TODO: switch from provisioned throughput to "serverless" capacity at the account level once it's available for Mongo (currently available for sql).
@@ -650,7 +650,7 @@ jobs:
     - name: DNS A-records
       uses: azure/cli@v1.0.0
       with:
-        # We have to add explicit A records so that Stogare Accounts resolve correctly to the private endpoint address
+        # We have to add explicit A records so that Storage Accounts resolve correctly to the private endpoint address
         # https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
         inlineScript: |
           ipv4_address=$(az network private-dns record-set a show --name tfs${{ env.environment }}storage --zone-name "privatelink.file.core.windows.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
