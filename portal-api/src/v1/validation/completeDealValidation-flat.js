@@ -21,14 +21,14 @@ module.exports = (deal) => {
   }
 
   let validationErrors = {
-    ...submissionDetailsRules(deal.submissionDetails),
+    ...submissionDetailsRules(deal.submissionDetails, deal),
   };
 
   deal.bondTransactions.items.filter((bond) => {
     validationErrors = {
       ...validationErrors,
       ...bondRules(bond, deal).errorList,
-      ...facilityReadyForCheckRequestedCoverStartDateRule(bond),
+      ...facilityReadyForCheckRequestedCoverStartDateRule(deal, bond),
     };
     return true;
   });
@@ -37,7 +37,7 @@ module.exports = (deal) => {
     validationErrors = {
       ...validationErrors,
       ...loanRules(loan, deal).errorList,
-      ...facilityReadyForCheckRequestedCoverStartDateRule(loan),
+      ...facilityReadyForCheckRequestedCoverStartDateRule(deal, loan),
     };
     return true;
   });

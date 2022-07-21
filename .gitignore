@@ -2,13 +2,16 @@
 .npm
 .idea
 .env
+.env.prod
 **/.env
+**/.env.prod
 pipeline.log
 dist
 node_modules
 dtfs-submissions-data-volume*
 **/cypress/videos
 **/cypress/screenshots
+**/actionsheets/*
 
 trade-finance-manager/salesforce.json
 

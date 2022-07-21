@@ -56,8 +56,7 @@ describe('/v1/deals/:id/clone', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe(['deals', 'facilities']);
   });
 
   describe('POST /v1/deals/:id/clone', () => {
@@ -102,7 +101,7 @@ describe('/v1/deals/:id/clone', () => {
         expect(cloned.deal.bankInternalRefName).toEqual(clonePostBody.bankInternalRefName);
         expect(cloned.deal.additionalRefName).toEqual(clonePostBody.additionalRefName);
         expect(cloned.deal.updatedAt).toBeDefined();
-        expect(cloned.deal.submissionType).toEqual(originalDeal.submissionType);
+        expect(cloned.deal.submissionType).toBeUndefined();
 
         expect(cloned.deal.maker.username).toEqual(aBarclaysMaker.username);
         expect(cloned.deal.maker.roles).toEqual(aBarclaysMaker.roles);
@@ -222,7 +221,7 @@ describe('/v1/deals/:id/clone', () => {
           const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${minDealBody._id}/clone`);
 
           const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
-          expect(cloned.deal.submissionType).toEqual('Manual Inclusion Application');
+          expect(cloned.deal.submissionType).toBeUndefined();
         });
       });
 
