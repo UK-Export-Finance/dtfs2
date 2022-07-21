@@ -56,6 +56,8 @@ const createFacilityLoan = async (context) => {
     }
 
     return {
+      status,
+      dataSent: acbsFacilityLoanInput,
       submittedToACBS,
       receivedFromACBS: moment().format(),
       ...data,
