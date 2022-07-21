@@ -42,7 +42,7 @@ jobs:
     steps:
     - uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_DIGITAL_TEST }}
+        creds: ${{ secrets.AZURE_DIGITAL_STAGING }}
 
     - name: Defaults
       uses: azure/cli@v1.0.0
