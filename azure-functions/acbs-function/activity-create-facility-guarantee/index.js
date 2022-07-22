@@ -50,6 +50,8 @@ const createFacilityGuarantee = async (context) => {
   }
 
   return {
+    status,
+    dataSent: acbsFacilityGuaranteeInput,
     submittedToACBS,
     receivedFromACBS: moment().format(),
     ...data,

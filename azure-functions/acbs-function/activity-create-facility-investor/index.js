@@ -49,6 +49,8 @@ const createFacilityInvestor = async (context) => {
   }
 
   return {
+    status,
+    dataSent: acbsFacilityInvestorInput,
     submittedToACBS,
     receivedFromACBS: moment().format(),
     ...data,

@@ -16,8 +16,7 @@ on:
   
 env:
   environment: staging
-  #TODO: Update AZURE_DIGITAL_TEST -> AZURE_DIGITAL_STAGING upon permissions
-  credentials: ${{ secrets.AZURE_DIGITAL_TEST }}
+  credentials: ${{ secrets.AZURE_DIGITAL_STAGING }}
   from: latest
   acr: ${{ secrets.ACR_REGISTRY_STAGING }}
   acr_username: ${{ secrets.ACR_USERNAME_STAGING }}

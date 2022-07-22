@@ -64,6 +64,8 @@ const createFacilityCovenant = async (context) => {
   }
 
   return {
+    status,
+    dataSent: acbsFacilityCovenantInput,
     submittedToACBS,
     receivedFromACBS: moment().format(),
     ...data,
