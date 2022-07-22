@@ -48,6 +48,8 @@ const createDealGuarantee = async (context) => {
   }
 
   return {
+    status,
+    dataSent: guarantee,
     submittedToACBS,
     receivedFromACBS: moment().format(),
     ...data,
