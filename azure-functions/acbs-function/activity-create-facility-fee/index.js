@@ -52,6 +52,8 @@ const createFacilityFee = async (context) => {
     }
 
     return {
+      status,
+      dataSent: acbsFacilityFeeInput,
       submittedToACBS,
       receivedFromACBS: moment().format(),
       ...data,
