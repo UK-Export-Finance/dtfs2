@@ -18,6 +18,9 @@ const caseDealPage = {
         facilityId: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukef-facility-id-link"]`),
         facilityTenor: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-tenor"]`),
         facilityEndDate: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-cover-end-date"]`),
+        exportCurrency: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-value-export-currency"]`),
+        valueGBP: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-value-gbp"]`),
+        exposure: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukef-exposure"]`),
       };
     },
   },

@@ -84,4 +84,5 @@ export const DAY_COUNT_BASIS = {
 export const CURRENCY = {
   AED: 'AED',
   AED_TEXT: 'AED - U.A.E. Dirham',
+  GBP: 'GBP',
 };

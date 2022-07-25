@@ -1,4 +1,6 @@
 const { formattedNumber } = require('../../../../utils/number');
+const { calculateNewFacilityValue, latestAmendmentValueAccepted } = require('../../../helpers/amendment.helpers');
+const api = require('../../../../v1/api');
 
 const mapTotals = (facilities) => {
   const totals = {};

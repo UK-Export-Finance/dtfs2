@@ -191,7 +191,7 @@ const MOCK_DEAL = {
       },
       'coverEndDate-day': '20',
       'coverEndDate-month': '10',
-      'coverEndDate-year': '2020',
+      'coverEndDate-year': '2022',
       issuedDate: '1606900616651',
       requestedCoverStartDate: '1606900616652',
       name: 'Test-123',

@@ -53,6 +53,7 @@ const todayUnixMonth = format(threeDaysAgo, 'M');
 const todayUnixYear = format(threeDaysAgo, 'yyyy');
 
 const todayFormattedFull = format(today, 'dd MMMM yyyy');
+const tomorrowFormattedFull = format(tomorrow, 'd MMMM yyyy');
 
 export default {
   today,
@@ -99,4 +100,5 @@ export default {
   threeDaysAgoPlusMonth,
   todayTaskFormat,
   todayFormattedFull,
+  tomorrowFormattedFull,
 };

@@ -13,6 +13,7 @@ const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDet
 const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
 const mapGefFacilities = require('./mappings/gef-facilities/mapGefFacilities');
 const mapDeals = require('./mappings/deal/mapDeals');
+const api = require('../../v1/api');
 
 const MOCK_DEAL = require('../../v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
@@ -52,14 +53,18 @@ const mockGefDeal = {
 };
 
 describe('reducer - deals', () => {
+  beforeEach(() => {
+    api.getLatestCompletedAmendment = () => Promise.resolve({});
+  });
+
   describe('mapBssDeal', () => {
-    it('should return a mapped deal', () => {
+    it('should return a mapped deal', async () => {
       const expected = {
         _id: mockBssDeal._id,
         dealSnapshot: {
           ...mockBssDeal.dealSnapshot,
           submissionDetails: mapSubmissionDetails(mockBssDeal.dealSnapshot.submissionDetails),
-          facilities: mapFacilities(
+          facilities: await mapFacilities(
             mockBssDeal.dealSnapshot.facilities,
             mockBssDeal.dealSnapshot.details,
             mockBssDeal.tfm,
@@ -71,13 +76,13 @@ describe('reducer - deals', () => {
         tfm: mapDealTfm(mockBssDeal),
       };
 
-      const result = mapBssDeal(mockBssDeal);
+      const result = await mapBssDeal(mockBssDeal);
       expect(result).toEqual(expected);
     });
   });
 
   describe('mapGefDeal', () => {
-    it('should return a mapped gef deal', () => {
+    it('should return a mapped gef deal', async () => {
       const expected = {
         _id: mockGefDeal._id,
         dealSnapshot: {
@@ -94,20 +99,20 @@ describe('reducer - deals', () => {
           bank: mockGefDeal.dealSnapshot.bank,
           details: mapGefDealDetails(mockGefDeal.dealSnapshot),
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
-          facilities: mapGefFacilities(mockGefDeal.dealSnapshot, mockGefDeal.tfm),
+          facilities: await mapGefFacilities(mockGefDeal.dealSnapshot, mockGefDeal.tfm),
           supportingInformation: mockGefDeal.dealSnapshot.supportingInformation,
           totals: mapTotals(mockGefDeal.dealSnapshot.facilities),
         },
         tfm: mapDealTfm(mockGefDeal),
       };
 
-      const result = mapGefDeal(mockGefDeal);
+      const result = await mapGefDeal(mockGefDeal);
       expect(result).toEqual(expected);
     });
   });
 
   describe('dealsLightReducer', () => {
-    it('should return mapDeals result', () => {
+    it('should return mapDeals result', async () => {
       const mockDeals = [
         mockBssDeal,
         mockBssDeal,
@@ -119,7 +124,7 @@ describe('reducer - deals', () => {
       const expected = mapDeals(
         mockDeals,
         mapBssDeal,
-        mapGefDeal,
+        await mapGefDeal,
       );
 
       expect(result).toEqual(expected);

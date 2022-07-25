@@ -12,8 +12,8 @@ describe('generate AIN/MIN confirmation email variables', () => {
   const mockFacilityLists = {};
 
   describe('commonEmailVars', () => {
-    it('should return object of email variables used in both BSS and GEF', () => {
-      const mockDeal = mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+    it('should return object of email variables used in both BSS and GEF', async () => {
+      const mockDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
 
       const result = commonEmailVars(mockDeal);
 
@@ -29,9 +29,9 @@ describe('generate AIN/MIN confirmation email variables', () => {
   });
 
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
-    const mockDeal = mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+    it('should return result of both commonEmailVars and bssEmailVariables functions', async () => {
+      const mockDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
 
-    it('should return result of both commonEmailVars and bssEmailVariables functions', () => {
       const result = generateMiaConfirmationEmailVars(mockDeal, mockFacilityLists);
 
       const expected = {
@@ -43,9 +43,9 @@ describe('generate AIN/MIN confirmation email variables', () => {
   });
 
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`, () => {
-    const mockDeal = mapSubmittedDeal({ dealSnapshot: MOCK_GEF_DEAL });
+    it('should return commonEmailVars function', async () => {
+      const mockDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_GEF_DEAL });
 
-    it('should return commonEmailVars function', () => {
       const result = generateMiaConfirmationEmailVars(mockDeal, mockFacilityLists);
 
       const expected = commonEmailVars(mockDeal);
@@ -53,8 +53,8 @@ describe('generate AIN/MIN confirmation email variables', () => {
     });
   });
 
-  it('should return empty object when dealType is invalid', () => {
-    const mockDeal = mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+  it('should return empty object when dealType is invalid', async () => {
+    const mockDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
     mockDeal.dealType = 'INVALID';
 
     const result = generateMiaConfirmationEmailVars(mockDeal);

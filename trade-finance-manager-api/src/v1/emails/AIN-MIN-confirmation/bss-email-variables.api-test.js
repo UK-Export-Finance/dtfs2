@@ -9,8 +9,8 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
     unissued: 'test',
   };
 
-  it('should return object', () => {
-    const mockSubmittedDeal = mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+  it('should return object', async () => {
+    const mockSubmittedDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
 
     const result = bssEmailVariables(mockSubmittedDeal, mockFacilityLists);
 
@@ -32,9 +32,9 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
   });
 
   describe('when deal is MIN', () => {
-    it('should return correct isAin/isMin properties', () => {
+    it('should return correct isAin/isMin properties', async () => {
       const mockSubmittedDeal = {
-        ...mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL }),
+        ...await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL }),
         submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
       };
 
@@ -46,13 +46,13 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
   });
 
   describe('when there are no issued or unissued facilities', () => {
-    it('should return correct `show issued/unissued header` properties', () => {
+    it('should return correct `show issued/unissued header` properties', async () => {
       mockFacilityLists = {
         issued: '',
         unissued: '',
       };
 
-      const mockSubmittedDeal = mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+      const mockSubmittedDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
 
       const result = bssEmailVariables(mockSubmittedDeal, mockFacilityLists);
 

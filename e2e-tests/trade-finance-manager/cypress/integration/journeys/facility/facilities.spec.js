@@ -81,7 +81,7 @@ context('Facility page', () => {
     cy.get('@row2').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[0].type);
     cy.get('@row2').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
     cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
-    cy.get('@row2').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2020');
+    cy.get('@row2').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2022');
     cy.get('@row2').find('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
   });
 
@@ -260,10 +260,10 @@ context('Facility page', () => {
     cy.get('@row2').find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
-    cy.get('@row3').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2020');
+    cy.get('@row3').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2022');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(4).as('row4');
-    cy.get('@row4').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2020');
+    cy.get('@row4').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2022');
   });
 
   it('sorts all columns based on Cover End Date column (DESC)', () => {
@@ -273,10 +273,10 @@ context('Facility page', () => {
     page.facilitiesPage.coverEndDateColumn().find('button').dblclick();
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2020');
+    cy.get('@row1').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2022');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2020');
+    cy.get('@row2').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2022');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
     cy.get('@row3').find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');

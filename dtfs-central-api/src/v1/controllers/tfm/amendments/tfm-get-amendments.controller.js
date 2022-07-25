@@ -293,13 +293,21 @@ exports.getCompletedAmendmentByDealId = async (req, res) => {
  *  }
  */
 const findLatestCompletedAmendmentByFacilityId = async (facilityId) => {
+  const proceed = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION.PROCEED;
   if (ObjectId.isValid(facilityId)) {
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection.aggregate([
         { $match: { _id: ObjectId(facilityId) } },
         { $unwind: '$amendments' },
-        { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
+        {
+          $match: {
+            $or: [
+              { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED, 'amendments.submittedByPim': true, 'amendments.requireUkefApproval': false },
+              { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED, 'amendments.bankDecision.decision': proceed, 'amendments.bankDecision.submitted': true }
+            ]
+          }
+        },
         { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
         { $project: { _id: 0, amendments: 1 } },
         { $limit: 1 }
