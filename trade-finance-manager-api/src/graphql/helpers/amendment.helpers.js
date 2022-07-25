@@ -155,6 +155,29 @@ const latestAmendmentCoverEndDateAccepted = (amendment) => {
   return false;
 };
 
+// calculates the value for total exposure to return for a single amendment
+const calculateAmendmentTotalExposure = async (facility) => {
+  const { _id, tfm, facilitySnapshot } = facility;
+  const { exchangeRate } = tfm;
+
+  const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
+
+  if (latestCompletedAmendment?.amendmentId && latestCompletedAmendment?.value && latestAmendmentValueAccepted(latestCompletedAmendment)) {
+    const { coverPercentage, coveredPercentage } = facilitySnapshot;
+
+    // BSS is coveredPercentage while GEF is coverPercentage
+    const coverPercentageValue = coverPercentage || coveredPercentage;
+
+    const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendment);
+    const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
+
+    // sets new exposure value based on amendment value
+    return ukefExposureValue;
+  }
+
+  return null;
+};
+
 module.exports = {
   amendmentChangeValueExportCurrency,
   calculateNewFacilityValue,
@@ -162,4 +185,5 @@ module.exports = {
   calculateAmendmentTenor,
   latestAmendmentValueAccepted,
   latestAmendmentCoverEndDateAccepted,
+  calculateAmendmentTotalExposure,
 };

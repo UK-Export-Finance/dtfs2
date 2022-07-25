@@ -22,7 +22,7 @@ const mapGefDealSnapshot = async (dealSnapshot, dealTfm) => ({
   eligibility: dealSnapshot.eligibility,
   supportingInformation: dealSnapshot.supportingInformation,
   facilities: await mapGefFacilities(dealSnapshot, dealTfm),
-  totals: mapTotals(dealSnapshot.facilities),
+  totals: await mapTotals(dealSnapshot.facilities),
 });
 
 module.exports = mapGefDealSnapshot;

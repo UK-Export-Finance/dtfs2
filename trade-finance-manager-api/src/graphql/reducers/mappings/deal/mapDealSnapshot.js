@@ -20,7 +20,7 @@ const mapDealSnapshot = async (deal) => {
     submissionDetails: mapSubmissionDetails(submissionDetails),
     eligibility: mapEligibility(eligibility),
     facilities: await mapFacilities(facilities, dealSnapshot.details, dealTfm),
-    totals: mapTotals(facilities),
+    totals: await mapTotals(facilities),
     isFinanceIncreasing: false,
   };
 

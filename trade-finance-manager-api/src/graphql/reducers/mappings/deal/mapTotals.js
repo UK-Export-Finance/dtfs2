@@ -1,13 +1,23 @@
 const { formattedNumber } = require('../../../../utils/number');
-const { calculateNewFacilityValue, latestAmendmentValueAccepted } = require('../../../helpers/amendment.helpers');
+const { calculateNewFacilityValue, latestAmendmentValueAccepted, calculateAmendmentTotalExposure } = require('../../../helpers/amendment.helpers');
 const api = require('../../../../v1/api');
 
-const mapTotals = (facilities) => {
+const mapTotals = async (facilities) => {
   const totals = {};
 
   // total value of all facilities
-  const facilitiesValue = facilities.map((facility) => {
-    const { facilitySnapshot, tfm } = facility;
+  const facilitiesValue = await Promise.all(facilities.map(async (facility) => {
+    const { facilitySnapshot, tfm, _id } = facility;
+
+    const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
+
+    // if latest amendment then returns value of new amendment
+    if (latestCompletedAmendment?.amendmentId && latestCompletedAmendment?.value && latestAmendmentValueAccepted(latestCompletedAmendment)) {
+      const { exchangeRate } = tfm;
+
+      const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendment);
+      return Number(valueInGBP);
+    }
 
     if (tfm.facilityValueInGBP) {
       return Number(tfm.facilityValueInGBP);
@@ -20,7 +30,7 @@ const mapTotals = (facilities) => {
     // - Cash and Contingent facility total is `value`
 
     return Number(facilitySnapshot.value);
-  });
+  }));
 
   const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
 
@@ -28,15 +38,20 @@ const mapTotals = (facilities) => {
 
   // total ukef exposure for all facilities
   const ukefExposureArray = [
-    ...facilities.map((f) => {
+    ...await Promise.all(facilities.map(async (f) => {
+      // if amendment completed, then returns exposure value of amendment
+      if (await calculateAmendmentTotalExposure(f)) {
+        const amendmentExposureValue = await calculateAmendmentTotalExposure(f);
+        return amendmentExposureValue;
+      }
+
       if (f.tfm.ukefExposure) {
         return f.tfm.ukefExposure;
       }
 
       return null;
-    }),
+    })),
   ];
-
   const formattedUkefExposure = formattedNumber(ukefExposureArray.reduce((a, b) => a + b));
   totals.facilitiesUkefExposure = `GBP ${formattedUkefExposure}`;
 

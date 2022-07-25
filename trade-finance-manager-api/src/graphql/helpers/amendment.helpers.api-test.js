@@ -1,6 +1,8 @@
 const amendmentHelpers = require('./amendment.helpers');
 const { CURRENCY } = require('../../constants/currency');
 const { FACILITY_TYPE } = require('../../constants/facilities');
+const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
+const api = require('../../v1/api');
 
 describe('amendmentChangeValueExportCurrency()', () => {
   const amendment = { currency: CURRENCY.GBP };
@@ -231,6 +233,57 @@ describe('calculateAmendmentTenor()', () => {
     const amendment = { };
 
     const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
+
+    const expected = null;
+
+    expect(result).toEqual(expected);
+  });
+});
+
+describe('calculateAmendmentTotalExposure()', () => {
+  const mockAmendment = {
+    value: 5000,
+    currency: CURRENCY.GBP,
+    amendmentId: '1234',
+    requireUkefApproval: true,
+    ukefDecision: {
+      submitted: true,
+      value: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
+    },
+    bankDecision: {
+      submitted: true,
+      decision: AMENDMENT_BANK_DECISION.PROCEED,
+    },
+  };
+
+  const mockFacility = {
+    _id: '123',
+    facilitySnapshot: {
+      type: 'Bond',
+      coverPercentage: 25,
+    },
+    tfm: {
+      ukefExposure: 23000.00,
+      facilityValueInGBP: 1034.7800881821,
+    },
+  };
+
+  it('should return exposure value when amendment in progress ', async () => {
+    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+
+    const result = await amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
+
+    const expected = mockAmendment.value * (mockFacility.facilitySnapshot.coverPercentage / 100);
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should null if amendment not completed', async () => {
+    mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.null };
+
+    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+
+    const result = await amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
 
     const expected = null;
 

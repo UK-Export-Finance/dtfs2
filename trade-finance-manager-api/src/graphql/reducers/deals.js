@@ -19,7 +19,7 @@ const mapBssDeal = async (deal) => {
       facilities: await mapFacilities(dealSnapshot.facilities, dealSnapshot.details, deal.tfm),
       supportingInformation: dealSnapshot.supportingInformation,
       eligibility: mapEligibility(dealSnapshot.eligibility),
-      totals: mapTotals(dealSnapshot.facilities),
+      totals: await mapTotals(dealSnapshot.facilities),
     },
     tfm: mapDealTfm(deal),
   };
@@ -48,7 +48,7 @@ const mapGefDeal = async (deal) => {
       submissionDetails: mapGefSubmissionDetails(dealSnapshot),
       facilities: await mapGefFacilities(dealSnapshot, deal.tfm),
       supportingInformation: dealSnapshot.supportingInformation,
-      totals: mapTotals(dealSnapshot.facilities),
+      totals: await mapTotals(dealSnapshot.facilities),
     },
     tfm: mapDealTfm(deal),
   };

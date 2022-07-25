@@ -50,7 +50,7 @@ describe('mapGefDealSnapshot', () => {
       eligibility: MOCK_GEF_DEAL.eligibility,
       supportingInformation: mockDeal.dealSnapshot.supportingInformation,
       facilities: await mapGefFacilities(mockDeal.dealSnapshot, mockDeal.tfm),
-      totals: mapTotals(mockDeal.dealSnapshot.facilities),
+      totals: await mapTotals(mockDeal.dealSnapshot.facilities),
     };
 
     expect(result).toEqual(expected);

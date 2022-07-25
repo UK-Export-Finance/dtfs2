@@ -71,7 +71,7 @@ describe('reducer - deals', () => {
           ),
           supportingInformation: mockBssDeal.dealSnapshot.supportingInformation,
           eligibility: mapEligibility(mockBssDeal.dealSnapshot.eligibility),
-          totals: mapTotals(mockBssDeal.dealSnapshot.facilities),
+          totals: await mapTotals(mockBssDeal.dealSnapshot.facilities),
         },
         tfm: mapDealTfm(mockBssDeal),
       };
@@ -101,7 +101,7 @@ describe('reducer - deals', () => {
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
           facilities: await mapGefFacilities(mockGefDeal.dealSnapshot, mockGefDeal.tfm),
           supportingInformation: mockGefDeal.dealSnapshot.supportingInformation,
-          totals: mapTotals(mockGefDeal.dealSnapshot.facilities),
+          totals: await mapTotals(mockGefDeal.dealSnapshot.facilities),
         },
         tfm: mapDealTfm(mockGefDeal),
       };

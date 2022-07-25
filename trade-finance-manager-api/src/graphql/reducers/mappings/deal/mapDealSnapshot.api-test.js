@@ -41,7 +41,7 @@ describe('mapDealSnapshot', () => {
       submissionDetails: mapSubmissionDetails(MOCK_DEAL.submissionDetails),
       eligibility: mapEligibility(MOCK_DEAL.eligibility),
       facilities: await mapFacilities(mockFacilities, MOCK_DEAL.details, mockDeal.tfm),
-      totals: mapTotals(mockFacilities),
+      totals: await mapTotals(mockFacilities),
       isFinanceIncreasing: false,
     };
 
