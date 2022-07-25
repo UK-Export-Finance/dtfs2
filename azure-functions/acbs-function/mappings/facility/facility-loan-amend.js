@@ -32,6 +32,8 @@ const facilityLoanAmend = (amendments, facilityMasterRecord) => {
         record = {
           ...record,
           expiryDate: formatDate(coverEndDate),
+          // TODO : Re-calculate `nextDueDate`
+          // nextDueDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
         };
       }
     }

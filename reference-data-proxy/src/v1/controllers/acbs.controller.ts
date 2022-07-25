@@ -198,7 +198,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     // Change requested
     const { changeFacilityValue, changeCoverEndDate } = amendments;
     // UW Decision
-    const { value, coverEndDate } = amendments.ukefDecision;
+    const { value, coverEndDate } = amendments.ukefDecision || false;
     const valueDeclined = value === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
     const coverEndDateDeclined = coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
     // Delete frivolous property

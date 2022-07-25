@@ -18,11 +18,11 @@ const getMaximumLiability = (facility, overallAmount = false) => {
     facilityValue = amount;
   }
 
-  const amount = typeof facilityValue === 'string'
+  const liability = typeof facilityValue === 'string'
     ? facilityValue.replace(/,/g, '')
     : facilityValue;
 
-  return Number(Number(amount).toFixed(2));
+  return Number(Number(liability).toFixed(2));
 };
 
 module.exports = getMaximumLiability;

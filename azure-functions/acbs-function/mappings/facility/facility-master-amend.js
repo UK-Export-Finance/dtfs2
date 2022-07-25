@@ -76,6 +76,7 @@ const facilityMasterAmend = (fmr, amendments, deal) => {
         record = {
           ...record,
           guaranteeExpiryDate: formatDate(coverEndDate),
+          exposurePeriod: helpers.getExposurePeriod(amendments, deal.dealSnapshot.dealType, fmr),
         };
       }
     }

@@ -4,26 +4,45 @@ const CONSTANTS = require('../../../constants');
 const { formatYear, formatTimestamp } = require('../../../helpers/date');
 
 /**
- * Evalutes facility's exposure period in months.
+ * Evaluates facility's exposure period in months.
  * If `Unissued` then guarantee month value is returned.
  * If `Issued` then cover start and end date difference in months.
  * @param {Object} facility Facility object
  * @param {String} dealType Deal type `GEF`, `BSS`, `EWCS`
- * @returns {Integer} Exposure period in months
+ * @param {Object} FMR Facility master record object, particularly used for amendments. `null` as default when no argument is provided.
+ * @returns {String} Exposure period in months as a `String`
  */
-const getExposurePeriod = (facility, dealType) => {
+const getExposurePeriod = (facility, dealType, fmr = null) => {
   const { facilitySnapshot } = facility;
+  let exposure = 0;
 
-  // GEF
+  // Facility amendment exposure calculation
+  if (facility.amendment && fmr) {
+    // De-structure object
+    const { issueDate } = fmr;
+    const { coverEndDate } = facility.amendment;
+    // Format in YYYY-MM-DD format
+    const startDate = formatTimestamp(issueDate);
+    const endDate = formatTimestamp(coverEndDate);
+
+    // Calculate exposure period (+1 for inclusive calculation)
+    let exposurePeriod = moment(endDate).diff(moment(startDate), 'months') + 1;
+    // Month offset
+    const offset = moment(startDate).date() === moment(endDate).date() ? -1 : 0;
+    exposurePeriod += offset;
+
+    return String(exposurePeriod);
+  }
+
+  // New facility exposure calculation
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
+    // GEF
     const { exposurePeriodInMonths } = facility.tfm;
     const { hasBeenIssued, monthsOfCover } = facilitySnapshot;
 
-    return hasBeenIssued ? exposurePeriodInMonths : monthsOfCover;
-  }
-
-  // BSS/EWCS
-  if (facilitySnapshot) {
+    exposure = hasBeenIssued ? exposurePeriodInMonths : monthsOfCover;
+  } else if (dealType === CONSTANTS.PRODUCT.TYPE.BSS_EWCS) {
+    // BSS/EWCS
     let coverStartDate;
     const {
       requestedCoverStartDate,
@@ -52,17 +71,17 @@ const getExposurePeriod = (facility, dealType) => {
       facilitySnapshot['coverEndDate-day'],
     ]);
 
-    if (!coverStartDate.isValid() || !coverEndDate.isValid()) {
-      return Number(ukefGuaranteeInMonths) || 0;
+    if ((!coverStartDate.isValid() || !coverEndDate.isValid()) && ukefGuaranteeInMonths) {
+      exposure = ukefGuaranteeInMonths;
     }
 
     const durationMonths = coverEndDate.diff(coverStartDate, 'months') + 1;
     const monthOffset = moment(coverStartDate).date() === moment(coverEndDate).date() ? -1 : 0;
 
-    return durationMonths + monthOffset;
+    exposure = durationMonths + monthOffset;
   }
 
-  return 0;
+  return String(exposure);
 };
 
 module.exports = getExposurePeriod;

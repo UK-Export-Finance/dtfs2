@@ -13,15 +13,14 @@ const getNextDueDate = (facility) => {
   const { guaranteeCommencementDate, guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
     ? facility.tfm.facilityGuaranteeDates
     : facility.update;
-
   const months = getFeeFrequencyMonths(facility);
   const feeType = mapFeeType(facility.facilitySnapshot);
 
   if (feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY) {
     return guaranteeExpiryDate;
   }
-  const nextDueDate = addMonth(guaranteeCommencementDate, months);
-  return nextDueDate;
+
+  return addMonth(guaranteeCommencementDate, months);
 };
 
 module.exports = getNextDueDate;
