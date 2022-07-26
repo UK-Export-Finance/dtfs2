@@ -1,7 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
 const { formattedNumber } = require('../../utils/number');
 const { decimalsCount, roundNumber } = require('../../v1/helpers/number');
-const { CURRENCY } = require('../../constants/currency');
+const { CURRENCY } = require('../../constants/currency.constant');
 const api = require('../../v1/api');
 const { DEALS } = require('../../constants');
 
@@ -79,7 +79,7 @@ const dealTypeCoverStartDate = (facilitySnapshot) => {
   let dateConstructed;
 
   if (facilitySnapshot['requestedCoverStartDate-year'] && facilitySnapshot['requestedCoverStartDate-month'] && facilitySnapshot['requestedCoverStartDate-day']) {
-  // BSS stored as seperate year month day values
+  // BSS stored as separate year month day values
     dateConstructed = new Date(
       facilitySnapshot['requestedCoverStartDate-year'],
       facilitySnapshot['requestedCoverStartDate-month'] - 1,
@@ -94,8 +94,7 @@ const dealTypeCoverStartDate = (facilitySnapshot) => {
 
 // calculates new tenor from amendment coverEndDate and facility coverStartDate.  Requires external api call to calculate tenor
 const calculateAmendmentTenor = async (facilitySnapshot, amendment) => {
-  if (facilitySnapshot && facilitySnapshot?.ukefFacilityType && (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate)
-    && amendment && amendment?.coverEndDate) {
+  if (facilitySnapshot?.ukefFacilityType && (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate) && amendment?.coverEndDate) {
     const { coverEndDate } = amendment;
     const { ukefFacilityType } = facilitySnapshot;
 
@@ -116,8 +115,7 @@ const calculateAmendmentTenor = async (facilitySnapshot, amendment) => {
 // checking if amendment completed and if value change accepted fully
 const latestAmendmentValueAccepted = (amendment) => {
   const { ukefDecision, bankDecision, value, requireUkefApproval } = amendment;
-  const { APPROVED_WITH_CONDITIONS } = DEALS.AMENDMENT_UW_DECISION;
-  const { APPROVED_WITHOUT_CONDITIONS } = DEALS.AMENDMENT_UW_DECISION;
+  const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = DEALS.AMENDMENT_UW_DECISION;
   const { PROCEED } = DEALS.AMENDMENT_BANK_DECISION;
 
   const ukefDecisionApproved = ukefDecision?.value === APPROVED_WITH_CONDITIONS || ukefDecision?.value === APPROVED_WITHOUT_CONDITIONS;
@@ -137,8 +135,7 @@ const latestAmendmentValueAccepted = (amendment) => {
 // checking if amendment completed and if coverEndDate change accepted fully
 const latestAmendmentCoverEndDateAccepted = (amendment) => {
   const { ukefDecision, bankDecision, coverEndDate, requireUkefApproval } = amendment;
-  const { APPROVED_WITH_CONDITIONS } = DEALS.AMENDMENT_UW_DECISION;
-  const { APPROVED_WITHOUT_CONDITIONS } = DEALS.AMENDMENT_UW_DECISION;
+  const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = DEALS.AMENDMENT_UW_DECISION;
   const { PROCEED } = DEALS.AMENDMENT_BANK_DECISION;
 
   const ukefDecisionApproved = ukefDecision?.coverEndDate === APPROVED_WITH_CONDITIONS || ukefDecision?.coverEndDate === APPROVED_WITHOUT_CONDITIONS;
@@ -155,6 +152,18 @@ const latestAmendmentCoverEndDateAccepted = (amendment) => {
   return false;
 };
 
+const isValidCompletedValueAmendment = (latestCompletedAmendment) => {
+  const isCompleted = latestCompletedAmendment?.value && latestAmendmentValueAccepted(latestCompletedAmendment);
+
+  return isCompleted;
+};
+
+const isValidCompletedCoverEndDateAmendment = (latestCompletedAmendment) => {
+  const isCompleted = latestCompletedAmendment?.coverEndDate && latestAmendmentCoverEndDateAccepted(latestCompletedAmendment);
+
+  return isCompleted;
+};
+
 // calculates the value for total exposure to return for a single amendment
 const calculateAmendmentTotalExposure = async (facility) => {
   const { _id, tfm, facilitySnapshot } = facility;
@@ -162,7 +171,7 @@ const calculateAmendmentTotalExposure = async (facility) => {
 
   const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
 
-  if (latestCompletedAmendment?.amendmentId && latestCompletedAmendment?.value && latestAmendmentValueAccepted(latestCompletedAmendment)) {
+  if (isValidCompletedValueAmendment(latestCompletedAmendment)) {
     const { coverPercentage, coveredPercentage } = facilitySnapshot;
 
     // BSS is coveredPercentage while GEF is coverPercentage
@@ -186,4 +195,6 @@ module.exports = {
   latestAmendmentValueAccepted,
   latestAmendmentCoverEndDateAccepted,
   calculateAmendmentTotalExposure,
+  isValidCompletedCoverEndDateAmendment,
+  isValidCompletedValueAmendment,
 };

@@ -1,7 +1,7 @@
 const mapUkefExposure = require('./mapUkefExposure');
 const { formattedNumber } = require('../../../../utils/number');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../../../constants/deals');
-const { CURRENCY } = require('../../../../constants/currency');
+const { CURRENCY } = require('../../../../constants/currency.constant');
 const api = require('../../../../v1/api');
 
 describe('mapUkefExposure()', () => {
@@ -37,7 +37,7 @@ describe('mapUkefExposure()', () => {
     const formattedUkefExposure = formattedNumber(mockFacilityTfm.ukefExposure);
 
     const expected = {
-      exposure: `GBP ${formattedUkefExposure}`,
+      exposure: `${CURRENCY.GBP} ${formattedUkefExposure}`,
       timestamp: `${mockFacilityTfm.ukefExposureCalculationTimestamp}`,
     };
 
@@ -63,7 +63,7 @@ describe('mapUkefExposure()', () => {
     const formattedUkefExposure = formattedNumber(mockFacilityTfm.ukefExposure);
 
     const expected = {
-      exposure: `GBP ${formattedUkefExposure}`,
+      exposure: `${CURRENCY.GBP} ${formattedUkefExposure}`,
       timestamp: `${mockFacilityTfm.ukefExposureCalculationTimestamp}`,
     };
 
@@ -91,7 +91,7 @@ describe('mapUkefExposure()', () => {
     const formattedUkefExposure = '600.00';
 
     const expected = {
-      exposure: `GBP ${formattedUkefExposure}`,
+      exposure: `${CURRENCY.GBP} ${formattedUkefExposure}`,
       timestamp: expect.any(String),
     };
 

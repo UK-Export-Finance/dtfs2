@@ -1,7 +1,8 @@
 const { getUnixTime } = require('date-fns');
 const { formattedNumber } = require('../../../../utils/number');
 const api = require('../../../../v1/api');
-const { calculateNewFacilityValue, calculateUkefExposure, latestAmendmentValueAccepted } = require('../../../helpers/amendment.helpers');
+const { calculateNewFacilityValue, calculateUkefExposure, isValidCompletedValueAmendment } = require('../../../helpers/amendment.helpers');
+const { CURRENCY } = require('../../../../constants/currency.constant');
 
 // maps ukef exposure on original value or latest amended value
 const mapUkefExposure = async (facilityTfm, facility) => {
@@ -21,7 +22,7 @@ const mapUkefExposure = async (facilityTfm, facility) => {
 
       const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
 
-      if (latestCompletedAmendment?.amendmentId && latestCompletedAmendment?.value && latestAmendmentValueAccepted(latestCompletedAmendment)) {
+      if (isValidCompletedValueAmendment(latestCompletedAmendment)) {
         const { coverPercentage, coveredPercentage } = facility.facilitySnapshot;
 
         // BSS is coveredPercentage while GEF is coverPercentage
@@ -37,7 +38,7 @@ const mapUkefExposure = async (facilityTfm, facility) => {
     }
 
     return {
-      exposure: `GBP ${formattedUkefExposure}`,
+      exposure: `${CURRENCY.GBP} ${formattedUkefExposure}`,
       timestamp: `${ukefExposureCalculationTimestampValue}`,
     };
   }

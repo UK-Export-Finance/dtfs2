@@ -1,7 +1,7 @@
 const mapFacilityValue = require('./mapFacilityValue');
 const { formattedNumber } = require('../../../../utils/number');
 const api = require('../../../../v1/api');
-const { CURRENCY } = require('../../../../constants/currency');
+const { CURRENCY } = require('../../../../constants/currency.constant');
 
 describe('mapFacilityValue', () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('mapFacilityValue', () => {
         {},
       );
 
-      const expected = `GBP ${mockFacility.value}`;
+      const expected = `${CURRENCY.GBP} ${mockFacility.value}`;
       expect(result).toEqual(expected);
     });
   });
@@ -44,7 +44,7 @@ describe('mapFacilityValue', () => {
         mockFacility,
       );
 
-      const expected = `GBP ${formattedNumber(mockTfmFacility.facilityValueInGBP)}`;
+      const expected = `${CURRENCY.GBP} ${formattedNumber(mockTfmFacility.facilityValueInGBP)}`;
       expect(result).toEqual(expected);
     });
   });
@@ -67,7 +67,7 @@ describe('mapFacilityValue', () => {
         mockFacility,
       );
 
-      const expected = `GBP ${formattedNumber(mockFacility.value)}`;
+      const expected = `${CURRENCY.GBP} ${formattedNumber(mockFacility.value)}`;
       expect(result).toEqual(expected);
     });
   });

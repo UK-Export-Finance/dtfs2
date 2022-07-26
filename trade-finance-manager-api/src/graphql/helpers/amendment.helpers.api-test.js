@@ -1,5 +1,5 @@
 const amendmentHelpers = require('./amendment.helpers');
-const { CURRENCY } = require('../../constants/currency');
+const { CURRENCY } = require('../../constants/currency.constant');
 const { FACILITY_TYPE } = require('../../constants/facilities');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
 const api = require('../../v1/api');

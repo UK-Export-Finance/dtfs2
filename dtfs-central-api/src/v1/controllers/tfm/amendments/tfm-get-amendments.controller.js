@@ -293,8 +293,10 @@ exports.getCompletedAmendmentByDealId = async (req, res) => {
  *  }
  */
 const findLatestCompletedAmendmentByFacilityId = async (facilityId) => {
-  const proceed = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION.PROCEED;
   if (ObjectId.isValid(facilityId)) {
+    const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
+    const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
+
     try {
       const collection = await db.getCollection('tfm-facilities');
       const amendment = await collection.aggregate([
@@ -303,8 +305,8 @@ const findLatestCompletedAmendmentByFacilityId = async (facilityId) => {
         {
           $match: {
             $or: [
-              { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED, 'amendments.submittedByPim': true, 'amendments.requireUkefApproval': false },
-              { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED, 'amendments.bankDecision.decision': proceed, 'amendments.bankDecision.submitted': true }
+              { 'amendments.status': COMPLETED, 'amendments.submittedByPim': true, 'amendments.requireUkefApproval': false },
+              { 'amendments.status': COMPLETED, 'amendments.bankDecision.decision': PROCEED, 'amendments.bankDecision.submitted': true }
             ]
           }
         },

@@ -67,7 +67,7 @@ context('Facility page', () => {
     page.facilitiesPage.facilityStageColumn().should('contain', 'Facility stage');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000');
+    cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '1000000');
     cy.get('@row1').find('[data-cy="facility__product"]').should('contain', dealTwo.dealType);
     cy.get('@row1').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[1].type);
     cy.get('@row1').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
@@ -76,7 +76,7 @@ context('Facility page', () => {
     cy.get('@row1').find('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__ukefFacilityId"]').should('contain', '10000000');
+    cy.get('@row2').find('[data-cy="facility__ukefFacilityId"]').should('contain', '1000000');
     cy.get('@row2').find('[data-cy="facility__product"]').should('contain', dealTwo.dealType);
     cy.get('@row2').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[0].type);
     cy.get('@row2').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
@@ -104,7 +104,7 @@ context('Facility page', () => {
   it('performs a search query based on Facility ID', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities'));
-    const searchString = '10000000';
+    const searchString = '1000000';
     page.facilitiesPage.searchFormInput().type(searchString);
     page.facilitiesPage.searchFormSubmitButton().click();
 

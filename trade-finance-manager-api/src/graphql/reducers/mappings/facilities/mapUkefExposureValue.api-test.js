@@ -1,7 +1,7 @@
 const mapUkefExposureValue = require('./mapUkefExposureValue');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../../../constants/deals');
 const { formattedNumber } = require('../../../../utils/number');
-const { CURRENCY } = require('../../../../constants/currency');
+const { CURRENCY } = require('../../../../constants/currency.constant');
 const api = require('../../../../v1/api');
 
 describe('mapUkefExposureValue()', () => {

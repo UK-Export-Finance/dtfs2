@@ -1,6 +1,7 @@
 const { formattedNumber } = require('../../../../utils/number');
-const { calculateNewFacilityValue, latestAmendmentValueAccepted, calculateAmendmentTotalExposure } = require('../../../helpers/amendment.helpers');
+const { calculateNewFacilityValue, calculateAmendmentTotalExposure, isValidCompletedValueAmendment } = require('../../../helpers/amendment.helpers');
 const api = require('../../../../v1/api');
+const { CURRENCY } = require('../../../../constants/currency.constant');
 
 const mapTotals = async (facilities) => {
   const totals = {};
@@ -12,7 +13,7 @@ const mapTotals = async (facilities) => {
     const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
 
     // if latest amendment then returns value of new amendment
-    if (latestCompletedAmendment?.amendmentId && latestCompletedAmendment?.value && latestAmendmentValueAccepted(latestCompletedAmendment)) {
+    if (isValidCompletedValueAmendment(latestCompletedAmendment)) {
       const { exchangeRate } = tfm;
 
       const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendment);
@@ -34,7 +35,7 @@ const mapTotals = async (facilities) => {
 
   const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
 
-  totals.facilitiesValueInGBP = `GBP ${formattedFacilitiesValue}`;
+  totals.facilitiesValueInGBP = `${CURRENCY.GBP} ${formattedFacilitiesValue}`;
 
   // total ukef exposure for all facilities
   const ukefExposureArray = [
@@ -53,7 +54,7 @@ const mapTotals = async (facilities) => {
     })),
   ];
   const formattedUkefExposure = formattedNumber(ukefExposureArray.reduce((a, b) => a + b));
-  totals.facilitiesUkefExposure = `GBP ${formattedUkefExposure}`;
+  totals.facilitiesUkefExposure = `${CURRENCY.GBP} ${formattedUkefExposure}`;
 
   return totals;
 };

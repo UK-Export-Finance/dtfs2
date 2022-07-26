@@ -2,7 +2,7 @@ const { fromUnixTime, format } = require('date-fns');
 const dealReducer = require('./deal');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 const api = require('../../v1/api');
-const { CURRENCY } = require('../../constants/currency');
+const { CURRENCY } = require('../../constants/currency.constant');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
 
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');

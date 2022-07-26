@@ -1,7 +1,7 @@
 const mapTotals = require('./mapTotals');
 const { formattedNumber } = require('../../../../utils/number');
 const api = require('../../../../v1/api');
-const { CURRENCY } = require('../../../../constants/currency');
+const { CURRENCY } = require('../../../../constants/currency.constant');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../../../constants/deals');
 
 describe('mapTotals', () => {
@@ -105,7 +105,7 @@ describe('mapTotals', () => {
         + Number(mockBondAndLoanFacilities[2].tfm.facilityValueInGBP)
         + Number(mockBondAndLoanFacilities[3].facilitySnapshot.value);
 
-      const expected = `GBP ${formattedNumber(totalValue)}`;
+      const expected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
 
@@ -119,7 +119,7 @@ describe('mapTotals', () => {
         + Number(mockBondAndLoanFacilities[2].tfm.facilityValueInGBP)
         + Number(mockBondAndLoanFacilities[3].facilitySnapshot.value);
 
-      const expected = `GBP ${formattedNumber(totalValue)}`;
+      const expected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
 
@@ -135,11 +135,11 @@ describe('mapTotals', () => {
         + Number(mockBondAndLoanFacilities[2].tfm.facilityValueInGBP)
         + Number(mockBondAndLoanFacilities[3].facilitySnapshot.value);
 
-      const notExpected = `GBP ${formattedNumber(totalValue)}`;
+      const notExpected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).not.toEqual(notExpected);
 
       const newTotal = mockAmendment.value * mockBondAndLoanFacilities.length;
-      const expected = `GBP ${formattedNumber(newTotal)}`;
+      const expected = `${CURRENCY.GBP} ${formattedNumber(newTotal)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
   });
@@ -152,7 +152,7 @@ describe('mapTotals', () => {
         + Number(mockCashAndContingentFacilities[1].facilitySnapshot.value)
         + Number(mockCashAndContingentFacilities[2].tfm.facilityValueInGBP);
 
-      const expected = `GBP ${formattedNumber(totalValue)}`;
+      const expected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
 
@@ -166,7 +166,7 @@ describe('mapTotals', () => {
         + Number(mockCashAndContingentFacilities[1].facilitySnapshot.value)
         + Number(mockCashAndContingentFacilities[2].tfm.facilityValueInGBP);
 
-      const expected = `GBP ${formattedNumber(totalValue)}`;
+      const expected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
 
@@ -180,11 +180,11 @@ describe('mapTotals', () => {
         + Number(mockCashAndContingentFacilities[1].facilitySnapshot.value)
         + Number(mockCashAndContingentFacilities[2].tfm.facilityValueInGBP);
 
-      const notExpected = `GBP ${formattedNumber(totalValue)}`;
+      const notExpected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).not.toEqual(notExpected);
 
       const newTotal = mockAmendment.value * mockCashAndContingentFacilities.length;
-      const expected = `GBP ${formattedNumber(newTotal)}`;
+      const expected = `${CURRENCY.GBP} ${formattedNumber(newTotal)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
   });
@@ -197,7 +197,7 @@ describe('mapTotals', () => {
       + mockBondAndLoanFacilities[2].tfm.ukefExposure
       + mockBondAndLoanFacilities[3].tfm.ukefExposure;
 
-    const expected = `GBP ${formattedNumber(totalUkefExposure)}`;
+    const expected = `${CURRENCY.GBP} ${formattedNumber(totalUkefExposure)}`;
     expect(result.facilitiesUkefExposure).toEqual(expected);
   });
 
@@ -212,7 +212,7 @@ describe('mapTotals', () => {
       + mockBondAndLoanFacilities[2].tfm.ukefExposure
       + mockBondAndLoanFacilities[3].tfm.ukefExposure;
 
-    const expected = `GBP ${formattedNumber(totalUkefExposure)}`;
+    const expected = `${CURRENCY.GBP} ${formattedNumber(totalUkefExposure)}`;
     expect(result.facilitiesUkefExposure).toEqual(expected);
   });
 
@@ -224,7 +224,7 @@ describe('mapTotals', () => {
 
     const totalUkefExposure = 5000;
 
-    const expected = `GBP ${formattedNumber(totalUkefExposure)}`;
+    const expected = `${CURRENCY.GBP} ${formattedNumber(totalUkefExposure)}`;
     expect(result.facilitiesUkefExposure).toEqual(expected);
   });
 });

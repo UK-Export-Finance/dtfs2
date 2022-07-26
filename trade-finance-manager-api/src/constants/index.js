@@ -6,7 +6,7 @@ const TASKS_AMENDMENT = require('./tasks-amendment.constant');
 const EMAIL_TEMPLATE_IDS = require('./email-template-ids');
 const DURABLE_FUNCTIONS = require('./durable-functions');
 const ACTIVITY = require('./activity');
-const CURRENCY = require('./currency');
+const CURRENCY = require('./currency.constant');
 
 module.exports = {
   FACILITIES,
