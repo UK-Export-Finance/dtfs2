@@ -37,22 +37,26 @@ const mapTotals = async (facilities) => {
 
   totals.facilitiesValueInGBP = `${CURRENCY.GBP} ${formattedFacilitiesValue}`;
 
+  // maps through facility and returns promise with exposure array
+  let mappedExposureTotal = facilities.map(async (f) => {
+    // if amendment completed, then returns exposure value of amendment
+    if (await calculateAmendmentTotalExposure(f)) {
+      const amendmentExposureValue = await calculateAmendmentTotalExposure(f);
+      return amendmentExposureValue;
+    }
+
+    if (f.tfm.ukefExposure) {
+      return f.tfm.ukefExposure;
+    }
+
+    return null;
+  });
+  // resolves mapped exposure promise
+  mappedExposureTotal = await Promise.all(mappedExposureTotal);
+
   // total ukef exposure for all facilities
-  const ukefExposureArray = [
-    ...await Promise.all(facilities.map(async (f) => {
-      // if amendment completed, then returns exposure value of amendment
-      if (await calculateAmendmentTotalExposure(f)) {
-        const amendmentExposureValue = await calculateAmendmentTotalExposure(f);
-        return amendmentExposureValue;
-      }
+  const ukefExposureArray = [...mappedExposureTotal];
 
-      if (f.tfm.ukefExposure) {
-        return f.tfm.ukefExposure;
-      }
-
-      return null;
-    })),
-  ];
   const formattedUkefExposure = formattedNumber(ukefExposureArray.reduce((a, b) => a + b));
   totals.facilitiesUkefExposure = `${CURRENCY.GBP} ${formattedUkefExposure}`;
 

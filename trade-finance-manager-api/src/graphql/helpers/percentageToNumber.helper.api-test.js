@@ -11,6 +11,16 @@ describe('percentageToNumber()', () => {
     expect(result).toEqual(expected);
   });
 
+  it('should convert percentage with decimal string to number without percentage symbol', () => {
+    const coverPercentage = '80.2%';
+
+    const result = percentageToNumber(coverPercentage);
+
+    const expected = 80.2;
+
+    expect(result).toEqual(expected);
+  });
+
   it('should return the same input when not a string', () => {
     const coverPercentage = 80;
 

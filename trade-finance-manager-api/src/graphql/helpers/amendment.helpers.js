@@ -16,6 +16,18 @@ const amendmentChangeValueExportCurrency = (amendment) => {
   return null;
 };
 
+const roundValue = (valueInGBP) => {
+  const totalDecimals = decimalsCount(valueInGBP);
+  let newValue = valueInGBP;
+
+  // rounds value to 2dp
+  if (totalDecimals > 2) {
+    newValue = roundNumber(valueInGBP, 2);
+  }
+
+  return newValue;
+};
+
 // calculates new facility value in GBP
 const calculateNewFacilityValue = (exchangeRate, amendment) => {
   const { currency, value: amendmentValue } = amendment;
@@ -31,13 +43,7 @@ const calculateNewFacilityValue = (exchangeRate, amendment) => {
         return null;
       }
       const valueInGBP = amendmentValue * exchangeRate;
-      const totalDecimals = decimalsCount(valueInGBP);
-      // rounds value to 2dp
-      if (totalDecimals > 2) {
-        newValue = roundNumber(valueInGBP, 2);
-      } else {
-        newValue = valueInGBP;
-      }
+      newValue = roundValue(valueInGBP);
     }
 
     return newValue;
@@ -94,22 +100,30 @@ const dealTypeCoverStartDate = (facilitySnapshot) => {
 
 // calculates new tenor from amendment coverEndDate and facility coverStartDate.  Requires external api call to calculate tenor
 const calculateAmendmentTenor = async (facilitySnapshot, amendment) => {
-  if (facilitySnapshot?.ukefFacilityType && (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate) && amendment?.coverEndDate) {
-    const { coverEndDate } = amendment;
-    const { ukefFacilityType } = facilitySnapshot;
+  try {
+    const validConditions = facilitySnapshot?.ukefFacilityType && (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate)
+    && amendment?.coverEndDate;
 
-    // returns coverStartDate from either gef or bss format
-    const coverStartDate = dealTypeCoverStartDate(facilitySnapshot);
-    // formatting for external api call
-    const coverStartDateFormatted = format(new Date(coverStartDate), 'yyyy-MM-dd');
-    const coverEndDateFormatted = format(fromUnixTime(coverEndDate), 'yyyy-MM-dd');
+    if (validConditions) {
+      const { coverEndDate } = amendment;
+      const { ukefFacilityType } = facilitySnapshot;
 
-    const updatedTenor = await api.getFacilityExposurePeriod(coverStartDateFormatted, coverEndDateFormatted, ukefFacilityType);
+      // returns coverStartDate from either gef or bss format
+      const coverStartDate = dealTypeCoverStartDate(facilitySnapshot);
+      // formatting for external api call
+      const coverStartDateFormatted = format(new Date(coverStartDate), 'yyyy-MM-dd');
+      const coverEndDateFormatted = format(fromUnixTime(coverEndDate), 'yyyy-MM-dd');
 
-    return updatedTenor.exposurePeriodInMonths;
+      const updatedTenor = await api.getFacilityExposurePeriod(coverStartDateFormatted, coverEndDateFormatted, ukefFacilityType);
+
+      return updatedTenor.exposurePeriodInMonths;
+    }
+
+    return null;
+  } catch (err) {
+    console.error('Error calculating amendment tenor', { err });
+    return null;
   }
-
-  return null;
 };
 
 // checking if amendment completed and if value change accepted fully
