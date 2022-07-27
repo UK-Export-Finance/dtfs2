@@ -138,18 +138,16 @@ const issueAcbsFacilities = async (deal) => {
       ...deal.exporter,
     },
   }));
-
   const acbsIssuedFacilities = await Promise.all(acbsIssuedFacilitiesPromises);
 
-  const acbsIssueFacilityTasks = await Promise.all(
+  return Promise.all(
     acbsIssuedFacilities.map((acbsTaskLinks) => addToACBSLog({ acbsTaskLinks })),
   );
-  return acbsIssueFacilityTasks;
 };
 
-const amendAcbsFacility = async (ukefFacilityId, amendments, deal) => {
-  api.amendACBSfacility(ukefFacilityId, amendments, deal)
-    .then((r) => console.log('RESPONSE===', r))
+const amendAcbsFacility = async (amendments, facility, deal) => {
+  api.amendACBSfacility(amendments, facility, deal)
+    .then((r) => r)
     .catch((e) => {
       console.error('Unable to amend facility: ', { e });
     });

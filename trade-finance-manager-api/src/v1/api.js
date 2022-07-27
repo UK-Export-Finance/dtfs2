@@ -765,12 +765,12 @@ const updateACBSfacility = async (facility, deal) => {
  * @param {Object} amendments Facility object comprising of amendments
  * @returns {Object} updated FMR upon success otherwise error
  */
-const amendACBSfacility = async (ukefFacilityId, amendments, deal) => {
+const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments) {
     try {
       const response = await axios({
         method: 'post',
-        url: `${refDataUrl}/acbs/facility/${ukefFacilityId}/amendments`,
+        url: `${refDataUrl}/acbs/facility/${facility.ukefFacilityId}/amendments`,
         headers: {
           'Content-Type': 'application/json',
         },

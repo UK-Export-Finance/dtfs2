@@ -178,6 +178,9 @@ const updateFacilityAmendment = async (req, res) => {
   // sends email if conditions are met
   await sendAmendmentEmail(amendmentId, facilityId);
 
+  // Fetch facility object
+  const facility = await api.findOneFacility(facilityId);
+  console.log({ facility });
   // Fetch complete amendment object
   const amendment = await api.getAmendmentById(facilityId, amendmentId);
   // Fetch deal object from deal-tfm
@@ -195,11 +198,10 @@ const updateFacilityAmendment = async (req, res) => {
   };
 
   // Amendment null & property existence check
-  if (amendment.ukefFacilityId && tfmDeal.tfm) {
-    const { ukefFacilityId } = amendment;
+  if (facility.ukefFacilityId && amendment && tfmDeal.tfm) {
     // ACBS Interaction
     if (canSendToAcbs(amendment)) {
-      acbs.amendAcbsFacility(ukefFacilityId, amendment, deal);
+      acbs.amendAcbsFacility(amendment, facility, deal);
     }
   }
 
