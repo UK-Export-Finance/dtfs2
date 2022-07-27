@@ -1,15 +1,13 @@
 /**
  * DATA MIGRATION
  * **************
- * Purpose of this script is to migrate `GEF` deals to TFM.
- * Since GEF deals are not subjected to execution on Workflow.
+ * Purpose of this script is to migrate `BSS/EWCS` deals to TFM.
  */
 
 const fs = require('fs');
 const axios = require('axios');
 const CONSTANTS = require('../constant');
 const { getCollection, update, disconnect } = require('../helpers/database');
-const { open, get } = require('../helpers/actionsheets');
 
 const version = '0.0.1';
 const { TFM_API } = process.env;
@@ -34,7 +32,7 @@ const setTfmDeal = (ukefDealId, updates) => update(CONSTANTS.DATABASE.TABLES.TFM
 /**
  * Submits deal to the TFM as a `Checker` from `UKEF test bank (Delegated)`
  * for following deals:
- * 1. Deal Type: `GEF`
+ * 1. Deal Type: `BSS/EWCS`
  * 2. Property exists check: `dataMigration`
  * @returns {Promise} Response on success, Reject upon a failure.
  */
@@ -44,11 +42,11 @@ const submitTfmDeal = async () => {
   let counter = 0;
   /**
    * AND condition
-   * 1. Deal type : GEF
+   * 1. Deal type : BSS/EWCS
    * 2. Property exists : dataMigration
    */
   const filter = {
-    $and: [{ dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF }, { dataMigration: { $exists: true } }],
+    $and: [{ dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS }, { dataMigration: { $exists: true } }],
   };
   const checker = {
     username: 'BANK1_CHECKER1',
@@ -120,93 +118,7 @@ const updateTfmDeal = (ukefDealId, updates) => {
   }
 };
 
-// ******************** ACTION SHEETS *************************
-
-/**
- * Parses action sheets from defined directory.
- * Interested cell lookups are defined in `searches` in following format:
- * [property path, cell name, response field index]
- * @returns {Promise} Parsed data from the action sheets in `JSON` as promise resolve, otherwise reject.
- */
-const actionSheets = async () => {
-  console.info('\x1b[33m%s\x1b[0m', '➕ 2. Parsing action sheets', '\n');
-  const path = './actionsheets';
-  const results = [];
-  const searches = [
-    ['ukefDealId', 'Deal Number', 1],
-    ['tfm.exporterCreditRating', 'Credit Rating Code', 3],
-  ];
-
-  try {
-    const files = fs.readdirSync(path);
-
-    await files.forEach((file) => {
-      const uri = `${path}/${file}`;
-      open(uri)
-        .then((data) => {
-          if (data) return Promise.resolve(data);
-          return Promise.reject(new Error(`🚩 Empty action sheet ${uri}`));
-        })
-        .then((data) => {
-          let lookups = {};
-          searches.forEach((lookup) => {
-            const propertyName = lookup[0];
-            lookups = {
-              ...lookups,
-              [propertyName]: get(data, lookup),
-            };
-          });
-          results.push(lookups);
-
-          Promise.resolve(results);
-        })
-        .catch((e) => Promise.reject(new Error(e)));
-    });
-
-    return Promise.resolve(results);
-  } catch (e) {
-    return Promise.reject(new Error(`🚩 Unable to read the directory ${e}`));
-  }
-};
-
-/**
- * Processes all the data provided in array of object.
- * If multiple action sheets were parsed then all promises
- * are resolved and final update counter is provided.
- * Otherwise rejected with an error.
- * @param {Array} data Action sheet parsed data provided in JSON format
- * @returns {Promise} Update counter if resolved otherwise reject error.
- */
-const processActionSheets = (data) => {
-  if (data && data.length > 0) {
-    let counter = 0;
-
-    const responses = data.map((deal) => {
-      const { ukefDealId } = deal;
-      const updates = {
-        ...deal,
-      };
-
-      delete updates.ukefDealId;
-      return updateTfmDeal(ukefDealId, updates)
-        .then((r) => {
-          if (r) {
-            counter += 1;
-            console.info('\x1b[33m%s\x1b[0m', `✅ Deal updated successfully ${ukefDealId}`);
-            return Promise.resolve();
-          }
-          return Promise.reject(new Error(`🚩 Unable to update deal ${ukefDealId}`));
-        })
-        .catch((e) => Promise.reject(new Error(e)));
-    });
-
-    return Promise.all(responses)
-      .then(() => Promise.resolve(counter))
-      .catch((e) => Promise.reject(e));
-  }
-
-  return Promise.reject(new Error('🚩 Empty data set provided.'));
-};
+// ******************** JSON *************************
 
 // ******************** MAIN *************************
 
@@ -222,8 +134,8 @@ const migrate = () => {
     .then((r) => {
       if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully inserted ${r} TFM deals.\n`);
     })
-    .then(() => actionSheets())
-    .then((r) => processActionSheets(r))
+    // .then(() => parseJSON())
+    // .then((r) => processJSON(r))
     .then((r) => {
       if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully updated ${r} TFM deals from Action Sheets.\n`);
     })
