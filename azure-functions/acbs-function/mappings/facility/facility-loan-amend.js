@@ -1,12 +1,8 @@
-/*
-"amount":   ukefExposure
-*/
-
 const CONSTANTS = require('../../constants');
 const { formatDate } = require('../../helpers/date');
 const helpers = require('./helpers');
 
-const facilityLoanAmend = (amendments, facilityMasterRecord) => {
+const facilityLoanAmend = (amendments, facility) => {
   try {
     let record = {
       portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
@@ -32,9 +28,14 @@ const facilityLoanAmend = (amendments, facilityMasterRecord) => {
         record = {
           ...record,
           expiryDate: formatDate(coverEndDate),
-          // TODO : Re-calculate `nextDueDate`
-          // nextDueDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
         };
+        // Amend `nextDueDate` if fee type is `At Maturity`
+        if (facilityMasterRecord) {
+          record = {
+            ...record,
+            nextDueDate: formatDate(coverEndDate),
+          };
+        }
       }
     }
 

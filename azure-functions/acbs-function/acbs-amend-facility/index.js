@@ -30,12 +30,14 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
       const hasFacilityId = Boolean(amendment.facilityId);
       // At least one of the amendment exists in the payload
       const hasAmendment = Boolean(amendment.amount) || Boolean(amendment.coverEndDate);
+      // Facility object existence check
+      const hasFacility = amendment.facility;
       // Deal properties existence check
       const hasDeal = amendment.deal && Object.prototype.hasOwnProperty.call(amendment.deal, 'dealSnapshot');
 
       // Payload verification
-      if (hasFacilityId && hasAmendment && hasDeal) {
-        const { deal, facilityId } = amendment;
+      if (hasFacilityId && hasAmendment && hasFacility && hasDeal) {
+        const { facility, deal, facilityId } = amendment;
 
         // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
         const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry(
@@ -108,7 +110,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
           }
 
           // 2.2. Facility Loan Record (FLR)
-          const flrMApped = mappings.facility.facilityLoanAmend(amendments, fmrMapped);
+          const flrMApped = mappings.facility.facilityLoanAmend(amendments, facility);
 
           // 2.3 FLR update
           // 2.3.1 Extract loan id for facility id
