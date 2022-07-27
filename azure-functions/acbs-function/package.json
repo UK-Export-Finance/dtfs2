@@ -16,6 +16,6 @@
     "dotenv": "^16.0.1",
     "durable-functions": "^1.5.4",
     "moment": "^2.29.4",
-    "date-fns": "^2.28.0"
+    "date-fns": "^2.29.1"
   }
 }
