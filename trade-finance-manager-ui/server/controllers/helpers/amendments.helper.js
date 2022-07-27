@@ -47,10 +47,10 @@ const ukefDecisionRejected = (amendment) => {
 
   // Dual amendment request
   if (changeFacilityValue && changeCoverEndDate) {
-    return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED && coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    return value === DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED && coverEndDate === DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED;
   }
   // Single amendment request
-  return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED || coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+  return value === DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED || coverEndDate === DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED;
 };
 
 /**

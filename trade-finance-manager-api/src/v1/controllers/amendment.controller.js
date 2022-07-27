@@ -180,7 +180,6 @@ const updateFacilityAmendment = async (req, res) => {
 
   // Fetch facility object
   const facility = await api.findOneFacility(facilityId);
-  console.log({ facility });
   // Fetch complete amendment object
   const amendment = await api.getAmendmentById(facilityId, amendmentId);
   // Fetch deal object from deal-tfm
@@ -198,7 +197,7 @@ const updateFacilityAmendment = async (req, res) => {
   };
 
   // Amendment null & property existence check
-  if (facility.ukefFacilityId && amendment && tfmDeal.tfm) {
+  if (facility._id && amendment && tfmDeal.tfm) {
     // ACBS Interaction
     if (canSendToAcbs(amendment)) {
       acbs.amendAcbsFacility(amendment, facility, deal);

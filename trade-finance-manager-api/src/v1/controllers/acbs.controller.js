@@ -10,7 +10,7 @@ const addToACBSLog = async ({
 }) => {
   const collection = await db.getCollection('durable-functions-log');
 
-  const acbsLog = await collection.insertOne({
+  return collection.insertOne({
     type: 'ACBS',
     dealId: deal._id,
     deal,
@@ -21,15 +21,11 @@ const addToACBSLog = async ({
     acbsTaskLinks,
     submittedDate: moment().format(),
   });
-
-  return acbsLog;
 };
 
 const clearACBSLog = async () => {
   const collection = await db.getCollection('durable-functions-log');
-  const removed = await collection.remove({});
-
-  return removed;
+  return collection.remove({});
 };
 
 const createACBS = async (deal) => {

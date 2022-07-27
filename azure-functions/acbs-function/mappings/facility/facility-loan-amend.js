@@ -4,18 +4,21 @@ const helpers = require('./helpers');
 
 const facilityLoanAmend = (amendments, facility) => {
   try {
-    let record = {
-      portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
-    };
+    // Default facility loan record
+    let record = { portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1 };
+    // De-structure
     const { amendment } = amendments;
+    const { facilitySnapshot } = facility;
 
-    if (amendment) {
+    if (amendment && facilitySnapshot) {
+      // De-structure
       const { amount, coverEndDate } = amendment;
+      const { type, feeType } = facilitySnapshot;
 
-      // UKEF Exposure
+      // 1. UKEF Exposure
       if (amount) {
-        // Only BSS (Bond) facility types are subjected to loan amount amendment.
-        if (facilityMasterRecord.productTypeId === CONSTANTS.FACILITY.FACILITY_TYPE_CODE.BSS) {
+        // 1.1. Amend amount, if facility type is `Bond`.
+        if (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND) {
           record = {
             ...record,
             amount: helpers.getMaximumLiability(amendments),
@@ -23,14 +26,16 @@ const facilityLoanAmend = (amendments, facility) => {
         }
       }
 
-      // Cover end date
+      // 2. Cover end date
       if (coverEndDate) {
+        // 2.1. Amend expiry date.
         record = {
           ...record,
           expiryDate: formatDate(coverEndDate),
         };
-        // Amend `nextDueDate` if fee type is `At Maturity`
-        if (facilityMasterRecord) {
+
+        // 2.2. Amend `nextDueDate`, if fee type is `At Maturity`.
+        if (feeType === CONSTANTS.FACILITY.FEE_TYPE.AT_MATURITY) {
           record = {
             ...record,
             nextDueDate: formatDate(coverEndDate),
