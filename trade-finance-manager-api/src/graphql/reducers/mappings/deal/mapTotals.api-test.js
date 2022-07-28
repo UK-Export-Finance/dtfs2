@@ -7,6 +7,7 @@ const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../../../
 describe('mapTotals', () => {
   const mockBondAndLoanFacilities = [
     {
+      _id: '1',
       facilitySnapshot: {
         type: 'Bond',
         coverPercentage: 25,
@@ -17,6 +18,7 @@ describe('mapTotals', () => {
       },
     },
     {
+      _id: '2',
       facilitySnapshot: {
         type: 'Bond',
         coverPercentage: 25,
@@ -27,6 +29,7 @@ describe('mapTotals', () => {
       },
     },
     {
+      _id: '3',
       facilitySnapshot: {
         type: 'Loan',
         coverPercentage: 25,
@@ -37,6 +40,7 @@ describe('mapTotals', () => {
       },
     },
     {
+      _id: '4',
       facilitySnapshot: {
         type: 'Loan',
         value: '1234.56',
@@ -51,6 +55,7 @@ describe('mapTotals', () => {
 
   const mockCashAndContingentFacilities = [
     {
+      _id: '1',
       facilitySnapshot: {
         type: 'Cash',
         value: '1234.56',
@@ -60,6 +65,7 @@ describe('mapTotals', () => {
       tfm: {},
     },
     {
+      _id: '2',
       facilitySnapshot: {
         type: 'Contingent',
         value: '1234.56',
@@ -69,6 +75,7 @@ describe('mapTotals', () => {
       tfm: {},
     },
     {
+      _id: '3',
       facilitySnapshot: {
         type: 'Contingent',
         value: '1234.56',

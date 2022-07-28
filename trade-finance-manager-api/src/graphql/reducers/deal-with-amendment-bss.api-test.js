@@ -110,6 +110,7 @@ describe('gef deal with amendments', () => {
         ...MOCK_DEAL_AIN_SUBMITTED,
         facilities: [
           {
+            _id: '1',
             facilitySnapshot: MOCK_DEAL_AIN_SUBMITTED.loanTransactions.items[0],
             tfm: {},
           },
@@ -132,7 +133,7 @@ describe('gef deal with amendments', () => {
 
     const amendedValue = `${CURRENCY.GBP} 5,000.00`;
     const amendedCoverEndDate = format(fromUnixTime(coverEndDateUnix), 'd MMMM yyyy');
-    const amendedTenor = '12 months';
+    const amendedTenor = '6 months';
 
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.value).toEqual(amendedValue);
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.coverEndDate).not.toEqual(amendedCoverEndDate);
