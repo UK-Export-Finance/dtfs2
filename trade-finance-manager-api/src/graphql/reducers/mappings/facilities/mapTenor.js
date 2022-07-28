@@ -4,7 +4,7 @@ const { calculateAmendmentTenor, isValidCompletedCoverEndDateAmendment } = requi
 
 // maps tenor from new amendment coverEndDate or from original facility
 const mapTenor = async (facilitySnapshot, facilityTfm) => {
-  const { facilityStage, monthsOfCover: ukefGuaranteeInMonths } = facilitySnapshot;
+  const { facilityStage, ukefGuaranteeInMonths: monthsOfCover } = facilitySnapshot;
   const { exposurePeriodInMonths } = facilityTfm;
 
   // sets original exposure period from facility
@@ -19,7 +19,7 @@ const mapTenor = async (facilitySnapshot, facilityTfm) => {
     }
   }
 
-  return mapTenorDate(facilityStage, ukefGuaranteeInMonths, updatedExposurePeriodInMonths);
+  return mapTenorDate(facilityStage, monthsOfCover, updatedExposurePeriodInMonths);
 };
 
 module.exports = mapTenor;

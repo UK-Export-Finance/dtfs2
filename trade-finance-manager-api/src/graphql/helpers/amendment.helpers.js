@@ -4,6 +4,7 @@ const { decimalsCount, roundNumber } = require('../../v1/helpers/number');
 const { CURRENCY } = require('../../constants/currency.constant');
 const api = require('../../v1/api');
 const { DEALS } = require('../../constants');
+const isValidFacility = require('./isValidFacility.helper');
 
 // returns the formatted amendment value and currency (without conversion)
 const amendmentChangeValueExportCurrency = (amendment) => {
@@ -57,7 +58,7 @@ const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
   let ukefExposure;
 
   if (facilityValueInGBP && coverPercentage) {
-    // parse float as can have 2dp in facility value
+    // parse float as can have 2 decimal places in facility value
     const calculation = parseFloat(facilityValueInGBP, 10) * (coverPercentage / 100);
     const totalDecimals = decimalsCount(calculation);
 
@@ -180,22 +181,24 @@ const isValidCompletedCoverEndDateAmendment = (latestCompletedAmendment) => {
 
 // calculates the value for total exposure to return for a single amendment
 const calculateAmendmentTotalExposure = async (facility) => {
-  const { _id, tfm, facilitySnapshot } = facility;
-  const { exchangeRate } = tfm;
+  if (isValidFacility(facility)) {
+    const { _id, tfm, facilitySnapshot } = facility;
+    const { exchangeRate } = tfm;
 
-  const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
+    const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
 
-  if (isValidCompletedValueAmendment(latestCompletedAmendment)) {
-    const { coverPercentage, coveredPercentage } = facilitySnapshot;
+    if (isValidCompletedValueAmendment(latestCompletedAmendment)) {
+      const { coverPercentage, coveredPercentage } = facilitySnapshot;
 
-    // BSS is coveredPercentage while GEF is coverPercentage
-    const coverPercentageValue = coverPercentage || coveredPercentage;
+      // BSS is coveredPercentage while GEF is coverPercentage
+      const coverPercentageValue = coverPercentage || coveredPercentage;
 
-    const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendment);
-    const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
+      const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendment);
+      const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
 
-    // sets new exposure value based on amendment value
-    return ukefExposureValue;
+      // sets new exposure value based on amendment value
+      return ukefExposureValue;
+    }
   }
 
   return null;

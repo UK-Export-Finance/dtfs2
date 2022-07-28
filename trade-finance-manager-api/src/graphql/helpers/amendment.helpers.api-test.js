@@ -17,7 +17,7 @@ describe('amendmentChangeValueExportCurrency()', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return a string with currency and value to 2 d.p even if different currency', () => {
+  it('should return a string with currency and value to 2 decimal points even if different currency', () => {
     amendment.value = 25000;
     amendment.currency = 'JPY';
 

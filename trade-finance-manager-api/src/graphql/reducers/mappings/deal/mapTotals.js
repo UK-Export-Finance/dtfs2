@@ -1,5 +1,6 @@
 const { formattedNumber } = require('../../../../utils/number');
 const { calculateNewFacilityValue, calculateAmendmentTotalExposure, isValidCompletedValueAmendment } = require('../../../helpers/amendment.helpers');
+const isValidFacility = require('../../../helpers/isValidFacility.helper');
 const api = require('../../../../v1/api');
 const { CURRENCY } = require('../../../../constants/currency.constant');
 
@@ -8,29 +9,32 @@ const mapTotals = async (facilities) => {
 
   // total value of all facilities
   const facilitiesValue = await Promise.all(facilities.map(async (facility) => {
-    const { facilitySnapshot, tfm, _id } = facility;
+    if (isValidFacility(facility)) {
+      const { facilitySnapshot, tfm, _id } = facility;
 
-    const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
+      const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
 
-    // if latest amendment then returns value of new amendment
-    if (isValidCompletedValueAmendment(latestCompletedAmendment)) {
-      const { exchangeRate } = tfm;
+      // if latest amendment then returns value of new amendment
+      if (isValidCompletedValueAmendment(latestCompletedAmendment)) {
+        const { exchangeRate } = tfm;
 
-      const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendment);
-      return Number(valueInGBP);
+        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendment);
+        return Number(valueInGBP);
+      }
+
+      if (tfm.facilityValueInGBP) {
+        return Number(tfm.facilityValueInGBP);
+      }
+
+      // NOTE:
+      // Facilities passed into this function are in their raw form (unmapped).
+      // If we pass in mapped facilities, value would contain currency code. Therefore:
+      // - Bond and Loan facility total is `value`
+      // - Cash and Contingent facility total is `value`
+
+      return Number(facilitySnapshot.value);
     }
-
-    if (tfm.facilityValueInGBP) {
-      return Number(tfm.facilityValueInGBP);
-    }
-
-    // NOTE:
-    // Facilities passed into this function are in their raw form (unmapped).
-    // If we pass in mapped facilities, value would contain currency code. Therefore:
-    // - Bond and Loan facility total is `value`
-    // - Cash and Contingent facility total is `value`
-
-    return Number(facilitySnapshot.value);
+    return null;
   }));
 
   const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
