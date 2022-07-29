@@ -86,6 +86,7 @@ const migrateGefAmendments = async () => {
     output.requireUkefApproval = amendment['Notification or Request'] === MANUAL;
     output.changeFacilityValue = amendment.changeFacilityValue;
     output.changeCoverEndDate = amendment.changeCoverEndDate;
+    output.createdAt = amendment['Date received'];
 
     if (amendment.changeCoverEndDate) {
       output.currentCoverEndDate = getUnixTime(new Date(excelDateToISODateString(amendment.currentCoverEndDate)));
@@ -100,15 +101,16 @@ const migrateGefAmendments = async () => {
 
     if (amendment['Notification or Request'] === AUTOMATIC) {
       if (amendment.changeCoverEndDate) {
-        output.effectiveDate = getUnixTime(new Date(excelDateToISODateString(amendment['When Finished'])));
+        output.effectiveDate = getUnixTime(new Date(excelDateToISODateString(amendment['Effective date'])));
       }
+      output.submissionDate = amendment.Moved ? getUnixTime(new Date(excelDateToISODateString(amendment.Moved))) : '';
     }
 
     if (amendment['Notification or Request'] === MANUAL) {
       output.leadUnderwriterId = amendment.UnderwriterID;
       output.ukefDecision = {
-        coverEndDate: amendment['CoverEndDate Decision'], // TODO: add UW Manager decision Approved with or without conditions
-        value: amendment['Value Decision'], // TODO: add UW Manager decision Approved with or without conditions
+        coverEndDate: amendment.changeCoverEndDate ? 'Approved without conditions' : null, // TODO: add UW Manager decision Approved with or without conditions
+        value: amendment.changeFacilityValue ? 'Approved without conditions' : null, // TODO: add UW Manager decision Approved with or without conditions
         comments: amendment['PIM Comment/Status'],
         conditions: amendment.conditions ? amendment.conditions : null, // TODO: add any conditions, if applicable
         declined: amendment.declined ? amendment.declined : null, // TODO: add any reasons why it was declined. This is probably not applicable
