@@ -4,8 +4,10 @@
  * Purpose of this script is to migrate GEF deals to TFM.
  * Since GEF deals are not subjected to execution on Workflow.
  */
+require('dotenv').config();
 
 const { TFM_API } = process.env;
+
 const axios = require('axios');
 const { getUnixTime } = require('date-fns');
 const { excelDateToISODateString } = require('../helpers/date');
@@ -61,11 +63,11 @@ const migrateGefAmendments = async () => {
   const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
   const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
   const allGefAmendments = [];
-  let amendments22To23 = await open('./gef-amendments/gef-amendments2.xlsx', 'Amendments Apr 22 to Apr 23');
+  let amendments22To23 = await open('./gef-amendments/mock-gef-amendments2.xlsx', 'Amendments Apr 22 to Apr 23');
   amendments22To23 = amendments22To23.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()) && item.Stage === COMPLETED);
   allGefAmendments.push(...amendments22To23);
 
-  let amendments21To22 = await open('./gef-amendments/gef-amendments2.xlsx', 'Amendments Apr 21 to Apr 22');
+  let amendments21To22 = await open('./gef-amendments/mock-gef-amendments2.xlsx', 'Amendments Apr 21 to Apr 22');
   amendments21To22 = amendments21To22.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()) && item.Stage === COMPLETED);
   allGefAmendments.push(...amendments21To22);
   const json = [];
@@ -78,8 +80,8 @@ const migrateGefAmendments = async () => {
     const output = {};
     output.requestDate = getUnixTime(new Date(excelDateToISODateString(amendment['Date received'])));
     output.exporter = amendment.Exporter.trim();
-    output.ukefDealId = `00${amendment['UKEF Deal ID']}`;
-    output.ukefFacilityId = `00${amendment['UKEF Facility ID']}`;
+    // output.ukefDealId = `00${amendment['UKEF Deal ID']}`;
+    // output.ukefFacilityId = `00${amendment['UKEF Facility ID']}`;
     output.status = amendment.Stage;
     output.submittedByPim = true;
     output.submittedAt = amendment.Moved ? getUnixTime(new Date(excelDateToISODateString(amendment.Moved))) : '';
@@ -100,9 +102,7 @@ const migrateGefAmendments = async () => {
     }
 
     if (amendment['Notification or Request'] === AUTOMATIC) {
-      if (amendment.changeCoverEndDate) {
-        output.effectiveDate = getUnixTime(new Date(excelDateToISODateString(amendment['Effective date'])));
-      }
+      output.effectiveDate = getUnixTime(new Date(excelDateToISODateString(amendment['Effective date'])));
       output.submissionDate = amendment.Moved ? getUnixTime(new Date(excelDateToISODateString(amendment.Moved))) : '';
     }
 
