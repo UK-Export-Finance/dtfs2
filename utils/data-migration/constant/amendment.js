@@ -1,6 +1,6 @@
 const AMENDMENT_TYPE = {
   MANUAL: 'Manual',
-  AUTOMATIC: 'Automatic',
+  AUTOMATIC: 'Auto',
 };
 
 const AMENDMENT_STATUS = {
