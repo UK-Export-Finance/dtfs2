@@ -112,8 +112,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
        * Update the deal with all the above modifications
        * Note: at the time of writing, some functions above update the deal, others do not.
        */
-      const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
-      return updatedDeal;
+      return api.updateDeal(dealId, updatedDealWithTasks);
     }
 
     return api.updateDeal(dealId, updatedDealWithCreateEstore);

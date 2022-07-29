@@ -21,7 +21,6 @@ const updatedIssuedFacilities = async (deal) => {
 
   modifiedDeal.facilities = await Promise.all(modifiedDeal.facilities.map(async (f) => {
     const facility = f;
-
     const {
       _id: facilityId,
       hasBeenIssued,
@@ -29,11 +28,20 @@ const updatedIssuedFacilities = async (deal) => {
     } = facility;
 
     /**
-     * if hasBeenIssued and hasBeenIssuedAndAcknowledged
-     * ensures tasks only done once and email only sent once for each issued facility
-     * hasBeenIssuedAndAcknowledged only set by tfm-api during this step
+     * `hasBeenIssued` : Facility has been issued by the maker.
+     * `sendToUkef` : Facility has been sent to UKEF.
+     *
+     * Ensures tasks only done once and email only sent once for each issued
+     * facility hasBeenIssuedAndAcknowledged only set by tfm-api during this step.
+     *
+     * If MIN then set `sendToUkef` to `false` to accommodate any cover start date
+     * amendment.
     */
-    if (hasBeenIssued && !hasBeenIssuedAndAcknowledged) {
+    const sendToUkef = submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
+      ? false
+      : hasBeenIssuedAndAcknowledged;
+
+    if (hasBeenIssued && !sendToUkef) {
       let facilityPremiumSchedule;
       let feeRecord;
       let facilityUpdate;
