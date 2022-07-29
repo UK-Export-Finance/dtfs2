@@ -44,9 +44,11 @@ const getDeal = async (dealId, dealType) => {
   return deal;
 };
 
-// Only create the TFM record until UKEFids have been generated, then process the submission
-// This allows a deal in Pending state to be seen in TFM,
-// which indicates to UKEF that a deal has been submitted before UKEFids are generated
+/** Only create the TFM record until UKEFids have been generated, then process the submission
+ * This allows a deal in Pending state to be seen in TFM,
+ * which indicates to UKEF that a deal has been submitted before UKEFids are generated
+ * */
+
 const submitDealBeforeUkefIds = async (dealId, dealType) => {
   const deal = await getDeal(dealId, dealType);
 
