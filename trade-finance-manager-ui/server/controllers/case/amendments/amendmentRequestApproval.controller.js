@@ -1,6 +1,6 @@
 const api = require('../../../api');
 const { requestApprovalValidation } = require('./validation/amendmentRequestApproval.validate');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
+const { AMENDMENT_STATUS, SUBMISSION_TYPE } = require('../../../constants/amendments');
 
 const getAmendmentRequestApproval = async (req, res) => {
   try {
@@ -31,6 +31,7 @@ const postAmendmentRequestApproval = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { requireUkefApproval } = req.body;
   const approval = requireUkefApproval === 'Yes';
+  const submissionType = approval ? SUBMISSION_TYPE.MANUAL_AMENDMENT : SUBMISSION_TYPE.AUTOMATIC_AMENDMENT;
 
   const { errorsObject, amendmentRequestApprovalErrors } = requestApprovalValidation(requireUkefApproval);
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
@@ -49,7 +50,7 @@ const postAmendmentRequestApproval = async (req, res) => {
   }
 
   try {
-    const payload = { requireUkefApproval: approval };
+    const payload = { requireUkefApproval: approval, submissionType };
 
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 

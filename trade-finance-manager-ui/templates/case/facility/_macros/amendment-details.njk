@@ -1,6 +1,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% import '../../amendments/_macros/amendment-ukef-decision-summary.njk' as summaryDetails %}
 
 {% macro render(params) %}
   {% set amendmentVersion = params.amendmentVersion %}
@@ -133,6 +134,10 @@
             head: head,
             rows: rows
           }) }}
+
+          {% if amendment.ukefDecision.submitted %}
+            {{ summaryDetails.render(amendment) }}
+          {% endif %}
 
         </div>
       </div>
