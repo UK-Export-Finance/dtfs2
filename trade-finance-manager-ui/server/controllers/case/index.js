@@ -60,11 +60,11 @@ const getCaseTasks = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
 
   if (amendments.length > 0) {
     amendments.map((a) => {
@@ -85,6 +85,7 @@ const getCaseTasks = async (req, res) => {
     selectedTaskFilter: TASKS.FILTER_TYPES.USER,
     amendments,
     hasAmendmentInProgress,
+    amendmentsInProgress,
   });
 };
 
@@ -114,11 +115,11 @@ const filterCaseTasks = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
 
   if (amendments.length > 0) {
     amendments.map((a) => {
@@ -139,6 +140,7 @@ const filterCaseTasks = async (req, res) => {
     selectedTaskFilter: filterType,
     amendments,
     hasAmendmentInProgress,
+    amendmentsInProgress,
   });
 };
 
@@ -230,6 +232,13 @@ const formatAmendmentDetails = (allAmendments) => {
           item.banksDecision = AMENDMENTS.AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
         }
       }
+
+      if (value?.ukefDecision?.submitted) {
+        const date = format(fromUnixTime(value.ukefDecision.submittedAt), 'dd MMMM yyyy');
+        const time = format(fromUnixTime(value.ukefDecision.submittedAt), 'HH:mm aaa');
+        item.ukefDecision.submittedAt = `${date} at ${time}`;
+      }
+
       item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
       item.bankDecisionTags = AMENDMENTS.BANK_DECISIONS_TAGS;
 
