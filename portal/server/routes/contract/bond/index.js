@@ -1,5 +1,6 @@
 const express = require('express');
 const moment = require('moment');
+const CONSTANTS = require('../../../constants')
 const api = require('../../../api');
 const {
   provide,
@@ -37,12 +38,15 @@ const userCanAccessBond = (user, deal) => {
   }
 
   const { status } = deal.details;
+  const acceptableStatus = [
+    CONSTANTS.STATUS.READY_FOR_APPROVAL,
+    CONSTANTS.STATUS.UKEF_ACKNOWLEDGED,
+    CONSTANTS.STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    CONSTANTS.STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+    CONSTANTS.STATUS.SUBMITTED_TO_UKEF,
+  ];
 
-  return !(status === 'Ready for checker\'s approval'
-    || status === 'Acknowledged'
-    || status === 'Accepted by UKEF (with conditions)'
-    || status === 'Accepted by UKEF (without conditions)'
-    || status === 'Submitted');
+  return !acceptableStatus.includes(status);
 };
 
 const userCanAccessBondPreview = (user) => user.roles.includes('maker');

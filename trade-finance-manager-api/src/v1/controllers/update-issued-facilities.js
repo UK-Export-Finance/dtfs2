@@ -29,19 +29,19 @@ const updatedIssuedFacilities = async (deal) => {
 
     /**
      * `hasBeenIssued` : Facility has been issued by the maker.
-     * `sendToUkef` : Facility has been sent to UKEF.
+     * `sentToUkef` : Facility has been sent to UKEF.
      *
      * Ensures tasks only done once and email only sent once for each issued
      * facility hasBeenIssuedAndAcknowledged only set by tfm-api during this step.
      *
-     * If MIN then set `sendToUkef` to `false` to accommodate any cover start date
+     * If MIN then set `sentToUkef` to `false` to accommodate any cover start date
      * amendment.
     */
-    const sendToUkef = submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
+    const sentToUkef = submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN
       ? false
       : hasBeenIssuedAndAcknowledged;
 
-    if (hasBeenIssued && !sendToUkef) {
+    if (hasBeenIssued && !sentToUkef) {
       let facilityPremiumSchedule;
       let feeRecord;
       let facilityUpdate;
