@@ -38,7 +38,7 @@ const userCanAccessBond = (user, deal) => {
   }
 
   const { status } = deal.details;
-  const acceptableStatus = [
+  const validStatus = [
     CONSTANTS.STATUS.READY_FOR_APPROVAL,
     CONSTANTS.STATUS.UKEF_ACKNOWLEDGED,
     CONSTANTS.STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
@@ -46,7 +46,7 @@ const userCanAccessBond = (user, deal) => {
     CONSTANTS.STATUS.SUBMITTED_TO_UKEF,
   ];
 
-  return !acceptableStatus.includes(status);
+  return !validStatus.includes(status);
 };
 
 const userCanAccessBondPreview = (user) => user.roles.includes('maker');
