@@ -91,36 +91,13 @@ jobs:
       run: node ./re-insert-mocks.js
 
     - name: Run TFM API tests
-      run: docker-compose exec -T trade-finance-manager-api npm run api-test
-
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
-
-    - name: Run Reference Data Proxy API tests
-      run: docker-compose exec -T reference-data-proxy npm run api-test
-
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
-
-    - name: Run Portal API tests
-      run: docker-compose exec -T portal-api npm run api-test
-
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
-
-    - name: Run Central API tests
-      run: docker-compose exec -T dtfs-central-api npm run api-test
+      working-directory: ./
+      run: |
+        cd ./trade-finance-manager-api
+        npm run api-test
 
     - name: Stop containers
       if: always()
       working-directory: ./
       run: docker-compose -f docker-compose.gha.yml down
 
-    - uses: act10ns/slack@v1
-      with:
-        status: ${{ job.status }}
-        steps: ${{ toJson(steps) }}
-        channel: '#dtfs-github-actions'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      if: failure()

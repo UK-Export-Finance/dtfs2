@@ -2,7 +2,7 @@ name: PR - Integration tests
 
 on:
   pull_request:
-    branches: [ main, main-amendments ]
+    branches: [ main2, main-amendments2 ]
     paths:
     - 'portal/**'
     - 'gef-ui/**'
