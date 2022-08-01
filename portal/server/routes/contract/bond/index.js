@@ -1,5 +1,6 @@
 const express = require('express');
 const moment = require('moment');
+const CONSTANTS = require('../../../constants');
 const api = require('../../../api');
 const {
   provide,
@@ -37,25 +38,18 @@ const userCanAccessBond = (user, deal) => {
   }
 
   const { status } = deal.details;
+  const validStatus = [
+    CONSTANTS.STATUS.READY_FOR_APPROVAL,
+    CONSTANTS.STATUS.UKEF_ACKNOWLEDGED,
+    CONSTANTS.STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+    CONSTANTS.STATUS.UKEF_APPROVED_WITH_CONDITIONS,
+    CONSTANTS.STATUS.SUBMITTED_TO_UKEF,
+  ];
 
-  if (status === 'Ready for checker\'s approval'
-    || status === 'Acknowledged'
-    || status === 'Accepted by UKEF (with conditions)'
-    || status === 'Accepted by UKEF (without conditions)'
-    || status === 'Submitted') {
-    return false;
-  }
-
-  return true;
+  return !validStatus.includes(status);
 };
 
-const userCanAccessBondPreview = (user) => {
-  if (!user.roles.includes('maker')) {
-    return false;
-  }
-
-  return true;
-};
+const userCanAccessBondPreview = (user) => user.roles.includes('maker');
 
 router.get('/contract/:_id/bond/create', async (req, res) => {
   const { dealId, bondId } = await api.createBond(req.params._id, req.session.userToken);
@@ -396,7 +390,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
     );
     bondToRender = apiData.bond;
 
-    if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day']) {
+    if (!req.body['requestedCoverStartDate-day']) {
       requestedCoverValidationErrors = {
         count: 1,
         errorList: {
