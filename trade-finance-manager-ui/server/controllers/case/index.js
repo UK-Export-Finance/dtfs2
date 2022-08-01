@@ -235,7 +235,7 @@ const formatAmendmentDetails = (allAmendments) => {
 
       if (value?.ukefDecision?.submitted) {
         const date = format(fromUnixTime(value.ukefDecision.submittedAt), 'dd MMMM yyyy');
-        const time = format(fromUnixTime(value.ukefDecision.submittedAt), 'HH:mm aaa');
+        const time = format(fromUnixTime(value.ukefDecision.submittedAt), 'h:mm aaa');
         item.ukefDecision.submittedAt = `${date} at ${time}`;
       }
 
