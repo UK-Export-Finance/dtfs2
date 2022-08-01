@@ -1,6 +1,6 @@
 /*
- * Facility loan amendment DAF
- * ***************************
+ * Facility loan `amount` amendment DAF
+ * **********************************
  * This DAF (Durable Activity Function) is never invoked directly.
  * It is invoked via DOF (Durable Orchestrator Function).
  *
@@ -22,10 +22,11 @@ const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
 const mandatoryFields = [
   'portfolioIdentifier',
-  'expiryDate',
+  'effectiveDate',
+  'amount',
 ];
 
-const updateFacilityLoan = async (context) => {
+const updateFacilityLoanAmount = async (context) => {
   try {
     const {
       loanId,
@@ -41,12 +42,12 @@ const updateFacilityLoan = async (context) => {
 
     const submittedToACBS = moment().format();
 
-    const { status, data } = await api.updateFacilityLoan(facilityId, loanId, acbsFacilityLoanInput);
+    const { status, data } = await api.updateFacilityLoanAmount(facilityId, loanId, acbsFacilityLoanInput);
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
         JSON.stringify({
-          name: 'ACBS Facility loan amend error',
+          name: 'ACBS Facility loan amount amend error',
           submittedToACBS,
           receivedFromACBS: moment().format(),
           dataReceived: data,
@@ -63,9 +64,9 @@ const updateFacilityLoan = async (context) => {
       ...data,
     };
   } catch (e) {
-    console.error('Error amending facility loan record: ', { e });
+    console.error('Error amending facility loan amount: ', { e });
     throw new Error(e);
   }
 };
 
-module.exports = updateFacilityLoan;
+module.exports = updateFacilityLoanAmount;

@@ -1,14 +1,14 @@
 /* eslint-disable no-extra-boolean-cast */
 /**
-* ACBS Functions API Library deals with following HTTP Methods:
-* 1. GET
-* 2. POST
-* 3. PUT
-* 4. PATCH
-*
-* All the function have argument validation check and return object verification in
-* case err object does not have expected properties due to network connection, SSL verification or other issues.
-*/
+ * ACBS Functions API Library deals with following HTTP Methods:
+ * 1. GET
+ * 2. POST
+ * 3. PUT
+ * 4. PATCH
+ *
+ * All the function have argument validation check and return object verification in
+ * case err object does not have expected properties due to network connection, SSL verification or other issues.
+ */
 const axios = require('axios');
 
 require('dotenv').config();
@@ -62,9 +62,11 @@ const postToAcbs = async (apiRef, acbsInput) => {
 
 const putToAcbs = async (apiRef, acbsInput, etag) => {
   if (!!apiRef && !!acbsInput) {
-    const additionalHeader = etag ? {
-      'If-Match': etag,
-    } : null;
+    const additionalHeader = etag
+      ? {
+        'If-Match': etag,
+      }
+      : null;
 
     return axios({
       method: 'put',
@@ -91,9 +93,11 @@ const putToAcbs = async (apiRef, acbsInput, etag) => {
 
 const patchToAcbs = async (apiRef, acbsInput, eTag) => {
   if (!!apiRef && !!acbsInput) {
-    const additionalHeader = eTag ? {
-      'If-Match': eTag,
-    } : null;
+    const additionalHeader = eTag
+      ? {
+        'If-Match': eTag,
+      }
+      : null;
 
     return axios({
       method: 'patch',
@@ -132,15 +136,9 @@ const createFacilityGuarantee = (acbsInput) => postToAcbs('facility/guarantee', 
 const createCodeValueTransaction = (acbsInput) => postToAcbs('facility/codeValueTransaction', acbsInput);
 const createFacilityLoan = (acbsInput) => postToAcbs('facility/loan', acbsInput);
 const createFacilityFee = (acbsInput) => postToAcbs('facility/fixedFee', acbsInput);
-const updateFacility = (facilityId, updateType, acbsInput, etag) => putToAcbs(
-  `facility/${facilityId}?op=${updateType}`,
-  acbsInput,
-  etag,
-);
-const updateFacilityLoan = (facilityId, loanId, acbsInput) => patchToAcbs(
-  `facility/${facilityId}/loan/${loanId}`,
-  acbsInput,
-);
+const updateFacility = (facilityId, updateType, acbsInput, etag) => putToAcbs(`facility/${facilityId}?op=${updateType}`, acbsInput, etag);
+const updateFacilityLoan = (facilityId, loanId, acbsInput) => patchToAcbs(`facility/${facilityId}/loan/${loanId}`, acbsInput);
+const updateFacilityLoanAmount = (facilityId, loanId, acbsInput) => postToAcbs(`facility/${facilityId}/loan/${loanId}/amountAmendment`, acbsInput);
 
 module.exports = {
   getFacility,
@@ -159,4 +157,5 @@ module.exports = {
   createFacilityFee,
   updateFacility,
   updateFacilityLoan,
+  updateFacilityLoanAmount,
 };

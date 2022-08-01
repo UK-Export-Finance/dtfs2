@@ -1,8 +1,8 @@
 const CONSTANTS = require('../../constants');
-const { formatDate } = require('../../helpers/date');
+const { formatDate, now } = require('../../helpers/date');
 const helpers = require('./helpers');
 
-const facilityLoanAmend = (amendments, facility) => {
+const facilityLoanAmend = (amendments, facility, facilityMasterRecord) => {
   try {
     // Default facility loan record
     let record = { portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1 };
@@ -21,7 +21,8 @@ const facilityLoanAmend = (amendments, facility) => {
         if (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND) {
           record = {
             ...record,
-            amount: helpers.getMaximumLiability(amendments),
+            effectiveDate: now(),
+            amount: helpers.getLoanAmountDifference(amount, facilityMasterRecord),
           };
         }
       }
