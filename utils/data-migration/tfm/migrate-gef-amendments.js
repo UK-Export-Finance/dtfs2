@@ -14,6 +14,8 @@ const { excelDateToISODateString } = require('../helpers/date');
 const CONSTANTS = require('../constant');
 const { open } = require('../helpers/actionsheets');
 
+const version = '0.0.1';
+
 const createFacilityAmendment = async (facilityId) => {
   try {
     const response = await axios({
@@ -71,12 +73,13 @@ const migrateGefAmendments = async () => {
   amendments21To22 = amendments21To22.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()) && item.Stage === COMPLETED);
   allGefAmendments.push(...amendments21To22);
   const json = [];
+  console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating GEF TFM amendments migration v${version}.`, '\n\n');
+  let counter = 0;
   // eslint-disable-next-line no-restricted-syntax
   for (const amendment of allGefAmendments) {
     // eslint-disable-next-line no-await-in-loop
     const { amendmentId } = await createFacilityAmendment(amendment.facilityId);
     const { facilityId } = amendment;
-    console.log(amendmentId, facilityId, amendment['Effective Date']); // TODO: change to proper script print
     const output = {};
     output.requestDate = getUnixTime(new Date(excelDateToISODateString(amendment['Date received'])));
     output.exporter = amendment.Exporter.trim();
@@ -153,6 +156,8 @@ const migrateGefAmendments = async () => {
     await updateAmendment(facilityId, amendmentId, taskUpdate);
 
     json.push(output);
+    counter += 1;
+    console.info('\x1b[33m%s\x1b[0m', `✅ Inserted amendment ${counter} of ${allGefAmendments.length}`);
   }
 };
 
