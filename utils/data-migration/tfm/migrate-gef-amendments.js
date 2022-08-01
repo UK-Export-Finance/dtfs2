@@ -76,7 +76,7 @@ const migrateGefAmendments = async () => {
     // eslint-disable-next-line no-await-in-loop
     const { amendmentId } = await createFacilityAmendment(amendment.facilityId);
     const { facilityId } = amendment;
-    console.log(amendmentId, facilityId); // TODO: change to proper script print
+    console.log(amendmentId, facilityId, amendment['Effective Date']); // TODO: change to proper script print
     const output = {};
     output.requestDate = getUnixTime(new Date(excelDateToISODateString(amendment['Date received'])));
     output.exporter = amendment.Exporter.trim();
@@ -102,7 +102,7 @@ const migrateGefAmendments = async () => {
     }
 
     if (amendment['Notification or Request'] === AUTOMATIC) {
-      output.effectiveDate = getUnixTime(new Date(excelDateToISODateString(amendment['Effective date'])));
+      output.effectiveDate = getUnixTime(new Date(excelDateToISODateString(amendment['Effective Date'])));
       output.submissionDate = amendment.Moved ? getUnixTime(new Date(excelDateToISODateString(amendment.Moved))) : '';
     }
 
@@ -130,7 +130,7 @@ const migrateGefAmendments = async () => {
         banksDecisionEmail: true,
         banksDecisionEmailSent: true,
         submittedAt: amendment['When Finished'] ? getUnixTime(new Date(excelDateToISODateString(amendment['When Finished']))) : '',
-        effectiveDate: amendment['When Finished'] ? getUnixTime(new Date(excelDateToISODateString(amendment['When Finished']))) : '', // TODO: confirm
+        effectiveDate: amendment['Effective Date'] ? getUnixTime(new Date(excelDateToISODateString(amendment['Effective Date']))) : '', // TODO: confirm
         receivedDate: getUnixTime(new Date(excelDateToISODateString(amendment['Date received']))), // TODO: check for received date
         submitted: true,
         submittedBy: {
