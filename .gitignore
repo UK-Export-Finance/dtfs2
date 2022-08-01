@@ -13,6 +13,7 @@ dtfs-submissions-data-volume*
 **/cypress/videos
 **/cypress/screenshots
 **/actionsheets/*
+**/json/*
 
 trade-finance-manager/salesforce.json
 

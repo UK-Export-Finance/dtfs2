@@ -16,7 +16,7 @@ describe('generate AIN/MIN confirmation email variables - GEF', () => {
   };
 
   it('should return object', async () => {
-    const mockSubmittedDeal = mapSubmittedDeal({ dealSnapshot: MOCK_GEF_DEAL });
+    const mockSubmittedDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_GEF_DEAL });
 
     const result = await gefEmailVariables(mockSubmittedDeal, mockFacilityLists);
 
@@ -49,7 +49,7 @@ describe('generate AIN/MIN confirmation email variables - GEF', () => {
       const mockDeal = MOCK_GEF_DEAL;
       delete mockDeal.additionalRefName;
 
-      const mockSubmittedDeal = mapSubmittedDeal({ dealSnapshot: mockDeal });
+      const mockSubmittedDeal = await mapSubmittedDeal({ dealSnapshot: mockDeal });
 
       const result = await gefEmailVariables(mockSubmittedDeal, mockFacilityLists);
       expect(result.dealName).toEqual('-');

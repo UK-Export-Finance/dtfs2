@@ -79,7 +79,7 @@ const getUnderwriterPage = async (req, res) => {
 
       if (amendment?.ukefDecision?.submitted) {
         const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'dd MMMM yyyy');
-        const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'HH:mm aaa');
+        const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'h:mm aaa');
         amendment.ukefDecision.submittedAt = `${date} at ${time}`;
       }
       amendment.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;

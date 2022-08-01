@@ -176,7 +176,7 @@ const updateAllTasks = async (allTaskGroups, groupId, taskUpdate, statusFrom, de
  * */
 const updateTfmTask = async (dealId, taskUpdate) => {
   const unmappedDeal = await api.findOneDeal(dealId);
-  const deal = mapSubmittedDeal(unmappedDeal);
+  const deal = await mapSubmittedDeal(unmappedDeal);
 
   const allTasks = deal.tfm.tasks;
 

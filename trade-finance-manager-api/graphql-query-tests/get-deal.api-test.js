@@ -4,6 +4,7 @@ const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const gql = require('graphql-tag');
+const api = require('../src/v1/api');
 
 jest.mock('../src/v1/api');
 
@@ -265,9 +266,11 @@ describe('graphql query - get deal', () => {
   });
 
   it('should return a mapped deal via dealReducer', async () => {
+    api.getLatestCompletedAmendment = () => Promise.resolve({});
+
     const mappedDeal = await mapDeal(MOCK_DEAL);
 
-    const expectedDealWithoutFacilities = dealReducer({
+    const expectedDealWithoutFacilities = await dealReducer({
       dealSnapshot: mappedDeal,
       tfm: MOCK_DEAL_TFM,
     });
