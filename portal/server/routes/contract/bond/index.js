@@ -1,6 +1,6 @@
 const express = require('express');
 const moment = require('moment');
-const CONSTANTS = require('../../../constants')
+const CONSTANTS = require('../../../constants');
 const api = require('../../../api');
 const {
   provide,
