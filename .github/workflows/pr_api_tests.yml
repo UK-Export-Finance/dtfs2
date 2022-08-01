@@ -90,11 +90,15 @@ jobs:
     - name: Load mock data
       run: node ./re-insert-mocks.js
 
-    - name: Run TFM API tests
-      working-directory: ./
-      run: |
-        cd ./trade-finance-manager-api
-        npm run api-test
+    #- name: Run TFM API tests
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      working-directory: ./trade-finance-manager-api
+      with:
+        node-version: 16
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run api-test
 
     - name: Stop containers
       if: always()
