@@ -352,8 +352,33 @@ describe('sendFirstTaskEmail()', () => {
     api.findOneTeam = jest.fn(() => Promise.resolve({ email: 'test@test.com' }));
   });
 
-  it('should send approved without conditions email with correct details for both amendments', async () => {
+  it('should send first task email with corrrect variables with gef deal', async () => {
     await sendFirstTaskEmail(amendmentVariables.firstTaskVariables);
+
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(
+      CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
+      amendmentVariables.approvedWithoutConditionsBothAmendments.user.email,
+      {
+        exporterName: expect.any(String),
+        taskUrl: expect.any(String),
+        ukefDealId: expect.any(String),
+        taskTitle: expect.any(String),
+      },
+    );
+
+    expect(updateFacilityAmendmentSpy).toHaveBeenCalledWith(
+      amendmentVariables.approvedWithoutConditionsBothAmendments.facilityId,
+      amendmentVariables.approvedWithoutConditionsBothAmendments.amendmentId,
+      { firstTaskEmailSent: true },
+    );
+  });
+
+  it('should send first task email with corrrect variables with bss deal', async () => {
+    const { firstTaskVariables } = amendmentVariables;
+    firstTaskVariables.dealSnapshot.ukefDealId = null;
+    firstTaskVariables.dealSnapshot.details = { ukefDealId: '123' };
+
+    await sendFirstTaskEmail(firstTaskVariables);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
       CONSTANTS.EMAIL_TEMPLATE_IDS.TASK_READY_TO_START,
