@@ -18,8 +18,14 @@ const BANK_DECISIONS_TAGS = {
   [AMENDMENT_BANK_DECISION.AWAITING_DECISION]: 'govuk-tag--yellow',
 };
 
+const SUBMISSION_TYPE = {
+  MANUAL_AMENDMENT: 'Manual Amendment',
+  AUTOMATIC_AMENDMENT: 'Automatic Amendment',
+};
+
 module.exports = {
   AMENDMENT_STATUS,
   AMENDMENT_BANK_DECISION,
   BANK_DECISIONS_TAGS,
+  SUBMISSION_TYPE,
 };
