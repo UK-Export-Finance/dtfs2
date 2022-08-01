@@ -7,24 +7,20 @@ const api = require('../../v1/api');
 describe('amendmentChangeValueExportCurrency()', () => {
   const amendment = { currency: CURRENCY.GBP };
 
-  it('should return a string with currency and value to 2 d.p', () => {
+  it('should return a string with currency and value to 2 decimal places', () => {
     amendment.value = 25000;
 
     const result = amendmentHelpers.amendmentChangeValueExportCurrency(amendment);
-
     const expected = `${CURRENCY.GBP} 25,000.00`;
-
     expect(result).toEqual(expected);
   });
 
   it('should return a string with currency and value to 2 decimal points even if different currency', () => {
     amendment.value = 25000;
-    amendment.currency = 'JPY';
+    amendment.currency = CURRENCY.JPY;
 
     const result = amendmentHelpers.amendmentChangeValueExportCurrency(amendment);
-
-    const expected = 'JPY 25,000.00';
-
+    const expected = `${CURRENCY.JPY} 25,000.00`;
     expect(result).toEqual(expected);
   });
 
@@ -32,10 +28,7 @@ describe('amendmentChangeValueExportCurrency()', () => {
     amendment.value = null;
 
     const result = amendmentHelpers.amendmentChangeValueExportCurrency(amendment);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 
   it('should return null if no currency', () => {
@@ -43,10 +36,7 @@ describe('amendmentChangeValueExportCurrency()', () => {
     amendment.currency = null;
 
     const result = amendmentHelpers.amendmentChangeValueExportCurrency(amendment);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 
   it('should return null if no currency or no value', () => {
@@ -54,10 +44,7 @@ describe('amendmentChangeValueExportCurrency()', () => {
     amendment.currency = null;
 
     const result = amendmentHelpers.amendmentChangeValueExportCurrency(amendment);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 });
 
@@ -68,21 +55,17 @@ describe('calculateNewFacilityValue()', () => {
     amendment.value = 25000;
 
     const result = amendmentHelpers.calculateNewFacilityValue(null, amendment);
-
     const expected = amendment.value;
-
     expect(result).toEqual(expected);
   });
 
   it('should return a number if different currency', () => {
     amendment.value = 25000;
-    amendment.currency = 'JPY';
+    amendment.currency = CURRENCY.JPY;
     const exchangeRate = 7.1;
 
     const result = amendmentHelpers.calculateNewFacilityValue(exchangeRate, amendment);
-
     const expected = amendment.value * exchangeRate;
-
     expect(result).toEqual(expected);
   });
 
@@ -92,22 +75,16 @@ describe('calculateNewFacilityValue()', () => {
     const exchangeRate = 7.1;
 
     const result = amendmentHelpers.calculateNewFacilityValue(exchangeRate, amendment);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 
   it('should return null if no exchange rate if currency not GBP', () => {
     amendment.value = 25000;
-    amendment.currency = 'JPY';
+    amendment.currency = CURRENCY.JPY;
     const exchangeRate = null;
 
     const result = amendmentHelpers.calculateNewFacilityValue(exchangeRate, amendment);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 });
 
@@ -115,21 +92,18 @@ describe('calculateUkefExposure()', () => {
   it('should return the cover percentage without rounding when not needed', () => {
     const facilityValueInGBP = '5000';
     const coverPercentage = 80;
+
     const result = amendmentHelpers.calculateUkefExposure(facilityValueInGBP, coverPercentage);
-
     const expected = 5000 * (80 / 100);
-
     expect(result).toEqual(expected);
   });
 
-  it('should return a rounded number when more than 2 d.p', () => {
+  it('should return a rounded number when more than 2 decimal places', () => {
     const facilityValueInGBP = '5165.2';
     const coverPercentage = 33;
 
     const result = amendmentHelpers.calculateUkefExposure(facilityValueInGBP, coverPercentage);
-
     const expected = 1704.52;
-
     expect(result).toEqual(expected);
   });
 
@@ -138,10 +112,7 @@ describe('calculateUkefExposure()', () => {
     const coverPercentage = 33;
 
     const result = amendmentHelpers.calculateUkefExposure(facilityValueInGBP, coverPercentage);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 
   it('should return null if no cover percentage', () => {
@@ -149,10 +120,7 @@ describe('calculateUkefExposure()', () => {
     const coverPercentage = null;
 
     const result = amendmentHelpers.calculateUkefExposure(facilityValueInGBP, coverPercentage);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 
   it('should return null if no cover percentage and facility value', () => {
@@ -160,10 +128,7 @@ describe('calculateUkefExposure()', () => {
     const coverPercentage = null;
 
     const result = amendmentHelpers.calculateUkefExposure(facilityValueInGBP, coverPercentage);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 });
 
@@ -173,40 +138,29 @@ describe('calculateAmendmentTenor()', () => {
       coverStartDate: new Date('2022-07-20T00:00:00.000+00:00'),
       ukefFacilityType: FACILITY_TYPE.CASH,
     };
-
     const amendment = { coverEndDate: 2541930208 };
 
     const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
-
     const expected = 12;
-
     expect(result).toEqual(expected);
   });
 
   it('should return null if no facilitySnapshot', async () => {
     const facilitySnapshot = null;
-
     const amendment = { coverEndDate: 2541930208 };
 
     const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 
   it('should return null if no facilitySnapshot coverStartDate', async () => {
     const facilitySnapshot = {
       ukefFacilityType: FACILITY_TYPE.CASH,
     };
-
     const amendment = { coverEndDate: 2541930208 };
 
     const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 
   it('should return null if no amendment', async () => {
@@ -214,14 +168,10 @@ describe('calculateAmendmentTenor()', () => {
       coverStartDate: new Date('2022-07-20T00:00:00.000+00:00'),
       ukefFacilityType: FACILITY_TYPE.CASH,
     };
-
     const amendment = null;
 
     const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 
   it('should return null if no amendment coverEndDate', async () => {
@@ -229,14 +179,10 @@ describe('calculateAmendmentTenor()', () => {
       coverStartDate: new Date('2022-07-20T00:00:00.000+00:00'),
       ukefFacilityType: FACILITY_TYPE.CASH,
     };
-
     const amendment = { };
 
     const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 });
 
@@ -272,21 +218,15 @@ describe('calculateAmendmentTotalExposure()', () => {
     api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
 
     const result = await amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
-
     const expected = mockAmendment.value * (mockFacility.facilitySnapshot.coverPercentage / 100);
-
     expect(result).toEqual(expected);
   });
 
   it('should null if amendment not completed', async () => {
     mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.null };
-
     api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
 
     const result = await amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 });

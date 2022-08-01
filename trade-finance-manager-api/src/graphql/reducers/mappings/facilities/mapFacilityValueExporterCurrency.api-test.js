@@ -28,9 +28,7 @@ describe('mapFacilityValueExportCurrency()', () => {
     api.getLatestCompletedAmendment = () => Promise.resolve({});
 
     const result = await mapFacilityValueExportCurrency(mockFacility);
-
     const expected = `${CURRENCY.GBP} 1,000.00`;
-
     expect(result).toEqual(expected);
   });
 
@@ -38,9 +36,7 @@ describe('mapFacilityValueExportCurrency()', () => {
     api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
 
     const result = await mapFacilityValueExportCurrency(mockFacility);
-
     const expected = `${CURRENCY.GBP} 1,000.00`;
-
     expect(result).toEqual(expected);
   });
 
@@ -49,9 +45,7 @@ describe('mapFacilityValueExportCurrency()', () => {
     api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
 
     const result = await mapFacilityValueExportCurrency(mockFacility);
-
     const expected = `${CURRENCY.GBP} 4,000.00`;
-
     expect(result).toEqual(expected);
   });
 
@@ -59,9 +53,6 @@ describe('mapFacilityValueExportCurrency()', () => {
     api.getLatestCompletedAmendment = () => Promise.resolve({});
 
     const result = await mapFacilityValueExportCurrency(null);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 });

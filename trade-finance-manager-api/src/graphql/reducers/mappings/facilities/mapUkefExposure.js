@@ -17,7 +17,7 @@ const mapUkefExposure = async (facilityTfm, facility) => {
     let formattedUkefExposure = formattedNumber(ukefExposure);
     let ukefExposureCalculationTimestampValue = ukefExposureCalculationTimestamp;
 
-    if (facility && facility?._id) {
+    if (facility?._id) {
       const { _id } = facility;
 
       const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);

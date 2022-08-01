@@ -5,9 +5,7 @@ describe('percentageToNumber()', () => {
     const coverPercentage = '80%';
 
     const result = percentageToNumber(coverPercentage);
-
     const expected = 80;
-
     expect(result).toEqual(expected);
   });
 
@@ -15,9 +13,7 @@ describe('percentageToNumber()', () => {
     const coverPercentage = '80.2%';
 
     const result = percentageToNumber(coverPercentage);
-
     const expected = 80.2;
-
     expect(result).toEqual(expected);
   });
 
@@ -25,9 +21,7 @@ describe('percentageToNumber()', () => {
     const coverPercentage = 80;
 
     const result = percentageToNumber(coverPercentage);
-
     const expected = 80;
-
     expect(result).toEqual(expected);
   });
 
@@ -35,9 +29,6 @@ describe('percentageToNumber()', () => {
     const coverPercentage = null;
 
     const result = percentageToNumber(coverPercentage);
-
-    const expected = null;
-
-    expect(result).toEqual(expected);
+    expect(result).toBeNull();
   });
 });
