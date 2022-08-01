@@ -11,6 +11,7 @@ const mapFirstDrawdownAmountInExportCurrency = require('./mapFirstDrawdownAmount
 const mapFeeType = require('./mapFeeType');
 const mapFeeFrequency = require('./mapFeeFrequency');
 const mapDates = require('./mapDates');
+const api = require('../../../../v1/api');
 
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
 
@@ -18,6 +19,7 @@ describe('mapFacility', () => {
   const mockTfmFacility = {
     ukefExposure: '1,234.00',
     ukefExposureCalculationTimestamp: '1606900616651',
+    facilityValueInGBP: '12345',
   };
 
   const mockDealDetails = MOCK_DEAL.details;
@@ -67,8 +69,19 @@ describe('mapFacility', () => {
     dayCountBasis: '365',
   };
 
+  const mockFacilityFull = {
+    facilitySnapshot: {
+      ...mockFacility,
+    },
+    tfm: {
+      ...mockTfmFacility,
+    },
+  };
+
   it('should map and format correct fields/values', async () => {
-    const result = mapFacility(mockFacility, mockTfmFacility, mockDealDetails);
+    api.getLatestCompletedAmendment = () => Promise.resolve({});
+
+    const result = await mapFacility(mockFacility, mockTfmFacility, mockDealDetails, mockFacilityFull);
 
     const expectedCoveredPercentage = `${mockCoveredPercentage}%`;
 
@@ -98,7 +111,7 @@ describe('mapFacility', () => {
 
     const expectedFirstDrawdownAmountInExportCurrency = mapFirstDrawdownAmountInExportCurrency(facilityLatest);
 
-    const expectedDates = mapDates(
+    const expectedDates = await mapDates(
       facilityLatest,
       mockTfmFacility,
       mockDealDetails,
@@ -114,7 +127,7 @@ describe('mapFacility', () => {
       facilityStage: mapFacilityStage(mockFacilityStage),
       hasBeenIssued: mockFacility.hasBeenIssued,
       coveredPercentage: expectedCoveredPercentage,
-      value: mapFacilityValue(mockFacility.currency.id, formattedFacilityValue, mockTfmFacility),
+      value: await mapFacilityValue(mockFacility.currency.id, formattedFacilityValue, mockFacilityFull),
       currency: mockFacility.currency.id,
       facilityValueExportCurrency: expectedFacilityValueExportCurrency,
       ukefExposure: `${mockFacility.currency.id} ${mockFacility.ukefExposure}`,

@@ -13,31 +13,35 @@ const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 describe('createDealTasks', () => {
   const updateDealSpy = jest.fn((dealId, dealUpdate) => Promise.resolve(dealUpdate));
 
-  const mockSubmittedDeal = mapSubmittedDeal({
-    dealSnapshot: MOCK_DEAL_MIA,
-    tfm: {
-      parties: { exporter: {} },
-    },
-  });
+  let mockSubmittedDeal;
+  let mockDealEligibilityCriteria11False;
+  let mockDealWithPartyUrn;
 
-  const mockDealEligibilityCriteria11False = {
-    ...mockSubmittedDeal,
-    eligibility: {
-      criteria: [
-        { id: 11, answer: false },
-      ],
-    },
-  };
-
-  const mockDealWithPartyUrn = {
-    ...mockSubmittedDeal,
-    tfm: {
-      parties: { exporter: { partyUrn: 'test' } },
-    },
-  };
-
-  beforeEach(() => {
+  beforeEach(async () => {
     externalApis.updateDeal = updateDealSpy;
+
+    mockSubmittedDeal = await mapSubmittedDeal({
+      dealSnapshot: MOCK_DEAL_MIA,
+      tfm: {
+        parties: { exporter: {} },
+      },
+    });
+
+    mockDealEligibilityCriteria11False = {
+      ...mockSubmittedDeal,
+      eligibility: {
+        criteria: [
+          { id: 11, answer: false },
+        ],
+      },
+    };
+
+    mockDealWithPartyUrn = {
+      ...mockSubmittedDeal,
+      tfm: {
+        parties: { exporter: { partyUrn: 'test' } },
+      },
+    };
   });
 
   describe('shouldCreatePartiesTask', () => {

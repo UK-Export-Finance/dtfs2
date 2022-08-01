@@ -1,29 +1,21 @@
 const moment = require('moment');
 const mapCoverEndDate = require('../facilities/mapCoverEndDate');
-const mapTenorDate = require('../facilities/mapTenorDate');
+const mapTenor = require('../facilities/mapTenor');
 const { convertDateToTimestamp } = require('../../../../utils/date');
 
-const mapGefFacilityDates = (facilitySnapsot, facilityTfm, dealSnapshot) => {
+const mapGefFacilityDates = async (facilitySnapshot, facilityTfm, dealSnapshot) => {
   const {
     coverStartDate,
     coverEndDate,
     submittedAsIssuedDate,
-    monthsOfCover: ukefGuaranteeInMonths,
-    facilityStage,
-  } = facilitySnapsot;
-
-  const { exposurePeriodInMonths } = facilityTfm;
+  } = facilitySnapshot;
 
   const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealSnapshot;
 
   const mapped = {
     inclusionNoticeReceived: manualInclusionNoticeSubmissionDate || dealSubmissionDate,
     bankIssueNoticeReceived: submittedAsIssuedDate,
-    tenor: mapTenorDate(
-      facilityStage,
-      ukefGuaranteeInMonths,
-      exposurePeriodInMonths,
-    ),
+    tenor: await mapTenor(facilitySnapshot, facilityTfm),
   };
 
   if (coverStartDate) {
@@ -32,10 +24,11 @@ const mapGefFacilityDates = (facilitySnapsot, facilityTfm, dealSnapshot) => {
 
   // only set coverEndDate if not null, else is undefined
   if (coverEndDate) {
-    mapped.coverEndDate = mapCoverEndDate(
+    mapped.coverEndDate = await mapCoverEndDate(
       moment(coverEndDate).format('DD'),
       moment(coverEndDate).format('MM'),
       moment(coverEndDate).format('YYYY'),
+      facilitySnapshot,
     );
   }
 
