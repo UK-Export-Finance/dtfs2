@@ -9,7 +9,7 @@ const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
 describe('mappings - map submitted deal - mapGefDeal', () => {
-  it('should return mapped deal', () => {
+  it('should return mapped deal', async () => {
     const mockDeal = {
       dealSnapshot: {
         ...MOCK_GEF_DEAL,
@@ -18,7 +18,7 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
       tfm: {},
     };
 
-    const result = mapGefDeal(mockDeal);
+    const result = await mapGefDeal(mockDeal);
 
     const { dealSnapshot } = mockDeal;
 

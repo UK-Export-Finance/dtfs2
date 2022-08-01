@@ -7,13 +7,17 @@ const mapFacilityType = require('../facilities/mapFacilityType');
 const mapGuaranteeFeePayableToUkef = require('../facilities/mapGuaranteeFeePayableToUkef');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
+const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
 const mapFacilityTfm = require('../facilities/mapFacilityTfm');
+const api = require('../../../../v1/api');
 
 const MOCK_GEF_DEAL = require('../../../../v1/__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefFacility', () => {
-  it('should return mapped GEF facility', () => {
+  it('should return mapped GEF facility', async () => {
+    api.getLatestCompletedAmendment = () => Promise.resolve({});
+
     const mockFacility = {
       _id: MOCK_CASH_CONTINGENT_FACILIIES[0]._id,
       facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
@@ -22,7 +26,7 @@ describe('mapGefFacility', () => {
 
     const mockDealTfm = {};
 
-    const result = mapGefFacility(
+    const result = await mapGefFacility(
       mockFacility,
       MOCK_GEF_DEAL,
       mockDealTfm,
@@ -44,25 +48,25 @@ describe('mapGefFacility', () => {
         bankFacilityReference: facilitySnapshot.name,
         banksInterestMargin: `${facilitySnapshot.interestPercentage}%`,
         coveredPercentage: `${facilitySnapshot.coverPercentage}%`,
-        dates: mapGefFacilityDates(facilitySnapshot, mockFacility.tfm, MOCK_GEF_DEAL),
+        dates: await mapGefFacilityDates(facilitySnapshot, mockFacility.tfm, MOCK_GEF_DEAL),
         facilityProduct: mapFacilityProduct(facilitySnapshot.type),
         facilityStage: mapFacilityStage(facilitySnapshot.hasBeenIssued),
         hasBeenIssued: facilitySnapshot.hasBeenIssued,
         type: mapFacilityType(facilitySnapshot),
         currency: facilitySnapshot.currency.id,
         facilityValueExportCurrency: `${facilitySnapshot.currency.id} ${formattedFacilityValue}`,
-        value: mapFacilityValue(facilitySnapshot.currency.id, formattedFacilityValue, mockFacility.tfm),
+        value: await mapFacilityValue(facilitySnapshot.currency.id, formattedFacilityValue, mockFacility),
         feeType: facilitySnapshot.feeType,
         feeFrequency: facilitySnapshot.feeFrequency,
         guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFee),
         dayCountBasis: facilitySnapshot.dayCountBasis,
         ukefFacilityType: mapGefUkefFacilityType(facilitySnapshot.type),
         ukefFacilityId: facilitySnapshot.ukefFacilityId,
-        ukefExposure: `${facilitySnapshot.currency.id} ${facilitySnapshot.ukefExposure}`,
+        ukefExposure: await mapUkefExposureValue(mockFacility.tfm, mockFacility),
         providedOn: facilitySnapshot.details,
         providedOnOther: facilitySnapshot.detailsOther,
       },
-      tfm: mapFacilityTfm(mockFacility.tfm, mockDealTfm),
+      tfm: await mapFacilityTfm(mockFacility.tfm, mockDealTfm, mockFacility),
     };
 
     expect(result).toEqual(expected);
