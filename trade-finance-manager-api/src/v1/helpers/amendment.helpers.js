@@ -219,6 +219,7 @@ const sendFirstTaskEmail = async (taskVariables) => {
   const { tasks } = amendment;
   const { dealId, exporter } = dealSnapshot;
 
+  // dealId in snapshot for gef and details for bss
   const ukefDealId = dealSnapshot.ukefDealId || dealSnapshot.details.ukefDealId;
 
   const firstTask = getFirstTask(tasks);
