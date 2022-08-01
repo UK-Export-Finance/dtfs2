@@ -52,18 +52,12 @@ const calculateNewFacilityValue = (exchangeRate, amendment) => {
 
 // calculates new ukef exposure from amendment value
 const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
-  let ukefExposure;
-
   if (facilityValueInGBP && coverPercentage) {
     // parse float as can have 2 decimal places in facility value
     const calculation = parseFloat(facilityValueInGBP, 10) * (coverPercentage / 100);
     const totalDecimals = decimalsCount(calculation);
 
-    if (totalDecimals > 2) {
-      ukefExposure = roundNumber(calculation, 2);
-    } else {
-      ukefExposure = calculation;
-    }
+    const ukefExposure = totalDecimals > 2 ? roundNumber(calculation, 2) : calculation;
 
     return ukefExposure;
   }
