@@ -1,8 +1,9 @@
 const { formattedNumber } = require('../../../../../utils/number');
+const { CURRENCY } = require('../../../../../constants/currency.constant');
 
 const mapSupplyContractValueInGBP = (supplyContractValueInGBP) => {
   if (supplyContractValueInGBP) {
-    return `GBP ${formattedNumber(supplyContractValueInGBP)}`;
+    return `${CURRENCY.GBP} ${formattedNumber(supplyContractValueInGBP)}`;
   }
 
   return null;
