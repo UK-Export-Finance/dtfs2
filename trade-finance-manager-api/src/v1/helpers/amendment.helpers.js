@@ -272,7 +272,10 @@ const firstTaskEmailConfirmation = async (facilityId, amendmentId) => {
 const sendFirstTaskEmail = async (taskVariables) => {
   const { amendment, dealSnapshot, facilityId, amendmentId } = taskVariables;
   const { tasks } = amendment;
-  const { dealId, exporter, ukefDealId } = dealSnapshot;
+  const { dealId, exporter } = dealSnapshot;
+
+  // dealId in snapshot for gef and details for bss
+  const ukefDealId = dealSnapshot.ukefDealId || dealSnapshot.details.ukefDealId;
 
   const firstTask = getFirstTask(tasks);
   const urlOrigin = process.env.TFM_URI;

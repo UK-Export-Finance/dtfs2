@@ -3,7 +3,7 @@ const mapGefFacilities = require('../gef-facilities/mapGefFacilities');
 const mapTotals = require('../deal/mapTotals');
 const mapGefSubmissionDetails = require('./mapGefSubmissionDetails');
 
-const mapGefDealSnapshot = (dealSnapshot, dealTfm) => ({
+const mapGefDealSnapshot = async (dealSnapshot, dealTfm) => ({
   _id: dealSnapshot._id,
   dealType: dealSnapshot.dealType,
   status: dealSnapshot.status,
@@ -21,8 +21,8 @@ const mapGefDealSnapshot = (dealSnapshot, dealTfm) => ({
   submissionDetails: mapGefSubmissionDetails(dealSnapshot),
   eligibility: dealSnapshot.eligibility,
   supportingInformation: dealSnapshot.supportingInformation,
-  facilities: mapGefFacilities(dealSnapshot, dealTfm),
-  totals: mapTotals(dealSnapshot.facilities),
+  facilities: await mapGefFacilities(dealSnapshot, dealTfm),
+  totals: await mapTotals(dealSnapshot.facilities),
 });
 
 module.exports = mapGefDealSnapshot;

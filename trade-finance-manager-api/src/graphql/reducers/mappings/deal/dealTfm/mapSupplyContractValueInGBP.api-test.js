@@ -1,5 +1,6 @@
 const mapSupplyContractValueInGBP = require('./mapSupplyContractValueInGBP');
 const { formattedNumber } = require('../../../../../utils/number');
+const { CURRENCY } = require('../../../../../constants/currency.constant');
 
 describe('mapSupplyContractValueInGBP', () => {
   it('should return formatted number as string', () => {
@@ -7,7 +8,7 @@ describe('mapSupplyContractValueInGBP', () => {
 
     const result = mapSupplyContractValueInGBP(mockSupplyContractValueInGBP);
 
-    const expected = `GBP ${formattedNumber(mockSupplyContractValueInGBP)}`;
+    const expected = `${CURRENCY.GBP} ${formattedNumber(mockSupplyContractValueInGBP)}`;
 
     expect(result).toEqual(expected);
   });
