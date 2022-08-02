@@ -9,13 +9,14 @@ const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
 
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
+
 describe('generate AIN/MIN confirmation email variables', () => {
   const mockFacilityLists = {};
 
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
-    const mockDeal = mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
-
     it('should return bssEmailVariables function', async () => {
+      const mockDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+
       const result = await generateAinMinConfirmationEmailVars(mockDeal, mockFacilityLists);
 
       const expected = bssEmailVariables(mockDeal, mockFacilityLists);
@@ -24,9 +25,9 @@ describe('generate AIN/MIN confirmation email variables', () => {
   });
 
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`, () => {
-    const mockDeal = mapSubmittedDeal({ dealSnapshot: MOCK_GEF_DEAL });
-
     it('should return gefEmailVariables function', async () => {
+      const mockDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_GEF_DEAL });
+
       const result = await generateAinMinConfirmationEmailVars(mockDeal, mockFacilityLists);
 
       const expected = await gefEmailVariables(mockDeal, mockFacilityLists);
