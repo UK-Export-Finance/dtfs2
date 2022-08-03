@@ -1,12 +1,8 @@
-const { getTime, format } = require('date-fns');
+const { getTime, format, getUnixTime } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const {
-  newDeal,
-  createAndSubmitDeals,
-  updateDealsTfm,
-} = require('./tfm-deals-get.api-test');
+const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
@@ -31,13 +27,7 @@ describe('/v1/tfm/deals', () => {
           },
         });
 
-        const [
-          submittedMIADeal,
-          submittedMINDeal,
-        ] = await createAndSubmitDeals([
-          miaDeal,
-          minDeal,
-        ]);
+        const [submittedMIADeal, submittedMINDeal] = await createAndSubmitDeals([miaDeal, minDeal]);
 
         await updateDealsTfm([
           {
@@ -115,13 +105,85 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = [
-          submittedMIADeal,
-        ];
+        const expectedDeals = [submittedMIADeal];
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
         expect(body.deals).toEqual(expectedDeals);
+      });
+
+      it('Returns deals filtered by `tfm.lastUpdated`', async () => {
+        const todayFormatted = format(new Date(), 'dd-MM-yyyy');
+
+        // Create Mock AIN deals
+
+        const ainDealToday = newDeal({
+          details: {
+            ukefDealId: 'ain-1',
+          },
+        });
+
+        // Past date
+        const ainDealPast = newDeal({
+          details: {
+            ukefDealId: 'ain-2',
+          },
+        });
+
+        // No date
+        const ainDealNone = newDeal({
+          details: {
+            ukefDealId: 'ain-3',
+          },
+        });
+
+        // Create mock deals
+        const deals = await createAndSubmitDeals([
+          ainDealToday,
+          ainDealPast,
+          ainDealNone,
+        ]);
+
+        // Update created mock deals
+        if (deals.length > 0) {
+          await updateDealsTfm([
+            {
+              _id: deals[0]._id,
+              tfm: {
+                lastUpdated: 0,
+              },
+            },
+            {
+              _id: deals[1]._id,
+              tfm: {
+                lastUpdated: '20-09-1989',
+              },
+            },
+          ]);
+        }
+
+        // Mock Request Body
+        const mockRequestBody = {
+          queryParams: {
+            byField: [
+              {
+                name: 'tfm.lastUpdated',
+                value: todayFormatted,
+              },
+            ],
+          },
+        };
+
+        // GET API CAll
+        const { status, body } = await api.get('/v1/tfm/deals', mockRequestBody);
+
+        // Test evaluation
+        expect(status).toEqual(200);
+        expect(body.deals.length).toEqual(2);
+        if (body.deals.length > 0) {
+          expect(body.deals[0].tfm.lastUpdated).toEqual(expect.any(Number));
+          expect(body.deals[1].tfm.lastUpdated).toEqual(expect.any(Number));
+        }
       });
     });
   });
