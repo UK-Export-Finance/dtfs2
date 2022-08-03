@@ -2,7 +2,7 @@ const { format } = require('date-fns');
 const amendmentController = require('../../../src/v1/controllers/amendment.controller');
 const { AMENDMENT_STATUS } = require('../../../src/constants/deals');
 const externalApis = require('../../../src/v1/api');
-const updateFacilityAmendment = require('../utils/updateFacilityAmendment');
+const updateFacilityAmendment = require('../utils/updateFacilityAmendment.util');
 
 describe('update tfm-deals on amendment completion', () => {
   const mockAmendment = {
@@ -56,7 +56,7 @@ describe('update tfm-deals on amendment completion', () => {
     expect(externalApis.updateDeal).toHaveBeenCalledWith(mockAmendment.dealId, { tfm: { lastUpdated: expect.any(Number) } });
   });
 
-  it('updateFacilityAmendment() - should not call updateDeal when updateTfmLastUpdated is null', async () => {
+  it('updateFacilityAmendment() - should NOT call updateDeal when updateTfmLastUpdated is null', async () => {
     externalApis.updateDeal = updateDealSpy;
     mockAmendment.dealId = '123';
 
@@ -64,7 +64,7 @@ describe('update tfm-deals on amendment completion', () => {
     expect(externalApis.updateDeal).not.toHaveBeenCalled();
   });
 
-  it('updateFacilityAmendment() - should not call updateDeal when updateTfmLastUpdated is true but dealId is null', async () => {
+  it('updateFacilityAmendment() - should NOT call updateDeal when updateTfmLastUpdated is true but dealId is null', async () => {
     externalApis.updateDeal = updateDealSpy;
     mockAmendment.dealId = null;
 
