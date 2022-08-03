@@ -4,6 +4,7 @@ const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
 const CONSTANTS = require('../../constants');
+const { formatCoverEndDate } = require('../helpers/amendment.helpers');
 
 const addToACBSLog = async ({
   deal = {}, facility = {}, bank = {}, acbsTaskLinks,
@@ -148,8 +149,20 @@ const issueAcbsFacilities = async (deal) => {
  * @param {Object} deal Bespoke deal object
  */
 const amendAcbsFacility = async (amendments, facility, deal) => {
-  api.amendACBSfacility(amendments, facility, deal)
-    .then((acbsTaskLinks) => addToACBSLog(acbsTaskLinks))
+  let payload;
+
+  // TO-DO : EPOCH Convergence
+  if (amendments.coverEndDate) {
+    payload = formatCoverEndDate(amendments);
+  }
+
+  api.amendACBSfacility(payload, facility, deal)
+    .then((acbsTaskLinks) => {
+      console.log('=========', { acbsTaskLinks });
+      if (acbsTaskLinks.id) {
+        addToACBSLog(acbsTaskLinks);
+      }
+    })
     .catch((e) => {
       console.error('Unable to amend facility: ', { e });
     });
