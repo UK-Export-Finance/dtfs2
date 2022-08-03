@@ -37,9 +37,7 @@ describe('update tfm-deals on amendment completion', () => {
     const result = await amendmentController.updateTFMDealLastUpdated(mockAmendment.dealId, mockAmendment.facilityId);
 
     const expected = format(new Date(), 'dd/MM/yyyy');
-
     const expectedResult = format(result.tfm.lastUpdated, 'dd/MM/yyyy');
-
     expect(expectedResult).toEqual(expected);
   });
 
@@ -55,7 +53,6 @@ describe('update tfm-deals on amendment completion', () => {
     mockAmendment.dealId = '123';
 
     await updateFacilityAmendment(mockAmendment.facilityId, mockAmendment.amendmentId, { updateTfmLastUpdated: true });
-
     expect(externalApis.updateDeal).toHaveBeenCalledWith(mockAmendment.dealId, { tfm: { lastUpdated: expect.any(Number) } });
   });
 
@@ -64,7 +61,6 @@ describe('update tfm-deals on amendment completion', () => {
     mockAmendment.dealId = '123';
 
     await updateFacilityAmendment(mockAmendment.facilityId, mockAmendment.amendmentId, { updateTfmLastUpdated: null });
-
     expect(externalApis.updateDeal).not.toHaveBeenCalled();
   });
 
@@ -73,7 +69,6 @@ describe('update tfm-deals on amendment completion', () => {
     mockAmendment.dealId = null;
 
     await updateFacilityAmendment(mockAmendment.facilityId, mockAmendment.amendmentId, { updateTfmLastUpdated: true });
-
     expect(externalApis.updateDeal).not.toHaveBeenCalled();
   });
 });
