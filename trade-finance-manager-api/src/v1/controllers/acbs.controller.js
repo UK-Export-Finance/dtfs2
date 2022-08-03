@@ -140,10 +140,16 @@ const issueAcbsFacilities = async (deal) => {
     acbsIssuedFacilities.map((acbsTaskLinks) => addToACBSLog({ acbsTaskLinks })),
   );
 };
-
+/**
+ * Amend facility controller function responsible for invoking
+ * respective API and writes ACBS task links to DB.
+ * @param {Object} amendments Facility amendments object
+ * @param {Object} facility Complete TFM facility object
+ * @param {Object} deal Bespoke deal object
+ */
 const amendAcbsFacility = async (amendments, facility, deal) => {
   api.amendACBSfacility(amendments, facility, deal)
-    .then((r) => r)
+    .then((acbsTaskLinks) => addToACBSLog(acbsTaskLinks))
     .catch((e) => {
       console.error('Unable to amend facility: ', { e });
     });
