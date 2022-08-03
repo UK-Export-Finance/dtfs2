@@ -14,7 +14,6 @@ const TIMESTAMP_FIELDS = [
   'dealSnapshot.eligibility.lastUpdated',
   'dealSnapshot.details.submissionDate',
   'dealSnapshot.facilitiesUpdated',
-  'tfm.lastUpdated',
 ];
 
 const isTimestampField = (fieldName) =>
