@@ -2,7 +2,11 @@ const { getTime, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
+const {
+  newDeal,
+  createAndSubmitDeals,
+  updateDealsTfm,
+} = require('./tfm-deals-get.api-test');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
@@ -27,7 +31,13 @@ describe('/v1/tfm/deals', () => {
           },
         });
 
-        const [submittedMIADeal, submittedMINDeal] = await createAndSubmitDeals([miaDeal, minDeal]);
+        const [
+          submittedMIADeal,
+          submittedMINDeal,
+        ] = await createAndSubmitDeals([
+          miaDeal,
+          minDeal,
+        ]);
 
         await updateDealsTfm([
           {
@@ -105,7 +115,9 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = [submittedMIADeal];
+        const expectedDeals = [
+          submittedMIADeal,
+        ];
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
