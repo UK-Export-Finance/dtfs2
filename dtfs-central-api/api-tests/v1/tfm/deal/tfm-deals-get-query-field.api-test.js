@@ -1,4 +1,4 @@
-const { getTime, format, getUnixTime } = require('date-fns');
+const { getTime, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
