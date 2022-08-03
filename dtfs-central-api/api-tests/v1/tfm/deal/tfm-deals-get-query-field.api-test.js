@@ -128,7 +128,7 @@ describe('/v1/tfm/deals', () => {
         const todayFormatted = format(new Date(), 'dd-MM-yyyy');
 
         // Create Mock AIN deals
-
+        // Today date
         const ainDealToday = newDeal({
           details: {
             ukefDealId: 'ain-1',
@@ -162,7 +162,7 @@ describe('/v1/tfm/deals', () => {
             {
               _id: deals[0]._id,
               tfm: {
-                lastUpdated: 0,
+                lastUpdated: todayFormatted,
               },
             },
             {
