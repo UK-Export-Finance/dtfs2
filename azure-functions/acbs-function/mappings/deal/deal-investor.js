@@ -11,7 +11,7 @@ const CONSTANTS = require('../../constants');
 "effectiveDate":      As per deal Commencement date
 "currency":           Deal Currency,
 "maximumLiability":   Contract Value,
-"expiryDate":     99/99/99
+"expiryDate":     2050-12-31
 */
 
 const dealInvestor = (deal) => ({
