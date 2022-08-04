@@ -34,7 +34,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
       // Facility object existence check
       const hasFacility = amendment.facility;
       // Deal properties existence check
-      const hasDeal = amendment.deal && Object.prototype.hasOwnProperty.call(amendment.deal, 'dealSnapshot');
+      const hasDeal = amendment.deal && amendment.deal.dealSnapshot;
 
       // Payload verification
       if (hasFacilityId && hasAmendment && hasFacility && hasDeal) {

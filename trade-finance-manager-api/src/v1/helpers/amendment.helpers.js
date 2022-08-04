@@ -244,7 +244,7 @@ const canSendToAcbs = (amendment) => {
   // Amendment has been submitted by PIM team
   const pim = amendment.submittedByPim;
   // Manual amendment verification
-  const manual = Boolean(amendment.requireUkefApproval) && Boolean(amendment.bankDecision);
+  const manual = Boolean(amendment.requireUkefApproval);
 
   // Manual amendment
   if (manual) {
