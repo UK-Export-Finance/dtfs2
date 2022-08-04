@@ -14,7 +14,6 @@ const TIMESTAMP_FIELDS = [
   'dealSnapshot.eligibility.lastUpdated',
   'dealSnapshot.details.submissionDate',
   'dealSnapshot.facilitiesUpdated',
-  'tfm.lastUpdated',
 ];
 
 const isTimestampField = (fieldName) =>
@@ -32,10 +31,12 @@ const dayStartAndEndTimestamps = (dateString) => {
   const dayEnd = endOfDay(new Date(day));
   const dayEndTimestamp = getTime(dayEnd);
 
-  return {
+  const dates = {
     dayStartTimestamp,
     dayEndTimestamp,
   };
+
+  return dates;
 };
 
 module.exports = {
