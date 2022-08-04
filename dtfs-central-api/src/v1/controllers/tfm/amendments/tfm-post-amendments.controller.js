@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
 const db = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
-const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendmentByFacilityId } = require('./tfm-get-amendments.controller');
+const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendmentByFacilityIdVersion } = require('./tfm-get-amendments.controller');
 const { findOneFacility } = require('../facility/tfm-get-facility.controller');
 
 exports.postTfmAmendment = async (req, res) => {
@@ -17,7 +17,8 @@ exports.postTfmAmendment = async (req, res) => {
       // check if there is an amendment in progress
       if (!amendmentInProgress) {
         const { dealId } = facility.facilitySnapshot;
-        const latestCompletedAmendment = await findLatestCompletedAmendmentByFacilityId(facilityId);
+        // the version of latest completed amendment (proceed or withdraw or auto) or null
+        const latestCompletedAmendmentVersion = await findLatestCompletedAmendmentByFacilityIdVersion(facilityId);
 
         const amendment = {
           amendmentId: new ObjectId(),
@@ -28,8 +29,8 @@ exports.postTfmAmendment = async (req, res) => {
           status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED,
           version: 1
         };
-        if (latestCompletedAmendment) {
-          amendment.version = latestCompletedAmendment.version + 1;
+        if (latestCompletedAmendmentVersion) {
+          amendment.version = latestCompletedAmendmentVersion + 1;
         }
         const collection = await db.getCollection('tfm-facilities');
         await collection.updateOne(
