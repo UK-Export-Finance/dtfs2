@@ -32,12 +32,10 @@ const dayStartAndEndTimestamps = (dateString) => {
   const dayEnd = endOfDay(new Date(day));
   const dayEndTimestamp = getTime(dayEnd);
 
-  const dates = {
+  return {
     dayStartTimestamp,
     dayEndTimestamp,
   };
-
-  return dates;
 };
 
 module.exports = {
