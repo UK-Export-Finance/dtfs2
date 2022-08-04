@@ -48,7 +48,9 @@ const server = new ApolloServer({
     if (isAuthenticated && !hasData) {
       return {
         errors: [
+
           { message: 'Server error returning query.' },
+
         ],
       };
     }
