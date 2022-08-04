@@ -38,20 +38,25 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
   const password: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET;
   const exposurePeriodURL: any = process.env.MULESOFT_API_EXPOSURE_PERIOD_URL;
 
-  const response = await axios({
-    method: 'get',
-    url: `${exposurePeriodURL}?startdate=${startDate}&enddate=${endDate}&productgroup=${productGroup}`,
-    auth: { username, password },
-  }).catch((error) => {
-    console.error('Error calling Exposure Period API ', { error });
-    return { data: error.response.data, status: error.response.status };
-  });
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${exposurePeriodURL}?startdate=${startDate}&enddate=${endDate}&productgroup=${productGroup}`,
+      auth: { username, password },
+    }).catch((error) => {
+      console.error('Error calling Exposure Period API ', { error });
+      return { data: error.response.data, status: error.response.status };
+    });
 
-  const { status, data } = response;
+    const { status, data } = response;
 
-  const { exposurePeriod } = data;
+    const { exposurePeriod } = data;
 
-  return res.status(status).send({
-    exposurePeriodInMonths: exposurePeriod,
-  });
+    return res.status(status).send({
+      exposurePeriodInMonths: exposurePeriod,
+    });
+  } catch (err) {
+    console.error('Error calling Exposure Period API ', { err });
+    return res.status(400);
+  }
 };

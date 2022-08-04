@@ -709,6 +709,7 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
     }
     return null;
   } catch ({ response }) {
+    console.error('TFM-API error calling premium schedule', { response });
     return null;
   }
 };

@@ -26,26 +26,30 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
   if (premiumSchedulePayload.facilityURN) {
     premiumSchedulePayloadFormatted.facilityURN = Number(premiumSchedulePayload.facilityURN);
   }
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${mdmEAurl}/premium/schedule`,
+      auth: { username, password },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: [premiumSchedulePayloadFormatted],
+    }).catch((error: any) => {
+      console.error(
+        `Error calling POST Premium schedule with facilityURN: ${premiumSchedulePayloadFormatted.facilityURN} \n`,
+        error.response.data,
+        error.response.status,
+      );
+      return { data: error?.response?.data, status: error?.response?.status };
+    });
 
-  const response = await axios({
-    method: 'post',
-    url: `${mdmEAurl}/premium/schedule`,
-    auth: { username, password },
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: [premiumSchedulePayloadFormatted],
-  }).catch((error: any) => {
-    console.error(
-      `Error calling POST Premium schedule with facilityURN: ${premiumSchedulePayloadFormatted.facilityURN} \n`,
-      error.response.data,
-      error.response.status,
-    );
-    return { data: error?.response?.data, status: error?.response?.status };
-  });
-
-  console.info(`Premium schedule successfully created for ${premiumSchedulePayloadFormatted.facilityURN}`);
-  return response.status ? response.status : response;
+    console.info(`Premium schedule successfully created for ${premiumSchedulePayloadFormatted.facilityURN}`);
+    return response.status ? response.status : response;
+  } catch (error) {
+    console.error('Error calling POST Premium schedule', { error });
+    return null;
+  }
 };
 
 const getScheduleData = async (facilityURN: any) => {
