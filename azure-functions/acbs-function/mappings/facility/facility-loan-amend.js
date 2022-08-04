@@ -22,7 +22,7 @@ const facilityLoanAmend = (amendments, facility, facilityMasterRecord) => {
           record = {
             ...record,
             effectiveDate: now(),
-            amount: helpers.getLoanAmountDifference(amount, facilityMasterRecord),
+            amountAmendment: helpers.getLoanAmountDifference(amount, facilityMasterRecord),
           };
         }
       }

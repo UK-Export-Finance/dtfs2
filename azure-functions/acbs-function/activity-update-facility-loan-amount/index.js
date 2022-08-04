@@ -23,7 +23,7 @@ const { findMissingMandatory } = require('../helpers/mandatoryFields');
 const mandatoryFields = [
   'portfolioIdentifier',
   'effectiveDate',
-  'amount',
+  'amountAmendment',
 ];
 
 const updateFacilityLoanAmount = async (context) => {

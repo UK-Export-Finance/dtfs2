@@ -66,6 +66,23 @@ const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster }) =>
     issuedFacilityMaster,
   });
 
+const updateAmendedFacilityAcbs = (taskResult) => {
+  if (taskResult.instanceId && taskResult.output) {
+    const { instanceId } = taskResult;
+    const { facilityMasterRecordAmendments, facilityLoanRecordAmendments } = taskResult.output;
+    const { _id } = taskResult.input.amendment.facility;
+    const acbsUpdate = {
+      [instanceId]: {
+        facilityMasterRecordAmendments,
+        facilityLoanRecordAmendments,
+      },
+    };
+
+    // Update tfm-facilities `acbs` object with ACBS amendments response
+    tfmController.updateFacilityAcbs(_id, acbsUpdate);
+  }
+};
+
 const checkAzureAcbsFunction = async () => {
   try {
   // Fetch outstanding functions
@@ -95,6 +112,10 @@ const checkAzureAcbsFunction = async () => {
           switch (task.name) {
             case 'acbs-issue-facility':
               await updateIssuedFacilityAcbs(task.output);
+              break;
+
+            case 'acbs-amend-facility':
+              await updateAmendedFacilityAcbs(task);
               break;
 
             default:
@@ -158,9 +179,8 @@ const amendAcbsFacility = async (amendments, facility, deal) => {
 
   api.amendACBSfacility(payload, facility, deal)
     .then((acbsTaskLinks) => {
-      console.log('=========', { acbsTaskLinks });
       if (acbsTaskLinks.id) {
-        addToACBSLog(acbsTaskLinks);
+        addToACBSLog({ acbsTaskLinks });
       }
     })
     .catch((e) => {
