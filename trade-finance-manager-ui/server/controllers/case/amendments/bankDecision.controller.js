@@ -283,6 +283,8 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
           email: req?.session?.user?.email,
         },
       },
+      // flag to update tfm-deals last updated
+      updateTfmLastUpdated: true,
     };
 
     await api.updateAmendment(facilityId, amendmentId, payload);

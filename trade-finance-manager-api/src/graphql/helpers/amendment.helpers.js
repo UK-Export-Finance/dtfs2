@@ -108,12 +108,14 @@ const calculateAmendmentTenor = async (facilitySnapshot, amendment) => {
 
       const updatedTenor = await api.getFacilityExposurePeriod(coverStartDateFormatted, coverEndDateFormatted, ukefFacilityType);
 
-      return updatedTenor.exposurePeriodInMonths;
+      if (updatedTenor) {
+        return updatedTenor.exposurePeriodInMonths;
+      }
     }
 
     return null;
   } catch (err) {
-    console.error('Error calculating amendment tenor', { err });
+    console.error('Error calculating amendment tenor in graphql amendment helper', { err });
     return null;
   }
 };
