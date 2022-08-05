@@ -4,6 +4,7 @@ const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
 const CONSTANTS = require('../../constants');
+const { formatCoverEndDate } = require('../helpers/amendment.helpers');
 
 const addToACBSLog = async ({
   deal = {}, facility = {}, bank = {}, acbsTaskLinks,
@@ -65,6 +66,23 @@ const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster }) =>
     issuedFacilityMaster,
   });
 
+const updateAmendedFacilityAcbs = (taskResult) => {
+  if (taskResult.instanceId && taskResult.output) {
+    const { instanceId } = taskResult;
+    const { facilityMasterRecordAmendments, facilityLoanRecordAmendments } = taskResult.output;
+    const { _id } = taskResult.input.amendment.facility;
+    const acbsUpdate = {
+      [instanceId]: {
+        facilityMasterRecordAmendments,
+        facilityLoanRecordAmendments,
+      },
+    };
+
+    // Update tfm-facilities `acbs` object with ACBS amendments response
+    tfmController.updateFacilityAcbs(_id, acbsUpdate);
+  }
+};
+
 const checkAzureAcbsFunction = async () => {
   try {
   // Fetch outstanding functions
@@ -94,6 +112,10 @@ const checkAzureAcbsFunction = async () => {
           switch (task.name) {
             case 'acbs-issue-facility':
               await updateIssuedFacilityAcbs(task.output);
+              break;
+
+            case 'acbs-amend-facility':
+              await updateAmendedFacilityAcbs(task);
               break;
 
             default:
@@ -140,10 +162,27 @@ const issueAcbsFacilities = async (deal) => {
     acbsIssuedFacilities.map((acbsTaskLinks) => addToACBSLog({ acbsTaskLinks })),
   );
 };
-
+/**
+ * Amend facility controller function responsible for invoking
+ * respective API and writes ACBS task links to DB.
+ * @param {Object} amendments Facility amendments object
+ * @param {Object} facility Complete TFM facility object
+ * @param {Object} deal Bespoke deal object
+ */
 const amendAcbsFacility = async (amendments, facility, deal) => {
-  api.amendACBSfacility(amendments, facility, deal)
-    .then((r) => r)
+  let payload;
+
+  // TO-DO : EPOCH Convergence
+  if (amendments.coverEndDate) {
+    payload = formatCoverEndDate(amendments);
+  }
+
+  api.amendACBSfacility(payload, facility, deal)
+    .then((acbsTaskLinks) => {
+      if (acbsTaskLinks.id) {
+        addToACBSLog({ acbsTaskLinks });
+      }
+    })
     .catch((e) => {
       console.error('Unable to amend facility: ', { e });
     });

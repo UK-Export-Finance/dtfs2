@@ -97,20 +97,17 @@ const createAcbsRecord = async (deal: any, bank: any) => {
 };
 
 export const createAcbsRecordPOST = async (req: Request, res: Response) => {
-  if (req) {
-    try {
-      const { deal, bank } = req.body;
-      const response = await createAcbsRecord(deal, bank);
-      if (response) {
-        const { status, data } = response;
-        return res.status(status).send(data);
-      }
-    } catch (error: any) {
-      console.error('ACBS create POST failed ', { error });
-      return res.status(400).send();
+  try {
+    const { deal, bank } = req.body;
+    const response = await createAcbsRecord(deal, bank);
+    if (response) {
+      const { status, data } = response;
+      return res.status(status).send(data);
     }
+  } catch (error: any) {
+    console.error('ACBS create POST failed ', { error });
+    return res.status(400).send();
   }
-  return res.status(400).send();
 };
 
 const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
@@ -160,7 +157,7 @@ const amendAcbsFacility = async (amendment: Amendment) => {
 
   if (amendment && hasAmendment) {
     try {
-      await axios({
+      return axios({
         method: 'post',
         url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
         data: {
@@ -210,6 +207,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   }
 
   const response = await amendAcbsFacility(payload);
+
   if (response) {
     // Successful
     const { status, data } = response;
