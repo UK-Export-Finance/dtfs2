@@ -22,11 +22,11 @@ export const emailNotification = async (req: Request, res: Response) => {
         personalisation,
         reference: null,
       })
-      .then((response: any) => response)
-      .catch((error: any) => {
-        console.error('Error calling Notify API ', error.response.data, error.response.status);
-        return { data: error.response.data, status: error.response.status };
-      });
+      .then((response: any) => response);
+
+    if (!notifyResponse) {
+      return res.status(422).send({});
+    }
 
     const { status, data } = notifyResponse;
 
