@@ -56,9 +56,35 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
   }
 };
 
+// function to update tfm deals lastUpdated once amendment complete
+const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
+  const amendment = await api.getAmendmentById(facilityId, amendmentId);
+
+  if (amendment?.dealId) {
+    const { dealId } = amendment;
+    const payload = {
+      tfm: {
+        lastUpdated: new Date().valueOf(),
+      },
+    };
+
+    try {
+      return api.updateDeal(dealId, payload);
+    } catch (err) {
+      console.error('Error updated tfm deal lastUpdated - amendment completed', { err });
+      return null;
+    }
+  }
+
+  return null;
+};
+
 const updateFacilityAmendment = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const payload = req.body;
+  // set to true if payload contains updateTfmLastUpdated else null
+  const tfmLastUpdated = payload.updateTfmLastUpdated;
+
   if (payload.createTasks && payload.submittedByPim) {
     const tasks = createAmendmentTasks(payload.requireUkefApproval);
     payload.tasks = tasks;
@@ -73,9 +99,19 @@ const updateFacilityAmendment = async (req, res) => {
     delete payload.taskUpdate;
   }
 
+  if (tfmLastUpdated) {
+    // delete so not part of amendment object
+    delete payload.updateTfmLastUpdated;
+  }
+
   const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
   // sends email if conditions are met
   await sendAmendmentEmail(amendmentId, facilityId);
+
+  // if amendment successfully created and amendment complete then update tfm deals lastUpdated
+  if (createdAmendment && tfmLastUpdated) {
+    await updateTFMDealLastUpdated(amendmentId, facilityId);
+  }
 
   if (createdAmendment) {
     return res.status(200).send(createdAmendment);
@@ -186,4 +222,5 @@ module.exports = {
   getLatestCompletedAmendmentByDealId,
   getAllAmendmentsInProgress,
   sendAmendmentEmail,
+  updateTFMDealLastUpdated,
 };

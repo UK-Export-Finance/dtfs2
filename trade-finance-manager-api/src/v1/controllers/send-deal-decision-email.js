@@ -39,10 +39,15 @@ const sendDealDecisionEmail = async (mappedDeal) => {
     default:
   }
 
-  await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, mappedDeal);
-  // send a copy of the email to bank's general email address
-  const bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, mappedDeal));
-  return bankResponse;
+  try {
+    await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, mappedDeal);
+    // send a copy of the email to bank's general email address
+    const bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, mappedDeal));
+    return bankResponse;
+  } catch (err) {
+    console.error('TFM-API send-deal-decision-email - Error sending email', { err });
+    return null;
+  }
 };
 
 module.exports = sendDealDecisionEmail;
