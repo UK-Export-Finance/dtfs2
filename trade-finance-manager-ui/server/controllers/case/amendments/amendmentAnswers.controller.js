@@ -58,6 +58,8 @@ const postAmendmentAnswers = async (req, res) => {
       payload.status = AMENDMENT_STATUS.COMPLETED;
       payload.submissionDate = getUnixTime(new Date());
       payload.automaticApprovalEmail = true;
+      // flag to update tfm-deals last updated
+      payload.updateTfmLastUpdated = true;
     }
 
     // if the facility value should not be changed, then re-set the `value` properties to `null`
