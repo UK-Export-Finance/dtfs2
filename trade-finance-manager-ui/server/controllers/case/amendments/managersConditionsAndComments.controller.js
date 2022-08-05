@@ -1,4 +1,5 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
+const sanitizeHtml = require('sanitize-html');
 const api = require('../../../api');
 
 const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } = require('../../helpers');
@@ -80,9 +81,9 @@ const postManagersConditionsAndComments = async (req, res) => {
   try {
     const payload = {
       ukefDecision: {
-        conditions: ukefDecisionConditions,
-        declined: ukefDecisionDeclined,
-        comments: ukefDecisionComments,
+        conditions: sanitizeHtml(ukefDecisionConditions),
+        declined: sanitizeHtml(ukefDecisionDeclined),
+        comments: sanitizeHtml(ukefDecisionComments),
       },
     };
 
