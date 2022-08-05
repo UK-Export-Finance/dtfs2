@@ -43,10 +43,11 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
       method: 'get',
       url: `${exposurePeriodURL}?startdate=${startDate}&enddate=${endDate}&productgroup=${productGroup}`,
       auth: { username, password },
-    }).catch((error) => {
-      console.error('Error calling Exposure Period API ', { error });
-      return { data: error.response.data, status: error.response.status };
     });
+
+    if (!response) {
+      return res.status(400).send({});
+    }
 
     const { status, data } = response;
 
@@ -56,7 +57,7 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
       exposurePeriodInMonths: exposurePeriod,
     });
   } catch (err) {
-    console.error('Error calling Exposure Period API ', { err });
-    return res.status(400);
+    console.error('Error calling Exposure Period API try catch', { err });
+    return res.status(400).send({});
   }
 };

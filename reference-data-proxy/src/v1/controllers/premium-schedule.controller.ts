@@ -47,7 +47,7 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
     console.info(`Premium schedule successfully created for ${premiumSchedulePayloadFormatted.facilityURN}`);
     return response.status ? response.status : response;
   } catch (error) {
-    console.error('Error calling POST Premium schedule', { error });
+    console.error('Error calling POST Premium schedule in try catch', { error });
     return null;
   }
 };

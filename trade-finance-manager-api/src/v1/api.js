@@ -687,8 +687,10 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
         'Content-Type': 'application/json',
       },
     });
+
     return response.data;
   } catch (err) {
+    console.error('TFM-API - Failed api call to getFacilityExposurePeriod', { err });
     return err;
   }
 };
