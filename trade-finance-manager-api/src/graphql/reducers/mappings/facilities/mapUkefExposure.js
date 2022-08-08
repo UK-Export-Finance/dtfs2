@@ -46,6 +46,7 @@ const mapUkefExposure = async (facilityTfm, facility) => {
       timestamp: `${ukefExposureCalculationTimestampValue}`,
     };
   }
+
   return {};
 };
 
