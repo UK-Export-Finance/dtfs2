@@ -140,6 +140,7 @@ const deal = {
     },
   ],
   eligibility: {
+    version: 5,
     criteria: [
       {
         id: 11,
