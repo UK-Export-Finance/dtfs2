@@ -53,6 +53,7 @@ const MOCK_AMENDMENT = {
   status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: true,
   requireUkefApproval: true,
+  leadUnderwriter: null,
 };
 
 const MOCK_AMENDMENT_AUTOMATIC_APPROVAL = {
@@ -89,7 +90,11 @@ const MOCK_AMENDMENT_UNDERWRITER_DECISION_SUBMITTED = {
 
 const MOCK_AMENDMENT_LEAD_UNDERWRITER = {
   ...MOCK_AMENDMENT,
-  leadUnderwriterId: '12345678',
+  leadUnderwriter: {
+    _id: '12345678',
+    firstName: 'Bob',
+    lastName: 'Smith',
+  },
 };
 
 const MOCK_AMENDMENT_BOTH_DECLINED = {

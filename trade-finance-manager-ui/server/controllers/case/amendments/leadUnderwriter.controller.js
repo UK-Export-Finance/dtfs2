@@ -16,8 +16,8 @@ const getAmendmentLeadUnderwriter = async (amendment, user) => {
   let leadUnderwriterId;
 
   // checks if leadUnderwriter exists in amendments object and sets currentLeadUnderWriterUserId
-  if (amendment?.leadUnderwriterId) {
-    leadUnderwriterId = amendment.leadUnderwriterId;
+  if (amendment?.leadUnderwriter?._id) {
+    leadUnderwriterId = amendment.leadUnderwriter._id;
   }
 
   // checks if set and not unassigned and gets details
@@ -50,6 +50,8 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const { leadUnderwriter } = amendment;
+
   const { user } = req.session;
 
   // checks if can edit
@@ -57,8 +59,8 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
 
   let currentLeadUnderWriterUserId;
   // if already set then shows name of assigned underwriter
-  if (amendment.leadUnderwriterId) {
-    currentLeadUnderWriterUserId = amendment.leadUnderwriterId;
+  if (leadUnderwriter?._id) {
+    currentLeadUnderWriterUserId = leadUnderwriter._id;
   }
 
   // gets all underwriter and managers
@@ -88,16 +90,30 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
  */
 const postAssignAmendmentLeadUnderwriter = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
-  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+  try {
+    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
 
-  if (!amendment?.amendmentId || status !== 200) {
-    return res.redirect('/not-found');
+    if (!amendment?.amendmentId || status !== 200) {
+      return res.redirect('/not-found');
+    }
+
+    const { assignedTo: assignedToValue } = req.body;
+    // assignedToValue is only the id so have to get the user's name from api call
+    const user = await api.getUser(assignedToValue);
+
+    // if no user.firstName or lastName, then values set to null
+    const updateUser = {
+      _id: assignedToValue,
+      firstName: user.firstName ? user.firstName : null,
+      lastName: user.lastName ? user.lastName : null,
+    };
+
+    const update = { leadUnderwriter: updateUser };
+
+    await api.updateAmendment(facilityId, amendmentId, update);
+  } catch (err) {
+    console.error('TFM-UI- postAssignAmendmentLeadUnderwriter - error updating leadUnderwriter', { err });
   }
-
-  const { assignedTo: assignedToValue } = req.body;
-  const update = { leadUnderwriterId: assignedToValue };
-
-  await api.updateAmendment(facilityId, amendmentId, update);
 
   return res.redirect(`/case/${dealId}/underwriting`);
 };
