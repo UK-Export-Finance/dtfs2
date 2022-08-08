@@ -1,4 +1,3 @@
-const { fromUnixTime } = require('date-fns');
 const { formattedNumber } = require('../../../../utils/number');
 const api = require('../../../../v1/api');
 const { calculateNewFacilityValue, calculateUkefExposure, isValidCompletedValueAmendment } = require('../../../helpers/amendment.helpers');
@@ -26,7 +25,7 @@ const mapUkefExposure = async (facilityTfm, facility) => {
         const { coverPercentage, coveredPercentage } = facility.facilitySnapshot;
         const { requireUkefApproval, submittedAt, bankDecision } = latestCompletedAmendment;
         // value of ukefExposureCalculationTime from automatic amendment submission time or manual amendment bankDecision submission time
-        const ukefExposureCalculationTime = requireUkefApproval ? bankDecision.submittedAt : submittedAt;
+        const ukefExposureTimestamp = requireUkefApproval ? bankDecision.submittedAt : submittedAt;
 
         // BSS is coveredPercentage while GEF is coverPercentage
         const coverPercentageValue = coverPercentage || coveredPercentage;
@@ -37,7 +36,7 @@ const mapUkefExposure = async (facilityTfm, facility) => {
         // sets new exposure value based on amendment value
         formattedUkefExposure = formattedNumber(ukefExposureValue);
         // converts from seconds unix timestamp to one with milliseconds
-        ukefExposureCalculationTimestampValue = fromUnixTime(ukefExposureCalculationTime).valueOf();
+        ukefExposureCalculationTimestampValue = new Date(ukefExposureTimestamp * 1000).valueOf();
       }
     }
 
