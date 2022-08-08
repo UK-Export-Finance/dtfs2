@@ -19,6 +19,7 @@ module.exports = [
     },
     eligibility: {
       status: 'Incomplete',
+      version: 5,
     },
   }, {
     submissionType: 'Automatic Inclusion Notice',

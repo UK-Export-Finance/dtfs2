@@ -109,6 +109,7 @@ const deal = {
   },
   eligibility: {
     status: 'Completed',
+    version: 5,
     criteria: [
       {
         _id: '5f3bd4c19b84262f37a97fdc',

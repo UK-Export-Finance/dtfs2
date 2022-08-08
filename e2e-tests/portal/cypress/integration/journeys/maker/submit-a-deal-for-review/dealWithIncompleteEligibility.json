@@ -76,6 +76,7 @@
 },
     "eligibility": {
       "status": "Incomplete",
+      "version": 4,
       "criteria": [
       { "id": 11, "answer": false
       },
