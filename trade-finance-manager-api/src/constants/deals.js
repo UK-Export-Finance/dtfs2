@@ -75,6 +75,12 @@ const AMENDMENT_BANK_DECISION = {
   WITHDRAW: 'Withdrawn',
 };
 
+const AMENDMENT_STATUS = {
+  IN_PROGRESS: 'In progress',
+  COMPLETED: 'Completed',
+  NOT_STARTED: 'Not started',
+};
+
 module.exports = {
   DEAL_TYPE,
   DEAL_PRODUCT_CODE,
@@ -89,4 +95,5 @@ module.exports = {
   AMENDMENT_UW_DECISION,
   AMENDMENT_TYPE,
   AMENDMENT_BANK_DECISION,
+  AMENDMENT_STATUS,
 };

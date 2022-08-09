@@ -44,9 +44,11 @@ const getDeal = async (dealId, dealType) => {
   return deal;
 };
 
-// Only create the TFM record until UKEFids have been generated, then process the submission
-// This allows a deal in Pending state to be seen in TFM,
-// which indicates to UKEF that a deal has been submitted before UKEFids are generated
+/** Only create the TFM record until UKEFids have been generated, then process the submission
+ * This allows a deal in Pending state to be seen in TFM,
+ * which indicates to UKEF that a deal has been submitted before UKEFids are generated
+ * */
+
 const submitDealBeforeUkefIds = async (dealId, dealType) => {
   const deal = await getDeal(dealId, dealType);
 
@@ -75,7 +77,8 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   }
 
   const submittedDeal = await api.submitDeal(dealType, dealId);
-  const mappedDeal = mapSubmittedDeal(submittedDeal);
+  const mappedDeal = await mapSubmittedDeal(submittedDeal);
+
   const { submissionCount } = mappedDeal;
   const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
@@ -115,8 +118,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
        * Update the deal with all the above modifications
        * Note: at the time of writing, some functions above update the deal, others do not.
        */
-      const updatedDeal = await api.updateDeal(dealId, updatedDealWithTasks);
-      return updatedDeal;
+      return api.updateDeal(dealId, updatedDealWithTasks);
     }
 
     return api.updateDeal(dealId, updatedDealWithCreateEstore);

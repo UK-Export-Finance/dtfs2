@@ -23,37 +23,41 @@ const generateIssuedFacilitiesListString = (facilities) => {
 };
 
 const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
-  const { bankInternalRefName, ukefDealId: ukefDealID, exporter, submissionType, maker } = deal;
+  try {
+    const { bankInternalRefName, ukefDealId: ukefDealID, exporter, submissionType, maker } = deal;
 
-  const shouldSendEmail = (
-    submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+    const shouldSendEmail = (
+      submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
     || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
 
-  if (shouldSendEmail) {
-    const bankId = maker.bank.id;
-    const { firstname: recipientName, email: makerEmailAddress } = maker;
-    const { emails: bankEmails } = await api.findBankById(bankId);
-    // get the email address for PIM user
-    const { email: pimEmail } = await api.findOneTeam(CONSTANTS.TEAMS.PIM.id);
+    if (shouldSendEmail) {
+      const bankId = maker.bank.id;
+      const { firstname: recipientName, email: makerEmailAddress } = maker;
+      const { emails: bankEmails } = await api.findBankById(bankId);
+      // get the email address for PIM user
+      const { email: pimEmail } = await api.findOneTeam(CONSTANTS.TEAMS.PIM.id);
 
-    const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED;
+      const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.ISSUED_FACILITY_RECEIVED;
 
-    const emailVariables = {
-      recipientName,
-      exporterName: exporter.companyName,
-      bankReferenceNumber: bankInternalRefName,
-      ukefDealID,
-      facilitiesList: generateIssuedFacilitiesListString(updatedFacilities),
-    };
+      const emailVariables = {
+        recipientName,
+        exporterName: exporter.companyName,
+        bankReferenceNumber: bankInternalRefName,
+        ukefDealID,
+        facilitiesList: generateIssuedFacilitiesListString(updatedFacilities),
+      };
 
-    // send email to maker
-    const makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
-    // send a copy of the email to PIM
-    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
-    // send a copy of the email to bank's general email address
-    const bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      // send email to maker
+      const makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
+      // send a copy of the email to PIM
+      const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+      // send a copy of the email to bank's general email address
+      const bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
 
-    return { makerEmailResponse, pimEmailResponse, bankResponse };
+      return { makerEmailResponse, pimEmailResponse, bankResponse };
+    }
+  } catch (err) {
+    console.error('TFM-API Error in sendIssuedFacilitiesReceivedEmail', { err });
   }
 
   return null;

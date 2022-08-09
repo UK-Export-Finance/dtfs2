@@ -2,13 +2,18 @@ const facilityReducer = require('./facility');
 const mapFacility = require('./mappings/facilities/mapFacility');
 const mapFacilityTfm = require('./mappings/facilities/mapFacilityTfm');
 const mapGefFacility = require('./mappings/gef-facilities/mapGefFacility');
+const api = require('../../v1/api');
 
 const MOCK_DEAL_AIN_SUBMITTED = require('../../v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILIIES = require('../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('reducer - facility', () => {
-  it('should return mapped object', () => {
+  beforeEach(() => {
+    api.getLatestCompletedAmendment = () => Promise.resolve({});
+  });
+
+  it('should return mapped object', async () => {
     const mockDeal = {
       dealSnapshot: MOCK_DEAL_AIN_SUBMITTED,
       tfm: {},
@@ -22,23 +27,24 @@ describe('reducer - facility', () => {
       },
     };
 
-    const result = facilityReducer(mockFacility, mockDeal.dealSnapshot, mockDeal.tfm);
+    const result = await facilityReducer(mockFacility, mockDeal.dealSnapshot, mockDeal.tfm);
 
     const expected = {
       _id: mockFacility._id,
-      facilitySnapshot: mapFacility(
+      facilitySnapshot: await mapFacility(
         mockFacility.facilitySnapshot,
         mockFacility.tfm,
         mockDeal.dealSnapshot.details,
+        mockFacility,
       ),
-      tfm: mapFacilityTfm(mockFacility.tfm, {}),
+      tfm: await mapFacilityTfm(mockFacility.tfm, {}, mockFacility),
     };
 
     expect(result).toEqual(expected);
   });
 
   describe('when facility is a GEF facility (CASH/CONTINGENT)', () => {
-    it('should return mapGefFacility', () => {
+    it('should return mapGefFacility', async () => {
       const mockGefDeal = {
         dealSnapshot: MOCK_GEF_DEAL,
         tfm: {},
@@ -52,9 +58,9 @@ describe('reducer - facility', () => {
         },
       };
 
-      const result = facilityReducer(mockGefFacility, mockGefDeal.dealSnapshot, mockGefDeal.tfm);
+      const result = await facilityReducer(mockGefFacility, mockGefDeal.dealSnapshot, mockGefDeal.tfm);
 
-      const expected = mapGefFacility(
+      const expected = await mapGefFacility(
         mockGefFacility,
         MOCK_GEF_DEAL,
         mockGefDeal.tfm,

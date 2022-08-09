@@ -7,8 +7,10 @@ const mapGuaranteeFeePayableToUkef = require('../facilities/mapGuaranteeFeePayab
 const mapFacilityTfm = require('../facilities/mapFacilityTfm');
 const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
+const mapFacilityValueExportCurrency = require('../facilities/mapFacilityValueExportCurrency');
+const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
 
-const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
+const mapGefFacility = async (facility, dealSnapshot, dealTfm) => {
   const {
     facilitySnapshot,
     tfm: facilityTfm,
@@ -26,7 +28,6 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
     name,
     type,
     ukefFacilityId,
-    ukefExposure,
     guaranteeFee,
   } = facilitySnapshot;
 
@@ -46,14 +47,14 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       bankFacilityReference: name,
       banksInterestMargin: `${interestPercentage}%`,
       coveredPercentage: `${coverPercentage}%`,
-      dates: mapGefFacilityDates(facilitySnapshot, facilityTfm, dealSnapshot),
+      dates: await mapGefFacilityDates(facilitySnapshot, facilityTfm, dealSnapshot),
       facilityProduct: facilitySnapshot.facilityProduct,
       facilityStage: facilitySnapshot.facilityStage,
       hasBeenIssued: facilitySnapshot.hasBeenIssued,
       type: mapFacilityType(facilitySnapshot),
       currency: currency.id,
-      facilityValueExportCurrency: `${currency.id} ${formattedFacilityValue}`,
-      value: mapFacilityValue(currency.id, formattedFacilityValue, facilityTfm),
+      facilityValueExportCurrency: await mapFacilityValueExportCurrency(facility),
+      value: await mapFacilityValue(currency.id, formattedFacilityValue, facility),
       feeType,
       feeFrequency,
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFee),
@@ -62,11 +63,11 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
       // TODO: DTFS2-4634 - we shouldn't need type and ukefFacilityType.
       ukefFacilityType: mapGefUkefFacilityType(type),
       ukefFacilityId,
-      ukefExposure: `${currency.id} ${ukefExposure}`,
+      ukefExposure: await mapUkefExposureValue(facilityTfm, facility),
       providedOn: facilitySnapshot.details,
       providedOnOther: facilitySnapshot.detailsOther,
     },
-    tfm: mapFacilityTfm(facilityTfm, dealTfm),
+    tfm: await mapFacilityTfm(facilityTfm, dealTfm, facility),
   };
 
   return result;

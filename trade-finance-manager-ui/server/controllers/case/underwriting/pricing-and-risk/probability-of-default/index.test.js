@@ -409,7 +409,7 @@ describe('POST underwriting - probability of default', () => {
       });
     });
 
-    describe('when numeric probability of default is submitted above 2 d.p', () => {
+    describe('when numeric probability of default is submitted above 2 decimal places', () => {
       it('should return template with validation errors', async () => {
         const req = {
           params: {

@@ -8,6 +8,7 @@ import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 import pages from '../../../pages';
+import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
 
 context('Amendments underwriting - add banks decision - proceed', () => {
   let dealId;
@@ -32,6 +33,27 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     dealFacilities.forEach((facility) => {
       cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
+  });
+
+  it('should display facility details and values on deal and facility page', () => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[0]._id;
+
+    cy.visit(relative(`/case/${dealId}/deal`));
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('23 months');
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains('20 October 2022');
+    caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
+    caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
+    caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
+
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+    facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
+    facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
+    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
+
+    facilityPage.facilityCoverEndDate().contains('20 October 2022');
+    facilityPage.facilityTenor().contains('23 months');
   });
 
   it('should submit an amendment request', () => {
@@ -113,7 +135,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2020');
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2022');
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -152,13 +174,34 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2020');
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2022');
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
 
     amendmentsPage.amendmentSendToBankButton().click();
+  });
+
+  it('should display facility details and values on deal and facility page as bank decision not added yet', () => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[0]._id;
+
+    cy.visit(relative(`/case/${dealId}/deal`));
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('23 months');
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains('20 October 2022');
+    caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
+    caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
+    caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
+
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+    facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
+    facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
+    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
+
+    facilityPage.facilityCoverEndDate().contains('20 October 2022');
+    facilityPage.facilityTenor().contains('23 months');
   });
 
   it('should show add decision button if logged in as PIM user', () => {
@@ -373,5 +416,26 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Proceed');
     amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', '05 June 2022');
+  });
+
+  it('should display amendment changed values on deal and facility page', () => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[0]._id;
+
+    cy.visit(relative(`/case/${dealId}/deal`));
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('23 months');
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains('20 October 2022');
+    caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
+    caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
+    caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
+
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+    facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
+    facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
+    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${dateConstants.todayFormatted}`);
+
+    facilityPage.facilityCoverEndDate().contains('20 October 2022');
+    facilityPage.facilityTenor().contains('23 months');
   });
 });

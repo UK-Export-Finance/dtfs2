@@ -123,6 +123,80 @@ describe('/v1/tfm/deals', () => {
 
         expect(body.deals).toEqual(expectedDeals);
       });
+
+      it('Returns deals filtered by `tfm.lastUpdated`', async () => {
+        const todayFormatted = format(new Date(), 'dd-MM-yyyy');
+
+        // Create Mock AIN deals
+        // Today date
+        const ainDealToday = newDeal({
+          details: {
+            ukefDealId: 'ain-1',
+          },
+        });
+
+        // Past date
+        const ainDealPast = newDeal({
+          details: {
+            ukefDealId: 'ain-2',
+          },
+        });
+
+        // No date
+        const ainDealNone = newDeal({
+          details: {
+            ukefDealId: 'ain-3',
+          },
+        });
+
+        // Create mock deals
+        const deals = await createAndSubmitDeals([
+          ainDealToday,
+          ainDealPast,
+          ainDealNone,
+        ]);
+
+        // Update created mock deals
+        if (deals.length > 0) {
+          await updateDealsTfm([
+            {
+              _id: deals[0]._id,
+              tfm: {
+                lastUpdated: todayFormatted,
+              },
+            },
+            {
+              _id: deals[1]._id,
+              tfm: {
+                lastUpdated: '20-09-1989',
+              },
+            },
+          ]);
+        }
+
+        // Mock Request Body
+        const mockRequestBody = {
+          queryParams: {
+            byField: [
+              {
+                name: 'tfm.lastUpdated',
+                value: todayFormatted,
+              },
+            ],
+          },
+        };
+
+        // GET API CAll
+        const { status, body } = await api.get('/v1/tfm/deals', mockRequestBody);
+
+        // Test evaluation
+        expect(status).toEqual(200);
+        expect(body.deals.length).toEqual(2);
+        if (body.deals.length > 0) {
+          expect(body.deals[0].tfm.lastUpdated).toEqual(expect.any(Number));
+          expect(body.deals[1].tfm.lastUpdated).toEqual(expect.any(Number));
+        }
+      });
     });
   });
 });

@@ -2,6 +2,7 @@ const mapFacilities = require('./mapFacilities');
 const mapFacility = require('./mapFacility');
 const mapFacilityTfm = require('./mapFacilityTfm');
 const MOCK_DEAL = require('../../../../v1/__mocks__/mock-deal');
+const api = require('../../../../v1/api');
 
 describe('mapFacilities', () => {
   const mockTfmFacility = {
@@ -104,18 +105,20 @@ describe('mapFacilities', () => {
   ];
 
   it('should map and format correct fields/values', async () => {
-    const result = mapFacilities(mockFacilities, mockDealDetails, MOCK_DEAL_TFM);
+    api.getLatestCompletedAmendment = () => Promise.resolve({});
+
+    const result = await mapFacilities(mockFacilities, mockDealDetails, MOCK_DEAL_TFM);
 
     const expected = [
       {
         _id: MOCK_FACILITIES[0]._id,
-        facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails) },
-        tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM),
+        facilitySnapshot: { ...await mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails, MOCK_FACILITIES[0]) },
+        tfm: await mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM, MOCK_FACILITIES[0]),
       },
       {
         _id: MOCK_FACILITIES[1]._id,
-        facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails) },
-        tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM),
+        facilitySnapshot: { ...await mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails, MOCK_FACILITIES[1]) },
+        tfm: await mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM, MOCK_FACILITIES[1]),
       },
     ];
 
