@@ -296,6 +296,7 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
   if (ObjectId.isValid(facilityId)) {
     const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
     const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
+    const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
 
     try {
       const collection = await db.getCollection('tfm-facilities');
@@ -306,10 +307,24 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
           $match: {
             $or: [
               {
-                'amendments.status': COMPLETED, 'amendments.submittedByPim': true, 'amendments.requireUkefApproval': false, 'amendments.changeFacilityValue': true
+                'amendments.status': COMPLETED,
+                'amendments.submittedByPim': true,
+                'amendments.requireUkefApproval': false,
+                'amendments.changeFacilityValue': true
               },
               {
-                'amendments.status': COMPLETED, 'amendments.bankDecision.decision': PROCEED, 'amendments.bankDecision.submitted': true, 'amendments.changeFacilityValue': true
+                'amendments.status': COMPLETED,
+                'amendments.bankDecision.decision': PROCEED,
+                'amendments.bankDecision.submitted': true,
+                'amendments.ukefDecision.value': APPROVED_WITH_CONDITIONS,
+                'amendments.changeFacilityValue': true
+              },
+              {
+                'amendments.status': COMPLETED,
+                'amendments.bankDecision.decision': PROCEED,
+                'amendments.bankDecision.submitted': true,
+                'amendments.ukefDecision.value': APPROVED_WITHOUT_CONDITIONS,
+                'amendments.changeFacilityValue': true
               }
             ]
           }
@@ -349,6 +364,7 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
   if (ObjectId.isValid(facilityId)) {
     const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
     const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
+    const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
 
     try {
       const collection = await db.getCollection('tfm-facilities');
@@ -359,10 +375,24 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
           $match: {
             $or: [
               {
-                'amendments.status': COMPLETED, 'amendments.submittedByPim': true, 'amendments.requireUkefApproval': false, 'amendments.changeCoverEndDate': true
+                'amendments.status': COMPLETED,
+                'amendments.submittedByPim': true,
+                'amendments.requireUkefApproval': false,
+                'amendments.changeCoverEndDate': true
               },
               {
-                'amendments.status': COMPLETED, 'amendments.bankDecision.decision': PROCEED, 'amendments.bankDecision.submitted': true, 'amendments.changeCoverEndDate': true
+                'amendments.status': COMPLETED,
+                'amendments.bankDecision.decision': PROCEED,
+                'amendments.bankDecision.submitted': true,
+                'amendments.ukefDecision.coverEndDate': APPROVED_WITH_CONDITIONS,
+                'amendments.changeCoverEndDate': true
+              },
+              {
+                'amendments.status': COMPLETED,
+                'amendments.bankDecision.decision': PROCEED,
+                'amendments.bankDecision.submitted': true,
+                'amendments.ukefDecision.coverEndDate': APPROVED_WITHOUT_CONDITIONS,
+                'amendments.changeCoverEndDate': true
               }
             ]
           }
