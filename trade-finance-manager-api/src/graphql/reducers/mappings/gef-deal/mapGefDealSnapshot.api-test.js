@@ -27,7 +27,9 @@ describe('mapGefDealSnapshot', () => {
   };
 
   it('should return mapped deal', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const result = await mapGefDealSnapshot(mockDeal.dealSnapshot, mockDeal.tfm);
 

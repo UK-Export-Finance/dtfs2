@@ -4,8 +4,6 @@ import {
   userCanEditManagersDecision,
   ukefDecisionRejected,
   validateUkefDecision,
-  latestAmendmentValueAccepted,
-  latestAmendmentCoverEndDateAccepted,
 } from '.';
 
 import MOCKS from '../../test-mocks/amendment-test-mocks';
@@ -248,70 +246,6 @@ describe('validateUkefDecision()', () => {
   it('should return `false` when only facility value is approved', () => {
     MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision.value = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
     const result = validateUkefDecision(MOCKS.MOCK_AMENDMENT_FACILITYVALUE.ukefDecision, CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED);
-    expect(result).toEqual(false);
-  });
-});
-
-describe('latestAmendmentValueAccepted()', () => {
-  it('should return `true` when automatic amendment and value was set', () => {
-    const result = latestAmendmentValueAccepted(MOCKS.MOCK_AMENDMENT_AUTOMATIC_VALUE);
-    expect(result).toEqual(true);
-  });
-
-  it('should return `false` when automatic amendment and coverEndDate was set', () => {
-    const result = latestAmendmentValueAccepted(MOCKS.MOCK_AMENDMENT_AUTOMATIC_COVERENDDATE);
-    expect(result).toEqual(false);
-  });
-
-  it('should return `true` when manual amendment and value was set, approved and proceed', () => {
-    const result = latestAmendmentValueAccepted(MOCKS.MOCK_AMENDMENT_BANK_DECISION_PROCEED_VALUE);
-    expect(result).toEqual(true);
-  });
-
-  it('should return `false` when manual amendment and coverEndDate was set, approved and proceed', () => {
-    const result = latestAmendmentValueAccepted(MOCKS.MOCK_AMENDMENT_BANK_DECISION_PROCEED_COVERENDDATE);
-    expect(result).toEqual(false);
-  });
-
-  it('should return `false` when manual amendment and value was set, approved and no bank decision', () => {
-    const result = latestAmendmentValueAccepted(MOCKS.MOCK_AMENDMENT_BANK_DECISION_PROCEED_COVERENDDATE);
-    expect(result).toEqual(false);
-  });
-
-  it('should return `false` when manual amendment and value was set, approved and declined', () => {
-    const result = latestAmendmentValueAccepted(MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED_COVERENDDATE);
-    expect(result).toEqual(false);
-  });
-});
-
-describe('latestAmendmentCoverEndDateAccepted()', () => {
-  it('should return `true` when automatic amendment and coverEndDate was set', () => {
-    const result = latestAmendmentCoverEndDateAccepted(MOCKS.MOCK_AMENDMENT_AUTOMATIC_COVERENDDATE);
-    expect(result).toEqual(true);
-  });
-
-  it('should return `false` when automatic amendment and coverEndDate was set', () => {
-    const result = latestAmendmentCoverEndDateAccepted(MOCKS.MOCK_AMENDMENT_AUTOMATIC_VALUE);
-    expect(result).toEqual(false);
-  });
-
-  it('should return `true` when manual amendment and coverEndDate was set, approved and proceed', () => {
-    const result = latestAmendmentCoverEndDateAccepted(MOCKS.MOCK_AMENDMENT_BANK_DECISION_PROCEED_COVERENDDATE);
-    expect(result).toEqual(true);
-  });
-
-  it('should return `false` when manual amendment and value was set, approved and proceed', () => {
-    const result = latestAmendmentCoverEndDateAccepted(MOCKS.MOCK_AMENDMENT_BANK_DECISION_PROCEED_VALUE);
-    expect(result).toEqual(false);
-  });
-
-  it('should return `false` when manual amendment and coverEndDate was set, approved and no bank decision', () => {
-    const result = latestAmendmentCoverEndDateAccepted(MOCKS.MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED_WITH_COVERENDDATE_SET);
-    expect(result).toEqual(false);
-  });
-
-  it('should return `false` when manual amendment and coverEndDate was set, approved and declined', () => {
-    const result = latestAmendmentValueAccepted(MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITHDRAW_COVERENDDATE);
     expect(result).toEqual(false);
   });
 });

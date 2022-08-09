@@ -337,17 +337,32 @@ const getCompletedAmendment = async (facilityId) => {
   }
 };
 
-const getLatestCompletedAmendment = async (facilityId) => {
+const getLatestCompletedValueAmendment = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/status/completed/latest`,
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/status/completed/latest-value`,
       headers: { 'Content-Type': 'application/json' },
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the latest completed amendment %O', { response: err?.response?.data });
+    console.error('Unable to get the latest completed value amendment %O', { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const getLatestCompletedDateAmendment = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/facility/${facilityId}/amendment/status/completed/latest-cover-end-date`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return { status: 200, data: response.data };
+  } catch (err) {
+    console.error('Unable to get the latest completed coverEndDate amendment %O', { response: err?.response?.data });
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -466,7 +481,6 @@ module.exports = {
   createFacilityAmendment,
   getAmendmentInProgress,
   getCompletedAmendment,
-  getLatestCompletedAmendment,
   getAmendmentById,
   getAmendmentsByFacilityId,
   getAmendmentsByDealId,
@@ -474,4 +488,6 @@ module.exports = {
   getCompletedAmendmentByDealId,
   getLatestCompletedAmendmentByDealId,
   getAllAmendmentsInProgress,
+  getLatestCompletedValueAmendment,
+  getLatestCompletedDateAmendment,
 };

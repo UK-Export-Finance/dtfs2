@@ -4,8 +4,6 @@ const {
   userCanEditBankDecision,
   ukefDecisionRejected,
   validateUkefDecision,
-  latestAmendmentValueAccepted,
-  latestAmendmentCoverEndDateAccepted,
 } = require('./amendments.helper');
 const { generateHeadingText } = require('./generateHeadingText.helper');
 const { mapDecisionObject, mapDecisionValue } = require('./mapDecisionObject.helper');
@@ -27,6 +25,4 @@ module.exports = {
   ukefDecisionRejected,
   validateUkefDecision,
   probabilityOfDefaultValidation,
-  latestAmendmentValueAccepted,
-  latestAmendmentCoverEndDateAccepted,
 };
