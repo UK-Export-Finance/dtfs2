@@ -131,16 +131,13 @@ const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
 
 export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
   try {
-    if (req) {
-      const { id } = req.params;
-      const { facility, deal } = req.body;
-      const response = await issueAcbsFacility(id, facility, deal);
-      if (response) {
-        const { status, data } = response;
-        return res.status(status).send(data);
-      }
+    const { id } = req.params;
+    const { facility, deal } = req.body;
+    const response = await issueAcbsFacility(id, facility, deal);
+    if (response) {
+      const { status, data } = response;
+      return res.status(status).send(data);
     }
-    return res.status(400).send();
   } catch (e) {
     console.error('Error during ACBS facility issue POST: ', { e });
     return res.status(400).send();
@@ -155,7 +152,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
 const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
 
-  if (amendment && hasAmendment) {
+  if (hasAmendment) {
     try {
       return axios({
         method: 'post',

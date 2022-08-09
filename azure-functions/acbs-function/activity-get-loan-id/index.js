@@ -42,10 +42,12 @@ const getLoanId = async (context) => {
       }
 
       // Validate returned data
-      if (data.length > 0) {
-        const loan = data[0];
+      if (data.length) {
+        const [loan] = data;
 
-        if (loan.loanIdentifier) return loan.loanIdentifier;
+        if (loan.loanIdentifier) {
+          return loan.loanIdentifier;
+        }
       }
 
       // Throw an error upon data validation failure

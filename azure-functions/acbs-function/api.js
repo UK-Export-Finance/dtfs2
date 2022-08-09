@@ -9,6 +9,9 @@
  * All the function have argument validation check and return object verification in
  * case err object does not have expected properties due to network connection, SSL verification or other issues.
  */
+const endpoint = process.env.MULESOFT_API_UKEF_TF_EA_URL;
+const username = process.env.MULESOFT_API_KEY;
+const password = process.env.MULESOFT_API_SECRET;
 const axios = require('axios');
 
 require('dotenv').config();
@@ -17,10 +20,10 @@ const getACBS = async (apiRef) => {
   if (!!apiRef) {
     return axios({
       method: 'get',
-      url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
+      url: `${endpoint}/${apiRef}`,
       auth: {
-        username: process.env.MULESOFT_API_KEY,
-        password: process.env.MULESOFT_API_SECRET,
+        username,
+        password,
       },
       headers: {
         'Content-Type': 'application/json',
@@ -28,22 +31,25 @@ const getACBS = async (apiRef) => {
     }).catch((e) => {
       console.error('Error calling GET to ACBS');
       return {
-        status: e.response ? e.response.status : e,
-        data: { error: e.response ? e.response.data : e },
+        status: e?.response?.status ?? e,
+        data: { error: e?.response?.data ?? e },
       };
     });
   }
-  return {};
+  return {
+    status: 400,
+    data: {},
+  };
 };
 
 const postToAcbs = async (apiRef, acbsInput) => {
   if (!!apiRef && !!acbsInput) {
     return axios({
       method: 'post',
-      url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
+      url: `${endpoint}/${apiRef}`,
       auth: {
-        username: process.env.MULESOFT_API_KEY,
-        password: process.env.MULESOFT_API_SECRET,
+        username,
+        password,
       },
       headers: {
         'Content-Type': 'application/json',
@@ -52,12 +58,15 @@ const postToAcbs = async (apiRef, acbsInput) => {
     }).catch((e) => {
       console.error('Error calling POST to ACBS');
       return {
-        status: e.response ? e.response.status : e,
-        data: { error: e.response ? e.response.data : e },
+        status: e?.response?.status ?? e,
+        data: { error: e?.response?.data ?? e },
       };
     });
   }
-  return {};
+  return {
+    status: 400,
+    data: {},
+  };
 };
 
 const putToAcbs = async (apiRef, acbsInput, etag) => {
@@ -70,10 +79,10 @@ const putToAcbs = async (apiRef, acbsInput, etag) => {
 
     return axios({
       method: 'put',
-      url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
+      url: `${endpoint}/${apiRef}`,
       auth: {
-        username: process.env.MULESOFT_API_KEY,
-        password: process.env.MULESOFT_API_SECRET,
+        username,
+        password,
       },
       headers: {
         'Content-Type': 'application/json',
@@ -83,12 +92,15 @@ const putToAcbs = async (apiRef, acbsInput, etag) => {
     }).catch((e) => {
       console.error('Error calling PUT to ACBS');
       return {
-        status: e.response ? e.response.status : e,
-        data: { error: e.response ? e.response.data : e },
+        status: e?.response?.status ?? e,
+        data: { error: e?.response?.data ?? e },
       };
     });
   }
-  return {};
+  return {
+    status: 400,
+    data: {},
+  };
 };
 
 const patchToAcbs = async (apiRef, acbsInput, eTag) => {
@@ -101,10 +113,10 @@ const patchToAcbs = async (apiRef, acbsInput, eTag) => {
 
     return axios({
       method: 'patch',
-      url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
+      url: `${endpoint}/${apiRef}`,
       auth: {
-        username: process.env.MULESOFT_API_KEY,
-        password: process.env.MULESOFT_API_SECRET,
+        username,
+        password,
       },
       headers: {
         'Content-Type': 'application/json',
@@ -114,12 +126,15 @@ const patchToAcbs = async (apiRef, acbsInput, eTag) => {
     }).catch((e) => {
       console.error('Error calling PATCH to ACBS');
       return {
-        status: e.response ? e.response.status : e,
-        data: { error: e.response ? e.response.data : e },
+        status: e?.response?.status ?? e,
+        data: { error: e?.response?.data ?? e },
       };
     });
   }
-  return {};
+  return {
+    status: 400,
+    data: {},
+  };
 };
 
 const getFacility = (facilityId) => getACBS(`facility/${facilityId}`);

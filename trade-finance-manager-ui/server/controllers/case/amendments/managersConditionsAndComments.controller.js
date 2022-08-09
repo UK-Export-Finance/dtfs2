@@ -180,7 +180,7 @@ const postManagersConditionsAndCommentsSummary = async (req, res) => {
     console.error('Unable to submit the underwriter managers decision');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
   } catch (err) {
-    console.error("There was a problem submitting the manager's decision %O", { response: err?.response?.data }, { err });
+    console.error("There was a problem submitting the manager's decision %O", { response: err?.response?.data });
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions/summary`);
   }
 };

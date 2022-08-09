@@ -42,15 +42,16 @@ const userCanEditBankDecision = (amendment, user) => {
 const ukefDecisionRejected = (amendment) => {
   const { changeFacilityValue, changeCoverEndDate } = amendment;
   const { value, coverEndDate } = amendment.ukefDecision;
+  const { UNDERWRITER_MANAGER_DECISIONS } = DECISIONS;
 
   // Ensure not all of the amendment requests are declined
 
   // Dual amendment request
   if (changeFacilityValue && changeCoverEndDate) {
-    return value === DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED && coverEndDate === DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED && coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
   }
   // Single amendment request
-  return value === DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED || coverEndDate === DECISIONS.UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+  return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED || coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
 };
 
 /**
