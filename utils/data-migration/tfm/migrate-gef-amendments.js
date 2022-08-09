@@ -4,13 +4,17 @@
  * Purpose of this script is to migrate GEF deals to TFM.
  * Since GEF deals are not subjected to execution on Workflow.
  */
+require('dotenv').config();
 
 const { TFM_API } = process.env;
+
 const axios = require('axios');
 const { getUnixTime } = require('date-fns');
 const { excelDateToISODateString } = require('../helpers/date');
 const CONSTANTS = require('../constant');
 const { open } = require('../helpers/actionsheets');
+
+const version = '0.0.1';
 
 const createFacilityAmendment = async (facilityId) => {
   try {
@@ -61,31 +65,33 @@ const migrateGefAmendments = async () => {
   const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
   const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
   const allGefAmendments = [];
-  let amendments22To23 = await open('./gef-amendments/gef-amendments2.xlsx', 'Amendments Apr 22 to Apr 23');
+  let amendments22To23 = await open('./gef-amendments/mock-gef-amendments2.xlsx', 'Amendments Apr 22 to Apr 23');
   amendments22To23 = amendments22To23.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()) && item.Stage === COMPLETED);
   allGefAmendments.push(...amendments22To23);
 
-  let amendments21To22 = await open('./gef-amendments/gef-amendments2.xlsx', 'Amendments Apr 21 to Apr 22');
+  let amendments21To22 = await open('./gef-amendments/mock-gef-amendments2.xlsx', 'Amendments Apr 21 to Apr 22');
   amendments21To22 = amendments21To22.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()) && item.Stage === COMPLETED);
   allGefAmendments.push(...amendments21To22);
   const json = [];
+  console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating GEF TFM amendments migration v${version}.`, '\n\n');
+  let counter = 0;
   // eslint-disable-next-line no-restricted-syntax
   for (const amendment of allGefAmendments) {
     // eslint-disable-next-line no-await-in-loop
     const { amendmentId } = await createFacilityAmendment(amendment.facilityId);
     const { facilityId } = amendment;
-    console.log(amendmentId, facilityId); // TODO: change to proper script print
     const output = {};
     output.requestDate = getUnixTime(new Date(excelDateToISODateString(amendment['Date received'])));
     output.exporter = amendment.Exporter.trim();
-    output.ukefDealId = `00${amendment['UKEF Deal ID']}`;
-    output.ukefFacilityId = `00${amendment['UKEF Facility ID']}`;
+    // output.ukefDealId = `00${amendment['UKEF Deal ID']}`;
+    // output.ukefFacilityId = `00${amendment['UKEF Facility ID']}`;
     output.status = amendment.Stage;
     output.submittedByPim = true;
     output.submittedAt = amendment.Moved ? getUnixTime(new Date(excelDateToISODateString(amendment.Moved))) : '';
     output.requireUkefApproval = amendment['Notification or Request'] === MANUAL;
     output.changeFacilityValue = amendment.changeFacilityValue;
     output.changeCoverEndDate = amendment.changeCoverEndDate;
+    output.createdAt = amendment['Date received'];
 
     if (amendment.changeCoverEndDate) {
       output.currentCoverEndDate = getUnixTime(new Date(excelDateToISODateString(amendment.currentCoverEndDate)));
@@ -99,16 +105,15 @@ const migrateGefAmendments = async () => {
     }
 
     if (amendment['Notification or Request'] === AUTOMATIC) {
-      if (amendment.changeCoverEndDate) {
-        output.effectiveDate = getUnixTime(new Date(excelDateToISODateString(amendment['When Finished'])));
-      }
+      output.effectiveDate = getUnixTime(new Date(excelDateToISODateString(amendment['Effective Date'])));
+      output.submissionDate = amendment.Moved ? getUnixTime(new Date(excelDateToISODateString(amendment.Moved))) : '';
     }
 
     if (amendment['Notification or Request'] === MANUAL) {
       output.leadUnderwriterId = amendment.UnderwriterID;
       output.ukefDecision = {
-        coverEndDate: amendment['CoverEndDate Decision'], // TODO: add UW Manager decision Approved with or without conditions
-        value: amendment['Value Decision'], // TODO: add UW Manager decision Approved with or without conditions
+        coverEndDate: amendment.changeCoverEndDate ? 'Approved without conditions' : null, // TODO: add UW Manager decision Approved with or without conditions
+        value: amendment.changeFacilityValue ? 'Approved without conditions' : null, // TODO: add UW Manager decision Approved with or without conditions
         comments: amendment['PIM Comment/Status'],
         conditions: amendment.conditions ? amendment.conditions : null, // TODO: add any conditions, if applicable
         declined: amendment.declined ? amendment.declined : null, // TODO: add any reasons why it was declined. This is probably not applicable
@@ -128,7 +133,7 @@ const migrateGefAmendments = async () => {
         banksDecisionEmail: true,
         banksDecisionEmailSent: true,
         submittedAt: amendment['When Finished'] ? getUnixTime(new Date(excelDateToISODateString(amendment['When Finished']))) : '',
-        effectiveDate: amendment['When Finished'] ? getUnixTime(new Date(excelDateToISODateString(amendment['When Finished']))) : '', // TODO: confirm
+        effectiveDate: amendment['Effective Date'] ? getUnixTime(new Date(excelDateToISODateString(amendment['Effective Date']))) : '', // TODO: confirm
         receivedDate: getUnixTime(new Date(excelDateToISODateString(amendment['Date received']))), // TODO: check for received date
         submitted: true,
         submittedBy: {
@@ -151,6 +156,8 @@ const migrateGefAmendments = async () => {
     await updateAmendment(facilityId, amendmentId, taskUpdate);
 
     json.push(output);
+    counter += 1;
+    console.info('\x1b[33m%s\x1b[0m', `✅ Inserted amendment ${counter} of ${allGefAmendments.length}`);
   }
 };
 
