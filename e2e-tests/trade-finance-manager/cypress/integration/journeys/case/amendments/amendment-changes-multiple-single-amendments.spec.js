@@ -15,9 +15,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
       dealId = insertedDeal._id;
-
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
-
       cy.createFacilities(dealId, [mockFacilities[0]], MOCK_MAKER_TFM).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
       });
@@ -48,23 +46,21 @@ context('Amendments changes displayed - multiple single change amendments', () =
     amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
-
     cy.url().should('contain', 'request-approval');
+
     // automatic approval
     amendmentsPage.amendmentRequestApprovalNo().click();
     amendmentsPage.continueAmendment().click();
-
     cy.url().should('contain', 'amendment-effective-date');
 
     amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
     amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentEffectiveYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
-
     cy.url().should('contain', 'amendment-options');
+
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
-
     // update both the cover end date and the facility value
     amendmentsPage.amendmentCoverEndDateCheckbox().click();
     amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
@@ -75,7 +71,6 @@ context('Amendments changes displayed - multiple single change amendments', () =
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
-
     cy.url().should('contain', 'check-answers');
     amendmentsPage.continueAmendment().click();
   });
@@ -95,32 +90,29 @@ context('Amendments changes displayed - multiple single change amendments', () =
     amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
-
     cy.url().should('contain', 'request-approval');
+
     // automatic approval
     amendmentsPage.amendmentRequestApprovalNo().click();
     amendmentsPage.continueAmendment().click();
-
     cy.url().should('contain', 'amendment-effective-date');
 
     amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
     amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentEffectiveYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
-
     cy.url().should('contain', 'amendment-options');
+
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
-
     // update both the cover end date and the facility value
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
     amendmentsPage.continueAmendment().click();
-
     cy.url().should('contain', 'facility-value');
+
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
-
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'check-answers');
     amendmentsPage.continueAmendment().click();
@@ -138,11 +130,9 @@ context('Amendments changes displayed - multiple single change amendments', () =
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
     facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${dateConstants.todayFormatted}`);
-
     facilityPage.facilityCoverEndDate().contains(dateConstants.tomorrowFormattedFull);
     facilityPage.facilityTenor().should('not.contain', '23 months');
   });

@@ -284,7 +284,7 @@ exports.getCompletedAmendmentByDealId = async (req, res) => {
 };
 
 /**
- *  returns an number containing the latest completed amendment value based on a given facilityId:
+ *  returns an object containing the latest completed amendment value, currency and amendmentId based on a given facilityId:
  *  {
  *    "amendmentId": "62692866ce546902bfcd9168",
  *    "createdAt": 1651058790,
@@ -337,7 +337,7 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
 exports.findLatestCompletedValueAmendmentByFacilityId = findLatestCompletedValueAmendmentByFacilityId;
 
 /**
- *  returns an number containing the latest completed amendment coverEndDate based on a given facilityId:
+ *  returns an object containing the latest completed amendment coverEndDate and amendmentId based on a given facilityId:
  *  {
  *    "amendmentId": "62692866ce546902bfcd9168",
  *    "createdAt": 1651058790,
