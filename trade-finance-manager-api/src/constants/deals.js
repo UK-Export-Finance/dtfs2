@@ -76,6 +76,8 @@ const AMENDMENT_BANK_DECISION = {
 
 const AMENDMENT_STATUS = {
   COMPLETED: 'Completed',
+  IN_PROGRESS: 'In progress',
+  NOT_STARTED: 'Not started',
 };
 
 module.exports = {
