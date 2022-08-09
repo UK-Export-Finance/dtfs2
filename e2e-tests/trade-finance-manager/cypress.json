@@ -17,7 +17,7 @@
   "responseTimeout": 100000,
   "pageLoadTimeout": 120000,
   "redirectionLimit": 60,
-  "numTestsKeptInMemory": 100,
+  "numTestsKeptInMemory": 1,
   "retries": {
     "runMode": 3,
     "openMode": 0
