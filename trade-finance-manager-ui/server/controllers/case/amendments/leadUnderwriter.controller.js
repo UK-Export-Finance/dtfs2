@@ -102,13 +102,13 @@ const postAssignAmendmentLeadUnderwriter = async (req, res) => {
     const user = await api.getUser(assignedToValue);
 
     // if no user.firstName or lastName, then values set to null
-    const updateUser = {
+    const leadUnderwriter = {
       _id: assignedToValue,
-      firstName: user.firstName ? user.firstName : null,
-      lastName: user.lastName ? user.lastName : null,
+      firstName: user.firstName ?? null,
+      lastName: user.lastName ?? null,
     };
 
-    const update = { leadUnderwriter: updateUser };
+    const update = { leadUnderwriter };
 
     await api.updateAmendment(facilityId, amendmentId, update);
   } catch (err) {
