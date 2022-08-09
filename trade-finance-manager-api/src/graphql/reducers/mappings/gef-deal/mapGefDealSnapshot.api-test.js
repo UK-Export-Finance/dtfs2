@@ -5,6 +5,7 @@ const mapTotals = require('../deal/mapTotals');
 const mapGefSubmissionDetails = require('./mapGefSubmissionDetails');
 const MOCK_GEF_DEAL = require('../../../../v1/__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
+const api = require('../../../../v1/api');
 
 describe('mapGefDealSnapshot', () => {
   const mockFacilities = [
@@ -25,8 +26,10 @@ describe('mapGefDealSnapshot', () => {
     tfm: {},
   };
 
-  it('should return mapped deal', () => {
-    const result = mapGefDealSnapshot(mockDeal.dealSnapshot, mockDeal.tfm);
+  it('should return mapped deal', async () => {
+    api.getLatestCompletedAmendment = () => Promise.resolve({});
+
+    const result = await mapGefDealSnapshot(mockDeal.dealSnapshot, mockDeal.tfm);
 
     const expected = {
       _id: MOCK_GEF_DEAL._id,
@@ -46,8 +49,8 @@ describe('mapGefDealSnapshot', () => {
       submissionDetails: mapGefSubmissionDetails(mockDeal.dealSnapshot),
       eligibility: MOCK_GEF_DEAL.eligibility,
       supportingInformation: mockDeal.dealSnapshot.supportingInformation,
-      facilities: mapGefFacilities(mockDeal.dealSnapshot, mockDeal.tfm),
-      totals: mapTotals(mockDeal.dealSnapshot.facilities),
+      facilities: await mapGefFacilities(mockDeal.dealSnapshot, mockDeal.tfm),
+      totals: await mapTotals(mockDeal.dealSnapshot.facilities),
     };
 
     expect(result).toEqual(expected);

@@ -99,7 +99,9 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
     });
 
     it('should render template with data for lead underwriter assigned', async () => {
-      MOCKS.MOCK_AMENDMENT.leadUnderwriterId = '12345678';
+      MOCKS.MOCK_AMENDMENT.leadUnderwriter = {
+        _id: '12345678',
+      };
       api.getAmendmentById = () => Promise.resolve({ data: MOCKS.MOCK_AMENDMENT, status: 200 });
 
       await amendmentLeadUnderwriterController.getAssignAmendmentLeadUnderwriter(req, res);
@@ -108,7 +110,7 @@ describe('GET getAssignAmendmentLeadUnderwriter()', () => {
       const alphabeticalTeamMembers = sortArrayOfObjectsAlphabetically(MOCKS.MOCK_TEAM_UNDERWRITER_MANAGERS, 'firstName');
 
       const expectedAssignToSelectOptions = mapAssignToSelectOptions(
-        MOCKS.MOCK_AMENDMENT.leadUnderwriterId,
+        MOCKS.MOCK_AMENDMENT.leadUnderwriter._id,
         MOCKS.MOCK_USER_UNDERWRITER_MANAGER,
         alphabeticalTeamMembers,
       );
@@ -198,7 +200,11 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
     await amendmentLeadUnderwriterController.postAssignAmendmentLeadUnderwriter(req, res);
 
     const expectedUpdateObj = {
-      leadUnderwriterId: MOCKS.MOCK_USER_UNDERWRITER_MANAGER._id,
+      leadUnderwriter: {
+        _id: MOCKS.MOCK_USER_UNDERWRITER_MANAGER._id,
+        firstName: MOCKS.MOCK_USER_UNDERWRITER_MANAGER.firstName,
+        lastName: MOCKS.MOCK_USER_UNDERWRITER_MANAGER.lastName,
+      },
     };
 
     expect(apiUpdateSpy).toHaveBeenCalledWith(
@@ -211,11 +217,12 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
   });
 
   it('should call api.updateAmendment and redirect to /lead-underwriter with correct params if unassigned', async () => {
+    api.getUser = () => Promise.resolve({});
     const req = {
       params: {
         _id: MOCKS.MOCK_DEAL._id,
-        // amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
-        // facilityId: '9999',
+        amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
+        facilityId: '9999',
       },
       session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
       body: {
@@ -226,7 +233,11 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
     await amendmentLeadUnderwriterController.postAssignAmendmentLeadUnderwriter(req, res);
 
     const expectedUpdateObj = {
-      leadUnderwriterId: 'Unassigned',
+      leadUnderwriter: {
+        _id: 'Unassigned',
+        firstName: null,
+        lastName: null,
+      },
     };
 
     expect(apiUpdateSpy).toHaveBeenCalledWith(

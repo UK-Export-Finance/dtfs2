@@ -145,6 +145,7 @@ describe('controllers - case', () => {
           selectedTaskFilter: 'user',
           amendments: [],
           hasAmendmentInProgress: false,
+          amendmentsInProgress: [],
         });
       });
     });
@@ -225,6 +226,7 @@ describe('controllers - case', () => {
           selectedTaskFilter: req.body.filterType,
           amendments: [],
           hasAmendmentInProgress: false,
+          amendmentsInProgress: [],
         });
       });
     });

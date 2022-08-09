@@ -4,7 +4,7 @@ const mapPremiumSchedule = require('./mapPremiumSchedule');
 const mapPremiumTotals = require('./mapPremiumTotals');
 
 describe('mapFacilityTfm', () => {
-  it('should return mapped object', () => {
+  it('should return mapped object', async () => {
     const mockFacilityTfm = {
       bondIssuerPartyUrn: '123',
       bondBeneficiaryPartyUrn: '456',
@@ -16,11 +16,11 @@ describe('mapFacilityTfm', () => {
       exporterCreditRating: 'Good (BB-)',
     };
 
-    const result = mapFacilityTfm(mockFacilityTfm, mockDealTfm);
+    const result = await mapFacilityTfm(mockFacilityTfm, mockDealTfm);
 
     const expected = {
       ...mockFacilityTfm,
-      ukefExposure: mapUkefExposure(mockFacilityTfm),
+      ukefExposure: await mapUkefExposure(mockFacilityTfm),
       premiumSchedule: mapPremiumSchedule(mockFacilityTfm.premiumSchedule),
       premiumTotals: mapPremiumTotals(mockFacilityTfm.premiumSchedule),
       creditRating: mockDealTfm.exporterCreditRating,
