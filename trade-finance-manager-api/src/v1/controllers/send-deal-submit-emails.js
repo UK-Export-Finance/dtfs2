@@ -58,11 +58,14 @@ const sendMiaAcknowledgement = async (deal) => {
   const { email: sendToEmailAddress } = maker;
   const bankId = maker.bank.id;
   const { emails: bankEmails } = await api.findBankById(bankId);
+  // get the email address for PIM user
+  const { email: pimEmail } = await api.findOneTeam(CONSTANTS.TEAMS.PIM.id);
 
   let templateId;
   let emailVariables;
   let emailResponse;
   let bankResponse;
+  let pimEmailResponse;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_MIA_RECEIVED;
@@ -73,7 +76,10 @@ const sendMiaAcknowledgement = async (deal) => {
     emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
     // send a copy of the email to the bank's general email address
     bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
-    return { emailResponse, bankResponse };
+    // send a copy of the email to PIM
+    pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+
+    return { emailResponse, bankResponse, pimEmailResponse };
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
@@ -85,7 +91,10 @@ const sendMiaAcknowledgement = async (deal) => {
     emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
     // send a copy of the email to the bank's general email address
     bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
-    return { emailResponse, bankResponse };
+    // send a copy of the email to PIM
+    pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+
+    return { emailResponse, bankResponse, pimEmailResponse };
   }
 
   return null;
