@@ -29,9 +29,9 @@ const mapUkefExposure = async (facilityTfm, facility) => {
         // gets full amendment
         const fullAmendment = await api.getAmendmentById(_id, amendmentId);
 
-        const { requireUkefApproval, submittedAt, bankDecision } = fullAmendment;
+        const { requireUkefApproval, effectiveDate, bankDecision } = fullAmendment;
         // value of ukefExposureCalculationTime from automatic amendment submission time or manual amendment bankDecision submission time
-        const ukefExposureTimestamp = requireUkefApproval ? bankDecision.submittedAt : submittedAt;
+        const ukefExposureTimestamp = requireUkefApproval ? bankDecision.effectiveDate : effectiveDate;
 
         // BSS is coveredPercentage while GEF is coverPercentage
         const coverPercentageValue = coverPercentage || coveredPercentage;
