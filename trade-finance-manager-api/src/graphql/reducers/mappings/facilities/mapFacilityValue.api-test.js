@@ -5,7 +5,7 @@ const { CURRENCY } = require('../../../../constants/currency.constant');
 
 describe('mapFacilityValue', () => {
   beforeEach(() => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
   });
 
   describe('when no facility provided', () => {

@@ -147,7 +147,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.continueAmendment().click();
   });
 
-  it('should accept the coverEndDate and decline facility value and bank should proceed', () => {
+  it('should accept the facility value and decline cover end date and bank should proceed', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 

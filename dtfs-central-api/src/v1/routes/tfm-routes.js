@@ -413,7 +413,8 @@ tfmRouter.route('/amendments/status/in-progress').get(tfmGetAmendmentController.
 tfmRouter.route('/facilities/:facilityId/amendment').get(tfmGetAmendmentController.getAllAmendmentsByFacilityId);
 tfmRouter.route('/facilities/:facilityId/amendment/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgress);
 tfmRouter.route('/facilities/:facilityId/amendment/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendmentsByFacilityId);
-tfmRouter.route('/facilities/:facilityId/amendment/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendment);
+tfmRouter.route('/facilities/:facilityId/amendment/status/completed/latest-value').get(tfmGetAmendmentController.getLatestCompletedValueAmendment);
+tfmRouter.route('/facilities/:facilityId/amendment/status/completed/latest-cover-end-date').get(tfmGetAmendmentController.getLatestCompletedDateAmendment);
 tfmRouter.route('/facilities/:facilityId/amendment/:amendmentId').get(tfmGetAmendmentController.getAmendmentById);
 tfmRouter.route('/deals/:dealId/amendments').get(tfmGetAmendmentController.getAmendmentsByDealId);
 tfmRouter.route('/deals/:dealId/amendment/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgressByDealId);

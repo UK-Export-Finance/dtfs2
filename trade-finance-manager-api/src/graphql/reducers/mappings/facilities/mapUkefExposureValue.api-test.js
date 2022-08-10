@@ -1,7 +1,7 @@
 const mapUkefExposureValue = require('./mapUkefExposureValue');
-const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../../../constants/deals');
 const { formattedNumber } = require('../../../../utils/number');
 const { CURRENCY } = require('../../../../constants/currency.constant');
+const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../../../constants/deals');
 const api = require('../../../../v1/api');
 
 describe('mapUkefExposureValue()', () => {
@@ -14,6 +14,12 @@ describe('mapUkefExposureValue()', () => {
       submitted: true,
       value: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
     },
+  };
+
+  const mockAmendmentValueResponse = {
+    value: 5000,
+    currency: CURRENCY.GBP,
+    amendmentId: '1234',
   };
 
   const facilitySnapshot = {
@@ -33,7 +39,8 @@ describe('mapUkefExposureValue()', () => {
   };
 
   it('should return exposure from facility if no amendment completed', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const result = await mapUkefExposureValue(mockFacilityTfm, mockFacility);
 
@@ -43,7 +50,8 @@ describe('mapUkefExposureValue()', () => {
   });
 
   it('should return exposure from facility if no amendment completed', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const result = await mapUkefExposureValue(mockFacilityTfm, mockFacility);
 
@@ -55,7 +63,8 @@ describe('mapUkefExposureValue()', () => {
   it('should return exposure from amendment if amendment completed', async () => {
     mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
 
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
+    api.getAmendmentById = () => Promise.resolve(mockAmendment);
 
     const result = await mapUkefExposureValue(mockFacilityTfm, mockFacility);
 
@@ -67,9 +76,7 @@ describe('mapUkefExposureValue()', () => {
   });
 
   it('should return undefined if no facilityTfm', async () => {
-    mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
-
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
 
     const result = await mapUkefExposureValue(null, mockFacility);
 

@@ -3,7 +3,6 @@ const { format, fromUnixTime } = require('date-fns');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const { formatYear } = require('../../../../utils/date');
 const api = require('../../../../v1/api');
-const { DEALS } = require('../../../../constants');
 
 describe('mapCoverEndDate', () => {
   it('should return formatted cover end date', async () => {
@@ -56,7 +55,7 @@ describe('mapCoverEndDate', () => {
 
   describe('when facility provided but no latest completed amendment', () => {
     it('should return 4 digit year provided', async () => {
-      api.getLatestCompletedAmendment = () => Promise.resolve({});
+      api.getLatestCompletedDateAmendment = () => Promise.resolve({});
 
       const facilitySnapshot = {
         _id: '123',
@@ -90,17 +89,9 @@ describe('mapCoverEndDate', () => {
     it('should return modified coverEndDate', async () => {
       const coverEndDateUnix = 1658403289;
 
-      api.getLatestCompletedAmendment = () => Promise.resolve({
+      api.getLatestCompletedDateAmendment = () => Promise.resolve({
         coverEndDate: coverEndDateUnix,
         amendmentId: '1234',
-        bankDecision: {
-          submitted: true,
-          decision: DEALS.AMENDMENT_BANK_DECISION.PROCEED,
-        },
-        ukefDecision: {
-          submitted: true,
-          coverEndDate: DEALS.AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
-        },
       });
 
       const facilitySnapshot = {
