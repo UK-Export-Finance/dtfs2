@@ -433,7 +433,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
-    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${dateConstants.todayFormatted}`);
+    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at 5 June 2022`);
 
     facilityPage.facilityCoverEndDate().contains('20 October 2022');
     facilityPage.facilityTenor().contains('23 months');

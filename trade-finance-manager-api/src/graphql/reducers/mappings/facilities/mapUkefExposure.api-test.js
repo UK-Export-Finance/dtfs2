@@ -18,6 +18,7 @@ describe('mapUkefExposure()', () => {
     bankDecision: {
       decision: AMENDMENT_BANK_DECISION.PROCEED,
       submittedAt: 1660047717,
+      effectiveDate: 1650047717,
     },
   };
   const mockAmendmentValueResponse = {
