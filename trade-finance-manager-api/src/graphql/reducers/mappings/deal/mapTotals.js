@@ -1,5 +1,5 @@
 const { formattedNumber } = require('../../../../utils/number');
-const { calculateNewFacilityValue, calculateAmendmentTotalExposure, isValidCompletedValueAmendment } = require('../../../helpers/amendment.helpers');
+const { calculateNewFacilityValue, calculateAmendmentTotalExposure } = require('../../../helpers/amendment.helpers');
 const isValidFacility = require('../../../helpers/isValidFacility.helper');
 const api = require('../../../../v1/api');
 const { CURRENCY } = require('../../../../constants/currency.constant');
@@ -12,13 +12,13 @@ const mapTotals = async (facilities) => {
     if (isValidFacility(facility)) {
       const { facilitySnapshot, tfm, _id } = facility;
 
-      const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
+      const latestCompletedAmendmentValue = await api.getLatestCompletedValueAmendment(_id);
 
       // if latest amendment then returns value of new amendment
-      if (isValidCompletedValueAmendment(latestCompletedAmendment)) {
+      if (latestCompletedAmendmentValue?.value) {
         const { exchangeRate } = tfm;
 
-        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendment);
+        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendmentValue);
         return Number(valueInGBP);
       }
 

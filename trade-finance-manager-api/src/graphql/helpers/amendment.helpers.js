@@ -3,7 +3,6 @@ const { formattedNumber } = require('../../utils/number');
 const { decimalsCount, roundNumber } = require('../../v1/helpers/number');
 const { CURRENCY } = require('../../constants/currency.constant');
 const api = require('../../v1/api');
-const { DEALS } = require('../../constants');
 const isValidFacility = require('./isValidFacility.helper');
 
 // returns the formatted amendment value and currency (without conversion)
@@ -120,73 +119,21 @@ const calculateAmendmentTenor = async (facilitySnapshot, amendment) => {
   }
 };
 
-// checking if amendment completed and if value change accepted fully
-const latestAmendmentValueAccepted = (amendment) => {
-  const { ukefDecision, bankDecision, value, requireUkefApproval } = amendment;
-  const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = DEALS.AMENDMENT_UW_DECISION;
-  const { PROCEED } = DEALS.AMENDMENT_BANK_DECISION;
-
-  const ukefDecisionApproved = ukefDecision?.value === APPROVED_WITH_CONDITIONS || ukefDecision?.value === APPROVED_WITHOUT_CONDITIONS;
-  const bankProceed = bankDecision?.decision === PROCEED;
-
-  if (!requireUkefApproval && value) {
-    return true;
-  }
-
-  if (value && ukefDecisionApproved && bankProceed) {
-    return true;
-  }
-
-  return false;
-};
-
-// checking if amendment completed and if coverEndDate change accepted fully
-const latestAmendmentCoverEndDateAccepted = (amendment) => {
-  const { ukefDecision, bankDecision, coverEndDate, requireUkefApproval } = amendment;
-  const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = DEALS.AMENDMENT_UW_DECISION;
-  const { PROCEED } = DEALS.AMENDMENT_BANK_DECISION;
-
-  const ukefDecisionApproved = ukefDecision?.coverEndDate === APPROVED_WITH_CONDITIONS || ukefDecision?.coverEndDate === APPROVED_WITHOUT_CONDITIONS;
-  const bankProceed = bankDecision?.decision === PROCEED;
-
-  if (!requireUkefApproval && coverEndDate) {
-    return true;
-  }
-
-  if (coverEndDate && ukefDecisionApproved && bankProceed) {
-    return true;
-  }
-
-  return false;
-};
-
-const isValidCompletedValueAmendment = (latestCompletedAmendment) => {
-  const isCompleted = latestCompletedAmendment?.value && latestAmendmentValueAccepted(latestCompletedAmendment);
-
-  return isCompleted;
-};
-
-const isValidCompletedCoverEndDateAmendment = (latestCompletedAmendment) => {
-  const isCompleted = latestCompletedAmendment?.coverEndDate && latestAmendmentCoverEndDateAccepted(latestCompletedAmendment);
-
-  return isCompleted;
-};
-
 // calculates the value for total exposure to return for a single amendment
 const calculateAmendmentTotalExposure = async (facility) => {
   if (isValidFacility(facility)) {
     const { _id, tfm, facilitySnapshot } = facility;
     const { exchangeRate } = tfm;
 
-    const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
+    const latestCompletedAmendmentValue = await api.getLatestCompletedValueAmendment(_id);
 
-    if (isValidCompletedValueAmendment(latestCompletedAmendment)) {
+    if (latestCompletedAmendmentValue?.value) {
       const { coverPercentage, coveredPercentage } = facilitySnapshot;
 
       // BSS is coveredPercentage while GEF is coverPercentage
       const coverPercentageValue = coverPercentage || coveredPercentage;
 
-      const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendment);
+      const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendmentValue);
       const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
 
       // sets new exposure value based on amendment value
@@ -202,9 +149,5 @@ module.exports = {
   calculateNewFacilityValue,
   calculateUkefExposure,
   calculateAmendmentTenor,
-  latestAmendmentValueAccepted,
-  latestAmendmentCoverEndDateAccepted,
   calculateAmendmentTotalExposure,
-  isValidCompletedCoverEndDateAmendment,
-  isValidCompletedValueAmendment,
 };

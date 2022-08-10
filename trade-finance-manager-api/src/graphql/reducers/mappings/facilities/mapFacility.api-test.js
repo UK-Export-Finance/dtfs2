@@ -79,7 +79,8 @@ describe('mapFacility', () => {
   };
 
   it('should map and format correct fields/values', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
 
     const result = await mapFacility(mockFacility, mockTfmFacility, mockDealDetails, mockFacilityFull);
 

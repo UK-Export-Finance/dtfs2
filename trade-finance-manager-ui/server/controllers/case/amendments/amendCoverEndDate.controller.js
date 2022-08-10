@@ -2,7 +2,6 @@ const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
-const { latestAmendmentCoverEndDateAccepted } = require('../../helpers/amendments.helper');
 
 const getAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -25,16 +24,12 @@ const getAmendCoverEndDate = async (req, res) => {
   }
 
   const facility = await api.getFacility(facilityId);
-  const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId, amendmentId);
+  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedDateAmendment(facilityId, amendmentId);
+
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
-  // if currentCoverEndDate exists, then use it
-  if (latestAmendment.currentCoverEndDate) {
-    currentCoverEndDate = format(fromUnixTime(latestAmendment.currentCoverEndDate), 'dd MMMM yyyy');
-  }
-
-  if (latestAmendmentCoverEndDateAccepted(latestAmendment)) {
-    currentCoverEndDate = format(fromUnixTime(latestAmendment.coverEndDate), 'dd MMMM yyyy');
+  if (latestAmendmentCoverEndDate?.coverEndDate) {
+    currentCoverEndDate = format(fromUnixTime(latestAmendmentCoverEndDate.coverEndDate), 'dd MMMM yyyy');
   }
 
   return res.render('case/amendments/amendment-cover-end-date.njk', {
@@ -54,17 +49,12 @@ const postAmendCoverEndDate = async (req, res) => {
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
   const { dealId } = amendment;
   const facility = await api.getFacility(facilityId);
-  const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId);
+  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedDateAmendment(facilityId, amendmentId);
 
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
-  // if currentCoverEndDate exists, then use it
-  if (latestAmendment.currentCoverEndDate) {
-    currentCoverEndDate = format(fromUnixTime(latestAmendment.currentCoverEndDate), 'dd MMMM yyyy');
-  }
-
-  if (latestAmendmentCoverEndDateAccepted(latestAmendment)) {
-    currentCoverEndDate = format(fromUnixTime(latestAmendment.coverEndDate), 'dd MMMM yyyy');
+  if (latestAmendmentCoverEndDate?.coverEndDate) {
+    currentCoverEndDate = format(fromUnixTime(latestAmendmentCoverEndDate.coverEndDate), 'dd MMMM yyyy');
   }
 
   const { coverEndDate, errorsObject, coverEndDateErrors } = await coverEndDateValidation(req.body, currentCoverEndDate);
