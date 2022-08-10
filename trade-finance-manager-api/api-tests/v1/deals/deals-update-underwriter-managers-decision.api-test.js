@@ -70,7 +70,7 @@ describe('update tfm underwriter managers decision', () => {
         },
       };
 
-      expect(sendEmailApiSpy).toBeCalledTimes(1);
+      expect(sendEmailApiSpy).toBeCalledTimes(2);
       expect(sendEmailApiSpy).toHaveBeenCalledWith(
         expected.templateId,
         expected.sendToEmailAddress,
@@ -102,7 +102,7 @@ describe('update tfm underwriter managers decision', () => {
         },
       };
 
-      expect(sendEmailApiSpy).toBeCalledTimes(1);
+      expect(sendEmailApiSpy).toBeCalledTimes(2);
       expect(sendEmailApiSpy).toHaveBeenCalledWith(
         expected.templateId,
         expected.sendToEmailAddress,
@@ -135,7 +135,7 @@ describe('update tfm underwriter managers decision', () => {
         },
       };
 
-      expect(sendEmailApiSpy).toBeCalledTimes(1);
+      expect(sendEmailApiSpy).toBeCalledTimes(2);
       expect(sendEmailApiSpy).toHaveBeenCalledWith(
         expected.templateId,
         expected.sendToEmailAddress,
