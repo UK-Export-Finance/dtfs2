@@ -369,7 +369,7 @@ const getLatestCompletedDateAmendment = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/completed/latest-date`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/completed/latest-cover-end-date`,
         headers: { 'Content-Type': 'application/json' },
       });
 
