@@ -55,6 +55,8 @@ const todayUnixYear = format(threeDaysAgo, 'yyyy');
 const todayFormattedFull = format(today, 'dd MMMM yyyy');
 const todayFormatted = format(today, 'd MMMM yyyy');
 const tomorrowFormattedFull = format(tomorrow, 'd MMMM yyyy');
+const tomorrowFormattedFacilityPage = format(tomorrow, 'dd LLL yyyy');
+
 const todayFormattedTimeHours = format(today, 'h');
 const todayFormattedTimeAmPm = format(today, 'aaa');
 
@@ -105,6 +107,7 @@ export default {
   todayFormattedFull,
   todayFormatted,
   tomorrowFormattedFull,
+  tomorrowFormattedFacilityPage,
   todayFormattedTimeHours,
   todayFormattedTimeAmPm,
 };
