@@ -16,7 +16,9 @@ const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-ca
 
 describe('mapGefFacility', () => {
   it('should return mapped GEF facility', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const mockFacility = {
       _id: MOCK_CASH_CONTINGENT_FACILIIES[0]._id,

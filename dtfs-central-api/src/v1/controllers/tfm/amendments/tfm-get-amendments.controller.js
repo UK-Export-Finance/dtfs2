@@ -284,7 +284,7 @@ exports.getCompletedAmendmentByDealId = async (req, res) => {
 };
 
 /**
- *  returns an object containing the latest completed amendment based on a given facilityId:
+ *  returns an object containing the latest completed amendment value, currency and amendmentId based on a given facilityId:
  *  {
  *    "amendmentId": "62692866ce546902bfcd9168",
  *    "createdAt": 1651058790,
@@ -292,10 +292,11 @@ exports.getCompletedAmendmentByDealId = async (req, res) => {
  *    "status": "Completed",
  *  }
  */
-const findLatestCompletedAmendmentByFacilityId = async (facilityId) => {
+const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
   if (ObjectId.isValid(facilityId)) {
     const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
     const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
+    const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
 
     try {
       const collection = await db.getCollection('tfm-facilities');
@@ -305,8 +306,26 @@ const findLatestCompletedAmendmentByFacilityId = async (facilityId) => {
         {
           $match: {
             $or: [
-              { 'amendments.status': COMPLETED, 'amendments.submittedByPim': true, 'amendments.requireUkefApproval': false },
-              { 'amendments.status': COMPLETED, 'amendments.bankDecision.decision': PROCEED, 'amendments.bankDecision.submitted': true }
+              {
+                'amendments.status': COMPLETED,
+                'amendments.submittedByPim': true,
+                'amendments.requireUkefApproval': false,
+                'amendments.changeFacilityValue': true
+              },
+              {
+                'amendments.status': COMPLETED,
+                'amendments.bankDecision.decision': PROCEED,
+                'amendments.bankDecision.submitted': true,
+                'amendments.ukefDecision.value': APPROVED_WITH_CONDITIONS,
+                'amendments.changeFacilityValue': true
+              },
+              {
+                'amendments.status': COMPLETED,
+                'amendments.bankDecision.decision': PROCEED,
+                'amendments.bankDecision.submitted': true,
+                'amendments.ukefDecision.value': APPROVED_WITHOUT_CONDITIONS,
+                'amendments.changeFacilityValue': true
+              }
             ]
           }
         },
@@ -314,15 +333,90 @@ const findLatestCompletedAmendmentByFacilityId = async (facilityId) => {
         { $project: { _id: 0, amendments: 1 } },
         { $limit: 1 }
       ]).toArray();
-      return amendment[0]?.amendments ?? null;
+
+      if (amendment[0]?.amendments?.value) {
+        return {
+          amendmentId: amendment[0].amendments.amendmentId,
+          value: amendment[0].amendments.value,
+          currency: amendment[0].amendments.currency
+        };
+      }
+      return null;
     } catch (err) {
-      console.error('Unable to find amendments object %O', { err });
+      console.error('Unable to find latest completed amendments value %O', { err });
       return null;
     }
   }
   return null;
 };
-exports.findLatestCompletedAmendmentByFacilityId = findLatestCompletedAmendmentByFacilityId;
+exports.findLatestCompletedValueAmendmentByFacilityId = findLatestCompletedValueAmendmentByFacilityId;
+
+/**
+ *  returns an object containing the latest completed amendment coverEndDate and amendmentId based on a given facilityId:
+ *  {
+ *    "amendmentId": "62692866ce546902bfcd9168",
+ *    "createdAt": 1651058790,
+ *    "updatedAt": 1651059653,
+ *    "status": "Completed",
+ *  }
+ */
+const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
+  if (ObjectId.isValid(facilityId)) {
+    const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
+    const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
+    const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
+
+    try {
+      const collection = await db.getCollection('tfm-facilities');
+      const amendment = await collection.aggregate([
+        { $match: { _id: ObjectId(facilityId) } },
+        { $unwind: '$amendments' },
+        {
+          $match: {
+            $or: [
+              {
+                'amendments.status': COMPLETED,
+                'amendments.submittedByPim': true,
+                'amendments.requireUkefApproval': false,
+                'amendments.changeCoverEndDate': true
+              },
+              {
+                'amendments.status': COMPLETED,
+                'amendments.bankDecision.decision': PROCEED,
+                'amendments.bankDecision.submitted': true,
+                'amendments.ukefDecision.coverEndDate': APPROVED_WITH_CONDITIONS,
+                'amendments.changeCoverEndDate': true
+              },
+              {
+                'amendments.status': COMPLETED,
+                'amendments.bankDecision.decision': PROCEED,
+                'amendments.bankDecision.submitted': true,
+                'amendments.ukefDecision.coverEndDate': APPROVED_WITHOUT_CONDITIONS,
+                'amendments.changeCoverEndDate': true
+              }
+            ]
+          }
+        },
+        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+        { $project: { _id: 0, amendments: 1 } },
+        { $limit: 1 }
+      ]).toArray();
+
+      if (amendment[0]?.amendments?.coverEndDate) {
+        return {
+          amendmentId: amendment[0].amendments.amendmentId,
+          coverEndDate: amendment[0].amendments.coverEndDate
+        };
+      }
+      return null;
+    } catch (err) {
+      console.error('Unable to find latest completed amendments coverEndDate %O', { err });
+      return null;
+    }
+  }
+  return null;
+};
+exports.findLatestCompletedDateAmendmentByFacilityId = findLatestCompletedDateAmendmentByFacilityId;
 
 // finds the latest completed amendment and returns the version
 const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
@@ -349,11 +443,20 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
 };
 exports.findLatestCompletedAmendmentByFacilityIdVersion = findLatestCompletedAmendmentByFacilityIdVersion;
 
-exports.getLatestCompletedAmendment = async (req, res) => {
+exports.getLatestCompletedValueAmendment = async (req, res) => {
   const { facilityId } = req.params;
   if (ObjectId.isValid(facilityId)) {
-    const amendment = await findLatestCompletedAmendmentByFacilityId(facilityId) ?? {};
-    return res.status(200).send(amendment);
+    const newValue = await findLatestCompletedValueAmendmentByFacilityId(facilityId) ?? {};
+    return res.status(200).send(newValue);
+  }
+  return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
+};
+
+exports.getLatestCompletedDateAmendment = async (req, res) => {
+  const { facilityId } = req.params;
+  if (ObjectId.isValid(facilityId)) {
+    const coverEndDate = await findLatestCompletedDateAmendmentByFacilityId(facilityId) ?? {};
+    return res.status(200).send(coverEndDate);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
 };

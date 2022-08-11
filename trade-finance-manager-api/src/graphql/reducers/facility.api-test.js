@@ -10,7 +10,9 @@ const MOCK_CASH_CONTINGENT_FACILIIES = require('../../v1/__mocks__/mock-cash-con
 
 describe('reducer - facility', () => {
   beforeEach(() => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
   });
 
   it('should return mapped object', async () => {

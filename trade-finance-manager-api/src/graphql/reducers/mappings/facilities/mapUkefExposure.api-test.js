@@ -10,10 +10,21 @@ describe('mapUkefExposure()', () => {
     currency: CURRENCY.GBP,
     amendmentId: '1234',
     requireUkefApproval: true,
+    submittedAt: 1660047717,
     ukefDecision: {
       submitted: true,
       value: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
     },
+    bankDecision: {
+      decision: AMENDMENT_BANK_DECISION.PROCEED,
+      submittedAt: 1660047717,
+      effectiveDate: 1650047717,
+    },
+  };
+  const mockAmendmentValueResponse = {
+    value: 5000,
+    currency: CURRENCY.GBP,
+    amendmentId: '1234',
   };
 
   const facilitySnapshot = {
@@ -50,7 +61,7 @@ describe('mapUkefExposure()', () => {
       ukefExposureCalculationTimestamp: '1606900616651',
     };
 
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
 
     const mockFacility = {
       _id: '12',
@@ -78,7 +89,8 @@ describe('mapUkefExposure()', () => {
       ukefExposureCalculationTimestamp: '1606900616651',
     };
 
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
+    api.getAmendmentById = () => Promise.resolve(mockAmendment);
 
     const mockFacility = {
       _id: '12',

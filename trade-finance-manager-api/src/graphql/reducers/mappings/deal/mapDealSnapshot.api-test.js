@@ -8,7 +8,9 @@ const api = require('../../../../v1/api');
 
 describe('mapDealSnapshot', () => {
   it('should return mapped object', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const mockFacilities = [
       {

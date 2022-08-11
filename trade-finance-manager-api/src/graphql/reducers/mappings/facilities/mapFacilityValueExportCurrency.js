@@ -1,6 +1,6 @@
 const api = require('../../../../v1/api');
 const { formattedNumber } = require('../../../../utils/number');
-const { amendmentChangeValueExportCurrency, isValidCompletedValueAmendment } = require('../../../helpers/amendment.helpers');
+const { amendmentChangeValueExportCurrency } = require('../../../helpers/amendment.helpers');
 
 // maps facility value (in original currency) and checks if amendment change on that value
 const mapFacilityValueExportCurrency = async (facility) => {
@@ -10,11 +10,11 @@ const mapFacilityValueExportCurrency = async (facility) => {
     const { currency, value } = facilitySnapshot;
 
     // checks if completed amendment which is accepted
-    const latestCompletedAmendment = await api.getLatestCompletedAmendment(_id);
+    const latestCompletedAmendmentValue = await api.getLatestCompletedValueAmendment(_id);
 
-    if (isValidCompletedValueAmendment(latestCompletedAmendment)) {
+    if (latestCompletedAmendmentValue?.value) {
       // returns the new value from amendment if completed and accepted by bank and UKEF
-      return amendmentChangeValueExportCurrency(latestCompletedAmendment);
+      return amendmentChangeValueExportCurrency(latestCompletedAmendmentValue);
     }
     const formattedFacilityValue = formattedNumber(value);
 

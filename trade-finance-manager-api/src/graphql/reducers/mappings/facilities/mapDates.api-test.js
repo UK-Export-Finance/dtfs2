@@ -3,7 +3,7 @@ const mapDates = require('./mapDates');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapTenorDate = require('./mapTenorDate');
 const api = require('../../../../v1/api');
-const { DEALS, FACILITIES } = require('../../../../constants');
+const { FACILITIES } = require('../../../../constants');
 const { calculateAmendmentTenor } = require('../../../helpers/amendment.helpers');
 
 describe('mapDates', () => {
@@ -38,7 +38,7 @@ describe('mapDates', () => {
   };
 
   beforeEach(() => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
   });
 
   it('should return inclusionNoticeReceived as deal submissionDate if manualInclusionNoticeSubmissionDate is empty', async () => {
@@ -93,17 +93,7 @@ describe('mapDates', () => {
   });
 
   it('should not return amendment tenor and coverEndDate if amendment not completed', async () => {
-    const coverEndDateUnix = 1658403289;
-
-    api.getLatestCompletedAmendment = () => Promise.resolve({
-      coverEndDate: coverEndDateUnix,
-      amendmentId: '1234',
-      requireUkefApproval: true,
-      ukefDecision: {
-        submitted: true,
-        coverEndDate: DEALS.AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
-      },
-    });
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
 
     const result = await mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
 
@@ -126,27 +116,18 @@ describe('mapDates', () => {
 
   it('should return amendment tenor and coverEndDate if amendment completed', async () => {
     const coverEndDateUnix = 1658403289;
-    const mockAmendment = {
+    const mockAmendmentResponse = {
       coverEndDate: coverEndDateUnix,
-      requireUkefApproval: true,
       amendmentId: '1234',
-      ukefDecision: {
-        submitted: true,
-        coverEndDate: DEALS.AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
-      },
-      bankDecision: {
-        submitted: true,
-        decision: DEALS.AMENDMENT_BANK_DECISION.PROCEED,
-      },
     };
 
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedDateAmendment = () => Promise.resolve(mockAmendmentResponse);
 
     const result = await mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
 
     const expectedCoverEndDate = format(fromUnixTime(coverEndDateUnix), 'd MMMM yyyy');
 
-    const tenorPeriod = await calculateAmendmentTenor(mockFacility, mockAmendment);
+    const tenorPeriod = await calculateAmendmentTenor(mockFacility, mockAmendmentResponse);
 
     const expectedTenor = mapTenorDate(
       mockFacility.facilityStage,

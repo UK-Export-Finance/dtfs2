@@ -117,7 +117,8 @@ describe('graphql query - get facility', () => {
   });
 
   beforeEach(() => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
   });
 
   it('should return a BSS/EWCS facility via facilityReducer', async () => {
