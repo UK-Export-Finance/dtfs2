@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
-const { AMENDMENTS } = CONSTANTS;
+const { AMENDMENTS, DECISIONS } = CONSTANTS;
 
 /**
  * @param {Object} deal
@@ -15,10 +15,7 @@ const showAmendmentButton = (deal, userTeam) => {
   const acceptableUser = CONSTANTS.TEAMS.PIM;
   const acceptableStatus = [CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED, CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
 
-  if (acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) && userTeam.includes(acceptableUser) && acceptableStatus.includes(deal.tfm.stage)) {
-    return true;
-  }
-  return false;
+  return acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) && userTeam.includes(acceptableUser) && acceptableStatus.includes(deal.tfm.stage);
 };
 
 const userCanEditManagersDecision = (amendment, user) => {
@@ -42,16 +39,16 @@ const userCanEditBankDecision = (amendment, user) => {
 const ukefDecisionRejected = (amendment) => {
   const { changeFacilityValue, changeCoverEndDate } = amendment;
   const { value, coverEndDate } = amendment.ukefDecision;
-  const { UNDERWRITER_MANAGER_DECISIONS } = DECISIONS;
+  const { DECLINED } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
 
   // Ensure not all of the amendment requests are declined
 
   // Dual amendment request
   if (changeFacilityValue && changeCoverEndDate) {
-    return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED && coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    return value === DECLINED && coverEndDate === DECLINED;
   }
   // Single amendment request
-  return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED || coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+  return value === DECLINED || coverEndDate === DECLINED;
 };
 
 /**
@@ -60,13 +57,7 @@ const ukefDecisionRejected = (amendment) => {
  * @returns {Boolean}
  * checks if amendment has declined or approved with conditions and returns true if so
  */
-const validateUkefDecision = (ukefDecision, decisionType) => {
-  if (ukefDecision?.coverEndDate === decisionType || ukefDecision?.value === decisionType) {
-    return true;
-  }
-
-  return false;
-};
+const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.coverEndDate === decisionType || ukefDecision?.value === decisionType;
 
 const hasAmendmentInProgressDealStage = async (amendments) => {
   if (amendments.length) {
@@ -81,8 +72,7 @@ const hasAmendmentInProgressDealStage = async (amendments) => {
 
 const amendmentsInProgressByDeal = async (amendments) => {
   if (amendments.length) {
-    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
-    return amendmentsInProgress;
+    return amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
   }
   return [];
 };

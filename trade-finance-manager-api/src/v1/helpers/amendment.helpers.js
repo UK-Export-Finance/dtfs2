@@ -19,41 +19,28 @@ const {
 } = require('../emails/amendments/manual-amendment-decision-email-variables');
 
 // checks if amendment exists and if eligible to send email
-const amendmentEmailEligible = (amendment) => {
-  if (amendment && (amendment?.automaticApprovalEmail || amendment?.ukefDecision?.managersDecisionEmail || amendment?.bankDecision?.banksDecisionEmail
-    || amendment?.sendFirstTaskEmail)) {
-    return true;
-  }
-  return false;
-};
+const amendmentEmailEligible = (amendment) =>
+  amendment && (amendment?.automaticApprovalEmail || amendment?.ukefDecision?.managersDecisionEmail || amendment?.bankDecision?.banksDecisionEmail
+    || amendment?.sendFirstTaskEmail);
 
 const isApprovedWithConditions = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
 
-  if (value === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS) {
-    return true;
-  }
-  return false;
+  return value === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS;
 };
 
 // checks if any are declined
 const isDeclined = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
 
-  if (value === AMENDMENT_UW_DECISION.DECLINED || coverEndDate === AMENDMENT_UW_DECISION.DECLINED) {
-    return true;
-  }
-  return false;
+  return value === AMENDMENT_UW_DECISION.DECLINED || coverEndDate === AMENDMENT_UW_DECISION.DECLINED;
 };
 
 // checks if value or coverEndDate are approved without conditions
 const isApprovedWithoutConditions = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
 
-  if (value === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS) {
-    return true;
-  }
-  return false;
+  return value === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS;
 };
 
 const sendAutomaticAmendmentEmail = async (amendmentVariables) => {
@@ -247,15 +234,16 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
 const amendmentDeclined = (amendment) => {
   const { changeFacilityValue, changeCoverEndDate } = amendment;
   const { value, coverEndDate } = amendment.ukefDecision;
+  const { DECLINED } = UNDERWRITER_MANAGER_DECISIONS;
 
   // Ensure not all of the amendment requests are declined
 
   // Dual amendment request
   if (changeFacilityValue && changeCoverEndDate) {
-    return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED && coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    return value === DECLINED && coverEndDate === DECLINED;
   }
   // Single amendment request
-  return value === UNDERWRITER_MANAGER_DECISIONS.DECLINED || coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+  return value === DECLINED || coverEndDate === DECLINED;
 };
 
 /**

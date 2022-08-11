@@ -9,7 +9,7 @@
  * All the function have argument validation check and return object verification in
  * case err object does not have expected properties due to network connection, SSL verification or other issues.
  */
-const endpoint = process.env.MULESOFT_API_UKEF_TF_EA_URL;
+const acbs = process.env.MULESOFT_API_UKEF_TF_EA_URL;
 const username = process.env.MULESOFT_API_KEY;
 const password = process.env.MULESOFT_API_SECRET;
 const axios = require('axios');
@@ -20,7 +20,7 @@ const getACBS = async (apiRef) => {
   if (!!apiRef) {
     return axios({
       method: 'get',
-      url: `${endpoint}/${apiRef}`,
+      url: `${acbs}/${apiRef}`,
       auth: {
         username,
         password,
@@ -46,7 +46,7 @@ const postToAcbs = async (apiRef, acbsInput) => {
   if (!!apiRef && !!acbsInput) {
     return axios({
       method: 'post',
-      url: `${endpoint}/${apiRef}`,
+      url: `${acbs}/${apiRef}`,
       auth: {
         username,
         password,
@@ -79,7 +79,7 @@ const putToAcbs = async (apiRef, acbsInput, etag) => {
 
     return axios({
       method: 'put',
-      url: `${endpoint}/${apiRef}`,
+      url: `${acbs}/${apiRef}`,
       auth: {
         username,
         password,
@@ -113,7 +113,7 @@ const patchToAcbs = async (apiRef, acbsInput, eTag) => {
 
     return axios({
       method: 'patch',
-      url: `${endpoint}/${apiRef}`,
+      url: `${acbs}/${apiRef}`,
       auth: {
         username,
         password,
