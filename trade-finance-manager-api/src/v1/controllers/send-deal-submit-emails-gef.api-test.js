@@ -49,6 +49,14 @@ describe('send-deal-submit-emails - GEF', () => {
       template: {},
     },
     bankResponse: [],
+    pimEmailResponse: {
+      content: {
+        body: {},
+      },
+      id: 'MOCK-NOTIFY-TEMPLATE-ID',
+      email: 'mock@testing.com',
+      template: {},
+    },
   };
 
   beforeEach(() => {
