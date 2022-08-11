@@ -1,6 +1,5 @@
 const api = require('../../../../v1/api');
 const mapTenor = require('./mapTenor');
-const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../../../constants/deals');
 const { FACILITY_TYPE } = require('../../../../constants/facilities');
 
 describe('mapTenor()', () => {
@@ -33,18 +32,13 @@ describe('mapTenor()', () => {
     },
   };
 
-  const mockAmendment = {
+  const mockAmendmentDateResponse = {
     coverEndDate: coverEndDateUnix,
     amendmentId: '1234',
-    requireUkefApproval: true,
-    ukefDecision: {
-      submitted: true,
-      coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
-    },
   };
 
   it('should return tenor from facility when no amendment exists', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
 
     const result = await mapTenor(mockFacility.facilitySnapshot, mockFacility.tfm);
 
@@ -54,7 +48,7 @@ describe('mapTenor()', () => {
   });
 
   it('should return tenor from facility when no completed amendment exists', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
 
     const result = await mapTenor(mockFacility.facilitySnapshot, mockFacility.tfm);
 
@@ -64,9 +58,7 @@ describe('mapTenor()', () => {
   });
 
   it('should return tenor from amendment when completed amendment exists', async () => {
-    mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
-
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedDateAmendment = () => Promise.resolve(mockAmendmentDateResponse);
     api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
 
     const result = await mapTenor(mockFacility.facilitySnapshot, mockFacility.tfm);

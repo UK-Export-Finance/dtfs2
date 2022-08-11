@@ -8,7 +8,9 @@ const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-ca
 
 describe('mapGefDeal', () => {
   it('should return mapped deal', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const mockDeal = {
       _id: MOCK_GEF_DEAL._id,

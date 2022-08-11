@@ -2,7 +2,6 @@ const mapTotals = require('./mapTotals');
 const { formattedNumber } = require('../../../../utils/number');
 const api = require('../../../../v1/api');
 const { CURRENCY } = require('../../../../constants/currency.constant');
-const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../../../constants/deals');
 
 describe('mapTotals', () => {
   const mockBondAndLoanFacilities = [
@@ -88,19 +87,16 @@ describe('mapTotals', () => {
     },
   ];
 
-  const mockAmendment = {
+  const mockAmendmentValueResponse = {
     value: 5000,
     currency: CURRENCY.GBP,
     amendmentId: '1234',
-    requireUkefApproval: true,
-    ukefDecision: {
-      submitted: true,
-      value: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
-    },
   };
 
   beforeEach(() => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
   });
 
   describe('with bond & loan facilities', () => {
@@ -117,7 +113,7 @@ describe('mapTotals', () => {
     });
 
     it('should return formatted total of all facility values when amendment not complete', async () => {
-      api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+      api.getLatestCompletedValueAmendment = () => Promise.resolve({});
 
       const result = await mapTotals(mockBondAndLoanFacilities);
 
@@ -131,9 +127,7 @@ describe('mapTotals', () => {
     });
 
     it('should return formatted total of all amended values when amendment completed', async () => {
-      mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
-
-      api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+      api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
 
       const result = await mapTotals(mockBondAndLoanFacilities);
 
@@ -145,7 +139,7 @@ describe('mapTotals', () => {
       const notExpected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).not.toEqual(notExpected);
 
-      const newTotal = mockAmendment.value * mockBondAndLoanFacilities.length;
+      const newTotal = mockAmendmentValueResponse.value * mockBondAndLoanFacilities.length;
       const expected = `${CURRENCY.GBP} ${formattedNumber(newTotal)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
@@ -164,9 +158,7 @@ describe('mapTotals', () => {
     });
 
     it('should return formatted total of all facility values when amendment not complete', async () => {
-      mockAmendment.bankDecision = { decision: null };
-
-      api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+      api.getLatestCompletedValueAmendment = () => Promise.resolve({});
       const result = await mapTotals(mockCashAndContingentFacilities);
 
       const totalValue = Number(mockCashAndContingentFacilities[0].facilitySnapshot.value)
@@ -178,9 +170,7 @@ describe('mapTotals', () => {
     });
 
     it('should return formatted total of all amended values when amendment is complete', async () => {
-      mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
-
-      api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+      api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
       const result = await mapTotals(mockCashAndContingentFacilities);
 
       const totalValue = Number(mockCashAndContingentFacilities[0].facilitySnapshot.value)
@@ -190,7 +180,7 @@ describe('mapTotals', () => {
       const notExpected = `${CURRENCY.GBP} ${formattedNumber(totalValue)}`;
       expect(result.facilitiesValueInGBP).not.toEqual(notExpected);
 
-      const newTotal = mockAmendment.value * mockCashAndContingentFacilities.length;
+      const newTotal = mockAmendmentValueResponse.value * mockCashAndContingentFacilities.length;
       const expected = `${CURRENCY.GBP} ${formattedNumber(newTotal)}`;
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
@@ -209,9 +199,7 @@ describe('mapTotals', () => {
   });
 
   it('should return formatted total of all facilities ukefExposure when amendment not complete', async () => {
-    mockAmendment.bankDecision = { decision: null };
-
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
     const result = await mapTotals(mockBondAndLoanFacilities);
 
     const totalUkefExposure = mockBondAndLoanFacilities[0].tfm.ukefExposure
@@ -224,9 +212,7 @@ describe('mapTotals', () => {
   });
 
   it('should return formatted total of all amended ukefExposure when amendment complete', async () => {
-    mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
-
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
     const result = await mapTotals(mockBondAndLoanFacilities);
 
     const totalUkefExposure = 5000;

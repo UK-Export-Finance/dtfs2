@@ -30,6 +30,7 @@
     },
     "eligibility" : {
         "status" : "Incomplete",
+        "version": 5,
         "criteria" : [
             {
                 "id" : 11,

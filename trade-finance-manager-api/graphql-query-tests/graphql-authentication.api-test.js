@@ -72,7 +72,9 @@ describe('graphql query - authentication', () => {
     });
 
     beforeEach(() => {
-      api.getLatestCompletedAmendment = () => Promise.resolve({});
+      api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+      api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+      api.getAmendmentById = () => Promise.resolve({});
     });
 
     it('GET - should return not authorised if missing auth key', async () => {

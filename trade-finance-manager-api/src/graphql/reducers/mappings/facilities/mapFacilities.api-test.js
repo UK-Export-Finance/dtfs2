@@ -105,7 +105,9 @@ describe('mapFacilities', () => {
   ];
 
   it('should map and format correct fields/values', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const result = await mapFacilities(mockFacilities, mockDealDetails, MOCK_DEAL_TFM);
 

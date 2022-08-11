@@ -342,19 +342,40 @@ const getCompletedAmendment = async (facilityId) => {
   }
 };
 
-const getLatestCompletedAmendment = async (facilityId) => {
+const getLatestCompletedValueAmendment = async (facilityId) => {
   const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/completed/latest`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/completed/latest-value`,
         headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the latest completed amendment %O', { response: err?.response?.data });
+      console.error('Unable to get the latest completed value amendment %O', { response: err?.response?.data });
+      return { status: 500, data: err?.response?.data };
+    }
+  } else {
+    console.error('Invalid facility Id');
+    return { status: 400, data: 'Invalid facility Id amendment Id provided' };
+  }
+};
+
+const getLatestCompletedDateAmendment = async (facilityId) => {
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/completed/latest-cover-end-date`,
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      return response.data;
+    } catch (err) {
+      console.error('Unable to get the latest completed coverEndDate amendment %O', { response: err?.response?.data });
       return { status: 500, data: err?.response?.data };
     }
   } else {
@@ -1015,7 +1036,8 @@ module.exports = {
   updateFacilityAmendment,
   getAmendmentInProgress,
   getCompletedAmendment,
-  getLatestCompletedAmendment,
+  getLatestCompletedValueAmendment,
+  getLatestCompletedDateAmendment,
   getAmendmentById,
   getAmendmentByFacilityId,
   getAmendmentsByDealId,

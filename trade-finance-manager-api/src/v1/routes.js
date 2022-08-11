@@ -144,7 +144,8 @@ openRouter.route('/facility/:facilityId/amendment/:amendmentId').put(amendmentCo
 openRouter.route('/facility/:facilityId/amendment/:amendmentId').get(amendmentController.getAmendmentById);
 openRouter.route('/facility/:facilityId/amendment/status/in-progress').get(amendmentController.getAmendmentInProgress);
 openRouter.route('/facility/:facilityId/amendment/status/completed').get(amendmentController.getCompletedAmendment);
-openRouter.route('/facility/:facilityId/amendment/status/completed/latest').get(amendmentController.getLatestCompletedAmendment);
+openRouter.route('/facility/:facilityId/amendment/status/completed/latest-value').get(amendmentController.getLatestCompletedValueAmendment);
+openRouter.route('/facility/:facilityId/amendment/status/completed/latest-cover-end-date').get(amendmentController.getLatestCompletedDateAmendment);
 openRouter.route('/deal/:dealId/amendments/').get(amendmentController.getAmendmentsByDealId);
 openRouter.route('/deal/:dealId/amendment/status/in-progress').get(amendmentController.getAmendmentInProgressByDealId);
 openRouter.route('/deal/:dealId/amendment/status/completed').get(amendmentController.getCompletedAmendmentByDealId);

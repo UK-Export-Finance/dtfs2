@@ -1,7 +1,6 @@
 const amendmentHelpers = require('./amendment.helpers');
 const { CURRENCY } = require('../../constants/currency.constant');
 const { FACILITY_TYPE } = require('../../constants/facilities');
-const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
 const api = require('../../v1/api');
 
 describe('amendmentChangeValueExportCurrency()', () => {
@@ -187,19 +186,10 @@ describe('calculateAmendmentTenor()', () => {
 });
 
 describe('calculateAmendmentTotalExposure()', () => {
-  const mockAmendment = {
+  const mockAmendmentValueResponse = {
     value: 5000,
     currency: CURRENCY.GBP,
     amendmentId: '1234',
-    requireUkefApproval: true,
-    ukefDecision: {
-      submitted: true,
-      value: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
-    },
-    bankDecision: {
-      submitted: true,
-      decision: AMENDMENT_BANK_DECISION.PROCEED,
-    },
   };
 
   const mockFacility = {
@@ -215,16 +205,15 @@ describe('calculateAmendmentTotalExposure()', () => {
   };
 
   it('should return exposure value when amendment in progress ', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
 
     const result = await amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
-    const expected = mockAmendment.value * (mockFacility.facilitySnapshot.coverPercentage / 100);
+    const expected = mockAmendmentValueResponse.value * (mockFacility.facilitySnapshot.coverPercentage / 100);
     expect(result).toEqual(expected);
   });
 
   it('should null if amendment not completed', async () => {
-    mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.null };
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
 
     const result = await amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
     expect(result).toBeNull();

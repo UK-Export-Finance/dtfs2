@@ -40,6 +40,7 @@ const deal = {
   },
   eligibility: {
     status: 'Completed',
+    version: 5,
     criteria: [
       {
         id: 11,

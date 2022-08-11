@@ -46,7 +46,9 @@ describe('graphql mutation - update underwriting managers decision', () => {
   });
 
   beforeEach(() => {
-    externalApis.getLatestCompletedAmendment = () => Promise.resolve({});
+    externalApis.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    externalApis.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    externalApis.getAmendmentById = () => Promise.resolve({});
   });
 
   it('should return updated decision with timestamp', async () => {
