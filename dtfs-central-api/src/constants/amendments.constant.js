@@ -11,7 +11,14 @@ const AMENDMENT_BANK_DECISION = {
   AWAITING_DECISION: 'Awaiting decision',
 };
 
+const AMENDMENT_MANAGER_DECISIONS = {
+  APPROVED_WITH_CONDITIONS: 'Approved with conditions',
+  APPROVED_WITHOUT_CONDITIONS: 'Approved without conditions',
+  DECLINED: 'Declined',
+};
+
 module.exports = {
   AMENDMENT_STATUS,
-  AMENDMENT_BANK_DECISION
+  AMENDMENT_BANK_DECISION,
+  AMENDMENT_MANAGER_DECISIONS
 };

@@ -24,8 +24,22 @@ describe('gef deal with amendments', () => {
     },
   };
 
+  const mockAmendmentValueResponse = {
+    value: 5000,
+    currency: CURRENCY.GBP,
+    amendmentId: '1234',
+  };
+
+  const mockAmendmentDateResponse = {
+    coverEndDate: coverEndDateUnix,
+    amendmentId: '1234',
+
+  };
+
   it('should return original deal as amendment not fully complete', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const mockBSSDeal = {
       _id: MOCK_DEAL_AIN_SUBMITTED._id,
@@ -58,7 +72,9 @@ describe('gef deal with amendments', () => {
     MOCK_DEAL_AIN_SUBMITTED.loanTransactions.items[0]['requestedCoverStartDate-month'] = '01';
     MOCK_DEAL_AIN_SUBMITTED.loanTransactions.items[0]['requestedCoverStartDate-day'] = '01';
 
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const mockBSSDeal = {
       _id: MOCK_DEAL_AIN_SUBMITTED._id,
@@ -76,7 +92,9 @@ describe('gef deal with amendments', () => {
 
     const originalResult = await dealReducer(mockBSSDeal);
 
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
+    api.getLatestCompletedDateAmendment = () => Promise.resolve(mockAmendmentDateResponse);
+    api.getAmendmentById = () => Promise.resolve(mockAmendment);
 
     const amendmentResult = {
       _id: mockBSSDeal._id,
@@ -102,7 +120,9 @@ describe('gef deal with amendments', () => {
     mockAmendment.ukefDecision.coverEndDate = AMENDMENT_UW_DECISION.DECLINED;
     mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
 
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const mockBSSDeal = {
       _id: MOCK_DEAL_AIN_SUBMITTED._id,
@@ -121,7 +141,9 @@ describe('gef deal with amendments', () => {
 
     const originalResult = await dealReducer(mockBSSDeal);
 
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve(mockAmendment);
 
     const amendmentResult = {
       _id: mockBSSDeal._id,

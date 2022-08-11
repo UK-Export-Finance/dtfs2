@@ -3,7 +3,6 @@ const dealReducer = require('./deal');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 const api = require('../../v1/api');
 const { CURRENCY } = require('../../constants/currency.constant');
-const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
 
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILIIES = require('../../v1/__mocks__/mock-cash-contingent-facilities');
@@ -11,21 +10,20 @@ const MOCK_CASH_CONTINGENT_FACILIIES = require('../../v1/__mocks__/mock-cash-con
 describe('gef deal with amendments', () => {
   const coverEndDateUnix = 1658403289;
 
-  const mockAmendment = {
-    coverEndDate: coverEndDateUnix,
+  const mockAmendmentValueResponse = {
     value: 5000,
     currency: CURRENCY.GBP,
     amendmentId: '1234',
-    requireUkefApproval: true,
-    ukefDecision: {
-      submitted: true,
-      value: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
-      coverEndDate: AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS,
-    },
+  };
+
+  const mockAmendmentDateResponse = {
+    coverEndDate: coverEndDateUnix,
+    amendmentId: '1234',
   };
 
   it('should return original deal as amendment not fully complete', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
 
     const mockGefDeal = {
       _id: MOCK_GEF_DEAL._id,
@@ -49,9 +47,8 @@ describe('gef deal with amendments', () => {
   });
 
   it('should return updated deal with completed amendment with 2 changes', async () => {
-    mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
-
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
 
     const mockGefDeal = {
       _id: MOCK_GEF_DEAL._id,
@@ -69,7 +66,8 @@ describe('gef deal with amendments', () => {
 
     const originalResult = await dealReducer(mockGefDeal);
 
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
+    api.getLatestCompletedDateAmendment = () => Promise.resolve(mockAmendmentDateResponse);
 
     const amendmentResult = await mapGefDeal(mockGefDeal);
 
@@ -85,10 +83,8 @@ describe('gef deal with amendments', () => {
   });
 
   it('should return updated deal with completed amendment with 1 changes if 1 accepted and 1 rejected', async () => {
-    mockAmendment.ukefDecision.coverEndDate = AMENDMENT_UW_DECISION.DECLINED;
-    mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
-
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
 
     const mockGefDeal = {
       _id: MOCK_GEF_DEAL._id,
@@ -105,8 +101,8 @@ describe('gef deal with amendments', () => {
     };
 
     const originalResult = await dealReducer(mockGefDeal);
-
-    api.getLatestCompletedAmendment = () => Promise.resolve(mockAmendment);
+    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
 
     const amendmentResult = await mapGefDeal(mockGefDeal);
 

@@ -54,7 +54,8 @@ const mockGefDeal = {
 
 describe('reducer - deals', () => {
   beforeEach(() => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
   });
 
   describe('mapBssDeal', () => {
@@ -131,5 +132,3 @@ describe('reducer - deals', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */

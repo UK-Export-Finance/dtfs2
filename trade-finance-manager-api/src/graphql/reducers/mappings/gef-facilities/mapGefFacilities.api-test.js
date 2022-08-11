@@ -5,7 +5,9 @@ const api = require('../../../../v1/api');
 
 describe('mapGefFacilities', () => {
   it('should return mapped GEF facilities', async () => {
-    api.getLatestCompletedAmendment = () => Promise.resolve({});
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getAmendmentById = () => Promise.resolve({});
 
     const mockDealSnapshot = {
       facilities: [

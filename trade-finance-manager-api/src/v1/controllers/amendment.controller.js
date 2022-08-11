@@ -91,13 +91,22 @@ const getCompletedAmendment = async (req, res) => {
   return res.status(422).send({ data: 'Unable to get the completed amendment' });
 };
 
-const getLatestCompletedAmendment = async (req, res) => {
+const getLatestCompletedValueAmendment = async (req, res) => {
   const { facilityId } = req.params;
-  const amendment = await api.getLatestCompletedAmendment(facilityId);
+  const amendment = await api.getLatestCompletedValueAmendment(facilityId);
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ data: 'Unable to get the latest completed amendment' });
+  return res.status(422).send({ data: 'Unable to get the latest completed value amendment' });
+};
+
+const getLatestCompletedDateAmendment = async (req, res) => {
+  const { facilityId } = req.params;
+  const amendment = await api.getLatestCompletedDateAmendment(facilityId);
+  if (amendment) {
+    return res.status(200).send(amendment);
+  }
+  return res.status(422).send({ data: 'Unable to get the latest completed coverEndDate amendment' });
 };
 
 const getAmendmentById = async (req, res) => {
@@ -235,7 +244,6 @@ module.exports = {
   updateFacilityAmendment,
   getAmendmentInProgress,
   getCompletedAmendment,
-  getLatestCompletedAmendment,
   getAmendmentById,
   getAmendmentByFacilityId,
   getAmendmentsByDealId,
@@ -245,4 +253,6 @@ module.exports = {
   getAllAmendmentsInProgress,
   sendAmendmentEmail,
   updateTFMDealLastUpdated,
+  getLatestCompletedValueAmendment,
+  getLatestCompletedDateAmendment,
 };

@@ -2,7 +2,6 @@ const api = require('../../../api');
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { amendFacilityValueValidation } = require('./validation/amendFacilityValue.validate');
 const { formattedNumber } = require('../../../helpers/number');
-const { latestAmendmentValueAccepted } = require('../../helpers/amendments.helper');
 
 const getAmendFacilityValue = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -13,19 +12,15 @@ const getAmendFacilityValue = async (req, res) => {
   }
 
   const facility = await api.getFacility(facilityId);
-  const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId);
+  const { data: latestAmendmentValue } = await api.getLatestCompletedValueAmendment(facilityId);
 
   const { dealId, value } = amendment;
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
   const { currency } = facility.facilitySnapshot;
   let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
 
-  // if currentValue exists, then use it, else use from snapshot
-  if (latestAmendment.currentValue) {
-    currentFacilityValue = `${currency} ${formattedNumber(latestAmendment.currentValue)}`;
-  }
-  if (latestAmendmentValueAccepted(latestAmendment)) {
-    currentFacilityValue = `${currency} ${formattedNumber(latestAmendment.value)}`;
+  if (latestAmendmentValue?.value) {
+    currentFacilityValue = `${currency} ${formattedNumber(latestAmendmentValue.value)}`;
   }
 
   return res.render('case/amendments/amendment-facility-value.njk', {
@@ -45,18 +40,13 @@ const postAmendFacilityValue = async (req, res) => {
 
   const facility = await api.getFacility(facilityId);
 
-  const { data: latestAmendment } = await api.getLatestCompletedAmendment(facilityId);
+  const { data: latestAmendmentValue } = await api.getLatestCompletedValueAmendment(facilityId);
   const { currency } = facility.facilitySnapshot;
   let { coveredPercentage } = facility.facilitySnapshot;
   let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
 
-  // if currentValue exists, then use it, else use from snapshot
-  if (latestAmendment.currentValue) {
-    currentFacilityValue = `${currency} ${formattedNumber(latestAmendment.currentValue)}`;
-  }
-
-  if (latestAmendmentValueAccepted(latestAmendment)) {
-    currentFacilityValue = `${currency} ${formattedNumber(latestAmendment.value)}`;
+  if (latestAmendmentValue?.value) {
+    currentFacilityValue = `${currency} ${formattedNumber(latestAmendmentValue.value)}`;
   }
 
   const { errorsObject, amendFacilityValueErrors } = amendFacilityValueValidation(currentFacilityValue, value, currency);
