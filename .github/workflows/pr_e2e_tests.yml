@@ -97,7 +97,7 @@ jobs:
     - name: Run GEF-UI E2E tests
       uses: cypress-io/github-action@v4
       with:
-        record: true
+        record: false
         parallel: false
         browser: chrome
         group: 'GEF UI'
@@ -156,7 +156,7 @@ jobs:
     - name: Run E2E tests
       uses: cypress-io/github-action@v4
       with:
-        record: true
+        record: false
         parallel: false
         browser: chrome
         group: 'Portal UI'
@@ -215,7 +215,7 @@ jobs:
     - name: Run E2E tests
       uses: cypress-io/github-action@v4
       with:
-        record: true
+        record: false
         parallel: false
         browser: chrome
         group: 'TFM UI'
@@ -277,7 +277,7 @@ jobs:
     - name: Run E2E tests
       uses: cypress-io/github-action@v4
       with:
-        record: true
+        record: false
         parallel: false
         browser: chrome
         group: 'TFM Submit'
