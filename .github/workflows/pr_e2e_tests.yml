@@ -53,7 +53,7 @@ env:
 jobs:
   set-environment:
     name: Set Environment
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
     steps:
@@ -67,9 +67,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
-    strategy:
-      fail-fast: false
+    runs-on: ubuntu-latest
       matrix:
         containers: [ 1, 2, 3, 4 ]
 
@@ -97,8 +95,8 @@ jobs:
     - name: Run GEF-UI E2E tests
       uses: cypress-io/github-action@v4
       with:
-        record: true
-        parallel: true
+        record: false
+        parallel: false
         browser: chrome
         group: 'GEF UI'
         project: ./e2e-tests/gef
@@ -126,9 +124,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
-    strategy:
-      fail-fast: false
+    runs-on: ubuntu-latest
       matrix:
         containers: [ 1, 2, 3, 4 ]
 
@@ -156,8 +152,8 @@ jobs:
     - name: Run E2E tests
       uses: cypress-io/github-action@v4
       with:
-        record: true
-        parallel: true
+        record: false
+        parallel: false
         browser: chrome
         group: 'Portal UI'
         project: ./e2e-tests/portal
@@ -185,11 +181,9 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
-    strategy:
-      fail-fast: false
+    runs-on: ubuntu-latest
       matrix:
-        containers: [ 1, 2, 3, 4 ]
+        containers: [ 1, 2, 3 ]
 
     # Cancel Previous runs
     concurrency:
@@ -215,8 +209,8 @@ jobs:
     - name: Run E2E tests
       uses: cypress-io/github-action@v4
       with:
-        record: true
-        parallel: true
+        record: false
+        parallel: false
         browser: chrome
         group: 'TFM UI'
         project: ./e2e-tests/trade-finance-manager
@@ -245,11 +239,9 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, linux]
-    strategy:
-      fail-fast: false
+    runs-on: ubuntu-latest
       matrix:
-        containers: [ 1, 2, 3, 4 ]
+        containers: [ 1, 2, 3 ]
 
     # Cancel Previous runs
     concurrency:
@@ -277,8 +269,8 @@ jobs:
     - name: Run E2E tests
       uses: cypress-io/github-action@v4
       with:
-        record: true
-        parallel: true
+        record: false
+        parallel: false
         browser: chrome
         group: 'TFM Submit'
         project: ./e2e-tests/submit-to-trade-finance-manager
