@@ -69,7 +69,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux]
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         containers: [ 1, 2, 3, 4 ]
 
@@ -128,7 +128,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux]
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         containers: [ 1, 2, 3, 4 ]
 
@@ -187,7 +187,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux]
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         containers: [ 1, 2, 3, 4 ]
 
@@ -247,7 +247,7 @@ jobs:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux]
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         containers: [ 1, 2, 3, 4 ]
 
