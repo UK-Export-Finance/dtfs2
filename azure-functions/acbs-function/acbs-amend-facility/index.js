@@ -23,6 +23,8 @@ const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
 const CONSTANTS = require('../constants');
 
+const { FACILITY } = CONSTANTS;
+
 module.exports = df.orchestrator(function* amendACBSFacility(context) {
   try {
     const { amendment } = context.df.getInput();
@@ -107,7 +109,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
           if (loanId) {
             // 2.3.2 - UKEF Exposure
             // Loan amount - `Bond` facility types only
-            if (amendment.amount && facilitySnapshot.type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND) {
+            if (amendment.amount && facilitySnapshot.type === FACILITY.FACILITY_TYPE.BOND) {
               const result = yield context.df.callActivityWithRetry('activity-update-facility-loan-amount', retryOptions, {
                 loanId,
                 facilityId,

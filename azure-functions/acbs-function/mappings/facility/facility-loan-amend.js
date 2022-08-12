@@ -2,10 +2,12 @@ const CONSTANTS = require('../../constants');
 const { formatDate, now } = require('../../helpers/date');
 const helpers = require('./helpers');
 
+const { FACILITY } = CONSTANTS;
+
 const facilityLoanAmend = (amendments, facility, facilityMasterRecord) => {
   try {
     // Default facility loan record
-    let record = { portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1 };
+    let record = { portfolioIdentifier: FACILITY.PORTFOLIO.E1 };
     // De-structure
     const { amendment } = amendments;
     const { facilitySnapshot } = facility;

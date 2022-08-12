@@ -3,6 +3,8 @@ const moment = require('moment');
 const CONSTANTS = require('../../../constants');
 const { formatYear, formatTimestamp } = require('../../../helpers/date');
 
+const { PRODUCT } = CONSTANTS;
+
 /**
  * Evaluates facility's exposure period in months.
  * If `Unissued` then guarantee month value is returned.
@@ -35,13 +37,13 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
   }
 
   // New facility exposure calculation
-  if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
+  if (dealType === PRODUCT.TYPE.GEF) {
     // GEF
     const { exposurePeriodInMonths } = facility.tfm;
     const { hasBeenIssued, monthsOfCover } = facilitySnapshot;
 
     exposure = hasBeenIssued ? exposurePeriodInMonths : monthsOfCover;
-  } else if (dealType === CONSTANTS.PRODUCT.TYPE.BSS_EWCS) {
+  } else if (dealType === PRODUCT.TYPE.BSS_EWCS) {
     // BSS/EWCS
     let coverStartDate;
     const {
