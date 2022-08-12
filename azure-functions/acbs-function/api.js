@@ -1,4 +1,3 @@
-/* eslint-disable no-extra-boolean-cast */
 /**
  * ACBS Functions API Library deals with following HTTP Methods:
  * 1. GET
@@ -17,7 +16,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 const getACBS = async (apiRef) => {
-  if (!!apiRef) {
+  if (apiRef) {
     return axios({
       method: 'get',
       url: `${acbs}/${apiRef}`,

@@ -1,15 +1,14 @@
 const axios = require('axios');
 const { hasValidObjectId } = require('./helpers/hasValidObjectId.helper');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
-
-require('dotenv').config();
-
 const CONSTANTS = require('../constants');
+require('dotenv').config();
 
 const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const refDataUrl = process.env.REFERENCE_DATA_PROXY_URL;
 const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 const azureNumberGeneratorUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
+const { DURABLE_FUNCTIONS } = CONSTANTS;
 
 const findOnePortalDeal = async (dealId) => {
   try {
@@ -814,14 +813,14 @@ const amendACBSfacility = async (amendments, facility, deal) => {
   return {};
 };
 
-const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => {
+const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => {
   let functionUrl;
   switch (type) {
-    case CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS:
+    case DURABLE_FUNCTIONS.TYPE.ACBS:
       functionUrl = azureAcbsFunctionUrl;
       break;
 
-    case CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR:
+    case DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR:
       functionUrl = azureNumberGeneratorUrl;
       break;
 
@@ -829,7 +828,7 @@ const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url
   }
 
   let modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, functionUrl);
-  if (type === CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS) {
+  if (type === DURABLE_FUNCTIONS.TYPE.ACBS) {
     modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, functionUrl) : functionUrl;
   }
 
