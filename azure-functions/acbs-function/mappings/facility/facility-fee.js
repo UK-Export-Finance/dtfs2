@@ -55,7 +55,7 @@ const facilityFee = (deal, facility) => {
   // Multiple EWCS/BSS Fee records as per premium schedule - Array
     feeRecord = [];
     if (facility.tfm.premiumSchedule) {
-      facility.tfm.premiumSchedule.forEach((_premiumSchedule, index) => {
+      facility.tfm.premiumSchedule.forEach((premiumSchedule, index) => {
         feeRecord.push(constructFeeRecord(deal, facility, index));
       });
     }
