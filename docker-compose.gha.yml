@@ -249,7 +249,7 @@ services:
       resources:
         limits:
           cpus: "0.1"
-          memory: 300M
+          memory: 600M
 
   reverse-proxy:
     build: ./reverse-proxy
@@ -266,4 +266,4 @@ services:
       resources:
         limits:
           cpus: "0.01"
-          memory: 150M
+          memory: 600M
