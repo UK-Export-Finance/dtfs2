@@ -76,8 +76,8 @@ const AMENDMENT_BANK_DECISION = {
 };
 
 const AMENDMENT_STATUS = {
-  IN_PROGRESS: 'In progress',
   COMPLETED: 'Completed',
+  IN_PROGRESS: 'In progress',
   NOT_STARTED: 'Not started',
 };
 

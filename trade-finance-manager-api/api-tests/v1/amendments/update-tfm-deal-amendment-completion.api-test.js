@@ -3,6 +3,7 @@ const amendmentController = require('../../../src/v1/controllers/amendment.contr
 const { AMENDMENT_STATUS } = require('../../../src/constants/deals');
 const externalApis = require('../../../src/v1/api');
 const updateFacilityAmendment = require('../utils/updateFacilityAmendment.util');
+const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-submitted');
 
 describe('update tfm-deals on amendment completion', () => {
   const mockAmendment = {
@@ -27,6 +28,7 @@ describe('update tfm-deals on amendment completion', () => {
     updateDealSpy.mockClear();
     externalApis.getAmendmentById = jest.fn(() => Promise.resolve(mockAmendment));
     externalApis.updateFacilityAmendment = jest.fn(() => Promise.resolve(mockAmendment));
+    externalApis.findOneDeal = jest.fn(() => Promise.resolve(MOCK_GEF_AIN_DEAL));
   });
 
   afterEach(() => {
