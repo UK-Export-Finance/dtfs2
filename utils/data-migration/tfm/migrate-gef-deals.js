@@ -134,9 +134,9 @@ const actionSheets = async () => {
   const results = [];
   const searches = [
     ['ukefDealId', 'Deal Number', 1],
-    ['tfm.exporterCreditRating', 'Risk Status', 3],
-    // ['tfm.', 'Loss Given Default', 1],
-    // ['tfm.', 'Credit Rating Code', 1],
+    ['tfm.exporterCreditRating', 'Credit Rating Code', 3],
+    ['tfm.lossGivenDefault', 'Loss Given Default', 3],
+    ['tfm.parties.exporter.partyUrn', 'Exporter UR Number', 1]
   ];
 
   try {
