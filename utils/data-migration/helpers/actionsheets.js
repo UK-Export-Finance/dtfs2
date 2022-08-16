@@ -33,6 +33,13 @@ const format = (lookup, value) => {
     if (lookup === 'Credit Rating Code') {
       return CONSTANTS.DEAL.CREDIT_RATING[value];
     }
+    if (lookup === 'Loss Given Default') {
+      /**
+       * Convert Loss Given Default from `0.5` to `50`
+       * due Macro disabled during data fetch from action sheets.
+       * */
+      return typeof value === 'number' ? value * 100 : value;
+    }
   }
 
   return value;
@@ -52,7 +59,6 @@ const get = (data, search) => {
     const match = data.find((row) => Object.values(row).includes(lookup));
     const cells = Object.values(match);
     const value = cells[cell];
-
     return format(lookup, value);
   }
   return null;
