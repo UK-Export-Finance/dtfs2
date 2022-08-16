@@ -11,7 +11,6 @@ const RedisStore = require('connect-redis')(session);
 const routes = require('./routes');
 const eligibilityRoutes = require('./routes/contract/eligibility');
 const healthcheck = require('./healthcheck');
-const uploadTest = require('./upload-test');
 const configureNunjucks = require('./nunjucks-configuration');
 const { csrf: csrfToken, seo, security } = require('./routes/middleware');
 
@@ -102,7 +101,6 @@ app.use(morgan('dev', {
 }));
 
 app.use(healthcheck);
-app.use(uploadTest);
 
 app.use('/', routes);
 
