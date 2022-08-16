@@ -1,25 +1,25 @@
 const { formattedNumber } = require('../../../../utils/number');
-const { calculateNewFacilityValue, calculateAmendmentTotalExposure } = require('../../../helpers/amendment.helpers');
+const { calculateNewFacilityValue, calculateAmendmentTotalExposure, findLatestCompletedAmendment } = require('../../../helpers/amendment.helpers');
 const isValidFacility = require('../../../helpers/isValidFacility.helper');
-const api = require('../../../../v1/api');
 const { CURRENCY } = require('../../../../constants/currency.constant');
 
-const mapTotals = async (facilities) => {
+const mapTotals = (facilities) => {
   const totals = {};
 
   // total value of all facilities
-  const facilitiesValue = await Promise.all(facilities.map(async (facility) => {
+  const facilitiesValue = facilities.map((facility) => {
     if (isValidFacility(facility)) {
-      const { facilitySnapshot, tfm, _id } = facility;
-
-      const latestCompletedAmendmentValue = await api.getLatestCompletedValueAmendment(_id);
+      const { facilitySnapshot, tfm } = facility;
 
       // if latest amendment then returns value of new amendment
-      if (latestCompletedAmendmentValue?.value) {
+      if (facility?.amendments?.length > 0) {
         const { exchangeRate } = tfm;
+        const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
 
-        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendmentValue);
-        return Number(valueInGBP);
+        if (latestAmendmentTFM?.value) {
+          const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentTFM.value);
+          return Number(valueInGBP);
+        }
       }
 
       if (tfm.facilityValueInGBP) {
@@ -35,17 +35,17 @@ const mapTotals = async (facilities) => {
       return Number(facilitySnapshot.value);
     }
     return null;
-  }));
+  });
 
   const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
 
   totals.facilitiesValueInGBP = `${CURRENCY.GBP} ${formattedFacilitiesValue}`;
 
   // maps through facility and returns promise with exposure array
-  let mappedExposureTotal = facilities.map(async (f) => {
+  const mappedExposureTotal = facilities.map((f) => {
     // if amendment completed, then returns exposure value of amendment
-    if (await calculateAmendmentTotalExposure(f)) {
-      const amendmentExposureValue = await calculateAmendmentTotalExposure(f);
+    if (calculateAmendmentTotalExposure(f)) {
+      const amendmentExposureValue = calculateAmendmentTotalExposure(f);
       return amendmentExposureValue;
     }
 
@@ -55,8 +55,6 @@ const mapTotals = async (facilities) => {
 
     return null;
   });
-  // resolves mapped exposure promise
-  mappedExposureTotal = await Promise.all(mappedExposureTotal);
 
   // total ukef exposure for all facilities
   const ukefExposureArray = [...mappedExposureTotal];

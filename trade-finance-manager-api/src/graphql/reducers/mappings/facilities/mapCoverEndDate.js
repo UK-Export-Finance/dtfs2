@@ -1,23 +1,21 @@
 const { fromUnixTime, format } = require('date-fns');
 const { hasValue } = require('../../../../utils/string');
 const { formatYear } = require('../../../../utils/date');
-const api = require('../../../../v1/api');
+const { findLatestCompletedAmendment } = require('../../../helpers/amendment.helpers');
 
-const mapCoverEndDate = async (day, month, year, facilitySnapshot) => {
+const mapCoverEndDate = (day, month, year, facility) => {
   const hasCoverEndDate = (hasValue(day) && hasValue(month) && hasValue(year));
-
   if (hasCoverEndDate) {
     let dayToUse = day;
     let monthToUse = month;
     let yearToUse = year;
 
-    if (facilitySnapshot) {
-      const { _id } = facilitySnapshot;
+    if (facility?.amendments?.length > 0) {
+      const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
 
-      const latestCompletedAmendmentCoverEndDate = await api.getLatestCompletedDateAmendment(_id);
+      if (latestAmendmentTFM?.coverEndDate) {
+        const { coverEndDate } = latestAmendmentTFM;
 
-      if (latestCompletedAmendmentCoverEndDate?.coverEndDate) {
-        const { coverEndDate } = latestCompletedAmendmentCoverEndDate;
         // maps new coverEndDate from unix timestamp in amendment
         dayToUse = format(fromUnixTime(coverEndDate), 'dd');
         monthToUse = format(fromUnixTime(coverEndDate), 'MM');

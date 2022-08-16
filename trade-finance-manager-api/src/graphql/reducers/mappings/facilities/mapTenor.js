@@ -1,21 +1,20 @@
-const api = require('../../../../v1/api');
 const mapTenorDate = require('./mapTenorDate');
-const { calculateAmendmentTenor } = require('../../../helpers/amendment.helpers');
+const { findLatestCompletedAmendment } = require('../../../helpers/amendment.helpers');
 
 // maps tenor from new amendment coverEndDate or from original facility
-const mapTenor = async (facilitySnapshot, facilityTfm) => {
+const mapTenor = (facilitySnapshot, facilityTfm, facility) => {
   const { facilityStage, ukefGuaranteeInMonths: monthsOfCover } = facilitySnapshot;
   const { exposurePeriodInMonths } = facilityTfm;
 
   // sets original exposure period from facility
   let updatedExposurePeriodInMonths = exposurePeriodInMonths;
 
-  if (facilitySnapshot?._id) {
-    const { _id } = facilitySnapshot;
-    const latestCompletedAmendmentCoverEndDate = await api.getLatestCompletedDateAmendment(_id);
-    if (latestCompletedAmendmentCoverEndDate?.coverEndDate) {
+  if (facility?.amendments?.length > 0) {
+    const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
+
+    if (latestAmendmentTFM?.amendmentExposurePeriodInMonths) {
       // if amendment coverEndDate change, then calculates new tenor period
-      updatedExposurePeriodInMonths = await calculateAmendmentTenor(facilitySnapshot, latestCompletedAmendmentCoverEndDate);
+      updatedExposurePeriodInMonths = latestAmendmentTFM.amendmentExposurePeriodInMonths;
     }
   }
 

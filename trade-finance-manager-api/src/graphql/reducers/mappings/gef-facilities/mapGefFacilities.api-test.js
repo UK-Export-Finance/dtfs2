@@ -1,14 +1,9 @@
 const mapGefFacilities = require('./mapGefFacilities');
 const mapGefFacility = require('./mapGefFacility');
 const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
-const api = require('../../../../v1/api');
 
 describe('mapGefFacilities', () => {
-  it('should return mapped GEF facilities', async () => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-    api.getAmendmentById = () => Promise.resolve({});
-
+  it('should return mapped GEF facilities', () => {
     const mockDealSnapshot = {
       facilities: [
         {
@@ -24,11 +19,11 @@ describe('mapGefFacilities', () => {
 
     const mockDealTfm = {};
 
-    const result = await mapGefFacilities(mockDealSnapshot, mockDealTfm);
+    const result = mapGefFacilities(mockDealSnapshot, mockDealTfm);
 
     const expected = [
-      await mapGefFacility(mockDealSnapshot.facilities[0], mockDealSnapshot, mockDealTfm),
-      await mapGefFacility(mockDealSnapshot.facilities[1], mockDealSnapshot, mockDealTfm),
+      mapGefFacility(mockDealSnapshot.facilities[0], mockDealSnapshot, mockDealTfm),
+      mapGefFacility(mockDealSnapshot.facilities[1], mockDealSnapshot, mockDealTfm),
     ];
 
     expect(result).toEqual(expected);

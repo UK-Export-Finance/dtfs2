@@ -1,22 +1,21 @@
 const { formattedNumber } = require('../../../../utils/number');
-const api = require('../../../../v1/api');
 const { CURRENCY } = require('../../../../constants/currency.constant');
-const { calculateNewFacilityValue } = require('../../../helpers/amendment.helpers');
+const { calculateNewFacilityValue, findLatestCompletedAmendment } = require('../../../helpers/amendment.helpers');
 
-const mapFacilityValue = async (currencyId, value, facility) => {
+const mapFacilityValue = (currencyId, value, facility) => {
   if (facility) {
     const {
-      _id,
       tfm: facilityTfm,
     } = facility;
 
-    const latestCompletedAmendmentValue = await api.getLatestCompletedValueAmendment(_id);
-
-    if (latestCompletedAmendmentValue?.value) {
+    if (facility?.amendments?.length > 0) {
       const { exchangeRate } = facilityTfm;
+      const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
 
-      const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendmentValue);
-      return `${CURRENCY.GBP} ${formattedNumber(valueInGBP)}`;
+      if (latestAmendmentTFM?.value) {
+        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentTFM.value);
+        return `${CURRENCY.GBP} ${formattedNumber(valueInGBP)}`;
+      }
     }
 
     if (facilityTfm?.facilityValueInGBP) {

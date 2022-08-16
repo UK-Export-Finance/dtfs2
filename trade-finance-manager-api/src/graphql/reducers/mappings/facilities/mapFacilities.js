@@ -1,12 +1,12 @@
 const mapFacility = require('./mapFacility');
 const mapFacilityTfm = require('./mapFacilityTfm');
 
-const mapFacilities = async (facilities, dealDetails, dealTfm) => {
-  const mappedFacility = await Promise.all(facilities.map(async (f) => ({
+const mapFacilities = (facilities, dealDetails, dealTfm) => {
+  const mappedFacility = facilities.map((f) => ({
     _id: f._id,
-    facilitySnapshot: await mapFacility(f.facilitySnapshot, f.tfm, dealDetails, f),
-    tfm: await mapFacilityTfm(f.tfm, dealTfm, f),
-  })));
+    facilitySnapshot: mapFacility(f.facilitySnapshot, f.tfm, dealDetails, f),
+    tfm: mapFacilityTfm(f.tfm, dealTfm, f),
+  }));
 
   return mappedFacility;
 };

@@ -2,19 +2,13 @@ const dealReducer = require('./deal');
 const mapDealSnapshot = require('./mappings/deal/mapDealSnapshot');
 const mapDealTfm = require('./mappings/deal/dealTfm/mapDealTfm');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
-const api = require('../../v1/api');
 
 const MOCK_DEAL_AIN_SUBMITTED = require('../../v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILIIES = require('../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('reducer - deal', () => {
-  beforeEach(() => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-  });
-
-  it('should return mapped object', async () => {
+  it('should return mapped object', () => {
     const mockDeal = {
       _id: MOCK_DEAL_AIN_SUBMITTED._id,
       dealSnapshot: {
@@ -39,11 +33,11 @@ describe('reducer - deal', () => {
       },
     };
 
-    const result = await dealReducer(mockDeal);
+    const result = dealReducer(mockDeal);
 
     const expected = {
       _id: mockDeal._id,
-      dealSnapshot: await mapDealSnapshot(mockDeal),
+      dealSnapshot: mapDealSnapshot(mockDeal),
       tfm: mapDealTfm(mockDeal),
     };
 
@@ -66,9 +60,9 @@ describe('reducer - deal', () => {
         tfm: {},
       };
 
-      const result = await dealReducer(mockGefDeal);
+      const result = dealReducer(mockGefDeal);
 
-      const expected = await mapGefDeal(mockGefDeal);
+      const expected = mapGefDeal(mockGefDeal);
 
       expect(result).toEqual(expected);
     });

@@ -10,6 +10,8 @@ const {
   canSendToAcbs,
   sendFirstTaskEmail,
   calculateUkefExposure,
+  addLatestAmendmentValue,
+  addLatestAmendmentDates,
 } = require('../helpers/amendment.helpers');
 
 const sendAmendmentEmail = async (amendmentId, facilityId) => {
@@ -71,6 +73,26 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
   }
 
   return null;
+};
+
+const createAmendmentTFMObject = async (amendmentId, facilityId) => {
+  try {
+    const latestValue = await api.getLatestCompletedValueAmendment(facilityId);
+    const latestCoverEndDate = await api.getLatestCompletedDateAmendment(facilityId);
+
+    let tfmToAdd = {};
+
+    tfmToAdd = await addLatestAmendmentValue(tfmToAdd, latestValue, facilityId);
+    tfmToAdd = await addLatestAmendmentDates(tfmToAdd, latestCoverEndDate, facilityId);
+
+    const payload = {
+      tfm: tfmToAdd,
+    };
+
+    await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+  } catch (error) {
+    console.error('TFM-API - unable to add TFM object to amendment', { error });
+  }
 };
 
 const getAmendmentInProgress = async (req, res) => {
@@ -218,6 +240,7 @@ const updateFacilityAmendment = async (req, res) => {
 
     if (createdAmendment && tfmLastUpdated) {
       await updateTFMDealLastUpdated(amendmentId, facilityId);
+      await createAmendmentTFMObject(amendmentId, facilityId);
     }
 
     // Fetch facility object
