@@ -46,7 +46,7 @@ const facilityLoan = (deal, facility, acbsData) => {
       issueDate,
       expiryDate: guaranteeExpiryDate,
       spreadRate: facility.facilitySnapshot.guaranteeFee || Number(facility.facilitySnapshot.guaranteeFeePayableByBank),
-      nextDueDate: helpers.getNextDueDate(facility, deal.dealSnapshot.dealType),
+      nextDueDate: helpers.getNextDueDate(facility),
       yearBasis: helpers.getYearBasis(facility),
       loanBillingFrequencyType: helpers.getFeeType(facility),
     };
