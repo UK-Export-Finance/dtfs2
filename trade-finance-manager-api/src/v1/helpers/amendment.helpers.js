@@ -1,6 +1,11 @@
 const api = require('../api');
 const sendTfmEmail = require('../controllers/send-tfm-email');
-const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
+const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
+const {
+  AMENDMENT_UW_DECISION,
+  AMENDMENT_BANK_DECISION,
+  AMENDMENT_STATUS,
+} = require('../../constants/deals');
 const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { automaticAmendmentEmailVariables } = require('../emails/amendments/automatic-approval-email-variables');
 const { generateTaskEmailVariables } = require('./generate-task-email-variables');
@@ -14,41 +19,28 @@ const {
 } = require('../emails/amendments/manual-amendment-decision-email-variables');
 
 // checks if amendment exists and if eligible to send email
-const amendmentEmailEligible = (amendment) => {
-  if (amendment && (amendment?.automaticApprovalEmail || amendment?.ukefDecision?.managersDecisionEmail || amendment?.bankDecision?.banksDecisionEmail
-    || amendment?.sendFirstTaskEmail)) {
-    return true;
-  }
-  return false;
-};
+const amendmentEmailEligible = (amendment) =>
+  amendment && (amendment?.automaticApprovalEmail || amendment?.ukefDecision?.managersDecisionEmail || amendment?.bankDecision?.banksDecisionEmail
+    || amendment?.sendFirstTaskEmail);
 
 const isApprovedWithConditions = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
 
-  if (value === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS) {
-    return true;
-  }
-  return false;
+  return value === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS;
 };
 
 // checks if any are declined
 const isDeclined = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
 
-  if (value === AMENDMENT_UW_DECISION.DECLINED || coverEndDate === AMENDMENT_UW_DECISION.DECLINED) {
-    return true;
-  }
-  return false;
+  return value === AMENDMENT_UW_DECISION.DECLINED || coverEndDate === AMENDMENT_UW_DECISION.DECLINED;
 };
 
 // checks if value or coverEndDate are approved without conditions
 const isApprovedWithoutConditions = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
 
-  if (value === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS) {
-    return true;
-  }
-  return false;
+  return value === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS;
 };
 
 const sendAutomaticAmendmentEmail = async (amendmentVariables) => {
@@ -233,6 +225,57 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
   }
 };
 
+/**
+ * Ascertain whether the requested amendment
+ * have been declined or not.
+ * @param {Object} amendment Amendment object
+ * @returns {Boolean} Whether both the amendments decision has been declined by the underwriter.
+ */
+const amendmentDeclined = (amendment) => {
+  const { changeFacilityValue, changeCoverEndDate } = amendment;
+  const { value, coverEndDate } = amendment.ukefDecision;
+  const { DECLINED } = UNDERWRITER_MANAGER_DECISIONS;
+
+  // Ensure not all of the amendment requests are declined
+
+  // Dual amendment request
+  if (changeFacilityValue && changeCoverEndDate) {
+    return value === DECLINED && coverEndDate === DECLINED;
+  }
+  // Single amendment request
+  return value === DECLINED || coverEndDate === DECLINED;
+};
+
+/**
+ * Evaluated whether facility amendment is eligible
+ * for ACBS interaction based on myriads of conditions.
+ * This function evaluated across all amendment types.
+ * @param {Object} amendment Facility amendments object
+ */
+const canSendToAcbs = (amendment) => {
+  // Ensure at least one of the attribute has been amended
+  const hasBeenAmended = amendment.changeCoverEndDate || amendment.changeFacilityValue;
+  // Amendment status is marked as `Completed`
+  const completed = amendment.status === AMENDMENT_STATUS.COMPLETED;
+  // Amendment has been submitted by PIM team
+  const pim = amendment.submittedByPim;
+  // Manual amendment verification
+  const manual = Boolean(amendment.requireUkefApproval) && Boolean(amendment.bankDecision);
+
+  // Manual amendment
+  if (manual) {
+    // Bank Decision
+    const { submitted, decision } = amendment.bankDecision;
+    // Bank has accepted the UW decision
+    const proceed = decision === AMENDMENT_BANK_DECISION.PROCEED;
+
+    return hasBeenAmended && completed && pim && submitted && proceed && !amendmentDeclined(amendment);
+  }
+
+  // Automatic amendment
+  return hasBeenAmended && completed && pim;
+};
+
 // updates flag if managers decision email sent so not sent again
 const firstTaskEmailConfirmation = async (facilityId, amendmentId) => {
   const payload = {
@@ -270,10 +313,54 @@ const sendFirstTaskEmail = async (taskVariables) => {
   }
 };
 
+/**
+ * Calculates UKEF Exposure for the defined facility
+ * based on updated facility amount and original cover percentage.
+ * @param {Object} payload Amendment payload
+ * @returns {Object} Computed payload with `ukefExposure` property calculated.
+ */
+const calculateUkefExposure = (payload) => {
+  if (payload?.value && payload?.coveredPercentage) {
+    return {
+      ...payload,
+      ukefExposure: payload.value * (payload.coveredPercentage / 100),
+    };
+  }
+
+  return payload;
+};
+
+/**
+ * Converts non-ms epoch to ms epoch.
+ * @param {Object} payload Amendment payload
+ * @returns {Object} Computed payload with EPOCH sm compatible `coverEndDate`.
+ */
+const formatCoverEndDate = (payload) => {
+  if (payload?.coverEndDate) {
+    /**
+     * TODO: date-fns and moment.js convergence
+     * Convert EPOCH to millisecond compatible epoch.
+     * date-fns outputs non-ms EPOCH.
+     * */
+    const epoch = payload.coverEndDate.toString().length > 10
+      ? payload.coverEndDate
+      : payload.coverEndDate * 1000;
+
+    return {
+      ...payload,
+      coverEndDate: epoch,
+    };
+  }
+  return payload;
+};
+
 module.exports = {
   amendmentEmailEligible,
   sendAutomaticAmendmentEmail,
   sendManualDecisionAmendmentEmail,
   sendManualBankDecisionEmail,
+  canSendToAcbs,
   sendFirstTaskEmail,
+  calculateUkefExposure,
+  formatCoverEndDate,
 };
