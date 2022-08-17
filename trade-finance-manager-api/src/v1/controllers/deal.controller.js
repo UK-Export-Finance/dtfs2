@@ -92,6 +92,8 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
   if (allRequiredPartiesHaveUrn) {
     await acbsController.createACBS(deal);
   }
+
+  return null;
 };
 exports.submitACBSIfAllPartiesHaveUrn = submitACBSIfAllPartiesHaveUrn;
 

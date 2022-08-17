@@ -104,6 +104,8 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
       const { status, data } = response;
       return res.status(status).send(data);
     }
+
+    return res.status(400).send();
   } catch (error: any) {
     console.error('ACBS create POST failed ', { error });
     return res.status(400).send();
