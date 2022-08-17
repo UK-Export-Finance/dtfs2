@@ -176,7 +176,6 @@ const amendAcbsFacility = async (amendment: Amendment) => {
  * @return {Object} Response object with HTTP code as `status` and response as `data`.
  */
 export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
-  try {
   const { id } = req.params;
   const { amendments, facility, deal } = req.body;
   // Construct payload
@@ -211,10 +210,6 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
     const { status, data } = response;
     return res.status(status).send(data);
   }
-} catch (e) {
-  console.error('Error executing ACBS Facility POST: ', { e });
-  return res.status(400).send();
-}
   // Upon failure
   return res.status(400).send();
 };
