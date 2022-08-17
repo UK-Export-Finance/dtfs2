@@ -1,8 +1,6 @@
-const { format, fromUnixTime } = require('date-fns');
 const { formattedNumber } = require('../../utils/number');
 const { decimalsCount, roundNumber } = require('../../v1/helpers/number');
 const { CURRENCY } = require('../../constants/currency.constant');
-const api = require('../../v1/api');
 const isValidFacility = require('./isValidFacility.helper');
 
 // returns the formatted amendment value and currency (without conversion)
@@ -64,80 +62,37 @@ const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
   return null;
 };
 
-// checks for coverStartDate and returns based on deal-type as stored differently
-const dealTypeCoverStartDate = (facilitySnapshot) => {
-  const { coverStartDate } = facilitySnapshot;
+const findLatestCompletedAmendment = (amendments) => {
+  const amendmentsReversed = [...amendments].reverse();
+  const tfmAmendmentObject = amendmentsReversed.find((amendment) => amendment.tfm);
 
-  // if exists - gef
-  if (coverStartDate) {
-    return coverStartDate;
+  if (tfmAmendmentObject) {
+    return tfmAmendmentObject.tfm;
   }
 
-  let dateConstructed;
-
-  if (facilitySnapshot['requestedCoverStartDate-year'] && facilitySnapshot['requestedCoverStartDate-month'] && facilitySnapshot['requestedCoverStartDate-day']) {
-  // BSS stored as separate year month day values
-    dateConstructed = new Date(
-      facilitySnapshot['requestedCoverStartDate-year'],
-      facilitySnapshot['requestedCoverStartDate-month'] - 1,
-      facilitySnapshot['requestedCoverStartDate-day'],
-    );
-  } else {
-    dateConstructed = new Date(parseInt(facilitySnapshot.requestedCoverStartDate, 10));
-  }
-
-  return dateConstructed;
-};
-
-// calculates new tenor from amendment coverEndDate and facility coverStartDate.  Requires external api call to calculate tenor
-const calculateAmendmentTenor = async (facilitySnapshot, amendment) => {
-  try {
-    const validConditions = facilitySnapshot?.ukefFacilityType && (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate)
-    && amendment?.coverEndDate;
-
-    if (validConditions) {
-      const { coverEndDate } = amendment;
-      const { ukefFacilityType } = facilitySnapshot;
-
-      // returns coverStartDate from either gef or bss format
-      const coverStartDate = dealTypeCoverStartDate(facilitySnapshot);
-      // formatting for external api call
-      const coverStartDateFormatted = format(new Date(coverStartDate), 'yyyy-MM-dd');
-      const coverEndDateFormatted = format(fromUnixTime(coverEndDate), 'yyyy-MM-dd');
-
-      const updatedTenor = await api.getFacilityExposurePeriod(coverStartDateFormatted, coverEndDateFormatted, ukefFacilityType);
-
-      if (updatedTenor) {
-        return updatedTenor.exposurePeriodInMonths;
-      }
-    }
-
-    return null;
-  } catch (err) {
-    console.error('Error calculating amendment tenor in graphql amendment helper', { err });
-    return null;
-  }
+  return null;
 };
 
 // calculates the value for total exposure to return for a single amendment
-const calculateAmendmentTotalExposure = async (facility) => {
+const calculateAmendmentTotalExposure = (facility) => {
   if (isValidFacility(facility)) {
-    const { _id, tfm, facilitySnapshot } = facility;
+    const { tfm, facilitySnapshot } = facility;
     const { exchangeRate } = tfm;
 
-    const latestCompletedAmendmentValue = await api.getLatestCompletedValueAmendment(_id);
-
-    if (latestCompletedAmendmentValue?.value) {
+    if (facility?.amendments?.length > 0) {
       const { coverPercentage, coveredPercentage } = facilitySnapshot;
+      const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
 
       // BSS is coveredPercentage while GEF is coverPercentage
       const coverPercentageValue = coverPercentage || coveredPercentage;
 
-      const valueInGBP = calculateNewFacilityValue(exchangeRate, latestCompletedAmendmentValue);
-      const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
+      if (latestAmendmentTFM?.value) {
+        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentTFM.value);
+        const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
 
-      // sets new exposure value based on amendment value
-      return ukefExposureValue;
+        // sets new exposure value based on amendment value
+        return ukefExposureValue;
+      }
     }
   }
 
@@ -148,6 +103,6 @@ module.exports = {
   amendmentChangeValueExportCurrency,
   calculateNewFacilityValue,
   calculateUkefExposure,
-  calculateAmendmentTenor,
   calculateAmendmentTotalExposure,
+  findLatestCompletedAmendment,
 };

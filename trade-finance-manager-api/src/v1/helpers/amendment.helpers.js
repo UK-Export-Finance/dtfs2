@@ -1,3 +1,4 @@
+const { format, fromUnixTime } = require('date-fns');
 const api = require('../api');
 const sendTfmEmail = require('../controllers/send-tfm-email');
 const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
@@ -6,6 +7,7 @@ const {
   AMENDMENT_BANK_DECISION,
   AMENDMENT_STATUS,
 } = require('../../constants/deals');
+const { CURRENCY } = require('../../constants/currency.constant');
 const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { automaticAmendmentEmailVariables } = require('../emails/amendments/automatic-approval-email-variables');
 const { generateTaskEmailVariables } = require('./generate-task-email-variables');
@@ -17,6 +19,9 @@ const {
   declinedDecision,
   banksDecisionEmailVariables,
 } = require('../emails/amendments/manual-amendment-decision-email-variables');
+const dealTypeCoverStartDate = require('./dealTypeCoverStartDate.helper');
+const { formattedNumber } = require('../../utils/number');
+const { decimalsCount, roundNumber } = require('./number');
 
 // checks if amendment exists and if eligible to send email
 const amendmentEmailEligible = (amendment) =>
@@ -319,7 +324,7 @@ const sendFirstTaskEmail = async (taskVariables) => {
  * @param {Object} payload Amendment payload
  * @returns {Object} Computed payload with `ukefExposure` property calculated.
  */
-const calculateUkefExposure = (payload) => {
+const calculateUkefACBSExposure = (payload) => {
   if (payload?.value && payload?.coveredPercentage) {
     return {
       ...payload,
@@ -354,6 +359,155 @@ const formatCoverEndDate = (payload) => {
   return payload;
 };
 
+const roundValue = (valueInGBP) => {
+  const totalDecimals = decimalsCount(valueInGBP);
+
+  // rounds to 2 decimal palces if decimals greater than 2
+  const newValue = totalDecimals > 2 ? roundNumber(valueInGBP, 2) : valueInGBP;
+
+  return newValue;
+};
+
+// calculates new facility value in GBP
+const calculateNewFacilityValue = (exchangeRate, amendment) => {
+  const { currency, value: amendmentValue } = amendment;
+  let newValue;
+
+  if (currency && amendmentValue) {
+    // if already in GBP, just take the value
+    if (currency === CURRENCY.GBP) {
+      newValue = amendmentValue;
+    } else {
+      // if no exchange rate return null
+      if (!exchangeRate) {
+        return null;
+      }
+      const valueInGBP = amendmentValue * exchangeRate;
+      newValue = roundValue(valueInGBP);
+    }
+
+    return newValue;
+  }
+
+  return null;
+};
+
+// calculates new ukef exposure from amendment value
+const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
+  if (facilityValueInGBP && coverPercentage) {
+    // parse float as can have 2 decimal places in facility value
+    const calculation = parseFloat(facilityValueInGBP, 10) * (coverPercentage / 100);
+    const totalDecimals = decimalsCount(calculation);
+
+    const ukefExposure = totalDecimals > 2 ? roundNumber(calculation, 2) : calculation;
+
+    return ukefExposure;
+  }
+
+  return null;
+};
+
+const calculateAmendmentExposure = async (amendmentId, facilityId, latestValue) => {
+  try {
+    const fullAmendment = await api.getAmendmentById(facilityId, amendmentId);
+    const existingFacility = await api.findOneFacility(facilityId);
+
+    const { facilitySnapshot, tfm } = existingFacility;
+    const { coverPercentage, coveredPercentage } = facilitySnapshot;
+    const { requireUkefApproval, effectiveDate, bankDecision } = fullAmendment;
+    const { exchangeRate } = tfm;
+
+    // value of ukefExposureCalculationTime from automatic amendment submission time or manual amendment bankDecision submission time
+    const ukefExposureTimestamp = requireUkefApproval ? bankDecision.effectiveDate : effectiveDate;
+
+    // BSS is coveredPercentage while GEF is coverPercentage
+    const coverPercentageValue = coverPercentage || coveredPercentage;
+
+    const valueInGBP = calculateNewFacilityValue(exchangeRate, latestValue);
+    const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
+
+    // sets new exposure value based on amendment value
+    const formattedUkefExposure = formattedNumber(ukefExposureValue);
+    // converts from seconds unix timestamp to one with milliseconds
+    const ukefExposureCalculationTimestampValue = new Date(ukefExposureTimestamp * 1000).valueOf();
+
+    return {
+      exposure: formattedUkefExposure,
+      timestamp: ukefExposureCalculationTimestampValue,
+      ukefExposureValue,
+    };
+  } catch (error) {
+    console.error('TFM-API - calculateAmendmentExposure - Error in amendment helper ', { error });
+    return null;
+  }
+};
+
+const addLatestAmendmentValue = async (tfmObject, latestValue, facilityId) => {
+  if (latestValue?.value) {
+    const { value, currency, amendmentId } = latestValue;
+
+    const newTfmObject = {
+      ...tfmObject,
+      value: {
+        value,
+        currency,
+      },
+      exposure: await calculateAmendmentExposure(amendmentId, facilityId, latestValue),
+    };
+    return newTfmObject;
+  }
+  return tfmObject;
+};
+
+const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
+  try {
+    const { facilitySnapshot } = existingFacility;
+
+    const validConditions = (facilitySnapshot?.ukefFacilityType || facilitySnapshot?.type)
+      && (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate) && coverEndDate;
+
+    if (validConditions) {
+      const { ukefFacilityType, type } = facilitySnapshot;
+      const facilityType = ukefFacilityType || type;
+
+      const coverStartDate = dealTypeCoverStartDate(facilitySnapshot);
+      // formatting for external api call
+      const coverStartDateFormatted = format(new Date(coverStartDate), 'yyyy-MM-dd');
+      const coverEndDateFormatted = format(fromUnixTime(coverEndDate), 'yyyy-MM-dd');
+
+      const updatedTenor = await api.getFacilityExposurePeriod(coverStartDateFormatted, coverEndDateFormatted, facilityType);
+
+      if (updatedTenor?.exposurePeriodInMonths) {
+        return updatedTenor.exposurePeriodInMonths;
+      }
+    }
+
+    return null;
+  } catch (err) {
+    console.error('TFM API - Amendment helpers - Error calculating new amendment tenor', { err });
+    return null;
+  }
+};
+
+const addLatestAmendmentDates = async (tfmObject, latestDate, facilityId) => {
+  if (latestDate?.coverEndDate) {
+    const { coverEndDate } = latestDate;
+    const existingFacility = await api.findOneFacility(facilityId);
+
+    if (!existingFacility) {
+      return tfmObject;
+    }
+    const newTfmObject = {
+      ...tfmObject,
+      coverEndDate: latestDate.coverEndDate,
+      amendmentExposurePeriodInMonths: await calculateAmendmentDateTenor(coverEndDate, existingFacility),
+    };
+
+    return newTfmObject;
+  }
+  return tfmObject;
+};
+
 module.exports = {
   amendmentEmailEligible,
   sendAutomaticAmendmentEmail,
@@ -363,4 +517,11 @@ module.exports = {
   sendFirstTaskEmail,
   calculateUkefExposure,
   formatCoverEndDate,
+  addLatestAmendmentValue,
+  addLatestAmendmentDates,
+  calculateAmendmentDateTenor,
+  calculateAmendmentExposure,
+  calculateUkefACBSExposure,
+  calculateNewFacilityValue,
+  roundValue,
 };
