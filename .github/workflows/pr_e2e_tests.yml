@@ -98,10 +98,32 @@ jobs:
 
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: E2E tests
-      working-directory: ./e2e-tests/gef
-      run: npx cypress run --browser chrome --config video=false --parallel --project ./
-
+    - name: Run GEF-UI E2E tests
+      uses: cypress-io/github-action@v4
+      with:
+        record: true
+        parallel: true
+        browser: chrome
+        group: 'GEF UI'
+        project: ./e2e-tests/gef
+        config: video=false
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Save Cypress screenshots
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@main
+      with:
+        name: screenshots
+        path: './cypress/screenshots'
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs-github-actions'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
 
   portal-tests:
     name: "Run - Portal End-To-End tests"
@@ -139,9 +161,32 @@ jobs:
 
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: E2E tests
-      working-directory: ./e2e-tests/portal
-      run: npx cypress run --browser chrome --config video=false --parallel --project ./
+    - name: Run E2E tests
+      uses: cypress-io/github-action@v4
+      with:
+        record: true
+        parallel: true
+        browser: chrome
+        group: 'Portal UI'
+        project: ./e2e-tests/portal
+        config: video=false
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Save Cypress screenshots
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@main
+      with:
+        name: screenshots
+        path: './cypress/screenshots'
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs-github-actions'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
 
   tfm-tests:
     name: "Run - Trade Finance Manager End-To-End tests"
@@ -179,9 +224,32 @@ jobs:
 
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: E2E tests
-      working-directory: ./e2e-tests/trade-finance-manager
-      run: npx cypress run --browser chrome --config video=false --parallel --project ./
+    - name: Run E2E tests
+      uses: cypress-io/github-action@v4
+      with:
+        record: true
+        parallel: true
+        browser: chrome
+        group: 'TFM UI'
+        project: ./e2e-tests/trade-finance-manager
+        config: video=false
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Save Cypress screenshots
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@main
+      with:
+        name: screenshots
+        path: './cypress/screenshots'
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs-github-actions'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
 
 
   tfm-submit-tests:
@@ -222,6 +290,29 @@ jobs:
 
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: E2E tests
-      working-directory: ./e2e-tests/submit-to-trade-finance-manager
-      run: npx cypress run --browser chrome --config video=false --parallel --project ./
+    - name: Run E2E tests
+      uses: cypress-io/github-action@v4
+      with:
+        record: true
+        parallel: true
+        browser: chrome
+        group: 'TFM Submit'
+        project: ./e2e-tests/submit-to-trade-finance-manager
+        config: video=false
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Save Cypress screenshots
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@main
+      with:
+        name: screenshots
+        path: './cypress/screenshots'
+    - uses: act10ns/slack@v1
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        channel: '#dtfs-github-actions'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: failure()
