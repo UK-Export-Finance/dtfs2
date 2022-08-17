@@ -415,7 +415,6 @@ const calculateAmendmentExposure = async (amendmentId, facilityId, latestValue) 
     const { facilitySnapshot, tfm } = existingFacility;
     const { coverPercentage, coveredPercentage } = facilitySnapshot;
     const { requireUkefApproval, effectiveDate, bankDecision } = fullAmendment;
-    const { exchangeRate } = tfm;
 
     // value of ukefExposureCalculationTime from automatic amendment submission time or manual amendment bankDecision submission time
     const ukefExposureTimestamp = requireUkefApproval ? bankDecision.effectiveDate : effectiveDate;
@@ -423,7 +422,7 @@ const calculateAmendmentExposure = async (amendmentId, facilityId, latestValue) 
     // BSS is coveredPercentage while GEF is coverPercentage
     const coverPercentageValue = coverPercentage || coveredPercentage;
 
-    const valueInGBP = calculateNewFacilityValue(exchangeRate, latestValue);
+    const valueInGBP = calculateNewFacilityValue(tfm?.exchangeRate, latestValue);
     const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
 
     // sets new exposure value based on amendment value

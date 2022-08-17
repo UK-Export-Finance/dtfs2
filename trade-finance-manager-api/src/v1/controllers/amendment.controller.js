@@ -90,8 +90,10 @@ const createAmendmentTFMObject = async (amendmentId, facilityId) => {
     };
 
     await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+    return tfmToAdd;
   } catch (error) {
     console.error('TFM-API - unable to add TFM object to amendment', { error });
+    return null;
   }
 };
 
