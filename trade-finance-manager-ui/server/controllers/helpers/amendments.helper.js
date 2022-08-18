@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
-const { AMENDMENTS, DECISIONS } = CONSTANTS;
+const { AMENDMENTS } = CONSTANTS;
 
 /**
  * @param {Object} deal
@@ -15,7 +15,10 @@ const showAmendmentButton = (deal, userTeam) => {
   const acceptableUser = CONSTANTS.TEAMS.PIM;
   const acceptableStatus = [CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED, CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
 
-  return acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) && userTeam.includes(acceptableUser) && acceptableStatus.includes(deal.tfm.stage);
+  if (acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) && userTeam.includes(acceptableUser) && acceptableStatus.includes(deal.tfm.stage)) {
+    return true;
+  }
+  return false;
 };
 
 const userCanEditManagersDecision = (amendment, user) => {
@@ -31,24 +34,28 @@ const userCanEditBankDecision = (amendment, user) => {
 };
 
 /**
- * Ascertain whether the requested amendment
- * have been declined or not.
- * @param {Object} amendment Amendment object
- * @returns {Boolean} Whether both the amendments decision has been declined by the underwriter.
+ * @param {Object} amendment
+ * @returns {Boolean}
+ * checks if amendment has coverEndDate or facility value amendment
+ * if both or just 1, checks if both or 1 have been declined and returns true
+ * else returns false
  */
 const ukefDecisionRejected = (amendment) => {
-  const { changeFacilityValue, changeCoverEndDate } = amendment;
-  const { value, coverEndDate } = amendment.ukefDecision;
-  const { DECLINED } = DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  const { DECLINED } = CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS;
+  // checks for boolean variable for which values amendment is changing
+  const coverEndDateDecision = amendment.ukefDecision.coverEndDate;
+  const facilityValueDecision = amendment.ukefDecision.value;
 
-  // Ensure not all of the amendment requests are declined
-
-  // Dual amendment request
-  if (changeFacilityValue && changeCoverEndDate) {
-    return value === DECLINED && coverEndDate === DECLINED;
+  // if both then checks both are declined
+  if (amendment.changeCoverEndDate && amendment.changeFacilityValue) {
+    if (coverEndDateDecision === DECLINED && facilityValueDecision === DECLINED) {
+      return true;
+    }
+  } else if (coverEndDateDecision === DECLINED || facilityValueDecision === DECLINED) {
+    // else if only 1, checks either is declined
+    return true;
   }
-  // Single amendment request
-  return value === DECLINED || coverEndDate === DECLINED;
+  return false;
 };
 
 /**
@@ -57,7 +64,13 @@ const ukefDecisionRejected = (amendment) => {
  * @returns {Boolean}
  * checks if amendment has declined or approved with conditions and returns true if so
  */
-const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.coverEndDate === decisionType || ukefDecision?.value === decisionType;
+const validateUkefDecision = (ukefDecision, decisionType) => {
+  if (ukefDecision?.coverEndDate === decisionType || ukefDecision?.value === decisionType) {
+    return true;
+  }
+
+  return false;
+};
 
 const hasAmendmentInProgressDealStage = async (amendments) => {
   if (amendments.length) {
@@ -72,7 +85,8 @@ const hasAmendmentInProgressDealStage = async (amendments) => {
 
 const amendmentsInProgressByDeal = async (amendments) => {
   if (amendments.length) {
-    return amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
+    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
+    return amendmentsInProgress;
   }
   return [];
 };

@@ -42,7 +42,6 @@ const postAmendFacilityValue = async (req, res) => {
 
   const { data: latestAmendmentValue } = await api.getLatestCompletedValueAmendment(facilityId);
   const { currency } = facility.facilitySnapshot;
-  let { coveredPercentage } = facility.facilitySnapshot;
   let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
 
   if (latestAmendmentValue?.value) {
@@ -71,15 +70,7 @@ const postAmendFacilityValue = async (req, res) => {
   try {
     const currentValueAndCurrency = currentFacilityValue.split(' ');
     const currentValue = Number(currentValueAndCurrency[1].replace(/,/g, ''));
-    coveredPercentage = Number(coveredPercentage.replace(/%/g, ''));
-    const ukefExposure = 0;
-    const payload = {
-      value: Number(value),
-      currentValue,
-      ukefExposure,
-      coveredPercentage,
-      currency,
-    };
+    const payload = { value: Number(value), currentValue, currency };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
 
     if (status === 200) {

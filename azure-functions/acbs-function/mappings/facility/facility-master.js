@@ -1,9 +1,9 @@
 /*
   "dealIdentifier":                 Deal ACBS ID,
   "facilityIdentifier":             UKEF facilityId,
-  "portfolioIdentifier":            Facility portfolio identifier. Default to "E1"
+  "portfolioIdentifier":            Facility portfolio idenfifier. Default to "E1"
   "dealBorrowerIdentifier":         exporter ACBS ID
-                                    Look up the Obligor ACBS Customer record
+                                    Look up the Obligors ACBS Customer record
                                     Use Party URN on the Deal = Alternate Customer Id.
                                     Use ACBS Customer Id (J$MRUI)
                                     Note there may be multiple customers in ACBS with the same Party URN.
@@ -26,7 +26,7 @@
   "premiumFrequencyCode":           Pre-Issue Est. Payment Frequency QUARTERLY(2)
   "riskCountryCode":                "GBR",
   "riskStatusCode":                 "03",
-  "effectiveDate":                  SEE Deal + deal investor calculation
+  "effectiveDate":                  SEE Deal + deal investor calcuation
   "foreCastPercentage":             Forecast % Derive from FACILITY:Stage, i.e. Commitment or Issued
   "issueDate":                      At Commitment stage its not required ,
                                     Issued when issued it would be Issue Date for Bond OR Disbursement Date for Loan
@@ -67,7 +67,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
     delegationType: helpers.getDelegationType(deal.dealSnapshot.submissionType),
     intrestOrFeeRate: helpers.getInterestOrFeeRate(facility),
     facilityStageCode,
-    exposurePeriod: helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType),
+    exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
     creditRatingCode: helpers.getCreditRatingCode(deal),
     guaranteePercentage: helpers.getInsuredPercentage(facilityStageCode),
     premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility.facilitySnapshot),

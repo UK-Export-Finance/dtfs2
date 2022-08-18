@@ -596,6 +596,7 @@ describe('/v1/deals', () => {
       });
 
       it('adds fee record to issued facilities', async () => {
+        // console.log(mockDeal);
         const { status, body } = await submitDeal(createSubmitBody(mockDeal));
 
         expect(status).toEqual(200);

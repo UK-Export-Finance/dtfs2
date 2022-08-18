@@ -48,7 +48,6 @@ const postAmendmentAnswers = async (req, res) => {
       submittedByPim: true,
       submittedAt: getUnixTime(new Date()),
       value: amendment.value,
-      ukefExposure: amendment.ukefExposure,
       coverEndDate: amendment.coverEndDate,
       createTasks: true,
       requireUkefApproval: amendment.requireUkefApproval,
@@ -68,7 +67,6 @@ const postAmendmentAnswers = async (req, res) => {
       payload.value = null;
       payload.currentValue = null;
       payload.currency = null;
-      payload.ukefExposure = null;
     }
 
     // if the cover end date should not be changed, then re-set the `coverEndDate` properties to `null`

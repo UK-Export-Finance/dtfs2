@@ -12,33 +12,28 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 
 const getFacilityMaster = async (context) => {
-  try {
-    const { facilityId } = context.bindingData;
+  const { facilityId } = context.bindingData;
 
-    if (facilityId) {
-      const { status, data, headers: { etag } } = await api.getFacility(facilityId);
+  if (facilityId) {
+    const { status, data, headers: { etag } } = await api.getFacility(facilityId);
 
-      if (isHttpErrorStatus(status)) {
-        throw new Error(
-          JSON.stringify({
-            name: 'ACBS Facility fetch error',
-            facilityId,
-            dataReceived: data,
-          }, null, 4),
-        );
-      }
-
-      return {
-        acbsFacility: data,
-        etag,
-      };
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify({
+          name: 'ACBS Facility fetch error',
+          facilityId,
+          dataReceived: data,
+        }, null, 4),
+      );
     }
 
-    throw new Error('Void argument set');
-  } catch (e) {
-    console.error('Error getting facility master record: ', { e });
-    throw new Error(e);
+    return {
+      acbsFacility: data,
+      etag,
+    };
   }
+
+  return {};
 };
 
 module.exports = getFacilityMaster;
