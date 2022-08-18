@@ -34,18 +34,32 @@ const isApprovedWithConditions = (ukefDecision) => {
   return value === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITH_CONDITIONS;
 };
 
-// checks if any are declined
-const isDeclined = (ukefDecision) => {
-  const { value, coverEndDate } = ukefDecision;
-
-  return value === AMENDMENT_UW_DECISION.DECLINED || coverEndDate === AMENDMENT_UW_DECISION.DECLINED;
-};
-
 // checks if value or coverEndDate are approved without conditions
 const isApprovedWithoutConditions = (ukefDecision) => {
   const { value, coverEndDate } = ukefDecision;
 
   return value === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS;
+};
+
+/**
+ * Ascertain whether the requested amendment
+ * have been declined or not.
+ * @param {Object} amendment Amendment object
+ * @returns {Boolean} Whether both the amendments decision has been declined by the underwriter.
+ */
+const amendmentDeclined = (amendment) => {
+  const { changeFacilityValue, changeCoverEndDate } = amendment;
+  const { value, coverEndDate } = amendment.ukefDecision;
+  const { DECLINED } = UNDERWRITER_MANAGER_DECISIONS;
+
+  // Ensure not all of the amendment requests are declined
+
+  // Dual amendment request
+  if (changeFacilityValue && changeCoverEndDate) {
+    return value === DECLINED && coverEndDate === DECLINED;
+  }
+  // Single amendment request
+  return value === DECLINED || coverEndDate === DECLINED;
 };
 
 const sendAutomaticAmendmentEmail = async (amendmentVariables) => {
@@ -160,23 +174,23 @@ const sendManualDecisionAmendmentEmail = async (amendmentVariables) => {
 
   try {
     // if one is approved with conditions and not declined
-    if (isApprovedWithConditions(ukefDecision) && !isDeclined(ukefDecision)) {
+    if (isApprovedWithConditions(ukefDecision) && !amendmentDeclined(amendment)) {
       await emailApprovedWithWithoutConditions(amendmentVariables);
 
       // if only approved without conditions (and not declined or with conditions)
-    } else if (isApprovedWithoutConditions(ukefDecision) && !isDeclined(ukefDecision) && !isApprovedWithConditions(ukefDecision)) {
+    } else if (isApprovedWithoutConditions(ukefDecision) && !amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
       await emailApprovedWithoutConditions(amendmentVariables);
 
       // if approved with conditions and declined only
-    } else if (isApprovedWithConditions(ukefDecision) && isDeclined(ukefDecision) && !isApprovedWithoutConditions(ukefDecision)) {
+    } else if (isApprovedWithConditions(ukefDecision) && amendmentDeclined(amendment) && !isApprovedWithoutConditions(ukefDecision)) {
       await emailApprovedWithConditionsDeclined(amendmentVariables);
 
       // if approved without conditions and declined only
-    } else if (isApprovedWithoutConditions(ukefDecision) && isDeclined(ukefDecision) && !isApprovedWithConditions(ukefDecision)) {
+    } else if (isApprovedWithoutConditions(ukefDecision) && amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
       await emailApprovedWithoutConditionsDeclined(amendmentVariables);
 
       // if declined only
-    } else if (isDeclined(ukefDecision) && !isApprovedWithConditions(ukefDecision) && !isApprovedWithoutConditions(ukefDecision)) {
+    } else if (amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision) && !isApprovedWithoutConditions(ukefDecision)) {
       await emailDeclined(amendmentVariables);
     } else {
       console.error('Incorrect ukefDecision passed for manual amendment email');
@@ -228,27 +242,6 @@ const sendManualBankDecisionEmail = async (amendmentVariables) => {
   } catch (error) {
     console.error('Error sending manual amendment bank decision email', { error });
   }
-};
-
-/**
- * Ascertain whether the requested amendment
- * have been declined or not.
- * @param {Object} amendment Amendment object
- * @returns {Boolean} Whether both the amendments decision has been declined by the underwriter.
- */
-const amendmentDeclined = (amendment) => {
-  const { changeFacilityValue, changeCoverEndDate } = amendment;
-  const { value, coverEndDate } = amendment.ukefDecision;
-  const { DECLINED } = UNDERWRITER_MANAGER_DECISIONS;
-
-  // Ensure not all of the amendment requests are declined
-
-  // Dual amendment request
-  if (changeFacilityValue && changeCoverEndDate) {
-    return value === DECLINED && coverEndDate === DECLINED;
-  }
-  // Single amendment request
-  return value === DECLINED || coverEndDate === DECLINED;
 };
 
 /**
