@@ -269,7 +269,7 @@ const updateFacilityAmendment = async (req, res) => {
       if (facility._id && amendment && tfmDeal.tfm) {
         // ACBS Interaction
         if (canSendToAcbs(amendment)) {
-          acbs.amendAcbsFacility(amendment, facility, deal);
+          // acbs.amendAcbsFacility(amendment, facility, deal);
         }
       }
 
