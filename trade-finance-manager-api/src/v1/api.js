@@ -790,27 +790,28 @@ const updateACBSfacility = async (facility, deal) => {
  */
 const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments && facility.facilitySnapshot) {
-    try {
-      const { ukefFacilityId } = facility.facilitySnapshot;
-      const response = await axios({
-        method: 'post',
-        url: `${refDataUrl}/acbs/facility/${ukefFacilityId}/amendments`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: {
-          amendments,
-          deal,
-          facility,
-        },
-      });
+    const { ukefFacilityId } = facility.facilitySnapshot;
+    const response = await axios({
+      method: 'post',
+      url: `${refDataUrl}/acbs/facility/${ukefFacilityId}/amendments`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        amendments,
+        deal,
+        facility,
+      },
+    }).catch((e) => {
+      console.error('TFM-API Facility amend error', { e });
+      return null;
+    });
+
+    if (response.data) {
       return response.data;
-    } catch (err) {
-      console.error('TFM-API Facility amend error', { err });
-      return err;
     }
   }
-  return {};
+  return null;
 };
 
 const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => {
