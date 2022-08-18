@@ -185,11 +185,14 @@ const amendAcbsFacility = async (amendments, facility, deal) => {
   api.amendACBSfacility(payload, facility, deal)
     .then((acbsTaskLinks) => {
       if (acbsTaskLinks.id) {
-        addToACBSLog({ acbsTaskLinks });
+        return addToACBSLog({ acbsTaskLinks });
       }
+
+      return null;
     })
     .catch((e) => {
       console.error('Unable to amend facility: ', { e });
+      return null;
     });
 };
 
