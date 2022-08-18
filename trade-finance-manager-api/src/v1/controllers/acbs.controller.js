@@ -43,7 +43,7 @@ const createACBS = async (deal) => {
   const acbsTaskLinks = await api.createACBS(deal, { id, name, partyUrn });
 
   if (acbsTaskLinks) {
-  return addToACBSLog({ deal, bank, acbsTaskLinks });
+    return addToACBSLog({ deal, bank, acbsTaskLinks });
   }
 
   return null;
