@@ -9,17 +9,12 @@ const mapGefUkefFacilityType = require('./mapGefUkefFacilityType');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
 const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
 const mapFacilityTfm = require('../facilities/mapFacilityTfm');
-const api = require('../../../../v1/api');
 
 const MOCK_GEF_DEAL = require('../../../../v1/__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('mapGefFacility', () => {
-  it('should return mapped GEF facility', async () => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-    api.getAmendmentById = () => Promise.resolve({});
-
+  it('should return mapped GEF facility', () => {
     const mockFacility = {
       _id: MOCK_CASH_CONTINGENT_FACILIIES[0]._id,
       facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
@@ -28,7 +23,7 @@ describe('mapGefFacility', () => {
 
     const mockDealTfm = {};
 
-    const result = await mapGefFacility(
+    const result = mapGefFacility(
       mockFacility,
       MOCK_GEF_DEAL,
       mockDealTfm,
@@ -50,25 +45,25 @@ describe('mapGefFacility', () => {
         bankFacilityReference: facilitySnapshot.name,
         banksInterestMargin: `${facilitySnapshot.interestPercentage}%`,
         coveredPercentage: `${facilitySnapshot.coverPercentage}%`,
-        dates: await mapGefFacilityDates(facilitySnapshot, mockFacility.tfm, MOCK_GEF_DEAL),
+        dates: mapGefFacilityDates(mockFacility, mockFacility.tfm, MOCK_GEF_DEAL),
         facilityProduct: mapFacilityProduct(facilitySnapshot.type),
         facilityStage: mapFacilityStage(facilitySnapshot.hasBeenIssued),
         hasBeenIssued: facilitySnapshot.hasBeenIssued,
         type: mapFacilityType(facilitySnapshot),
         currency: facilitySnapshot.currency.id,
         facilityValueExportCurrency: `${facilitySnapshot.currency.id} ${formattedFacilityValue}`,
-        value: await mapFacilityValue(facilitySnapshot.currency.id, formattedFacilityValue, mockFacility),
+        value: mapFacilityValue(facilitySnapshot.currency.id, formattedFacilityValue, mockFacility),
         feeType: facilitySnapshot.feeType,
         feeFrequency: facilitySnapshot.feeFrequency,
         guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(facilitySnapshot.guaranteeFee),
         dayCountBasis: facilitySnapshot.dayCountBasis,
         ukefFacilityType: mapGefUkefFacilityType(facilitySnapshot.type),
         ukefFacilityId: facilitySnapshot.ukefFacilityId,
-        ukefExposure: await mapUkefExposureValue(mockFacility.tfm, mockFacility),
+        ukefExposure: mapUkefExposureValue(mockFacility.tfm, mockFacility),
         providedOn: facilitySnapshot.details,
         providedOnOther: facilitySnapshot.detailsOther,
       },
-      tfm: await mapFacilityTfm(mockFacility.tfm, mockDealTfm, mockFacility),
+      tfm: mapFacilityTfm(mockFacility.tfm, mockDealTfm, mockFacility),
     };
 
     expect(result).toEqual(expected);

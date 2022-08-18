@@ -1,4 +1,3 @@
-const api = require('../../../../v1/api');
 const mapTenor = require('./mapTenor');
 const { FACILITY_TYPE } = require('../../../../constants/facilities');
 
@@ -33,35 +32,35 @@ describe('mapTenor()', () => {
   };
 
   const mockAmendmentDateResponse = {
-    coverEndDate: coverEndDateUnix,
-    amendmentId: '1234',
+    amendmentExposurePeriodInMonths: 2,
   };
 
-  it('should return tenor from facility when no amendment exists', async () => {
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-
-    const result = await mapTenor(mockFacility.facilitySnapshot, mockFacility.tfm);
+  it('should return tenor from facility when no amendment exists', () => {
+    const result = mapTenor(mockFacility.facilitySnapshot, mockFacility.tfm, mockFacility);
 
     const expected = `${mockFacility.tfm.exposurePeriodInMonths} months`;
 
     expect(result).toEqual(expected);
   });
 
-  it('should return tenor from facility when no completed amendment exists', async () => {
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-
-    const result = await mapTenor(mockFacility.facilitySnapshot, mockFacility.tfm);
+  it('should return tenor from facility when no completed amendment exists', () => {
+    mockFacility.amendments = [{
+      coverEndDate: coverEndDateUnix,
+    }];
+    const result = mapTenor(mockFacility.facilitySnapshot, mockFacility.tfm, mockFacility);
 
     const expected = `${mockFacility.tfm.exposurePeriodInMonths} months`;
 
     expect(result).toEqual(expected);
   });
 
-  it('should return tenor from amendment when completed amendment exists', async () => {
-    api.getLatestCompletedDateAmendment = () => Promise.resolve(mockAmendmentDateResponse);
-    api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
-
-    const result = await mapTenor(mockFacility.facilitySnapshot, mockFacility.tfm);
+  it('should return tenor from amendment when completed amendment exists', () => {
+    mockFacility.amendments[0] = {
+      tfm: {
+        ...mockAmendmentDateResponse,
+      },
+    };
+    const result = mapTenor(mockFacility.facilitySnapshot, mockFacility.tfm, mockFacility);
 
     const expected = '2 months';
 

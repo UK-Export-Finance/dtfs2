@@ -180,7 +180,7 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
 
   const updatedDeal = await api.updateDeal(dealId, managerDecisionUpdate);
 
-  const mappedDeal = await mapSubmittedDeal(updatedDeal);
+  const mappedDeal = mapSubmittedDeal(updatedDeal);
 
   const {
     dealType,
