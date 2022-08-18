@@ -153,18 +153,22 @@ const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
 
   if (hasAmendment) {
-    try {
-      return axios({
-        method: 'post',
-        url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
-        data: {
-          amendment,
-        },
-      });
-    } catch (error: any) {
-      console.error('Error amending ACBS facility: ', { error });
-      return null;
+    const response = await axios({
+      method: 'post',
+      url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
+      data: {
+        amendment,
+      },
+    }).catch((e: any) => {
+      console.error('Error amending ACBS facility: ', { e });
+      return e;
+    });
+
+    if (response.status) {
+      return response;
     }
+
+    return null;
   }
 };
 
