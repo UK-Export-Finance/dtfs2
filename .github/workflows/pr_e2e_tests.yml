@@ -3,16 +3,6 @@ name: PR - End-To-End tests
 on:
   pull_request:
     branches: [ main-amendments ]
-    paths:
-    - 'gef-ui/**'
-    - 'portal/**'
-    - 'portal-api/**'
-    - 'trade-finance-manager-ui/**'
-    - 'trade-finance-manager-api/**'
-    - 'reference-data-proxy/**'
-    - 'dtfs-central-api/**'
-    - 'e2e-tests/**'
-    - 'utils/mock-data-loader/**'
 
 env:
   environment: dev

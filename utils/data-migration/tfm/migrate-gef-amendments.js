@@ -87,11 +87,12 @@ const migrateGefAmendments = async () => {
     // output.ukefFacilityId = `00${amendment['UKEF Facility ID']}`;
     output.status = amendment.Stage;
     output.submittedByPim = true;
-    output.submittedAt = amendment.Moved ? getUnixTime(new Date(excelDateToISODateString(amendment.Moved))) : '';
+    output.submittedAt = amendment['When Finished'] ? getUnixTime(new Date(excelDateToISODateString(amendment['When Finished']))) : '';
     output.requireUkefApproval = amendment['Notification or Request'] === MANUAL;
     output.changeFacilityValue = amendment.changeFacilityValue;
     output.changeCoverEndDate = amendment.changeCoverEndDate;
     output.createdAt = amendment['Date received'];
+    output.updateTfmLastUpdated = true;
 
     if (amendment.changeCoverEndDate) {
       output.currentCoverEndDate = getUnixTime(new Date(excelDateToISODateString(amendment.currentCoverEndDate)));
@@ -106,7 +107,7 @@ const migrateGefAmendments = async () => {
 
     if (amendment['Notification or Request'] === AUTOMATIC) {
       output.effectiveDate = getUnixTime(new Date(excelDateToISODateString(amendment['Effective Date'])));
-      output.submissionDate = amendment.Moved ? getUnixTime(new Date(excelDateToISODateString(amendment.Moved))) : '';
+      output.submissionDate = amendment['When Finished'] ? getUnixTime(new Date(excelDateToISODateString(amendment['When Finished']))) : '';
     }
 
     if (amendment['Notification or Request'] === MANUAL) {
