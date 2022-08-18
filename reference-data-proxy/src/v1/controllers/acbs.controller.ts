@@ -176,39 +176,44 @@ const amendAcbsFacility = async (amendment: Amendment) => {
  * @return {Object} Response object with HTTP code as `status` and response as `data`.
  */
 export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { amendments, facility, deal } = req.body;
-  // Construct payload
-  const payload = {
-    facilityId: id,
-    amount: amendments.ukefExposure,
-    coverEndDate: amendments.coverEndDate,
-    facility,
-    deal,
-  };
+  try {
+    const { id } = req.params;
+    const { amendments, facility, deal } = req.body;
+    // Construct payload
+    const payload = {
+      facilityId: id,
+      amount: amendments.ukefExposure,
+      coverEndDate: amendments.coverEndDate,
+      facility,
+      deal,
+    };
 
-  // Refine payload
+    // Refine payload
 
-  // Change requested
-  const { changeFacilityValue, changeCoverEndDate } = amendments;
-  // UW Decision
-  const { value, coverEndDate } = amendments.ukefDecision || false;
-  const valueDeclined = value === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
-  const coverEndDateDeclined = coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
-  // Delete frivolous property
-  if (!changeFacilityValue || valueDeclined) {
-    delete payload.amount;
-  }
-  if (!changeCoverEndDate || coverEndDateDeclined) {
-    delete payload.coverEndDate;
-  }
+    // Change requested
+    const { changeFacilityValue, changeCoverEndDate } = amendments;
+    // UW Decision
+    const { value, coverEndDate } = amendments.ukefDecision || false;
+    const valueDeclined = value === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    const coverEndDateDeclined = coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    // Delete frivolous property
+    if (!changeFacilityValue || valueDeclined) {
+      delete payload.amount;
+    }
+    if (!changeCoverEndDate || coverEndDateDeclined) {
+      delete payload.coverEndDate;
+    }
 
-  const response = await amendAcbsFacility(payload);
+    const response = await amendAcbsFacility(payload);
 
-  if (response) {
-    // Successful
-    const { status, data } = response;
-    return res.status(status).send(data);
+    if (response) {
+      // Successful
+      const { status, data } = response;
+      return res.status(status).send(data);
+    }
+  } catch (e) {
+    console.error('Error executing ACBS Facility POST: ', { e });
+    return res.status(400).send();
   }
   // Upon failure
   return res.status(400).send();
