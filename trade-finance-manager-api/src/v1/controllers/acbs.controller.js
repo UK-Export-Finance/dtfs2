@@ -41,7 +41,12 @@ const createACBS = async (deal) => {
   const { id, name, partyUrn } = bank;
 
   const acbsTaskLinks = await api.createACBS(deal, { id, name, partyUrn });
-  return addToACBSLog({ deal, bank, acbsTaskLinks });
+
+  if (acbsTaskLinks) {
+    return addToACBSLog({ deal, bank, acbsTaskLinks });
+  }
+
+  return null;
 };
 
 const updateDealAcbs = async (taskOutput) => {
@@ -180,11 +185,14 @@ const amendAcbsFacility = async (amendments, facility, deal) => {
   api.amendACBSfacility(payload, facility, deal)
     .then((acbsTaskLinks) => {
       if (acbsTaskLinks.id) {
-        addToACBSLog({ acbsTaskLinks });
+        return addToACBSLog({ acbsTaskLinks });
       }
+
+      return null;
     })
     .catch((e) => {
       console.error('Unable to amend facility: ', { e });
+      return null;
     });
 };
 
