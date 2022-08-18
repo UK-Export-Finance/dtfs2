@@ -75,7 +75,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [ 1, 2, 3, 4 ]
+        containers: [ 1 ]
 
     # Cancel Previous runs
     concurrency:
@@ -102,7 +102,7 @@ jobs:
       uses: cypress-io/github-action@v4
       with:
         record: true
-        parallel: true
+        parallel: false
         browser: chrome
         group: 'GEF UI'
         project: ./e2e-tests/gef
@@ -138,7 +138,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [ 1, 2, 3, 4 ]
+        containers: [ 1 ]
 
     # Cancel Previous runs
     concurrency:
@@ -165,7 +165,7 @@ jobs:
       uses: cypress-io/github-action@v4
       with:
         record: true
-        parallel: true
+        parallel: false
         browser: chrome
         group: 'Portal UI'
         project: ./e2e-tests/portal
@@ -201,7 +201,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [ 1, 2, 3 ]
+        containers: [ 1 ]
 
     # Cancel Previous runs
     concurrency:
@@ -228,7 +228,7 @@ jobs:
       uses: cypress-io/github-action@v4
       with:
         record: true
-        parallel: true
+        parallel: false
         browser: chrome
         group: 'TFM UI'
         project: ./e2e-tests/trade-finance-manager
@@ -265,7 +265,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [ 1, 2, 3 ]
+        containers: [ 1 ]
 
     # Cancel Previous runs
     concurrency:
@@ -294,7 +294,7 @@ jobs:
       uses: cypress-io/github-action@v4
       with:
         record: true
-        parallel: true
+        parallel: false
         browser: chrome
         group: 'TFM Submit'
         project: ./e2e-tests/submit-to-trade-finance-manager
