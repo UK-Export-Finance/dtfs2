@@ -1,8 +1,10 @@
 // checks for coverStartDate and returns based on deal-type as stored differently
 const dealTypeCoverStartDate = (facilitySnapshot) => {
+  const { coverStartDate } = facilitySnapshot;
+
   // if exists - GEF
-  if (facilitySnapshot?.coverStartDate) {
-    return facilitySnapshot.coverStartDate;
+  if (coverStartDate) {
+    return coverStartDate;
   }
 
   let dateConstructed;
