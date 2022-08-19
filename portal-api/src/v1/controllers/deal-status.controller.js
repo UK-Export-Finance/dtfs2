@@ -129,7 +129,6 @@ exports.update = (req, res) => {
         dealAfterAllUpdates = await createMiaSubmissionDate(req.params.id, user);
       }
 
-      // ensure that the deal is not migrated
       if (dealAfterAllUpdates.details.submissionCount === 1) {
         dealAfterAllUpdates = await createUkefIds(
           req.params.id,
