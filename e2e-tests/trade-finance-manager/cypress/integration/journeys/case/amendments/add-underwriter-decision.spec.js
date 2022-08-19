@@ -206,9 +206,13 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('have.class', 'govuk-tag--green');
 
-    amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions <script>console.log(\'hello world\')</script> <embed type="text/html" src="snippet.html" width="500" height="200">');
-    amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment <img src=x onerror=console.log(\'img\')/> <object data="snippet.html" width="500" height="200"></object>');
-    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff <input type="text" name="state" value="INPUT_FROM_USER">');
+    // amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions <script>console.log(\'hello world\')</script> <embed type="text/html" src="snippet.html" width="500" height="200">');
+    // amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment <img src=x onerror=console.log(\'img\')/> <object data="snippet.html" width="500" height="200"></object>');
+    // amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff <input type="text" name="state" value="INPUT_FROM_USER">');
+
+    amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
+    amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment');
+    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff');
 
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions/summary');
