@@ -130,7 +130,7 @@ exports.update = (req, res) => {
       }
 
       // ensure that the deal is not migrated
-      if (dealAfterAllUpdates.details.submissionCount === 1 && !Object.prototype.hasOwnProperty.call(dealAfterAllUpdates, 'dataMigration')) {
+      if (dealAfterAllUpdates.details.submissionCount === 1) {
         dealAfterAllUpdates = await createUkefIds(
           req.params.id,
           dealAfterAllUpdates,
