@@ -80,20 +80,25 @@ export const findOne = async (req: Request, res: Response) => {
 
 const createAcbsRecord = async (deal: any, bank: any) => {
   if (deal) {
-    try {
-      await axios({
-        method: 'post',
-        url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
-        data: {
-          deal,
-          bank,
-        },
-      });
-    } catch (error: any) {
-      console.error('Error creating ACBS record: ', { error });
-      return null;
+    const response = await axios({
+      method: 'post',
+      url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
+      data: {
+        deal,
+        bank,
+      },
+    }).catch((e: any) => {
+      console.error('Error creating ACBS record: ', { e });
+      return e;
+    });
+
+    if (response.status) {
+      return response;
     }
   }
+
+  // Upon failure
+  return null;
 };
 
 export const createAcbsRecordPOST = async (req: Request, res: Response) => {
@@ -108,25 +113,33 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
     console.error('ACBS create POST failed ', { error });
     return res.status(400).send();
   }
+
+  // Upon failure
+  return res.status(400).send();
 };
 
 const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
   if (id) {
-    try {
-      await axios({
-        method: 'post',
-        url: `${acbsFunctionUrl}/api/orchestrators/acbs-issue-facility`,
-        data: {
-          facilityId: id,
-          facility,
-          deal,
-        },
-      });
-    } catch (error: any) {
-      console.error('ACBS issue facility POST failed ', { error });
-      return null;
+    const response = await axios({
+      method: 'post',
+      url: `${acbsFunctionUrl}/api/orchestrators/acbs-issue-facility`,
+      data: {
+        facilityId: id,
+        facility,
+        deal,
+      },
+    }).catch((e) => {
+      console.error('ACBS issue facility POST failed ', { e });
+      return e;
+    });
+
+    if (response.status) {
+      return response;
     }
   }
+
+  // Upon failure
+  return null;
 };
 
 export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
@@ -142,6 +155,9 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
     console.error('Error during ACBS facility issue POST: ', { e });
     return res.status(400).send();
   }
+
+  // Upon failure
+  return res.status(400).send();
 };
 
 /**
@@ -153,19 +169,23 @@ const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
 
   if (hasAmendment) {
-    try {
-      return axios({
-        method: 'post',
-        url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
-        data: {
-          amendment,
-        },
-      });
-    } catch (error: any) {
-      console.error('Error amending ACBS facility: ', { error });
-      return null;
+    const response = await axios({
+      method: 'post',
+      url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
+      data: {
+        amendment,
+      },
+    }).catch((e: any) => {
+      console.error('Error amending ACBS facility: ', { e });
+      return e;
+    });
+
+    if (response.status) {
+      return response;
     }
   }
+
+  return null;
 };
 
 /**
@@ -176,40 +196,46 @@ const amendAcbsFacility = async (amendment: Amendment) => {
  * @return {Object} Response object with HTTP code as `status` and response as `data`.
  */
 export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { amendments, facility, deal } = req.body;
-  // Construct payload
-  const payload = {
-    facilityId: id,
-    amount: amendments.ukefExposure,
-    coverEndDate: amendments.coverEndDate,
-    facility,
-    deal,
-  };
+  try {
+    const { id } = req.params;
+    const { amendments, facility, deal } = req.body;
+    // Construct payload
+    const payload = {
+      facilityId: id,
+      amount: amendments.ukefExposure,
+      coverEndDate: amendments.coverEndDate,
+      facility,
+      deal,
+    };
 
-  // Refine payload
+    // Refine payload
 
-  // Change requested
-  const { changeFacilityValue, changeCoverEndDate } = amendments;
-  // UW Decision
-  const { value, coverEndDate } = amendments.ukefDecision || false;
-  const valueDeclined = value === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
-  const coverEndDateDeclined = coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
-  // Delete frivolous property
-  if (!changeFacilityValue || valueDeclined) {
-    delete payload.amount;
+    // Change requested
+    const { changeFacilityValue, changeCoverEndDate } = amendments;
+    // UW Decision
+    const { value, coverEndDate } = amendments.ukefDecision || false;
+    const valueDeclined = value === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    const coverEndDateDeclined = coverEndDate === UNDERWRITER_MANAGER_DECISIONS.DECLINED;
+    // Delete frivolous property
+    if (!changeFacilityValue || valueDeclined) {
+      delete payload.amount;
+    }
+    if (!changeCoverEndDate || coverEndDateDeclined) {
+      delete payload.coverEndDate;
+    }
+
+    const response = await amendAcbsFacility(payload);
+
+    if (response) {
+      // Successful
+      const { status, data } = response;
+      return res.status(status).send(data);
+    }
+  } catch (e) {
+    console.error('Error executing ACBS Facility POST: ', { e });
+    return res.status(400).send();
   }
-  if (!changeCoverEndDate || coverEndDateDeclined) {
-    delete payload.coverEndDate;
-  }
 
-  const response = await amendAcbsFacility(payload);
-
-  if (response) {
-    // Successful
-    const { status, data } = response;
-    return res.status(status).send(data);
-  }
   // Upon failure
   return res.status(400).send();
 };
