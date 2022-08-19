@@ -9,7 +9,7 @@ const mapTenor = (facilitySnapshot, facilityTfm, facility) => {
   // sets original exposure period from facility
   let updatedExposurePeriodInMonths = exposurePeriodInMonths;
   // if amendments
-  if (facility?.amendments?.length > 0) {
+  if (facility?.amendments?.length) {
     const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
 
     // checks if exposure period in months in latest completed amendment

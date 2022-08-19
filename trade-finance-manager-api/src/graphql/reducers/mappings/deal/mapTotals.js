@@ -12,7 +12,7 @@ const mapTotals = (facilities) => {
       const { facilitySnapshot, tfm } = facility;
 
       // if latest amendment then returns value of new amendment
-      if (facility?.amendments?.length > 0) {
+      if (facility?.amendments?.length) {
         const { exchangeRate } = tfm;
         const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
 

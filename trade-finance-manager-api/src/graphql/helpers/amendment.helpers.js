@@ -82,7 +82,7 @@ const calculateAmendmentTotalExposure = (facility) => {
     const { tfm, facilitySnapshot } = facility;
     const { exchangeRate } = tfm;
 
-    if (facility?.amendments?.length > 0) {
+    if (facility?.amendments?.length) {
       const { coverPercentage, coveredPercentage } = facilitySnapshot;
       const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
 

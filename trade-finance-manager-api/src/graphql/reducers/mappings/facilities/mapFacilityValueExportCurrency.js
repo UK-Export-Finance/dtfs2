@@ -8,7 +8,7 @@ const mapFacilityValueExportCurrency = (facility) => {
 
     const { currency, value } = facilitySnapshot;
     // if amendments in facility
-    if (facility?.amendments?.length > 0) {
+    if (facility?.amendments?.length) {
       const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
 
       // if latest completed amendment contains value

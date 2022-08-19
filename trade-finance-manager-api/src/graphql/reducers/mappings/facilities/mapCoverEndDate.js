@@ -11,7 +11,7 @@ const mapCoverEndDate = (day, month, year, facility) => {
     let yearToUse = year;
 
     // if there are amendments present
-    if (facility?.amendments?.length > 0) {
+    if (facility?.amendments?.length) {
       // returns latest completed tfm object from amendment
       const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
       // if coverEndDate as part of amendment changes
