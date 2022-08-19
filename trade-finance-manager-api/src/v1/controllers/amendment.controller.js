@@ -9,7 +9,7 @@ const {
   sendManualBankDecisionEmail,
   canSendToAcbs,
   sendFirstTaskEmail,
-  calculateACBSUkefExposure,
+  calculateAcbsUkefExposure,
   addLatestAmendmentValue,
   addLatestAmendmentDates,
 } = require('../helpers/amendment.helpers');
@@ -236,7 +236,7 @@ const updateFacilityAmendment = async (req, res) => {
       }
 
       // UKEF exposure
-      payload = calculateACBSUkefExposure(payload);
+      payload = calculateAcbsUkefExposure(payload);
 
       // Update Amendment
       const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);

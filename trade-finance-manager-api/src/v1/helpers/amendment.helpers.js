@@ -471,7 +471,7 @@ const addLatestAmendmentDates = async (tfmObject, latestDate, facilityId) => {
  * @param {Object} payload Amendment payload
  * @returns {Object} Computed payload with `ukefExposure` property calculated.
  */
-const calculateACBSUkefExposure = (payload) => {
+const calculateAcbsUkefExposure = (payload) => {
   if (payload?.value && payload?.coveredPercentage) {
     return {
       ...payload,
@@ -519,7 +519,7 @@ module.exports = {
   addLatestAmendmentDates,
   calculateAmendmentDateTenor,
   calculateAmendmentExposure,
-  calculateACBSUkefExposure,
+  calculateAcbsUkefExposure,
   calculateNewFacilityValue,
   roundValue,
 };

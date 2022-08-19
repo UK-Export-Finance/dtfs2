@@ -64,6 +64,9 @@ const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
 
 // returns tfm object from latest amendment if it exists or null
 const findLatestCompletedAmendment = (amendments) => {
+  if (!amendments.length) {
+    return null;
+  }
   // array reversed to get the latest amendment
   const amendmentsReversed = [...amendments].reverse();
   // reversed array checked for first tfm object and is returned
