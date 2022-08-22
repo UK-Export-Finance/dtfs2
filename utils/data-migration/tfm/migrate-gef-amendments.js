@@ -65,11 +65,11 @@ const migrateGefAmendments = async () => {
   const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
   const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
   const allGefAmendments = [];
-  let amendments22To23 = await open('./gef-amendments/mock-gef-amendments2.xlsx', 'Amendments Apr 22 to Apr 23');
+  let amendments22To23 = await open('./amendments/data.xlsx', 'Amendments Apr 22 to Apr 23');
   amendments22To23 = amendments22To23.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()) && item.Stage === COMPLETED);
   allGefAmendments.push(...amendments22To23);
 
-  let amendments21To22 = await open('./gef-amendments/mock-gef-amendments2.xlsx', 'Amendments Apr 21 to Apr 22');
+  let amendments21To22 = await open('./amendments/data.xlsx', 'Amendments Apr 21 to Apr 22');
   amendments21To22 = amendments21To22.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()) && item.Stage === COMPLETED);
   allGefAmendments.push(...amendments21To22);
   const json = [];
