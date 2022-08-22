@@ -171,7 +171,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.continueAmendment().should('be.visible');
   });
 
-  it('should take you to `Add conditions, reasons and comments` summary page if no errors', () => {
+  it('should take you to `Add conditions, reasons and comments` summary page if no errors and sanitize comments on UW page once submitted to bank', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
@@ -221,27 +221,6 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
-    cy.url().should('contain', '/managers-conditions/summary');
-  });
-
-  it('should take you to `Underwriting` page once a manual amendment has been submitted with underwriter managers decision and santised conditions/reasons/comments displayed', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    cy.url().should('contain', `/case/${dealId}/underwriting`);
-    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
-
-    cy.url().should('contain', '/cover-end-date/managers-decision');
-    amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
-    amendmentsPage.continueAmendment().click();
-
-    cy.url().should('contain', '/facility-value/managers-decision');
-    amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('be.checked');
-    amendmentsPage.continueAmendment().click();
-    cy.url().should('contain', '/managers-conditions');
-
-    amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions/summary');
 
     amendmentsPage.amendmentSendToBankButton().click();
