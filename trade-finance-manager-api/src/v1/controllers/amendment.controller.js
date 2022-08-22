@@ -9,7 +9,9 @@ const {
   sendManualBankDecisionEmail,
   canSendToAcbs,
   sendFirstTaskEmail,
-  calculateUkefExposure,
+  calculateAcbsUkefExposure,
+  addLatestAmendmentValue,
+  addLatestAmendmentDates,
 } = require('../helpers/amendment.helpers');
 
 const sendAmendmentEmail = async (amendmentId, facilityId) => {
@@ -71,6 +73,30 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
   }
 
   return null;
+};
+
+// creates tfm object in latest amendment with completed mapping for displaying amendment changes in tfm
+const createAmendmentTFMObject = async (amendmentId, facilityId) => {
+  try {
+    // gets latest amendment value and dates
+    const latestValue = await api.getLatestCompletedValueAmendment(facilityId);
+    const latestCoverEndDate = await api.getLatestCompletedDateAmendment(facilityId);
+
+    let tfmToAdd = {};
+    // populates array with latest value/exposure and date/tenor values
+    tfmToAdd = await addLatestAmendmentValue(tfmToAdd, latestValue, facilityId);
+    tfmToAdd = await addLatestAmendmentDates(tfmToAdd, latestCoverEndDate, facilityId);
+
+    const payload = {
+      tfm: tfmToAdd,
+    };
+
+    await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+    return tfmToAdd;
+  } catch (error) {
+    console.error('TFM-API - unable to add TFM object to amendment', { error });
+    return null;
+  }
 };
 
 const getAmendmentInProgress = async (req, res) => {
@@ -210,15 +236,17 @@ const updateFacilityAmendment = async (req, res) => {
       }
 
       // UKEF exposure
-      payload = calculateUkefExposure(payload);
+      payload = calculateAcbsUkefExposure(payload);
 
       // Update Amendment
       const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
       // sends email if conditions are met
       await sendAmendmentEmail(amendmentId, facilityId);
 
+      // if facility successfully updated and completed, then adds tfm lastUpdated and tfm object in amendments
       if (createdAmendment && tfmLastUpdated) {
         await updateTFMDealLastUpdated(amendmentId, facilityId);
+        await createAmendmentTFMObject(amendmentId, facilityId);
       }
 
       // Fetch facility object
@@ -276,4 +304,5 @@ module.exports = {
   updateTFMDealLastUpdated,
   getLatestCompletedValueAmendment,
   getLatestCompletedDateAmendment,
+  createAmendmentTFMObject,
 };

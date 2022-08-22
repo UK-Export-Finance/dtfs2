@@ -27,7 +27,6 @@ const mapTenorDate = (
 
   if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT) {
     period = ukefGuaranteeInMonths;
-
     return `${period} ${monthString(period)}`;
   }
 
