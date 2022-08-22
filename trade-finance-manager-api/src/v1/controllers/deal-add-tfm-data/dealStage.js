@@ -3,8 +3,11 @@ const CONSTANTS = require('../../../constants');
 const dealStage = (status, submissionType) => {
   let tfmDealStage;
 
-  const hasSubmittedStatus = (status === CONSTANTS.DEALS.PORTAL_DEAL_STATUS.SUBMITTED_TO_UKEF
-    || status === CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED);
+  const hasSubmittedStatus = (
+    status === CONSTANTS.DEALS.PORTAL_DEAL_STATUS.SUBMITTED_TO_UKEF
+    || status === CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED
+    || status === CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF
+  );
 
   if (hasSubmittedStatus) {
     if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
@@ -12,7 +15,7 @@ const dealStage = (status, submissionType) => {
     }
 
     if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      tfmDealStage = CONSTANTS.DEALS.DEAL_STAGE_TFM.APPLICATION;
+      tfmDealStage = CONSTANTS.DEALS.DEAL_STAGE_TFM.IN_PROGRESS_BY_UKEF;
     }
 
     if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {

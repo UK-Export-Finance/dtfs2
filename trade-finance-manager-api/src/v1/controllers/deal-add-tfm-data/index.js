@@ -12,6 +12,7 @@ const addTfmDealData = async (deal) => {
   const {
     _id: dealId,
     submissionType,
+    submissionDate,
     status,
     tfm,
   } = deal;
@@ -19,7 +20,7 @@ const addTfmDealData = async (deal) => {
   const dealUpdate = {
     tfm: {
       ...tfm,
-      ...generateDateReceived(),
+      ...generateDateReceived(submissionDate),
       parties: {},
       activities: [],
       product: addDealProduct(deal),
