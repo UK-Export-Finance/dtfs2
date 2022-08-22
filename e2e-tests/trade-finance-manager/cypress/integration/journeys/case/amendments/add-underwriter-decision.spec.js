@@ -32,58 +32,8 @@ context('Amendments underwriting - add underwriter decision', () => {
     });
   });
 
-  // it('should submit an amendment request', () => {
-  //   cy.login(PIM_USER_1);
-  //   const facilityId = dealFacilities[0]._id;
-  //   cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
-  //   facilityPage.facilityTabAmendments().click();
-  //   amendmentsPage.addAmendmentButton().should('exist');
-  //   amendmentsPage.addAmendmentButton().contains('Add an amendment request');
-  //   amendmentsPage.addAmendmentButton().click();
-  //   cy.url().should('contain', 'request-date');
-
-  //   amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-  //   amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-  //   amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-  //   amendmentsPage.continueAmendment().click();
-
-  //   cy.url().should('contain', 'request-approval');
-  //   // manual approval
-  //   amendmentsPage.amendmentRequestApprovalYes().click();
-  //   amendmentsPage.continueAmendment().click();
-
-  //   cy.url().should('contain', 'amendment-options');
-  //   amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
-  //   amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
-
-  //   // update both the cover end date and the facility value
-  //   amendmentsPage.amendmentCoverEndDateCheckbox().click();
-  //   amendmentsPage.amendmentFacilityValueCheckbox().click();
-  //   amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
-  //   amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-  //   amendmentsPage.continueAmendment().click();
-  //   cy.url().should('contain', 'cover-end-date');
-
-  //   amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
-  //   amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-  //   amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-  //   amendmentsPage.continueAmendment().click();
-
-  //   cy.url().should('contain', 'facility-value');
-  //   amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-  //   amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
-
-  //   amendmentsPage.continueAmendment().click();
-  //   cy.url().should('contain', 'check-answers');
-  //   amendmentsPage.continueAmendment().click();
-  // });
-
-  it('should show relevant errors when not completing sections on UW managers decision journey', () => {
-
-  });
-
-  it('should show errors if sections incorrectly completed and if no errors, then should sanitize comments on UW page once submitted to bank', () => {
+  // TODO: split into seperate it statements.  Changed to 1 big it statement to stop it failing as was not completing it statements in order
+  it('should submit amendment,  show errors if sections incorrectly completed and if no errors, then should sanitize comments on UW page once submitted to bank', () => {
     cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
