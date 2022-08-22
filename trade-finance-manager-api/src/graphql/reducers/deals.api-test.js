@@ -13,7 +13,6 @@ const mapGefSubmissionDetails = require('./mappings/gef-deal/mapGefSubmissionDet
 const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
 const mapGefFacilities = require('./mappings/gef-facilities/mapGefFacilities');
 const mapDeals = require('./mappings/deal/mapDeals');
-const api = require('../../v1/api');
 
 const MOCK_DEAL = require('../../v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
@@ -53,31 +52,26 @@ const mockGefDeal = {
 };
 
 describe('reducer - deals', () => {
-  beforeEach(() => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-  });
-
   describe('mapBssDeal', () => {
-    it('should return a mapped deal', async () => {
+    it('should return a mapped deal', () => {
       const expected = {
         _id: mockBssDeal._id,
         dealSnapshot: {
           ...mockBssDeal.dealSnapshot,
           submissionDetails: mapSubmissionDetails(mockBssDeal.dealSnapshot.submissionDetails),
-          facilities: await mapFacilities(
+          facilities: mapFacilities(
             mockBssDeal.dealSnapshot.facilities,
             mockBssDeal.dealSnapshot.details,
             mockBssDeal.tfm,
           ),
           supportingInformation: mockBssDeal.dealSnapshot.supportingInformation,
           eligibility: mapEligibility(mockBssDeal.dealSnapshot.eligibility),
-          totals: await mapTotals(mockBssDeal.dealSnapshot.facilities),
+          totals: mapTotals(mockBssDeal.dealSnapshot.facilities),
         },
         tfm: mapDealTfm(mockBssDeal),
       };
 
-      const result = await mapBssDeal(mockBssDeal);
+      const result = mapBssDeal(mockBssDeal);
       expect(result).toEqual(expected);
     });
   });
@@ -100,14 +94,14 @@ describe('reducer - deals', () => {
           bank: mockGefDeal.dealSnapshot.bank,
           details: mapGefDealDetails(mockGefDeal.dealSnapshot),
           submissionDetails: mapGefSubmissionDetails(mockGefDeal.dealSnapshot),
-          facilities: await mapGefFacilities(mockGefDeal.dealSnapshot, mockGefDeal.tfm),
+          facilities: mapGefFacilities(mockGefDeal.dealSnapshot, mockGefDeal.tfm),
           supportingInformation: mockGefDeal.dealSnapshot.supportingInformation,
-          totals: await mapTotals(mockGefDeal.dealSnapshot.facilities),
+          totals: mapTotals(mockGefDeal.dealSnapshot.facilities),
         },
         tfm: mapDealTfm(mockGefDeal),
       };
 
-      const result = await mapGefDeal(mockGefDeal);
+      const result = mapGefDeal(mockGefDeal);
       expect(result).toEqual(expected);
     });
   });
@@ -125,7 +119,7 @@ describe('reducer - deals', () => {
       const expected = mapDeals(
         mockDeals,
         mapBssDeal,
-        await mapGefDeal,
+        mapGefDeal,
       );
 
       expect(result).toEqual(expected);

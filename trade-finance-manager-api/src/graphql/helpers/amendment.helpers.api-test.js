@@ -1,7 +1,5 @@
 const amendmentHelpers = require('./amendment.helpers');
 const { CURRENCY } = require('../../constants/currency.constant');
-const { FACILITY_TYPE } = require('../../constants/facilities');
-const api = require('../../v1/api');
 
 describe('amendmentChangeValueExportCurrency()', () => {
   const amendment = { currency: CURRENCY.GBP };
@@ -131,60 +129,6 @@ describe('calculateUkefExposure()', () => {
   });
 });
 
-describe('calculateAmendmentTenor()', () => {
-  it('should return coverStartDate in correct format if gef coverStartDate', async () => {
-    const facilitySnapshot = {
-      coverStartDate: new Date('2022-07-20T00:00:00.000+00:00'),
-      ukefFacilityType: FACILITY_TYPE.CASH,
-    };
-    const amendment = { coverEndDate: 2541930208 };
-
-    const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
-    const expected = 12;
-    expect(result).toEqual(expected);
-  });
-
-  it('should return null if no facilitySnapshot', async () => {
-    const facilitySnapshot = null;
-    const amendment = { coverEndDate: 2541930208 };
-
-    const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
-    expect(result).toBeNull();
-  });
-
-  it('should return null if no facilitySnapshot coverStartDate', async () => {
-    const facilitySnapshot = {
-      ukefFacilityType: FACILITY_TYPE.CASH,
-    };
-    const amendment = { coverEndDate: 2541930208 };
-
-    const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
-    expect(result).toBeNull();
-  });
-
-  it('should return null if no amendment', async () => {
-    const facilitySnapshot = {
-      coverStartDate: new Date('2022-07-20T00:00:00.000+00:00'),
-      ukefFacilityType: FACILITY_TYPE.CASH,
-    };
-    const amendment = null;
-
-    const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
-    expect(result).toBeNull();
-  });
-
-  it('should return null if no amendment coverEndDate', async () => {
-    const facilitySnapshot = {
-      coverStartDate: new Date('2022-07-20T00:00:00.000+00:00'),
-      ukefFacilityType: FACILITY_TYPE.CASH,
-    };
-    const amendment = { };
-
-    const result = await amendmentHelpers.calculateAmendmentTenor(facilitySnapshot, amendment);
-    expect(result).toBeNull();
-  });
-});
-
 describe('calculateAmendmentTotalExposure()', () => {
   const mockAmendmentValueResponse = {
     value: 5000,
@@ -202,20 +146,50 @@ describe('calculateAmendmentTotalExposure()', () => {
       ukefExposure: 23000.00,
       facilityValueInGBP: 1034.7800881821,
     },
+    amendments: [{ ...mockAmendmentValueResponse }],
   };
 
-  it('should return exposure value when amendment in progress ', async () => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
+  it('should null if amendment not completed', () => {
+    const result = amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
+    expect(result).toBeNull();
+  });
 
-    const result = await amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
+  it('should return exposure value when amendment completed', () => {
+    mockFacility.amendments[0].tfm = {
+      value: { ...mockAmendmentValueResponse },
+    };
+    const result = amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
     const expected = mockAmendmentValueResponse.value * (mockFacility.facilitySnapshot.coverPercentage / 100);
     expect(result).toEqual(expected);
   });
+});
 
-  it('should null if amendment not completed', async () => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+describe('findLatestCompletedAmendment()', () => {
+  it('should return last tfm object in array of amendments', () => {
+    const amendments = [
+      { tfm: { value: 2000 } },
+      {
+        value: 2000,
+      },
+      {
+        tfm: { value: 5000 },
+      },
+    ];
 
-    const result = await amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
-    expect(result).toBeNull();
+    const response = amendmentHelpers.findLatestCompletedAmendment(amendments);
+    const expected = { value: 5000 };
+
+    expect(response).toEqual(expected);
+  });
+
+  it('should return null if no tfm objects in array', () => {
+    const amendments = [
+      { value: 2000 },
+      { value: 2000 },
+      { value: 5000 },
+    ];
+
+    const response = amendmentHelpers.findLatestCompletedAmendment(amendments);
+    expect(response).toBeNull();
   });
 });

@@ -1,9 +1,14 @@
 const mapTotals = require('./mapTotals');
 const { formattedNumber } = require('../../../../utils/number');
-const api = require('../../../../v1/api');
 const { CURRENCY } = require('../../../../constants/currency.constant');
 
 describe('mapTotals', () => {
+  const mockAmendmentValueResponse = {
+    value: 5000,
+    currency: CURRENCY.GBP,
+    amendmentId: '1234',
+  };
+
   const mockBondAndLoanFacilities = [
     {
       _id: '1',
@@ -15,6 +20,7 @@ describe('mapTotals', () => {
         ukefExposure: 80000.00,
         facilityValueInGBP: 2117.4290881821,
       },
+      amendments: [{ ...mockAmendmentValueResponse }],
     },
     {
       _id: '2',
@@ -26,6 +32,7 @@ describe('mapTotals', () => {
         ukefExposure: 23000.00,
         facilityValueInGBP: 1034.7800881821,
       },
+      amendments: [{ ...mockAmendmentValueResponse }],
     },
     {
       _id: '3',
@@ -37,6 +44,7 @@ describe('mapTotals', () => {
         ukefExposure: 8000.00,
         facilityValueInGBP: 3200.567,
       },
+      amendments: [{ ...mockAmendmentValueResponse }],
     },
     {
       _id: '4',
@@ -49,6 +57,7 @@ describe('mapTotals', () => {
       tfm: {
         ukefExposure: 9000.00,
       },
+      amendments: [{ ...mockAmendmentValueResponse }],
     },
   ];
 
@@ -62,6 +71,7 @@ describe('mapTotals', () => {
         coverPercentage: 25,
       },
       tfm: {},
+      amendments: [{ ...mockAmendmentValueResponse }],
     },
     {
       _id: '2',
@@ -72,6 +82,7 @@ describe('mapTotals', () => {
         coverPercentage: 25,
       },
       tfm: {},
+      amendments: [{ ...mockAmendmentValueResponse }],
     },
     {
       _id: '3',
@@ -84,24 +95,13 @@ describe('mapTotals', () => {
       tfm: {
         facilityValueInGBP: 3200.567,
       },
+      amendments: [{ ...mockAmendmentValueResponse }],
     },
   ];
 
-  const mockAmendmentValueResponse = {
-    value: 5000,
-    currency: CURRENCY.GBP,
-    amendmentId: '1234',
-  };
-
-  beforeEach(() => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-    api.getAmendmentById = () => Promise.resolve({});
-  });
-
   describe('with bond & loan facilities', () => {
-    it('should return formatted total of all facility values', async () => {
-      const result = await mapTotals(mockBondAndLoanFacilities);
+    it('should return formatted total of all facility values', () => {
+      const result = mapTotals(mockBondAndLoanFacilities);
 
       const totalValue = Number(mockBondAndLoanFacilities[0].tfm.facilityValueInGBP)
         + Number(mockBondAndLoanFacilities[1].tfm.facilityValueInGBP)
@@ -112,10 +112,8 @@ describe('mapTotals', () => {
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
 
-    it('should return formatted total of all facility values when amendment not complete', async () => {
-      api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-
-      const result = await mapTotals(mockBondAndLoanFacilities);
+    it('should return formatted total of all facility values when amendment not complete', () => {
+      const result = mapTotals(mockBondAndLoanFacilities);
 
       const totalValue = Number(mockBondAndLoanFacilities[0].tfm.facilityValueInGBP)
         + Number(mockBondAndLoanFacilities[1].tfm.facilityValueInGBP)
@@ -126,10 +124,17 @@ describe('mapTotals', () => {
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
 
-    it('should return formatted total of all amended values when amendment completed', async () => {
-      api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
+    it('should return formatted total of all amended values when amendment completed', () => {
+      mockBondAndLoanFacilities.map((facility) => {
+        const facilityMapped = { ...facility };
 
-      const result = await mapTotals(mockBondAndLoanFacilities);
+        facilityMapped.amendments[0].tfm = {
+          value: { ...mockAmendmentValueResponse },
+        };
+        return facilityMapped;
+      });
+
+      const result = mapTotals(mockBondAndLoanFacilities);
 
       const totalValue = Number(mockBondAndLoanFacilities[0].tfm.facilityValueInGBP)
         + Number(mockBondAndLoanFacilities[1].tfm.facilityValueInGBP)
@@ -146,8 +151,8 @@ describe('mapTotals', () => {
   });
 
   describe('with cash & contingent facilities', () => {
-    it('should return formatted total of all facility values', async () => {
-      const result = await mapTotals(mockCashAndContingentFacilities);
+    it('should return formatted total of all facility values', () => {
+      const result = mapTotals(mockCashAndContingentFacilities);
 
       const totalValue = Number(mockCashAndContingentFacilities[0].facilitySnapshot.value)
         + Number(mockCashAndContingentFacilities[1].facilitySnapshot.value)
@@ -157,9 +162,8 @@ describe('mapTotals', () => {
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
 
-    it('should return formatted total of all facility values when amendment not complete', async () => {
-      api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-      const result = await mapTotals(mockCashAndContingentFacilities);
+    it('should return formatted total of all facility values when amendment not complete', () => {
+      const result = mapTotals(mockCashAndContingentFacilities);
 
       const totalValue = Number(mockCashAndContingentFacilities[0].facilitySnapshot.value)
         + Number(mockCashAndContingentFacilities[1].facilitySnapshot.value)
@@ -169,9 +173,16 @@ describe('mapTotals', () => {
       expect(result.facilitiesValueInGBP).toEqual(expected);
     });
 
-    it('should return formatted total of all amended values when amendment is complete', async () => {
-      api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
-      const result = await mapTotals(mockCashAndContingentFacilities);
+    it('should return formatted total of all amended values when amendment is complete', () => {
+      mockCashAndContingentFacilities.map((facility) => {
+        const facilityMapped = { ...facility };
+
+        facilityMapped.amendments[0].tfm = {
+          value: { ...mockAmendmentValueResponse },
+        };
+        return facilityMapped;
+      });
+      const result = mapTotals(mockCashAndContingentFacilities);
 
       const totalValue = Number(mockCashAndContingentFacilities[0].facilitySnapshot.value)
         + Number(mockCashAndContingentFacilities[1].facilitySnapshot.value)
@@ -186,8 +197,17 @@ describe('mapTotals', () => {
     });
   });
 
-  it('should return formatted total of all facilities ukefExposure', async () => {
-    const result = await mapTotals(mockBondAndLoanFacilities);
+  it('should return formatted total of all facilities ukefExposure', () => {
+    mockBondAndLoanFacilities.map((facility) => {
+      const facilityMapped = { ...facility };
+
+      facilityMapped.amendments[0].tfm = {
+        value: { },
+      };
+      return facilityMapped;
+    });
+
+    const result = mapTotals(mockBondAndLoanFacilities);
 
     const totalUkefExposure = mockBondAndLoanFacilities[0].tfm.ukefExposure
       + mockBondAndLoanFacilities[1].tfm.ukefExposure
@@ -198,9 +218,8 @@ describe('mapTotals', () => {
     expect(result.facilitiesUkefExposure).toEqual(expected);
   });
 
-  it('should return formatted total of all facilities ukefExposure when amendment not complete', async () => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    const result = await mapTotals(mockBondAndLoanFacilities);
+  it('should return formatted total of all facilities ukefExposure when amendment not complete', () => {
+    const result = mapTotals(mockBondAndLoanFacilities);
 
     const totalUkefExposure = mockBondAndLoanFacilities[0].tfm.ukefExposure
       + mockBondAndLoanFacilities[1].tfm.ukefExposure
@@ -211,9 +230,17 @@ describe('mapTotals', () => {
     expect(result.facilitiesUkefExposure).toEqual(expected);
   });
 
-  it('should return formatted total of all amended ukefExposure when amendment complete', async () => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
-    const result = await mapTotals(mockBondAndLoanFacilities);
+  it('should return formatted total of all amended ukefExposure when amendment complete', () => {
+    mockBondAndLoanFacilities.map((facility) => {
+      const facilityMapped = { ...facility };
+
+      facilityMapped.amendments[0].tfm = {
+        value: { ...mockAmendmentValueResponse },
+      };
+      return facilityMapped;
+    });
+
+    const result = mapTotals(mockBondAndLoanFacilities);
 
     const totalUkefExposure = 5000;
 

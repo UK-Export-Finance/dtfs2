@@ -3,7 +3,7 @@ const mapFacilities = require('../facilities/mapFacilities');
 const mapSubmissionDetails = require('./mapSubmissionDetails');
 const mapEligibility = require('./mapEligibility');
 
-const mapDealSnapshot = async (deal) => {
+const mapDealSnapshot = (deal) => {
   const {
     dealSnapshot,
     tfm: dealTfm,
@@ -19,8 +19,8 @@ const mapDealSnapshot = async (deal) => {
     ...dealSnapshot,
     submissionDetails: mapSubmissionDetails(submissionDetails),
     eligibility: mapEligibility(eligibility),
-    facilities: await mapFacilities(facilities, dealSnapshot.details, dealTfm),
-    totals: await mapTotals(facilities),
+    facilities: mapFacilities(facilities, dealSnapshot.details, dealTfm),
+    totals: mapTotals(facilities),
     isFinanceIncreasing: false,
   };
 

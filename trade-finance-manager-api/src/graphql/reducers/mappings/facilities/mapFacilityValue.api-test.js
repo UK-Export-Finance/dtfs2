@@ -1,21 +1,16 @@
 const mapFacilityValue = require('./mapFacilityValue');
 const { formattedNumber } = require('../../../../utils/number');
-const api = require('../../../../v1/api');
 const { CURRENCY } = require('../../../../constants/currency.constant');
 
 describe('mapFacilityValue', () => {
-  beforeEach(() => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-  });
-
   describe('when no facility provided', () => {
-    it('should return currency id and value', async () => {
+    it('should return currency id and value', () => {
       const mockFacility = {
         currency: { id: CURRENCY.GBP },
         value: '1,234',
       };
 
-      const result = await mapFacilityValue(
+      const result = mapFacilityValue(
         mockFacility.currency.id,
         mockFacility.value,
         {},
@@ -27,7 +22,7 @@ describe('mapFacilityValue', () => {
   });
 
   describe('when facility currency is NOT GBP', () => {
-    it('should return formatted facilityValueInGBP', async () => {
+    it('should return formatted facilityValueInGBP', () => {
       const mockTfmFacility = {
         facilityValueInGBP: '22000',
       };
@@ -38,7 +33,7 @@ describe('mapFacilityValue', () => {
         tfm: mockTfmFacility,
       };
 
-      const result = await mapFacilityValue(
+      const result = mapFacilityValue(
         mockFacility.currency.id,
         mockFacility.value,
         mockFacility,
@@ -50,7 +45,7 @@ describe('mapFacilityValue', () => {
   });
 
   describe('when facility currency is GBP', () => {
-    it('should return formatted facilityValueInGBP', async () => {
+    it('should return formatted facilityValueInGBP', () => {
       const mockTfmFacility = {
         facilityValueInGBP: '22000',
       };
@@ -61,13 +56,58 @@ describe('mapFacilityValue', () => {
         tfm: mockTfmFacility,
       };
 
-      const result = await mapFacilityValue(
+      const result = mapFacilityValue(
         mockFacility.currency.id,
         mockFacility.value,
         mockFacility,
       );
 
       const expected = `${CURRENCY.GBP} ${formattedNumber(mockFacility.value)}`;
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('amendment mapFacilityValue', () => {
+    const mockTfmFacility = {
+      facilityValueInGBP: '22000',
+    };
+
+    const mockFacility = {
+      currency: { id: CURRENCY.GBP },
+      value: '42000',
+      tfm: mockTfmFacility,
+      amendments: [{
+        value: 2000,
+      }],
+    };
+
+    it('should not add amendment facility value when amendment not complete', () => {
+      const result = mapFacilityValue(
+        mockFacility.currency.id,
+        mockFacility.value,
+        mockFacility,
+      );
+
+      const expected = `${CURRENCY.GBP} ${formattedNumber(mockFacility.value)}`;
+      expect(result).toEqual(expected);
+    });
+
+    it('should add amendment facility value when amendment complete', () => {
+      const amendmentValue = 2000;
+
+      mockFacility.amendments[0].tfm = {
+        value: {
+          value: amendmentValue,
+          currency: CURRENCY.GBP,
+        },
+      };
+      const result = mapFacilityValue(
+        mockFacility.currency.id,
+        mockFacility.value,
+        mockFacility,
+      );
+
+      const expected = `${CURRENCY.GBP} ${formattedNumber(amendmentValue)}`;
       expect(result).toEqual(expected);
     });
   });
