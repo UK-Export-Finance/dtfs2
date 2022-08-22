@@ -3,7 +3,7 @@ const mapFacilityTfm = require('./mappings/facilities/mapFacilityTfm');
 const mapGefFacility = require('./mappings/gef-facilities/mapGefFacility');
 const isGefFacility = require('../helpers/isGefFacility');
 
-const facilityReducer = async (facility, dealSnapshot, dealTfm) => {
+const facilityReducer = (facility, dealSnapshot, dealTfm) => {
   const { facilitySnapshot } = facility;
 
   if (isGefFacility(facilitySnapshot.type)) {
@@ -12,13 +12,13 @@ const facilityReducer = async (facility, dealSnapshot, dealTfm) => {
 
   const result = {
     _id: facility._id,
-    facilitySnapshot: await mapFacility(
+    facilitySnapshot: mapFacility(
       facilitySnapshot,
       facility.tfm,
       dealSnapshot.details,
       facility,
     ),
-    tfm: await mapFacilityTfm(facility.tfm, dealTfm, facility),
+    tfm: mapFacilityTfm(facility.tfm, dealTfm, facility),
   };
 
   return result;
