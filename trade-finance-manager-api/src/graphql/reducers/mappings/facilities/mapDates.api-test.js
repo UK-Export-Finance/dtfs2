@@ -2,9 +2,7 @@ const { format, fromUnixTime } = require('date-fns');
 const mapDates = require('./mapDates');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapTenorDate = require('./mapTenorDate');
-const api = require('../../../../v1/api');
 const { FACILITIES } = require('../../../../constants');
-const { calculateAmendmentTenor } = require('../../../helpers/amendment.helpers');
 
 describe('mapDates', () => {
   const mockCoverEndDate = {
@@ -21,12 +19,14 @@ describe('mapDates', () => {
 
   const mockFacility = {
     _id: '1',
-    submittedAsIssuedDate: 160690061100,
-    requestedCoverStartDate: '2021-12-08T00:00:00.000Z',
-    ukefFacilityType: FACILITIES.FACILITY_TYPE.BOND,
-    ukefGuaranteeInMonths: '12',
-    ...mockCoverEndDate,
-    ...mockCoverStartDate,
+    facilitySnapshot: {
+      submittedAsIssuedDate: 160690061100,
+      requestedCoverStartDate: '2021-12-08T00:00:00.000Z',
+      ukefFacilityType: FACILITIES.FACILITY_TYPE.BOND,
+      ukefGuaranteeInMonths: '12',
+      ...mockCoverEndDate,
+      ...mockCoverStartDate,
+    },
   };
 
   const mockFacilityTfm = {
@@ -37,40 +37,36 @@ describe('mapDates', () => {
     submissionDate: '1606900616651',
   };
 
-  beforeEach(() => {
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-  });
-
-  it('should return inclusionNoticeReceived as deal submissionDate if manualInclusionNoticeSubmissionDate is empty', async () => {
-    const result = await mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
+  it('should return inclusionNoticeReceived as deal submissionDate if manualInclusionNoticeSubmissionDate is empty', () => {
+    const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
     expect(result.inclusionNoticeReceived).toEqual(mockDealDetails.submissionDate);
   });
 
-  it('should return manualInclusionNoticeSubmissionDate as deal submissionDate if manualInclusionNoticeSubmissionDate has a value', async () => {
+  it('should return manualInclusionNoticeSubmissionDate as deal submissionDate if manualInclusionNoticeSubmissionDate has a value', () => {
     const minMockDealDetails = {
       ...mockDealDetails,
       manualInclusionNoticeSubmissionDate: '16069006199999',
     };
-    const result = await mapDates(mockFacility, mockFacilityTfm, minMockDealDetails);
+    const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, minMockDealDetails);
     expect(result.inclusionNoticeReceived).toEqual(minMockDealDetails.manualInclusionNoticeSubmissionDate);
   });
 
   it('should return bankIssueNoticeReceived as facility submittedAsIssuedDate;', async () => {
-    const result = await mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
+    const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
 
-    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.submittedAsIssuedDate);
+    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.facilitySnapshot.submittedAsIssuedDate);
   });
 
   it('should return coverStartDate as facility requestedCoverStartDate', async () => {
-    const result = await mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
+    const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
 
-    expect(result.coverStartDate).toEqual(mockFacility.requestedCoverStartDate);
+    expect(result.coverStartDate).toEqual(mockFacility.facilitySnapshot.requestedCoverStartDate);
   });
 
-  it('should return coverEndDate as facility coverEndDate values', async () => {
-    const result = await mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
+  it('should return coverEndDate as facility coverEndDate values', () => {
+    const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
 
-    const expected = await mapCoverEndDate(
+    const expected = mapCoverEndDate(
       mockCoverEndDate['coverEndDate-day'],
       mockCoverEndDate['coverEndDate-month'],
       mockCoverEndDate['coverEndDate-year'],
@@ -80,24 +76,30 @@ describe('mapDates', () => {
     expect(result.coverEndDate).toEqual(expected);
   });
 
-  it('should return tenor', async () => {
-    const result = await mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
+  it('should return tenor', () => {
+    const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
 
     const expected = mapTenorDate(
-      mockFacility.facilityStage,
-      mockFacility.ukefGuaranteeInMonths,
+      mockFacility.facilitySnapshot.facilityStage,
+      mockFacility.facilitySnapshot.ukefGuaranteeInMonths,
       mockFacilityTfm.exposurePeriodInMonths,
     );
 
     expect(result.tenor).toEqual(expected);
   });
 
-  it('should not return amendment tenor and coverEndDate if amendment not completed', async () => {
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+  it('should not return amendment tenor and coverEndDate if amendment not completed', () => {
+    const coverEndDateUnix = 1658403289;
 
-    const result = await mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
+    mockFacility.amendments = [
+      {
+        coverEndDate: coverEndDateUnix,
+      },
+    ];
 
-    const expectedCoverEndDate = await mapCoverEndDate(
+    const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
+
+    const expectedCoverEndDate = mapCoverEndDate(
       mockCoverEndDate['coverEndDate-day'],
       mockCoverEndDate['coverEndDate-month'],
       mockCoverEndDate['coverEndDate-year'],
@@ -105,8 +107,8 @@ describe('mapDates', () => {
     );
 
     const expectedTenor = mapTenorDate(
-      mockFacility.facilityStage,
-      mockFacility.ukefGuaranteeInMonths,
+      mockFacility.facilitySnapshot.facilityStage,
+      mockFacility.facilitySnapshot.ukefGuaranteeInMonths,
       mockFacilityTfm.exposurePeriodInMonths,
     );
 
@@ -114,25 +116,27 @@ describe('mapDates', () => {
     expect(result.tenor).toEqual(expectedTenor);
   });
 
-  it('should return amendment tenor and coverEndDate if amendment completed', async () => {
+  it('should return amendment tenor and coverEndDate if amendment completed', () => {
     const coverEndDateUnix = 1658403289;
-    const mockAmendmentResponse = {
-      coverEndDate: coverEndDateUnix,
-      amendmentId: '1234',
-    };
+    const amendmentTenorPeriod = 2;
 
-    api.getLatestCompletedDateAmendment = () => Promise.resolve(mockAmendmentResponse);
+    mockFacility.amendments = [
+      {
+        tfm: {
+          coverEndDate: coverEndDateUnix,
+          amendmentExposurePeriodInMonths: amendmentTenorPeriod,
+        },
+      },
+    ];
 
-    const result = await mapDates(mockFacility, mockFacilityTfm, mockDealDetails);
+    const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
 
     const expectedCoverEndDate = format(fromUnixTime(coverEndDateUnix), 'd MMMM yyyy');
 
-    const tenorPeriod = await calculateAmendmentTenor(mockFacility, mockAmendmentResponse);
-
     const expectedTenor = mapTenorDate(
-      mockFacility.facilityStage,
-      mockFacility.ukefGuaranteeInMonths,
-      tenorPeriod,
+      mockFacility.facilitySnapshot.facilityStage,
+      mockFacility.facilitySnapshot.ukefGuaranteeInMonths,
+      amendmentTenorPeriod,
     );
 
     expect(result.coverEndDate).toEqual(expectedCoverEndDate);

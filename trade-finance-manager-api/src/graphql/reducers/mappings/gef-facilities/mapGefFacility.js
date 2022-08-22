@@ -10,7 +10,7 @@ const mapGefFacilityDates = require('./mapGefFacilityDates');
 const mapFacilityValueExportCurrency = require('../facilities/mapFacilityValueExportCurrency');
 const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
 
-const mapGefFacility = async (facility, dealSnapshot, dealTfm) => {
+const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
   const {
     facilitySnapshot,
     tfm: facilityTfm,
@@ -47,14 +47,14 @@ const mapGefFacility = async (facility, dealSnapshot, dealTfm) => {
       bankFacilityReference: name,
       banksInterestMargin: `${interestPercentage}%`,
       coveredPercentage: `${coverPercentage}%`,
-      dates: await mapGefFacilityDates(facilitySnapshot, facilityTfm, dealSnapshot),
+      dates: mapGefFacilityDates(facility, facilityTfm, dealSnapshot),
       facilityProduct: facilitySnapshot.facilityProduct,
       facilityStage: facilitySnapshot.facilityStage,
       hasBeenIssued: facilitySnapshot.hasBeenIssued,
       type: mapFacilityType(facilitySnapshot),
       currency: currency.id,
-      facilityValueExportCurrency: await mapFacilityValueExportCurrency(facility),
-      value: await mapFacilityValue(currency.id, formattedFacilityValue, facility),
+      facilityValueExportCurrency: mapFacilityValueExportCurrency(facility),
+      value: mapFacilityValue(currency.id, formattedFacilityValue, facility),
       feeType,
       feeFrequency,
       guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFee),
@@ -63,11 +63,11 @@ const mapGefFacility = async (facility, dealSnapshot, dealTfm) => {
       // TODO: DTFS2-4634 - we shouldn't need type and ukefFacilityType.
       ukefFacilityType: mapGefUkefFacilityType(type),
       ukefFacilityId,
-      ukefExposure: await mapUkefExposureValue(facilityTfm, facility),
+      ukefExposure: mapUkefExposureValue(facilityTfm, facility),
       providedOn: facilitySnapshot.details,
       providedOnOther: facilitySnapshot.detailsOther,
     },
-    tfm: await mapFacilityTfm(facilityTfm, dealTfm, facility),
+    tfm: mapFacilityTfm(facilityTfm, dealTfm, facility),
   };
 
   return result;
