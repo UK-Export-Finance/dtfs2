@@ -1,6 +1,6 @@
 const { mapCashContingentFacility } = require('./map-cash-contingent-facility');
 
-const mapGefDeal = async (deal) => {
+const mapGefDeal = (deal) => {
   const { dealSnapshot, tfm } = deal;
 
   const {

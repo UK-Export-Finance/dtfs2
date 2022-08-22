@@ -2,7 +2,6 @@ const mapUkefExposure = require('./mapUkefExposure');
 const { formattedNumber } = require('../../../../utils/number');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../../../constants/deals');
 const { CURRENCY } = require('../../../../constants/currency.constant');
-const api = require('../../../../v1/api');
 
 describe('mapUkefExposure()', () => {
   const mockAmendment = {
@@ -22,9 +21,8 @@ describe('mapUkefExposure()', () => {
     },
   };
   const mockAmendmentValueResponse = {
-    value: 5000,
-    currency: CURRENCY.GBP,
-    amendmentId: '1234',
+    exposure: '600.00',
+    timestamp: 1658403289,
   };
 
   const facilitySnapshot = {
@@ -32,7 +30,7 @@ describe('mapUkefExposure()', () => {
     _id: '1',
   };
 
-  it('should return tfm.ukefExposure with timestamp', async () => {
+  it('should return tfm.ukefExposure with timestamp', () => {
     const mockFacilityTfm = {
       ukefExposure: '2,469.00',
       ukefExposureCalculationTimestamp: '1606900616651',
@@ -43,7 +41,7 @@ describe('mapUkefExposure()', () => {
       tfm: mockFacilityTfm,
     };
 
-    const result = await mapUkefExposure(mockFacilityTfm, mockFacility);
+    const result = mapUkefExposure(mockFacilityTfm, mockFacility);
 
     const formattedUkefExposure = formattedNumber(mockFacilityTfm.ukefExposure);
 
@@ -55,21 +53,20 @@ describe('mapUkefExposure()', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return tfm.ukefExposure with timestamp when amendment not completed', async () => {
+  it('should return tfm.ukefExposure with timestamp when amendment not completed', () => {
     const mockFacilityTfm = {
       ukefExposure: '2,469.00',
       ukefExposureCalculationTimestamp: '1606900616651',
     };
-
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
 
     const mockFacility = {
       _id: '12',
       facilitySnapshot: {},
       tfm: mockFacilityTfm,
+      amendments: [{ ...mockAmendment }],
     };
 
-    const result = await mapUkefExposure(mockFacilityTfm, mockFacility);
+    const result = mapUkefExposure(mockFacilityTfm, mockFacility);
 
     const formattedUkefExposure = formattedNumber(mockFacilityTfm.ukefExposure);
 
@@ -81,24 +78,24 @@ describe('mapUkefExposure()', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return new exposure with timestamp when amendment completed', async () => {
-    mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
-
+  it('should return new exposure with timestamp when amendment completed', () => {
     const mockFacilityTfm = {
       ukefExposure: '2,469.00',
       ukefExposureCalculationTimestamp: '1606900616651',
     };
-
-    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
-    api.getAmendmentById = () => Promise.resolve(mockAmendment);
 
     const mockFacility = {
       _id: '12',
       facilitySnapshot,
       tfm: mockFacilityTfm,
+      amendments: [{ ...mockAmendment }],
     };
 
-    const result = await mapUkefExposure(mockFacilityTfm, mockFacility);
+    mockFacility.amendments[0].tfm = {
+      exposure: { ...mockAmendmentValueResponse },
+    };
+
+    const result = mapUkefExposure(mockFacilityTfm, mockFacility);
 
     const formattedUkefExposure = '600.00';
 
@@ -110,7 +107,7 @@ describe('mapUkefExposure()', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return empty object if no facilitytfm', async () => {
+  it('should return empty object if no facilitytfm', () => {
     mockAmendment.bankDecision = { decision: AMENDMENT_BANK_DECISION.PROCEED };
 
     const mockFacilityTfm = null;
@@ -121,7 +118,7 @@ describe('mapUkefExposure()', () => {
       tfm: mockFacilityTfm,
     };
 
-    const result = await mapUkefExposure(mockFacilityTfm, mockFacility);
+    const result = mapUkefExposure(mockFacilityTfm, mockFacility);
 
     expect(result).toEqual({});
   });

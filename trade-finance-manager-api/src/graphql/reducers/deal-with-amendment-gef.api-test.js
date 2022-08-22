@@ -1,7 +1,6 @@
 const { fromUnixTime, format } = require('date-fns');
 const dealReducer = require('./deal');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
-const api = require('../../v1/api');
 const { CURRENCY } = require('../../constants/currency.constant');
 
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
@@ -21,10 +20,7 @@ describe('gef deal with amendments', () => {
     amendmentId: '1234',
   };
 
-  it('should return original deal as amendment not fully complete', async () => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-
+  it('should return original deal as amendment not fully complete', () => {
     const mockGefDeal = {
       _id: MOCK_GEF_DEAL._id,
       dealSnapshot: {
@@ -33,23 +29,21 @@ describe('gef deal with amendments', () => {
           {
             facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
             tfm: {},
+            amendments: [{ ...mockAmendmentValueResponse, ...mockAmendmentValueResponse }],
           },
         ],
       },
       tfm: {},
     };
 
-    const result = await dealReducer(mockGefDeal);
+    const result = dealReducer(mockGefDeal);
 
-    const expected = await mapGefDeal(mockGefDeal);
+    const expected = mapGefDeal(mockGefDeal);
 
     expect(result).toEqual(expected);
   });
 
-  it('should return updated deal with completed amendment with 2 changes', async () => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-
+  it('should return updated deal with completed amendment with 2 changes', () => {
     const mockGefDeal = {
       _id: MOCK_GEF_DEAL._id,
       dealSnapshot: {
@@ -58,19 +52,22 @@ describe('gef deal with amendments', () => {
           {
             facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
             tfm: {},
+            amendments: [{ ...mockAmendmentValueResponse, ...mockAmendmentValueResponse }],
           },
         ],
       },
       tfm: {},
     };
 
-    const originalResult = await dealReducer(mockGefDeal);
+    const originalResult = dealReducer(mockGefDeal);
 
-    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
-    api.getLatestCompletedDateAmendment = () => Promise.resolve(mockAmendmentDateResponse);
+    mockGefDeal.dealSnapshot.facilities[0].amendments[0].tfm = {
+      value: { ...mockAmendmentValueResponse },
+      ...mockAmendmentDateResponse,
+      amendmentExposurePeriodInMonths: 12,
+    };
 
-    const amendmentResult = await mapGefDeal(mockGefDeal);
-
+    const amendmentResult = mapGefDeal(mockGefDeal);
     expect(amendmentResult).not.toEqual(originalResult);
 
     const amendedValue = `${CURRENCY.GBP} 5,000.00`;
@@ -82,10 +79,7 @@ describe('gef deal with amendments', () => {
     expect(amendmentResult.dealSnapshot.facilities[0].facilitySnapshot.dates.tenor).toEqual(amendedTenor);
   });
 
-  it('should return updated deal with completed amendment with 1 changes if 1 accepted and 1 rejected', async () => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-
+  it('should return updated deal with completed amendment with 1 changes if 1 accepted and 1 rejected', () => {
     const mockGefDeal = {
       _id: MOCK_GEF_DEAL._id,
       dealSnapshot: {
@@ -94,17 +88,20 @@ describe('gef deal with amendments', () => {
           {
             facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
             tfm: {},
+            amendments: [{ ...mockAmendmentValueResponse, ...mockAmendmentValueResponse }],
           },
         ],
       },
       tfm: {},
     };
 
-    const originalResult = await dealReducer(mockGefDeal);
-    api.getLatestCompletedValueAmendment = () => Promise.resolve(mockAmendmentValueResponse);
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    const originalResult = dealReducer(mockGefDeal);
 
-    const amendmentResult = await mapGefDeal(mockGefDeal);
+    mockGefDeal.dealSnapshot.facilities[0].amendments[0].tfm = {
+      value: { ...mockAmendmentValueResponse },
+    };
+
+    const amendmentResult = mapGefDeal(mockGefDeal);
 
     expect(amendmentResult).not.toEqual(originalResult);
 
