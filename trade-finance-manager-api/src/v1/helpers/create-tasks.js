@@ -49,7 +49,9 @@ const createGroupTasks = (tasks, groupId, additionalTasks = []) => {
 
       // only the first task in the first group can be started/edited straight away.
       if (groupId === 1 && taskIdCount === 1) {
-        task.canEdit = true;
+        // Set to `false` upon data-migration execution
+        task.canEdit = !migrationScript;
+        // Set to `Completed` upon data-migration execution
         task.status = migrationScript
           ? CONSTANTS.TASKS.STATUS.COMPLETED
           : CONSTANTS.TASKS.STATUS.TO_DO;
