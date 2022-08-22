@@ -140,7 +140,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.errorSummary().contains('Select your decision for the facility value');
   });
 
-  it('should take you to `Add conditions, reasons and comments` page if a decision has been made for Facility Value and Cover End Date', () => {
+  it('should take you to `Add conditions, reasons and comments` summary page if no errors and sanitize comments on UW page once submitted to bank', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
@@ -169,25 +169,8 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentsManagersDecisionComments().should('be.visible');
 
     amendmentsPage.continueAmendment().should('be.visible');
-  });
-
-  it('should take you to `Add conditions, reasons and comments` summary page if no errors and sanitize comments on UW page once submitted to bank', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
-
-    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
-
-    cy.url().should('contain', '/cover-end-date/managers-decision');
-    amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
     amendmentsPage.continueAmendment().click();
 
-    cy.url().should('contain', '/facility-value/managers-decision');
-    amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('be.checked');
-    amendmentsPage.continueAmendment().click();
-    cy.url().should('contain', '/managers-conditions');
-
-    amendmentsPage.continueAmendment().click();
     // testing errors if conditions and decline boxes not filled
     amendmentsPage.errorSummary().contains('Enter the conditions for the approval');
     amendmentsPage.errorSummary().contains('Enter the reasons for declining the change');
