@@ -81,13 +81,13 @@ const migrateGefAmendments = async () => {
     const { amendmentId } = await createFacilityAmendment(amendment.facilityId);
     const { facilityId } = amendment;
     const output = {};
-    output.requestDate = getUnixTime(new Date(excelDateToISODateString(amendment['Date received'])));
+    output.requestDate = getUnixTime((new Date(excelDateToISODateString(amendment['Date received']))).setHours(0, 0, 0, 0));
     output.exporter = amendment.Exporter.trim();
     // output.ukefDealId = `00${amendment['UKEF Deal ID']}`;
     // output.ukefFacilityId = `00${amendment['UKEF Facility ID']}`;
     output.status = amendment.Stage;
     output.submittedByPim = true;
-    output.submittedAt = amendment['When Finished'] ? getUnixTime(new Date(excelDateToISODateString(amendment['When Finished']))) : '';
+    output.submittedAt = amendment['When Finished'] ? getUnixTime((new Date(excelDateToISODateString(amendment['When Finished']))).setHours(0, 0, 0, 0)) : '';
     output.requireUkefApproval = amendment['Notification or Request'] === MANUAL;
     output.changeFacilityValue = amendment.changeFacilityValue;
     output.changeCoverEndDate = amendment.changeCoverEndDate;
@@ -95,8 +95,8 @@ const migrateGefAmendments = async () => {
     output.updateTfmLastUpdated = true;
 
     if (amendment.changeCoverEndDate) {
-      output.currentCoverEndDate = getUnixTime(new Date(excelDateToISODateString(amendment.currentCoverEndDate)));
-      output.coverEndDate = getUnixTime(new Date(excelDateToISODateString(amendment.coverEndDate)));
+      output.currentCoverEndDate = getUnixTime((new Date(excelDateToISODateString(amendment.currentCoverEndDate))).setHours(0, 0, 0, 0));
+      output.coverEndDate = getUnixTime((new Date(excelDateToISODateString(amendment.coverEndDate))).setHours(0, 0, 0, 0));
     }
 
     if (amendment.changeFacilityValue) {
@@ -106,8 +106,8 @@ const migrateGefAmendments = async () => {
     }
 
     if (amendment['Notification or Request'] === AUTOMATIC) {
-      output.effectiveDate = getUnixTime(new Date(excelDateToISODateString(amendment['Effective Date'])));
-      output.submissionDate = amendment['When Finished'] ? getUnixTime(new Date(excelDateToISODateString(amendment['When Finished']))) : '';
+      output.effectiveDate = getUnixTime((new Date(excelDateToISODateString(amendment['Effective Date']))).setHours(0, 0, 0, 0));
+      output.submissionDate = amendment['When Finished'] ? getUnixTime((new Date(excelDateToISODateString(amendment['When Finished']))).setHours(0, 0, 0, 0)) : '';
     }
 
     if (amendment['Notification or Request'] === MANUAL) {
@@ -121,7 +121,7 @@ const migrateGefAmendments = async () => {
         managersDecisionEmail: true,
         managersDecisionEmailSent: true,
         submitted: true,
-        submittedAt: amendment['When Finished'] ? getUnixTime(new Date(excelDateToISODateString(amendment['When Finished']))) : '',
+        submittedAt: amendment['When Finished'] ? getUnixTime((new Date(excelDateToISODateString(amendment['When Finished']))).setHours(0, 0, 0, 0)) : '',
         submittedBy: {
           _id: amendment.UnderwriterID,
           name: amendment.UnderwriterName,
@@ -133,9 +133,9 @@ const migrateGefAmendments = async () => {
         decision: PROCEED,
         banksDecisionEmail: true,
         banksDecisionEmailSent: true,
-        submittedAt: amendment['When Finished'] ? getUnixTime(new Date(excelDateToISODateString(amendment['When Finished']))) : '',
-        effectiveDate: amendment['Effective Date'] ? getUnixTime(new Date(excelDateToISODateString(amendment['Effective Date']))) : '', // TODO: confirm
-        receivedDate: getUnixTime(new Date(excelDateToISODateString(amendment['Date received']))), // TODO: check for received date
+        submittedAt: amendment['When Finished'] ? getUnixTime((new Date(excelDateToISODateString(amendment['When Finished']))).setHours(0, 0, 0, 0)) : '',
+        effectiveDate: amendment['Effective Date'] ? getUnixTime((new Date(excelDateToISODateString(amendment['Effective Date']))).setHours(0, 0, 0, 0)) : '', // TODO: confirm
+        receivedDate: getUnixTime((new Date(excelDateToISODateString(amendment['Date received']))).setHours(0, 0, 0, 0)), // TODO: check for received date
         submitted: true,
         submittedBy: {
           _id: amendment.PIMId,
