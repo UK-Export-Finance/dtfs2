@@ -13,7 +13,7 @@ const mapDates = require('./mapDates');
 const mapUkefExposureValue = require('./mapUkefExposureValue');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
 
-const mapFacility = async (f, facilityTfm, dealDetails, facilityFull) => {
+const mapFacility = (f, facilityTfm, dealDetails, facilityFull) => {
   // Deep clone
   const facility = JSON.parse(JSON.stringify(f, null, 4));
 
@@ -47,10 +47,10 @@ const mapFacility = async (f, facilityTfm, dealDetails, facilityFull) => {
     facilityStage: facility.facilityStage,
     hasBeenIssued: facility.hasBeenIssued,
     coveredPercentage: `${facility.coveredPercentage}%`,
-    facilityValueExportCurrency: await mapFacilityValueExportCurrency(facilityFull),
-    value: await mapFacilityValue(currency.id, formattedFacilityValue, facilityFull),
+    facilityValueExportCurrency: mapFacilityValueExportCurrency(facilityFull),
+    value: mapFacilityValue(currency.id, formattedFacilityValue, facilityFull),
     currency: currency.id,
-    ukefExposure: await mapUkefExposureValue(facilityTfm, facilityFull),
+    ukefExposure: mapUkefExposureValue(facilityTfm, facilityFull),
     bankFacilityReference: mapBankFacilityReference(facility),
     guaranteeFeePayableToUkef: mapGuaranteeFeePayableToUkef(guaranteeFeePayableByBank),
     banksInterestMargin: mapBanksInterestMargin(facility),
@@ -58,7 +58,7 @@ const mapFacility = async (f, facilityTfm, dealDetails, facilityFull) => {
     feeType: mapFeeType(facility),
     feeFrequency: mapFeeFrequency(facility),
     dayCountBasis: Number(facility.dayCountBasis),
-    dates: await mapDates(facility, facilityTfm, dealDetails),
+    dates: mapDates(facilityFull, facility, facilityTfm, dealDetails),
 
     // bond specifics
     bondIssuer: facility.bondIssuer,
