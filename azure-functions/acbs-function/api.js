@@ -30,8 +30,8 @@ const getACBS = async (apiRef) => {
     }).catch((e) => {
       console.error('Error calling GET to ACBS');
       return {
-        status: e?.response?.status ?? e,
-        data: { error: e?.response?.data ?? e },
+        status: e.response ? e.response.status : e,
+        data: { error: e.response ? e.response.data : e },
       };
     });
   }
@@ -57,8 +57,8 @@ const postToAcbs = async (apiRef, acbsInput) => {
     }).catch((e) => {
       console.error('Error calling POST to ACBS');
       return {
-        status: e?.response?.status ?? e,
-        data: { error: e?.response?.data ?? e },
+        status: e.response ? e.response.status : e,
+        data: { error: e.response ? e.response.data : e },
       };
     });
   }
@@ -91,8 +91,8 @@ const putToAcbs = async (apiRef, acbsInput, etag) => {
     }).catch((e) => {
       console.error('Error calling PUT to ACBS');
       return {
-        status: e?.response?.status ?? e,
-        data: { error: e?.response?.data ?? e },
+        status: e.response ? e.response.status : e,
+        data: { error: e.response ? e.response.data : e },
       };
     });
   }
@@ -125,8 +125,8 @@ const patchToAcbs = async (apiRef, acbsInput, eTag) => {
     }).catch((e) => {
       console.error('Error calling PATCH to ACBS');
       return {
-        status: e?.response?.status ?? e,
-        data: { error: e?.response?.data ?? e },
+        status: e.response ? e.response.status : e,
+        data: { error: e.response ? e.response.data : e },
       };
     });
   }
