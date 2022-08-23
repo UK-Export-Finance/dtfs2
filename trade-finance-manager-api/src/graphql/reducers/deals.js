@@ -8,7 +8,7 @@ const mapGefDealDetails = require('./mappings/gef-deal/mapGefDealDetails');
 const mapGefFacilities = require('./mappings/gef-facilities/mapGefFacilities');
 const mapDeals = require('./mappings/deal/mapDeals');
 
-const mapBssDeal = async (deal) => {
+const mapBssDeal = (deal) => {
   const { _id, dealSnapshot } = deal;
 
   const mapped = {
@@ -16,10 +16,10 @@ const mapBssDeal = async (deal) => {
     dealSnapshot: {
       ...dealSnapshot,
       submissionDetails: mapSubmissionDetails(dealSnapshot.submissionDetails),
-      facilities: await mapFacilities(dealSnapshot.facilities, dealSnapshot.details, deal.tfm),
+      facilities: mapFacilities(dealSnapshot.facilities, dealSnapshot.details, deal.tfm),
       supportingInformation: dealSnapshot.supportingInformation,
       eligibility: mapEligibility(dealSnapshot.eligibility),
-      totals: await mapTotals(dealSnapshot.facilities),
+      totals: mapTotals(dealSnapshot.facilities),
     },
     tfm: mapDealTfm(deal),
   };
@@ -27,7 +27,7 @@ const mapBssDeal = async (deal) => {
   return mapped;
 };
 
-const mapGefDeal = async (deal) => {
+const mapGefDeal = (deal) => {
   const { _id, dealSnapshot } = deal;
 
   const mapped = {
@@ -46,9 +46,9 @@ const mapGefDeal = async (deal) => {
       bank: dealSnapshot.bank,
       details: mapGefDealDetails(dealSnapshot),
       submissionDetails: mapGefSubmissionDetails(dealSnapshot),
-      facilities: await mapGefFacilities(dealSnapshot, deal.tfm),
+      facilities: mapGefFacilities(dealSnapshot, deal.tfm),
       supportingInformation: dealSnapshot.supportingInformation,
-      totals: await mapTotals(dealSnapshot.facilities),
+      totals: mapTotals(dealSnapshot.facilities),
     },
     tfm: mapDealTfm(deal),
   };

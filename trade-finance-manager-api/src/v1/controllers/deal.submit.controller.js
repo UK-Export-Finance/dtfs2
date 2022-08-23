@@ -76,7 +76,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   }
 
   const submittedDeal = await api.submitDeal(dealType, dealId);
-  const mappedDeal = await mapSubmittedDeal(submittedDeal);
+  const mappedDeal = mapSubmittedDeal(submittedDeal);
 
   const { submissionCount } = mappedDeal;
   const firstDealSubmission = submissionCount === 1;

@@ -10,6 +10,9 @@ const sendDealDecisionEmail = async (mappedDeal) => {
   const { comments } = underwriterManagersDecision;
   const bankId = maker.bank.id;
   const { emails: bankEmails } = await api.findBankById(bankId);
+  // get the email address for PIM user
+  const { email: pimEmail } = await api.findOneTeam(CONSTANTS.TEAMS.PIM.id);
+
   let templateId;
 
   const emailVariables = {
@@ -39,15 +42,13 @@ const sendDealDecisionEmail = async (mappedDeal) => {
     default:
   }
 
-  try {
-    await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, mappedDeal);
-    // send a copy of the email to bank's general email address
-    const bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, mappedDeal));
-    return bankResponse;
-  } catch (err) {
-    console.error('TFM-API send-deal-decision-email - Error sending email', { err });
-    return null;
-  }
+  await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, mappedDeal);
+  // send a copy of the email to bank's general email address
+  const bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, mappedDeal));
+  // send a copy of the email to PIM
+  await sendTfmEmail(templateId, pimEmail, emailVariables, mappedDeal);
+
+  return bankResponse;
 };
 
 module.exports = sendDealDecisionEmail;

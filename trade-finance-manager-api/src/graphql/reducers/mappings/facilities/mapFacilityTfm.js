@@ -2,10 +2,10 @@ const mapUkefExposure = require('./mapUkefExposure');
 const mapPremiumSchedule = require('./mapPremiumSchedule');
 const mapPremiumTotals = require('./mapPremiumTotals');
 
-const mapFacilityTfm = async (facilityTfm, dealTfm, facility) =>
+const mapFacilityTfm = (facilityTfm, dealTfm, facility) =>
   ({
     ...facilityTfm,
-    ukefExposure: await mapUkefExposure(facilityTfm, facility),
+    ukefExposure: mapUkefExposure(facilityTfm, facility),
     premiumSchedule: mapPremiumSchedule(facilityTfm.premiumSchedule),
     premiumTotals: mapPremiumTotals(facilityTfm.premiumSchedule),
     creditRating: dealTfm.exporterCreditRating,

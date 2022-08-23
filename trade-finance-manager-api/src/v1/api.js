@@ -1,15 +1,14 @@
 const axios = require('axios');
 const { hasValidObjectId } = require('./helpers/hasValidObjectId.helper');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
-
-require('dotenv').config();
-
 const CONSTANTS = require('../constants');
+require('dotenv').config();
 
 const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const refDataUrl = process.env.REFERENCE_DATA_PROXY_URL;
 const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 const azureNumberGeneratorUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
+const { DURABLE_FUNCTIONS } = CONSTANTS;
 
 const findOnePortalDeal = async (dealId) => {
   try {
@@ -783,14 +782,46 @@ const updateACBSfacility = async (facility, deal) => {
   return {};
 };
 
-const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => {
+/**
+ * ACBS facility amendment
+ * @param {String} ukefFacilityId UKEF Facility ID
+ * @param {Object} amendments Facility object comprising of amendments
+ * @returns {Object} updated FMR upon success otherwise error
+ */
+const amendACBSfacility = async (amendments, facility, deal) => {
+  if (amendments && facility.facilitySnapshot) {
+    const { ukefFacilityId } = facility.facilitySnapshot;
+    const response = await axios({
+      method: 'post',
+      url: `${refDataUrl}/acbs/facility/${ukefFacilityId}/amendments`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        amendments,
+        deal,
+        facility,
+      },
+    }).catch((e) => {
+      console.error('TFM-API Facility amend error', { e });
+      return null;
+    });
+
+    if (response.data) {
+      return response.data;
+    }
+  }
+  return null;
+};
+
+const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => {
   let functionUrl;
   switch (type) {
-    case CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS:
+    case DURABLE_FUNCTIONS.TYPE.ACBS:
       functionUrl = azureAcbsFunctionUrl;
       break;
 
-    case CONSTANTS.DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR:
+    case DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR:
       functionUrl = azureNumberGeneratorUrl;
       break;
 
@@ -798,7 +829,7 @@ const getFunctionsAPI = async (type = CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, url
   }
 
   let modifiedUrl = url.replace(/http:\/\/localhost:[\d]*/, functionUrl);
-  if (type === CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS) {
+  if (type === DURABLE_FUNCTIONS.TYPE.ACBS) {
     modifiedUrl = url ? url.replace(/http:\/\/localhost:[\d]*/, functionUrl) : functionUrl;
   }
 
@@ -1042,6 +1073,7 @@ module.exports = {
   getPremiumSchedule,
   createACBS,
   updateACBSfacility,
+  amendACBSfacility,
   getFunctionsAPI,
   createEstoreFolders,
   sendEmail,

@@ -2,10 +2,9 @@ const moment = require('moment');
 const { format, fromUnixTime } = require('date-fns');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const { formatYear } = require('../../../../utils/date');
-const api = require('../../../../v1/api');
 
 describe('mapCoverEndDate', () => {
-  it('should return formatted cover end date', async () => {
+  it('should return formatted cover end date', () => {
     const mockCoverEndDate = {
       day: '01',
       month: '02',
@@ -14,7 +13,7 @@ describe('mapCoverEndDate', () => {
 
     const { day, month, year } = mockCoverEndDate;
 
-    const result = await mapCoverEndDate(day, month, year);
+    const result = mapCoverEndDate(day, month, year, {});
 
     const coverEndDate = moment().set({
       date: Number(day),
@@ -28,7 +27,7 @@ describe('mapCoverEndDate', () => {
   });
 
   describe('when cover end date year only has 2 digits', () => {
-    it('should return 4 digit year', async () => {
+    it('should return 4 digit year', () => {
       const mockCoverEndDate = {
         day: '01',
         month: '02',
@@ -37,7 +36,7 @@ describe('mapCoverEndDate', () => {
 
       const { day, month, year } = mockCoverEndDate;
 
-      const result = await mapCoverEndDate(day, month, year);
+      const result = mapCoverEndDate(day, month, year, {});
 
       const coverEndDate = moment().set({
         date: Number(day),
@@ -54,11 +53,14 @@ describe('mapCoverEndDate', () => {
   });
 
   describe('when facility provided but no latest completed amendment', () => {
-    it('should return 4 digit year provided', async () => {
-      api.getLatestCompletedDateAmendment = () => Promise.resolve({});
-
-      const facilitySnapshot = {
-        _id: '123',
+    it('should return 4 digit year provided', () => {
+      const facility = {
+        amendments: [
+          {
+            amendmentId: 5,
+            coverEndDate: 1660637831,
+          },
+        ],
       };
 
       const mockCoverEndDate = {
@@ -69,7 +71,7 @@ describe('mapCoverEndDate', () => {
 
       const { day, month, year } = mockCoverEndDate;
 
-      const result = await mapCoverEndDate(day, month, year, facilitySnapshot);
+      const result = mapCoverEndDate(day, month, year, facility);
 
       const coverEndDate = moment().set({
         date: Number(day),
@@ -86,16 +88,17 @@ describe('mapCoverEndDate', () => {
   });
 
   describe('when facility provided and latest completed amendment has a coverEndDate', () => {
-    it('should return modified coverEndDate', async () => {
+    it('should return modified coverEndDate', () => {
       const coverEndDateUnix = 1658403289;
 
-      api.getLatestCompletedDateAmendment = () => Promise.resolve({
-        coverEndDate: coverEndDateUnix,
-        amendmentId: '1234',
-      });
-
-      const facilitySnapshot = {
-        _id: '123',
+      const mockFacility = {
+        amendments: [
+          {
+            tfm: {
+              coverEndDate: coverEndDateUnix,
+            },
+          },
+        ],
       };
 
       const mockCoverEndDate = {
@@ -106,7 +109,7 @@ describe('mapCoverEndDate', () => {
 
       const { day, month, year } = mockCoverEndDate;
 
-      const result = await mapCoverEndDate(day, month, year, facilitySnapshot);
+      const result = mapCoverEndDate(day, month, year, mockFacility);
 
       const expected = format(fromUnixTime(coverEndDateUnix), 'd MMMM yyyy');
 
@@ -115,7 +118,7 @@ describe('mapCoverEndDate', () => {
   });
 
   describe('when cover end date is null', () => {
-    it('should return undefined as date is null', async () => {
+    it('should return undefined as date is null', () => {
       const mockCoverEndDate = {
         day: null,
         month: null,
@@ -124,7 +127,7 @@ describe('mapCoverEndDate', () => {
 
       const { day, month, year } = mockCoverEndDate;
 
-      const result = await mapCoverEndDate(day, month, year);
+      const result = mapCoverEndDate(day, month, year);
 
       expect(result).toEqual(undefined);
     });

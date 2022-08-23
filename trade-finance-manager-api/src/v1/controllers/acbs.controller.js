@@ -4,13 +4,14 @@ const api = require('../api');
 const db = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
 const CONSTANTS = require('../../constants');
+const { formatCoverEndDate } = require('../helpers/amendment.helpers');
 
 const addToACBSLog = async ({
   deal = {}, facility = {}, bank = {}, acbsTaskLinks,
 }) => {
   const collection = await db.getCollection('durable-functions-log');
 
-  const acbsLog = await collection.insertOne({
+  return collection.insertOne({
     type: 'ACBS',
     dealId: deal._id,
     deal,
@@ -21,15 +22,11 @@ const addToACBSLog = async ({
     acbsTaskLinks,
     submittedDate: moment().format(),
   });
-
-  return acbsLog;
 };
 
 const clearACBSLog = async () => {
   const collection = await db.getCollection('durable-functions-log');
-  const removed = await collection.remove({});
-
-  return removed;
+  return collection.remove({});
 };
 
 const createACBS = async (deal) => {
@@ -44,14 +41,19 @@ const createACBS = async (deal) => {
   const { id, name, partyUrn } = bank;
 
   const acbsTaskLinks = await api.createACBS(deal, { id, name, partyUrn });
-  return addToACBSLog({ deal, bank, acbsTaskLinks });
+
+  if (acbsTaskLinks) {
+    return addToACBSLog({ deal, bank, acbsTaskLinks });
+  }
+
+  return null;
 };
 
 const updateDealAcbs = async (taskOutput) => {
   const { facilities } = taskOutput;
   /**
    * 1. Add `acbs` object to tfm-deal
-   * 2. Add ACBS records to the TFM activites
+   * 2. Add ACBS records to the TFM activities
    */
   await tfmController.updateAcbs(taskOutput);
 
@@ -68,6 +70,23 @@ const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster }) =>
     facilityStage: CONSTANTS.FACILITIES.ACBS_FACILITY_STAGE.ISSUED,
     issuedFacilityMaster,
   });
+
+const updateAmendedFacilityAcbs = (taskResult) => {
+  if (taskResult.instanceId && taskResult.output) {
+    const { instanceId } = taskResult;
+    const { facilityMasterRecordAmendments, facilityLoanRecordAmendments } = taskResult.output;
+    const { _id } = taskResult.input.amendment.facility;
+    const acbsUpdate = {
+      [instanceId]: {
+        facilityMasterRecordAmendments,
+        facilityLoanRecordAmendments,
+      },
+    };
+
+    // Update tfm-facilities `acbs` object with ACBS amendments response
+    tfmController.updateFacilityAcbs(_id, acbsUpdate);
+  }
+};
 
 const checkAzureAcbsFunction = async () => {
   try {
@@ -98,6 +117,10 @@ const checkAzureAcbsFunction = async () => {
           switch (task.name) {
             case 'acbs-issue-facility':
               await updateIssuedFacilityAcbs(task.output);
+              break;
+
+            case 'acbs-amend-facility':
+              await updateAmendedFacilityAcbs(task);
               break;
 
             default:
@@ -138,13 +161,39 @@ const issueAcbsFacilities = async (deal) => {
       ...deal.exporter,
     },
   }));
-
   const acbsIssuedFacilities = await Promise.all(acbsIssuedFacilitiesPromises);
 
-  const acbsIssueFacilityTasks = await Promise.all(
+  return Promise.all(
     acbsIssuedFacilities.map((acbsTaskLinks) => addToACBSLog({ acbsTaskLinks })),
   );
-  return acbsIssueFacilityTasks;
+};
+/**
+ * Amend facility controller function responsible for invoking
+ * respective API and writes ACBS task links to DB.
+ * @param {Object} amendments Facility amendments object
+ * @param {Object} facility Complete TFM facility object
+ * @param {Object} deal Bespoke deal object
+ */
+const amendAcbsFacility = async (amendments, facility, deal) => {
+  let payload;
+
+  // TO-DO : EPOCH Convergence
+  if (amendments.coverEndDate) {
+    payload = formatCoverEndDate(amendments);
+  }
+
+  api.amendACBSfacility(payload, facility, deal)
+    .then((acbsTaskLinks) => {
+      if (acbsTaskLinks.id) {
+        return addToACBSLog({ acbsTaskLinks });
+      }
+
+      return null;
+    })
+    .catch((e) => {
+      console.error('Unable to amend facility: ', { e });
+      return null;
+    });
 };
 
 module.exports = {
@@ -153,4 +202,5 @@ module.exports = {
   createACBS,
   checkAzureAcbsFunction,
   issueAcbsFacilities,
+  amendAcbsFacility,
 };

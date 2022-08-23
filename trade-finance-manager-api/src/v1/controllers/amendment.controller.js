@@ -1,4 +1,5 @@
 const api = require('../api');
+const acbs = require('./acbs.controller');
 const { createAmendmentTasks, updateAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
 const {
@@ -6,17 +7,12 @@ const {
   sendAutomaticAmendmentEmail,
   sendManualDecisionAmendmentEmail,
   sendManualBankDecisionEmail,
+  canSendToAcbs,
   sendFirstTaskEmail,
+  calculateAcbsUkefExposure,
+  addLatestAmendmentValue,
+  addLatestAmendmentDates,
 } = require('../helpers/amendment.helpers');
-
-const createFacilityAmendment = async (req, res) => {
-  const { facilityId } = req.body;
-  const { amendmentId } = await api.createFacilityAmendment(facilityId);
-  if (amendmentId) {
-    return res.status(200).send({ amendmentId });
-  }
-  return res.status(422).send({ data: 'Unable to create amendment' });
-};
 
 const sendAmendmentEmail = async (amendmentId, facilityId) => {
   try {
@@ -79,44 +75,28 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
   return null;
 };
 
-const updateFacilityAmendment = async (req, res) => {
-  const { amendmentId, facilityId } = req.params;
-  const payload = req.body;
-  // set to true if payload contains updateTfmLastUpdated else null
-  const tfmLastUpdated = payload.updateTfmLastUpdated;
+// creates tfm object in latest amendment with completed mapping for displaying amendment changes in tfm
+const createAmendmentTFMObject = async (amendmentId, facilityId) => {
+  try {
+    // gets latest amendment value and dates
+    const latestValue = await api.getLatestCompletedValueAmendment(facilityId);
+    const latestCoverEndDate = await api.getLatestCompletedDateAmendment(facilityId);
 
-  if (payload.createTasks && payload.submittedByPim) {
-    const tasks = createAmendmentTasks(payload.requireUkefApproval);
-    payload.tasks = tasks;
-    delete payload.createTasks;
-    delete payload.requireUkefApproval;
+    let tfmToAdd = {};
+    // populates array with latest value/exposure and date/tenor values
+    tfmToAdd = await addLatestAmendmentValue(tfmToAdd, latestValue, facilityId);
+    tfmToAdd = await addLatestAmendmentDates(tfmToAdd, latestCoverEndDate, facilityId);
+
+    const payload = {
+      tfm: tfmToAdd,
+    };
+
+    await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+    return tfmToAdd;
+  } catch (error) {
+    console.error('TFM-API - unable to add TFM object to amendment', { error });
+    return null;
   }
-
-  if (payload?.taskUpdate?.updateTask) {
-    const tasks = await updateAmendmentTasks(facilityId, amendmentId, payload.taskUpdate);
-    payload.tasks = tasks;
-    payload.ukefDecision = { isReadyForApproval: isRiskAnalysisCompleted(tasks) };
-    delete payload.taskUpdate;
-  }
-
-  if (tfmLastUpdated) {
-    // delete so not part of amendment object
-    delete payload.updateTfmLastUpdated;
-  }
-
-  const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
-  // sends email if conditions are met
-  await sendAmendmentEmail(amendmentId, facilityId);
-
-  // if amendment successfully created and amendment complete then update tfm deals lastUpdated
-  if (createdAmendment && tfmLastUpdated) {
-    await updateTFMDealLastUpdated(amendmentId, facilityId);
-  }
-
-  if (createdAmendment) {
-    return res.status(200).send(createdAmendment);
-  }
-  return res.status(422).send({ data: 'Unable to update amendment' });
 };
 
 const getAmendmentInProgress = async (req, res) => {
@@ -217,6 +197,97 @@ const getAllAmendmentsInProgress = async (req, res) => {
   return res.status(422).send({ data: 'Unable to get the amendments in progress' });
 };
 
+const createFacilityAmendment = async (req, res) => {
+  const { facilityId } = req.body;
+  const { amendmentId } = await api.createFacilityAmendment(facilityId);
+  if (amendmentId) {
+    return res.status(200).send({ amendmentId });
+  }
+  return res.status(422).send({ data: 'Unable to create amendment' });
+};
+
+const updateFacilityAmendment = async (req, res) => {
+  const { amendmentId, facilityId } = req.params;
+  let payload = req.body;
+  // set to true if payload contains updateTfmLastUpdated else null
+  const tfmLastUpdated = payload.updateTfmLastUpdated;
+
+  /** Payload computation */
+  // Tasks
+  try {
+    if (amendmentId && facilityId && payload) {
+      if (payload.createTasks && payload.submittedByPim) {
+        const tasks = createAmendmentTasks(payload.requireUkefApproval);
+        payload.tasks = tasks;
+        delete payload.createTasks;
+        delete payload.requireUkefApproval;
+      }
+
+      if (payload?.taskUpdate?.updateTask) {
+        const tasks = await updateAmendmentTasks(facilityId, amendmentId, payload.taskUpdate);
+        payload.tasks = tasks;
+        payload.ukefDecision = { isReadyForApproval: isRiskAnalysisCompleted(tasks) };
+        delete payload.taskUpdate;
+      }
+
+      // delete so not part of amendment object
+      if (tfmLastUpdated) {
+        delete payload.updateTfmLastUpdated;
+      }
+
+      // UKEF exposure
+      payload = calculateAcbsUkefExposure(payload);
+
+      // Update Amendment
+      const createdAmendment = await api.updateFacilityAmendment(facilityId, amendmentId, payload);
+      // sends email if conditions are met
+      await sendAmendmentEmail(amendmentId, facilityId);
+
+      // if facility successfully updated and completed, then adds tfm lastUpdated and tfm object in amendments
+      if (createdAmendment && tfmLastUpdated) {
+        await updateTFMDealLastUpdated(amendmentId, facilityId);
+        await createAmendmentTFMObject(amendmentId, facilityId);
+      }
+
+      // Fetch facility object
+      const facility = await api.findOneFacility(facilityId);
+      // Fetch complete amendment object
+      const amendment = await api.getAmendmentById(facilityId, amendmentId);
+      // Fetch deal object from deal-tfm
+      const tfmDeal = await api.findOneDeal(amendment.dealId);
+      // Construct acceptable deal object
+
+      const deal = {
+        dealSnapshot: {
+          dealType: tfmDeal.dealSnapshot.dealType,
+          submissionType: tfmDeal.dealSnapshot.submissionType,
+          submissionDate: tfmDeal.dealSnapshot.submissionDate,
+        },
+        exporter: {
+          companyName: tfmDeal.dealSnapshot.exporter.companyName,
+        },
+      };
+
+      // Amendment null & property existence check
+      if (facility._id && amendment && tfmDeal.tfm) {
+        // ACBS Interaction
+        if (canSendToAcbs(amendment)) {
+          acbs.amendAcbsFacility(amendment, facility, deal);
+        }
+      }
+
+      if (createdAmendment) {
+        return res.status(200).send(createdAmendment);
+      }
+    }
+  } catch (e) {
+    console.error('Unable to update amendment: ', { e });
+    return res.status(400).send({ data: 'Unable to update amendment' });
+  }
+
+  return res.status(422).send({ data: 'Unable to update amendment' });
+};
+
 module.exports = {
   createFacilityAmendment,
   updateFacilityAmendment,
@@ -233,4 +304,5 @@ module.exports = {
   updateTFMDealLastUpdated,
   getLatestCompletedValueAmendment,
   getLatestCompletedDateAmendment,
+  createAmendmentTFMObject,
 };
