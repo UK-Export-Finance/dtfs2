@@ -4,9 +4,6 @@
  * Purpose of this script is to migrate GEF deals to TFM.
  * Since GEF deals are not subjected to execution on Workflow.
  */
-require('dotenv').config();
-
-const { TFM_API } = process.env;
 
 const axios = require('axios');
 const { getUnixTime } = require('date-fns');
@@ -15,6 +12,7 @@ const CONSTANTS = require('../constant');
 const { open } = require('../helpers/actionsheets');
 
 const version = '0.0.1';
+const TFM_API = 'http://localhost:5004';
 
 const createFacilityAmendment = async (facilityId) => {
   try {
