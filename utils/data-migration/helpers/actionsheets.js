@@ -57,9 +57,11 @@ const get = (data, search) => {
     const cell = search[2];
 
     const match = data.find((row) => Object.values(row).includes(lookup));
-    const cells = Object.values(match);
-    const value = cells[cell];
-    return format(lookup, value);
+    if (match) {
+      const cells = Object.values(match);
+      const value = cells[cell];
+      return format(lookup, value);
+    }
   }
   return null;
 };
