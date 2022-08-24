@@ -4,7 +4,7 @@ import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
-import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
+import { MOCK_MAKER_TFM } from '../../../../fixtures/users-portal';
 import pages from '../../../pages';
 
 context('Amendments underwriting - add underwriter decision', () => {
@@ -22,13 +22,6 @@ context('Amendments underwriting - add underwriter decision', () => {
       });
 
       cy.submitDeal(dealId, dealType);
-    });
-  });
-
-  after(() => {
-    cy.deleteDeals(dealId, ADMIN_LOGIN);
-    dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, MOCK_MAKER_TFM);
     });
   });
 
