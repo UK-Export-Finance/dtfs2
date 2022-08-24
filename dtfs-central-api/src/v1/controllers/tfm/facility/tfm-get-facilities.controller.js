@@ -26,23 +26,24 @@ exports.getAllFacilities = async (req, res) => {
   const collection = await db.getCollection('tfm-facilities');
   const searchString = req.body.searchString || '';
 
-  // mongodb query that returns an array of objects with the following format:
-  // [{
-  //        "amendments": [amendments-array]
-  //       "tfmFacilities": {
-  //           "dealId": "Mock deal Id",
-  //           "facilityId": "Mock facility Id",
-  //           "ukefFacilityId": "0030136443",
-  //           "dealType": "GEF",
-  //           "type": "Cash",
-  //           "value": 1000000,
-  //           "currency": "GBP",
-  //           "coverEndDate": "2021-08-12T00:00:00.000Z",
-  //           "companyName": "Mock company name",
-  //           "hasBeenIssued": true
-  //       }
-  // }]
-
+  /**
+   * mongodb query that returns an array of objects with the following format:
+   * [{
+   *    "amendments": [amendments-array]
+   *     "tfmFacilities": {
+   *        "dealId": "Mock deal Id",
+   *        "facilityId": "Mock facility Id",
+   *        "ukefFacilityId": "0030136443",
+   *        "dealType": "GEF",
+   *        "type": "Cash",
+   *        "value": 1000000,
+   *        "currency": "GBP",
+   *        "coverEndDate": "2021-08-12T00:00:00.000Z",.
+   *        "companyName": "Mock company name",
+   *        "hasBeenIssued": true
+   *     }
+   * }]
+   */
   const facilities = await collection.aggregate([
     {
       $lookup: {

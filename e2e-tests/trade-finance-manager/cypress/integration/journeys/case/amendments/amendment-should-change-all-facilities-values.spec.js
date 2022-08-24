@@ -71,7 +71,7 @@ context('Amendments all facilities table - should show amendment value and cover
 
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
-    // update both the cover end date and the facility value
+    // update both the cover end date only
     amendmentsPage.amendmentCoverEndDateCheckbox().click();
     amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
     amendmentsPage.continueAmendment().click();
@@ -115,7 +115,7 @@ context('Amendments all facilities table - should show amendment value and cover
 
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
-    // update both the cover end date and the facility value
+    // update both the acility value only
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
     amendmentsPage.continueAmendment().click();
