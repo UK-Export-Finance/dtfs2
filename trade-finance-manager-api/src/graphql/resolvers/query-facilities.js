@@ -1,21 +1,23 @@
 /* eslint-disable no-await-in-loop */
 const { format, getUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
-const api = require('../../v1/api');
-
+const { findLatestCompletedAmendment } = require('../helpers/amendment.helpers');
 const { getAllFacilities } = require('../../v1/controllers/facility.controller');
+
 // list all facilities from the database
 exports.queryAllFacilities = async (queryParams) => {
+  if (!queryParams?.params) {
+    return {};
+  }
   const rawFacilities = await getAllFacilities(queryParams.params);
   const facilities = [];
+
   // eslint-disable-next-line no-restricted-syntax
   for (const item of rawFacilities) {
     const { tfmFacilities: facility } = item;
-    const { facilityId } = facility;
 
-    // checks for amended facility value or coverEndDate
-    const latestCompletedAmendmentValue = await api.getLatestCompletedValueAmendment(facilityId);
-    const latestCompletedAmendmentCoverEndDate = await api.getLatestCompletedDateAmendment(facilityId);
+    // finds latest completed amendment tfm object with mapped values
+    const latestCompletedAmendment = findLatestCompletedAmendment(item?.amendments);
 
     const defaultFacilityValue = facility.value;
     const defaultCoverEndDate = facility.coverEndDate;
@@ -28,14 +30,15 @@ exports.queryAllFacilities = async (queryParams) => {
     let coverEndDateEpoch = facility.coverEndDate ? getUnixTime(new Date(facility.coverEndDate)) : '';
 
     // if amendment, then willset relevant values based on amendment
-    if (latestCompletedAmendmentValue?.value) {
-      const { value, currency } = latestCompletedAmendmentValue;
+    if (latestCompletedAmendment?.value) {
+      const { value, currency } = latestCompletedAmendment.value;
       currencyAndValue = `${currency} ${commaNumber(value)}`;
       facilityValue = parseInt(value, 10);
     }
 
-    if (latestCompletedAmendmentCoverEndDate?.coverEndDate) {
-      const { coverEndDate } = latestCompletedAmendmentCoverEndDate;
+    if (latestCompletedAmendment?.coverEndDate) {
+      const { coverEndDate } = latestCompletedAmendment;
+      // * 1000 so to convert to ms epoch time format so can be correctly formatted by template
       facilityCoverEndDate = format(new Date(coverEndDate * 1000), 'dd LLL yyyy');
       coverEndDateEpoch = coverEndDate;
     }
