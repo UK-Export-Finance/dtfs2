@@ -1,4 +1,4 @@
-const { isBefore, set, getUnixTime } = require('date-fns');
+const { set, getUnixTime } = require('date-fns');
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
 
 /**
@@ -51,18 +51,6 @@ const effectiveDateValidation = async (body) => {
       errMsg: msg,
       subFieldErrorRefs: dateFieldsInError,
     });
-  } else if (amendmentEffectiveIsFullyComplete) {
-    const today = (new Date()).setHours(2, 2, 2, 2);
-    let effectiveDateSet = set(new Date(), { year: effectiveDateYear, month: effectiveDateMonth - 1, date: effectiveDateDay });
-    effectiveDateSet = effectiveDateSet.setHours(2, 2, 2, 2);
-
-    // checks amendment date is not in the future
-    if (isBefore(effectiveDateSet, today)) {
-      effectiveDateErrors.push({
-        errRef: 'effectiveDate',
-        errMsg: 'The date the amendment is effective from must be today or in the future',
-      });
-    }
   }
 
   if (amendmentEffectiveIsFullyComplete) {
