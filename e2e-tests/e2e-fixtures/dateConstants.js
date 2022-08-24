@@ -13,6 +13,7 @@ const fourDaysAgo = sub(today, { days: 4 });
 const fourDaysAgoDay = format(fourDaysAgo, 'dd');
 const fourDaysAgoMonth = format(fourDaysAgo, 'M');
 const fourDaysAgoYear = format(fourDaysAgo, 'yyyy');
+const fourDaysAgoFull = format(fourDaysAgo, 'd MMMM yyyy');
 const oneMonth = add(today, { months: 1 });
 const oneMonthDay = format(oneMonth, 'dd');
 const oneMonthMonth = format(oneMonth, 'M');
@@ -73,6 +74,7 @@ export default {
   fourDaysAgoDay,
   fourDaysAgoMonth,
   fourDaysAgoYear,
+  fourDaysAgoFull,
   oneMonth,
   oneMonthDay,
   oneMonthMonth,

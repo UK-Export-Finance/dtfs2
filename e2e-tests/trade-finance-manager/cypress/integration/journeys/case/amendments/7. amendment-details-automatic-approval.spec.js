@@ -79,9 +79,9 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.continueAmendment().click();
       cy.url().should('contain', 'amendment-effective-date');
 
-      amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
-      amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentEffectiveYearInput().clear().focused().type(dateConstants.todayYear);
+      amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.fourDaysAgoDay);
+      amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.fourDaysAgoMonth);
+      amendmentsPage.amendmentEffectiveYearInput().clear().focused().type(dateConstants.fourDaysAgoYear);
       amendmentsPage.continueAmendment().click();
 
       cy.url().should('contain', 'amendment-options');
@@ -134,7 +134,7 @@ context('Amendments - automatic approval journey', () => {
 
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
       amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
-      amendmentsPage.amendmentAnswerEffectiveDate().should('contain', dateConstants.todayDay);
+      amendmentsPage.amendmentAnswerEffectiveDate().should('contain', dateConstants.fourDaysAgoDay);
       amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.tomorrowDay);
       amendmentsPage.amendmentAnswerFacilityValue().should('contain', 'GBP 123.00');
 
@@ -150,7 +150,7 @@ context('Amendments - automatic approval journey', () => {
 
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', dateConstants.todayFormattedFull);
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', dateConstants.fourDaysAgoFull);
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2022');
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
       amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
@@ -299,7 +299,7 @@ context('Amendments - automatic approval journey', () => {
 
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
       amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
-      amendmentsPage.amendmentAnswerEffectiveDate().should('contain', dateConstants.todayDay);
+      amendmentsPage.amendmentAnswerEffectiveDate().should('contain', dateConstants.fourDaysAgoDay);
       amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.tomorrowDay);
 
       amendmentsPage.continueAmendment().click();
