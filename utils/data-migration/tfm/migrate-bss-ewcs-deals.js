@@ -4,10 +4,9 @@
  * Purpose of this script is to migrate `BSS/EWCS` deals to TFM.
  */
 
-const fs = require('fs');
 const axios = require('axios');
 const CONSTANTS = require('../constant');
-const { getCollection, update, disconnect } = require('../helpers/database');
+const { getCollection, disconnect } = require('../helpers/database');
 
 const version = '0.0.1';
 const { TFM_API } = process.env;
@@ -20,14 +19,6 @@ const { TFM_API } = process.env;
  * @returns {Object} Collection object
  */
 const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL, filter);
-
-/**
- * Updates TFM deal with provided updates object.
- * @param {String} ukefDealId UKEF Deal ID
- * @param {Object} updates Updates object in JSON
- * @returns {Promise} Resolve if successful otherwise Reject
- */
-const setTfmDeal = (ukefDealId, updates) => update(CONSTANTS.DATABASE.TABLES.TFM_DEAL, ukefDealId, updates);
 
 /**
  * Submits deal to the TFM as a `Checker` from `UKEF test bank (Delegated)`
@@ -102,24 +93,6 @@ const submitTfmDeal = async () => {
     .catch((e) => Promise.reject(e));
 };
 
-/**
- * Updates `tfm-deals` collection with update object.
- * @param {String} ukefDealId UKEF Deal ID
- * @param {Object} update Object comprising of updates to be applied
- * @returns {Promise} Resolve is success, otherwise Reject accompanied with an error message.
- */
-const updateTfmDeal = (ukefDealId, updates) => {
-  try {
-    return setTfmDeal(ukefDealId, updates)
-      .then((r) => Promise.resolve(r))
-      .catch((e) => Promise.reject(new Error(e)));
-  } catch (e) {
-    return Promise.reject(new Error(`🚩 Unable to update deal TFM ${ukefDealId} ${e}`));
-  }
-};
-
-// ******************** JSON *************************
-
 // ******************** MAIN *************************
 
 /**
@@ -128,16 +101,11 @@ const updateTfmDeal = (ukefDealId, updates) => {
  * @returns {Boolean} Execution status
  */
 const migrate = () => {
-  console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating GEF TFM migration v${version}.`, '\n\n');
+  console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating BSS/EWCS TFM migration v${version}.`, '\n\n');
 
   submitTfmDeal()
     .then((r) => {
       if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully inserted ${r} TFM deals.\n`);
-    })
-    // .then(() => parseJSON())
-    // .then((r) => processJSON(r))
-    .then((r) => {
-      if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully updated ${r} TFM deals from Action Sheets.\n`);
     })
     .then(() => disconnect())
     .then(() => process.exit(1))

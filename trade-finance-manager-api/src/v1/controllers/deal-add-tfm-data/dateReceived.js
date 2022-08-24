@@ -1,8 +1,8 @@
 const { getUnixTime, format } = require('date-fns');
 
 const generateDateReceived = (portalSubmissionDate) => ({
-  dateReceived: format(portalSubmissionDate, 'dd-MM-yyyy'),
-  dateReceivedTimestamp: getUnixTime(portalSubmissionDate),
+  dateReceived: format(Number(portalSubmissionDate), 'dd-MM-yyyy'),
+  dateReceivedTimestamp: getUnixTime(Number(portalSubmissionDate)),
 });
 
 module.exports = generateDateReceived;
