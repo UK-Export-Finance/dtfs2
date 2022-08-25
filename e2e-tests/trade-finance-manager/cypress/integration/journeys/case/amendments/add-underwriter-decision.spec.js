@@ -147,81 +147,81 @@ context('Amendments underwriting - add underwriter decision', () => {
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
 
+    cy.url().should('contain', '/cover-end-date/managers-decision');
+    amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', '/facility-value/managers-decision');
+    amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().click();
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/managers-conditions');
+
+    amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2022');
+
+    amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
+    amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
+    amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
+
+    amendmentsPage.amendmentsManagersDecisionConditions().should('be.visible');
+    amendmentsPage.amendmentsManagersDecisionReasons().should('be.visible');
+    amendmentsPage.amendmentsManagersDecisionComments().should('be.visible');
+
+    amendmentsPage.continueAmendment().should('be.visible');
+  });
+
+  it('should take you to `Add conditions, reasons and comments` summary page if no errors', () => {
+    cy.login(UNDERWRITER_MANAGER_1);
+    cy.visit(relative(`/case/${dealId}/underwriting`));
+
+    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
+    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+
     //   cy.url().should('contain', '/cover-end-date/managers-decision');
     //   amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
     //   amendmentsPage.continueAmendment().click();
 
     //   cy.url().should('contain', '/facility-value/managers-decision');
-    //   amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().click();
+    //   amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('be.checked');
     //   amendmentsPage.continueAmendment().click();
     //   cy.url().should('contain', '/managers-conditions');
 
+    //   amendmentsPage.continueAmendment().click();
+    //   // testing errors if conditions and decline boxes not filled
+    //   amendmentsPage.errorSummary().contains('Enter the conditions for the approval');
+    //   amendmentsPage.errorSummary().contains('Enter the reasons for declining the change');
+
+    //   amendmentsPage.errorMessage().contains('Enter the conditions for the approval');
+    //   amendmentsPage.errorMessage().contains('Enter the reasons for declining the change');
+
+    //   // ensures these values stay the same
     //   amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    //   amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('have.class', 'govuk-tag--red');
     //   amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
     //   amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2022');
 
     //   amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     //   amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
     //   amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
+    //   amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('have.class', 'govuk-tag--green');
 
-    //   amendmentsPage.amendmentsManagersDecisionConditions().should('be.visible');
-    //   amendmentsPage.amendmentsManagersDecisionReasons().should('be.visible');
-    //   amendmentsPage.amendmentsManagersDecisionComments().should('be.visible');
+    //   amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions <script>alert(\'hello world\')</script> <embed type="text/html" src="snippet.html" width="500" height="200">');
+    //   amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment <img src=x onerror=alert(\'img\')/> <object data="snippet.html" width="500" height="200"></object>');
+    //   amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff <input type="text" name="state" value="INPUT_FROM_USER">');
 
-  //   amendmentsPage.continueAmendment().should('be.visible');
+    //   amendmentsPage.continueAmendment().click();
+    //   cy.url().should('contain', '/managers-conditions/summary');
+    //   amendmentsPage.amendmentSendToBankButton().should('be.visible');
+
+    //   amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+    //   amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
+    //   amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2022');
+
+  //   amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
+  //   amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
+  //   amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
   });
-
-  // it('should take you to `Add conditions, reasons and comments` summary page if no errors', () => {
-  //   cy.login(UNDERWRITER_MANAGER_1);
-  //   cy.visit(relative(`/case/${dealId}/underwriting`));
-
-  //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-  //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
-
-  //   cy.url().should('contain', '/cover-end-date/managers-decision');
-  //   amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
-  //   amendmentsPage.continueAmendment().click();
-
-  //   cy.url().should('contain', '/facility-value/managers-decision');
-  //   amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('be.checked');
-  //   amendmentsPage.continueAmendment().click();
-  //   cy.url().should('contain', '/managers-conditions');
-
-  //   amendmentsPage.continueAmendment().click();
-  //   // testing errors if conditions and decline boxes not filled
-  //   amendmentsPage.errorSummary().contains('Enter the conditions for the approval');
-  //   amendmentsPage.errorSummary().contains('Enter the reasons for declining the change');
-
-  //   amendmentsPage.errorMessage().contains('Enter the conditions for the approval');
-  //   amendmentsPage.errorMessage().contains('Enter the reasons for declining the change');
-
-  //   // ensures these values stay the same
-  //   amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
-  //   amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('have.class', 'govuk-tag--red');
-  //   amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-  //   amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2022');
-
-  //   amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
-  //   amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-  //   amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
-  //   amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('have.class', 'govuk-tag--green');
-
-  //   amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions <script>alert(\'hello world\')</script> <embed type="text/html" src="snippet.html" width="500" height="200">');
-  //   amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment <img src=x onerror=alert(\'img\')/> <object data="snippet.html" width="500" height="200"></object>');
-  //   amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff <input type="text" name="state" value="INPUT_FROM_USER">');
-
-  //   amendmentsPage.continueAmendment().click();
-  //   cy.url().should('contain', '/managers-conditions/summary');
-  //   amendmentsPage.amendmentSendToBankButton().should('be.visible');
-
-  //   amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
-  //   amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-  //   amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2022');
-
-  //   amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
-  //   amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-  //   amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
-  // });
 
   // it('should take you to `Underwriting` page once a manual amendment has been submitted with underwriter managers decision and santised conditions/reasons/comments displayed', () => {
   //   cy.login(UNDERWRITER_MANAGER_1);
