@@ -254,13 +254,13 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
 
-    // amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
-    // amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
+    amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
+    amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
 
-    // amendmentsPage.amendmentManagersDecisionDateHeading().contains('Date and time');
-    // amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedFull);
-    // amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeHours);
-    // amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeAmPm);
+    amendmentsPage.amendmentManagersDecisionDateHeading().contains('Date and time');
+    amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedFull);
+    amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeHours);
+    amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeAmPm);
 
     // amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
     // amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
