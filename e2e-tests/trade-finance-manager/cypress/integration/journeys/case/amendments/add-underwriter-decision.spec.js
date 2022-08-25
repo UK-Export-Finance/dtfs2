@@ -11,6 +11,10 @@ context('Amendments underwriting - add underwriter decision', () => {
   let dealId;
   const dealFacilities = [];
 
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
+  });
+
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
       dealId = insertedDeal._id;
