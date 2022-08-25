@@ -13,6 +13,7 @@ const fourDaysAgo = sub(today, { days: 4 });
 const fourDaysAgoDay = format(fourDaysAgo, 'dd');
 const fourDaysAgoMonth = format(fourDaysAgo, 'M');
 const fourDaysAgoYear = format(fourDaysAgo, 'yyyy');
+const fourDaysAgoFull = format(fourDaysAgo, 'd MMMM yyyy');
 const oneMonth = add(today, { months: 1 });
 const oneMonthDay = format(oneMonth, 'dd');
 const oneMonthMonth = format(oneMonth, 'M');
@@ -55,6 +56,8 @@ const todayUnixYear = format(threeDaysAgo, 'yyyy');
 const todayFormattedFull = format(today, 'dd MMMM yyyy');
 const todayFormatted = format(today, 'd MMMM yyyy');
 const tomorrowFormattedFull = format(tomorrow, 'd MMMM yyyy');
+const tomorrowFormattedFacilityPage = format(tomorrow, 'dd LLL yyyy');
+
 const todayFormattedTimeHours = format(today, 'h');
 const todayFormattedTimeAmPm = format(today, 'aaa');
 
@@ -71,6 +74,7 @@ export default {
   fourDaysAgoDay,
   fourDaysAgoMonth,
   fourDaysAgoYear,
+  fourDaysAgoFull,
   oneMonth,
   oneMonthDay,
   oneMonthMonth,
@@ -105,6 +109,7 @@ export default {
   todayFormattedFull,
   todayFormatted,
   tomorrowFormattedFull,
+  tomorrowFormattedFacilityPage,
   todayFormattedTimeHours,
   todayFormattedTimeAmPm,
 };
