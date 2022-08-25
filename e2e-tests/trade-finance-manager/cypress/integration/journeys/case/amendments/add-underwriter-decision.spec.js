@@ -244,7 +244,7 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     amendmentsPage.amendmentSendToBankButton().click();
 
-    // cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
+    cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     // amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     // amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
