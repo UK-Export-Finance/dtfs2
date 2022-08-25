@@ -247,43 +247,43 @@ context('Amendments underwriting - add underwriter decision', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
 
-  it('should show underwriter managers decision and santised conditions/reasons/comments displayed', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
+  // it('should show underwriter managers decision and santised conditions/reasons/comments displayed', () => {
+  //   cy.login(UNDERWRITER_MANAGER_1);
+  //   cy.visit(relative(`/case/${dealId}/underwriting`));
 
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
-    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2022');
+  //   amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
+  //   amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
+  //   amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', '20 October 2022');
 
-    amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
-    amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-    amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
+  //   amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
+  //   amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
+  //   amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
 
-    amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
-    amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
+  //   amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
+  //   amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
 
-    amendmentsPage.amendmentManagersDecisionDateHeading().contains('Date and time');
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedFull);
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeHours);
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeAmPm);
+  //   amendmentsPage.amendmentManagersDecisionDateHeading().contains('Date and time');
+  //   amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedFull);
+  //   amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeHours);
+  //   amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeAmPm);
 
-    amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
-    amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
+  //   amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
+  //   amendmentsPage.amendmentManagersDecisionBy(1).contains(`${UNDERWRITER_MANAGER_1.firstName} ${UNDERWRITER_MANAGER_1.lastName}`);
 
-    amendmentsPage.amendmentManagersDecisionConditionsHeading().contains('Conditions');
-    amendmentsPage.amendmentManagersDecisionConditions(1).contains('This is a list of conditions');
-    amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', '<script>alert(\'hello world\')</script>');
-    amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', '<embed type="text/html" src="snippet.html" width="500" height="200">');
+  //   amendmentsPage.amendmentManagersDecisionConditionsHeading().contains('Conditions');
+  //   amendmentsPage.amendmentManagersDecisionConditions(1).contains('This is a list of conditions');
+  //   amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', '<script>alert(\'hello world\')</script>');
+  //   amendmentsPage.amendmentManagersDecisionConditions(1).should('not.contain', '<embed type="text/html" src="snippet.html" width="500" height="200">');
 
-    amendmentsPage.amendmentManagersDecisionReasonsHeading().contains('Reasons');
-    amendmentsPage.amendmentManagersDecisionReasons(1).contains('This is the reason for declining the amendment');
-    amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', '<img src=x onerror=alert(\'img\')/>');
-    amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', '<object data="snippet.html" width="500" height="200"></object>');
+  //   amendmentsPage.amendmentManagersDecisionReasonsHeading().contains('Reasons');
+  //   amendmentsPage.amendmentManagersDecisionReasons(1).contains('This is the reason for declining the amendment');
+  //   amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', '<img src=x onerror=alert(\'img\')/>');
+  //   amendmentsPage.amendmentManagersDecisionReasons(1).should('not.contain', '<object data="snippet.html" width="500" height="200"></object>');
 
-    amendmentsPage.amendmentManagersDecisionCommentsHeading().contains('Comments');
-    amendmentsPage.amendmentManagersDecisionComments(1).contains('This is a comment visible only to UKEF staff');
-    amendmentsPage.amendmentManagersDecisionComments(1).should('not.contain', '<input type="text" name="state" value="INPUT_FROM_USER">');
-  });
+  //   amendmentsPage.amendmentManagersDecisionCommentsHeading().contains('Comments');
+  //   amendmentsPage.amendmentManagersDecisionComments(1).contains('This is a comment visible only to UKEF staff');
+  //   amendmentsPage.amendmentManagersDecisionComments(1).should('not.contain', '<input type="text" name="state" value="INPUT_FROM_USER">');
+  // });
 
   it('should display underwriter managers decision and conditions/reasons/comments displayed on amendment details page', () => {
     cy.login(UNDERWRITER_MANAGER_1);
