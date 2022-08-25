@@ -43,86 +43,86 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    // amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    // amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    // amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    // amendmentsPage.continueAmendment().click();
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    amendmentsPage.continueAmendment().click();
 
-    // cy.url().should('contain', 'request-approval');
-    // // manual approval
-    // amendmentsPage.amendmentRequestApprovalYes().click();
-    // amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', 'request-approval');
+    // manual approval
+    amendmentsPage.amendmentRequestApprovalYes().click();
+    amendmentsPage.continueAmendment().click();
 
-    // cy.url().should('contain', 'amendment-options');
-    // amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
-    // amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
+    cy.url().should('contain', 'amendment-options');
+    amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
+    amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
 
-    // // update both the cover end date and the facility value
-    // amendmentsPage.amendmentCoverEndDateCheckbox().click();
-    // amendmentsPage.amendmentFacilityValueCheckbox().click();
-    // amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
-    // amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-    // amendmentsPage.continueAmendment().click();
-    // cy.url().should('contain', 'cover-end-date');
+    // update both the cover end date and the facility value
+    amendmentsPage.amendmentCoverEndDateCheckbox().click();
+    amendmentsPage.amendmentFacilityValueCheckbox().click();
+    amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
+    amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', 'cover-end-date');
 
-    // amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
-    // amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-    // amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-    // amendmentsPage.continueAmendment().click();
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+    amendmentsPage.continueAmendment().click();
 
-    // cy.url().should('contain', 'facility-value');
-    // amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    // amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
+    cy.url().should('contain', 'facility-value');
+    amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
+    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
 
-    // amendmentsPage.continueAmendment().click();
-    // cy.url().should('contain', 'check-answers');
-    // amendmentsPage.continueAmendment().click();
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', 'check-answers');
+    amendmentsPage.continueAmendment().click();
   });
 
-  // it('should take you to `Add underwriter decision - Cover End Date` page', () => {
-  //   cy.login(UNDERWRITER_MANAGER_1);
-  //   cy.visit(relative(`/case/${dealId}/underwriting`));
+  it('should take you to `Add underwriter decision - Cover End Date` page', () => {
+    cy.login(UNDERWRITER_MANAGER_1);
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
-  //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-  //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
+    pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
 
-  //   cy.url().should('contain', '/cover-end-date/managers-decision');
+    //   cy.url().should('contain', '/cover-end-date/managers-decision');
 
-  //   pages.amendmentsPage.underWriterManagerDecisionCoverEndDateHeading().contains('What\'s your decision?');
-  //   pages.amendmentsPage.amendmentCurrentCoverEndDate().contains('20 October 2022');
-  //   pages.amendmentsPage.amendmentNewCoverEndDateDay().contains(dateConstants.tomorrowDay);
-  //   pages.amendmentsPage.amendmentNewCoverEndDateDay().contains(dateConstants.todayYear);
+    //   pages.amendmentsPage.underWriterManagerDecisionCoverEndDateHeading().contains('What\'s your decision?');
+    //   pages.amendmentsPage.amendmentCurrentCoverEndDate().contains('20 October 2022');
+    //   pages.amendmentsPage.amendmentNewCoverEndDateDay().contains(dateConstants.tomorrowDay);
+    //   pages.amendmentsPage.amendmentNewCoverEndDateDay().contains(dateConstants.todayYear);
 
-  //   pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions().should('exist');
-  //   pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('exist');
-  //   pages.amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('exist');
-  // });
+    //   pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions().should('exist');
+    //   pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('exist');
+    //   pages.amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('exist');
+    // });
 
-  // it('should show an error if no decision has been made but the `Continue` button is clicked', () => {
-  //   cy.login(UNDERWRITER_MANAGER_1);
-  //   cy.visit(relative(`/case/${dealId}/underwriting`));
+    // it('should show an error if no decision has been made but the `Continue` button is clicked', () => {
+    //   cy.login(UNDERWRITER_MANAGER_1);
+    //   cy.visit(relative(`/case/${dealId}/underwriting`));
 
-  //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-  //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+    //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
+    //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
 
-  //   cy.url().should('contain', '/cover-end-date/managers-decision');
-  //   amendmentsPage.continueAmendment().click();
-  //   amendmentsPage.errorSummary().contains('Select your decision for the cover end date');
-  // });
+    //   cy.url().should('contain', '/cover-end-date/managers-decision');
+    //   amendmentsPage.continueAmendment().click();
+    //   amendmentsPage.errorSummary().contains('Select your decision for the cover end date');
+    // });
 
-  // it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
-  //   cy.login(UNDERWRITER_MANAGER_1);
-  //   cy.visit(relative(`/case/${dealId}/underwriting`));
+    // it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
+    //   cy.login(UNDERWRITER_MANAGER_1);
+    //   cy.visit(relative(`/case/${dealId}/underwriting`));
 
-  //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
-  //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
+    //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
+    //   pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
 
-  //   cy.url().should('contain', '/cover-end-date/managers-decision');
-  //   amendmentsPage.underWriterManagerDecisionRadioInputDecline().click();
-  //   amendmentsPage.continueAmendment().click();
+    //   cy.url().should('contain', '/cover-end-date/managers-decision');
+    //   amendmentsPage.underWriterManagerDecisionRadioInputDecline().click();
+    //   amendmentsPage.continueAmendment().click();
 
   //   cy.url().should('contain', '/facility-value/managers-decision');
-  // });
+  });
 
   // it('should show an error if no decision has been made for `Facility Value` but the `Continue` button is clicked', () => {
   //   cy.login(UNDERWRITER_MANAGER_1);
