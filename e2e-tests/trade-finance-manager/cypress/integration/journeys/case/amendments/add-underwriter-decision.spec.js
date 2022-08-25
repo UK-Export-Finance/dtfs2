@@ -242,7 +242,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', '/managers-conditions/summary');
 
-    // amendmentsPage.amendmentSendToBankButton().click();
+    amendmentsPage.amendmentSendToBankButton().click();
 
     // cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
