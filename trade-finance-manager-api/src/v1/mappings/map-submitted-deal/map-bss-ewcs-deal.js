@@ -23,6 +23,7 @@ const mapBssEwcsDeal = (deal) => {
   const {
     submissionCount,
     submissionDate,
+    created,
     ukefDealId,
   } = details;
 
@@ -37,6 +38,7 @@ const mapBssEwcsDeal = (deal) => {
     additionalRefName,
     submissionCount,
     submissionDate,
+    created,
     status,
     ukefDealId,
     maker,
