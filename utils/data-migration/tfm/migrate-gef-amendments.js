@@ -63,11 +63,11 @@ const migrateGefAmendments = async () => {
   const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
   const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
   const allGefAmendments = [];
-  let amendments22To23 = await open('./amendments/data.xlsx', 'Amendments Apr 22 to Apr 23');
+  let amendments22To23 = await open('./amendments/gef-amendments2.xlsx', 'Amendments Apr 22 to Apr 23');
   amendments22To23 = amendments22To23.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()) && item.Stage === COMPLETED);
   allGefAmendments.push(...amendments22To23);
 
-  let amendments21To22 = await open('./amendments/data.xlsx', 'Amendments Apr 21 to Apr 22');
+  let amendments21To22 = await open('./amendments/gef-amendments2.xlsx', 'Amendments Apr 21 to Apr 22');
   amendments21To22 = amendments21To22.filter((item) => item.Product === 'GEF' && amendmentType.includes(item['Type of amendment'].trim()) && item.Stage === COMPLETED);
   allGefAmendments.push(...amendments21To22);
   const json = [];
@@ -109,7 +109,11 @@ const migrateGefAmendments = async () => {
     }
 
     if (amendment['Notification or Request'] === MANUAL) {
-      output.leadUnderwriterId = amendment.UnderwriterID;
+      output.leadUnderwriter = {
+        _id: amendment.UnderwriterID,
+        firstName: amendment.UnderwriterFirstName,
+        lastName: amendment.UnderWriterSurname,
+      };
       output.ukefDecision = {
         coverEndDate: amendment.changeCoverEndDate ? 'Approved without conditions' : null, // TODO: add UW Manager decision Approved with or without conditions
         value: amendment.changeFacilityValue ? 'Approved without conditions' : null, // TODO: add UW Manager decision Approved with or without conditions
@@ -133,7 +137,7 @@ const migrateGefAmendments = async () => {
         banksDecisionEmailSent: true,
         submittedAt: amendment['When Finished'] ? getUnixTime((new Date(excelDateToISODateString(amendment['When Finished']))).setHours(0, 0, 0, 0)) : '',
         effectiveDate: amendment['Effective Date'] ? getUnixTime((new Date(excelDateToISODateString(amendment['Effective Date']))).setHours(0, 0, 0, 0)) : '', // TODO: confirm
-        receivedDate: getUnixTime((new Date(excelDateToISODateString(amendment['Date received']))).setHours(0, 0, 0, 0)), // TODO: check for received date
+        receivedDate: getUnixTime((new Date(excelDateToISODateString(amendment['When Finished']))).setHours(0, 0, 0, 0)), // TODO: check for received date
         submitted: true,
         submittedBy: {
           _id: amendment.PIMId,
