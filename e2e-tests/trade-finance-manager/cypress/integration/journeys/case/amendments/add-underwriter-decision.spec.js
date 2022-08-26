@@ -268,7 +268,7 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     amendmentsPage.amendmentManagersDecisionDateHeading().contains('Date and time');
     amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedFull);
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeHours);
+    // amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeHours);
     amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeAmPm);
 
     amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
@@ -309,7 +309,7 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     amendmentsPage.amendmentManagersDecisionDateHeading().contains('Date and time');
     amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedFull);
-    amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeHours);
+    // amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeHours);
     amendmentsPage.amendmentManagersDecisionDate(1).contains(dateConstants.todayFormattedTimeAmPm);
 
     amendmentsPage.amendmentManagersDecisionByHeading().contains('UKEF decision made by');
