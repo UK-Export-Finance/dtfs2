@@ -85,7 +85,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
-      run: docker-compose -f docker-compose.yml up --build -d
+      run: docker-compose -f docker-compose.gha.yml up --build -d
     - name: Sleep for 30 seconds
       run: sleep 30s
 
@@ -148,7 +148,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
-      run: docker-compose -f docker-compose.yml up --build -d
+      run: docker-compose -f docker-compose.gha.yml up --build -d
     - name: Sleep for 30 seconds
       run: sleep 30s
 
@@ -211,7 +211,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Start Docker Compose
-      run: docker-compose -f docker-compose.yml up --build -d
+      run: docker-compose -f docker-compose.gha.yml up --build -d
     - name: Sleep for 30 seconds
       run: sleep 30s
 
@@ -277,7 +277,7 @@ jobs:
     - name: Start Docker Compose
       run: |
         source secrets/set_jwt_keypair.sh
-        docker-compose -f docker-compose.yml up --build -d
+        docker-compose -f docker-compose.gha.yml up --build -d
     - name: Sleep for 30 seconds
       run: sleep 30s
 
