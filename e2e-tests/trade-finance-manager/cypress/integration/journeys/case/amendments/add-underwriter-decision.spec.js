@@ -85,7 +85,6 @@ context('Amendments underwriting - add underwriter decision', () => {
       pages.amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('exist');
       pages.amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('exist');
 
-      cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -95,7 +94,6 @@ context('Amendments underwriting - add underwriter decision', () => {
       amendmentsPage.continueAmendment().click();
       amendmentsPage.errorSummary().contains('Select your decision for the cover end date');
 
-      cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -107,7 +105,6 @@ context('Amendments underwriting - add underwriter decision', () => {
 
       cy.url().should('contain', '/facility-value/managers-decision');
 
-      cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -121,7 +118,6 @@ context('Amendments underwriting - add underwriter decision', () => {
       amendmentsPage.continueAmendment().click();
       amendmentsPage.errorSummary().contains('Select your decision for the facility value');
 
-      cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -150,7 +146,6 @@ context('Amendments underwriting - add underwriter decision', () => {
 
       amendmentsPage.continueAmendment().should('be.visible');
 
-      cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -200,7 +195,6 @@ context('Amendments underwriting - add underwriter decision', () => {
       amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
       amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
 
-      cy.login(UNDERWRITER_MANAGER_1);
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -221,9 +215,6 @@ context('Amendments underwriting - add underwriter decision', () => {
       amendmentsPage.amendmentSendToBankButton().click();
 
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
-
-      cy.login(UNDERWRITER_MANAGER_1);
-      cy.visit(relative(`/case/${dealId}/underwriting`));
 
       amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
@@ -257,8 +248,6 @@ context('Amendments underwriting - add underwriter decision', () => {
       amendmentsPage.amendmentManagersDecisionCommentsHeading().contains('Comments');
       amendmentsPage.amendmentManagersDecisionComments(1).contains('This is a comment visible only to UKEF staff');
       amendmentsPage.amendmentManagersDecisionComments(1).should('not.contain', '<input type="text" name="state" value="INPUT_FROM_USER">');
-
-      cy.login(UNDERWRITER_MANAGER_1);
 
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
       facilityPage.facilityTabAmendments().click();
