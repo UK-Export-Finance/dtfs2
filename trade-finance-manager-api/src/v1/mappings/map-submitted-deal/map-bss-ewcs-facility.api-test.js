@@ -65,7 +65,7 @@ describe('mappings - map submitted deal - mapBssEwcsFacility', () => {
         currencyCode: currency.id,
         value: Number(value.replace(/,/g, '')),
         coverPercentage: Number(coveredPercentage),
-        ukefExposure: Number(ukefExposure.split('.')[0].replace(/,/g, '')),
+        ukefExposure: Number(ukefExposure.replace(/,/g, '')),
         ukefGuaranteeInMonths,
         hasBeenIssued: isIssued(facilityStage),
         hasBeenAcknowledged,
