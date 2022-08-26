@@ -52,7 +52,7 @@ const mapBssEwcsFacility = (facility) => {
     hasBeenIssuedAndAcknowledged,
   } = facility;
 
-  const cleanUkefExposure = Number(ukefExposure.split('.')[0].replace(/,/g, ''));
+  const cleanUkefExposure = Number(ukefExposure.replace(/,/g, ''));
 
   return {
     _id,
