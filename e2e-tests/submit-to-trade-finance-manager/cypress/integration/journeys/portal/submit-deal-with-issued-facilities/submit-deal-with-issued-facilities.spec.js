@@ -89,6 +89,9 @@ context('Portal to TFM deal submission', () => {
     const issuedBondId = issuedBond._id;
     facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedBondId);
 
+    // contains exposure to 2 decimal places (not rounded)
+    facilityRow.facilityExposure().contains('486.14');
+
     facilityRow.facilityId().click();
 
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${issuedBondId}`);
@@ -113,6 +116,9 @@ context('Portal to TFM deal submission', () => {
 
     const issuedLoanId = issuedLoan._id;
     facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedLoanId);
+
+    // contains exposure to 2 decimal places (not rounded)
+    facilityRow.facilityExposure().contains('87.27');
 
     facilityRow.facilityId().click();
 
