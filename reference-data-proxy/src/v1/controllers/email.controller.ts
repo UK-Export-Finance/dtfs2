@@ -32,7 +32,7 @@ export const emailNotification = async (req: Request, res: Response) => {
 
     return res.status(status).send(data);
   } catch (e) {
-    console.error('Unable to send email', { e });
+    // console.error('Unable to send email', { e });
   }
   return res.status(422).send({});
 };
@@ -53,7 +53,7 @@ export const sendEmail = async (templateId: string, sendToEmailAddress: string, 
     });
     return data;
   } catch (err) {
-    console.error(`Unable to send the email: ${err}`);
+    // console.error(`Unable to send the email: ${err}`);
     return null;
   }
 };
