@@ -103,7 +103,6 @@ context('Amendments underwriting - add underwriter decision', () => {
   });
 
   it('should show an error if no decision has been made but the `Continue` button is clicked', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -115,7 +114,6 @@ context('Amendments underwriting - add underwriter decision', () => {
   });
 
   it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -129,7 +127,6 @@ context('Amendments underwriting - add underwriter decision', () => {
   });
 
   it('should show an error if no decision has been made for `Facility Value` but the `Continue` button is clicked', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -145,7 +142,6 @@ context('Amendments underwriting - add underwriter decision', () => {
   });
 
   it('should take you to `Add conditions, reasons and comments` page if a decision has been made for Facility Value and Cover End Date', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -176,7 +172,6 @@ context('Amendments underwriting - add underwriter decision', () => {
   });
 
   it('should take you to `Add conditions, reasons and comments` summary page if no errors', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -228,7 +223,6 @@ context('Amendments underwriting - add underwriter decision', () => {
   });
 
   it('should take you to `Underwriting` page once a manual amendment has been submitted', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -252,7 +246,6 @@ context('Amendments underwriting - add underwriter decision', () => {
   });
 
   it('should show underwriter managers decision and santised conditions/reasons/comments displayed', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
@@ -290,8 +283,6 @@ context('Amendments underwriting - add underwriter decision', () => {
   });
 
   it('should display underwriter managers decision and conditions/reasons/comments displayed on amendment details page', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
-
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityTabAmendments().click();
