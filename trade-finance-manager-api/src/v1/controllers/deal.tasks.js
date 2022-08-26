@@ -3,22 +3,6 @@ const CONSTANTS = require('../../constants');
 const { createTasks } = require('../helpers/create-tasks');
 
 /**
- * Check if the "create or match parties" task should be created
- * @param {Object} deal
- * @returns {Boolean}
- */
-const shouldCreatePartiesTask = (deal) => {
-  const { tfm } = deal;
-  const exporterPartyUrn = tfm.parties.exporter.partyUrn;
-
-  if (exporterPartyUrn && exporterPartyUrn.length) {
-    return false;
-  }
-
-  return true;
-};
-
-/**
  * Check if the "check agent" task should be created
  * @param {Object} deal
  * @returns {Boolean}
@@ -53,10 +37,6 @@ const shouldCreateAgentCheckTask = (deal) => {
  */
 const listAdditionalTasks = (deal) => {
   const additionalTasks = [];
-
-  if (shouldCreatePartiesTask(deal)) {
-    additionalTasks.push(CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES);
-  }
 
   if (shouldCreateAgentCheckTask(deal)) {
     additionalTasks.push(CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK);
@@ -104,7 +84,6 @@ const createDealTasks = async (deal) => {
 };
 
 module.exports = {
-  shouldCreatePartiesTask,
   shouldCreateAgentCheckTask,
   listAdditionalTasks,
   createDealTasks,

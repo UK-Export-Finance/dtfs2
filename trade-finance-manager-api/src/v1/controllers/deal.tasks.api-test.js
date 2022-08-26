@@ -1,5 +1,4 @@
 const {
-  shouldCreatePartiesTask,
   shouldCreateAgentCheckTask,
   listAdditionalTasks,
   createDealTasks,
@@ -38,22 +37,6 @@ describe('createDealTasks', () => {
 
   beforeEach(() => {
     externalApis.updateDeal = updateDealSpy;
-  });
-
-  describe('shouldCreatePartiesTask', () => {
-    describe('when a deal has tfm.exporter.partyUrn', () => {
-      it('should return false', () => {
-        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
-        expect(result).toEqual(false);
-      });
-    });
-
-    describe('when a deal does NOT have tfm.exporter.partyUrn', () => {
-      it('should return true', () => {
-        const result = shouldCreatePartiesTask(mockSubmittedDeal);
-        expect(result).toEqual(true);
-      });
-    });
   });
 
   describe('shouldCreateAgentCheckTask', () => {
@@ -98,7 +81,6 @@ describe('createDealTasks', () => {
         const result = listAdditionalTasks(mockDealEligibilityCriteria11False);
 
         const expected = [
-          CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
           CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
         ];
 
