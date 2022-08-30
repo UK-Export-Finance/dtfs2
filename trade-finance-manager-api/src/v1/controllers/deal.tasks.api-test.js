@@ -1,4 +1,5 @@
 const {
+  shouldCreatePartiesTask,
   shouldCreateAgentCheckTask,
   listAdditionalTasks,
   createDealTasks,
@@ -37,6 +38,51 @@ describe('createDealTasks', () => {
 
   beforeEach(() => {
     externalApis.updateDeal = updateDealSpy;
+  });
+
+  describe('shouldCreatePartiesTask', () => {
+    describe('when a deal has tfm.exporter.partyUrn but NO tfm.buyer.partyUrn and deal is BSS', () => {
+      it('should return true', () => {
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a deal does NOT have tfm.exporter.partyUrn but has tfm.buyer.partyUrn and deal is BSS', () => {
+      it('should return true', () => {
+        mockDealWithPartyUrn.tfm.parties.buyer = { partyUrn: 'Test' };
+        mockDealWithPartyUrn.tfm.parties.exporter = null;
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a deal does NOT have tfm.exporter.partyUrn and NO tfm.buyer.partyUrn and deal is BSS', () => {
+      it('should return true', () => {
+        const result = shouldCreatePartiesTask(mockSubmittedDeal);
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a deal has tfm.exporter.partyUrn and deal is GEF', () => {
+      it('should return false', () => {
+        mockDealWithPartyUrn.tfm.parties.buyer = null;
+        mockDealWithPartyUrn.tfm.parties.exporter = { partyUrn: 'Test' };
+        mockDealWithPartyUrn.dealType = CONSTANTS.DEALS.DEAL_TYPE.GEF;
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe('when a deal does NOT have tfm.exporter.partyUrn and deal is GEF', () => {
+      it('should return true', () => {
+        mockDealWithPartyUrn.tfm.parties.buyer = null;
+        mockDealWithPartyUrn.tfm.parties.exporter = null;
+        mockDealWithPartyUrn.dealType = CONSTANTS.DEALS.DEAL_TYPE.GEF;
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
+        expect(result).toEqual(true);
+      });
+    });
   });
 
   describe('shouldCreateAgentCheckTask', () => {
@@ -81,6 +127,7 @@ describe('createDealTasks', () => {
         const result = listAdditionalTasks(mockDealEligibilityCriteria11False);
 
         const expected = [
+          CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
           CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
         ];
 
@@ -90,6 +137,9 @@ describe('createDealTasks', () => {
 
     describe('when no additional tasks should be added', () => {
       it('should return empty array', () => {
+        mockDealWithPartyUrn.tfm.parties.buyer = null;
+        mockDealWithPartyUrn.tfm.parties.exporter = { partyUrn: 'Test ' };
+        mockDealWithPartyUrn.dealType = CONSTANTS.DEALS.DEAL_TYPE.GEF;
         const result = listAdditionalTasks(mockDealWithPartyUrn);
 
         expect(result).toEqual([]);

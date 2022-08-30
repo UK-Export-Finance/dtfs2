@@ -3,6 +3,35 @@ const CONSTANTS = require('../../constants');
 const { createTasks } = require('../helpers/create-tasks');
 
 /**
+ * Check if the "create or match parties" task should be created
+ * if BSS, show task if either buyer or exporter party URN are not present
+ * if GEF, show task if exporter party URN is not present
+ * @param {Object} deal
+ * @returns {Boolean}
+ */
+const shouldCreatePartiesTask = (deal) => {
+  const { dealType, tfm } = deal;
+  const { BSS_EWCS } = CONSTANTS.DEALS.DEAL_TYPE;
+  // exporter party URN
+  const exporterPartyUrn = tfm.parties?.exporter?.partyUrn;
+  // buyer party URN
+  const buyerPartyUrn = tfm.parties?.buyer?.partyUrn;
+  // boolean if exporter party URN exists and is not empty
+  const exporterPartyUrnExists = exporterPartyUrn && exporterPartyUrn.length;
+
+  // if BSS, then need to check buyer party URN and exporter party URN
+  if (dealType === BSS_EWCS) {
+    // boolean if buyer party URN exists and is not empty
+    const buyerPartyUrnExists = buyerPartyUrn && buyerPartyUrn.length;
+    // if either does not exist, then show task
+    return !buyerPartyUrnExists || !exporterPartyUrnExists;
+  }
+
+  // show task if exporter party urn does not exist
+  return !exporterPartyUrnExists;
+};
+
+/**
  * Check if the "check agent" task should be created
  * @param {Object} deal
  * @returns {Boolean}
@@ -37,6 +66,10 @@ const shouldCreateAgentCheckTask = (deal) => {
  */
 const listAdditionalTasks = (deal) => {
   const additionalTasks = [];
+
+  if (shouldCreatePartiesTask(deal)) {
+    additionalTasks.push(CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES);
+  }
 
   if (shouldCreateAgentCheckTask(deal)) {
     additionalTasks.push(CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK);
@@ -84,6 +117,7 @@ const createDealTasks = async (deal) => {
 };
 
 module.exports = {
+  shouldCreatePartiesTask,
   shouldCreateAgentCheckTask,
   listAdditionalTasks,
   createDealTasks,

@@ -29,6 +29,7 @@ const AIN = {
       {
         title: AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
         team: TEAMS.BUSINESS_SUPPORT,
+        isConditional: true,
       },
       {
         title: AIN_AND_MIA.GROUP_1.CREATE_OR_LINK_SALESFORCE,
@@ -71,6 +72,7 @@ const MIA = {
         groupId: 1,
         title: AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
         team: TEAMS.BUSINESS_SUPPORT,
+        isConditional: true,
       },
       {
         groupId: 1,
