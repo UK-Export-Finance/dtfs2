@@ -57,6 +57,15 @@ describe('createDealTasks', () => {
       });
     });
 
+    describe('when a deal has tfm.exporter.partyUrn and has tfm.buyer.partyUrn and deal is BSS', () => {
+      it('should return true', () => {
+        mockDealWithPartyUrn.tfm.parties.buyer = { partyUrn: '1234' };
+        mockDealWithPartyUrn.tfm.parties.exporter = { partyUrn: '1234' };
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
+        expect(result).toEqual(false);
+      });
+    });
+
     describe('when a deal does NOT have tfm.exporter.partyUrn and NO tfm.buyer.partyUrn and deal is BSS', () => {
       it('should return true', () => {
         const result = shouldCreatePartiesTask(mockSubmittedDeal);
