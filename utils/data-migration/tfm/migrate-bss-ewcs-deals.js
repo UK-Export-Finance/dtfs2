@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 /**
  * DATA MIGRATION
  * **************
@@ -7,6 +9,7 @@
 const axios = require('axios');
 const CONSTANTS = require('../constant');
 const { getCollection, disconnect } = require('../helpers/database');
+const { sleep } = require('../helpers/io');
 
 const version = '0.0.1';
 const { TFM_API } = process.env;
@@ -61,7 +64,7 @@ const submitTfmDeal = async () => {
 
   return getDeals(filter)
     .then(async (deals) => {
-      const insertions = deals.map(async (deal) => {
+      for (const deal of deals) {
         await axios({
           method: 'put',
           url: `${TFM_API}/v1/deals/submit`,
@@ -84,11 +87,9 @@ const submitTfmDeal = async () => {
             }
           })
           .catch((error) => Promise.reject(new Error(`🚩 Error inserting deal ${error}`)));
-      });
 
-      return Promise.all(insertions)
-        .then(() => Promise.resolve(counter))
-        .catch((e) => Promise.reject(e));
+        await sleep(1000);
+      }
     })
     .catch((e) => Promise.reject(e));
 };
