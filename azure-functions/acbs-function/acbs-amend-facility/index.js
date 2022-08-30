@@ -77,24 +77,26 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
             };
           }
 
-          // 2.2.2. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with new eTag
-          const updatedFmr = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
+          // 2.2.2 - Cover end date
+          if (amendment.coverEndDate) {
+            // 2.2.3. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with new eTag
+            const updatedFmr = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
 
-          // 2.2.3 - Cover end date
-          if (amendment.coverEndDate && updatedFmr.etag) {
-            const result = yield context.df.callActivityWithRetry('activity-update-facility-master', retryOptions, {
-              facilityId,
-              acbsFacilityMasterInput: fmrMapped,
-              updateType: 'amendExpiryDate',
-              etag: updatedFmr.etag,
-            });
+            if (updatedFmr.etag) {
+              const result = yield context.df.callActivityWithRetry('activity-update-facility-master', retryOptions, {
+                facilityId,
+                acbsFacilityMasterInput: fmrMapped,
+                updateType: 'amendExpiryDate',
+                etag: updatedFmr.etag,
+              });
 
-            facilityMasterRecordAmendments = {
-              ...facilityMasterRecordAmendments,
-              coverEndDate: {
-                ...result,
-              },
-            };
+              facilityMasterRecordAmendments = {
+                ...facilityMasterRecordAmendments,
+                coverEndDate: {
+                  ...result,
+                },
+              };
+            }
           }
 
           // 2.3. Facility Loan Record (FLR)
