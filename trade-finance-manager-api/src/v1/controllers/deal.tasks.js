@@ -17,12 +17,12 @@ const shouldCreatePartiesTask = (deal) => {
   // buyer party URN
   const buyerPartyUrn = tfm.parties?.buyer?.partyUrn;
   // boolean if exporter party URN exists and is not empty
-  const exporterPartyUrnExists = exporterPartyUrn && exporterPartyUrn.length;
+  const exporterPartyUrnExists = exporterPartyUrn && exporterPartyUrn.trim().length;
 
   // if BSS, then need to check buyer party URN and exporter party URN
   if (dealType === BSS_EWCS) {
     // boolean if buyer party URN exists and is not empty
-    const buyerPartyUrnExists = buyerPartyUrn && buyerPartyUrn.length;
+    const buyerPartyUrnExists = buyerPartyUrn && buyerPartyUrn.trim().length;
     // if either does not exist, then show task
     return !buyerPartyUrnExists || !exporterPartyUrnExists;
   }
