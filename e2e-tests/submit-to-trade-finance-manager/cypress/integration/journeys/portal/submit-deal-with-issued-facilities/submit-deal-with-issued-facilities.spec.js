@@ -89,8 +89,17 @@ context('Portal to TFM deal submission', () => {
     const issuedBondId = issuedBond._id;
     facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedBondId);
 
+    // calculate ukef exposure from value in GBP
+    facilityRow.facilityValueGBP().then((value) => {
+      facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedBondId);
+      // removes GBP before
+      const valueinGBP = value.text().split(' ');
+      // removes commas
+      const exposureValue = parseFloat(valueinGBP[1].replace(/,/g, '')) * (issuedBond.coveredPercentage / 100);
+      facilityRow.facilityExposure().contains(`GBP ${exposureValue.toFixed(2)}`);
+    });
+
     // contains exposure to 2 decimal places (not rounded)
-    facilityRow.facilityExposure().contains('486.14');
 
     facilityRow.facilityId().click();
 
@@ -117,8 +126,15 @@ context('Portal to TFM deal submission', () => {
     const issuedLoanId = issuedLoan._id;
     facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedLoanId);
 
-    // contains exposure to 2 decimal places (not rounded)
-    facilityRow.facilityExposure().contains('87.27');
+    // calculate ukef exposure from value in GBP
+    facilityRow.facilityValueGBP().then((value) => {
+      facilityRow = tfmPages.caseDealPage.dealFacilitiesTable.row(issuedLoanId);
+      // removes GBP before
+      const valueinGBP = value.text().split(' ');
+      // removes commas
+      const exposureValue = parseFloat(valueinGBP[1].replace(/,/g, '')) * (issuedLoan.coveredPercentage / 100);
+      facilityRow.facilityExposure().contains(`GBP ${exposureValue.toFixed(2)}`);
+    });
 
     facilityRow.facilityId().click();
 
