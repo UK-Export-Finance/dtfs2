@@ -23,7 +23,7 @@ module.exports = () => {
   deal.mockFacilities[1]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
   deal.mockFacilities[1]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
 
-  deal.mockFacilities[0]['conversionRateDate-day'] = aMonthInTheFuture.getDate();
+  deal.mockFacilities[0]['conversionRateDate-day'] = now.getDate();
   deal.mockFacilities[0]['conversionRateDate-month'] = now.getMonth() + 1;
   deal.mockFacilities[0]['conversionRateDate-year'] = now.getFullYear();
 

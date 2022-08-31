@@ -11,6 +11,10 @@ context('Amendments underwriting - add underwriter decision', () => {
   let dealId;
   const dealFacilities = [];
 
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid');
+  });
+
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
       dealId = insertedDeal._id;
@@ -206,7 +210,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('have.class', 'govuk-tag--green');
 
-    amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions <script>console.log(\'hello world\')</script> <embed type="text/html" src="snippet.html" width="500" height="200">');
+    amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions <script>(\'hello world\')</script> <embed type="text/html" src="snippet.html" width="500" height="200">');
     amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment <img src=x onerror=console.log(\'img\')/> <object data="snippet.html" width="500" height="200"></object>');
     amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff <input type="text" name="state" value="INPUT_FROM_USER">');
 
@@ -223,7 +227,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
   });
 
-  it('should take you to `Underwriting` page once a manual amendment has been submitted with underwriter managers decision and santised conditions/reasons/comments displayed', () => {
+  it('should take you to `Underwriting` page once a manual amendment has been submitted', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
@@ -245,6 +249,11 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentSendToBankButton().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
+  });
+
+  it('should show underwriter managers decision and santised conditions/reasons/comments displayed', () => {
+    cy.login(UNDERWRITER_MANAGER_1);
+    cy.visit(relative(`/case/${dealId}/underwriting`));
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
     amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
@@ -282,11 +291,9 @@ context('Amendments underwriting - add underwriter decision', () => {
 
   it('should display underwriter managers decision and conditions/reasons/comments displayed on amendment details page', () => {
     cy.login(UNDERWRITER_MANAGER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting`));
 
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
     facilityPage.facilityTabAmendments().click();
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);

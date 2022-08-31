@@ -175,7 +175,7 @@ const issueAcbsFacilities = async (deal) => {
  * @param {Object} deal Bespoke deal object
  */
 const amendAcbsFacility = async (amendments, facility, deal) => {
-  let payload;
+  let payload = amendments;
 
   // TO-DO : EPOCH Convergence
   if (amendments.coverEndDate) {
@@ -184,7 +184,7 @@ const amendAcbsFacility = async (amendments, facility, deal) => {
 
   api.amendACBSfacility(payload, facility, deal)
     .then((acbsTaskLinks) => {
-      if (acbsTaskLinks.id) {
+      if (acbsTaskLinks && acbsTaskLinks.id) {
         return addToACBSLog({ acbsTaskLinks });
       }
 
