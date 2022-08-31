@@ -23,6 +23,7 @@ const caseDealPage = {
         exposure: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukef-exposure"]`),
         totalValue: () => cy.get('@row').get('[data-cy="facilities-total-value"]'),
         totalExposure: () => cy.get('@row').get('[data-cy="facilities-total-ukef-exposure"]'),
+        facilityValueGBP: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-value-gbp"]`),
         facilityExposure: () => cy.get('@row').get(`[data-cy="facility-${facilityId}-ukef-exposure"]`),
       };
     },
