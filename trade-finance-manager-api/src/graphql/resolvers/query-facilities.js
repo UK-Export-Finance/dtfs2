@@ -22,7 +22,7 @@ exports.queryAllFacilities = async (queryParams) => {
     let facilityCoverEndDate = '-';
     let coverEndDateEpoch = '';
     // regex to check date is correct format - YYYY-MM-DD
-    const dateRegex = /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|1\d|2\d|3[01])$/;
+    const dateRegex = /^\d\d\d\d-\d\d-\d\d/;
 
     const defaultFacilityValue = facility.value;
     const defaultCoverEndDate = facility.coverEndDate;
