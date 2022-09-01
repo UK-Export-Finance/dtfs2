@@ -207,28 +207,6 @@ const sendDealSubmitEmails = async (deal) => {
   }
 };
 
-const sendMigratedDealEmail = async (dealId) => {
-  try {
-    if (!dealId) {
-      return false;
-    }
-
-    const sendToEmailAddress = process.env.INTERNAL_EMAIL_GROUP;
-    const emailVariables = {
-      dealId,
-    };
-
-    return sendTfmEmail(
-      CONSTANTS.EMAIL_TEMPLATE_IDS.MIGRATED_DEAL_SUBMITTED,
-      sendToEmailAddress,
-      emailVariables,
-    );
-  } catch (err) {
-    console.error('TFM-API - Error sending deal migrated deal emails', { err });
-    return null;
-  }
-};
-
 module.exports = {
   shouldSendFirstTaskEmail,
   sendFirstTaskEmail,
@@ -236,5 +214,4 @@ module.exports = {
   sendMiaAcknowledgement,
   generateBssDealAinMinConfirmationEmailVariables,
   sendAinMinAcknowledgement,
-  sendMigratedDealEmail,
 };
