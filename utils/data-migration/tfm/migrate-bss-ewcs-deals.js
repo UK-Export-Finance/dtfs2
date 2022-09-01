@@ -5,10 +5,10 @@
  * **************
  * Purpose of this script is to migrate `BSS/EWCS` deals to TFM.
  */
-
+const fs = require('fs');
 const axios = require('axios');
 const CONSTANTS = require('../constant');
-const { getCollection, disconnect } = require('../helpers/database');
+const { getCollection, disconnect, update } = require('../helpers/database');
 const { sleep } = require('../helpers/io');
 
 const version = '0.0.1';
@@ -22,6 +22,14 @@ const { TFM_API } = process.env;
  * @returns {Object} Collection object
  */
 const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL, filter);
+
+/**
+ * Updates TFM deal with provided updates object.
+ * @param {String} ukefDealId UKEF Deal ID
+ * @param {Object} updates Updates object in JSON
+ * @returns {Promise} Resolve if successful otherwise Reject
+ */
+const setTfmDeal = (ukefDealId, updates) => update(CONSTANTS.DATABASE.TABLES.TFM_DEAL, ukefDealId, updates);
 
 /**
  * Submits deal to the TFM as a `Checker` from `UKEF test bank (Delegated)`
@@ -65,7 +73,7 @@ const submitTfmDeal = async () => {
   return getDeals(filter)
     .then(async (deals) => {
       for (const deal of deals) {
-        await axios({
+        axios({
           method: 'put',
           url: `${TFM_API}/v1/deals/submit`,
           headers: {
@@ -94,6 +102,54 @@ const submitTfmDeal = async () => {
     .catch((e) => Promise.reject(e));
 };
 
+/**
+ * Updates `tfm-deals` collection with update object.
+ * @param {String} ukefDealId UKEF Deal ID
+ * @param {Object} update Object comprising of updates to be applied
+ * @returns {Promise} Resolve is success, otherwise Reject accompanied with an error message.
+ */
+const updateTfmDeal = (ukefDealId, updates) => {
+  try {
+    return setTfmDeal(ukefDealId, updates)
+      .then((r) => Promise.resolve(r))
+      .catch((e) => Promise.reject(new Error(e)));
+  } catch (e) {
+    return Promise.reject(new Error(`🚩 Unable to update deal TFM ${ukefDealId} ${e}`));
+  }
+};
+
+// ******************** WORKFLOW / K2 *************************
+
+const workflow = async () => {
+  console.info('\x1b[33m%s\x1b[0m', '➕ 2. Extracting data from Workflow', '\n');
+  const path = './json';
+  const results = [];
+
+  try {
+    const files = fs.readdirSync(path);
+
+    await files.forEach((file) => {
+      const uri = `${path}/${file}`;
+      const data = fs.readFileSync(uri, 'utf8');
+
+      if (data) {
+        const json = JSON.parse(data);
+        const deals = json.Workflow;
+
+        deals.map((deal) => {
+          console.info(deal);
+        });
+      } else {
+        return Promise.reject(new Error(`🚩 Empty workflow data set ${uri}`));
+      }
+    });
+
+    return Promise.resolve(results);
+  } catch (e) {
+    return Promise.reject(new Error(`🚩 Unable to read the workflow directory ${e}`));
+  }
+};
+
 // ******************** MAIN *************************
 
 /**
@@ -104,10 +160,12 @@ const submitTfmDeal = async () => {
 const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating BSS/EWCS TFM migration v${version}.`, '\n\n');
 
-  submitTfmDeal()
-    .then((r) => {
-      if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully inserted ${r} TFM deals.\n`);
-    })
+  // submitTfmDeal()
+  //   .then((r) => {
+  //     if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully inserted ${r} TFM deals.\n`);
+  //   })
+  // //   .then(() => workflow())
+  workflow()
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {

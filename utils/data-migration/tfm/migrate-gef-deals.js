@@ -167,7 +167,7 @@ const actionSheets = async () => {
 
     return Promise.resolve(results);
   } catch (e) {
-    return Promise.reject(new Error(`🚩 Unable to read the directory ${e}`));
+    return Promise.reject(new Error(`🚩 Unable to read the action sheets directory ${e}`));
   }
 };
 
