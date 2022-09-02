@@ -132,7 +132,7 @@ const getActivities = (deal) => {
  * @returns {Array} An array of activities object
  */
 const add = async (acbs) => {
-  if (acbs) {
+  if (acbs.portalDealId) {
     acbsResponse = acbs;
     const deal = await api.findOneDeal(acbs.portalDealId);
     if (deal) {
