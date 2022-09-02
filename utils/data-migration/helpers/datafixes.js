@@ -1,6 +1,6 @@
 const CONSTANTS = require('../constant');
-const { getCollection, portalDealUpdate, disconnect } = require('./database');
-const { workflow, sleep } = require('./io');
+const { getCollection, portalDealUpdate } = require('./database');
+const { workflow } = require('./io');
 /**
  * Data fixes helper functions
  */

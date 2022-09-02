@@ -76,7 +76,7 @@ const portalDealUpdate = async (id, updates) => {
       ? Promise.resolve(true)
       : Promise.reject(response);
   } catch (e) {
-    console.error(`Portal deal ${ukefDealId} update error: `, { e });
+    console.error(`Portal deal ${id} update error: `, { e });
     return Promise.reject(new Error(false));
   }
 };
