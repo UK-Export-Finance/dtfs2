@@ -8,7 +8,7 @@
 const fs = require('fs');
 const axios = require('axios');
 const CONSTANTS = require('../constant');
-const { getCollection, update, disconnect } = require('../helpers/database');
+const { getCollection, tfmDealUpdate, disconnect } = require('../helpers/database');
 const { open, get } = require('../helpers/actionsheets');
 
 const version = '0.0.1';
@@ -29,7 +29,7 @@ const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL
  * @param {Object} updates Updates object in JSON
  * @returns {Promise} Resolve if successful otherwise Reject
  */
-const setTfmDeal = (ukefDealId, updates) => update(CONSTANTS.DATABASE.TABLES.TFM_DEAL, ukefDealId, updates);
+const setTfmDeal = (ukefDealId, updates) => tfmDealUpdate(ukefDealId, updates);
 
 /**
  * Submits deal to the TFM as a `Checker` from `UKEF test bank (Delegated)`

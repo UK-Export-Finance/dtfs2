@@ -1,0 +1,14 @@
+const FILES = {
+  DEAL: 1,
+  DEAL_PARTIES: 2,
+  COMMENTS: 3,
+  FACILITY: 4,
+  FACILITY_PARTIES: 5,
+  INCOME_EXPOSURE: 6,
+  ELIGIBILITY_RESPONSE: 8,
+  AMENDMENTS: 9,
+};
+
+module.exports = {
+  FILES,
+};

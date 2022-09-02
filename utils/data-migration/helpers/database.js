@@ -4,6 +4,7 @@
 
 require('dotenv').config({ path: '../../../.env' });
 const { MongoClient } = require('mongodb');
+const CONSTANTS = require('../constant');
 
 let client;
 let connection;
@@ -47,21 +48,46 @@ const getCollection = async (name, filter = null, raw = null) => {
     if (rows) {
       resolve(rows);
     } else {
-      reject(new Error(`🚩 Unable to get collection ${name}`));
+      reject(new Error(`Unable to get collection ${name}`));
     }
   });
 };
 
 /**
- * Updates collection property(ies)
- * @param {String} name Collection name
+ * Portal - Updates collection property(ies)
  * @param {String} ukefDealId UKEF Deal ID
  * @param {Object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
-const update = async (name, ukefDealId, updates) => {
+const portalDealUpdate = async (ukefDealId, updates) => {
   if (!connection) await connect();
-  const response = await connection.collection(name).updateOne(
+  const response = await connection.collection(CONSTANTS.DATABASE.TABLES.DEAL).updateOne(
+    { 'details.ukefDealId': ukefDealId },
+    {
+      $set: {
+        ...updates,
+      },
+    },
+  );
+
+  return new Promise((resolve, reject) => {
+    if (Object.prototype.hasOwnProperty.call(response, 'acknowledged')) {
+      resolve(true);
+    } else {
+      reject(new Error(`Unable to update TFM deal property ${ukefDealId}`));
+    }
+  });
+};
+
+/**
+ * TFM - Updates collection property(ies)
+ * @param {String} ukefDealId UKEF Deal ID
+ * @param {Object} updates Properties to update
+ * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
+ */
+const tfmDealUpdate = async (ukefDealId, updates) => {
+  if (!connection) await connect();
+  const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL).updateOne(
     { 'dealSnapshot.ukefDealId': ukefDealId },
     {
       $set: {
@@ -74,13 +100,14 @@ const update = async (name, ukefDealId, updates) => {
     if (Object.prototype.hasOwnProperty.call(response, 'acknowledged')) {
       resolve(true);
     } else {
-      reject(new Error(`🚩 Unable to update TFM deal property ${ukefDealId}`));
+      reject(new Error(`Unable to update TFM deal property ${ukefDealId}`));
     }
   });
 };
 
 module.exports = {
   getCollection,
-  update,
   disconnect,
+  portalDealUpdate,
+  tfmDealUpdate,
 };
