@@ -3,6 +3,7 @@
  */
 
 require('dotenv').config({ path: '../../../.env' });
+const { ObjectId } = require('mongodb');
 const { MongoClient } = require('mongodb');
 const CONSTANTS = require('../constant');
 
@@ -59,24 +60,25 @@ const getCollection = async (name, filter = null, raw = null) => {
  * @param {Object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
-const portalDealUpdate = async (ukefDealId, updates) => {
-  if (!connection) await connect();
-  const response = await connection.collection(CONSTANTS.DATABASE.TABLES.DEAL).updateOne(
-    { 'details.ukefDealId': ukefDealId },
-    {
-      $set: {
-        ...updates,
+const portalDealUpdate = async (id, updates) => {
+  try {
+    if (!connection) await connect();
+    const response = await connection.collection(CONSTANTS.DATABASE.TABLES.DEAL).updateOne(
+      { 'details.id': ObjectId(id) },
+      {
+        $set: {
+          ...updates,
+        },
       },
-    },
-  );
+    );
 
-  return new Promise((resolve, reject) => {
-    if (Object.prototype.hasOwnProperty.call(response, 'acknowledged')) {
-      resolve(true);
-    } else {
-      reject(new Error(`Unable to update TFM deal property ${ukefDealId}`));
-    }
-  });
+    return (response.acknowledged)
+      ? Promise.resolve(true)
+      : Promise.reject(response);
+  } catch (e) {
+    console.error(`Portal deal ${ukefDealId} update error: `, { e });
+    return Promise.reject(new Error(false));
+  }
 };
 
 /**

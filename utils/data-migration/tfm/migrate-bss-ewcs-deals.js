@@ -135,7 +135,7 @@ const migrate = () => {
 
   deals()
     .then((d) => datafixes(d))
-    .then((d) => tfm(d))
+    // .then((d) => tfm(d))
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {
