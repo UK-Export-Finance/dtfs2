@@ -176,7 +176,7 @@ exports.update = async (req, res) => {
   });
 };
 
-exports.downloadFile = async (req, res) => {
+exports.downloadFile = (req, res) => {
   const { id, fieldname, filename } = req.params;
 
   findOneDeal(id, async (deal) => {

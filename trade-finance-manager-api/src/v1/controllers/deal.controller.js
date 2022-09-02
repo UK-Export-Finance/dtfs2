@@ -96,10 +96,7 @@ const submitACBSIfAllPartiesHaveUrn = async (dealId) => {
 exports.submitACBSIfAllPartiesHaveUrn = submitACBSIfAllPartiesHaveUrn;
 
 const canDealBeSubmittedToACBS = (submissionType) => {
-  const acceptable = [
-    CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
-    CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
-  ];
+  const acceptable = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIN];
   return acceptable.includes(submissionType);
 };
 exports.canDealBeSubmittedToACBS = canDealBeSubmittedToACBS;
@@ -182,31 +179,22 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
 
   const mappedDeal = mapSubmittedDeal(updatedDeal);
 
-  const {
-    dealType,
-    submissionType,
-  } = mappedDeal;
+  const { dealType, submissionType } = mappedDeal;
 
   const mappedPortalStatus = mapTfmDealStageToPortalStatus(decision);
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    await api.updatePortalBssDealStatus(
-      dealId,
-      mappedPortalStatus,
-    );
+    await api.updatePortalBssDealStatus(dealId, mappedPortalStatus);
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    await api.updatePortalGefDealStatus(
-      dealId,
-      mappedPortalStatus,
-    );
+    await api.updatePortalGefDealStatus(dealId, mappedPortalStatus);
   }
 
   let portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_COMMENT;
+  const { UKEF_APPROVED_WITH_CONDITIONS, UKEF_APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.DEALS.DEAL_STAGE_TFM;
 
-  if (decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITH_CONDITIONS
-    || decision === CONSTANTS.DEALS.DEAL_STAGE_TFM.UKEF_APPROVED_WITHOUT_CONDITIONS) {
+  if (decision === UKEF_APPROVED_WITH_CONDITIONS || decision === UKEF_APPROVED_WITHOUT_CONDITIONS) {
     portalCommentType = CONSTANTS.DEALS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION;
   }
 
@@ -243,10 +231,7 @@ const updateTfmUnderwriterManagersDecision = async (dealId, decision, comments, 
 };
 exports.updateTfmUnderwriterManagersDecision = updateTfmUnderwriterManagersDecision;
 
-const updateTfmLeadUnderwriter = async (
-  dealId,
-  leadUnderwriter,
-) => {
+const updateTfmLeadUnderwriter = async (dealId, leadUnderwriter) => {
   const { userId } = leadUnderwriter;
 
   const leadUnderwriterUpdate = {
@@ -257,16 +242,9 @@ const updateTfmLeadUnderwriter = async (
 
   const updatedDeal = await api.updateDeal(dealId, leadUnderwriterUpdate);
 
-  const taskGroupsToUpdate = [
-    CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE,
-    CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE,
-  ];
+  const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
-  await assignGroupTasksToOneUser(
-    dealId,
-    taskGroupsToUpdate,
-    userId,
-  );
+  await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId);
 
   return updatedDeal.tfm;
 };

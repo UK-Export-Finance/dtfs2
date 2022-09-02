@@ -4,26 +4,17 @@ const banks = {
   Barclays: {
     id: '956',
     name: 'Barclays Bank',
-    emails: [
-      'maker4@ukexportfinance.gov.uk',
-      'checker4@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
   },
   HSBC: {
     id: '961',
     name: 'HSBC',
-    emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'maker2@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
   },
   UKEF: {
     id: '9',
     name: 'UKEF test bank (Delegated)',
-    emails: [
-      'maker1@ukexportfinance.gov.uk',
-      'checker1@ukexportfinance.gov.uk',
-    ],
+    emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
   },
   any: {
     id: '*',
@@ -148,9 +139,7 @@ const finder = () => {
 
 module.exports.initialise = async (app) => {
   if (notYetInitialised) {
-    const {
-      get, post, put, remove,
-    } = api(app).as();
+    const { get, post, remove } = api(app).as();
 
     const currentUsersResponse = await get('/v1/user');
     const existingUsers = currentUsersResponse.body.users;

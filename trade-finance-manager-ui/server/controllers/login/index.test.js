@@ -16,7 +16,7 @@ describe('controllers - login', () => {
 
   describe('POST', () => {
     beforeEach(() => {
-      api.login = async (username, password) => {
+      api.login = (username, password) => {
         const returnVal = username && password ? { success: true, token: '', user: {} } : false;
         return Promise.resolve(returnVal);
       };

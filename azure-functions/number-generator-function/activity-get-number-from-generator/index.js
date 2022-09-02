@@ -41,7 +41,6 @@ const getNumberFromGenerator = async (context) => {
     numberFromGenerator = await numberGeneratorController.callNumberGenerator(numberType);
     console.info('Azure functions - numberFromGenerator ', numberFromGenerator);
 
-
     if (numberFromGenerator.error) {
       throw new Error(JSON.stringify(numberFromGenerator.error));
     }
@@ -55,6 +54,5 @@ const getNumberFromGenerator = async (context) => {
     ukefId: numberFromGenerator,
   };
 };
-
 
 module.exports = getNumberFromGenerator;

@@ -9,7 +9,7 @@ const { validationErrorHandler } = require('../../../../helpers/validationErrorH
  * function to validate the amendment effective date
  * checks if in future or before submission date
  */
-const effectiveDateValidation = async (body) => {
+const effectiveDateValidation = (body) => {
   const {
     'amendment-effective-date-day': effectiveDateDay,
     'amendment-effective-date-month': effectiveDateMonth,

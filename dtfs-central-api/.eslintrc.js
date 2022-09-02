@@ -17,8 +17,10 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
-    'comma-dangle': 'off',
-    'no-loop-func': 'off',
+    'comma-dangle': 0,
+    'no-loop-func': 0,
+    'require-await': 'error',
+    'default-param-last': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

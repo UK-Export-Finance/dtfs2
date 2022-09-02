@@ -14,7 +14,7 @@ const createFacility = async (newFacility) => {
   return { _id: insertedId };
 };
 
-exports.createFacilityPost = async (req, res) => {
+exports.createFacilityPost = (req, res) => {
   const facility = req.body;
 
   return findOneDeal(facility.dealId, async (deal) => {

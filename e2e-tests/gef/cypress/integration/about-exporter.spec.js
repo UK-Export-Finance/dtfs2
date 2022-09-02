@@ -2,8 +2,8 @@ import relative from './relativeURL';
 import aboutExporter from './pages/about-exporter';
 import applicationDetails from './pages/application-details';
 import CREDENTIALS from '../fixtures/credentials.json';
+import CONSTANTS from '../fixtures/constants';
 
-const dealIds = [];
 let dealWithNoExporterIndustries;
 let dealWithExporterIndustries;
 let dealWithEmptyExporter;
@@ -19,22 +19,13 @@ context('About Exporter Page', () => {
       })
       .then(() => cy.apiFetchAllApplications(token))
       .then(({ body }) => {
-        body.items.forEach((item) => {
-          dealIds.push(item._id);
-        });
+        dealWithNoExporterIndustries = body.items.find((deal) => deal.exporter?.industries?.length === 0);
 
-        dealWithNoExporterIndustries = body.items.find((deal) =>
-           deal.exporter?.industries?.length === 0);
+        dealWithExporterIndustries = body.items.find((deal) => deal.exporter?.industries?.length);
 
-        dealWithExporterIndustries = body.items.find((deal) =>
-          deal.exporter?.industries?.length);
+        dealWithEmptyExporter = body.items.find((deal) => deal.exporter.status === CONSTANTS.DEAL_STATUS.NOT_STARTED);
 
-        dealWithEmptyExporter = body.items.find((deal) =>
-          deal.exporter.status === 'Not started');
-
-        dealWithCompletedExporter = body.items.find((deal) =>
-          deal.exporter.status === 'Completed');
-
+        dealWithCompletedExporter = body.items.find((deal) => deal.exporter.status === CONSTANTS.DEAL_STATUS.COMPLETED);
       });
     cy.login(CREDENTIALS.MAKER);
   });

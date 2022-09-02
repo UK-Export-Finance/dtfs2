@@ -42,7 +42,7 @@ describe('/v1/currencies', () => {
       expect(status).toEqual(200);
       expect(body.currencies.length).toBeGreaterThan(1);
       for (let i = 1; i < body.currencies.length; i += 1) {
-        expect(body.currencies[i - 1].id < body.currencies[i].id).toBe(true);
+        expect(body.currencies[i - 1].id < body.currencies[i].id).toBeTruthy();
       }
     });
   });

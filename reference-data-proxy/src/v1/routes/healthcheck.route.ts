@@ -5,27 +5,17 @@ dotenv.config();
 export const healthcheck = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
 
-export const pingMulesoft = async () => 'Not configured';
-
-healthcheck.get('/healthcheck', (req: Request, res: Response) => {
-  const mulesoft = pingMulesoft();
-
-  const data = {
+healthcheck.get('/healthcheck', (_req: Request, res: Response) => {
+  const data: any = {
+    commit_hash: GITHUB_SHA,
     uptime: process.uptime(),
-    message: 'Ok',
-    date: new Date(),
-    mulesoftStatus: '',
-    commitHash: '',
+    message: 'OK',
+    timestamp: Date.now(),
   };
-
-  Promise.all([mulesoft]).then((values) => {
-    try {
-      [data.mulesoftStatus] = values;
-      data.commitHash = GITHUB_SHA;
-      res.send(data);
-    } catch (e: any) {
-      data.message = e;
-      res.status(503).send();
-    }
-  });
+  try {
+    res.status(200).send(data);
+  } catch (error) {
+    data.message = error;
+    res.status(503).send();
+  }
 });

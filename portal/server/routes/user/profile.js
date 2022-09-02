@@ -18,7 +18,7 @@ router.get('/:_id', async (req, res) => {
 });
 
 // When user is logged in and would like to change the password
-router.get('/:_id/change-password', async (req, res) => {
+router.get('/:_id/change-password', (req, res) => {
   const { _id } = requestParams(req);
 
   return res.render('user/change-password.njk', {

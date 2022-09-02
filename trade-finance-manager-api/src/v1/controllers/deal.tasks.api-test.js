@@ -1,9 +1,4 @@
-const {
-  shouldCreatePartiesTask,
-  shouldCreateAgentCheckTask,
-  listAdditionalTasks,
-  createDealTasks,
-} = require('./deal.tasks');
+const { shouldCreatePartiesTask, shouldCreateAgentCheckTask, listAdditionalTasks, createDealTasks } = require('./deal.tasks');
 const externalApis = require('../api');
 const CONSTANTS = require('../../constants');
 const MOCK_DEAL_MIA = require('../__mocks__/mock-deal-MIA-submitted');
@@ -17,10 +12,10 @@ describe('createDealTasks', () => {
   let mockDealEligibilityCriteria11False;
   let mockDealWithPartyUrn;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     externalApis.updateDeal = updateDealSpy;
 
-    mockSubmittedDeal = await mapSubmittedDeal({
+    mockSubmittedDeal = mapSubmittedDeal({
       dealSnapshot: MOCK_DEAL_MIA,
       tfm: {
         parties: { exporter: {} },
@@ -30,9 +25,7 @@ describe('createDealTasks', () => {
     mockDealEligibilityCriteria11False = {
       ...mockSubmittedDeal,
       eligibility: {
-        criteria: [
-          { id: 11, answer: false },
-        ],
+        criteria: [{ id: 11, answer: false }],
       },
     };
 
@@ -155,10 +148,7 @@ describe('createDealTasks', () => {
       it('should return array of all additional tasks', () => {
         const result = listAdditionalTasks(mockDealEligibilityCriteria11False);
 
-        const expected = [
-          CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES,
-          CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK,
-        ];
+        const expected = [CONSTANTS.TASKS.AIN_AND_MIA.GROUP_1.MATCH_OR_CREATE_PARTIES, CONSTANTS.TASKS.MIA_GROUP_1_TASKS.COMPLETE_AGENT_CHECK];
 
         expect(result).toEqual(expected);
       });
@@ -185,20 +175,14 @@ describe('createDealTasks', () => {
     it('should call api.updateDeal and return updated deal', async () => {
       const result = await createDealTasks(mockSubmittedDeal);
 
-      const expectedTasks = createTasks(
-        mockSubmittedDeal.submissionType,
-        listAdditionalTasks(mockSubmittedDeal),
-      );
+      const expectedTasks = createTasks(mockSubmittedDeal.submissionType, listAdditionalTasks(mockSubmittedDeal));
 
       const expectedDealTfm = {
         ...mockSubmittedDeal.tfm,
         tasks: expectedTasks,
       };
 
-      expect(updateDealSpy).toHaveBeenCalledWith(
-        mockSubmittedDeal._id,
-        { tfm: expectedDealTfm },
-      );
+      expect(updateDealSpy).toHaveBeenCalledWith(mockSubmittedDeal._id, { tfm: expectedDealTfm });
 
       const expectedDealReturn = {
         ...mockSubmittedDeal,

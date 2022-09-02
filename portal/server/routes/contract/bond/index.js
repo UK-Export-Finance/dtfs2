@@ -296,7 +296,7 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:bondId/issue-facility', provide([BOND, DEAL]), async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/issue-facility', provide([BOND, DEAL]), (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { bond } = req.apiData.bond;
   const { user } = req.session;
@@ -472,7 +472,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), async (req, res) => {
+router.get('/contract/:_id/bond/:bondId/delete', provide([DEAL, BOND]), (req, res) => {
   const { user } = req.session;
   const { bond } = req.apiData.bond;
 

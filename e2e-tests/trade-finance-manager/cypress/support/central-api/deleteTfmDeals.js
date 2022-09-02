@@ -2,12 +2,8 @@ const getAllTfmDeals = require('./getAllTfmDeals');
 const deleteTfmDeal = require('./deleteTfmDeal');
 
 const deleteAllDeals = (deals) => {
-  for (const dealToDelete of deals) {
-    const { _id } = dealToDelete;
-    deleteTfmDeal(_id);
-  };
-}
-
+  deals.map(({ _id }) => deleteTfmDeal(_id));
+};
 
 module.exports = () => {
   console.info('deleteTfmDeals::');

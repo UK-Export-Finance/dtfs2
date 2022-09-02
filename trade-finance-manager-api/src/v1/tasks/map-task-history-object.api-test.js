@@ -4,7 +4,7 @@ const MOCK_USERS = require('../__mocks__/mock-users');
 const mockUser = MOCK_USERS[0];
 
 describe('mapTaskHistoryObject', () => {
-  it('should return mapped object with timestamp', async () => {
+  it('should return mapped object with timestamp', () => {
     const input = {
       statusFrom: 'To do',
       statusTo: 'Done',
@@ -12,7 +12,7 @@ describe('mapTaskHistoryObject', () => {
       updatedBy: mockUser._id,
     };
 
-    const result = await mapTaskHistoryObject(input);
+    const result = mapTaskHistoryObject(input);
 
     expect(result.statusFrom).toEqual(input.statusFrom);
     expect(result.statusTo).toEqual(input.statusTo);

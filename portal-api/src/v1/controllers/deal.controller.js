@@ -24,22 +24,18 @@ exports.findOneDeal = findOneDeal;
 
 const createDealEligibility = async (eligibility) => {
   if (eligibility) {
-    const beingGivenEligibility = (eligibility && eligibility.criteria);
+    const eligibilityObj = {
+      ...eligibility,
+      lastUpdated: null,
+    };
 
-    if (beingGivenEligibility) {
-      const eligibilityObj = {
-        ...eligibility,
-        lastUpdated: null,
-      };
-
-      if (eligibility.status) {
-        eligibilityObj.status = eligibility.status;
-      } else {
-        eligibilityObj.status = DEFAULTS.DEAL.eligibility.status;
-      }
-
-      return eligibilityObj;
+    if (eligibility.status) {
+      eligibilityObj.status = eligibility.status;
+    } else {
+      eligibilityObj.status = DEFAULTS.DEAL.eligibility.status;
     }
+
+    return eligibilityObj;
   }
 
   const latestEligibility = await findLatestEligibilityCriteria();
@@ -137,7 +133,6 @@ exports.update = async (req, res) => {
       dealId,
       req.body,
       req.user,
-      deal,
     );
 
     return res.status(200).json(updatedDeal);

@@ -23,6 +23,7 @@ module.exports = {
     'object-curly-newline': ['error', {
       consistent: true,
     }],
+    'require-await': 'error',
   },
   parserOptions: {
     ecmaVersion: 2020,

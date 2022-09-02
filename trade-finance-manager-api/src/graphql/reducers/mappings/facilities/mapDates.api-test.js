@@ -51,13 +51,13 @@ describe('mapDates', () => {
     expect(result.inclusionNoticeReceived).toEqual(minMockDealDetails.manualInclusionNoticeSubmissionDate);
   });
 
-  it('should return bankIssueNoticeReceived as facility submittedAsIssuedDate;', async () => {
+  it('should return bankIssueNoticeReceived as facility submittedAsIssuedDate;', () => {
     const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
 
     expect(result.bankIssueNoticeReceived).toEqual(mockFacility.facilitySnapshot.submittedAsIssuedDate);
   });
 
-  it('should return coverStartDate as facility requestedCoverStartDate', async () => {
+  it('should return coverStartDate as facility requestedCoverStartDate', () => {
     const result = mapDates(mockFacility, mockFacility.facilitySnapshot, mockFacilityTfm, mockDealDetails);
 
     expect(result.coverStartDate).toEqual(mockFacility.facilitySnapshot.requestedCoverStartDate);

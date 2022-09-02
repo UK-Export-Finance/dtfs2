@@ -1,4 +1,4 @@
-const create = async () => ({
+const create = () => ({
   ukefId: '12345678910',
 });
 

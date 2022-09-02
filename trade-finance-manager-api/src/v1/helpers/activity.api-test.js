@@ -21,11 +21,11 @@ const mockFacilityRecord = {
 };
 
 describe('labelCase()', () => {
-  it('Should return label case for specified string', () => {
+  it('Should return label case for specified string (Facility)', () => {
     expect(labelCase('facility')).toEqual('Facility');
   });
 
-  it('Should return label case for specified string', () => {
+  it('Should return label case for specified string (Automatic Inclusion Notice)', () => {
     expect(labelCase('Automatic Inclusion Notice')).toEqual('Automatic inclusion notice');
   });
 

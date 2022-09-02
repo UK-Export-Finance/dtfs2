@@ -25,7 +25,7 @@ context('Submit AIN deal and check portalActivities', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        deal = body.items[2];
+        [,, deal] = body.items;
         dealId = deal._id;
 
         cy.login(CREDENTIALS.MAKER);

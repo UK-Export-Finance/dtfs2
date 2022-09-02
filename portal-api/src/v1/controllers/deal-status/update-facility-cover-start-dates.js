@@ -1,7 +1,7 @@
 const CONSTANTS = require('../../../constants');
 const facilitiesController = require('../facilities.controller');
 
-const updateFacilityCoverStartDates = async (user, deal) => {
+const updateFacilityCoverStartDates = (user, deal) => {
   const modifiedDeal = deal;
 
   if (modifiedDeal.facilities.length) {

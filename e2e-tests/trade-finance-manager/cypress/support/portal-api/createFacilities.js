@@ -25,6 +25,5 @@ module.exports = (dealId, facilities, user) => {
         ).then((createdFacilities) => createdFacilities);
       }
     });
-  //  return Promise.resolve(facilitiesWithUkefIds);
   });
 };

@@ -22,7 +22,7 @@ class Facility {
       this.dealId = req.dealId ? ObjectId(req.dealId) : null;
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
-      if (req.hasBeenIssued != null) {
+      if (req.hasBeenIssued) {
         this.hasBeenIssued = Boolean(req.hasBeenIssued);
       }
       this.name = req.name || null;
@@ -49,7 +49,7 @@ class Facility {
       this.dayCountBasis = null;
       this.coverDateConfirmed = null;
       this.hasBeenIssuedAndAcknowledged = null;
-      if (req.hasBeenIssuedAndAcknowledged != null) {
+      if (req.hasBeenIssuedAndAcknowledged) {
         this.hasBeenIssuedAndAcknowledged = Boolean(req.hasBeenIssuedAndAcknowledged);
       }
       /**
@@ -58,14 +58,14 @@ class Facility {
        * Used as a criteria for resubmission to UKEF
        */
       this.canResubmitIssuedFacilities = null;
-      if (req.canResubmitIssuedFacilities != null) {
+      if (req.canResubmitIssuedFacilities) {
         this.canResubmitIssuedFacilities = Boolean(req.canResubmitIssuedFacilities);
       }
       // used to store the user details of maker who changed unissued facility to issued
       this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker) || null;
     } else {
       // update facility
-      if (req.hasBeenIssued != null) {
+      if (req.hasBeenIssued) {
         this.hasBeenIssued = Boolean(req.hasBeenIssued);
       }
 
@@ -73,25 +73,25 @@ class Facility {
         this.hasBeenIssuedAndAcknowledged = Boolean(req.hasBeenIssuedAndAcknowledged);
       }
 
-      if (req.name != null) {
+      if (req.name) {
         this.name = String(req.name);
       }
 
-      if (req.shouldCoverStartOnSubmission != null) {
+      if (req.shouldCoverStartOnSubmission) {
         this.shouldCoverStartOnSubmission = Boolean(req.shouldCoverStartOnSubmission);
       }
 
-      if (req.coverStartDate != null) {
+      if (req.coverStartDate) {
         const timestamp = convertToTimestamp(req.coverStartDate);
         this.coverStartDate = new Date(timestamp);
       }
 
-      if (req.coverEndDate != null) {
+      if (req.coverEndDate) {
         const timestamp = convertToTimestamp(req.coverEndDate);
         this.coverEndDate = new Date(timestamp);
       }
 
-      if (req.issueDate != null) {
+      if (req.issueDate) {
         const timestamp = convertToTimestamp(req.issueDate);
         this.issueDate = new Date(timestamp);
       }
@@ -102,27 +102,27 @@ class Facility {
         this.monthsOfCover = Number(req.monthsOfCover);
       }
 
-      if (req.details != null) {
+      if (req.details) {
         this.details = req.details;
       }
 
-      if (req.detailsOther != null) {
+      if (req.detailsOther) {
         this.detailsOther = String(req.detailsOther);
       }
 
-      if (req.currency != null) {
+      if (req.currency) {
         this.currency = req.currency || null;
       }
 
-      if (req.value != null) {
+      if (req.value) {
         this.value = Number(req.value);
       }
 
-      if (req.coverPercentage != null) {
+      if (req.coverPercentage) {
         this.coverPercentage = Number(req.coverPercentage);
       }
 
-      if (req.interestPercentage != null) {
+      if (req.interestPercentage) {
         this.interestPercentage = Number(req.interestPercentage);
       }
 
@@ -138,15 +138,15 @@ class Facility {
         this.dayCountBasis = Number(req.dayCountBasis);
       }
 
-      if (req.paymentType != null) {
+      if (req.paymentType) {
         this.paymentType = req.paymentType;
       }
 
-      if (req.ukefExposure != null) {
+      if (req.ukefExposure) {
         this.ukefExposure = req.ukefExposure;
       }
 
-      if (req.guaranteeFee != null) {
+      if (req.guaranteeFee) {
         this.guaranteeFee = req.guaranteeFee;
       }
 
@@ -154,7 +154,7 @@ class Facility {
         this.ukefFacilityId = req.ukefFacilityId;
       }
 
-      if (req.submittedAsIssuedDate != null) {
+      if (req.submittedAsIssuedDate) {
         this.submittedAsIssuedDate = req.submittedAsIssuedDate;
       }
 
@@ -176,11 +176,11 @@ class Facility {
         this.coverDateConfirmed = req.coverDateConfirmed;
       }
 
-      if (req.canResubmitIssuedFacilities != null) {
+      if (req.canResubmitIssuedFacilities) {
         this.canResubmitIssuedFacilities = Boolean(req.canResubmitIssuedFacilities);
       }
 
-      if (req.unissuedToIssuedByMaker != null) {
+      if (req.unissuedToIssuedByMaker) {
         this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker);
       }
 

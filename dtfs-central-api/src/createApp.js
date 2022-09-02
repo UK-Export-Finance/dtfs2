@@ -40,7 +40,7 @@ app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
 // Return 200 on get to / to confirm to Azure that
 // the container has started successfully:
 const rootRouter = express.Router();
-rootRouter.get('/', async (req, res) => {
+rootRouter.get('/', (req, res) => {
   res.status(200).send();
 });
 

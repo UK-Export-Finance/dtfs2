@@ -7,9 +7,9 @@ const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-s
 
 describe('update tfm-deals on amendment completion', () => {
   const mockAmendment = {
-    dealId: '123',
-    facilityId: '321',
-    amendmentId: '111',
+    dealId: '630ddd844fbacbd9a1b867b6',
+    facilityId: '630ddd803c5c23fadb9a1a61',
+    amendmentId: '630ddd7b90682a4e5dfd5ee9',
     status: AMENDMENT_STATUS.COMPLETED,
   };
 
@@ -29,6 +29,9 @@ describe('update tfm-deals on amendment completion', () => {
     externalApis.getAmendmentById = jest.fn(() => Promise.resolve(mockAmendment));
     externalApis.updateFacilityAmendment = jest.fn(() => Promise.resolve(mockAmendment));
     externalApis.findOneDeal = jest.fn(() => Promise.resolve(MOCK_GEF_AIN_DEAL));
+
+    externalApis.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    externalApis.getLatestCompletedDateAmendment = () => Promise.resolve({});
   });
 
   afterEach(() => {
@@ -52,7 +55,7 @@ describe('update tfm-deals on amendment completion', () => {
 
   it('updateFacilityAmendment() - should call updateDeal when updateTfmLastUpdated is true', async () => {
     externalApis.updateDeal = updateDealSpy;
-    mockAmendment.dealId = '123';
+    mockAmendment.dealId = '630ddd87bfd4f4c1b298ceed';
 
     await updateFacilityAmendment(mockAmendment.facilityId, mockAmendment.amendmentId, { updateTfmLastUpdated: true });
     expect(externalApis.updateDeal).toHaveBeenCalledWith(mockAmendment.dealId, { tfm: { lastUpdated: expect.any(Number) } });

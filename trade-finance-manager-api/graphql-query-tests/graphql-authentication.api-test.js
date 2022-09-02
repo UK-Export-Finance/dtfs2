@@ -136,7 +136,7 @@ describe('graphql query - authentication', () => {
       });
 
       expect(data.deal.dealSnapshot._id).toEqual(MOCK_DEAL._id);
-      expect(errors).toEqual(undefined);
+      expect(errors).toBeUndefined();
     });
 
     it('MUTATE - should return not authorised', async () => {
@@ -190,7 +190,7 @@ describe('graphql query - authentication', () => {
       });
 
       expect(data.deal.dealSnapshot._id).toEqual(MOCK_DEAL._id);
-      expect(errors).toEqual(undefined);
+      expect(errors).toBeUndefined();
     });
 
     it('MUTATE - should update and return result', async () => {
@@ -203,7 +203,7 @@ describe('graphql query - authentication', () => {
       });
 
       expect(data.updateParties.parties).toEqual(partyUpdate);
-      expect(errors).toEqual(undefined);
+      expect(errors).toBeUndefined();
     });
   });
 });

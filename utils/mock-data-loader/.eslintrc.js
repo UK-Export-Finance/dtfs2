@@ -14,13 +14,13 @@ module.exports = {
       ignoreTemplateLiterals: true,
     }],
     'no-console': ['error', { allow: ['info', 'error'] }],
-    'no-underscore-dangle': ['error', { allow: ['_id'] }],
+    'no-underscore-dangle': ['error', { allow: ['_id', '_csrf'] }],
     'import/no-named-as-default': 0,
     'implicit-arrow-linebreak': 0,
-    'comma-dangle': 'off',
-    'no-loop-func': 'off',
-    'no-await-in-loop': 'off',
-    'no-restricted-syntax': 'off',
+    'object-curly-newline': ['error', {
+      consistent: true,
+    }],
+    'no-unneeded-ternary': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

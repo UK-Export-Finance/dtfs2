@@ -77,7 +77,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
   const { portalActivities, checkerId } = application;
   const checker = await getUserInfo(checkerId);
 
-  facilities.forEach(async (facility) => {
+  facilities.map((facility) => {
     if (facility.canResubmitIssuedFacilities) {
       // creates user object to add to array
       const maker = facility.unissuedToIssuedByMaker;
@@ -96,6 +96,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
       // adds to beginning of portalActivities array so most recent displayed first
       portalActivities.unshift(activityObj);
     }
+    return facility;
   });
 
   return portalActivities;

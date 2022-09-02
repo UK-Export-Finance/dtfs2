@@ -14,14 +14,11 @@ const insertMocks = async () => {
   });
 
   console.info('inserting TFM teams');
-  for (const team of MOCKS.TEAMS) {
-    await api.createTeam(team, token);
-  }
+  MOCKS.TEAMS.map((team) => api.createTeam(team, token));
 
   console.info('inserting TFM users');
-  for (const user of MOCKS.USERS) {
-    await api.createTfmUser(user);
-  }
+
+  MOCKS.USERS.map((user) => api.createTfmUser(user));
 };
 
 module.exports = insertMocks;

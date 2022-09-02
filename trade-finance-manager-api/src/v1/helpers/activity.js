@@ -12,7 +12,7 @@ const labelCase = (label) => label.charAt(0).toUpperCase() + label.substring(1).
 
 /**
  * Returns ACBS record creation timestamp in UNIX EPOCH
- * wihtout the milliseconds.
+ * without the milliseconds.
  * @param {Object} record ACBS response object
  * @returns {Integer} EPOCH time without the milliseconds
  */
@@ -102,23 +102,23 @@ const getObject = (record, deal) => ({
  * @param {Object} Deal Deal object
  * @returns {Array} An array of activites object
  */
-const getActivities = async (deal) => {
+const getActivities = (deal) => {
   try {
-    const activites = [];
+    const activities = [];
     // Add deal activity object to the array
     if (acbsResponse.deal) {
-      activites.push(getObject(acbsResponse.deal.deal, deal));
+      activities.push(getObject(acbsResponse.deal.deal, deal));
     }
 
     // Add facility(ies) object(s) to the array
     if (acbsResponse.facilities.length > 0) {
       acbsResponse.facilities.forEach((facility) => {
         if (facility.facilityMaster) {
-          activites.push(getObject(facility.facilityMaster, deal));
+          activities.push(getObject(facility.facilityMaster, deal));
         }
       });
     }
-    return activites;
+    return activities;
   } catch (error) {
     console.error('Error creating activity object.', { error });
   }
@@ -138,7 +138,8 @@ const add = async (acbs) => {
     if (deal) {
       return getActivities(deal);
     }
-    console.error(`Unable to get deal ${acbs.portalDealId} for activites.`);
+    console.error(`Unable to get deal ${acbs.portalDealId} for activities.`);
+    return {};
   }
   return {};
 };

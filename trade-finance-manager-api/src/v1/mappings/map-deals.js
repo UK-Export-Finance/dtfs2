@@ -20,8 +20,7 @@ const mapDeals = async (deals) => {
     delete deal.dealSnapshot.loanTransactions.items;
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      deal.dealSnapshot.facilities = await Promise.all(dealSnapshot.facilities.map(async ({ _id }) =>
-        api.findOneFacility(_id)));
+      deal.dealSnapshot.facilities = await Promise.all(dealSnapshot.facilities.map(({ _id }) => api.findOneFacility(_id)));
     }
 
     return deal;

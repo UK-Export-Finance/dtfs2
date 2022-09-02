@@ -131,7 +131,7 @@ exports.allDeals = async (req, res) => {
   });
 };
 
-exports.removeSingleAllDealsFilter = async (req, res) => {
+exports.removeSingleAllDealsFilter = (req, res) => {
   removeSessionFilter(req);
 
   return res.redirect('/dashboard/deals/0');

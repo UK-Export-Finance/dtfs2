@@ -1,12 +1,8 @@
 const { shield, rule } = require('graphql-shield');
 
-const hasReadAccess = rule({ cache: 'contextual' })(
-  async (parent, args, ctx) => ctx.graphqlPermissions.read,
-);
+const hasReadAccess = rule({ cache: 'contextual' })((parent, args, ctx) => ctx.graphqlPermissions.read);
 
-const hasWriteAccess = rule({ cache: 'contextual' })(
-  async (parent, args, ctx) => ctx.graphqlPermissions.write,
-);
+const hasWriteAccess = rule({ cache: 'contextual' })((parent, args, ctx) => ctx.graphqlPermissions.write);
 
 const graphqlPermissions = shield({
   Query: {

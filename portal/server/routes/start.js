@@ -8,7 +8,7 @@ const beforeYouStartValidation = require('../validation/before-you-start');
 const router = express.Router();
 router.use('/before-you-start/*', validateToken);
 
-router.get('/before-you-start', [provide([MANDATORY_CRITERIA]), validateRole({ role: ['maker'] })], async (req, res) => {
+router.get('/before-you-start', [provide([MANDATORY_CRITERIA]), validateRole({ role: ['maker'] })], (req, res) => {
   const { mandatoryCriteria } = req.apiData;
   res.render('before-you-start/before-you-start.njk', {
     mandatoryCriteria,
@@ -16,7 +16,7 @@ router.get('/before-you-start', [provide([MANDATORY_CRITERIA]), validateRole({ r
   });
 });
 
-router.post('/before-you-start', [provide([MANDATORY_CRITERIA]), validateRole({ role: ['maker'] })], async (req, res) => {
+router.post('/before-you-start', [provide([MANDATORY_CRITERIA]), validateRole({ role: ['maker'] })], (req, res) => {
   const { mandatoryCriteria } = req.apiData;
 
   const validationErrors = generateErrorSummary(beforeYouStartValidation(req.body), errorHref);
@@ -35,7 +35,7 @@ router.post('/before-you-start', [provide([MANDATORY_CRITERIA]), validateRole({ 
   return res.redirect('/before-you-start/bank-deal');
 });
 
-router.get('/before-you-start/bank-deal', validateRole({ role: ['maker'] }), async (req, res) => {
+router.get('/before-you-start/bank-deal', validateRole({ role: ['maker'] }), (req, res) => {
   res.render('before-you-start/before-you-start-bank-deal.njk', {
     user: req.session.user,
   });

@@ -14,7 +14,7 @@ const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../con
  * canResubmitIssuedFacilities - changes flags to false
  * @param {Object} facilities
  */
-const updateChangedToIssued = async (facilities) => {
+const updateChangedToIssued = (facilities) => {
   facilities.forEach(async (facility) => {
     const { _id, canResubmitIssuedFacilities } = facility;
 
@@ -100,7 +100,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
     const { checkerId, portalActivities } = application;
     const checker = await getUserInfo(checkerId);
 
-    facilities.forEach(async (facility) => {
+    facilities.forEach((facility) => {
       if (facility.canResubmitIssuedFacilities) {
       // creates user object to add to array
         const maker = facility.unissuedToIssuedByMaker;

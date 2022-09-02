@@ -1,17 +1,11 @@
 const now = require('../../../now');
 const refDataApi = require('../../../reference-data/api');
-const {
-  getAllFacilitiesByDealId,
-  update: updateFacility,
-} = require('./facilities.controller');
-const {
-  ukefSubmissionPortalActivity,
-  facilityChangePortalActivity,
-} = require('./portal-activities.controller');
+const { getAllFacilitiesByDealId, update: updateFacility } = require('./facilities.controller');
+const { ukefSubmissionPortalActivity, facilityChangePortalActivity } = require('./portal-activities.controller');
 
 const CONSTANTS = require('../../../constants');
 
-const generateSubmissionData = async (existingApplication) => {
+const generateSubmissionData = (existingApplication) => {
   const result = {
     date: existingApplication.submissionDate,
   };
@@ -25,36 +19,35 @@ const generateSubmissionData = async (existingApplication) => {
   return result;
 };
 
-const generateId = async ({
-  entityId, entityType, dealId, user,
-}) => refDataApi.numberGenerator.create({
-  dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
-  entityId,
-  entityType,
-  dealId,
-  user,
-});
+const generateId = ({ entityId, entityType, dealId, user }) =>
+  refDataApi.numberGenerator.create({
+    dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
+    entityId,
+    entityType,
+    dealId,
+    user,
+  });
 
-const generateUkefDealId = async (application) => generateId({
-  entityId: application._id,
-  entityType: 'deal',
-  dealId: application._id,
-  user: application.checkerId,
-});
+const generateUkefDealId = (application) =>
+  generateId({
+    entityId: application._id,
+    entityType: 'deal',
+    dealId: application._id,
+    user: application.checkerId,
+  });
 
-const generateUkefFacilityId = async (facility) => generateId({
-  entityId: facility._id,
-  entityType: 'facility',
-  dealId: facility.dealId,
-});
+const generateUkefFacilityId = (facility) =>
+  generateId({
+    entityId: facility._id,
+    entityType: 'facility',
+    dealId: facility.dealId,
+  });
 
 const addSubmissionDateToIssuedFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
   // eslint-disable-next-line no-restricted-syntax
   for (const facility of facilities) {
-    const {
-      _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate, hasBeenIssuedAndAcknowledged
-    } = facility;
+    const { _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate, hasBeenIssuedAndAcknowledged } = facility;
     /**
      * checks if hasBeenIssued and if not hasBeenIssuedAndAcknowledged
      * ensures that once submitted to UKEF, the coverStartDate is not overwritten to the new resubmission date
@@ -71,9 +64,9 @@ const addSubmissionDateToIssuedFacilities = async (dealId) => {
        */
       if (shouldCoverStartOnSubmission) {
         if (canResubmitIssuedFacilities) {
-          update.coverStartDate = (new Date(issueDate)).setHours(0, 0, 0, 0);
+          update.coverStartDate = new Date(issueDate).setHours(0, 0, 0, 0);
         } else {
-          update.coverStartDate = (new Date()).setHours(0, 0, 0, 0);
+          update.coverStartDate = new Date().setHours(0, 0, 0, 0);
         }
       }
       // eslint-disable-next-line no-await-in-loop
@@ -107,15 +100,17 @@ const updateChangedToIssued = async (dealId) => {
 const addUkefFacilityIdToFacilities = async (dealId) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
 
-  await Promise.all(facilities.map(async (facility) => {
-    if (!facility.ukefFacilityId) {
-      const { ukefId } = await generateUkefFacilityId(facility);
-      const update = {
-        ukefFacilityId: ukefId,
-      };
-      await updateFacility(facility._id, update);
-    }
-  }));
+  await Promise.all(
+    facilities.map(async (facility) => {
+      if (!facility.ukefFacilityId) {
+        const { ukefId } = await generateUkefFacilityId(facility);
+        const update = {
+          ukefFacilityId: ukefId,
+        };
+        await updateFacility(facility._id, update);
+      }
+    }),
+  );
 
   return facilities;
 };
@@ -168,20 +163,24 @@ const checkCoverDateConfirmed = async (app) => {
 
       if (notYetSubmittedToUKEF && haveFacilites) {
         // Iterate through issued facilites
-        facilities.filter((f) => f.hasBeenIssued && !f.coverDateConfirmed).map(async (f) => {
-          hasUpdated = true;
-          await updateFacility(f._id, {
-            coverDateConfirmed: Boolean(isAIN),
+        facilities
+          .filter((f) => f.hasBeenIssued && !f.coverDateConfirmed)
+          .map(async (f) => {
+            hasUpdated = true;
+            await updateFacility(f._id, {
+              coverDateConfirmed: Boolean(isAIN),
+            });
           });
-        });
 
         // Iterate through unissued facilities
-        facilities.filter((f) => !f.hasBeenIssued && f.coverDateConfirmed).map(async (f) => {
-          hasUpdated = true;
-          await updateFacility(f._id, {
-            coverDateConfirmed: false,
+        facilities
+          .filter((f) => !f.hasBeenIssued && f.coverDateConfirmed)
+          .map(async (f) => {
+            hasUpdated = true;
+            await updateFacility(f._id, {
+              coverDateConfirmed: false,
+            });
           });
-        });
         return hasUpdated;
       }
     } catch (e) {

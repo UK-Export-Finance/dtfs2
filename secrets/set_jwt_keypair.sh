@@ -1,3 +1,4 @@
+#!/bin/bash
 # API Keys - save file in ./secrets folder
 
 # Directory locations

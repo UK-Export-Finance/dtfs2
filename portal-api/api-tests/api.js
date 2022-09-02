@@ -43,7 +43,7 @@ module.exports = (app) => ({
       }),
 
       put: (data) => ({
-        to: async (url) => request(app)
+        to: (url) => request(app)
           .put(url)
           .set({ Authorization: token || '' })
           .send(data),
