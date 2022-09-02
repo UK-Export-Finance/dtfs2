@@ -40,7 +40,7 @@ const deals = async () => {
    * 2. Property exists : dataMigration
    */
   const filter = {
-    $and: [{ dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS }, { dataMigration: { $exists: true } }, { 'details.ukefDealId': '0020004727' }],
+    $and: [{ dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS }, { dataMigration: { $exists: true } }],
   };
 
   return getDeals(filter)
@@ -101,7 +101,7 @@ const tfm = async (data) => {
       .then((inserted) => {
         if (inserted.status === 200) {
           counter += 1;
-          console.info('\x1b[33m%s\x1b[0m', `✅ Submitted ${counter}/${deals.length}`);
+          console.info('\x1b[33m%s\x1b[0m', `${counter}/${data.length} Submitted.`, '\n');
           Promise.resolve(inserted);
         } else {
           Promise.reject(new Error('\x1b[31m%s\x1b[0m', `🚩 Error inserting deal ${inserted}`));
@@ -113,7 +113,13 @@ const tfm = async (data) => {
   });
 
   return Promise.all(submitted)
-    .then(() => Promise.resolve(submitted))
+    .then(() => {
+      if (counter === data.length) {
+        console.info('\x1b[33m%s\x1b[0m', `✅ All ${data.length} deals have been submitted to TFM.`, '\n');
+      }
+
+      return Promise.resolve(submitted);
+    })
     .catch((e) => Promise.reject(e));
 };
 

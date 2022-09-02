@@ -50,12 +50,12 @@ const banking = async () => {
  * Add deal level comments in Portal.
  */
 const comment = async () => {
-  let portalComments = [];
   const comments = await workflow(CONSTANTS.WORKFLOW.FILES.COMMENTS);
 
   Object.values(allDeals).forEach((deal, index) => {
     if (deal.maker) {
       const { maker } = deal;
+      let portalComments = [];
 
       // Copy existing portal comments
       if (deal.comments) {
@@ -113,7 +113,7 @@ const datafixes = async (deals) => {
         .then((r) => {
           if (r) {
             updated += 1;
-            console.info('\x1b[33m%s\x1b[0m', `${updated}/${allDeals.length} deal data-fixed.`, '\n');
+            console.info('\x1b[33m%s\x1b[0m', `${updated}/${allDeals.length} data-fixed.`, '\n');
             return Promise.resolve(true);
           }
 
