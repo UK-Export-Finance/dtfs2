@@ -33,7 +33,8 @@ exports.queryAllFacilities = async (queryParams) => {
     // if amendment, then willset relevant values based on amendment
     if (latestCompletedAmendment?.value) {
       const { value, currency } = latestCompletedAmendment.value;
-      currencyAndValue = `${currency} ${commaNumber(value)}`;
+      const formattedValue = facilityValueFormatted(value);
+      currencyAndValue = `${currency} ${commaNumber(formattedValue)}`;
       facilityValue = parseInt(value, 10);
     }
 
