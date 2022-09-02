@@ -13,12 +13,12 @@ const chance = new Chance();
 
 context('Dashboard Deals filters - filter by multiple fields with multiple values', () => {
   const ALL_DEALS = [];
-  const asda = { ...GEF_DEAL_DRAFT };
+  const GEF_DEAL = { ...GEF_DEAL_DRAFT };
 
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
-
+    // insert and update deals with random company names
     const manyBssDeals = Array.from(Array(13), () => BSS_DEAL_MIA);
     manyBssDeals.map((deal) => {
       cy.insertOneDeal(deal, BANK1_MAKER1).then(({ _id }) => {
@@ -27,13 +27,12 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
             companyName: chance.company(),
           },
           // adds company name to array
-        }, BANK1_MAKER1).then((dd) => ALL_DEALS.unshift(dd.exporter.companyName));
+        }, BANK1_MAKER1).then((insertedDeal) => ALL_DEALS.unshift(insertedDeal.exporter.companyName));
       });
       return deal;
     });
 
-    const manyGefDeals = Array.from(Array(13), () => asda);
-
+    const manyGefDeals = Array.from(Array(13), () => GEF_DEAL);
     manyGefDeals.map((deal) => {
       cy.insertOneGefApplication(deal, BANK1_MAKER1).then(({ _id }) => {
         cy.updateGefApplication(_id, {
@@ -41,7 +40,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
             companyName: chance.company(),
           },
           // adds company name to array
-        }, BANK1_MAKER1).then((dd) => ALL_DEALS.unshift(dd.exporter.companyName));
+        }, BANK1_MAKER1).then((insertedDeal) => ALL_DEALS.unshift(insertedDeal.exporter.companyName));
       });
       return deal;
     });
