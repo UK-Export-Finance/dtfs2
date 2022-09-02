@@ -2,6 +2,7 @@
 const { format, getUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
 const { findLatestCompletedAmendment } = require('../helpers/amendment.helpers');
+const facilityValueFormatted = require('../helpers/facilityValueFormatted.helper');
 const { getAllFacilities } = require('../../v1/controllers/facility.controller');
 
 // list all facilities from the database
@@ -19,7 +20,7 @@ exports.queryAllFacilities = async (queryParams) => {
     // finds latest completed amendment tfm object with mapped values
     const latestCompletedAmendment = findLatestCompletedAmendment(item?.amendments);
 
-    const defaultFacilityValue = facility.value;
+    const defaultFacilityValue = facilityValueFormatted(facility.value);
     const defaultCoverEndDate = facility.coverEndDate;
     const formatCoverEndDate = format(new Date(defaultCoverEndDate), 'dd LLL yyyy'); // 11 Aug 2021
 
