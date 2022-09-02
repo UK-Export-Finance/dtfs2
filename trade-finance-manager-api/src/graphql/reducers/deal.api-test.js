@@ -45,7 +45,7 @@ describe('reducer - deal', () => {
   });
 
   describe('when dealType is `GEF`', () => {
-    it('should return mapGefDeal', async () => {
+    it('should return mapGefDeal', () => {
       const mockGefDeal = {
         _id: MOCK_GEF_DEAL._id,
         dealSnapshot: {

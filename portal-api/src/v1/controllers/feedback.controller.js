@@ -103,7 +103,7 @@ exports.findOne = (req, res) => (
 exports.findAll = (req, res) => (
   findFeedbacks((feedbacks) => res.status(200).send(feedbacks)));
 
-exports.delete = async (req, res) => {
+exports.delete = (req, res) => {
   findOneFeedback(req.params.id, async (feedback) => {
     if (!feedback) {
       return res.status(404).send();

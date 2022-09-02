@@ -100,14 +100,14 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
     beforeEach(async () => {
       originalFacilities = [
-        mockUnsubmittedUnconditionalLoan('1'),
-        mockUnsubmittedUnconditionalLoan('2'),
-        mockUnsubmittedUnconditionalLoanWithIssueFacilityDetails('3'),
-        mockUnsubmittedUnconditionalLoanWithIssueFacilityDetails('4'),
-        unsubmittedIssuedBond('1'),
-        unsubmittedIssuedBond('2'),
-        unsubmittedIssuedBondWithIssueFacilityDetails('3'),
-        unsubmittedIssuedBondWithIssueFacilityDetails('4'),
+        mockUnsubmittedUnconditionalLoan(),
+        mockUnsubmittedUnconditionalLoan(),
+        mockUnsubmittedUnconditionalLoanWithIssueFacilityDetails(),
+        mockUnsubmittedUnconditionalLoanWithIssueFacilityDetails(),
+        unsubmittedIssuedBond(),
+        unsubmittedIssuedBond(),
+        unsubmittedIssuedBondWithIssueFacilityDetails(),
+        unsubmittedIssuedBondWithIssueFacilityDetails(),
       ];
 
       const postResult = await as(aBarclaysMaker).post(JSON.parse(JSON.stringify(completedDeal))).to('/v1/deals');

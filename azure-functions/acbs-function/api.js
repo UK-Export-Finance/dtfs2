@@ -8,14 +8,15 @@
  * All the function have argument validation check and return object verification in
  * case err object does not have expected properties due to network connection, SSL verification or other issues.
  */
+
+const axios = require('axios');
+require('dotenv').config();
+
 const acbs = process.env.MULESOFT_API_UKEF_TF_EA_URL;
 const username = process.env.MULESOFT_API_KEY;
 const password = process.env.MULESOFT_API_SECRET;
-const axios = require('axios');
 
-require('dotenv').config();
-
-const getACBS = async (apiRef) => {
+const getACBS = (apiRef) => {
   if (apiRef) {
     return axios({
       method: 'get',
@@ -41,8 +42,8 @@ const getACBS = async (apiRef) => {
   };
 };
 
-const postToAcbs = async (apiRef, acbsInput) => {
-  if (!!apiRef && !!acbsInput) {
+const postToAcbs = (apiRef, acbsInput) => {
+  if (apiRef && acbsInput) {
     return axios({
       method: 'post',
       url: `${acbs}/${apiRef}`,
@@ -68,8 +69,8 @@ const postToAcbs = async (apiRef, acbsInput) => {
   };
 };
 
-const putToAcbs = async (apiRef, acbsInput, etag) => {
-  if (!!apiRef && !!acbsInput) {
+const putToAcbs = (apiRef, acbsInput, etag) => {
+  if (apiRef && acbsInput) {
     const additionalHeader = etag
       ? {
         'If-Match': etag,
@@ -102,8 +103,8 @@ const putToAcbs = async (apiRef, acbsInput, etag) => {
   };
 };
 
-const patchToAcbs = async (apiRef, acbsInput, eTag) => {
-  if (!!apiRef && !!acbsInput) {
+const patchToAcbs = (apiRef, acbsInput, eTag) => {
+  if (apiRef && acbsInput) {
     const additionalHeader = eTag
       ? {
         'If-Match': eTag,

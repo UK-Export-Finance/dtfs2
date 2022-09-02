@@ -31,7 +31,7 @@ describe('assignGroupTasksToOneUser', () => {
     const result = await assignGroupTasksToOneUser(
       dealId,
       groupTitlesToAssign,
-      userId,
+      userId
     );
 
     let filteredTasksResult = [];

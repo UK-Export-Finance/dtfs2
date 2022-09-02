@@ -185,7 +185,9 @@ const createActivity = async (dealId, activityUpdate) => {
     activityUpdate,
   };
 
-  return apollo('PUT', createActivityMutation, updateVariable);
+  const response = await apollo('PUT', createActivityMutation, updateVariable);
+
+  return response;
 };
 
 const login = async (username, password) => {

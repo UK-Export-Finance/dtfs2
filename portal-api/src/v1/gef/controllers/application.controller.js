@@ -163,7 +163,7 @@ exports.updateSupportingInformation = async (req, res) => {
   return res.status(utils.mongoStatus(result)).send(response);
 };
 
-const sendStatusUpdateEmail = async (user, existingApplication, status) => {
+const sendStatusUpdateEmail = (user, existingApplication, status) => {
   const {
     maker, status: previousStatus, bankInternalRefName, exporter
   } = existingApplication;
@@ -174,7 +174,7 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   // get exporter name
   const { companyName = '' } = exporter;
 
-  user.bank.emails.forEach(async (email) => {
+  user.bank.emails.map(async (email) => {
     await sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
       firstName,
       surname,
@@ -238,7 +238,7 @@ exports.changeStatus = async (req, res) => {
   // If status of correct type, send update email
   if ([DEAL_STATUS.READY_FOR_APPROVAL, DEAL_STATUS.CHANGES_REQUIRED, DEAL_STATUS.SUBMITTED_TO_UKEF].includes(status)) {
     const { user } = req;
-    await sendStatusUpdateEmail(user, existingApplication, status);
+    sendStatusUpdateEmail(user, existingApplication, status);
   }
 
   return res.status(utils.mongoStatus(updatedDocument)).send(response);

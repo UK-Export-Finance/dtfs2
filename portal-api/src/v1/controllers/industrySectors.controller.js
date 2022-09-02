@@ -6,7 +6,7 @@ const sortIndustrySectors = (industrySectors) => utils.sortArrayAlphabetically(i
   classes: utils.sortArrayAlphabetically(sector.classes, 'name'),
 }));
 
-const findIndustrySectors = async () => refDataApi.industrySectors.getIndustrySectors();
+const findIndustrySectors = () => refDataApi.industrySectors.getIndustrySectors();
 
 const findOneIndustrySector = async (code) => {
   const { status, data } = await refDataApi.industrySectors.getIndustrySector(code);

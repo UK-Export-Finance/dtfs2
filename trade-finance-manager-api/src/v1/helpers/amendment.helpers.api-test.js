@@ -21,7 +21,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
 
   const updateFacilityAmendmentSpy = jest.fn(() => Promise.resolve({}));
 
-  beforeEach(async () => {
+  beforeEach(() => {
     sendEmailApiSpy.mockClear();
     updateFacilityAmendmentSpy.mockClear();
 
@@ -352,7 +352,7 @@ describe('sendFirstTaskEmail()', () => {
 
   const updateFacilityAmendmentSpy = jest.fn(() => Promise.resolve({}));
 
-  beforeEach(async () => {
+  beforeEach(() => {
     sendEmailApiSpy.mockClear();
     updateFacilityAmendmentSpy.mockClear();
 

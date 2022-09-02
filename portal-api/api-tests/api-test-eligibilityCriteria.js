@@ -2,27 +2,18 @@ const api = require('./api');
 
 const ECs = require('./fixtures/eligibilityCriteria');
 
-let notYetInitialised = true;
-
 module.exports.initialise = async (app, user) => {
+  let notYetInitialised = true;
   if (notYetInitialised) {
-    const {
-      get, post, put, remove,
-    } = api(app).as(user);
+    const { get, post, remove } = api(app).as(user);
 
     const currentECResponse = await get('/v1/eligibility-criteria');
     const existingECs = currentECResponse.body.eligibilityCriteria;
 
-    for (const existingEC of existingECs) {
-      await remove(`/v1/users/${existingEC._id}`);
-    }
+    existingECs.map(async (existingEC) => remove(`/v1/users/${existingEC._id}`));
 
-    for (const ec of ECs) {
-      await post(ec).to('/v1/eligibility-criteria/');
-    }
+    ECs.map(async (ec) => post(ec).to('/v1/eligibility-criteria/'));
 
     notYetInitialised = false;
   }
-
-  return;
 };

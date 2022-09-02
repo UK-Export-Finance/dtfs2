@@ -84,7 +84,7 @@ exports.allFacilities = async (req, res) => {
   });
 };
 
-exports.removeSingleAllFacilitiesFilter = async (req, res) => {
+exports.removeSingleAllFacilitiesFilter = (req, res) => {
   removeSessionFilter(req);
 
   return res.redirect('/dashboard/facilities/0');

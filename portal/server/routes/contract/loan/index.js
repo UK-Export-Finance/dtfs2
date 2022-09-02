@@ -82,7 +82,7 @@ router.get('/contract/:_id/loan/create', async (req, res) => {
   return res.redirect(`/contract/${dealId}/loan/${loanId}/guarantee-details`);
 });
 
-router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), (req, res) => {
   const {
     dealId,
     loan,
@@ -125,7 +125,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), (req, res) => {
   const {
     dealId,
     loan,
@@ -168,7 +168,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), (req, res) => {
   const {
     dealId,
     loan,
@@ -299,7 +299,7 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
   const { user } = req.session;
@@ -341,7 +341,7 @@ router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
   return res.redirect(`/contract/${dealId}`);
 });
 
-router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', provide([LOAN]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', provide([LOAN]), (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
 
@@ -380,7 +380,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
   };
 
   if (req.body.needToChangeRequestedCoverStartDate === 'true') {
-    if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day']) {
+    if (!req.body['requestedCoverStartDate-day']) {
       requestedCoverValidationErrors = {
         count: 1,
         errorList: {
@@ -461,7 +461,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), async (req, res) => {
+router.get('/contract/:_id/loan/:loanId/delete', provide([DEAL, LOAN]), (req, res) => {
   const { user } = req.session;
   const { loan } = req.apiData.loan;
 

@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const db = require('../../../../drivers/db-client');
 
-exports.deleteDeal = async (req, res) => {
+exports.deleteDeal = (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     findOneDeal(req.params.id, async (deal) => {
       if (deal) {

@@ -78,7 +78,7 @@ const sendMiaAcknowledgement = async (deal) => {
     // send an email to the maker
     emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
     // send a copy of the email to the bank's general email address
-    bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
+    bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
     // send a copy of the email to PIM
     pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
 
@@ -93,7 +93,7 @@ const sendMiaAcknowledgement = async (deal) => {
     // send an email to the maker
     emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
     // send a copy of the email to the bank's general email address
-    bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
+    bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
     // send a copy of the email to PIM
     pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
 
@@ -160,7 +160,7 @@ const sendAinMinAcknowledgement = async (deal) => {
       // send a copy of the email to PIM
       pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to the bank's general email address
-      bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
 
@@ -175,7 +175,7 @@ const sendAinMinAcknowledgement = async (deal) => {
       // send a copy of the email to PIM
       pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to the bank's general email address
-      bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
 
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
@@ -207,7 +207,7 @@ const sendDealSubmitEmails = async (deal) => {
   }
 };
 
-const sendMigratedDealEmail = async (dealId) => {
+const sendMigratedDealEmail = (dealId) => {
   try {
     if (!dealId) {
       return false;

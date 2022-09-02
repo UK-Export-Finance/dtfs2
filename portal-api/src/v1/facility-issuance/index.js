@@ -8,46 +8,41 @@ const canIssueFacility = (userRoles, deal, facility) => {
 
   const dealHasBeenSubmitted = submissionDate;
 
+  const { facilityStage, previousFacilityStage } = facility;
+
+  const { MIN, AIN, MIA } = CONSTANTS.DEAL.SUBMISSION_TYPE;
+
   const {
-    facilityStage,
-    previousFacilityStage,
-  } = facility;
+    UKEF_ACKNOWLEDGED,
+    UKEF_APPROVED_WITHOUT_CONDITIONS,
+    UKEF_APPROVED_WITH_CONDITIONS,
+    READY_FOR_APPROVAL,
+    CHANGES_REQUIRED
+  } = CONSTANTS.DEAL.DEAL_STATUS;
 
-  const acceptedByUkefDealStatus = (status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
-                                    || status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
+  const { UNISSUED, ISSUED } = CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND;
+  const { CONDITIONAL, UNCONDITIONAL } = CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN;
 
-  const allowedDealStatus = (status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_ACKNOWLEDGED
-                            || status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
-                            || status === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
-                            || status === CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
-                            || status === CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED);
+  const acceptedByUkefDealStatus = status === UKEF_APPROVED_WITHOUT_CONDITIONS || status === UKEF_APPROVED_WITH_CONDITIONS;
 
-  const allowedDealSubmissionType = (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN
-                                     || submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIN);
+  const allowedStatuses = [UKEF_ACKNOWLEDGED, UKEF_APPROVED_WITHOUT_CONDITIONS, UKEF_APPROVED_WITH_CONDITIONS, READY_FOR_APPROVAL, CHANGES_REQUIRED];
+  const allowedDealStatus = allowedStatuses.includes(status);
 
-  const isMiaDealInApprovedStatus = (submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.MIA
-                                    && (acceptedByUkefDealStatus || status === CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED));
+  const allowedDealSubmissionType = submissionType === AIN || submissionType === MIN;
 
-  const allowedBondFacilityStage = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
-    || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED
-        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED
-            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED));
+  const isMiaDealInApprovedStatus = submissionType === MIA && (acceptedByUkefDealStatus || status === CHANGES_REQUIRED);
 
-  const allowedLoanFacilityStage = facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
-    || (facilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL
-        && (previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.CONDITIONAL
-            || previousFacilityStage === CONSTANTS.FACILITIES.FACILITIES_STAGE.LOAN.UNCONDITIONAL));
+  const allowedBondFacilityStage = facilityStage === UNISSUED
+                                || (facilityStage === ISSUED && (previousFacilityStage === UNISSUED || previousFacilityStage === ISSUED));
 
-  const allowedFacilityStage = (allowedLoanFacilityStage || allowedBondFacilityStage);
+  const allowedLoanFacilityStage = facilityStage === CONDITIONAL
+                                || (facilityStage === UNCONDITIONAL && (previousFacilityStage === CONDITIONAL || previousFacilityStage === UNCONDITIONAL));
 
-  const isAllowedDealStatusAndSubmissionType = ((allowedDealStatus
-                                                && allowedDealSubmissionType)
-                                                || isMiaDealInApprovedStatus);
+  const allowedFacilityStage = allowedLoanFacilityStage || allowedBondFacilityStage;
 
-  if (isMaker
-    && dealHasBeenSubmitted
-    && isAllowedDealStatusAndSubmissionType
-    && allowedFacilityStage) {
+  const isAllowedDealStatusAndSubmissionType = (allowedDealStatus && allowedDealSubmissionType) || isMiaDealInApprovedStatus;
+
+  if (isMaker && dealHasBeenSubmitted && isAllowedDealStatusAndSubmissionType && allowedFacilityStage) {
     return true;
   }
 

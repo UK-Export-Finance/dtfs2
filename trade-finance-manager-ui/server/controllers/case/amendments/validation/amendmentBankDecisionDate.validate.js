@@ -13,7 +13,7 @@ const { validationErrorHandler } = require('../../../../helpers/validationErrorH
  * returns errors or epoch received/effective date (with blank errors) in an object
  */
 
-const amendmentBankDecisionDateValidation = async (body, type, message) => {
+const amendmentBankDecisionDateValidation = (body, type, message) => {
   const {
     'amendment--bank-decision-date-day': amendmentBankDecisionDateDay,
     'amendment--bank-decision-date-month': amendmentBankDecisionDateMonth,

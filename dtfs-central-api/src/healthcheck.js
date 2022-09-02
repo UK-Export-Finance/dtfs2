@@ -30,6 +30,9 @@ router.get('/healthcheck', (req, res) => {
   Promise.all([mongo]).then((values) => {
     res.status(200).json({
       commit_hash: GITHUB_SHA,
+      uptime: process.uptime(),
+      message: 'OK',
+      timestamp: Date.now(),
       mongo: values[0],
     });
   });

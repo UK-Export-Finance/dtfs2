@@ -17,7 +17,7 @@ describe('/countries', () => {
       expect(body.countries[0]).toEqual(gbr);
 
       for (let i = 2; i < body.countries.length; i += 1) {
-        expect(body.countries[i - 1].name < body.countries[i].name).toBe(true);
+        expect(body.countries[i - 1].name < body.countries[i].name).toBeTruthy();
       }
     });
   });

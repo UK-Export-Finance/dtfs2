@@ -1,7 +1,7 @@
 const utils = require('../../utils/array');
 const refDataApi = require('../../reference-data/api');
 
-const findOneCurrency = async (id) => refDataApi.currencies.getCurrency(id);
+const findOneCurrency = (id) => refDataApi.currencies.getCurrency(id);
 exports.findOneCurrency = findOneCurrency;
 
 exports.findAll = async (req, res) => {

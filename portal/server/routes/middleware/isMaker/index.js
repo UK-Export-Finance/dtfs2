@@ -1,4 +1,4 @@
-const isMaker = async (req, res, next) => {
+const isMaker = (req, res, next) => {
   const { user } = req.session;
 
   if (!user || !user.roles.includes('maker')) {

@@ -56,7 +56,7 @@ const userCanAccessEligibility = (user) => {
   return true;
 };
 
-router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), async (req, res) => {
+router.get('/contract/:_id/eligibility/criteria', provide([DEAL, COUNTRIES]), (req, res) => {
   const { deal, countries } = req.apiData;
 
   const { user } = req.session;
@@ -122,7 +122,7 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]),
   return res.redirect(redirectUrl);
 });
 
-router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]), async (req, res) => {
+router.get('/contract/:_id/eligibility/supporting-documentation', provide([DEAL]), (req, res) => {
   const { deal } = req.apiData;
 
   const { user } = req.session;
@@ -254,7 +254,7 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
   fileData.pipe(readStream).pipe(res);
 });
 
-router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), async (req, res) => {
+router.get('/contract/:_id/eligibility/check-your-answers', provide([DEAL]), (req, res) => {
   const { deal } = req.apiData;
   const { user } = req.session;
 

@@ -3,20 +3,17 @@ const express = require('express');
 const healthcheck = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
 
-healthcheck.get('/healthcheck', async (req, res) => {
+healthcheck.get('/healthcheck', (req, res) => {
   const data = {
+    commit_hash: GITHUB_SHA,
     uptime: process.uptime(),
-    message: 'Ok',
-    date: new Date(),
-    ui: {
-      commitHash: GITHUB_SHA,
-    },
+    message: 'OK',
+    timestamp: Date.now(),
   };
-
   try {
     res.status(200).send(data);
-  } catch (e) {
-    data.message = e;
+  } catch (error) {
+    data.message = error;
     res.status(503).send();
   }
 });

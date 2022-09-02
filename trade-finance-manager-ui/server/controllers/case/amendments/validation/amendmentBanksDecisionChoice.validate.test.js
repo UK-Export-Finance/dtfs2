@@ -1,7 +1,7 @@
 import { amendmentBankDecisionValidation } from './amendmentBanksDecisionChoice.validate';
 
 describe('amendmentBankDecisionValidation()', () => {
-  it('should return an error if no choice is selected', async () => {
+  it('should return an error if no choice is selected', () => {
     const result = amendmentBankDecisionValidation(null);
 
     const expected = {
@@ -29,7 +29,7 @@ describe('amendmentBankDecisionValidation()', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return no errors if choice selected', async () => {
+  it('should return no errors if choice selected', () => {
     const result = amendmentBankDecisionValidation('Proceed');
 
     const expected = {

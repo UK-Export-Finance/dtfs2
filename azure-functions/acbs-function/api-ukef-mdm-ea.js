@@ -29,9 +29,9 @@ const getAPI = async (type) => {
 
 const getCurrency = (currencyCode) => getAPI(`currency?searchtext=${currencyCode}`);
 
-const getACBSIndustrySector = async (industryId) => getAPI(`map-industry-sector?ukefIndustryId=${industryId}`);
+const getACBSIndustrySector = (industryId) => getAPI(`map-industry-sector?ukefIndustryId=${industryId}`);
 
-const getACBSCountryCode = async (country) => getAPI(`country?searchtext=${country}`);
+const getACBSCountryCode = (country) => getAPI(`country?searchtext=${country}`);
 
 module.exports = {
   getCurrency,

@@ -52,7 +52,7 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
       // send a copy of the email to PIM
       const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to bank's general email address
-      const bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      const bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
 
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }

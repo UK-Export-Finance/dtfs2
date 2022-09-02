@@ -129,7 +129,7 @@ describe('mapCoverEndDate', () => {
 
       const result = mapCoverEndDate(day, month, year);
 
-      expect(result).toEqual(undefined);
+      expect(result).toBeUndefined();
     });
   });
 });

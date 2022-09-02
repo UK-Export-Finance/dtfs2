@@ -1,7 +1,5 @@
 const mockFiles = [];
 
-mockFiles.forEach((mockFile) => {
-  jest.mock(mockFile);
-});
+jest.mock(mockFiles);
 
 console.info(`MOCKED FILES: \n${mockFiles.join('\n')}`);

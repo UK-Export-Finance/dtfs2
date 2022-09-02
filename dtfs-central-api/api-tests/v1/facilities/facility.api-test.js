@@ -35,13 +35,10 @@ const createDeal = async () => {
 };
 
 describe('/v1/portal/facilities', () => {
-  beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
-    await wipeDB.wipe(['tfm-facilities']);
-  });
-
   describe('POST /v1/portal/facilities', () => {
+    beforeAll(async () => {
+      await wipeDB.wipe(['deals', 'facilities', 'tfm-facilities']);
+    });
     it('returns 404 when associatedDeal/dealId is not found', async () => {
       const facilityWithInvalidDealId = {
         dealId: MOCK_DEAL.DEAL_ID,
@@ -92,9 +89,9 @@ describe('/v1/portal/facilities', () => {
       const facility2 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facility3 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
 
-      expect(typeof facility1.body._id).toEqual('string');
-      expect(typeof facility2.body._id).toEqual('string');
-      expect(typeof facility3.body._id).toEqual('string');
+      expect(facility1.body._id).toBeDefined();
+      expect(facility2.body._id).toBeDefined();
+      expect(facility3.body._id).toBeDefined();
     });
 
     it('adds the facility id to the associated deal', async () => {
@@ -112,11 +109,9 @@ describe('/v1/portal/facilities', () => {
 
       expect(status).toEqual(200);
 
-      if (createdFacility) {
-        expect(body.deal.facilities).toEqual([
-          createdFacility._id,
-        ]);
-      }
+      expect(body.deal.facilities).toEqual([
+        createdFacility._id,
+      ]);
     });
 
     describe('when required fields are missing', () => {

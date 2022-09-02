@@ -1,16 +1,12 @@
 const sendEmail = require('../../email');
 
-const sendEmailsToOwningBanks = async (templateId, emailVariables, owningBankEmails) => {
+const sendEmailsToOwningBanks = (templateId, emailVariables, owningBankEmails) => {
   owningBankEmails.forEach(async (email) => {
-    await sendEmail(
-      templateId,
-      email,
-      emailVariables,
-    );
+    await sendEmail(templateId, email, emailVariables);
   });
 };
 
-const abandonedDealEmails = async (baseEmailVariables, emailAddresses) => {
+const abandonedDealEmails = (baseEmailVariables, emailAddresses) => {
   const EMAIL_TEMPLATE_ID = '8a5d4158-d944-4ecb-98a0-42a7f79a8174';
 
   const emailVariables = {
@@ -22,10 +18,10 @@ const abandonedDealEmails = async (baseEmailVariables, emailAddresses) => {
     emailVariables.supplierName = 'null';
   }
 
-  await sendEmailsToOwningBanks(EMAIL_TEMPLATE_ID, emailVariables, emailAddresses);
+  sendEmailsToOwningBanks(EMAIL_TEMPLATE_ID, emailVariables, emailAddresses);
 };
 
-const statusUpdateEmails = async (baseEmailVariables, deal, emailAddresses) => {
+const statusUpdateEmails = (baseEmailVariables, deal, emailAddresses) => {
   const EMAIL_TEMPLATE_ID = '718beb52-474e-4f34-a8d7-ab0e48cdffce';
 
   const { submissionType } = deal;
@@ -35,26 +31,15 @@ const statusUpdateEmails = async (baseEmailVariables, deal, emailAddresses) => {
     submissionType,
   };
 
-  await sendEmailsToOwningBanks(EMAIL_TEMPLATE_ID, emailVariables, emailAddresses);
+  sendEmailsToOwningBanks(EMAIL_TEMPLATE_ID, emailVariables, emailAddresses);
 };
 
 const send = async (deal, fromStatus, user) => {
-  const {
-    submissionType,
-    bankInternalRefName,
-    maker,
-    status: currentStatus,
-  } = deal;
+  const { submissionType, bankInternalRefName, maker, status: currentStatus } = deal;
 
-  const {
-    'supplier-name': supplierName,
-  } = deal.submissionDetails;
+  const { 'supplier-name': supplierName } = deal.submissionDetails;
 
-  const {
-    firstname,
-    surname,
-    username,
-  } = user;
+  const { firstname, surname, username } = user;
 
   const updatedByName = `${firstname} ${surname}`;
   const updatedByEmail = username;

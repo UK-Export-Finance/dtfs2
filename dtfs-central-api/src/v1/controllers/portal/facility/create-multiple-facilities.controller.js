@@ -6,14 +6,16 @@ const { updateDeal } = require('../deal/update-deal.controller');
 const createFacilities = async (facilities, dealId) => {
   const collection = await db.getCollection('facilities');
 
-  const facilitiesWithId = await Promise.all(facilities.map(async (f) => {
-    const facility = f;
-    facility._id = new ObjectId(facility._id);
-    facility.createdDate = Date.now();
-    facility.updatedAt = Date.now();
-    facility.dealId = new ObjectId(dealId);
-    return facility;
-  }));
+  const facilitiesWithId = await Promise.all(
+    facilities.map((f) => {
+      const facility = f;
+      facility._id = new ObjectId(facility._id);
+      facility.createdDate = Date.now();
+      facility.updatedAt = Date.now();
+      facility.dealId = new ObjectId(dealId);
+      return facility;
+    }),
+  );
 
   const idsArray = [];
   facilitiesWithId.forEach((f) => {
@@ -26,22 +28,15 @@ const createFacilities = async (facilities, dealId) => {
     facilities: idsArray,
   };
 
-  await updateDeal(
-    dealId,
-    dealUpdate,
-  );
+  await updateDeal(dealId, dealUpdate);
 
   const flattenedIds = Object.values(result.insertedIds);
 
   return flattenedIds;
 };
 
-exports.createMultipleFacilitiesPost = async (req, res) => {
-  const {
-    facilities,
-    dealId,
-    user,
-  } = req.body;
+exports.createMultipleFacilitiesPost = (req, res) => {
+  const { facilities, dealId, user } = req.body;
 
   if (!user) {
     return res.status(404).send();

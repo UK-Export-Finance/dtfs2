@@ -12,13 +12,11 @@ const items = require('../../fixtures/gef/eligibilityCriteria');
 const baseUrl = '/v1/gef/eligibility-criteria';
 
 describe(baseUrl, () => {
-  // let noRoles;
   let aMaker;
   let anEditor;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    // noRoles = testUsers().withoutAnyRoles().one();
     aMaker = testUsers().withRole('maker').one();
     anEditor = testUsers().withRole('editor').one();
   });
@@ -52,7 +50,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('returns the latest eligibilty-criteria version', async () => {
+    it('returns the latest eligibility-criteria version', async () => {
       await as(anEditor).post(items[0]).to(baseUrl);
       await as(anEditor).post(items[1]).to(baseUrl);
       await as(anEditor).post(items[2]).to(baseUrl);
@@ -79,13 +77,13 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
-      const item = await as(anEditor).post(items[0]).to(baseUrl);
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { status } = await as(aMaker).get(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(200);
     });
 
     it('returns an eligibility criteria', async () => {
-      const item = await as(anEditor).post(items[0]).to(baseUrl);
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { status, body } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(200);
       const expected = {
@@ -118,60 +116,21 @@ describe(baseUrl, () => {
     });
   });
 
-  // describe(`PUT ${baseUrl}/:version`, () => {
-  //   it('rejects requests that do not present a valid Authorization token', async () => {
-  //     const { status } = await as().put(updatedMandatoryCriteria).to(`${baseUrl}/1`);
-  //     expect(status).toEqual(401);
-  //   });
-
-  //   it('rejects requests that present a valid Authorization token but do not have "editor" role', async () => {
-  //     const { status } = await as(aMaker).put(updatedMandatoryCriteria).to(`${baseUrl}/1`);
-  //     expect(status).toEqual(401);
-  //   });
-
-  //   it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-  //     const item = await as(anEditor).post(items[0]).to(baseUrl);
-  //     const { status } = await as(anEditor).put(updatedMandatoryCriteria).to(`${baseUrl}/${item.body.version}`);
-  //     expect(status).toEqual(200);
-  //   });
-
-  //   it('successfully updates item', async () => {
-  //     const item = await as(anEditor).post(items[0]).to(baseUrl);
-  //     const itemUpdate = {
-  //       ...JSON.parse(item.text),
-  //       version: 99,
-  //       dateCreated: '2021-01-01T00:00',
-  //       isInDraft: true,
-  //       title: 'test 99',
-  //       text: 'Test is a mock test',
-  //     };
-  //     delete itemUpdate._id; // immutable key
-
-  //     const { status, body } = await as(anEditor).put(itemUpdate).to(`${baseUrl}/${item.body.version}`);
-
-  //     expect(status).toEqual(200);
-  //     expect(body).toEqual(expectMongoId({
-  //       ...itemUpdate,
-  //       updatedAt: expect.any(Number),
-  //     }));
-  //   });
-  // });
-
   describe(`DELETE ${baseUrl}/:version`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const item = await as(anEditor).post(items[0]).to(baseUrl);
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { status } = await as().remove(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const item = await as(anEditor).post(items[0]).to(baseUrl);
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { status } = await as(anEditor).remove(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(200);
     });
 
-    it('deletes the eligibilty-criteria', async () => {
-      const { body: createdItem } = await as(anEditor).post(items[0]).to(baseUrl);
+    it('deletes the eligibility-criteria', async () => {
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { body: item } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
 
       const { status, body } = await as(anEditor).remove(`${baseUrl}/${items[0].version}`);

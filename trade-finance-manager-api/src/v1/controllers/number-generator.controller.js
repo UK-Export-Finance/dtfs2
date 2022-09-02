@@ -7,7 +7,7 @@ const gefController = require('./gef.controller');
 
 const otherDealTasksStillRunning = (task, taskList) => taskList.some((t) => t.dealId === task.dealId && ['Pending', 'Running'].includes(t.runtimeStatus));
 
-const updatePortalDeal = async (input, { ukefId }) => {
+const updatePortalDeal = (input, { ukefId }) => {
   if (input.entityType === 'deal') {
     return api.updatePortalDeal(input.entityId, {
       details: {
@@ -25,7 +25,7 @@ const updatePortalDeal = async (input, { ukefId }) => {
   return Promise.reject();
 };
 
-const updateGefApplication = async (input, { ukefId }) => {
+const updateGefApplication = (input, { ukefId }) => {
   if (input.entityType === 'deal') {
     return gefController.updateGefApplication(input.entityId, {
       ukefDealId: ukefId,

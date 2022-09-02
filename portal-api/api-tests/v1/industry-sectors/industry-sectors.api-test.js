@@ -11,13 +11,6 @@ jest.unmock('../../../src/reference-data/api');
 
 const mockIndustrySectorCode = '1008';
 
-// const aaaa = anIndustrySector({ code: '100', name: 'AAAA', classes: mockClasses });
-// const pppp = anIndustrySector({ code: '200', name: 'PPPP', classes: mockClasses });
-// const mmmm = anIndustrySector({ code: '300', name: 'MMMM', classes: mockClasses });
-
-// const newIndustrySector = anIndustrySector({ code: '101', name: 'AAAB', classes: mockClasses });
-// const updatedIndustrySector = anIndustrySector({ code: '101', name: 'BBBA', classes: mockClasses });
-
 describe('/v1/industry-sectors', () => {
   let noRoles;
   let aBarclaysMaker;

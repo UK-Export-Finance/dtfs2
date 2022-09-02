@@ -1,4 +1,3 @@
-/* eslint-disable */
 const request = require('supertest');
 
 module.exports = (app) => ({
@@ -25,13 +24,13 @@ module.exports = (app) => ({
   }),
 
   put: (data) => ({
-    to: async (url) => request(app)
+    to: async (url) => await request(app)
       .put(url)
       .send(data),
   }),
 
   putMultipartForm: (data, files = []) => ({
-    to: async (url) => {
+    to: (url) => {
       const apiRequest = request(app)
         .put(url);
 
@@ -47,15 +46,10 @@ module.exports = (app) => ({
     },
   }),
 
-  get: async (url) => request(app)
-    .get(url),
+  get: (url) => request(app).get(url),
 
   remove: (data) => ({
-    to: async (url) =>
-      request(app)
-        .delete(url)
-        .send(data),
+    to: (url) =>
+      request(app).delete(url).send(data),
   }),
 });
-
-/* eslint-enable */

@@ -22,8 +22,7 @@ exports.create = async (facilityBody, user) => {
 /**
  * Find a facility (BSS, EWCS only)
  */
-exports.findOne = async (facilityId) =>
-  api.findOneFacility(facilityId);
+exports.findOne = (facilityId) => api.findOneFacility(facilityId);
 
 exports.update = async (dealId, facilityId, facilityBody, user) => {
   const updatedFacility = await api.updateFacility(facilityId, facilityBody, user);
@@ -35,11 +34,7 @@ exports.update = async (dealId, facilityId, facilityBody, user) => {
       facilitiesUpdated: new Date().valueOf(),
     };
 
-    await updateDeal(
-      dealId,
-      dealUpdate,
-      user,
-    );
+    await updateDeal(dealId, dealUpdate, user);
   }
 
   return updatedFacility;
@@ -48,8 +43,7 @@ exports.update = async (dealId, facilityId, facilityBody, user) => {
 /**
  * Delete a facility (BSS, EWCS only)
  */
-exports.delete = async (facilityId, user) =>
-  api.deleteFacility(facilityId, user);
+exports.delete = (facilityId, user) => api.deleteFacility(facilityId, user);
 
 /**
  * Create multiple facilities (BSS, EWCS only)
@@ -72,23 +66,17 @@ exports.createMultiple = async (req, res) => {
 /**
  * Create multiple facilities (BSS, EWCS only)
  */
-exports.createMultipleFacilities = async (facilities, dealId, user) =>
-  api.createMultipleFacilities(facilities, dealId, user);
+exports.createMultipleFacilities = (facilities, dealId, user) => api.createMultipleFacilities(facilities, dealId, user);
 
 /**
-* Queries all facilities in the facilities collection (BSS, EWCS, GEF)
-* @param {*} filters any filters for deals or facilities, uses match spec
-* @param {*} sort any additional sort fields for list
-* @param {*} start where list should start - part of pagination.
-* @param {*} pagesize Size of each page - limits list results
-* @returns combined and formatted list of facilities
-*/
-const queryAllFacilities = async (
-  filters = {},
-  sort = {},
-  start = 0,
-  pagesize = 0,
-) => {
+ * Queries all facilities in the facilities collection (BSS, EWCS, GEF)
+ * @param {*} filters any filters for deals or facilities, uses match spec
+ * @param {*} sort any additional sort fields for list
+ * @param {*} start where list should start - part of pagination.
+ * @param {*} pagesize Size of each page - limits list results
+ * @returns combined and formatted list of facilities
+ */
+const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {
   const collection = await db.getCollection('facilities');
 
   const results = await collection
@@ -127,10 +115,7 @@ const queryAllFacilities = async (
       {
         $facet: {
           count: [{ $count: 'total' }],
-          facilities: [
-            { $skip: start },
-            ...(pagesize ? [{ $limit: pagesize }] : []),
-          ],
+          facilities: [{ $skip: start }, ...(pagesize ? [{ $limit: pagesize }] : [])],
         },
       },
       { $unwind: '$count' },
@@ -144,10 +129,7 @@ const queryAllFacilities = async (
     .toArray();
 
   if (results.length) {
-    const {
-      count,
-      facilities,
-    } = results[0];
+    const { count, facilities } = results[0];
 
     return {
       count,
@@ -162,19 +144,9 @@ const queryAllFacilities = async (
 };
 
 exports.getQueryAllFacilities = async (req, res) => {
-  const {
-    start,
-    pagesize,
-    filters,
-    sort,
-  } = req.body;
+  const { start, pagesize, filters, sort } = req.body;
 
-  const results = await queryAllFacilities(
-    filters,
-    sort,
-    start,
-    pagesize,
-  );
+  const results = await queryAllFacilities(filters, sort, start, pagesize);
 
   return res.status(200).send(results);
 };

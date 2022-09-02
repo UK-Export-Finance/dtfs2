@@ -96,7 +96,7 @@ const checkAzureAcbsFunction = async () => {
       type: 'ACBS',
       status: 'Running',
     }).toArray();
-    const tasks = await runningTasks.map(async ({ acbsTaskLinks = {} }) =>
+    const tasks = await runningTasks.map(({ acbsTaskLinks = {} }) =>
       api.getFunctionsAPI(CONSTANTS.DURABLE_FUNCTIONS.TYPE.ACBS, acbsTaskLinks.statusQueryGetUri));
     const taskList = await Promise.all(tasks);
 
@@ -174,7 +174,7 @@ const issueAcbsFacilities = async (deal) => {
  * @param {Object} facility Complete TFM facility object
  * @param {Object} deal Bespoke deal object
  */
-const amendAcbsFacility = async (amendments, facility, deal) => {
+const amendAcbsFacility = (amendments, facility, deal) => {
   let payload = amendments;
 
   // TO-DO : EPOCH Convergence
@@ -182,14 +182,13 @@ const amendAcbsFacility = async (amendments, facility, deal) => {
     payload = formatCoverEndDate(amendments);
   }
 
-  api.amendACBSfacility(payload, facility, deal)
-    .then((acbsTaskLinks) => {
-      if (acbsTaskLinks && acbsTaskLinks.id) {
-        return addToACBSLog({ acbsTaskLinks });
-      }
+  api.amendACBSfacility(payload, facility, deal).then((acbsTaskLinks) => {
+    if (acbsTaskLinks && acbsTaskLinks.id) {
+      return addToACBSLog({ acbsTaskLinks });
+    }
 
-      return null;
-    })
+    return null;
+  })
     .catch((e) => {
       console.error('Unable to amend facility: ', { e });
       return null;

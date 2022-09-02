@@ -17,7 +17,7 @@ const mapDeal = async (deal) => {
   if (deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     const allFacilityIds = deal.facilities.map((facility) => facility._id);
 
-    mappedDeal.facilities = await Promise.all(allFacilityIds.map(async (facilityId) => api.findOneFacility(facilityId)));
+    mappedDeal.facilities = await Promise.all(allFacilityIds.map((facilityId) => api.findOneFacility(facilityId)));
 
     // Remove BSS transactions arrays. This is not used in TFM, only in BSS.
     delete mappedDeal.bondTransactions.items;

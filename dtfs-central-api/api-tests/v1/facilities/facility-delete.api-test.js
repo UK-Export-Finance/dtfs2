@@ -36,8 +36,7 @@ describe('/v1/portal/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe(['deals', 'facilities']);
   });
 
   beforeEach(async () => {

@@ -14,12 +14,12 @@ const router = express.Router();
 
 router.use('/dashboard/*', validateToken);
 router.get('/', validateToken, (req, res) => res.redirect('/dashboard/deals'));
-router.get('/dashboard', async (req, res) => res.redirect('/dashboard/deals'));
+router.get('/dashboard', (req, res) => res.redirect('/dashboard/deals'));
 
 /**
  * Deals
  */
-router.get('/dashboard/deals', async (req, res) => {
+router.get('/dashboard/deals', (req, res) => {
   req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
 
   return res.redirect('/dashboard/deals/0');
@@ -31,7 +31,7 @@ router.get('/dashboard/deals/filters/remove/:fieldName/:fieldValue', removeSingl
 /**
  * Facilities
  */
-router.get('/dashboard/facilities', async (req, res) => {
+router.get('/dashboard/facilities', (req, res) => {
   req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
 
   return res.redirect('/dashboard/facilities/0');

@@ -11,7 +11,6 @@ import MOCK_DEAL_READY_TO_SUBMIT from '../test-data/MIA-deal/dealReadyToSubmit';
 context('Portal to TFM deal submission', () => {
   let deal;
   let dealId;
-  const dealFacilities = [];
 
   before(() => {
     cy.insertManyDeals([MOCK_DEAL_READY_TO_SUBMIT()], BANK1_MAKER1).then((insertedDeals) => {
@@ -20,9 +19,7 @@ context('Portal to TFM deal submission', () => {
 
       const { mockFacilities } = deal;
 
-      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-        dealFacilities.push(...createdFacilities);
-      });
+      cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1);
     });
   });
 

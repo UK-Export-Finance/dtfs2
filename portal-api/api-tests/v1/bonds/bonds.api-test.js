@@ -644,7 +644,7 @@ describe('/v1/deals/:id/bond', () => {
 
         const { body } = await as(aBarclaysMaker).put(updatedBond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
-        expect(body.feeFrequency).toEqual(undefined);
+        expect(body.feeFrequency).toBeUndefined();
       });
     });
 
