@@ -1,6 +1,6 @@
 const CONSTANTS = require('../constant');
 const { getCollection, portalDealUpdate, disconnect } = require('./database');
-const { workflow } = require('./io');
+const { workflow, sleep } = require('./io');
 /**
  * Data fixes helper functions
  */
@@ -82,9 +82,15 @@ const comment = async () => {
   });
 };
 
-const update = async (ukefDealId, deal) => portalDealUpdate(ukefDealId, deal)
+/**
+ * Update portal deal
+ * @param {String} id Object ID
+ * @param {Object} deal Updated deal object
+ * @returns {Promise} `Resolve` upon success otherwise `Reject`
+ */
+const update = async (id, deal) => portalDealUpdate(id, deal)
   .then((r) => Promise.resolve(r))
-  .catch(() => Promise.reject(new Error('Error updating portal deal')));
+  .catch((e) => Promise.reject(new Error('Error updating portal deal: ', { e })));
 
 /**
  * Data fix main function, invokes various data fixes.
@@ -109,7 +115,7 @@ const datafixes = async (deals) => {
 
     // Update portal
     const updates = allDeals.map(async (deal) => {
-      await update(deal.details.ukefDealId, deal)
+      await update(deal._id, deal)
         .then((r) => {
           if (r) {
             updated += 1;
@@ -118,7 +124,8 @@ const datafixes = async (deals) => {
           }
 
           return Promise.reject();
-        });
+        })
+        .catch((e) => Promise.reject(e));
     });
 
     return Promise.all(updates)
