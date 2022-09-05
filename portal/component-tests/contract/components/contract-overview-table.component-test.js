@@ -7,8 +7,7 @@ const component = 'contract/components/contract-overview-table.njk';
 const render = componentRenderer(component);
 describe(component, () => {
   const now = moment();
-
-  let deal = {
+  const deal = {
     updatedAt: Date.now(),
     bankInternalRefName: 'bankInternalRefName',
     status: 'status',
@@ -24,15 +23,6 @@ describe(component, () => {
         surname: 'Burns',
       },
       submissionDate: now.valueOf(),
-    },
-  };
-
-  const dealWithManualInclusionApplicationSubmissionDate = {
-    ...deal,
-    submissionType: 'Manual Inclusion Notice',
-    details: {
-      ...deal.details,
-      manualInclusionApplicationSubmissionDate: now.valueOf(),
     },
   };
 
@@ -65,6 +55,14 @@ describe(component, () => {
   });
 
   describe('when deal has manualInclusionApplicationSubmissionDate', () => {
+    const dealWithManualInclusionApplicationSubmissionDate = {
+      ...deal,
+      submissionType: 'Manual Inclusion Notice',
+      details: {
+        ...deal.details,
+        manualInclusionApplicationSubmissionDate: now.valueOf(),
+      },
+    };
     let wrapper;
     const user = { timezone: 'Europe/London' };
 
@@ -83,7 +81,7 @@ describe(component, () => {
   describe('renders - for any blank fields', () => {
     let wrapper;
 
-    deal = {
+    const deal1 = {
       updatedAt: null,
       status: '',
       maker: {},
@@ -98,7 +96,7 @@ describe(component, () => {
 
     beforeAll(() => {
       const user = { timezone: 'Europe/London' };
-      wrapper = render({ deal, user });
+      wrapper = render({ deal1, user });
     });
 
     it('displays deal.bankInternalRefName', () => wrapper.expectText('[data-cy="bankInternalRefName"]').toRead('-'));
