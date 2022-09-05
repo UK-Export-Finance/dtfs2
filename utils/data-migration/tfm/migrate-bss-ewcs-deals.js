@@ -85,7 +85,7 @@ const tfm = async (data) => {
     _id: '627b70305ac41e001d37294a',
   };
 
-  const submitted = data.map(async (deal) => {
+  for (const deal of data) {
     await axios({
       method: 'put',
       url: `${TFM_API}/v1/deals/submit`,
@@ -109,18 +109,14 @@ const tfm = async (data) => {
       })
       .catch((error) => Promise.reject(new Error(`🚩 Error inserting deal ${error}`)));
 
-    await sleep(1000);
-  });
+    await sleep(700);
+  }
 
-  return Promise.all(submitted)
-    .then(() => {
-      if (counter === data.length) {
-        console.info('\x1b[33m%s\x1b[0m', `✅ All ${data.length} deals have been submitted to TFM.`, '\n');
-      }
+  if (counter === data.length) {
+    console.info('\x1b[33m%s\x1b[0m', `✅ All ${data.length} deals have been submitted to TFM.`, '\n');
+  }
 
-      return Promise.resolve(submitted);
-    })
-    .catch((e) => Promise.reject(e));
+  return Promise.resolve(counter);
 };
 
 // ******************** MAIN *************************

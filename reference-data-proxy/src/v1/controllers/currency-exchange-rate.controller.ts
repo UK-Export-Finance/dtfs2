@@ -25,8 +25,8 @@ export const getExchangeRate = async (req: Request, res: Response) => {
     url: `${exchangeRateURL}?source=${actualSource}&target=${actualTarget}`,
     auth: { username, password },
   }).catch((error: any) => {
-    console.error('Error calling Exchange rate API, ', error.response.data, error.response.status);
-    return { data: error.response.data, status: error.response.status };
+    console.error('Error calling Exchange rate API, ', error?.response?.data, error?.response?.status);
+    return { data: error?.response?.data, status: error?.response?.status };
   });
 
   const { status, data } = response;
