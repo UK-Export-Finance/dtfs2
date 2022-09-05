@@ -2,7 +2,7 @@ const request = require('supertest');
 
 module.exports = (app) => ({
   post: (data) => ({
-    to: async (url) => request(app)
+    to: (url) => request(app)
       .post(url)
       .send(data),
   }),
@@ -24,7 +24,7 @@ module.exports = (app) => ({
   }),
 
   put: (data) => ({
-    to: async (url) => await request(app)
+    to: (url) => request(app)
       .put(url)
       .send(data),
   }),

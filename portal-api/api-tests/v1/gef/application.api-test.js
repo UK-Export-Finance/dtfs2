@@ -372,7 +372,6 @@ describe(baseUrl, () => {
               aMaker,
               aMaker,
               mockApplication,
-              CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
             ),
           );
         });
@@ -396,7 +395,6 @@ describe(baseUrl, () => {
               aMaker,
               aChecker,
               mockApplication,
-              CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED,
             ),
           );
         });
@@ -420,7 +418,6 @@ describe(baseUrl, () => {
               aMaker,
               aChecker,
               mockApplication,
-              CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF,
             ),
           );
         });

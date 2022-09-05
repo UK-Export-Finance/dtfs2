@@ -37,11 +37,7 @@ const bondHasIncompleteIssueFacilityDetails = (dealStatus, previousDealStatus, b
 
   const allowedFacilityStage = bond.facilityStage === 'Unissued';
 
-  if (allowedDealStatus && allowedFacilityStage && !bond.issueFacilityDetailsSubmitted) {
-    return true;
-  }
-
-  return false;
+  return allowedDealStatus && allowedFacilityStage && !bond.issueFacilityDetailsSubmitted;
 };
 
 const addAccurateStatusesToBonds = (deal) => {

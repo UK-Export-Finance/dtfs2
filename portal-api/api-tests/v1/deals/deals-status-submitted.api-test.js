@@ -30,8 +30,7 @@ describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe(['deals', 'facilities']);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
     externalApis.numberGenerator = {
