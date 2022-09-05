@@ -63,7 +63,7 @@ describe('userToken()', () => {
 
 describe('isObject()', () => {
   it('returns the correct boolean', () => {
-    expect(isObject({})).toBeTruthy()();
+    expect(isObject({})).toBeTruthy();
     expect(isObject([])).toBeFalsy();
     expect(isObject('')).toBeFalsy();
     expect(isObject(1)).toBeFalsy();
@@ -1125,7 +1125,7 @@ describe('isTrueSet()', () => {
   });
 
   it('returns true boolean if string value is equal to `true`', () => {
-    expect(isTrueSet('true')).toBeFalsy();
+    expect(isTrueSet('true')).toBeTruthy();
   });
 
   it('returns false boolean if string value is equal to `false`', () => {

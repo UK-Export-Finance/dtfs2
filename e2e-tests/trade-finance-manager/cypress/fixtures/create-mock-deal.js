@@ -34,5 +34,4 @@ const createMockDeal = (overrides) => {
   };
 };
 
-
 export default createMockDeal;

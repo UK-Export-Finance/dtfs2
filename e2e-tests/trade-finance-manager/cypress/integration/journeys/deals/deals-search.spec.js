@@ -61,9 +61,6 @@ context('User can view and filter multiple deals', () => {
   // Therefore we need to set all of these fields to yesterday.
   const DEAL_COMPLETED_YESTERDAY = createMockDeal({
     testId: 'DEAL_COMPLETED_YESTERDAY',
-    eligibility: {
-      lastUpdated: yesterday.valueOf().toString(),
-    },
     facilitiesUpdated: yesterday.valueOf().toString(),
   });
 
