@@ -6,8 +6,6 @@ const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const mockApplications = require('../../fixtures/gef/application');
 
-const facilitiesCollectionName = 'facilities';
-const dealsCollectionName = 'deals';
 const gefDealUrl = '/v1/gef/application';
 const gefFacilityUrl = '/v1/gef/facilities';
 
@@ -21,8 +19,7 @@ describe('v1/reports/unissued-facilities', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([facilitiesCollectionName]);
-    await wipeDB.wipe([dealsCollectionName]);
+    await wipeDB.wipe(['facilities', 'deals']);
 
     // create a GEF deal
     mockApplication = await as(aMaker).post({ ...mockApplications[0], bank: { id: aMaker.bank.id } }).to(gefDealUrl);

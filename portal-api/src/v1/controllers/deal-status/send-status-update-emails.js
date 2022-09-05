@@ -1,12 +1,12 @@
 const sendEmail = require('../../email');
 
 const sendEmailsToOwningBanks = (templateId, emailVariables, owningBankEmails) => {
-  owningBankEmails.forEach(async (email) => {
+  owningBankEmails.map(async (email) => {
     await sendEmail(templateId, email, emailVariables);
   });
 };
 
-const abandonedDealEmails = (baseEmailVariables, emailAddresses) => {
+const abandonedDealEmails = async (baseEmailVariables, emailAddresses) => {
   const EMAIL_TEMPLATE_ID = '8a5d4158-d944-4ecb-98a0-42a7f79a8174';
 
   const emailVariables = {
@@ -18,10 +18,10 @@ const abandonedDealEmails = (baseEmailVariables, emailAddresses) => {
     emailVariables.supplierName = 'null';
   }
 
-  sendEmailsToOwningBanks(EMAIL_TEMPLATE_ID, emailVariables, emailAddresses);
+  await sendEmailsToOwningBanks(EMAIL_TEMPLATE_ID, emailVariables, emailAddresses);
 };
 
-const statusUpdateEmails = (baseEmailVariables, deal, emailAddresses) => {
+const statusUpdateEmails = async (baseEmailVariables, deal, emailAddresses) => {
   const EMAIL_TEMPLATE_ID = '718beb52-474e-4f34-a8d7-ab0e48cdffce';
 
   const { submissionType } = deal;
@@ -31,7 +31,7 @@ const statusUpdateEmails = (baseEmailVariables, deal, emailAddresses) => {
     submissionType,
   };
 
-  sendEmailsToOwningBanks(EMAIL_TEMPLATE_ID, emailVariables, emailAddresses);
+  await sendEmailsToOwningBanks(EMAIL_TEMPLATE_ID, emailVariables, emailAddresses);
 };
 
 const send = async (deal, fromStatus, user) => {

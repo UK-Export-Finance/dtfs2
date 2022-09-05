@@ -244,7 +244,7 @@ const updateTfmLeadUnderwriter = async (dealId, leadUnderwriter) => {
 
   const taskGroupsToUpdate = [CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE, CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE];
 
-  await assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId);
+  assignGroupTasksToOneUser(dealId, taskGroupsToUpdate, userId);
 
   return updatedDeal.tfm;
 };
