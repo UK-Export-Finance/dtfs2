@@ -5,7 +5,7 @@ const { issuedFacilityConfirmation } = require('../../utils/facility-helpers');
 const api = require('../../services/api');
 const Application = require('../../models/application');
 
-const submitToUkef = async (req, res) => {
+const submitToUkef = (req, res) => {
   const { params } = req;
   const { dealId } = params;
   try {

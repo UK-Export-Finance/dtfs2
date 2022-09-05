@@ -6,11 +6,7 @@ const { validateFacilityValue } = require('./facility-value');
 const api = require('../../services/api');
 
 const facilityValue = async (req, res) => {
-  const {
-    params,
-    query,
-    session,
-  } = req;
+  const { params, query, session } = req;
   const { dealId, facilityId } = params;
   const { status } = query;
   const { user } = session;
@@ -33,16 +29,12 @@ const facilityValue = async (req, res) => {
   }
 };
 
-const updateFacilityValue = async (req, res) => {
-  const {
-    params, body, query, session,
-  } = req;
+const updateFacilityValue = (req, res) => {
+  const { params, body, query, session } = req;
   const { user } = session;
   const { _id: editorId } = user;
   const { dealId, facilityId } = params;
-  const {
-    value, interestPercentage, coverPercentage, facilityType, currency,
-  } = body;
+  const { value, interestPercentage, coverPercentage, facilityType, currency } = body;
 
   const { status, saveAndReturn } = query;
   const facilityTypeConst = FACILITY_TYPE[facilityType?.toUpperCase()];

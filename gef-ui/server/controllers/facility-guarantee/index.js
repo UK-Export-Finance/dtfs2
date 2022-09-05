@@ -30,16 +30,12 @@ const facilityGuarantee = async (req, res) => {
   }
 };
 
-const updateFacilityGuarantee = async (req, res) => {
-  const {
-    params, body, query, session,
-  } = req;
+const updateFacilityGuarantee = (req, res) => {
+  const { params, body, query, session } = req;
   const { dealId, facilityId } = params;
   const { user } = session;
   const { _id: editorId } = user;
-  const {
-    feeType, inAdvanceFrequency, inArrearsFrequency, dayCountBasis,
-  } = body;
+  const { feeType, inAdvanceFrequency, inArrearsFrequency, dayCountBasis } = body;
   const { status } = query;
   const facilityGuaranteeErrors = [];
 

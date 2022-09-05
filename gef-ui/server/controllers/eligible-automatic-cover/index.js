@@ -1,4 +1,4 @@
-const eligibleAutomaticCover = async (req, res) => {
+const eligibleAutomaticCover = (req, res) => {
   const { params } = req;
   const { dealId } = params;
 
