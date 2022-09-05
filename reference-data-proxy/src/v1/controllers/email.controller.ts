@@ -31,8 +31,8 @@ export const emailNotification = async (req: Request, res: Response) => {
     const { status, data } = notifyResponse;
 
     return res.status(status).send(data);
-  } catch (e) {
-    console.error('Unable to send email', { e });
+  } catch (e: any) {
+    console.error('Unable to send email', { response: e.response.data.errors });
   }
   return res.status(422).send({});
 };
