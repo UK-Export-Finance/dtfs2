@@ -94,7 +94,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
     if (mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
       || mappedDeal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-      // Below is commented soley for the purpose of GEF TFM data migration
+      // Below is commented solely for the purpose of TFM data migration
       // const dealWithTasks = await createDealTasks(updatedDealWithCreateEstore);
 
       /**

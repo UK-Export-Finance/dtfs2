@@ -64,7 +64,7 @@ const portalDealUpdate = async (id, updates) => {
   try {
     if (!connection) await connect();
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.DEAL).updateOne(
-      { 'details.id': ObjectId(id) },
+      { _id: ObjectId(id) },
       {
         $set: {
           ...updates,
