@@ -156,7 +156,7 @@ describe('controllers/automatic-cover', () => {
         await validateAutomaticCover(mockRequest, mockResponse);
       });
 
-      it('returns no validation errors', async () => {
+      it('returns no validation errors', () => {
         expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${mockDealId}`);
       });
 
@@ -243,7 +243,7 @@ describe('controllers/automatic-cover', () => {
         await validateAutomaticCover(mockRequest, mockResponse);
       });
 
-      it('redirects user to `application details` page', async () => {
+      it('redirects user to `application details` page', () => {
         expect(mockResponse.redirect).toHaveBeenCalledWith(
           `/gef/application-details/${mockDealId}/eligible-automatic-cover`,
         );

@@ -1,4 +1,4 @@
-const ineligibleAutomaticCover = async (req, res) => {
+const ineligibleAutomaticCover = (req, res) => {
   const { params } = req;
   const { dealId } = params;
 
