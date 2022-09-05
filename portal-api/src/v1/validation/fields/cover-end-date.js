@@ -21,19 +21,19 @@ module.exports = (submittedValues, deal, errorList) => {
       const schema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
       const validation = schema.validate(coverEndDateYear);
 
-      // error object does not exist if no errors in validation
-      if (validation.error) {
-        newErrorList.coverEndDate = {
-          text: 'The year for the Cover End Date must include 4 numbers',
-          order: orderNumber(newErrorList),
-        };
-      }
-
       const formattedDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
       const nowDate = moment().format('YYYY-MM-DD');
       if (moment(formattedDate).isBefore(nowDate)) {
         newErrorList.coverEndDate = {
           text: 'Cover End Date must be today or in the future',
+          order: orderNumber(newErrorList),
+        };
+      }
+
+      // error object does not exist if no errors in validation
+      if (validation.error) {
+        newErrorList.coverEndDate = {
+          text: 'The year for the Cover End Date must include 4 numbers',
           order: orderNumber(newErrorList),
         };
       }

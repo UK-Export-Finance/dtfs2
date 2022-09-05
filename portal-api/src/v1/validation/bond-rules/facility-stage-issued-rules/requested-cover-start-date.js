@@ -29,18 +29,13 @@ module.exports = (submittedValues, deal, errorList) => {
     const nowDate = moment().startOf('day');
 
     if (!dealHasBeenSubmitted) {
+      // validates the coverStartDateYear is 4 digits long and only numbers and returns error in validation if not
       const schema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
       const validation = schema.validate(requestedCoverStartDateYear);
 
       if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
         newErrorList.requestedCoverStartDate = {
           text: 'Requested Cover Start Date must be on the application submission date or in the future',
-          order: orderNumber(newErrorList),
-        };
-      } else if (validation.error) {
-        // error object does not exist if no errors in validation
-        newErrorList.requestedCoverStartDate = {
-          text: 'The year for the requested Cover Start Date must include 4 numbers',
           order: orderNumber(newErrorList),
         };
       } else if (!canEnterDateGreaterThan3Months) {
@@ -62,6 +57,13 @@ module.exports = (submittedValues, deal, errorList) => {
             order: orderNumber(newErrorList),
           };
         }
+      }
+      if (validation.error && requestedCoverStartDateYear) {
+        // error object does not exist if no errors in validation
+        newErrorList.requestedCoverStartDate = {
+          text: 'The year for the requested Cover Start Date must include 4 numbers',
+          order: orderNumber(newErrorList),
+        };
       }
     }
   } else if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
