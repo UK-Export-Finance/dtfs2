@@ -1,4 +1,5 @@
 const moment = require('moment');
+const Joi = require('joi');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 const {
   dateHasSomeValues,
@@ -33,6 +34,17 @@ module.exports = (submittedValues, deal, errorList) => {
           text: 'Requested Cover Start Date must be on the application submission date or in the future',
           order: orderNumber(newErrorList),
         };
+
+        const schema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
+        const validation = schema.validate(requestedCoverStartDateYear);
+
+        // error object does not exist if no errors in validation
+        if (validation.error) {
+          newErrorList.requestedCoverStartDate = {
+            text: 'The year for the requested Cover Start Date must include 4 numbers',
+            order: orderNumber(newErrorList),
+          };
+        }
       } else if (!canEnterDateGreaterThan3Months) {
         const MAX_MONTHS_FROM_NOW = 3;
 
