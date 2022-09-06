@@ -378,7 +378,13 @@ context('Case tasks - AIN deal', () => {
 
     firstTask = pages.tasksPage.tasks.row(1, 1);
 
-    const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'short', day: '2-digit' });
+    const now = new Date();
+    let expectedDate = [
+      now.toLocaleDateString('en-GB', { day: '2-digit' }),
+      now.toLocaleDateString('en-GB', { month: 'short' }).substr(0, 3),
+      now.toLocaleDateString('en-GB', { year: 'numeric' }),
+    ];
+    expectedDate = expectedDate.join(' ');
 
     firstTask.dateStarted().invoke('text').then((text) => {
       expect(text.trim()).to.equal(expectedDate);

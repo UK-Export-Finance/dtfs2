@@ -96,7 +96,8 @@ context('Portal to TFM deal submission', () => {
       const valueinGBP = value.text().split(' ');
       // removes commas
       const exposureValue = parseFloat(valueinGBP[1].replace(/,/g, '')) * (issuedBond.coveredPercentage / 100);
-      facilityRow.facilityExposure().contains(`GBP ${exposureValue.toFixed(2)}`);
+      // Math.trunc() as we need the value of exposure before the decimal point (no rounding)
+      facilityRow.facilityExposure().contains(`GBP ${Math.trunc(exposureValue)}`);
     });
 
     // contains exposure to 2 decimal places (not rounded)
@@ -133,7 +134,8 @@ context('Portal to TFM deal submission', () => {
       const valueinGBP = value.text().split(' ');
       // removes commas
       const exposureValue = parseFloat(valueinGBP[1].replace(/,/g, '')) * (issuedLoan.coveredPercentage / 100);
-      facilityRow.facilityExposure().contains(`GBP ${exposureValue.toFixed(2)}`);
+      // Math.trunc() as we need the value of exposure before the decimal point (no rounding)
+      facilityRow.facilityExposure().contains(`GBP ${Math.trunc(exposureValue)}`);
     });
 
     facilityRow.facilityId().click();
