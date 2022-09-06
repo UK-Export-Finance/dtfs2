@@ -172,6 +172,22 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
+
+        describe('when requestedCoverStartDate year is not 4 numbers', () => {
+          it('should return validationError', async () => {
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': '23',
+              'requestedCoverStartDate-month': '09',
+              'requestedCoverStartDate-year': '22',
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
+
+            const expectedText = 'The year for the requested Cover Start Date must include 4 numbers';
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
       });
 
       describe('when deal is MIA with approved deal status', () => {
@@ -239,6 +255,22 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
           });
         });
 
+        describe('when requestedCoverStartDate year is not 4 numbers', () => {
+          it('should return validationError', async () => {
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': '23',
+              'requestedCoverStartDate-month': '09',
+              'requestedCoverStartDate-year': '22',
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
+
+            const expectedText = 'The year for the requested Cover Start Date must include 4 numbers';
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
+
         describe('when eligibility criteria 15 answer is `false`', () => {
           it('should NOT return validationError when date is greater than 3 months', async () => {
             const dealWithEligibilityCriteria15False = {
@@ -299,6 +331,22 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
 
             const formattedManualInclusionNoticeSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate)).format('Do MMMM YYYY');
             const expectedText = `Requested Cover Start Date must be after ${formattedManualInclusionNoticeSubmissionDate}`;
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
+
+        describe('when requestedCoverStartDate year is not 4 numbers', () => {
+          it('should return validationError', async () => {
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': '23',
+              'requestedCoverStartDate-month': '09',
+              'requestedCoverStartDate-year': '22',
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
+
+            const expectedText = 'The year for the requested Cover Start Date must include 4 numbers';
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
