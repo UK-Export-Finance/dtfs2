@@ -20,7 +20,7 @@ exports.queryAllFacilities = async (queryParams) => {
     // finds latest completed amendment tfm object with mapped values
     const latestCompletedAmendment = findLatestCompletedAmendment(item?.amendments);
 
-    let facilityCoverEndDate = '-';
+    let facilityCoverEndDate = '';
     let coverEndDateEpoch = '';
     // regex to check date is correct format - YYYY-MM-DD
     const dateRegex = /^\d\d\d\d-\d\d-\d\d/;
