@@ -1,4 +1,5 @@
 const moment = require('moment');
+const Joi = require('joi');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 const {
   dateHasSomeValues,
@@ -26,6 +27,9 @@ module.exports = (submittedValues, deal, errorList) => {
 
   if (requestedCoverStartDateTimestamp) {
     const nowDate = moment().startOf('day');
+    // validates the coverStartDateYear is 4 digits long and only numbers and returns error in validation if not
+    const schema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
+    const validation = schema.validate(requestedCoverStartDateYear);
 
     if (!dealHasBeenSubmitted) {
       if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
@@ -52,6 +56,12 @@ module.exports = (submittedValues, deal, errorList) => {
             order: orderNumber(newErrorList),
           };
         }
+      }
+      if (validation.error && requestedCoverStartDateYear) {
+        newErrorList.requestedCoverStartDate = {
+          text: 'The year for the requested Cover Start Date must include 4 numbers',
+          order: orderNumber(newErrorList),
+        };
       }
     }
   } else if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
