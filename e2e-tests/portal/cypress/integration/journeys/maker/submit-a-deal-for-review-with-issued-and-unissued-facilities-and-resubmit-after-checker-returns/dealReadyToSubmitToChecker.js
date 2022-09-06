@@ -1,6 +1,7 @@
 const { nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 
 const now = new Date().valueOf;
+const nowFormatted = new Date();
 const nowPlusMonth = nowPlusMonths(1);
 
 const deal = {
@@ -198,9 +199,10 @@ const deal = {
       bondType: 'Bid bond',
       facilityStage: 'Issued',
       hasBeenIssued: true,
-      'requestedCoverStartDate-day': '',
-      'requestedCoverStartDate-month': '',
-      'requestedCoverStartDate-year': '',
+      requestedCoverStartDate: nowFormatted.valueOf().toString(),
+      'requestedCoverStartDate-day': nowFormatted.getDate().toString(),
+      'requestedCoverStartDate-month': (nowFormatted.getMonth() + 1).toString(),
+      'requestedCoverStartDate-year': nowFormatted.getFullYear().toString(),
       'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
       'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
       'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
@@ -240,9 +242,10 @@ const deal = {
       createdDate: now,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
-      'requestedCoverStartDate-day': '',
-      'requestedCoverStartDate-month': '',
-      'requestedCoverStartDate-year': '',
+      requestedCoverStartDate: nowFormatted.valueOf().toString(),
+      'requestedCoverStartDate-day': nowFormatted.getDate().toString(),
+      'requestedCoverStartDate-month': (nowFormatted.getMonth() + 1).toString(),
+      'requestedCoverStartDate-year': nowFormatted.getFullYear().toString(),
       'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
       'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
       'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),

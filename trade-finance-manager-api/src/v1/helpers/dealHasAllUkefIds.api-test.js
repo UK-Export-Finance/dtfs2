@@ -62,8 +62,7 @@ describe('dealHasAllUkefIds()', () => {
     expect(result.status).toEqual(true);
   });
 
-  // TODO: remove once amendments is in place
-  it('Should return FALSE when a deal has been migrated', async () => {
+  it('Should treat migrated deal as a normal deal with pre-generated UKEF IDs', async () => {
     const deal = MOCK_DEAL_GEF;
     deal.dataMigration = { drupalDealId: '1234' };
     const mockDeal = {
@@ -82,7 +81,6 @@ describe('dealHasAllUkefIds()', () => {
     };
 
     const result = await dealHasAllUkefIds(mockDeal._id);
-    expect(result.status).toEqual(false);
-    expect(result.message).toEqual('Migrated deal');
+    expect(result.status).toEqual(true);
   });
 });

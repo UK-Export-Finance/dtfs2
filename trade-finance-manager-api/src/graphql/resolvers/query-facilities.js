@@ -2,6 +2,7 @@
 const { format, getUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
 const { findLatestCompletedAmendment } = require('../helpers/amendment.helpers');
+const facilityValueFormatted = require('../helpers/facilityValueFormatted.helper');
 const { getAllFacilities } = require('../../v1/controllers/facility.controller');
 
 // list all facilities from the database
@@ -40,7 +41,8 @@ exports.queryAllFacilities = async (queryParams) => {
     // if amendment, then willset relevant values based on amendment
     if (latestCompletedAmendment?.value) {
       const { value, currency } = latestCompletedAmendment.value;
-      currencyAndValue = `${currency} ${commaNumber(value)}`;
+      const formattedValue = facilityValueFormatted(value);
+      currencyAndValue = `${currency} ${commaNumber(formattedValue)}`;
       facilityValue = parseInt(value, 10);
     }
 
