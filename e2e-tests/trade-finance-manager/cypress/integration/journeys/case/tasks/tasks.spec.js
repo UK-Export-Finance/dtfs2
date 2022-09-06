@@ -67,7 +67,7 @@ context('Case tasks - AIN deal', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
-    pages.tasksPage.tasksHeading().contains('Tasks for this deal');
+    pages.tasksPage.tasksHeading().contains('Tasks');
     pages.tasksPage.tasksHeading().invoke('attr', 'aria-label').then((label) => {
       expect(label).to.equal('Tasks for this deal');
     });
@@ -347,7 +347,6 @@ context('Case tasks - AIN deal', () => {
 
     pages.tasksPage.filterRadioYourTeam().click();
 
-    // const secondTask = pages.tasksPage.tasks.row(1, 2);
     let firstTask = pages.tasksPage.tasks.row(1, 1);
 
     //---------------------------------------------------------------
