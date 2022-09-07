@@ -50,7 +50,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
         const { details } = deal.dealSnapshot;
         submissionDate = details.submissionDate;
       } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-        submissionDate = deal.submissionDate;
+        submissionDate = deal.dealSnapshot.submissionDate;
       }
 
       // Amend `facility` and `facility.tfm`
