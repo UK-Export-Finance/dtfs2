@@ -8,6 +8,20 @@ describe('amendmentmentYearValidation()', () => {
     expect(result).toEqual(true);
   });
 
+  it('should return true when year is 1 number long', () => {
+    const year = '2';
+    const result = amendmentmentYearValidation(year);
+
+    expect(result).toEqual(true);
+  });
+
+  it('should return true when year is 3 numbers long', () => {
+    const year = '202';
+    const result = amendmentmentYearValidation(year);
+
+    expect(result).toEqual(true);
+  });
+
   it('should return true when year includes a letter', () => {
     const year = '2O22';
     const result = amendmentmentYearValidation(year);

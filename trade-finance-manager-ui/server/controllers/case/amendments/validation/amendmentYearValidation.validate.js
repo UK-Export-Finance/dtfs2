@@ -11,11 +11,8 @@ const amendmentmentYearValidation = (year) => {
   const schema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
   const validation = schema.validate(year);
 
-  if (validation.error) {
-    return true;
-  }
-
-  return false;
+  // return true if validation error exists, or false
+  return validation.error ? true : false;
 };
 
 module.exports = amendmentmentYearValidation;

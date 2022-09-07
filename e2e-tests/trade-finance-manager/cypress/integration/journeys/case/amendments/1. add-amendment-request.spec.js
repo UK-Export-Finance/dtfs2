@@ -129,6 +129,24 @@ context('Amendments - Request date', () => {
 
     amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type('20 22');
+
+    amendmentsPage.continueAmendment().click();
+
+    amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type('2 22');
+
+    amendmentsPage.continueAmendment().click();
+
+    amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
   });
 
   it('should take you back to amendments page when clicking cancel', () => {

@@ -118,6 +118,24 @@ context('Amendments - Effective date', () => {
 
     amendmentsPage.errorSummary().contains('The year for the effective date must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
+
+    amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('20 22');
+
+    amendmentsPage.continueAmendment().click();
+
+    amendmentsPage.errorSummary().contains('The year for the effective date must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
+
+    amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('2 22');
+
+    amendmentsPage.continueAmendment().click();
+
+    amendmentsPage.errorSummary().contains('The year for the effective date must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
   });
 
   it('should continue to the `What would the bank like to change?` page', () => {

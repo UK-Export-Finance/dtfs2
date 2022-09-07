@@ -93,6 +93,18 @@ context('Amendments - Cover End Date', () => {
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type('2O22');
     amendmentsPage.continueAmendment().click();
     amendmentsPage.errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
+
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(20);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(10);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type('20 22');
+    amendmentsPage.continueAmendment().click();
+    amendmentsPage.errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
+
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(20);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(10);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type('2 22');
+    amendmentsPage.continueAmendment().click();
+    amendmentsPage.errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
   });
 
   it('should continue to `Check your answers` page if the cover end date is valid', () => {
