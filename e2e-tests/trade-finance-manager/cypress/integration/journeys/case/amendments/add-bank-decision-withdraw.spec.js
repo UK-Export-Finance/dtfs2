@@ -187,6 +187,15 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     amendmentsPage.amendmentBankDecisionReceivedDateHint().contains('For example, 31 3 1980');
 
     amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('22');
+
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/received-date');
+    amendmentsPage.errorSummary().contains('The year must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+
+    amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
     amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('06');
     amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2022');
 

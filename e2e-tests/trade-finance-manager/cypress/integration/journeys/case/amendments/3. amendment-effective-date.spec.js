@@ -80,6 +80,46 @@ context('Amendments - Effective date', () => {
     amendmentsPage.errorMessage().contains('Enter the date the amendment is effective from');
   });
 
+  it('should return errors when entering year in wrong format', () => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+    facilityPage.facilityTabAmendments().click();
+    amendmentsPage.continueAmendmentButton().should('exist');
+    amendmentsPage.continueAmendmentButton().contains('Continue with amendment request 1');
+    amendmentsPage.continueAmendmentButton().click();
+    cy.url().should('contain', 'request-date');
+
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', 'request-approval');
+
+    amendmentsPage.amendmentRequestApprovalNo().click();
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', 'amendment-effective-date');
+
+    amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('22');
+
+    amendmentsPage.continueAmendment().click();
+
+    amendmentsPage.errorSummary().contains('The year for the effective date must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
+
+    amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('2O22');
+
+    amendmentsPage.continueAmendment().click();
+
+    amendmentsPage.errorSummary().contains('The year for the effective date must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
+  });
+
   it('should continue to the `What would the bank like to change?` page', () => {
     cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
