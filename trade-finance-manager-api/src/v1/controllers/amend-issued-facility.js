@@ -5,6 +5,7 @@ const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
 const { calculateGefFacilityFeeRecord } = require('../helpers/calculate-gef-facility-fee-record');
 const { mapCashContingentFacility } = require('../mappings/map-submitted-deal/map-cash-contingent-facility');
 const { mapBssEwcsFacility } = require('../mappings/map-submitted-deal/map-bss-ewcs-facility');
+const { formatDate } = require('../../utils/date');
 
 /**
  * Amend TFM properties of issued facility.
@@ -27,8 +28,10 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
         value,
         tfm: amendmentTfm,
       } = amendment;
-      const { dealType, submissionDate } = deal.dealSnapshot;
+      const { dealType } = deal.dealSnapshot;
+      let submissionDate;
       const { facilitySnapshot, tfm } = facility;
+      let history = [];
       let facilityPremiumSchedule;
       let feeRecord;
       let facilityTfmUpdate;
@@ -41,10 +44,24 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
       delete amendedFacility.facilitySnapshot;
       delete amendedFacility.amendments;
 
+      // Set submission date
+      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+        const { details } = deal.dealSnapshot;
+        submissionDate = details.submissionDate;
+      } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+        submissionDate = deal.submissionDate;
+      }
+
       // Amend `facility` and `facility.tfm`
       if (amendmentTfm) {
         // Set pre-calculated amendment TFM properties (facility.tfm)
         const { amendmentExposurePeriodInMonths, exposure } = amendmentTfm;
+
+        // Extrapolate and delete history object (tfm.history)
+        if (tfm.history) {
+          history = Object.values(tfm.history);
+          delete tfm.history;
+        }
 
         facilityTfmUpdate = {
           ...tfm,
@@ -70,11 +87,24 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
 
         // Facility cover end date
         if (changeCoverEndDate) {
-          amendedFacility = {
-            ...amendedFacility,
-            // Convert non ms-EPOCH to ms-EPOCH
-            coverEndDate: new Date(coverEndDate * 1000),
-          };
+          // Convert non ms-EPOCH to ms-EPOCH
+          const coverEndDateMs = coverEndDate * 1000;
+
+          if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+            const expiryDate = formatDate(coverEndDateMs).split('-');
+
+            amendedFacility = {
+              ...amendedFacility,
+              'coverEndDate-day': expiryDate[2],
+              'coverEndDate-month': expiryDate[1],
+              'coverEndDate-year': expiryDate[0],
+            };
+          } else {
+            amendedFacility = {
+              ...amendedFacility,
+              coverEndDate: new Date(coverEndDateMs),
+            };
+          }
         }
 
         // Map facility
@@ -95,7 +125,9 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
         if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
           facilityPremiumSchedule = await getFacilityPremiumSchedule(
             amendedFacility,
-            exposure.ukefExposureValue,
+            {
+              exposurePeriodInMonths: amendmentExposurePeriodInMonths,
+            },
             facilityGuaranteeDates,
           );
 
@@ -110,6 +142,13 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
             feeRecord,
           };
         }
+
+        // Save TFM in `tfm.history`
+        history.push(tfm);
+        facilityTfmUpdate = {
+          ...facilityTfmUpdate,
+          history,
+        };
 
         // Updated `facility.tfm` property
         await api.updateFacility(facility._id, facilityTfmUpdate);
