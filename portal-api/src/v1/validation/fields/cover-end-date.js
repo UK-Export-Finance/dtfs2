@@ -1,4 +1,5 @@
 const moment = require('moment');
+const Joi = require('joi');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 const {
   dateHasAllValues,
@@ -16,12 +17,23 @@ module.exports = (submittedValues, deal, errorList) => {
 
   if (isReadyForValidation(deal, submittedValues)) {
     if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
+      // schema to validate that the year is 4 digits long and only numbers
+      const schema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
+      const validation = schema.validate(coverEndDateYear);
+
       const formattedDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
       const nowDate = moment().format('YYYY-MM-DD');
-
       if (moment(formattedDate).isBefore(nowDate)) {
         newErrorList.coverEndDate = {
           text: 'Cover End Date must be today or in the future',
+          order: orderNumber(newErrorList),
+        };
+      }
+
+      // error object does not exist if no errors in validation
+      if (validation.error) {
+        newErrorList.coverEndDate = {
+          text: 'The year for the Cover End Date must include 4 numbers',
           order: orderNumber(newErrorList),
         };
       }

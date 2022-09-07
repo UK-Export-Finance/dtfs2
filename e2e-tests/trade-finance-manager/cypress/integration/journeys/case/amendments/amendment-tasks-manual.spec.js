@@ -125,7 +125,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(1, 3).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(2, 1).title().contains('Complete an adverse history check');
-    pages.tasksPage.tasks.row(2, 1).team().contains(USER_TEAMS.UNDERWRITER_MANAGERS);
+    pages.tasksPage.tasks.row(2, 1).team().contains(USER_TEAMS.UNDERWRITERS);
     pages.tasksPage.tasks.row(2, 1).status().contains('Cannot start yet');
 
     pages.tasksPage.tasks.row(3, 1).title().contains('Check exposure');
