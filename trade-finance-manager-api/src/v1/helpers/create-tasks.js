@@ -122,6 +122,10 @@ const createTasks = (submissionType, additionalTasks) => {
     tasks = createTasksMIA(additionalTasks);
   }
 
+  if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
+    tasks = createTasksMIA(additionalTasks);
+  }
+
   return tasks;
 };
 
