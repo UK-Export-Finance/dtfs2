@@ -21,7 +21,7 @@ const NEW_TASK = {
  * @param {Array} additional/special tasks to add to the group
  * @returns {Array} created tasks
  */
-const createGroupTasks = (tasks, groupId, additionalTasks = []) => {
+const createGroupTasks = (tasks, groupId, isMia, additionalTasks = []) => {
   const mappedTasks = [];
   let taskIdCount = 0;
 
@@ -47,12 +47,17 @@ const createGroupTasks = (tasks, groupId, additionalTasks = []) => {
         ...NEW_TASK,
       };
 
+      // if is MIA and migrated, then task set to cannot start
+      if (!(migrationScript && !isMia)) {
+        task.status = CONSTANTS.TASKS.STATUS.CANNOT_START;
+      }
+
       // only the first task in the first group can be started/edited straight away.
       if (groupId === 1 && taskIdCount === 1) {
-        // Set to `false` upon data-migration execution
-        task.canEdit = !migrationScript;
-        // Set to `Completed` upon data-migration execution
-        task.status = migrationScript
+        // Set to `false` upon data-migration execution unless is MIA
+        task.canEdit = !(migrationScript && !isMia);
+        // Set to `Completed` upon data-migration execution unless MIA
+        task.status = migrationScript && !isMia
           ? CONSTANTS.TASKS.STATUS.COMPLETED
           : CONSTANTS.TASKS.STATUS.TO_DO;
       }
@@ -73,7 +78,7 @@ const createTasksAIN = (additionalTasks) => [
   {
     groupTitle: CONSTANTS.TASKS.AIN.GROUP_1.GROUP_TITLE,
     id: 1,
-    groupTasks: createGroupTasks(CONSTANTS.TASKS.AIN.GROUP_1.TASKS, 1, additionalTasks),
+    groupTasks: createGroupTasks(CONSTANTS.TASKS.AIN.GROUP_1.TASKS, 1, false, additionalTasks),
   },
 ];
 
@@ -82,26 +87,26 @@ const createTasksAIN = (additionalTasks) => [
  * @param {Array} additional/special tasks to add to the group
  * @returns {Array} created task groups
  */
-const createTasksMIA = (additionalTasks) => [
+const createTasksMIA = (additionalTasks, isMia) => [
   {
     groupTitle: CONSTANTS.TASKS.MIA.GROUP_1.GROUP_TITLE,
     id: 1,
-    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_1.TASKS, 1, additionalTasks),
+    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_1.TASKS, 1, isMia, additionalTasks),
   },
   {
     groupTitle: CONSTANTS.TASKS.MIA.GROUP_2.GROUP_TITLE,
     id: 2,
-    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_2.TASKS, 2, additionalTasks),
+    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_2.TASKS, 2, isMia, additionalTasks),
   },
   {
     groupTitle: CONSTANTS.TASKS.MIA.GROUP_3.GROUP_TITLE,
     id: 3,
-    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_3.TASKS, 3, additionalTasks),
+    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_3.TASKS, 3, isMia, additionalTasks),
   },
   {
     groupTitle: CONSTANTS.TASKS.MIA.GROUP_4.GROUP_TITLE,
     id: 4,
-    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_4.TASKS, 4, additionalTasks),
+    groupTasks: createGroupTasks(CONSTANTS.TASKS.MIA.GROUP_4.TASKS, 4, isMia, additionalTasks),
   },
 ];
 
@@ -119,11 +124,12 @@ const createTasks = (submissionType, additionalTasks) => {
   }
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-    tasks = createTasksMIA(additionalTasks);
+    // as MIA, then isMia set to true
+    tasks = createTasksMIA(additionalTasks, true);
   }
 
   if (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN) {
-    tasks = createTasksMIA(additionalTasks);
+    tasks = createTasksMIA(additionalTasks, false);
   }
 
   return tasks;
