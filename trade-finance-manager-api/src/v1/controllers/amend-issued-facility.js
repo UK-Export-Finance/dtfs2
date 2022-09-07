@@ -35,6 +35,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
       let facilityPremiumSchedule;
       let feeRecord;
       let facilityTfmUpdate;
+      let { facilityGuaranteeDates } = tfm;
       let amendedFacility = {
         ...facility,
         ...facilitySnapshot,
@@ -114,12 +115,14 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
           amendedFacility = mapCashContingentFacility(amendedFacility);
         }
 
+        if (changeCoverEndDate) {
         // facility.tfm.facilityGuaranteeDates
-        const facilityGuaranteeDates = getGuaranteeDates(amendedFacility, submissionDate);
-        facilityTfmUpdate = {
-          ...facilityTfmUpdate,
-          facilityGuaranteeDates,
-        };
+          facilityGuaranteeDates = getGuaranteeDates(amendedFacility, submissionDate);
+          facilityTfmUpdate = {
+            ...facilityTfmUpdate,
+            facilityGuaranteeDates,
+          };
+        }
 
         // facility.tfm.feeRecord or facility.tfm.premiumSchedule
         if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
