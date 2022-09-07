@@ -70,6 +70,42 @@ context('Amendments - automatic approval journey', () => {
 
       amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
       amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentRequestYearInput().clear().focused().type('22');
+
+      amendmentsPage.continueAmendment().click();
+
+      amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+      amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+      amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentRequestYearInput().clear().focused().type('2O22');
+
+      amendmentsPage.continueAmendment().click();
+
+      amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+      amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+      amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentRequestYearInput().clear().focused().type('20 22');
+
+      amendmentsPage.continueAmendment().click();
+
+      amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+      amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+      amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentRequestYearInput().clear().focused().type('2 22');
+
+      amendmentsPage.continueAmendment().click();
+
+      amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+      amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+      amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
       amendmentsPage.continueAmendment().click();
 
@@ -78,6 +114,24 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentRequestApprovalNo().click();
       amendmentsPage.continueAmendment().click();
       cy.url().should('contain', 'amendment-effective-date');
+
+      amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
+      amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('22');
+
+      amendmentsPage.continueAmendment().click();
+
+      amendmentsPage.errorSummary().contains('The year for the effective date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
+
+      amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
+      amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('2O22');
+
+      amendmentsPage.continueAmendment().click();
+
+      amendmentsPage.errorSummary().contains('The year for the effective date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
 
       amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.fourDaysAgoDay);
       amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.fourDaysAgoMonth);

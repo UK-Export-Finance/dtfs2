@@ -1,6 +1,7 @@
 const { set, getUnixTime } = require('date-fns');
 
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
+const amendmentmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  * @param {Object} body
@@ -35,6 +36,14 @@ const amendmentBankDecisionDateValidation = async (body, type, message) => {
       errRef: type,
       errMsg: message,
     });
+  } else if (amendmentRequestIsFullyComplete) {
+    // if year in wrong format
+    if (amendmentmentYearValidation(amendmentBankDecisionDateYear)) {
+      amendmentBankDecisionDateErrors.push({
+        errRef: type,
+        errMsg: 'The year must include 4 numbers',
+      });
+    }
   }
 
   if (amendmentRequestIsFullyComplete) {

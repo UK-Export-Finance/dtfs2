@@ -1,5 +1,6 @@
 const { isAfter, isBefore, set, getUnixTime } = require('date-fns');
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
+const amendmentmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  *
@@ -71,6 +72,13 @@ const amendmentRequestDateValidation = async (body, facility) => {
       amendmentRequestDateErrors.push({
         errRef: 'amendmentRequestDate',
         errMsg: 'Amendment request date cannot be before the notice submission date',
+      });
+    }
+    // if year in wrong format
+    if (amendmentmentYearValidation(amendmentRequestDateYear)) {
+      amendmentRequestDateErrors.push({
+        errRef: 'amendmentRequestDate',
+        errMsg: 'The year for the amendment request date must include 4 numbers',
       });
     }
   }
