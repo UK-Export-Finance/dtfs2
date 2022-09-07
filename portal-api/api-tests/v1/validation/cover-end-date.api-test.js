@@ -46,6 +46,40 @@ describe('validation - coverEndDate on ready for checkers approval', () => {
 
       expect(errors).toEqual({});
     });
+
+    it('should throw validation error if coverEndDate is 2 numbers long', () => {
+      const errorList = {};
+
+      const deal = {
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
+      };
+      const submittedValues = {
+        'coverEndDate-day': '23',
+        'coverEndDate-month': '03',
+        'coverEndDate-year': '23',
+      };
+
+      const errors = checkCoverStartDate(submittedValues, deal, errorList);
+
+      expect(errors.coverEndDate.text).toEqual('The year for the Cover End Date must include 4 numbers');
+    });
+
+    it('should throw validation error if coverEndDate is has letters in it', () => {
+      const errorList = {};
+
+      const deal = {
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
+      };
+      const submittedValues = {
+        'coverEndDate-day': '23',
+        'coverEndDate-month': '03',
+        'coverEndDate-year': '2O23',
+      };
+
+      const errors = checkCoverStartDate(submittedValues, deal, errorList);
+
+      expect(errors.coverEndDate.text).toEqual('The year for the Cover End Date must include 4 numbers');
+    });
   });
 
   describe('MIN', () => {
@@ -88,6 +122,40 @@ describe('validation - coverEndDate on ready for checkers approval', () => {
 
       expect(errors).toEqual({});
     });
+
+    it('should throw validation error if coverEndDate is 2 numbers long', () => {
+      const errorList = {};
+
+      const deal = {
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
+      };
+      const submittedValues = {
+        'coverEndDate-day': '23',
+        'coverEndDate-month': '03',
+        'coverEndDate-year': '23',
+      };
+
+      const errors = checkCoverStartDate(submittedValues, deal, errorList);
+
+      expect(errors.coverEndDate.text).toEqual('The year for the Cover End Date must include 4 numbers');
+    });
+
+    it('should throw validation error if coverEndDate contains non numerical characters', () => {
+      const errorList = {};
+
+      const deal = {
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN,
+      };
+      const submittedValues = {
+        'coverEndDate-day': '23',
+        'coverEndDate-month': '03',
+        'coverEndDate-year': '2O23',
+      };
+
+      const errors = checkCoverStartDate(submittedValues, deal, errorList);
+
+      expect(errors.coverEndDate.text).toEqual('The year for the Cover End Date must include 4 numbers');
+    });
   });
 
   describe('MIA', () => {
@@ -129,6 +197,40 @@ describe('validation - coverEndDate on ready for checkers approval', () => {
       const errors = checkCoverStartDate(submittedValues, deal, errorList);
 
       expect(errors.coverEndDate.text).toEqual(errorMessage);
+    });
+
+    it('should throw validation error if coverEndDate is 2 numbers long', () => {
+      const errorList = {};
+
+      const deal = {
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
+      };
+      const submittedValues = {
+        'coverEndDate-day': '23',
+        'coverEndDate-month': '03',
+        'coverEndDate-year': '23',
+      };
+
+      const errors = checkCoverStartDate(submittedValues, deal, errorList);
+
+      expect(errors.coverEndDate.text).toEqual('The year for the Cover End Date must include 4 numbers');
+    });
+
+    it('should throw validation error if coverEndDate contains non numerical characters', () => {
+      const errorList = {};
+
+      const deal = {
+        submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA,
+      };
+      const submittedValues = {
+        'coverEndDate-day': '23',
+        'coverEndDate-month': '03',
+        'coverEndDate-year': '2O23',
+      };
+
+      const errors = checkCoverStartDate(submittedValues, deal, errorList);
+
+      expect(errors.coverEndDate.text).toEqual('The year for the Cover End Date must include 4 numbers');
     });
   });
 });
