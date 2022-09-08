@@ -206,10 +206,6 @@ describe('requestDateValidation()', () => {
           errorSummary: [
             {
               href: '#amendmentRequestDate',
-              text: 'Amendment request date cannot be before the notice submission date',
-            },
-            {
-              href: '#amendmentRequestDate',
               text: 'The year for the amendment request date must include 4 numbers',
             },
           ],
@@ -226,10 +222,6 @@ describe('requestDateValidation()', () => {
         amendmentRequestDateYear: '22',
       },
       amendmentRequestDateErrors: [
-        {
-          errRef: 'amendmentRequestDate',
-          errMsg: 'Amendment request date cannot be before the notice submission date',
-        },
         {
           errRef: 'amendmentRequestDate',
           errMsg: 'The year for the amendment request date must include 4 numbers',

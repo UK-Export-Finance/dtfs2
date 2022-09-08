@@ -58,28 +58,33 @@ const amendmentRequestDateValidation = async (body, facility) => {
     const today = new Date();
     let requestDateSet = set(new Date(), { year: amendmentRequestDateYear, month: amendmentRequestDateMonth - 1, date: amendmentRequestDateDay });
     requestDateSet = requestDateSet.setHours(2, 2, 2, 2);
+    let yearCorrectFormat = true;
 
-    // checks amendment date not in the future
-    if (isAfter(requestDateSet, today)) {
-      amendmentRequestDateErrors.push({
-        errRef: 'amendmentRequestDate',
-        errMsg: 'Amendment request date cannot be in the future',
-      });
-    }
-
-    // checks amendment date not before submission date
-    if (isBefore(requestDateSet, submissionDate)) {
-      amendmentRequestDateErrors.push({
-        errRef: 'amendmentRequestDate',
-        errMsg: 'Amendment request date cannot be before the notice submission date',
-      });
-    }
     // if year in wrong format
     if (amendmentmentYearValidation(amendmentRequestDateYear)) {
+      yearCorrectFormat = false;
       amendmentRequestDateErrors.push({
         errRef: 'amendmentRequestDate',
         errMsg: 'The year for the amendment request date must include 4 numbers',
       });
+    }
+
+    if (yearCorrectFormat) {
+    // checks amendment date not in the future
+      if (isAfter(requestDateSet, today)) {
+        amendmentRequestDateErrors.push({
+          errRef: 'amendmentRequestDate',
+          errMsg: 'Amendment request date cannot be in the future',
+        });
+      }
+
+      // checks amendment date not before submission date
+      if (isBefore(requestDateSet, submissionDate)) {
+        amendmentRequestDateErrors.push({
+          errRef: 'amendmentRequestDate',
+          errMsg: 'Amendment request date cannot be before the notice submission date',
+        });
+      }
     }
   }
 
