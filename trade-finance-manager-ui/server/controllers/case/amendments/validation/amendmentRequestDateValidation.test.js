@@ -172,6 +172,126 @@ describe('requestDateValidation()', () => {
     expect(result).toEqual(expected);
   });
 
+  it('returns error if amendment date has 2 numbers for year', async () => {
+    const today = new Date();
+    const future = add(today, { days: 7 });
+
+    const futureDay = format(future, 'dd');
+    const futureMonth = format(future, 'MM');
+
+    const body = {
+      'amendment-request-date-day': futureDay.toString(),
+      'amendment-request-date-month': futureMonth.toString(),
+      'amendment-request-date-year': '22',
+    };
+
+    const mockFacility = {
+      _id: '12345',
+      facilitySnapshot: {
+        _id: '12345',
+        dealId: '4567',
+        dates: {
+          inclusionNoticeReceived: 1650538933299,
+        },
+      },
+      amendments: [],
+    };
+
+    const result = await requestDateValidation.amendmentRequestDateValidation(body, mockFacility);
+
+    const expected = {
+      amendmentRequestDate: result.amendmentRequestDate,
+      errorsObject: {
+        errors: {
+          errorSummary: [
+            {
+              href: '#amendmentRequestDate',
+              text: 'The year for the amendment request date must include 4 numbers',
+            },
+          ],
+          fieldErrors:
+            {
+              amendmentRequestDate: {
+                text: 'The year for the amendment request date must include 4 numbers',
+              },
+            },
+
+        },
+        amendmentRequestDateDay: futureDay.toString(),
+        amendmentRequestDateMonth: futureMonth.toString(),
+        amendmentRequestDateYear: '22',
+      },
+      amendmentRequestDateErrors: [
+        {
+          errRef: 'amendmentRequestDate',
+          errMsg: 'The year for the amendment request date must include 4 numbers',
+        },
+      ],
+    };
+
+    expect(result).toEqual(expected);
+  });
+
+  it('returns error if amendment date has space between numbers for year', async () => {
+    const today = new Date();
+    const future = add(today, { days: 7 });
+
+    const futureDay = format(future, 'dd');
+    const futureMonth = format(future, 'MM');
+
+    const body = {
+      'amendment-request-date-day': futureDay.toString(),
+      'amendment-request-date-month': futureMonth.toString(),
+      'amendment-request-date-year': '2 22',
+    };
+
+    const mockFacility = {
+      _id: '12345',
+      facilitySnapshot: {
+        _id: '12345',
+        dealId: '4567',
+        dates: {
+          inclusionNoticeReceived: 1650538933299,
+        },
+      },
+      amendments: [],
+    };
+
+    const result = await requestDateValidation.amendmentRequestDateValidation(body, mockFacility);
+
+    const expected = {
+      amendmentRequestDate: result.amendmentRequestDate,
+      errorsObject: {
+        errors: {
+          errorSummary: [
+            {
+              href: '#amendmentRequestDate',
+              text: 'The year for the amendment request date must include 4 numbers',
+            },
+          ],
+          fieldErrors:
+            {
+              amendmentRequestDate: {
+                text: 'The year for the amendment request date must include 4 numbers',
+              },
+            },
+
+        },
+        amendmentRequestDateDay: futureDay.toString(),
+        amendmentRequestDateMonth: futureMonth.toString(),
+        amendmentRequestDateYear: '2 22',
+      },
+      amendmentRequestDateErrors: [
+        {
+          errRef: 'amendmentRequestDate',
+          errMsg: 'The year for the amendment request date must include 4 numbers',
+        },
+      ],
+    };
+
+    expect(result).toEqual(expected);
+  });
+
   it('returns no errors if amendment date now', async () => {
     const today = new Date();
 

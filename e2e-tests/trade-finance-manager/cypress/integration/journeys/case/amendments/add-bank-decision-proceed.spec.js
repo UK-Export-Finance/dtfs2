@@ -266,6 +266,42 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.url().should('contain', '/banks-decision/received-date');
     amendmentsPage.errorSummary().contains('Enter the date UKEF received the bank\'s decision');
     amendmentsPage.errorMessage().contains('Enter the date UKEF received the bank\'s decision');
+
+    amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('22');
+
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/received-date');
+    amendmentsPage.errorSummary().contains('The year must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+
+    amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2O22');
+
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/received-date');
+    amendmentsPage.errorSummary().contains('The year must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+
+    amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2 022');
+
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/received-date');
+    amendmentsPage.errorSummary().contains('The year must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+
+    amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2 22');
+
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', '/banks-decision/received-date');
+    amendmentsPage.errorSummary().contains('The year must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
   });
 
   it('should take you to effective date page if date entered correctly', () => {
@@ -310,6 +346,24 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.url().should('contain', '/banks-decision/effective-date');
     amendmentsPage.errorSummary().contains('Enter the date the amendment will be effective from');
     amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
+
+    amendmentsPage.amendmentBankDecisionEffectiveDateDay().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionEffectiveDateMonth().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionEffectiveDateYear().clear().focused().type('22');
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', '/banks-decision/effective-date');
+    amendmentsPage.errorSummary().contains('The year must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
+
+    amendmentsPage.amendmentBankDecisionEffectiveDateDay().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionEffectiveDateMonth().clear().focused().type('05');
+    amendmentsPage.amendmentBankDecisionEffectiveDateYear().clear().focused().type('2O22');
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', '/banks-decision/effective-date');
+    amendmentsPage.errorSummary().contains('The year must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year must include 4 numbers');
   });
 
   it('should take you to check answers page if date entered correctly', () => {

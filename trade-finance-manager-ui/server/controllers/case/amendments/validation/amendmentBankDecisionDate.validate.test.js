@@ -83,6 +83,82 @@ describe('amendmentBankDecisionDateValidation()', () => {
       expect(result).toEqual(expected);
     });
 
+    it('should return an error if the year has a space between numbers', async () => {
+      const body = {
+        'amendment--bank-decision-date-day': '5',
+        'amendment--bank-decision-date-month': '2',
+        'amendment--bank-decision-date-year': '2 22',
+      };
+
+      const result = await amendmentBankDecisionDateValidation(body, type, message);
+
+      const expected = {
+        amendmentBankRequestDate: expect.any(Number),
+        errorsObject: {
+          errors: {
+            errorSummary: [
+              {
+                text: 'The year must include 4 numbers',
+                href: '#bankDecisionDate',
+              },
+            ],
+            fieldErrors: {
+              bankDecisionDate: { text: 'The year must include 4 numbers' },
+            },
+          },
+          amendmentBankDecisionDateDay: '5',
+          amendmentBankDecisionDateMonth: '2',
+          amendmentBankDecisionDateYear: '2 22',
+        },
+        amendmentBankDecisionDateErrors: [
+          {
+            errRef: 'bankDecisionDate',
+            errMsg: 'The year must include 4 numbers',
+          },
+        ],
+      };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should return an error if the year has 2 numbers', async () => {
+      const body = {
+        'amendment--bank-decision-date-day': '5',
+        'amendment--bank-decision-date-month': '2',
+        'amendment--bank-decision-date-year': '22',
+      };
+
+      const result = await amendmentBankDecisionDateValidation(body, type, message);
+
+      const expected = {
+        amendmentBankRequestDate: expect.any(Number),
+        errorsObject: {
+          errors: {
+            errorSummary: [
+              {
+                text: 'The year must include 4 numbers',
+                href: '#bankDecisionDate',
+              },
+            ],
+            fieldErrors: {
+              bankDecisionDate: { text: 'The year must include 4 numbers' },
+            },
+          },
+          amendmentBankDecisionDateDay: '5',
+          amendmentBankDecisionDateMonth: '2',
+          amendmentBankDecisionDateYear: '22',
+        },
+        amendmentBankDecisionDateErrors: [
+          {
+            errRef: 'bankDecisionDate',
+            errMsg: 'The year must include 4 numbers',
+          },
+        ],
+      };
+
+      expect(result).toEqual(expected);
+    });
+
     it('should return an object in the correct format with no errors if date entered correctly', async () => {
       const body = {
         'amendment--bank-decision-date-day': '05',

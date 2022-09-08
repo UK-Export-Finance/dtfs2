@@ -2,6 +2,7 @@ const page = {
   visit: () => cy.visit('/dashboard/deals/0'),
   tableHeader: (column) => cy.get(`[data-cy="deal__header--${column}"]`),
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
+  exporterButton: () => cy.get('[data-cy="deal__header--exporter-button"]'),
   row: {
     exporter: (id) => cy.get(`[data-cy="deal__exporter--${id}"]`),
     bankRef: (id) => cy.get(`[data-cy="deal__bankRef--bankInternalRefName${id}"]`),
