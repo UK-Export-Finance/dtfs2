@@ -103,6 +103,52 @@ context('Amendments - Request date', () => {
     amendmentsPage.errorMessage().contains('Amendment request date cannot be in the future');
   });
 
+  it('should return errors when clicking continue on year in wrong format', () => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[0]._id;
+
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+    facilityPage.facilityTabAmendments().click();
+    amendmentsPage.addAmendmentButton().click();
+
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type('22');
+
+    amendmentsPage.continueAmendment().click();
+
+    amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type('2O22');
+
+    amendmentsPage.continueAmendment().click();
+
+    amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type('20 22');
+
+    amendmentsPage.continueAmendment().click();
+
+    amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type('2 22');
+
+    amendmentsPage.continueAmendment().click();
+
+    amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+    amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+  });
+
   it('should take you back to amendments page when clicking cancel', () => {
     cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
