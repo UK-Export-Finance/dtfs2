@@ -1,5 +1,6 @@
 const api = require('../api');
 const acbs = require('./acbs.controller');
+const { amendIssuedFacility } = require('./amend-issued-facility');
 const { createAmendmentTasks, updateAmendmentTasks } = require('../helpers/create-tasks-amendment.helper');
 const { isRiskAnalysisCompleted } = require('../helpers/tasks');
 const {
@@ -270,8 +271,11 @@ const updateFacilityAmendment = async (req, res) => {
 
       // Amendment null & property existence check
       if (facility._id && amendment && tfmDeal.tfm) {
-        // ACBS Interaction
+        // TFM Facility update + ACBS Interaction
         if (canSendToAcbs(amendment)) {
+          // Amend facility TFM properties
+          amendIssuedFacility(amendment, facility, tfmDeal);
+          // Amend facility ACBS records
           acbs.amendAcbsFacility(amendment, facility, deal);
         }
       }
