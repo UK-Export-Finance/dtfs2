@@ -33,7 +33,7 @@ const getDeal = async (id, tasksFilters, activityFilters) => {
     console.error('TFM UI - GraphQL error querying deal ', response.errors || response.networkError.result.errors);
   }
 
-  return response.data.deal;
+  return response?.data?.deal;
 };
 
 const getFacilities = async (queryParams) => {
