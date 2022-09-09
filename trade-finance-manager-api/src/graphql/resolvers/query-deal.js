@@ -4,20 +4,25 @@ const { filterTasks } = require('./filters/filterTasks');
 const { filterActivities } = require('./filters/filterActivities');
 
 const queryDeal = async ({ params }) => {
-  const { _id, tasksFilters, activityFilters } = params;
+  try {
+    const { _id, tasksFilters, activityFilters } = params;
 
-  const deal = await findOneTfmDeal(_id);
+    const deal = await findOneTfmDeal(_id);
 
-  const filtered = {
-    ...deal,
-    tfm: {
-      ...deal.tfm,
-      tasks: filterTasks(deal.tfm.tasks, tasksFilters),
-      activities: filterActivities(deal.tfm.activities, activityFilters),
-    },
-  };
+    const filtered = {
+      ...deal,
+      tfm: {
+        ...deal.tfm,
+        tasks: filterTasks(deal.tfm.tasks, tasksFilters),
+        activities: filterActivities(deal.tfm.activities, activityFilters),
+      },
+    };
 
-  return dealReducer(filtered);
+    return dealReducer(filtered);
+  } catch (e) {
+    console.error('Unable to resolve GQL queryDeal: ', { e });
+    return null;
+  }
 };
 
 module.exports = queryDeal;
