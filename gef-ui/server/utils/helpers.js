@@ -487,6 +487,15 @@ const pastDate = ({ day, month, year }) => {
   return input < now;
 };
 
+// checks that both dates are the same
+const sameDate = ({ day, month, year }, coverEndDate) => {
+  const input = getEpoch({ day, month, year });
+  // converts coverEndDate to epoch value
+  const coverEndDateValue = new Date(coverEndDate).valueOf();
+
+  return input === coverEndDateValue;
+};
+
 const futureDateInRange = ({ day, month, year }, days) => {
   if (!pastDate({ day, month, year })) {
     const input = getEpoch({ day, month, year });
@@ -546,6 +555,7 @@ module.exports = {
   summaryItemsConditions,
   displayTaskComments,
   pastDate,
+  sameDate,
   futureDateInRange,
   displayChangeSupportingInfo,
   canUpdateUnissuedFacilitiesCheck,

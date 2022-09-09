@@ -14,6 +14,7 @@ import {
   summaryItemsConditions,
   displayTaskComments,
   pastDate,
+  sameDate,
   futureDateInRange,
   displayChangeSupportingInfo,
   canUpdateUnissuedFacilitiesCheck,
@@ -1411,6 +1412,18 @@ describe('pastDate', () => {
   it('Should return FALSE for the specified date', () => {
     const date = new Date();
     expect(pastDate({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() })).toEqual(false);
+  });
+});
+
+describe('sameDate()', () => {
+  it('should return TRUE if dates are the same', () => {
+    const coverEndDate = new Date('2022-05-25');
+    expect(sameDate({ day: 25, month: 5, year: 2022 }, coverEndDate)).toEqual(true);
+  });
+
+  it('should return FALSE if dates are different', () => {
+    const coverEndDate = new Date('2022-05-26');
+    expect(sameDate({ day: 25, month: 5, year: 2022 }, coverEndDate)).toEqual(false);
   });
 });
 
