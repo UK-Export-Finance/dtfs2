@@ -1,5 +1,6 @@
 const { isSameDay, set, getUnixTime } = require('date-fns');
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
+const amendmentmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  *
@@ -29,6 +30,13 @@ const coverEndDateValidation = (body, currentEndDate) => {
       coverEndDateErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'The new cover end date cannot be the same as the current cover end date',
+      });
+    }
+    // if year in wrong format
+    if (amendmentmentYearValidation(coverEndYear)) {
+      coverEndDateErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'The year for the amendment cover end date must include 4 numbers',
       });
     }
   }
