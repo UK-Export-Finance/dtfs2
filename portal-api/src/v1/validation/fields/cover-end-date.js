@@ -18,8 +18,12 @@ module.exports = (submittedValues, deal, errorList) => {
   if (isReadyForValidation(deal, submittedValues)) {
     if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       // schema to validate that the year is 4 digits long and only numbers
-      const schema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
-      const validation = schema.validate(coverEndDateYear);
+      const coverEndDateYearSchema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
+      const coverEndDateYearValidation = coverEndDateYearSchema.validate(coverEndDateYear);
+      // schema which ensures that coverEnd month and day is only numbers and of length 1 or 2
+      const coverDayMonthSchema = Joi.string().min(1).max(2).pattern(/^[0-9]+$/);
+      const coverMonthValidation = coverDayMonthSchema.validate(coverEndDateMonth);
+      const coverDayValidation = coverDayMonthSchema.validate(coverEndDateDay);
 
       const formattedDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
       const nowDate = moment().format('YYYY-MM-DD');
@@ -30,8 +34,24 @@ module.exports = (submittedValues, deal, errorList) => {
         };
       }
 
+      // check if cover start day only has 2 numbers
+      if (coverDayValidation.error) {
+        newErrorList.coverEndDate = {
+          text: 'The day for the cover end date must only include 1 or 2 numbers',
+          order: orderNumber(newErrorList),
+        };
+      }
+
+      // check if cover end month only has 2 numbers
+      if (coverMonthValidation.error) {
+        newErrorList.coverEndDate = {
+          text: 'The month for the cover end date must only include 1 or 2 numbers',
+          order: orderNumber(newErrorList),
+        };
+      }
+
       // error object does not exist if no errors in validation
-      if (validation.error) {
+      if (coverEndDateYearValidation.error) {
         newErrorList.coverEndDate = {
           text: 'The year for the Cover End Date must include 4 numbers',
           order: orderNumber(newErrorList),
