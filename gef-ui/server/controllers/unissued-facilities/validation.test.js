@@ -164,6 +164,52 @@ describe('validation()', () => {
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
+  it('should return object with errors populated if end date before start date', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = '';
+    mockRequest.body['issue-date-month'] = '';
+    mockRequest.body['issue-date-year'] = '';
+
+    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+
+    // expected facility errors array
+    const expectedFacilityErrors = [
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'The cover end date must be after the cover start date',
+      },
+    ];
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [{
+        href: '#coverEndDate',
+        text: 'The cover end date must be after the cover start date',
+      }],
+      fieldErrors: {
+        coverEndDate: {
+          text: 'The cover end date must be after the cover start date',
+        },
+      },
+    };
+
+    // check that errors are correct
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
   it('should return object with errors populated if start date before issue date', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';

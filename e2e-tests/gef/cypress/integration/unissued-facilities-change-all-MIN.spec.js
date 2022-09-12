@@ -186,6 +186,22 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.twentyEightYear);
       aboutFacilityUnissued.continueButton().click();
       aboutFacilityUnissued.errorSummary().contains('Cover end date cannot be before cover start date');
+
+      // coverEnd date same as coverStartDate
+      aboutFacilityUnissued.coverStartDateDay().clear();
+      aboutFacilityUnissued.coverStartDateMonth().clear();
+      aboutFacilityUnissued.coverStartDateYear().clear();
+      aboutFacilityUnissued.coverEndDateDay().clear();
+      aboutFacilityUnissued.coverEndDateMonth().clear();
+      aboutFacilityUnissued.coverEndDateYear().clear();
+      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.todayDay);
+      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.todayMonth);
+      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.todayYear);
+      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.todayDay);
+      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.todayMonth);
+      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.todayYear);
+      aboutFacilityUnissued.continueButton().click();
+      aboutFacilityUnissued.errorSummary().contains('The cover end date must be after the cover start date');
     });
 
     it('the correct success messages should be displayed after changing facility to issued', () => {

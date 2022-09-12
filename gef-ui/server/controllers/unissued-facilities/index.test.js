@@ -195,9 +195,9 @@ describe('postChangeUnissuedFacility()', () => {
     mockRequest.body['issue-date-month'] = format(now, 'M');
     mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
-    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+    mockRequest.body['cover-start-date-day'] = format(now, 'd');
+    mockRequest.body['cover-start-date-month'] = format(now, 'M');
+    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
 
     mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
@@ -209,7 +209,7 @@ describe('postChangeUnissuedFacility()', () => {
       'xyz',
       {
         coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(now, 'MMMM d, yyyy'),
         issueDate: format(now, 'MMMM d, yyyy'),
         shouldCoverStartOnSubmission: false,
         monthsOfCover: 30,
@@ -449,9 +449,9 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     mockRequest.body['issue-date-month'] = format(now, 'M');
     mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
-    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+    mockRequest.body['cover-start-date-day'] = format(now, 'd');
+    mockRequest.body['cover-start-date-month'] = format(now, 'M');
+    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
 
     mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
     mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
@@ -463,7 +463,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       'xyz',
       {
         coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(now, 'MMMM d, yyyy'),
         issueDate: format(now, 'MMMM d, yyyy'),
         shouldCoverStartOnSubmission: false,
         monthsOfCover: 30,
