@@ -8,6 +8,7 @@ const SUBMISSION_TYPE = require('./submission-type');
 const TRANSACTION_STAGE = require('./transaction-stage');
 const TRANSACTION_TYPE = require('./transaction-type');
 const PORTAL_URL = require('./portalUrl.constant');
+const SORT_BY = require('./sort');
 
 module.exports = {
   DASHBOARD,
@@ -20,4 +21,5 @@ module.exports = {
   TRANSACTION_STAGE,
   TRANSACTION_TYPE,
   PORTAL_URL,
+  SORT_BY,
 };

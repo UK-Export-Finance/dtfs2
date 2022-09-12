@@ -21,6 +21,7 @@ router.get('/dashboard', (req, res) => res.redirect('/dashboard/deals'));
  */
 router.get('/dashboard/deals', (req, res) => {
   req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+  req.session.sortBy = CONSTANTS.DASHBOARD.DEFAULT_SORT;
 
   return res.redirect('/dashboard/deals/0');
 });
