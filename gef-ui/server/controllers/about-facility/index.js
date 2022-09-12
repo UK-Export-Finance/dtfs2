@@ -1,5 +1,5 @@
 const {
-  add, format, isAfter, isBefore, set,
+  add, format, isAfter, isBefore, isEqual, set,
 } = require('date-fns');
 const api = require('../../services/api');
 const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
@@ -210,6 +210,14 @@ const validateAboutFacility = async (req, res) => {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'Cover end date cannot be before cover start date',
+      });
+    }
+
+    // if coverEndDate is the same as the coverStartDate
+    if (isEqual(coverStartDate, coverEndDate)) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'The cover end date must be after the cover start date',
       });
     }
   }
