@@ -489,6 +489,10 @@ const pastDate = ({ day, month, year }) => {
 
 // checks that both dates are the same
 const sameDate = ({ day, month, year }, coverEndDate) => {
+  if (!coverEndDate) {
+    return false;
+  }
+
   const input = getEpoch({ day, month, year });
   // converts coverEndDate to epoch value
   const coverEndDateValue = new Date(coverEndDate).valueOf();

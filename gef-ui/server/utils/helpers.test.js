@@ -1426,6 +1426,11 @@ describe('sameDate()', () => {
     const coverEndDate = new Date('2022-05-26');
     expect(sameDate({ day: 25, month: 5, year: 2022 }, coverEndDate)).toEqual(false);
   });
+
+  it('should return FALSE if coverEndDate is null', () => {
+    const coverEndDate = null;
+    expect(sameDate({ day: 25, month: 5, year: 2022 }, coverEndDate)).toEqual(false);
+  });
 });
 
 describe('futureDateInRange', () => {
