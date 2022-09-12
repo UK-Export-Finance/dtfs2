@@ -4,6 +4,7 @@ const
     validationErrorHandler,
     getEpoch,
     pastDate,
+    sameDate,
     futureDateInRange,
   } = require('../../utils/helpers');
 const { applicationDetails } = require('../application-details');
@@ -44,6 +45,7 @@ const processCoverStartDate = async (req, res) => {
     year,
   } = req.body;
   let facility;
+  const { details } = await api.getFacility(facilityId);
 
   try {
     if (ukefCoverStartDate === undefined) {
@@ -75,6 +77,8 @@ const processCoverStartDate = async (req, res) => {
       } else if (!futureDateInRange({ day, month, year }, 90)) {
         // 3. Check date is with-in three months
         req.errors = setError('ukefCoverStartDateInput', 'Cover date must be within 3 months');
+      } else if (sameDate({ day, month, year }, details.coverEndDate)) {
+        req.errors = setError('ukefCoverStartDateInput', 'The cover start date must be before the cover end date');
       } else {
         // Update facility's cover start date
         facility = await updateCoverStartDate(facilityId, {
@@ -85,9 +89,8 @@ const processCoverStartDate = async (req, res) => {
     }
 
     if (facility) {
-      facility = await api.getFacility(facilityId);
       req.success = {
-        message: `Cover start date for ${facility.details.name} confirmed`,
+        message: `Cover start date for ${details.name} confirmed`,
       };
       req.url = `/gef/application-details/${dealId}/cover-start-date`;
     }
