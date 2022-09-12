@@ -112,9 +112,9 @@ describe('controllers/about-facility', () => {
     it('sets the correct date format using single day, month and year values', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.query.saveAndReturn = 'true';
-      mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
-      mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
-      mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
 
       mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
@@ -124,7 +124,7 @@ describe('controllers/about-facility', () => {
 
       expect(api.updateFacility).toHaveBeenCalledWith('xyz', {
         coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(now, 'MMMM d, yyyy'),
         shouldCoverStartOnSubmission: null,
         monthsOfCover: null,
         name: undefined,
@@ -135,9 +135,9 @@ describe('controllers/about-facility', () => {
     it('calls api.updateApplication with editorId if successfully updates facility', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.query.saveAndReturn = 'true';
-      mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
-      mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
-      mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
 
       mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
@@ -357,6 +357,26 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
       mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+      mockRequest.body['cover-end-date-day'] = format(now, 'd');
+      mockRequest.body['cover-end-date-month'] = format(now, 'M');
+      mockRequest.body['cover-end-date-year'] = format(now, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
+    it('should show error message if coverStartDate is the same as coverEndDate', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
       mockRequest.body['cover-end-date-day'] = format(now, 'd');
       mockRequest.body['cover-end-date-month'] = format(now, 'M');
       mockRequest.body['cover-end-date-year'] = format(now, 'yyyy');
