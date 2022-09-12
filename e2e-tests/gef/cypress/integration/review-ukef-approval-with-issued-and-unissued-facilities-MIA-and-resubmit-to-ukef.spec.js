@@ -217,11 +217,11 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.coverStartDateNo().click();
 
       coverStartDate.coverStartDateDay().clear();
-      coverStartDate.coverStartDateDay().type(dateConstants.tomorrowDay);
+      coverStartDate.coverStartDateDay().type(dateConstants.todayDay);
       coverStartDate.coverStartDateMonth().clear();
-      coverStartDate.coverStartDateMonth().type(dateConstants.tomorrowMonth);
+      coverStartDate.coverStartDateMonth().type(dateConstants.todayMonth);
       coverStartDate.coverStartDateYear().clear();
-      coverStartDate.coverStartDateYear().type(dateConstants.tomorrowYear);
+      coverStartDate.coverStartDateYear().type(dateConstants.todayYear);
 
       coverStartDate.continueButton().click();
 

@@ -101,6 +101,7 @@ describe('controller/ukef-cover-start-date', () => {
     api.getEligibilityCriteria.mockResolvedValue(mockEligibilityCriteriaResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.updateApplication = updateApplicationSpy;
+    api.getFacility.mockResolvedValue(mockFacilityResponse.items[0]);
   });
 
   afterEach(() => {
