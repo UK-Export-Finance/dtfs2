@@ -9,11 +9,12 @@
 const axios = require('axios');
 const CONSTANTS = require('../constant');
 const { getCollection, disconnect } = require('../helpers/database');
-const { datafixes } = require('../helpers/datafixes');
+const { datafixes, datafixesTfm } = require('../helpers/datafixes');
 const { sleep } = require('../helpers/io');
 
 const version = '0.0.1';
 const { TFM_API } = process.env;
+const allTfmDeals = [];
 
 // ******************** DEALS *************************
 
@@ -30,7 +31,6 @@ const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL
  * 2. Property exists check: `dataMigration`
  * @returns {Promise} Response on success, Reject upon a failure.
  */
-
 const deals = async () => {
   console.info('\x1b[33m%s\x1b[0m', `➕ 1. Fetching all ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} deals`, '\n');
 
@@ -102,9 +102,9 @@ const tfm = async (data) => {
         if (inserted.status === 200) {
           counter += 1;
           console.info('\x1b[33m%s\x1b[0m', `${counter}/${data.length} Submitted.`, '\n');
-          Promise.resolve(inserted);
+          allTfmDeals.push(inserted.data);
         } else {
-          Promise.reject(new Error('\x1b[31m%s\x1b[0m', `🚩 Error inserting deal ${inserted}`));
+          throw new Error('\x1b[31m%s\x1b[0m', `🚩 Error inserting deal ${inserted}`);
         }
       })
       .catch((error) => Promise.reject(new Error(`🚩 Error inserting deal ${error}`)));
@@ -116,7 +116,7 @@ const tfm = async (data) => {
     console.info('\x1b[33m%s\x1b[0m', `✅ All ${data.length} deals have been submitted to TFM.`, '\n');
   }
 
-  return Promise.resolve(counter);
+  return Promise.resolve(allTfmDeals);
 };
 
 // ******************** MAIN *************************
@@ -132,6 +132,7 @@ const migrate = () => {
   deals()
     .then((d) => datafixes(d))
     .then((d) => tfm(d))
+    .then((d) => datafixesTfm(d))
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {

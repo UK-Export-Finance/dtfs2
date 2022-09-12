@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
  * Database connection helper functions
  */
@@ -55,6 +56,21 @@ const getCollection = async (name, filter = null, raw = null) => {
 };
 
 /**
+ * Ascertain UKEF deal ID property path
+ * as per deal type.
+ * @param {String} dealType Deal Type
+ * @returns {String} UKEF Deal ID property path
+ */
+const ukefDealIdTfmPath = (dealType) => {
+  switch (dealType) {
+    case 'GEF':
+      return 'dealsnapshot.ukefDealId';
+    default:
+      return 'dealsnapshot.details.ukefDealId';
+  }
+};
+
+/**
  * Portal - Updates collection property(ies)
  * @param {String} ukefDealId UKEF Deal ID
  * @param {Object} updates Properties to update
@@ -87,24 +103,30 @@ const portalDealUpdate = async (id, updates) => {
  * @param {Object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
-const tfmDealUpdate = async (ukefDealId, updates) => {
-  if (!connection) await connect();
-  const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL).updateOne(
-    { 'dealSnapshot.ukefDealId': ukefDealId },
-    {
-      $set: {
-        ...updates,
-      },
-    },
-  );
+const tfmDealUpdate = async (updatedDeal) => {
+  try {
+    const path = ukefDealIdTfmPath(updatedDeal.dealSnapshot.dealType);
+    const ukefDealId = updatedDeal.ukefDealId ?? updatedDeal.dealSnapshot.ukefDealId;
 
-  return new Promise((resolve, reject) => {
-    if (Object.prototype.hasOwnProperty.call(response, 'acknowledged')) {
-      resolve(true);
-    } else {
-      reject(new Error(`Unable to update TFM deal property ${ukefDealId}`));
-    }
-  });
+    delete updatedDeal._id;
+
+    if (!connection) await connect();
+    const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL).updateOne(
+      { [path]: ukefDealId },
+      {
+        $set: {
+          ...updatedDeal,
+        },
+      },
+    ).catch((e) => console.error(e));
+
+    return (response.acknowledged)
+      ? Promise.resolve(true)
+      : Promise.reject(response);
+  } catch (e) {
+    console.error(`TFM deal ${updatedDeal._id} update error: `, { e });
+    return Promise.reject(new Error(false));
+  }
 };
 
 module.exports = {
