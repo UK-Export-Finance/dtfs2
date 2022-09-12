@@ -77,7 +77,7 @@ const processCoverStartDate = async (req, res) => {
       } else if (!futureDateInRange({ day, month, year }, 90)) {
         // 3. Check date is with-in three months
         req.errors = setError('ukefCoverStartDateInput', 'Cover date must be within 3 months');
-      } else if (sameDate({ day, month, year }, details?.coverEndDate)) {
+      } else if (sameDate({ day, month, year }, details.coverEndDate)) {
         req.errors = setError('ukefCoverStartDateInput', 'The cover start date must be before the cover end date');
       } else {
         // Update facility's cover start date
