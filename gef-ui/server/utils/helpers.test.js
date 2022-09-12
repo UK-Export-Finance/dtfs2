@@ -1416,6 +1416,7 @@ describe('pastDate', () => {
 });
 
 describe('sameDate()', () => {
+  // TODO: make test dynamic with now
   it('should return TRUE if dates are the same', () => {
     const coverEndDate = new Date('2022-05-25');
     expect(sameDate({ day: 25, month: 5, year: 2022 }, coverEndDate)).toEqual(true);
