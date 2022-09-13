@@ -9,6 +9,10 @@ const queryDeal = async ({ params }) => {
 
     const deal = await findOneTfmDeal(_id);
 
+    if (!deal) {
+      return null;
+    }
+
     const filtered = {
       ...deal,
       tfm: {
