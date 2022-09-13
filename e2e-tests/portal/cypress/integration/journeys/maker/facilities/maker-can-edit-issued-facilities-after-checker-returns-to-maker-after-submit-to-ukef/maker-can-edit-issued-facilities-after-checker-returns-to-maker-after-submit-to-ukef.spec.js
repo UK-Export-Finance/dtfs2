@@ -82,10 +82,43 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
         expect(text.trim()).to.equal('Facility issued');
       });
 
+      const coverStart = nowPlusMonths(1);
+      const coverStartDay = (coverStart.getDate()).toString();
+      const coverStartMonth = (coverStart.getMonth() + 1).toString();
+      const coverStartYear =  (coverStart.getFullYear()).toString();
+      const coverEnd = nowPlusMonths(2);
+      const coverEndDay = (coverEnd.getDate()).toString();
+      const coverEndMonth = (coverEnd.getMonth() + 1).toString();
+      const coverEndYear =  (coverEnd.getFullYear()).toString();
+
       bondRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
       pages.bondIssueFacility.issuedDateDayInput().clear();
       pages.bondIssueFacility.issuedDateDayInput().type(issuedDateDay);
+      pages.bondIssueFacility.requestedCoverStartDateDayInput().clear().type(`${coverStartDay}-`);
+      pages.bondIssueFacility.submit().click();
+      pages.bondIssueFacility.requestedCoverStartDateError().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
+      pages.bondIssueFacility.requestedCoverStartDateDayInput().clear().type(coverStartDay);
+      pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear().type(`${coverStartMonth}3`);
+      pages.bondIssueFacility.submit().click();
+      pages.bondIssueFacility.requestedCoverStartDateError().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
+      pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear().type(coverStartMonth);
+      pages.bondIssueFacility.requestedCoverStartDateYearInput().clear().type(`${coverStartYear}/`);
+      pages.bondIssueFacility.submit().click();
+      pages.bondIssueFacility.requestedCoverStartDateError().contains('The year for the requested Cover Start Date must include 4 numbers');
+      pages.bondIssueFacility.requestedCoverStartDateYearInput().clear().type(coverStartYear);
+      pages.bondIssueFacility.coverEndDateDayInput().clear().type(`${coverEndDay}-`);
+      pages.bondIssueFacility.submit().click();
+      pages.bondIssueFacility.coverEndDateError().contains('The day for the cover end date must only include 1 or 2 numbers');
+      pages.bondIssueFacility.coverEndDateDayInput().clear().type(coverEndDay);
+      pages.bondIssueFacility.coverEndDateMonthInput().clear().type(`${coverEndMonth}3`);
+      pages.bondIssueFacility.submit().click();
+      pages.bondIssueFacility.coverEndDateError().contains('The month for the cover end date must only include 1 or 2 numbers');
+      pages.bondIssueFacility.coverEndDateMonthInput().clear().type(coverEndMonth);
+      pages.bondIssueFacility.coverEndDateYearInput().clear().type(`${coverEndYear}/`);
+      pages.bondIssueFacility.submit().click();
+      pages.bondIssueFacility.coverEndDateError().contains('The year for the Cover End Date must include 4 numbers');
+      pages.bondIssueFacility.coverEndDateYearInput().clear().type(coverEndYear);
       pages.bondIssueFacility.submit().click();
     });
 
