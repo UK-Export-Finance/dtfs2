@@ -198,7 +198,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
     //   coverStartDate.errorInput().contains('Cover date must be within 3 months');
     // });
 
-    it('entering cover date correctly shows success message and redirects to unissued facilities table and update facilities later', () => {
+    it('entering cover date the same date as the coverEndDate should show an error', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
 
       coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
@@ -211,6 +211,27 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       coverStartDate.coverStartDateMonth().type(dateConstants.tomorrowMonth);
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.tomorrowYear);
+
+      coverStartDate.continueButton().click();
+
+      coverStartDate.errorSummary().contains('The cover start date must be before the cover end date');
+      coverStartDate.coverStartDateNo().click();
+      coverStartDate.errorInput().contains('The cover start date must be before the cover end date');
+    });
+
+    it('entering cover date correctly shows success message and redirects to unissued facilities table and update facilities later', () => {
+      cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
+
+      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+
+      coverStartDate.coverStartDateNo().click();
+
+      coverStartDate.coverStartDateDay().clear();
+      coverStartDate.coverStartDateDay().type(dateConstants.todayDay);
+      coverStartDate.coverStartDateMonth().clear();
+      coverStartDate.coverStartDateMonth().type(dateConstants.todayMonth);
+      coverStartDate.coverStartDateYear().clear();
+      coverStartDate.coverStartDateYear().type(dateConstants.todayYear);
 
       coverStartDate.continueButton().click();
 
