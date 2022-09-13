@@ -102,10 +102,7 @@
             key: 'Approval level required',
             value: ''
           }) }}
-        {% if not userCanEdit %}
-          </div>
-          <div class="govuk-grid-column-one-half">
-        {% endif %}
+
           {{ keyValueArrayGridRow.render({
             key: 'Correspondence Address',
             values:  [ deal.submissionDetails.indemnifierCorrespondenceAddressLine1,
