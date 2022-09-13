@@ -91,16 +91,43 @@ context('About Facility Page', () => {
       aboutFacility.coverStartDateError();
     });
 
+    it('should show an error message if coverStartDate or coverEndDate break validation rules', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      aboutFacility.facilityName().type('Name');
+      aboutFacility.shouldCoverStartOnSubmissionNo().click();
+      aboutFacility.coverStartDateDay().type(`${now.getDate()}-`);
+      aboutFacility.coverStartDateMonth().type(now.getMonth() + 1);
+      aboutFacility.coverStartDateYear().type(now.getFullYear());
+      aboutFacility.coverEndDateDay().type(`${now.getDate()}-`);
+      aboutFacility.coverEndDateMonth().type(now.getMonth() + 1);
+      aboutFacility.coverEndDateYear().type(now.getFullYear());
+      aboutFacility.continueButton().click();
+      aboutFacility.errorSummary().contains('The day for the cover start date must include 1 or 2 numbers');
+      aboutFacility.errorSummary().contains('The day for the cover end date must include 1 or 2 numbers');
+      aboutFacility.coverStartDateError().contains('The day for the cover start date must include 1 or 2 numbers');
+      aboutFacility.coverEndDateError().contains('The day for the cover end date must include 1 or 2 numbers');
+
+      aboutFacility.coverStartDateDay().clear().type(now.getDate());
+      aboutFacility.coverStartDateYear().type('-');
+      aboutFacility.coverEndDateDay().clear().type(now.getDate());
+      aboutFacility.coverEndDateYear().type('2');
+      aboutFacility.continueButton().click();
+      aboutFacility.errorSummary().contains('The year for the cover start date must include 4 numbers');
+      aboutFacility.errorSummary().contains('The year for the cover end date must include 4 numbers');
+      aboutFacility.coverStartDateError().contains('The year for the cover start date must include 4 numbers');
+      aboutFacility.coverEndDateError().contains('The year for the cover end date must include 4 numbers');
+    });
+
     it('should show an error message if coverStartDate and coverEndDate are the same', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.facilityName().type('Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      aboutFacility.coverStartDateDay().type(now.getDate());
-      aboutFacility.coverStartDateMonth().type(now.getMonth() + 1);
-      aboutFacility.coverStartDateYear().type(now.getFullYear());
-      aboutFacility.coverEndDateDay().type(now.getDate());
-      aboutFacility.coverEndDateMonth().type(now.getMonth() + 1);
-      aboutFacility.coverEndDateYear().type(now.getFullYear());
+      aboutFacility.coverStartDateDay().clear().type(now.getDate());
+      aboutFacility.coverStartDateMonth().clear().type(now.getMonth() + 1);
+      aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
+      aboutFacility.coverEndDateDay().clear().type(now.getDate());
+      aboutFacility.coverEndDateMonth().clear().type(now.getMonth() + 1);
+      aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
       aboutFacility.continueButton().click();
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
     });
