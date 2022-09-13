@@ -41,6 +41,7 @@ const aboutFacility = async (req, res) => {
   }
 };
 
+// TODO: split this function up as too long
 const validateAboutFacility = async (req, res) => {
   const {
     body, query, params, session,
@@ -122,11 +123,11 @@ const validateAboutFacility = async (req, res) => {
         const now = new Date();
         const threeMonthsFromNow = add(now, { months: 3 });
         // schema which ensures that coverStartDate year only contains 4 numbers
-        const yearSchema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
+        const yearSchema = Joi.string().length(4).pattern(/^\d+$/).required();
         const yearValidation = yearSchema.validate(coverStartDateYear);
 
         // schema which ensures that coverStart month and day is only numbers and of length 1 or 2
-        const coverDayMonthSchema = Joi.string().min(1).max(2).pattern(/^[0-9]+$/);
+        const coverDayMonthSchema = Joi.string().min(1).max(2).pattern(/^\d+$/);
         const coverStartMonthValidation = coverDayMonthSchema.validate(coverStartDateMonth);
         const coverStartDayValidation = coverDayMonthSchema.validate(coverStartDateDay);
 
@@ -237,11 +238,11 @@ const validateAboutFacility = async (req, res) => {
 
   if (coverEndDateIsFullyComplete) {
     // schema which ensures that coverEndDate year only contains 4 numbers
-    const yearSchema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
+    const yearSchema = Joi.string().length(4).pattern(/^\d+$/).required();
     const yearValidation = yearSchema.validate(coverEndDateYear);
 
     // schema which ensures that coverEnd month and day is only numbers and of length 1 or 2
-    const coverDayMonthSchema = Joi.string().min(1).max(2).pattern(/^[0-9]+$/);
+    const coverDayMonthSchema = Joi.string().min(1).max(2).pattern(/^\d+$/);
     const coverEndMonthValidation = coverDayMonthSchema.validate(coverEndDateMonth);
     const coverEndDayValidation = coverDayMonthSchema.validate(coverEndDateDay);
 
