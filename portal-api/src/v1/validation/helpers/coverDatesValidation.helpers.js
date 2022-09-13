@@ -1,6 +1,20 @@
 const Joi = require('joi');
 
 const coverDatesValidation = (day, month, year) => {
+  // if any dates are missing, return empty error objects
+  if (!day || !month || !year) {
+    return {
+      coverYearValidation: {
+        error: '',
+      },
+      coverMonthValidation: {
+        error: '',
+      },
+      coverDayValidation: {
+        error: '',
+      }
+    };
+  }
   // schema to validate that the year is 4 digits long and only numbers
   const coverYearSchema = Joi.string().length(4).pattern(/^\d+$/).required();
   const coverYearValidation = coverYearSchema.validate(year.toString());

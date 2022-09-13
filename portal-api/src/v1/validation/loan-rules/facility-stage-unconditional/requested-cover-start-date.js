@@ -29,7 +29,15 @@ module.exports = (submittedValues, deal, errorList) => {
     const nowDate = moment().startOf('day');
     // validates the coverStartDateYear is 4 digits long and only numbers and returns error in validation if not
     const schema = Joi.string().length(4).pattern(/^\d+$/).required();
-    const validation = schema.validate(requestedCoverStartDateYear.toString());
+    let validation;
+    // if no year, then creates empty error else populates validation
+    if (!requestedCoverStartDateYear) {
+      validation = {
+        error: '',
+      };
+    } else {
+      validation = schema.validate(requestedCoverStartDateYear.toString());
+    }
 
     if (!dealHasBeenSubmitted) {
       if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
