@@ -232,7 +232,9 @@ const validateAboutFacility = async (req, res) => {
   if (coverStartDateIsFullyComplete) {
     coverStartDate = set(
       new Date(),
-      { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay },
+      {
+        year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay, hours: 0, minutes: 0, seconds: 0, milliseconds: 0,
+      },
     );
   }
 
@@ -273,7 +275,9 @@ const validateAboutFacility = async (req, res) => {
 
     coverEndDate = set(
       new Date(),
-      { year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay },
+      {
+        year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay, hours: 0, minutes: 0, seconds: 0, milliseconds: 0,
+      },
     );
   }
 
