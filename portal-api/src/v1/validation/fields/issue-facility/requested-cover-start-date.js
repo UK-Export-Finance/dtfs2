@@ -1,5 +1,4 @@
 const moment = require('moment');
-const Joi = require('joi');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 const {
   dateHasSomeValues,
@@ -7,6 +6,7 @@ const {
 } = require('../date');
 const { formattedTimestamp } = require('../../../facility-dates/timestamp');
 const CONSTANTS = require('../../../../constants');
+const coverDatesValidation = require('../../helpers/coverDatesValidation.helpers');
 
 module.exports = (
   submittedValues,
@@ -106,12 +106,30 @@ module.exports = (
         };
       }
     }
-    // validates the coverStartDateYear is 4 digits long and only numbers and returns error in validation if not
-    const schema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
-    const validation = schema.validate(requestedCoverStartDateYear);
+    const {
+      coverDayValidation,
+      coverMonthValidation,
+      coverYearValidation
+    } = coverDatesValidation(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
+
+    if (coverDayValidation.error && requestedCoverStartDateDay) {
+      // error object does not exist if no errors in validation
+      newErrorList.requestedCoverStartDate = {
+        text: 'The day for the requested Cover Start Date must include 1 or 2 numbers',
+        order: orderNumber(newErrorList),
+      };
+    }
+
+    if (coverMonthValidation.error && requestedCoverStartDateMonth) {
+      // error object does not exist if no errors in validation
+      newErrorList.requestedCoverStartDate = {
+        text: 'The month for the requested Cover Start Date must include 1 or 2 numbers',
+        order: orderNumber(newErrorList),
+      };
+    }
 
     // error object does not exist if no errors in validation
-    if (validation.error && requestedCoverStartDateYear) {
+    if (coverYearValidation.error && requestedCoverStartDateYear) {
       newErrorList.requestedCoverStartDate = {
         text: 'The year for the requested Cover Start Date must include 4 numbers',
         order: orderNumber(newErrorList),
