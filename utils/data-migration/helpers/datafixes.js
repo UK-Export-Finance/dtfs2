@@ -6,6 +6,28 @@ const { workflow } = require('./io');
  */
 let allDeals = {};
 
+/**
+ * Format's raw string into a formatted string.
+ * Following operations are performed on a raw string:
+ * 1. Replace `\n` with `<br/>`
+ * @param {String} string Raw string
+ * @returns {String} Formatted string
+ */
+const formatString = (string) => {
+  let raw = string;
+  if (raw) {
+    // Carriage Returns
+    raw = raw.replace(/(\\r\\n|\\r|\\n)/g, '');
+    // Tab Feeds
+    raw = raw.replace(/\\t/g, '');
+    // Double quotes
+    raw = raw.replace(/\\"/g, '"');
+    // Escaped forward slash
+    raw = raw.replace(/\\\//g, '/');
+  }
+  return raw;
+};
+
 // ******************** DEALS *************************
 
 /**
@@ -43,43 +65,6 @@ const banking = async () => {
         ...bank,
         partyUrn,
       };
-    }
-  });
-};
-
-/**
- * Comments (deal.comments)
- * Add deal level comments in Portal.
- */
-const comment = async () => {
-  const comments = await workflow(CONSTANTS.WORKFLOW.FILES.COMMENTS);
-
-  Object.values(allDeals).forEach((deal, index) => {
-    if (deal.details && deal.maker) {
-      const { maker } = deal;
-      let portalComments = [];
-
-      // Copy existing portal comments
-      if (deal.comments) {
-        portalComments = deal.comments;
-      }
-
-      // Process comments
-      comments
-        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === deal.details.ukefDealId)
-        .map(({ DEAL }) => {
-          if (DEAL.COMMENT_TEXT) {
-            portalComments.push({
-              user: maker,
-              text: DEAL.COMMENT_TEXT,
-              timestamp: Number(deal.details.submissionDate),
-            });
-          }
-
-          return null;
-        });
-
-      allDeals[index].comments = portalComments;
     }
   });
 };
@@ -129,6 +114,73 @@ const partyUrn = async () => {
 };
 
 /**
+ * Add agent's commission rate to deal TFM (deal.tfm.agent.commissionRate)
+ */
+const agentCommissionRate = async () => {
+  const commission = await workflow(CONSTANTS.WORKFLOW.FILES.DEAL);
+
+  Object.values(allDeals).forEach((deal, index) => {
+    if (deal.dealSnapshot.details && deal.tfm.parties) {
+    // Add agent commission rate
+      commission
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === deal.dealSnapshot.details.ukefDealId)
+        .map(({ DEAL }) => {
+          if (DEAL['AGENT COMMISSION PERCENT']) {
+            allDeals[index].tfm.parties.agent.commissionRate = DEAL['AGENT COMMISSION PERCENT'];
+          }
+          return null;
+        });
+    }
+  });
+};
+
+/**
+ * Add Comments to the deal in TFM (tfm.activities)
+ */
+const comment = async () => {
+  const comments = await workflow(CONSTANTS.WORKFLOW.FILES.COMMENTS);
+
+  Object.values(allDeals).forEach((deal, index) => {
+    if (deal.tfm.activities) {
+      const { activities } = deal.tfm;
+      let tfmComments = [];
+
+      // Copy existing TFM activities
+      if (activities) {
+        tfmComments = activities;
+      }
+
+      // Process comments
+      comments
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === deal.dealSnapshot.details.ukefDealId)
+        .map(({ DEAL }) => {
+          if (DEAL.COMMENT_TEXT) {
+            const { _id, firstname, surname } = deal.dealSnapshot.maker;
+
+            tfmComments.push({
+              type: 'COMMENT',
+              timestamp: Number(Number(deal.dealSnapshot.details.submissionDate) / 1000),
+              text: formatString(DEAL.COMMENT_TEXT),
+              author: {
+                _id,
+                firstName: firstname,
+                lastName: surname,
+              },
+              label: 'Comment added'
+            });
+          }
+
+          return null;
+        });
+
+      allDeals[index].tfm.activities = tfmComments;
+    }
+  });
+};
+
+// ******************** Deal Update *************************
+
+/**
  * Update portal deal
  * @param {String} id Object ID
  * @param {Object} deal Updated deal object
@@ -156,7 +208,6 @@ const datafixes = async (deals) => {
 
     // Deal - Data fixes
     await banking();
-    await comment();
     eligibilityCriteria();
 
     // Facility - Data fixes
@@ -213,6 +264,8 @@ const datafixesTfm = async (deals) => {
 
       // TFM Deal - Data fixes
       await partyUrn();
+      await agentCommissionRate();
+      await comment();
 
       const updates = allDeals.map(async (deal) => {
         await tfmDealUpdate(deal)
