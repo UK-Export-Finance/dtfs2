@@ -136,6 +136,40 @@ describe('controllers/dashboard/deals', () => {
     });
   });
 
+  describe('getAllDealsData with blank session.sortBy', () => {
+    it('should calls api.allDeals with default sort query if session.sortBy is blank', async () => {
+      mockReq.session.sortBy = null;
+
+      await getAllDealsData(
+        'mock-token',
+        mockReq.session.user,
+        mockReq.session.dashboardFilters,
+        mockReq.params.page,
+        mockReq.session.sortBy,
+        mockRes,
+      );
+
+      const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
+
+      const expectedFilters = dashboardDealsFiltersQuery(
+        mockReq.body.createdByYou,
+        filtersArray,
+        mockReq.session.user,
+      );
+
+      // empty object as default sort
+      const sortQuery = {};
+
+      expect(api.allDeals).toHaveBeenCalledWith(
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
+        expectedFilters,
+        'mock-token',
+        sortQuery,
+      );
+    });
+  });
+
   describe('getTemplateVariables', () => {
     it('should return an object', () => {
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);

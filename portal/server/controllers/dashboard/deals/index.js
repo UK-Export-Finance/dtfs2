@@ -115,15 +115,16 @@ const getDataAndTemplateVariables = async (
 exports.getDataAndTemplateVariables = getDataAndTemplateVariables;
 
 exports.allDeals = async (req, res) => {
+  console.log(req.session);
   const { userToken } = requestParams(req);
   const { user } = req.session;
   const currentPage = req.params.page;
 
-  let activeSortByOrder = req.session.sortBy;
+  let activeSortByOrder = req.session.sortBy ? req.session.sortBy : CONSTANTS.SORT_BY.DEFAULT;
 
   if (Object.keys(req.body).length) {
     req.session.dashboardFilters = req.body;
-    req.session.sortBy = req.body.sortBy;
+    req.session.sortBy = req.body.sortBy ? req.body.sortBy : CONSTANTS.SORT_BY.DEFAULT;
   }
 
   if (req.body.sortBy) {
