@@ -26,6 +26,13 @@ const allTfmDeals = [];
 const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL, filter);
 
 /**
+ * Return all the TFM deals, without (default) or with filter specified.
+ * @param {Object} filter Mongo filter
+ * @returns {Object} Collection object
+ */
+const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL);
+
+/**
  * Extracts deals from `deals` collection with following filters
  * 1. Deal Type: `BSS/EWCS`
  * 2. Property exists check: `dataMigration`
