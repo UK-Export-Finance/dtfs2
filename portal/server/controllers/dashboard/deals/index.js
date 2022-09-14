@@ -115,7 +115,6 @@ const getDataAndTemplateVariables = async (
 exports.getDataAndTemplateVariables = getDataAndTemplateVariables;
 
 exports.allDeals = async (req, res) => {
-  console.log(req.session);
   const { userToken } = requestParams(req);
   const { user } = req.session;
   const currentPage = req.params.page;
