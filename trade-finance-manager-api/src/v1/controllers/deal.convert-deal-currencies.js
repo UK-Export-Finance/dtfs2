@@ -1,4 +1,5 @@
 const api = require('../api');
+const dateHelpers = require('../../utils/date');
 
 const convertDealCurrencies = async (deal) => {
   if (!deal) {
@@ -9,11 +10,13 @@ const convertDealCurrencies = async (deal) => {
     _id: dealId,
     dealCurrency,
     dealValue,
+    submissionDate,
     tfm,
   } = deal;
 
   if (dealCurrency && dealCurrency.id !== 'GBP') {
-    const currencyExchange = await api.getCurrencyExchangeRate(dealCurrency.id, 'GBP');
+    const historicDate = dateHelpers.formatDate(Number(submissionDate));
+    const currencyExchange = await api.getCurrencyExchangeRate(dealCurrency.id, 'GBP', historicDate);
 
     let dealUpdate = {};
 
@@ -27,6 +30,7 @@ const convertDealCurrencies = async (deal) => {
     } else {
       const {
         midPrice: exchangeRate,
+        historicExchangeRate,
       } = currencyExchange;
 
       const strippedDealValue = Number(dealValue.replace(/,/g, ''));
@@ -38,6 +42,10 @@ const convertDealCurrencies = async (deal) => {
         tfm: {
           ...tfm,
           supplyContractValueInGBP,
+          dataMigration: {
+            modifiedExchangeRate: exchangeRate,
+            exchangeRate: historicExchangeRate,
+          },
         },
       };
     }

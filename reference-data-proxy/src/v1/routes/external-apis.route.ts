@@ -390,7 +390,7 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *       404:
  *         description: Not found
  */
-apiRoutes.get('/currency-exchange-rate/:source/:target', currencyExchangeRate.getExchangeRate);
+apiRoutes.get('/currency-exchange-rate/:source/:target/:date', currencyExchangeRate.getExchangeRate);
 
 /**
  * @openapi

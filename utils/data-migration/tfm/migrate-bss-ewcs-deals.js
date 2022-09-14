@@ -109,7 +109,7 @@ const tfm = async (data) => {
       })
       .catch((error) => Promise.reject(new Error(`🚩 Error inserting deal ${error}`)));
 
-    await sleep(700);
+    await sleep(1000);
   }
 
   if (counter === data.length) {
