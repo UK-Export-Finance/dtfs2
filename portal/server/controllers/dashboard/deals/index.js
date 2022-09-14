@@ -119,10 +119,11 @@ exports.allDeals = async (req, res) => {
   const { user } = req.session;
   const currentPage = req.params.page;
 
-  let activeSortByOrder = CONSTANTS.SORT_BY.DEFAULT;
+  let activeSortByOrder = req.session.sortBy;
 
   if (Object.keys(req.body).length) {
     req.session.dashboardFilters = req.body;
+    req.session.sortBy = req.body.sortBy;
   }
 
   if (req.body.sortBy) {

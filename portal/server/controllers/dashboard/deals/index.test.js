@@ -69,6 +69,7 @@ describe('controllers/dashboard/deals', () => {
       params: { page: 1 },
       session: {
         dashboardFilters: CONSTANTS.DASHBOARD.DEFAULT_FILTERS,
+        sortBy: CONSTANTS.DASHBOARD.DEFAULT_SORT.order,
         userToken: '1234',
         user: {
           _id: 'mock-user',
