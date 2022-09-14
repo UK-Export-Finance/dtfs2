@@ -1,5 +1,5 @@
 const CONSTANTS = require('../constants');
-const dateConstants = require('../dateConstants');
+const dateConstants = require('../../../../e2e-fixtures/dateConstants');
 
 exports.MOCK_FACILITY_ONE = {
   type: CONSTANTS.FACILITY_TYPE.CASH,
