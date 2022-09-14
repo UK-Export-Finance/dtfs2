@@ -64,9 +64,9 @@ const getCollection = async (name, filter = null, raw = null) => {
 const ukefDealIdTfmPath = (dealType) => {
   switch (dealType) {
     case 'GEF':
-      return 'dealsnapshot.ukefDealId';
+      return 'dealSnapshot.ukefDealId';
     default:
-      return 'dealsnapshot.details.ukefDealId';
+      return 'dealSnapshot.details.ukefDealId';
   }
 };
 
@@ -106,7 +106,7 @@ const portalDealUpdate = async (id, updates) => {
 const tfmDealUpdate = async (updatedDeal) => {
   try {
     const path = ukefDealIdTfmPath(updatedDeal.dealSnapshot.dealType);
-    const ukefDealId = updatedDeal.ukefDealId ?? updatedDeal.dealSnapshot.ukefDealId;
+    const ukefDealId = updatedDeal.dealSnapshot.ukefDealId || updatedDeal.dealSnapshot.details.ukefDealId;
 
     delete updatedDeal._id;
 
