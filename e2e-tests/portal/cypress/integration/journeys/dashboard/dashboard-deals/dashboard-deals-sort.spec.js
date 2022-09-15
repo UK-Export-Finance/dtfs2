@@ -85,7 +85,6 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
         .contains(ALL_DEALS[19]);
 
       dashboardDeals.next().click();
-      dashboardDeals.exporterButton().click();
 
       dashboardDeals.rows().eq(0).find('td').eq(0)
         .contains(ALL_DEALS[20]);
@@ -111,8 +110,6 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
         .contains(ALL_DEALS[19]);
 
       dashboardDeals.next().click();
-      dashboardDeals.exporterButton().click();
-      dashboardDeals.exporterButton().click();
 
       dashboardDeals.rows().eq(0).find('td').eq(0)
         .contains(ALL_DEALS[20]);

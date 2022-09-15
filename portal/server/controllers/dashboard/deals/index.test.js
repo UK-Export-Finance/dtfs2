@@ -69,6 +69,7 @@ describe('controllers/dashboard/deals', () => {
       params: { page: 1 },
       session: {
         dashboardFilters: CONSTANTS.DASHBOARD.DEFAULT_FILTERS,
+        sortBy: CONSTANTS.DASHBOARD.DEFAULT_SORT.order,
         userToken: '1234',
         user: {
           _id: 'mock-user',
@@ -132,6 +133,40 @@ describe('controllers/dashboard/deals', () => {
       };
 
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getAllDealsData with blank session.sortBy', () => {
+    it('should calls api.allDeals with default sort query if session.sortBy is blank', async () => {
+      delete mockReq.session.sortBy;
+
+      await getAllDealsData(
+        'mock-token',
+        mockReq.session.user,
+        mockReq.session.dashboardFilters,
+        mockReq.params.page,
+        mockReq.session.sortBy,
+        mockRes,
+      );
+
+      const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
+
+      const expectedFilters = dashboardDealsFiltersQuery(
+        mockReq.body.createdByYou,
+        filtersArray,
+        mockReq.session.user,
+      );
+
+      // empty object as default sort
+      const sortQuery = {};
+
+      expect(api.allDeals).toHaveBeenCalledWith(
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
+        CONSTANTS.DASHBOARD.PAGE_SIZE,
+        expectedFilters,
+        'mock-token',
+        sortQuery,
+      );
     });
   });
 
