@@ -138,7 +138,7 @@ describe('controllers/dashboard/deals', () => {
 
   describe('getAllDealsData with blank session.sortBy', () => {
     it('should calls api.allDeals with default sort query if session.sortBy is blank', async () => {
-      mockReq.session.sortBy = null;
+      delete mockReq.session.sortBy;
 
       await getAllDealsData(
         'mock-token',
