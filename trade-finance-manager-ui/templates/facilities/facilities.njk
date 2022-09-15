@@ -71,7 +71,7 @@
         attributes: { "data-cy": "facility__facilityValue", "data-sort-value": facility.value }
       },
       {
-        html: facility.coverEndDate,
+        html: facility.coverEndDate or "-",
         attributes: { "data-cy": "facility__coverEndDate", "data-sort-value": facility.coverEndDateEpoch }
       },
       {

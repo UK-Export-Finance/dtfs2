@@ -57,6 +57,64 @@ context('Bond Details', () => {
     pages.bondDetails.title().contains('Bond');
   });
 
+  it('form submit with extra characters in coverStart and coverEnd dates must show a validation error', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+
+    pages.contract.addBondButton().click();
+
+    pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
+    pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
+    pages.bondDetails.facilityStageIssuedInput().click();
+    pages.bondDetails.requestedCoverStartDateDayInput().type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}-`);
+    pages.bondDetails.requestedCoverStartDateMonthInput().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
+    pages.bondDetails.requestedCoverStartDateYearInput().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
+    pages.bondDetails.coverEndDateDayInput().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateDay}-`);
+    pages.bondDetails.coverEndDateMonthInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
+    pages.bondDetails.coverEndDateYearInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateYear);
+    pages.bondDetails.nameInput().type(BOND_FORM_VALUES.DETAILS.name);
+    pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
+
+    pages.bondDetails.submit().click();
+
+    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
+
+    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
+
+    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
+
+    pages.bondDetails.bondDetails().click();
+    pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
+    pages.bondDetails.coverEndDateInputErrorMessage().contains('The day for the cover end date must only include 1 or 2 numbers');
+
+    pages.bondDetails.requestedCoverStartDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+    pages.bondDetails.coverEndDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
+    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}-`);
+    pages.bondDetails.coverEndDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}-`);
+
+    pages.bondDetails.submit().click();
+
+    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
+
+    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
+
+    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
+      expect(text.trim()).equal('Incomplete');
+    });
+
+    pages.bondDetails.bondDetails().click();
+    pages.bondDetails.coverEndDateInputErrorMessage().contains('The month for the cover end date must only include 1 or 2 numbers');
+  });
+
   it('form submit of all required fields should display a `completed` status tag only for `Bond Details` in task list header', () => {
     cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
