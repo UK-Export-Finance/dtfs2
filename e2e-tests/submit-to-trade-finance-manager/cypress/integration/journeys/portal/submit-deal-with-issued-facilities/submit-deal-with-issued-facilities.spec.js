@@ -96,8 +96,14 @@ context('Portal to TFM deal submission', () => {
       const valueinGBP = value.text().split(' ');
       // removes commas
       const exposureValue = parseFloat(valueinGBP[1].replace(/,/g, '')) * (issuedBond.coveredPercentage / 100);
-      // Math.trunc() as we need the value of exposure before the decimal point (no rounding)
-      facilityRow.facilityExposure().contains(`GBP ${Math.trunc(exposureValue)}`);
+
+      // obtain facility exposure value and round to compare calculated exposure value with one on page
+      facilityRow.facilityExposure().then((exposure) => {
+        const facilityExposure = exposure.text().split(' ');
+        const facilityExposureValue = parseFloat(facilityExposure[1].replace(/,/g, ''));
+        // round both numbers to compare
+        expect(Math.round(exposureValue)).to.equal(Math.round(facilityExposureValue));
+      });
     });
 
     facilityRow.facilityId().click();
@@ -132,8 +138,14 @@ context('Portal to TFM deal submission', () => {
       const valueinGBP = value.text().split(' ');
       // removes commas
       const exposureValue = parseFloat(valueinGBP[1].replace(/,/g, '')) * (issuedLoan.coveredPercentage / 100);
-      // Math.trunc() as we need the value of exposure before the decimal point (no rounding)
-      facilityRow.facilityExposure().contains(`GBP ${Math.trunc(exposureValue)}`);
+
+      // obtain facility exposure value and round to compare calculated exposure value with one on page
+      facilityRow.facilityExposure().then((exposure) => {
+        const facilityExposure = exposure.text().split(' ');
+        const facilityExposureValue = parseFloat(facilityExposure[1].replace(/,/g, ''));
+        // round both numbers to compare
+        expect(Math.round(exposureValue)).to.equal(Math.round(facilityExposureValue));
+      });
     });
 
     facilityRow.facilityId().click();
