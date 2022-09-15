@@ -20,15 +20,23 @@ exports.queryAllFacilities = async (queryParams) => {
     // finds latest completed amendment tfm object with mapped values
     const latestCompletedAmendment = findLatestCompletedAmendment(item?.amendments);
 
-    const defaultFacilityValue = facilityValueFormatted(facility.value);
+    let facilityCoverEndDate = '';
+    let coverEndDateEpoch = '';
+    // regex to check date is correct format - YYYY-MM-DD
+    const dateRegex = /^\d\d\d\d-\d\d-\d\d/;
+
+    const defaultFacilityValue = facility.value;
     const defaultCoverEndDate = facility.coverEndDate;
-    const formatCoverEndDate = format(new Date(defaultCoverEndDate), 'dd LLL yyyy'); // 11 Aug 2021
+    // if correct format, then set coverEndDate
+    if (dateRegex.test(defaultCoverEndDate)) {
+      const formatCoverEndDate = format(new Date(defaultCoverEndDate), 'dd LLL yyyy'); // 11 Aug 2021#
+      facilityCoverEndDate = facility.coverEndDate ? formatCoverEndDate : '';
+      coverEndDateEpoch = facility.coverEndDate ? getUnixTime(new Date(facility.coverEndDate)) : '';
+    }
 
     // sets the values based on original facility value
     let currencyAndValue = `${facility.currency} ${commaNumber(defaultFacilityValue)}`;
     let facilityValue = parseInt(facility.value, 10);
-    let facilityCoverEndDate = facility.coverEndDate ? formatCoverEndDate : '';
-    let coverEndDateEpoch = facility.coverEndDate ? getUnixTime(new Date(facility.coverEndDate)) : '';
 
     // if amendment, then willset relevant values based on amendment
     if (latestCompletedAmendment?.value) {
