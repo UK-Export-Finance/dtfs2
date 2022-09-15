@@ -9,7 +9,7 @@
 const axios = require('axios');
 const CONSTANTS = require('../constant');
 const { getCollection, disconnect } = require('../helpers/database');
-const { datafixes, datafixesTfm } = require('../helpers/datafixes');
+const { datafixes, datafixesTfmDeal, datafixesTfmFacilities } = require('../helpers/datafixes');
 const { sleep } = require('../helpers/io');
 
 const version = '0.0.1';
@@ -136,10 +136,12 @@ const tfm = async (data) => {
 const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating BSS/EWCS TFM migration v${version}.`, '\n\n');
 
-  deals()
-    .then((d) => datafixes(d))
-    .then((d) => tfm(d))
-    .then((d) => datafixesTfm(d))
+  // deals()
+  //   .then((d) => datafixes(d))
+  //   .then((d) => tfm(d))
+  //   .then((d) => datafixesTfmDeal(d))
+  // .then(() => datafixesTfmFacilities())
+  datafixesTfmFacilities()
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {

@@ -5,6 +5,18 @@ const { workflow } = require('./io');
  * Data fixes helper functions
  */
 let allDeals = {};
+let allFacilities = {};
+
+// ******************** DATABASE *************************
+
+/**
+ * Return all the TFM facilities, without (default) or with filter specified.
+ * @param {Object} filter Mongo filter
+ * @returns {Object} Collection object
+ */
+const getTfmFacilities = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES);
+
+// ******************** FORMATTING *************************
 
 /**
  * Format's raw string into a formatted string.
@@ -154,8 +166,9 @@ const comment = async () => {
       comments
         .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === deal.dealSnapshot.details.ukefDealId)
         .map(({ DEAL }) => {
-          if (DEAL.COMMENT_TEXT) {
-            const { _id, firstname, surname } = deal.dealSnapshot.maker;
+          if (DEAL.COMMENT_TEXT && DEAL.ASSOC_TYPE_ID === 1) {
+            const { _id } = deal.dealSnapshot.maker;
+            const author = DEAL.COMMENT_TEXT.split(' ');
 
             tfmComments.push({
               type: 'COMMENT',
@@ -163,8 +176,8 @@ const comment = async () => {
               text: formatString(DEAL.COMMENT_TEXT),
               author: {
                 _id,
-                firstName: firstname,
-                lastName: surname,
+                firstName: author[0],
+                lastName: author[1] || '',
               },
               label: 'Comment added'
             });
@@ -250,7 +263,7 @@ const datafixes = async (deals) => {
  * @param {Array} deals TFM deals object in an array
  * @returns {Array} deals Data fixed TFM deals object in an array
  */
-const datafixesTfm = async (deals) => {
+const datafixesTfmDeal = async (deals) => {
   console.info('\x1b[33m%s\x1b[0m', `➕ 4. Data-fixing ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM deals.`, '\n');
 
   try {
@@ -302,7 +315,24 @@ const datafixesTfm = async (deals) => {
   }
 };
 
+/**
+ * Data fix TFM facilities
+ * @param {Array} facilities Array of TFM facilities objects
+ * @returns {Array} TFM facilities data fixed, returned in as array of objects.
+ */
+const datafixesTfmFacilities = async () => {
+  try {
+    allFacilities = await getTfmFacilities();
+
+    return Promise.resolve(allFacilities);
+  } catch (e) {
+    console.error('Error data-fixing TFM facilities: ', { e });
+    return Promise.reject(e);
+  }
+};
+
 module.exports = {
   datafixes,
-  datafixesTfm,
+  datafixesTfmDeal,
+  datafixesTfmFacilities,
 };

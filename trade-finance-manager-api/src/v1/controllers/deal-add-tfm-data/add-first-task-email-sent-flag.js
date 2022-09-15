@@ -4,17 +4,20 @@
 */
 const addFirstTaskEmailSentFlag = (emailResponse, tasks) => {
   const modifiedTasks = tasks;
+  try {
+    if (!emailResponse.errors) {
+      modifiedTasks.map((g) => {
+        const group = g;
 
-  if (!emailResponse.errors) {
-    modifiedTasks.map((g) => {
-      const group = g;
+        if (group.id === 1) {
+          group.groupTasks[0].emailSent = true;
+        }
 
-      if (group.id === 1) {
-        group.groupTasks[0].emailSent = true;
-      }
-
-      return group;
-    });
+        return group;
+      });
+    }
+  } catch (e) {
+    console.error('Error adding first task email');
   }
 
   return modifiedTasks;
