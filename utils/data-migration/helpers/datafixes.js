@@ -1,5 +1,11 @@
+const { ObjectID } = require('bson');
 const CONSTANTS = require('../constant');
-const { getCollection, portalDealUpdate, tfmDealUpdate } = require('./database');
+const {
+  getCollection,
+  portalDealUpdate,
+  tfmDealUpdate,
+  tfmFacilityUpdate,
+} = require('./database');
 const { workflow } = require('./io');
 /**
  * Data fixes helper functions
@@ -16,7 +22,7 @@ let allFacilities = {};
  */
 const getTfmFacilities = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES);
 
-// ******************** FORMATTING *************************
+// ******************** EXTRA *************************
 
 /**
  * Format's raw string into a formatted string.
@@ -39,6 +45,30 @@ const formatString = (string) => {
   }
   return raw;
 };
+
+/**
+ * Returns UKEF deal ID across various products
+ * @param {Object} deal Deal Object
+ * @returns {Integer} UKEF Deal ID
+ */
+const dealId = (deal) => {
+  if (deal && deal.dealSnapshot) {
+    return deal.dealSnapshot.dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF
+      ? deal.dealSnapshot.dealId
+      : deal.dealSnapshot.details.dealId;
+  }
+  return null;
+};
+
+/**
+ * Returns UKEF Deal ID from Object ID
+ * @param {String} _id Deal Object ID
+ * @returns {Integer} UKEF Deal ID
+ */
+const getUkefDealIdFromObjectId = (_id) => allDeals
+  .filter((d) => d._id.toString() === _id.toString())
+  .map((d) => d.ukefDealId ?? d.details.ukefDealId)
+  .reduce((d) => d);
 
 // ******************** DEALS *************************
 
@@ -84,7 +114,9 @@ const banking = async () => {
 // ******************** TFM DEALS *************************
 
 /**
- * Add Party URN to the TFM deal parties (tfm.parties)
+ * Add Party URN to the TFM deal parties (deal.tfm.parties)
+ * or to TFM facilities (facility.tfm.bondIssuerPartyUrn)
+ * and (facility.tfm.bondBeneficiaryPartyUrn)
  * Following parties URN will be added (if available)
  * 1. Agent (tfm.parties.agent.partyUrn)
  * 2. Buyer (tfm.parties.buyer.partyUrn)
@@ -92,14 +124,44 @@ const banking = async () => {
  * 4. indemnifier (tfm.parties.indemnifier.partyUrn)
  * @param {Object} deal TFM deal object
  */
-const partyUrn = async () => {
+const partyUrn = async (facility = false) => {
   const urns = await workflow(CONSTANTS.WORKFLOW.FILES.DEAL_PARTIES);
 
+  if (facility) {
+    Object.values(allFacilities).forEach(async (f, i) => {
+      if (f.facilitySnapshot && f.tfm) {
+        // Get deal id from facility id
+        const ukefDealId = await getUkefDealIdFromObjectId(f.facilitySnapshot.dealId);
+
+        // Process Party URNs
+        urns
+          .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === ukefDealId)
+          .map(({ DEAL }) => {
+            if (DEAL.PARTY && DEAL.PARTY.URN) {
+              const { ROLE_TYPE, URN } = DEAL.PARTY;
+
+              switch (ROLE_TYPE) {
+                case 'BSS ISSUER':
+                  allFacilities[i].tfm.bondIssuerPartyUrn = URN;
+                  break;
+                case 'BSS BENEFICIARY':
+                  allFacilities[i].tfm.bondBeneficiaryPartyUrn = URN;
+                  break;
+                default:
+                  break;
+              }
+            }
+            return null;
+          });
+      }
+    });
+  }
+
   Object.values(allDeals).forEach((deal, index) => {
-    if (deal.dealSnapshot.details && deal.tfm.parties) {
+    if (deal.dealSnapshot && deal.tfm.parties) {
       // Process Party URNs
       urns
-        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === deal.dealSnapshot.details.ukefDealId)
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal))
         .map(({ DEAL }) => {
           if (DEAL.PARTY && DEAL.PARTY.URN) {
             const { ROLE_TYPE, URN } = DEAL.PARTY;
@@ -285,7 +347,7 @@ const datafixesTfmDeal = async (deals) => {
           .then((r) => {
             if (r) {
               updated += 1;
-              console.info('\x1b[33m%s\x1b[0m', `${updated}/${allDeals.length} TFM data-fixed.`, '\n');
+              console.info('\x1b[33m%s\x1b[0m', `${updated}/${allDeals.length} deals TFM data-fixed.`, '\n');
 
               return Promise.resolve(true);
             }
@@ -302,7 +364,7 @@ const datafixesTfmDeal = async (deals) => {
 
             return Promise.resolve(allDeals);
           }
-          console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allDeals.length} have been TFM data-fixed.\n`);
+          console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allDeals.length} deals have been TFM data-fixed.\n`);
           return Promise.reject();
         })
         .catch((e) => Promise.reject(e));
@@ -320,11 +382,57 @@ const datafixesTfmDeal = async (deals) => {
  * @param {Array} facilities Array of TFM facilities objects
  * @returns {Array} TFM facilities data fixed, returned in as array of objects.
  */
-const datafixesTfmFacilities = async () => {
-  try {
-    allFacilities = await getTfmFacilities();
+const datafixesTfmFacilities = async (deals) => {
+  console.info('\x1b[33m%s\x1b[0m', `➕ 5. Data-fixing ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM facilities.`, '\n');
 
-    return Promise.resolve(allFacilities);
+  try {
+    if (deals && deals.length > 0) {
+      /**
+       * Save deals and facilities to global variable
+       * for independent data fixes functions.
+       */
+
+      allDeals = deals;
+      allFacilities = await getTfmFacilities();
+      let updated = 0;
+
+      if (allFacilities && allFacilities.length > 0) {
+      // TFM Facilities - Data fixes
+        await partyUrn(true);
+
+        // Update TFM Facilities
+        const updates = allFacilities.map(async (facility) => {
+          await tfmFacilityUpdate(facility)
+            .then((r) => {
+              if (r) {
+                updated += 1;
+                console.info('\x1b[33m%s\x1b[0m', `${updated}/${allFacilities.length} facilities TFM data-fixed.`, '\n');
+
+                return Promise.resolve(true);
+              }
+
+              return Promise.reject();
+            })
+            .catch((e) => Promise.reject(e));
+        });
+
+        return Promise.all(updates)
+          .then(() => {
+            if (updated === allFacilities.length) {
+              console.info('\x1b[33m%s\x1b[0m', `✅ All ${allFacilities.length} facilities have been data-fixed.`, '\n');
+
+              return Promise.resolve(allFacilities);
+            }
+            console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allFacilities.length} facilities have been TFM data-fixed.\n`);
+            return Promise.reject();
+          })
+          .catch((e) => Promise.reject(e));
+      }
+
+      return Promise.reject(new Error('TFM Facilities void data set'));
+    }
+
+    return Promise.reject(new Error('TFM deals void data set'));
   } catch (e) {
     console.error('Error data-fixing TFM facilities: ', { e });
     return Promise.reject(e);
