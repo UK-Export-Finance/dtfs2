@@ -61,7 +61,7 @@ const getCollection = async (name, filter = null, raw = null) => {
  * @param {String} dealType Deal Type
  * @returns {String} UKEF Deal ID property path
  */
-const ukefDealIdTfmPath = (dealType) => {
+const ukefDealIdPath = (dealType) => {
   switch (dealType) {
     case 'GEF':
       return 'dealSnapshot.ukefDealId';
@@ -105,12 +105,13 @@ const portalDealUpdate = async (id, updates) => {
  */
 const tfmDealUpdate = async (updatedDeal) => {
   try {
-    const path = ukefDealIdTfmPath(updatedDeal.dealSnapshot.dealType);
+    const path = ukefDealIdPath(updatedDeal.dealSnapshot.dealType);
     const ukefDealId = updatedDeal.dealSnapshot.ukefDealId || updatedDeal.dealSnapshot.details.ukefDealId;
 
     delete updatedDeal._id;
 
     if (!connection) await connect();
+
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL).updateOne(
       { [path]: ukefDealId },
       {
@@ -118,14 +119,38 @@ const tfmDealUpdate = async (updatedDeal) => {
           ...updatedDeal,
         },
       },
-    ).catch((e) => console.error(e));
+    ).catch((e) => new Error(e));
 
     return (response.acknowledged)
       ? Promise.resolve(true)
       : Promise.reject(response);
   } catch (e) {
     console.error(`TFM deal ${updatedDeal._id} update error: `, { e });
-    return Promise.reject(new Error(false));
+    return Promise.reject(new Error(e));
+  }
+};
+
+const tfmFacilityUpdate = async (updatedFacility) => {
+  try {
+    delete updatedFacility._id;
+
+    if (!connection) await connect();
+
+    const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES).updateOne(
+      { 'facilitySnapshot.ukefFacilityId': updatedFacility.facilitySnapshot.ukefFacilityId },
+      {
+        $set: {
+          ...updatedFacility,
+        },
+      },
+    ).catch((e) => new Error(e));
+
+    return (response.acknowledged)
+      ? Promise.resolve(true)
+      : Promise.reject(response);
+  } catch (e) {
+    console.error(`TFM facility ${updatedFacility._id} update error: `, { e });
+    return Promise.reject(new Error(e));
   }
 };
 
@@ -134,4 +159,5 @@ module.exports = {
   disconnect,
   portalDealUpdate,
   tfmDealUpdate,
+  tfmFacilityUpdate,
 };
