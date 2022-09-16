@@ -132,6 +132,17 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
     });
 
+    it('should show an error message if coverStartDate and coverEndDate are the same', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      aboutFacility.facilityName().type('Name');
+      aboutFacility.shouldCoverStartOnSubmissionYes().click();
+      aboutFacility.coverEndDateDay().clear().type(now.getDate());
+      aboutFacility.coverEndDateMonth().clear().type(now.getMonth() + 1);
+      aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
+      aboutFacility.continueButton().click();
+      aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
+    });
+
     it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.facilityName().type('Name');
