@@ -125,26 +125,28 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
         }
 
         // facility.tfm.feeRecord or facility.tfm.premiumSchedule
-        if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-          facilityPremiumSchedule = await getFacilityPremiumSchedule(
-            amendedFacility,
-            {
-              exposurePeriodInMonths: amendmentExposurePeriodInMonths,
-            },
-            facilityGuaranteeDates,
-          );
+        // TODO: De-comment below upon PS/FF BR completion.
 
-          facilityTfmUpdate = {
-            ...facilityTfmUpdate,
-            premiumSchedule: facilityPremiumSchedule,
-          };
-        } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-          feeRecord = calculateGefFacilityFeeRecord(amendedFacility);
-          facilityTfmUpdate = {
-            ...facilityTfmUpdate,
-            feeRecord,
-          };
-        }
+        // if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+        //   facilityPremiumSchedule = await getFacilityPremiumSchedule(
+        //     amendedFacility,
+        //     {
+        //       exposurePeriodInMonths: amendmentExposurePeriodInMonths,
+        //     },
+        //     facilityGuaranteeDates,
+        //   );
+
+        //   facilityTfmUpdate = {
+        //     ...facilityTfmUpdate,
+        //     premiumSchedule: facilityPremiumSchedule,
+        //   };
+        // } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+        //   feeRecord = calculateGefFacilityFeeRecord(amendedFacility);
+        //   facilityTfmUpdate = {
+        //     ...facilityTfmUpdate,
+        //     feeRecord,
+        //   };
+        // }
 
         // Save TFM in `tfm.history`
         history.push(tfm);
