@@ -308,6 +308,13 @@ const validateAboutFacility = async (req, res) => {
       },
     );
 
+    if ((coverEndDate < coverStartNow) && coverEndDateValid) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'Cover end date cannot be before cover start date',
+      });
+    }
+
     if (isEqual(coverStartNow, coverEndDate) && coverEndDateValid) {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',

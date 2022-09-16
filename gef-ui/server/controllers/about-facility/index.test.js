@@ -599,6 +599,23 @@ describe('controllers/about-facility', () => {
       }));
     });
 
+    it('should show error message if cover starts on submission which is before the coverEndDate', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'true';
+      mockRequest.body['cover-end-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
     it('shows error message if no monthsOfcover has been provided', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';

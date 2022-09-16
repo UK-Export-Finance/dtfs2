@@ -1,11 +1,13 @@
 import relative from './relativeURL';
 import aboutFacility from './pages/about-facility';
 import CREDENTIALS from '../fixtures/credentials.json';
+import dateConstants from '../fixtures/dateConstants';
 
 const applications = [];
 let token;
 
 const now = new Date();
+const { yesterday } = dateConstants;
 
 context('About Facility Page', () => {
   before(() => {
@@ -132,7 +134,7 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
     });
 
-    it('should show an error message if coverStartDate and coverEndDate are the same', () => {
+    it('should show an error message if coverStartDate and coverEndDate are the same - shouldCoverStartOnSubmission', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
       aboutFacility.facilityName().type('Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
@@ -141,6 +143,17 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
       aboutFacility.continueButton().click();
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
+    });
+
+    it('should show an error message if coverEndDate is before the coverStartDate - shouldCoverStartOnSubmission', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      aboutFacility.facilityName().type('Name');
+      aboutFacility.shouldCoverStartOnSubmissionYes().click();
+      aboutFacility.coverEndDateDay().clear().type(yesterday.getDate());
+      aboutFacility.coverEndDateMonth().clear().type(yesterday.getMonth() + 1);
+      aboutFacility.coverEndDateYear().clear().type(yesterday.getFullYear());
+      aboutFacility.continueButton().click();
+      aboutFacility.coverEndDateError().contains('Cover end date cannot be before cover start date');
     });
 
     it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
