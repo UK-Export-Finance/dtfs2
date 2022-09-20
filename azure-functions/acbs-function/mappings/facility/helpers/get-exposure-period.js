@@ -80,6 +80,11 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
     const durationMonths = coverEndDate.diff(coverStartDate, 'months') + 1;
     const monthOffset = moment(coverStartDate).date() === moment(coverEndDate).date() ? -1 : 0;
 
+    // Return `exposure` when `coverStartDate` and `coverEndDate` are null
+    if (!durationMonths && !monthOffset) {
+      return String(exposure);
+    }
+
     exposure = durationMonths + monthOffset;
   }
 
