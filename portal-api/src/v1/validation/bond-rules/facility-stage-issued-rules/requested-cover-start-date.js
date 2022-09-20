@@ -83,20 +83,21 @@ module.exports = (submittedValues, deal, errorList) => {
         order: orderNumber(newErrorList),
       };
     }
-  } else if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
-    requestedCoverStartDateDay,
-    requestedCoverStartDateMonth,
-    requestedCoverStartDateYear,
-  )) {
-    newErrorList.requestedCoverStartDate = {
-      text: dateValidationText(
-        'Requested Cover Start Date',
-        requestedCoverStartDateDay,
-        requestedCoverStartDateMonth,
-        requestedCoverStartDateYear,
-      ),
-      order: orderNumber(newErrorList),
-    };
+    if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    )) {
+      newErrorList.requestedCoverStartDate = {
+        text: dateValidationText(
+          'Requested Cover Start Date',
+          requestedCoverStartDateDay,
+          requestedCoverStartDateMonth,
+          requestedCoverStartDateYear,
+        ),
+        order: orderNumber(newErrorList),
+      };
+    }
   }
 
   return newErrorList;
