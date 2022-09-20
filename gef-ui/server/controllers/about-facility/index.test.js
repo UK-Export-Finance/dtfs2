@@ -594,7 +594,7 @@ describe('controllers/about-facility', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
         errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The cover end date must be after the cover start date' }]),
         }),
       }));
     });
@@ -611,7 +611,7 @@ describe('controllers/about-facility', () => {
 
       expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
         errors: expect.objectContaining({
-          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date cannot be before cover start date' }]),
         }),
       }));
     });
