@@ -14,6 +14,7 @@ const fourDaysAgoDay = format(fourDaysAgo, 'dd');
 const fourDaysAgoMonth = format(fourDaysAgo, 'M');
 const fourDaysAgoYear = format(fourDaysAgo, 'yyyy');
 const fourDaysAgoFull = format(fourDaysAgo, 'd MMMM yyyy');
+const yesterday = sub(today, { days: 1 });
 const oneMonth = add(today, { months: 1 });
 const oneMonthDay = format(oneMonth, 'dd');
 const oneMonthMonth = format(oneMonth, 'M');
@@ -22,7 +23,7 @@ const twoMonths = add(today, { months: 2 });
 const twoMonthsDay = format(twoMonths, 'dd');
 const twoMonthsMonth = format(twoMonths, 'M');
 const twoMonthsYear = format(twoMonths, 'yyyy');
-// to test that if beyond issue/ coverstartdate limit
+// to test that if beyond issue/ cover start date limit
 const tomorrow = add(today, { days: 1 });
 const tomorrowDay = format(tomorrow, 'dd');
 const tomorrowMonth = format(tomorrow, 'M');
@@ -70,6 +71,7 @@ export default {
   tomorrowDay,
   tomorrowMonth,
   tomorrowYear,
+  yesterday,
   fourDaysAgo,
   fourDaysAgoDay,
   fourDaysAgoMonth,

@@ -3,6 +3,7 @@ const {
 } = require('date-fns');
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
+const coverDatesValidation = require('../../utils/coverDatesValidation.helper');
 
 /**
  * validation for changing facilities
@@ -86,6 +87,12 @@ const facilityValidation = async (body, query, params) => {
       subFieldErrorRefs: dateFieldsInError,
     });
   } else if (issueDateIsFullyComplete) {
+    const {
+      coverDayValidation,
+      coverMonthValidation,
+      coverYearValidation,
+    } = coverDatesValidation(issueDateDay, issueDateMonth, issueDateYear);
+
     // set to midnight to stop mismatch if submission date in past so set to midnight of past date
     const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
     const now = new Date();
@@ -102,6 +109,27 @@ const facilityValidation = async (body, query, params) => {
       aboutFacilityErrors.push({
         errRef: 'issueDate',
         errMsg: 'The issue date cannot be in the future',
+      });
+    }
+
+    if (coverDayValidation.error && issueDateDay) {
+      aboutFacilityErrors.push({
+        errRef: 'issueDate',
+        errMsg: 'The day for the issue date must include 1 or 2 numbers',
+      });
+    }
+
+    if (coverMonthValidation.error && issueDateMonth) {
+      aboutFacilityErrors.push({
+        errRef: 'issueDate',
+        errMsg: 'The month for the issue date must include 1 or 2 numbers',
+      });
+    }
+
+    if (coverYearValidation.error && issueDateYear) {
+      aboutFacilityErrors.push({
+        errRef: 'issueDate',
+        errMsg: 'The year for the issue date must include 4 numbers',
       });
     }
   }
@@ -146,6 +174,12 @@ const facilityValidation = async (body, query, params) => {
       // set to midnight to stop mismatch if submission date in past so set to midnight of past date
       const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
 
+      const {
+        coverDayValidation,
+        coverMonthValidation,
+        coverYearValidation,
+      } = coverDatesValidation(coverStartDateDay, coverStartDateMonth, coverStartDateYear);
+
       let threeMonthsFromSubmission;
 
       if (application.manualInclusionNoticeSubmissionDate) {
@@ -168,6 +202,27 @@ const facilityValidation = async (body, query, params) => {
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
           errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+        });
+      }
+
+      if (coverDayValidation.error && coverStartDateDay) {
+        aboutFacilityErrors.push({
+          errRef: 'coverStartDate',
+          errMsg: 'The day for the cover start date must include 1 or 2 numbers',
+        });
+      }
+
+      if (coverMonthValidation.error && coverStartDateMonth) {
+        aboutFacilityErrors.push({
+          errRef: 'coverStartDate',
+          errMsg: 'The month for the cover start date must include 1 or 2 numbers',
+        });
+      }
+
+      if (coverYearValidation.error && coverStartDateYear) {
+        aboutFacilityErrors.push({
+          errRef: 'coverStartDate',
+          errMsg: 'The year for the cover start date must include 4 numbers',
         });
       }
     }
@@ -241,6 +296,33 @@ const facilityValidation = async (body, query, params) => {
 
   if (coverEndDateIsFullyComplete) {
     coverEndDate = set(new Date(), { year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay });
+
+    const {
+      coverDayValidation,
+      coverMonthValidation,
+      coverYearValidation,
+    } = coverDatesValidation(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
+
+    if (coverDayValidation.error && coverEndDateDay) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'The day for the cover end date must include 1 or 2 numbers',
+      });
+    }
+
+    if (coverMonthValidation.error && coverEndDateMonth) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'The month for the cover end date must include 1 or 2 numbers',
+      });
+    }
+
+    if (coverYearValidation.error && coverEndDateYear) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'The year for the cover end date must include 4 numbers',
+      });
+    }
   }
 
   if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete) {

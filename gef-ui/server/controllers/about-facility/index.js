@@ -298,6 +298,31 @@ const validateAboutFacility = async (req, res) => {
     }
   }
 
+  // validation if should start on submission - no coverStartDate to check against
+  if (body.shouldCoverStartOnSubmission && coverEndDateIsFullyComplete) {
+    // temporarily set coverStartDate to now
+    const coverStartNow = set(
+      new Date(),
+      {
+        hours: 0, minutes: 0, seconds: 0, milliseconds: 0,
+      },
+    );
+
+    if ((coverEndDate < coverStartNow) && coverEndDateValid) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'Cover end date cannot be before cover start date',
+      });
+    }
+
+    if (isEqual(coverStartNow, coverEndDate) && coverEndDateValid) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'The cover end date must be after the cover start date',
+      });
+    }
+  }
+
   // Regex tests to see if value is a number only
   const digitsRegex = /^[0-9]*$/;
   if (body.monthsOfCover) {

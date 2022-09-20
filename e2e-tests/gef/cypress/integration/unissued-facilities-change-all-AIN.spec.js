@@ -222,6 +222,33 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.todayYear);
       aboutFacilityUnissued.continueButton().click();
       aboutFacilityUnissued.errorSummary().contains('The cover end date must be after the cover start date');
+
+      aboutFacilityUnissued.issueDateDay().clear().type('**');
+      aboutFacilityUnissued.issueDateMonth().clear().type(`${dateConstants.threeDaysMonth}-`);
+      aboutFacilityUnissued.issueDateYear().clear().type(`${dateConstants.threeDaysYear}2`);
+
+      aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
+      aboutFacilityUnissued.coverStartDateDay().clear().type(`${dateConstants.twoMonthsDay}/`);
+      aboutFacilityUnissued.coverStartDateMonth().clear().type(`${dateConstants.twoMonthsMonth}2`);
+      aboutFacilityUnissued.coverStartDateYear().clear().type(`${dateConstants.twoMonthsYear}/`);
+
+      aboutFacilityUnissued.coverEndDateDay().clear().type(`${dateConstants.threeMonthsOneDayDay}2`);
+      aboutFacilityUnissued.coverEndDateMonth().clear().type(`${dateConstants.threeMonthsOneDayMonth}-`);
+      aboutFacilityUnissued.coverEndDateYear().clear().type(`${dateConstants.threeMonthsOneDayYear}2`);
+      aboutFacilityUnissued.continueButton().click();
+
+      aboutFacilityUnissued.errorSummary().contains('The day for the issue date must include 1 or 2 numbers');
+      aboutFacilityUnissued.errorSummary().contains('The month for the issue date must include 1 or 2 numbers');
+      aboutFacilityUnissued.errorSummary().contains('The year for the issue date must include 4 numbers');
+      aboutFacilityUnissued.errorSummary().contains('The day for the cover start date must include 1 or 2 numbers');
+      aboutFacilityUnissued.errorSummary().contains('The month for the cover start date must include 1 or 2 numbers');
+      aboutFacilityUnissued.errorSummary().contains('The year for the cover start date must include 4 numbers');
+      aboutFacilityUnissued.errorSummary().contains('The day for the cover end date must include 1 or 2 numbers');
+      aboutFacilityUnissued.errorSummary().contains('The month for the cover end date must include 1 or 2 numbers');
+      aboutFacilityUnissued.errorSummary().contains('The year for the cover end date must include 4 numbers');
+      aboutFacilityUnissued.issueDateError().contains('The year for the issue date must include 4 numbers');
+      aboutFacilityUnissued.coverStartDateError().contains('The year for the cover start date must include 4 numbers');
+      aboutFacilityUnissued.coverEndDateError().contains('The year for the cover end date must include 4 numbers');
     });
 
     it('the correct success messages should be displayed after changing facility to issued', () => {
