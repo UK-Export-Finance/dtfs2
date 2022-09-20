@@ -345,6 +345,361 @@ describe('validation()', () => {
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
+  it('should return object with errors populated if issue date has only symbols', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = `${format(tomorrow, 'd')}-`;
+    mockRequest.body['issue-date-month'] = `${format(tomorrow, 'd')}-`;
+    mockRequest.body['issue-date-year'] = `${format(tomorrow, 'd')}-`;
+
+    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(oneYearFromNow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [
+        {
+          href: '#issueDate',
+          text: 'The day for the issue date must include 1 or 2 numbers',
+        },
+        {
+          href: '#issueDate',
+          text: 'The month for the issue date must include 1 or 2 numbers',
+        },
+        {
+          href: '#issueDate',
+          text: 'The year for the issue date must include 4 numbers',
+        }],
+      fieldErrors: {
+        issueDate: {
+          text: 'The year for the issue date must include 4 numbers',
+        },
+      },
+    };
+
+    const expectedFacilityErrors = [{
+      errRef: 'issueDate',
+      errMsg: 'The day for the issue date must include 1 or 2 numbers',
+    },
+    {
+      errRef: 'issueDate',
+      errMsg: 'The month for the issue date must include 1 or 2 numbers',
+    },
+    {
+      errRef: 'issueDate',
+      errMsg: 'The year for the issue date must include 4 numbers',
+    }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
+  it('should return object with errors populated if cover start date has only symbols', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = '**';
+    mockRequest.body['cover-start-date-month'] = `${format(tomorrow, 'M')}-`;
+    mockRequest.body['cover-start-date-year'] = `${format(tomorrow, 'yyyy')}/`;
+
+    mockRequest.body['cover-end-date-day'] = format(oneYearFromNow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [
+        {
+          href: '#coverStartDate',
+          text: 'The day for the cover start date must include 1 or 2 numbers',
+        },
+        {
+          href: '#coverStartDate',
+          text: 'The month for the cover start date must include 1 or 2 numbers',
+        },
+        {
+          href: '#coverStartDate',
+          text: 'The year for the cover start date must include 4 numbers',
+        }],
+      fieldErrors: {
+        coverStartDate: {
+          text: 'The year for the cover start date must include 4 numbers',
+        },
+      },
+    };
+
+    const expectedFacilityErrors = [{
+      errRef: 'coverStartDate',
+      errMsg: 'The day for the cover start date must include 1 or 2 numbers',
+    },
+    {
+      errRef: 'coverStartDate',
+      errMsg: 'The month for the cover start date must include 1 or 2 numbers',
+    },
+    {
+      errRef: 'coverStartDate',
+      errMsg: 'The year for the cover start date must include 4 numbers',
+    }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
+  it('should return object with errors populated if cover end date has symbols', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = `${format(oneYearFromNow, 'd')}-`;
+    mockRequest.body['cover-end-date-month'] = `${format(oneYearFromNow, 'M')}/`;
+    mockRequest.body['cover-end-date-year'] = '2O22';
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [
+        {
+          href: '#coverEndDate',
+          text: 'The day for the cover end date must include 1 or 2 numbers',
+        },
+        {
+          href: '#coverEndDate',
+          text: 'The month for the cover end date must include 1 or 2 numbers',
+        },
+        {
+          href: '#coverEndDate',
+          text: 'The year for the cover end date must include 4 numbers',
+        }],
+      fieldErrors: {
+        coverEndDate: {
+          text: 'The year for the cover end date must include 4 numbers',
+        },
+      },
+    };
+
+    const expectedFacilityErrors = [{
+      errRef: 'coverEndDate',
+      errMsg: 'The day for the cover end date must include 1 or 2 numbers',
+    },
+    {
+      errRef: 'coverEndDate',
+      errMsg: 'The month for the cover end date must include 1 or 2 numbers',
+    },
+    {
+      errRef: 'coverEndDate',
+      errMsg: 'The year for the cover end date must include 4 numbers',
+    }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
+  it('should return object with errors populated if all dates are just symbols', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = `${format(tomorrow, 'd')}-`;
+    mockRequest.body['issue-date-month'] = `${format(tomorrow, 'd')}-`;
+    mockRequest.body['issue-date-year'] = `${format(tomorrow, 'd')}-`;
+
+    mockRequest.body['cover-start-date-day'] = '**';
+    mockRequest.body['cover-start-date-month'] = `${format(tomorrow, 'M')}-`;
+    mockRequest.body['cover-start-date-year'] = `${format(tomorrow, 'yyyy')}/`;
+
+    mockRequest.body['cover-end-date-day'] = `${format(oneYearFromNow, 'd')}-`;
+    mockRequest.body['cover-end-date-month'] = `${format(oneYearFromNow, 'M')}/`;
+    mockRequest.body['cover-end-date-year'] = '2O22';
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [
+        {
+          href: '#issueDate',
+          text: 'The day for the issue date must include 1 or 2 numbers',
+        },
+        {
+          href: '#issueDate',
+          text: 'The month for the issue date must include 1 or 2 numbers',
+        },
+        {
+          href: '#issueDate',
+          text: 'The year for the issue date must include 4 numbers',
+        },
+        {
+          href: '#coverStartDate',
+          text: 'The day for the cover start date must include 1 or 2 numbers',
+        },
+        {
+          href: '#coverStartDate',
+          text: 'The month for the cover start date must include 1 or 2 numbers',
+        },
+        {
+          href: '#coverStartDate',
+          text: 'The year for the cover start date must include 4 numbers',
+        },
+        {
+          href: '#coverEndDate',
+          text: 'The day for the cover end date must include 1 or 2 numbers',
+        },
+        {
+          href: '#coverEndDate',
+          text: 'The month for the cover end date must include 1 or 2 numbers',
+        },
+        {
+          href: '#coverEndDate',
+          text: 'The year for the cover end date must include 4 numbers',
+        }],
+      fieldErrors: {
+        issueDate: {
+          text: 'The year for the issue date must include 4 numbers',
+        },
+        coverStartDate: {
+          text: 'The year for the cover start date must include 4 numbers',
+        },
+        coverEndDate: {
+          text: 'The year for the cover end date must include 4 numbers',
+        },
+      },
+    };
+
+    const expectedFacilityErrors = [
+      {
+        errRef: 'issueDate',
+        errMsg: 'The day for the issue date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'issueDate',
+        errMsg: 'The month for the issue date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'issueDate',
+        errMsg: 'The year for the issue date must include 4 numbers',
+      },
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'The day for the cover start date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'The month for the cover start date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'The year for the cover start date must include 4 numbers',
+      },
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'The day for the cover end date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'The month for the cover end date must include 1 or 2 numbers',
+      },
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'The year for the cover end date must include 4 numbers',
+      }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
+  it('should return object with errors populated if all dates are blank', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+    mockRequest.body['issue-date-day'] = '';
+    mockRequest.body['issue-date-month'] = '';
+    mockRequest.body['issue-date-year'] = '';
+
+    mockRequest.body['cover-start-date-day'] = '';
+    mockRequest.body['cover-start-date-month'] = '';
+    mockRequest.body['cover-start-date-year'] = '';
+
+    mockRequest.body['cover-end-date-day'] = '';
+    mockRequest.body['cover-end-date-month'] = '';
+    mockRequest.body['cover-end-date-year'] = '';
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [
+        {
+          href: '#issueDate',
+          text: 'Enter the date you issued the facility to the exporter',
+        },
+        {
+          href: '#coverStartDate',
+          text: 'Enter a cover start date',
+        },
+        {
+          href: '#coverEndDate',
+          text: 'Enter a cover end date',
+        }],
+      fieldErrors: {
+        issueDate: {
+          text: 'Enter the date you issued the facility to the exporter',
+        },
+        coverStartDate: {
+          text: 'Enter a cover start date',
+        },
+        coverEndDate: {
+          text: 'Enter a cover end date',
+        },
+      },
+    };
+
+    const expectedFacilityErrors = [
+      {
+        errRef: 'issueDate',
+        errMsg: 'Enter the date you issued the facility to the exporter',
+      },
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'Enter a cover start date',
+      },
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'Enter a cover end date',
+      }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
   it('should return object with errors populated AIN and coverStartDate over 3 months in future from submission date', async () => {
     api.getApplication.mockResolvedValue({ submissionDate: `${getUnixTime(oneMonthAgo)}608` });
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
