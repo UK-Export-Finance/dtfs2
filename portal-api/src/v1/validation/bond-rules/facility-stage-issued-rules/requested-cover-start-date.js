@@ -25,16 +25,16 @@ module.exports = (submittedValues, deal, errorList) => {
 
   const dealHasBeenSubmitted = deal.details.submissionDate;
 
-  if (requestedCoverStartDateTimestamp) {
-    const nowDate = moment().startOf('day');
+  const nowDate = moment().startOf('day');
 
-    if (!dealHasBeenSubmitted) {
-      const {
-        coverDayValidation,
-        coverMonthValidation,
-        coverYearValidation
-      } = coverDatesValidation(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
+  if (!dealHasBeenSubmitted) {
+    const {
+      coverDayValidation,
+      coverMonthValidation,
+      coverYearValidation
+    } = coverDatesValidation(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
 
+    if (requestedCoverStartDateTimestamp) {
       if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
         newErrorList.requestedCoverStartDate = {
           text: 'Requested Cover Start Date must be on the application submission date or in the future',
@@ -60,28 +60,28 @@ module.exports = (submittedValues, deal, errorList) => {
           };
         }
       }
-      if (coverDayValidation.error && requestedCoverStartDateDay) {
-        // error object does not exist if no errors in validation
-        newErrorList.requestedCoverStartDate = {
-          text: 'The day for the requested Cover Start Date must include 1 or 2 numbers',
-          order: orderNumber(newErrorList),
-        };
-      }
+    }
+    if (coverDayValidation.error && requestedCoverStartDateDay) {
+      // error object does not exist if no errors in validation
+      newErrorList.requestedCoverStartDate = {
+        text: 'The day for the requested Cover Start Date must include 1 or 2 numbers',
+        order: orderNumber(newErrorList),
+      };
+    }
 
-      if (coverMonthValidation.error && requestedCoverStartDateMonth) {
-        // error object does not exist if no errors in validation
-        newErrorList.requestedCoverStartDate = {
-          text: 'The month for the requested Cover Start Date must include 1 or 2 numbers',
-          order: orderNumber(newErrorList),
-        };
-      }
-      if (coverYearValidation.error && requestedCoverStartDateYear) {
-        // error object does not exist if no errors in validation
-        newErrorList.requestedCoverStartDate = {
-          text: 'The year for the requested Cover Start Date must include 4 numbers',
-          order: orderNumber(newErrorList),
-        };
-      }
+    if (coverMonthValidation.error && requestedCoverStartDateMonth) {
+      // error object does not exist if no errors in validation
+      newErrorList.requestedCoverStartDate = {
+        text: 'The month for the requested Cover Start Date must include 1 or 2 numbers',
+        order: orderNumber(newErrorList),
+      };
+    }
+    if (coverYearValidation.error && requestedCoverStartDateYear) {
+      // error object does not exist if no errors in validation
+      newErrorList.requestedCoverStartDate = {
+        text: 'The year for the requested Cover Start Date must include 4 numbers',
+        order: orderNumber(newErrorList),
+      };
     }
   } else if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
     requestedCoverStartDateDay,
