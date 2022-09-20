@@ -345,7 +345,7 @@ describe('validation()', () => {
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
-  it('should return object with errors populated if issue date has errors', async () => {
+  it('should return object with errors populated if issue date has only symbols', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.query.saveAndReturn = 'true';
@@ -403,7 +403,7 @@ describe('validation()', () => {
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
-  it('should return object with errors populated if cover start date has errors', async () => {
+  it('should return object with errors populated if cover start date has only symbols', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -462,7 +462,7 @@ describe('validation()', () => {
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
-  it('should return object with errors populated if cover end date has errors', async () => {
+  it('should return object with errors populated if cover end date has symbols', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -521,7 +521,7 @@ describe('validation()', () => {
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
-  it('should return object with errors populated if all dates have errors', async () => {
+  it('should return object with errors populated if all dates are just symbols', async () => {
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
     mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -629,6 +629,71 @@ describe('validation()', () => {
       {
         errRef: 'coverEndDate',
         errMsg: 'The year for the cover end date must include 4 numbers',
+      }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
+  it('should return object with errors populated if all dates are blank', async () => {
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+    mockRequest.body['issue-date-day'] = '';
+    mockRequest.body['issue-date-month'] = '';
+    mockRequest.body['issue-date-year'] = '';
+
+    mockRequest.body['cover-start-date-day'] = '';
+    mockRequest.body['cover-start-date-month'] = '';
+    mockRequest.body['cover-start-date-year'] = '';
+
+    mockRequest.body['cover-end-date-day'] = '';
+    mockRequest.body['cover-end-date-month'] = '';
+    mockRequest.body['cover-end-date-year'] = '';
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params);
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [
+        {
+          href: '#issueDate',
+          text: 'Enter the date you issued the facility to the exporter',
+        },
+        {
+          href: '#coverStartDate',
+          text: 'Enter a cover start date',
+        },
+        {
+          href: '#coverEndDate',
+          text: 'Enter a cover end date',
+        }],
+      fieldErrors: {
+        issueDate: {
+          text: 'Enter the date you issued the facility to the exporter',
+        },
+        coverStartDate: {
+          text: 'Enter a cover start date',
+        },
+        coverEndDate: {
+          text: 'Enter a cover end date',
+        },
+      },
+    };
+
+    const expectedFacilityErrors = [
+      {
+        errRef: 'issueDate',
+        errMsg: 'Enter the date you issued the facility to the exporter',
+      },
+      {
+        errRef: 'coverStartDate',
+        errMsg: 'Enter a cover start date',
+      },
+      {
+        errRef: 'coverEndDate',
+        errMsg: 'Enter a cover end date',
       }];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);
