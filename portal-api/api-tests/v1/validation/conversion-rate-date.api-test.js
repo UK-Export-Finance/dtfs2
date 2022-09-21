@@ -67,6 +67,28 @@ describe('validation - conversion rate date', () => {
     expect(errorsLess.conversionRateDate.text).toEqual('The year for the conversion rate must include 4 numbers');
   });
 
+  it('should return validation error if the conversion date year is 00 or 0000', () => {
+    const facility = {
+      'conversionRateDate-day': '22',
+      'conversionRateDate-month': '02',
+      'conversionRateDate-year': '00',
+    };
+
+    const errors = checkConversionRate(facility, errorList, deal);
+
+    expect(errors.conversionRateDate.text).toEqual('The year for the conversion rate must include 4 numbers');
+
+    const facilityLess = {
+      'conversionRateDate-day': '22',
+      'conversionRateDate-month': '02',
+      'conversionRateDate-year': '0000',
+    };
+
+    const errorsLess = checkConversionRate(facilityLess, errorList, deal);
+
+    expect(errorsLess.conversionRateDate.text).toEqual('Conversion rate date must be between 23rd August 2022 and 21st September 2022');
+  });
+
   it('should return validation error if the conversion date month has more than 2 numbers', () => {
     const facility = {
       'conversionRateDate-day': '22',

@@ -61,8 +61,8 @@ module.exports = (submittedValues, deal, errorList) => {
         }
       }
     }
+    // coverDayValidation.error only exists if validation errors present
     if (coverDayValidation.error && requestedCoverStartDateDay) {
-      // error object does not exist if no errors in validation
       newErrorList.requestedCoverStartDate = {
         text: 'The day for the requested Cover Start Date must include 1 or 2 numbers',
         order: orderNumber(newErrorList),
@@ -70,14 +70,12 @@ module.exports = (submittedValues, deal, errorList) => {
     }
 
     if (coverMonthValidation.error && requestedCoverStartDateMonth) {
-      // error object does not exist if no errors in validation
       newErrorList.requestedCoverStartDate = {
         text: 'The month for the requested Cover Start Date must include 1 or 2 numbers',
         order: orderNumber(newErrorList),
       };
     }
     if (coverYearValidation.error && requestedCoverStartDateYear) {
-      // error object does not exist if no errors in validation
       newErrorList.requestedCoverStartDate = {
         text: 'The year for the requested Cover Start Date must include 4 numbers',
         order: orderNumber(newErrorList),
