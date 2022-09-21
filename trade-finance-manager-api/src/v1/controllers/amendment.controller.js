@@ -24,7 +24,7 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
       const { dealSnapshot } = await api.findOneDeal(amendment.dealId);
       if (dealSnapshot) {
       // gets portal user to ensure latest details
-        // const user = await api.findPortalUserById(dealSnapshot.maker._id);
+        const user = await api.findPortalUserById(dealSnapshot.maker._id);
 
         // if automaticApprovalEmail and !automaticApprovalEmailSent (email not sent before)
         if (amendment?.automaticApprovalEmail && !amendment?.automaticApprovalEmailSent) {

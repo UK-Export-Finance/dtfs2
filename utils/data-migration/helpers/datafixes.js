@@ -1,4 +1,3 @@
-const { ObjectID } = require('bson');
 const CONSTANTS = require('../constant');
 const {
   getCollection,
@@ -54,8 +53,8 @@ const formatString = (string) => {
 const dealId = (deal) => {
   if (deal && deal.dealSnapshot) {
     return deal.dealSnapshot.dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF
-      ? deal.dealSnapshot.dealId
-      : deal.dealSnapshot.details.dealId;
+      ? deal.dealSnapshot.ukefDealId
+      : deal.dealSnapshot.details.ukefDealId;
   }
   return null;
 };
@@ -167,6 +166,9 @@ const partyUrn = async (facility = false) => {
             const { ROLE_TYPE, URN } = DEAL.PARTY;
 
             switch (ROLE_TYPE) {
+              case 'AGENT':
+                allDeals[index].tfm.parties.agent.partyUrn = URN;
+                break;
               case 'BUYER':
                 allDeals[index].tfm.parties.buyer.partyUrn = URN;
                 break;
@@ -181,6 +183,166 @@ const partyUrn = async (facility = false) => {
             }
           }
 
+          return null;
+        });
+    }
+  });
+};
+
+/**
+ * Add exporter credit rating to a deal (deal.tfm.exporterCreditRating)
+ */
+const creditRating = async () => {
+  const creditRatings = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
+
+  Object.values(allDeals).forEach((deal, index) => {
+    if (deal.tfm) {
+      // Add exporter credit rating to the deal
+      creditRatings
+        .filter(({ UKEF_DEAL_ID }) => UKEF_DEAL_ID === dealId(deal))
+        .map(({ FACILITY }) => {
+          allDeals[index].tfm.exporterCreditRating = FACILITY['CREDIT RATING'];
+          return null;
+        });
+    }
+  });
+};
+
+/**
+ * Add Premium Schedule (deal.tfm.premiumSchedule) for pre-calculated
+ * Workflow/K2 deals. This also includes PS
+ * pre-calculated for Amendments.
+ */
+const premiumSchedule = async () => {
+  const premiumSchedules = await workflow(CONSTANTS.WORKFLOW.FILES.INCOME_EXPOSURE);
+
+  Object.values(allFacilities).forEach((facility, index) => {
+    if (facility.tfm) {
+      const premiums = [];
+      let period = 1;
+
+      // Add pre-calculated PS to the facility
+      premiumSchedules
+        .filter(({ DEAL }) => DEAL.FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId
+        && DEAL.FACILITY.PREM_SCH)
+        .map(({ DEAL }) => {
+          premiums.push({
+            id: period,
+            facilityURN: Number(DEAL.FACILITY['UKEF FACILITY ID']).toString(),
+            calculationDate: DEAL.FACILITY.PREM_SCH['CALCULATION DATE'],
+            income: DEAL.FACILITY.PREM_SCH.INCOME,
+            incomePerDay: DEAL.FACILITY.PREM_SCH['INCOME PER DAY'],
+            exposure: DEAL.FACILITY.PREM_SCH.EXPOSURE,
+            period,
+            daysInPeriod: DEAL.FACILITY.PREM_SCH['DAYS IN PERIOD'],
+            effectiveFrom: DEAL.FACILITY.PREM_SCH['EFFECTIVE FROM DATE'],
+            effectiveTo: DEAL.FACILITY.PREM_SCH['EFFECTIVE TO DATE'],
+            created: DEAL.FACILITY.PREM_SCH['CALCULATION DATE'],
+            updated: `${DEAL.FACILITY.PREM_SCH['CALCULATION DATE']}T00:00:00`,
+            isAtive: `${DEAL.FACILITY.PREM_SCH['CURRENT INDICATOR']}T00:00:00`,
+          });
+          period += 1;
+
+          return null;
+        });
+
+      allFacilities[index].tfm.premiumSchedule = premiums;
+    }
+  });
+};
+
+/**
+ * Facility data fix
+ * facility.facilitySnapshot.dayCountBasis
+ */
+const dayBasis = async () => {
+  const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
+
+  Object.values(allFacilities).forEach((facility, index) => {
+    if (facility.tfm && facility.tfm.dayCountBasis) {
+      facilities
+        .filter(({ FACILITY }) => FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId)
+        .map(({ FACILITY }) => {
+          if (FACILITY['DAY BASIS']) {
+            allFacilities[index].tfm.facilitySnapshot.dayCountBasis = FACILITY['DAY BASIS'];
+          }
+          return null;
+        });
+    }
+  });
+};
+
+/**
+ * Facility data fix
+ * facility.facilitySnapshot.feeType
+ */
+const feeType = async () => {
+  const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
+
+  Object.values(allFacilities).forEach((facility, index) => {
+    if (facility.tfm && facility.tfm.dayCountBasis) {
+      facilities
+        .filter(({ FACILITY }) => FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId)
+        .map(({ FACILITY }) => {
+          if (FACILITY['PREMIUM TYPE']) {
+            let type;
+
+            switch (FACILITY['PREMIUM TYPE']) {
+              case 1:
+                type = 'In Advance';
+                break;
+              case 2:
+                type = 'In Arrears';
+                break;
+              case 3:
+                type = 'At Maturity';
+                break;
+              default:
+                break;
+            }
+
+            allFacilities[index].tfm.facilitySnapshot.feeType = type;
+          }
+          return null;
+        });
+    }
+  });
+};
+
+/**
+ * Facility data fix
+ * facility.facilitySnapshot.feeFrequency
+ */
+const feeFrequency = async () => {
+  const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
+
+  Object.values(allFacilities).forEach((facility, index) => {
+    if (facility.tfm && facility.tfm.dayCountBasis) {
+      facilities
+        .filter(({ FACILITY }) => FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId)
+        .map(({ FACILITY }) => {
+          if (FACILITY['PREMIUM FREQUENCY']) {
+            let frequency;
+
+            switch (FACILITY['PREMIUM FREQUENCY']) {
+              case 1:
+                frequency = 'Monthly';
+                break;
+              case 2:
+                frequency = 'Quarterly';
+                break;
+              case 3:
+                frequency = 'Semi-annually';
+                break;
+              case 4:
+                frequency = 'Annually';
+                break;
+              default:
+                break;
+            }
+
+            allFacilities[index].tfm.facilitySnapshot.feeFrequency = frequency;
+          }
           return null;
         });
     }
@@ -338,6 +500,7 @@ const datafixesTfmDeal = async (deals) => {
       let updated = 0;
 
       // TFM Deal - Data fixes
+      await creditRating();
       await partyUrn();
       await agentCommissionRate();
       await comment();
@@ -399,6 +562,10 @@ const datafixesTfmFacilities = async (deals) => {
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
         await partyUrn(true);
+        await premiumSchedule();
+        await dayBasis();
+        await feeType();
+        await feeFrequency();
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {
