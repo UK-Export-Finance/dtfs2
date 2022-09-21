@@ -92,27 +92,23 @@ context('Bond Details', () => {
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
     pages.bondDetails.coverEndDateInputErrorMessage().contains('The day for the cover end date must only include 1 or 2 numbers');
 
-    pages.bondDetails.requestedCoverStartDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
-    pages.bondDetails.coverEndDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
-    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}-`);
-    pages.bondDetails.coverEndDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}-`);
+    pages.bondDetails.requestedCoverStartDateDayInput().type('##');
+    pages.bondDetails.requestedCoverStartDateMonthInput().type('##');
+    pages.bondDetails.requestedCoverStartDateYearInput().type('##');
+    pages.bondDetails.coverEndDateDayInput().type('##');
+    pages.bondDetails.coverEndDateMonthInput().type('##');
+    pages.bondDetails.coverEndDateYearInput().type('##');
 
-    pages.bondDetails.submit().click();
+    partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
+      const bondId = bondIdHiddenInput[0].value;
 
-    partials.taskListHeader.itemStatus('bond-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
+      pages.bondDetails.saveGoBackButton().click();
+
+      const row = pages.contract.bondTransactionsTable.row(bondId);
+
+      row.requestedCoverStartDate().contains('Invalid date');
+      row.coverEndDate().contains('Invalid date');
     });
-
-    partials.taskListHeader.itemStatus('financial-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
-
-    partials.taskListHeader.itemStatus('fee-details').invoke('text').then((text) => {
-      expect(text.trim()).equal('Incomplete');
-    });
-
-    pages.bondDetails.bondDetails().click();
-    pages.bondDetails.coverEndDateInputErrorMessage().contains('The month for the cover end date must only include 1 or 2 numbers');
   });
 
   it('form submit of all required fields should display a `completed` status tag only for `Bond Details` in task list header', () => {

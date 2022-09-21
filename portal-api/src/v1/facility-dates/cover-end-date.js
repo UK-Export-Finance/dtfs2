@@ -36,8 +36,8 @@ const hasAllCoverEndDateValues = (facility) => {
 exports.hasAllCoverEndDateValues = hasAllCoverEndDateValues;
 
 const updateCoverEndDate = (facility) => {
-  // if we have all requestedCoverStartDate fields (day, month and year)
-  // generate UTC timestamp in a single requestedCoverStartDate property.
+  // if we have all coverEndDate fields (day, month and year)
+  // generate UTC timestamp in a single coverEndDate property.
   const modifiedFacility = facility;
 
   if (hasAllCoverEndDateValues(facility)) {

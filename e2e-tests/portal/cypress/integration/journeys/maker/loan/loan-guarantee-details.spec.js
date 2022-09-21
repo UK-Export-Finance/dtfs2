@@ -154,6 +154,49 @@ context('Loan Guarantee Details', () => {
         });
       });
     });
+
+    it('should show validation errors when incorrect date inputs and show invalid date on contract page', () => {
+      goToPage(deal);
+
+      pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
+
+      pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().clear().type('23-');
+      pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().clear().type('03-');
+      pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().clear().type('2022-');
+
+      pages.loanGuaranteeDetails.coverEndDateDayInput().clear().type('23-');
+      pages.loanGuaranteeDetails.coverEndDateMonthInput().clear().type('08-');
+      pages.loanGuaranteeDetails.coverEndDateYearInput().clear().type('2023-');
+
+      pages.loanGuaranteeDetails.submit().click();
+
+      partials.taskListHeader.itemLink('loan-guarantee-details').click();
+
+      partials.errorSummary.errorSummaryLinks().should('have.length', 3);
+      partials.errorSummary.errorSummaryLinks().contains('The year for the Cover End Date must include 4 numbers');
+      partials.errorSummary.errorSummaryLinks().contains('The year for the requested Cover Start Date must include 4 numbers');
+      pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
+      pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
+
+      pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().clear().type('##');
+      pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().clear().type('##');
+      pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().clear().type('####');
+
+      pages.loanGuaranteeDetails.coverEndDateDayInput().clear().type('##');
+      pages.loanGuaranteeDetails.coverEndDateMonthInput().clear().type('##');
+      pages.loanGuaranteeDetails.coverEndDateYearInput().clear().type('####');
+
+      partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
+        const loanId = loanIdHiddenInput[0].value;
+
+        pages.loanGuaranteeDetails.saveGoBackButton().click();
+
+        const row = pages.contract.loansTransactionsTable.row(loanId);
+
+        row.requestedCoverStartDate().contains('Invalid date');
+        row.coverEndDate().contains('Invalid date');
+      });
+    });
   });
 
   it('should prepopulate form inputs from submitted data and render a checked checkbox in progress nav', () => {
