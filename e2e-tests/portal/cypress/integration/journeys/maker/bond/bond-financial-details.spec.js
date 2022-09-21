@@ -213,6 +213,26 @@ context('Bond Financial Details', () => {
         pages.bondFinancialDetails.currencyInputErrorMessage().should('be.visible');
         pages.bondFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
+
+        pages.bondFinancialDetails.conversionRateDateDayInput().type('22-');
+        pages.bondFinancialDetails.conversionRateDateMonthInput().type('02');
+        pages.bondFinancialDetails.conversionRateDateYearInput().type('2022');
+        pages.bondFinancialDetails.submit().click();
+        partials.taskListHeader.itemLink('financial-details').click();
+        pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The day for the conversion rate must include 1 or 2 numbers');
+
+        pages.bondFinancialDetails.conversionRateDateDayInput().clear().type('22');
+        pages.bondFinancialDetails.conversionRateDateMonthInput().clear().type('022');
+        pages.bondFinancialDetails.submit().click();
+        partials.taskListHeader.itemLink('financial-details').click();
+        pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The month for the conversion rate must include 1 or 2 numbers');
+
+        pages.bondFinancialDetails.conversionRateDateDayInput().clear().type('22');
+        pages.bondFinancialDetails.conversionRateDateMonthInput().clear().type('02');
+        pages.bondFinancialDetails.conversionRateDateYearInput().clear().type('2O22');
+        pages.bondFinancialDetails.submit().click();
+        partials.taskListHeader.itemLink('financial-details').click();
+        pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The year for the conversion rate must include 4 numbers');
       });
     });
 
