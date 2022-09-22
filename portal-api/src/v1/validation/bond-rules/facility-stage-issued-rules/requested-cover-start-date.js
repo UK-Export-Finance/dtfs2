@@ -61,6 +61,23 @@ module.exports = (submittedValues, deal, errorList) => {
         }
       }
     }
+
+    if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    )) {
+      newErrorList.requestedCoverStartDate = {
+        text: dateValidationText(
+          'Requested Cover Start Date',
+          requestedCoverStartDateDay,
+          requestedCoverStartDateMonth,
+          requestedCoverStartDateYear,
+        ),
+        order: orderNumber(newErrorList),
+      };
+    }
+
     // coverDayValidation.error only exists if validation errors present
     if (coverDayValidation.error && requestedCoverStartDateDay) {
       newErrorList.requestedCoverStartDate = {
@@ -78,21 +95,6 @@ module.exports = (submittedValues, deal, errorList) => {
     if (coverYearValidation.error && requestedCoverStartDateYear) {
       newErrorList.requestedCoverStartDate = {
         text: 'The year for the requested Cover Start Date must include 4 numbers',
-        order: orderNumber(newErrorList),
-      };
-    }
-    if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
-      requestedCoverStartDateDay,
-      requestedCoverStartDateMonth,
-      requestedCoverStartDateYear,
-    )) {
-      newErrorList.requestedCoverStartDate = {
-        text: dateValidationText(
-          'Requested Cover Start Date',
-          requestedCoverStartDateDay,
-          requestedCoverStartDateMonth,
-          requestedCoverStartDateYear,
-        ),
         order: orderNumber(newErrorList),
       };
     }
