@@ -55,8 +55,8 @@
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-cover-end-date">
-                  {% if loan['coverEndDate-day'] and loan['coverEndDate-month'] and loan['coverEndDate-year'] %}
-                    {{ loan['coverEndDate-day'] | safe }}/{{ loan['coverEndDate-month'] | safe }}/{{ loan['coverEndDate-year'] | safe }}
+                  {% if loan.coverEndDate %}
+                    {{ loan.coverEndDate | localiseTimestamp('DD/MM/YYYY', params.user.timezone) | safe }}
                   {% endif %}
                 </td>
 
