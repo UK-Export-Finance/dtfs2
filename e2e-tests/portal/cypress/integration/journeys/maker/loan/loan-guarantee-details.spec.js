@@ -178,6 +178,60 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
       pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
 
+      pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().clear().type(' ');
+      pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().clear().type(' ');
+      pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().clear().type(' ');
+
+      pages.loanGuaranteeDetails.coverEndDateDayInput().clear().type(' ');
+      pages.loanGuaranteeDetails.coverEndDateMonthInput().clear().type(' ');
+      pages.loanGuaranteeDetails.coverEndDateYearInput().clear().type(' ');
+
+      pages.loanGuaranteeDetails.submit().click();
+
+      partials.taskListHeader.itemLink('loan-guarantee-details').click();
+
+      partials.errorSummary.errorSummaryLinks().should('have.length', 3);
+      partials.errorSummary.errorSummaryLinks().contains('The year for the requested Cover Start Date must include 4 numbers');
+      partials.errorSummary.errorSummaryLinks().contains('The year for the Cover End Date must include 4 numbers');
+      pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
+      pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
+
+      pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().clear().type('23-');
+      pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().clear().type('05');
+      pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().clear().type('2022');
+
+      pages.loanGuaranteeDetails.coverEndDateDayInput().clear().type('23-');
+      pages.loanGuaranteeDetails.coverEndDateMonthInput().clear().type('05');
+      pages.loanGuaranteeDetails.coverEndDateYearInput().clear().type('2025');
+
+      pages.loanGuaranteeDetails.submit().click();
+
+      partials.taskListHeader.itemLink('loan-guarantee-details').click();
+
+      partials.errorSummary.errorSummaryLinks().should('have.length', 3);
+      partials.errorSummary.errorSummaryLinks().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
+      partials.errorSummary.errorSummaryLinks().contains('The day for the cover end date must only include 1 or 2 numbers');
+      pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The day for the cover end date must only include 1 or 2 numbers');
+      pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
+
+      pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().clear().type('23');
+      pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().clear().type('05-');
+      pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().clear().type('2022');
+
+      pages.loanGuaranteeDetails.coverEndDateDayInput().clear().type('23');
+      pages.loanGuaranteeDetails.coverEndDateMonthInput().clear().type('05-');
+      pages.loanGuaranteeDetails.coverEndDateYearInput().clear().type('2025');
+
+      pages.loanGuaranteeDetails.submit().click();
+
+      partials.taskListHeader.itemLink('loan-guarantee-details').click();
+
+      partials.errorSummary.errorSummaryLinks().should('have.length', 3);
+      partials.errorSummary.errorSummaryLinks().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
+      partials.errorSummary.errorSummaryLinks().contains('The month for the cover end date must only include 1 or 2 numbers');
+      pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The month for the cover end date must only include 1 or 2 numbers');
+      pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
+
       pages.loanGuaranteeDetails.requestedCoverStartDateDayInput().clear().type('##');
       pages.loanGuaranteeDetails.requestedCoverStartDateMonthInput().clear().type('##');
       pages.loanGuaranteeDetails.requestedCoverStartDateYearInput().clear().type('####');

@@ -1,3 +1,4 @@
+const moment = require('moment');
 const checkConversionRate = require('../../../src/v1/validation/fields/currency-not-the-same-as-supply-contract-rules/conversion-rate-date');
 
 describe('validation - conversion rate date', () => {
@@ -84,9 +85,12 @@ describe('validation - conversion rate date', () => {
       'conversionRateDate-year': '0000',
     };
 
+    const nowDate = moment().format('YYYY-MM-DD');
+    const MAX_DAYS_FROM_NOW = moment(nowDate).subtract(29, 'day');
+
     const errorsLess = checkConversionRate(facilityLess, errorList, deal);
 
-    expect(errorsLess.conversionRateDate.text).toEqual('Conversion rate date must be between 23rd August 2022 and 21st September 2022');
+    expect(errorsLess.conversionRateDate.text).toEqual(`Conversion rate date must be between ${moment(MAX_DAYS_FROM_NOW).format('Do MMMM YYYY')} and ${moment(nowDate).format('Do MMMM YYYY')}`);
   });
 
   it('should return validation error if the conversion date month has more than 2 numbers', () => {

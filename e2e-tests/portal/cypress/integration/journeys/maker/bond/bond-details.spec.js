@@ -92,12 +92,38 @@ context('Bond Details', () => {
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
     pages.bondDetails.coverEndDateInputErrorMessage().contains('The day for the cover end date must only include 1 or 2 numbers');
 
-    pages.bondDetails.requestedCoverStartDateDayInput().type('##');
-    pages.bondDetails.requestedCoverStartDateMonthInput().type('##');
-    pages.bondDetails.requestedCoverStartDateYearInput().type('##');
-    pages.bondDetails.coverEndDateDayInput().type('##');
-    pages.bondDetails.coverEndDateMonthInput().type('##');
-    pages.bondDetails.coverEndDateYearInput().type('##');
+    pages.bondDetails.requestedCoverStartDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}-`);
+    pages.bondDetails.requestedCoverStartDateYearInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
+    pages.bondDetails.coverEndDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
+    pages.bondDetails.coverEndDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}-`);
+    pages.bondDetails.coverEndDateYearInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateYear);
+
+    pages.bondDetails.submit().click();
+
+    pages.bondDetails.bondDetails().click();
+    pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
+    pages.bondDetails.coverEndDateInputErrorMessage().contains('The month for the cover end date must only include 1 or 2 numbers');
+
+    pages.bondDetails.requestedCoverStartDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
+    pages.bondDetails.requestedCoverStartDateYearInput().clear().type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}-`);
+    pages.bondDetails.coverEndDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
+    pages.bondDetails.coverEndDateMonthInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
+    pages.bondDetails.coverEndDateYearInput().clear().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateYear}-`);
+
+    pages.bondDetails.submit().click();
+
+    pages.bondDetails.bondDetails().click();
+    pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
+    pages.bondDetails.coverEndDateInputErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
+
+    pages.bondDetails.requestedCoverStartDateDayInput().clear().type('##');
+    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type('##');
+    pages.bondDetails.requestedCoverStartDateYearInput().clear().type('##');
+    pages.bondDetails.coverEndDateDayInput().clear().type('##');
+    pages.bondDetails.coverEndDateMonthInput().clear().type('##');
+    pages.bondDetails.coverEndDateYearInput().clear().type('##');
 
     partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
       const bondId = bondIdHiddenInput[0].value;
