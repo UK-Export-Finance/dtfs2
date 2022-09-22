@@ -11,6 +11,10 @@ const {
   hasAllRequestedCoverStartDateValues,
   updateRequestedCoverStartDate,
 } = require('../facility-dates/requested-cover-start-date');
+const {
+  hasAllCoverEndDateValues,
+  updateCoverEndDate,
+} = require('../facility-dates/cover-end-date');
 const { sanitizeCurrency } = require('../../utils/number');
 const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
@@ -153,6 +157,12 @@ exports.updateBond = async (req, res) => {
         modifiedBond = updateRequestedCoverStartDate(modifiedBond);
       } else {
         modifiedBond.requestedCoverStartDate = null;
+      }
+
+      if (hasAllCoverEndDateValues(modifiedBond)) {
+        modifiedBond = updateCoverEndDate(modifiedBond);
+      } else {
+        modifiedBond.coverEndDate = null;
       }
 
       const { status, data } = await facilitiesController.update(

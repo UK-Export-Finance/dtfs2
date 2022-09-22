@@ -1,7 +1,7 @@
 import relative from './relativeURL';
 import aboutFacility from './pages/about-facility';
 import CREDENTIALS from '../fixtures/credentials.json';
-import dateConstants from '../fixtures/dateConstants';
+import dateConstants from '../../../e2e-fixtures/dateConstants';
 
 const applications = [];
 let token;

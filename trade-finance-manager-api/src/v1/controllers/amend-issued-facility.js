@@ -1,8 +1,8 @@
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
-const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
-const { calculateGefFacilityFeeRecord } = require('../helpers/calculate-gef-facility-fee-record');
+// const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
+// const { calculateGefFacilityFeeRecord } = require('../helpers/calculate-gef-facility-fee-record');
 const { mapCashContingentFacility } = require('../mappings/map-submitted-deal/map-cash-contingent-facility');
 const { mapBssEwcsFacility } = require('../mappings/map-submitted-deal/map-bss-ewcs-facility');
 const { formatDate } = require('../../utils/date');
@@ -32,8 +32,8 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
       let submissionDate;
       const { facilitySnapshot, tfm } = facility;
       let history = [];
-      let facilityPremiumSchedule;
-      let feeRecord;
+      // let facilityPremiumSchedule;
+      // let feeRecord;
       let facilityTfmUpdate;
       let { facilityGuaranteeDates } = tfm;
       let amendedFacility = {
@@ -125,26 +125,28 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
         }
 
         // facility.tfm.feeRecord or facility.tfm.premiumSchedule
-        if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-          facilityPremiumSchedule = await getFacilityPremiumSchedule(
-            amendedFacility,
-            {
-              exposurePeriodInMonths: amendmentExposurePeriodInMonths,
-            },
-            facilityGuaranteeDates,
-          );
+        // TO-DO DTFS2-4614 & DTFS2-5201: De-comment below upon PS/FF BR completion.
 
-          facilityTfmUpdate = {
-            ...facilityTfmUpdate,
-            premiumSchedule: facilityPremiumSchedule,
-          };
-        } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-          feeRecord = calculateGefFacilityFeeRecord(amendedFacility);
-          facilityTfmUpdate = {
-            ...facilityTfmUpdate,
-            feeRecord,
-          };
-        }
+        // if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+        //   facilityPremiumSchedule = await getFacilityPremiumSchedule(
+        //     amendedFacility,
+        //     {
+        //       exposurePeriodInMonths: amendmentExposurePeriodInMonths,
+        //     },
+        //     facilityGuaranteeDates,
+        //   );
+
+        //   facilityTfmUpdate = {
+        //     ...facilityTfmUpdate,
+        //     premiumSchedule: facilityPremiumSchedule,
+        //   };
+        // } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+        //   feeRecord = calculateGefFacilityFeeRecord(amendedFacility);
+        //   facilityTfmUpdate = {
+        //     ...facilityTfmUpdate,
+        //     feeRecord,
+        //   };
+        // }
 
         // Save TFM in `tfm.history`
         history.push(tfm);
