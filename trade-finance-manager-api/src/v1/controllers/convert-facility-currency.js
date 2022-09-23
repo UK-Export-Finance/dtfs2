@@ -29,7 +29,7 @@ const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
         modifiedExchangeRate: exchangeRate,
         exchangeRate: historicExchangeRate,
       },
-      ...calculateUkefExposure(facilityValueInGBP, coverPercentage),
+      ...calculateUkefExposure(facilityValueInGBP, coverPercentage, dealSubmissionDate),
     };
   } else {
     facilityUpdate = {
