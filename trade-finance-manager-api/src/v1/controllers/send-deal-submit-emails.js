@@ -180,7 +180,7 @@ const sendAinMinAcknowledgement = async (deal) => {
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
   } catch (err) {
-    console.error('TFM-API - Error sending AIN/MIN acknowledgement email', { err });
+    // console.error('TFM-API - Error sending AIN/MIN acknowledgement email', { err });
   }
 
   return null;
@@ -202,7 +202,6 @@ const sendDealSubmitEmails = async (deal) => {
       emailAcknowledgementAinMin,
     };
   } catch (err) {
-    console.error('TFM-API - Error sending deal submit emails', { err });
     return {};
   }
 };

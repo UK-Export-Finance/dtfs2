@@ -30,7 +30,7 @@ const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL
  * @param {Object} filter Mongo filter
  * @returns {Object} Collection object
  */
-const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, { 'dealSnapshot.details.ukefDealId': '0020005534' });
+const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL);
 
 /**
  * Extracts deals from `deals` collection with following filters
@@ -72,6 +72,8 @@ const tfm = async (data) => {
   }
 
   let counter = 0;
+  let percentage = 0;
+
   const checker = {
     username: 'BANK1_CHECKER1',
     roles: ['checker'],
@@ -108,7 +110,9 @@ const tfm = async (data) => {
       .then((inserted) => {
         if (inserted.status === 200) {
           counter += 1;
-          console.info('\x1b[33m%s\x1b[0m', `${counter}/${data.length} Submitted.`, '\n');
+          percentage = Math.round((counter / data.length) * 100);
+
+          console.info('\x1b[33m%s\x1b[0m', `${percentage}% : ${counter}/${data.length} Submitted.`, '\n');
           allTfmDeals.push(inserted.data);
         } else {
           throw new Error('\x1b[31m%s\x1b[0m', `🚩 Error inserting deal ${inserted}`);
@@ -116,7 +120,10 @@ const tfm = async (data) => {
       })
       .catch((error) => Promise.reject(new Error(`🚩 Error inserting deal ${error}`)));
 
-    await sleep(1000);
+    if (counter % 100 === 0) {
+      console.info('\x1b[33m%s\x1b[0m', `👽️ Taking 10 seconds sleep at ${counter}.`, '\n');
+      await sleep(10000);
+    }
   }
 
   if (counter === data.length) {
