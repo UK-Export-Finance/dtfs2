@@ -124,7 +124,7 @@ const supportingInformations = async () => {
     if (deal.dealSnapshot) {
       // Add exporter credit rating to the deal
       information
-        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal) && DEAL['BANK SECURITY'] !== '')
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal) && DEAL['BANK SECURITY'].toString().trim() !== '')
         .map(({ DEAL }) => {
           const { supportingInformation } = allDeals[index].dealSnapshot;
 
@@ -619,7 +619,18 @@ const amendment = async () => {
       amendments
         .filter(({ DEAL }) => DEAL.FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId)
         .forEach(({ DEAL }) => {
-          console.log(DEAL.FACILITY['UKEF FACILITY ID']);
+          let amends = [];
+
+          // Copy existing amendments
+          if (facility.tfm.amendments) {
+            amends = facility.tfm.amendments;
+          }
+
+          // Construct amendment
+          amends.push();
+
+          // Save amendments
+          allFacilities[index].tfm.amendments = amends;
         });
     }
   });
@@ -772,13 +783,13 @@ const datafixesTfmFacilities = async (deals) => {
 
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
-        await partyUrn(true);
-        await premiumSchedule();
-        await dayBasis();
-        await feeType();
-        await feeFrequency();
-        await ACBS(true);
-        // await amendment();
+        // await partyUrn(true);
+        // await premiumSchedule();
+        // await dayBasis();
+        // await feeType();
+        // await feeFrequency();
+        // await ACBS(true);
+        await amendment();
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {
