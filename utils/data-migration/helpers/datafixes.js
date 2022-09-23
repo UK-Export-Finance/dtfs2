@@ -68,7 +68,7 @@ const dealId = (deal) => {
  */
 const getUkefDealIdFromObjectId = (_id) => allDeals
   .filter((d) => d._id.toString() === _id.toString())
-  .map((d) => d.ukefDealId ?? d.details.ukefDealId)
+  .map((d) => d.dealSnapshot.ukefDealId ?? d.dealSnapshot.details.ukefDealId)
   .reduce((d) => d);
 
 // ******************** DEALS *************************
@@ -607,6 +607,24 @@ const feeFrequency = async () => {
   });
 };
 
+/**
+ * Add amendments to the facility
+ * facility.tfm.amendments
+ */
+const amendment = async () => {
+  const amendments = await workflow(CONSTANTS.WORKFLOW.FILES.AMENDMENTS);
+
+  Object.values(allFacilities).forEach((facility, index) => {
+    if (facility.tfm) {
+      amendments
+        .filter(({ DEAL }) => DEAL.FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId)
+        .forEach(({ DEAL }) => {
+          console.log(DEAL.FACILITY['UKEF FACILITY ID']);
+        });
+    }
+  });
+};
+
 // ******************** Deal Update *************************
 
 /**
@@ -638,8 +656,6 @@ const datafixes = async (deals) => {
     // Deal - Data fixes
     await banking();
     eligibilityCriteria();
-
-    // Facility - Data fixes
 
     // Update portal
     const updates = allDeals.map(async (deal) => {
@@ -762,6 +778,7 @@ const datafixesTfmFacilities = async (deals) => {
         await feeType();
         await feeFrequency();
         await ACBS(true);
+        // await amendment();
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {

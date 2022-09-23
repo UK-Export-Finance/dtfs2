@@ -7,8 +7,8 @@ const { MongoClient } = require('mongodb');
 
 dotenv.config();
 
-const dbName = process.env.MONGO_INITDB_DATABASE;
-const url = process.env.MONGODB_URI;
+const dbName = 'dtfs-submissions';
+const url = 'mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT';
 
 let client;
 
