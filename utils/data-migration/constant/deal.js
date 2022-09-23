@@ -46,6 +46,15 @@ const CREDIT_RATING = {
   'B+': 'Acceptable (B+)',
 };
 
+const UNDERWRITER_MANAGER_DECISIONS = {
+  APPROVED_WITH_CONDITIONS: 'Approved with conditions',
+  APPROVED_WITHOUT_CONDITIONS: 'Approved without conditions',
+  DECLINED: 'Declined',
+  NOT_ADDED: 'Not added',
+  AUTOMATIC_APPROVAL: 'Automatic approval',
+  AWAITING_DECISION: 'Awaiting decision',
+};
+
 module.exports = {
   DEAL_TYPE,
   SUBMISSION_TYPE,
@@ -54,4 +63,5 @@ module.exports = {
   LOSS_GIVEN_DEFAULT,
   PROBABILITY_OF_DEFAULT,
   CREDIT_RATING,
+  UNDERWRITER_MANAGER_DECISIONS,
 };
