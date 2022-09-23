@@ -1,3 +1,4 @@
+const axios = require('axios');
 const CONSTANTS = require('../constant');
 const {
   getCollection,
@@ -6,11 +7,14 @@ const {
   tfmFacilityUpdate,
 } = require('./database');
 const { workflow } = require('./io');
+
+const { TFM_API } = process.env;
+let allDeals = {};
+let allFacilities = {};
+
 /**
  * Data fixes helper functions
  */
-let allDeals = {};
-let allFacilities = {};
 
 // ******************** DATABASE *************************
 
@@ -20,6 +24,48 @@ let allFacilities = {};
  * @returns {Object} Collection object
  */
 const getTfmFacilities = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES);
+
+// ******************** Internal API Calls *************************
+
+const createAmendment = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `${TFM_API}/v1/facility/${facilityId}/amendment`,
+      headers: { 'Content-Type': 'application/json' },
+      data: { facilityId },
+    });
+
+    if (response.data) {
+      return Promise.resolve(response.data);
+    }
+
+    return Promise.reject(new Error(response?.error));
+  } catch (e) {
+    console.error(`Unable to create an amendment for facility ${facilityId}:`, { e });
+    return Promise.reject(new Error(e));
+  }
+};
+
+const updateAmendment = async (facilityId, amendmentId, amendment) => {
+  try {
+    const response = await axios({
+      method: 'PUT',
+      url: `${TFM_API}/v1/facility/${facilityId}/amendment/${amendmentId}`,
+      headers: { 'Content-Type': 'application/json' },
+      amendment,
+    });
+
+    if (response.data) {
+      return Promise.resolve(response.data);
+    }
+
+    return Promise.reject(new Error(response?.error));
+  } catch (e) {
+    console.error(`Unable to update an amendment for facility ${facilityId}:`, { e });
+    return Promise.reject(new Error(e));
+  }
+};
 
 // ******************** EXTRA *************************
 
@@ -619,18 +665,8 @@ const amendment = async () => {
       amendments
         .filter(({ DEAL }) => DEAL.FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId)
         .forEach(({ DEAL }) => {
-          let amends = [];
-
-          // Copy existing amendments
-          if (facility.tfm.amendments) {
-            amends = facility.tfm.amendments;
-          }
-
-          // Construct amendment
-          amends.push();
-
-          // Save amendments
-          allFacilities[index].tfm.amendments = amends;
+          const facilityId;
+          createAmendment(facilityId);
         });
     }
   });

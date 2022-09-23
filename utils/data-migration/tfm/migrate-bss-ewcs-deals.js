@@ -30,7 +30,7 @@ const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL
  * @param {Object} filter Mongo filter
  * @returns {Object} Collection object
  */
-const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, { 'dealSnapshot.details.ukefDealId': '0020009154' });
+const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL);
 
 /**
  * Extracts deals from `deals` collection with following filters
@@ -146,8 +146,8 @@ const migrate = () => {
   getTfmDeals()
     // .then((d) => datafixes(d))
     // .then((d) => tfm(d))
-    // .then((d) => datafixesTfmDeal(d))
-    .then((d) => datafixesTfmFacilities(d))
+    .then((d) => datafixesTfmDeal(d))
+    // .then((d) => datafixesTfmFacilities(d))
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {

@@ -130,6 +130,11 @@ const tfmDealUpdate = async (updatedDeal) => {
   }
 };
 
+/**
+ * Update TFM Facility
+ * @param {Object} updatedFacility Updated facility payload
+ * @returns {Promise} Resolve if successful otherwise reject.
+ */
 const tfmFacilityUpdate = async (updatedFacility) => {
   try {
     delete updatedFacility._id;
@@ -160,4 +165,5 @@ module.exports = {
   portalDealUpdate,
   tfmDealUpdate,
   tfmFacilityUpdate,
+
 };
