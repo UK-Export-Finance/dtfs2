@@ -1,10 +1,9 @@
-const now = require('../../now');
 const {
   decimalsCount,
   roundNumber,
 } = require('./number');
 
-const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
+const calculateUkefExposure = (facilityValueInGBP, coverPercentage, dealSubmissionDate) => {
   let ukefExposure;
 
   const calculation = facilityValueInGBP * (coverPercentage / 100);
@@ -18,7 +17,7 @@ const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
 
   return {
     ukefExposure,
-    ukefExposureCalculationTimestamp: now(),
+    ukefExposureCalculationTimestamp: dealSubmissionDate,
   };
 };
 
