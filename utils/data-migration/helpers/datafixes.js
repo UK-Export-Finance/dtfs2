@@ -114,6 +114,48 @@ const banking = async () => {
 
 // ******************** TFM DEALS *************************
 /**
+ * Add supporting information
+ * deal.dealSnapshot.supportingInformation
+ */
+const supportingInformations = async () => {
+  const information = await workflow(CONSTANTS.WORKFLOW.FILES.DEAL);
+
+  Object.values(allDeals).forEach((deal, index) => {
+    if (deal.dealSnapshot) {
+      // Add exporter credit rating to the deal
+      information
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal) && DEAL['BANK SECURITY'] !== '')
+        .map(({ DEAL }) => {
+          const { supportingInformation } = allDeals[index].dealSnapshot;
+
+          // If exist then skip
+          if (!supportingInformation) {
+            return null;
+          }
+
+          // Only if comments don't already exists
+          if (!supportingInformation.securityDetails) {
+            allDeals[index].dealSnapshot.supportingInformation = {
+              ...supportingInformation,
+              securityDetails: {
+                exporter: formatString(DEAL['BANK SECURITY']),
+              },
+              validationErrors: {
+                count: 0,
+                errorList: {
+                  exporterQuestionnaire: {}
+                }
+              }
+            };
+          }
+
+          return null;
+        });
+    }
+  });
+};
+
+/**
  * Add UKEF decision to a MIN
  *
  * deal.tfm.underwriterManagersDecision
@@ -656,6 +698,7 @@ const datafixesTfmDeal = async (deals) => {
       await comment();
       await ACBS();
       await ukefDecision();
+      await supportingInformations();
 
       const updates = allDeals.map(async (deal) => {
         await tfmDealUpdate(deal)
