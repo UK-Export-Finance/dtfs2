@@ -30,7 +30,7 @@ const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL
  * @param {Object} filter Mongo filter
  * @returns {Object} Collection object
  */
-const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL);
+const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, { 'dealSnapshot.details.ukefDealId': '0020005534' });
 
 /**
  * Extracts deals from `deals` collection with following filters
@@ -136,11 +136,11 @@ const tfm = async (data) => {
 const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating BSS/EWCS TFM migration v${version}.`, '\n\n');
 
-  getTfmDeals()
-  //   .then((d) => datafixes(d))
-  //   .then((d) => tfm(d))
+  deals()
+    .then((d) => datafixes(d))
+    .then((d) => tfm(d))
     .then((d) => datafixesTfmDeal(d))
-    // .then((d) => datafixesTfmFacilities(d))
+    .then((d) => datafixesTfmFacilities(d))
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {
