@@ -41,6 +41,8 @@ const formatString = (string) => {
     raw = raw.replace(/\\"/g, '"');
     // Escaped forward slash
     raw = raw.replace(/\\\//g, '/');
+    // Replace unknown character
+    raw = raw.replace(//g, '');
   }
   return raw;
 };
@@ -111,6 +113,79 @@ const banking = async () => {
 };
 
 // ******************** TFM DEALS *************************
+/**
+ * Add UKEF decision to a MIN
+ *
+ * deal.tfm.underwriterManagersDecision
+ * deal.dealSnapshot.ukefDecision
+ * deal.dealSnapshot.ukefDecisionAccepted
+ */
+const ukefDecision = async () => {
+  const comments = await workflow(CONSTANTS.WORKFLOW.FILES.COMMENTS);
+  const acceptableSubmissions = [
+    CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+  ];
+
+  Object.values(allDeals).forEach((deal, index) => {
+    // MIN only deals
+    if (!acceptableSubmissions.includes(deal.dealSnapshot.submissionType)) {
+      return null;
+    }
+
+    let text = '';
+    let decision;
+    const acceptableTaskNames = [
+      'Deal Final Approval',
+      'AR - Final Approval',
+      'Tier 1 Approval'
+    ];
+
+    // Concatenate approval comments
+    comments
+      .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal)
+      && DEAL.COMMENT_TEXT
+      && acceptableTaskNames.includes(DEAL.TASK_NAME))
+      .forEach(({ DEAL }) => {
+        text = text.concat(text, ' ', formatString(DEAL.COMMENT_TEXT));
+      });
+
+    comments
+      .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal)
+      && DEAL.COMMENT_TEXT
+      && acceptableTaskNames.includes(DEAL.TASK_NAME))
+      .forEach(({ DEAL }) => {
+        const withConditions = DEAL.COMMENT_TEXT.toString().indexOf('Approved with Conditions') !== -1;
+        const withoutConditions = DEAL.COMMENT_TEXT.toString().indexOf('Approved without any other conditions') !== -1
+          || DEAL.COMMENT_TEXT.toString().indexOf('approved without special conditions') !== -1
+          || DEAL.COMMENT_TEXT.toString().indexOf('Approved : ') !== -1;
+
+        decision = withConditions && !withoutConditions
+          ? CONSTANTS.DEAL.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS
+          : CONSTANTS.DEAL.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
+
+        if (!allDeals[index].dealSnapshot.ukefDecision) {
+          allDeals[index].dealSnapshot.ukefDecision = [
+            {
+              text,
+              decision,
+              timestamp: deal.dealSnapshot.updatedAt,
+            }
+          ];
+        }
+
+        if (!allDeals[index].tfm.underwriterManagersDecision) {
+          allDeals[index].tfm.underwriterManagersDecision = {
+            decision,
+            comments: text
+          };
+        }
+
+        allDeals[index].dealSnapshot.ukefDecisionAccepted = true;
+      });
+
+    return true;
+  });
+};
 
 /**
  * Add Party URN to the TFM deal parties (deal.tfm.parties)
@@ -209,6 +284,147 @@ const creditRating = async () => {
 };
 
 /**
+ * Adds `acbs` property to the TFM facilities
+ * facility.tfm.acbs
+ */
+const ACBS = async (facility = false) => {
+  if (!facility) {
+    const acceptableSubmissions = [
+      CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
+      CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
+    ];
+    Object.values(allDeals).forEach((d, i) => {
+      if (!d.tfm.acbs && acceptableSubmissions.includes(d.dealSnapshot.submissionType)) {
+        // Construct `facilities` array
+        const facilities = d.dealSnapshot.facilities.map((f) => ({
+          facilityId: f._id,
+          facilityStage: f.hasBeenIssued ? '07' : '06',
+          facilityMaster: {},
+          facilityInvestor: {},
+          facilityCovenant: {},
+          facilityProviderGuarantee: {},
+          codeValueTransaction: {},
+        }));
+
+        // Construct `acbs` object
+        const acbs = {
+          portalDealId: d._id,
+          ukefDealId: dealId(d),
+          deal: {
+            parties: {},
+            deal: {},
+            investor: {},
+            guarantee: {},
+            facilities,
+          }
+        };
+
+        // Add `acbs` object to `deal.tfm`
+        const { tfm } = allDeals[i];
+        allDeals[i].tfm = {
+          ...tfm,
+          acbs,
+        };
+      }
+    });
+  } else {
+    Object.values(allFacilities).forEach((f, i) => {
+      if (!f.tfm.acbs && Boolean(f.facilitySnapshot.hasBeenIssued)) {
+      // Construct `acbs` object
+        const acbs = {
+          facilityStage: '07',
+          facilityMaster: {},
+          facilityInvestor: {},
+          facilityCovenant: {},
+          parties: {},
+          facilityCovenantChargeable: {},
+          facilityBondBeneficiaryGuarantee: {},
+          codeValueTransaction: {},
+          facilityLoan: {},
+          facilityFee: {},
+          dataMigration: true,
+        };
+
+        // Add `acbs` object to `facility.tfm`
+        const { tfm } = allFacilities[i];
+        allFacilities[i].tfm = {
+          ...tfm,
+          acbs,
+        };
+      }
+    });
+  }
+};
+
+/**
+ * Add agent's commission rate to deal TFM (deal.tfm.agent.commissionRate)
+ */
+const agentCommissionRate = async () => {
+  const commission = await workflow(CONSTANTS.WORKFLOW.FILES.DEAL);
+
+  Object.values(allDeals).forEach((deal, index) => {
+    if (deal.dealSnapshot.details && deal.tfm.parties) {
+    // Add agent commission rate
+      commission
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal))
+        .map(({ DEAL }) => {
+          if (DEAL['AGENT COMMISSION PERCENT']) {
+            allDeals[index].tfm.parties.agent.commissionRate = DEAL['AGENT COMMISSION PERCENT'];
+          }
+          return null;
+        });
+    }
+  });
+};
+
+/**
+ * Add Comments to the deal in TFM (tfm.activities)
+ */
+const comment = async () => {
+  const comments = await workflow(CONSTANTS.WORKFLOW.FILES.COMMENTS);
+
+  Object.values(allDeals).forEach((deal, index) => {
+    if (deal.tfm.activities) {
+      const { activities } = deal.tfm;
+      let tfmComments = [];
+
+      // Copy existing TFM activities
+      if (activities) {
+        tfmComments = activities;
+      }
+
+      // Process comments
+      comments
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal))
+        .map(({ DEAL }) => {
+          if (DEAL.COMMENT_TEXT && DEAL.ASSOC_TYPE_ID === 1) {
+            const { _id } = deal.dealSnapshot.maker;
+            const author = DEAL.COMMENT_TEXT.split(' ');
+
+            tfmComments.push({
+              type: 'COMMENT',
+              timestamp: Number(Number(deal.dealSnapshot.details.submissionDate) / 1000),
+              text: formatString(DEAL.COMMENT_TEXT),
+              author: {
+                _id,
+                firstName: author[0],
+                lastName: author[1] || '',
+              },
+              label: 'Comment added'
+            });
+          }
+
+          return null;
+        });
+
+      allDeals[index].tfm.activities = tfmComments;
+    }
+  });
+};
+
+// ******************** TFM FACILITIES *************************
+
+/**
  * Add Premium Schedule (deal.tfm.premiumSchedule) for pre-calculated
  * Workflow/K2 deals. This also includes PS
  * pre-calculated for Amendments.
@@ -252,9 +468,9 @@ const premiumSchedule = async () => {
 };
 
 /**
- * Facility data fix
- * facility.facilitySnapshot.dayCountBasis
- */
+* Facility data fix
+* facility.facilitySnapshot.dayCountBasis
+*/
 const dayBasis = async () => {
   const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
 
@@ -273,9 +489,9 @@ const dayBasis = async () => {
 };
 
 /**
- * Facility data fix
- * facility.facilitySnapshot.feeType
- */
+* Facility data fix
+* facility.facilitySnapshot.feeType
+*/
 const feeType = async () => {
   const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
 
@@ -310,9 +526,9 @@ const feeType = async () => {
 };
 
 /**
- * Facility data fix
- * facility.facilitySnapshot.feeFrequency
- */
+* Facility data fix
+* facility.facilitySnapshot.feeFrequency
+*/
 const feeFrequency = async () => {
   const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
 
@@ -345,72 +561,6 @@ const feeFrequency = async () => {
           }
           return null;
         });
-    }
-  });
-};
-
-/**
- * Add agent's commission rate to deal TFM (deal.tfm.agent.commissionRate)
- */
-const agentCommissionRate = async () => {
-  const commission = await workflow(CONSTANTS.WORKFLOW.FILES.DEAL);
-
-  Object.values(allDeals).forEach((deal, index) => {
-    if (deal.dealSnapshot.details && deal.tfm.parties) {
-    // Add agent commission rate
-      commission
-        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === deal.dealSnapshot.details.ukefDealId)
-        .map(({ DEAL }) => {
-          if (DEAL['AGENT COMMISSION PERCENT']) {
-            allDeals[index].tfm.parties.agent.commissionRate = DEAL['AGENT COMMISSION PERCENT'];
-          }
-          return null;
-        });
-    }
-  });
-};
-
-/**
- * Add Comments to the deal in TFM (tfm.activities)
- */
-const comment = async () => {
-  const comments = await workflow(CONSTANTS.WORKFLOW.FILES.COMMENTS);
-
-  Object.values(allDeals).forEach((deal, index) => {
-    if (deal.tfm.activities) {
-      const { activities } = deal.tfm;
-      let tfmComments = [];
-
-      // Copy existing TFM activities
-      if (activities) {
-        tfmComments = activities;
-      }
-
-      // Process comments
-      comments
-        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === deal.dealSnapshot.details.ukefDealId)
-        .map(({ DEAL }) => {
-          if (DEAL.COMMENT_TEXT && DEAL.ASSOC_TYPE_ID === 1) {
-            const { _id } = deal.dealSnapshot.maker;
-            const author = DEAL.COMMENT_TEXT.split(' ');
-
-            tfmComments.push({
-              type: 'COMMENT',
-              timestamp: Number(Number(deal.dealSnapshot.details.submissionDate) / 1000),
-              text: formatString(DEAL.COMMENT_TEXT),
-              author: {
-                _id,
-                firstName: author[0],
-                lastName: author[1] || '',
-              },
-              label: 'Comment added'
-            });
-          }
-
-          return null;
-        });
-
-      allDeals[index].tfm.activities = tfmComments;
     }
   });
 };
@@ -504,6 +654,8 @@ const datafixesTfmDeal = async (deals) => {
       await partyUrn();
       await agentCommissionRate();
       await comment();
+      await ACBS();
+      await ukefDecision();
 
       const updates = allDeals.map(async (deal) => {
         await tfmDealUpdate(deal)
@@ -566,6 +718,7 @@ const datafixesTfmFacilities = async (deals) => {
         await dayBasis();
         await feeType();
         await feeFrequency();
+        await ACBS(true);
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {
