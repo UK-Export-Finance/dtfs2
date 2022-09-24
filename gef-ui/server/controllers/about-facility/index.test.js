@@ -350,6 +350,198 @@ describe('controllers/about-facility', () => {
       }));
     });
 
+    it('shows error message if coverStartDate day has character or is more than 3 numbers long', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-start-date-day'] = `${format(yesterday, 'd')}-`;
+      mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' }]),
+        }),
+      }));
+
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-start-date-day'] = `${format(yesterday, 'd')}2`;
+      mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' }]),
+        }),
+      }));
+    });
+
+    it('shows error message if coverStartDate month has character or is more than 3 numbers long', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-start-date-month'] = `${format(yesterday, 'M')}=`;
+      mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' }]),
+        }),
+      }));
+
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-start-date-month'] = `${format(yesterday, 'M')}3}`;
+      mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' }]),
+        }),
+      }));
+    });
+
+    it('shows error message if coverStartDate year is less than 4 numbers long or has symbols', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-start-date-year'] = `${format(yesterday, 'yyyy')}+`;
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' }]),
+        }),
+      }));
+
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-start-date-year'] = '20';
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' }]),
+        }),
+      }));
+    });
+
+    it('shows error message if coverEndDate day has character or is more than 3 numbers long', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-end-date-day'] = `${format(yesterday, 'd')}-`;
+      mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
+        }),
+      }));
+
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-end-date-day'] = `${format(yesterday, 'd')}2`;
+      mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
+        }),
+      }));
+    });
+
+    it('shows error message if coverStartDate month has character or is more than 3 numbers long', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-end-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-end-date-month'] = `${format(yesterday, 'M')}=`;
+      mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' }]),
+        }),
+      }));
+
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-end-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-end-date-month'] = `${format(yesterday, 'M')}3}`;
+      mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' }]),
+        }),
+      }));
+    });
+
+    it('shows error message if coverStartDate year is less than 4 numbers long or has symbols', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-end-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-end-date-year'] = `${format(yesterday, 'yyyy')}+`;
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' }]),
+        }),
+      }));
+
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      mockRequest.body['cover-end-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-end-date-year'] = '20';
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' }]),
+        }),
+      }));
+    });
+
     it('shows error message if coverStartDate is after coverEndDate is in the past', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -386,6 +578,40 @@ describe('controllers/about-facility', () => {
       expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
         errors: expect.objectContaining({
           errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: expect.any(String) }]),
+        }),
+      }));
+    });
+
+    it('should show error message if cover starts on submission which is the same as the coverEndDate', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'true';
+      mockRequest.body['cover-end-date-day'] = format(now, 'd');
+      mockRequest.body['cover-end-date-month'] = format(now, 'M');
+      mockRequest.body['cover-end-date-year'] = format(now, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The cover end date must be after the cover start date' }]),
+        }),
+      }));
+    });
+
+    it('should show error message if cover starts on submission which is before the coverEndDate', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'true';
+      mockRequest.body['cover-end-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
+
+      await validateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/about-facility.njk', expect.objectContaining({
+        errors: expect.objectContaining({
+          errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date cannot be before cover start date' }]),
         }),
       }));
     });

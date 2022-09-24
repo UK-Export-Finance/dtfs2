@@ -1,5 +1,4 @@
 const moment = require('moment');
-const Joi = require('joi');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 const {
   dateHasSomeValues,
@@ -7,6 +6,7 @@ const {
   dateValidationText,
 } = require('../../fields/date');
 const { formattedTimestamp } = require('../../../facility-dates/timestamp');
+const coverDatesValidation = require('../../helpers/coverDatesValidation.helpers');
 
 module.exports = (submittedValues, deal, errorList) => {
   const newErrorList = errorList;
@@ -25,13 +25,16 @@ module.exports = (submittedValues, deal, errorList) => {
 
   const dealHasBeenSubmitted = deal.details.submissionDate;
 
-  if (requestedCoverStartDateTimestamp) {
-    const nowDate = moment().startOf('day');
-    // validates the coverStartDateYear is 4 digits long and only numbers and returns error in validation if not
-    const schema = Joi.string().length(4).pattern(/^[0-9]+$/).required();
-    const validation = schema.validate(requestedCoverStartDateYear);
+  const nowDate = moment().startOf('day');
 
-    if (!dealHasBeenSubmitted) {
+  if (!dealHasBeenSubmitted) {
+    const {
+      coverDayValidation,
+      coverMonthValidation,
+      coverYearValidation
+    } = coverDatesValidation(requestedCoverStartDateDay, requestedCoverStartDateMonth, requestedCoverStartDateYear);
+
+    if (requestedCoverStartDateTimestamp) {
       if (moment(requestedCoverStartDateTimestamp).isBefore(nowDate)) {
         newErrorList.requestedCoverStartDate = {
           text: 'Requested Cover Start Date must be on the application submission date or in the future',
@@ -57,27 +60,44 @@ module.exports = (submittedValues, deal, errorList) => {
           };
         }
       }
-      if (validation.error && requestedCoverStartDateYear) {
-        newErrorList.requestedCoverStartDate = {
-          text: 'The year for the requested Cover Start Date must include 4 numbers',
-          order: orderNumber(newErrorList),
-        };
-      }
     }
-  } else if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
-    requestedCoverStartDateDay,
-    requestedCoverStartDateMonth,
-    requestedCoverStartDateYear,
-  )) {
-    newErrorList.requestedCoverStartDate = {
-      text: dateValidationText(
-        'Requested Cover Start Date',
-        requestedCoverStartDateDay,
-        requestedCoverStartDateMonth,
-        requestedCoverStartDateYear,
-      ),
-      order: orderNumber(newErrorList),
-    };
+
+    if (!requestedCoverStartDateTimestamp && dateHasSomeValues(
+      requestedCoverStartDateDay,
+      requestedCoverStartDateMonth,
+      requestedCoverStartDateYear,
+    )) {
+      newErrorList.requestedCoverStartDate = {
+        text: dateValidationText(
+          'Requested Cover Start Date',
+          requestedCoverStartDateDay,
+          requestedCoverStartDateMonth,
+          requestedCoverStartDateYear,
+        ),
+        order: orderNumber(newErrorList),
+      };
+    }
+
+    // coverDayValidation.error only exists if validation errors present
+    if (coverDayValidation.error && requestedCoverStartDateDay) {
+      newErrorList.requestedCoverStartDate = {
+        text: 'The day for the requested Cover Start Date must include 1 or 2 numbers',
+        order: orderNumber(newErrorList),
+      };
+    }
+
+    if (coverMonthValidation.error && requestedCoverStartDateMonth) {
+      newErrorList.requestedCoverStartDate = {
+        text: 'The month for the requested Cover Start Date must include 1 or 2 numbers',
+        order: orderNumber(newErrorList),
+      };
+    }
+    if (coverYearValidation.error && requestedCoverStartDateYear) {
+      newErrorList.requestedCoverStartDate = {
+        text: 'The year for the requested Cover Start Date must include 4 numbers',
+        order: orderNumber(newErrorList),
+      };
+    }
   }
 
   return newErrorList;
