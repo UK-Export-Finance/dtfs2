@@ -224,11 +224,11 @@ const migrate = () => {
     .then((r) => {
       if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully inserted ${r} TFM deals.\n`);
     })
-    // .then(() => actionSheets())
-    // .then((r) => processActionSheets(r))
-    // .then((r) => {
-    //   if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully updated ${r} TFM deals from Action Sheets.\n`);
-    // })
+    .then(() => actionSheets())
+    .then((r) => processActionSheets(r))
+    .then((r) => {
+      if (r) console.info('\n\x1b[32m%s\x1b[0m', `✅ Successfully updated ${r} TFM deals from Action Sheets.\n`);
+    })
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {
