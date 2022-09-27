@@ -35,6 +35,8 @@ const getFilename = (type) => {
       return '8.json';
     case 9:
       return '9.json';
+    case 10:
+      return '10.json';
     default:
       return '1.json';
   }

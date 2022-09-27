@@ -3,6 +3,19 @@
  */
 
 /**
+ * Return's EPOCH from a date time string
+ * @param {String} string Date time
+ * @returns {Intger} EPOCH with ms
+ */
+const getEpoch = (string) => {
+  if (string) {
+    return new Date(string).valueOf();
+  }
+
+  return 0;
+};
+
+/**
  * Returns formatted date string in `DD-MM-YYYY` format from an EPOCH integer argument.
  * @param {Integer} epoch EPOCH
  * @returns {String} Formatted date string, `Invalid` if null provided.
@@ -26,11 +39,11 @@ const getDDMMYYYY = (epoch) => {
 };
 
 /**
- *  Converts milliseconds EPOCH to secods only.
+ *  Converts milliseconds EPOCH to seconds only.
  * @param {Integer} epoch EPOCH in milliseconds
  * @returns {Integer} EPOCH in seconds, `0` if null provided.
  */
-const epochInSeconds = (epoch) => (epoch ? epoch / 1000 : 0);
+const epochInSeconds = (epoch) => (epoch ? Math.trunc(epoch / 1000) : 0);
 
 /**
  * Converts an excel date to ISO Date string
@@ -40,6 +53,7 @@ const epochInSeconds = (epoch) => (epoch ? epoch / 1000 : 0);
 const excelDateToISODateString = (excelDateNumber) => new Date(Math.round((excelDateNumber - 25569) * 86400 * 1000)).toISOString().substring(0, 10);
 
 module.exports = {
+  getEpoch,
   getDDMMYYYY,
   epochInSeconds,
   excelDateToISODateString

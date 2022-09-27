@@ -7,6 +7,7 @@ const FILES = {
   INCOME_EXPOSURE: 6,
   ELIGIBILITY_RESPONSE: 8,
   AMENDMENTS: 9,
+  FACILITY_COMMENTS: 10,
 };
 
 module.exports = {

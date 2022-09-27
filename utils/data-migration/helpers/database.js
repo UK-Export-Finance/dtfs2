@@ -99,7 +99,6 @@ const portalDealUpdate = async (id, updates) => {
 
 /**
  * TFM - Updates collection property(ies)
- * @param {String} ukefDealId UKEF Deal ID
  * @param {Object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
