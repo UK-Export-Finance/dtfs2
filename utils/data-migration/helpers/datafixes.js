@@ -11,6 +11,7 @@ const {
   tfmFacilityUpdate,
 } = require('./database');
 const { workflow } = require('./io');
+const { epochInSeconds, getEpoch } = require('./date');
 
 const { TFM_API } = process.env;
 let allDeals = {};
@@ -226,7 +227,10 @@ const ukefDecision = async () => {
     }
 
     let text = '';
+    let userFullName = null;
     let decision;
+    let withConditions = false;
+    let withoutConditions = false;
     const acceptableTaskNames = [
       'Deal Final Approval',
       'AR - Final Approval',
@@ -240,6 +244,17 @@ const ukefDecision = async () => {
       && acceptableTaskNames.includes(DEAL.TASK_NAME))
       .forEach(({ DEAL }) => {
         text = text.concat(text, ' ', formatString(DEAL.COMMENT_TEXT));
+        withConditions = DEAL.COMMENT_TEXT.toString().indexOf('Approved with Conditions') !== -1;
+
+        if (!withConditions) {
+          withoutConditions = DEAL.COMMENT_TEXT.toString().indexOf('Approved without any other conditions') !== -1
+          || DEAL.COMMENT_TEXT.toString().indexOf('approved without special conditions') !== -1
+          || DEAL.COMMENT_TEXT.toString().indexOf('Approved') !== -1;
+        }
+
+        if ((withConditions || withoutConditions) && DEAL.COMMENT_BY) {
+          userFullName = DEAL.COMMENT_BY;
+        }
       });
 
     comments
@@ -247,21 +262,18 @@ const ukefDecision = async () => {
       && DEAL.COMMENT_TEXT
       && acceptableTaskNames.includes(DEAL.TASK_NAME))
       .forEach(({ DEAL }) => {
-        const withConditions = DEAL.COMMENT_TEXT.toString().indexOf('Approved with Conditions') !== -1;
-        const withoutConditions = DEAL.COMMENT_TEXT.toString().indexOf('Approved without any other conditions') !== -1
-          || DEAL.COMMENT_TEXT.toString().indexOf('approved without special conditions') !== -1
-          || DEAL.COMMENT_TEXT.toString().indexOf('Approved : ') !== -1;
-
-        decision = withConditions && !withoutConditions
+        decision = withConditions
           ? CONSTANTS.DEAL.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS
           : CONSTANTS.DEAL.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS;
+
+        const timestamp = getEpoch(DEAL.FACILITY.COMMENT_DATE_CREATED_DATETIME);
 
         if (!allDeals[index].dealSnapshot.ukefDecision) {
           allDeals[index].dealSnapshot.ukefDecision = [
             {
               text,
               decision,
-              timestamp: deal.dealSnapshot.updatedAt,
+              timestamp,
             }
           ];
         }
@@ -269,7 +281,11 @@ const ukefDecision = async () => {
         if (!allDeals[index].tfm.underwriterManagersDecision) {
           allDeals[index].tfm.underwriterManagersDecision = {
             decision,
-            comments: text
+            comments: withConditions ? text : '',
+            internalComments: !withConditions ? text : '',
+            timestamp,
+            userFullName,
+
           };
         }
 
@@ -474,7 +490,8 @@ const agentCommissionRate = async () => {
  * Add Comments to the deal in TFM (tfm.activities)
  */
 const comment = async () => {
-  const comments = await workflow(CONSTANTS.WORKFLOW.FILES.COMMENTS);
+  const deals = await workflow(CONSTANTS.WORKFLOW.FILES.COMMENTS);
+  const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY_COMMENTS);
 
   Object.values(allDeals).forEach((deal, index) => {
     if (deal.tfm.activities) {
@@ -486,17 +503,18 @@ const comment = async () => {
         tfmComments = activities;
       }
 
-      // Process comments
-      comments
+      // Process deal level comments
+      deals
         .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal))
         .map(({ DEAL }) => {
           if (DEAL.COMMENT_TEXT && DEAL.ASSOC_TYPE_ID === 1) {
             const { _id } = deal.dealSnapshot.maker;
             const author = DEAL.COMMENT_BY.split(' ');
+            const timestamp = epochInSeconds(getEpoch(DEAL.FACILITY.COMMENT_DATE_CREATED_DATETIME));
 
             tfmComments.push({
               type: 'COMMENT',
-              timestamp: Number(Number(deal.dealSnapshot.details.submissionDate) / 1000),
+              timestamp,
               text: formatString(DEAL.COMMENT_TEXT),
               author: {
                 _id,
@@ -509,6 +527,38 @@ const comment = async () => {
 
           return null;
         });
+
+      // Process facility level comments
+      facilities
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal))
+        .map(({ DEAL }) => {
+          if (DEAL.FACILITY.COMMENT_TEXT) {
+            const { _id } = deal.dealSnapshot.maker;
+            const author = DEAL.FACILITY.COMMENT_BY.split(' ');
+
+            tfmComments.push({
+              type: 'COMMENT',
+              timestamp: epochInSeconds(getEpoch(DEAL.FACILITY.COMMENT_DATE_CREATED_DATETIME)),
+              text: formatString(DEAL.FACILITY.COMMENT_TEXT),
+              author: {
+                _id,
+                firstName: author[0],
+                lastName: author[1] || '',
+              },
+              label: 'Comment added'
+            });
+          }
+
+          return null;
+        });
+
+      /**
+       * Chronological sort
+       *
+       * Ensure latest comment always appear on the top
+       * and oldest at the bottom.
+       */
+      tfmComments = tfmComments.sort((a, b) => b.timestamp - a.timestamp);
 
       allDeals[index].tfm.activities = tfmComments;
     }
@@ -876,13 +926,13 @@ const datafixesTfmDeal = async (deals) => {
       let updated = 0;
 
       // TFM Deal - Data fixes
-      // await creditRating();
-      // await partyUrn();
-      // await agentCommissionRate();
+      await creditRating();
+      await partyUrn();
+      await agentCommissionRate();
       await comment();
-      // await ACBS();
-      // await ukefDecision();
-      // await supportingInformations();
+      await ACBS();
+      await ukefDecision();
+      await supportingInformations();
 
       const updates = allDeals.map(async (deal) => {
         await tfmDealUpdate(deal)
