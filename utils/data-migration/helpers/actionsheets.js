@@ -3,6 +3,7 @@
  */
 const excel = require('xlsx');
 const CONSTANTS = require('../constant');
+const { excelDateToISODateString } = require('./date');
 
 const actionSheet = 'Action Sheet';
 
@@ -39,6 +40,22 @@ const format = (lookup, value) => {
        * due Macro disabled during data fetch from action sheets.
        * */
       return typeof value === 'number' ? value * 100 : value;
+    }
+
+    if (lookup === 'Banks Fees') {
+      /**
+       * ConvertBanks Fees from `0.5` to `50`
+       * due Macro disabled during data fetch from action sheets.
+       * */
+      return typeof value === 'number' ? value * 100 : value;
+    }
+
+    if (lookup === 'Guarantee Expiry') {
+      /**
+       * ConvertBanks Guarantee Expiry from `excel timestamp` to `timestamp`
+       * due Macro disabled during data fetch from action sheets.
+       * */
+      return typeof value === 'number' ? excelDateToISODateString(value) : value;
     }
   }
 
