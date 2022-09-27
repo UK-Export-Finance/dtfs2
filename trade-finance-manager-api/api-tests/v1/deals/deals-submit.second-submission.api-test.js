@@ -653,7 +653,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
         expect(body.submissionType).toEqual(CONSTANTS.DEALS.SUBMISSION_TYPE.MIN);
-        expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('number');
+        expect(typeof body.manualInclusionNoticeSubmissionDate).toEqual('string');
       });
     });
   });
