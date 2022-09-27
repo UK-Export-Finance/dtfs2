@@ -258,5 +258,9 @@ context('Portal to TFM deal submission', () => {
       // this text is only displayed if a total exists.
       expect(text.trim()).to.contain('Total');
     });
+
+    tfmPages.facilityPage.allFacilitiesLink().click();
+    tfmPages.facilitiesPage.facilityIdLink(dealFacilities.bonds[0]._id).should('exist');
+    tfmPages.facilitiesPage.facilityIdLink(dealFacilities.loans[0]._id).should('exist');
   });
 });
