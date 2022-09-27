@@ -103,11 +103,8 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
   if (ObjectId.isValid(deal._id)) {
     try {
       const collection = await db.getCollection('tfm-deals');
-
       const update = {
-        ...deal,
         dealSnapshot: {
-          ...deal.dealSnapshot,
           ...snapshotChanges,
         },
       };
