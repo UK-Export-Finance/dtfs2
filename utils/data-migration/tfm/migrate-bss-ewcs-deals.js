@@ -30,7 +30,7 @@ const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL
  * @param {Object} filter Mongo filter
  * @returns {Object} Collection object
  */
-const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL);
+const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, { 'dealSnapshot.details.ukefDealId': '0020004445' });
 
 /**
  * Extracts deals from `deals` collection with following filters

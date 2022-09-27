@@ -175,7 +175,6 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
 exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 
 exports.updateDealPut = async (req, res) => {
-  console.log('===HERE');
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;
 

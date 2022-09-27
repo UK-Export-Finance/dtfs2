@@ -40,7 +40,7 @@ exports.postTfmAmendment = async (req, res) => {
 
         return res.status(200).json({ amendmentId: amendment.amendmentId.toHexString() });
       }
-      return res.status(400).send({ status: 400, message: 'The current facility already has an amendment in progress' });
+      return res.status(400).send({ status: 400, message: `The current facility ${facilityId} already has an amendment in progress` });
     }
     return res.status(404).send({ status: 404, message: 'The current facility does not exist' });
   }

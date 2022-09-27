@@ -201,6 +201,7 @@ const getAllAmendmentsInProgress = async (req, res) => {
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
   const { amendmentId } = await api.createFacilityAmendment(facilityId);
+
   if (amendmentId) {
     return res.status(200).send({ amendmentId });
   }
@@ -251,34 +252,34 @@ const updateFacilityAmendment = async (req, res) => {
       }
 
       // Fetch facility object
-      const facility = await api.findOneFacility(facilityId);
+      // const facility = await api.findOneFacility(facilityId);
       // Fetch complete amendment object
-      const amendment = await api.getAmendmentById(facilityId, amendmentId);
+      // const amendment = await api.getAmendmentById(facilityId, amendmentId);
       // Fetch deal object from deal-tfm
-      const tfmDeal = await api.findOneDeal(amendment.dealId);
+      // const tfmDeal = await api.findOneDeal(amendment.dealId);
       // Construct acceptable deal object
 
-      const deal = {
-        dealSnapshot: {
-          dealType: tfmDeal.dealSnapshot.dealType,
-          submissionType: tfmDeal.dealSnapshot.submissionType,
-          submissionDate: tfmDeal.dealSnapshot.submissionDate,
-        },
-        exporter: {
-          companyName: tfmDeal.dealSnapshot.exporter.companyName,
-        },
-      };
+      // const deal = {
+      //   dealSnapshot: {
+      //     dealType: tfmDeal.dealSnapshot.dealType,
+      //     submissionType: tfmDeal.dealSnapshot.submissionType,
+      //     submissionDate: tfmDeal.dealSnapshot.submissionDate,
+      //   },
+      //   exporter: {
+      //     companyName: tfmDeal.dealSnapshot.exporter.companyName,
+      //   },
+      // };
 
-      // Amendment null & property existence check
-      if (facility._id && amendment && tfmDeal.tfm) {
-        // TFM Facility update + ACBS Interaction
-        if (canSendToAcbs(amendment)) {
-          // Amend facility TFM properties
-          amendIssuedFacility(amendment, facility, tfmDeal);
-          // Amend facility ACBS records
-          acbs.amendAcbsFacility(amendment, facility, deal);
-        }
-      }
+      // // Amendment null & property existence check
+      // if (facility._id && amendment && tfmDeal.tfm) {
+      //   // TFM Facility update + ACBS Interaction
+      //   if (canSendToAcbs(amendment)) {
+      //     // Amend facility TFM properties
+      //     amendIssuedFacility(amendment, facility, tfmDeal);
+      //     // Amend facility ACBS records
+      //     acbs.amendAcbsFacility(amendment, facility, deal);
+      //   }
+      // }
 
       if (createdAmendment) {
         return res.status(200).send(createdAmendment);
