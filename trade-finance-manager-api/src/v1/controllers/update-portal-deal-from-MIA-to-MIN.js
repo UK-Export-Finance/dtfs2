@@ -4,7 +4,6 @@ const now = require('../../now');
 
 const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
   console.info('Updating Portal deal from MIA to MIN');
-  let update;
   let dealUpdate;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
@@ -14,10 +13,10 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
       manualInclusionNoticeSubmissionDate: now(),
     };
 
-    update = await api.updatePortalGefDeal(dealId, dealUpdate);
+    await api.updatePortalGefDeal(dealId, dealUpdate);
 
     // adds portal activity object for min submission and facilities changed -> issued
-    update = await api.updateGefMINActivity(dealId);
+    await api.updateGefMINActivity(dealId);
   } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     dealUpdate = {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
@@ -27,10 +26,10 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
       },
     };
 
-    update = await api.updatePortalDeal(dealId, dealUpdate);
+    await api.updatePortalDeal(dealId, dealUpdate);
   }
 
-  return update;
+  return dealUpdate;
 };
 
 exports.updatePortalDealFromMIAtoMIN = updatePortalDealFromMIAtoMIN;
