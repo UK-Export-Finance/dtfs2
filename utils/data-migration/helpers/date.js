@@ -52,9 +52,22 @@ const epochInSeconds = (epoch) => (epoch ? Math.trunc(epoch / 1000) : 0);
  */
 const excelDateToISODateString = (excelDateNumber) => new Date(Math.round((excelDateNumber - 25569) * 86400 * 1000)).toISOString().substring(0, 10);
 
+/**
+ * Appends Timestamp to the date with zero hours, minutes and seconds.
+ * @param {String} date Date in `YYYY-MM-DD` format
+ * @returns {String} Timestamp formatted date in `YYYY-MM-DDT00:00:00` format
+ */
+const getStringTimestamp = (date) => {
+  if (date) {
+    return date.toString().concat('T00:00:00');
+  }
+  return date;
+};
+
 module.exports = {
   getEpoch,
   getDDMMYYYY,
   epochInSeconds,
-  excelDateToISODateString
+  excelDateToISODateString,
+  getStringTimestamp
 };
