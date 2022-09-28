@@ -3,7 +3,11 @@
  */
 const excel = require('xlsx');
 const CONSTANTS = require('../constant');
-const { excelDateToISODateString } = require('./date');
+const {
+  getEpoch,
+  getStringTimestamp,
+  excelDateToISODateString
+} = require('./date');
 
 const actionSheet = 'Action Sheet';
 
@@ -32,7 +36,7 @@ const open = (uri, sheet = actionSheet) => {
 const format = (lookup, value) => {
   if (lookup && value) {
     if (lookup === 'Credit Rating Code') {
-      return CONSTANTS.DEAL.CREDIT_RATING[value];
+      return CONSTANTS.DEAL.CREDIT_RATING[value] ?? value;
     }
     if (lookup === 'Loss Given Default') {
       /**
@@ -55,7 +59,15 @@ const format = (lookup, value) => {
        * ConvertBanks Guarantee Expiry from `excel timestamp` to `timestamp`
        * due Macro disabled during data fetch from action sheets.
        * */
-      return typeof value === 'number' ? excelDateToISODateString(value) : value;
+      return typeof value === 'number' ? getStringTimestamp(excelDateToISODateString(value)) : value;
+    }
+
+    if (lookup === 'Anticipated Issue') {
+      /**
+       * ConvertBanks Guarantee Issue from `excel timestamp` to `timestamp`
+       * due Macro disabled during data fetch from action sheets.
+       * */
+      return typeof value === 'number' ? getEpoch(excelDateToISODateString(value)) : value;
     }
   }
 
@@ -77,6 +89,7 @@ const get = (data, search) => {
     if (match) {
       const cells = Object.values(match);
       const value = cells[cell];
+
       return format(lookup, value);
     }
   }

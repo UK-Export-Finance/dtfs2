@@ -2,6 +2,7 @@
  * I/O helper functions
  */
 const fs = require('fs');
+const { open, get } = require('./actionsheets');
 
 /**
  * Sleep helper function
@@ -42,6 +43,11 @@ const getFilename = (type) => {
   }
 };
 
+/**
+ * Reads workflow JSON data
+ * @param {Integer} type Workflow file type
+ * @returns {Object} Workflow data in JSON
+ */
 const workflow = async (type) => {
   if (!type) {
     return Promise.reject(new Error('Please specify file type'));
@@ -67,7 +73,47 @@ const workflow = async (type) => {
   }
 };
 
+const actionsheet = async (search) => {
+  try {
+    const path = '../tfm/actionsheets';
+    const results = [];
+    const files = fs.readdirSync(path);
+
+    await files.forEach((file, index) => {
+      const uri = `${path}/${file}`;
+      const percentage = Math.round((index / files.length) * 100);
+      console.info('\x1b[33m%s\x1b[0m', `${percentage}% : Parsing action sheet ${file}.`, '\n');
+
+      open(uri)
+        .then((data) => {
+          if (data) return Promise.resolve(data);
+          return Promise.reject(new Error(`🚩 Empty action sheet ${uri}`));
+        })
+        .then((data) => {
+          let lookups = {};
+          search.forEach((lookup) => {
+            const propertyName = lookup[0];
+
+            lookups = {
+              ...lookups,
+              [propertyName]: get(data, lookup),
+            };
+          });
+          results.push(lookups);
+
+          Promise.resolve(results);
+        })
+        .catch((e) => Promise.reject(new Error(e)));
+    });
+
+    return Promise.resolve(results);
+  } catch (e) {
+    return Promise.reject(new Error(`🚩 Unable to read the action sheets directory ${e}`));
+  }
+};
+
 module.exports = {
   sleep,
   workflow,
+  actionsheet,
 };

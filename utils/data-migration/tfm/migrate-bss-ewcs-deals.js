@@ -3,7 +3,10 @@
 /**
  * DATA MIGRATION
  * **************
- * Purpose of this script is to migrate `BSS/EWCS` deals to TFM.
+ * Purpose of this script is to migrate `BSS/EWCS` deals to TFM
+ * with myriads of data-fixes.
+ *
+ * `BSS/EWCS` TFM data has been provided from Workflow JSON exports.
  */
 
 const axios = require('axios');
@@ -141,7 +144,7 @@ const tfm = async (data) => {
  * @returns {Boolean} Execution status
  */
 const migrate = () => {
-  console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating BSS/EWCS TFM migration v${version}.`, '\n\n');
+  console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM migration v${version}.`, '\n\n');
 
   deals()
     .then((d) => datafixes(d))

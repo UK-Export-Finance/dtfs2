@@ -16,6 +16,13 @@ const getEpoch = (string) => {
 };
 
 /**
+ *  Converts milliseconds EPOCH to seconds only.
+ * @param {Integer} epoch EPOCH in milliseconds
+ * @returns {Integer} EPOCH in seconds, `0` if null provided.
+ */
+const epochInSeconds = (epoch) => (epoch ? Math.trunc(epoch / 1000) : 0);
+
+/**
  * Returns formatted date string in `DD-MM-YYYY` format from an EPOCH integer argument.
  * @param {Integer} epoch EPOCH
  * @returns {String} Formatted date string, `Invalid` if null provided.
@@ -37,13 +44,6 @@ const getDDMMYYYY = (epoch) => {
   }
   return 'Invalid';
 };
-
-/**
- *  Converts milliseconds EPOCH to seconds only.
- * @param {Integer} epoch EPOCH in milliseconds
- * @returns {Integer} EPOCH in seconds, `0` if null provided.
- */
-const epochInSeconds = (epoch) => (epoch ? Math.trunc(epoch / 1000) : 0);
 
 /**
  * Converts an excel date to ISO Date string
