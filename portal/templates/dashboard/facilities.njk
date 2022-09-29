@@ -19,7 +19,9 @@
     table: facilitiesTable.render({
       facilities: facilities,
       userTimezone: user.timezone,
-      isChecker: isChecker
+      isChecker: isChecker,
+      activeSortByOrder: activeSortByOrder,
+      csrfToken: csrfToken
     }),
     pages: pages,
     route: '/facilities',

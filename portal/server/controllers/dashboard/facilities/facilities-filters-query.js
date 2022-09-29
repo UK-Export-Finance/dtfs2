@@ -16,6 +16,8 @@ const dashboardFacilitiesFiltersQuery = (
   user,
 ) => {
   const query = {};
+  let dashboardFilters = filters;
+
   // if user is admin, then deal.bank.id should not be set so cannot see all
   if (!isSuperUser(user)) {
     query.$and = [
@@ -23,10 +25,21 @@ const dashboardFacilitiesFiltersQuery = (
     ];
   }
 
-  if (filters.length) {
+  const filtered = [];
+  // removes _crsf from dashboardFilters
+  /* eslint-disable no-unused-vars */
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [key, value] of Object.entries(dashboardFilters)) {
+    if (!Object.prototype.hasOwnProperty.call(value, '_csrf')) {
+      filtered.push(value);
+    }
+  }
+  dashboardFilters = filtered;
+
+  if (dashboardFilters.length) {
     query.$or = [];
 
-    filters.forEach((filterObj) => {
+    dashboardFilters.forEach((filterObj) => {
       const fieldName = Object.keys(filterObj)[0];
       const filterValue = filterObj[fieldName];
 

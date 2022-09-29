@@ -116,6 +116,7 @@ const queryAllFacilities = async (
           hasBeenIssued: '$hasBeenIssued',
           submittedAsIssuedDate: '$submittedAsIssuedDate',
           updatedAt: { $toDouble: '$updatedAt' },
+          exporter: '$deal.exporter.companyName',
         },
       },
       {
