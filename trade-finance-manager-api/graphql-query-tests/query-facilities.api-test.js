@@ -49,4 +49,13 @@ describe('queryAllFacilities()', () => {
 
     expect(result).toEqual({});
   });
+
+  it('should return ukefFacilityId as `-` if is null', async () => {
+    mockTfmFacilities[0].ukefFacilityId = null;
+    mockTfmFacilities[0].tfmFacilities.ukefFacilityId = null;
+
+    const result = await queryAllFacilities({ params: 'test' });
+
+    expect(result.tfmFacilities[0].ukefFacilityId).toEqual('-');
+  });
 });
