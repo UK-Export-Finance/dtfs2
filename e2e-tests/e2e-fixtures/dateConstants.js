@@ -23,6 +23,9 @@ const twoMonths = add(today, { months: 2 });
 const twoMonthsDay = format(twoMonths, 'dd');
 const twoMonthsMonth = format(twoMonths, 'M');
 const twoMonthsYear = format(twoMonths, 'yyyy');
+const twoMonthsFormatted = format(twoMonths, 'dd LLL yyyy');
+const twoMonthsFormattedFull = format(twoMonths, 'dd MMMM yyyy');
+const twoMonthsFormattedTable = format(twoMonths, 'd MMMM yyyy');
 // to test that if beyond issue/ cover start date limit
 const tomorrow = add(today, { days: 1 });
 const tomorrowDay = format(tomorrow, 'dd');
@@ -85,6 +88,9 @@ export default {
   twoMonthsDay,
   twoMonthsMonth,
   twoMonthsYear,
+  twoMonthsFormatted,
+  twoMonthsFormattedFull,
+  twoMonthsFormattedTable,
   threeMonths,
   threeMonthsDay,
   threeMonthsMonth,
