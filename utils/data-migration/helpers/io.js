@@ -73,6 +73,11 @@ const workflow = async (type) => {
   }
 };
 
+/**
+ * Reads Action sheet
+ * @param {Array} search Search criterion
+ * @returns {Array} Formatted data from action sheets
+ */
 const actionsheet = async (search) => {
   try {
     const path = '../tfm/actionsheets';

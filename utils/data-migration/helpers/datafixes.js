@@ -12,6 +12,7 @@ const {
 } = require('./database');
 const { actionsheet, workflow } = require('./io');
 const { epochInSeconds, getEpoch } = require('./date');
+const getFacilityPremiumSchedule = require('../../../trade-finance-manager-api/src/v1/controllers/get-facility-premium-schedule');
 
 const { TFM_API } = process.env;
 let allDeals = {};
@@ -28,7 +29,7 @@ let allFacilities = {};
  * @param {Object} filter Mongo filter
  * @returns {Object} Collection object
  */
-const getTfmFacilities = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES);
+const getTfmFacilities = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES, { 'facilitySnapshot.ukefFacilityId': '0020015641' });
 
 // ******************** Internal API Calls *************************
 
@@ -226,24 +227,27 @@ const ukefDecision = async () => {
       return null;
     }
 
-    let text = '';
+    let internalComments = '';
+    let decisionComments = '';
     let userFullName = null;
     let decision;
     let withConditions = false;
     let withoutConditions = false;
-    const acceptableTaskNames = [
+    const decisionComment = [
       'Deal Final Approval',
+    ];
+    const internalComment = [
       'AR - Final Approval',
       'Tier 1 Approval'
     ];
 
-    // Concatenate approval comments
+    // Concatenate decision comments
     comments
       .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal)
       && DEAL.COMMENT_TEXT
-      && acceptableTaskNames.includes(DEAL.TASK_NAME))
+      && decisionComment.includes(DEAL.TASK_NAME))
       .forEach(({ DEAL }) => {
-        text = text.concat(text, ' ', formatString(DEAL.COMMENT_TEXT));
+        decisionComments = decisionComments.concat(decisionComments, ' ', formatString(DEAL.COMMENT_TEXT));
         withConditions = DEAL.COMMENT_TEXT.toString().indexOf('Approved with Conditions') !== -1;
 
         if (!withConditions) {
@@ -257,10 +261,19 @@ const ukefDecision = async () => {
         }
       });
 
+    // Concatenate internal comments
+    comments
+      .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal)
+    && DEAL.COMMENT_TEXT
+    && internalComment.includes(DEAL.TASK_NAME))
+      .forEach(({ DEAL }) => {
+        internalComments = internalComments.concat(internalComments, ' ', formatString(DEAL.COMMENT_TEXT));
+      });
+
     comments
       .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal)
       && DEAL.COMMENT_TEXT
-      && acceptableTaskNames.includes(DEAL.TASK_NAME))
+      && (decisionComment.includes(DEAL.TASK_NAME) || internalComment.includes(DEAL.TASK_NAME)))
       .forEach(({ DEAL }) => {
         decision = withConditions
           ? CONSTANTS.DEAL.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS
@@ -271,7 +284,7 @@ const ukefDecision = async () => {
         if (!allDeals[index].dealSnapshot.ukefDecision) {
           allDeals[index].dealSnapshot.ukefDecision = [
             {
-              text,
+              decisionComment,
               decision,
               timestamp,
             }
@@ -281,8 +294,8 @@ const ukefDecision = async () => {
         if (!allDeals[index].tfm.underwriterManagersDecision) {
           allDeals[index].tfm.underwriterManagersDecision = {
             decision,
-            comments: withConditions ? text : '',
-            internalComments: !withConditions ? text : '',
+            comments: decisionComments,
+            internalComments,
             timestamp,
             userFullName,
 
@@ -574,12 +587,13 @@ const comment = async () => {
  */
 const premiumSchedule = async () => {
   const premiumSchedules = await workflow(CONSTANTS.WORKFLOW.FILES.INCOME_EXPOSURE);
+  const facilities = Object.values(allFacilities);
+  let index = 0;
 
-  Object.values(allFacilities).forEach((facility, index) => {
+  for (const facility of facilities) {
     if (facility.tfm) {
-      const premiums = [];
+      let premiums = [];
       let period = 1;
-
       // Add pre-calculated PS to the facility
       premiumSchedules
         .filter(({ DEAL }) =>
@@ -607,9 +621,26 @@ const premiumSchedule = async () => {
           return null;
         });
 
+      /**
+         * Facility has been issued in Portal V2 but has not been updated
+         * in Workflow (PS will not exists).
+         * If above is true then PS should be manually calculated by invoking
+         * PS API with desired payload
+         */
+      if (facility.facilitySnapshot.hasBeenIssued && !premiums.length) {
+        const { exposurePeriodInMonths, facilityGuaranteeDates } = facility.tfm;
+        const facilityPremiumSchedule = await getFacilityPremiumSchedule(
+          facility,
+          exposurePeriodInMonths,
+          facilityGuaranteeDates,
+        );
+        premiums = facilityPremiumSchedule;
+      }
+
       allFacilities[index].tfm.premiumSchedule = premiums;
     }
-  });
+    index += 1;
+  }
 };
 
 /**
@@ -929,6 +960,7 @@ const datafixesTfmDeal = async (deals) => {
      * functions.
      */
       allDeals = deals;
+
       let updated = 0;
 
       // TFM Deal - Data fixes
@@ -1025,7 +1057,7 @@ const datafixesTfmFacilities = async (deals) => {
             if (updated === allFacilities.length) {
               console.info('\x1b[33m%s\x1b[0m', `✅ All ${allFacilities.length} facilities have been data-fixed.`, '\n');
 
-              return Promise.resolve(allFacilities);
+              return Promise.resolve(allDeals);
             }
             console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allFacilities.length} facilities have been TFM data-fixed.\n`);
             return Promise.reject();
@@ -1117,9 +1149,6 @@ const actionSheetFacility = async () => {
                     const value = update[1];
 
                     switch (path) {
-                      case 'exporterCreditRating':
-                        allFacilities[index].facilitySnapshot.coverEndDate = value;
-                        break;
                       case 'coverEndDate':
                         allFacilities[index].facilitySnapshot.coverEndDate = value;
                         break;

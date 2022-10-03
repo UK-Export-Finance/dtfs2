@@ -50,7 +50,7 @@ const deals = async () => {
    * 2. Property exists : dataMigration
    */
   const filter = {
-    $and: [{ dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS }, { dataMigration: { $exists: true } }],
+    $and: [{ dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS }, { dataMigration: { $exists: true } }, { 'details.ukefDealId': '0020007113' }],
   };
 
   return getDeals(filter)
@@ -150,6 +150,7 @@ const migrate = () => {
     .then((d) => datafixes(d))
     .then((d) => tfm(d))
     .then((d) => datafixesTfmDeal(d))
+    .then(() => getTfmDeals())
     .then((d) => datafixesTfmFacilities(d))
     .then(() => disconnect())
     .then(() => process.exit(1))
