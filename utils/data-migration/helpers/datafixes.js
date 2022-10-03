@@ -9,6 +9,7 @@ const {
   portalDealUpdate,
   tfmDealUpdate,
   tfmFacilityUpdate,
+  portalFacilityUpdate,
 } = require('./database');
 const { actionsheet, workflow } = require('./io');
 const { epochInSeconds, getEpoch } = require('./date');
@@ -1124,6 +1125,16 @@ const actionSheetDeal = async () => {
 };
 
 /**
+ * Update portal facility
+ * @param {String} id Object ID
+ * @param {Object} deal Updated deal object
+ * @returns {Promise} `Resolve` upon success otherwise `Reject`
+ */
+const portalUpdateFacility = async (id, facility) => portalFacilityUpdate(id, facility)
+  .then((r) => Promise.resolve(r))
+  .catch((e) => Promise.reject(new Error('Error updating portal facility: ', { e })));
+
+/**
  * Updates `BSS/EWCS` TFM facilities from action sheet
  */
 const actionSheetFacility = async () => {
@@ -1135,7 +1146,7 @@ const actionSheetFacility = async () => {
       ['coverPercentage', 'Banks Fees', 4],
     ];
 
-    actionsheet(searches)
+    await actionsheet(searches)
       .then((data) => {
         allFacilities
           .forEach((facility, index) => {
@@ -1168,6 +1179,109 @@ const actionSheetFacility = async () => {
   } catch (e) {
     console.error('Error parsing action sheets for deal', { e });
   }
+};
+
+// processes facility portal action sheet updates
+const actionSheetFacilityPortal = async () => {
+  try {
+    const searches = [
+      ['ukefFacilityId', 'Facility Number', 1],
+      ['coverEndDate', 'Guarantee Expiry', 6],
+      ['coverStartDate', 'Anticipated Issue', 2],
+      ['coverPercentage', 'Banks Fees', 4],
+    ];
+
+    await actionsheet(searches)
+      .then((data) => {
+        allFacilities
+          .forEach((facility, index) => {
+            data
+              .filter(({ ukefFacilityId }) => ukefFacilityId === facility.ukefFacilityId)
+              .map((updates) => {
+                // Iterate over Action sheet updates
+                Object.entries(updates)
+                  .map((update) => {
+                    const path = update[0];
+                    const value = update[1];
+                    switch (path) {
+                      case 'coverEndDate':
+                        // antipated issue if null
+                        if (value !== 'Anticipated Issue') {
+                          allFacilities[index].coverEndDate = value;
+                        }
+                        break;
+                      case 'coverStartDate':
+                        if (value !== 'Anticipated Issue') {
+                          allFacilities[index].coverStartDate = value;
+                        }
+                        break;
+                      case 'coverPercentage':
+                        allFacilities[index].coverPercentage = value;
+                        break;
+                      default:
+                        break;
+                    }
+                  });
+              });
+          });
+      });
+  } catch (e) {
+    console.error('Error parsing action sheets for facility', { e });
+  }
+};
+
+/**
+ *
+ * @param {Array} facilities
+ * @param {String} type
+ * processes action sheet updates and updates allFacilities array
+ * updates facilities collection with updates
+ */
+const datafixesFacilities = async (facilities, type) => {
+  console.info('\x1b[33m%s\x1b[0m', `➕ 2. Applying ${type} portal facilities data fixes`, '\n');
+
+  if (facilities && facilities.length > 0) {
+    /**
+     * Save facilities to global variable for independent data fixes
+     * functions.
+     */
+    allFacilities = facilities;
+    let updated = 0;
+
+    // updates allFacilitiesArray
+    await actionSheetFacilityPortal();
+
+    // Update portal
+    const updates = allFacilities.map(async (facility) => {
+      await portalUpdateFacility(facility._id, facility)
+        .then((r) => {
+          if (r) {
+            updated += 1;
+            console.info('\x1b[33m%s\x1b[0m', `${updated}/${allFacilities.length} portal facilities data-fixed.`, '\n');
+
+            return Promise.resolve(true);
+          }
+
+          return Promise.reject();
+        })
+        .catch((e) => Promise.reject(e));
+    });
+
+    return Promise.all(updates)
+      .then(() => {
+        if (updated === allFacilities.length) {
+          console.info('\x1b[33m%s\x1b[0m', `✅ All ${allFacilities.length} facilities have been data-fixed.`, '\n');
+
+          return Promise.resolve(allFacilities);
+        }
+
+        console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allFacilities.length} facilities have been data-fixed.\n`);
+        return Promise.reject();
+      })
+      .catch((e) => Promise.reject(e));
+  }
+
+  return Promise.reject(new Error('Empty data set for facility data fixes'));
 };
 
 /**
@@ -1293,4 +1407,5 @@ module.exports = {
   datafixesTfmFacilities,
   datafixTfmDealGef,
   datafixesTfmFacilitiesGef,
+  datafixesFacilities
 };
