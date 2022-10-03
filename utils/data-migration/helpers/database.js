@@ -98,6 +98,33 @@ const portalDealUpdate = async (id, updates) => {
 };
 
 /**
+ * Portal facilities - Updates portal facility collection
+ * @param {String} facilityId facility ID
+ * @param {Object} updates Properties to update
+ * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
+ */
+const portalFacilityUpdate = async (id, updates) => {
+  try {
+    if (!connection) await connect();
+    const response = await connection.collection(CONSTANTS.DATABASE.TABLES.FACILITIES).updateOne(
+      { _id: ObjectId(id) },
+      {
+        $set: {
+          ...updates,
+        },
+      },
+    );
+
+    return (response.acknowledged)
+      ? Promise.resolve(true)
+      : Promise.reject(response);
+  } catch (e) {
+    console.error(`Portal deal ${id} update error: `, { e });
+    return Promise.reject(new Error(false));
+  }
+};
+
+/**
  * TFM - Updates collection property(ies)
  * @param {Object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
@@ -162,6 +189,7 @@ module.exports = {
   getCollection,
   disconnect,
   portalDealUpdate,
+  portalFacilityUpdate,
   tfmDealUpdate,
   tfmFacilityUpdate,
 
