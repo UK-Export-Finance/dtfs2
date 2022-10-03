@@ -9,6 +9,7 @@ const dashboardFacilitiesFiltersKeywordQuery = (keywordValue) => {
     CONSTANTS.FIELD_NAMES.FACILITY.CURRENCY,
     CONSTANTS.FIELD_NAMES.FACILITY.VALUE,
     CONSTANTS.FIELD_NAMES.FACILITY.TYPE,
+    CONSTANTS.FIELD_NAMES.FACILITY.EXPORTER_COMPANY_NAME,
   ];
 
   const keywordQuery = generateKeywordQuery(
