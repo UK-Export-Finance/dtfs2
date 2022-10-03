@@ -37,14 +37,14 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
       data: [premiumSchedulePayloadFormatted],
     }).catch((error: any) => {
       console.error(
-        `Error calling POST Premium schedule with facilityURN: ${premiumSchedulePayloadFormatted.facilityURN} \n`,
+        `Error calling POST Premium schedule ${mdmEAurl}/premium/schedule with facilityURN: ${premiumSchedulePayloadFormatted.facilityURN} \n`,
         error.response.data,
         error.response.status,
       );
       return { data: error?.response?.data, status: error?.response?.status };
     });
 
-    console.info(`Premium schedule successfully created for ${premiumSchedulePayloadFormatted.facilityURN}`);
+    console.info(`Premium schedule successfully created for ${premiumSchedulePayloadFormatted.facilityURN} with ${response.status}`);
     return response.status ? response.status : response;
   } catch (error) {
     console.error('Error calling POST Premium schedule in try catch', { error });

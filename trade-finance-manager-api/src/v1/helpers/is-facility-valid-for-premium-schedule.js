@@ -3,13 +3,17 @@ const isFacilityValidForPremiumSchedule = (
   facilityExposurePeriod,
   facilityGuaranteeDates,
 ) => {
+  if (!facility.facilitySnapshot) {
+    facility.facilitySnapshot = {};
+  }
+
   if (!facilityExposurePeriod || facilityExposurePeriod < 1) {
     return false;
   }
-  if (!facility.feeType) {
+  if (!facility.feeType || !facility.facilitySnapshot.premiumType) {
     return false;
   }
-  if (!facility.ukefFacilityId) {
+  if (!facility.ukefFacilityId || !facility.facilitySnapshot.ukefFacilityId) {
     return false;
   }
   if (!facilityGuaranteeDates.guaranteeCommencementDate) {
@@ -18,18 +22,18 @@ const isFacilityValidForPremiumSchedule = (
   if (!facilityGuaranteeDates.guaranteeExpiryDate) {
     return false;
   }
-  if (!facility.guaranteeFee) {
+  if (!facility.guaranteeFee || !facility.facilitySnapshot.guaranteeFeePayableByBank) {
     return false;
   }
-  if (!facility.coverPercentage) {
-    return false;
-  }
-
-  if (!facility.dayCountBasis) {
+  if (!facility.coverPercentage || !facility.facilitySnapshot.coveredPercentage) {
     return false;
   }
 
-  if (!facility.ukefExposure) {
+  if (!facility.dayCountBasis || !facility.facilitySnapshot.dayCountBasis) {
+    return false;
+  }
+
+  if (!facility.ukefExposure || !facility.facilitySnapshot.ukefExposure) {
     return false;
   }
 
