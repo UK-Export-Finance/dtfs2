@@ -26,14 +26,13 @@ const dashboardFacilitiesFiltersQuery = (
   }
 
   const filtered = [];
-  // removes _crsf from dashboardFilters
-  /* eslint-disable no-unused-vars */
-  // eslint-disable-next-line no-restricted-syntax
-  for (const [key, value] of Object.entries(dashboardFilters)) {
-    if (!Object.prototype.hasOwnProperty.call(value, '_csrf')) {
+  // removes _crsf from facilitiesFilter
+  Object.values(dashboardFilters).forEach((value) => {
+    if (!value._csrf) {
       filtered.push(value);
     }
-  }
+  });
+
   dashboardFilters = filtered;
 
   if (dashboardFilters.length) {
