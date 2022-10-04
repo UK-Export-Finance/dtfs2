@@ -22,6 +22,7 @@
       {% endif %}
 
       {% set linkHtml %}
+
         {% if not isChecker %}
           <a href="{{ url }}" class="govuk-link" data-cy="facility__name--link--{{ facility._id }}">
             {{ facility.name if facility.name else 'Not entered'}}
@@ -29,6 +30,7 @@
         {% else %}
           <span data-cy="facility__name--text--{{ facility._id }}"> {{ facility.name }} </span>
         {% endif %}
+
       {% endset %}
 
       {% if facility.hasBeenIssued %}
@@ -37,10 +39,6 @@
         {% set stage = 'Unissued' %}
       {% endif %}
 
-      {# {% if facility.currency.id and facility.value %}
-        {% set currency = facility.currency.id %}
-        {% set value = currency + ' ' + facility.value %}
-      {% endif %} #}
       {% set currencyAndValue = '-' %}
 
       {% if facility.currency.id and facility.value %}
