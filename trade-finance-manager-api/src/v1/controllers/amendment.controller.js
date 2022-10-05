@@ -222,7 +222,7 @@ const updateFacilityAmendment = async (req, res) => {
         const tasks = createAmendmentTasks(payload.requireUkefApproval);
         payload.tasks = tasks;
         delete payload.createTasks;
-        delete payload.requireUkefApproval;
+        // delete payload.requireUkefApproval;
       }
 
       if (payload?.taskUpdate?.updateTask) {
