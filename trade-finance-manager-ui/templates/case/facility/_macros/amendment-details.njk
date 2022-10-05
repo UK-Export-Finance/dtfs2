@@ -117,10 +117,22 @@
 
           {% set head =
             [
-              { text: "" },
-              { text: "Change from" },
-              { text: "Change to" },
-              { text: "UKEF decision" }
+              {
+                text: "",
+                classes: 'govuk-!-width-one-quarter'
+              },
+              {
+                text: "Change from",
+                classes: 'govuk-!-width-one-quarter'
+              },
+              {
+                text: "Change to",
+                classes: 'govuk-!-width-one-quarter'
+              },
+              {
+                text: "UKEF decision",
+                classes: 'govuk-!-width-one-quarter'
+              }
             ]
           %}
           {% if amendment.requireUkefApproval === 'Yes' %}
