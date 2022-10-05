@@ -1,0 +1,49 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% macro render(amendment) %}
+  {% set bankDecision = amendment.bankDecision.decision %}
+  {% set bankDecisionTags = amendment.bankDecisionTags %}
+  {% set effectiveDate = amendment.bankDecision.effectiveDate %}
+  {% set effectiveDateFormatted = amendment.bankDecision.effectiveDateFormatted %}
+  {% set receivedDateFormatted = amendment.bankDecision.receivedDateFormatted %}
+
+
+  <div class="govuk-grid-row" data-cy="amendment--bank-decision-submitted">
+      <div class="govuk-grid-column-full">
+
+      <div class="govuk-!-padding-bottom-7">
+        {{govukTag({
+          text: bankDecision,
+          classes: bankDecisionTags[bankDecision],
+          attributes: { "data-cy": "decision-status-tag" }
+        })}}
+      </div>
+
+      {% if effectiveDate %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="amendment--bank-decision-effective">Date ammendment is effective from</h4>
+        </div>
+
+        <div class="govuk-grid-column-one-half">
+          <p class="govuk-body-s" data-cy="amendment--bank-decision-effective-date">{{ effectiveDateFormatted }}</p>
+        </div>
+      </div>
+
+      {% endif %}
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          <h4 class="govuk-heading-s govuk-body-s govuk-!-font-weight-bold" data-cy="amendment--bank-decision-received">Date decision received</h4>
+        </div>
+
+        <div class="govuk-grid-column-one-half">
+          <p class="govuk-body-s" data-cy="amendment--bank-decision-received-date">{{ receivedDateFormatted }} </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+{% endmacro %}

@@ -1,5 +1,6 @@
 const pageRenderer = require('../../../../component-tests/pageRenderer');
-const page = '../templates/case/underwriting/managers-decision/edit-managers-decision.njk'
+
+const page = '../templates/case/underwriting/managers-decision/edit-managers-decision.njk';
 
 const render = pageRenderer(page);
 
@@ -44,7 +45,7 @@ describe(page, () => {
     it('should render cancel link', () => {
       wrapper.expectLink('[data-cy="cancel-link"]')
         .toLinkTo(
-          `/case/${params.dealId}/underwriting/pricing-and-risk`,
+          `/case/${params.dealId}/underwriting`,
           'Cancel',
         );
     });

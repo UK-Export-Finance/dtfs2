@@ -2,7 +2,7 @@ name: PR tests - Empty tests for github action config
 
 on:
   pull_request:
-    branches: [ main, main-amendments ]
+    branches: [ main ]
     paths:
     - '.github/workflows/**'
     - 'README.md'

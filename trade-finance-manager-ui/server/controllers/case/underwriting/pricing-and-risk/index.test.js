@@ -41,46 +41,19 @@ describe('GET underwriting - pricing and risk', () => {
       api.getDeal = () => Promise.resolve(mockDeal);
     });
 
-    it('should render pricing and risk template with data', async () => {
-      const req = {
-        params: {
-          _id: mockDeal._id,
-        },
-        session,
-      };
-
-      await pricingAndRiskController.getUnderWritingPricingAndRisk(req, res);
-      expect(res.render).toHaveBeenCalledWith(
-        'case/underwriting/pricing-and-risk/pricing-and-risk.njk',
+    it('should return the pricing and risk object with data', async () => {
+      const result = await pricingAndRiskController.getUnderWritingPricingAndRisk(mockDeal, mockUser);
+      expect(result).toEqual(
         {
           userCanEditGeneral: userCanEditGeneral(session.user),
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
-          activeSideNavigation: 'pricing and risk',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id,
           user: session.user,
         },
       );
-    });
-  });
-
-  describe('when deal does NOT exist', () => {
-    beforeEach(() => {
-      api.getDeal = () => Promise.resolve();
-    });
-
-    it('should redirect to not-found route', async () => {
-      const req = {
-        params: {
-          _id: '1',
-        },
-        session,
-      };
-
-      await pricingAndRiskController.getUnderWritingPricingAndRisk(req, res);
-      expect(res.redirect).toHaveBeenCalledWith('/not-found');
     });
   });
 });
@@ -105,7 +78,6 @@ describe('GET underwriting - pricing and risk edit', () => {
         {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'underwriting',
-          activeSideNavigation: 'pricing and risk',
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id,
@@ -178,7 +150,7 @@ describe('POST underwriting - pricing and risk edit', () => {
 
       await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);
     });
 
     describe('with no req.body.exporterCreditRating', () => {
@@ -214,7 +186,6 @@ describe('POST underwriting - pricing and risk edit', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,
@@ -262,7 +233,6 @@ describe('POST underwriting - pricing and risk edit', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,
@@ -310,7 +280,6 @@ describe('POST underwriting - pricing and risk edit', () => {
           {
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'underwriting',
-            activeSideNavigation: 'pricing and risk',
             deal: mockDeal.dealSnapshot,
             tfm: {
               ...mockDeal.tfm,
@@ -339,7 +308,7 @@ describe('POST underwriting - pricing and risk edit', () => {
 
         await pricingAndRiskController.postUnderWritingPricingAndRisk(req, res);
 
-        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting/pricing-and-risk`);
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/underwriting`);
       });
     });
   });

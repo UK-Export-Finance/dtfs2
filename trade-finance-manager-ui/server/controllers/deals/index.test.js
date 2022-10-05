@@ -23,6 +23,7 @@ describe('controllers - deals', () => {
     describe('when there are deals', () => {
       beforeEach(() => {
         api.getDeals = () => Promise.resolve(mockGetDeals);
+        api.getAllAmendmentsInProgress = () => Promise.resolve(mockGetDeals);
       });
 
       it('should render deals template with data', async () => {

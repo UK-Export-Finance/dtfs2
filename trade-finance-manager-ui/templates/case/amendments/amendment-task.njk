@@ -1,0 +1,98 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block content %}
+
+  <section class="govuk-!-margin-top-5">
+
+    <div class="govuk-grid-row" data-cy="deal-tasks">
+      <div class="govuk-grid-column-full">
+        <span class="govuk-caption-xl">Task</span>
+        <h2 class="govuk-heading-xl govuk-!-margin-top-0 govuk-!-margin-bottom-6" data-cy="task-heading">{{ task.title }}</h2>
+
+        <h4 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy="type-of-work-heading">Type of work</h4>
+        <p class="govuk-body" data-cy="type-of-work-subheading">Amendment for {{amendment.type}} {{amendment.ukefFacilityId}}</p>
+
+        <h4 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy="team-heading">Team</h4>
+        <p class="govuk-body" data-cy="team-subheading">{{ task.team.name }}</p>
+
+        <form method="POST" autocomplete="off">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          {% set assignToMeCopy = (userFullName + ' ' + '(Assign to me)') %}
+
+          {% if taskIsAssignedToUser %}
+            {% set assignToMeCopy = userFullName %}
+          {% endif %}
+
+          {{ govukSelect({
+            id: "assignedTo",
+            name: "assignedTo",
+            label: {
+              text: "Assigned to",
+              classes: "govuk-heading-s govuk-!-font-weight-bold"
+            },
+            attributes: {
+              'data-cy': 'assigned-to-select-input'
+            },
+            classes: "govuk-!-margin-top-2",
+            items: assignToSelectOptions
+          }) }}
+
+          {{govukRadios({
+              fieldset: {
+                legend: {
+                  text: "Status",
+                  classes: "govuk-!-font-size-24 govuk-!-font-weight-bold govuk-!-margin-bottom-2"
+                }
+              },
+              attributes: {
+                'data-cy': 'task-status-radios'
+              },
+              name: "status",
+              items: [
+                {
+                  value: "To do",
+                  text: "To do",
+                  checked: task.status === 'To do',
+                  attributes: {
+                    'data-cy': 'task-status-to-do'
+                  }
+                },
+                {
+                  value: "In progress",
+                  text: "In progress",
+                  checked: task.status === 'In progress',
+                  attributes: {
+                    'data-cy': 'task-status-in-progress'
+                  }
+                },
+                {
+                  value: "Done",
+                  text: "Done",
+                  checked: task.status === 'Done',
+                  attributes: {
+                    'data-cy': 'task-status-done'
+                  }
+                }
+              ]
+            })
+          }}
+
+          {{ govukButton({
+            text: "Save and close",
+            attributes: {
+              'data-cy': 'submit-button'
+            }
+          }) }}
+
+          <a class="govuk-body govuk-link govuk-!-margin-left-6 close-link" href="/case/{{ dealId }}/tasks" data-cy="close-link">Close without saving</a>
+
+        </form>
+
+      </div>
+    </div>
+  </section>
+{% endblock %}

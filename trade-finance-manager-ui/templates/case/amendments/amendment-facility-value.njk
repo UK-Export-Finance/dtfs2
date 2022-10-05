@@ -1,0 +1,71 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendment - Facility value
+{% endblock %}
+
+{% block sub_content %}
+
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'amendment--error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--facility-value-heading" aria-label="Enter the new facility value">Enter the new facility value</h1>
+
+  <div class="govuk-body govuk-!-margin-bottom-4" data-cy="amendment--current-facility-value">
+    <p class="govuk-body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Current facility value</p>
+    {{currentFacilityValue}}
+  </div>
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ govukInput({
+      id: "facilityValue",
+      name: "value",
+      label: {
+        text: "New facility value",
+        classes: "govuk-label--s",
+        isPageHeading: false
+      },
+      prefix: {
+        text: currency
+      },
+      errorMessage: errors and errors.fieldErrors.facilityValue and {
+        text: errors.fieldErrors.facilityValue.text,
+        attributes: {
+          'data-cy': 'amendment--inline-error'
+        }
+      },
+      classes: "govuk-input--width-10",
+      spellcheck: false,
+      value: value,
+      attributes: {
+        'data-cy': "amendment--facility-value"
+      }
+    }) }}
+
+    <div class="govuk-button-group">
+      {% if isEditable %}
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+              "data-cy": "amendment--continue-button"
+          }
+          })
+        }}
+      {% endif %}
+      <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
+    </div>
+
+  </form>
+
+{% endblock %}

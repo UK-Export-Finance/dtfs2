@@ -1,0 +1,88 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendment - Effective date
+{% endblock %}
+
+{% block sub_content %}
+
+{% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'amendment--error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--effective-date-heading" aria-label="What date will the amendment be effective from?">What date will the amendment be effective from?</h1>
+
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ govukDateInput({
+      id: "effectiveDate",
+      namePrefix: "amendment-effective-date",
+      hint: {
+        text: "For example, 31 3 1980",
+        attributes: {
+          "data-cy": "amendment--effective-hint"
+        }
+      },
+      errorMessage: errors and errors.fieldErrors.effectiveDate and {
+        text: errors.fieldErrors.effectiveDate.text,
+        attributes: {
+          'data-cy': 'amendment--inline-error'
+        }
+      },
+      items: [
+        {
+          label: "Day",
+          classes: errors.fieldErrors.effectiveDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "day",
+          value: effectiveDateDay,
+          attributes: {
+            'data-cy': "amendment--effective-date-day"
+          }
+        },
+        {
+          label: "Month",
+          classes: errors.fieldErrors.effectiveDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "month",
+          value: effectiveDateMonth,
+          attributes: {
+            'data-cy': "amendment--effective-date-month"
+          }
+        },
+        {
+          label: "Year",
+          classes: errors.fieldErrors.effectiveDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+          name: "year",
+          value: effectiveDateYear,
+          attributes: {
+            'data-cy': "amendment--effective-date-year"
+          }
+        }
+      ]
+    }) }}
+
+    <div class="govuk-button-group">
+      {% if isEditable %}
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+              "data-cy": "amendment--continue-button"
+          }
+          })
+        }}
+      {% endif %}
+      <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
+    </div>
+
+  </form>
+
+{% endblock %}

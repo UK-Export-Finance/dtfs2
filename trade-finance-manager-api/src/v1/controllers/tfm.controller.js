@@ -8,14 +8,13 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal(dealId, partyUpdate);
-  return updatedDeal;
+  return api.updateDeal(dealId, partyUpdate);
 };
 exports.updateTfmParty = updateTfmParty;
 
 const updateAcbs = async (taskOutput) => {
   const { ...dealAcbs } = taskOutput;
-  // Add various ACBS records to the TFM activites
+  // Add various ACBS records to the TFM activities
   const activities = await activity.add(taskOutput);
   const acbsUpdate = {
     tfm: {
@@ -24,8 +23,7 @@ const updateAcbs = async (taskOutput) => {
     },
   };
 
-  const updatedDeal = await api.updateDeal(taskOutput.portalDealId, acbsUpdate);
-  return updatedDeal;
+  return api.updateDeal(taskOutput.portalDealId, acbsUpdate);
 };
 exports.updateAcbs = updateAcbs;
 

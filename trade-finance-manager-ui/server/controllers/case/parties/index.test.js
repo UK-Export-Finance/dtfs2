@@ -34,6 +34,7 @@ describe('controllers - case - parties', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should render deal template with data', async () => {
@@ -54,6 +55,8 @@ describe('controllers - case - parties', () => {
           activeSubNavigation: 'parties',
           dealId: req.params._id,
           user: session.user,
+          amendmentsInProgress: [],
+          hasAmendmentInProgress: false,
         });
       });
     });
@@ -61,6 +64,7 @@ describe('controllers - case - parties', () => {
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve();
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should redirect to not-found route', async () => {
@@ -99,6 +103,7 @@ describe('controllers - case - parties', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should render exporter edit template with data', async () => {
@@ -127,6 +132,7 @@ describe('controllers - case - parties', () => {
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve();
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should redirect to not-found route', async () => {
@@ -181,6 +187,7 @@ describe('controllers - case - parties', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should render bond issuer edit template with data', async () => {
@@ -210,6 +217,7 @@ describe('controllers - case - parties', () => {
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve();
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should redirect to not-found route', async () => {
@@ -264,6 +272,7 @@ describe('controllers - case - parties', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should render bond beneficiary edit template with data', async () => {
@@ -293,6 +302,7 @@ describe('controllers - case - parties', () => {
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve();
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should redirect to not-found route', async () => {
@@ -334,6 +344,7 @@ describe('controllers - case - parties', () => {
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should render party edit template with data', async () => {
@@ -357,6 +368,7 @@ describe('controllers - case - parties', () => {
     describe('when deal does NOT exist', () => {
       beforeEach(() => {
         api.getDeal = () => Promise.resolve();
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
       });
 
       it('should redirect to not-found route', async () => {
