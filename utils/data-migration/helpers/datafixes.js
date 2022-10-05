@@ -1047,13 +1047,13 @@ const datafixesTfmFacilities = async (deals) => {
 
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
-        // await partyUrn(true);
+        await partyUrn(true);
         await premiumSchedule();
-        // await dayBasis();
-        // await feeType();
-        // await feeFrequency();
-        // await ACBS(true);
-        // await amendment();
+        await dayBasis();
+        await feeType();
+        await feeFrequency();
+        await ACBS(true);
+        await amendment();
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {

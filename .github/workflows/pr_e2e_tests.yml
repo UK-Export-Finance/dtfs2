@@ -2,7 +2,11 @@ name: PR - End-To-End tests
 
 on:
   pull_request:
+<<<<<<< HEAD
     branches: [ void ]
+=======
+    branches: [ main ]
+>>>>>>> main
     paths:
     - 'gef-ui/**'
     - 'portal/**'
