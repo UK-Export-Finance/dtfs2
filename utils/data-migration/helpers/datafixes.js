@@ -11,9 +11,10 @@ const {
   tfmFacilityUpdate,
   portalFacilityUpdate,
 } = require('./database');
-const { actionsheet, workflow } = require('./io');
+const { actionsheet, workflow, sleep } = require('./io');
 const { epochInSeconds, getEpoch } = require('./date');
 const getFacilityPremiumSchedule = require('../../../trade-finance-manager-api/src/v1/controllers/get-facility-premium-schedule');
+const mapWorkflowStatus = require('./amendment');
 
 const { TFM_API } = process.env;
 let allDeals = {};
@@ -30,7 +31,7 @@ let allFacilities = {};
  * @param {Object} filter Mongo filter
  * @returns {Object} Collection object
  */
-const getTfmFacilities = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES, { 'facilitySnapshot.ukefFacilityId': '0020015641' });
+const getTfmFacilities = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES);
 
 // ******************** Internal API Calls *************************
 
@@ -748,30 +749,35 @@ const feeFrequency = async () => {
  */
 const amendment = async () => {
   const amendments = await workflow(CONSTANTS.WORKFLOW.FILES.AMENDMENTS);
+  const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
 
   for (const facility of Object.values(allFacilities)) {
     const facilityId = facility._id;
-    let amend = {};
-    let amendmentExists = false;
-    let workflowAmendment;
+    let payload = {};
+    let counter = 1;
 
-    // Verify whether amendment exists in the Workflow
-    amendments.filter(({ DEAL }) => {
-      if (
-        DEAL.FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId
-        && DEAL.FACILITY.STATE !== 'CANCELLED'
-      ) {
-        amendmentExists = true;
-        workflowAmendment = DEAL.FACILITY;
-      }
-    });
+    /**
+     * Filter amendments as per
+     * 1. UKEF Facility ID
+     * 2. Completed
+     */
+    const amends = amendments
+      .filter(({ DEAL }) => DEAL.FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId
+      && DEAL.FACILITY.STATE === 'COMPLETE');
 
-    // Proceed upon amendment existence
-    if (amendmentExists) {
-      // Create a draft facility amendment
-      console.info('\x1b[33m%s\x1b[0m', `Migrating amendment for ${facilityId}`, '\n');
+    // Chronological sort
+    amends.sort((a, b) => new Date(a.DEAL.FACILITY.DATE_CREATED).valueOf() - new Date(b.DEAL.FACILITY.DATE_CREATED).valueOf());
+
+    // Iterate over filtered amendments
+    for (const amend of amends) {
+      console.info('\x1b[33m%s\x1b[0m', `Migrating amendment ${counter} for ${facilityId}`, '\n');
+
+      const currency = facilities
+        .filter(({ FACILITY }) => FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId)
+        .map(({ FACILITY }) => FACILITY['CURRENCY TYPE'])
+        .reduce((c) => c);
+
       const { amendmentId } = await createAmendment(facilityId);
-
       const {
         STATE,
         ORIG_VALUE,
@@ -782,57 +788,59 @@ const amendment = async () => {
         DATE_LAST_UPDATED,
         DATE_CREATED,
         PIM_APPROVAL,
+        PIM_COMMENT,
         PIM_COMMENT_BY,
+        OUTCOME_COMMENTS,
         DOC_REVIEW_COMMENTS,
-      } = workflowAmendment;
+      } = amend.DEAL.FACILITY;
 
       // Construct amendment object with relevant properties
-      const status = STATE === 'COMPLETE'
-        ? CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED
-        : CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS;
+      const status = mapWorkflowStatus(STATE);
       const changeFacilityValue = VALUE ? ORIG_VALUE !== VALUE : false;
       const changeCoverEndDate = EXPIRY_DATE ? ORIG_EXPIRY_DATE !== EXPIRY_DATE : false;
+      const approval = PIM_APPROVAL === 'Approved with conditions' ? 'Approved with conditions' : 'Approved without conditions';
 
-      amend = {
+      payload = {
         requestDate: getUnixTime(new Date(EFFECTIVE_FROM_DATE).setHours(0, 0, 0, 0)),
         createdAt: getUnixTime(new Date(DATE_CREATED).setHours(0, 0, 0, 0)),
         submittedAt: getUnixTime(new Date(DATE_LAST_UPDATED).setHours(0, 0, 0, 0)),
+        updatedAt: getUnixTime(new Date(DATE_LAST_UPDATED).setHours(0, 0, 0, 0)),
         status,
-        submittedByPim: true,
         requireUkefApproval: Boolean(PIM_APPROVAL),
         changeFacilityValue,
         changeCoverEndDate,
         updateTfmLastUpdated: true,
         createTasks: true,
-        exporter: ''
+        submittedByPim: true,
+        currency,
       };
 
       if (changeFacilityValue) {
-        amend = {
-          ...amend,
+        payload = {
+          ...payload,
           currentValue: ORIG_VALUE,
           value: VALUE,
         };
       }
 
       if (changeCoverEndDate) {
-        amend = {
-          ...amend,
+        payload = {
+          ...payload,
           currentCoverEndDate: getUnixTime(new Date(ORIG_EXPIRY_DATE).setHours(0, 0, 0, 0)),
           coverEndDate: getUnixTime(new Date(EXPIRY_DATE).setHours(0, 0, 0, 0)),
         };
       }
 
-      if (amend.requireUkefApproval) {
+      if (payload.requireUkefApproval) {
         // Manual amendment
-        amend = {
-          ...amend,
+        payload = {
+          ...payload,
           ukefDecision: {
-            coverEndDate: changeCoverEndDate ? 'Approved without conditions' : null,
-            value: changeFacilityValue ? 'Approved without conditions' : null,
+            coverEndDate: changeCoverEndDate ? approval : null,
+            value: changeFacilityValue ? approval : null,
             declined: PIM_APPROVAL !== 'Approved with conditions' ? true : null,
-            conditions: PIM_APPROVAL,
-            comments: DOC_REVIEW_COMMENTS,
+            conditions: formatString(PIM_COMMENT),
+            comments: formatString(DOC_REVIEW_COMMENTS || OUTCOME_COMMENTS),
             managersDecisionEmail: true,
             managersDecisionEmailSent: true,
             submitted: true,
@@ -862,15 +870,17 @@ const amendment = async () => {
         };
       } else {
         // Automatic amendment
-        amend = {
-          ...amend,
+        payload = {
+          ...payload,
           effectiveDate: getUnixTime(new Date(EFFECTIVE_FROM_DATE).setHours(0, 0, 0, 0)),
           submissionDate: getUnixTime(new Date(DATE_LAST_UPDATED).setHours(0, 0, 0, 0)),
         };
       }
 
       // Update draft facility amendment
-      await updateAmendment(facilityId, amendmentId, amend);
+      await updateAmendment(facilityId, amendmentId, payload);
+
+      counter += 1;
     }
   }
 };
@@ -1029,12 +1039,12 @@ const datafixesTfmFacilities = async (deals) => {
 
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
-        await partyUrn(true);
-        await premiumSchedule();
-        await dayBasis();
-        await feeType();
-        await feeFrequency();
-        await ACBS(true);
+        // await partyUrn(true);
+        // await premiumSchedule();
+        // await dayBasis();
+        // await feeType();
+        // await feeFrequency();
+        // await ACBS(true);
         await amendment();
 
         // Update TFM Facilities
@@ -1391,7 +1401,7 @@ const datafixesTfmFacilitiesGef = async (deals) => {
           .catch((e) => Promise.reject(e));
       }
 
-      return Promise.reject(new Error('TFM Facilities void data set'));
+      return Promise.reject(new Error('GEF TFM Facilities void data set'));
     }
 
     return Promise.reject(new Error('TFM deals void data set'));
