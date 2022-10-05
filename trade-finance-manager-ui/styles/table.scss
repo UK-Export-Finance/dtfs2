@@ -50,8 +50,7 @@
  white-space: nowrap;
 }
 
-.amendment-details {
- &:nth-child(odd) {
+.amendment-details:nth-child(odd) {
   position: relative;
   .govuk-grid-column-full:before {
     content: '';
@@ -61,11 +60,5 @@
     position:absolute;
     top: 0;
     left: 0;
-  }
-}
-  .govuk-table__header {
-    &:nth-child(1) {
-      width: 25%;
-    }
   }
 }
