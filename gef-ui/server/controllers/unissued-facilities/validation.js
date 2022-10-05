@@ -13,7 +13,7 @@ const coverDatesValidation = require('../../utils/coverDatesValidation.helper');
  * @returns {res} if validation errors
  * @returns {Object} if no validation errors
  */
-const facilityValidation = async (body, query, params) => {
+const facilityValidation = async (body, query, params, facility) => {
   const { facilityType } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
@@ -198,7 +198,7 @@ const facilityValidation = async (body, query, params) => {
         });
       }
 
-      if (isAfter(startDate, threeMonthsFromSubmission)) {
+      if (isAfter(startDate, threeMonthsFromSubmission) && !facility?.specialIssuePermission) {
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
           errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
