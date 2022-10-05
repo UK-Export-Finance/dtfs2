@@ -228,3 +228,28 @@ export const MOCK_APPLICATION_MIA = {
   },
   ...commonApplicationDetails,
 };
+
+export const MOCK_APPLICATION_MIN = {
+  status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
+  submissionType: DEAL_SUBMISSION_TYPE.MIN,
+  ukefDecisionAccepted: false,
+  submissionCount: 1,
+  eligibility: eligibilityCriteria(false),
+  supportingInformation: {
+    manualInclusion: [
+      {
+        _id: '61d71890a018210013a91c53',
+        parentId: '61d7185aa018210013a91c51',
+        filename: 'test.pdf',
+        mimetype: 'application/pdf',
+        encoding: '7bit',
+        size: 28583,
+        documentPath: 'manualInclusion',
+      },
+    ],
+    securityDetails: { exporter: 'Mock security details', facility: 'Mock facility details' },
+    status: 'In progress',
+    requiredFields: ['manualInclusion'],
+  },
+  ...commonApplicationDetails,
+};

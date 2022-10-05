@@ -5,7 +5,6 @@ const component = '../templates/case/underwriting/pricing-and-risk/_macros/secti
 const render = componentRenderer(component);
 
 describe(component, () => {
-  let wrapper;
   let params = {
     caseId: '1234',
     supplierName: 'Testing',
@@ -54,7 +53,7 @@ describe(component, () => {
 
       const wrapper = render(params);
       wrapper.expectLink('[data-cy="add-credit-rating-link"]')
-        .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, `Add a credit rating for ${params.supplierName}`);
+        .toLinkTo(`/case/${params.caseId}/underwriting/pricing-and-risk/edit`, 'Add');
     });
   });
 });

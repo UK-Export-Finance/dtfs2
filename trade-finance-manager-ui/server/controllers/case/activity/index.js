@@ -1,7 +1,10 @@
 const { getUnixTime, fromUnixTime } = require('date-fns');
 const api = require('../../../api');
 const generateValidationErrors = require('../../../helpers/validation');
+const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
+
+const { DEAL } = CONSTANTS;
 
 const MAX_COMMENT_LENGTH = 1000;
 
@@ -31,10 +34,17 @@ const getActivity = async (req, res) => {
   const blankObj = {};
 
   const deal = await api.getDeal(dealId, blankObj, activityFilters);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
+
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
 
   const activities = mappedActivities(deal.tfm.activities);
 
@@ -47,6 +57,8 @@ const getActivity = async (req, res) => {
     user,
     selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
     activities,
+    hasAmendmentInProgress,
+    amendmentsInProgress,
   });
 };
 
@@ -62,10 +74,17 @@ const filterActivities = async (req, res) => {
   };
   const blankObj = {};
   const deal = await api.getDeal(dealId, blankObj, activityFilters);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
+
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
 
   const activities = mappedActivities(deal.tfm.activities);
 
@@ -78,6 +97,8 @@ const filterActivities = async (req, res) => {
     user,
     selectedActivityFilter: filterType,
     activities,
+    hasAmendmentInProgress,
+    amendmentsInProgress,
   });
 };
 

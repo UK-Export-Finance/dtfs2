@@ -89,7 +89,7 @@ describe('/v1/deals', () => {
     it('should add TFM deal data', async () => {
       const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
 
-      const mappedDeal = mapSubmittedDeal(body);
+      const mappedDeal = await mapSubmittedDeal(body);
       const tfmDataObject = await addTfmDealData(mappedDeal);
 
       // parties object is added further down the line.

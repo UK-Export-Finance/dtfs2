@@ -31,7 +31,16 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+  });
+
+  after(() => {
+    cy.clearCookies();
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
   });
 
   it('MIA is submitted, TFM Underwriter submits `Approved` decision. Portal status updates; Portal deal is resubmitted and then should become an MIN', () => {
@@ -49,6 +58,11 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+    cy.forceVisit(TFM_URL);
+
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToSubmit().click();
@@ -78,6 +92,9 @@ context('Portal to TFM deal submission', () => {
     // Underwriter Manager logs in to TFM
     //---------------------------------------------------------------
 
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
     cy.forceVisit(TFM_URL);
 
     cy.tfmLogin(UNDERWRITER_MANAGER_1);
@@ -95,8 +112,7 @@ context('Portal to TFM deal submission', () => {
     // Underwriter Manager submits a decision
     //---------------------------------------------------------------
     tfmPartials.caseSubNavigation.underwritingLink().click();
-    tfmPartials.underwritingSubNav.underwriterManagerDecisionLink().click();
-    tfmPages.managersDecisionPage.addDecisionLink().click();
+    tfmPages.managersDecisionPage.addDecisionLink().click({ force: true });
 
     const MOCK_COMMENTS = 'e2e test comment';
 
@@ -107,6 +123,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Go back to Portal
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
 
@@ -124,6 +144,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker goes back into the deal
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.login(BANK1_MAKER1);
     portalPages.contract.visit(deal);
 
@@ -194,6 +218,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Go back to TFM
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.forceVisit(TFM_URL);
 
     cy.tfmLogin(UNDERWRITER_MANAGER_1);

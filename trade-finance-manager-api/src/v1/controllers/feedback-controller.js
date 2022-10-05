@@ -59,11 +59,15 @@ exports.create = async (req, res) => {
   const EMAIL_TEMPLATE_ID = CONSTANTS.EMAIL_TEMPLATE_IDS.TFM_FEEDBACK_RECEIVED;
   const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
-  await sendTfmEmail(
-    EMAIL_TEMPLATE_ID,
-    EMAIL_RECIPIENT,
-    emailVariables,
-  );
+  try {
+    await sendTfmEmail(
+      EMAIL_TEMPLATE_ID,
+      EMAIL_RECIPIENT,
+      emailVariables,
+    );
+  } catch (err) {
+    console.error('TFM-API feedback controller - error sending email', { err });
+  }
 
   return res.status(200).send({ _id: createdFeedback.insertedId });
 };

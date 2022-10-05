@@ -77,7 +77,7 @@ describe('reducer - deals', () => {
   });
 
   describe('mapGefDeal', () => {
-    it('should return a mapped gef deal', () => {
+    it('should return a mapped gef deal', async () => {
       const expected = {
         _id: mockGefDeal._id,
         dealSnapshot: {
@@ -107,7 +107,7 @@ describe('reducer - deals', () => {
   });
 
   describe('dealsLightReducer', () => {
-    it('should return mapDeals result', () => {
+    it('should return mapDeals result', async () => {
       const mockDeals = [
         mockBssDeal,
         mockBssDeal,
@@ -126,5 +126,3 @@ describe('reducer - deals', () => {
     });
   });
 });
-
-/* eslint-enable no-underscore-dangle */

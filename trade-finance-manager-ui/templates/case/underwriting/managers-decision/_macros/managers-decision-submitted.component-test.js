@@ -16,11 +16,6 @@ describe(component, () => {
     },
   };
 
-  it('should render subheading', () => {
-    const wrapper = render(params);
-    wrapper.expectText('[data-cy="managers-decision-subheading"]').toRead('Decision');
-  });
-
   it('should render status tag component', () => {
     const wrapper = render(params);
 

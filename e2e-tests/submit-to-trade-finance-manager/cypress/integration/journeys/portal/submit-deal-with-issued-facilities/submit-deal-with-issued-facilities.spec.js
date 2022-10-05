@@ -106,8 +106,6 @@ context('Portal to TFM deal submission', () => {
       });
     });
 
-    // contains exposure to 2 decimal places (not rounded)
-
     facilityRow.facilityId().click();
 
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${issuedBondId}`);

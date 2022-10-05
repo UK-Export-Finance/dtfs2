@@ -5,13 +5,13 @@ const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
 const MOCK_BSS_DEAL = require('../../__mocks__/mock-deal');
 
 describe('generate MIA confirmation email variables - BSS', () => {
-  it('should return object', () => {
+  it('should return object', async () => {
     const mockFacilities = [
       ...MOCK_BSS_DEAL.bondTransactions.items,
       ...MOCK_BSS_DEAL.loanTransactions.items,
     ];
 
-    const mockSubmittedDeal = mapSubmittedDeal({
+    const mockSubmittedDeal = await mapSubmittedDeal({
       dealSnapshot: {
         ...MOCK_BSS_DEAL,
         facilities: mockFacilities,
