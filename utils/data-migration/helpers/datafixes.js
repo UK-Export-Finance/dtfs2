@@ -609,7 +609,7 @@ const premiumSchedule = async () => {
             calculationDate: DEAL.FACILITY.PREM_SCH['CALCULATION DATE'],
             income: DEAL.FACILITY.PREM_SCH.INCOME,
             incomePerDay: DEAL.FACILITY.PREM_SCH['INCOME PER DAY'],
-            exposure: DEAL.FACILITY.PREM_SCH.EXPOSURE,
+            exposure: Math.trunc(DEAL.FACILITY.PREM_SCH.EXPOSURE),
             period,
             daysInPeriod: DEAL.FACILITY.PREM_SCH['DAYS IN PERIOD'],
             effectiveFrom: DEAL.FACILITY.PREM_SCH['EFFECTIVE FROM DATE'],
@@ -754,7 +754,7 @@ const amendment = async () => {
   for (const facility of Object.values(allFacilities)) {
     const facilityId = facility._id;
     let payload = {};
-    let counter = 1;
+    let lastAmendment = null;
 
     /**
      * Filter amendments as per
@@ -769,8 +769,13 @@ const amendment = async () => {
     amends.sort((a, b) => new Date(a.DEAL.FACILITY.DATE_CREATED).valueOf() - new Date(b.DEAL.FACILITY.DATE_CREATED).valueOf());
 
     // Iterate over filtered amendments
-    for (const amend of amends) {
-      console.info('\x1b[33m%s\x1b[0m', `Migrating amendment ${counter} for ${facilityId}`, '\n');
+    for (const [index, amend] of amends.entries()) {
+      console.info('\x1b[33m%s\x1b[0m', `Migrating amendment ${index + 1} for Facility ${facilityId}`, '\n');
+
+      // Store last amendment for a correct amendments summary page
+      if (index) {
+        lastAmendment = amends[index - 1];
+      }
 
       const currency = facilities
         .filter(({ FACILITY }) => FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId)
@@ -816,17 +821,22 @@ const amendment = async () => {
       };
 
       if (changeFacilityValue) {
+        const currentValue = lastAmendment ? lastAmendment.DEAL.FACILITY.VALUE : ORIG_VALUE;
+
         payload = {
           ...payload,
-          currentValue: ORIG_VALUE,
+          currentValue,
           value: VALUE,
         };
       }
 
       if (changeCoverEndDate) {
+        const currentCoverEndDate = lastAmendment && lastAmendment.DEAL.FACILITY.EXPIRY_DATE
+          ? getUnixTime(new Date(lastAmendment.DEAL.FACILITY.EXPIRY_DATE).setHours(0, 0, 0, 0))
+          : getUnixTime(new Date(ORIG_EXPIRY_DATE).setHours(0, 0, 0, 0));
         payload = {
           ...payload,
-          currentCoverEndDate: getUnixTime(new Date(ORIG_EXPIRY_DATE).setHours(0, 0, 0, 0)),
+          currentCoverEndDate,
           coverEndDate: getUnixTime(new Date(EXPIRY_DATE).setHours(0, 0, 0, 0)),
         };
       }
@@ -838,9 +848,9 @@ const amendment = async () => {
           ukefDecision: {
             coverEndDate: changeCoverEndDate ? approval : null,
             value: changeFacilityValue ? approval : null,
-            declined: PIM_APPROVAL !== 'Approved with conditions' ? true : null,
-            conditions: formatString(PIM_COMMENT),
-            comments: formatString(DOC_REVIEW_COMMENTS || OUTCOME_COMMENTS),
+            declined: null,
+            conditions: approval === 'Approved with conditions' ? formatString(PIM_COMMENT) : '',
+            comments: approval === 'Approved with conditions' ? formatString(DOC_REVIEW_COMMENTS || OUTCOME_COMMENTS) : formatString(PIM_COMMENT),
             managersDecisionEmail: true,
             managersDecisionEmailSent: true,
             submitted: true,
@@ -879,8 +889,6 @@ const amendment = async () => {
 
       // Update draft facility amendment
       await updateAmendment(facilityId, amendmentId, payload);
-
-      counter += 1;
     }
   }
 };
@@ -1040,12 +1048,12 @@ const datafixesTfmFacilities = async (deals) => {
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
         // await partyUrn(true);
-        // await premiumSchedule();
+        await premiumSchedule();
         // await dayBasis();
         // await feeType();
         // await feeFrequency();
         // await ACBS(true);
-        await amendment();
+        // await amendment();
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {
