@@ -3,6 +3,7 @@ const caseController = require('../../controllers/case');
 const partiesController = require('../../controllers/case/parties');
 const underwritingController = require('../../controllers/case/underwriting');
 const activityController = require('../../controllers/case/activity');
+const amendmentsController = require('../../controllers/case/amendments');
 
 const router = express.Router();
 
@@ -15,6 +16,57 @@ router.get('/:_id/tasks/:groupId/:taskId', caseController.getCaseTask);
 router.post('/:_id/tasks/:groupId/:taskId', caseController.putCaseTask);
 
 router.get('/:_id/facility/:facilityId', caseController.getCaseFacility);
+router.post('/:_id/facility/:facilityId', caseController.postFacilityAmendment);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.getAmendmentRequestDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.postAmendmentRequestDate);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval', amendmentsController.getAmendmentRequestApproval);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval', amendmentsController.postAmendmentRequestApproval);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.getAmendmentOptions);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.postAmendmentOptions);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.getAmendmentEffectiveDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date', amendmentsController.postAmendmentEffectiveDate);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', amendmentsController.getAssignAmendmentLeadUnderwriter);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', amendmentsController.postAssignAmendmentLeadUnderwriter);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.getAmendFacilityValue);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.postAmendFacilityValue);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision', amendmentsController.getAmendmentAddUnderwriterManagersFacilityValue);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision', amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.getAmendCoverEndDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.postAmendCoverEndDate);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision', amendmentsController.getAmendmentAddUnderwriterManagersDecisionCoverEndDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision', amendmentsController.postAmendmentAddUnderwriterManagersDecisionCoverEndDate);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', amendmentsController.getAmendmentAnswers);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', amendmentsController.postAmendmentAnswers);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions', amendmentsController.getManagersConditionsAndComments);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions', amendmentsController.postManagersConditionsAndComments);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions/summary', amendmentsController.getManagersConditionsAndCommentsSummary);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions/summary', amendmentsController.postManagersConditionsAndCommentsSummary);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.getAmendmentBankDecisionChoice);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.postAmendmentBankDecisionChoice);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date', amendmentsController.getAmendmentBankDecisionReceivedDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date', amendmentsController.postAmendmentBankDecisionReceivedDate);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date', amendmentsController.getAmendmentBankDecisionEffectiveDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date', amendmentsController.postAmendmentBankDecisionEffectiveDate);
+
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.getAmendmentBankDecisionAnswers);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers', amendmentsController.postAmendmentBankDecisionAnswers);
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.getAmendmentTask);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.postAmendmentTask);
 
 router.get('/:_id/parties', partiesController.getCaseParties);
 
@@ -41,7 +93,8 @@ router.post('/:_id/activity', activityController.filterActivities);
 router.get('/:_id/activity/post-comment', activityController.getCommentBox);
 router.post('/:_id/activity/post-comment', activityController.postComment);
 
-router.get('/:_id/underwriting/pricing-and-risk', underwritingController.getUnderWritingPricingAndRisk);
+router.get('/:_id/underwriting', underwritingController.getUnderwriterPage);
+
 router.get('/:_id/underwriting/pricing-and-risk/edit', underwritingController.getUnderWritingPricingAndRiskEdit);
 router.post('/:_id/underwriting/pricing-and-risk/edit', underwritingController.postUnderWritingPricingAndRisk);
 router.get('/:_id/underwriting/pricing-and-risk/loss-given-default', underwritingController.getUnderWritingLossGivenDefault);
@@ -52,11 +105,8 @@ router.post('/:_id/underwriting/pricing-and-risk/probability-of-default', underw
 router.get('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.getUnderWritingFacilityRiskProfileEdit);
 router.post('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile', underwritingController.postUnderWritingFacilityRiskProfileEdit);
 
-router.get('/:_id/underwriting/lead-underwriter', underwritingController.getLeadUnderwriter);
 router.get('/:_id/underwriting/lead-underwriter/assign', underwritingController.getAssignLeadUnderwriter);
 router.post('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
-
-router.get('/:_id/underwriting/managers-decision', underwritingController.getUnderwriterManagersDecision);
 
 router.get('/:_id/underwriting/managers-decision/edit', underwritingController.getUnderwriterManagersDecisionEdit);
 router.post('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);

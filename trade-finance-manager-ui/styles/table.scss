@@ -5,3 +5,60 @@
 .govuk-table__cell--border-top {
   border-top: solid 1px govuk-colour('mid-grey');
 }
+
+.gov-table__grey-table-column {
+  background: #F3F2F1;
+}
+
+.gov-table_cell-vertical-align-middle {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.gov-table_cell--border-bottom-transparent {
+  border-bottom: 1px solid transparent;
+}
+
+.facilities-table td {
+  text-align: right !important;
+}
+
+.deals-table td:nth-child(1), .deals-table th:nth-child(1) {
+  min-width: 110px;
+}
+
+.deals-table td:nth-child(2), .deals-table th:nth-child(2) {
+  min-width: 100px;
+}
+
+.deals-table td:nth-child(3), .deals-table th:nth-child(3) {
+  min-width: 205px;
+}
+
+.deals-table td:nth-child(7), .deals-table th:nth-child(7) {
+  min-width: 140px;
+}
+
+.deals-table td:nth-child(8), .deals-table th:nth-child(8) {
+  min-width: 100px;
+}
+
+.deals-table td:nth-child(4),.deals-table td:nth-child(5),.deals-table td:nth-child(6) {
+ max-width: 220px;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+}
+
+.amendment-details:nth-child(odd) {
+  position: relative;
+  .govuk-grid-column-full:before {
+    content: '';
+    width: 100%;
+    height: 3px;
+    background-color: $govuk-text-colour;
+    position:absolute;
+    top: 0;
+    left: 0;
+  }
+}

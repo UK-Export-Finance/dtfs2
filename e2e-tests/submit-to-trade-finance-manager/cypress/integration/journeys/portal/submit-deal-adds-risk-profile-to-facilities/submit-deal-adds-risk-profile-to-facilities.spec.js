@@ -28,7 +28,16 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+  });
+
+  after(() => {
+    cy.clearCookies();
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
   });
 
   it('Portal deal is submitted to UKEF, facility `risk profile` defaults to `Flat`. User can navigate to facility pages', () => {
@@ -59,6 +68,10 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // user login to TFM
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
+
     cy.forceVisit(TFM_URL);
 
     cy.tfmLogin(BUSINESS_SUPPORT_USER_1);
@@ -78,7 +91,7 @@ context('Portal to TFM deal submission', () => {
         expect(text.trim()).to.contain('Flat');
       });
 
-    facility1.facilityLink().click();
+    facility1.facilityLink().click({ force: true });
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${dealFacilities[0]._id}`);
 
     // check facility 1 has default risk profile and can click through to facility page
@@ -92,7 +105,7 @@ context('Portal to TFM deal submission', () => {
         expect(text.trim()).to.contain('Flat');
       });
 
-    facility2.facilityLink().click();
+    facility2.facilityLink().click({ force: true });
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${dealFacilities[1]._id}`);
   });
 });

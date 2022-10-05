@@ -1,0 +1,15 @@
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% import '../_macros/summary-table.njk' as summary %}
+{% import '../_macros/amendment-ukef-decision-summary.njk' as summaryDetails %}
+
+
+<div class="govuk-grid-row" data-cy="managers-decision-submitted">
+
+  <div class="govuk-grid-column-full" data-cy="amendment--details-{{amendment.version}}">
+    {{ summary.render(amendment) }}
+
+    {{ summaryDetails.render(amendment) }}
+
+  </div>
+
+</div>

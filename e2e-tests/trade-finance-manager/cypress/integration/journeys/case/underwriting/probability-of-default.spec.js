@@ -49,7 +49,7 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
       partials.caseSubNavigation.underwritingLink().click();
 
       // go to probability of default
-      pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().click();
+      pages.underwritingPricingAndRiskPage.exporterTableChangeProbabilityOfDefaultLink().click({ force: true });
       cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/probability-of-default`));
     });
 
@@ -71,14 +71,14 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
     it('should return to pricing & risk page without updating value if cancel', () => {
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('45');
       pages.underwritingProbabilityOfDefaultPage.closeLink().click();
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+      cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
       pages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Less than 14.1%');
       });
     });
 
     it('should display validation error if value is not a number, below 0.01, above 14.09 or more than 2 decimal places', () => {
-      pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('45');
+      pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('15');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
       pages.underwritingProbabilityOfDefaultPage.errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
       pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
@@ -108,7 +108,7 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('10.5');
       pages.underwritingProbabilityOfDefaultPage.submitButton().click();
 
-      cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk`));
+      cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
       pages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault().invoke('text').then((text) => {
         expect(text.trim()).to.equal('Less than 10.5%');
       });

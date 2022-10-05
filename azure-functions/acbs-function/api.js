@@ -1,120 +1,162 @@
-/* eslint-disable no-extra-boolean-cast */
 /**
-* ACBS Functions API Library deals with following HTTP Methods:
-* 1. GET
-* 2. PUT
-* 3. POST
-*
-* All the function have argument validation check and return object verification in
-* case err object does not have expected properties due to network connection, SSL verification or other issues.
-*/
+ * ACBS Functions API Library deals with following HTTP Methods:
+ * 1. GET
+ * 2. POST
+ * 3. PUT
+ * 4. PATCH
+ *
+ * All the function have argument validation check and return object verification in
+ * case err object does not have expected properties due to network connection, SSL verification or other issues.
+ */
+const acbs = process.env.MULESOFT_API_UKEF_TF_EA_URL;
+const username = process.env.MULESOFT_API_KEY;
+const password = process.env.MULESOFT_API_SECRET;
 const axios = require('axios');
 
 require('dotenv').config();
 
 const getACBS = async (apiRef) => {
-  if (!!apiRef) {
-    const response = await axios({
+  if (apiRef) {
+    return axios({
       method: 'get',
-      url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
+      url: `${acbs}/${apiRef}`,
       auth: {
-        username: process.env.MULESOFT_API_KEY,
-        password: process.env.MULESOFT_API_SECRET,
+        username,
+        password,
       },
       headers: {
         'Content-Type': 'application/json',
       },
-    }).catch((err) => ({
-      status: !!err.response
-        ? err.response.status
-        : err,
-    }));
-    return response;
+    }).catch((e) => {
+      console.error('Error calling GET to ACBS');
+      return {
+        status: e.response ? e.response.status : e,
+        data: { error: e.response ? e.response.data : e },
+      };
+    });
   }
-  return {};
+  return {
+    status: 400,
+    data: {},
+  };
 };
 
-const putToACBS = async (apiRef, acbsInput, etag) => {
+const postToAcbs = async (apiRef, acbsInput) => {
   if (!!apiRef && !!acbsInput) {
-    const additionalHeader = etag ? {
-      'If-Match': etag,
-    } : null;
-
-    const response = await axios({
-      method: 'put',
-      url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
+    return axios({
+      method: 'post',
+      url: `${acbs}/${apiRef}`,
       auth: {
-        username: process.env.MULESOFT_API_KEY,
-        password: process.env.MULESOFT_API_SECRET,
+        username,
+        password,
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: [acbsInput],
+    }).catch((e) => {
+      console.error('Error calling POST to ACBS');
+      return {
+        status: e.response ? e.response.status : e,
+        data: { error: e.response ? e.response.data : e },
+      };
+    });
+  }
+  return {
+    status: 400,
+    data: {},
+  };
+};
+
+const putToAcbs = async (apiRef, acbsInput, etag) => {
+  if (!!apiRef && !!acbsInput) {
+    const additionalHeader = etag
+      ? {
+        'If-Match': etag,
+      }
+      : null;
+
+    return axios({
+      method: 'put',
+      url: `${acbs}/${apiRef}`,
+      auth: {
+        username,
+        password,
       },
       headers: {
         'Content-Type': 'application/json',
         ...additionalHeader,
       },
       data: acbsInput,
-    }).catch((err) => ({
-      status: !!err.response
-        ? err.response.status
-        : err,
-      data: {
-        error: err.response
-          ? err.response.data
-          : err,
-      },
-    }));
-    return response;
+    }).catch((e) => {
+      console.error('Error calling PUT to ACBS');
+      return {
+        status: e.response ? e.response.status : e,
+        data: { error: e.response ? e.response.data : e },
+      };
+    });
   }
-  return {};
+  return {
+    status: 400,
+    data: {},
+  };
 };
 
-const postToACBS = async (apiRef, acbsInput) => {
+const patchToAcbs = async (apiRef, acbsInput, eTag) => {
   if (!!apiRef && !!acbsInput) {
-    const response = await axios({
-      method: 'post',
-      url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiRef}`,
+    const additionalHeader = eTag
+      ? {
+        'If-Match': eTag,
+      }
+      : null;
+
+    return axios({
+      method: 'patch',
+      url: `${acbs}/${apiRef}`,
       auth: {
-        username: process.env.MULESOFT_API_KEY,
-        password: process.env.MULESOFT_API_SECRET,
+        username,
+        password,
       },
       headers: {
         'Content-Type': 'application/json',
+        ...additionalHeader,
       },
-      data: [acbsInput],
-    }).catch((err) => ({
-      status: !!err.response
-        ? err.response.status
-        : err,
-      data: {
-        error: err.response
-          ? err.response.data
-          : err,
-      },
-    }));
-    return response;
+      data: acbsInput,
+    }).catch((e) => {
+      console.error('Error calling PATCH to ACBS');
+      return {
+        status: e.response ? e.response.status : e,
+        data: { error: e.response ? e.response.data : e },
+      };
+    });
   }
-  return {};
+  return {
+    status: 400,
+    data: {},
+  };
 };
 
-const createParty = (acbsInput) => postToACBS('party', acbsInput);
-const createDeal = (acbsInput) => postToACBS('deal', acbsInput);
-const createDealInvestor = (acbsInput) => postToACBS('deal/investor', acbsInput);
-const createDealGuarantee = (acbsInput) => postToACBS('deal/guarantee', acbsInput);
-const createFacility = (acbsInput) => postToACBS('facility', acbsInput);
-const createFacilityInvestor = (acbsInput) => postToACBS('facility/investor', acbsInput);
-const createFacilityCovenantId = (acbsInput) => postToACBS('numbers', acbsInput);
-const createFacilityCovenant = (acbsInput) => postToACBS('facility/covenant', acbsInput);
-const createFacilityGuarantee = (acbsInput) => postToACBS('facility/guarantee', acbsInput);
-const createCodeValueTransaction = (acbsInput) => postToACBS('facility/codeValueTransaction', acbsInput);
-const createFacilityLoan = (acbsInput) => postToACBS('facility/loan', acbsInput);
-const createFacilityFee = (acbsInput) => postToACBS('facility/fixedFee', acbsInput);
-const updateFacility = (facilityId, updateType, acbsInput, etag) => putToACBS(
-  `facility/${facilityId}?op=${updateType}`,
-  acbsInput,
-  etag,
-);
 const getFacility = (facilityId) => getACBS(`facility/${facilityId}`);
+const getLoanId = (facilityId) => getACBS(`facility/${facilityId}/loan`);
+const createParty = (acbsInput) => postToAcbs('party', acbsInput);
+const createDeal = (acbsInput) => postToAcbs('deal', acbsInput);
+const createDealInvestor = (acbsInput) => postToAcbs('deal/investor', acbsInput);
+const createDealGuarantee = (acbsInput) => postToAcbs('deal/guarantee', acbsInput);
+const createFacility = (acbsInput) => postToAcbs('facility', acbsInput);
+const createFacilityInvestor = (acbsInput) => postToAcbs('facility/investor', acbsInput);
+const createFacilityCovenantId = (acbsInput) => postToAcbs('numbers', acbsInput);
+const createFacilityCovenant = (acbsInput) => postToAcbs('facility/covenant', acbsInput);
+const createFacilityGuarantee = (acbsInput) => postToAcbs('facility/guarantee', acbsInput);
+const createCodeValueTransaction = (acbsInput) => postToAcbs('facility/codeValueTransaction', acbsInput);
+const createFacilityLoan = (acbsInput) => postToAcbs('facility/loan', acbsInput);
+const createFacilityFee = (acbsInput) => postToAcbs('facility/fixedFee', acbsInput);
+const updateFacility = (facilityId, updateType, acbsInput, etag) => putToAcbs(`facility/${facilityId}?op=${updateType}`, acbsInput, etag);
+const updateFacilityLoan = (facilityId, loanId, acbsInput) => patchToAcbs(`facility/${facilityId}/loan/${loanId}`, acbsInput);
+const updateFacilityLoanAmount = (facilityId, loanId, acbsInput) => postToAcbs(`facility/${facilityId}/loan/${loanId}/amountAmendment`, acbsInput);
 
 module.exports = {
+  getFacility,
+  getLoanId,
   createParty,
   createDeal,
   createDealInvestor,
@@ -128,5 +170,6 @@ module.exports = {
   createFacilityLoan,
   createFacilityFee,
   updateFacility,
-  getFacility,
+  updateFacilityLoan,
+  updateFacilityLoanAmount,
 };

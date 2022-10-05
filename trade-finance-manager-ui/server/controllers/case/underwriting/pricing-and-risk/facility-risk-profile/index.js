@@ -57,7 +57,7 @@ const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
 
   await api.updateFacilityRiskProfile(facilityId, facilityUpdate);
 
-  return res.redirect(`/case/${dealId}/underwriting/pricing-and-risk`);
+  return res.redirect(`/case/${dealId}/underwriting`);
 };
 
 module.exports = {

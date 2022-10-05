@@ -1,0 +1,92 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendment - Cover End Date
+{% endblock %}
+
+{% block sub_content %}
+
+{% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'amendment--error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+  <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-2" data-cy="amendment--cover-end-date-heading" aria-label="Enter the new cover end date">Enter the new cover end date</h1>
+
+  <div class="govuk-body govuk-!-margin-bottom-4" data-cy="amendment--current-cover-end-date">
+    <p class="govuk-body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Current cover end date</p>
+    {{currentCoverEndDate}}
+  </div>
+  <form method="POST" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ govukDateInput({
+      id: "coverEndDate",
+      namePrefix: "cover-end-date",
+      hint: {
+        text: "For example, 31 3 2022",
+        attributes: {
+          "data-cy": "cover-end-date-hint"
+        }
+      },
+      errorMessage: errors and errors.fieldErrors.coverEndDate and {
+        text: errors.fieldErrors.coverEndDate.text,
+        attributes: {
+          'data-cy': 'amendment--inline-error'
+        }
+      },
+      items: [
+        {
+          label: "Day",
+          classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "day",
+          value: coverEndDateDay,
+          attributes: {
+            'data-cy': "amendment--cover-end-date-day"
+          }
+        },
+        {
+          label: "Month",
+          classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "month",
+          value: coverEndDateMonth,
+          attributes: {
+            'data-cy': "amendment--cover-end-date-month"
+          }
+        },
+        {
+          label: "Year",
+          classes: errors.fieldErrors.coverEndDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+          name: "year",
+          value: coverEndDateYear,
+          attributes: {
+            'data-cy': "amendment--cover-end-date-year"
+          }
+        }
+      ]
+    }) }}
+
+    <div class="govuk-button-group">
+      {% if isEditable %}
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+              "data-cy": "amendment--continue-button"
+          }
+          })
+        }}
+      {% endif %}
+      <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
+    </div>
+
+  </form>
+
+{% endblock %}

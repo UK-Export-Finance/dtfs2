@@ -103,19 +103,19 @@ describe('mapFacilities', () => {
     { ...MOCK_FACILITIES[1] },
   ];
 
-  it('should map and format correct fields/values', async () => {
+  it('should map and format correct fields/values', () => {
     const result = mapFacilities(mockFacilities, mockDealDetails, MOCK_DEAL_TFM);
 
     const expected = [
       {
         _id: MOCK_FACILITIES[0]._id,
-        facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails) },
-        tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM),
+        facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[0].facilitySnapshot, mockTfmFacility, mockDealDetails, MOCK_FACILITIES[0]) },
+        tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM, MOCK_FACILITIES[0]),
       },
       {
         _id: MOCK_FACILITIES[1]._id,
-        facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails) },
-        tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM),
+        facilitySnapshot: { ...mapFacility(MOCK_FACILITIES[1].facilitySnapshot, mockTfmFacility, mockDealDetails, MOCK_FACILITIES[1]) },
+        tfm: mapFacilityTfm(mockTfmFacility, MOCK_DEAL_TFM, MOCK_FACILITIES[1]),
       },
     ];
 

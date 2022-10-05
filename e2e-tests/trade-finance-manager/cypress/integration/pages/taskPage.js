@@ -1,4 +1,6 @@
 const taskPage = {
+  taskHeading: () => cy.get('[data-cy="task-heading"]'),
+
   assignedToSelectInput: () => cy.get('[data-cy="assigned-to-select-input"]').first(),
   assignedToSelectInputOption: () => cy.get('[data-cy="assigned-to-select-input"] option'),
   assignedToSelectInputSelectedOption: () => cy.get('[data-cy="assigned-to-select-input"]').first().find('option:selected'),

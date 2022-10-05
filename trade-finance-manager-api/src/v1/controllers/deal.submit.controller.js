@@ -1,5 +1,3 @@
-const { ObjectId } = require('bson');
-const { getCollection } = require('../../drivers/db-client');
 const {
   findOneTfmDeal,
   findOnePortalDeal,
@@ -25,7 +23,6 @@ const { updatePortalDealFromMIAtoMIN } = require('./update-portal-deal-from-MIA-
 const {
   sendDealSubmitEmails,
   sendAinMinAcknowledgement,
-  sendMigratedDealEmail,
 } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const dealHasAllUkefIds = require('../helpers/dealHasAllUkefIds');
@@ -50,6 +47,7 @@ const getDeal = async (dealId, dealType) => {
  * */
 
 const submitDealBeforeUkefIds = async (dealId, dealType) => {
+  console.info('Submitting deal before UKEF IDs');
   const deal = await getDeal(dealId, dealType);
 
   if (!deal) {
@@ -68,7 +66,7 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
   const deal = await getDeal(dealId, dealType);
-  console.info('UKEF IDs verified');
+  console.info('Submitting deal after UKEF IDs');
 
   if (!deal) {
     console.error('TFM API - submitDealAfterUkefIds - deal not found ', dealId);
@@ -77,6 +75,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
   const submittedDeal = await api.submitDeal(dealType, dealId);
   const mappedDeal = mapSubmittedDeal(submittedDeal);
+
   const { submissionCount } = mappedDeal;
   const firstDealSubmission = submissionCount === 1;
   const dealHasBeenResubmit = submissionCount > 1;
@@ -175,107 +174,28 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
 
-// function used only for deals that have been migrated
-// note: this should not be used anymore once the migration for Amendments is complete
-const submitMigratedDeal = async (dealId, dealType, checker) => {
-  const deal = await getDeal(dealId, dealType);
-
-  if (!deal) {
-    console.error('TFM API - submitDealAfterUkefIds - deal not found ', dealId);
-    return false;
-  }
-  const facilitiesCollection = await getCollection('facilities');
-  const facilities = await facilitiesCollection.find({ dealId: ObjectId(deal._id) }).toArray();
-  if (facilities) {
-    deal.facilities = facilities;
-  }
-
-  const mappedDeal = mapSubmittedDeal({ dealSnapshot: deal });
-
-  const updatedDeal = await updatedIssuedFacilities(mappedDeal);
-
-  const isUpdatingToMIN = deal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
-
-  if (isUpdatingToMIN) {
-    const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker);
-    updatedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-      updatedDeal.manualInclusionNoticeSubmissionDate = portalMINUpdate.manualInclusionNoticeSubmissionDate;
-      updatedDeal.checkerMIN = portalMINUpdate.checkerMIN;
-    } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      updatedDeal.manualInclusionNoticeSubmissionDate = portalMINUpdate.details.manualInclusionNoticeSubmissionDate;
-      updatedDeal.checkerMIN = portalMINUpdate.details.checkerMIN;
-    }
-
-    await sendAinMinAcknowledgement(updatedDeal);
-  }
-
-  // ACBS interaction : AIN or MIN only
-  if (dealController.canDealBeSubmittedToACBS(updatedDeal.submissionType)) {
-    console.info('Migrated deal ACBS interaction initiated: ', dealId);
-
-    // Add `updatedDeal` deal object to `migratedDeals` collection
-    const migratedDealToGo = {
-      ...updatedDeal,
-      issueFacility: [],
-    };
-
-    // Issue facility ACBS JSON
-    updatedDeal.facilities.filter((facility) => facility.hasBeenIssued).map((facility) => migratedDealToGo.issueFacility.push(
-      {
-        facilityId: facility.ukefFacilityId,
-        facility,
-        deal: {
-          dealSnapshot: {
-            dealType: deal.dealType,
-            submissionType: deal.submissionType,
-            submissionDate: deal.submissionDate,
-          },
-          exporter: {
-            ...deal.exporter,
-          },
-        },
-      },
-    ));
-
-    const migratedDeals = await getCollection('migratedDeals');
-    migratedDeals.insertOne(migratedDealToGo);
-
-    // ACBS
-    await dealController.submitACBSIfAllPartiesHaveUrn(dealId);
-
-    // Send notification email
-    await sendMigratedDealEmail(dealId);
-  }
-
-  await updatePortalDealStatus(updatedDeal);
-
-  return true;
-};
-
 const submitDealPUT = async (req, res) => {
   const { dealId, dealType, checker } = req.body;
   let deal;
 
-  const { status: canSubmitDealAfterUkefIds, message } = await dealHasAllUkefIds(dealId);
-  // check if the deal has been migrated from Portal V1 to Portal v2
-  if (message === 'Migrated deal') {
-    console.info('Submitting a migrated deal', dealId);
-    deal = await submitMigratedDeal(dealId, dealType, checker);
-  } else {
-    console.info('Submitting a brand new deal', dealId);
-    if (canSubmitDealAfterUkefIds) {
+  if (dealId) {
+    const { status } = await dealHasAllUkefIds(dealId);
+
+    if (status) {
       deal = await submitDealAfterUkefIds(dealId, dealType, checker);
     } else {
       deal = await submitDealBeforeUkefIds(dealId, dealType);
     }
+
+    if (!deal) {
+      return res.status(404).send();
+    }
+
+    return res.status(200).send(deal);
   }
 
-  if (!deal) {
-    return res.status(404).send();
-  }
-
-  return res.status(200).send(deal);
+  // Upon failure
+  return res.status(400).send();
 };
 
 exports.submitDealPUT = submitDealPUT;

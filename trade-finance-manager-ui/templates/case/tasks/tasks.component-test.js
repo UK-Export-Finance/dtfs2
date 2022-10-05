@@ -1,4 +1,5 @@
 const pageRenderer = require('../../../component-tests/pageRenderer');
+
 const page = '../templates/case/tasks/tasks.njk';
 const render = pageRenderer(page);
 
@@ -14,7 +15,7 @@ describe(page, () => {
         {
           groupTitle: 'Testing',
           groupTasks: [],
-        }
+        },
       ],
       selectedTaskFilter: 'all',
     };
@@ -24,7 +25,7 @@ describe(page, () => {
     });
 
     it('should render heading', () => {
-      wrapper.expectText('[data-cy="tasks-heading"]').toRead('Tasks for this deal');
+      wrapper.expectText('[data-cy="tasks-heading"]').toRead('Tasks');
     });
 
     it('should render filters', () => {
@@ -42,12 +43,9 @@ describe(page, () => {
     it('should NOT render `no tasks message` component', () => {
       wrapper.expectElement('[data-cy="no-tasks-message"]').notToExist();
     });
-
-
   });
 
   describe('when there are no tasks', () => {
-
     const params = {
       deal: {
         submissionType: 'Automatic Inclusion Notice',
@@ -67,6 +65,5 @@ describe(page, () => {
     it('should NOT render tasks table', () => {
       wrapper.expectElement('[data-cy="tasks-table"]').notToExist();
     });
-    
   });
 });
