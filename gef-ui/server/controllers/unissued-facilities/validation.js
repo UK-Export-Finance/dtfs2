@@ -198,6 +198,11 @@ const facilityValidation = async (body, query, params, facility) => {
         });
       }
 
+      /**
+       * if special flag is manually set in db - if deal submission date is more than 3 months in the past then validation will fail for issue
+       * if specialIssuePermission is true, then this validation will not take place and coverStartDate can be set (more than 3 months after submission date)
+       * else validation takes place so start date cannot be more than 3 months ahead of notice submission date
+       */
       if (isAfter(startDate, threeMonthsFromSubmission) && !facility?.specialIssuePermission) {
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
