@@ -50,7 +50,7 @@ const deals = async () => {
    * 2. Property exists : dataMigration
    */
   const filter = {
-    $and: [{ dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS }, { dataMigration: { $exists: true } }, { 'details.ukefDealId': '0020010532' }],
+    $and: [{ dealType: CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS }, { dataMigration: { $exists: true } }],
   };
 
   return getDeals(filter)
@@ -146,11 +146,11 @@ const tfm = async (data) => {
 const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM migration v${version}.`, '\n\n');
 
-  getTfmDeals()
-    // .then((d) => datafixes(d))
-    // .then((d) => tfm(d))
-    // .then((d) => datafixesTfmDeal(d))
-    // .then(() => getTfmDeals())
+  deals()
+    .then((d) => datafixes(d))
+    .then((d) => tfm(d))
+    .then((d) => datafixesTfmDeal(d))
+    .then(() => getTfmDeals())
     .then((d) => datafixesTfmFacilities(d))
     .then(() => disconnect())
     .then(() => process.exit(1))
