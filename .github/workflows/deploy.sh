@@ -27,7 +27,7 @@ if [ -n "$selection" ]; then
     then
     ############### DEV ###############
     destination=dev
-    branch=main-amendments
+    branch=main
     ############### DEV ###############
     elif [ "$selection" = "2" ]
     then
