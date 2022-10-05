@@ -1,15 +1,25 @@
 const api = require('../../../api');
 const userCanEdit = require('./helpers');
+const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
+const CONSTANTS = require('../../../constants');
+
+const { DEAL } = CONSTANTS;
 
 const getCaseParties = async (req, res) => {
   const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  const { user } = req.session;
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const { user } = req.session;
+  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  if (hasAmendmentInProgress) {
+    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+  }
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
 
   const canEdit = userCanEdit(user);
 
@@ -23,6 +33,8 @@ const getCaseParties = async (req, res) => {
     activeSubNavigation: 'parties',
     dealId,
     user,
+    hasAmendmentInProgress,
+    amendmentsInProgress,
   });
 };
 

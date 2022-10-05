@@ -71,45 +71,51 @@ const updateFacilities = async (deal) => {
 
     const facilityGuaranteeDates = getGuaranteeDates(facility, dealSubmissionDate);
     const facilityCurrencyConversion = await convertFacilityCurrency(facility, dealSubmissionDate);
-    const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
 
-    // Premium Schedule is only valid for non-GEF facilities
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      facilityPremiumSchedule = await getFacilityPremiumSchedule(
-        facility,
-        facilityExposurePeriod,
-        facilityGuaranteeDates,
-      );
-      facilityUpdate = {
-        premiumSchedule: facilityPremiumSchedule,
-      };
-    } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-      // Fee record is only valid for GEF facilities
-      if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
-        feeRecord = calculateGefFacilityFeeRecord(facility);
+    try {
+      const facilityExposurePeriod = await getFacilityExposurePeriod(facility);
+
+      // Premium Schedule is only valid for non-GEF facilities
+      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+        facilityPremiumSchedule = await getFacilityPremiumSchedule(
+          facility,
+          facilityExposurePeriod,
+          facilityGuaranteeDates,
+        );
         facilityUpdate = {
-          ...facilityUpdate,
-          feeRecord,
+          premiumSchedule: facilityPremiumSchedule,
         };
+      } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+      // Fee record is only valid for GEF facilities
+        if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
+          feeRecord = calculateGefFacilityFeeRecord(facility);
+          facilityUpdate = {
+            ...facilityUpdate,
+            feeRecord,
+          };
+        }
       }
+
+      facilityUpdate = {
+        ...facilityUpdate,
+        ...facilityCurrencyConversion,
+        ...facilityExposurePeriod,
+        facilityGuaranteeDates,
+        riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
+      };
+
+      const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
+
+      // add the updated tfm object to returned facility.
+      // if we return updateFacilityResponse, we'll get facilitySnapshot
+      // - therefore losing the flat, generic facility mapping used in deal submission calls.
+      facility.tfm = updateFacilityResponse.tfm;
+
+      return facility;
+    } catch (err) {
+      console.error('TFM-API - error in update-facilities.js', { err });
+      return facility;
     }
-
-    facilityUpdate = {
-      ...facilityUpdate,
-      ...facilityCurrencyConversion,
-      ...facilityExposurePeriod,
-      facilityGuaranteeDates,
-      riskProfile: DEFAULTS.FACILITY_RISK_PROFILE,
-    };
-
-    const updateFacilityResponse = await api.updateFacility(facilityId, facilityUpdate);
-
-    // add the updated tfm object to returned facility.
-    // if we return updateFacilityResponse, we'll get facilitySnapshot
-    // - therefore losing the flat, generic facility mapping used in deal submission calls.
-    facility.tfm = updateFacilityResponse.tfm;
-
-    return facility;
   }));
 
   return modifiedDeal;

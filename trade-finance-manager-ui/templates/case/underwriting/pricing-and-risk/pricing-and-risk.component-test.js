@@ -1,51 +1,43 @@
-const pageRenderer = require('../../../../component-tests/pageRenderer');
+const componentRenderer = require('../../../../component-tests/componentRenderer');
 
 const page = '../templates/case/underwriting/pricing-and-risk/pricing-and-risk.njk';
 
-const render = pageRenderer(page);
+const render = componentRenderer(page);
 
 describe(page, () => {
   const params = {
-    dealId: '1234',
-    deal: {
-      submissionDetails: {
-        supplierName: 'The Supplier Name',
+    pricingAndRisk: {
+      dealId: '1234',
+      deal: {
+        submissionDetails: {
+          supplierName: 'The Supplier Name',
+        },
+        facilities: [
+          {
+            _id: '1',
+            facilitySnapshot: {
+              ukefFacilityId: '100',
+              type: 'Loan',
+            },
+          },
+          {
+            _id: '2',
+            facilitySnapshot: {
+              ukefFacilityId: '100',
+              type: 'Loan',
+            },
+          },
+          {
+            _id: '3',
+            facilitySnapshot: {
+              ukefFacilityId: '100',
+              type: 'Loan',
+            },
+          },
+        ],
       },
-      facilities: [
-        {
-          _id: '1',
-          facilitySnapshot: {
-            ukefFacilityId: '100',
-            type: 'Loan',
-          },
-        },
-        {
-          _id: '2',
-          facilitySnapshot: {
-            ukefFacilityId: '100',
-            type: 'Loan',
-          },
-        },
-        {
-          _id: '3',
-          facilitySnapshot: {
-            ukefFacilityId: '100',
-            type: 'Loan',
-          },
-        },
-      ],
     },
   };
-
-  it('should render underwriting heading', () => {
-    const wrapper = render(params);
-    wrapper.expectText('[data-cy="underwriting-heading"]').toRead('Underwriting');
-  });
-
-  it('should render Pricing and risk heading', () => {
-    const wrapper = render(params);
-    wrapper.expectText('[data-cy="pricing-and-risk-heading"]').toRead('Pricing and risk');
-  });
 
   it('should render exporter section', () => {
     const wrapper = render(params);

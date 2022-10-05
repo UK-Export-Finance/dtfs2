@@ -1,15 +1,21 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
 {% import './_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
 {% import './_macros/facilities-table.njk' as facilitiesTable %}
 
 {% extends "case/case.njk" %}
 
 {% block sub_content %}
+   {% set amendmentBarParams = {
+    hasAmendmentInProgress: hasAmendmentInProgress,
+    amendmentsInProgress: amendmentsInProgress
+  } %}
+  {{ amendmentInProgressBar.render(amendmentBarParams) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-      <p class="header-label" data-cy="page-title" aria-label="Deal">Deal</p>
+      <h1 class="govuk-heading-xl govuk-!-margin-top-6" data-cy="page-title" aria-label="Deal">Deal</h1>
     </div>
   </div>
 

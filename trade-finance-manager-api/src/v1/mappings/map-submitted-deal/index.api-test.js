@@ -9,10 +9,10 @@ const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
 
 describe('mappings - map submitted deal - mapSubmittedDeal', () => {
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
-    it('should return mapBssEwcsDeal', () => {
+    it('should return mapBssEwcsDeal', async () => {
       const mockDeal = { dealSnapshot: MOCK_BSS_EWCS_DEAL };
 
-      const result = mapSubmittedDeal(mockDeal);
+      const result = await mapSubmittedDeal(mockDeal);
 
       const expected = {
         ...mapBssEwcsDeal(mockDeal),
@@ -33,7 +33,7 @@ describe('mappings - map submitted deal - mapSubmittedDeal', () => {
   });
 
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`, () => {
-    it('should return mapGefDeal', () => {
+    it('should return mapGefDeal', async () => {
       const mockDeal = {
         dealSnapshot: {
           ...MOCK_GEF_DEAL,
@@ -41,9 +41,9 @@ describe('mappings - map submitted deal - mapSubmittedDeal', () => {
         },
       };
 
-      const result = mapSubmittedDeal(mockDeal);
+      const result = await mapSubmittedDeal(mockDeal);
 
-      const expected = mapGefDeal(mockDeal);
+      const expected = await mapGefDeal(mockDeal);
 
       expect(result).toEqual(expected);
     });

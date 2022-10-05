@@ -38,6 +38,20 @@ export const DEAL_STATUS = {
   UKEF_REFUSED: 'Rejected by UKEF',
 };
 
+export const TFM_DEAL_STAGE = {
+  CONFIRMED: 'Confirmed',
+  AMENDMENT_IN_PROGRESS: 'Amendment in progress',
+};
+
+export const UNDERWRITER_MANAGER_DECISIONS = {
+  APPROVED_WITH_CONDITIONS: 'Approved with conditions',
+  APPROVED_WITHOUT_CONDITIONS: 'Approved without conditions',
+  DECLINED: 'Declined',
+  NOT_ADDED: 'Not added',
+  AUTOMATIC_APPROVAL: 'Automatic approval',
+  AWAITING_DECISION: 'Awaiting decision',
+};
+
 export const FEE_TYPE = {
   ADVANCE: 'In advance',
   ARREAR: 'In arrear',
@@ -70,4 +84,5 @@ export const DAY_COUNT_BASIS = {
 export const CURRENCY = {
   AED: 'AED',
   AED_TEXT: 'AED - U.A.E. Dirham',
+  GBP: 'GBP',
 };

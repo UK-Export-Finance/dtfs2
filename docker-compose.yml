@@ -172,7 +172,6 @@ services:
       - V1_AZURE_PORTAL_FILESHARE_NAME=${V1_AZURE_PORTAL_FILESHARE_NAME}
       - V1_AZURE_PORTAL_EXPORT_FOLDER=${V1_AZURE_PORTAL_EXPORT_FOLDER}
       - TZ=Europe/London
-
     entrypoint: npx nodemon src/index.js -L
 
   reference-data-proxy:

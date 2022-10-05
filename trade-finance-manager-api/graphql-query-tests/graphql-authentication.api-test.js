@@ -6,6 +6,7 @@ const gql = require('graphql-tag');
 const graphqlPermissions = require('../src/graphql/middleware/graphql-permissions');
 const graphqlKeyAuthentication = require('../src/graphql/key-authentication');
 const MOCK_DEAL = require('../src/v1/__mocks__/mock-deal');
+const api = require('../src/v1/api');
 
 const apiToken = process.env.UKEF_TFM_API_SYSTEM_KEY;
 
@@ -68,6 +69,12 @@ describe('graphql query - authentication', () => {
       // use the test server to create a query function
       const { query: doQuery } = createTestClient(server);
       query = doQuery;
+    });
+
+    beforeEach(() => {
+      api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+      api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+      api.getAmendmentById = () => Promise.resolve({});
     });
 
     it('GET - should return not authorised if missing auth key', async () => {

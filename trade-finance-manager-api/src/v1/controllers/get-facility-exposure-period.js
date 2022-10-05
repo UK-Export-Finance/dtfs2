@@ -3,34 +3,39 @@ const formattedTimestamp = require('../formattedTimestamp');
 const dateHelpers = require('../../utils/date');
 
 const getFacilityExposurePeriod = async (facility) => {
-  const {
-    type,
-    hasBeenIssued,
-    coverStartDate,
-    coverEndDate,
-  } = facility;
-
-  let facilityUpdate;
-
-  if (hasBeenIssued) {
-    const startDate = formattedTimestamp(coverStartDate);
-
-    const formattedStartDate = dateHelpers.formatDate(startDate);
-
-    const formattedEndDate = dateHelpers.formatDate(coverEndDate);
-
-    const exposurePeriodResponse = await api.getFacilityExposurePeriod(
-      formattedStartDate,
-      formattedEndDate,
+  try {
+    const {
       type,
-    );
+      hasBeenIssued,
+      coverStartDate,
+      coverEndDate,
+    } = facility;
 
-    const { exposurePeriodInMonths } = exposurePeriodResponse;
+    let facilityUpdate;
 
-    facilityUpdate = { exposurePeriodInMonths };
+    if (hasBeenIssued) {
+      const startDate = formattedTimestamp(coverStartDate);
+
+      const formattedStartDate = dateHelpers.formatDate(startDate);
+
+      const formattedEndDate = dateHelpers.formatDate(coverEndDate);
+
+      const exposurePeriodResponse = await api.getFacilityExposurePeriod(
+        formattedStartDate,
+        formattedEndDate,
+        type,
+      );
+
+      const { exposurePeriodInMonths } = exposurePeriodResponse;
+
+      facilityUpdate = { exposurePeriodInMonths };
+    }
+
+    return facilityUpdate;
+  } catch (err) {
+    console.error('TFM-API - error calling getFacilityExposurePeriod update-facilities.js', { err });
+    return facility;
   }
-
-  return facilityUpdate;
 };
 
 module.exports = getFacilityExposurePeriod;

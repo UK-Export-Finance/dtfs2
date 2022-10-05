@@ -1,29 +1,21 @@
 const moment = require('moment');
 const mapCoverEndDate = require('../facilities/mapCoverEndDate');
-const mapTenorDate = require('../facilities/mapTenorDate');
+const mapTenor = require('../facilities/mapTenor');
 const { convertDateToTimestamp } = require('../../../../utils/date');
 
-const mapGefFacilityDates = (facilitySnapsot, facilityTfm, dealSnapshot) => {
+const mapGefFacilityDates = (facility, facilityTfm, dealSnapshot) => {
   const {
     coverStartDate,
     coverEndDate,
     submittedAsIssuedDate,
-    monthsOfCover: ukefGuaranteeInMonths,
-    facilityStage,
-  } = facilitySnapsot;
-
-  const { exposurePeriodInMonths } = facilityTfm;
+  } = facility.facilitySnapshot;
 
   const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealSnapshot;
 
   const mapped = {
     inclusionNoticeReceived: manualInclusionNoticeSubmissionDate || dealSubmissionDate,
     bankIssueNoticeReceived: submittedAsIssuedDate,
-    tenor: mapTenorDate(
-      facilityStage,
-      ukefGuaranteeInMonths,
-      exposurePeriodInMonths,
-    ),
+    tenor: mapTenor(facility.facilitySnapshot, facilityTfm, facility),
   };
 
   if (coverStartDate) {
@@ -36,6 +28,7 @@ const mapGefFacilityDates = (facilitySnapsot, facilityTfm, dealSnapshot) => {
       moment(coverEndDate).format('DD'),
       moment(coverEndDate).format('MM'),
       moment(coverEndDate).format('YYYY'),
+      facility,
     );
   }
 

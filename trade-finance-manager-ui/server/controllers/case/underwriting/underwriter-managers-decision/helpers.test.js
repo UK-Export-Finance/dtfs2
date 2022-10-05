@@ -1,10 +1,9 @@
-/* eslint-disable no-underscore-dangle */
-import canUserEditManagersDecision from './helpers';
+import userCanEditManagersDecision from './helpers';
 
 describe('case - underwriter-managers-decision - helpers', () => {
-  describe('canUserEditManagersDecision', () => {
+  describe('userCanEditManagersDecision', () => {
     it('should return true', () => {
-      const result = canUserEditManagersDecision(
+      const result = userCanEditManagersDecision(
         {
           firstName: 'Joe',
           lastName: 'Bloggs',
@@ -19,7 +18,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
 
     describe('when user is NOT in UNDERWRITER_MANAGERS team', () => {
       it('should return false', () => {
-        const result = canUserEditManagersDecision(
+        const result = userCanEditManagersDecision(
           {
             firstName: 'Joe',
             lastName: 'Bloggs',
@@ -35,7 +34,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
 
     describe('when deal is NOT MIA', () => {
       it('should return false', () => {
-        const result = canUserEditManagersDecision(
+        const result = userCanEditManagersDecision(
           {
             firstName: 'Joe',
             lastName: 'Bloggs',
@@ -51,7 +50,7 @@ describe('case - underwriter-managers-decision - helpers', () => {
 
     describe('when the deal has a managers decision', () => {
       it('should return false', () => {
-        const result = canUserEditManagersDecision(
+        const result = userCanEditManagersDecision(
           {
             firstName: 'Joe',
             lastName: 'Bloggs',

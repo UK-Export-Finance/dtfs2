@@ -9,9 +9,11 @@ const MOCK_CASH_CONTINGENT_FACILIIES = require('../../../../v1/__mocks__/mock-ca
 
 describe('mapGefFacilityDates', () => {
   const mockFacility = {
-    ...MOCK_CASH_CONTINGENT_FACILIIES[0],
-    facilityStage: 'Issued',
-    hasBeenIssued: true,
+    facilitySnapshot: {
+      ...MOCK_CASH_CONTINGENT_FACILIIES[0],
+      facilityStage: 'Issued',
+      hasBeenIssued: true,
+    },
   };
 
   const mockFacilityTfm = {
@@ -37,13 +39,13 @@ describe('mapGefFacilityDates', () => {
   it('should return bankIssueNoticeReceived as submittedAsIssuedDate', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
-    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.submittedAsIssuedDate);
+    expect(result.bankIssueNoticeReceived).toEqual(mockFacility.facilitySnapshot.submittedAsIssuedDate);
   });
 
   it('should return coverStartDate as timestamp', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
-    const expected = convertDateToTimestamp(mockFacility.coverStartDate);
+    const expected = convertDateToTimestamp(mockFacility.facilitySnapshot.coverStartDate);
 
     expect(result.coverStartDate).toEqual(expected);
   });
@@ -52,9 +54,10 @@ describe('mapGefFacilityDates', () => {
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
 
     const expected = mapCoverEndDate(
-      moment(mockFacility.coverEndDate).format('DD'),
-      moment(mockFacility.coverEndDate).format('MM'),
-      moment(mockFacility.coverEndDate).format('YYYY'),
+      moment(mockFacility.facilitySnapshot.coverEndDate).format('DD'),
+      moment(mockFacility.facilitySnapshot.coverEndDate).format('MM'),
+      moment(mockFacility.facilitySnapshot.coverEndDate).format('YYYY'),
+      mockFacility,
     );
 
     expect(result.coverEndDate).toEqual(expected);
@@ -73,14 +76,14 @@ describe('mapGefFacilityDates', () => {
   });
 
   it('should not map coverStartDate when date is null', () => {
-    mockFacility.coverStartDate = null;
+    mockFacility.facilitySnapshot.coverStartDate = null;
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
     // undefined as not set in function
     expect(result.coverStartDate).toBeUndefined();
   });
 
   it('should not map coverEndDate when date is null', () => {
-    mockFacility.coverEndDate = null;
+    mockFacility.facilitySnapshot.coverEndDate = null;
     const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
     // undefined as not set in function
     expect(result.coverEndDate).toBeUndefined();

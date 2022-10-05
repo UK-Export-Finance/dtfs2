@@ -1,6 +1,133 @@
 const DEAL = {
   ELIGIBILITY_CRITERIA: {
     'BSS/EWCS': {
+      1: {
+        1: {
+          text: 'The Supplier has confirmed in its Supplier Supplementary Declaration that the Supply Contract does not involve agents and the Bank is not aware that any of the information contained within it is inaccurate.',
+          textList: [],
+          group: 'Supply Contract / Transaction criteria',
+        },
+        2: {
+          text: 'The cover period for each Transaction does not exceed 36 months for bonds or 24 months for working capital loans, or such other period approved by UKEF (that has not lapsed or been withdrawn) in relation to bonds and/or loans for this Obligor.',
+          textList: [],
+          group: 'Supply Contract / Transaction criteria',
+        },
+        3: {
+          text: 'The total UKEF exposure for this Transaction and any prior live covered Transactions for this Obligor does not exceed £2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn) in relation to this Obligor.',
+          textList: [],
+          group: 'Supply Contract / Transaction criteria',
+        },
+        4: {
+          text: 'For a bond Transaction, the bond has not yet been issued or, where the bond has been issued, this was done no more than 30 calendar days prior to the submission of this Inclusion Notice.  For a loan Transaction, the loan has not yet been made irrevocably available for disbursement.',
+          textList: [],
+          group: 'Supply Contract / Transaction criteria',
+        },
+        5: {
+          text: 'The Supplier has provided the bank with a duly completed Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate.',
+          textList: [],
+          group: 'Supply Contract / Transaction criteria',
+        },
+        6: {
+          text: 'The Transaction is not an Affected Transaction i.e. the Bank Team is not aware of any event or circumstance which might result in a demand under the bond or default on a loan, or adverse event in relation to the Supply Contract.',
+          textList: [],
+          group: 'Supply Contract / Transaction criteria',
+        },
+        7: {
+          text: 'The Bank has complied with its policies and procedures in relation to the Transaction.',
+          textList: [],
+          group: 'Supply Contract / Transaction criteria',
+        },
+        8: {
+          text: 'The Requested Cover Start Date is no more than one month from the date of submission.',
+          textList: [],
+          group: 'Supply Contract / Transaction criteria',
+        },
+        9: {
+          text: 'Where the Supplier is a UK Supplier, the Buyer under the Supply Contract is not an Affiliate of the Supplier.',
+          textList: [],
+          group: 'Supply Contract / Transaction criteria',
+        },
+        10: {
+          text: 'Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate.',
+          textList: [],
+          group: 'Supply Contract / Transaction criteria',
+        },
+        11: {
+          text: 'The Supplier has confirmed in its Supplier Supplementary Declaration that it does not operate in any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco or gambling, and the Bank is not aware that any of the information contained within it is inaccurate.',
+          textList: [],
+          group: 'Controlled Sectors',
+        },
+        12: {
+          text: 'Either the Supplier or, where applicable, the Guarantor has an annual turnover of not less than £1 million per the most recent annual audited or, where exempted, unaudited statutory financial statements. ',
+          textList: [],
+          group: 'Financial criteria',
+        },
+        13: {
+          text: 'Either the Supplier or, where applicable, the Guarantor has a net worth greater than zero per the most recent annual audited or, where exempted, unaudited statutory financial statements. ',
+          textList: [],
+          group: 'Financial criteria',
+        },
+        14: {
+          text: 'Either the Supplier or, where applicable, the Guarantor has a Current Ratio of not less than 0.5 per the most recent annual audited or, where exempted, unaudited statutory financial statements. ',
+          textList: [],
+          group: 'Financial criteria',
+        },
+        15: {
+          text: 'Either the Supplier or, where applicable, the Guarantor has supplied the Bank with copies of its annual audited or, where exempted, unaudited statutory financial statements for at least the three most recent consecutive financial years.',
+          textList: [],
+          group: 'Financial criteria',
+        },
+        16: {
+          text: 'Either the Supplier or the Guarantor does not currently appear on any internal watchlist maintained by the Bank and is not being managed out of the Bank’s stressed management or restructuring units.',
+          textList: [],
+          group: 'Credit criteria',
+        },
+        17: {
+          text: 'Either the Supplier or the Guarantor has a probability of default of not more than 14.1%.',
+          textList: [],
+          group: 'Credit criteria',
+        },
+        18: {
+          text: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate to any Relevant Person.',
+          textList: [],
+          group: 'Bank due diligence',
+        },
+        19: {
+          text: 'The Bank Facility Letter is governed by the laws of England and Wales, Scotland or Northern Ireland.',
+          textList: [],
+          group: 'Bank facility letter criteria',
+        },
+        20: {
+          text: 'The fees and/or interest have been set either in accordance with the Bank’s normal pricing policies or, if any, minimum or overall pricing requirements set by UKEF.',
+          textList: [],
+          group: 'Bank facility letter criteria',
+        },
+        21: {
+          text: 'The fees and/or interest are payable at least as frequently as quarterly, either in advance or in arrear.',
+          textList: [],
+          group: 'Bank facility letter criteria',
+        },
+        22: {
+          text: 'The Bank is the sole and beneficial owner of, and has legal title to, the Transaction.',
+          textList: [],
+          group: 'Legal criteria',
+        },
+        23: {
+          text: 'The Bank has not made a Disposal (other than a Permitted Disposal) or a Risk Transfer (other than a Permitted Risk Transfer) in relation to the Transaction.',
+          textList: [],
+          group: 'Legal criteria',
+        },
+        24: {
+          text: 'The Bank’s right, title and interest in relation to the Transaction is clear of any Security and Quasi-Security (other than Permitted Security) and is freely assignable without the need to obtain consent of any Obligor or any other person.',
+          textList: [],
+          group: 'Legal criteria',
+        },
+        25: {
+          text: 'The Bank is not restricted or prevented by any agreement with an Obligor from providing information and records relating to the Transaction.',
+          textList: [],
+          group: 'Legal criteria',
+        },
+      },
       4: {
         11: {
           text: 'There are no agents involved in the supply contract.',
