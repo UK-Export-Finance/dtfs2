@@ -15,6 +15,7 @@ const { actionsheet, workflow, sleep } = require('./io');
 const { epochInSeconds, getEpoch } = require('./date');
 const getFacilityPremiumSchedule = require('../../../trade-finance-manager-api/src/v1/controllers/get-facility-premium-schedule');
 const mapWorkflowStatus = require('./amendment');
+const { ObjectId } = require('mongodb');
 
 const { TFM_API } = process.env;
 let allDeals = {};
@@ -992,7 +993,21 @@ const datafixesTfmDeal = async (deals) => {
       await supportingInformations();
 
       const updates = allDeals.map(async (deal) => {
-        await tfmDealUpdate(deal)
+        // Ensure `_id` are kept as ObjectId
+        const objectIdDeal = {
+          ...deal,
+          dealSnapshot: {
+            ...deal.dealSnapshot,
+            _id: ObjectId(deal.dealSnapshot._id),
+          }
+        };
+
+        objectIdDeal.dealSnapshot.facilities.map((f, i) => {
+          objectIdDeal.dealSnapshot.facilities[i]._id = ObjectId(f._id);
+          objectIdDeal.dealSnapshot.facilities[i].dealId = ObjectId(f.dealId);
+        });
+
+        await tfmDealUpdate(objectIdDeal)
           .then((r) => {
             if (r) {
               updated += 1;

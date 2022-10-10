@@ -6,6 +6,7 @@
 require('dotenv').config({ path: '../../../.env' });
 const { ObjectId } = require('mongodb');
 const { MongoClient } = require('mongodb');
+const { updateDeal } = require('../../../trade-finance-manager-api/src/v1/api');
 const CONSTANTS = require('../constant');
 
 let client;
@@ -131,20 +132,15 @@ const portalFacilityUpdate = async (id, updates) => {
  */
 const tfmDealUpdate = async (updatedDeal) => {
   try {
-    const path = ukefDealIdPath(updatedDeal.dealSnapshot.dealType);
-    const ukefDealId = updatedDeal.dealSnapshot.ukefDealId || updatedDeal.dealSnapshot.details.ukefDealId;
-
+    const { _id } = updatedDeal;
     delete updatedDeal._id;
 
     if (!connection) await connect();
 
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL).updateOne(
-      { [path]: ukefDealId },
-      {
-        $set: {
-          ...updatedDeal,
-        },
-      },
+      { _id: { $eq: ObjectId(String(_id)) } },
+      { $set: updatedDeal },
+      { returnOriginal: false },
     ).catch((e) => new Error(e));
 
     return (response.acknowledged)
