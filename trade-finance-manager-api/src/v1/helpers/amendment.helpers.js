@@ -311,6 +311,26 @@ const sendFirstTaskEmail = async (taskVariables) => {
   }
 };
 
+/**
+ * Initiate an internal UKEF team email, upon an amendment
+ * submission (automatic) and approval (manual)
+ * @param {String} ukefFacilityId 
+ */
+const internalAmendmentEmail = async (ukefFacilityId) => {
+  try {
+    const templateId = EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION;
+    const sendToEmailAddress = process.env.UKEF_INTERNAL_NOTIFICATION;
+    const emailVariables = {
+      ukefFacilityId,
+    };
+    console.log(templateId, sendToEmailAddress, emailVariables);
+
+    await sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
+  } catch (error) {
+    console.error('Error sending manual amendment bank decision email', { error });
+  }
+};
+
 const roundValue = (valueInGBP) => {
   const totalDecimals = decimalsCount(valueInGBP);
 
@@ -511,8 +531,9 @@ module.exports = {
   sendAutomaticAmendmentEmail,
   sendManualDecisionAmendmentEmail,
   sendManualBankDecisionEmail,
-  canSendToAcbs,
   sendFirstTaskEmail,
+  internalAmendmentEmail,
+  canSendToAcbs,
   calculateUkefExposure,
   formatCoverEndDate,
   addLatestAmendmentValue,
