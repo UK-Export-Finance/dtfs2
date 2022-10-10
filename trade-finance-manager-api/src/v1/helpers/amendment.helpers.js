@@ -314,7 +314,7 @@ const sendFirstTaskEmail = async (taskVariables) => {
 /**
  * Initiate an internal UKEF team email, upon an amendment
  * submission (automatic) and approval (manual)
- * @param {String} ukefFacilityId 
+ * @param {String} ukefFacilityId UKEF Facility ID
  */
 const internalAmendmentEmail = async (ukefFacilityId) => {
   try {
@@ -323,11 +323,10 @@ const internalAmendmentEmail = async (ukefFacilityId) => {
     const emailVariables = {
       ukefFacilityId,
     };
-    console.log(templateId, sendToEmailAddress, emailVariables);
 
     await sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
   } catch (error) {
-    console.error('Error sending manual amendment bank decision email', { error });
+    console.error('Error sending internal amendment email', { error });
   }
 };
 
