@@ -1,9 +1,15 @@
 const api = require('../api');
-const { sendManualDecisionAmendmentEmail,
-  sendFirstTaskEmail, calculateNewFacilityValue,
-  calculateUkefExposure, calculateAmendmentExposure,
-  calculateAmendmentDateTenor, addLatestAmendmentDates,
-  addLatestAmendmentValue } = require('./amendment.helpers');
+const {
+  sendManualDecisionAmendmentEmail,
+  sendFirstTaskEmail,
+  calculateNewFacilityValue,
+  calculateUkefExposure,
+  calculateAmendmentExposure,
+  calculateAmendmentDateTenor,
+  addLatestAmendmentDates,
+  addLatestAmendmentValue,
+  internalAmendmentEmail,
+} = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
 const { CURRENCY } = require('../../constants/currency.constant');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
@@ -797,5 +803,43 @@ describe('addLatestAmendmentValue()', () => {
       },
     };
     expect(response).toEqual(expected);
+  });
+});
+
+/**
+ * UKEF internal email notification upon
+ * a facility amendment submission unit
+ * test cases.
+ */
+describe('internalAmendmentEmail()', () => {
+  const sendEmailApiSpy = jest.fn(() => Promise.resolve(
+    MOCK_NOTIFY_EMAIL_RESPONSE,
+  ));
+
+  beforeEach(async () => {
+    sendEmailApiSpy.mockClear();
+    api.sendEmail = sendEmailApiSpy;
+  });
+
+  it('Should return false void UKEF Facility ID', async () => {
+    const response = await internalAmendmentEmail('');
+    expect(response).toEqual(false);
+  });
+
+  it('Should return expect object on a correct UKEF Facility ID', async () => {
+    const response = await internalAmendmentEmail('1234567');
+    expect(response).toEqual(expect.any(Object));
+  });
+
+  it('Should call the expected function with expected arguments set', async () => {
+    await internalAmendmentEmail('1234567');
+
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(
+      CONSTANTS.EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION,
+      expect.any(String),
+      {
+        ukefFacilityId: '1234567',
+      },
+    );
   });
 });

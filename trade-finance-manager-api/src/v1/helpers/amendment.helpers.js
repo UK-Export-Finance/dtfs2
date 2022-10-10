@@ -324,9 +324,14 @@ const internalAmendmentEmail = async (ukefFacilityId) => {
       ukefFacilityId,
     };
 
-    await sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
+    if (!templateId || !sendToEmailAddress || !ukefFacilityId) {
+      throw new Error('Void argument specified');
+    }
+
+    return sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
   } catch (error) {
     console.error('Error sending internal amendment email', { error });
+    return false;
   }
 };
 
