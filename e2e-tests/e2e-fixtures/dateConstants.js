@@ -50,6 +50,16 @@ const threeDaysDay = format(threeDaysAgo, 'dd');
 const threeDaysMonth = format(threeDaysAgo, 'M');
 const threeDaysYear = format(threeDaysAgo, 'yyyy');
 
+const twoYears = add(today, { years: 2, months: 3, days: 1 });
+const twoYearsDay = format(twoYears, 'dd');
+const twoYearsMonth = format(twoYears, 'M');
+const twoYearsYear = format(twoYears, 'yyyy');
+
+const threeYears = add(today, { years: 3, months: 3, days: 1 });
+const threeYearsDay = format(threeYears, 'dd');
+const threeYearsMonth = format(threeYears, 'M');
+const threeYearsYear = format(threeYears, 'yyyy');
+
 const threeDaysAgoPlusMonth = add(threeDaysAgo, { months: 3 });
 
 const todayUnix = getUnixTime(today).toString();
@@ -120,4 +130,12 @@ export default {
   tomorrowFormattedFacilityPage,
   todayFormattedTimeHours,
   todayFormattedTimeAmPm,
+  twoYears,
+  twoYearsDay,
+  twoYearsMonth,
+  twoYearsYear,
+  threeYears,
+  threeYearsDay,
+  threeYearsMonth,
+  threeYearsYear,
 };

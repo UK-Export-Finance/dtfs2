@@ -184,6 +184,10 @@ class Facility {
         this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker);
       }
 
+      if (req.specialIssuePermission != null) {
+        this.specialIssuePermission = Object(req.specialIssuePermission);
+      }
+
       this.updatedAt = Date.now();
     }
   }
