@@ -253,7 +253,7 @@ const updateFacilityAmendment = async (req, res) => {
 
       // Fetch facility object
       const facility = await api.findOneFacility(facilityId);
-      const { ukefFacilityId } = facility;
+      const { ukefFacilityId } = facility.facilitySnapshot;
       // Fetch complete amendment object
       const amendment = await api.getAmendmentById(facilityId, amendmentId);
       // Fetch deal object from deal-tfm
