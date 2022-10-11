@@ -19,6 +19,7 @@ const { formattedNumber } = require('../../utils/number');
 const amendmentVariables = require('../__mocks__/amendmentVariables');
 
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
+const MOCK_NOTIFY_EMAIL_BAD_RESPONSE = require('../__mocks__/mock-notify-email-bad-response');
 
 describe('sendManualDecisionAmendmentEmail()', () => {
   const sendEmailApiSpy = jest.fn(() => Promise.resolve(
@@ -812,6 +813,16 @@ describe('addLatestAmendmentValue()', () => {
  * test cases.
  */
 describe('internalAmendmentEmail()', () => {
+  it('Should expect 400 on a bad request', async () => {
+    const sendEmailApiSpyBadResponse = jest.fn(() => Promise.resolve(
+      MOCK_NOTIFY_EMAIL_BAD_RESPONSE,
+    ));
+    api.sendEmail = sendEmailApiSpyBadResponse;
+
+    const response = await internalAmendmentEmail('1234567');
+    expect(response.response.status).toEqual(400);
+  });
+
   const sendEmailApiSpy = jest.fn(() => Promise.resolve(
     MOCK_NOTIFY_EMAIL_RESPONSE,
   ));
