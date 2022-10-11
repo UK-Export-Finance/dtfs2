@@ -324,21 +324,21 @@ const internalAmendmentEmail = async (ukefFacilityId) => {
       ukefFacilityId,
     };
 
-    if (!templateId || !sendToEmailAddress || !ukefFacilityId) {
-      throw new Error('Void argument specified');
+    if (!ukefFacilityId) {
+      return false;
     }
 
     return sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
   } catch (error) {
     console.error('Error sending internal amendment email', { error });
-    return false;
+    return error;
   }
 };
 
 const roundValue = (valueInGBP) => {
   const totalDecimals = decimalsCount(valueInGBP);
 
-  // rounds to 2 decimal palces if decimals greater than 2
+  // rounds to 2 decimal palaces if decimals greater than 2
   const newValue = totalDecimals > 2 ? roundNumber(valueInGBP, 2) : valueInGBP;
 
   return newValue;
