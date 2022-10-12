@@ -24,6 +24,7 @@ const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
     const facilityValueInGBP = value * exchangeRate;
 
     facilityUpdate = {
+      exchangeRate: Number(exchangeRate.toFixed(2)),
       facilityValueInGBP,
       dataMigration: {
         modifiedExchangeRate: exchangeRate,

@@ -1,7 +1,9 @@
 const CONSTANTS = require('../../../constants');
 
 const mapPremiumFrequencyId = (facility) => {
-  switch (facility.feeFrequency ?? facility.facilitySnapshot.premiumFrequency) {
+  switch (facility.feeFrequency
+    || facility.facilitySnapshot.feeFrequency
+    || facility.facilitySnapshot.premiumFrequency) {
     case CONSTANTS.FACILITIES.FACILITY_FEE_FREQUENCY_PORTAL.MONTHLY:
       return CONSTANTS.FACILITIES.FACILITY_PREMIUM_FREQUENCY_ID.MONTHLY;
 
@@ -20,7 +22,9 @@ const mapPremiumFrequencyId = (facility) => {
 };
 
 const mapPremiumTypeId = (facility) => {
-  switch (facility.feeType ?? facility.facilitySnapshot.premiumType) {
+  switch (facility.feeType
+    || facility.facilitySnapshot.feeType
+    || facility.facilitySnapshot.premiumType) {
     case CONSTANTS.FACILITIES.FACILITY_FEE_TYPE_PORTAL.IN_ADVANCE:
       return CONSTANTS.FACILITIES.FACILITY_PREMIUM_TYPE_ID.IN_ADVANCE;
 

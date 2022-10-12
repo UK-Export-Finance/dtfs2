@@ -3,10 +3,16 @@ const isFacilityValidForPremiumSchedule = require('../../helpers/is-facility-val
 const mapProductGroup = require('./map-product-group');
 const { stripCommas } = require('../../../utils/string');
 
-const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
-  if (!isFacilityValidForPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates)) {
-    return null;
+const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGuaranteeDates, skip) => {
+  if (!skip) {
+    if (!isFacilityValidForPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates)) {
+      return null;
+    }
   }
+
+  const exposurePeriod = facilityExposurePeriod.exposurePeriodInMonths
+    ? Number(facilityExposurePeriod.exposurePeriodInMonths)
+    : Number(facilityExposurePeriod);
 
   const mapped = {};
 
@@ -26,6 +32,10 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
 
   mapped.dayBasis = String(facility.dayCountBasis ?? facility.facilitySnapshot.dayCountBasis);
   mapped.exposurePeriod = Number(facilityExposurePeriod);
+  mapped.maximumLiability = facility.ukefExposure ?? Number(facility.facilitySnapshot.ukefExposure);
+
+  mapped.dayBasis = String(facility.dayCountBasis ?? facility.facilitySnapshot.dayCountBasis);
+  mapped.exposurePeriod = exposurePeriod;
   mapped.maximumLiability = facility.ukefExposure ?? Number(facility.facilitySnapshot.ukefExposure);
 
   mapped.cumulativeAmount = 0;

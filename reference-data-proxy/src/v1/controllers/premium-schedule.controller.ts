@@ -40,6 +40,7 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
         `Error calling POST Premium schedule ${mdmEAurl}/premium/schedule with facilityURN: ${premiumSchedulePayloadFormatted.facilityURN} \n`,
         error.response.data,
         error.response.status,
+        premiumSchedulePayloadFormatted,
       );
       return { data: error?.response?.data, status: error?.response?.status };
     });

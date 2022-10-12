@@ -636,6 +636,7 @@ const premiumSchedule = async () => {
           facility,
           exposurePeriodInMonths,
           facilityGuaranteeDates,
+          true
         );
         premiums = facilityPremiumSchedule;
       }

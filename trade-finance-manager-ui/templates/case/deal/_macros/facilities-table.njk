@@ -52,7 +52,7 @@
               -
             {% endif %}
           </td>
-
+          {{ facility.facilitySnapshot.value }}
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-export-currency">{{ facility.facilitySnapshot.facilityValueExportCurrency | dashIfEmpty }}</td>
 
           <td class="govuk-table__cell govuk-body-s" data-cy="facility-{{ facility._id }}-value-gbp">{{ facility.facilitySnapshot.value | dashIfEmpty}}</td>
