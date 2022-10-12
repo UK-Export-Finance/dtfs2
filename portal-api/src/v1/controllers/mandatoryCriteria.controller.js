@@ -1,73 +1,98 @@
-const assert = require('assert');
+const { MandatoryCriteria } = require('../gef/models/mandatoryCriteria');
+const api = require('../api');
+const { DEAL_TYPE } = require('../../constants/deal');
 
-const db = require('../../drivers/db-client');
-
-const sortMandatoryCriteria = (arr, callback) => {
-  const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
-  return callback(sortedArray);
+exports.postMandatoryCriteria = async (req, res) => {
+  const { data: mandatoryCriteria } = await api.postMandatoryCriteria(new MandatoryCriteria(req.body), DEAL_TYPE.GEF);
+  res.status(201).send({ _id: mandatoryCriteria._id });
 };
 
-const findMandatoryCriteria = async (callback) => {
-  const collection = await db.getCollection('mandatoryCriteria');
-
-  collection.find({}).toArray((err, result) => {
-    assert.equal(err, null);
-    callback(result);
-  });
-};
-exports.findMandatoryCriteria = findMandatoryCriteria;
-
-const findOneMandatoryCriteria = async (version, callback) => {
-  const collection = await db.getCollection('mandatoryCriteria');
-  collection.findOne({ version: Number(version) }, (err, result) => {
-    assert.equal(err, null);
-    callback(result);
-  });
+exports.findAllMandatoryCriteria = async (req, res) => {
+  const { data: criteria, status } = await api.findAllMandatoryCriteria(DEAL_TYPE.GEF);
+  if (status === 200) {
+    return res.status(200).send(criteria);
+  }
+  return res.status(status).send();
 };
 
-exports.create = async (req, res) => {
-  const collection = await db.getCollection('mandatoryCriteria');
-  const mandatoryCriteria = await collection.insertOne(req.body);
-
-  res.status(200).send(mandatoryCriteria.ops[0]);
+exports.findOneMandatoryCriteria = async (req, res) => {
+  const { id } = req.params;
+  const criteria = await api.findOneMandatoryCriteria(id, DEAL_TYPE.GEF);
+  if (criteria.status === 200) {
+    return res.status(200).send(criteria.data);
+  }
+  return res.status(criteria.status).send();
 };
 
-exports.findAll = (req, res) => (
-  findMandatoryCriteria((mandatoryCriteria) =>
-    sortMandatoryCriteria(mandatoryCriteria, (sortedMandatoryCriteria) =>
-      res.status(200).send({
-        count: mandatoryCriteria.length,
-        mandatoryCriteria: sortedMandatoryCriteria,
-      })))
-);
-
-exports.findOne = (req, res) => (
-  findOneMandatoryCriteria(
-    req.params.version,
-    (mandatoryCriteria) => res.status(200).send(mandatoryCriteria),
-  )
-);
-
-const findLatestMandatoryCriteria = async () => {
-  const collection = await db.getCollection('mandatoryCriteria');
-  const latest = await collection.find({}).sort({ version: -1 }).limit(1).toArray();
-  return latest[0];
-};
-exports.findLatestMandatoryCriteria = findLatestMandatoryCriteria;
-
-exports.findLatest = async (req, res) => {
-  const latest = await findLatestMandatoryCriteria();
-  return res.status(200).send(latest);
+exports.findLatestMandatoryCriteria = async (req, res) => {
+  const criteria = await api.findLatestMandatoryCriteria(DEAL_TYPE.GEF);
+  if (criteria.status === 200) {
+    return res.status(200).send(criteria.data);
+  }
+  return res.status(criteria.status).send();
 };
 
-exports.update = async (req, res) => {
-  const collection = await db.getCollection('mandatoryCriteria');
-  const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
-  res.status(200).send(status);
+exports.putMandatoryCriteria = async (req, res) => {
+  const update = req.body;
+  update.updatedAt = Date.now();
+  const criteria = await api.putMandatoryCriteria(update, req.params.id, DEAL_TYPE.GEF);
+  if (criteria.status === 200) {
+    return res.status(200).send(criteria.data);
+  }
+  return res.status(criteria.status).send();
 };
 
-exports.delete = async (req, res) => {
-  const collection = await db.getCollection('mandatoryCriteria');
-  const status = await collection.deleteOne({ version: Number(req.params.version) });
-  res.status(200).send(status);
+exports.deleteMandatoryCriteria = async (req, res) => {
+  const criteria = await api.deleteMandatoryCriteria(req.params.id, DEAL_TYPE.GEF);
+  if (criteria.status === 200) {
+    return res.status(200).send(criteria.data);
+  }
+  return res.status(criteria.status).send();
+};
+
+// BSS/EWCS section
+exports.postBssMandatoryCriteria = async (req, res) => {
+  const { data: mandatoryCriteria } = await api.postMandatoryCriteria(req.body, DEAL_TYPE.BSS_EWCS);
+  res.status(200).send(mandatoryCriteria);
+};
+
+exports.findAllBssMandatoryCriteria = async (req, res) => {
+  const { data: criteria, status } = await api.findAllMandatoryCriteria(DEAL_TYPE.BSS_EWCS);
+  if (status === 200) {
+    return res.status(200).send(criteria);
+  }
+  return res.status(status).send();
+};
+
+exports.findOneBssMandatoryCriteria = async (req, res) => {
+  const { version } = req.params;
+  const criteria = await api.findOneMandatoryCriteria(version, DEAL_TYPE.BSS_EWCS);
+  if (criteria.status === 200) {
+    return res.status(200).send(criteria.data);
+  }
+  return res.status(criteria.status).send();
+};
+
+exports.findLatestBssMandatoryCriteria = async (req, res) => {
+  const criteria = await api.findLatestMandatoryCriteria(DEAL_TYPE.BSS_EWCS);
+  if (criteria.status === 200) {
+    return res.status(200).send(criteria.data);
+  }
+  return res.status(criteria.status).send();
+};
+
+exports.putBssMandatoryCriteria = async (req, res) => {
+  const criteria = await api.putMandatoryCriteria(req.body, req.params.version, DEAL_TYPE.BSS_EWCS);
+  if (criteria.status === 200) {
+    return res.status(200).send(criteria.data);
+  }
+  return res.status(criteria.status).send();
+};
+
+exports.deleteBssMandatoryCriteria = async (req, res) => {
+  const criteria = await api.deleteMandatoryCriteria(req.params.version, DEAL_TYPE.BSS_EWCS);
+  if (criteria.status === 200) {
+    return res.status(200).send(criteria.data);
+  }
+  return res.status(criteria.status).send();
 };

@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
-const { findOneDeal } = require('../deal/get-deal.controller');
-const { updateDeal } = require('../deal/update-deal.controller');
+const db = require('../../../../database/mongo-client');
+const { findOneBssDeal } = require('../deal/get-deal.controller');
+const { updateBssDeal } = require('../deal/update-deal.controller');
 
 const createFacilities = async (facilities, dealId) => {
   const collection = await db.getCollection('facilities');
@@ -28,7 +28,7 @@ const createFacilities = async (facilities, dealId) => {
     facilities: idsArray,
   };
 
-  await updateDeal(dealId, dealUpdate);
+  await updateBssDeal(dealId, dealUpdate);
 
   const flattenedIds = Object.values(result.insertedIds);
 
@@ -42,7 +42,7 @@ exports.createMultipleFacilitiesPost = (req, res) => {
     return res.status(404).send();
   }
 
-  return findOneDeal(dealId, async (deal) => {
+  return findOneBssDeal(dealId, async (deal) => {
     if (deal) {
       const insertedFacilities = await createFacilities(facilities, dealId);
 

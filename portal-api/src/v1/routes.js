@@ -156,18 +156,18 @@ authRouter
 
 authRouterAllowXss
   .route('/mandatory-criteria')
-  .get(mandatoryCriteria.findAll)
-  .post(validate({ role: ['editor'] }), mandatoryCriteria.create);
+  .get(mandatoryCriteria.findAllBssMandatoryCriteria)
+  .post(validate({ role: ['editor'] }), mandatoryCriteria.postBssMandatoryCriteria);
 
 authRouterAllowXss
   .route('/mandatory-criteria/latest')
-  .get(mandatoryCriteria.findLatest);
+  .get(mandatoryCriteria.findLatestBssMandatoryCriteria);
 
 authRouterAllowXss
   .route('/mandatory-criteria/:version')
-  .get(mandatoryCriteria.findOne)
-  .put(validate({ role: ['editor'] }), mandatoryCriteria.update)
-  .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);
+  .get(mandatoryCriteria.findOneBssMandatoryCriteria)
+  .put(validate({ role: ['editor'] }), mandatoryCriteria.putBssMandatoryCriteria)
+  .delete(validate({ role: ['editor'] }), mandatoryCriteria.deleteBssMandatoryCriteria);
 
 openRouter.route('/users').get(users.list).post(users.create);
 

@@ -27,7 +27,7 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['gef-mandatoryCriteriaVersioned']);
+    await wipeDB.wipe(['mandatoryCriteria']);
   });
 
   describe('GET /v1/gef/mandatory-criteria-versioned', () => {
@@ -61,6 +61,7 @@ describe(baseUrl, () => {
       expect(body).toEqual(expect.objectContaining({
         ...expectMongoId(allMandatoryCriteria[2]),
         createdAt: expect.any(Number),
+        updatedAt: expect.any(Number),
         introText: expect.any(String),
         criteria: expect.arrayContaining([
           expect.objectContaining({
@@ -92,6 +93,7 @@ describe(baseUrl, () => {
       const expected = {
         ...expectMongoId(newMandatoryCriteria),
         createdAt: expect.any(Number),
+        updatedAt: expect.any(Number),
         criteria: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -163,6 +165,7 @@ describe(baseUrl, () => {
         ...itemUpdate,
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
+        dealType: expect.any(String),
         criteria: [
           { id: '1', body: 'Testing' },
         ],

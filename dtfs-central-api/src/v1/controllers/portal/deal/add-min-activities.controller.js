@@ -1,12 +1,12 @@
 const { getUnixTime } = require('date-fns');
 
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 
-const { findOneDeal } = require('./get-gef-deal.controller');
-const { updateDeal } = require('./update-deal.controller');
-const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
-const { updateFacility } = require('../gef-facility/update-facility.controller');
+const { findOneGefDeal } = require('./get-deal.controller');
+const { updateGefDeal } = require('./update-deal.controller');
+const { findAllGefFacilitiesByDealId } = require('../facility/get-facilities.controller');
+const { updateGefFacility } = require('../facility/update-facility.controller');
 
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants/activityConstants');
 
@@ -23,7 +23,7 @@ const updateChangedToIssued = (facilities) => {
         canResubmitIssuedFacilities: false,
       };
 
-      await updateFacility(_id, update);
+      await updateGefFacility(_id, update);
     }
   });
 };
@@ -176,7 +176,7 @@ const generateMINActivities = async (req, res) => {
     try {
       const dealId = req.params.id;
 
-      const application = await findOneDeal(dealId);
+      const application = await findOneGefDeal(dealId);
 
       if (application) {
         const facilities = await findAllGefFacilitiesByDealId(dealId);
@@ -191,7 +191,7 @@ const generateMINActivities = async (req, res) => {
 
         await updateChangedToIssued(facilities);
 
-        const updatedDeal = await updateDeal(dealId, update);
+        const updatedDeal = await updateGefDeal(dealId, update);
 
         res.status(200).send(updatedDeal);
       }

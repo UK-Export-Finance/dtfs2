@@ -21,6 +21,7 @@ module.exports = {
     'no-loop-func': 0,
     'require-await': 'error',
     'default-param-last': 0,
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
   },
   parserOptions: {
     ecmaVersion: 2020,

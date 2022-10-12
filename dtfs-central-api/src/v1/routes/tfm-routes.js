@@ -1,4 +1,5 @@
 const express = require('express');
+const { param } = require('express-validator');
 
 const tfmRouter = express.Router();
 
@@ -16,6 +17,8 @@ const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-po
 
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
+
+const { hasValidationErrors } = require('../validation/hasValidationErrors.validate');
 
 const { TFM_ROUTE } = require('../../constants/routes');
 
@@ -56,94 +59,87 @@ tfmRouter.use((req, res, next) => {
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/deals/submit')
-  .put(
-    tfmSubmitDealController.submitDealPut,
-  );
+tfmRouter.route('/deals/submit').put(tfmSubmitDealController.submitDealPut);
 
 /**
-* @openapi
-* /tfm/deals/:id:
-*   get:
-*     summary: Get a TFM deal
-*     tags: [TFM]
-*     description: Get a TFM deal. Returns associated facilities snapshot data inside deal.dealSnapshot.facilities
-*     parameters:
-*       - in: path
-*         name: id
-*         schema:
-*           type: string
-*         required: true
-*         description: Deal ID to get
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             schema:
-*               allOf:
-*                 - $ref: '#/definitions/TFMDealBSS'
-*                 - type: object
-*                   properties:
-*                     dealSnapshot:
-*                       type: object
-*                       properties:
-*                         facilities:
-*                           example: [ { _id: '123abc', type: 'Cash' }, { _id: '456abc', type: 'Contingent' } ]
-*       404:
-*         description: Not found
-*/
-tfmRouter.route('/deals/:id').get(
-  tfmGetDealController.findOneDealGet,
-);
+ * @openapi
+ * /tfm/deals/:id:
+ *   get:
+ *     summary: Get a TFM deal
+ *     tags: [TFM]
+ *     description: Get a TFM deal. Returns associated facilities snapshot data inside deal.dealSnapshot.facilities
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to get
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/TFMDealBSS'
+ *                 - type: object
+ *                   properties:
+ *                     dealSnapshot:
+ *                       type: object
+ *                       properties:
+ *                         facilities:
+ *                           example: [ { _id: '123abc', type: 'Cash' }, { _id: '456abc', type: 'Contingent' } ]
+ *       404:
+ *         description: Not found
+ */
+tfmRouter.route('/deals/:id').get(tfmGetDealController.findOneDealGet);
 
 /**
-* @openapi
-* /tfm/deals/:id:
-*   put:
-*     summary: Update a TFM deal
-*     tags: [TFM]
-*     description: Update a TFM deal. Only updates deal.tfm, not deal.dealSnapshot
-*     parameters:
-*       - in: path
-*         name: id
-*         schema:
-*           type: string
-*         required: true
-*         description: Deal ID to update
-*     requestBody:
-*       required: true
-*       content:
-*         application/json:
-*           schema:
-*             type: object
-*             example:
-*               tfm:
-*                 lossGivenDefault: 50
-*                 exporterCreditRating: Good (BB-)
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             schema:
-*               allOf:
-*                 - $ref: '#/definitions/TFMDealBSS'
-*                 - type: object
-*                   properties:
-*                     tfm:
-*                       type: object
-*                       properties:
-*                         lossGivenDefault:
-*                           example: 50
-*                         exporterCreditRating:
-*                           example: Good (BB-)
-*       404:
-*         description: Not found
-*/
-tfmRouter.route('/deals/:id').put(
-  tfmUpdateDealController.updateDealPut,
-);
+ * @openapi
+ * /tfm/deals/:id:
+ *   put:
+ *     summary: Update a TFM deal
+ *     tags: [TFM]
+ *     description: Update a TFM deal. Only updates deal.tfm, not deal.dealSnapshot
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             example:
+ *               tfm:
+ *                 lossGivenDefault: 50
+ *                 exporterCreditRating: Good (BB-)
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/definitions/TFMDealBSS'
+ *                 - type: object
+ *                   properties:
+ *                     tfm:
+ *                       type: object
+ *                       properties:
+ *                         lossGivenDefault:
+ *                           example: 50
+ *                         exporterCreditRating:
+ *                           example: Good (BB-)
+ *       404:
+ *         description: Not found
+ */
+tfmRouter.route('/deals/:id').put(tfmUpdateDealController.updateDealPut);
 
 /**
  * @openapi
@@ -168,9 +164,7 @@ tfmRouter.route('/deals/:id').put(
  *               acknowledged: true
  *               deletedCount: 1
  */
-tfmRouter.route('/deals/:id').delete(
-  tfmDeleteDealController.deleteDeal,
-);
+tfmRouter.route('/deals/:id').delete(tfmDeleteDealController.deleteDeal);
 
 /**
  * @openapi
@@ -206,10 +200,7 @@ tfmRouter.route('/deals/:id').delete(
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/deals/:id/snapshot')
-  .put(
-    tfmUpdateDealController.updateDealSnapshotPut,
-  );
+tfmRouter.route('/deals/:id/snapshot').put(tfmUpdateDealController.updateDealSnapshotPut);
 
 /**
  * @openapi
@@ -247,10 +238,7 @@ tfmRouter.route('/deals/:id/snapshot')
  *             example:
  *               deals: [ { _id: '123456abc', allFields: true }, { _id: '123456abc', allFields: true } ]
  */
-tfmRouter.route('/deals')
-  .get(
-    tfmGetDealsController.findDealsGet,
-  );
+tfmRouter.route('/deals').get(tfmGetDealsController.findDealsGet);
 
 /**
  * @openapi
@@ -273,10 +261,7 @@ tfmRouter.route('/deals')
  *           application/json:
  *             example: [ { _id: '123456abc', allFields: true }, { _id: '123456abc', allFields: true } ]
  */
-tfmRouter.route('/deals/:id/facilities')
-  .get(
-    tfmGetFacilitiesController.findFacilitiesGet,
-  );
+tfmRouter.route('/deals/:id/facilities').get(tfmGetFacilitiesController.findFacilitiesGet);
 
 /**
  * @openapi
@@ -332,10 +317,7 @@ tfmRouter.route('/facilities').get(tfmGetFacilitiesController.getAllFacilities);
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/facilities/:id')
-  .get(
-    tfmGetFacilityController.findOneFacilityGet,
-  );
+tfmRouter.route('/facilities/:id').get(tfmGetFacilityController.findOneFacilityGet);
 
 /**
  * @openapi
@@ -374,9 +356,7 @@ tfmRouter.route('/facilities/:id')
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/facilities/:id').put(
-  tfmUpdateFacilityController.updateFacilityPut,
-);
+tfmRouter.route('/facilities/:id').put(tfmUpdateFacilityController.updateFacilityPut);
 
 /**
  * @openapi
@@ -458,18 +438,18 @@ tfmRouter.route('/deals/:dealId/amendment/status/completed/latest').get(tfmGetAm
  *                 updated
  *                 createdAmendment
  *               }
-*       404:
-*         description: Not found
-*/
+ *       404:
+ *         description: Not found
+ */
 tfmRouter.route('/facilities/:facilityId/amendment').post(tfmPostAmendmentController.postTfmAmendment);
 
 /**
-* @openapi
-* /tfm/facilities/amendments/:id:
-*
-*       404:
-*         description: Not found
-*/
+ * @openapi
+ * /tfm/facilities/amendments/:id:
+ *
+ *       404:
+ *         description: Not found
+ */
 tfmRouter.route('/facilities/:facilityId/amendment/:amendmentId').put(tfmPutAmendmentController.updateTfmAmendment);
 
 /**
@@ -487,9 +467,7 @@ tfmRouter.route('/facilities/:facilityId/amendment/:amendmentId').put(tfmPutAmen
  *             schema:
  *               $ref: '#/definitions/TFMTeams'
  */
-tfmRouter.route('/teams').get(
-  tfmTeamsController.listTeamsGET,
-);
+tfmRouter.route('/teams').get(tfmTeamsController.listTeamsGET);
 
 /**
  * @openapi
@@ -513,9 +491,7 @@ tfmRouter.route('/teams').get(
  *             example:
  *               _id: '123456abc'
  */
-tfmRouter.route('/teams').post(
-  tfmTeamsController.createTeamPOST,
-);
+tfmRouter.route('/teams').post(tfmTeamsController.createTeamPOST);
 
 /**
  * @openapi
@@ -541,10 +517,7 @@ tfmRouter.route('/teams').post(
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/teams/:id')
-  .get(
-    tfmTeamsController.findOneTeamGET,
-  );
+tfmRouter.route('/teams/:id').get(param('id').not().isEmpty(), hasValidationErrors, tfmTeamsController.getTeamById);
 
 /**
  * @openapi
@@ -569,9 +542,7 @@ tfmRouter.route('/teams/:id')
  *               acknowledged: true
  *               deletedCount: 1
  */
-tfmRouter.route('/teams/:id').delete(
-  tfmTeamsController.deleteTeamDELETE,
-);
+tfmRouter.route('/teams/:id').delete(param('id').not().isEmpty(), hasValidationErrors, tfmTeamsController.deleteTeamById);
 
 /**
  * @openapi
@@ -588,9 +559,7 @@ tfmRouter.route('/teams/:id').delete(
  *             schema:
  *               $ref: '#/definitions/TFMUsers'
  */
-tfmRouter.route('/users').get(
-  tfmUsersController.listUsersGET,
-);
+tfmRouter.route('/users').get(tfmUsersController.listUsersGET);
 
 /**
  * @openapi
@@ -614,9 +583,7 @@ tfmRouter.route('/users').get(
  *             example:
  *               _id: '123456abc'
  */
-tfmRouter.route('/users').post(
-  tfmUsersController.createUserPOST,
-);
+tfmRouter.route('/users').post(tfmUsersController.createUserPOST);
 
 /**
  * @openapi
@@ -626,12 +593,12 @@ tfmRouter.route('/users').post(
  *     tags: [TFM]
  *     description: Get a TFM user by username
  *     parameters:
-*       - in: path
-*         name: username
-*         schema:
-*           type: string
-*         required: true
-*         description: Username to get
+ *       - in: path
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Username to get
  *     responses:
  *       200:
  *         description: OK
@@ -642,37 +609,32 @@ tfmRouter.route('/users').post(
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/users/:username')
-  .get(
-    tfmUsersController.findOneUserGET,
-  );
+tfmRouter.route('/users/:username').get(param('username').not().isEmpty(), hasValidationErrors, tfmUsersController.findOneUserGET);
 
 /**
-* @openapi
-* /tfm/users/:username:
-*   delete:
-*     summary: Delete a user
-*     tags: [TFM]
-*     description: Delete a user by username
-*     parameters:
-*       - in: path
-*         name: username
-*         schema:
-*           type: string
-*         required: true
-*         description: User to delete
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             example:
-*               acknowledged: true
-*               deletedCount: 1
-*/
-tfmRouter.route('/users/:username').delete(
-  tfmUsersController.deleteUserDELETE,
-);
+ * @openapi
+ * /tfm/users/:username:
+ *   delete:
+ *     summary: Delete a user
+ *     tags: [TFM]
+ *     description: Delete a user by username
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User to delete
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               acknowledged: true
+ *               deletedCount: 1
+ */
+tfmRouter.route('/users/:username').delete(param('username').not().isEmpty(), hasValidationErrors, tfmUsersController.deleteTfmUser);
 
 /**
  * @openapi
@@ -682,12 +644,12 @@ tfmRouter.route('/users/:username').delete(
  *     tags: [TFM]
  *     description: Get a TFM user by ID
  *     parameters:
-*       - in: path
-*         name: id
-*         schema:
-*           type: string
-*         required: true
-*         description: User ID to get
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User ID to get
  *     responses:
  *       200:
  *         description: OK
@@ -698,36 +660,30 @@ tfmRouter.route('/users/:username').delete(
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/users/id/:userId')
-  .get(
-    tfmUsersController.findOneUserByIdGET,
-  );
+tfmRouter.route('/users/id/:userId').get(param('userId').isMongoId(), hasValidationErrors, tfmUsersController.getTfmUserById);
 
 /**
-* @openapi
-* /tfm/users/team/:teamId:
-*   get:
-*     summary: Get all TFM users in a team
-*     tags: [TFM]
-*     description: Get all TFM users in a team by team ID
-*     parameters:
-*       - in: path
-*         name: teamId
-*         schema:
-*           type: string
-*         required: true
-*         description: Team ID to get. Not MongoDB _id, but the team ID provided when created.
-*     responses:
-*       200:
-*         description: OK
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/definitions/TFMUsers'
-*/
-tfmRouter.route('/users/team/:teamId')
-  .get(
-    tfmUsersController.findTeamUsersGET,
-  );
+ * @openapi
+ * /tfm/users/team/:teamId:
+ *   get:
+ *     summary: Get all TFM users in a team
+ *     tags: [TFM]
+ *     description: Get all TFM users in a team by team ID
+ *     parameters:
+ *       - in: path
+ *         name: teamId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Team ID to get. Not MongoDB _id, but the team ID provided when created.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/TFMUsers'
+ */
+tfmRouter.route('/users/team/:teamId').get(param('teamId').not().isEmpty(), hasValidationErrors, tfmUsersController.getUsersByTeamId);
 
 module.exports = tfmRouter;

@@ -9,6 +9,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     criteria: [
       { id: '1', body: 'Test is a mock test' },
     ],
+    dealType: 'GEF'
   },
   {
     version: 1.1,
@@ -19,6 +20,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     criteria: [
       { id: '1', body: 'Test is a mock test' },
     ],
+    dealType: 'GEF'
   },
   {
     version: 2,
@@ -85,6 +87,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
         ],
       },
     ],
+    dealType: 'GEF'
   },
   {
     version: 0.1,
@@ -95,6 +98,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     criteria: [
       { id: '1', body: 'Test is a mock test' },
     ],
+    dealType: 'GEF'
   },
   {
     version: 3.4,
@@ -105,6 +109,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
     criteria: [
       { id: '1', body: 'Test is a mock test' },
     ],
+    dealType: 'GEF'
   },
 ];
 

@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../../../drivers/db-client');
+const { findOneBssDeal, findOneGefDeal } = require('./get-deal.controller');
+const db = require('../../../../database/mongo-client');
 const { PORTAL_ROUTE } = require('../../../../constants/routes');
 
 const withoutId = (obj) => {
@@ -37,7 +37,7 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
     // ideally we could refactor, perhaps, so that no partial updates are allowed.
     // but for now...
     if (!dealUpdate.editedBy) {
-      const deal = await findOneDeal(dealId);
+      const deal = await findOneBssDeal(dealId);
       if (deal && deal.editedBy) {
         editedBy = [
           ...deal.editedBy,
@@ -67,7 +67,7 @@ const updateDealEditedByPortal = async (dealId, user) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: ObjectId(dealId) },
       $.flatten(withoutId({ editedBy })),
-      { returnOriginal: false },
+      { returnDocument: 'after', returnNewDocument: true }
     );
 
     const { value } = findAndUpdateResponse;
@@ -77,14 +77,14 @@ const updateDealEditedByPortal = async (dealId, user) => {
 };
 exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
-const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) => {
+const updateBssDeal = async (dealId, dealChanges, user, existingDeal, routePath) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection('deals');
 
     let originalDeal = existingDeal;
 
     if (!existingDeal) {
-      originalDeal = await findOneDeal(dealId);
+      originalDeal = await findOneBssDeal(dealId);
     }
 
     let originalDealDetails;
@@ -127,23 +127,23 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: ObjectId(dealId) },
       $.flatten(withoutId(update)),
-      { returnOriginal: false },
+      { returnDocument: 'after', returnNewDocument: true }
     );
 
     return findAndUpdateResponse.value;
   }
   return { status: 400, message: 'Invalid Deal Id' };
 };
-exports.updateDeal = updateDeal;
+exports.updateBssDeal = updateBssDeal;
 
 const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
-  await findOneDeal(dealId, async (deal) => {
+  await findOneBssDeal(dealId, async (deal) => {
     const { facilities } = deal;
 
     const updatedFacilities = [...facilities, newFacilityId.toHexString()];
     const dealUpdate = { ...deal, facilities: updatedFacilities };
 
-    const updatedDeal = await updateDeal(dealId, dealUpdate, user, null, routePath);
+    const updatedDeal = await updateBssDeal(dealId, dealUpdate, user, null, routePath);
 
     return updatedDeal;
   });
@@ -152,7 +152,7 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath) => {
 exports.addFacilityIdToDeal = addFacilityIdToDeal;
 
 const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => {
-  await findOneDeal(dealId, async (deal) => {
+  await findOneBssDeal(dealId, async (deal) => {
     if (deal && deal.facilities) {
       const { facilities } = deal;
 
@@ -163,7 +163,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
         facilities: updatedFacilities,
       };
 
-      const updatedDeal = await updateDeal(dealId, dealUpdate, user, null, routePath);
+      const updatedDeal = await updateBssDeal(dealId, dealUpdate, user, null, routePath);
 
       return updatedDeal;
     }
@@ -174,26 +174,64 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
 
 exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 
-exports.updateDealPut = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const dealId = req.params.id;
+exports.putBssDeal = async (req, res) => {
+  const dealId = req.params.id;
 
-    const { user, dealUpdate } = req.body;
+  const { user, dealUpdate } = req.body;
 
-    await findOneDeal(dealId, async (deal) => {
-      if (deal) {
-        const updatedDeal = await updateDeal(
-          dealId,
-          dealUpdate,
-          user,
-          deal,
-          req.routePath,
-        );
-        return res.status(200).json(updatedDeal);
-      }
-      return res.status(404).send({ status: 404, message: 'Deal not found' });
-    });
-  } else {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  await findOneBssDeal(dealId, async (deal) => {
+    if (deal) {
+      const updatedDeal = await updateBssDeal(
+        dealId,
+        dealUpdate,
+        user,
+        deal,
+        req.routePath,
+      );
+      return res.status(200).json(updatedDeal);
+    }
+    return res.status(404).send({ status: 404, message: 'Deal not found' });
+  });
+};
+
+const updateGefDeal = async (dealId, update) => {
+  if (ObjectId.isValid(dealId)) {
+    const collection = await db.getCollection('deals');
+    const originalDeal = await findOneGefDeal(dealId);
+
+    console.info('Updating Portal GEF deal.');
+
+    const dealUpdate = {
+      ...originalDeal,
+      ...update,
+      updatedAt: Date.now(),
+    };
+
+    const findAndUpdateResponse = await collection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(String(dealId)) } },
+      { $set: dealUpdate },
+      { returnDocument: 'after', returnNewDocument: true }
+    );
+
+    console.info('Updated Portal GEF deal');
+
+    return findAndUpdateResponse.value;
   }
+  return { status: 400, message: 'Invalid Deal Id' };
+};
+exports.updateGefDeal = updateGefDeal;
+
+exports.putGefDeal = async (req, res) => {
+  const dealId = req.params.id;
+
+  const { dealUpdate } = req.body;
+
+  await findOneGefDeal(dealId, async (existingDeal) => {
+    if (existingDeal) {
+      const updatedDeal = await updateGefDeal(dealId, dealUpdate);
+      return res.status(200).json(updatedDeal);
+    }
+
+    return res.status(404).send();
+  });
 };

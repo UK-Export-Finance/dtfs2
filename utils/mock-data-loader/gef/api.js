@@ -1,7 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const centralApi = process.env.DTFS_CENTRAL_API;
 const portalApi = process.env.DEAL_API_URL;
 
 const createApplication = async (data, token) => {
@@ -47,20 +46,6 @@ const listDeals = async (token) => {
   return response.data.items;
 };
 
-const deleteDeal = async (dealId, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApi}/v1/gef/application/${dealId}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
 const createFacilities = async (data, token) => {
   const response = await axios({
     method: 'post',
@@ -75,35 +60,6 @@ const createFacilities = async (data, token) => {
 
   return response.data;
 };
-
-const listFacilities = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${centralApi}/v1/portal/gef/facilities`
-  }).catch((err) => { console.error(`err: ${err}`); });
-  if (!response) return [];
-  return response.data;
-};
-
-const deleteFacilities = async (facility, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApi}/v1/gef/facilities/${facility._id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response;
-};
-
 const updateFacilities = async (facility, data, token) => {
   const response = await axios({
     method: 'put',
@@ -134,34 +90,6 @@ const createEligibilityCriteria = async (data, token) => {
   return response.data;
 };
 
-const deleteEligibilityCriteria = async (mandatoryCriteria, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApi}/v1/gef/eligibility-criteria/${mandatoryCriteria._id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
-const listEligibilityCriteria = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApi}/v1/gef/eligibility-criteria`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data.items;
-};
-
 const latestEligibilityCriteria = async (token) => {
   const response = await axios({
     method: 'get',
@@ -174,8 +102,6 @@ const latestEligibilityCriteria = async (token) => {
   }).catch((err) => { console.error(`err: ${err}`); });
   return response.data;
 };
-
-// Mandatory Criteria
 
 const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
   const response = await axios({
@@ -192,76 +118,13 @@ const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
   return response.data;
 };
 
-const deleteMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApi}/v1/gef/mandatory-criteria-versioned/${mandatoryCriteria._id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
-const listMandatoryCriteriaVersioned = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApi}/v1/gef/mandatory-criteria-versioned`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data.items;
-};
-
-const getDurableFunctions = async (token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${centralApi}/v1/portal/durable-functions`
-  }).catch((err) => { console.error(`err: ${err}`); });
-  return response;
-};
-
-const deleteCronJobs = async (token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${centralApi}/v1/portal/cron-jobs`
-  }).catch((err) => { console.error(`err: ${err}`); });
-  return response;
-};
-
 module.exports = {
   createApplication,
-  updateApplication,
-  listDeals,
-  deleteDeal,
-  createFacilities,
-  listFacilities,
-  deleteFacilities,
-  updateFacilities,
   createEligibilityCriteria,
-  deleteEligibilityCriteria,
-  listEligibilityCriteria,
-  latestEligibilityCriteria,
   createMandatoryCriteriaVersioned,
-  deleteMandatoryCriteriaVersioned,
-  listMandatoryCriteriaVersioned,
-  getDurableFunctions,
-  deleteCronJobs
+  latestEligibilityCriteria,
+  updateApplication,
+  updateFacilities,
+  createFacilities,
+  listDeals,
 };

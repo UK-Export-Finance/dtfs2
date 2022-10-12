@@ -202,18 +202,64 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
   }
 };
 
-const findLatestGefMandatoryCriteria = async () => {
+const findLatestMandatoryCriteria = async (dealType) => {
   try {
-    const response = await axios({
-      method: 'get',
-      url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/latest`,
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    return { status: 200, data: response.data };
+    const { data } = await axios.get(`${centralApiUrl}/v1/portal/mandatory-criteria?dealType=${dealType}&latest=true`);
+    return { status: 200, data };
   } catch (err) {
-    console.error('Unable to get the latest mandatory criteria for GEF deals %O', { response: err?.response?.data });
+    console.error(`Unable to get the latest ${dealType} mandatory criteria %O`, { response: err?.response?.data });
     return { status: 500, data: err?.response?.data };
+  }
+};
+
+const findAllMandatoryCriteria = async (dealType) => {
+  try {
+    const { data } = await axios.get(`${centralApiUrl}/v1/portal/mandatory-criteria?dealType=${dealType}`);
+    return { status: 200, data };
+  } catch (err) {
+    console.error('Unable to get all mandatory criteria %O', { response: err?.response?.data });
+    return { status: 500, data: err?.response?.data };
+  }
+};
+
+const findOneMandatoryCriteria = async (id, dealType) => {
+  try {
+    const { data } = await axios.get(`${centralApiUrl}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`);
+
+    return { status: 200, data };
+  } catch (err) {
+    console.error(`Unable to get one ${dealType} mandatory criteria ${err?.response?.data} %O`, { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const postMandatoryCriteria = async (payload, dealType) => {
+  try {
+    const { data } = await axios.post(`${centralApiUrl}/v1/portal/mandatory-criteria?dealType=${dealType}`, payload);
+    return { status: 200, data };
+  } catch (err) {
+    console.error(`Unable to create the ${dealType} mandatory criteria %O`, { response: err?.response?.data });
+    return { status: 500, data: err?.response?.data };
+  }
+};
+
+const putMandatoryCriteria = async (payload, id, dealType) => {
+  try {
+    const { data } = await axios.put(`${centralApiUrl}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`, payload);
+    return { status: 200, data };
+  } catch (err) {
+    console.error(`Unable to update the ${dealType} mandatory criteria %O`, { response: err?.response?.data });
+    return { status: 500, data: err?.response?.data };
+  }
+};
+
+const deleteMandatoryCriteria = async (id, dealType) => {
+  try {
+    const { data } = await axios.delete(`${centralApiUrl}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`);
+    return { status: 200, data };
+  } catch (err) {
+    console.error(`Unable to delete the ${dealType} mandatory criteria %O`, { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
@@ -229,5 +275,10 @@ module.exports = {
   updateFacility,
   deleteFacility,
   tfmDealSubmit,
-  findLatestGefMandatoryCriteria,
+  findLatestMandatoryCriteria,
+  findAllMandatoryCriteria,
+  findOneMandatoryCriteria,
+  postMandatoryCriteria,
+  putMandatoryCriteria,
+  deleteMandatoryCriteria
 };

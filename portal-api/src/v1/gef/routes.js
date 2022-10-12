@@ -6,7 +6,7 @@ const fileUpload = require('./middleware/fileUpload');
 const application = require('./controllers/application.controller');
 const cloneApplication = require('./controllers/clone-gef-deal.controller');
 const facilities = require('./controllers/facilities.controller');
-const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersioned.controller');
+const mandatoryCriteria = require('../controllers/mandatoryCriteria.controller');
 const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
 const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
@@ -58,16 +58,16 @@ router.route('/eligibility-criteria/:version')
 
 // Mandatory Criteria
 router.route('/mandatory-criteria-versioned')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findAll)
-  .post(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.create);
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteria.findAllMandatoryCriteria)
+  .post(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteria.postMandatoryCriteria);
 
 router.route('/mandatory-criteria-versioned/latest')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findLatest);
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteria.findLatestMandatoryCriteria);
 
 router.route('/mandatory-criteria-versioned/:id')
-  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteriaVersioned.findOne)
-  .put(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.update)
-  .delete(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteriaVersioned.delete);
+  .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), mandatoryCriteria.findOneMandatoryCriteria)
+  .put(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteria.putMandatoryCriteria)
+  .delete(validate({ role: ['editor', 'data-admin'] }), mandatoryCriteria.deleteMandatoryCriteria);
 
 // File Uploads
 // TODO: this feels like it should be a service: https://ukef-dtfs.atlassian.net/browse/DTFS2-4842

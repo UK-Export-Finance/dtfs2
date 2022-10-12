@@ -1,6 +1,7 @@
 const MANDATORY_CRITERIA = [
   {
     version: 27,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 1,
@@ -17,7 +18,7 @@ const MANDATORY_CRITERIA = [
           {
             id: 3,
             copy: 'Where the Supplier is a UK Supplier, the Supplier has provided the Bank with a duly completed UK Supplier Declaration, and the Bank is not aware that any of the information contained within it is inaccurate. (Conditional for UK Supplier)',
-          }
+          },
         ],
       },
       {
@@ -69,13 +70,14 @@ const MANDATORY_CRITERIA = [
           {
             id: 10,
             copy: 'The Bank is not restricted or prevented by any agreement with an Obligor from providing information and records relating to the Transaction.',
-          }
+          },
         ],
       },
     ],
   },
   {
     version: 30,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 1,
@@ -151,6 +153,7 @@ const MANDATORY_CRITERIA = [
   },
   {
     version: 33,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 1,
@@ -223,7 +226,7 @@ const MANDATORY_CRITERIA = [
         ],
       },
     ],
-  }
+  },
 ];
 
 module.exports = MANDATORY_CRITERIA;

@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../../../drivers/db-client');
+const { findOneGefDeal, findOneBssDeal } = require('./get-deal.controller');
+const db = require('../../../../database/mongo-client');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -9,7 +9,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateDealStatus = async (dealId, status, existingDeal) => {
+const updateBssDealStatus = async (dealId, status, existingDeal) => {
   if (ObjectId.isValid(dealId)) {
     const dealsCollection = await db.getCollection('deals');
 
@@ -25,7 +25,7 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
     const findAndUpdateResponse = await dealsCollection.findOneAndUpdate(
       { _id: ObjectId(dealId) },
       $.flatten(withoutId(modifiedDeal)),
-      { returnOriginal: false },
+      { returnDocument: 'after', returnNewDocument: true }
     );
 
     console.info(`Updated Portal BSS deal status from ${previousStatus} to ${status}`);
@@ -34,29 +34,66 @@ const updateDealStatus = async (dealId, status, existingDeal) => {
   }
   return { status: 400, message: 'Invalid Deal Id' };
 };
-exports.updateDealStatus = updateDealStatus;
+exports.updateBssDealStatus = updateBssDealStatus;
 
-exports.updateDealStatusPut = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const dealId = req.params.id;
+exports.putBssDealStatus = async (req, res) => {
+  const dealId = req.params.id;
 
-    const { status } = req.body;
+  const { status } = req.body;
 
-    await findOneDeal(dealId, async (existingDeal) => {
-      if (existingDeal) {
-        if (existingDeal.status === status) {
-          return res.status(400).send();
-        }
-        const updatedDeal = await updateDealStatus(
-          dealId,
-          status,
-          existingDeal,
-        );
-        return res.status(200).json(updatedDeal);
+  await findOneBssDeal(dealId, async (existingDeal) => {
+    if (existingDeal) {
+      if (existingDeal.status === status) {
+        return res.status(400).send();
       }
-      return res.status(404).send({ status: 404, message: 'Deal not found' });
-    });
-  } else {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+      const updatedDeal = await updateBssDealStatus(dealId, status, existingDeal);
+      return res.status(200).json(updatedDeal);
+    }
+    return res.status(404).send({ status: 404, message: 'Deal not found' });
+  });
+};
+
+// GEF section
+
+const updateGefDealStatus = async (dealId, previousStatus, newStatus) => {
+  if (ObjectId.isValid(dealId)) {
+    const collection = await db.getCollection('deals');
+
+    const dealUpdate = {
+      previousStatus,
+      status: newStatus,
+      updatedAt: Date.now(),
+    };
+
+    const findAndUpdateResponse = await collection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(String(dealId)) } },
+      { $set: dealUpdate },
+      { returnDocument: 'after', returnNewDocument: true }
+    );
+
+    console.info(`Updated Portal GEF deal status from ${previousStatus} to ${newStatus}`);
+
+    return findAndUpdateResponse.value;
   }
+  return { status: 400, message: 'Invalid Deal Id' };
+};
+exports.updateGefDealStatus = updateGefDealStatus;
+
+exports.putGefDealStatus = async (req, res) => {
+  const dealId = req.params.id;
+
+  const { status: newStatus } = req.body;
+
+  await findOneGefDeal(dealId, async (existingDeal) => {
+    if (existingDeal) {
+      if (existingDeal.status === newStatus) {
+        return res.status(400).send();
+      }
+
+      const updatedDeal = await updateGefDealStatus(dealId, existingDeal.status, newStatus);
+      return res.status(200).json(updatedDeal);
+    }
+
+    return res.status(404).send({ status: 404, message: 'Deal not found' });
+  });
 };

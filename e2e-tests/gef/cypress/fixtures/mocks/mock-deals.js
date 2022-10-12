@@ -88,7 +88,6 @@ const commonApplicationDetails = {
   dealType: DEAL_TYPE.GEF,
   bank: { id: '9' },
   bankInternalRefName: chance.sentence({ words: 2 }),
-  mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
   submissionDate: `${dateConstants.threeDaysAgoUnix}503`,

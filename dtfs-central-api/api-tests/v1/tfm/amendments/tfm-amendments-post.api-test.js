@@ -2,40 +2,13 @@ const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
-const { MOCK_DEAL } = require('../../mocks/mock-data');
-const aDeal = require('../../deal-builder');
+const { MOCK_BSS_FACILITY, MOCK_BSS_DEAL, MOCK_USER } = require('../../mocks/mock-data');
 
 describe('POST TFM amendments', () => {
   let dealId;
 
-  const mockUser = {
-    _id: '123456789',
-    username: 'temp',
-    roles: [],
-    bank: {
-      id: '956',
-      name: 'Barclays Bank',
-    },
-  };
-
-  const newFacility = {
-    type: 'Bond',
-    dealId: MOCK_DEAL.DEAL_ID,
-  };
-
-  const newDeal = aDeal({
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-    additionalRefName: 'mock name',
-    bankInternalRefName: 'mock id',
-    editedBy: [],
-    eligibility: {
-      status: 'Not started',
-      criteria: [{}],
-    },
-  });
-
   const createDeal = async () => {
-    const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+    const { body } = await api.post({ deal: MOCK_BSS_DEAL, user: MOCK_USER }).to('/v1/portal/deals');
     return body;
   };
 
@@ -47,12 +20,12 @@ describe('POST TFM amendments', () => {
     const deal = await createDeal();
     dealId = deal._id;
 
-    newFacility.dealId = dealId;
+    MOCK_BSS_FACILITY.dealId = dealId;
   });
 
   describe('POST /v1/tfm/facilities/:id/amendment', () => {
     it('should create a new amendment based on facilityId', async () => {
-      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const postResult = await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
@@ -62,7 +35,7 @@ describe('POST TFM amendments', () => {
     });
 
     it('should return 400 if an amendment already exists', async () => {
-      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const postResult = await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
@@ -75,7 +48,7 @@ describe('POST TFM amendments', () => {
     });
 
     it('should return 404 if the facility does not exist', async () => {
-      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const postResult = await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');

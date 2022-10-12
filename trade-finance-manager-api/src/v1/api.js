@@ -1020,7 +1020,7 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/version/${version}`,
+      url: `${centralApiUrl}/v1/portal/mandatory-criteria/${version}?dealType=GEF`,
       headers: { 'Content-Type': 'application/json' },
     });
 

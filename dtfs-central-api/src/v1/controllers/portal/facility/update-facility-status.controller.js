@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -26,7 +26,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: ObjectId(facilityId) },
       $.flatten(withoutId(update)),
-      { returnOriginal: false },
+      { returnDocument: 'after', returnNewDocument: true }
     );
 
     console.info(`Updated Portal facility status from ${previousStatus} to ${status}`);

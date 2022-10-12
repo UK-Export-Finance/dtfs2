@@ -1,6 +1,6 @@
 const expectMongoId = (obj) => ({
   _id: expect.any(String),
-  ...obj
+  ...obj,
 });
 
 const expectMongoIds = (list) => list.map(expectMongoId);

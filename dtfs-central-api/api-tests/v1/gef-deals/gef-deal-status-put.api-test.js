@@ -5,14 +5,13 @@ const CONSTANTS = require('../../../src/constants');
 
 describe('/v1/portal/gef/deals/:id/status', () => {
   beforeAll(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe(['deals', 'facilities']);
   });
 
   const mockDeal = {
     dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-    status: 'Draft',
-    updatedAt: 1234.0,
+    status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
+    updatedAt: 1234,
   };
 
   describe('PUT /v1/portal/gef/deals/:id/status', () => {
@@ -21,7 +20,7 @@ describe('/v1/portal/gef/deals/:id/status', () => {
 
       const dealId = createdDeal._id;
 
-      const statusUpdate = { status: 'ACKNOWLEDGED' };
+      const statusUpdate = { status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED };
       const { body, status } = await api.put(statusUpdate).to(`/v1/portal/gef/deals/${dealId}/status `);
 
       expect(status).toEqual(200);
@@ -38,12 +37,12 @@ describe('/v1/portal/gef/deals/:id/status', () => {
       const dealId = createdDeal._id;
 
       // First status update
-      let statusUpdate = { status: 'ACKNOWLEDGED' };
+      let statusUpdate = { status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED };
       const { status } = await api.put(statusUpdate).to(`/v1/portal/gef/deals/${dealId}/status `);
       expect(status).toEqual(200);
 
       // Second status update
-      statusUpdate = { status: 'ACKNOWLEDGED' };
+      statusUpdate = { status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED };
       const { status: secondStatus } = await api.put(statusUpdate).to(`/v1/portal/gef/deals/${dealId}/status `);
       expect(secondStatus).toEqual(400);
     });

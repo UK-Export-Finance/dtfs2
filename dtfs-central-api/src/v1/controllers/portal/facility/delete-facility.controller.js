@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { findOneFacility } = require('./get-facility.controller');
 const { removeFacilityIdFromDeal } = require('../deal/update-deal.controller');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 
 exports.deleteFacility = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {

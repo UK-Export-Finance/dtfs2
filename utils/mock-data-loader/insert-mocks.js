@@ -1,8 +1,13 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
 const api = require('./api');
+const apiGef = require('./gef/api');
 const centralApi = require('./centralApi');
+const portalApi = require('./api');
 const PORTAL_MOCKS = require('./portal');
 const MOCK_BANKS = require('./banks');
-const MOCKS = require('./bss');
+const MOCKS_BSS = require('./bss');
+const MOCKS_GEF = require('./gef');
 
 const tokenFor = require('./temporary-token-handler');
 
@@ -42,19 +47,19 @@ const insertMocks = async () => {
   }
 
   console.info('inserting BSS mandatory-criteria');
-  for (const mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
+  for (const mandatoryCriteria of MOCKS_BSS.MANDATORY_CRITERIA) {
     await api.createMandatoryCriteria(mandatoryCriteria, token);
   }
 
   console.info('inserting BSS eligibility-criteria');
-  for (const eligibilityCriteria of MOCKS.ELIGIBILITY_CRITERIA) {
+  for (const eligibilityCriteria of MOCKS_BSS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(eligibilityCriteria, token);
   }
 
   console.info('inserting BSS deals');
   const insertedDeals = [];
 
-  for (const deal of MOCKS.DEALS) {
+  for (const deal of MOCKS_BSS.DEALS) {
     const { _id } = await api.createDeal(deal, tfmMakerToken);
     const { deal: createdDeal } = await api.getDeal(_id, tfmMakerToken);
 
@@ -62,7 +67,7 @@ const insertMocks = async () => {
   }
 
   console.info('inserting BSS facilities');
-  MOCKS.FACILITIES.forEach(async (facility) => {
+  MOCKS_BSS.FACILITIES.forEach(async (facility) => {
     const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
     const facilityToInsert = {
       ...facility,
@@ -70,6 +75,48 @@ const insertMocks = async () => {
     };
     await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, tfmMakerToken);
   });
+
+  const allUsers = await portalApi.listUsers();
+  const makerUserId = allUsers.find((user) => user.username === 'BANK1_MAKER1')._id;
+
+  console.info('inserting GEF mandatory-criteria-versioned');
+  for (const item of MOCKS_GEF.MANDATORY_CRITERIA_VERSIONED) {
+    await apiGef.createMandatoryCriteriaVersioned(item, token);
+  }
+
+  console.info('inserting GEF eligibility-criteria');
+  for (const item of MOCKS_GEF.ELIGIBILITY_CRITERIA) {
+    await apiGef.createEligibilityCriteria(item, token);
+  }
+
+  console.info('inserting GEF deals');
+
+  const latestEligibilityCriteria = await apiGef.latestEligibilityCriteria(token);
+
+  for (const [index, item] of MOCKS_GEF.APPLICATION.entries()) {
+    item.userId = makerUserId;
+    const application = await apiGef.createApplication(item, token);
+
+    const applicationUpdate = {
+      submissionType: item.submissionType,
+    };
+
+    applicationUpdate.eligibility = latestEligibilityCriteria;
+
+    await apiGef.updateApplication(application._id, applicationUpdate, token);
+  }
+
+  const gefDeals = await apiGef.listDeals(token);
+
+  console.info('inserting and updating GEF facilities');
+  for (const [index, item] of MOCKS_GEF.FACILITIES.entries()) {
+    for (const subitem of item) {
+      subitem.dealId = gefDeals[index]._id;
+      const facility = await apiGef.createFacilities(subitem, token);
+      delete subitem.dealId;
+      await apiGef.updateFacilities(facility.details, subitem, token);
+    }
+  }
 };
 
 module.exports = insertMocks;

@@ -1,9 +1,9 @@
 const DEFAULTS = require('../defaults');
-const { findLatestMandatoryCriteria } = require('./mandatoryCriteria.controller');
 const { findOneDeal, createDeal, createDealEligibility } = require('./deal.controller');
 const { getCloneDealErrors } = require('../validation/clone-bss-deal');
 const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
+const api = require('../api');
 
 const CLONE_BOND_FIELDS = [
   'type',
@@ -81,7 +81,7 @@ exports.clone = async (req, res) => {
       details: {
         maker: req.user,
       },
-      mandatoryCriteria: await findLatestMandatoryCriteria(),
+      mandatoryCriteria: await api.findLatestMandatoryCriteria(CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS),
       eligibility: await createDealEligibility(),
       editedBy: [],
       comments: [],

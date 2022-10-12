@@ -25,7 +25,7 @@ module.exports = (submittedValues, deal, errorList) => {
     if (dateHasAllValues(coverEndDateDay, coverEndDateMonth, coverEndDateYear)) {
       const formattedDate = `${coverEndDateYear}-${coverEndDateMonth}-${coverEndDateDay}`;
       const nowDate = moment().format('YYYY-MM-DD');
-      if (moment(formattedDate).isBefore(nowDate)) {
+      if ((moment(formattedDate, true).isBefore(nowDate))) {
         newErrorList.coverEndDate = {
           text: 'Cover End Date must be today or in the future',
           order: orderNumber(newErrorList),

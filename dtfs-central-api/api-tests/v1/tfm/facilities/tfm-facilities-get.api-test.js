@@ -2,22 +2,21 @@ const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
 const CONSTANTS = require('../../../../src/constants');
-const { MOCK_DEAL } = require('../../mocks/mock-data');
+const { MOCK_DEAL_ID } = require('../../mocks/mock-data');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-  status: 'Draft',
+  status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
 };
 
 const newFacility = {
   type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
-  dealId: MOCK_DEAL.DEAL_ID,
+  dealId: MOCK_DEAL_ID,
 };
 
 describe('/v1/tfm/deals/:id/facilities', () => {
   beforeAll(async () => {
-    await wipeDB.wipe(['tfm-deals']);
-    await wipeDB.wipe(['tfm-facilities']);
+    await wipeDB.wipe(['tfm-deals', 'tfm-facilities']);
   });
 
   describe('GET /v1/tfm/deal/:id/facilities', () => {
@@ -33,10 +32,12 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       await api.post(newFacility).to('/v1/portal/gef/facilities');
 
       // submit deal/facilities
-      await api.put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-        dealId,
-      }).to('/v1/tfm/deals/submit');
+      await api
+        .put({
+          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealId,
+        })
+        .to('/v1/tfm/deals/submit');
 
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}/facilities`);
 

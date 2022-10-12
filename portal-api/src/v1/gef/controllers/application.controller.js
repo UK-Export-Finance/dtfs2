@@ -42,7 +42,7 @@ exports.create = async (req, res) => {
       newDeal.exporter.updatedAt = Date.now();
     }
 
-    const response = await api.findLatestGefMandatoryCriteria();
+    const response = await api.findLatestMandatoryCriteria(DEAL_TYPE.GEF);
     if (response?.data?.version) {
       newDeal.mandatoryVersionId = response.data.version;
     }

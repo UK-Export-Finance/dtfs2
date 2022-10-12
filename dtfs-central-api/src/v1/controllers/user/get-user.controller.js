@@ -1,29 +1,21 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../drivers/db-client');
+const db = require('../../../database/mongo-client');
 
-const findOneUser = async (_id) => {
-  if (ObjectId.isValid(_id)) {
-    const usersCollection = await db.getCollection('users');
-
-    const user = await usersCollection.findOne({ _id: ObjectId(_id) });
-
-    return user;
-  }
-  return { status: 400, message: 'Invalid User Id' };
+const findOnePortalUser = async (_id) => {
+  const usersCollection = await db.getCollection('users');
+  return usersCollection.findOne({ _id: ObjectId(_id) });
 };
-exports.findOneUser = findOneUser;
+exports.findOnePortalUser = findOnePortalUser;
 
-exports.findOneUserGet = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const user = await findOneUser(req.params.id);
+exports.findOnePortalUserGet = async (req, res) => {
+  const { userId } = req.params;
+  const user = await findOnePortalUser(userId);
 
-    if (user) {
-      return res.status(200).send(user);
-    }
-
-    return res.status(404).send({ status: 404, message: 'User not found' });
+  if (user) {
+    return res.status(200).send(user);
   }
-  return res.status(400).send({ status: 400, message: 'Invalid User Id' });
+
+  return res.status(404).send({ status: 404, message: 'User not found' });
 };
 
 const sanitizeUser = (user) => ({
@@ -40,24 +32,20 @@ const sanitizeUser = (user) => ({
   _id: user._id,
 });
 
-const sanitizeUsers = (users) => users.map(sanitizeUser);
-
-const list = async (callback) => {
+const listPortalUsers = async () => {
   const collection = await db.getCollection('users');
 
-  collection.find({}).toArray(callback);
+  return collection.find({}).toArray();
 };
 
-exports.list = (req, res, next) => {
-  list((err, users) => {
-    if (err) {
-      next(err);
-    } else {
-      res.status(200).json({
-        success: true,
-        count: users.length,
-        users: sanitizeUsers(users),
-      });
-    }
-  });
+exports.listAllPortalUsers = async (req, res) => {
+  const users = await listPortalUsers();
+  if (users) {
+    return res.status(200).send({
+      success: true,
+      count: users.length,
+      users: users.map(sanitizeUser),
+    });
+  }
+  return res.status(500).send({ success: false });
 };

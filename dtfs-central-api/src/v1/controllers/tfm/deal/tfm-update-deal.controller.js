@@ -1,8 +1,8 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
-const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
+const { findAllBssFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 const CONSTANTS = require('../../../../constants');
 
 const withoutId = (obj) => {
@@ -69,7 +69,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(dealId) } },
       $.flatten(withoutId(dealUpdate)),
-      { returnOriginal: false },
+      { returnDocument: 'after', returnNewDocument: true }
     );
 
     return findAndUpdateResponse.value;
@@ -117,7 +117,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
       const findAndUpdateResponse = await collection.findOneAndUpdate(
         { _id: { $eq: ObjectId(String(dealId)) } },
         $.flatten(withoutId(update)),
-        { returnOriginal: false, upsert: true },
+        { returnDocument: 'after', returnNewDocument: true, upsert: true }
       );
 
       return findAndUpdateResponse.value;
@@ -137,7 +137,7 @@ exports.updateDealSnapshotPut = async (req, res) => {
     const snapshotUpdate = req.body;
 
     if (snapshotUpdate.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      const dealFacilities = await findAllFacilitiesByDealId(dealId);
+      const dealFacilities = await findAllBssFacilitiesByDealId(dealId);
       snapshotUpdate.facilities = dealFacilities;
     }
 

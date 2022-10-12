@@ -119,5 +119,5 @@ module.exports = {
   listUsers,
   listDeals,
   deleteDeal,
-  createTfmUser
+  createTfmUser,
 };

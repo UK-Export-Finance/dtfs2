@@ -9,10 +9,7 @@ const {
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
-    await wipeDB.wipe(['tfm-deals']);
-    await wipeDB.wipe(['tfm-facilities']);
+    await wipeDB.wipe(['deals', 'facilities', 'tfm-deals', 'tfm-facilities']);
   });
 
   describe('GET /v1/tfm/deals', () => {

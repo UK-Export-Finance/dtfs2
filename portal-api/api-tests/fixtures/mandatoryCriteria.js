@@ -1,6 +1,7 @@
 const MANDATORY_CRITERIA = [
   {
     version: 2,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: '1',
@@ -76,6 +77,7 @@ const MANDATORY_CRITERIA = [
   },
   {
     version: 1,
+    dealType: 'BSS/EWCS',
     criteria: [],
   },
 ];

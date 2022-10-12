@@ -137,7 +137,6 @@ const collections = [
   'mandatoryCriteria',
   'eligibilityCriteria',
   'gef-eligibilityCriteria',
-  'gef-mandatoryCriteriaVersioned',
   'cron-job-logs',
   'files',
   'durable-functions-log',

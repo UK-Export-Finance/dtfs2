@@ -1,9 +1,8 @@
-const db = require('../../../drivers/db-client');
+const db = require('../../../database/mongo-client');
 
-exports.deleteAllEstoreLogs = async (req, res) => {
+exports.deleteCronJobLogs = async (req, res) => {
   try {
     const collection = await db.getCollection('cron-job-logs');
-    // delete all documents from `cron-job-logs` collection
     await collection.deleteMany({});
 
     return res.status(200).send();

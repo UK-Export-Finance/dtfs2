@@ -1,4 +1,4 @@
-const db = require('../../../drivers/db-client');
+const db = require('../../../database/mongo-client');
 
 const createUser = async (user) => {
   const collection = await db.getCollection('users');

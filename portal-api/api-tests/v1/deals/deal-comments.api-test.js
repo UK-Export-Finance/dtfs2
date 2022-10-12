@@ -22,16 +22,12 @@ describe('deal comments controller', () => {
   });
 
   beforeEach(async () => {
+    await wipeDB.wipe(['deals', 'facilities']);
     const { body } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
     dealId = body._id;
     user = {
       username: aBarclaysMaker.username,
     };
-  });
-
-  afterEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
   });
 
   it('should update a comment', async () => {

@@ -1,36 +1,11 @@
 const db = require('../src/drivers/db-client');
 
-const wipe = async (collections) => {
-  const drop = async (collection) => new Promise(async (resolve, reject) => {
-    const collectionToDrop = await db.getCollection(collection);
+const wipe = (collections) => collections.forEach(async (name) => {
+  const collection = await db.getCollection(name);
+  await collection.deleteMany({});
+});
 
-    collectionToDrop.drop((err, delOK) => {
-      resolve();
-    });
-  });
-
-  const dropPromises = [];
-  for (const collection of collections) {
-    dropPromises.push(drop(collection));
-  }
-  const dropped = await Promise.all(dropPromises);
-  return dropped;
-};
-
-const wipeAll = async () => {
-  const wiped = await wipe([
-    'deals',
-    'facilities',
-    'banks',
-    'transactions',
-    'industrySectors',
-    'mandatoryCriteria',
-    'eligibilityCriteria',
-    'users',
-    'gef-mandatoryCriteriaVersioned',
-  ]);
-  return wiped;
-};
+const wipeAll = () => wipe(['banks', 'deals', 'users', 'tfm-deals', 'tfm-facilities', 'tfm-users', 'tfm-teams']);
 
 module.exports = {
   wipe,

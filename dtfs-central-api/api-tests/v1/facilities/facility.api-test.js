@@ -1,36 +1,13 @@
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
-const aDeal = require('../deal-builder');
-const { MOCK_DEAL } = require('../mocks/mock-data');
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
-
-const newFacility = {
-  type: 'Bond',
-  dealId: MOCK_DEAL.DEAL_ID,
-};
-
-const newDeal = aDeal({
-  additionalRefName: 'mock name',
-  bankInternalRefName: 'mock id',
-  editedBy: [],
-  eligibility: {
-    status: 'Not started',
-    criteria: [{}],
-  },
-});
+const {
+  MOCK_BSS_FACILITY, MOCK_BSS_DEAL, MOCK_DEAL_ID, MOCK_USER
+} = require('../mocks/mock-data');
+const CONSTANTS = require('../../../src/constants');
 
 const createDeal = async () => {
-  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+  const { body } = await api.post({ deal: MOCK_BSS_DEAL, user: MOCK_USER }).to('/v1/portal/deals');
   return body;
 };
 
@@ -41,19 +18,19 @@ describe('/v1/portal/facilities', () => {
     });
     it('returns 404 when associatedDeal/dealId is not found', async () => {
       const facilityWithInvalidDealId = {
-        dealId: MOCK_DEAL.DEAL_ID,
-        type: 'Bond',
+        dealId: MOCK_DEAL_ID,
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
       };
 
-      const { status } = await api.post({ facility: facilityWithInvalidDealId, user: mockUser }).to('/v1/portal/facilities');
+      const { status } = await api.post({ facility: facilityWithInvalidDealId, user: MOCK_USER }).to('/v1/portal/facilities');
 
       expect(status).toEqual(404);
     });
 
     it('returns 404 when user is not found', async () => {
       const facilityWithInvalidDealId = {
-        dealId: MOCK_DEAL.DEAL_ID,
-        type: 'Bond',
+        dealId: MOCK_DEAL_ID,
+        type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
       };
 
       const { status } = await api.post({ facility: facilityWithInvalidDealId }).to('/v1/portal/facilities');
@@ -63,19 +40,19 @@ describe('/v1/portal/facilities', () => {
 
     it('creates a facility', async () => {
       const { _id } = await createDeal();
-      newFacility.dealId = _id;
+      MOCK_BSS_FACILITY.dealId = _id;
 
-      const { body, status } = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const { body, status } = await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
 
       expect(status).toEqual(200);
 
-      expect(typeof body._id).toEqual('string');
+      expect(body._id).toBeString();
 
       const { body: facilityAfterCreation } = await api.get(`/v1/portal/facilities/${body._id}`);
 
       expect(facilityAfterCreation).toEqual({
         _id: body._id,
-        ...newFacility,
+        ...MOCK_BSS_FACILITY,
         createdDate: expect.any(Number),
         updatedAt: expect.any(Number),
       });
@@ -83,11 +60,11 @@ describe('/v1/portal/facilities', () => {
 
     it('creates incremental integer facility IDs', async () => {
       const { _id } = await createDeal();
-      newFacility.dealId = _id;
+      MOCK_BSS_FACILITY.dealId = _id;
 
-      const facility1 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      const facility2 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
-      const facility3 = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const facility1 = await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
+      const facility2 = await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
+      const facility3 = await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
 
       expect(facility1.body._id).toBeDefined();
       expect(facility2.body._id).toBeDefined();
@@ -96,16 +73,16 @@ describe('/v1/portal/facilities', () => {
 
     it('adds the facility id to the associated deal', async () => {
       const { _id } = await createDeal();
-      newFacility.dealId = _id;
+      MOCK_BSS_FACILITY.dealId = _id;
 
       const {
         status: createdFacilityStatus,
         body: createdFacility,
-      } = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      } = await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
 
       expect(createdFacilityStatus).toEqual(200);
 
-      const { status, body } = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
+      const { status, body } = await api.get(`/v1/portal/deals/${MOCK_BSS_FACILITY.dealId}`);
 
       expect(status).toEqual(200);
 
@@ -117,14 +94,14 @@ describe('/v1/portal/facilities', () => {
     describe('when required fields are missing', () => {
       it('returns 400 with validation errors', async () => {
         const { _id } = await createDeal();
-        newFacility.dealId = _id;
+        MOCK_BSS_FACILITY.dealId = _id;
 
         const postBody = {
           type: '',
           dealId: '',
         };
 
-        const { body, status } = await api.post({ facility: postBody, user: mockUser }).to('/v1/portal/facilities');
+        const { body, status } = await api.post({ facility: postBody, user: MOCK_USER }).to('/v1/portal/facilities');
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(2);
@@ -140,15 +117,15 @@ describe('/v1/portal/facilities', () => {
     describe('when required fields are invalid', () => {
       it('returns 400 with validation errors', async () => {
         const { _id } = await createDeal();
-        newFacility.dealId = _id;
+        MOCK_BSS_FACILITY.dealId = _id;
 
         const postBody = {
           type: 'invalid-facility',
-          dealId: MOCK_DEAL.DEAL_ID,
+          dealId: MOCK_DEAL_ID,
           user: {},
         };
 
-        const { body, status } = await api.post({ facility: postBody, user: mockUser }).to('/v1/portal/facilities');
+        const { body, status } = await api.post({ facility: postBody, user: MOCK_USER }).to('/v1/portal/facilities');
 
         expect(status).toEqual(400);
         expect(body.validationErrors.count).toEqual(1);
@@ -162,16 +139,16 @@ describe('/v1/portal/facilities', () => {
   describe('GET /v1/portal/facilities/:id', () => {
     it('returns the requested resource', async () => {
       const { _id } = await createDeal();
-      newFacility.dealId = _id;
+      MOCK_BSS_FACILITY.dealId = _id;
 
-      const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
+      const postResult = await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
       const { status, body } = await api.get(`/v1/portal/facilities/${newId}`);
 
       expect(status).toEqual(200);
       expect(body._id).toEqual(newId);
-      expect(typeof body.createdDate).toEqual('number');
+      expect(body.createdDate).toBeNumber();
     });
   });
 });

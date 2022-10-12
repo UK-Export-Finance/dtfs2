@@ -1,4 +1,5 @@
 const express = require('express');
+const { query, param } = require('express-validator');
 
 const portalRouter = express.Router();
 const createDealController = require('../controllers/portal/deal/create-deal.controller');
@@ -19,16 +20,7 @@ const updateFacilityStatusController = require('../controllers/portal/facility/u
 const getBankController = require('../controllers/bank/get-bank.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
 
-const createGefDealController = require('../controllers/portal/gef-deal/create-gef-deal.controller');
-const getGefDealController = require('../controllers/portal/gef-deal/get-gef-deal.controller');
-const updateGefDealController = require('../controllers/portal/gef-deal/update-deal.controller');
-const putGefDealStatusController = require('../controllers/portal/gef-deal/put-gef-deal.status.controller');
-const addCommentToGefDeal = require('../controllers/portal/gef-deal/add-underwriter-comment-gef.controller');
-const gefActivityController = require('../controllers/portal/gef-deal/add-min-activities.controller');
-
-const getGefFacilitiesController = require('../controllers/portal/gef-facility/get-facilities.controller');
-const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
-const updateGefFacilityController = require('../controllers/portal/gef-facility/update-facility.controller');
+const gefActivityController = require('../controllers/portal/deal/add-min-activities.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
@@ -36,21 +28,16 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
 const { PORTAL_ROUTE } = require('../../constants/routes');
+const { hasValidationErrors } = require('../validation/hasValidationErrors.validate');
 
 portalRouter.use((req, res, next) => {
   req.routePath = PORTAL_ROUTE;
   next();
 });
 
-portalRouter.route('/banks')
-  .post(
-    createBankController.createBankPost,
-  );
+portalRouter.route('/banks').post(createBankController.createBankPost);
 
-portalRouter.route('/banks/:id')
-  .get(
-    getBankController.findOneBankGet,
-  );
+portalRouter.route('/banks/:id').get(getBankController.findOneBankGet);
 
 /**
  * @openapi
@@ -106,9 +93,7 @@ portalRouter.route('/banks/:id')
  *                     order: '2'
  *                     text: 'Enter the Bank deal name'
  */
-portalRouter.route('/deals').post(
-  createDealController.createDealPost,
-);
+portalRouter.route('/deals').post(createDealController.postBssDeal);
 
 /**
  * @openapi
@@ -139,9 +124,7 @@ portalRouter.route('/deals').post(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id').get(
-  getDealController.findOneDealGet,
-);
+portalRouter.route('/deals/:id').get(getDealController.getOneBssDeal);
 
 /**
  * @openapi
@@ -181,9 +164,7 @@ portalRouter.route('/deals/:id').get(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id').put(
-  updateDealController.updateDealPut,
-);
+portalRouter.route('/deals/:id').put(updateDealController.putBssDeal);
 
 /**
  * @openapi
@@ -208,9 +189,7 @@ portalRouter.route('/deals/:id').put(
  *               acknowledged: true
  *               deletedCount: 1
  */
-portalRouter.route('/deals/:id').delete(
-  deleteDealController.deleteDeal,
-);
+portalRouter.route('/deals/:id').delete(deleteDealController.deleteDeal);
 
 /**
  * @openapi
@@ -253,10 +232,7 @@ portalRouter.route('/deals/:id').delete(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id/status')
-  .put(
-    updateDealStatusController.updateDealStatusPut,
-  );
+portalRouter.route('/deals/:id/status').put(updateDealStatusController.putBssDealStatus);
 
 /**
  * @openapi
@@ -303,10 +279,7 @@ portalRouter.route('/deals/:id/status')
  *       404:
  *         description: Deal not found
  */
-portalRouter.route('/deals/:id/comment')
-  .post(
-    addDealCommentController.addDealCommentPost,
-  );
+portalRouter.route('/deals/:id/comment').post(addDealCommentController.postCommentToBssDeal);
 
 /**
  * @openapi
@@ -323,9 +296,7 @@ portalRouter.route('/deals/:id/comment')
  *             schema:
  *               $ref: '#/definitions/FacilitiesBSS'
  */
-portalRouter.route('/facilities').get(
-  getFacilitiesController.findAllGet,
-);
+portalRouter.route('/facilities').get(getFacilitiesController.getAllPortalFacilities);
 
 /**
  * @openapi
@@ -371,14 +342,9 @@ portalRouter.route('/facilities').get(
  *                     order: '2'
  *                     text: 'Enter the Associated deal id'
  */
-portalRouter.route('/facilities').post(
-  createFacilityController.createFacilityPost,
-);
+portalRouter.route('/facilities').post(createFacilityController.postBssFacility);
 
-portalRouter.route('/multiple-facilities')
-  .post(
-    createMultipleFacilitiesController.createMultipleFacilitiesPost,
-  );
+portalRouter.route('/multiple-facilities').post(createMultipleFacilitiesController.createMultipleFacilitiesPost);
 
 /**
  * @openapi
@@ -404,9 +370,7 @@ portalRouter.route('/multiple-facilities')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').get(
-  getFacilityController.findOneFacilityGet,
-);
+portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityGet);
 
 /**
  * @openapi
@@ -444,9 +408,7 @@ portalRouter.route('/facilities/:id').get(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').put(
-  updateFacilityController.updateFacilityPut,
-);
+portalRouter.route('/facilities/:id').put(updateFacilityController.putBssFacility);
 
 /**
  * @openapi
@@ -473,9 +435,7 @@ portalRouter.route('/facilities/:id').put(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').delete(
-  deleteFacilityController.deleteFacility,
-);
+portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFacility);
 
 /**
  * @openapi
@@ -515,10 +475,7 @@ portalRouter.route('/facilities/:id').delete(
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id/status')
-  .put(
-    updateFacilityStatusController.updateFacilityStatusPut,
-  );
+portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.updateFacilityStatusPut);
 
 /**
  * @openapi
@@ -535,10 +492,7 @@ portalRouter.route('/facilities/:id/status')
  *             example:
  *               _id: '123456abc'
  */
-portalRouter.route('/gef/deals')
-  .post(
-    createGefDealController.createDealPost,
-  );
+portalRouter.route('/gef/deals').post(createDealController.postGefDeal);
 
 /**
  * @openapi
@@ -564,10 +518,7 @@ portalRouter.route('/gef/deals')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id')
-  .get(
-    getGefDealController.findOneDealGet,
-  );
+portalRouter.route('/gef/deals/:id').get(getDealController.getOneGefDeal);
 
 /**
  * @openapi
@@ -607,10 +558,7 @@ portalRouter.route('/gef/deals/:id')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id')
-  .put(
-    updateGefDealController.updateDealPut,
-  );
+portalRouter.route('/gef/deals/:id').put(updateDealController.putGefDeal);
 
 /**
  * @openapi
@@ -636,10 +584,7 @@ portalRouter.route('/gef/deals/:id')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/activity/:id')
-  .put(
-    gefActivityController.generateMINActivities,
-  );
+portalRouter.route('/gef/deals/activity/:id').put(gefActivityController.generateMINActivities);
 
 /**
  * @openapi
@@ -680,10 +625,7 @@ portalRouter.route('/gef/deals/activity/:id')
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id/status')
-  .put(
-    putGefDealStatusController.updateDealStatusPut,
-  );
+portalRouter.route('/gef/deals/:id/status').put(updateDealStatusController.putGefDealStatus);
 
 /**
  * @openapi
@@ -730,7 +672,7 @@ portalRouter.route('/gef/deals/:id/status')
  *       404:
  *         description: Deal not found
  */
-portalRouter.route('/gef/deals/:id/comment').post(addCommentToGefDeal.addUnderwriterCommentToGefDeal);
+portalRouter.route('/gef/deals/:id/comment').post(addDealCommentController.postCommentToGefDeal);
 
 /**
  * @openapi
@@ -754,10 +696,7 @@ portalRouter.route('/gef/deals/:id/comment').post(addCommentToGefDeal.addUnderwr
  *             schema:
  *               $ref: '#/definitions/FacilitiesGEF'
  */
-portalRouter.route('/gef/deals/:id/facilities')
-  .get(
-    getGefFacilitiesController.findAllGet,
-  );
+portalRouter.route('/gef/deals/:id/facilities').get(getFacilitiesController.getAllGefFacilitiesByDealId);
 
 /**
  * @openapi
@@ -776,7 +715,7 @@ portalRouter.route('/gef/deals/:id/facilities')
  *       404:
  *         description: Deal not found
  */
-portalRouter.route('/gef/facilities').post(createGefFacilityController.createFacilityPost);
+portalRouter.route('/gef/facilities').post(createFacilityController.postGefFacility);
 
 /**
  * @openapi
@@ -793,7 +732,7 @@ portalRouter.route('/gef/facilities').post(createGefFacilityController.createFac
  *             schema:
  *                $ref: '#/definitions/FacilityGEF'
  */
-portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFacilities);
+portalRouter.route('/gef/facilities').get(getFacilitiesController.findAllGefFacilities);
 
 /**
  * @openapi
@@ -831,9 +770,7 @@ portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFaci
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/facilities/:id').put(
-  updateGefFacilityController.updateFacilityPut,
-);
+portalRouter.route('/gef/facilities/:id').put(updateFacilityController.putGefFacility);
 
 /**
  * @openapi
@@ -865,9 +802,13 @@ portalRouter.route('/durable-functions').delete(durableFunctionsController.delet
  *         description: Fail
  *
  */
-portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
+portalRouter.route('/cron-jobs').delete(cronJobsController.deleteCronJobLogs);
 
-portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLatestGefMandatoryCriteria);
-portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
+// GEF Mandatory Criteria
+portalRouter.route('/mandatory-criteria/').post(query('dealType').not().isEmpty(), hasValidationErrors, mandatoryCriteria.postMandatoryCriteria);
+portalRouter.route('/mandatory-criteria/').get(mandatoryCriteria.getMandatoryCriteria);
+portalRouter.route('/mandatory-criteria/:version').get(query('dealType').not().isEmpty(), param('version').not().isEmpty(), hasValidationErrors, mandatoryCriteria.getOneMandatoryCriteria);
+portalRouter.route('/mandatory-criteria/:version').put(query('dealType').not().isEmpty(), param('version').not().isEmpty(), hasValidationErrors, mandatoryCriteria.putMandatoryCriteria);
+portalRouter.route('/mandatory-criteria/:version').delete(query('dealType').not().isEmpty(), param('version').not().isEmpty(), hasValidationErrors, mandatoryCriteria.deleteMandatoryCriteria);
 
 module.exports = portalRouter;

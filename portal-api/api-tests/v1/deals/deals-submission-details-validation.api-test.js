@@ -28,13 +28,9 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
   let anHSBCMaker;
 
   beforeAll(async () => {
+    await wipeDB.wipe(['deals', 'facilities']);
     const testUsers = await testUserCache.initialise(app);
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
-  });
-
-  beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
   });
 
   describe('For all cases', () => {
@@ -742,7 +738,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
         validationErrors = body.validationErrors;
       });
 
-      it('expects currency validation message if not in correct format', async () => {
+      it('expects currency validation message if not in correct format', () => {
         expect(validationErrors.errorList.supplyContractValue).toEqual({
           order: expect.any(String),
           text: 'Supply Contract value must be in currency format',
