@@ -17,7 +17,7 @@ const cleanAllTables = async () => {
     username: 'admin',
     email: 'admin-2',
     password: 'AbC!2345',
-    roles: ['maker', 'editor'],
+    roles: ['maker', 'admin'],
     bank: { id: '*' },
   });
 };

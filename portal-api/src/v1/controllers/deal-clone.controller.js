@@ -71,6 +71,8 @@ exports.clone = async (req, res) => {
       delete existingDealWithoutCertainFields.submissionType;
     }
 
+    const { data: latestMandatoryCriteria } = await api.findLatestMandatoryCriteria(CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS);
+
     const modifiedDeal = {
       ...existingDealWithoutCertainFields,
       status: DEFAULTS.DEAL.status,
@@ -81,7 +83,7 @@ exports.clone = async (req, res) => {
       details: {
         maker: req.user,
       },
-      mandatoryCriteria: await api.findLatestMandatoryCriteria(CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS),
+      mandatoryCriteria: latestMandatoryCriteria,
       eligibility: await createDealEligibility(),
       editedBy: [],
       comments: [],
