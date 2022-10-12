@@ -17,6 +17,11 @@ exports.queryAllFacilities = async (queryParams) => {
   for (const item of rawFacilities) {
     const { tfmFacilities: facility } = item;
 
+    // if facilityId is null, replace with '-'
+    if (!facility.ukefFacilityId) {
+      facility.ukefFacilityId = '-';
+    }
+
     // finds latest completed amendment tfm object with mapped values
     const latestCompletedAmendment = findLatestCompletedAmendment(item?.amendments);
 

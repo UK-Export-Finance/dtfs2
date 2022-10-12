@@ -49,7 +49,7 @@ exports.getAllFacilities = async (req, res) => {
       $lookup: {
         from: 'tfm-deals',
         localField: 'facilitySnapshot.dealId',
-        foreignField: 'dealSnapshot._id',
+        foreignField: '_id',
         as: 'tfmDeals'
       }
     },

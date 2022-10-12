@@ -23,6 +23,9 @@ const twoMonths = add(today, { months: 2 });
 const twoMonthsDay = format(twoMonths, 'dd');
 const twoMonthsMonth = format(twoMonths, 'M');
 const twoMonthsYear = format(twoMonths, 'yyyy');
+const twoMonthsFormatted = format(twoMonths, 'dd LLL yyyy');
+const twoMonthsFormattedFull = format(twoMonths, 'dd MMMM yyyy');
+const twoMonthsFormattedTable = format(twoMonths, 'd MMMM yyyy');
 // to test that if beyond issue/ cover start date limit
 const tomorrow = add(today, { days: 1 });
 const tomorrowDay = format(tomorrow, 'dd');
@@ -46,6 +49,16 @@ const threeDaysAgoUnix = getUnixTime(threeDaysAgo).toString();
 const threeDaysDay = format(threeDaysAgo, 'dd');
 const threeDaysMonth = format(threeDaysAgo, 'M');
 const threeDaysYear = format(threeDaysAgo, 'yyyy');
+
+const twoYears = add(today, { years: 2, months: 3, days: 1 });
+const twoYearsDay = format(twoYears, 'dd');
+const twoYearsMonth = format(twoYears, 'M');
+const twoYearsYear = format(twoYears, 'yyyy');
+
+const threeYears = add(today, { years: 3, months: 3, days: 1 });
+const threeYearsDay = format(threeYears, 'dd');
+const threeYearsMonth = format(threeYears, 'M');
+const threeYearsYear = format(threeYears, 'yyyy');
 
 const threeDaysAgoPlusMonth = add(threeDaysAgo, { months: 3 });
 
@@ -85,6 +98,9 @@ export default {
   twoMonthsDay,
   twoMonthsMonth,
   twoMonthsYear,
+  twoMonthsFormatted,
+  twoMonthsFormattedFull,
+  twoMonthsFormattedTable,
   threeMonths,
   threeMonthsDay,
   threeMonthsMonth,
@@ -114,4 +130,12 @@ export default {
   tomorrowFormattedFacilityPage,
   todayFormattedTimeHours,
   todayFormattedTimeAmPm,
+  twoYears,
+  twoYearsDay,
+  twoYearsMonth,
+  twoYearsYear,
+  threeYears,
+  threeYearsDay,
+  threeYearsMonth,
+  threeYearsYear,
 };
