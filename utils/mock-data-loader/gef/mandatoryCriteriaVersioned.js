@@ -1,6 +1,7 @@
 const MANDATORY_CRITERIA_VERSIONED = [
   {
     version: 33,
+    dealType: 'GEF',
     createdAt: new Date('2021-01-03T00:00'),
     updatedAt: null,
     isInDraft: false,

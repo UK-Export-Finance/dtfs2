@@ -5,13 +5,12 @@ const CONSTANTS = require('../../../src/constants');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-  status: 'Draft',
+  status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
 };
 
 describe('/v1/portal/gef/deals', () => {
   beforeAll(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe(['deals', 'facilities']);
   });
 
   describe('POST /v1/portal/gef/deals', () => {

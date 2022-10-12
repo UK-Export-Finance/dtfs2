@@ -138,131 +138,6 @@ const createUser = async (user) => {
   return response.data;
 };
 
-const deleteBank = async (deal, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/banks/${deal.id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
-const deleteCurrency = async (currency, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/currencies/${currency.id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
-const deleteCountry = async (country, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/countries/${country.code}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
-const deleteDeal = async (dealId, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/deals/${dealId}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
-const deleteIndustrySector = async (industrySector, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/industry-sectors/${industrySector.code}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
-const deleteMandatoryCriteria = async (version, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/mandatory-criteria/${version}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
-const deleteEligibilityCriteria = async (version, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/eligibility-criteria/${version}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
-const deleteUser = async (user) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-    },
-    url: `${portalApiUrl}/v1/users/${user._id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
-const listBanks = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/banks`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data.banks;
-};
-
 const listCurrencies = async (token) => {
   const response = await axios({
     method: 'get',
@@ -275,36 +150,6 @@ const listCurrencies = async (token) => {
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.currencies;
-};
-
-const listCountries = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/countries`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data.countries;
-};
-
-const listDeals = async (token) => {
-  // const response = await apollo('GET', QUERY.dealsQuery, {}, token);
-
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/deals`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data.deals;
 };
 
 const listIndustrySectors = async (token) => {
@@ -335,20 +180,6 @@ const listMandatoryCriteria = async (token) => {
   return response.data.mandatoryCriteria;
 };
 
-const listEligibilityCriteria = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/eligibility-criteria`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data.eligibilityCriteria;
-};
-
 const listUsers = async () => {
   const response = await axios({
     method: 'get',
@@ -361,7 +192,6 @@ const listUsers = async () => {
 
   return response.data.users;
 };
-
 const updateCurrency = async (currency, token) => {
   const response = await axios({
     method: 'put',
@@ -402,21 +232,9 @@ module.exports = {
   createMandatoryCriteria,
   createEligibilityCriteria,
   createUser,
-  deleteBank,
-  deleteCurrency,
-  deleteCountry,
-  deleteDeal,
-  deleteIndustrySector,
-  deleteMandatoryCriteria,
-  deleteEligibilityCriteria,
-  deleteUser,
-  listBanks,
   listCurrencies,
-  listCountries,
-  listDeals,
   listIndustrySectors,
   listMandatoryCriteria,
-  listEligibilityCriteria,
   listUsers,
   updateCountry,
   updateCurrency,

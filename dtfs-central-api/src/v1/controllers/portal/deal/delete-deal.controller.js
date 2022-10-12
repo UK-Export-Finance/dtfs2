@@ -1,9 +1,9 @@
 const { ObjectId } = require('mongodb');
-const { findOneDeal } = require('./get-deal.controller');
-const db = require('../../../../drivers/db-client');
+const { findOneBssDeal } = require('./get-deal.controller');
+const db = require('../../../../database/mongo-client');
 
 exports.deleteDeal = (req, res) => {
-  findOneDeal(req.params.id, async (deal) => {
+  findOneBssDeal(req.params.id, async (deal) => {
     if (ObjectId.isValid(req.params.id)) {
       if (deal) {
         const collection = await db.getCollection('deals');

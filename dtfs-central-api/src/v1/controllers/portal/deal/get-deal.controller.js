@@ -1,7 +1,6 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 const CONSTANTS = require('../../../../constants');
-const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 
 const extendDealWithFacilities = async (deal) => {
   const facilitiesCollection = await db.getCollection('facilities');
@@ -40,7 +39,7 @@ const extendDealWithFacilities = async (deal) => {
   return mappedDeal;
 };
 
-const findOneDeal = async (_id, callback) => {
+const findOneBssDeal = async (_id, callback) => {
   const dealsCollection = await db.getCollection('deals');
 
   const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
@@ -64,19 +63,29 @@ const findOneDeal = async (_id, callback) => {
 
   return deal;
 };
-exports.findOneDeal = findOneDeal;
+exports.findOneBssDeal = findOneBssDeal;
+
+exports.getOneBssDeal = async (req, res) => {
+  if (ObjectId.isValid(req.params.id)) {
+    const deal = await findOneBssDeal(req.params.id);
+
+    if (deal) {
+      return res.status(200).send({
+        deal,
+      });
+    }
+
+    return res.status(404).send({ status: 404, message: 'Deal not found' });
+  }
+
+  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+};
 
 const findOneGefDeal = async (_id, callback) => {
   if (ObjectId.isValid(_id)) {
     const dealsCollection = await db.getCollection('deals');
 
     const deal = await dealsCollection.findOne({ _id: ObjectId(_id) });
-
-    if (deal) {
-      const facilities = await findAllGefFacilitiesByDealId(_id);
-
-      deal.facilities = facilities;
-    }
 
     if (callback) {
       callback(deal);
@@ -88,18 +97,15 @@ const findOneGefDeal = async (_id, callback) => {
 };
 exports.findOneGefDeal = findOneGefDeal;
 
-exports.findOneDealGet = async (req, res) => {
+exports.getOneGefDeal = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
-    const deal = await findOneDeal(req.params.id);
+    const deal = await findOneGefDeal(req.params.id);
 
     if (deal) {
-      return res.status(200).send({
-        deal,
-      });
+      return res.status(200).send(deal);
     }
 
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
-
   return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };

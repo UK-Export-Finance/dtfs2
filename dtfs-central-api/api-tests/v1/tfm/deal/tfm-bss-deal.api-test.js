@@ -1,42 +1,18 @@
 const wipeDB = require('../../../wipeDB');
-const aDeal = require('../../deal-builder');
 
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
+const { MOCK_BSS_DEAL, MOCK_USER } = require('../../mocks/mock-data');
 const CONSTANTS = require('../../../../src/constants');
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
-
-const newDeal = aDeal({
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-  additionalRefName: 'mock name',
-  bankInternalRefName: 'mock id',
-  editedBy: [],
-  eligibility: {
-    status: 'Not started',
-    criteria: [{}],
-  },
-});
 
 describe('/v1/tfm/deal/:id', () => {
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
-    await wipeDB.wipe(['tfm-deals']);
-    await wipeDB.wipe(['tfm-facilities']);
+    await wipeDB.wipe(['deals', 'facilities', 'tfm-deals', 'tfm-facilities']);
   });
 
   describe('GET /v1/tfm/deal/:id', () => {
     it('returns the requested resource', async () => {
-      const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const postResult = await api.post({ deal: MOCK_BSS_DEAL, user: MOCK_USER }).to('/v1/portal/deals');
       const dealId = postResult.body._id;
 
       await api.put({
@@ -47,19 +23,19 @@ describe('/v1/tfm/deal/:id', () => {
       const { status, body } = await api.get(`/v1/tfm/deals/${dealId}`);
 
       expect(status).toEqual(200);
-      expect(body.deal.dealSnapshot).toMatchObject(newDeal);
+      expect(body.deal.dealSnapshot).toMatchObject(MOCK_BSS_DEAL);
     });
 
     describe('when a deal has facilities', () => {
       it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
-        const postResult = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+        const postResult = await api.post({ deal: MOCK_BSS_DEAL, user: MOCK_USER }).to('/v1/portal/deals');
         const dealId = postResult.body._id;
 
         // create some facilities
         const mockFacility = {
           dealId,
           value: 123456,
-          user: mockUser,
+          user: MOCK_USER,
         };
 
         const mockBond = {
@@ -72,10 +48,10 @@ describe('/v1/tfm/deal/:id', () => {
           ...mockFacility,
         };
 
-        const { body: createdBond1 } = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
-        const { body: createdBond2 } = await api.post({ facility: mockBond, user: mockUser }).to('/v1/portal/facilities');
-        const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
-        const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: mockUser }).to('/v1/portal/facilities');
+        const { body: createdBond1 } = await api.post({ facility: mockBond, user: MOCK_USER }).to('/v1/portal/facilities');
+        const { body: createdBond2 } = await api.post({ facility: mockBond, user: MOCK_USER }).to('/v1/portal/facilities');
+        const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: MOCK_USER }).to('/v1/portal/facilities');
+        const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: MOCK_USER }).to('/v1/portal/facilities');
 
         const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
         const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);
@@ -111,7 +87,7 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('updates deal.dealSnapshot whilst retaining existing snapshot deal.tfm', async () => {
-      const { body: portalDeal } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+      const { body: portalDeal } = await api.post({ deal: MOCK_BSS_DEAL, user: MOCK_USER }).to('/v1/portal/deals');
       const dealId = portalDeal._id;
 
       const mockTfm = {
@@ -143,7 +119,7 @@ describe('/v1/tfm/deal/:id', () => {
       const { body: dealAfterUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
 
       expect(dealAfterUpdate.deal.dealSnapshot).toMatchObject({
-        ...newDeal,
+        ...MOCK_BSS_DEAL,
         ...snapshotUpdate,
       });
 

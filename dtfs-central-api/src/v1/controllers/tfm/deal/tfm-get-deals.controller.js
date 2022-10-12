@@ -1,5 +1,5 @@
 const moment = require('moment');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 const CONSTANTS = require('../../../../constants');
 const getObjectPropertyValueFromStringPath = require('../../../../utils/getObjectPropertyValueFromStringPath');
 const mapDataModel = require('../../../../mapping/mapDataModel');

@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 
 const findFacilitiesByDealId = async (dealId) => {
   const collection = await db.getCollection('tfm-facilities');

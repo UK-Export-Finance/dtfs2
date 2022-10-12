@@ -1,6 +1,8 @@
+const { DEALS: { DEAL_STATUS } } = require('../../constants');
+
 const DEFAULTS = {
   DEAL: {
-    status: 'Draft',
+    status: DEAL_STATUS.DRAFT,
     details: {},
     eligibility: {
       status: 'Not started',

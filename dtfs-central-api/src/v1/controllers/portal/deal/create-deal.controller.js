@@ -1,8 +1,8 @@
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 const DEFAULTS = require('../../../defaults');
 const getDealErrors = require('../../../validation/create-deal');
 
-const createDeal = async (deal, maker) => {
+const createBssDeal = async (deal, maker) => {
   const collection = await db.getCollection('deals');
 
   const { details } = deal;
@@ -39,13 +39,13 @@ const createDeal = async (deal, maker) => {
   };
 };
 
-exports.createDealPost = async (req, res) => {
+exports.postBssDeal = async (req, res) => {
   const { user } = req.body;
   if (!user) {
     return res.status(404).send();
   }
 
-  const { validationErrors, _id } = await createDeal(req.body.deal, user);
+  const { validationErrors, _id } = await createBssDeal(req.body.deal, user);
 
   if (validationErrors) {
     return res.status(400).send({
@@ -55,4 +55,20 @@ exports.createDealPost = async (req, res) => {
   }
 
   return res.status(200).send({ _id });
+};
+
+const createGefDeal = async (deal) => {
+  const collection = await db.getCollection('deals');
+
+  const response = await collection.insertOne(deal);
+
+  const { insertedId } = response;
+
+  return { _id: insertedId };
+};
+
+exports.postGefDeal = async (req, res) => {
+  const createdDeal = await createGefDeal(req.body);
+
+  return res.status(200).send(createdDeal);
 };

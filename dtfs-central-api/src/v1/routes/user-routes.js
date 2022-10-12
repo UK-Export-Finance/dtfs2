@@ -1,10 +1,10 @@
 const express = require('express');
+const { param } = require('express-validator');
+
+const { createUserPost, findOnePortalUserGet, listAllPortalUsers } = require('../controllers/user');
+const { hasValidationErrors } = require('../validation/hasValidationErrors.validate');
 
 const userRouter = express.Router();
-
-const getUserController = require('../controllers/user/get-user.controller');
-const createUserController = require('../controllers/user/create-user.controller');
-
 /**
  * @openapi
  * /user:
@@ -27,10 +27,7 @@ const createUserController = require('../controllers/user/create-user.controller
  *             example:
  *               _id: '123456abc'
  */
-userRouter.route('/')
-  .post(
-    createUserController.createUserPost,
-  );
+userRouter.route('/').post(createUserPost);
 
 /**
  * @openapi
@@ -61,14 +58,8 @@ userRouter.route('/')
  *       404:
  *         description: Not found
  */
-userRouter.route('/:id')
-  .get(
-    getUserController.findOneUserGet,
-  );
+userRouter.route('/:userId').get(param('userId').isMongoId(), hasValidationErrors, findOnePortalUserGet);
 
-userRouter.route('/')
-  .get(
-    getUserController.list,
-  );
+userRouter.route('/').get(listAllPortalUsers);
 
 module.exports = userRouter;

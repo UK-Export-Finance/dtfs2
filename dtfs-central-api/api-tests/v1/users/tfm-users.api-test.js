@@ -1,32 +1,36 @@
-const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
-const { expectMongoIds } = require('../../../expectMongoIds');
+const Chance = require('chance');
+
+const wipeDB = require('../../wipeDB');
+const app = require('../../../src/createApp');
+const api = require('../../api')(app);
+const { expectMongoIds } = require('../../expectMongoIds');
+
+const chance = new Chance();
 
 const mockUsers = [
   {
     username: 'T1_USER_1',
-    email: '',
+    email: chance.email(),
     teams: ['TEAM1'],
-    timezone: 'Europe/London',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
+    timezone: chance.timezone().utc[0],
+    firstName: chance.first(),
+    lastName: chance.last(),
   },
   {
     username: 'T1_USER_2',
-    email: '',
+    email: chance.email(),
     teams: ['TEAM1'],
-    timezone: 'Europe/London',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
+    timezone: chance.timezone().utc[0],
+    firstName: chance.first(),
+    lastName: chance.last(),
   },
   {
     username: 'T1_USER_3',
-    email: '',
+    email: chance.email(),
     teams: ['TEAM2'],
-    timezone: 'Europe/London',
-    firstName: 'Joe',
-    lastName: 'Bloggs',
+    timezone: chance.timezone().utc[0],
+    firstName: chance.first(),
+    lastName: chance.last(),
   },
 ];
 
@@ -49,7 +53,7 @@ describe('/v1/tfm/users', () => {
   describe('GET /v1/tfm/users', () => {
     it('returns all users', async () => {
       await Promise.all(
-        mockUsers.map(async (mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')),
+        mockUsers.map((mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')),
       );
       const { status, body } = await api.get('/v1/tfm/users');
       expect(status).toEqual(200);
@@ -92,7 +96,7 @@ describe('/v1/tfm/users', () => {
   describe('DELETE /v1/tfm/users/:id', () => {
     it('deletes the user', async () => {
       await Promise.all(
-        mockUsers.map(async (mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')),
+        mockUsers.map((mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')),
       );
 
       const { status, body } = await api.remove().to(`/v1/tfm/users/${mockUsers[0].username}`);
@@ -111,7 +115,7 @@ describe('/v1/tfm/users', () => {
   describe('GET /v1/tfm/users/team/:teamId', () => {
     it('returns all users in given team', async () => {
       await Promise.all(
-        mockUsers.map(async (mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')),
+        mockUsers.map((mockUser) => api.post({ user: mockUser }).to('/v1/tfm/users')),
       );
 
       const team1Users = mockUsers.filter((u) => u.teams.includes('TEAM1'));

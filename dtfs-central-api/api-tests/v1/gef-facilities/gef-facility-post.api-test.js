@@ -2,15 +2,15 @@ const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
 const CONSTANTS = require('../../../src/constants');
-const { MOCK_DEAL } = require('../mocks/mock-data');
+const { MOCK_DEAL_ID } = require('../mocks/mock-data');
 
 const newDeal = {
   dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
-  status: 'Draft',
+  status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
 };
 
 const newFacility = {
-  dealId: MOCK_DEAL.DEAL_ID,
+  dealId: MOCK_DEAL_ID,
   type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
 };
 
@@ -22,8 +22,7 @@ describe('/v1/portal/gef/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe(['deals', 'facilities']);
   });
 
   beforeEach(async () => {
@@ -37,7 +36,7 @@ describe('/v1/portal/gef/facilities', () => {
     it('returns 404 when the associated deal is not found', async () => {
       const facilityWithInvalidDealId = {
         ...newFacility,
-        dealId: MOCK_DEAL.DEAL_ID,
+        dealId: MOCK_DEAL_ID,
       };
 
       const { status } = await api.post(facilityWithInvalidDealId).to('/v1/portal/gef/facilities');

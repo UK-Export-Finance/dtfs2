@@ -1,10 +1,10 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 const getCreateFacilityErrors = require('../../../validation/create-facility');
-const { findOneDeal } = require('../deal/get-deal.controller');
+const { findOneBssDeal, findOneGefDeal } = require('../deal/get-deal.controller');
 const { addFacilityIdToDeal } = require('../deal/update-deal.controller');
 
-const createFacility = async (facility, user, routePath) => {
+const createBssFacility = async (facility, user, routePath) => {
   const collection = await db.getCollection('facilities');
 
   const { dealId } = facility;
@@ -19,17 +19,12 @@ const createFacility = async (facility, user, routePath) => {
   const response = await collection.insertOne(newFacility);
   const { insertedId } = response;
 
-  await addFacilityIdToDeal(
-    dealId,
-    insertedId,
-    user,
-    routePath,
-  );
+  await addFacilityIdToDeal(dealId, insertedId, user, routePath);
 
   return { _id: insertedId };
 };
 
-exports.createFacilityPost = async (req, res) => {
+exports.postBssFacility = async (req, res) => {
   const { facility, user } = req.body;
 
   if (!user) {
@@ -44,13 +39,35 @@ exports.createFacilityPost = async (req, res) => {
     });
   }
 
-  const deal = await findOneDeal(facility.dealId);
+  const deal = await findOneBssDeal(facility.dealId);
 
   if (deal) {
-    const createdFacility = await createFacility(facility, user, req.routePath);
+    const createdFacility = await createBssFacility(facility, user, req.routePath);
 
     return res.status(200).send(createdFacility);
   }
 
+  return res.status(404).send('Deal not found');
+};
+
+const createGefFacility = async (newFacility) => {
+  const facility = newFacility;
+  const collection = await db.getCollection('facilities');
+
+  facility.dealId = new ObjectId(facility.dealId);
+
+  const response = await collection.insertOne(facility);
+  const { insertedId } = response;
+
+  return { _id: insertedId };
+};
+
+exports.postGefFacility = async (req, res) => {
+  const facility = req.body;
+  const deal = await findOneGefDeal(facility.dealId);
+  if (deal) {
+    const updatedFacility = await createGefFacility(facility);
+    return res.status(200).send(updatedFacility);
+  }
   return res.status(404).send('Deal not found');
 };

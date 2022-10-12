@@ -1,4 +1,4 @@
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 
 const teamsCollection = 'tfm-teams';
 
@@ -35,7 +35,7 @@ const findOneTeam = async (id) => {
 };
 exports.findOneTeam = findOneTeam;
 
-exports.findOneTeamGET = async (req, res) => {
+exports.getTeamById = async (req, res) => {
   const team = await findOneTeam(req.params.id);
   if (team) {
     return res.status(200).send({
@@ -52,7 +52,7 @@ const deleteTeam = async (id) => {
 };
 exports.deleteTeam = deleteTeam;
 
-exports.deleteTeamDELETE = async (req, res) => {
+exports.deleteTeamById = async (req, res) => {
   const deleted = await deleteTeam(req.params.id);
   return res.status(200).send(deleted);
 };

@@ -1,58 +1,32 @@
 const wipeDB = require('../../wipeDB');
 const app = require('../../../src/createApp');
 const api = require('../../api')(app);
-const aDeal = require('../deal-builder');
-const { MOCK_DEAL } = require('../mocks/mock-data');
-
-const mockUser = {
-  _id: '123456789',
-  username: 'temp',
-  roles: [],
-  bank: {
-    id: '956',
-    name: 'Barclays Bank',
-  },
-};
-
-const mockFacility = {
-  type: 'Bond',
-  dealId: MOCK_DEAL.DEAL_ID,
-};
-
-const newDeal = aDeal({
-  additionalRefName: 'mock name',
-  bankInternalRefName: 'mock id',
-  editedBy: [],
-  eligibility: {
-    status: 'Not started',
-    criteria: [{}],
-  },
-});
+const { MOCK_BSS_FACILITY, MOCK_BSS_DEAL, MOCK_USER } = require('../mocks/mock-data');
 
 const createDeal = async () => {
-  const { body } = await api.post({ deal: newDeal, user: mockUser }).to('/v1/portal/deals');
+  const { body } = await api.post({ deal: MOCK_BSS_DEAL, user: MOCK_USER }).to('/v1/portal/deals');
   return body;
 };
+
 describe('/v1/portal/facilities', () => {
   let dealId;
 
   beforeAll(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe(['deals', 'facilities']);
   });
 
   beforeEach(async () => {
     const deal = await createDeal();
 
     dealId = deal._id;
-    mockFacility.dealId = dealId;
+    MOCK_BSS_FACILITY.dealId = dealId;
   });
 
   describe('GET /v1/portal/facilities/', () => {
     it('returns multiple facilites', async () => {
-      await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
-      await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
-      await api.post({ facility: mockFacility, user: mockUser }).to('/v1/portal/facilities');
+      await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
+      await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
+      await api.post({ facility: MOCK_BSS_FACILITY, user: MOCK_USER }).to('/v1/portal/facilities');
 
       const { status, body } = await api.get('/v1/portal/facilities');
 
@@ -70,19 +44,14 @@ describe('/v1/portal/facilities', () => {
   });
 
   describe('POST /v1/portal/multiple-facilities', () => {
-    it('creates and returns multiple facilties with createdDate and updatedAt', async () => {
+    it('creates and returns multiple facilites with createdDate and updatedAt', async () => {
       await wipeDB.wipe(['facilities']);
 
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [MOCK_BSS_FACILITY, MOCK_BSS_FACILITY, MOCK_BSS_FACILITY, MOCK_BSS_FACILITY];
 
       const postBody = {
         facilities,
-        user: mockUser,
+        user: MOCK_USER,
         dealId,
       };
 
@@ -94,17 +63,12 @@ describe('/v1/portal/facilities', () => {
       const facilityId = body[0];
       const { body: facilityAfterCreation } = await api.get(`/v1/portal/facilities/${facilityId}`);
 
-      expect(typeof facilityAfterCreation.createdDate).toEqual('number');
-      expect(typeof facilityAfterCreation.updatedAt).toEqual('number');
+      expect(facilityAfterCreation.createdDate).toBeNumber();
+      expect(facilityAfterCreation.updatedAt).toBeNumber();
     });
 
     it('returns 400 where user is missing', async () => {
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [MOCK_BSS_FACILITY, MOCK_BSS_FACILITY];
 
       const postBody = {
         facilities,
@@ -117,12 +81,7 @@ describe('/v1/portal/facilities', () => {
     });
 
     it('returns 400 where deal is not found', async () => {
-      const facilities = [
-        mockFacility,
-        mockFacility,
-        mockFacility,
-        mockFacility,
-      ];
+      const facilities = [MOCK_BSS_FACILITY, MOCK_BSS_FACILITY];
 
       const postBody = {
         facilities,

@@ -1,10 +1,6 @@
 const wipeDB = require('../../wipeDB');
 const CONSTANTS = require('../../../src/constants');
-const {
-  FACILITY_TYPE,
-  FACILITY_PAYMENT_TYPE,
-  ERROR,
-} = require('../../../src/v1/gef/enums');
+const { FACILITY_TYPE, FACILITY_PAYMENT_TYPE, ERROR } = require('../../../src/v1/gef/enums');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -17,10 +13,7 @@ const mockFacilities = require('../../fixtures/gef/facilities');
 const applicationBaseUrl = '/v1/gef/application';
 const mockApplications = require('../../fixtures/gef/application');
 
-const {
-  calculateUkefExposure,
-  calculateGuaranteeFee,
-} = require('../../../src/v1/gef/calculations/facility-calculations');
+const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../src/v1/gef/calculations/facility-calculations');
 const { roundNumber } = require('../../../src/utils/number');
 
 describe(baseUrl, () => {
@@ -96,7 +89,7 @@ describe(baseUrl, () => {
     };
   });
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     await wipeDB.wipe(['facilities', 'deals']);
   });
 
@@ -347,7 +340,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
     });
 
-    it('updates the associated deal\'s facilitiesUpdated timestamp', async () => {
+    it("updates the associated deal's facilitiesUpdated timestamp", async () => {
       // create deal
       const { body: createdDeal } = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
@@ -374,7 +367,7 @@ describe(baseUrl, () => {
         name: 'Test',
         currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
         coverStartDate: 'July 19, 2022',
-        coverEndDate: 'July 19, 2050'
+        coverEndDate: 'July 19, 2050',
       };
       const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
@@ -389,7 +382,7 @@ describe(baseUrl, () => {
           currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
           updatedAt: expect.any(Number),
           coverStartDate: '2022-07-19T00:00:00.000Z',
-          coverEndDate: '2050-07-19T00:00:00.000Z'
+          coverEndDate: '2050-07-19T00:00:00.000Z',
         },
         validation: {
           required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
@@ -407,7 +400,7 @@ describe(baseUrl, () => {
         name: 'Test',
         currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
         coverStartDate: 'February 29, 2024',
-        coverEndDate: 'February 29, 2040'
+        coverEndDate: 'February 29, 2040',
       };
       const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
@@ -422,7 +415,7 @@ describe(baseUrl, () => {
           currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
           updatedAt: expect.any(Number),
           coverStartDate: '2024-02-29T00:00:00.000Z',
-          coverEndDate: '2040-02-29T00:00:00.000Z'
+          coverEndDate: '2040-02-29T00:00:00.000Z',
         },
         validation: {
           required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
@@ -440,7 +433,7 @@ describe(baseUrl, () => {
         name: 'Test',
         currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
         coverStartDate: 'February 01, 9999',
-        coverEndDate: 'February 01, 10000'
+        coverEndDate: 'February 01, 10000',
       };
       const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
@@ -455,7 +448,7 @@ describe(baseUrl, () => {
           currency: { id: CONSTANTS.CURRENCY.CURRENCY.GBP },
           updatedAt: expect.any(Number),
           coverStartDate: '9999-02-01T00:00:00.000Z',
-          coverEndDate: '+010000-02-01T00:00:00.000Z'
+          coverEndDate: '+010000-02-01T00:00:00.000Z',
         },
         validation: {
           required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
@@ -494,6 +487,10 @@ describe(baseUrl, () => {
   });
 
   describe(`Overall Status: ${baseUrl}`, () => {
+    beforeEach(async () => {
+      await wipeDB.wipe(['facilities', 'deals']);
+    });
+
     it(`overall status shows as "${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED}" if all status is marked as "${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED}"`, async () => {
       await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
@@ -544,11 +541,13 @@ describe(baseUrl, () => {
       it('returns an enum error when putting the wrong type', async () => {
         const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: 'TEST' }).to(baseUrl);
         expect(status).toEqual(422);
-        expect(body).toEqual([{
-          errCode: ERROR.ENUM_ERROR,
-          errMsg: 'Unrecognised enum',
-          errRef: 'type',
-        }]);
+        expect(body).toEqual([
+          {
+            errCode: ERROR.ENUM_ERROR,
+            errMsg: 'Unrecognised enum',
+            errRef: 'type',
+          },
+        ]);
       });
     });
     describe('PUT', () => {
@@ -556,11 +555,13 @@ describe(baseUrl, () => {
         const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
         const res = await as(aMaker).put({ type: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
         expect(res.status).toEqual(422);
-        expect(res.body).toEqual([{
-          errCode: ERROR.ENUM_ERROR,
-          errMsg: 'Unrecognised enum',
-          errRef: 'type',
-        }]);
+        expect(res.body).toEqual([
+          {
+            errCode: ERROR.ENUM_ERROR,
+            errMsg: 'Unrecognised enum',
+            errRef: 'type',
+          },
+        ]);
       });
     });
   });
@@ -569,18 +570,22 @@ describe(baseUrl, () => {
     it('returns an mandator error when an application ID is missing', async () => {
       const { status, body } = await as(aMaker).post({ type: 'TEST' }).to(baseUrl);
       expect(status).toEqual(422);
-      expect(body).toEqual([{
-        errCode: ERROR.MANDATORY_FIELD,
-        errMsg: 'No Application ID and/or facility type sent with request',
-      }]);
+      expect(body).toEqual([
+        {
+          errCode: ERROR.MANDATORY_FIELD,
+          errMsg: 'No Application ID and/or facility type sent with request',
+        },
+      ]);
     });
     it('returns an mandator error when facility type is missing', async () => {
       const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id }).to(baseUrl);
       expect(status).toEqual(422);
-      expect(body).toEqual([{
-        errCode: ERROR.MANDATORY_FIELD,
-        errMsg: 'No Application ID and/or facility type sent with request',
-      }]);
+      expect(body).toEqual([
+        {
+          errCode: ERROR.MANDATORY_FIELD,
+          errMsg: 'No Application ID and/or facility type sent with request',
+        },
+      ]);
     });
   });
 
@@ -645,7 +650,7 @@ describe(baseUrl, () => {
 
         const result = calculateGuaranteeFee(update, existingFacility);
 
-        const calculation = (0.9 * Number(update.interestPercentage));
+        const calculation = 0.9 * Number(update.interestPercentage);
         const expected = Number(calculation.toFixed(3));
 
         expect(result).toEqual(expected);
@@ -661,7 +666,7 @@ describe(baseUrl, () => {
 
         const result = calculateGuaranteeFee(update, existingFacility);
 
-        const calculation = (0.9 * Number(existingFacility.interestPercentage));
+        const calculation = 0.9 * Number(existingFacility.interestPercentage);
         const expected = Number(calculation.toFixed(3));
 
         expect(result).toEqual(expected);

@@ -1,4 +1,4 @@
-const db = require('../../../drivers/db-client');
+const db = require('../../../database/mongo-client');
 
 const createBank = async (bank) => {
   const collection = await db.getCollection('banks');

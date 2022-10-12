@@ -1,4 +1,4 @@
-const db = require('../../../drivers/db-client');
+const db = require('../../../database/mongo-client');
 
 const findOneBank = async (id) => {
   const banksCollection = await db.getCollection('banks');

@@ -1,4 +1,4 @@
-const db = require('./src/drivers/db-client');
+const db = require('./src/database/mongo-client');
 
 afterAll(async () => {
   await db.close();

@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 const CONSTANTS = require('../../../../constants');
 
 /* returns an array of object containing all amendments in progress

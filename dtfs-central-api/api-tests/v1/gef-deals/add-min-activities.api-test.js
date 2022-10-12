@@ -6,12 +6,9 @@ const {
   portalActivityGenerator,
   getUserInfo,
   updateChangedToIssued,
-} = require('../../../src/v1/controllers/portal/gef-deal/add-min-activities.controller');
+} = require('../../../src/v1/controllers/portal/deal/add-min-activities.controller');
 
-const collectionName = 'facilities';
-const applicationCollectionName = 'deals';
-
-const db = require('../../../src/drivers/db-client');
+const db = require('../../../src/database/mongo-client');
 
 const mockApplications = require('../../mocks/gef/gef-applications');
 const { mockFacilities } = require('../../mocks/gef/gef-facilities');
@@ -33,8 +30,7 @@ const applicationBaseUrl = '/v1/portal/gef/deals';
 
 describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe(['deals', 'facilities']);
     // adds user to db incase empty
     const testUsers = await testUserCache.initialise(app);
 
@@ -87,8 +83,7 @@ describe('facilityChangePortalActivity()', () => {
   const mockFacilitiesArray = [mockFacilities[4], mockFacilities[5]];
 
   it('should return a populated array with issued facility activity object', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe(['deals', 'facilities']);
 
     const userCollection = await db.getCollection('users');
 
@@ -163,8 +158,7 @@ describe('facilityChangePortalActivity()', () => {
   });
 
   it('should return a populated array with 2 in the issued facility activity object', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe(['deals', 'facilities']);
 
     // resets array to length 0
     MOCK_APPLICATION_FACILITIES.portalActivities = [];
@@ -202,8 +196,7 @@ describe('facilityChangePortalActivity()', () => {
 
 describe('getUserInfo()', () => {
   it('should return correctly formatted userObj', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe(['deals', 'facilities']);
 
     // ensures that user object returned is correctly formatted
 
@@ -388,8 +381,7 @@ describe('updateChangedToIssued()', () => {
   let mockApplication;
 
   beforeAll(async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe(['deals', 'facilities']);
     const testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole('maker').one();
     aChecker = testUsers().withRole('checker').one();

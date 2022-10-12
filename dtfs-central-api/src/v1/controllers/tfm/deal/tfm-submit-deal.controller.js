@@ -1,11 +1,10 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const db = require('../../../../drivers/db-client');
-const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
+const db = require('../../../../database/mongo-client');
+const { findOneBssDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
 
-const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
-const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-facilities.controller');
+const { findAllBssFacilitiesByDealId, findAllGefFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 
 const DEFAULTS = require('../../../defaults');
 const CONSTANTS = require('../../../../constants');
@@ -40,14 +39,15 @@ const createDealSnapshot = async (deal) => {
     const dealObj = { dealSnapshot: deal, ...tfmInit };
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      const dealFacilities = await findAllFacilitiesByDealId(dealId);
+      const dealFacilities = await findAllBssFacilitiesByDealId(dealId);
       dealObj.dealSnapshot.facilities = dealFacilities;
     }
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(deal._id) } }, $.flatten(withoutId(dealObj)), {
-      returnOriginal: false,
-      upsert: true,
-    });
+    const findAndUpdateResponse = await collection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(deal._id) } },
+      $.flatten(withoutId(dealObj)),
+      { returnDocument: 'after', returnNewDocument: true, upsert: true }
+    );
 
     return findAndUpdateResponse.value;
   }
@@ -60,7 +60,7 @@ const createFacilitiesSnapshot = async (deal) => {
 
     let dealFacilities = [];
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      dealFacilities = await findAllFacilitiesByDealId(dealId);
+      dealFacilities = await findAllBssFacilitiesByDealId(dealId);
     }
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
@@ -76,10 +76,11 @@ const createFacilitiesSnapshot = async (deal) => {
     if (dealFacilities) {
       const updatedFacilities = Promise.all(
         dealFacilities.map((facility) =>
-          collection.findOneAndUpdate({ _id: { $eq: ObjectId(facility._id) } }, $.flatten({ facilitySnapshot: facility, ...tfmInit }), {
-            returnOriginal: false,
-            upsert: true,
-          })),
+          collection.findOneAndUpdate(
+            { _id: { $eq: ObjectId(facility._id) } },
+            $.flatten({ facilitySnapshot: facility, ...tfmInit }),
+            { returnDocument: 'after', returnNewDocument: true, upsert: true }
+          )),
       );
 
       return updatedFacilities;
@@ -104,24 +105,27 @@ exports.submitDealPut = async (req, res) => {
   const { dealId, dealType } = req.body;
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    await findOneGefDeal(dealId, async (deal) => {
-      if (deal) {
-        const updatedDeal = await submitDeal(deal);
-        return res.status(200).json(updatedDeal);
-      }
+    const deal = await findOneGefDeal(dealId);
+    if (deal) {
+      const facilities = await findAllGefFacilitiesByDealId(dealId);
 
-      return res.status(404).send();
-    });
+      deal.facilities = facilities;
+
+      const updatedDeal = await submitDeal(deal);
+      res.status(200).send(updatedDeal);
+    }
+
+    res.status(404).send();
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    await findOneDeal(dealId, async (deal) => {
-      if (deal) {
-        const updatedDeal = await submitDeal(deal);
-        return res.status(200).json(updatedDeal);
-      }
+    const deal = await findOneBssDeal(dealId);
 
-      return res.status(404).send();
-    });
+    if (deal) {
+      const updatedDeal = await submitDeal(deal);
+      res.status(200).send(updatedDeal);
+    }
+
+    res.status(404).send();
   }
 };

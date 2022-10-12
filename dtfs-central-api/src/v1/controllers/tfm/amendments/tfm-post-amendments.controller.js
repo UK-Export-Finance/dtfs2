@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
-const db = require('../../../../drivers/db-client');
+const db = require('../../../../database/mongo-client');
 const CONSTANTS = require('../../../../constants');
 const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendmentByFacilityIdVersion } = require('./tfm-get-amendments.controller');
 const { findOneFacility } = require('../facility/tfm-get-facility.controller');

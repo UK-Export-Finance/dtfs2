@@ -1,14 +1,18 @@
-const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
-const { expectMongoIds } = require('../../../expectMongoIds');
+const Chance = require('chance');
+
+const wipeDB = require('../../wipeDB');
+const app = require('../../../src/createApp');
+const api = require('../../api')(app);
+const { expectMongoIds } = require('../../expectMongoIds');
+
+const chance = new Chance();
 
 const mockTeams = [{
   id: 'TEAM1',
-  name: 'Mock Team 1',
+  name: chance.name(),
 }, {
   id: 'TEAM2',
-  name: 'Mock Team 2',
+  name: chance.name(),
 }];
 
 const orderTeams = (teams) => teams.sort((t1, t2) => (t1.id.localeCompare(t2.id)));
@@ -42,7 +46,7 @@ describe('/v1/tfm/teams', () => {
   describe('GET /v1/tfm/teams', () => {
     it('returns all teams', async () => {
       await Promise.all(
-        mockTeams.map(async (mockTeam) => api.post({ team: mockTeam }).to('/v1/tfm/teams')),
+        mockTeams.map((mockTeam) => api.post({ team: mockTeam }).to('/v1/tfm/teams')),
       );
       const { status, body } = await api.get('/v1/tfm/teams');
       expect(status).toEqual(200);
@@ -73,7 +77,7 @@ describe('/v1/tfm/teams', () => {
   describe('DELETE /v1/tfm/teams/:id', () => {
     it('deletes the team', async () => {
       await Promise.all(
-        mockTeams.map(async (mockTeam) => api.post({ team: mockTeam }).to('/v1/tfm/teams')),
+        mockTeams.map((mockTeam) => api.post({ team: mockTeam }).to('/v1/tfm/teams')),
       );
 
       const { status, body } = await api.remove().to(`/v1/tfm/teams/${mockTeams[0].id}`);
