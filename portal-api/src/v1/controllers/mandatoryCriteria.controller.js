@@ -4,7 +4,7 @@ const { DEAL_TYPE } = require('../../constants/deal');
 
 exports.postMandatoryCriteria = async (req, res) => {
   const { data: mandatoryCriteria } = await api.postMandatoryCriteria(new MandatoryCriteria(req.body), DEAL_TYPE.GEF);
-  res.status(201).send({ _id: mandatoryCriteria._id });
+  return res.status(201).send(mandatoryCriteria);
 };
 
 exports.findAllMandatoryCriteria = async (req, res) => {

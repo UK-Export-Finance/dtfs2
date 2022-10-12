@@ -82,13 +82,13 @@ describe(baseUrl, () => {
     it('accepts requests that do present a valid Authorization token', async () => {
       const item = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
 
-      const { status } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
+      const { status } = await as(aMaker).get(`${baseUrl}/${item.body.version}`);
       expect(status).toEqual(200);
     });
 
     it('returns a mandatory-criteria-versioned', async () => {
       const item = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
-      const { status, body } = await as(anEditor).get(`${baseUrl}/${item.body._id}`);
+      const { status, body } = await as(anEditor).get(`${baseUrl}/${item.body.version}`);
       expect(status).toEqual(200);
       const expected = {
         ...expectMongoId(newMandatoryCriteria),
@@ -158,8 +158,7 @@ describe(baseUrl, () => {
       const { status } = await as(anEditor).put(itemUpdate).to(`${baseUrl}/${item.body._id}`);
 
       expect(status).toEqual(200);
-
-      const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
+      const { body } = await as(aMaker).get(`${baseUrl}/${itemUpdate.version}`);
 
       expect(body).toEqual(expectMongoId({
         ...itemUpdate,
@@ -188,7 +187,7 @@ describe(baseUrl, () => {
 
     it('deletes the mandatory-criteria', async () => {
       const { body: createdItem } = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
-      const { body: item } = await as(anEditor).get(`${baseUrl}/${createdItem._id}`);
+      const { body: item } = await as(anEditor).get(`${baseUrl}/${createdItem.version}`);
 
       const { status, body } = await as(anEditor).remove(`${baseUrl}/${createdItem._id}`);
       expect(status).toEqual(200);

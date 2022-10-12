@@ -64,7 +64,8 @@ exports.postMandatoryCriteria = async (req, res) => {
   payload.updatedAt = Date.now();
   const collection = await getCollection(collectionName);
   const response = await collection.insertOne(payload);
-  return res.status(200).send({ _id: response.insertedId });
+  const mandatoryCriteria = await collection.findOne({ _id: ObjectId(response.insertedId) });
+  return res.status(200).send(mandatoryCriteria);
 };
 
 exports.putMandatoryCriteria = async (req, res) => {
@@ -80,7 +81,7 @@ exports.putMandatoryCriteria = async (req, res) => {
     response = await collection.findOneAndUpdate(
       { _id: ObjectId(version), dealType: GEF },
       { $set: req.body },
-      { returnDocument: 'after' },
+      { returnDocument: 'after', returnNewDocument: true }
     );
     response = response.value;
   }
