@@ -8,8 +8,9 @@ const {
   sendAutomaticAmendmentEmail,
   sendManualDecisionAmendmentEmail,
   sendManualBankDecisionEmail,
-  canSendToAcbs,
   sendFirstTaskEmail,
+  internalAmendmentEmail,
+  canSendToAcbs,
   calculateAcbsUkefExposure,
   addLatestAmendmentValue,
   addLatestAmendmentDates,
@@ -252,6 +253,7 @@ const updateFacilityAmendment = async (req, res) => {
 
       // Fetch facility object
       const facility = await api.findOneFacility(facilityId);
+      const { ukefFacilityId } = facility.facilitySnapshot;
       // Fetch complete amendment object
       const amendment = await api.getAmendmentById(facilityId, amendmentId);
       // Fetch deal object from deal-tfm
@@ -274,9 +276,11 @@ const updateFacilityAmendment = async (req, res) => {
         // TFM Facility update + ACBS Interaction
         if (canSendToAcbs(amendment)) {
           // Amend facility TFM properties
-          amendIssuedFacility(amendment, facility, tfmDeal);
+          await amendIssuedFacility(amendment, facility, tfmDeal);
+          // Amendment email notification to PDC
+          await internalAmendmentEmail(ukefFacilityId);
           // Amend facility ACBS records
-          acbs.amendAcbsFacility(amendment, facility, deal);
+          await acbs.amendAcbsFacility(amendment, facility, deal);
         }
       }
 
