@@ -110,8 +110,8 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
           if (loanId) {
             // 2.3.2 - UKEF Exposure
-            // Loan amount - `Bond` facility types only
-            if (amendment.amount && facilitySnapshot.type === FACILITY.FACILITY_TYPE.BOND) {
+            // Loan amount - All except `Loan` facility type
+            if (amendment.amount && facilitySnapshot.type !== FACILITY.FACILITY_TYPE.LOAN) {
               const result = yield context.df.callActivityWithRetry('activity-update-facility-loan-amount', retryOptions, {
                 loanId,
                 facilityId,
