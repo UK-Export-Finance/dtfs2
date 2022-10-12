@@ -334,6 +334,18 @@ const MockFacilityResponseUnissued = () => {
   return res;
 };
 
+const MockFacilityResponseSpecialIssue = () => {
+  const res = {};
+  res.details = {
+    type: CONSTANTS.FACILITY_TYPE.CASH,
+    name: 'UKEF123',
+    hasBeenIssued: true,
+    shouldCoverStartOnSubmission: false,
+    specialIssuePermission: true,
+  };
+  return res;
+};
+
 const MockExpectedFacilityRenderChange = (change) => ({
   facilityType: CONSTANTS.FACILITY_TYPE.CASH,
   facilityName: 'UKEF123',
@@ -395,6 +407,7 @@ module.exports = {
   MockFacilityResponseUnissued,
   MockExpectedFacilityRenderChange,
   MockFacilitiesResponse,
+  MockFacilityResponseSpecialIssue,
   MockFacilityResponseChangedIssued,
   MockFacilityResponseNotChangedIssued,
 };

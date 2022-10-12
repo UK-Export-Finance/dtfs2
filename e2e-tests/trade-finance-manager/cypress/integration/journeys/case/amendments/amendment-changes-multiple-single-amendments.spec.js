@@ -67,9 +67,9 @@ context('Amendments changes displayed - multiple single change amendments', () =
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'cover-end-date');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.twoMonthsDay);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.twoMonthsMonth);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.twoMonthsYear);
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'check-answers');
     amendmentsPage.continueAmendment().click();
@@ -124,7 +124,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', '23 months');
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.tomorrowFormattedFull);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.twoMonthsFormattedTable);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
@@ -133,7 +133,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
     facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${dateConstants.todayFormatted}`);
-    facilityPage.facilityCoverEndDate().contains(dateConstants.tomorrowFormattedFull);
+    facilityPage.facilityCoverEndDate().contains(dateConstants.twoMonthsFormattedTable);
     facilityPage.facilityTenor().should('not.contain', '23 months');
   });
 });

@@ -136,51 +136,51 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
  */
 const postChangeUnissuedFacility = async (req, res) => {
   const { body, query, params } = req;
+  const { facilityId } = params;
   const { user } = req.session;
   const { _id: editorId } = user;
 
-  const {
-    issueDate,
-    coverStartDate,
-    coverEndDate,
-    aboutFacilityErrors,
-    facilityId,
-    dealId,
-    errorsObject,
-  } = await facilityValidation(body, query, params);
-
-  if (aboutFacilityErrors.length > 0) {
-    return res.render('partials/unissued-change-about-facility.njk', {
-      errors: errorsObject.errors,
-      facilityName: errorsObject.facilityName,
-      shouldCoverStartOnSubmission: errorsObject.shouldCoverStartOnSubmission,
-      monthsOfCover: errorsObject.monthsOfCover,
-      hasBeenIssued: errorsObject.hasBeenIssued,
-      issueDateDay: errorsObject.issueDateDay,
-      issueDateMonth: errorsObject.issueDateMonth,
-      issueDateYear: errorsObject.issueDateYear,
-      coverStartDateDay: errorsObject.coverStartDateDay,
-      coverStartDateMonth: errorsObject.coverStartDateMonth,
-      coverStartDateYear: errorsObject.coverStartDateYear,
-      coverEndDateDay: errorsObject.coverEndDateDay,
-      coverEndDateMonth: errorsObject.coverEndDateMonth,
-      coverEndDateYear: errorsObject.coverEndDateYear,
-      facilityType: errorsObject.facilityType,
-      facilityTypeString: errorsObject.facilityTypeString,
-      dealId: errorsObject.dealId,
-      facilityId: errorsObject.facilityId,
-      status: errorsObject.status,
-    });
-  }
-
-  const userObj = {
-    firstname: user.firstname,
-    surname: user.surname,
-    _id: user._id,
-  };
-
   try {
     const { details } = await api.getFacility(facilityId);
+
+    const {
+      issueDate,
+      coverStartDate,
+      coverEndDate,
+      aboutFacilityErrors,
+      dealId,
+      errorsObject,
+    } = await facilityValidation(body, query, params, details);
+
+    if (aboutFacilityErrors.length > 0) {
+      return res.render('partials/unissued-change-about-facility.njk', {
+        errors: errorsObject.errors,
+        facilityName: errorsObject.facilityName,
+        shouldCoverStartOnSubmission: errorsObject.shouldCoverStartOnSubmission,
+        monthsOfCover: errorsObject.monthsOfCover,
+        hasBeenIssued: errorsObject.hasBeenIssued,
+        issueDateDay: errorsObject.issueDateDay,
+        issueDateMonth: errorsObject.issueDateMonth,
+        issueDateYear: errorsObject.issueDateYear,
+        coverStartDateDay: errorsObject.coverStartDateDay,
+        coverStartDateMonth: errorsObject.coverStartDateMonth,
+        coverStartDateYear: errorsObject.coverStartDateYear,
+        coverEndDateDay: errorsObject.coverEndDateDay,
+        coverEndDateMonth: errorsObject.coverEndDateMonth,
+        coverEndDateYear: errorsObject.coverEndDateYear,
+        facilityType: errorsObject.facilityType,
+        facilityTypeString: errorsObject.facilityTypeString,
+        dealId: errorsObject.dealId,
+        facilityId: errorsObject.facilityId,
+        status: errorsObject.status,
+      });
+    }
+
+    const userObj = {
+      firstname: user.firstname,
+      surname: user.surname,
+      _id: user._id,
+    };
 
     await api.updateFacility(
       facilityId,
@@ -224,51 +224,51 @@ const postChangeUnissuedFacility = async (req, res) => {
  */
 const postChangeUnissuedFacilityPreview = async (req, res) => {
   const { body, query, params } = req;
+  const { facilityId } = params;
   const { user } = req.session;
   const { _id: editorId } = user;
 
-  const {
-    issueDate,
-    coverStartDate,
-    coverEndDate,
-    aboutFacilityErrors,
-    facilityId,
-    dealId,
-    errorsObject,
-  } = await facilityValidation(body, query, params);
-
-  if (aboutFacilityErrors.length > 0) {
-    return res.render('partials/unissued-change-about-facility.njk', {
-      errors: errorsObject.errors,
-      facilityName: errorsObject.facilityName,
-      shouldCoverStartOnSubmission: errorsObject.shouldCoverStartOnSubmission,
-      monthsOfCover: errorsObject.monthsOfCover,
-      hasBeenIssued: errorsObject.hasBeenIssued,
-      issueDateDay: errorsObject.issueDateDay,
-      issueDateMonth: errorsObject.issueDateMonth,
-      issueDateYear: errorsObject.issueDateYear,
-      coverStartDateDay: errorsObject.coverStartDateDay,
-      coverStartDateMonth: errorsObject.coverStartDateMonth,
-      coverStartDateYear: errorsObject.coverStartDateYear,
-      coverEndDateDay: errorsObject.coverEndDateDay,
-      coverEndDateMonth: errorsObject.coverEndDateMonth,
-      coverEndDateYear: errorsObject.coverEndDateYear,
-      facilityType: errorsObject.facilityType,
-      facilityTypeString: errorsObject.facilityTypeString,
-      dealId: errorsObject.dealId,
-      facilityId: errorsObject.facilityId,
-      status: errorsObject.status,
-    });
-  }
-
-  const userObj = {
-    firstname: user.firstname,
-    surname: user.surname,
-    _id: user._id,
-  };
-
   try {
     const { details } = await api.getFacility(facilityId);
+
+    const {
+      issueDate,
+      coverStartDate,
+      coverEndDate,
+      aboutFacilityErrors,
+      dealId,
+      errorsObject,
+    } = await facilityValidation(body, query, params, details);
+
+    if (aboutFacilityErrors.length > 0) {
+      return res.render('partials/unissued-change-about-facility.njk', {
+        errors: errorsObject.errors,
+        facilityName: errorsObject.facilityName,
+        shouldCoverStartOnSubmission: errorsObject.shouldCoverStartOnSubmission,
+        monthsOfCover: errorsObject.monthsOfCover,
+        hasBeenIssued: errorsObject.hasBeenIssued,
+        issueDateDay: errorsObject.issueDateDay,
+        issueDateMonth: errorsObject.issueDateMonth,
+        issueDateYear: errorsObject.issueDateYear,
+        coverStartDateDay: errorsObject.coverStartDateDay,
+        coverStartDateMonth: errorsObject.coverStartDateMonth,
+        coverStartDateYear: errorsObject.coverStartDateYear,
+        coverEndDateDay: errorsObject.coverEndDateDay,
+        coverEndDateMonth: errorsObject.coverEndDateMonth,
+        coverEndDateYear: errorsObject.coverEndDateYear,
+        facilityType: errorsObject.facilityType,
+        facilityTypeString: errorsObject.facilityTypeString,
+        dealId: errorsObject.dealId,
+        facilityId: errorsObject.facilityId,
+        status: errorsObject.status,
+      });
+    }
+
+    const userObj = {
+      firstname: user.firstname,
+      surname: user.surname,
+      _id: user._id,
+    };
 
     await api.updateFacility(
       facilityId,
