@@ -42,6 +42,7 @@ const convertDealCurrencies = async (deal) => {
           tfm: {
             ...tfm,
             supplyContractValueInGBP,
+            exchangeRate: Number(exchangeRate.toFixed(2)),
             dataMigration: {
               modifiedExchangeRate: exchangeRate,
               exchangeRate: historicExchangeRate,
