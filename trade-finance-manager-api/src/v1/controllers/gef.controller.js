@@ -6,10 +6,8 @@ const updateGefApplication = async (dealId, applicationUpdate) => {
 
   const updatedApplication = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(String(dealId)) } },
-    {
-      $set: applicationUpdate,
-    },
-    { returnDocument: 'after', returnOriginal: false },
+    { $set: applicationUpdate },
+    { returnDocument: 'after', returnNewDocument: true },
   );
 
   return updatedApplication;
@@ -20,10 +18,8 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
 
   const updatedFacility = await collection.findOneAndUpdate(
     { _id: { $eq: ObjectId(facilityId) } },
-    {
-      $set: facilityUpdate,
-    },
-    { returnDocument: 'after', returnOriginal: false },
+    { $set: facilityUpdate },
+    { returnDocument: 'after', returnNewDocument: true },
   );
 
   return updatedFacility;

@@ -106,6 +106,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
+      - REDIS_PORT=6379
       - TZ=Europe/London
     command: npx nodemon --inspect=0.0.0.0:9226 server/index.js -L
 

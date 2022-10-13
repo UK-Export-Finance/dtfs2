@@ -10,7 +10,7 @@ module.exports = (username, password) => new Promise((resolve) => {
       return resolve({ err });
     }
 
-    if (user === null) {
+    if (!user) {
       return resolve({ err: userNotFound });
     }
 

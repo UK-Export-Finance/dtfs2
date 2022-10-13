@@ -94,21 +94,21 @@ exports.getById = async (req, res) => {
 
 const update = async (id, updateBody) => {
   try {
-    const collection = await db.getCollection(facilitiesCollectionName);
-    const dbQuery = await db.getCollection(dealsCollectionName);
+    const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
+    const dealsQuery = await db.getCollection(dealsCollectionName);
 
     const facilityId = ObjectId(String(id));
-    const existingFacility = await collection.findOne({ _id: facilityId });
+    const existingFacility = await facilitiesQuery.findOne({ _id: facilityId });
     const facilityUpdate = new Facility({
       ...updateBody,
       ukefExposure: calculateUkefExposure(updateBody, existingFacility),
       guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
     });
 
-    const updatedFacility = await collection.findOneAndUpdate(
+    const updatedFacility = await facilitiesQuery.findOneAndUpdate(
       { _id: { $eq: facilityId } },
       { $set: facilityUpdate },
-      { returnOriginal: false },
+      { returnDocument: 'after', returnNewDocument: true }
     );
 
     if (existingFacility) {
@@ -118,10 +118,9 @@ const update = async (id, updateBody) => {
       };
       const dealUpdate = new Application(dealUpdateObj);
 
-      await dbQuery.findOneAndUpdate(
+      await dealsQuery.updateOne(
         { _id: { $eq: ObjectId(existingFacility.dealId) } },
-        { $set: dealUpdate },
-        { returnOriginal: false },
+        { $set: dealUpdate }
       );
     }
     return updatedFacility;

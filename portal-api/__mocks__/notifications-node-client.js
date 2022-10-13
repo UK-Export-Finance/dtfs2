@@ -1,4 +1,3 @@
-
 function NotifyClient() {
   return {
     sendEmail: () => Promise.resolve(true),

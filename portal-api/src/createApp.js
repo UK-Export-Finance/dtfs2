@@ -42,14 +42,17 @@ app.use(graphQlRouter);
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schemaWithMiddleware = applyMiddleware(schema, validateUserMiddleware);
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: ({ req }) => ({ user: req.user }),
-  schema: schemaWithMiddleware,
-});
-
-server.applyMiddleware({ app });
+const startServer = async () => {
+  const apolloServer = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req }) => ({ user: req.user }),
+    schema: schemaWithMiddleware,
+  });
+  await apolloServer.start();
+  apolloServer.applyMiddleware({ app });
+};
+startServer();
 
 app.use((err) => { console.error(err); });
 

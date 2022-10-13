@@ -1,6 +1,6 @@
 import api from './api';
 
-const { default: axios } = require('axios');
+const axios = require('axios');
 
 jest.mock('axios');
 

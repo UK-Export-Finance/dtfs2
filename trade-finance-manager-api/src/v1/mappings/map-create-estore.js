@@ -3,15 +3,7 @@ const CONSTANTS = require('../../constants');
 const { mapUKEFDocumentsToEstore } = require('./map-ukef-documents-to-estore');
 
 const mapCreateEstore = (deal) => {
-  const {
-    dealType,
-    ukefDealId,
-    facilities,
-    exporter,
-    buyer,
-    destinationOfGoodsAndServices,
-    supportingInformation,
-  } = deal;
+  const { dealType, ukefDealId, facilities, exporter, buyer, destinationOfGoodsAndServices, supportingInformation } = deal;
 
   let buyerName;
   let destinationMarket;
@@ -38,7 +30,7 @@ const mapCreateEstore = (deal) => {
   return {
     dealId: deal._id,
     dealType,
-    exporterName: (exporter && exporter.companyName) ? formatExporterNameForSharepoint(exporter.companyName) : '',
+    exporterName: exporter && exporter.companyName ? formatExporterNameForSharepoint(exporter.companyName) : '',
     buyerName,
     dealIdentifier: ukefDealId,
     destinationMarket,
