@@ -13,13 +13,13 @@
   },
   "author": "",
   "dependencies": {
-    "axios": "^0.27.2",
-    "dotenv": "^16.0.2",
+    "axios": "^1.1.2",
+    "dotenv": "^16.0.3",
     "durable-functions": "^1.5.4",
-    "eslint": "^8.19.0",
+    "eslint": "^8.25.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "moment": "^2.29.4",
-    "date-fns": "^2.29.2"
+    "date-fns": "^2.29.3"
   }
 }
