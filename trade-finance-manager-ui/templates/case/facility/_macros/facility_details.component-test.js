@@ -35,6 +35,7 @@ describe(component, () => {
       },
     },
     facilityTfm: {
+      exchangeRate: '0.89',
       ukefExposure: {
         exposure: 'GBP 123',
         timestamp: '1606900616651',
@@ -111,6 +112,10 @@ describe(component, () => {
   describe('value and exposure section', () => {
     it('should render facilityValueExportCurrency', () => {
       wrapper.expectText('[data-cy="facility-value-export-currency"]').toRead(params.facility.facilityValueExportCurrency);
+    });
+
+    it('Should render exchangeRate (Non-GBP facilities only)', () => {
+      wrapper.expectText('[data-cy="facility-exchange-rate"]').toRead(params.facilityTfm.exchangeRate);
     });
 
     it('should render value', () => {
