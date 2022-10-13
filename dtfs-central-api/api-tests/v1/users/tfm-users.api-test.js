@@ -106,9 +106,10 @@ describe('/v1/tfm/users', () => {
 
       const listUsersRes = await api.get('/v1/tfm/users');
 
-      const allNonDeletedUsers = mockUsers.filter((u) => u.username !== mockUsers[0].username).map((u) => u.username);
+      let allNonDeletedUsers = mockUsers.filter((u) => u.username !== mockUsers[0].username).map((u) => u.username);
+      allNonDeletedUsers = allNonDeletedUsers.sort();
       const usernameList = listUsersRes.body.users.map((u) => u.username);
-      expect(usernameList.sort()).toEqual(allNonDeletedUsers.sort());
+      expect(usernameList.sort()).toEqual(allNonDeletedUsers);
     });
   });
 

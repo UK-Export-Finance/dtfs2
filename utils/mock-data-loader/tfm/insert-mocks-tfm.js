@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 const api = require('./api');
 const MOCKS = require('./mocks');
 
@@ -14,10 +16,14 @@ const insertMocks = async () => {
   });
 
   console.info('inserting TFM teams');
-  MOCKS.TEAMS.forEach((team) => api.createTeam(team, token));
+  for (const team of MOCKS.TEAMS) {
+    await api.createTeam(team, token);
+  }
 
   console.info('inserting TFM users');
-  MOCKS.USERS.forEach((user) => api.createTfmUser(user));
+  for (const user of MOCKS.USERS) {
+    await api.createTfmUser(user);
+  }
 };
 
 module.exports = insertMocks;

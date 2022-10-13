@@ -42,11 +42,7 @@ const canIssueFacility = (userRoles, deal, facility) => {
 
   const isAllowedDealStatusAndSubmissionType = (allowedDealStatus && allowedDealSubmissionType) || isMiaDealInApprovedStatus;
 
-  if (isMaker && dealHasBeenSubmitted && isAllowedDealStatusAndSubmissionType && allowedFacilityStage) {
-    return true;
-  }
-
-  return false;
+  return isMaker && dealHasBeenSubmitted && isAllowedDealStatusAndSubmissionType && allowedFacilityStage;
 };
 
 module.exports = canIssueFacility;
