@@ -1,5 +1,4 @@
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
-const fetch = require('node-fetch');
 
 const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG } = require('../config/fileshare.config');
 
@@ -69,20 +68,7 @@ const getDirectory = async (fileshare, folderPaths = '') => {
   return directoryClient;
 };
 
-const tmpTests = () => {
-  const tests = ['https://www.bbc.co.uk/news'];
-
-  tests.forEach((uri) => {
-    fetch('https://www.bbc.co.uk/news', { method: 'GET' })
-      .then((response) => console.info({ uri, response }))
-      .catch((err) => console.error({ uri, err }));
-  });
-};
-
 const uploadFile = async ({ fileshare, folder, filename, buffer, allowOverwrite }) => {
-  if (process.env.AZURE_LOG_LEVEL) {
-    tmpTests();
-  }
   const directoryClient = await getDirectory(fileshare, folder);
 
   await directoryClient.create().catch(({ details }) => {

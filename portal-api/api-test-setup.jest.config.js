@@ -1,5 +1,3 @@
-const axios = require('axios');
-const corsAdapter = require('axios/lib/adapters/http');
 const db = require('./src/drivers/db-client');
 
 const mockFiles = [
@@ -25,10 +23,6 @@ expect.extend({
       pass: true,
     };
   },
-});
-
-beforeAll(() => {
-  axios.defaults.adapter = corsAdapter;
 });
 
 afterAll(async () => {

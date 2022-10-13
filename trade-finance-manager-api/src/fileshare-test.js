@@ -1,4 +1,3 @@
-// const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const isPortReachable = require('is-port-reachable');
 
 const urlList = [

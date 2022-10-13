@@ -44,7 +44,7 @@ const errorFormat = (file, parentId, error) => ({
   error,
 });
 
-exports.create = async (req, res) => {
+exports.createFile = async (req, res) => {
   const { files, body: { parentId, maxSize, documentPath } } = req;
 
   const maxFileSize = maxSize || DEFAULT_MAX_SIZE;
@@ -157,7 +157,7 @@ exports.downloadFile = async (req, res) => {
   }
 };
 
-exports.delete = async (req, res) => {
+exports.deleteFile = async (req, res) => {
   try {
     const [file, deal] = await getFile(req.params.id);
 

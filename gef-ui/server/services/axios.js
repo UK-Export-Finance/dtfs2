@@ -1,4 +1,4 @@
-const { default: axios } = require('axios');
+const axios = require('axios');
 require('dotenv').config();
 
 const { DEAL_API_URL } = process.env;

@@ -75,12 +75,12 @@ router.route('/files')
   .post(
     validate({ role: ['maker', 'data-admin'] }),
     fileUpload.any(),
-    files.create,
+    files.createFile,
   );
 
 router.route('/files/:id')
   .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), files.getById)
-  .delete(validate({ role: ['maker', 'data-admin'] }), files.delete);
+  .delete(validate({ role: ['maker', 'data-admin'] }), files.deleteFile);
 
 router.route('/files/:id/download')
   .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), files.downloadFile);
