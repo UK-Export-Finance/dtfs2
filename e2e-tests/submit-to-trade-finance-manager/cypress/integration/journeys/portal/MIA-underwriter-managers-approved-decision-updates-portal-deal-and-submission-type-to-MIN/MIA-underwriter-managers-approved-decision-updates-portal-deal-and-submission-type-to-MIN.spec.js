@@ -183,6 +183,9 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef again
     //---------------------------------------------------------------
+    cy.clearCookie('connect.sid');
+    cy.clearCookie('_csrf');
+    cy.getCookies().should('be.empty');
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
     portalPages.contract.proceedToSubmit().click();
