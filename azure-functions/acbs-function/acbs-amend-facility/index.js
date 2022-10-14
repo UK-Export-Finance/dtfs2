@@ -73,8 +73,8 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
           return {
             facilityId,
-            facilityLoanRecord: facilityLoanRecord?.result,
-            facilityMasterRecord: facilityMasterRecord?.result,
+            facilityLoanRecord: facilityLoanRecord.result,
+            facilityMasterRecord: facilityMasterRecord.result,
           };
         }
         throw new Error('ACBS facility amendment error : Unable to retrieve FMR.');
