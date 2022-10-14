@@ -19,12 +19,12 @@ const facilityLoanAmend = (amendments, facility, facilityMasterRecord) => {
 
       // 1. UKEF Exposure
       if (amount) {
-        // 1.1. Amend amount, if facility type is `Bond`.
-        if (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND) {
+        // 1.1. Amend amount, if facility type is not `Loan`.
+        if (type !== FACILITY.FACILITY_TYPE.LOAN) {
           record = {
             ...record,
             effectiveDate: now(),
-            amountAmendment: helpers.getLoanAmountDifference(amount, facilityMasterRecord),
+            amountAmendment: helpers.getLoanAmountDifference(amount, type, facilityMasterRecord),
           };
         }
       }
