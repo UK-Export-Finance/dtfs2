@@ -43,7 +43,6 @@ const updateFacilityLoanAmount = async (context) => {
     const submittedToACBS = moment().format();
 
     const { status, data } = await api.updateFacilityLoanAmount(facilityId, loanId, acbsFacilityLoanInput);
-
     if (isHttpErrorStatus(status)) {
       throw new Error(
         JSON.stringify({
