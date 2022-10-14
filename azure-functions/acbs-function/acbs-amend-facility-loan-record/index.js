@@ -23,9 +23,7 @@
 const df = require('durable-functions');
 const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
-const CONSTANTS = require('../constants');
-
-const { FACILITY } = CONSTANTS;
+const { FACILITY } = require('../constants');
 
 module.exports = df.orchestrator(function* Facility(context) {
   if (context.df.getInput()) {
