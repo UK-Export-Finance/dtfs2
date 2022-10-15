@@ -797,6 +797,7 @@ const amendment = async () => {
         PIM_APPROVAL,
         PIM_COMMENT,
         PIM_COMMENT_BY,
+        PIM_DATE_CREATED_DATETIME,
         OUTCOME_COMMENTS,
         DOC_REVIEW_COMMENTS,
       } = amend.DEAL.FACILITY;
@@ -856,7 +857,7 @@ const amendment = async () => {
             managersDecisionEmail: true,
             managersDecisionEmailSent: true,
             submitted: true,
-            submittedAt: getUnixTime(new Date(DATE_LAST_UPDATED).setHours(0, 0, 0, 0)),
+            submittedAt: getUnixTime(new Date(PIM_DATE_CREATED_DATETIME).setHours(0, 0, 0, 0)),
             submittedBy: {
               _id: '',
               name: PIM_COMMENT_BY,
@@ -869,7 +870,7 @@ const amendment = async () => {
             banksDecisionEmail: true,
             banksDecisionEmailSent: true,
             submitted: true,
-            submittedAt: getUnixTime(new Date(DATE_LAST_UPDATED).setHours(0, 0, 0, 0)),
+            submittedAt: getUnixTime(new Date(PIM_DATE_CREATED_DATETIME).setHours(0, 0, 0, 0)),
             receivedDate: getUnixTime(new Date(DATE_CREATED).setHours(0, 0, 0, 0)),
             effectiveDate: getUnixTime(new Date(EFFECTIVE_FROM_DATE).setHours(0, 0, 0, 0)),
             submittedBy: {
