@@ -99,7 +99,8 @@ services:
       - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
-      - REDIS_HOSTNAME=redis
+      - REDIS_HOSTNAME=redis://redis
+      - REDIS_PORT=6379
       - TZ=Europe/London
     command: npx nodemon server/index.js -L
 
@@ -205,7 +206,8 @@ services:
       - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
-      - REDIS_HOSTNAME=redis
+      - REDIS_HOSTNAME=redis://redis
+      - REDIS_PORT=6379
       - TZ=Europe/London
     command: npx nodemon server/index.js -L
 

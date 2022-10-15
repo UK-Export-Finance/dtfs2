@@ -58,22 +58,15 @@ if (process.env.REDIS_KEY) {
   };
 }
 
-const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
+console.info(`GEF UI: Connecting to redis server: ${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`);
+const client = redis.createClient({ url: `${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`, legacyMode: true, ...redisOptions });
 
-redisClient.on('error', (err) => {
-  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
-});
+client.on('error', (err) => console.error('GEF UI: Redis Client Error', err));
+client.on('ready', () => { console.info('GEF UI: REDIS ready'); });
+client.on('connect', () => { console.info('GEF UI: REDIS connected'); });
 
-redisClient.on('ready', () => {
-  console.info('REDIS ready');
-});
-
-redisClient.on('connect', () => {
-  console.info('REDIS connected');
-});
-
-const sessionStore = new RedisStore({ client: redisClient });
-
+client.connect();
+const sessionStore = new RedisStore({ client });
 sessionOptions.store = sessionStore;
 
 app.set('trustproxy', true);

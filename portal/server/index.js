@@ -44,8 +44,6 @@ const sessionOptions = {
   cookie,
 };
 
-console.info(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
-
 let redisOptions = {};
 
 if (process.env.REDIS_KEY) {
@@ -55,22 +53,15 @@ if (process.env.REDIS_KEY) {
   };
 }
 
-const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
+console.info(`BSS: Connecting to redis server: ${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`);
+const client = redis.createClient({ url: `${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`, legacyMode: true, ...redisOptions });
 
-redisClient.on('error', (err) => {
-  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
-});
+client.on('error', (err) => console.error('BSS: Redis Client Error', err));
+client.on('ready', () => { console.info('BSS: REDIS ready'); });
+client.on('connect', () => { console.info('BSS: REDIS connected'); });
 
-redisClient.on('ready', () => {
-  console.info('REDIS ready');
-});
-
-redisClient.on('connect', () => {
-  console.info('REDIS connected');
-});
-
-const sessionStore = new RedisStore({ client: redisClient });
-
+client.connect();
+const sessionStore = new RedisStore({ client });
 sessionOptions.store = sessionStore;
 
 app.use(session(sessionOptions));
@@ -123,4 +114,4 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.listen(PORT, () => console.info(`BSS app listening on port ${PORT}!`));
+app.listen(PORT, () => console.info(`BSS: Listening on port ${PORT}!`));
