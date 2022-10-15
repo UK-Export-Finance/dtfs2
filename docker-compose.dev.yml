@@ -53,7 +53,8 @@ services:
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - SESSION_SECRET
       - TZ=Europe/London
-      - REDIS_HOSTNAME=redis
+      - REDIS_HOSTNAME=redis://redis
+      - REDIS_PORT=6379
     command: npx nodemon --inspect=0.0.0.0:9224 server/index.js -L
 
   trade-finance-manager-api:
@@ -105,7 +106,7 @@ services:
       - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
-      - REDIS_HOSTNAME=redis
+      - REDIS_HOSTNAME=redis://redis
       - REDIS_PORT=6379
       - TZ=Europe/London
     command: npx nodemon --inspect=0.0.0.0:9226 server/index.js -L
@@ -212,7 +213,8 @@ services:
       - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
-      - REDIS_HOSTNAME=redis
+      - REDIS_HOSTNAME=redis://redis
+      - REDIS_PORT=6379
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - TZ=Europe/London

@@ -9,7 +9,23 @@ const wipe = async (collections) => {
   });
   return Promise.all(response);
 };
-const wipeAll = async () => wipe(['banks', 'deals', 'facilities', 'users', 'tfm-deals', 'tfm-facilities', 'tfm-users', 'tfm-teams', 'eligibilityCriteria', 'mandatoryCriteria']);
+const wipeAll = async () =>
+  wipe([
+    'banks',
+    'deals',
+    'facilities',
+    'users',
+    'tfm-deals',
+    'tfm-facilities',
+    'tfm-users',
+    'tfm-teams',
+    'eligibilityCriteria',
+    'mandatoryCriteria',
+    'cron-job-logs',
+    'durable-functions-log',
+    'files',
+    'tfm-feedback',
+  ]);
 
 const cleanAllTables = async () => {
   await wipeAll();
