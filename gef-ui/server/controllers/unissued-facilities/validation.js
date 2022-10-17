@@ -13,7 +13,7 @@ const coverDatesValidation = require('../../utils/coverDatesValidation.helper');
  * @returns {res} if validation errors
  * @returns {Object} if no validation errors
  */
-const facilityValidation = async (body, query, params) => {
+const facilityValidation = async (body, query, params, facility) => {
   const { facilityType } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
@@ -198,7 +198,12 @@ const facilityValidation = async (body, query, params) => {
         });
       }
 
-      if (isAfter(startDate, threeMonthsFromSubmission)) {
+      /**
+       * if special flag is manually set in db - if deal submission date is more than 3 months in the past then validation will fail for issue
+       * if specialIssuePermission is true, then this validation will not take place and coverStartDate can be set (more than 3 months after submission date)
+       * else validation takes place so start date cannot be more than 3 months ahead of notice submission date
+       */
+      if (isAfter(startDate, threeMonthsFromSubmission) && !facility?.specialIssuePermission) {
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
           errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',

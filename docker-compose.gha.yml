@@ -78,6 +78,7 @@ services:
       - SENTRY_DSN=${SENTRY_DSN}
       - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
       - TZ=Europe/London
+      - UKEF_INTERNAL_NOTIFICATION=test
     entrypoint: npx nodemon src/index.js -L
 
   portal:

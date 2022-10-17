@@ -311,10 +311,34 @@ const sendFirstTaskEmail = async (taskVariables) => {
   }
 };
 
+/**
+ * Initiate an internal UKEF team email, upon an amendment
+ * submission (automatic) and approval (manual)
+ * @param {String} ukefFacilityId UKEF Facility ID
+ */
+const internalAmendmentEmail = async (ukefFacilityId) => {
+  try {
+    const templateId = EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION;
+    const sendToEmailAddress = process.env.UKEF_INTERNAL_NOTIFICATION;
+    const emailVariables = {
+      ukefFacilityId,
+    };
+
+    if (!ukefFacilityId) {
+      return false;
+    }
+
+    return sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
+  } catch (error) {
+    console.error('Error sending internal amendment email', { error });
+    return error;
+  }
+};
+
 const roundValue = (valueInGBP) => {
   const totalDecimals = decimalsCount(valueInGBP);
 
-  // rounds to 2 decimal palces if decimals greater than 2
+  // rounds to 2 decimal palaces if decimals greater than 2
   const newValue = totalDecimals > 2 ? roundNumber(valueInGBP, 2) : valueInGBP;
 
   return newValue;
@@ -511,8 +535,9 @@ module.exports = {
   sendAutomaticAmendmentEmail,
   sendManualDecisionAmendmentEmail,
   sendManualBankDecisionEmail,
-  canSendToAcbs,
   sendFirstTaskEmail,
+  internalAmendmentEmail,
+  canSendToAcbs,
   calculateUkefExposure,
   formatCoverEndDate,
   addLatestAmendmentValue,
