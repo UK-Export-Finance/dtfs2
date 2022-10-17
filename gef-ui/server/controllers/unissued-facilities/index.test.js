@@ -178,6 +178,8 @@ describe('postChangeUnissuedFacility()', () => {
   const twoDaysAgo = sub(now, { days: 2 });
   const twoDaysAgoMidnight = (new Date(twoDaysAgo)).setHours(0, 0, 0, 0);
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
+  const twoYearFromNow = add(now, { years: 2, months: 3, days: 1 });
+  const threeYearFromNow = add(now, { years: 3, months: 3, days: 1 });
 
   const maker = {
     _id: '12345',
@@ -392,6 +394,50 @@ describe('postChangeUnissuedFacility()', () => {
     );
   });
 
+  it('should update facility if specialIssuePermission is true and coverStartDate is more than 3 months in the future', async () => {
+    api.getFacility.mockResolvedValue(MOCKS.MockFacilityResponseSpecialIssue());
+
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = format(twoYearFromNow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(twoYearFromNow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(twoYearFromNow, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(threeYearFromNow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
+
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+    await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+    // should not go ahead with call as errors
+    expect(api.updateFacility).toHaveBeenCalledWith(
+      'xyz',
+      {
+        coverEndDate: format(threeYearFromNow, 'MMMM d, yyyy'),
+        coverStartDate: format(twoYearFromNow, 'MMMM d, yyyy'),
+        issueDate: format(now, 'MMMM d, yyyy'),
+        shouldCoverStartOnSubmission: false,
+        monthsOfCover: null,
+        name: 'UKEF123',
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+        coverDateConfirmed: true,
+        unissuedToIssuedByMaker: maker,
+      },
+      { message: 'UKEF123 is updated' },
+      '/gef/application-details/123/unissued-facilities',
+    );
+  });
+
   it('redirects user to `problem with service` page if there is an issue with the API', async () => {
     mockRequest.query.saveAndReturn = 'true';
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
@@ -432,6 +478,8 @@ describe('postChangeUnissuedFacilityPreview()', () => {
   const now = new Date();
   const tomorrow = add(now, { days: 1 });
   const oneYearFromNow = add(now, { years: 1, months: 3, days: 1 });
+  const twoYearFromNow = add(now, { years: 2, months: 3, days: 1 });
+  const threeYearFromNow = add(now, { years: 3, months: 3, days: 1 });
 
   const maker = {
     _id: '12345',
@@ -551,6 +599,49 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       },
       { message: 'UKEF123 is updated' },
       '/gef/application-details/123/unissued-facilities',
+    );
+  });
+
+  it('should update facility if specialIssuePermission is true and coverStartDate is more than 3 months in the future', async () => {
+    api.getFacility.mockResolvedValue(MOCKS.MockFacilityResponseSpecialIssue());
+
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = format(now, 'd');
+    mockRequest.body['issue-date-month'] = format(now, 'M');
+    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+    mockRequest.body['cover-start-date-day'] = format(twoYearFromNow, 'd');
+    mockRequest.body['cover-start-date-month'] = format(twoYearFromNow, 'M');
+    mockRequest.body['cover-start-date-year'] = format(twoYearFromNow, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(threeYearFromNow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
+
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+
+    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+    await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
+
+    // should not go ahead with call as errors
+    expect(api.updateFacility).toHaveBeenCalledWith(
+      'xyz',
+      {
+        coverEndDate: format(threeYearFromNow, 'MMMM d, yyyy'),
+        coverStartDate: format(twoYearFromNow, 'MMMM d, yyyy'),
+        issueDate: format(now, 'MMMM d, yyyy'),
+        shouldCoverStartOnSubmission: false,
+        monthsOfCover: null,
+        name: 'UKEF123',
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+        coverDateConfirmed: true,
+        unissuedToIssuedByMaker: maker,
+      },
+      '/gef/application-details/123',
     );
   });
 
