@@ -28,7 +28,9 @@
             {{ facility.name if facility.name else 'Not entered'}}
           </a>
         {% else %}
-          <span data-cy="facility__name--text--{{ facility._id }}"> {{ facility.name }} </span>
+          <span data-cy="facility__name--text--{{ facility._id }}">
+            {{ facility.name }}
+          </span>
         {% endif %}
 
       {% endset %}
