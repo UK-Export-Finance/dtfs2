@@ -13,11 +13,9 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
   if (ObjectId.isValid(facilityId)) {
     const collection = await db.getCollection('facilities');
 
-    console.info(`Updating Portal facility status to ${status}`);
     const previousStatus = existingFacility.status;
 
     const update = {
-      ...existingFacility,
       updatedAt: Date.now(),
       previousStatus,
       status,
@@ -29,7 +27,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
       { returnDocument: 'after', returnNewDocument: true }
     );
 
-    console.info(`Updated Portal facility status from ${previousStatus} to ${status}`);
+    console.info(`Updated Portal facility ${facilityId} status from ${previousStatus} to ${status}`);
 
     return findAndUpdateResponse.value;
   }
@@ -45,11 +43,10 @@ exports.updateFacilityStatusPut = async (req, res) => {
 
     await findOneFacility(facilityId, async (existingFacility) => {
       if (existingFacility) {
-        const updatedFacility = await updateFacilityStatus(
-          facilityId,
-          status,
-          existingFacility,
-        );
+        if (existingFacility.status === status) {
+          return res.status(200).send();
+        }
+        const updatedFacility = await updateFacilityStatus(facilityId, status, existingFacility);
         return res.status(200).json(updatedFacility);
       }
 

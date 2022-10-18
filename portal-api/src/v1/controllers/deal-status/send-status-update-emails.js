@@ -1,7 +1,7 @@
 const sendEmail = require('../../email');
 
 const sendEmailsToOwningBanks = async (templateId, emailVariables, owningBankEmails) => {
-  await owningBankEmails.map(async (email) => {
+  await owningBankEmails.forEach(async (email) => {
     await sendEmail(templateId, email, emailVariables);
   });
 };

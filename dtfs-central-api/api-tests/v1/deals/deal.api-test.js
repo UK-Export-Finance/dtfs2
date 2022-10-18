@@ -299,9 +299,9 @@ describe('/v1/portal/deals', () => {
       const { status } = await api.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       expect(status).toEqual(200);
 
-      // Second status update - 400
+      // Second status update - 200
       const { status: secondStatus } = await api.put({ status: statusUpdate }).to(`/v1/portal/deals/${createdDeal._id}/status`);
-      expect(secondStatus).toEqual(400);
+      expect(secondStatus).toEqual(200);
     });
 
     it('returns the updated deal with updated statuses', async () => {

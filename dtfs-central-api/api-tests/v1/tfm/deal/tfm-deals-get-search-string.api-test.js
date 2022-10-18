@@ -2,10 +2,7 @@ const { sub, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
 const app = require('../../../../src/createApp');
 const api = require('../../../api')(app);
-const {
-  newDeal,
-  createAndSubmitDeals,
-} = require('./tfm-deals-get.api-test');
+const { newDeal, createAndSubmitDeals } = require('./tfm-deals-get.api-test');
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {
@@ -27,10 +24,7 @@ describe('/v1/tfm/deals', () => {
           },
         });
 
-        const submittedDeals = await createAndSubmitDeals([
-          miaDeal,
-          minDeal,
-        ]);
+        const submittedDeals = await createAndSubmitDeals([miaDeal, minDeal]);
 
         const mockReqBody = {
           queryParams: {
@@ -42,8 +36,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter((deal) =>
-          deal.dealSnapshot.details.ukefDealId === miaDeal.details.ukefDealId);
+        const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.details.ukefDealId === miaDeal.details.ukefDealId);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -59,10 +52,7 @@ describe('/v1/tfm/deals', () => {
           ukefDealId: 'test-2',
         });
 
-        const submittedDeals = await createAndSubmitDeals([
-          miaDeal,
-          minDeal,
-        ]);
+        const submittedDeals = await createAndSubmitDeals([miaDeal, minDeal]);
 
         const mockReqBody = {
           queryParams: {
@@ -74,8 +64,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter((deal) =>
-          deal.dealSnapshot.ukefDealId === miaDeal.ukefDealId);
+        const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.ukefDealId === miaDeal.ukefDealId);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -101,11 +90,7 @@ describe('/v1/tfm/deals', () => {
           },
         });
 
-        const submittedDeals = await createAndSubmitDeals([
-          miaDeal,
-          miaDeal2,
-          minDeal,
-        ]);
+        const submittedDeals = await createAndSubmitDeals([miaDeal, miaDeal2, minDeal]);
 
         const mockReqBody = {
           queryParams: {
@@ -117,8 +102,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter((deal) =>
-          deal.dealSnapshot.bank.name === miaDeal.bank.name);
+        const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.bank.name === miaDeal.bank.name);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -134,10 +118,7 @@ describe('/v1/tfm/deals', () => {
 
         const minDeal = newDeal({});
 
-        const submittedDeals = await createAndSubmitDeals([
-          miaDeal,
-          minDeal,
-        ]);
+        const submittedDeals = await createAndSubmitDeals([miaDeal, minDeal]);
 
         const mockReqBody = {
           queryParams: {
@@ -149,8 +130,9 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter((deal) =>
-          deal.dealSnapshot.submissionDetails['supplier-name'] === miaDeal.submissionDetails['supplier-name']);
+        const expectedDeals = submittedDeals.filter(
+          (deal) => deal.dealSnapshot.submissionDetails['supplier-name'] === miaDeal.submissionDetails['supplier-name'],
+        );
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -170,11 +152,7 @@ describe('/v1/tfm/deals', () => {
           submissionType: 'Manual Inclusion Notice',
         });
 
-        const submittedDeals = await createAndSubmitDeals([
-          ainDeal,
-          miaDeal,
-          minDeal,
-        ]);
+        const submittedDeals = await createAndSubmitDeals([ainDeal, miaDeal, minDeal]);
 
         const mockReqBody = {
           queryParams: {
@@ -186,8 +164,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter((deal) =>
-          deal.dealSnapshot.submissionType === ainDeal.submissionType);
+        const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.submissionType === ainDeal.submissionType);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -207,10 +184,7 @@ describe('/v1/tfm/deals', () => {
           },
         });
 
-        const submittedDeals = await createAndSubmitDeals([
-          ainDeal,
-          miaDeal,
-        ]);
+        const submittedDeals = await createAndSubmitDeals([ainDeal, miaDeal]);
 
         const mockReqBody = {
           queryParams: {
@@ -222,8 +196,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter((deal) =>
-          deal.dealSnapshot.submissionDetails['buyer-name'] === ainDeal.submissionDetails['buyer-name']);
+        const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.submissionDetails['buyer-name'] === ainDeal.submissionDetails['buyer-name']);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -248,10 +221,7 @@ describe('/v1/tfm/deals', () => {
           },
         });
 
-        const submittedDeals = await createAndSubmitDeals([
-          ainDealWithConfirmedStage,
-          miaDealWithApplicationStage,
-        ]);
+        const submittedDeals = await createAndSubmitDeals([ainDealWithConfirmedStage, miaDealWithApplicationStage]);
 
         const mockReqBody = {
           queryParams: {
@@ -263,8 +233,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = submittedDeals.filter((deal) =>
-          deal.dealSnapshot.details.ukefDealId === ainDealWithConfirmedStage.details.ukefDealId);
+        const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.details.ukefDealId === ainDealWithConfirmedStage.details.ukefDealId);
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -280,9 +249,7 @@ describe('/v1/tfm/deals', () => {
             ukefDealId: 'DEAL-WITH-BONDS',
           },
           bondTransactions: {
-            items: [
-              { _id: '1', type: 'Bond' },
-            ],
+            items: [{ _id: '1', type: 'Bond' }],
           },
         });
 
@@ -292,17 +259,12 @@ describe('/v1/tfm/deals', () => {
             ukefDealId: 'DEAL-WITH-LOANS',
           },
           loanTransactions: {
-            items: [
-              { _id: '1', type: 'Loan' },
-            ],
+            items: [{ _id: '1', type: 'Loan' }],
           },
         });
 
         beforeEach(async () => {
-          submittedDeals = await createAndSubmitDeals([
-            dealWithBonds,
-            dealWithLoans,
-          ]);
+          submittedDeals = await createAndSubmitDeals([dealWithBonds, dealWithLoans]);
         });
 
         it('returns deals filtered by Bond productCode', async () => {
@@ -316,8 +278,7 @@ describe('/v1/tfm/deals', () => {
 
           expect(status).toEqual(200);
 
-          const expectedDeals = submittedDeals.filter((deal) =>
-            deal.dealSnapshot.ukefDealId === 'DEAL-WITH-BONDS');
+          const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.ukefDealId === 'DEAL-WITH-BONDS');
 
           expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -335,8 +296,7 @@ describe('/v1/tfm/deals', () => {
 
           expect(status).toEqual(200);
 
-          const expectedDeals = submittedDeals.filter((deal) =>
-            deal.dealSnapshot.ukefDealId === 'DEAL-WITH-LOANS');
+          const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.ukefDealId === 'DEAL-WITH-LOANS');
 
           expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -350,17 +310,11 @@ describe('/v1/tfm/deals', () => {
               ukefDealId: 'DEAL-WITH-BONDS-AND-LOANS',
             },
             loanTransactions: {
-              items: [
-                { _id: '1', type: 'Loan' },
-              ],
+              items: [{ _id: '1', type: 'Loan' }],
             },
           });
 
-          submittedDeals = await createAndSubmitDeals([
-            dealWithBonds,
-            dealWithLoans,
-            dealWithBondsAndLoans,
-          ]);
+          submittedDeals = await createAndSubmitDeals([dealWithBonds, dealWithLoans, dealWithBondsAndLoans]);
 
           const mockReqBody = {
             queryParams: {
@@ -372,8 +326,7 @@ describe('/v1/tfm/deals', () => {
 
           expect(status).toEqual(200);
 
-          const expectedDeals = submittedDeals.filter((deal) =>
-            deal.dealSnapshot.ukefDealId === 'DEAL-WITH-BONDS-AND-LOANS');
+          const expectedDeals = submittedDeals.filter((deal) => deal.dealSnapshot.ukefDealId === 'DEAL-WITH-BONDS-AND-LOANS');
 
           expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -402,36 +355,37 @@ describe('/v1/tfm/deals', () => {
           },
         });
 
-        const submittedDeals = await createAndSubmitDeals([
-          dealSubmittedYesterday,
-          dealSubmittedToday,
-        ]);
+        const submittedDeals = await createAndSubmitDeals([dealSubmittedYesterday, dealSubmittedToday]);
 
-        const dealSubmittedYesterdayResponseBody = submittedDeals.find((deal) =>
-          deal.dealSnapshot.details.ukefDealId === dealSubmittedYesterday.details.ukefDealId);
+        const dealSubmittedYesterdayResponseBody = submittedDeals.find(
+          (deal) => deal.dealSnapshot.details.ukefDealId === dealSubmittedYesterday.details.ukefDealId,
+        );
 
-        const dealSubmittedTodayResponseBody = submittedDeals.find((deal) =>
-          deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId);
+        const dealSubmittedTodayResponseBody = submittedDeals.find((deal) => deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId);
 
         const yesterdayFormatted = format(yesterday, 'dd-MM-yyyy');
         const todayFormatted = format(today, 'dd-MM-yyyy');
 
         // manually update deal's tfm object for test
-        const dealSubmittedYesterdayUpdateResponse = await api.put({
-          dealUpdate: {
-            tfm: {
-              dateReceived: yesterdayFormatted,
+        const dealSubmittedYesterdayUpdateResponse = await api
+          .put({
+            dealUpdate: {
+              tfm: {
+                dateReceived: yesterdayFormatted,
+              },
             },
-          },
-        }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
+          })
+          .to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
 
-        await api.put({
-          dealUpdate: {
-            tfm: {
-              dateReceived: todayFormatted,
+        await api
+          .put({
+            dealUpdate: {
+              tfm: {
+                dateReceived: todayFormatted,
+              },
             },
-          },
-        }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
+          })
+          .to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
 
         const mockReqBody = {
           queryParams: {
@@ -443,9 +397,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = [
-          dealSubmittedYesterdayUpdateResponse.body,
-        ];
+        const expectedDeals = [dealSubmittedYesterdayUpdateResponse.body];
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 
@@ -474,36 +426,37 @@ describe('/v1/tfm/deals', () => {
           },
         });
 
-        const submittedDeals = await createAndSubmitDeals([
-          dealSubmittedYesterday,
-          dealSubmittedToday,
-        ]);
+        const submittedDeals = await createAndSubmitDeals([dealSubmittedYesterday, dealSubmittedToday]);
 
-        const dealSubmittedYesterdayResponseBody = submittedDeals.find((deal) =>
-          deal.dealSnapshot.details.ukefDealId === dealSubmittedYesterday.details.ukefDealId);
+        const dealSubmittedYesterdayResponseBody = submittedDeals.find(
+          (deal) => deal.dealSnapshot.details.ukefDealId === dealSubmittedYesterday.details.ukefDealId,
+        );
 
-        const dealSubmittedTodayResponseBody = submittedDeals.find((deal) =>
-          deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId);
+        const dealSubmittedTodayResponseBody = submittedDeals.find((deal) => deal.dealSnapshot.details.ukefDealId === dealSubmittedToday.details.ukefDealId);
 
         const yesterdayFormatted = format(yesterday, 'dd-MM-yyyy');
         const todayFormatted = format(today, 'dd-MM-yyyy');
 
         // manually update deal's tfm object for test
-        const dealSubmittedYesterdayUpdateResponse = await api.put({
-          dealUpdate: {
-            tfm: {
-              dateReceived: yesterdayFormatted,
+        const dealSubmittedYesterdayUpdateResponse = await api
+          .put({
+            dealUpdate: {
+              tfm: {
+                dateReceived: yesterdayFormatted,
+              },
             },
-          },
-        }).to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
+          })
+          .to(`/v1/tfm/deals/${dealSubmittedYesterdayResponseBody._id}`);
 
-        await api.put({
-          dealUpdate: {
-            tfm: {
-              dateReceived: todayFormatted,
+        await api
+          .put({
+            dealUpdate: {
+              tfm: {
+                dateReceived: todayFormatted,
+              },
             },
-          },
-        }).to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
+          })
+          .to(`/v1/tfm/deals/${dealSubmittedTodayResponseBody._id}`);
 
         const mockReqBody = {
           queryParams: {
@@ -515,9 +468,7 @@ describe('/v1/tfm/deals', () => {
 
         expect(status).toEqual(200);
 
-        const expectedDeals = [
-          dealSubmittedYesterdayUpdateResponse.body,
-        ];
+        const expectedDeals = [dealSubmittedYesterdayUpdateResponse.body];
 
         expect(body.deals.length).toEqual(expectedDeals.length);
 

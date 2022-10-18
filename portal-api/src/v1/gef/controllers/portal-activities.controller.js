@@ -77,7 +77,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
   const { portalActivities, checkerId } = application;
   const checker = await getUserInfo(checkerId);
 
-  facilities.map((facility) => {
+  facilities.forEach((facility) => {
     if (facility.canResubmitIssuedFacilities) {
       // creates user object to add to array
       const maker = facility.unissuedToIssuedByMaker;

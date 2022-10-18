@@ -180,10 +180,10 @@ const generateMINActivities = async (req, res) => {
 
       if (application) {
         const facilities = await findAllGefFacilitiesByDealId(dealId);
-        let portalActivities;
+        let { portalActivities } = application;
 
-        portalActivities = ukefSubmissionPortalActivity(application);
-        portalActivities = facilityChangePortalActivity(application, facilities);
+        portalActivities = await ukefSubmissionPortalActivity(application);
+        portalActivities = await facilityChangePortalActivity(application, facilities);
 
         const update = {
           portalActivities,
