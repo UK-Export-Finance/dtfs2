@@ -16,7 +16,6 @@ const updateBssDealStatus = async (dealId, status, existingDeal) => {
     const previousStatus = existingDeal.status;
 
     const modifiedDeal = {
-      ...existingDeal,
       updatedAt: Date.now(),
       status,
       previousStatus,
@@ -28,7 +27,7 @@ const updateBssDealStatus = async (dealId, status, existingDeal) => {
       { returnDocument: 'after', returnNewDocument: true }
     );
 
-    console.info(`Updated Portal BSS deal status from ${previousStatus} to ${status}`);
+    console.info(`Updated Portal BSS deal ${dealId} status from ${previousStatus} to ${status}`);
 
     return findAndUpdateResponse.value;
   }
@@ -44,7 +43,7 @@ exports.putBssDealStatus = async (req, res) => {
   await findOneBssDeal(dealId, async (existingDeal) => {
     if (existingDeal) {
       if (existingDeal.status === status) {
-        return res.status(400).send();
+        return res.status(200).send();
       }
       const updatedDeal = await updateBssDealStatus(dealId, status, existingDeal);
       return res.status(200).json(updatedDeal);
@@ -68,7 +67,7 @@ const updateGefDealStatus = async (dealId, previousStatus, newStatus) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(String(dealId)) } },
       { $set: dealUpdate },
-      { returnDocument: 'after', returnNewDocument: true }
+      { returnDocument: 'after', returnNewDocument: true },
     );
 
     console.info(`Updated Portal GEF deal status from ${previousStatus} to ${newStatus}`);

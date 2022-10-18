@@ -174,7 +174,7 @@ const sendStatusUpdateEmail = (user, existingApplication, status) => {
   // get exporter name
   const { companyName = '' } = exporter;
 
-  user.bank.emails.map(async (email) => {
+  user.bank.emails.forEach(async (email) => {
     await sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
       firstName,
       surname,

@@ -39,7 +39,7 @@ const createUkefIds = async (entityId, deal, user) => {
 
   const facilitiesNumGenPromises = [];
   // Kick off function call for each facility
-  deal.facilities.map((facilityId) => facilitiesNumGenPromises.push(
+  deal.facilities.forEach((facilityId) => facilitiesNumGenPromises.push(
     refDataApi.numberGenerator.create(
       {
         dealType,
