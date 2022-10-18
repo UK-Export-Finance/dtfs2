@@ -454,10 +454,10 @@ const ACBS = async (facility = false) => {
     });
   } else {
     Object.values(allFacilities).forEach((f, i) => {
-      if (!f.tfm.acbs && Boolean(f.facilitySnapshot.hasBeenIssued)) {
+      if (!f.tfm.acbs) {
       // Construct `acbs` object
         const acbs = {
-          facilityStage: '07',
+          facilityStage: f.facilitySnapshot.hasBeenIssued ? '07' : '06',
           facilityMaster: {},
           facilityInvestor: {},
           facilityCovenant: {},
@@ -1338,6 +1338,7 @@ const datafixTfmDealGef = async (deals) => {
 
       // TFM Deal - Action sheet data fixes
       await actionSheetDeal();
+      await ACBS();
 
       const updates = allDeals.map(async (deal) => {
         await tfmDealUpdate(deal)
@@ -1396,6 +1397,7 @@ const datafixesTfmFacilitiesGef = async (deals) => {
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
         await actionSheetFacility();
+        await ACBS(true);
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {
