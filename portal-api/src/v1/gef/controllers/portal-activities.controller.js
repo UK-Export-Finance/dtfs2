@@ -10,15 +10,16 @@ const CONSTANTS = require('../../../constants');
 const getUserInfo = async (userId) => {
   const userCollectionName = 'users';
   let firstname = '';
-  const surname = '';
+  let surname = '';
 
   const userCollection = await db.getCollection(userCollectionName);
   const userProfile = userId
     ? await userCollection.findOne({ _id: ObjectId(String(userId)) })
     : {};
 
-  if (userProfile) {
-    firstname = userProfile.firstName;
+  if (userProfile.firstname) {
+    firstname = userProfile.firstname;
+    surname = userProfile.surname;
   }
 
   // creates user object which can be used
