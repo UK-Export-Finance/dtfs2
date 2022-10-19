@@ -74,6 +74,27 @@ describe('controllers/dashboard/facilities - filters query', () => {
     expect(result).toEqual(expected);
   });
 
+  it('should remove _crsf from the query', () => {
+    const mockFilters = [
+      {
+        _csrf: ['123'],
+      },
+    ];
+
+    const result = dashboardFacilitiesFiltersQuery(
+      mockFilters,
+      mockUser,
+    );
+
+    const expected = {
+      $and: [
+        { 'deal.bank.id': mockUser.bank.id },
+      ],
+    };
+
+    expect(result).toEqual(expected);
+  });
+
   it('should not return deal.bank.id if superuser', () => {
     const mockFilters = [];
 

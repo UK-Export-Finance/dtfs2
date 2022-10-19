@@ -13,6 +13,7 @@ describe('controllers/dashboard/facilities - filters - keyword query', () => {
       CONSTANTS.FIELD_NAMES.FACILITY.CURRENCY,
       CONSTANTS.FIELD_NAMES.FACILITY.VALUE,
       CONSTANTS.FIELD_NAMES.FACILITY.TYPE,
+      CONSTANTS.FIELD_NAMES.FACILITY.EXPORTER_COMPANY_NAME,
     ];
 
     const result = facilitiesKeywordQuery(keywordValue);
