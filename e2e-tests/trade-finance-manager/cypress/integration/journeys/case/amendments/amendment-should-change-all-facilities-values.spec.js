@@ -38,7 +38,7 @@ context('Amendments all facilities table - should show amendment value and cover
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').last().as('row1');
     cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '1000000');
     cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 12,345');
-    cy.get('@row1').find('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
+    cy.get('@row1').find('[data-cy="facility__coverEndDate"]').should('contain', '20 Oct 2022');
   });
 
   it('should submit an automatic amendment request for coverEndDate', () => {
