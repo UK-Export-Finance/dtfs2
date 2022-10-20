@@ -4,135 +4,171 @@
   {% set facilities = params.facilities %}
   {% set userTimezone = params.userTimezone %}
   {% set isChecker = params.isChecker %}
+  {% set activeSortByOrder = params.activeSortByOrder %}
+  {% set defaultSortByOrder = 'updatedAt' %}
+  {% set csrfToken = params.csrfToken %}
 
-  {% set rows = [] %}
+  <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-  {% for facility in facilities %}
+    {% set rows = [] %}
 
-    {% if facility.type === 'Cash' or facility.type === 'Contingent' %}
-        {% set url = '/gef/application-details/' + facility.dealId + '#' + facility._id %}
-    {% else %}
-        {% set url = '/contract/' + facility.dealId + '#' + facility._id %}
-    {% endif %}
+    {% for facility in facilities %}
 
-    {% set linkHtml %}
-      {% if not isChecker %}
-        <a href="{{ url }}" class="govuk-link" data-cy="facility__name--link--{{ facility._id }}">
-          {{ facility.name if facility.name else 'Not entered'}}
-        </a>
+      {% if facility.type === 'Cash' or facility.type === 'Contingent' %}
+          {% set url = '/gef/application-details/' + facility.dealId + '#' + facility._id %}
       {% else %}
-        <span data-cy="facility__name--text--{{ facility._id }}"> {{ facility.name }} </span>
+          {% set url = '/contract/' + facility.dealId + '#' + facility._id %}
       {% endif %}
+
+      {% set linkHtml %}
+
+        {% if not isChecker %}
+          <a href="{{ url }}" class="govuk-link" data-cy="facility__name--link--{{ facility._id }}">
+            {{ facility.name if facility.name else 'Not entered'}}
+          </a>
+        {% else %}
+          <span data-cy="facility__name--text--{{ facility._id }}">
+            {{ facility.name }}
+          </span>
+        {% endif %}
+
+      {% endset %}
+
+      {% if facility.hasBeenIssued %}
+        {% set stage = 'Issued' %}
+      {% else %}
+        {% set stage = 'Unissued' %}
+      {% endif %}
+
+      {% set currencyAndValue = '-' %}
+
+      {% if facility.currency.id and facility.value %}
+        {% set formattedValue = facility.value | formatAsCurrency %}
+        {% set currencyAndValue = facility.currency.id + ' ' + formattedValue %}
+      {% endif %}
+
+      {% set facilityRow = [
+        {
+          text: facility.exporter,
+          attributes: { "data-cy": "facility__exporter--" + facility._id  },
+          classes: "govuk-body-s"
+        },
+        {
+          html: linkHtml,
+          attributes: { "data-cy": "facility__bankId--" + facility._id  },
+          classes: "govuk-body-s"
+        },
+        {
+          text: facility.ukefFacilityId | dashIfEmpty,
+          attributes: { "data-cy": "facility__ukefId--" + facility._id },
+          classes: "govuk-body-s"
+        },
+        {
+          text: facility.type | dashIfEmpty,
+          attributes: { "data-cy": "facility__type--" + facility._id },
+          classes: "govuk-body-s"
+        },
+        {
+          text: facility.submissionType | dashIfEmpty,
+          attributes: { "data-cy": "facility__noticeType--" + facility._id },
+          classes: "govuk-body-s"
+        },
+        {
+          text: currencyAndValue,
+          attributes: { "data-cy": "facility__value--" + facility._id },
+          classes: "govuk-body-s"
+        },
+        {
+          text: stage  | dashIfEmpty,
+          attributes: { "data-cy": "facility__bankStage--" + facility._id },
+          classes: "govuk-body-s"
+        },
+        {
+          text: facility.submittedAsIssuedDate | localiseTimestamp("D MMM YYYY", userTimezone) | dashIfEmpty,
+          attributes: { "data-cy": "facility__issuedDate--" + facility._id },
+          classes: "govuk-body-s"
+        }
+      ] %}
+
+      {% set rows = (rows.push(facilityRow), rows) %}
+    {% endfor %}
+
+    {% set exporterHTML %}
+      {% set buttonValue = 'ascending' %}
+
+      {% if activeSortByOrder === 'ascending' %}
+        {% set buttonValue = 'descending' %}
+      {% endif %}
+
+      <button
+        type="submit"
+        name="sortBy"
+        value="{{ buttonValue }}"
+        data-cy="facility__exporter--header-button">
+        Exporter
+      </button>
+
     {% endset %}
 
-    {% if facility.hasBeenIssued %}
-      {% set stage = 'Issued' %}
-    {% else %}
-      {% set stage = 'Unissued' %}
-    {% endif %}
+    {{govukTable({
+      classes: "govuk-table govuk-!-margin-bottom-0",
+      head: [
+        {
+          text: "Exporter",
+          html: exporterHTML,
+          value: buttonValue,
+          attributes: {
+          "data-cy": "facility__exporter--header",
+          "aria-sort": activeSortByOrder or defaultSortByOrder
+          }
+        },
+        {
+          text: "Facility name",
+          attributes: {
+            "data-cy": "facility__name--header"
+          }
+        },
+        {
+          text: "UKEF facility ID",
+          attributes: {
+            "data-cy": "facility__ukefId--header"
+          }
+        },
+        {
+          text: "Facility type",
+          attributes: {
+            "data-cy": "facility__type--header"
+          }
+        },
+        {
+          text: "Notice type",
+          attributes: {
+            "data-cy": "facility__noticeType--header"
+          }
+        },
+        {
+          text: "Value",
+          attributes: {
+            "data-cy": "facility__value--header"
+          }
+        },
+        {
+          text: "Bank’s facility stage",
+          attributes: {
+            "data-cy": "facility__bankStage--header"
+          }
+        },
+        {
+          text: "Issued date",
+          attributes: {
+            "data-cy": "facility__date--header"
+          }
+        }
+      ],
+      rows: rows
+    })}}
 
-    {# {% if facility.currency.id and facility.value %}
-      {% set currency = facility.currency.id %}
-      {% set value = currency + ' ' + facility.value %}
-    {% endif %} #}
-    {% set currencyAndValue = '-' %}
-
-    {% if facility.currency.id and facility.value %}
-      {% set formattedValue = facility.value | formatAsCurrency %}
-      {% set currencyAndValue = facility.currency.id + ' ' + formattedValue %}
-    {% endif %}
-
-    {% set facilityRow = [
-      {
-        html: linkHtml,
-        attributes: { "data-cy": "facility__bankId--" + facility._id  },
-        classes: "govuk-body-s"
-      },
-      {
-        text: facility.ukefFacilityId | dashIfEmpty,
-        attributes: { "data-cy": "facility__ukefId--" + facility._id },
-        classes: "govuk-body-s"
-      },
-      {
-        text: facility.type | dashIfEmpty,
-        attributes: { "data-cy": "facility__type--" + facility._id },
-        classes: "govuk-body-s"
-      },
-      {
-        text: facility.submissionType | dashIfEmpty,
-        attributes: { "data-cy": "facility__noticeType--" + facility._id },
-        classes: "govuk-body-s"
-      },
-      {
-        text: currencyAndValue,
-        attributes: { "data-cy": "facility__value--" + facility._id },
-        classes: "govuk-body-s"
-      },
-      {
-        text: stage  | dashIfEmpty,
-        attributes: { "data-cy": "facility__bankStage--" + facility._id },
-        classes: "govuk-body-s"
-      },
-      {
-        text: facility.submittedAsIssuedDate | localiseTimestamp("D MMM YYYY", userTimezone) | dashIfEmpty,
-        attributes: { "data-cy": "facility__issuedDate--" + facility._id },
-        classes: "govuk-body-s"
-      }
-    ] %}
-
-    {% set rows = (rows.push(facilityRow), rows) %}
-  {% endfor %}
-
-  {{govukTable({
-    classes: "govuk-table govuk-!-margin-bottom-0",
-    attributes: {
-      'data-module': 'moj-sortable-table'
-    },
-    head: [
-      {
-        text: "Facility name",
-        attributes: {
-          "data-cy": "facility__name--header"
-        }
-      },
-      {
-        text: "UKEF facility ID",
-        attributes: {
-          "data-cy": "facility__ukefId--header"
-        }
-      },
-      {
-        text: "Facility type",
-        attributes: {
-          "data-cy": "facility__type--header"
-        }
-      },
-      {
-        text: "Notice type",
-        attributes: {
-          "data-cy": "facility__noticeType--header"
-        }
-      },
-      {
-        text: "Value",
-        attributes: {
-          "data-cy": "facility__value--header"
-        }
-      },
-      {
-        text: "Bank’s facility stage",
-        attributes: {
-          "data-cy": "facility__bankStage--header"
-        }
-      },
-      {
-        text: "Issued date",
-        attributes: {
-          "data-cy": "facility__date--header"
-        }
-      }
-    ],
-    rows: rows
-  })}}
+  </form>
 
 {% endmacro %}
