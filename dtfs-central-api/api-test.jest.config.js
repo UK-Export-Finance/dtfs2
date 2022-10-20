@@ -6,7 +6,5 @@ module.exports = {
   testEnvironment: 'node',
   clearMocks: true,
   setupFilesAfterEnv: ['./api-test-setup.jest.config.js', 'jest-extended/all'],
-  reporters: ['default',
-    ['jest-slow-test-reporter', { numTests: 8, warnOnSlowerThan: 600, color: true }]
-  ]
+  reporters: ['default', ['jest-slow-test-reporter', { numTests: 8, warnOnSlowerThan: 600, color: true }]],
 };

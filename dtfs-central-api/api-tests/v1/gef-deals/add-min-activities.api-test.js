@@ -403,7 +403,7 @@ describe('updateChangedToIssued()', () => {
     const { body } = await as(aChecker).get(baseUrl, mockQuery);
 
     // changes to false to test
-    updateChangedToIssued(body);
+    await updateChangedToIssued(body);
   });
 
   it('changes canResubmitIssuedFacilities to false', async () => {
