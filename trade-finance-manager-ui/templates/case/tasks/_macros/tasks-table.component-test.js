@@ -51,6 +51,11 @@ describe(component, () => {
       },
     ],
     userTimezone: 'Europe/London',
+    user: {
+      teams: [
+        'BUSINESS_SUPPORT',
+      ],
+    },
   };
 
   beforeEach(() => {
@@ -82,7 +87,7 @@ describe(component, () => {
 
   describe('for each task in a tasks group', () => {
     describe('when a task has `canEdit`', () => {
-      it('should render link to task', () => {
+      it('should render link to task if user in same group as task', () => {
         const taskWithCanEdit = params.tasks[0].groupTasks[1];
 
         const linkSelector = `[data-cy="task-table-row-group-${taskWithCanEdit.groupId}-task-${taskWithCanEdit.id}-link"]`;
