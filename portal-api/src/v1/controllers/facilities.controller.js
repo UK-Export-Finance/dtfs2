@@ -117,6 +117,8 @@ const queryAllFacilities = async (
           submittedAsIssuedDate: '$submittedAsIssuedDate',
           updatedAt: { $toDouble: '$updatedAt' },
           exporter: '$deal.exporter.companyName',
+          // exporter in lowercase for sorting
+          lowerExporter: { $toLower: '$deal.exporter.companyName' },
         },
       },
       {
