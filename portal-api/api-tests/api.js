@@ -43,7 +43,7 @@ module.exports = (app) => ({
       }),
 
       put: (data) => ({
-        to: (url) => request(app)
+        to: async (url) => request(app)
           .put(url)
           .set({ Authorization: token || '' })
           .send(data),
@@ -54,7 +54,7 @@ module.exports = (app) => ({
           const apiRequest = request(app)
             .put(url)
             .set({ Authorization: token || '' });
-
+          console.log(files);
           if (files.length) {
             files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
           }
