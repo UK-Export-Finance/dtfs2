@@ -2,7 +2,13 @@ import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import { BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
+import {
+  BUSINESS_SUPPORT_USER_1,
+  UNDERWRITING_SUPPORT_1,
+  UNDERWRITER_MANAGER_1,
+  UNDERWRITER_1,
+  RISK_MANAGER_1,
+} from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 import {
   MIA_TASKS_STRUCTURE,
@@ -18,6 +24,10 @@ context('Case tasks - MIA deal - all tasks', () => {
   let dealId;
   const dealFacilities = [];
   let userId;
+  let underWriterSupportId;
+  let underWriterManagerId;
+  let underwriterId;
+  let riskManagerId;
 
   const underwritingGroupId = 3;
 
@@ -28,6 +38,22 @@ context('Case tasks - MIA deal - all tasks', () => {
   before(() => {
     cy.getUser(BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
       userId = userObj._id;
+    });
+
+    cy.getUser(UNDERWRITING_SUPPORT_1.username).then((userObj) => {
+      underWriterSupportId = userObj._id;
+    });
+
+    cy.getUser(UNDERWRITER_MANAGER_1.username).then((userObj) => {
+      underWriterManagerId = userObj._id;
+    });
+
+    cy.getUser(UNDERWRITER_1.username).then((userObj) => {
+      underwriterId = userObj._id;
+    });
+
+    cy.getUser(RISK_MANAGER_1.username).then((userObj) => {
+      riskManagerId = userObj._id;
     });
   });
 
@@ -60,7 +86,7 @@ context('Case tasks - MIA deal - all tasks', () => {
     const secondTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingSecondTaskId);
     const lastTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingLastTaskId);
 
-    submitTaskInProgress(underwritingGroupId, underwritingLastTaskId, userId);
+    submitTaskInProgress(underwritingGroupId, underwritingLastTaskId, underwriterId);
 
     // go to 'all' tasks page
     pages.tasksPage.filterRadioAllTasks().click();
@@ -73,7 +99,7 @@ context('Case tasks - MIA deal - all tasks', () => {
     secondTaskRow.link().should('exist');
 
     // complete last task
-    submitTaskComplete(underwritingGroupId, underwritingLastTaskId, userId);
+    submitTaskComplete(underwritingGroupId, underwritingLastTaskId, underwriterId);
 
     // go to 'all' tasks page
     pages.tasksPage.filterRadioAllTasks().click();
@@ -93,7 +119,7 @@ context('Case tasks - MIA deal - all tasks', () => {
     const secondTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingSecondTaskId);
     const lastTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingLastTaskId);
 
-    submitTaskInProgress(underwritingGroupId, underwritingFirstTaskId, userId);
+    submitTaskInProgress(underwritingGroupId, underwritingFirstTaskId, underwriterId);
 
     // go to 'all' tasks page
     pages.tasksPage.filterRadioAllTasks().click();
@@ -106,7 +132,7 @@ context('Case tasks - MIA deal - all tasks', () => {
     secondTaskRow.link().should('exist');
 
     // complete first task
-    submitTaskComplete(underwritingGroupId, underwritingFirstTaskId, userId);
+    submitTaskComplete(underwritingGroupId, underwritingFirstTaskId, underwriterId);
 
     // go to 'all' tasks page
     pages.tasksPage.filterRadioAllTasks().click();
@@ -127,7 +153,7 @@ context('Case tasks - MIA deal - all tasks', () => {
     const secondTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingSecondTaskId);
     const lastTaskRow = pages.tasksPage.tasks.row(underwritingGroupId, underwritingLastTaskId);
 
-    submitTaskInProgress(underwritingGroupId, underwritingSecondTaskId, userId);
+    submitTaskInProgress(underwritingGroupId, underwritingSecondTaskId, underwriterId);
 
     // go to 'all' tasks page
     pages.tasksPage.filterRadioAllTasks().click();
@@ -140,7 +166,7 @@ context('Case tasks - MIA deal - all tasks', () => {
     lastTaskRow.link().should('not.exist');
 
     // complete second task
-    submitTaskComplete(underwritingGroupId, underwritingSecondTaskId, userId);
+    submitTaskComplete(underwritingGroupId, underwritingSecondTaskId, underwriterId);
 
     // go to 'all' tasks page
     pages.tasksPage.filterRadioAllTasks().click();
@@ -180,6 +206,43 @@ context('Case tasks - MIA deal - all tasks', () => {
     // Complete all tasks in 'Set up deal' group
     cy.wrap(group1Tasks).each((_, index) => {
       const taskId = index + 1;
+
+      if (taskId === 3) {
+        cy.login(UNDERWRITING_SUPPORT_1);
+        cy.visit(relative(`/case/${dealId}/deal`));
+        partials.caseSubNavigation.tasksLink().click();
+        pages.tasksPage.filterRadioAllTasks().click();
+
+        return new Cypress.Promise((resolve) => {
+          submitTaskCompleteAndAssertOtherTasks(1, taskId, underWriterSupportId);
+          resolve();
+        });
+      }
+
+      if (taskId === 4) {
+        cy.login(UNDERWRITING_SUPPORT_1);
+        cy.visit(relative(`/case/${dealId}/deal`));
+        partials.caseSubNavigation.tasksLink().click();
+        pages.tasksPage.filterRadioAllTasks().click();
+
+        return new Cypress.Promise((resolve) => {
+          submitTaskCompleteAndAssertOtherTasks(1, taskId, underWriterSupportId);
+          resolve();
+        });
+      }
+
+      if (taskId === 5) {
+        cy.login(UNDERWRITER_MANAGER_1);
+        cy.visit(relative(`/case/${dealId}/deal`));
+        partials.caseSubNavigation.tasksLink().click();
+        pages.tasksPage.filterRadioAllTasks().click();
+
+        return new Cypress.Promise((resolve) => {
+          submitTaskCompleteAndAssertOtherTasks(1, taskId, underWriterManagerId);
+          resolve();
+        });
+      }
+
       return new Cypress.Promise((resolve) => {
         submitTaskCompleteAndAssertOtherTasks(1, taskId, userId);
         resolve();
@@ -188,9 +251,14 @@ context('Case tasks - MIA deal - all tasks', () => {
 
     // Complete all tasks in 'Adverse history check' group
     cy.wrap(group2Tasks).each((_, index) => {
+      cy.login(UNDERWRITER_1);
+      cy.visit(relative(`/case/${dealId}/deal`));
+      partials.caseSubNavigation.tasksLink().click();
+      pages.tasksPage.filterRadioAllTasks().click();
+
       const taskId = index + 1;
       return new Cypress.Promise((resolve) => {
-        submitTaskCompleteAndAssertOtherTasks(2, taskId, userId);
+        submitTaskCompleteAndAssertOtherTasks(2, taskId, underwriterId);
         resolve();
       });
     });
@@ -218,11 +286,34 @@ context('Case tasks - MIA deal - all tasks', () => {
     startAndCompleteFirstUnderwritingTask();
     startAndCompleteSecondUnderwritingTask();
 
+    cy.login(UNDERWRITER_MANAGER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+    partials.caseSubNavigation.tasksLink().click();
+    pages.tasksPage.filterRadioAllTasks().click();
+
     // Complete all tasks in 'Approvals' group
     cy.wrap(group4Tasks).each((_, index) => {
       const taskId = index + 1;
+
+      if (taskId === 3) {
+        cy.login(RISK_MANAGER_1);
+        cy.visit(relative(`/case/${dealId}/deal`));
+        partials.caseSubNavigation.tasksLink().click();
+        pages.tasksPage.filterRadioAllTasks().click();
+        return new Cypress.Promise((resolve) => {
+          submitTaskCompleteAndAssertOtherTasks(4, taskId, riskManagerId);
+          resolve();
+        });
+      }
+
+      if (taskId === 4) {
+        cy.login(UNDERWRITER_MANAGER_1);
+        cy.visit(relative(`/case/${dealId}/deal`));
+        partials.caseSubNavigation.tasksLink().click();
+        pages.tasksPage.filterRadioAllTasks().click();
+      }
       return new Cypress.Promise((resolve) => {
-        submitTaskCompleteAndAssertOtherTasks(4, taskId, userId);
+        submitTaskCompleteAndAssertOtherTasks(4, taskId, underWriterManagerId);
         resolve();
       });
     });

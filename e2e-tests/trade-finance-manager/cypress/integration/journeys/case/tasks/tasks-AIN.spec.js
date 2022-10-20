@@ -57,6 +57,20 @@ context('Case tasks - AIN deal', () => {
     pages.tasksPage.tasksTableRows().should('have.length', TOTAL_AIN_TASKS);
   });
 
+  it('should not let wrong user edit a task', () => {
+    cy.login(MOCK_USERS.T1_USER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    //---------------------------------------------------------------
+    // user cannot assign tasks to themselves if in wrong group
+    //---------------------------------------------------------------
+    pages.tasksPage.filterRadioAllTasks().click();
+    const firstTask = pages.tasksPage.tasks.row(1, 1);
+    firstTask.link().should('not.exist');
+  });
+
   it('user can assign a task to themselves, change status and then unassign.', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
