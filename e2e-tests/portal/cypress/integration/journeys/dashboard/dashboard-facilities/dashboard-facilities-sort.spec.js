@@ -23,11 +23,18 @@ context('Dashboard facilities - sort', () => {
 
     // insert and update deals with random company names
     const manyBssDeals = Array.from(Array(15), () => BSS_DEAL_DRAFT);
-    manyBssDeals.map((deal) => {
+    manyBssDeals.map((deal, index) => {
       cy.insertOneDeal(deal, BANK1_MAKER1).then(({ _id }) => {
+        let companyName = '';
+        // sets one company to lowercase
+        if (index === 3) {
+          companyName = chance.company().toLowerCase();
+        } else {
+          companyName = chance.company();
+        }
         cy.updateDeal(_id, {
           exporter: {
-            companyName: chance.company(),
+            companyName,
           },
           // adds company name to array
         }, BANK1_MAKER1).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
@@ -87,7 +94,7 @@ context('Dashboard facilities - sort', () => {
 
   it('should sort exporter alphabetically ascending if exporter button is clicked on facility page', () => {
     // sorts array alphabetically
-    exporterNames.sort();
+    exporterNames.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     cy.login(BANK1_MAKER1);
     dashboardFacilities.visit();
 
@@ -110,7 +117,7 @@ context('Dashboard facilities - sort', () => {
 
   it('should sort alphabetically descending if exporter is clicked twice', () => {
     // sorts array and then reverses so in reverse order
-    exporterNames.sort().reverse();
+    exporterNames.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).reverse();
     cy.login(BANK1_MAKER1);
     dashboardFacilities.visit();
 
