@@ -20,18 +20,11 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
     cy.deleteDeals(ADMIN);
     // insert and update deals with random company names
     const manyBssDeals = Array.from(Array(13), () => BSS_DEAL_MIA);
-    manyBssDeals.map((deal, index) => {
+    manyBssDeals.map((deal) => {
       cy.insertOneDeal(deal, BANK1_MAKER1).then(({ _id }) => {
-        let companyName = '';
-        // sets one company to lowercase
-        if (index === 3) {
-          companyName = chance.company().toLowerCase();
-        } else {
-          companyName = chance.company();
-        }
         cy.updateDeal(_id, {
           exporter: {
-            companyName,
+            companyName: chance.company(),
           },
           // adds company name to array
         }, BANK1_MAKER1).then((insertedDeal) => ALL_DEALS.unshift(insertedDeal.exporter.companyName));
@@ -78,7 +71,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
 
     it('should sort alphabetically ascending if exporter is clicked ', () => {
       // sorts array alphabetically
-      ALL_DEALS.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+      ALL_DEALS.sort();
       cy.login(BANK1_MAKER1);
       dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -102,7 +95,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
 
     it('should sort alphabetically descending if exporter is clicked twice', () => {
       // sorts array and then reverses so in reverse order
-      ALL_DEALS.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).reverse();
+      ALL_DEALS.sort().reverse();
       cy.login(BANK1_MAKER1);
       dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
