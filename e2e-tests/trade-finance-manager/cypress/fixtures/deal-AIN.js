@@ -1,5 +1,4 @@
 const CONSTANTS = require('./constants');
-const dateConstants = require('../../../e2e-fixtures/dateConstants');
 
 const MOCK_DEAL = {
   dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
@@ -190,9 +189,9 @@ const MOCK_DEAL = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      'coverEndDate-day': dateConstants.oneMonthDay,
-      'coverEndDate-month': dateConstants.oneMonthMonth,
-      'coverEndDate-year': dateConstants.oneMonthYear,
+      'coverEndDate-day': '20',
+      'coverEndDate-month': '10',
+      'coverEndDate-year': '2022',
       issuedDate: '1606900616651',
       requestedCoverStartDate: '1606900616652',
       name: 'Test-123',

@@ -75,10 +75,10 @@ context('Amendments - Cover End Date', () => {
     cy.url().should('contain', 'amendment-options');
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'cover-end-date');
-    amendmentsPage.amendmentCurrentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.oneMonthDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.oneMonthMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.oneMonthYear);
+    amendmentsPage.amendmentCurrentCoverEndDate().should('contain', '20 October 2022');
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(20);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(10);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(2022);
     amendmentsPage.continueAmendment().click();
     amendmentsPage.errorSummary().contains('The new cover end date cannot be the same as the current cover end date');
 
