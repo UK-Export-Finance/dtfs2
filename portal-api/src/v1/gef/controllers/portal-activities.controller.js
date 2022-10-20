@@ -17,7 +17,7 @@ const getUserInfo = async (userId) => {
     ? await userCollection.findOne({ _id: ObjectId(String(userId)) })
     : {};
 
-  if (userProfile.firstname) {
+  if (userProfile?.firstname) {
     firstname = userProfile.firstname;
     surname = userProfile.surname;
   }
