@@ -23,11 +23,7 @@ let facilityOneId;
 const FACILITY_THREE_SPECIAL = { ...MOCK_FACILITY_THREE };
 FACILITY_THREE_SPECIAL.specialIssuePermission = true;
 
-/*
-  for changing facilities to issued from preview page.
-  To unlock functionality, need to first issue one facility from unissued-facility table
-*/
-context('Unissued Facilities MIN - change to issued from preview page - specialIssuedPermission', () => {
+context('Unissued Facilities MIN - change to issued more than 3 months after MIN submission date', () => {
   before(() => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
       token = t;
