@@ -3,6 +3,7 @@
 /* eslint-disable no-restricted-syntax */
 const axios = require('axios');
 const { getUnixTime } = require('date-fns');
+const { ObjectId } = require('mongodb');
 const CONSTANTS = require('../constant');
 const {
   getCollection,
@@ -15,7 +16,6 @@ const { actionsheet, workflow, sleep } = require('./io');
 const { epochInSeconds, getEpoch } = require('./date');
 const getFacilityPremiumSchedule = require('../../../trade-finance-manager-api/src/v1/controllers/get-facility-premium-schedule');
 const mapWorkflowStatus = require('./amendment');
-const { ObjectId } = require('mongodb');
 
 const { TFM_API } = process.env;
 let allDeals = {};
@@ -122,10 +122,12 @@ const dealId = (deal) => {
  * @param {String} _id Deal Object ID
  * @returns {Integer} UKEF Deal ID
  */
-const getUkefDealIdFromObjectId = (_id) => allDeals
-  .filter((d) => d._id.toString() === _id.toString())
-  .map((d) => d.dealSnapshot.ukefDealId ?? d.dealSnapshot.details.ukefDealId)
-  .reduce((d) => d);
+const getUkefDealIdFromObjectId = (_id) => {
+  const id = allDeals
+    .filter((d) => d._id.toString() === _id.toString())
+    .map((d) => d.dealSnapshot.ukefDealId ?? d.dealSnapshot.details.ukefDealId);
+  return id[0];
+};
 
 // ******************** DEALS *************************
 
@@ -591,6 +593,10 @@ const comment = async () => {
 const premiumSchedule = async () => {
   const premiumSchedules = await workflow(CONSTANTS.WORKFLOW.FILES.INCOME_EXPOSURE);
   const facilities = Object.values(allFacilities);
+  const acceptableFacilities = [
+    CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
+    CONSTANTS.FACILITY.FACILITY_TYPE.LOAN
+  ];
   let index = 0;
 
   for (const facility of facilities) {
@@ -628,9 +634,11 @@ const premiumSchedule = async () => {
          * Facility has been issued in Portal V2 but has not been updated
          * in Workflow (PS will not exists).
          * If above is true then PS should be manually calculated by invoking
-         * PS API with desired payload
+         * PS API with desired payload.
+         *
+         * This is only applicable to facilities which are wither `Bond` or `Loan`.
          */
-      if (facility.facilitySnapshot.hasBeenIssued && !premiums.length) {
+      if (facility.facilitySnapshot.hasBeenIssued && !premiums.length && acceptableFacilities.includes(facility.facilitySnapshot.type)) {
         const { exposurePeriodInMonths, facilityGuaranteeDates } = facility.tfm;
         const facilityPremiumSchedule = await getFacilityPremiumSchedule(
           facility,
