@@ -57,6 +57,12 @@ const twoYearsDay = format(twoYears, 'dd');
 const twoYearsMonth = format(twoYears, 'M');
 const twoYearsYear = format(twoYears, 'yyyy');
 
+const oneYearAgo = sub(today, { years: 1 });
+const oneYearUnix = getUnixTime(oneYearAgo).toString();
+const oneYearAgoDay = format(oneYearAgo, 'dd');
+const oneYearAgoMonth = format(oneYearAgo, 'M');
+const oneYearAgoYear = format(oneYearAgo, 'yyyy');
+
 const threeYears = add(today, { years: 3, months: 3, days: 1 });
 const threeYearsDay = format(threeYears, 'dd');
 const threeYearsMonth = format(threeYears, 'M');
@@ -142,4 +148,9 @@ export default {
   threeYearsDay,
   threeYearsMonth,
   threeYearsYear,
+  oneYearAgo,
+  oneYearUnix,
+  oneYearAgoDay,
+  oneYearAgoMonth,
+  oneYearAgoYear,
 };
