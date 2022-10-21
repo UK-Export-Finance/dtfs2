@@ -188,6 +188,8 @@ const queryAllDeals = async (
         product: '$dealType',
         submissionType: '$submissionType',
         exporter: '$exporter.companyName',
+        // exporter in lowercase for sorting
+        lowerExporter: { $toLower: '$exporter.companyName' },
         updatedAt: { $toDouble: '$updatedAt' },
       },
     },

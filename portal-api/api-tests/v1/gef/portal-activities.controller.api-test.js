@@ -291,4 +291,23 @@ describe('getUserInfo()', () => {
 
     expect(returnedUser).toEqual(expectedUserObject);
   });
+
+  it('Should return empty `firstname` and `lastname` when user does not exists', async () => {
+    // Wipe existing collections
+    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe([applicationCollectionName]);
+
+    // Fetch user from the collection
+    const userCollection = await db.getCollection('users');
+    const checker = await userCollection.findOne({ _id: '0' });
+    const returnedUser = await getUserInfo(checker?._id);
+
+    const expectedUserObject = {
+      firstname: '',
+      surname: '',
+      _id: checker?._id,
+    };
+
+    expect(returnedUser).toEqual(expectedUserObject);
+  });
 });

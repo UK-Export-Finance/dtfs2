@@ -12,15 +12,17 @@ const { getApiData, requestParams, getFlashSuccessMessage } = require('../../../
 const { sanitiseBody } = require('./sanitise-body');
 const CONSTANTS = require('../../../constants');
 const { isChecker } = require('../../../helpers/isChecker.helper');
+const { dashboardSortQuery } = require('../sort/helpers');
 
 const { PAGE_SIZE } = CONSTANTS.DASHBOARD;
 
-const getAllFacilitiesData = async (userToken, user, sessionFilters, currentPage, res) => {
+const getAllFacilitiesData = async (userToken, user, sessionFilters, currentPage, sortBy, res) => {
   const filtersArray = submittedFiltersArray(sessionFilters);
 
   const filtersQuery = dashboardFacilitiesFiltersQuery(filtersArray, user);
 
-  const { count, facilities } = await getApiData(api.allFacilities(currentPage * PAGE_SIZE, PAGE_SIZE, filtersQuery, userToken), res);
+  const sortQuery = dashboardSortQuery(sortBy);
+  const { count, facilities } = await getApiData(api.allFacilities(currentPage * PAGE_SIZE, PAGE_SIZE, filtersQuery, userToken, sortQuery), res);
 
   return {
     facilities,
@@ -55,8 +57,8 @@ const getTemplateVariables = (user, sessionFilters, facilities, count, currentPa
 };
 exports.getTemplateVariables = getTemplateVariables;
 
-const getDataAndTemplateVariables = async (userToken, user, sessionFilters, currentPage, res) => {
-  const { facilities, count, filtersArray } = await getAllFacilitiesData(userToken, user, sessionFilters, currentPage, res);
+const getDataAndTemplateVariables = async (userToken, user, sessionFilters, currentPage, sortBy, res) => {
+  const { facilities, count, filtersArray } = await getAllFacilitiesData(userToken, user, sessionFilters, currentPage, sortBy, res);
 
   const templateVariables = getTemplateVariables(user, sessionFilters, facilities, count, currentPage, filtersArray);
 
@@ -69,18 +71,32 @@ exports.allFacilities = async (req, res) => {
   const { user } = req.session;
   const currentPage = req.params.page;
 
+  let activeSortByOrder = req.session.sortBy ?? CONSTANTS.SORT_BY.DEFAULT;
+
   if (Object.keys(req.body).length) {
     const sanitisedBody = sanitiseBody(req.body);
-
     req.session.dashboardFilters = sanitisedBody;
+    req.session.sortBy = req.body.sortBy ?? CONSTANTS.SORT_BY.DEFAULT;
   }
 
-  const templateVariables = await getDataAndTemplateVariables(userToken, user, req.session.dashboardFilters, currentPage, res);
+  if (req.body.sortBy) {
+    if (req.body.sortBy === CONSTANTS.SORT_BY.DESCENDING) {
+      activeSortByOrder = CONSTANTS.SORT_BY.DESCENDING;
+      delete req.body.sortBy;
+    }
+    if (req.body.sortBy === CONSTANTS.SORT_BY.ASCENDING) {
+      activeSortByOrder = CONSTANTS.SORT_BY.ASCENDING;
+      delete req.body.sortBy;
+    }
+  }
+
+  const templateVariables = await getDataAndTemplateVariables(userToken, user, req.session.dashboardFilters, currentPage, activeSortByOrder, res);
 
   return res.render('dashboard/facilities.njk', {
     ...templateVariables,
     successMessage: getFlashSuccessMessage(req),
     selectedFiltersString: filtersToText(templateVariables.selectedFilters),
+    activeSortByOrder,
   });
 };
 

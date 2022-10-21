@@ -40,7 +40,8 @@
         {% set tableComponentData = {
           tasks: tasks,
           caseId: dealId,
-          userTimezone: user.timezone
+          userTimezone: user.timezone,
+          user: user
         } %}
 
         {{ tasksTable.render(tableComponentData) }}
