@@ -4,7 +4,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1 } from '../../../../../../e2e-fixtures';
+import { PIM_USER_1, UNDERWRITER_MANAGER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 import pages from '../../../pages';
 import { USER_TEAMS } from '../../../../fixtures/constants';
@@ -111,6 +111,16 @@ context('Amendments tasks - automatic amendment tasks', () => {
     pages.tasksPage.tasks.row(1, 1).dateStarted().contains('-');
     pages.tasksPage.tasks.row(1, 1).dateCompleted().contains('-');
     pages.tasksPage.tasks.row(1, 1).status().contains('To do');
+  });
+
+  it('should not allow you to assign, change the status to in progress and done if user in wrong group', () => {
+    cy.login(UNDERWRITER_MANAGER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+    caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+    pages.tasksPage.filterRadioAllTasks().click();
+
+    pages.tasksPage.tasks.row(1, 1).link().should('not.exist');
   });
 
   it('should allow you to assign, change the status to in progress and done', () => {
