@@ -49,6 +49,18 @@ const facilityValidation = async (body, query, params, facility) => {
   let issueDate = null;
   let coverStartDate = null;
   let coverEndDate = null;
+  let threeMonthsFromSubmission;
+
+  // set to midnight to stop mismatch if submission date in past so set to midnight of past date
+  const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
+
+  if (application.manualInclusionNoticeSubmissionDate) {
+    const minSubmissionDate = (new Date(Number(application.manualInclusionNoticeSubmissionDate))).setHours(0, 0, 0, 0);
+    threeMonthsFromSubmission = add(minSubmissionDate, { months: 3 });
+  } else {
+    threeMonthsFromSubmission = add(submissionDate, { months: 3 });
+  }
+  const now = (new Date()).setHours(0, 0, 0, 0);
 
   // Only validate facility name if hasBeenIssued is set to Yes
   if (!saveAndReturn && !body.facilityName) {
@@ -93,9 +105,6 @@ const facilityValidation = async (body, query, params, facility) => {
       coverYearValidation,
     } = coverDatesValidation(issueDateDay, issueDateMonth, issueDateYear);
 
-    // set to midnight to stop mismatch if submission date in past so set to midnight of past date
-    const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
-    const now = new Date();
     const issueDateSet = (set(new Date(), { year: issueDateYear, month: issueDateMonth - 1, date: issueDateDay })).setHours(0, 0, 0, 0);
 
     if (isBefore(issueDateSet, submissionDate)) {
@@ -171,23 +180,11 @@ const facilityValidation = async (body, query, params, facility) => {
         subFieldErrorRefs: dateFieldsInError,
       });
     } else if (coverStartDateIsFullyComplete) {
-      // set to midnight to stop mismatch if submission date in past so set to midnight of past date
-      const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
-
       const {
         coverDayValidation,
         coverMonthValidation,
         coverYearValidation,
       } = coverDatesValidation(coverStartDateDay, coverStartDateMonth, coverStartDateYear);
-
-      let threeMonthsFromSubmission;
-
-      if (application.manualInclusionNoticeSubmissionDate) {
-        const minSubmissionDate = (new Date(Number(application.manualInclusionNoticeSubmissionDate))).setHours(0, 0, 0, 0);
-        threeMonthsFromSubmission = add(minSubmissionDate, { months: 3 });
-      } else {
-        threeMonthsFromSubmission = add(submissionDate, { months: 3 });
-      }
 
       const startDate = (set(new Date(), { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay })).setHours(0, 0, 0, 0);
 
@@ -231,6 +228,12 @@ const facilityValidation = async (body, query, params, facility) => {
         });
       }
     }
+    // else if cover starts on submission (now) then check it is not 3 months post submission date
+  } else if (isAfter(now, threeMonthsFromSubmission) && !facility?.specialIssuePermission) {
+    aboutFacilityErrors.push({
+      errRef: 'coverStartDate',
+      errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+    });
   }
 
   if (coverEndDateIsBlank) {

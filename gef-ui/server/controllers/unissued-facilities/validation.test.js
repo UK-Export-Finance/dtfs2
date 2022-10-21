@@ -812,4 +812,144 @@ describe('validation()', () => {
     expect(result.errorsObject.errors).toEqual(expectedErrors);
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
+
+  it('should return object with errors populated AIN and coverStartDate starts on submission over 3 months in future from submission date', async () => {
+    api.getApplication.mockResolvedValue({ submissionDate: `${getUnixTime(oneYearAgo)}608` });
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'true';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = format(yesterday, 'd');
+    mockRequest.body['issue-date-month'] = format(yesterday, 'M');
+    mockRequest.body['issue-date-year'] = format(yesterday, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(oneYearFromNow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [
+        {
+          href: '#coverStartDate',
+          text: 'The cover start date must be within 3 months of the inclusion notice submission date',
+        },
+      ],
+      fieldErrors: {
+        coverStartDate: {
+          text: 'The cover start date must be within 3 months of the inclusion notice submission date',
+        },
+      },
+    };
+
+    const expectedFacilityErrors = [{
+      errRef: 'coverStartDate',
+      errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+    }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
+  it('should return object with errors populated MIN and coverStartDate starts on submission over 3 months in future from submission date', async () => {
+    api.getApplication.mockResolvedValue({ submissionDate: `${getUnixTime(oneYearAgo)}608`, manualInclusionNoticeSubmissionDate: `${getUnixTime(oneYearAgo)}608` });
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'true';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = format(yesterday, 'd');
+    mockRequest.body['issue-date-month'] = format(yesterday, 'M');
+    mockRequest.body['issue-date-year'] = format(yesterday, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(oneYearFromNow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(oneYearFromNow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(oneYearFromNow, 'yyyy');
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, {});
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [
+        {
+          href: '#coverStartDate',
+          text: 'The cover start date must be within 3 months of the inclusion notice submission date',
+        },
+      ],
+      fieldErrors: {
+        coverStartDate: {
+          text: 'The cover start date must be within 3 months of the inclusion notice submission date',
+        },
+      },
+    };
+
+    const expectedFacilityErrors = [{
+      errRef: 'coverStartDate',
+      errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+    }];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
+  it('should return object with no errors specialIssuePermission is true and coverStartDate on submission is more than 3 months in the future AIN', async () => {
+    api.getApplication.mockResolvedValue({ submissionDate: `${getUnixTime(oneYearAgo)}608` });
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'true';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = format(yesterday, 'd');
+    mockRequest.body['issue-date-month'] = format(yesterday, 'M');
+    mockRequest.body['issue-date-year'] = format(yesterday, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(threeYearFromNow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, { specialIssuePermission: true });
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [],
+      fieldErrors: {},
+    };
+
+    const expectedFacilityErrors = [];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
+
+  it('should return object with no errors specialIssuePermission is true and coverStartDate on submission is more than 3 months in the future MIN', async () => {
+    api.getApplication.mockResolvedValue({ submissionDate: `${getUnixTime(oneYearAgo)}608`, manualInclusionNoticeSubmissionDate: `${getUnixTime(oneYearAgo)}608` });
+    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+    mockRequest.body.facilityName = 'UKEF123';
+    mockRequest.body.shouldCoverStartOnSubmission = 'true';
+    mockRequest.query.saveAndReturn = 'true';
+
+    mockRequest.body['issue-date-day'] = format(yesterday, 'd');
+    mockRequest.body['issue-date-month'] = format(yesterday, 'M');
+    mockRequest.body['issue-date-year'] = format(yesterday, 'yyyy');
+
+    mockRequest.body['cover-end-date-day'] = format(threeYearFromNow, 'd');
+    mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
+    mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
+
+    const result = await facilityValidation(mockRequest.body, mockRequest.query, mockRequest.params, { specialIssuePermission: true });
+
+    // expected error object format
+    const expectedErrors = {
+      errorSummary: [],
+      fieldErrors: {},
+    };
+
+    const expectedFacilityErrors = [];
+
+    expect(result.errorsObject.errors).toEqual(expectedErrors);
+    expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
+  });
 });
