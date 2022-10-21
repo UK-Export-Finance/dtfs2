@@ -79,6 +79,7 @@ services:
       - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
       - DATA_MIGRATION_SCRIPT=true
       - TZ=Europe/London
+      - UKEF_INTERNAL_NOTIFICATION=test
     entrypoint: npx nodemon src/index.js -L
 
   portal:

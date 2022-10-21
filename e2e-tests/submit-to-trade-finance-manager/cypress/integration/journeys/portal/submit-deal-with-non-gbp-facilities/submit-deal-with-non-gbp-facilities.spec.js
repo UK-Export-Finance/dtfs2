@@ -80,7 +80,8 @@ context('Portal to TFM deal submission', () => {
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/deal`);
 
     //---------------------------------------------------------------
-    // deal facilities with non-GBP currency display GBP and non-GBP currency values
+    // deal facilities with non-GBP currency display GBP and non-GBP
+    // currency values alongside with an Exchange rate
     //---------------------------------------------------------------
     const facilityWithNonGBPCurrency = dealFacilities.find((facility) => facility.currency.code !== 'GBP');
     const facilityId = facilityWithNonGBPCurrency._id;
@@ -90,12 +91,21 @@ context('Portal to TFM deal submission', () => {
 
     cy.url().should('eq', `${TFM_URL}/case/${dealId}/facility/${facilityId}`);
 
+    // Value (export currency)
     tfmPages.facilityPage
       .facilityValueExportCurrency()
       .invoke('text')
       .then((text) => {
         const facilityCurrency = facilityWithNonGBPCurrency.currency.id;
         expect(text.trim()).to.contain(facilityCurrency);
+      });
+
+    // Exchange rate
+    tfmPages.facilityPage
+      .facilityExchangeRate()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).not.contain('-');
       });
 
     // currency is converted dynamically - tricky/flaky to assert/mock this from e2e test
