@@ -54,7 +54,6 @@ module.exports = (app) => ({
           const apiRequest = request(app)
             .put(url)
             .set({ Authorization: token || '' });
-          console.log(files);
           if (files.length) {
             files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
           }
