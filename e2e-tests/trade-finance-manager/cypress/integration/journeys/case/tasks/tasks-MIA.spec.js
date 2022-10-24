@@ -165,4 +165,46 @@ context('Case tasks - MIA deal', () => {
       expect(text.trim()).to.equal('In progress');
     });
   });
+
+  it('should not allow you to click on task if not in the right group`', () => {
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    //---------------------------------------------------------------
+    // user completes task
+    //---------------------------------------------------------------
+    pages.tasksPage.filterRadioAllTasks().click();
+    const firstTask = pages.tasksPage.tasks.row(1, 1);
+    firstTask.link().click();
+
+    cy.url().should('eq', relative(`/case/${dealId}/tasks/1/1`));
+    pages.taskPage.taskStatusRadioInputDone().click();
+    pages.taskPage.submitButton().click();
+
+    pages.tasksPage.filterRadioAllTasks().click();
+    const secondTask = pages.tasksPage.tasks.row(1, 2);
+    secondTask.link().click();
+
+    cy.url().should('eq', relative(`/case/${dealId}/tasks/1/2`));
+    pages.taskPage.taskStatusRadioInputDone().click();
+    pages.taskPage.submitButton().click();
+
+    //---------------------------------------------------------------
+    // user cannot click on task as belongs to another group
+    //---------------------------------------------------------------
+
+    pages.tasksPage.filterRadioAllTasks().click();
+    const thirdTask = pages.tasksPage.tasks.row(1, 3);
+    thirdTask.link().should('not.exist');
+    thirdTask.title().contains('File all deal emails in this deal');
+
+    // task should be open for corrct user
+    cy.login(MOCK_USERS.UNDERWRITING_SUPPORT_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+    pages.tasksPage.filterRadioAllTasks().click();
+    thirdTask.link().should('exist');
+    thirdTask.title().should('not.exist');
+  });
 });

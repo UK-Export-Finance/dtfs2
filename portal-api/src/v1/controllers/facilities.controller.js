@@ -104,6 +104,9 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
           hasBeenIssued: '$hasBeenIssued',
           submittedAsIssuedDate: '$submittedAsIssuedDate',
           updatedAt: { $toDouble: '$updatedAt' },
+          exporter: '$deal.exporter.companyName',
+          // exporter in lowercase for sorting
+          lowerExporter: { $toLower: '$deal.exporter.companyName' },
         },
       },
       {

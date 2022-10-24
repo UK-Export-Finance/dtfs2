@@ -4,7 +4,13 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1 } from '../../../../../../e2e-fixtures';
+import {
+  PIM_USER_1,
+  UNDERWRITING_SUPPORT_1,
+  UNDERWRITER_MANAGER_1,
+  UNDERWRITER_1,
+  RISK_MANAGER_1,
+} from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 import pages from '../../../pages';
 import { USER_TEAMS } from '../../../../fixtures/constants';
@@ -23,6 +29,10 @@ const completeTask = (completeTaskParams) => {
 context('Amendments tasks - manual amendment tasks', () => {
   let dealId;
   let userId;
+  let UWSupportId;
+  let UWManagerId;
+  let UWId;
+  let riskId;
   const dealFacilities = [];
 
   before(() => {
@@ -39,6 +49,18 @@ context('Amendments tasks - manual amendment tasks', () => {
 
       cy.getUser(PIM_USER_1.username).then((userObj) => {
         userId = userObj._id;
+      });
+      cy.getUser(UNDERWRITING_SUPPORT_1.username).then((userObj) => {
+        UWSupportId = userObj._id;
+      });
+      cy.getUser(UNDERWRITER_MANAGER_1.username).then((userObj) => {
+        UWManagerId = userObj._id;
+      });
+      cy.getUser(UNDERWRITER_1.username).then((userObj) => {
+        UWId = userObj._id;
+      });
+      cy.getUser(RISK_MANAGER_1.username).then((userObj) => {
+        riskId = userObj._id;
       });
     });
   });
@@ -193,7 +215,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should change change status of group 2 tasks after completing group 1', () => {
-    cy.login(PIM_USER_1);
+    cy.login(UNDERWRITING_SUPPORT_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -202,7 +224,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(1, 2).link().first().click();
 
     const completeTaskParams = {
-      userId,
+      userId: UWSupportId,
       groupId: 1,
       taskId: 2,
     };
@@ -222,12 +244,16 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 4).status().contains('Cannot start yet');
     pages.tasksPage.tasks.row(4, 5).status().contains('Cannot start yet');
 
+    cy.login(UNDERWRITER_MANAGER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+    caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
     pages.tasksPage.filterRadioAllTasks().click();
 
     pages.tasksPage.tasks.row(1, 3).link().first().click();
 
     const completeTaskParams1 = {
-      userId,
+      userId: UWManagerId,
       groupId: 1,
       taskId: 3,
     };
@@ -248,7 +274,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should change change status of group 3 tasks after completing group 2', () => {
-    cy.login(PIM_USER_1);
+    cy.login(UNDERWRITER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -257,7 +283,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(2, 1).link().first().click();
 
     const completeTaskParams = {
-      userId,
+      userId: UWId,
       groupId: 2,
       taskId: 1,
     };
@@ -277,7 +303,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should change change status of group 4 tasks after completing group 3', () => {
-    cy.login(PIM_USER_1);
+    cy.login(UNDERWRITER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -286,7 +312,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(3, 2).link().first().click();
 
     const completeTaskParams = {
-      userId,
+      userId: UWId,
       groupId: 3,
       taskId: 2,
     };
@@ -306,7 +332,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(3, 1).link().first().click();
 
     const completeTaskParams1 = {
-      userId,
+      userId: UWId,
       groupId: 3,
       taskId: 1,
     };
@@ -324,7 +350,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should allow you to add UW decision after completing `approve or decline the amendment` task in order', () => {
-    cy.login(PIM_USER_1);
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -333,7 +359,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 1).link().first().click();
 
     const completeTaskParams = {
-      userId,
+      userId: UWManagerId,
       groupId: 4,
       taskId: 1,
     };
@@ -350,7 +376,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 2).link().first().click();
 
     const completeTaskParams1 = {
-      userId,
+      userId: UWManagerId,
       groupId: 4,
       taskId: 2,
     };
@@ -376,10 +402,16 @@ context('Amendments tasks - manual amendment tasks', () => {
     // cy.url().should('eq', relative(`/case/${dealId}/tasks`));
     // pages.tasksPage.filterRadioAllTasks().click();
 
+    cy.login(RISK_MANAGER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+    caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+    pages.tasksPage.filterRadioAllTasks().click();
+
     pages.tasksPage.tasks.row(4, 3).link().first().click();
 
     const completeTaskParams2 = {
-      userId,
+      userId: riskId,
       groupId: 4,
       taskId: 3,
     };
@@ -391,12 +423,18 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 4).status().contains('To do');
     pages.tasksPage.tasks.row(4, 5).status().contains('Cannot start yet');
 
+    cy.login(UNDERWRITER_MANAGER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+    caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+    pages.tasksPage.filterRadioAllTasks().click();
+
     pages.tasksPage.tasks.row(4, 4).link().first().click();
 
     cy.url().should('contain', '/amendment');
     cy.url().should('contain', `task/${4}/group/${4}`);
 
-    pages.taskPage.assignedToSelectInput().select(userId);
+    pages.taskPage.assignedToSelectInput().select(UWManagerId);
     pages.taskPage.taskStatusRadioInputInProgress().click();
     pages.taskPage.submitButton().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -421,7 +459,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 4).link().first().click();
 
     const completeTaskParams3 = {
-      userId,
+      userId: UWManagerId,
       groupId: 4,
       taskId: 4,
     };
@@ -431,6 +469,12 @@ context('Amendments tasks - manual amendment tasks', () => {
 
     pages.tasksPage.tasks.row(4, 4).status().contains('Done');
     pages.tasksPage.tasks.row(4, 5).status().contains('To do');
+
+    cy.login(PIM_USER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+    caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+    pages.tasksPage.filterRadioAllTasks().click();
 
     pages.tasksPage.tasks.row(4, 5).link().first().click();
 

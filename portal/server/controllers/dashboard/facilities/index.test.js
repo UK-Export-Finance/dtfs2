@@ -76,6 +76,7 @@ describe('controllers/dashboard/facilities', () => {
         mockReq.session.user,
         mockReq.session.dashboardFilters,
         mockReq.params.page,
+        CONSTANTS.SORT_BY.DEFAULT,
         mockRes,
       );
 
@@ -88,11 +89,14 @@ describe('controllers/dashboard/facilities', () => {
         mockReq.session.user,
       );
 
+      const sortQuery = {};
+
       expect(api.allFacilities).toHaveBeenCalledWith(
         CONSTANTS.DASHBOARD.PAGE_SIZE,
         CONSTANTS.DASHBOARD.PAGE_SIZE,
         expectedFilters,
         'mock-token',
+        sortQuery,
       );
     });
 
@@ -161,6 +165,7 @@ describe('controllers/dashboard/facilities', () => {
         mockReq.session.user,
         mockReq.session.dashboardFilters,
         mockReq.params.page,
+        CONSTANTS.SORT_BY.DEFAULT,
         mockRes,
       );
 
@@ -205,6 +210,7 @@ describe('controllers/dashboard/facilities', () => {
         mockReq.session.user,
         mockReq.session.dashboardFilters,
         mockReq.params.page,
+        CONSTANTS.SORT_BY.DEFAULT,
         mockRes,
       );
 
@@ -212,6 +218,8 @@ describe('controllers/dashboard/facilities', () => {
         ...expectedVariables,
         successMessage: getFlashSuccessMessage(mockReq),
         selectedFiltersString: 'Filters selected: none',
+        activeSortByOrder: CONSTANTS.SORT_BY.DEFAULT,
+
       });
     });
   });

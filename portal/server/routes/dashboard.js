@@ -34,6 +34,7 @@ router.get('/dashboard/deals/filters/remove/:fieldName/:fieldValue', removeSingl
  */
 router.get('/dashboard/facilities', (req, res) => {
   req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+  req.session.sortBy = CONSTANTS.DASHBOARD.DEFAULT_SORT;
 
   return res.redirect('/dashboard/facilities/0');
 });
