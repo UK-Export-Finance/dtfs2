@@ -28,19 +28,17 @@ module.exports.deleteDeal = (token, deal) => cy.request({
   },
 }).then((resp) => expect(resp.status).to.equal(200));
 
-module.exports.listAllDeals = (token) => {
-  return cy.request({
-    url: `${api()}/v1/deals`,
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
-  }).then((resp) => {
-    expect(resp.status).to.equal(200);
-    return resp.body.deals;
-  });
-};
+module.exports.listAllDeals = (token) => cy.request({
+  url: `${api()}/v1/deals`,
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body.deals;
+});
 
 module.exports.listAllUsers = (token) => cy.request({
   url: `${api()}/v1/users`,

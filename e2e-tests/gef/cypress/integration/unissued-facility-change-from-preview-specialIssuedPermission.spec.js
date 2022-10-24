@@ -200,10 +200,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
       aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
 
-      aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoYearsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoYearsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoYearsYear);
+      aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
 
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeYearsDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeYearsMonth);
@@ -213,7 +210,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
 
     it('change links should appear for facility four and three should be unissued still', () => {
       const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
-      const coverStart = format(dateConstants.twoYears, 'd MMMM yyyy');
+      const coverStartNow = format(dateConstants.today, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeYears, 'd MMMM yyyy');
 
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
@@ -230,7 +227,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       applicationPreview.facilitySummaryListRowAction(0, 2).contains('Change');
       applicationPreview.facilitySummaryListRowValue(0, 3).contains(issuedDate);
       applicationPreview.facilitySummaryListRowAction(0, 3).contains('Change');
-      applicationPreview.facilitySummaryListRowValue(0, 4).contains(coverStart);
+      applicationPreview.facilitySummaryListRowValue(0, 4).contains(coverStartNow);
       applicationPreview.facilitySummaryListRowAction(0, 4).contains('Change');
       applicationPreview.facilitySummaryListRowValue(0, 5).contains(coverEnd);
       applicationPreview.facilitySummaryListRowAction(0, 5).contains('Change');
