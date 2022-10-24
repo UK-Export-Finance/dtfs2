@@ -26,6 +26,12 @@ let allFacilities = {};
  */
 
 // ******************** DATABASE *************************
+/**
+  * Return all the portal deals, without (default) or with filter specified.
+  * @param {Object} filter Mongo filter
+  * @returns {Object} Collection object
+  */
+const getDeals = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.DEAL, filter);
 
 /**
  * Return all the TFM facilities, without (default) or with filter specified.
@@ -406,6 +412,48 @@ const creditRating = async () => {
           allDeals[index].tfm.exporterCreditRating = FACILITY['CREDIT RATING'];
           return null;
         });
+    }
+  });
+};
+
+const importPortalData = async () => {
+  /**
+    * AND condition
+    * 1. Deal type : GEF
+    * 2. Property exists : dataMigration
+    */
+  const filter = {
+    $and: [{ dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF }, { dataMigration: { $exists: true } }],
+  };
+  const deals = await getDeals(filter);
+
+  deals.map((deal) => {
+    const { ukefDecision: decision } = deal;
+    if (decision && decision[0] && decision[0].text) {
+      const { text } = decision[0];
+
+      // Set deal TFM stage as `Abandoned` if mentioned in UKEF decision
+      if (text.toLowerCase().indexOf('abandoned')) {
+        allDeals
+          .forEach((d, i) => {
+            if (allDeals[i].dealSnapshot.ukefDealId === deal.ukefDealId) {
+              allDeals[i].tfm.stage = CONSTANTS.DEAL.TFM_STATUS.ABANDONED;
+            }
+          });
+      }
+
+      // Add UW Managers decision's from Portal to TFM
+      if (text && text.toLowerCase().indexOf('abandoned') === -1) {
+        allDeals
+          .forEach((d, i) => {
+            if (allDeals[i].dealSnapshot.ukefDealId === deal.ukefDealId) {
+              allDeals[i].tfm.underwriterManagersDecision = {
+                decision: CONSTANTS.DEAL.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,
+                comments: text
+              };
+            }
+          });
+      }
     }
   });
 };
@@ -1345,8 +1393,9 @@ const datafixTfmDealGef = async (deals) => {
       let updated = 0;
 
       // TFM Deal - Action sheet data fixes
-      await actionSheetDeal();
-      await ACBS();
+      // await actionSheetDeal();
+      // await ACBS();
+      await importPortalData();
 
       const updates = allDeals.map(async (deal) => {
         await tfmDealUpdate(deal)
