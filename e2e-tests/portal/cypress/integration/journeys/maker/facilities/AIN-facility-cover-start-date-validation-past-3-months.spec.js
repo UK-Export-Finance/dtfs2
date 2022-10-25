@@ -184,7 +184,6 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
       // cover starts on submission
-      pages.bondIssueFacility.requestedCoverStartDateError().contains('aa');
       pages.bondIssueFacility.issuedDateDayInput().clear().type(day);
       pages.bondIssueFacility.issuedDateMonthInput().clear().type(month);
       pages.bondIssueFacility.issuedDateYearInput().clear().type(year);
