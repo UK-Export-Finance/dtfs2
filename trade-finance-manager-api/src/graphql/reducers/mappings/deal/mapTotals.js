@@ -31,13 +31,14 @@ const mapTotals = (facilities) => {
       // If we pass in mapped facilities, value would contain currency code. Therefore:
       // - Bond and Loan facility total is `value`
       // - Cash and Contingent facility total is `value`
-
       return Number(facilitySnapshot.value);
     }
     return null;
   });
 
-  const formattedFacilitiesValue = formattedNumber(facilitiesValue.reduce((a, b) => a + b));
+  const formattedFacilitiesValue = facilitiesValue.length
+    ? formattedNumber(facilitiesValue.reduce((a, b) => a + b))
+    : 0;
 
   totals.facilitiesValueInGBP = `${CURRENCY.GBP} ${formattedFacilitiesValue}`;
 
@@ -59,7 +60,10 @@ const mapTotals = (facilities) => {
   // total ukef exposure for all facilities
   const ukefExposureArray = [...mappedExposureTotal];
 
-  const formattedUkefExposure = formattedNumber(ukefExposureArray.reduce((a, b) => a + b));
+  const formattedUkefExposure = ukefExposureArray.length
+    ? formattedNumber(ukefExposureArray.reduce((a, b) => a + b))
+    : 0;
+
   totals.facilitiesUkefExposure = `${CURRENCY.GBP} ${formattedUkefExposure}`;
 
   return totals;
