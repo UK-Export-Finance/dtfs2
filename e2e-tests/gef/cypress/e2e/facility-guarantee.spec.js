@@ -83,7 +83,6 @@ context('Facility Guarantee Page', () => {
       facilityGuarantee.feeFrequencyInputErrorMessage();
     });
 
-
     it('displays the application page when required entries are completed', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.feeTypeInAdvanceInput().click();

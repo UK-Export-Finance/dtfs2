@@ -28,7 +28,6 @@ context('Checker tries to submit a deal that has changed/newly issued facilities
     cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
 
-
     pages.contract.proceedToSubmit().click();
     cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
 

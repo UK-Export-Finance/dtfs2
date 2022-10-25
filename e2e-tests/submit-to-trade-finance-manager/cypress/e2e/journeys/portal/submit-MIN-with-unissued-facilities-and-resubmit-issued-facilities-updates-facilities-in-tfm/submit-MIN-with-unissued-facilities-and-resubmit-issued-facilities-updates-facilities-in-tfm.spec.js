@@ -1,6 +1,6 @@
 import relative from '../../../relativeURL';
-import portalPages from '../../../../../../portal/cypress/integration/pages';
-import tfmPages from '../../../../../../trade-finance-manager/cypress/integration/pages';
+import portalPages from '../../../../../../portal/cypress/e2e/pages';
+import tfmPages from '../../../../../../trade-finance-manager/cypress/e2e/pages';
 
 import MOCK_USERS from '../../../../../../portal/cypress/fixtures/users';
 import MOCK_MIN_UNISSUED_FACILITIES_DEAL_READY_TO_SUBMIT from '../test-data/MIN-deal-unissued-facilities/dealReadyToSubmit';
@@ -9,14 +9,14 @@ import {
   COVER_START_DATE_VALUE as BOND_COVER_START_DATE_VALUE,
   COVER_END_DATE_VALUE as BOND_COVER_END_DATE_VALUE,
   fillAndSubmitIssueBondFacilityForm,
-} from '../../../../../../portal/cypress/integration/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm';
+} from '../../../../../../portal/cypress/e2e/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueBondFacilityForm';
 
 import {
   COVER_START_DATE_VALUE as LOAN_COVER_START_DATE_VALUE,
   COVER_END_DATE_VALUE as LOAN_COVER_END_DATE_VALUE,
   DISBURSEMENT_AMOUNT_VALUE,
   fillAndSubmitIssueLoanFacilityForm,
-} from '../../../../../../portal/cypress/integration/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm';
+} from '../../../../../../portal/cypress/e2e/journeys/maker/fill-and-submit-issue-facility-form/fillAndSubmitIssueLoanFacilityForm';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 

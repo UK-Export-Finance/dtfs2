@@ -8,10 +8,9 @@ import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { T1_USER_1 } from '../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM } from '../../../fixtures/users-portal';
-import CONSTANTS from '../../../fixtures/constants';
+import { FACILITY_TYPE, DEAL_TYPE } from '../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
-import { DEAL_TYPE } from '../../../fixtures/constants';
 
 context('User can view and filter multiple deals', () => {
   let ALL_SUBMITTED_DEALS = [];
@@ -45,14 +44,14 @@ context('User can view and filter multiple deals', () => {
   const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
     mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.BOND),
+      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.BOND),
     ],
   });
 
   const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
     testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     mockFacilities: [
-      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.LOAN),
+      MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.LOAN),
     ],
   });
 
@@ -298,7 +297,7 @@ context('User can view and filter multiple deals', () => {
       const { dealSnapshot } = deal;
 
       if (dealSnapshot.mockFacilities) {
-        if (dealSnapshot.mockFacilities.find((f) => f.type === CONSTANTS.FACILITY_TYPE.BOND)) {
+        if (dealSnapshot.mockFacilities.find((f) => f.type === FACILITY_TYPE.BOND)) {
           return deal;
         }
       }

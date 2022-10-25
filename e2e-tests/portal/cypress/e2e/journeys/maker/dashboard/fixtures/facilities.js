@@ -56,7 +56,7 @@ const BOND_FACILITY = {
   ukefFacilityId: '123',
 };
 
-module.exports =  {
+module.exports = {
   CASH_FACILITY,
   BOND_FACILITY,
 };

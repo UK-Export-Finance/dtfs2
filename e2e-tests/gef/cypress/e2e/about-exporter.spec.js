@@ -24,7 +24,7 @@ context('About Exporter Page', () => {
         });
 
         dealWithNoExporterIndustries = body.items.find((deal) =>
-           deal.exporter?.industries?.length === 0);
+          deal.exporter?.industries?.length === 0);
 
         dealWithExporterIndustries = body.items.find((deal) =>
           deal.exporter?.industries?.length);
@@ -34,7 +34,6 @@ context('About Exporter Page', () => {
 
         dealWithCompletedExporter = body.items.find((deal) =>
           deal.exporter.status === 'Completed');
-
       });
     cy.login(CREDENTIALS.MAKER);
   });

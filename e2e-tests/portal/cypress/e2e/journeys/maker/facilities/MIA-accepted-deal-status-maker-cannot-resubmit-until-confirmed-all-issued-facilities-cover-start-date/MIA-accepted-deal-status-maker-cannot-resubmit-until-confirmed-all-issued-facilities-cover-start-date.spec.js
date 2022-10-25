@@ -84,7 +84,6 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const secondIssuedSubmittedBondId = secondIssuedSubmittedBond._id;
     const secondIssuedSubmittedBondRow = pages.contract.bondTransactionsTable.row(secondIssuedSubmittedBondId);
 
-
     const issuedCompletedBondId = issuedCompletedBond._id;
     const issuedCompletedBondRow = pages.contract.bondTransactionsTable.row(issuedCompletedBondId);
 
@@ -108,7 +107,6 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     const conditionalLoanId = conditionalLoan._id;
     const conditionalLoanRow = pages.contract.loansTransactionsTable.row(conditionalLoanId);
-
 
     //---------------------------------------------------------------
     // `Confirm start date` link should appear for Issued Bonds & Unconditional Loans
@@ -251,13 +249,17 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // - `confirm start date` link/text should be updated
     //---------------------------------------------------------------
 
-    secondIssuedSubmittedBondRow.requestedCoverStartDate().should('contain.text',
-      new Date(issuedSubmittedBond.requestedCoverStartDate).toLocaleDateString('en-GB'));
+    secondIssuedSubmittedBondRow.requestedCoverStartDate().should(
+      'contain.text',
+      new Date(issuedSubmittedBond.requestedCoverStartDate).toLocaleDateString('en-GB'),
+    );
 
     secondIssuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
-    secondUnconditionalSubmittedLoanRow.requestedCoverStartDate().should('contain.text',
-      new Date(issuedSubmittedBond.requestedCoverStartDate).toLocaleDateString('en-GB'));
+    secondUnconditionalSubmittedLoanRow.requestedCoverStartDate().should(
+      'contain.text',
+      new Date(issuedSubmittedBond.requestedCoverStartDate).toLocaleDateString('en-GB'),
+    );
 
     secondUnconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
