@@ -98,8 +98,8 @@ context('View dashboard facilities as a maker', () => {
         CASH_FACILITY.dealId = createdGefDeal._id;
 
         cy.insertOneGefFacility(CASH_FACILITY, BANK1_MAKER1)
-          .then((gefFacility) => {
-            const { _id } = gefFacility.details;
+          .then((facility) => {
+            const { _id } = facility.details;
 
             cy.updateGefFacility(_id, CASH_FACILITY, BANK1_MAKER1)
               .then((updatedGefFacility) => {
@@ -148,9 +148,8 @@ context('View dashboard facilities as a maker', () => {
     //---------------------------------------------------------------
     // first facility should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
-    const firstRow = cy.get('table tr').eq(1);
 
-    firstRow.find(`[data-cy="facility__name--link--${gefFacilityId}"]`).should('exist');
+    cy.get('table tr').eq(1).find(`[data-cy="facility__name--link--${gefFacilityId}"]`).should('exist');
 
     nameLink(gefFacilityId).should('contain', gefFacility.name);
 
@@ -172,9 +171,8 @@ context('View dashboard facilities as a maker', () => {
     //---------------------------------------------------------------
     // second facility (BSS)
     //---------------------------------------------------------------
-    const secondRow = cy.get('table tr').eq(2);
 
-    secondRow.find(`[data-cy="facility__name--link--${bssFacilityId}"]`).should('exist');
+    cy.get('table tr').eq(2).find(`[data-cy="facility__name--link--${bssFacilityId}"]`).should('exist');
 
     nameLink(bssFacilityId).should('contain', bssFacility.name);
 
@@ -224,8 +222,6 @@ context('View dashboard facilities as a maker', () => {
       expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
     });
 
-    const row = cy.get('table tr');
-
-    row.find(`[data-cy="facility__name--link--${ALL_BANK2_DEALS[0]}"]`).should('not.exist');
+    cy.get('table tr').find(`[data-cy="facility__name--link--${ALL_BANK2_DEALS[0]}"]`).should('not.exist');
   });
 });

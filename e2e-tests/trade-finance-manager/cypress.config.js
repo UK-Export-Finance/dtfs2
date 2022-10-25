@@ -16,10 +16,10 @@ module.exports = defineConfig({
   projectId: 'sefntb',
   responseTimeout: 100000,
   pageLoadTimeout: 120000,
-  redirectionLimit: 60,
+  redirectionLimit: 100,
   numTestsKeptInMemory: 1,
   retries: {
-    runMode: 3,
+    runMode: 2,
     openMode: 0,
   },
   e2e: {

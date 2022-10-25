@@ -45,32 +45,32 @@ context('View dashboard deals as a maker', () => {
     });
 
     cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1)
-      .then((gefDeal) => {
-        ALL_DEALS.push(gefDeal);
+      .then((deal) => {
+        ALL_DEALS.push(deal);
       });
 
     cy.insertOneDeal(BSS_DEAL, BANK1_MAKER1)
-      .then((bssDeal) => {
-        ALL_DEALS.push(bssDeal);
+      .then((deal) => {
+        ALL_DEALS.push(deal);
       });
 
     cy.insertOneGefApplication(GEF_DEAL_MAKER_2, BANK1_MAKER2)
-      .then((gefDeal) => {
-        ALL_DEALS.push(gefDeal);
+      .then((deal) => {
+        ALL_DEALS.push(deal);
       });
 
     cy.insertOneGefApplication(GEF_DEAL_BANK_2_MAKER_2, BANK1_MAKER2)
-      .then((gefDeal) => {
-        ALL_DEALS.push(gefDeal);
+      .then((deal) => {
+        ALL_DEALS.push(deal);
       });
   });
 
   beforeEach(() => {
-    gefDeal = ALL_DEALS.find(({ dealType, status, maker }) =>
+    gefDeal = ALL_DEALS.find(({ dealType, maker }) =>
       dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
       && maker.username === BANK1_MAKER2.username);
 
-    bssDeal = ALL_DEALS.find(({ dealType, status }) =>
+    bssDeal = ALL_DEALS.find(({ dealType }) =>
       dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
 
     gefDealId = gefDeal._id;
@@ -101,9 +101,9 @@ context('View dashboard deals as a maker', () => {
     //---------------------------------------------------------------
     // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
-    const firstRow = cy.get('table tr').eq(1);
 
-    firstRow.find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
+    cy.get('table tr').eq(1).as('firstRow').find(`[data-cy="deal__status--${gefDeal._id}"]`)
+      .should('exist');
 
     exporter(gefDealId).invoke('text').then((text) => {
       expect(text.trim()).equal(gefDeal.exporter.companyName);
@@ -132,9 +132,7 @@ context('View dashboard deals as a maker', () => {
     //---------------------------------------------------------------
     // second deal (BSS)
     //---------------------------------------------------------------
-    const secondRow = cy.get('table tr').eq(2);
-
-    firstRow.find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
+    cy.get('table tr').eq(2).find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
 
     exporter(bssDealId).invoke('text').then((text) => {
       expect(text.trim()).equal(bssDeal.exporter.companyName);
@@ -169,10 +167,8 @@ context('View dashboard deals as a maker', () => {
     dashboardDeals.row.link(gefDealId).click();
     cy.url().should('eq', relative(`/gef/application-details/${gefDealId}`));
 
-
     // go back to the dashboard
     dashboardDeals.visit();
-
 
     // BSS link
     dashboardDeals.row.link(bssDealId).click();
@@ -185,7 +181,6 @@ context('View dashboard deals as a maker', () => {
   //   cy.login(BANK1_MAKER2);
   //   dashboardDeals.visit();
 
-
   //   // should see all deals in bank 1
   //   dashboardDeals.totalItems().invoke('text').then((text) => {
   //     expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
@@ -193,7 +188,6 @@ context('View dashboard deals as a maker', () => {
 
   //   // select/submit `created by you` checkbox
   //   dashboardDeals.filters.mainContainer.createdByYouCheckbox().check();
-
 
   //   // should only see deals made by Maker 2.
   //   const DEALS_BY_MAKER_2 = ALL_BANK1_DEALS.filter(({ maker }) => maker.username === BANK1_MAKER2.username);
@@ -214,8 +208,6 @@ context('View dashboard deals as a maker', () => {
       expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
     });
 
-    const row = cy.get('table tr');
-
-    row.find(`[data-cy="deal__status--${ALL_BANK2_DEALS[0]._id}"]`).should('not.exist');
+    cy.get('table tr').find(`[data-cy="deal__status--${ALL_BANK2_DEALS[0]._id}"]`).should('not.exist');
   });
 });
