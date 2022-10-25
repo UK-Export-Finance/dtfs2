@@ -120,7 +120,7 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
       expect(status).toEqual(404);
     });
 
-    it('400 requests if <user>.bank.id == *', async () => {
+    it('should return 400 if <user>.bank.id == *', async () => {
       const { status } = await as(aSuperuser).put({}).to(`/v1/deals/${dealId}/loan/${loanId}/change-cover-start-date`);
 
       expect(status).toEqual(400);
