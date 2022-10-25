@@ -16,6 +16,7 @@ const { actionsheet, workflow, sleep } = require('./io');
 const { epochInSeconds, getEpoch } = require('./date');
 const getFacilityPremiumSchedule = require('../../../trade-finance-manager-api/src/v1/controllers/get-facility-premium-schedule');
 const mapWorkflowStatus = require('./amendment');
+const siteNames = require('../tfm/json/eStore');
 
 const { TFM_API } = process.env;
 let allDeals = {};
@@ -532,6 +533,25 @@ const ACBS = async (facility = false) => {
 };
 
 /**
+ * Add eStore site name to deals with missing
+ * eStore site name due to exporter name anomaly.
+ * `deal.tfm.eStore.siteName` property is updated.
+ */
+const eStore = async () => {
+  Object.values(allDeals).forEach((deal, index) => {
+    // Only if Site name is blank
+    if (!deal.tfm.estore.siteName) {
+      siteNames.map((site) => {
+        if (site[0] === Number(deal.dealSnapshot.details.ukefDealId)) {
+          allDeals[index].tfm.estore.siteName = site[1];
+        }
+      });
+    }
+  });
+  return null;
+};
+
+/**
  * Add agent's commission rate to deal TFM (deal.tfm.agent.commissionRate)
  */
 const agentCommissionRate = async () => {
@@ -1042,13 +1062,14 @@ const datafixesTfmDeal = async (deals) => {
       let updated = 0;
 
       // TFM Deal - Data fixes
-      await creditRating();
-      await partyUrn();
-      await agentCommissionRate();
-      await comment();
-      await ACBS();
-      await ukefDecision();
-      await supportingInformations();
+      // await creditRating();
+      // await partyUrn();
+      // await agentCommissionRate();
+      // await comment();
+      // await ACBS();
+      // await ukefDecision();
+      // await supportingInformations();
+      await eStore();
 
       const updates = allDeals.map(async (deal) => {
         // Ensure `_id` are kept as ObjectId
