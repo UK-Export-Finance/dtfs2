@@ -18,7 +18,7 @@ const AINDeal = {
   },
   mockFacilities: [
     {
-      type: 'Bond',
+      type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
       createdDate: fourMonthsPast(),
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
       hasBeenIssued: false,
@@ -26,7 +26,7 @@ const AINDeal = {
       status: CONSTANTS.DEALS.SECTION_STATUS.COMPLETED,
     },
     {
-      type: 'Loan',
+      type: CONSTANTS.FACILITY.FACILITY_TYPE.LOAN,
       createdDate: fourMonthsPast(),
       facilityStage: CONSTANTS.FACILITY.FACILITY_STAGE.CONDITIONAL,
       hasBeenIssued: false,
