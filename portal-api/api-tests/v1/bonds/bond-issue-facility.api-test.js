@@ -159,6 +159,25 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
       expect(typeof body.issuedDate === 'string').toEqual(true);
     });
 
+    it('should return 200 with updated bond, if special issue permission and more than 3 months in advance', async () => {
+      const issueFacilityBodySpecialPermission = {
+        ...createCoverDateFields('requestedCoverStartDate', moment().add(5, 'month')),
+        ...createCoverDateFields('coverEndDate', moment().add(8, 'month')),
+        ...createCoverDateFields('issuedDate', moment()),
+        name: '1234',
+        specialIssuePermission: true,
+      };
+      const { status, body } = await putIssueFacility(dealId, bondId, issueFacilityBodySpecialPermission);
+
+      expect(status).toEqual(200);
+      expect(body.issueFacilityDetailsProvided).toEqual(true);
+      expect(body.hasBeenIssued).toEqual(true);
+      expect(body.previousFacilityStage).toEqual(CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.UNISSUED);
+      expect(body.facilityStage).toEqual(CONSTANTS.FACILITIES.FACILITIES_STAGE.BOND.ISSUED);
+      expect(typeof body.requestedCoverStartDate === 'string').toEqual(true);
+      expect(typeof body.issuedDate === 'string').toEqual(true);
+    });
+
     describe('with validation errors', () => {
       const incompleteIssueFacilityBody = {
         ...createCoverDateFields('requestedCoverStartDate', moment().add(1, 'week')),
