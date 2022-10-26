@@ -1,5 +1,5 @@
-const pages = require('../../integration/pages');
-const fillLoanForm = require('../../integration/journeys/maker/loan/fill-loan-forms');
+const pages = require('../../e2e/pages');
+const fillLoanForm = require('../../e2e/journeys/maker/loan/fill-loan-forms');
 
 module.exports = () => {
   pages.contract.addLoanButton().click();

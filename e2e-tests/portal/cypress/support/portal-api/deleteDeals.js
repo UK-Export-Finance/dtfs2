@@ -1,11 +1,13 @@
-const { listAllDeals, logIn, deleteDeal, deleteGefApplication } = require('./api');
+const {
+  listAllDeals, logIn, deleteDeal, deleteGefApplication,
+} = require('./api');
 
 const deleteAllDeals = (token, deals) => {
   if (!deals || !deals.length) return;
 
-  deals.forEach(async (deal) => {
+  deals.forEach((deal) => {
     if (deal.product === 'BSS/EWCS') {
-      return deleteDeal(token, deal)
+      return deleteDeal(token, deal);
     }
 
     if (deal.product === 'GEF') {

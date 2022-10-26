@@ -1,10 +1,10 @@
-const pages = require('../../../../portal/cypress/integration/pages');
+const pages = require('../../../../portal/cypress/e2e/pages');
 
 module.exports = (opts) => {
-  const {username, password} = opts;
+  const { username, password } = opts;
 
   pages.landingPage.visit();
   pages.landingPage.email().type(username);
   pages.landingPage.password().type(password);
   pages.landingPage.login().click();
-}
+};

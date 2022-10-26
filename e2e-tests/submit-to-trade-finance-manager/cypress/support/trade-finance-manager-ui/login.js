@@ -1,4 +1,4 @@
-const tfmPages = require('../../../../trade-finance-manager/cypress/integration/pages');
+const tfmPages = require('../../../../trade-finance-manager/cypress/e2e/pages');
 
 module.exports = (opts) => {
   const { username, password } = opts;

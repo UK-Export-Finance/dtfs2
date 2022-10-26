@@ -1,5 +1,5 @@
-const pages = require('../../integration/pages');
-const fillBondForm = require('../../integration/journeys/maker/bond/fill-bond-forms');
+const pages = require('../../e2e/pages');
+const fillBondForm = require('../../e2e/journeys/maker/bond/fill-bond-forms');
 
 module.exports = () => {
   pages.contract.addBondButton().click();
@@ -12,4 +12,4 @@ module.exports = () => {
 
   fillBondForm.feeDetails();
   pages.bondFeeDetails.submit().click();
-}
+};
