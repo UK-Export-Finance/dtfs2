@@ -4,6 +4,7 @@ const {
   dateHasAllValues,
   dateValidationText,
 } = require('./date');
+const { formattedTimestamp } = require('../../facility-dates/timestamp');
 const isReadyForValidation = require('../helpers/isReadyForValidation.helper');
 const coverDatesValidation = require('../helpers/coverDatesValidation.helpers');
 
@@ -13,6 +14,7 @@ module.exports = (submittedValues, deal, errorList) => {
     'coverEndDate-day': coverEndDateDay,
     'coverEndDate-month': coverEndDateMonth,
     'coverEndDate-year': coverEndDateYear,
+    requestedCoverStartDate,
   } = submittedValues;
 
   if (isReadyForValidation(deal, submittedValues)) {
@@ -28,6 +30,30 @@ module.exports = (submittedValues, deal, errorList) => {
       if (moment(formattedDate).isBefore(nowDate)) {
         newErrorList.coverEndDate = {
           text: 'Cover End Date must be today or in the future',
+          order: orderNumber(newErrorList),
+        };
+      }
+
+      /**
+       * validation if requested cover start date
+       * checks if set, then the cover end date is not the same
+       * if null, means that cover starts on submission so checks if the same as now
+       * throws error if dates are the same
+       */
+      if (requestedCoverStartDate) {
+        // converts from UTC
+        const coverStartDate = formattedTimestamp(requestedCoverStartDate);
+        // formats to the same format as formatted date for checking
+        const requestedCoverStartDateFormatted = moment(coverStartDate).format('YYYY-MM-DD');
+        if (moment(formattedDate).isSame(requestedCoverStartDateFormatted)) {
+          newErrorList.coverEndDate = {
+            text: 'Cover End Date must be after the Requested Cover Start Date',
+            order: orderNumber(newErrorList),
+          };
+        }
+      } else if (moment(formattedDate).isSame(nowDate)) {
+        newErrorList.coverEndDate = {
+          text: 'Cover End Date must be after the Requested Cover Start Date',
           order: orderNumber(newErrorList),
         };
       }

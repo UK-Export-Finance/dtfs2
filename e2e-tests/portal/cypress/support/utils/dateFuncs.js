@@ -12,8 +12,15 @@ const nowPlusMonths = (numberMonths) => {
   return date;
 };
 
+const datePlusMonths = (date, numberMonths) => {
+  const newDate = new Date(date);
+  newDate.setMonth(newDate.getMonth() + numberMonths);
+  return newDate;
+};
+
 module.exports = {
   padDate,
   nowPlusDays,
   nowPlusMonths,
+  datePlusMonths,
 };

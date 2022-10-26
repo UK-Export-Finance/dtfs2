@@ -274,7 +274,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
         describe('when requestedCoverStartDate is after 3 months from today', () => {
           it('should return validationError', async () => {
-            const todayPlus3Months = moment().add(3, 'month');
+            const submissionPlus3Months = moment(updatedDeal.details.submissionDate).add(3, 'month');
             const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
@@ -286,10 +286,74 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
             const formattedSubmissionDate = moment(formattedTimestamp(updatedDeal.details.submissionDate)).format('Do MMMM YYYY');
-            const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
+            const submissionPlus3MonthsFormatted = moment(submissionPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${formattedSubmissionDate} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${formattedSubmissionDate} and ${submissionPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
+
+        describe('when requestedCoverStartDate is after 3 months from submission date but has special issue permission', () => {
+          it('should not return validationError for coverStartDate', async () => {
+            const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
+              'requestedCoverStartDate-month': moment(todayPlus3Months1Day).format('MM'),
+              'requestedCoverStartDate-year': moment(todayPlus3Months1Day).format('YYYY'),
+              specialIssuePermission: true,
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
+          });
+        });
+      });
+
+      describe('when deal is AIN and cover starts on submission', () => {
+        let updatedDeal;
+
+        beforeEach(async () => {
+          await createDealAndLoan();
+
+          updatedDeal = {
+            ...newDeal,
+            submissionType: 'Automatic Inclusion Notice',
+            details: {
+              ...newDeal.details,
+              submissionDate: moment().subtract(4, 'month').utc().valueOf()
+            },
+          };
+
+          await updateDeal(dealId, updatedDeal);
+        });
+
+        describe('when requestedCoverStartDate is after 3 months from submission date', () => {
+          it('should return validationError', async () => {
+            const submissionPlus3Months = moment(updatedDeal.details.submissionDate).add(3, 'month');
+            const requestedCoverStartDateFields = {
+              requestedCoverStartDate: null
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
+
+            const formattedSubmissionDate = moment(formattedTimestamp(updatedDeal.details.submissionDate)).format('Do MMMM YYYY');
+            const submissionPlus3MonthsFormatted = moment(submissionPlus3Months).format('Do MMMM YYYY');
+
+            const expectedText = `Requested Cover Start Date must be between ${formattedSubmissionDate} and ${submissionPlus3MonthsFormatted}`;
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
+
+        describe('when requestedCoverStartDate is after 3 months from submission date but has special issue permission', () => {
+          it('should not return validationError for coverStartDate', async () => {
+            const requestedCoverStartDateFields = {
+              requestedCoverStartDate: null,
+              specialIssuePermission: true,
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
           });
         });
       });
@@ -457,7 +521,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
         describe('when is after 3 months from today', () => {
           it('should return validationError', async () => {
-            const todayPlus3Months = moment().add(3, 'month');
+            const minPlus3Months = moment(updatedDeal.details.manualInclusionNoticeSubmissionDate).add(3, 'month');
             const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
@@ -469,10 +533,25 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
             const formattedManualInclusionNoticeSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate)).format('Do MMMM YYYY');
-            const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
+            const minPlus3MonthsFormatted = moment(minPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${minPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
+
+        describe('when requestedCoverStartDate is after 3 months from submission date but has special issue permission', () => {
+          it('should not return validationError for coverStartDate', async () => {
+            const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
+              'requestedCoverStartDate-month': moment(todayPlus3Months1Day).format('MM'),
+              'requestedCoverStartDate-year': moment(todayPlus3Months1Day).format('YYYY'),
+              specialIssuePermission: true,
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
           });
         });
 
@@ -492,6 +571,79 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
               'requestedCoverStartDate-month': moment(todayPlus3Months1Day).format('MM'),
               'requestedCoverStartDate-year': moment(todayPlus3Months1Day).format('YYYY'),
+            };
+
+            await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
+          });
+        });
+      });
+
+      describe('when deal is MIN with approved status and cover starts on submission', () => {
+        let updatedDeal;
+
+        beforeEach(async () => {
+          await createDealAndLoan();
+
+          updatedDeal = {
+            ...newDeal,
+            submissionType: 'Manual Inclusion Notice',
+            status: 'Accepted by UKEF (without conditions)',
+            details: {
+              ...newDeal.details,
+              submissionDate: moment().subtract(4, 'month').utc().valueOf(),
+              manualInclusionNoticeSubmissionDate: moment().subtract(4, 'month').utc().valueOf(),
+            },
+          };
+
+          await updateDeal(dealId, updatedDeal);
+        });
+
+        describe('when is after 3 months from today', () => {
+          it('should return validationError', async () => {
+            const submissionPlus3Months = moment().subtract(4, 'month').add(3, 'month');
+            const requestedCoverStartDateFields = {
+              requestedCoverStartDate: null,
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
+
+            const formattedManualInclusionNoticeSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate)).format('Do MMMM YYYY');
+            const submissionPlus3MonthsFormatted = moment(submissionPlus3Months).format('Do MMMM YYYY');
+
+            const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${submissionPlus3MonthsFormatted}`;
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
+
+        describe('when requestedCoverStartDate is after 3 months from submission date but has special issue permission', () => {
+          it('should not return validationError for coverStartDate', async () => {
+            const requestedCoverStartDateFields = {
+              requestedCoverStartDate: null,
+              specialIssuePermission: true,
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
+          });
+        });
+
+        describe('when eligibility criteria 15 answer is `false`', () => {
+          it('should NOT return validationError when date is greater than 3 months', async () => {
+            const dealWithEligibilityCriteria15False = {
+              ...updatedDeal,
+              eligibility: {
+                criteria: [
+                  { id: 15, answer: false }
+                ],
+              },
+            };
+
+            const requestedCoverStartDateFields = {
+              requestedCoverStartDate: null,
             };
 
             await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
