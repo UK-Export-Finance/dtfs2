@@ -1,5 +1,8 @@
 const axios = require('axios');
-const { CENTRAL_API, TFM_API } = require('../config/environment.config');
+const ENV = require('../config/environment.config');
+
+const CENTRAL_API = (new URL(ENV.CENTRAL_API)).toString();
+const TFM_API = (new URL(ENV.TFM_API)).toString();
 
 const findOneDeal = async (dealId) => {
   try {

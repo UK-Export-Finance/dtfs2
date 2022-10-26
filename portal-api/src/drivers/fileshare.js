@@ -44,7 +44,7 @@ const getShareClient = async () => {
 };
 
 const getDirectory = async (fileshare, folderPaths = '') => {
-  const shareClient = await getShareClient(fileshare);
+  const shareClient = await getShareClient();
 
   const directoryClient = shareClient.getDirectoryClient(folderPaths);
 
