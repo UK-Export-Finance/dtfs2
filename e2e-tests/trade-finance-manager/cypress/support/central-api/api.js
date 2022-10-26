@@ -3,7 +3,7 @@ const api = () => {
   return url;
 };
 
-module.exports.createFacility = async (facility, dealId, user) =>
+module.exports.createFacility = (facility, dealId, user) =>
   cy.request({
     method: 'POST',
     url: `${api()}/v1/portal/facilities`,
@@ -19,7 +19,7 @@ module.exports.createFacility = async (facility, dealId, user) =>
     return resp.body;
   });
 
-module.exports.updateFacility = async (facilityId, facilityUpdate, user) =>
+module.exports.updateFacility = (facilityId, facilityUpdate, user) =>
   cy.request({
     method: 'PUT',
     url: `${api()}/v1/portal/facilities/${facilityId}`,
@@ -36,7 +36,7 @@ module.exports.updateFacility = async (facilityId, facilityUpdate, user) =>
     return resp.body;
   });
 
-module.exports.deleteFacility = async (facilityId, user) =>
+module.exports.deleteFacility = (facilityId, user) =>
   cy.request({
     method: 'DELETE',
     url: `${api()}/v1/portal/facilities/${facilityId}`,
