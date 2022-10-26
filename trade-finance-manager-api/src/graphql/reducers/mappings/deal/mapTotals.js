@@ -6,6 +6,11 @@ const { CURRENCY } = require('../../../../constants/currency.constant');
 const mapTotals = (facilities) => {
   const totals = {};
 
+  // Ensure facilities are not null
+  if (!facilities) {
+    return null;
+  }
+
   // total value of all facilities
   const facilitiesValue = facilities.map((facility) => {
     if (isValidFacility(facility)) {
