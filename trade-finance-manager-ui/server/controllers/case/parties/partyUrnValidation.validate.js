@@ -8,7 +8,7 @@ const { validationErrorHandler } = require('../../../helpers/validationErrorHand
  */
 const validatePartyURN = (URNValue) => {
   // URNvalue is string so checks length and is only numbers
-  const urnSchema = Joi.string().min(3).pattern(/^[0-9]+$/).required();
+  const urnSchema = Joi.string().min(3).pattern(/^\d+$/).required();
   const urnValidation = urnSchema.validate(URNValue);
 
   if (urnValidation.error) {
