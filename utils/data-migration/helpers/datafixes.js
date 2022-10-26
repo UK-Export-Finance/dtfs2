@@ -434,7 +434,7 @@ const importPortalData = async () => {
       const { text } = decision[0];
 
       // Set deal TFM stage as `Abandoned` if mentioned in UKEF decision
-      if (text.toLowerCase().indexOf('abandoned')) {
+      if (text.toLowerCase().indexOf('abandoned') !== -1) {
         allDeals
           .forEach((d, i) => {
             if (allDeals[i].dealSnapshot.ukefDealId === deal.ukefDealId) {
@@ -448,9 +448,12 @@ const importPortalData = async () => {
         allDeals
           .forEach((d, i) => {
             if (allDeals[i].dealSnapshot.ukefDealId === deal.ukefDealId) {
+              allDeals[i].tfm.stage = CONSTANTS.DEAL.TFM_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
               allDeals[i].tfm.underwriterManagersDecision = {
                 decision: CONSTANTS.DEAL.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,
-                comments: text
+                comments: text,
+                userFullName: '',
+                timestamp: deal.updatedAt
               };
             }
           });
@@ -1062,13 +1065,13 @@ const datafixesTfmDeal = async (deals) => {
       let updated = 0;
 
       // TFM Deal - Data fixes
-      // await creditRating();
-      // await partyUrn();
-      // await agentCommissionRate();
-      // await comment();
-      // await ACBS();
-      // await ukefDecision();
-      // await supportingInformations();
+      await creditRating();
+      await partyUrn();
+      await agentCommissionRate();
+      await comment();
+      await ACBS();
+      await ukefDecision();
+      await supportingInformations();
       await eStore();
 
       const updates = allDeals.map(async (deal) => {
@@ -1414,8 +1417,8 @@ const datafixTfmDealGef = async (deals) => {
       let updated = 0;
 
       // TFM Deal - Action sheet data fixes
-      // await actionSheetDeal();
-      // await ACBS();
+      await actionSheetDeal();
+      await ACBS();
       await importPortalData();
 
       const updates = allDeals.map(async (deal) => {
