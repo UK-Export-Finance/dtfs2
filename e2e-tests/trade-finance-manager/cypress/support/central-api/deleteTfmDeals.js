@@ -5,9 +5,8 @@ const deleteAllDeals = (deals) => {
   for (const dealToDelete of deals) {
     const { _id } = dealToDelete;
     deleteTfmDeal(_id);
-  };
-}
-
+  }
+};
 
 module.exports = () => {
   console.info('deleteTfmDeals::');
