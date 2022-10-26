@@ -32,7 +32,7 @@ npx cypress run --config video=false
 ### **Run a single E2E test**
 
 ```shell
-npx cypress run --spec "cypress/integration/**/my-test.spec.js" --config video=false
+npx cypress run --spec "cypress/e2e/**/my-test.spec.js" --config video=false
 ```
 
 ### **For live debugging, open the GUI and select the test:**
