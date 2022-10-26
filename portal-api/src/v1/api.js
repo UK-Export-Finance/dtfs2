@@ -1,21 +1,10 @@
 const axios = require('axios');
-
-require('dotenv').config();
-
-const centralApiUrl = process.env.DTFS_CENTRAL_API;
-const tfmUrl = process.env.TFM_API;
+const { CENTRAL_API, TFM_API } = require('../config/environment.config');
 
 const findOneDeal = async (dealId) => {
   try {
-    const response = await axios({
-      method: 'get',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return response.data.deal;
+    const { data: { deal } } = await axios.get(`${CENTRAL_API}/v1/portal/deals/${dealId}`);
+    return deal;
   } catch (err) {
     return false;
   }
@@ -23,17 +12,7 @@ const findOneDeal = async (dealId) => {
 
 const createDeal = async (deal, user) => {
   try {
-    return await axios({
-      method: 'post',
-      url: `${centralApiUrl}/v1/portal/deals`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        deal,
-        user,
-      },
-    });
+    return await axios.post(`${CENTRAL_API}/v1/portal/deals`, { deal, user });
   } catch ({ response }) {
     return response;
   }
@@ -41,19 +20,8 @@ const createDeal = async (deal, user) => {
 
 const updateDeal = async (dealId, dealUpdate, user) => {
   try {
-    const response = await axios({
-      method: 'put',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        dealUpdate,
-        user,
-      },
-    });
-
-    return response.data;
+    const { data } = await axios.put(`${CENTRAL_API}/v1/portal/deals/${dealId}`, { dealUpdate, user });
+    return data;
   } catch (err) {
     return err;
   }
@@ -61,13 +29,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
 
 const deleteDeal = async (dealId) => {
   try {
-    return await axios({
-      method: 'delete',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return await axios.delete(`${CENTRAL_API}/v1/portal/deals/${dealId}`,);
   } catch (err) {
     return err;
   }
@@ -75,19 +37,8 @@ const deleteDeal = async (dealId) => {
 
 const addDealComment = async (dealId, commentType, comment) => {
   try {
-    const response = await axios({
-      method: 'post',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        commentType,
-        comment,
-      },
-    });
-
-    return response.data;
+    const { data } = await axios.post(`${CENTRAL_API}/v1/portal/deals/${dealId}/comment`, { commentType, comment });
+    return data;
   } catch (err) {
     return err;
   }
@@ -95,17 +46,7 @@ const addDealComment = async (dealId, commentType, comment) => {
 
 const createFacility = async (facility, user) => {
   try {
-    return await axios({
-      method: 'post',
-      url: `${centralApiUrl}/v1/portal/facilities`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        facility,
-        user,
-      },
-    });
+    return await axios.post(`${CENTRAL_API}/v1/portal/facilities`, { facility, user });
   } catch ({ response }) {
     return response;
   }
@@ -113,18 +54,7 @@ const createFacility = async (facility, user) => {
 
 const createMultipleFacilities = async (facilities, dealId, user) => {
   try {
-    return await axios({
-      method: 'post',
-      url: `${centralApiUrl}/v1/portal/multiple-facilities`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        facilities,
-        dealId,
-        user,
-      },
-    });
+    return await axios.post(`${CENTRAL_API}/v1/portal/multiple-facilities`, { facilities, dealId, user });
   } catch ({ response }) {
     return response;
   }
@@ -132,15 +62,8 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
 
 const findOneFacility = async (facilityId) => {
   try {
-    const response = await axios({
-      method: 'get',
-      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return response.data;
+    const { data } = await axios.get(`${CENTRAL_API}/v1/portal/facilities/${facilityId}`);
+    return data;
   } catch (err) {
     return false;
   }
@@ -148,17 +71,7 @@ const findOneFacility = async (facilityId) => {
 
 const updateFacility = async (facilityId, facility, user) => {
   try {
-    return await axios({
-      method: 'put',
-      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        ...facility,
-        user,
-      },
-    });
+    return await axios.put(`${CENTRAL_API}/v1/portal/facilities/${facilityId}`, { ...facility, user });
   } catch ({ response }) {
     return response;
   }
@@ -166,16 +79,7 @@ const updateFacility = async (facilityId, facility, user) => {
 
 const deleteFacility = async (facilityId, user) => {
   try {
-    return await axios({
-      method: 'delete',
-      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        user,
-      },
-    });
+    return await axios.delete(`${CENTRAL_API}/v1/portal/facilities/${facilityId}`, { user });
   } catch ({ response }) {
     return response;
   }
@@ -183,20 +87,8 @@ const deleteFacility = async (facilityId, user) => {
 
 const tfmDealSubmit = async (dealId, dealType, checker) => {
   try {
-    const response = await axios({
-      method: 'put',
-      url: `${tfmUrl}/v1/deals/submit`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        dealId,
-        dealType,
-        checker,
-      },
-    });
-
-    return response.data;
+    const { data } = await axios.put(`${TFM_API}/v1/deals/submit`, { dealId, dealType, checker, });
+    return data;
   } catch (err) {
     return err;
   }
@@ -204,7 +96,7 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
 
 const findLatestMandatoryCriteria = async (dealType) => {
   try {
-    const { data } = await axios.get(`${centralApiUrl}/v1/portal/mandatory-criteria?dealType=${dealType}&latest=true`);
+    const { data } = await axios.get(`${CENTRAL_API}/v1/portal/mandatory-criteria?dealType=${dealType}&latest=true`);
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to get the latest ${dealType} mandatory criteria %O`, { response: err?.response?.data });
@@ -214,7 +106,7 @@ const findLatestMandatoryCriteria = async (dealType) => {
 
 const findAllMandatoryCriteria = async (dealType) => {
   try {
-    const { data } = await axios.get(`${centralApiUrl}/v1/portal/mandatory-criteria?dealType=${dealType}`);
+    const { data } = await axios.get(`${CENTRAL_API}/v1/portal/mandatory-criteria?dealType=${dealType}`);
     return { status: 200, data };
   } catch (err) {
     console.error('Unable to get all mandatory criteria %O', { response: err?.response?.data });
@@ -224,7 +116,7 @@ const findAllMandatoryCriteria = async (dealType) => {
 
 const findOneMandatoryCriteria = async (id, dealType) => {
   try {
-    const { data } = await axios.get(`${centralApiUrl}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`);
+    const { data } = await axios.get(`${CENTRAL_API}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`);
 
     return { status: 200, data };
   } catch (err) {
@@ -235,7 +127,7 @@ const findOneMandatoryCriteria = async (id, dealType) => {
 
 const postMandatoryCriteria = async (payload, dealType) => {
   try {
-    const { data } = await axios.post(`${centralApiUrl}/v1/portal/mandatory-criteria?dealType=${dealType}`, payload);
+    const { data } = await axios.post(`${CENTRAL_API}/v1/portal/mandatory-criteria?dealType=${dealType}`, payload);
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to create the ${dealType} mandatory criteria %O`, { response: err?.response?.data });
@@ -245,7 +137,7 @@ const postMandatoryCriteria = async (payload, dealType) => {
 
 const putMandatoryCriteria = async (payload, id, dealType) => {
   try {
-    const { data } = await axios.put(`${centralApiUrl}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`, payload);
+    const { data } = await axios.put(`${CENTRAL_API}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`, payload);
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to update the ${dealType} mandatory criteria %O`, { response: err?.response?.data });
@@ -255,7 +147,7 @@ const putMandatoryCriteria = async (payload, id, dealType) => {
 
 const deleteMandatoryCriteria = async (id, dealType) => {
   try {
-    const { data } = await axios.delete(`${centralApiUrl}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`);
+    const { data } = await axios.delete(`${CENTRAL_API}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`);
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to delete the ${dealType} mandatory criteria %O`, { response: err?.response?.data });

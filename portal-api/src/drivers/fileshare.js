@@ -1,6 +1,6 @@
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 
-const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG } = require('../config/fileshare.config');
+const { AZURE_PORTAL_FILESHARE_CONFIG } = require('../config/fileshare.config');
 
 let userDefinedConfig;
 
@@ -8,22 +8,22 @@ const setConfig = (fileshareConfig) => {
   userDefinedConfig = fileshareConfig;
 };
 
-const getConfig = (fileshare = 'portal') => {
-  const config = fileshare === 'workflow' ? AZURE_WORKFLOW_FILESHARE_CONFIG : AZURE_PORTAL_FILESHARE_CONFIG;
+const getConfig = () => {
+  const config = AZURE_PORTAL_FILESHARE_CONFIG;
   return userDefinedConfig || config;
 };
 
-const getCredentials = async (fileshare = 'portal') => {
-  const { STORAGE_ACCOUNT, STORAGE_ACCESS_KEY } = getConfig(fileshare);
+const getCredentials = async () => {
+  const { STORAGE_ACCOUNT, STORAGE_ACCESS_KEY } = getConfig();
 
   const credentials = await new StorageSharedKeyCredential(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY);
 
   return credentials;
 };
 
-const getShareClient = async (fileshare) => {
-  const credentials = await getCredentials(fileshare);
-  const { STORAGE_ACCOUNT, FILESHARE_NAME } = getConfig(fileshare);
+const getShareClient = async () => {
+  const credentials = await getCredentials();
+  const { STORAGE_ACCOUNT, FILESHARE_NAME } = getConfig();
   const serviceClient = new ShareServiceClient(`https://${STORAGE_ACCOUNT}.file.core.windows.net`, credentials);
 
   if (process.env.AZURE_LOG_LEVEL) {
@@ -129,7 +129,7 @@ const readFile = async ({ fileshare, folder = '', filename }) => {
 };
 
 const deleteFile = async (fileshare, filePath) => {
-  const shareClient = await getShareClient(fileshare);
+  const shareClient = await getShareClient();
 
   await shareClient.deleteFile(filePath).catch(() => {});
 };
@@ -147,7 +147,7 @@ const deleteMultipleFiles = (fileshare, filePath, fileList) => {
 };
 
 const deleteDirectory = async (fileshare, folder) => {
-  const shareClient = await getShareClient(fileshare);
+  const shareClient = await getShareClient();
   const deleteDir = await shareClient.deleteDirectory(folder);
   return deleteDir;
 };
