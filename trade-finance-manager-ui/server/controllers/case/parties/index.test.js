@@ -125,6 +125,7 @@ describe('controllers - case - parties', () => {
           tfm: mockDeal.tfm,
           dealId: req.params._id,
           user: session.user,
+          urn: mockDeal.tfm.parties.exporter.partyUrn,
         });
       });
     });
@@ -353,15 +354,112 @@ describe('controllers - case - parties', () => {
             _id: mockDeal._id,
           },
           body: {
-            exporter: {
-              partyUrn: '12345',
-            },
+            partyUrn: '12345',
           },
           session,
         };
 
         await partiesController.postExporterPartyDetails(req, res);
         expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+      });
+
+      it('should render template with errors if partyUrn is blank', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            partyUrn: '',
+          },
+          session,
+        };
+
+        await partiesController.postExporterPartyDetails(req, res);
+
+        const expectedErrorSummary = {
+          errorSummary: [{ text: 'Enter a correct party URN', href: '#partyUrn' }],
+          fieldErrors: { partyUrn: { text: 'Enter a correct party URN' } },
+        };
+
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+          userCanEdit: userCanEdit(req.session.user),
+          renderEditLink: false,
+          renderEditForm: true,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          dealId: req.params._id,
+          user: session.user,
+          urn: req.body.partyUrn,
+          errors: expectedErrorSummary,
+        });
+      });
+
+      it('should render template with errors if partyUrn is letters only', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            partyUrn: 'ABCDE',
+          },
+          session,
+        };
+
+        await partiesController.postExporterPartyDetails(req, res);
+
+        const expectedErrorSummary = {
+          errorSummary: [{ text: 'Enter a correct party URN', href: '#partyUrn' }],
+          fieldErrors: { partyUrn: { text: 'Enter a correct party URN' } },
+        };
+
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+          userCanEdit: userCanEdit(req.session.user),
+          renderEditLink: false,
+          renderEditForm: true,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          dealId: req.params._id,
+          user: session.user,
+          urn: req.body.partyUrn,
+          errors: expectedErrorSummary,
+        });
+      });
+
+      it('should render template with errors if partyUrn has special characters', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            partyUrn: '1234!',
+          },
+          session,
+        };
+
+        await partiesController.postExporterPartyDetails(req, res);
+
+        const expectedErrorSummary = {
+          errorSummary: [{ text: 'Enter a correct party URN', href: '#partyUrn' }],
+          fieldErrors: { partyUrn: { text: 'Enter a correct party URN' } },
+        };
+
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+          userCanEdit: userCanEdit(req.session.user),
+          renderEditLink: false,
+          renderEditForm: true,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          dealId: req.params._id,
+          user: session.user,
+          urn: req.body.partyUrn,
+          errors: expectedErrorSummary,
+        });
       });
     });
 

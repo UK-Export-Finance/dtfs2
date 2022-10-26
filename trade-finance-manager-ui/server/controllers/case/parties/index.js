@@ -1,5 +1,6 @@
 const api = require('../../../api');
 const userCanEdit = require('./helpers');
+const validatePartyURN = require('./partyUrnValidation.validate');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 
@@ -65,6 +66,7 @@ const getPartyDetails = (partyType) => (
       tfm: deal.tfm,
       dealId,
       user: req.session.user,
+      urn: deal.tfm.parties.exporter.partyUrn,
     });
   }
 );
@@ -143,6 +145,34 @@ const postPartyDetails = (partyType) => (
 
     if (!deal) {
       return res.redirect('/not-found');
+    }
+
+    /**
+     * checks if partyType is exporter and if partyUrn input exists or is a blank string (nothing inputted)
+     * validates input - should only be at least 3 numbers
+     * validation error rendered if error exists on edit partyUrn page
+     * if no error, then updates partyURN
+     */
+    if (partyType === 'exporter' && (req.body.partyUrn || req.body.partyUrn === '')) {
+      // validates input
+      const validationError = validatePartyURN(req.body.partyUrn);
+      const canEdit = userCanEdit(user);
+
+      if (validationError.errorsObject) {
+        return res.render(`case/parties/edit/${partyType}-edit.njk`, {
+          userCanEdit: canEdit,
+          renderEditLink: false,
+          renderEditForm: true,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
+          deal: deal.dealSnapshot,
+          tfm: deal.tfm,
+          dealId,
+          user: req.session.user,
+          errors: validationError.errorsObject.errors,
+          urn: validationError.urn,
+        });
+      }
     }
 
     const update = {
