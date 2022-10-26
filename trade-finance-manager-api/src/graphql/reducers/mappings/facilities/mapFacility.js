@@ -14,6 +14,11 @@ const mapUkefExposureValue = require('./mapUkefExposureValue');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
 
 const mapFacility = (f, facilityTfm, dealDetails, facilityFull) => {
+  // Ensure facility is valid
+  if (!f) {
+    return null;
+  }
+
   // Deep clone
   const facility = JSON.parse(JSON.stringify(f, null, 4));
 
