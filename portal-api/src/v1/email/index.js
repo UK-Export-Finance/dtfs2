@@ -10,7 +10,7 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
     .sendEmail(templateId, sendToEmailAddress, { personalisation, reference: null })
     .then((response) => response)
     .catch((err) => {
-      console.error('Portal API - Failed to send email', err?.response.data);
+      console.error('Portal API - Failed to send email', err?.response);
       return err?.response?.data;
     });
 };

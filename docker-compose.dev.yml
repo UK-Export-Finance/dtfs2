@@ -191,7 +191,7 @@ services:
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - TZ=Europe/London
-    entrypoint: npx nodemon src/index.ts -L --max-old-space-size=300
+    entrypoint: npx nodemon src/index.ts -L
 
   gef-ui:
     build: ./gef-ui
