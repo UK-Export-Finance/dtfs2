@@ -10,6 +10,9 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
     submissionType: 'Automatic Inclusion Notice',
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
+    details: {
+      submissionDate: moment().utc().valueOf(),
+    },
     submissionDetails: {
       supplyContractCurrency: {
         id: 'GBP',
@@ -117,10 +120,10 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
       expect(status).toEqual(404);
     });
 
-    it('accepts requests if <user>.bank.id == *', async () => {
+    it('should return 400 if <user>.bank.id == *', async () => {
       const { status } = await as(aSuperuser).put({}).to(`/v1/deals/${dealId}/loan/${loanId}/change-cover-start-date`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(400);
     });
 
     describe('when loan.facilityStage is not `Unconditional`', () => {
