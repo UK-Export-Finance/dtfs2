@@ -7,7 +7,7 @@ const mapTotals = (facilities) => {
   const totals = {};
 
   // Ensure facilities are not null
-  if (!facilities) {
+  if (!facilities && !facilities?.length) {
     return null;
   }
 
