@@ -1,74 +1,103 @@
-const assert = require('assert');
+const api = require('../api');
+const { DEAL_TYPE: { GEF, BSS_EWCS } } = require('../../constants/deal');
+const { EligibilityCriteria } = require('../gef/models/eligibilityCriteria');
 
-const db = require('../../drivers/db-client');
-
-const sortEligibilityCriteria = (arr, callback) => {
-  const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
-  return callback(sortedArray);
+exports.postEligibilityCriteria = async (req, res) => {
+  const { data: mandatoryCriteria } = await api.postEligibilityCriteria(new EligibilityCriteria(req.body), GEF);
+  return res.status(201).send(mandatoryCriteria);
 };
 
-const findEligibilityCriteria = (callback) => new Promise((resolve) => {
-  db.getCollection('eligibilityCriteria')
-    .then((collection) => {
-      collection.find({}).toArray((err, result) => {
-        assert.equal(err, null);
-        resolve(result);
-        if (callback) callback(result);
-      });
-    });
-});
-exports.findEligibilityCriteria = findEligibilityCriteria;
-
-const findOneEligibilityCriteria = async (version, callback) => {
-  const collection = await db.getCollection('eligibilityCriteria');
-  collection.findOne({ version }, (err, result) => {
-    assert.equal(err, null);
-    callback(result);
-  });
+exports.findAllEligibilityCriteria = async (req, res) => {
+  const { data, status } = await api.findAllEligibilityCriteria(GEF);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
 };
 
-exports.create = async (req, res) => {
-  const collection = await db.getCollection('eligibilityCriteria');
-  const eligibilityCriteria = await collection.insertOne(req.body);
-  res.status(200).send(eligibilityCriteria);
+exports.findOneEligibilityCriteria = async (req, res) => {
+  const { version } = req.params;
+  const { data, status } = await api.findOneEligibilityCriteria(version, GEF);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
 };
 
-exports.findAll = (req, res) => (
-  findEligibilityCriteria((eligibilityCriteria) =>
-    sortEligibilityCriteria(eligibilityCriteria, (sortedEligibilityCriteria) =>
-      res.status(200).send({
-        count: eligibilityCriteria.length,
-        eligibilityCriteria: sortedEligibilityCriteria,
-      })))
-);
-
-exports.findOne = (req, res) => (
-  findOneEligibilityCriteria(
-    Number(req.params.version),
-    (eligibilityCriteria) => res.status(200).send(eligibilityCriteria),
-  )
-);
-
-const findLatest = async () => {
-  const collection = await db.getCollection('eligibilityCriteria');
-  const latest = await collection.find({}).sort({ version: -1 }).limit(1).toArray();
-  return latest[0];
-};
-exports.findLatest = findLatest;
-
-exports.findLatestGET = async (req, res) => {
-  const latest = await findLatest();
-  return res.status(200).send(latest);
+exports.findLatestEligibilityCriteria = async (req, res) => {
+  const { data, status } = await api.findLatestEligibilityCriteria(GEF);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
 };
 
-exports.update = async (req, res) => {
-  const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.updateOne({ version: Number(req.params.version) }, { $set: { criteria: req.body.criteria } }, {});
-  res.status(200).send(status);
+exports.putEligibilityCriteria = async (req, res) => {
+  const payload = req.body;
+  const { version } = req.params;
+  payload.updatedAt = Date.now();
+  const { data, status } = await api.putEligibilityCriteria(payload, version, GEF);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
 };
 
-exports.delete = async (req, res) => {
-  const collection = await db.getCollection('eligibilityCriteria');
-  const status = await collection.deleteOne({ version: Number(req.params.version) });
-  res.status(200).send(status);
+exports.deleteEligibilityCriteria = async (req, res) => {
+  const { version } = req.params;
+  const { data, status } = await api.deleteEligibilityCriteria(version, GEF);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
+};
+
+// BSS/EWCS section
+exports.postBssEligibilityCriteria = async (req, res) => {
+  const { data, status } = await api.postEligibilityCriteria(req.body, BSS_EWCS);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
+};
+
+exports.findAllBssEligibilityCriteria = async (req, res) => {
+  const { data, status } = await api.findAllEligibilityCriteria(BSS_EWCS);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
+};
+
+exports.findOneBssEligibilityCriteria = async (req, res) => {
+  const { version } = req.params;
+  const { data, status } = await api.findOneEligibilityCriteria(version, BSS_EWCS);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
+};
+
+exports.findLatestBssEligibilityCriteria = async (req, res) => {
+  const { data, status } = await api.findLatestEligibilityCriteria(BSS_EWCS);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
+};
+
+exports.putBssEligibilityCriteria = async (req, res) => {
+  const { data, status } = await api.putEligibilityCriteria(req.body, req.params.version, BSS_EWCS);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
+};
+
+exports.deleteBssEligibilityCriteria = async (req, res) => {
+  const { data, status } = await api.deleteEligibilityCriteria(req.params.version, BSS_EWCS);
+  if (status === 200) {
+    return res.status(status).send(data);
+  }
+  return res.status(status).send();
 };

@@ -4,7 +4,7 @@ const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
-const { findLatest: findLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
+const { DEAL_TYPE: { BSS_EWCS } } = require('../../constants/deal');
 const api = require('../api');
 
 /**
@@ -38,7 +38,7 @@ const createDealEligibility = async (eligibility) => {
     return eligibilityObj;
   }
 
-  const latestEligibility = await findLatestEligibilityCriteria();
+  const { data: latestEligibility } = await api.findLatestEligibilityCriteria(BSS_EWCS);
 
   return {
     ...latestEligibility,

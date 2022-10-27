@@ -5,7 +5,7 @@ const db = require('../../../drivers/db-client');
 const { validateApplicationReferences } = require('./validation/application');
 const { exporterStatus } = require('./validation/exporter');
 const CONSTANTS = require('../../../constants');
-const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
+const api = require('../../api');
 
 const cloneExporter = (currentExporter) => {
   const clonedExporter = currentExporter;
@@ -126,7 +126,7 @@ const cloneDeal = async (dealId, bankInternalRefName, additionalRefName, maker, 
   const existingDeal = await collection.findOne({ _id: ObjectId(dealId), 'bank.id': bank.id });
   if (existingDeal) {
     const clonedDeal = existingDeal;
-    const eligibility = await getLatestEligibilityCriteria();
+    const { data: eligibility } = await api.findLatestEligibilityCriteria(CONSTANTS.DEAL.DEAL_TYPE.GEF);
 
     // delete unused properties
     unusedProperties.forEach((property) => {

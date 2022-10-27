@@ -136,7 +136,6 @@ const collections = [
   'banks',
   'mandatoryCriteria',
   'eligibilityCriteria',
-  'gef-eligibilityCriteria',
   'cron-job-logs',
   'files',
   'durable-functions-log',

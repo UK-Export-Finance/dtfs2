@@ -141,18 +141,18 @@ authRouter.route('/industry-sectors/:code').get(industrySectors.findOne);
 
 authRouter
   .route('/eligibility-criteria')
-  .get(eligibilityCriteria.findAll)
-  .post(validate({ role: ['editor'] }), eligibilityCriteria.create);
+  .get(eligibilityCriteria.findAllBssEligibilityCriteria)
+  .post(validate({ role: ['editor'] }), eligibilityCriteria.postBssEligibilityCriteria);
 
 authRouter
   .route('/eligibility-criteria/latest')
-  .get(eligibilityCriteria.findLatestGET);
+  .get(eligibilityCriteria.findLatestBssEligibilityCriteria);
 
 authRouter
   .route('/eligibility-criteria/:version')
-  .get(eligibilityCriteria.findOne)
-  .put(validate({ role: ['editor'] }), eligibilityCriteria.update)
-  .delete(validate({ role: ['editor'] }), eligibilityCriteria.delete);
+  .get(eligibilityCriteria.findOneBssEligibilityCriteria)
+  .put(validate({ role: ['editor'] }), eligibilityCriteria.putBssEligibilityCriteria)
+  .delete(validate({ role: ['editor'] }), eligibilityCriteria.deleteBssEligibilityCriteria);
 
 authRouterAllowXss
   .route('/mandatory-criteria')

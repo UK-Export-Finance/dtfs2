@@ -100,7 +100,7 @@ const findLatestMandatoryCriteria = async (dealType) => {
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to get the latest ${dealType} mandatory criteria %O`, { response: err?.response?.data });
-    return { status: 500, data: err?.response?.data };
+    return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
@@ -110,7 +110,7 @@ const findAllMandatoryCriteria = async (dealType) => {
     return { status: 200, data };
   } catch (err) {
     console.error('Unable to get all mandatory criteria %O', { response: err?.response?.data });
-    return { status: 500, data: err?.response?.data };
+    return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
@@ -131,7 +131,7 @@ const postMandatoryCriteria = async (payload, dealType) => {
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to create the ${dealType} mandatory criteria %O`, { response: err?.response?.data });
-    return { status: 500, data: err?.response?.data };
+    return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
@@ -141,7 +141,7 @@ const putMandatoryCriteria = async (payload, id, dealType) => {
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to update the ${dealType} mandatory criteria %O`, { response: err?.response?.data });
-    return { status: 500, data: err?.response?.data };
+    return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
@@ -151,6 +151,69 @@ const deleteMandatoryCriteria = async (id, dealType) => {
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to delete the ${dealType} mandatory criteria %O`, { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+// Eligibility Criteria
+
+const findLatestEligibilityCriteria = async (dealType) => {
+  try {
+    const { data } = await axios.get(`${CENTRAL_API}/v1/portal/eligibility-criteria?dealType=${dealType}&latest=true`);
+    return { status: 200, data };
+  } catch (err) {
+    console.error(`Unable to get the latest ${dealType} eligibility criteria %O`, { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const findAllEligibilityCriteria = async (dealType) => {
+  try {
+    const { data } = await axios.get(`${CENTRAL_API}/v1/portal/eligibility-criteria?dealType=${dealType}`);
+    return { status: 200, data };
+  } catch (err) {
+    console.error('Unable to get all eligibility criteria %O', { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const findOneEligibilityCriteria = async (version, dealType) => {
+  try {
+    const { data } = await axios.get(`${CENTRAL_API}/v1/portal/eligibility-criteria/${version}?dealType=${dealType}`);
+
+    return { status: 200, data };
+  } catch (err) {
+    console.error(`Unable to get one ${dealType} eligibility criteria ${err?.response?.data} %O`, { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const postEligibilityCriteria = async (payload, dealType) => {
+  try {
+    const { data } = await axios.post(`${CENTRAL_API}/v1/portal/eligibility-criteria?dealType=${dealType}`, payload);
+    return { status: 200, data };
+  } catch (err) {
+    console.error(`Unable to create the ${dealType} eligibility criteria %O`, { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const putEligibilityCriteria = async (payload, version, dealType) => {
+  try {
+    const { data } = await axios.put(`${CENTRAL_API}/v1/portal/eligibility-criteria/${version}?dealType=${dealType}`, payload);
+    return { status: 200, data };
+  } catch (err) {
+    console.error(`Unable to update the ${dealType} eligibility criteria %O`, { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
+const deleteEligibilityCriteria = async (version, dealType) => {
+  try {
+    const { data } = await axios.delete(`${CENTRAL_API}/v1/portal/eligibility-criteria/${version}?dealType=${dealType}`);
+    return { status: 200, data };
+  } catch (err) {
+    console.error(`Unable to delete the ${dealType} eligibility criteria %O`, { response: err?.response?.data });
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -172,5 +235,11 @@ module.exports = {
   findOneMandatoryCriteria,
   postMandatoryCriteria,
   putMandatoryCriteria,
-  deleteMandatoryCriteria
+  deleteMandatoryCriteria,
+  findLatestEligibilityCriteria,
+  findAllEligibilityCriteria,
+  findOneEligibilityCriteria,
+  postEligibilityCriteria,
+  putEligibilityCriteria,
+  deleteEligibilityCriteria
 };
