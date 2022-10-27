@@ -214,7 +214,7 @@ const findOneFacility = async (facilityId) => {
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error finding BSS facility ${facilityId}`);
+    console.error(`TFM API - error finding BSS facility ${facilityId}`, { err });
 
     return err;
   }
