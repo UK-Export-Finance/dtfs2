@@ -32,7 +32,7 @@ services:
       resources:
         limits:
           cpus: "0.1"
-          memory: 400M
+          memory: 1024M
     environment:
       - PORT=5005
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
