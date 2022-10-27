@@ -11,6 +11,8 @@ const mapTotals = (facilities) => {
     return null;
   }
 
+  console.log({ facilities }, facilities.length, typeof facilities);
+
   // total value of all facilities
   const facilitiesValue = facilities.map((facility) => {
     if (isValidFacility(facility)) {
