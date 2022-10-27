@@ -3,14 +3,14 @@ const { ObjectId } = require('mongodb');
 const { getCollection } = require('../../../../database/mongo-client');
 const { DEAL_TYPE: { GEF, BSS_EWCS } } = require('../../../../constants/deals');
 
-const collectionName = 'mandatoryCriteria';
+const collectionName = 'eligibilityCriteria';
 
-const findOne = async (dealType, id) => {
+const findOne = async (dealType, version) => {
   const collection = await getCollection(collectionName);
-  return collection.findOne({ dealType, version: Number(id) });
+  return collection.findOne({ dealType, version });
 };
 
-exports.getOneMandatoryCriteria = async (req, res) => {
+exports.getOneEligibilityCriteria = async (req, res) => {
   const { version } = req.params;
   const { dealType, } = req.query;
   const criteria = await findOne(dealType, version);
@@ -39,14 +39,14 @@ const findAll = async (dealType) => {
     criteria = { items: criteria };
   } else if (dealType === BSS_EWCS) {
     criteria = await collection.aggregate([{ $match: { dealType: BSS_EWCS } }, { $sort: { version: -1 } }]).toArray();
-    criteria = { count: criteria.length, mandatoryCriteria: criteria };
+    criteria = { count: criteria.length, eligibilityCriteria: criteria };
   } else {
     criteria = await collection.aggregate([{ $sort: { version: 1 } }]).toArray();
   }
   return criteria;
 };
 
-exports.getMandatoryCriteria = async (req, res) => {
+exports.getEligibilityCriteria = async (req, res) => {
   const { dealType, latest } = req.query;
   const status = 200;
   let criteria;
@@ -59,16 +59,16 @@ exports.getMandatoryCriteria = async (req, res) => {
   return res.status(status).send(criteria);
 };
 
-exports.postMandatoryCriteria = async (req, res) => {
+exports.postEligibilityCriteria = async (req, res) => {
   const payload = req.body;
   payload.updatedAt = Date.now();
   const collection = await getCollection(collectionName);
   const response = await collection.insertOne(payload);
-  const mandatoryCriteria = await collection.findOne({ _id: ObjectId(response.insertedId) });
-  return res.status(200).send(mandatoryCriteria);
+  const eligibilityCriteria = await collection.findOne({ _id: ObjectId(response.insertedId) });
+  return res.status(200).send(eligibilityCriteria);
 };
 
-exports.putMandatoryCriteria = async (req, res) => {
+exports.putEligibilityCriteria = async (req, res) => {
   const { dealType } = req.query;
   const { version } = req.params;
 
@@ -87,24 +87,24 @@ exports.putMandatoryCriteria = async (req, res) => {
   }
 
   if (dealType === BSS_EWCS) {
-    response = await collection.updateOne({ version: { $eq: Number(version) }, dealType: BSS_EWCS }, { $set: { criteria: payload.criteria } }, {});
+    response = await collection.updateOne({ version, dealType: BSS_EWCS }, { $set: { criteria: payload.criteria } }, {});
   }
   return res.status(200).send(response);
 };
 
-exports.deleteMandatoryCriteria = async (req, res) => {
+exports.deleteEligibilityCriteria = async (req, res) => {
   const { dealType } = req.query;
   const { version } = req.params;
   let response;
 
   const collection = await getCollection(collectionName);
   if (dealType === GEF) {
-    response = await collection.findOneAndDelete({ _id: ObjectId(version), dealType: GEF });
+    response = await collection.findOneAndDelete({ version, dealType: GEF });
     response = response.value;
   }
 
   if (dealType === BSS_EWCS) {
-    response = await collection.deleteOne({ version: Number(version), dealType: BSS_EWCS });
+    response = await collection.deleteOne({ version, dealType: BSS_EWCS });
     response = response.value;
   }
   return res.status(200).send(response);

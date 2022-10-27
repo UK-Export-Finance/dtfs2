@@ -25,7 +25,8 @@ const gefActivityController = require('../controllers/portal/deal/add-min-activi
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
 
-const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
+const mandatoryCriteria = require('../controllers/portal/mandatory-criteria');
+const eligibilityCriteria = require('../controllers/portal/eligibility-criteria');
 
 const { PORTAL_ROUTE } = require('../../constants/routes');
 const { hasValidationErrors } = require('../validation/hasValidationErrors.validate');
@@ -804,11 +805,18 @@ portalRouter.route('/durable-functions').delete(durableFunctionsController.delet
  */
 portalRouter.route('/cron-jobs').delete(cronJobsController.deleteCronJobLogs);
 
-// GEF Mandatory Criteria
+// Mandatory Criteria
 portalRouter.route('/mandatory-criteria/').post(query('dealType').not().isEmpty(), hasValidationErrors, mandatoryCriteria.postMandatoryCriteria);
-portalRouter.route('/mandatory-criteria/').get(mandatoryCriteria.getMandatoryCriteria);
-portalRouter.route('/mandatory-criteria/:version').get(query('dealType').not().isEmpty(), param('version').not().isEmpty(), hasValidationErrors, mandatoryCriteria.getOneMandatoryCriteria);
-portalRouter.route('/mandatory-criteria/:version').put(query('dealType').not().isEmpty(), param('version').not().isEmpty(), hasValidationErrors, mandatoryCriteria.putMandatoryCriteria);
-portalRouter.route('/mandatory-criteria/:version').delete(query('dealType').not().isEmpty(), param('version').not().isEmpty(), hasValidationErrors, mandatoryCriteria.deleteMandatoryCriteria);
+portalRouter.route('/mandatory-criteria/').get(query('latest').toBoolean(), mandatoryCriteria.getMandatoryCriteria);
+portalRouter.route('/mandatory-criteria/:version').get(query('dealType').not().isEmpty(), param('version').toInt().not().isEmpty(), hasValidationErrors, mandatoryCriteria.getOneMandatoryCriteria);
+portalRouter.route('/mandatory-criteria/:version').put(query('dealType').not().isEmpty(), param('version').toInt().not().isEmpty(), hasValidationErrors, mandatoryCriteria.putMandatoryCriteria);
+portalRouter.route('/mandatory-criteria/:version').delete(query('dealType').not().isEmpty(), param('version').toInt().not().isEmpty(), hasValidationErrors, mandatoryCriteria.deleteMandatoryCriteria);
+
+// Eligibility Criteria
+portalRouter.route('/eligibility-criteria/').post(query('dealType').not().isEmpty(), hasValidationErrors, eligibilityCriteria.postEligibilityCriteria);
+portalRouter.route('/eligibility-criteria/').get(query('latest').toBoolean(), hasValidationErrors, eligibilityCriteria.getEligibilityCriteria);
+portalRouter.route('/eligibility-criteria/:version').get(query('dealType').not().isEmpty(), param('version').toInt().not().isEmpty(), hasValidationErrors, eligibilityCriteria.getOneEligibilityCriteria);
+portalRouter.route('/eligibility-criteria/:version').put(query('dealType').not().isEmpty(), param('version').toInt().not().isEmpty(), hasValidationErrors, eligibilityCriteria.putEligibilityCriteria);
+portalRouter.route('/eligibility-criteria/:version').delete(query('dealType').not().isEmpty(), param('version').toInt().not().isEmpty(), hasValidationErrors, eligibilityCriteria.deleteEligibilityCriteria);
 
 module.exports = portalRouter;

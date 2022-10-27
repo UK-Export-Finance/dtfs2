@@ -7,7 +7,6 @@ const { supportingInfoStatus } = require('./validation/supportingInfo');
 
 const { eligibilityCriteriaStatus } = require('./validation/eligibilityCriteria');
 const { isSuperUser } = require('../../users/checks');
-const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 
 const { Application } = require('../models/application');
 const { addSubmissionData } = require('./application-submit');
@@ -34,7 +33,7 @@ exports.create = async (req, res) => {
   if (validateErrs) {
     res.status(422).send(validateErrs);
   } else {
-    const eligibility = await getLatestEligibilityCriteria();
+    const { data: eligibility } = await api.findLatestEligibilityCriteria(DEAL_TYPE.GEF);
 
     if (newDeal.exporter) {
       newDeal.exporter.status = exporterStatus(newDeal.exporter);

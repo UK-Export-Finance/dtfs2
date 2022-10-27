@@ -1,6 +1,7 @@
 module.exports = [
   {
     version: 1,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 1,
@@ -106,6 +107,7 @@ module.exports = [
   },
   {
     version: 2,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 11,
@@ -143,6 +145,7 @@ module.exports = [
   },
   {
     version: 3,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 11,
@@ -179,7 +182,8 @@ module.exports = [
     ],
   },
   {
-    version: 5,
+    version: 4,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 11,
@@ -191,7 +195,7 @@ module.exports = [
       },
       {
         id: 13,
-        description: 'The total UKEF exposure, across all short-term schemes (including bond support and export working capital transactions), for this Obligor (including this Transaction) does not exceed £2 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).',
+        description: 'The total UKEF exposure, across all short-term schemes (including bond support, export working capital and general export facility transactions), for this Obligor (including this Transaction) does not exceed £5 million, or such other limit approved by UKEF (that has not lapsed or been withdrawn).',
       },
       {
         id: 14,
@@ -203,7 +207,7 @@ module.exports = [
       },
       {
         id: 16,
-        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco or gambling, and the Bank is not aware that any of the information contained within it is inaccurate.',
+        description: 'The Supplier has confirmed in its Supplier Declaration that the Supply Contract does not involve any of the following Controlled Sectors: sharp arms defence, nuclear, radiological, biological, human cloning, pornography, tobacco, gambling, coal, oil, gas or fossil fuel energy and the Bank is not aware that any of the information contained within it is inaccurate.',
       },
       {
         id: 17,
@@ -217,6 +221,7 @@ module.exports = [
   },
   {
     version: 5,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 11,
