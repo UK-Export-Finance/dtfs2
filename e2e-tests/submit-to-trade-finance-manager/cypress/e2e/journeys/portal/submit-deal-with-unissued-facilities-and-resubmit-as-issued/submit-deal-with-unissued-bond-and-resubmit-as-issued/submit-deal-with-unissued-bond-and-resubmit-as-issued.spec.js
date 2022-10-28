@@ -17,7 +17,6 @@ const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 context('Portal to TFM deal submission', () => {
   let deal;
   let dealId;
-  const dealFacilities = [];
   let bond;
   let bondId;
 
@@ -29,7 +28,6 @@ context('Portal to TFM deal submission', () => {
       const { mockFacilities } = deal;
 
       cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
-        dealFacilities.push(...createdFacilities);
         [bond] = createdFacilities;
         bondId = bond._id;
       });
@@ -70,6 +68,10 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contractConfirmSubmission.confirmSubmit().check();
     portalPages.contractConfirmSubmission.acceptAndSubmit().click(deal);
+
+    // force wait: wait for number generator to finish executing
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(15000);
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');

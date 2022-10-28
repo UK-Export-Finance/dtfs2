@@ -21,7 +21,23 @@ const deal = {
     created: date.valueOf(),
   },
   eligibility: ELIGIBILITY_COMPLETED,
-  submissionDetails: SUBMISSION_DETAILS,
+  submissionDetails: {
+    ...SUBMISSION_DETAILS,
+    'supplier-companies-house-registration-number': '',
+    'supplier-correspondence-address-country': {},
+    'supplier-correspondence-address-is-different': 'false',
+    supplyContractConversionDate: '28/04/2022',
+    'supplyContractConversionDate-day': '28',
+    'supplyContractConversionDate-month': '04',
+    'supplyContractConversionDate-year': '2022',
+    supplyContractConversionRateToGBP: '7.1',
+    supplyContractCurrency: {
+      currencyId: 1,
+      id: 'AED',
+      text: 'AED - U.A.E. Dirham',
+    },
+    supplyContractValue: '4354533.00',
+  },
   mockFacilities: [
     {
       type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
