@@ -89,6 +89,13 @@ context('Parties - user can view and edit agent', () => {
         cy.url().should('eq', relative(`/case/${dealId}/parties/agent`));
         pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.agentPage.agentUniqueRefInput().clear().type(' ');
+        pages.agentPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/agent`));
+        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
       });
 
       it('should save entered details if partyUrn correctly entered', () => {

@@ -92,6 +92,13 @@ context('Parties - user can view and edit buyer', () => {
         cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
         pages.buyerPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.buyerPage.urnInput().clear().type(' ');
+        pages.buyerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
+        pages.buyerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
       });
 
       it('should save entered details if partyUrn correctly entered', () => {

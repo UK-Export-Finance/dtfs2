@@ -92,6 +92,13 @@ context('Parties - user can view and edit exporter', () => {
         cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
         pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.exporterPage.urnInput().clear().type(' ');
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
       });
 
       it('should save entered details if partyUrn correctly entered', () => {

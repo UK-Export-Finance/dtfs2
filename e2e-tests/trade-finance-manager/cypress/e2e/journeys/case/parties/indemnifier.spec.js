@@ -77,6 +77,13 @@ context('Parties - user can view and edit indemnifier', () => {
         cy.url().should('eq', relative(`/case/${dealId}/parties/indemnifier`));
         pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.indemnifierPage.urnInput().clear().type(' ');
+        pages.indemnifierPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/indemnifier`));
+        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
       });
 
       it('should save entered details if partyUrn correctly entered', () => {
