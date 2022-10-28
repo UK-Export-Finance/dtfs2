@@ -6,6 +6,8 @@ const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-opt
 const CONSTANTS = require('../../constants');
 const { filterTasks } = require('../helpers/tasks.helper');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
+const validatePartyURN = require('./parties/partyUrnValidation.validate');
+const { bondPartyType, userCanEdit } = require('./parties/helpers');
 
 const {
   DEAL,
@@ -352,11 +354,57 @@ const postTfmFacility = async (req, res) => {
   const dealId = req.params._id;
   delete req.body._csrf;
   delete facilityUpdateFields._csrf;
-
+  const { user } = req.session;
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
     return res.redirect('/not-found');
+  }
+
+  // gets the bodyType and partyType from body for URN validation
+  const { bodyType, partyType } = bondPartyType(req.body);
+
+  const urnValidationErrors = [];
+  // object to store final error object if any validation errors
+  let validationErrors = {};
+
+  // loops through array of URNs
+  req.body[bodyType].forEach((eachType, index) => {
+    // constructs object for validation
+    const partyUrnParams = {
+      urnValue: eachType,
+      // partyURN not required for these fields
+      partyUrnRequired: null,
+      // adds 1 to index as nunjucks indexes start at 1
+      index: index + 1,
+      partyType: bodyType,
+      urnValidationErrors,
+    };
+
+    const errors = validatePartyURN(partyUrnParams);
+
+    // if errors, then overrides validationErrors object
+    if (errors.errorsObject) {
+      validationErrors = errors;
+    }
+  });
+
+  // if error, then rerender template with error message
+  if (validationErrors.errorsObject) {
+    const canEdit = userCanEdit(user);
+
+    return res.render(`case/parties/edit/${partyType}-edit.njk`, {
+      userCanEdit: canEdit,
+      renderEditLink: false,
+      renderEditForm: true,
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'parties',
+      deal: deal.dealSnapshot,
+      user,
+      errors: validationErrors.errorsObject.errors,
+      // returns URN from request body
+      urn: req.body[bodyType],
+    });
   }
 
   await Promise.all(

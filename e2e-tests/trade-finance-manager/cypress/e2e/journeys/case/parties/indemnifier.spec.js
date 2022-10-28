@@ -37,24 +37,50 @@ context('Parties - user can view and edit indemnifier', () => {
         cy.visit(relative(`/case/${dealId}/parties`));
       });
 
-      it('should render edit page', () => {
-        pages.partiesPage.indemnifierEditLink().click();
-
-        cy.url().should('eq', relative(`/case/${dealId}/parties/indemnifier`));
-        pages.partiesPage.indemnifierEditLink().should('not.exist');
-
-        pages.indemnifierPage.urnInput().should('exist');
-        pages.indemnifierPage.heading().should('have.text', 'Edit indemnifier details');
-
-        pages.indemnifierPage.saveButton().should('exist');
-        pages.indemnifierPage.closeLink().should('exist');
-
-        pages.indemnifierPage.closeLink().click();
-        cy.url().should('eq', relative(`/case/${dealId}/parties`));
-      });
-
       it('should save entered details', () => {
         const partyUrn = 'test partyurn';
+
+        pages.partiesPage.indemnifierEditLink().click();
+        pages.indemnifierPage.urnInput().clear();
+        pages.indemnifierPage.urnInput().type(partyUrn);
+
+        pages.indemnifierPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/indemnifier`));
+        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.indemnifierPage.urnInput().clear().type('12');
+        pages.indemnifierPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/indemnifier`));
+        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.indemnifierPage.urnInput().clear().type('ABC123');
+        pages.indemnifierPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/indemnifier`));
+        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.indemnifierPage.urnInput().clear().type('"!£!"£!"£!"£');
+        pages.indemnifierPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/indemnifier`));
+        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.indemnifierPage.urnInput().clear().type('1234!');
+        pages.indemnifierPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/indemnifier`));
+        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
+      });
+
+      it('should save entered details if partyUrn correctly entered', () => {
+        const partyUrn = '12345';
 
         pages.partiesPage.indemnifierEditLink().click();
         pages.indemnifierPage.urnInput().clear();
@@ -69,7 +95,7 @@ context('Parties - user can view and edit indemnifier', () => {
         });
 
         pages.partiesPage.indemnifierEditLink().click();
-        pages.indemnifierPage.urnInput().invoke('val').then((value) => {
+        pages.exporterPage.urnInput().invoke('val').then((value) => {
           expect(value.trim()).equal(partyUrn);
         });
       });

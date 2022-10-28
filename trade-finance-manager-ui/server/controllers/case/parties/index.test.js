@@ -2,7 +2,7 @@
 import partiesController from '.';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
-import userCanEdit from './helpers';
+import { userCanEdit } from './helpers';
 
 const res = mockRes();
 
@@ -341,6 +341,13 @@ describe('controllers - case - parties', () => {
       const mockDeal = {
         _id: '61f6ac5b02ffda01b1e8efef',
         mock: true,
+        tfm: {
+          parties: {
+            exporter: {
+              partyUrnRequired: true,
+            },
+          },
+        },
       };
 
       beforeEach(() => {
@@ -377,8 +384,8 @@ describe('controllers - case - parties', () => {
         await partiesController.postExporterPartyDetails(req, res);
 
         const expectedErrorSummary = {
-          errorSummary: [{ text: 'Enter a correct party URN', href: '#partyUrn' }],
-          fieldErrors: { partyUrn: { text: 'Enter a correct party URN' } },
+          errorSummary: [{ text: 'Enter a unique reference number', href: '#partyUrn' }],
+          fieldErrors: { partyUrn: { text: 'Enter a unique reference number' } },
         };
 
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
@@ -410,8 +417,8 @@ describe('controllers - case - parties', () => {
         await partiesController.postExporterPartyDetails(req, res);
 
         const expectedErrorSummary = {
-          errorSummary: [{ text: 'Enter a correct party URN', href: '#partyUrn' }],
-          fieldErrors: { partyUrn: { text: 'Enter a correct party URN' } },
+          errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
+          fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
         };
 
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
@@ -443,8 +450,8 @@ describe('controllers - case - parties', () => {
         await partiesController.postExporterPartyDetails(req, res);
 
         const expectedErrorSummary = {
-          errorSummary: [{ text: 'Enter a correct party URN', href: '#partyUrn' }],
-          fieldErrors: { partyUrn: { text: 'Enter a correct party URN' } },
+          errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
+          fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
         };
 
         expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {

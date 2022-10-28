@@ -62,36 +62,36 @@ context('Parties - user can view and edit exporter', () => {
         pages.exporterPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
-        pages.exporterPage.errorSummary().contains('Enter a correct party URN');
-        pages.exporterPage.urnError().contains('Enter a correct party URN');
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.exporterPage.urnInput().clear().type('12');
         pages.exporterPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
-        pages.exporterPage.errorSummary().contains('Enter a correct party URN');
-        pages.exporterPage.urnError().contains('Enter a correct party URN');
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.exporterPage.urnInput().clear().type('ABC123');
         pages.exporterPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
-        pages.exporterPage.errorSummary().contains('Enter a correct party URN');
-        pages.exporterPage.urnError().contains('Enter a correct party URN');
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.exporterPage.urnInput().clear().type('"!£!"£!"£!"£');
         pages.exporterPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
-        pages.exporterPage.errorSummary().contains('Enter a correct party URN');
-        pages.exporterPage.urnError().contains('Enter a correct party URN');
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.exporterPage.urnInput().clear().type('1234!');
         pages.exporterPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
-        pages.exporterPage.errorSummary().contains('Enter a correct party URN');
-        pages.exporterPage.urnError().contains('Enter a correct party URN');
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
       });
 
       it('should save entered details if partyUrn correctly entered', () => {

@@ -1,5 +1,5 @@
 const api = require('../../../api');
-const userCanEdit = require('./helpers');
+const { userCanEdit, isEmptyString } = require('./helpers');
 const validatePartyURN = require('./partyUrnValidation.validate');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
@@ -66,7 +66,7 @@ const getPartyDetails = (partyType) => (
       tfm: deal.tfm,
       dealId,
       user: req.session.user,
-      urn: deal.tfm.parties.exporter.partyUrn,
+      urn: deal.tfm.parties[partyType].partyUrn,
     });
   }
 );
@@ -153,9 +153,20 @@ const postPartyDetails = (partyType) => (
      * validation error rendered if error exists on edit partyUrn page
      * if no error, then updates partyURN
      */
-    if (partyType === 'exporter' && (req.body.partyUrn || req.body.partyUrn === '')) {
+    if (req.body.partyUrn || isEmptyString(req.body.partyUrn)) {
+      const urnValidationErrors = [];
+
+      const partyUrnParams = {
+        urnValue: req.body.partyUrn,
+        partyUrnRequired: deal.tfm.parties[partyType].partyUrnRequired,
+        // index not required for these fields as only 1 URN box on page
+        index: null,
+        partyType,
+        urnValidationErrors,
+      };
+
       // validates input
-      const validationError = validatePartyURN(req.body.partyUrn);
+      const validationError = validatePartyURN(partyUrnParams);
       const canEdit = userCanEdit(user);
 
       if (validationError.errorsObject) {
