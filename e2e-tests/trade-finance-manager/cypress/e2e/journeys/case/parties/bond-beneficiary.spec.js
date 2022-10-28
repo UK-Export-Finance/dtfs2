@@ -12,6 +12,10 @@ context('Parties - user can view and edit bond beneficiary', () => {
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
       dealId = insertedDeal._id;
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+      // adds another bond to mock facilities
+      const facilityToAdd = mockFacilities[0];
+      mockFacilities.push(facilityToAdd);
+
       cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
       });
