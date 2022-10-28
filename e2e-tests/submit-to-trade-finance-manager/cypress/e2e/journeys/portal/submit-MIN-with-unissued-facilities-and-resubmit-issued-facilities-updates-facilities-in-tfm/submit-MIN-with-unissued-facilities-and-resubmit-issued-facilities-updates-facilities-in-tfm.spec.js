@@ -148,6 +148,9 @@ context('Portal to TFM deal submission', () => {
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
+    // force wait: wait for number generator to finish executing
+    cy.wait(15000)
+
     //---------------------------------------------------------------
     // login to TFM
     //---------------------------------------------------------------
