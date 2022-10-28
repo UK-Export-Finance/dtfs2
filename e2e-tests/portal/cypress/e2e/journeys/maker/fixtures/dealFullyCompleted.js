@@ -139,7 +139,16 @@ const deal = {
       dayCountBasis: '365',
     },
   ],
-  eligibility: ELIGIBILITY_COMPLETED,
+  eligibility: {
+    ...ELIGIBILITY_COMPLETED,
+    agentAddressLine1: 'ADDR 1',
+    agentAddressLine2: 'Addr 2',
+    agentAddressLine3: 'Addr 3',
+    agentAddressCountry: 'GBR',
+    agentName: 'AGENT NAME',
+    agentAddressPostcode: 'CF64 5SH',
+    agentAddressTown: 'City',
+  },
   submissionDetails: SUBMISSION_DETAILS,
   summary: {
     totalValue: {
