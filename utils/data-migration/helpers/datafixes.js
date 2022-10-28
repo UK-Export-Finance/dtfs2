@@ -448,7 +448,7 @@ const importPortalData = async () => {
         allDeals
           .forEach((d, i) => {
             if (allDeals[i].dealSnapshot.ukefDealId === deal.ukefDealId) {
-              allDeals[i].tfm.stage = CONSTANTS.DEAL.TFM_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
+              allDeals[i].tfm.stage = CONSTANTS.DEAL.TFM_STATUS.CONFIRMED;
               allDeals[i].tfm.underwriterManagersDecision = {
                 decision: CONSTANTS.DEAL.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,
                 comments: text,
