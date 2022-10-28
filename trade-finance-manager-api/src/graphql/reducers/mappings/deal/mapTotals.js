@@ -5,9 +5,10 @@ const { CURRENCY } = require('../../../../constants/currency.constant');
 
 const mapTotals = (facilities) => {
   const totals = {};
+  console.log({ facilities }, facilities.length, typeof facilities);
 
   // total value of all facilities
-  const facilitiesValue = facilities.map((facility) => {
+  const facilitiesValue = !facilities ? null : facilities.map((facility) => {
     if (isValidFacility(facility)) {
       const { facilitySnapshot, tfm } = facility;
 
@@ -43,7 +44,7 @@ const mapTotals = (facilities) => {
   totals.facilitiesValueInGBP = `${CURRENCY.GBP} ${formattedFacilitiesValue}`;
 
   // maps through facility and returns total from exposure array
-  const mappedExposureTotal = facilities.map((f) => {
+  const mappedExposureTotal = !facilities ? null : facilities.map((f) => {
     // if amendment completed, then returns exposure value of amendment
     if (calculateAmendmentTotalExposure(f)) {
       const amendmentExposureValue = calculateAmendmentTotalExposure(f);
