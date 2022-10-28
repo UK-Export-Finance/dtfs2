@@ -55,6 +55,13 @@ context('Parties - user can view and edit agent', () => {
       it('should save entered details', () => {
         pages.partiesPage.agentEditLink().click();
         pages.agentPage.agentUniqueRefInput().clear();
+
+        pages.agentPage.saveButton().click();
+
+        pages.agentPage.errorSummary().contains('Enter a unique reference number');
+        pages.agentPage.urnError().contains('Enter a unique reference number');
+
+        pages.agentPage.agentUniqueRefInput().clear();
         pages.agentPage.agentUniqueRefInput().type('agent partyurn');
 
         pages.agentPage.saveButton().click();

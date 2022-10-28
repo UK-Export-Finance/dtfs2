@@ -42,6 +42,13 @@ context('Parties - user can view and edit indemnifier', () => {
 
         pages.partiesPage.indemnifierEditLink().click();
         pages.indemnifierPage.urnInput().clear();
+        pages.indemnifierPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/indemnifier`));
+        pages.indemnifierPage.errorSummary().contains('Enter a unique reference number');
+        pages.indemnifierPage.urnError().contains('Enter a unique reference number');
+
+        pages.indemnifierPage.urnInput().clear();
         pages.indemnifierPage.urnInput().type(partyUrn);
 
         pages.indemnifierPage.saveButton().click();

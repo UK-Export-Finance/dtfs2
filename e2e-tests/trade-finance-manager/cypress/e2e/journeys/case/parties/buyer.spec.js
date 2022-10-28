@@ -57,6 +57,14 @@ context('Parties - user can view and edit buyer', () => {
 
         pages.partiesPage.buyerEditLink().click();
         pages.buyerPage.urnInput().clear();
+
+        pages.buyerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
+        pages.buyerPage.errorSummary().contains('Enter a unique reference number');
+        pages.buyerPage.urnError().contains('Enter a unique reference number');
+
+        pages.buyerPage.urnInput().clear();
         pages.buyerPage.urnInput().type(partyUrn);
 
         pages.buyerPage.saveButton().click();

@@ -57,6 +57,14 @@ context('Parties - user can view and edit exporter', () => {
 
         pages.partiesPage.exporterEditLink().click();
         pages.exporterPage.urnInput().clear();
+
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        pages.exporterPage.errorSummary().contains('Enter a unique reference number');
+        pages.exporterPage.urnError().contains('Enter a unique reference number');
+
+        pages.exporterPage.urnInput().clear();
         pages.exporterPage.urnInput().type(partyUrn);
 
         pages.exporterPage.saveButton().click();
