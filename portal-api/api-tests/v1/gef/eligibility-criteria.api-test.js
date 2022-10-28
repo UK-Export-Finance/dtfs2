@@ -71,11 +71,6 @@ describe(baseUrl, () => {
       expect(status).toEqual(401);
     });
 
-    it('returns a 404 if there are no records', async () => {
-      const { status } = await as(aMaker).get(`${baseUrl}/doesnotexist`);
-      expect(status).toEqual(404);
-    });
-
     it('accepts requests that do present a valid Authorization token', async () => {
       await as(anEditor).post(items[0]).to(baseUrl);
       const { status } = await as(aMaker).get(`${baseUrl}/${items[0].version}`);
@@ -91,6 +86,7 @@ describe(baseUrl, () => {
         version: items[0].version,
         isInDraft: expect.any(Boolean),
         createdAt: expect.any(Number),
+        updatedAt: expect.any(Number),
         criteria: expect.any(Array),
       };
       expect(body).toEqual(expected);

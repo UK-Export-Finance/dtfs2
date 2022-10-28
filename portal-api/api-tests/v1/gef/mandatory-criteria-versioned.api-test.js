@@ -155,11 +155,10 @@ describe(baseUrl, () => {
       };
       delete itemUpdate._id; // immutable key
 
-      const { status } = await as(anEditor).put(itemUpdate).to(`${baseUrl}/${item.body._id}`);
+      const { status } = await as(anEditor).put(itemUpdate).to(`${baseUrl}/${item.body.version}`);
 
       expect(status).toEqual(200);
       const { body } = await as(aMaker).get(`${baseUrl}/${itemUpdate.version}`);
-
       expect(body).toEqual(expectMongoId({
         ...itemUpdate,
         createdAt: expect.any(Number),
@@ -187,11 +186,11 @@ describe(baseUrl, () => {
 
     it('deletes the mandatory-criteria', async () => {
       const { body: createdItem } = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
-      const { body: item } = await as(anEditor).get(`${baseUrl}/${createdItem.version}`);
+      await as(anEditor).get(`${baseUrl}/${createdItem.version}`);
 
-      const { status, body } = await as(anEditor).remove(`${baseUrl}/${createdItem._id}`);
+      const { status, body } = await as(anEditor).remove(`${baseUrl}/${createdItem.version}`);
       expect(status).toEqual(200);
-      expect(body).toEqual(item);
+      expect(body).toEqual({});
     });
   });
 });

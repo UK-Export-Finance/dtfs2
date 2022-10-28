@@ -33,8 +33,7 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe(['deals', 'facilities']);
   });
 
   describe('PUT /v1/deals/:id/eligibility-criteria', () => {

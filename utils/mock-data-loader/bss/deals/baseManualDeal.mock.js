@@ -1,6 +1,6 @@
 const AUTOMATIC_BSS_DEAL = require('./baseDeal.mock');
 
 module.exports = {
-  mockId: 2,
   ...AUTOMATIC_BSS_DEAL,
+  submissionType: 'Manual Inclusion Application',
 };

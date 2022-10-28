@@ -8,6 +8,7 @@ const chance = new Chance();
 const eligibilityCriteria = (type) => ({
   version: 2,
   isInDraft: false,
+  dealType: 'GEF',
   criteria: [
     {
       id: 12,

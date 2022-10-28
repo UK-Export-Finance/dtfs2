@@ -110,6 +110,7 @@ const MOCK_DEAL_AIN_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = {
   },
   eligibility: {
     version: 5,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 11,

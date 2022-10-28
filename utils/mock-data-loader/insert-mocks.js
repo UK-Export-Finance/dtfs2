@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
+const Chance = require('chance');
 const api = require('./api');
 const apiGef = require('./gef/api');
 const centralApi = require('./centralApi');
@@ -10,6 +11,8 @@ const MOCKS_BSS = require('./bss');
 const MOCKS_GEF = require('./gef');
 
 const tokenFor = require('./temporary-token-handler');
+
+const chance = new Chance();
 
 const insertMocks = async () => {
   const token = await tokenFor({
@@ -60,7 +63,12 @@ const insertMocks = async () => {
   const insertedDeals = [];
 
   for (const deal of MOCKS_BSS.DEALS) {
-    const { _id } = await api.createDeal(deal, tfmMakerToken);
+    const newDeal = deal;
+    newDeal.bankInternalRefName = chance.sentence({ words: 2 });
+    newDeal.additionalRefName = chance.sentence({ words: 2 });
+    newDeal.exporter = { companyName: chance.company() };
+
+    const { _id } = await api.createDeal(newDeal, tfmMakerToken);
     const { deal: createdDeal } = await api.getDeal(_id, tfmMakerToken);
 
     insertedDeals.push(createdDeal);
@@ -93,7 +101,8 @@ const insertMocks = async () => {
 
   const latestEligibilityCriteria = await apiGef.latestEligibilityCriteria(token);
 
-  for (const [index, item] of MOCKS_GEF.APPLICATION.entries()) {
+  for (const val of MOCKS_GEF.APPLICATION.entries()) {
+    const [, item] = val;
     item.userId = makerUserId;
     const application = await apiGef.createApplication(item, token);
 

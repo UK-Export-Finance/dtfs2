@@ -1,5 +1,6 @@
 export const mandatoryCriteria = {
   _id: '623f30f08b2712001f99f2b8',
+  dealType: 'BSS/EWCS',
   version: 33,
   criteria: [
     {

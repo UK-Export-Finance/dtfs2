@@ -351,6 +351,7 @@ const deal = {
     },
   ],
   eligibility: {
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 11,

@@ -58,7 +58,7 @@ exports.update = async (req, res) => {
 
       // Special case for criteria 11 - must add agents name & address if criteria 11 === false
       const criteria11 = updatedCriteria.find((c) => c.id === 11);
-
+      console.log(criteria11);
       const criteria11IsFalse = (typeof criteria11.answer !== 'undefined' && criteria11.answer === false);
 
       const criteria11Additional = {

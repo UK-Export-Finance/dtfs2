@@ -111,6 +111,7 @@ const MOCK_DEAL = {
       supplyContractValue: '1234.00',
     },
     eligibility: {
+      dealType: 'BSS/EWCS',
       criteria: [
         {
           id: 11,

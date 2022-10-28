@@ -5,15 +5,12 @@ const { DEAL_TYPE: { GEF, BSS_EWCS } } = require('../../../../constants/deals');
 
 const collectionName = 'mandatoryCriteria';
 
-const findOne = async (dealType, version) => {
-  const collection = await getCollection(collectionName);
-  return collection.findOne({ dealType, version });
-};
-
 exports.getOneMandatoryCriteria = async (req, res) => {
   const { version } = req.params;
-  const { dealType, } = req.query;
-  const criteria = await findOne(dealType, version);
+  const { dealType } = req.query;
+
+  const collection = await getCollection(collectionName);
+  const criteria = await collection.findOne({ dealType, version });
   const status = criteria ? 200 : 404;
   return res.status(status).send(criteria);
 };
@@ -72,40 +69,25 @@ exports.putMandatoryCriteria = async (req, res) => {
   const { dealType } = req.query;
   const { version } = req.params;
 
-  let response = {};
   const payload = req.body;
   payload.updatedAt = Date.now();
 
   const collection = await getCollection(collectionName);
-  if (dealType === GEF) {
-    response = await collection.findOneAndUpdate(
-      { _id: ObjectId(version), dealType: GEF },
-      { $set: req.body },
-      { returnDocument: 'after', returnNewDocument: true }
-    );
-    response = response.value;
-  }
 
-  if (dealType === BSS_EWCS) {
-    response = await collection.updateOne({ version, dealType: BSS_EWCS }, { $set: { criteria: payload.criteria } }, {});
-  }
-  return res.status(200).send(response);
+  const response = await collection.findOneAndUpdate(
+    { version, dealType },
+    { $set: req.body },
+    { returnDocument: 'after', returnNewDocument: true }
+  );
+  return res.status(200).send(response.value);
 };
 
 exports.deleteMandatoryCriteria = async (req, res) => {
   const { dealType } = req.query;
   const { version } = req.params;
-  let response;
 
   const collection = await getCollection(collectionName);
-  if (dealType === GEF) {
-    response = await collection.findOneAndDelete({ _id: ObjectId(version), dealType: GEF });
-    response = response.value;
-  }
-
-  if (dealType === BSS_EWCS) {
-    response = await collection.deleteOne({ version, dealType: BSS_EWCS });
-    response = response.value;
-  }
-  return res.status(200).send(response);
+  const response = await collection.deleteOne({ version, dealType });
+  const status = response ? 200 : 404;
+  return res.status(status).send();
 };
