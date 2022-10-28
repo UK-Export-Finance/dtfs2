@@ -109,6 +109,7 @@ const MOCK_DEAL_AIN_SUBMITTED = {
   },
   eligibility: {
     version: 5,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 11,

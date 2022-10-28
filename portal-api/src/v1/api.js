@@ -114,10 +114,9 @@ const findAllMandatoryCriteria = async (dealType) => {
   }
 };
 
-const findOneMandatoryCriteria = async (id, dealType) => {
+const findOneMandatoryCriteria = async (version, dealType) => {
   try {
-    const { data } = await axios.get(`${CENTRAL_API}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`);
-
+    const { data } = await axios.get(`${CENTRAL_API}/v1/portal/mandatory-criteria/${version}?dealType=${dealType}`);
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to get one ${dealType} mandatory criteria ${err?.response?.data} %O`, { response: err?.response?.data });
@@ -135,9 +134,9 @@ const postMandatoryCriteria = async (payload, dealType) => {
   }
 };
 
-const putMandatoryCriteria = async (payload, id, dealType) => {
+const putMandatoryCriteria = async (payload, version, dealType) => {
   try {
-    const { data } = await axios.put(`${CENTRAL_API}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`, payload);
+    const { data } = await axios.put(`${CENTRAL_API}/v1/portal/mandatory-criteria/${version}?dealType=${dealType}`, payload);
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to update the ${dealType} mandatory criteria %O`, { response: err?.response?.data });
@@ -145,9 +144,9 @@ const putMandatoryCriteria = async (payload, id, dealType) => {
   }
 };
 
-const deleteMandatoryCriteria = async (id, dealType) => {
+const deleteMandatoryCriteria = async (version, dealType) => {
   try {
-    const { data } = await axios.delete(`${CENTRAL_API}/v1/portal/mandatory-criteria/${id}?dealType=${dealType}`);
+    const { data } = await axios.delete(`${CENTRAL_API}/v1/portal/mandatory-criteria/${version}?dealType=${dealType}`);
     return { status: 200, data };
   } catch (err) {
     console.error(`Unable to delete the ${dealType} mandatory criteria %O`, { response: err?.response?.data });

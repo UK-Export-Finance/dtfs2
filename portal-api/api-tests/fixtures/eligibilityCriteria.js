@@ -1,6 +1,7 @@
 module.exports = [
   {
     version: 2,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 1,
@@ -9,7 +10,8 @@ module.exports = [
     ],
   },
   {
-    version: 123,
+    version: 1,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 11,

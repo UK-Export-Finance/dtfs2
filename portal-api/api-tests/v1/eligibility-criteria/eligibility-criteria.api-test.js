@@ -7,6 +7,7 @@ const { as } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allEligibilityCriteria = require('../../fixtures/eligibilityCriteria');
+
 const newEligibilityCriteria = allEligibilityCriteria[0];
 const updatedEligibilityCriteria = {
   ...newEligibilityCriteria,
@@ -22,7 +23,7 @@ describe('/v1/eligibility-criteria', () => {
   let noRoles;
   let anEditor;
 
-  beforeAll(async() => {
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     anEditor = testUsers().withRole('editor').one();
@@ -46,14 +47,14 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     it('returns a list of eligibility-criteria sorted by id', async () => {
-      // randomise the order a bit on the way in...
-      await as(anEditor).post(allEligibilityCriteria[0]).to('/v1/eligibility-criteria');
-      await as(anEditor).post(allEligibilityCriteria[1]).to('/v1/eligibility-criteria');
+      const payload = [{ ...allEligibilityCriteria[0], updatedAt: expect.any(Number) }, { ...allEligibilityCriteria[1], updatedAt: expect.any(Number) }];
+      await as(anEditor).post({ ...payload[0] }).to('/v1/eligibility-criteria');
+      await as(anEditor).post({ ...payload[1] }).to('/v1/eligibility-criteria');
 
-      const { body } = await as(noRoles).get(`/v1/eligibility-criteria`);
+      const { body } = await as(noRoles).get('/v1/eligibility-criteria');
       expect(body).toEqual({
         count: allEligibilityCriteria.length,
-        eligibilityCriteria: expectMongoIds(allEligibilityCriteria),
+        eligibilityCriteria: expectMongoIds(payload),
       });
     });
   });
@@ -77,7 +78,7 @@ describe('/v1/eligibility-criteria', () => {
       const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${newEligibilityCriteria.version}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(newEligibilityCriteria));
+      expect(body).toEqual(expectMongoId({ ...newEligibilityCriteria, updatedAt: expect.any(Number) }));
     });
   });
 
@@ -89,6 +90,7 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
+      await as(anEditor).post(allEligibilityCriteria[1]).to('/v1/eligibility-criteria');
       const { status } = await as(noRoles).get('/v1/eligibility-criteria/1');
 
       expect(status).toEqual(200);
@@ -100,7 +102,7 @@ describe('/v1/eligibility-criteria', () => {
       const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${newEligibilityCriteria.version}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId(newEligibilityCriteria));
+      expect(body).toEqual(expectMongoId({ ...newEligibilityCriteria, updatedAt: expect.any(Number) }));
     });
   });
 
@@ -164,6 +166,7 @@ describe('/v1/eligibility-criteria', () => {
       expect(body).toEqual(expectMongoId({
         ...eligibilityCriteria,
         criteria: update.criteria,
+        updatedAt: expect.any(Number)
       }));
     });
   });
@@ -192,10 +195,8 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     it('deletes the eligibility-criteria', async () => {
-      await as(anEditor).post(newEligibilityCriteria).to('/v1/eligibility-criteria');
-      await as(anEditor).remove('/v1/eligibility-criteria/1');
-
-      const { status, body } = await as(anEditor).get('/v1/eligibility-criteria/1');
+      await as(anEditor).post(allEligibilityCriteria[1]).to('/v1/eligibility-criteria');
+      const { status, body } = await as(anEditor).remove('/v1/eligibility-criteria/1');
 
       expect(status).toEqual(200);
       expect(body).toEqual({});

@@ -88,7 +88,9 @@ describe(baseUrl, () => {
           maker: expect.any(Object),
           eligibility: {
             _id: expect.any(String),
+            dealType: expect.any(String),
             createdAt: expect.any(Number),
+            updatedAt: expect.any(Number),
             isInDraft: false,
             version: expect.any(Number),
             criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
@@ -140,9 +142,11 @@ describe(baseUrl, () => {
         maker: expect.any(Object),
         eligibility: {
           _id: expect.any(String),
-          createdAt: expect.any(Number),
-          isInDraft: false,
           version: expect.any(Number),
+          createdAt: expect.any(Number),
+          updatedAt: expect.any(Number),
+          dealType: expect.any(String),
+          isInDraft: false,
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
             ...criterion,
             answer: null,
@@ -226,9 +230,11 @@ describe(baseUrl, () => {
         checkerId: null,
         portalActivities: [],
         eligibility: {
-          version: expect.any(Number),
           _id: expect.any(String),
+          version: expect.any(Number),
           createdAt: expect.any(Number),
+          updatedAt: expect.any(Number),
+          dealType: expect.any(String),
           isInDraft: false,
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
             ...criterion,

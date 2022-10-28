@@ -108,6 +108,7 @@ const MOCK_DEAL_NO_UKEF_ID = {
   },
   eligibility: {
     version: 5,
+    dealType: 'BSS/EWCS',
     criteria: [
       {
         id: 11,

@@ -87,7 +87,8 @@ const MOCK_GEF_DEAL = {
   eligibility: {
     status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.COMPLETED,
     version: 2,
-    updatedAt: 1634835561860.0,
+    updatedAt: 1634835561860,
+    dealType: 'GEF',
     criteria: [
       {
         id: 12,

@@ -9,7 +9,9 @@ const expectAddedFields = (obj) => {
       status: 'Not started',
       _id: expect.any(String),
       version: expect.any(Number),
+      updatedAt: expect.any(Number),
       criteria: expect.any(Array),
+      dealType: expect.any(String)
     },
     submissionDetails: {
       status: 'Not started',
