@@ -17,12 +17,7 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
   // some deal updates do not want to be marked as "edited by X user"
   // for example when a Checker submits a deal, they have not 'edited' the deal, only submitted it.
   if (user) {
-    const {
-      username,
-      roles,
-      bank,
-      _id,
-    } = user;
+    const { username, roles, bank, _id } = user;
 
     const newEditedBy = {
       date: Date.now(),
@@ -39,20 +34,12 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
     if (!dealUpdate.editedBy) {
       const deal = await findOneBssDeal(dealId);
       if (deal && deal.editedBy) {
-        editedBy = [
-          ...deal.editedBy,
-          newEditedBy,
-        ];
+        editedBy = [...deal.editedBy, newEditedBy];
       } else {
-        editedBy = [
-          newEditedBy,
-        ];
+        editedBy = [newEditedBy];
       }
     } else {
-      editedBy = [
-        ...dealUpdate.editedBy,
-        newEditedBy,
-      ];
+      editedBy = [...dealUpdate.editedBy, newEditedBy];
     }
   }
 
@@ -64,14 +51,13 @@ const updateDealEditedByPortal = async (dealId, user) => {
     const collection = await db.getCollection('deals');
     const editedBy = await handleEditedByPortal(dealId, {}, user);
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
+    const response = await collection.findOneAndUpdate(
       { _id: ObjectId(dealId) },
       $.flatten(withoutId({ editedBy })),
       { returnDocument: 'after', returnNewDocument: true }
     );
 
-    const { value } = findAndUpdateResponse;
-    return value;
+    return response.value;
   }
   return { status: 400, message: 'Invalid Deal Id' };
 };
@@ -81,26 +67,26 @@ const updateBssDeal = async (dealId, dealChanges, user, existingDeal, routePath)
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection('deals');
 
-    let originalDeal = existingDeal;
+    // let originalDeal = existingDeal;
 
-    if (!existingDeal) {
-      originalDeal = await findOneBssDeal(dealId);
-    }
+    // if (!existingDeal) {
+    //   originalDeal = await findOneBssDeal(dealId);
+    // }
 
-    let originalDealDetails;
-    if (originalDeal && originalDeal.details) {
-      originalDealDetails = originalDeal.details;
-    }
+    // let originalDealDetails;
+    // if (originalDeal && originalDeal.details) {
+    //   originalDealDetails = originalDeal.details;
+    // }
 
     let dealChangesDetails;
-    if (dealChanges && dealChanges.details) {
+    if (dealChanges?.details) {
       dealChangesDetails = dealChanges.details;
     }
 
-    let originalDealEligibility;
-    if (originalDeal && originalDeal.eligibility) {
-      originalDealEligibility = originalDeal.eligibility;
-    }
+    // let originalDealEligibility;
+    // if (originalDeal && originalDeal.eligibility) {
+    //   originalDealEligibility = originalDeal.eligibility;
+    // }
 
     let dealChangesEligibility;
     if (dealChanges && dealChanges.eligibility) {
@@ -111,11 +97,11 @@ const updateBssDeal = async (dealId, dealChanges, user, existingDeal, routePath)
       ...dealChanges,
       updatedAt: Date.now(),
       details: {
-        ...originalDealDetails,
+        // ...originalDealDetails,
         ...dealChangesDetails,
       },
       eligibility: {
-        ...originalDealEligibility,
+        // ...originalDealEligibility,
         ...dealChangesEligibility,
       },
     };
@@ -175,19 +161,12 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
 exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 
 exports.putBssDeal = async (req, res) => {
-  const dealId = req.params.id;
-
+  const { id: dealId } = req.params;
   const { user, dealUpdate } = req.body;
 
   await findOneBssDeal(dealId, async (deal) => {
     if (deal) {
-      const updatedDeal = await updateBssDeal(
-        dealId,
-        dealUpdate,
-        user,
-        deal,
-        req.routePath,
-      );
+      const updatedDeal = await updateBssDeal(dealId, dealUpdate, user, deal, req.routePath);
       return res.status(200).json(updatedDeal);
     }
     return res.status(404).send({ status: 404, message: 'Deal not found' });
@@ -197,23 +176,19 @@ exports.putBssDeal = async (req, res) => {
 const updateGefDeal = async (dealId, update) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection('deals');
-    const originalDeal = await findOneGefDeal(dealId);
-
-    console.info('Updating Portal GEF deal.');
 
     const dealUpdate = {
-      ...originalDeal,
       ...update,
       updatedAt: Date.now(),
     };
 
     const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(String(dealId)) } },
-      { $set: dealUpdate },
-      { returnDocument: 'after', returnNewDocument: true }
+      { _id: { $eq: ObjectId(dealId) } },
+      $.flatten(dealUpdate),
+      { returnDocument: 'after', returnNewDocument: true },
     );
 
-    console.info('Updated Portal GEF deal');
+    console.info('Portal GEF deal Updated');
 
     return findAndUpdateResponse.value;
   }

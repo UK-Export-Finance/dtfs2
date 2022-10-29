@@ -1,6 +1,5 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../database/mongo-client');
-const { findOneGefDeal, findOneBssDeal } = require('./get-deal.controller');
 
 const addDealComment = async (_id, commentType, comment) => {
   const collection = await db.getCollection('deals');
@@ -23,27 +22,11 @@ const addDealComment = async (_id, commentType, comment) => {
 
   return response.value;
 };
+exports.postCommentToDeal = async (req, res) => {
+  const { id: dealId } = req.params;
+  const { commentType, comment } = req.body;
 
-exports.postCommentToBssDeal = async (req, res) => {
-  const dealId = req.params.id;
-
-  const deal = await findOneBssDeal(dealId);
-  if (deal) {
-    const { commentType, comment } = req.body;
-    const updatedDeal = await addDealComment(dealId, commentType, comment);
-    return res.status(200).send(updatedDeal);
-  }
-  return res.status(404).send({ status: 400, message: 'Deal not found' });
-};
-
-exports.postCommentToGefDeal = async (req, res) => {
-  const dealId = req.params.id;
-
-  const deal = await findOneGefDeal(dealId);
-  if (deal) {
-    const { commentType, comment } = req.body;
-    const updatedDeal = await addDealComment(dealId, commentType, comment);
-    return res.status(200).send(updatedDeal);
-  }
-  return res.status(404).send({ status: 400, message: 'Deal not found' });
+  const updatedDeal = await addDealComment(dealId, commentType, comment);
+  const status = updatedDeal ? 200 : 400;
+  return res.status(status).send(updatedDeal);
 };
