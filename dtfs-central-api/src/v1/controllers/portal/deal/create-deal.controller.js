@@ -34,9 +34,7 @@ const createBssDeal = async (deal, maker) => {
 
   const { insertedId } = response;
 
-  return {
-    _id: insertedId,
-  };
+  return { _id: insertedId, };
 };
 
 exports.postBssDeal = async (req, res) => {
@@ -48,27 +46,15 @@ exports.postBssDeal = async (req, res) => {
   const { validationErrors, _id } = await createBssDeal(req.body.deal, user);
 
   if (validationErrors) {
-    return res.status(400).send({
-      _id,
-      validationErrors,
-    });
+    return res.status(400).send({ _id, validationErrors });
   }
 
   return res.status(200).send({ _id });
 };
 
-const createGefDeal = async (deal) => {
-  const collection = await db.getCollection('deals');
-
-  const response = await collection.insertOne(deal);
-
-  const { insertedId } = response;
-
-  return { _id: insertedId };
-};
-
 exports.postGefDeal = async (req, res) => {
-  const createdDeal = await createGefDeal(req.body);
+  const collection = await db.getCollection('deals');
+  const response = await collection.insertOne(req.body);
 
-  return res.status(200).send(createdDeal);
+  return res.status(200).send({ _id: response.insertedId });
 };

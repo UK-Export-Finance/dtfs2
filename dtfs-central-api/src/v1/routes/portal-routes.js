@@ -280,7 +280,7 @@ portalRouter.route('/deals/:id/status').put(updateDealStatusController.putBssDea
  *       404:
  *         description: Deal not found
  */
-portalRouter.route('/deals/:id/comment').post(addDealCommentController.postCommentToBssDeal);
+portalRouter.route('/deals/:id/comment').post(addDealCommentController.postCommentToDeal);
 
 /**
  * @openapi
@@ -673,7 +673,7 @@ portalRouter.route('/gef/deals/:id/status').put(updateDealStatusController.putGe
  *       404:
  *         description: Deal not found
  */
-portalRouter.route('/gef/deals/:id/comment').post(addDealCommentController.postCommentToGefDeal);
+portalRouter.route('/gef/deals/:id/comment').post(addDealCommentController.postCommentToDeal);
 
 /**
  * @openapi
