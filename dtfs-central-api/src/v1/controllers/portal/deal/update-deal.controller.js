@@ -67,26 +67,26 @@ const updateBssDeal = async (dealId, dealChanges, user, existingDeal, routePath)
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection('deals');
 
-    // let originalDeal = existingDeal;
+    let originalDeal = existingDeal;
 
-    // if (!existingDeal) {
-    //   originalDeal = await findOneBssDeal(dealId);
-    // }
+    if (!existingDeal) {
+      originalDeal = await findOneBssDeal(dealId);
+    }
 
-    // let originalDealDetails;
-    // if (originalDeal && originalDeal.details) {
-    //   originalDealDetails = originalDeal.details;
-    // }
+    let originalDealDetails;
+    if (originalDeal && originalDeal.details) {
+      originalDealDetails = originalDeal.details;
+    }
 
     let dealChangesDetails;
     if (dealChanges?.details) {
       dealChangesDetails = dealChanges.details;
     }
 
-    // let originalDealEligibility;
-    // if (originalDeal && originalDeal.eligibility) {
-    //   originalDealEligibility = originalDeal.eligibility;
-    // }
+    let originalDealEligibility;
+    if (originalDeal && originalDeal.eligibility) {
+      originalDealEligibility = originalDeal.eligibility;
+    }
 
     let dealChangesEligibility;
     if (dealChanges && dealChanges.eligibility) {
@@ -97,11 +97,11 @@ const updateBssDeal = async (dealId, dealChanges, user, existingDeal, routePath)
       ...dealChanges,
       updatedAt: Date.now(),
       details: {
-        // ...originalDealDetails,
+        ...originalDealDetails,
         ...dealChangesDetails,
       },
       eligibility: {
-        // ...originalDealEligibility,
+        ...originalDealEligibility,
         ...dealChangesEligibility,
       },
     };
