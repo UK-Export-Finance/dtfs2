@@ -21,8 +21,8 @@ describe('mapFacilityTfm', () => {
     const expected = {
       ...mockFacilityTfm,
       ukefExposure: mapUkefExposure(mockFacilityTfm),
-      premiumSchedule: mockFacilityTfm.premiumSchedule ? mapPremiumSchedule(mockFacilityTfm.premiumSchedule) : [],
-      premiumTotals: mockFacilityTfm.premiumSchedule ? mapPremiumTotals(mockFacilityTfm.premiumSchedule) : [],
+      premiumSchedule: mapPremiumSchedule(mockFacilityTfm.premiumSchedule),
+      premiumTotals: mapPremiumTotals(mockFacilityTfm.premiumSchedule),
       creditRating: mockDealTfm.exporterCreditRating,
     };
 
