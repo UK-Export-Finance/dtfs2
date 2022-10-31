@@ -5,7 +5,6 @@ const { CURRENCY } = require('../../../../constants/currency.constant');
 
 const mapTotals = (facilities) => {
   const totals = {};
-  console.log({ facilities }, facilities.length, typeof facilities);
 
   // total value of all facilities
   const facilitiesValue = !facilities ? null : facilities.map((facility) => {
