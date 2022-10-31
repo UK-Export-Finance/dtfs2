@@ -43,7 +43,6 @@ exports.postBssFacility = async (req, res) => {
 
   if (deal) {
     const createdFacility = await createBssFacility(facility, user, req.routePath);
-
     return res.status(200).send(createdFacility);
   }
 

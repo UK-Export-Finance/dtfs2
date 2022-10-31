@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../../database/mongo-client');
-const CONSTANTS = require('../../../../constants');
+const { FACILITIES: { FACILITY_TYPE: { BOND, LOAN } } } = require('../../../../constants');
 
 const extendDealWithFacilities = async (deal) => {
   const facilitiesCollection = await db.getCollection('facilities');
@@ -16,11 +16,11 @@ const extendDealWithFacilities = async (deal) => {
     if (facilityObj) {
       const { type } = facilityObj;
 
-      if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+      if (type === BOND) {
         mappedBonds.push(facilityObj);
       }
 
-      if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+      if (type === LOAN) {
         mappedLoans.push(facilityObj);
       }
     }

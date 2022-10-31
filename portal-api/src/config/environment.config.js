@@ -5,7 +5,7 @@ dotenv.config();
 
 const envVarsSchema = Joi.object()
   .keys({
-    // NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
+    NODE_ENV: Joi.string().valid('production', 'development', 'test').default('development'),
     PORT: Joi.number().default(5001),
     MONGODB_URI: Joi.string().required().description('Mongo DB url'),
     MONGO_INITDB_DATABASE: Joi.string().required().description('Mongo DB url'),
@@ -22,7 +22,7 @@ if (error) {
 }
 
 module.exports = {
-  // NODE_ENV: envVars.NODE_ENV,
+  NODE_ENV: envVars.NODE_ENV,
   PORT: envVars.PORT,
   MONGODB_URI: envVars.MONGO_INITDB_DATABASE,
   MONGO_INITDB_DATABASE: envVars.MONGO_INITDB_DATABASE,

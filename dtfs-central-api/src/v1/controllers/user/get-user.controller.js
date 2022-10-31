@@ -18,24 +18,25 @@ exports.findOnePortalUserGet = async (req, res) => {
   return res.status(404).send({ status: 404, message: 'User not found' });
 };
 
-const sanitizeUser = (user) => ({
-  username: user.username,
-  firstname: user.firstname,
-  surname: user.surname,
-  email: user.email,
-  roles: user.roles,
-  bank: user.bank,
-  timezone: user.timezone,
-  lastLogin: user.lastLogin,
-  'user-status': user['user-status'],
-  disabled: user.disabled,
-  _id: user._id,
-});
-
 const listPortalUsers = async () => {
   const collection = await db.getCollection('users');
 
-  return collection.find({}).toArray();
+  return collection.aggregate([
+    {
+      $project: {
+        username: 1,
+        firstname: 1,
+        surname: 1,
+        email: 1,
+        roles: 1,
+        bank: 1,
+        timezone: 1,
+        lastLogin: 1,
+        'user-status': 1,
+        disabled: 1
+      }
+    }
+  ]).toArray();
 };
 
 exports.listAllPortalUsers = async (req, res) => {
@@ -44,7 +45,7 @@ exports.listAllPortalUsers = async (req, res) => {
     return res.status(200).send({
       success: true,
       count: users.length,
-      users: users.map(sanitizeUser),
+      users,
     });
   }
   return res.status(500).send({ success: false });

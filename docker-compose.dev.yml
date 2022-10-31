@@ -30,6 +30,7 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - TZ=Europe/London
+      - NODE_ENV=development
     command: npx nodemon --inspect=0.0.0.0:9223 src/index.js -L
 
   trade-finance-manager-ui:
@@ -55,6 +56,7 @@ services:
       - TZ=Europe/London
       - REDIS_HOSTNAME=redis://redis
       - REDIS_PORT=6379
+      - NODE_ENV=development
     command: npx nodemon --inspect=0.0.0.0:9224 server/index.js -L
 
   trade-finance-manager-api:
@@ -84,6 +86,8 @@ services:
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
       - TZ=Europe/London
+      - UKEF_INTERNAL_NOTIFICATION=test
+      - NODE_ENV=development
     command: npx nodemon --inspect=0.0.0.0:9225 src/index.js -L
 
   portal:
@@ -109,6 +113,7 @@ services:
       - REDIS_HOSTNAME=redis://redis
       - REDIS_PORT=6379
       - TZ=Europe/London
+      - NODE_ENV=development
     command: npx nodemon --inspect=0.0.0.0:9226 server/index.js -L
 
   portal-api:
@@ -146,6 +151,7 @@ services:
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
       - TZ=Europe/London
+      - NODE_ENV=development
 
     command: npx nodemon --inspect=0.0.0.0:9227 src/index.js -L
 
@@ -191,6 +197,7 @@ services:
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - TZ=Europe/London
+      - NODE_ENV=development
     entrypoint: npx nodemon src/index.ts -L
 
   gef-ui:
@@ -218,6 +225,7 @@ services:
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - TZ=Europe/London
+      - NODE_ENV=development
     command: npx nodemon --inspect=0.0.0.0:9229 server/index.js -L --max_old_space_size=250
 
   number-generator-function:
@@ -234,6 +242,7 @@ services:
       - MULESOFT_API_KEY
       - MULESOFT_API_SECRET
       - TZ=Europe/London
+      - NODE_ENV=development
 
   redis:
     image: "redis:alpine"
