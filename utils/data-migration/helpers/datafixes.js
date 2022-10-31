@@ -543,13 +543,11 @@ const ACBS = async (facility = false) => {
 const eStore = async () => {
   Object.values(allDeals).forEach((deal, index) => {
     // Only if Site name is blank
-    if (!deal.tfm.estore.siteName) {
-      siteNames.map((site) => {
-        if (site[0] === Number(deal.dealSnapshot.details.ukefDealId)) {
-          allDeals[index].tfm.estore.siteName = site[1];
-        }
-      });
-    }
+    siteNames.map((site) => {
+      if (site[0] === Number(deal.dealSnapshot.details.ukefDealId)) {
+        allDeals[index].tfm.estore.siteName = site[1];
+      }
+    });
   });
   return null;
 };
