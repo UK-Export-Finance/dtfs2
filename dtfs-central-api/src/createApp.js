@@ -27,8 +27,8 @@ app.use(seo);
 app.use(security);
 
 app.use(healthcheck);
-// added limit for larger payloads - 20MB
-app.use(express.json({ limit: '2000mb' }));
+// added limit for larger payloads - 500kb
+app.use(express.json({ limit: '500kb' }));
 app.use(compression());
 
 app.use(`/v1/${BANK_ROUTE}`, bankRoutes);
