@@ -6,8 +6,8 @@ const mapFacilityTfm = (facilityTfm, dealTfm, facility) =>
   ({
     ...facilityTfm,
     ukefExposure: mapUkefExposure(facilityTfm, facility),
-    premiumSchedule: facilityTfm.premiumSchedule ? mapPremiumSchedule(facilityTfm.premiumSchedule) : [],
-    premiumTotals: facilityTfm.premiumSchedule ? mapPremiumTotals(facilityTfm.premiumSchedule) : [],
+    premiumSchedule: mapPremiumSchedule(facilityTfm?.premiumSchedule),
+    premiumTotals: mapPremiumTotals(facilityTfm?.premiumSchedule),
     creditRating: dealTfm.exporterCreditRating,
   });
 
