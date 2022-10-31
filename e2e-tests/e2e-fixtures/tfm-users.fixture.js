@@ -70,7 +70,7 @@ export const UNDERWRITING_SUPPORT_1 = {
 
 export const PIM_USER_1 = {
   username: 'PIM_USER_1',
-  teams: ['PIM'],
+  teams: ['PIM', 'BUSINESS_SUPPORT'],
   firstName: 'Adam',
   lastName: 'Pimson',
   ...defaultUserDetails,
