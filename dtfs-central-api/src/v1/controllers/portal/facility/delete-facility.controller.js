@@ -12,9 +12,9 @@ exports.deleteFacility = async (req, res) => {
         const collection = await db.getCollection('facilities');
         const status = await collection.deleteOne({ _id: ObjectId(facilityId) });
 
-        // remove facility ID from the associated deal
         const { user } = req.body;
 
+        // remove facility ID from the associated deal
         await removeFacilityIdFromDeal(facility.dealId, facilityId, user, req.routePath);
 
         return res.status(200).send(status);

@@ -22,11 +22,14 @@ const findLatest = async (dealType) => {
   const collection = await getCollection(collectionName);
   let criteria = {};
 
-  if (dealType === GEF) {
-    [criteria] = await collection.aggregate([{ $match: { dealType: GEF, isInDraft: false } }, { $sort: { version: -1 } }, { $limit: 1 }]).toArray();
-  } else if (dealType === BSS_EWCS) {
-    [criteria] = await collection.aggregate([{ $match: { dealType: BSS_EWCS } }, { $sort: { version: -1 } }, { $limit: 1 }]).toArray();
+  let filter = {};
+  if (dealType === BSS_EWCS) {
+    filter = { $match: { dealType: BSS_EWCS } };
+  } else if (dealType === GEF) {
+    filter = { $match: { dealType: GEF, isInDraft: false } };
   }
+
+  [criteria] = await collection.aggregate([filter, { $sort: { version: -1 } }, { $limit: 1 }]).toArray();
   return criteria;
 };
 
@@ -48,13 +51,13 @@ const findAll = async (dealType) => {
 
 exports.getEligibilityCriteria = async (req, res) => {
   const { dealType, latest } = req.query;
-  const status = 200;
   let criteria;
   if (dealType && latest) {
     criteria = await findLatest(dealType);
   } else {
     criteria = await findAll(dealType);
   }
+  const status = criteria ? 200 : 404;
 
   return res.status(status).send(criteria);
 };
@@ -77,18 +80,13 @@ exports.putEligibilityCriteria = async (req, res) => {
   payload.updatedAt = Date.now();
 
   const collection = await getCollection(collectionName);
-  if (dealType === GEF) {
-    response = await collection.findOneAndUpdate(
-      { _id: ObjectId(version), dealType: GEF },
-      { $set: req.body },
-      { returnDocument: 'after', returnNewDocument: true }
-    );
-    response = response.value;
-  }
+  response = await collection.findOneAndUpdate(
+    { _id: ObjectId(version), dealType },
+    { $set: req.body },
+    { returnDocument: 'after', returnNewDocument: true }
+  );
+  response = response.value;
 
-  if (dealType === BSS_EWCS) {
-    response = await collection.updateOne({ version, dealType: BSS_EWCS }, { $set: { criteria: payload.criteria } }, {});
-  }
   return res.status(200).send(response);
 };
 

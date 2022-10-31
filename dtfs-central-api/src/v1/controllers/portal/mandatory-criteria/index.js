@@ -19,11 +19,12 @@ const findLatest = async (dealType) => {
   const collection = await getCollection(collectionName);
   let criteria = {};
 
-  if (dealType === GEF) {
-    [criteria] = await collection.aggregate([{ $match: { dealType: GEF, isInDraft: false } }, { $sort: { version: -1 } }, { $limit: 1 }]).toArray();
-  } else if (dealType === BSS_EWCS) {
-    [criteria] = await collection.aggregate([{ $match: { dealType: BSS_EWCS } }, { $sort: { version: -1 } }, { $limit: 1 }]).toArray();
+  let filter = { $match: { dealType: GEF, isInDraft: false } };
+  if (dealType === BSS_EWCS) {
+    filter = { $match: { dealType: BSS_EWCS } };
   }
+
+  [criteria] = await collection.aggregate([filter, { $sort: { version: -1 } }, { $limit: 1 }]).toArray();
   return criteria;
 };
 
@@ -31,27 +32,25 @@ const findAll = async (dealType) => {
   const collection = await getCollection(collectionName);
   let criteria = [];
 
-  if (dealType === GEF) {
-    const query = await collection.aggregate([{ $match: { dealType: GEF } }, { $sort: { version: -1 } }]).toArray();
-    criteria = { items: query };
-  } else if (dealType === BSS_EWCS) {
-    const query = await collection.aggregate([{ $match: { dealType: BSS_EWCS } }, { $sort: { version: -1 } }]).toArray();
-    criteria = { count: query.length, mandatoryCriteria: query };
-  } else {
-    criteria = await collection.aggregate([{ $sort: { version: 1 } }]).toArray();
+  let filter = {};
+
+  if (dealType === GEF || dealType === BSS_EWCS) {
+    filter = { $match: { dealType } };
   }
+
+  criteria = await collection.aggregate([filter, { $sort: { version: 1 } }]).toArray();
   return criteria;
 };
 
 exports.getMandatoryCriteria = async (req, res) => {
   const { dealType, latest } = req.query;
-  const status = 200;
   let criteria;
   if (dealType && latest) {
     criteria = await findLatest(dealType);
   } else {
     criteria = await findAll(dealType);
   }
+  const status = criteria ? 200 : 404;
 
   return res.status(status).send(criteria);
 };
@@ -76,7 +75,7 @@ exports.putMandatoryCriteria = async (req, res) => {
 
   const response = await collection.findOneAndUpdate(
     { version, dealType },
-    { $set: req.body },
+    { $set: payload },
     { returnDocument: 'after', returnNewDocument: true }
   );
   return res.status(200).send(response.value);

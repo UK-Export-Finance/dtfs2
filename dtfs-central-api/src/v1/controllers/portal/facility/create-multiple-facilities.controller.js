@@ -29,9 +29,7 @@ const createFacilities = async (facilities, dealId) => {
   };
 
   await updateBssDeal(dealId, dealUpdate);
-
   const flattenedIds = Object.values(result.insertedIds);
-
   return flattenedIds;
 };
 
@@ -39,7 +37,7 @@ exports.createMultipleFacilitiesPost = (req, res) => {
   const { facilities, dealId, user } = req.body;
 
   if (!user) {
-    return res.status(404).send();
+    return res.status(400).send();
   }
 
   return findOneBssDeal(dealId, async (deal) => {
