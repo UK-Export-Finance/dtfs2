@@ -27,6 +27,7 @@ env:
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
+  NODE_ENV: production
 
 # Below this line should be the same for all environments
 
@@ -815,7 +816,8 @@ jobs:
               MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }} \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
               WEBSITE_USE_PLACEHOLDER=0 \
-              TZ=Europe/London
+              TZ=Europe/London \
+              NODE_ENV="${{env.NODE_ENV}}"
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
@@ -943,7 +945,8 @@ jobs:
               MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
               WEBSITE_USE_PLACEHOLDER=0 \
-              TZ=Europe/London
+              TZ=Europe/London \
+              NODE_ENV="${{env.NODE_ENV}}"
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
@@ -1151,7 +1154,8 @@ jobs:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-reference-data-proxy \
             --always-on true \
-            --ftps-state Disabled
+            --ftps-state Disabled \
+            --min-tls-version 1.2
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -1203,7 +1207,8 @@ jobs:
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-              TZ=Europe/London
+              TZ=Europe/London \
+              NODE_ENV="${{env.NODE_ENV}}"
 
   dtfs-central-api:
     name: DTFS Central API
@@ -1326,7 +1331,8 @@ jobs:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-dtfs-central-api \
             --always-on true \
-            --ftps-state Disabled
+            --ftps-state Disabled \
+            --min-tls-version 1.2            
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -1342,7 +1348,8 @@ jobs:
               PORT=5000 \
               WEBSITES_PORT=5000 \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-              TZ=Europe/London
+              TZ=Europe/London \
+              NODE_ENV="${{env.NODE_ENV}}"
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -1362,7 +1369,8 @@ jobs:
             --settings \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
+              NODE_ENV="${{env.NODE_ENV}}"
 
   portal-api:
     name: Portal API
@@ -1485,7 +1493,8 @@ jobs:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-portal-api \
             --always-on true \
-            --ftps-state Disabled
+            --ftps-state Disabled \
+            --min-tls-version 1.2
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -1501,7 +1510,8 @@ jobs:
               PORT=5000 \
               WEBSITES_PORT=5000 \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-              TZ=Europe/London
+              TZ=Europe/London \
+              NODE_ENV="${{env.NODE_ENV}}"
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -1529,11 +1539,6 @@ jobs:
               AZURE_PORTAL_FILESHARE_NAME="${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}" \
               AZURE_PORTAL_STORAGE_ACCESS_KEY="$portal_file_storage_key" \
               AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
-              AZURE_WORKFLOW_EXPORT_FOLDER="${{ secrets.AZURE_WORKFLOW_EXPORT_FOLDER }}" \
-              AZURE_WORKFLOW_FILESHARE_NAME="${{ secrets.AZURE_WORKFLOW_FILESHARE_NAME }}" \
-              AZURE_WORKFLOW_IMPORT_FOLDER="${{ secrets.AZURE_WORKFLOW_IMPORT_FOLDER }}" \
-              AZURE_WORKFLOW_STORAGE_ACCOUNT="${{ secrets.AZURE_WORKFLOW_STORAGE_ACCOUNT }}" \
-              AZURE_WORKFLOW_STORAGE_ACCESS_KEY="${{ secrets.AZURE_WORKFLOW_STORAGE_ACCESS_KEY }}" \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
               JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
@@ -1541,12 +1546,12 @@ jobs:
               GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
               DTFS_PORTAL_SCHEDULER="${{ secrets.DTFS_PORTAL_SCHEDULER }}" \
-              FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ secrets.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
               TFM_API="http://$tfm_api_url" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
+              NODE_ENV="${{env.NODE_ENV}}"
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
@@ -1669,7 +1674,8 @@ jobs:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-trade-finance-manager-api \
             --always-on true \
-            --ftps-state Disabled
+            --ftps-state Disabled \
+            --min-tls-version 1.2
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -1685,7 +1691,8 @@ jobs:
               PORT=5000 \
               WEBSITES_PORT=5000 \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-              TZ=Europe/London
+              TZ=Europe/London \
+              NODE_ENV="${{env.NODE_ENV}}"
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -1714,7 +1721,8 @@ jobs:
               TFM_URI="${{ secrets.TFM_URI }}" \
               AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
               AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}" \
-              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}"
+              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
+              NODE_ENV="${{env.NODE_ENV}}"
 
   # END API setup
 
@@ -1839,7 +1847,8 @@ jobs:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-portal-ui \
             --always-on true \
-            --ftps-state Disabled
+            --ftps-state Disabled \
+            --min-tls-version 1.2
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -1871,7 +1880,8 @@ jobs:
               HTTPS=1 \
               START_PAGE_REDIRECT=1 \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-              TZ=Europe/London
+              TZ=Europe/London \
+              NODE_ENV="${{env.NODE_ENV}}"
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -1881,7 +1891,8 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
+              NODE_ENV="${{env.NODE_ENV}}"
 
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
@@ -2003,7 +2014,8 @@ jobs:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
             --always-on true \
-            --ftps-state Disabled
+            --ftps-state Disabled \
+            --min-tls-version 1.2
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -2035,7 +2047,8 @@ jobs:
               ESTORE_URL="${{ secrets.ESTORE_URL }}" \
               HTTPS=1 \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-              TZ=Europe/London
+              TZ=Europe/London \
+              NODE_ENV="${{env.NODE_ENV}}"
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -2044,7 +2057,8 @@ jobs:
           az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
             --connection-string-type custom \
             --settings \
-              SESSION_SECRET="${{ secrets.SESSION_SECRET }}"
+              SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
+              NODE_ENV="${{env.NODE_ENV}}"
 
   gef-ui:
     name: GEF UI
@@ -2166,7 +2180,8 @@ jobs:
         inlineScript: |
           az webapp config set --name tfs-${{ env.environment }}-gef-ui \
             --always-on true \
-            --ftps-state Disabled
+            --ftps-state Disabled \
+            --min-tls-version 1.2
 
     - name: Environment variables
       uses: azure/cli@v1.0.0
@@ -2197,7 +2212,8 @@ jobs:
               REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
               HTTPS=1 \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-              TZ=Europe/London
+              TZ=Europe/London \
+              NODE_ENV="${{env.NODE_ENV}}"
 
     - name: Secrets
       uses: azure/cli@v1.0.0
@@ -2207,7 +2223,8 @@ jobs:
             --connection-string-type custom \
             --settings \
               SESSION_SECRET="${{ secrets.SESSION_SECRET }}" \
-              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
+              NODE_ENV="${{env.NODE_ENV}}"
 
   # END UI setup
 
