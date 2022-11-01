@@ -9,6 +9,11 @@ const mapGefFacilities = require('./mappings/gef-facilities/mapGefFacilities');
 const mapDeals = require('./mappings/deal/mapDeals');
 
 const mapBssDeal = (deal) => {
+  if (!deal) {
+    return null;
+  }
+
+  console.info(`Mapping BSS/EWCS deal ${deal._id}`);
   const { _id, dealSnapshot } = deal;
 
   const mapped = {
@@ -28,6 +33,11 @@ const mapBssDeal = (deal) => {
 };
 
 const mapGefDeal = (deal) => {
+  if (!deal) {
+    return null;
+  }
+
+  console.info(`Mapping GEF deal ${deal._id}`);
   const { _id, dealSnapshot } = deal;
 
   const mapped = {

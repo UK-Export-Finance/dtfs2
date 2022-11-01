@@ -39,7 +39,7 @@
                 <tr class="govuk-table__row" data-cy="task-group-{{ taskGroup.id }}-task-{{ task.id }}-row">
 
                   <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 ukef-tasks-table__cell-width-28">
-                    {% if task.canEdit and user.teams in task.team.id %}
+                    {% if task.canEdit and task.team.id in user.teams %}
                       <a class="govuk-link" href="/case/{{ dealId }}/facility/{{facilityId}}/amendment/{{amendmentId}}/task/{{ task.id }}/group/{{ task.groupId }}" data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-link">{{ task.title }}</a>
                       {% else %}
                         <span data-cy="task-table-row-group-{{task.groupId}}-task-{{ task.id }}-title">{{ task.title }}</span>
