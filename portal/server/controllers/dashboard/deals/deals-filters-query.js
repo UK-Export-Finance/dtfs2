@@ -55,8 +55,9 @@ const dashboardDealsFiltersQuery = (createdByYou, filters, user) => {
     const hasOnlyAllStatusesFilterValue = (hasOnlyStatusFilter
       && statusFilterValues[0] === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES);
 
-    if (!hasOnlyAllStatusesFilterValue) {
-      query.$or = [];
+    if (!hasOnlyAllStatusesFilterValue && !query.$and) {
+      // empty and query if not created yet
+      query.$and = [];
     }
 
     dashboardFilters.forEach((filterObj) => {
@@ -67,19 +68,44 @@ const dashboardDealsFiltersQuery = (createdByYou, filters, user) => {
 
       const hasAllStatusesFilterValue = filterValue.includes(CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES);
 
+      /**
+       * overall filtering logic is $and
+       * however keyword is contructed by matching all fields to keyword
+       * if and logic will not work as cannot match all field so has to be or for keyword search
+       * so or array is pushed to overall $and query
+       */
       if (isKeywordField) {
         const keywordValue = filterValue[0];
         const keywordFilters = keywordQuery(keywordValue);
 
-        query.$or = [...query.$or, ...keywordFilters];
+        const keywordFilter = {};
+        keywordFilter.$or = [];
+        keywordFilter.$or.push(...keywordFilters);
+
+        query.$and.push(keywordFilter);
       }
 
+      /**
+       * overall filtering logic is $and
+       * however for each fieldFilter (eg dealType) should be $or
+       * example for filter dealType: GEF and BSS
+       * if $and logic, will fail as no deals are both GEF and BSS so need or logic
+       * $and: [
+       *    { $or: [{dealType: 'GEF}, {dealType: 'BSS'}] },
+       *    {status: 'Draft'},
+       * ]
+       */
       if (!isKeywordField && !hasAllStatusesFilterValue) {
+        const fieldFilter = {};
+        // or for field (eg dealType)
+        fieldFilter.$or = [];
         filterValue.forEach((value) => {
-          query.$or.push({
+          fieldFilter.$or.push({
             [fieldName]: value,
           });
         });
+        // adds $or to $and query
+        query.$and.push(fieldFilter);
       }
     });
   }
