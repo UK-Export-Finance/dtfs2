@@ -4,6 +4,7 @@
   {% set caseId = params.caseId %}
   {% set tasks = params.tasks %}
   {% set userTimezone = params.userTimezone %}
+  {% set user = params.user %}
 
   <div data-cy="tasks-table">
     {% for taskGroup in tasks %}
@@ -29,7 +30,8 @@
               <tr class="govuk-table__row" data-cy="task-group-{{ taskGroup.id }}-task-{{ task.id }}-row">
 
                 <td class="govuk-table__cell govuk-!-padding-top-4 govuk-!-padding-right-4 govuk-!-padding-bottom-4 govuk-!-padding-left-0 ukef-tasks-table__cell-width-28">
-                  {% if task.canEdit %}
+                  {# checks if can edit and if user is in tasks team id group #}
+                  {% if task.canEdit and task.team.id in user.teams %}
                     <a class="govuk-link" href="/case/{{ caseId }}/tasks/{{ task.groupId }}/{{ task.id }}" data-cy="task-table-row-group-{{ task.groupId }}-task-{{ task.id }}-link">{{ task.title }}</a>
 
                     {% else %}

@@ -13,44 +13,102 @@ const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 describe('createDealTasks', () => {
   const updateDealSpy = jest.fn((dealId, dealUpdate) => Promise.resolve(dealUpdate));
 
-  const mockSubmittedDeal = mapSubmittedDeal({
-    dealSnapshot: MOCK_DEAL_MIA,
-    tfm: {
-      parties: { exporter: {} },
-    },
-  });
+  let mockSubmittedDeal;
+  let mockDealEligibilityCriteria11False;
+  let mockDealWithPartyUrn;
 
-  const mockDealEligibilityCriteria11False = {
-    ...mockSubmittedDeal,
-    eligibility: {
-      criteria: [
-        { id: 11, answer: false },
-      ],
-    },
-  };
-
-  const mockDealWithPartyUrn = {
-    ...mockSubmittedDeal,
-    tfm: {
-      parties: { exporter: { partyUrn: 'test' } },
-    },
-  };
-
-  beforeEach(() => {
+  beforeEach(async () => {
     externalApis.updateDeal = updateDealSpy;
+
+    mockSubmittedDeal = await mapSubmittedDeal({
+      dealSnapshot: MOCK_DEAL_MIA,
+      tfm: {
+        parties: { exporter: {} },
+      },
+    });
+
+    mockDealEligibilityCriteria11False = {
+      ...mockSubmittedDeal,
+      eligibility: {
+        criteria: [
+          { id: 11, answer: false },
+        ],
+      },
+    };
+
+    mockDealWithPartyUrn = {
+      ...mockSubmittedDeal,
+      tfm: {
+        parties: { exporter: { partyUrn: '1234' } },
+      },
+    };
   });
 
   describe('shouldCreatePartiesTask', () => {
-    describe('when a deal has tfm.exporter.partyUrn', () => {
-      it('should return false', () => {
+    describe('when a deal has tfm.exporter.partyUrn but NO tfm.buyer.partyUrn and deal is BSS', () => {
+      it('should return true', () => {
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a deal does NOT have tfm.exporter.partyUrn but has tfm.buyer.partyUrn and deal is BSS', () => {
+      it('should return true', () => {
+        mockDealWithPartyUrn.tfm.parties.buyer = { partyUrn: '1234' };
+        mockDealWithPartyUrn.tfm.parties.exporter = '';
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a deal has empty string tfm.exporter.partyUrn but has tfm.buyer.partyUrn and deal is BSS', () => {
+      it('should return true', () => {
+        mockDealWithPartyUrn.tfm.parties.buyer = { partyUrn: '1234' };
+        mockDealWithPartyUrn.tfm.parties.exporter = { partyUrn: ' ' };
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a deal has tfm.exporter.partyUrn and has tfm.buyer.partyUrn and deal is BSS', () => {
+      it('should return true', () => {
+        mockDealWithPartyUrn.tfm.parties.buyer = { partyUrn: '1234' };
+        mockDealWithPartyUrn.tfm.parties.exporter = { partyUrn: '1234' };
         const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
         expect(result).toEqual(false);
       });
     });
 
-    describe('when a deal does NOT have tfm.exporter.partyUrn', () => {
+    describe('when a deal does NOT have tfm.exporter.partyUrn and NO tfm.buyer.partyUrn and deal is BSS', () => {
       it('should return true', () => {
         const result = shouldCreatePartiesTask(mockSubmittedDeal);
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a deal has tfm.exporter.partyUrn and deal is GEF', () => {
+      it('should return false', () => {
+        mockDealWithPartyUrn.tfm.parties.exporter = { partyUrn: '1234' };
+        mockDealWithPartyUrn.dealType = CONSTANTS.DEALS.DEAL_TYPE.GEF;
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe('when a deal does NOT have tfm.exporter.partyUrn and deal is GEF', () => {
+      it('should return true', () => {
+        mockDealWithPartyUrn.tfm.parties.exporter = '';
+        mockDealWithPartyUrn.dealType = CONSTANTS.DEALS.DEAL_TYPE.GEF;
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when a deal has a blank partyURN with a space in it', () => {
+      it('should return true', () => {
+        mockDealWithPartyUrn.tfm.parties.exporter = { partyUrn: ' ' };
+        mockDealWithPartyUrn.dealType = CONSTANTS.DEALS.DEAL_TYPE.GEF;
+        const result = shouldCreatePartiesTask(mockDealWithPartyUrn);
         expect(result).toEqual(true);
       });
     });
@@ -108,6 +166,8 @@ describe('createDealTasks', () => {
 
     describe('when no additional tasks should be added', () => {
       it('should return empty array', () => {
+        mockDealWithPartyUrn.tfm.parties.exporter = { partyUrn: '1234' };
+        mockDealWithPartyUrn.dealType = CONSTANTS.DEALS.DEAL_TYPE.GEF;
         const result = listAdditionalTasks(mockDealWithPartyUrn);
 
         expect(result).toEqual([]);

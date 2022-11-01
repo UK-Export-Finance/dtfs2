@@ -1,0 +1,144 @@
+{
+  "submissionType": "Automatic Inclusion Notice",
+  "bankInternalRefName": "abc-1-def",
+  "additionalRefName": "Tibettan submarine acquisition scheme",
+  "status": "Draft",
+  "bank": {
+    "id": "9",
+    "name": "UKEF test bank (Delegated)",
+    "emails": [
+      "maker@ukexportfinance.gov.uk",
+      "checker@ukexportfinance.gov.uk"
+    ]
+  },
+  "details": {},
+  "submissionDetails" : {
+    "indemnifier-address-country" : {
+      "code": "GBR"
+    },
+    "indemnifier-address-line-3" : "",
+    "indemnifier-address-line-1" : "1A",
+    "indemnifier-address-line-2" : "Test Road",
+    "indemnifier-address-postcode" : "SW1A 2HQ",
+    "indemnifier-address-town" : "London",
+    "indemnifier-companies-house-registration-number" : "08547313",
+    "indemnifier-correspondence-address-country" : {
+      "code": "GBR"
+    },
+    "indemnifier-correspondence-address-line-3" : "Essex",
+    "indemnifier-correspondence-address-line-1" : "Test address",
+    "indemnifier-correspondence-address-line-2" : "",
+    "indemnifier-correspondence-address-postcode" : "SW1A 2HQ",
+    "indemnifier-correspondence-address-town" : "Chelmsford",
+    "indemnifier-name" : "Test Trading Limited",
+    "indemnifierCorrespondenceAddressDifferent" : "true",
+    "industry-sector": {
+  "code": "1008",
+  "name": "Accommodation and food service activities"
+},
+    "industry-class": {
+  "code": "56101",
+  "name": "Licensed restaurants"
+},
+    "legallyDistinct" : "true",
+    "sme-type" : "Small",
+    "supplier-address-country" : {
+      "code": "GBR",
+      "name": "United Kingdom"
+    },
+    "supplier-address-line-3" : "London",
+    "supplier-address-line-1" : "1 Horseguards Road",
+    "supplier-address-line-2" : "",
+    "supplier-address-postcode" : "SW1A 2HQ",
+    "supplier-address-town" : "Westminster",
+    "supplier-companies-house-registration-number" : "",
+    "supplier-correspondence-address-country" : {
+      "code": "GBR",
+      "name": "United Kingdom"
+    },
+    "supplier-correspondence-address-line-3" : "Edinburgh",
+    "supplier-correspondence-address-line-1" : "2 Horseguards Road",
+    "supplier-correspondence-address-line-2" : "",
+    "supplier-correspondence-address-postcode" : "ED1 23S",
+    "supplier-correspondence-address-town" : "Eastminster",
+    "supplier-name" : "UKEF",
+    "supplier-type" : "Exporter",
+    "supplier-correspondence-address-is-different" : "true",
+    "supply-contract-description" : "Description.",
+    "buyer-address-country" : {
+      "code": "USA",
+      "name": "United States"
+    },
+    "buyer-address-line-1" : "Corner of East and Main",
+    "buyer-address-line-2" : "",
+    "buyer-address-line-3" : "The Bronx",
+    "buyer-address-postcode" : "no-idea",
+    "buyer-address-town" : "New York",
+    "buyer-name" : "Huggy Bear",
+    "destinationOfGoodsAndServices" : {
+      "code": "USA",
+      "name": "United States"
+    },
+    "viewedPreviewPage" : true,
+    "supplyContractConversionRateToGBP" : "1.123456",
+    "supplyContractCurrency" : {
+        "id" : "USD",
+        "text": "USD - US Dollars"
+    },
+    "supplyContractValue" : "10,000"
+},
+    "eligibility": {
+      "status": "Completed",
+      "version": 5,
+      "criteria": [
+      { "id": 11, "answer": true
+      },
+      { "id": 12, "answer": true
+      },
+      { "id": 13, "answer": true
+      },
+      { "id": 14, "answer": true
+      },
+      { "id": 15, "answer": true
+      },
+      { "id": 16, "answer": true
+      },
+      { "id": 17, "answer": true
+      },
+      { "id": 18, "answer": true
+      }
+    ]
+  },
+  "mockFacilities": [
+    {
+        "type": "Bond",
+        "bondIssuer": "issuer",
+        "bondType": "bond type",
+        "facilityStage": "unissued",
+        "ukefGuaranteeInMonths": "24",
+        "name": "1234",
+        "bondBeneficiary": "test",
+        "value": "123",
+        "currencySameAsSupplyContractCurrency": "true",
+        "riskMarginFee": "1",
+        "coveredPercentage": "2",
+        "feeType": "test",
+        "feeFrequency": "test",
+        "dayCountBasis": "test"
+    },
+    {
+      "type": "Loan",
+      "facilityStage": "Unconditional",
+      "hasBeenIssued": true,
+      "name": "123",
+      "value": "123",
+      "disbursementAmount": "12",
+      "ukefGuaranteeInMonths": "12",
+      "currencySameAsSupplyContractCurrency": "true",
+      "interestMarginFee": "5",
+      "coveredPercentage": "40",
+      "premiumType": "At maturity",
+      "dayCountBasis": "365"
+    }
+  ]
+}

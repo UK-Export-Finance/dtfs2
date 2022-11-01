@@ -9,10 +9,14 @@ const mapEligibilityCriteriaContentStrings = (eligibility, dealType) => {
 
   return mappedCriteria.map((criterion) => {
     const mappedCriterion = criterion;
+    const id = Number(criterion.id);
 
-    const contentObj = versionContentStrings[Number(criterion.id)];
-    mappedCriterion.text = contentObj.text;
-    mappedCriterion.textList = contentObj.textList;
+    // Ensure Criterion exists in applicable EC
+    if (id in versionContentStrings) {
+      const contentObj = versionContentStrings[id];
+      mappedCriterion.text = contentObj.text;
+      mappedCriterion.textList = contentObj.textList;
+    }
 
     return mappedCriterion;
   });

@@ -8,7 +8,7 @@ const criteriaWithAnswer11False = () => {
       return {
         ...criterion,
         answer: false,
-      }
+      };
     }
 
     return criterion;

@@ -27,7 +27,7 @@ app.use(seo);
 app.use(security);
 
 app.use(healthcheck);
-// added limit for larger payloads
+// added limit for larger payloads - 500kb
 app.use(express.json({ limit: '500kb' }));
 app.use(compression());
 

@@ -1,8 +1,9 @@
 const {
-  add, isAfter, isBefore, set,
+  add, isAfter, isBefore, isEqual, set,
 } = require('date-fns');
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
+const coverDatesValidation = require('../../utils/coverDatesValidation.helper');
 
 /**
  * validation for changing facilities
@@ -12,7 +13,7 @@ const { validationErrorHandler } = require('../../utils/helpers');
  * @returns {res} if validation errors
  * @returns {Object} if no validation errors
  */
-const facilityValidation = async (body, query, params) => {
+const facilityValidation = async (body, query, params, facility) => {
   const { facilityType } = body;
   const facilityTypeString = facilityType.toLowerCase();
   const { saveAndReturn, status } = query;
@@ -48,6 +49,18 @@ const facilityValidation = async (body, query, params) => {
   let issueDate = null;
   let coverStartDate = null;
   let coverEndDate = null;
+  let threeMonthsFromSubmission;
+
+  // set to midnight to stop mismatch if submission date in past so set to midnight of past date
+  const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
+
+  if (application.manualInclusionNoticeSubmissionDate) {
+    const minSubmissionDate = (new Date(Number(application.manualInclusionNoticeSubmissionDate))).setHours(0, 0, 0, 0);
+    threeMonthsFromSubmission = add(minSubmissionDate, { months: 3 });
+  } else {
+    threeMonthsFromSubmission = add(submissionDate, { months: 3 });
+  }
+  const now = (new Date()).setHours(0, 0, 0, 0);
 
   // Only validate facility name if hasBeenIssued is set to Yes
   if (!saveAndReturn && !body.facilityName) {
@@ -86,9 +99,12 @@ const facilityValidation = async (body, query, params) => {
       subFieldErrorRefs: dateFieldsInError,
     });
   } else if (issueDateIsFullyComplete) {
-    // set to midnight to stop mismatch if submission date in past so set to midnight of past date
-    const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
-    const now = new Date();
+    const {
+      coverDayValidation,
+      coverMonthValidation,
+      coverYearValidation,
+    } = coverDatesValidation(issueDateDay, issueDateMonth, issueDateYear);
+
     const issueDateSet = (set(new Date(), { year: issueDateYear, month: issueDateMonth - 1, date: issueDateDay })).setHours(0, 0, 0, 0);
 
     if (isBefore(issueDateSet, submissionDate)) {
@@ -102,6 +118,27 @@ const facilityValidation = async (body, query, params) => {
       aboutFacilityErrors.push({
         errRef: 'issueDate',
         errMsg: 'The issue date cannot be in the future',
+      });
+    }
+
+    if (coverDayValidation.error && issueDateDay) {
+      aboutFacilityErrors.push({
+        errRef: 'issueDate',
+        errMsg: 'The day for the issue date must include 1 or 2 numbers',
+      });
+    }
+
+    if (coverMonthValidation.error && issueDateMonth) {
+      aboutFacilityErrors.push({
+        errRef: 'issueDate',
+        errMsg: 'The month for the issue date must include 1 or 2 numbers',
+      });
+    }
+
+    if (coverYearValidation.error && issueDateYear) {
+      aboutFacilityErrors.push({
+        errRef: 'issueDate',
+        errMsg: 'The year for the issue date must include 4 numbers',
       });
     }
   }
@@ -143,17 +180,11 @@ const facilityValidation = async (body, query, params) => {
         subFieldErrorRefs: dateFieldsInError,
       });
     } else if (coverStartDateIsFullyComplete) {
-      // set to midnight to stop mismatch if submission date in past so set to midnight of past date
-      const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
-
-      let threeMonthsFromSubmission;
-
-      if (application.manualInclusionNoticeSubmissionDate) {
-        const minSubmissionDate = (new Date(Number(application.manualInclusionNoticeSubmissionDate))).setHours(0, 0, 0, 0);
-        threeMonthsFromSubmission = add(minSubmissionDate, { months: 3 });
-      } else {
-        threeMonthsFromSubmission = add(submissionDate, { months: 3 });
-      }
+      const {
+        coverDayValidation,
+        coverMonthValidation,
+        coverYearValidation,
+      } = coverDatesValidation(coverStartDateDay, coverStartDateMonth, coverStartDateYear);
 
       const startDate = (set(new Date(), { year: coverStartDateYear, month: coverStartDateMonth - 1, date: coverStartDateDay })).setHours(0, 0, 0, 0);
 
@@ -164,13 +195,45 @@ const facilityValidation = async (body, query, params) => {
         });
       }
 
-      if (isAfter(startDate, threeMonthsFromSubmission)) {
+      /**
+       * if special flag is manually set in db - if deal submission date is more than 3 months in the past then validation will fail for issue
+       * if specialIssuePermission is true, then this validation will not take place and coverStartDate can be set (more than 3 months after submission date)
+       * else validation takes place so start date cannot be more than 3 months ahead of notice submission date
+       */
+      if (isAfter(startDate, threeMonthsFromSubmission) && !facility?.specialIssuePermission) {
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
           errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
         });
       }
+
+      if (coverDayValidation.error && coverStartDateDay) {
+        aboutFacilityErrors.push({
+          errRef: 'coverStartDate',
+          errMsg: 'The day for the cover start date must include 1 or 2 numbers',
+        });
+      }
+
+      if (coverMonthValidation.error && coverStartDateMonth) {
+        aboutFacilityErrors.push({
+          errRef: 'coverStartDate',
+          errMsg: 'The month for the cover start date must include 1 or 2 numbers',
+        });
+      }
+
+      if (coverYearValidation.error && coverStartDateYear) {
+        aboutFacilityErrors.push({
+          errRef: 'coverStartDate',
+          errMsg: 'The year for the cover start date must include 4 numbers',
+        });
+      }
     }
+    // else if cover starts on submission (now) then check it is not 3 months post submission date
+  } else if (isAfter(now, threeMonthsFromSubmission) && !facility?.specialIssuePermission) {
+    aboutFacilityErrors.push({
+      errRef: 'coverStartDate',
+      errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+    });
   }
 
   if (coverEndDateIsBlank) {
@@ -241,6 +304,33 @@ const facilityValidation = async (body, query, params) => {
 
   if (coverEndDateIsFullyComplete) {
     coverEndDate = set(new Date(), { year: coverEndDateYear, month: coverEndDateMonth - 1, date: coverEndDateDay });
+
+    const {
+      coverDayValidation,
+      coverMonthValidation,
+      coverYearValidation,
+    } = coverDatesValidation(coverEndDateDay, coverEndDateMonth, coverEndDateYear);
+
+    if (coverDayValidation.error && coverEndDateDay) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'The day for the cover end date must include 1 or 2 numbers',
+      });
+    }
+
+    if (coverMonthValidation.error && coverEndDateMonth) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'The month for the cover end date must include 1 or 2 numbers',
+      });
+    }
+
+    if (coverYearValidation.error && coverEndDateYear) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'The year for the cover end date must include 4 numbers',
+      });
+    }
   }
 
   if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete) {
@@ -248,6 +338,14 @@ const facilityValidation = async (body, query, params) => {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'Cover end date cannot be before cover start date',
+      });
+    }
+
+    // if coverEndDate is the same as the coverStartDate
+    if (isEqual(coverStartDate, coverEndDate)) {
+      aboutFacilityErrors.push({
+        errRef: 'coverEndDate',
+        errMsg: 'The cover end date must be after the cover start date',
       });
     }
   }

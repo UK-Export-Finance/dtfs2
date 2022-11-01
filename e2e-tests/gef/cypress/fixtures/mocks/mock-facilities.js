@@ -1,4 +1,5 @@
 const CONSTANTS = require('../constants');
+const dateConstants = require('../../../../e2e-fixtures/dateConstants');
 
 exports.MOCK_FACILITY_ONE = {
   type: CONSTANTS.FACILITY_TYPE.CASH,
@@ -62,7 +63,7 @@ exports.MOCK_FACILITY_TWO_NULL_MIA = {
   name: 'Facility two',
   shouldCoverStartOnSubmission: true,
   coverStartDate: 1638403200000,
-  coverEndDate: '2030-01-01T00:00:00.000Z',
+  coverEndDate: dateConstants.tomorrow,
   monthsOfCover: null,
   details: ['Term basis', 'Revolving or renewing basis', 'Committed basis', 'Uncommitted basis', 'On demand or overdraft basis', 'Factoring on a  with-recourse basis', 'Other'],
   detailsOther: 'Other',

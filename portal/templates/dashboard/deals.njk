@@ -19,7 +19,9 @@
     createdByYou: createdByYou,
     table: dealsTable.render({
       deals: deals,
-      userTimezone: user.timezone
+      userTimezone: user.timezone,
+      activeSortByOrder: activeSortByOrder,
+      csrfToken: csrfToken
     }),
     pages: pages,
     route: '/deals',

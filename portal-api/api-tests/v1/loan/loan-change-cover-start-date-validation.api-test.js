@@ -152,9 +152,25 @@ describe('/v1/deals/:id/loan/:loanId', () => {
           });
         });
 
+        describe('when requestedCoverStartDate year is not 4 numbers', () => {
+          it('should return validationError', async () => {
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': '23',
+              'requestedCoverStartDate-month': '09',
+              'requestedCoverStartDate-year': '22',
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
+
+            const expectedText = 'The year for the requested Cover Start Date must include 4 numbers';
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
+
         describe('when requestedCoverStartDate is after 3 months from today', () => {
           it('should return validationError', async () => {
-            const todayPlus3Months = moment().add(3, 'month');
+            const submissionPlus3Months = moment(updatedDeal.details.submissionDate).add(3, 'month');
             const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
@@ -166,9 +182,9 @@ describe('/v1/deals/:id/loan/:loanId', () => {
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
             const formattedSubmissionDate = moment(formattedTimestamp(updatedDeal.details.submissionDate)).format('Do MMMM YYYY');
-            const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
+            const submissionPlus3MonthsFormatted = moment(submissionPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${formattedSubmissionDate} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${formattedSubmissionDate} and ${submissionPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
@@ -213,6 +229,22 @@ describe('/v1/deals/:id/loan/:loanId', () => {
             const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
 
             const expectedText = `Requested Cover Start Date must be between ${todayFormatted} and ${todayPlus3MonthsFormatted}`;
+            expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+          });
+        });
+
+        describe('when requestedCoverStartDate year is not 4 numbers', () => {
+          it('should return validationError', async () => {
+            const requestedCoverStartDateFields = {
+              'requestedCoverStartDate-day': '23',
+              'requestedCoverStartDate-month': '09',
+              'requestedCoverStartDate-year': '22',
+            };
+
+            const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+            expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
+
+            const expectedText = 'The year for the requested Cover Start Date must include 4 numbers';
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });
@@ -301,11 +333,27 @@ describe('/v1/deals/:id/loan/:loanId', () => {
             const expectedText = `Requested Cover Start Date must be after ${formattedManualInclusionNoticeSubmissionDate}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
+
+          describe('when requestedCoverStartDate year is not 4 numbers', () => {
+            it('should return validationError', async () => {
+              const requestedCoverStartDateFields = {
+                'requestedCoverStartDate-day': '23',
+                'requestedCoverStartDate-month': '09',
+                'requestedCoverStartDate-year': '22',
+              };
+
+              const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
+              expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
+
+              const expectedText = 'The year for the requested Cover Start Date must include 4 numbers';
+              expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
+            });
+          });
         });
 
         describe('when is after 3 months from today', () => {
           it('should return validationError', async () => {
-            const todayPlus3Months = moment().add(3, 'month');
+            const minPlus3Months = moment(updatedDeal.details.manualInclusionNoticeSubmissionDate).add(3, 'month');
             const todayPlus3Months1Day = moment().add(3, 'month').add(1, 'day');
             const requestedCoverStartDateFields = {
               'requestedCoverStartDate-day': moment(todayPlus3Months1Day).format('DD'),
@@ -317,9 +365,9 @@ describe('/v1/deals/:id/loan/:loanId', () => {
             expect(validationErrors.errorList.requestedCoverStartDate.order).toBeDefined();
 
             const formattedManualInclusionNoticeSubmissionDate = moment(formattedTimestamp(updatedDeal.details.manualInclusionNoticeSubmissionDate)).format('Do MMMM YYYY');
-            const todayPlus3MonthsFormatted = moment(todayPlus3Months).format('Do MMMM YYYY');
+            const minPlus3MonthsFormatted = moment(minPlus3Months).format('Do MMMM YYYY');
 
-            const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${todayPlus3MonthsFormatted}`;
+            const expectedText = `Requested Cover Start Date must be between ${formattedManualInclusionNoticeSubmissionDate} and ${minPlus3MonthsFormatted}`;
             expect(validationErrors.errorList.requestedCoverStartDate.text).toEqual(expectedText);
           });
         });

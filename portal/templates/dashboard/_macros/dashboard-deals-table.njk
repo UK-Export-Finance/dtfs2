@@ -1,107 +1,132 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% macro render(params) %}
   {% set deals = params.deals %}
   {% set userTimezone = params.userTimezone %}
+  {% set activeSortByOrder = params.activeSortByOrder %}
+  {% set defaultSortByOrder = 'updatedAt' %}
+  {% set csrfToken = params.csrfToken %}
 
-  {% set rows = [] %}
+  <form method="POST" autocomplete="off" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-  {% for deal in deals %}
+    {% set rows = [] %}
 
-    {% if deal.product === 'GEF' %}
-      {% set url = '/gef/application-details/' %}
+    {% for deal in deals %}
 
-      {% else %}
+      {% if deal.product === 'GEF' %}
+        {% set url = '/gef/application-details/' %}
 
-      {% set url = '/contract/' %}
-    {% endif %}
+        {% else %}
 
-    {% set linkHtml %}
-      <a
-        href="{{ url }}{{ deal._id }}"
-        class="govuk-link"
-        data-cy="deal__link--{{ deal._id }}"
-      >
-        {{ deal.bankInternalRefName }}
-      </a>
+        {% set url = '/contract/' %}
+      {% endif %}
+
+      {% set linkHtml %}
+        <a
+          href="{{ url }}{{ deal._id }}"
+          class="govuk-link"
+          data-cy="deal__link--{{ deal._id }}"
+        >
+          {{ deal.bankInternalRefName }}
+        </a>
+      {% endset %}
+
+      {% set dealRow = [
+        {
+          text: deal.exporter or "-",
+          attributes: { "data-cy": "deal__exporter--" + deal._id  }
+        },
+        {
+          html: linkHtml,
+          attributes: { "data-cy": "deal__bankRef--bankInternalRefName" + deal._id }
+        },
+        {
+          text: deal.product or "-",
+          attributes: { "data-cy": "deal__product--" + deal._id }
+        },
+        {
+          text: deal.submissionType or "-",
+          attributes: { "data-cy": "deal__submissionType--" + deal._id }
+        },
+        {
+          text: deal.status or "-",
+          attributes: { "data-cy": "deal__status--" + deal._id }
+        },
+        {
+          text: deal.updatedAt | localiseTimestamp("D MMM YYYY", userTimezone) or "-",
+          attributes: {
+          'data-cy': 'deal__updated--' + deal._id }
+        }
+      ] %}
+
+      {% set rows = (rows.push(dealRow), rows) %}
+    {% endfor %}
+
+    {% set exporterHTML %}
+      {% set buttonValue = 'ascending' %}
+
+      {% if activeSortByOrder === 'ascending' %}
+        {% set buttonValue = 'descending' %}
+      {% endif %}
+
+      <button
+        type="submit"
+        name="sortBy"
+        value="{{ buttonValue }}"
+        data-cy="deal__header--exporter-button">
+        Exporter
+      </button>
+
     {% endset %}
 
-    {% set dealRow = [
-      {
-        text: deal.exporter or "-",
-        attributes: { "data-cy": "deal__exporter--" + deal._id  }
-      },
-      {
-        html: linkHtml,
-        attributes: { "data-cy": "deal__bankRef--bankInternalRefName" + deal._id }
-      },
-      {
-        text: deal.product or "-",
-        attributes: { "data-cy": "deal__product--" + deal._id }
-      },
-      {
-        text: deal.submissionType or "-",
-        attributes: { "data-cy": "deal__submissionType--" + deal._id }
-      },
-      {
-        text: deal.status or "-",
-        attributes: { "data-cy": "deal__status--" + deal._id }
-      },
-      {
-        text: deal.updatedAt | localiseTimestamp("D MMM YYYY", userTimezone) or "-",
-        attributes: {
-        'data-cy': 'deal__updated--' + deal._id }
-      }
-    ] %}
+    {{govukTable({
+      classes: "govuk-table govuk-!-margin-bottom-0",
+      head: [
+        {
+          text: "Exporter",
+          html: exporterHTML,
+          value: buttonValue,
+          attributes: {
+          "data-cy": "deal__header--exporter",
+          "aria-sort": activeSortByOrder or defaultSortByOrder
+          }
+        },
+        {
+          text: "Bank ref",
+          attributes: {
+          "data-cy": "deal__header--bankRef"
+        }
+        },
+        {
+          text: "Product",
+          attributes: {
+          "data-cy": "deal__header--product"
+        }
+        },
+        {
+          text: "Type",
+          attributes: {
+          "data-cy": "deal__header--type"
+        }
+        },
+        {
+          text: "Status",
+          attributes: {
+          "data-cy": "deal__header--status"
+        }
+        },
+        {
+          text: "Last updated",
+          attributes: {
+          "data-cy": "deal__header--updated"
+        }
+        }
+      ],
+      rows: rows
+    })}}
 
-    {% set rows = (rows.push(dealRow), rows) %}
-  {% endfor %}
+  </form>
 
-  {{govukTable({
-    classes: "govuk-table govuk-!-margin-bottom-0",
-    attributes: {
-      'data-module': 'moj-sortable-table'
-    },
-    head: [
-      {
-        text: "Exporter",
-        attributes: {
-        "data-cy": "deal__header--exporter",
-        "aria-sort": "none"
-      }
-      },
-      {
-        text: "Bank ref",
-        attributes: {
-        "data-cy": "deal__header--bankRef"
-      }
-      },
-      {
-        text: "Product",
-        attributes: {
-        "data-cy": "deal__header--product"
-      }
-      },
-      {
-        text: "Type",
-        attributes: {
-        "data-cy": "deal__header--type"
-      }
-      },
-      {
-        text: "Status",
-        attributes: {
-        "data-cy": "deal__header--status"
-      }
-      },
-      {
-        text: "Last updated",
-        attributes: {
-        "data-cy": "deal__header--updated"
-      }
-      }
-    ],
-    rows: rows
-  })}}
-  
 {% endmacro %}

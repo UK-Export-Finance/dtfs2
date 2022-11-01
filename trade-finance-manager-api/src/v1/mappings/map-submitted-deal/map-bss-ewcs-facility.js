@@ -52,14 +52,14 @@ const mapBssEwcsFacility = (facility) => {
     hasBeenIssuedAndAcknowledged,
   } = facility;
 
-  const cleanUkefExposure = Number(ukefExposure.split('.')[0].replace(/,/g, ''));
+  const cleanUkefExposure = Number(ukefExposure.toString().replace(/,/g, ''));
 
   return {
     _id,
     ukefFacilityId,
     type,
     currencyCode: currency && currency.id,
-    value: Number(value.replace(/,/g, '')),
+    value: Number(value.toString().replace(/,/g, '')),
     coverPercentage: Number(coveredPercentage),
     ukefExposure: cleanUkefExposure,
     ukefGuaranteeInMonths,

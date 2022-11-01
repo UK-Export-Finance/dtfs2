@@ -9,14 +9,18 @@ const CONSTANTS = require('../../../constants');
 // retrieves user information from database
 const getUserInfo = async (userId) => {
   const userCollectionName = 'users';
+  let firstname = '';
+  let surname = '';
 
   const userCollection = await db.getCollection(userCollectionName);
-  const {
-    firstname,
-    surname = '',
-  } = userId
+  const userProfile = userId
     ? await userCollection.findOne({ _id: ObjectId(String(userId)) })
     : {};
+
+  if (userProfile?.firstname) {
+    firstname = userProfile.firstname;
+    surname = userProfile.surname;
+  }
 
   // creates user object which can be used
   const user = {
@@ -24,6 +28,7 @@ const getUserInfo = async (userId) => {
     surname,
     _id: userId,
   };
+
   return user;
 };
 

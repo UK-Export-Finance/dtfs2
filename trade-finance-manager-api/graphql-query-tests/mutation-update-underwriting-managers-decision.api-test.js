@@ -45,6 +45,12 @@ describe('graphql mutation - update underwriting managers decision', () => {
     externalApis.updatePortalBssDealStatus = jest.fn();
   });
 
+  beforeEach(() => {
+    externalApis.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    externalApis.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    externalApis.getAmendmentById = () => Promise.resolve({});
+  });
+
   it('should return updated decision with timestamp', async () => {
     const mutationVars = {
       dealId: MOCK_DEAL._id,

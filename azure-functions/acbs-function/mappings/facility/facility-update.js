@@ -42,7 +42,7 @@ const CONSTANTS = require('../../constants');
 
 const facilityUpdate = (facility, acbsFacility, deal) => ({
   ...acbsFacility,
-  exposurePeriod: String(helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType)),
+  exposurePeriod: helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType),
   description: helpers.getDescription(facility, deal.dealSnapshot.dealType),
   capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
   issueDate: helpers.getIssueDate(facility, acbsFacility.effectiveDate),

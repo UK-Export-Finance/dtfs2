@@ -1,12 +1,17 @@
 {%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
 {% import './_macros/deal-submitted.njk' as dealSubmitted %}
 {% import './_macros/activity-comment-filter.njk' as activityCommentFilter %}
+{% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-
 
 {% extends "case/case.njk" %}
 
 {% block sub_content %}
+  {% set amendmentBarParams = {
+    hasAmendmentInProgress: hasAmendmentInProgress,
+    amendmentsInProgress: amendmentsInProgress
+  } %}
+  {{ amendmentInProgressBar.render(amendmentBarParams) }}
 
   <div class="govuk-grid-row" data-cy="case-activity">
 

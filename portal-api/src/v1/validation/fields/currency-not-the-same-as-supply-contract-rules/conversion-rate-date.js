@@ -4,6 +4,7 @@ const {
   dateValidationText,
 } = require('../date');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
+const coverDatesValidation = require('../../helpers/coverDatesValidation.helpers');
 
 module.exports = (facility, errorList, deal) => {
   const newErrorList = { ...errorList };
@@ -16,6 +17,12 @@ module.exports = (facility, errorList, deal) => {
 
   // only run this validation if first submission - submissionDate does not exist on first submission
   if (!deal?.details?.submissionDate) {
+    const {
+      coverDayValidation,
+      coverMonthValidation,
+      coverYearValidation
+    } = coverDatesValidation(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear);
+
     if (dateHasAllValues(conversionRateDateDay, conversionRateDateMonth, conversionRateDateYear)) {
       const formattedDate = `${conversionRateDateYear}-${conversionRateDateMonth}-${conversionRateDateDay}`;
       const nowDate = moment().format('YYYY-MM-DD');
@@ -43,6 +50,29 @@ module.exports = (facility, errorList, deal) => {
           conversionRateDateMonth,
           conversionRateDateYear,
         ),
+        order: orderNumber(newErrorList),
+      };
+    }
+
+    if (coverDayValidation.error && conversionRateDateDay) {
+      // error object does not exist if no errors in validation
+      newErrorList.conversionRateDate = {
+        text: 'The day for the conversion rate must include 1 or 2 numbers',
+        order: orderNumber(newErrorList),
+      };
+    }
+
+    if (coverMonthValidation.error && conversionRateDateMonth) {
+      // error object does not exist if no errors in validation
+      newErrorList.conversionRateDate = {
+        text: 'The month for the conversion rate must include 1 or 2 numbers',
+        order: orderNumber(newErrorList),
+      };
+    }
+    if (coverYearValidation.error && conversionRateDateYear) {
+      // error object does not exist if no errors in validation
+      newErrorList.conversionRateDate = {
+        text: 'The year for the conversion rate must include 4 numbers',
         order: orderNumber(newErrorList),
       };
     }

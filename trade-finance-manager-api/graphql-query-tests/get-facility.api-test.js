@@ -3,6 +3,7 @@ const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const gql = require('graphql-tag');
+const api = require('../src/v1/api');
 
 jest.mock('../src/v1/api');
 
@@ -115,6 +116,11 @@ describe('graphql query - get facility', () => {
     query = doQuery;
   });
 
+  beforeEach(() => {
+    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
+    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+  });
+
   it('should return a BSS/EWCS facility via facilityReducer', async () => {
     const { data } = await query({
       query: GET_FACILITY,
@@ -131,7 +137,7 @@ describe('graphql query - get facility', () => {
       tfm: mockFacility.tfm,
     };
 
-    const reducerResult = facilityReducer(
+    const reducerResult = await facilityReducer(
       initFacilityShape,
       MOCK_DEAL,
       mockDealTfm,
@@ -172,7 +178,7 @@ describe('graphql query - get facility', () => {
       tfm: mockFacility.tfm,
     };
 
-    const reducerResult = facilityReducer(initFacilityShape, MOCK_GEF_DEAL, mockDealTfm);
+    const reducerResult = await facilityReducer(initFacilityShape, MOCK_GEF_DEAL, mockDealTfm);
 
     expect(data.facility._id).toEqual(MOCK_CASH_CONTINGENT_FACILITIES[0]._id);
 

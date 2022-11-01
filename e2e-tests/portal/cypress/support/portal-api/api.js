@@ -28,19 +28,17 @@ module.exports.deleteDeal = (token, deal) => cy.request({
   },
 }).then((resp) => expect(resp.status).to.equal(200));
 
-module.exports.listAllDeals = (token) => {
-  return cy.request({
-    url: `${api()}/v1/deals`,
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
-  }).then((resp) => {
-    expect(resp.status).to.equal(200);
-    return resp.body.deals;
-  });
-};
+module.exports.listAllDeals = (token) => cy.request({
+  url: `${api()}/v1/deals`,
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body.deals;
+});
 
 module.exports.listAllUsers = (token) => cy.request({
   url: `${api()}/v1/users`,
@@ -119,18 +117,6 @@ module.exports.updateLoan = (dealId, loanId, update, token) => cy.request({
   },
   failOnStatusCode: false, // need to allow this for when we invalidate a bond and test user flow
 }).then((resp) => resp.body);
-
-module.exports.downloadFile = (token, deal) => cy.request({
-  url: `${api()}/v1/deals/${deal._id}/integration/type-a`,
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: token,
-  },
-}).then((resp) => {
-  expect(resp.status).to.equal(200);
-  return resp.body;
-});
 
 module.exports.createFacilities = (dealId, facilities, user, token) => cy.request({
   url: `${api()}/v1/deals/${dealId}/multiple-facilities`,

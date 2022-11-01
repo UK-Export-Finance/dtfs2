@@ -1,0 +1,58 @@
+{
+  "submissionType": "Automatic Inclusion Notice",
+  "bankInternalRefName": "abc-1-def",
+  "additionalRefName": "Tibettan submarine acquisition scheme",
+  "status": "Draft",
+  "bank": {
+    "id": "9",
+    "name": "UKEF test bank (Delegated)",
+    "emails": [
+      "maker@ukexportfinance.gov.uk",
+      "checker@ukexportfinance.gov.uk"
+    ]
+  },
+    "submissionDetails": {
+      "status": "Incomplete",
+      "supplier-name": "Supplier name 1"
+  },
+    "eligibility": {
+      "status": "Completed",
+      "version": 5,
+      "criteria": [
+      { "id": 11, "answer": true
+      },
+      { "id": 12, "answer": true
+      },
+      { "id": 13, "answer": true
+      },
+      { "id": 14, "answer": true
+      },
+      { "id": 15, "answer": true
+      },
+      { "id": 16, "answer": true
+      },
+      { "id": 17, "answer": true
+      },
+      { "id": 18, "answer": true
+      }
+    ]
+  },
+  "mockFacilities": [
+    {
+      "type": "Bond",
+      "bondIssuer": "issuer",
+      "bondType": "bond type",
+      "facilityStage": "unissued",
+      "ukefGuaranteeInMonths": "24",
+      "name": "1234",
+      "bondBeneficiary": "test",
+      "value": "123",
+      "currencySameAsSupplyContractCurrency": "true",
+      "riskMarginFee": "1",
+      "coveredPercentage": "2",
+      "feeType": "test",
+      "feeFrequency": "test",
+      "dayCountBasis": "test"
+    }
+  ]
+}

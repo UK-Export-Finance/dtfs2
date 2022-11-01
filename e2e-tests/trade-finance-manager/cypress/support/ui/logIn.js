@@ -1,4 +1,4 @@
-import pages from '../../integration/pages';
+import pages from '../../e2e/pages';
 
 export default (opts) => {
   const { username, password } = opts;

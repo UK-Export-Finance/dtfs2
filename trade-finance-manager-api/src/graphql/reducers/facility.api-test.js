@@ -30,8 +30,9 @@ describe('reducer - facility', () => {
         mockFacility.facilitySnapshot,
         mockFacility.tfm,
         mockDeal.dealSnapshot.details,
+        mockFacility,
       ),
-      tfm: mapFacilityTfm(mockFacility.tfm, {}),
+      tfm: mapFacilityTfm(mockFacility.tfm, {}, mockFacility),
     };
 
     expect(result).toEqual(expected);

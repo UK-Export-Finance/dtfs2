@@ -16,8 +16,9 @@ const facilityReducer = (facility, dealSnapshot, dealTfm) => {
       facilitySnapshot,
       facility.tfm,
       dealSnapshot.details,
+      facility,
     ),
-    tfm: mapFacilityTfm(facility.tfm, dealTfm),
+    tfm: mapFacilityTfm(facility.tfm, dealTfm, facility),
   };
 
   return result;

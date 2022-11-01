@@ -49,6 +49,14 @@ describe('send-deal-submit-emails - GEF', () => {
       template: {},
     },
     bankResponse: [],
+    pimEmailResponse: {
+      content: {
+        body: {},
+      },
+      id: 'MOCK-NOTIFY-TEMPLATE-ID',
+      email: 'mock@testing.com',
+      template: {},
+    },
   };
 
   beforeEach(() => {
@@ -69,7 +77,7 @@ describe('send-deal-submit-emails - GEF', () => {
     });
 
     it('should call sendEmail and return object of sent emails', async () => {
-      const mappedDeal = mapSubmittedDeal(mockGefDealAin);
+      const mappedDeal = await mapSubmittedDeal(mockGefDealAin);
 
       const result = await sendDealSubmitEmails(mappedDeal);
 
@@ -106,7 +114,7 @@ describe('send-deal-submit-emails - GEF', () => {
     });
 
     it('should call sendEmail and return object of sent emails', async () => {
-      const mappedDeal = mapSubmittedDeal(mockGefDealMia);
+      const mappedDeal = await mapSubmittedDeal(mockGefDealMia);
 
       const result = await sendDealSubmitEmails(mappedDeal);
 
@@ -138,7 +146,7 @@ describe('send-deal-submit-emails - GEF', () => {
     });
 
     it('should call sendEmail and return object of sent emails', async () => {
-      const mappedDeal = mapSubmittedDeal(mockGefDealMin);
+      const mappedDeal = await mapSubmittedDeal(mockGefDealMin);
 
       const result = await sendDealSubmitEmails(mappedDeal);
 

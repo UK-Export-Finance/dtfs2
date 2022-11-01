@@ -1,0 +1,184 @@
+{
+  "dealType": "BSS/EWCS",
+  "submissionType": "Manual Inclusion Notice",
+  "bankInternalRefName": "abc-1-def",
+  "additionalRefName": "Tibettan submarine acquisition scheme",
+  "status": "Draft",
+  "bank": {
+    "id": "956",
+    "name": "Barclays Bank",
+    "emails": [
+      "maker4@ukexportfinance.gov.uk",
+      "checker4@ukexportfinance.gov.uk"
+    ]
+  },
+  "submissionDetails" : {
+    "indemnifier-address-country" : {
+      "code": "GBR"
+    },
+    "indemnifier-address-line-3" : "",
+    "indemnifier-address-line-1" : "1A",
+    "indemnifier-address-line-2" : "Test Road",
+    "indemnifier-address-postcode" : "SW1A 2HQ",
+    "indemnifier-address-town" : "London",
+    "indemnifier-companies-house-registration-number" : "08547313",
+    "indemnifier-correspondence-address-country" : {
+      "code": "GBR"
+    },
+    "indemnifier-correspondence-address-line-3" : "Essex",
+    "indemnifier-correspondence-address-line-1" : "Test address",
+    "indemnifier-correspondence-address-line-2" : "",
+    "indemnifier-correspondence-address-postcode" : "SW1A 2HQ",
+    "indemnifier-correspondence-address-town" : "Chelmsford",
+    "indemnifier-name" : "Test Trading Limited",
+    "indemnifierCorrespondenceAddressDifferent" : "true",
+    "industry-sector": {
+  "code": "1008",
+  "name": "Accommodation and food service activities"
+},
+    "industry-class": {
+  "code": "56101",
+  "name": "Licensed restaurants"
+},
+    "legallyDistinct" : "true",
+    "sme-type" : "Small",
+    "supplier-address-country" : {
+      "code": "GBR",
+      "name": "United Kingdom"
+    },
+    "supplier-address-line-3" : "London",
+    "supplier-address-line-1" : "1 Horseguards Road",
+    "supplier-address-line-2" : "",
+    "supplier-address-postcode" : "SW1A 2HQ",
+    "supplier-address-town" : "Westminster",
+    "supplier-companies-house-registration-number" : "",
+    "supplier-correspondence-address-country" : {
+      "code": "GBR",
+      "name": "United Kingdom"
+    },
+    "supplier-correspondence-address-line-3" : "Edinburgh",
+    "supplier-correspondence-address-line-1" : "2 Horseguards Road",
+    "supplier-correspondence-address-line-2" : "",
+    "supplier-correspondence-address-postcode" : "ED1 23S",
+    "supplier-correspondence-address-town" : "Eastminster",
+    "supplier-name" : "UKEF",
+    "supplier-type" : "Exporter",
+    "supplier-correspondence-address-is-different" : "true",
+    "supply-contract-description" : "Description.",
+    "buyer-address-country" : {
+      "code": "USA",
+      "name": "United States"
+    },
+    "buyer-address-line-1" : "Corner of East and Main",
+    "buyer-address-line-2" : "",
+    "buyer-address-line-3" : "The Bronx",
+    "buyer-address-postcode" : "no-idea",
+    "buyer-address-town" : "New York",
+    "buyer-name" : "Huggy Bear",
+    "destinationOfGoodsAndServices" : {
+      "code": "USA",
+      "name": "United States"
+    },
+    "viewedPreviewPage" : true,
+    "supplyContractConversionRateToGBP" : "1.123456",
+    "supplyContractCurrency" : {
+        "id" : "USD",
+        "text": "USD - US Dollars"
+    },
+    "supplyContractValue" : "10,000"
+},
+    "eligibility": {
+      "status": "Completed",
+      "version": 5,
+      "criteria": [
+      { "id": 11, "answer": true
+      },
+      { "id": 12, "answer": true
+      },
+      { "id": 13, "answer": true
+      },
+      { "id": 14, "answer": true
+      },
+      { "id": 15, "answer": true
+      },
+      { "id": 16, "answer": true
+      },
+      { "id": 17, "answer": true
+      },
+      { "id": 18, "answer": true
+      }
+    ]
+  },
+  "mockFacilities": [
+    {
+      "type": "Loan",
+      "createdDate": "1615380531878",
+      "name": "1122444",
+      "coverEndDate-day": "12",
+      "coverEndDate-month": "08",
+      "coverEndDate-year": "2021",
+      "facilityStage": "Unconditional",
+      "hasBeenIssued": true,
+      "updatedAt": 1615380612045,
+      "requestedCoverStartDate": "1615380562489",
+      "requestedCoverStartDate-day": "10",
+      "requestedCoverStartDate-month": "03",
+      "requestedCoverStartDate-year": "2021",
+      "ukefGuaranteeInMonths": null,
+      "conversionRate": "50",
+      "coveredPercentage": "12",
+      "currency": {
+        "id": "AUD",
+        "text": "AUD - Australian Dollars"
+      },
+      "currencySameAsSupplyContractCurrency": "false",
+      "disbursementAmount": "100.00",
+      "value": "1234.00",
+      "guaranteeFeePayableByBank": "21.6000",
+      "interestMarginFee": "24",
+      "minimumQuarterlyFee": "",
+      "ukefExposure": "148.08",
+      "dayCountBasis": "365",
+      "premiumFrequency": null,
+      "premiumType": "At maturity",
+      "status": "Completed"
+    },
+    {
+      "type": "Bond",
+      "createdDate": "1615380491206",
+      "bondBeneficiary": "",
+      "bondIssuer": "",
+      "bondType": "Advance payment guarantee",
+      "coverEndDate-day": "05",
+      "coverEndDate-month": "06",
+      "coverEndDate-year": "2021",
+      "facilityStage": "Issued",
+      "hasBeenIssued": true,
+      "updatedAt": 1615380612017,
+      "requestedCoverStartDate": "1615380529968",
+      "requestedCoverStartDate-day": "10",
+      "requestedCoverStartDate-month": "03",
+      "requestedCoverStartDate-year": "2021",
+      "ukefGuaranteeInMonths": null,
+      "name": "1234",
+      "conversionRate": "100",
+      "coveredPercentage": "24",
+      "currency": {
+        "id": "EUR",
+        "text": "EUR - Euros"
+      },
+      "currencySameAsSupplyContractCurrency": "false",
+      "value": "2400.00",
+      "guaranteeFeePayableByBank": "10.8000",
+      "minimumRiskMarginFee": "",
+      "riskMarginFee": "12",
+      "ukefExposure": "576.00",
+      "dayCountBasis": "365",
+      "feeFrequency": null,
+      "feeType": "At maturity"
+    }
+  ],
+  "exporter": {
+    "companyName": "UKEF"
+  }
+}

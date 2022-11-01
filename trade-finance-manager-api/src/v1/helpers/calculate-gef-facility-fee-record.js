@@ -18,7 +18,7 @@ const calculateDaysOfCover = (coverStartDate, coverEndDate) => differenceInDays(
 const calculateDrawnAmount = (facilityValue, coverPercentage) => (facilityValue * (coverPercentage / 100) * 0.1);
 
 /* Business logic:
- * (Drawn Amount * Days Of Cover * Interst rate) / day basis
+ * (Drawn Amount * Days Of Cover * Interest rate) / day basis
  * Logic has been updated based on feedback from Mulesoft team (AV) - 10/02/2022
  */
 const calculateFeeAmount = (drawnAmount, daysOfCover, dayBasis, interestPercentage) =>

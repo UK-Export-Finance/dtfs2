@@ -46,6 +46,8 @@ const createDealInvestor = async (context) => {
   }
 
   return {
+    status,
+    dataSent: investor,
     submittedToACBS,
     receivedFromACBS: moment().format(),
     ...data,

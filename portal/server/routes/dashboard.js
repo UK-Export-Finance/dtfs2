@@ -21,6 +21,7 @@ router.get('/dashboard', async (req, res) => res.redirect('/dashboard/deals'));
  */
 router.get('/dashboard/deals', async (req, res) => {
   req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+  req.session.sortBy = CONSTANTS.DASHBOARD.DEFAULT_SORT;
 
   return res.redirect('/dashboard/deals/0');
 });
@@ -33,6 +34,7 @@ router.get('/dashboard/deals/filters/remove/:fieldName/:fieldValue', removeSingl
  */
 router.get('/dashboard/facilities', async (req, res) => {
   req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
+  req.session.sortBy = CONSTANTS.DASHBOARD.DEFAULT_SORT;
 
   return res.redirect('/dashboard/facilities/0');
 });

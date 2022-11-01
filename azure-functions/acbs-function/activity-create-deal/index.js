@@ -49,6 +49,8 @@ const createDeal = async (context) => {
   }
 
   return {
+    status,
+    dataSent: deal,
     submittedToACBS,
     receivedFromACBS: moment().format(),
     ...data,

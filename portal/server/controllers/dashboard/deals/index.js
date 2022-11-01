@@ -7,6 +7,7 @@ const {
   submittedFiltersObject,
   filtersToText,
 } = require('../filters/helpers');
+const { dashboardSortQuery } = require('../sort/helpers');
 const { removeSessionFilter } = require('../filters/remove-filter-from-session');
 const {
   getApiData,
@@ -22,6 +23,7 @@ const getAllDealsData = async (
   user,
   sessionFilters,
   currentPage,
+  sortBy,
   res,
 ) => {
   const filtersArray = submittedFiltersArray(sessionFilters);
@@ -32,11 +34,14 @@ const getAllDealsData = async (
     user,
   );
 
+  const sortQuery = dashboardSortQuery(sortBy);
+
   const { count, deals } = await getApiData(api.allDeals(
     currentPage * PAGE_SIZE,
     PAGE_SIZE,
     filtersQuery,
     userToken,
+    sortQuery,
   ), res);
 
   return {
@@ -84,6 +89,7 @@ const getDataAndTemplateVariables = async (
   user,
   sessionFilters,
   currentPage,
+  sortBy,
   res,
 ) => {
   const { deals, count, filtersArray } = await getAllDealsData(
@@ -91,6 +97,7 @@ const getDataAndTemplateVariables = async (
     user,
     sessionFilters,
     currentPage,
+    sortBy,
     res,
   );
 
@@ -112,8 +119,22 @@ exports.allDeals = async (req, res) => {
   const { user } = req.session;
   const currentPage = req.params.page;
 
+  let activeSortByOrder = req.session.sortBy ?? CONSTANTS.SORT_BY.DEFAULT;
+
   if (Object.keys(req.body).length) {
     req.session.dashboardFilters = req.body;
+    req.session.sortBy = req.body.sortBy ?? CONSTANTS.SORT_BY.DEFAULT;
+  }
+
+  if (req.body.sortBy) {
+    if (req.body.sortBy === CONSTANTS.SORT_BY.DESCENDING) {
+      activeSortByOrder = CONSTANTS.SORT_BY.DESCENDING;
+      delete req.body.sortBy;
+    }
+    if (req.body.sortBy === CONSTANTS.SORT_BY.ASCENDING) {
+      activeSortByOrder = CONSTANTS.SORT_BY.ASCENDING;
+      delete req.body.sortBy;
+    }
   }
 
   const templateVariables = await getDataAndTemplateVariables(
@@ -121,6 +142,7 @@ exports.allDeals = async (req, res) => {
     user,
     req.session.dashboardFilters,
     currentPage,
+    activeSortByOrder,
     res,
   );
 
@@ -128,6 +150,7 @@ exports.allDeals = async (req, res) => {
     ...templateVariables,
     successMessage: getFlashSuccessMessage(req),
     selectedFiltersString: filtersToText(templateVariables.selectedFilters),
+    activeSortByOrder,
   });
 };
 
