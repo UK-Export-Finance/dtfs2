@@ -1691,7 +1691,8 @@ jobs:
               WEBSITES_PORT=5000 \
               LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
               TZ=Europe/London \
-              NODE_ENV="${{env.NODE_ENV}}"
+              NODE_ENV="${{env.NODE_ENV}}" \
+              UKEF_INTERNAL_NOTIFICATION="${{env.UKEF_INTERNAL_NOTIFICATION_EMAIL}}" \
 
     - name: Secrets
       uses: azure/cli@v1.0.0
