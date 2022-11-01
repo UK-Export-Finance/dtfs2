@@ -322,31 +322,36 @@ const postFacilityAmendment = async (req, res) => {
 };
 
 const getCaseDocuments = async (req, res) => {
-  const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  try {
+    const dealId = req.params._id;
+    const deal = await api.getDeal(dealId);
+    const { data: amendments } = await api.getAmendmentsByDealId(dealId);
 
-  if (!deal) {
+    if (!deal) {
+      return res.redirect('/not-found');
+    }
+
+    const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+    if (hasAmendmentInProgress) {
+      deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+    }
+    const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+
+    return res.render('case/documents/documents.njk', {
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
+      eStoreUrl: process.env.ESTORE_URL,
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'documents',
+      dealId,
+      user: req.session.user,
+      hasAmendmentInProgress,
+      amendmentsInProgress,
+    });
+  } catch (error) {
+    console.error('Error getCaseDocuments', { error });
     return res.redirect('/not-found');
   }
-
-  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
-  if (hasAmendmentInProgress) {
-    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-  }
-  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
-
-  return res.render('case/documents/documents.njk', {
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    eStoreUrl: process.env.ESTORE_URL,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'documents',
-    dealId,
-    user: req.session.user,
-    hasAmendmentInProgress,
-    amendmentsInProgress,
-  });
 };
 
 const postTfmFacility = async (req, res) => {

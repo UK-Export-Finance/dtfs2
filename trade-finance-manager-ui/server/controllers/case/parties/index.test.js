@@ -166,6 +166,261 @@ describe('controllers - case - parties', () => {
     });
   });
 
+  describe('GET agent edit', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        dealSnapshot: {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          submissionDetails: {
+            supplierName: 'test supplier',
+          },
+        },
+        tfm: {
+          parties: {
+            agent: {
+              partyUrn: '12345',
+            },
+          },
+        },
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+      });
+
+      it('should render agent edit template with data', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+        };
+
+        await partiesController.getAgentPartyDetails(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent-edit.njk', {
+          userCanEdit: userCanEdit(req.session.user),
+          renderEditLink: false,
+          renderEditForm: true,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          dealId: req.params._id,
+          user: session.user,
+          urn: mockDeal.tfm.parties.agent.partyUrn,
+        });
+      });
+    });
+
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await partiesController.getAgentPartyDetails(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+
+    describe('when user is not allowed to edit', () => {
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session: {
+            user: userNotAllowedToEdit,
+          },
+        };
+
+        await partiesController.getAgentPartyDetails(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
+  describe('GET buyer edit', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        dealSnapshot: {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          submissionDetails: {
+            supplierName: 'test supplier',
+          },
+        },
+        tfm: {
+          parties: {
+            buyer: {
+              partyUrn: '12345',
+            },
+          },
+        },
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+      });
+
+      it('should render agent edit template with data', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+        };
+
+        await partiesController.getBuyerPartyDetails(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer-edit.njk', {
+          userCanEdit: userCanEdit(req.session.user),
+          renderEditLink: false,
+          renderEditForm: true,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          dealId: req.params._id,
+          user: session.user,
+          urn: mockDeal.tfm.parties.buyer.partyUrn,
+        });
+      });
+    });
+
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await partiesController.getBuyerPartyDetails(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+
+    describe('when user is not allowed to edit', () => {
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session: {
+            user: userNotAllowedToEdit,
+          },
+        };
+
+        await partiesController.getBuyerPartyDetails(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
+  describe('GET indemnifier edit', () => {
+    describe('when deal exists', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        dealSnapshot: {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          submissionDetails: {
+            supplierName: 'test supplier',
+          },
+        },
+        tfm: {
+          parties: {
+            indemnifier: {
+              partyUrn: '12345',
+            },
+          },
+        },
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+      });
+
+      it('should render agent edit template with data', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          session,
+        };
+
+        await partiesController.getIndemnifierPartyDetails(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier-edit.njk', {
+          userCanEdit: userCanEdit(req.session.user),
+          renderEditLink: false,
+          renderEditForm: true,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          dealId: req.params._id,
+          user: session.user,
+          urn: mockDeal.tfm.parties.indemnifier.partyUrn,
+        });
+      });
+    });
+
+    describe('when deal does NOT exist', () => {
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve();
+        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+      });
+
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session,
+        };
+
+        await partiesController.getIndemnifierPartyDetails(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+
+    describe('when user is not allowed to edit', () => {
+      it('should redirect to not-found route', async () => {
+        const req = {
+          params: {
+            _id: '1',
+          },
+          session: {
+            user: userNotAllowedToEdit,
+          },
+        };
+
+        await partiesController.getIndemnifierPartyDetails(req, res);
+        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+      });
+    });
+  });
+
   describe('GET bond issuer edit', () => {
     describe('when deal exists', () => {
       const mockDeal = {
@@ -337,177 +592,707 @@ describe('controllers - case - parties', () => {
   });
 
   describe('POST party edit', () => {
-    describe('when deal exists', () => {
-      const mockDeal = {
-        _id: '61f6ac5b02ffda01b1e8efef',
-        mock: true,
-        tfm: {
-          parties: {
-            exporter: {
-              partyUrnRequired: true,
+    describe('exporter', () => {
+      describe('when deal exists', () => {
+        const mockDeal = {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          mock: true,
+          tfm: {
+            parties: {
+              exporter: {
+                partyUrnRequired: true,
+              },
             },
           },
-        },
-      };
-
-      beforeEach(() => {
-        api.getDeal = () => Promise.resolve(mockDeal);
-        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
-      });
-
-      it('should render party edit template with data', async () => {
-        const req = {
-          params: {
-            _id: mockDeal._id,
-          },
-          body: {
-            partyUrn: '12345',
-          },
-          session,
         };
 
-        await partiesController.postExporterPartyDetails(req, res);
-        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
-      });
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve(mockDeal);
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+        });
 
-      it('should render template with errors if partyUrn is blank', async () => {
-        const req = {
-          params: {
-            _id: mockDeal._id,
-          },
-          body: {
-            partyUrn: '',
-          },
-          session,
-        };
+        it('should render party edit template with data', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '12345',
+            },
+            session,
+          };
 
-        await partiesController.postExporterPartyDetails(req, res);
+          await partiesController.postExporterPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+        });
 
-        const expectedErrorSummary = {
-          errorSummary: [{ text: 'Enter a unique reference number', href: '#partyUrn' }],
-          fieldErrors: { partyUrn: { text: 'Enter a unique reference number' } },
-        };
+        it('should render template with errors if partyUrn is blank', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '',
+            },
+            session,
+          };
 
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
-          userCanEdit: userCanEdit(req.session.user),
-          renderEditLink: false,
-          renderEditForm: true,
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'parties',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: req.params._id,
-          user: session.user,
-          urn: req.body.partyUrn,
-          errors: expectedErrorSummary,
+          await partiesController.postExporterPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a unique reference number', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a unique reference number' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+
+        it('should render template with errors if partyUrn is letters only', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: 'ABCDE',
+            },
+            session,
+          };
+
+          await partiesController.postExporterPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+
+        it('should render template with errors if partyUrn has special characters', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '1234!',
+            },
+            session,
+          };
+
+          await partiesController.postExporterPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
         });
       });
 
-      it('should render template with errors if partyUrn is letters only', async () => {
-        const req = {
-          params: {
-            _id: mockDeal._id,
-          },
-          body: {
-            partyUrn: 'ABCDE',
-          },
-          session,
-        };
+      describe('when deal does NOT exist', () => {
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve();
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+        });
 
-        await partiesController.postExporterPartyDetails(req, res);
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session,
+          };
 
-        const expectedErrorSummary = {
-          errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
-          fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
-        };
-
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
-          userCanEdit: userCanEdit(req.session.user),
-          renderEditLink: false,
-          renderEditForm: true,
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'parties',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: req.params._id,
-          user: session.user,
-          urn: req.body.partyUrn,
-          errors: expectedErrorSummary,
+          await partiesController.postExporterPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
       });
 
-      it('should render template with errors if partyUrn has special characters', async () => {
-        const req = {
-          params: {
-            _id: mockDeal._id,
-          },
-          body: {
-            partyUrn: '1234!',
-          },
-          session,
-        };
+      describe('when user is not allowed to edit', () => {
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session: {
+              user: userNotAllowedToEdit,
+            },
+          };
 
-        await partiesController.postExporterPartyDetails(req, res);
-
-        const expectedErrorSummary = {
-          errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
-          fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
-        };
-
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
-          userCanEdit: userCanEdit(req.session.user),
-          renderEditLink: false,
-          renderEditForm: true,
-          activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'parties',
-          deal: mockDeal.dealSnapshot,
-          tfm: mockDeal.tfm,
-          dealId: req.params._id,
-          user: session.user,
-          urn: req.body.partyUrn,
-          errors: expectedErrorSummary,
+          await partiesController.postExporterPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
       });
     });
 
-    describe('when deal does NOT exist', () => {
-      beforeEach(() => {
-        api.getDeal = () => Promise.resolve();
-        api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
-      });
-
-      it('should redirect to not-found route', async () => {
-        const req = {
-          body: {
-            csrf: '12345',
+    describe('Agent', () => {
+      describe('when deal exists', () => {
+        const mockDeal = {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          mock: true,
+          tfm: {
+            parties: {
+              agent: {
+                partyUrnRequired: true,
+              },
+            },
           },
-          params: {
-            _id: '1',
-          },
-          session,
         };
 
-        await partiesController.postExporterPartyDetails(req, res);
-        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve(mockDeal);
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+        });
+
+        it('should render party edit template with data', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '12345',
+            },
+            session,
+          };
+
+          await partiesController.postAgentPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+        });
+
+        it('should render template with errors if partyUrn is blank', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '',
+            },
+            session,
+          };
+
+          await partiesController.postAgentPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a unique reference number', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a unique reference number' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+
+        it('should render template with errors if partyUrn is letters only', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: 'ABCDE',
+            },
+            session,
+          };
+
+          await partiesController.postAgentPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+
+        it('should render template with errors if partyUrn has special characters', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '1234!',
+            },
+            session,
+          };
+
+          await partiesController.postAgentPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+      });
+
+      describe('when deal does NOT exist', () => {
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve();
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+        });
+
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session,
+          };
+
+          await partiesController.postAgentPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when user is not allowed to edit', () => {
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session: {
+              user: userNotAllowedToEdit,
+            },
+          };
+
+          await partiesController.postAgentPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
       });
     });
 
-    describe('when user is not allowed to edit', () => {
-      it('should redirect to not-found route', async () => {
-        const req = {
-          body: {
-            csrf: '12345',
-          },
-          params: {
-            _id: '1',
-          },
-          session: {
-            user: userNotAllowedToEdit,
+    describe('Indemnifier', () => {
+      describe('when deal exists', () => {
+        const mockDeal = {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          mock: true,
+          tfm: {
+            parties: {
+              indemnifier: {
+                partyUrnRequired: true,
+              },
+            },
           },
         };
 
-        await partiesController.postExporterPartyDetails(req, res);
-        expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve(mockDeal);
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+        });
+
+        it('should render party edit template with data', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '12345',
+            },
+            session,
+          };
+
+          await partiesController.postIndemnifierPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+        });
+
+        it('should render template with errors if partyUrn is blank', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '',
+            },
+            session,
+          };
+
+          await partiesController.postIndemnifierPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a unique reference number', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a unique reference number' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+
+        it('should render template with errors if partyUrn is letters only', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: 'ABCDE',
+            },
+            session,
+          };
+
+          await partiesController.postIndemnifierPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+
+        it('should render template with errors if partyUrn has special characters', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '1234!',
+            },
+            session,
+          };
+
+          await partiesController.postIndemnifierPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+      });
+
+      describe('when deal does NOT exist', () => {
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve();
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+        });
+
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session,
+          };
+
+          await partiesController.postIndemnifierPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when user is not allowed to edit', () => {
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session: {
+              user: userNotAllowedToEdit,
+            },
+          };
+
+          await partiesController.postAgentPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+    });
+
+    describe('Buyer', () => {
+      describe('when deal exists', () => {
+        const mockDeal = {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          mock: true,
+          tfm: {
+            parties: {
+              buyer: {
+                partyUrnRequired: true,
+              },
+            },
+          },
+        };
+
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve(mockDeal);
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+        });
+
+        it('should render party edit template with data', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '12345',
+            },
+            session,
+          };
+
+          await partiesController.postBuyerPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+        });
+
+        it('should render template with errors if partyUrn is blank', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '',
+            },
+            session,
+          };
+
+          await partiesController.postBuyerPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a unique reference number', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a unique reference number' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+
+        it('should render template with errors if partyUrn is letters only', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: 'ABCDE',
+            },
+            session,
+          };
+
+          await partiesController.postBuyerPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+
+        it('should render template with errors if partyUrn has special characters', async () => {
+          const req = {
+            params: {
+              _id: mockDeal._id,
+            },
+            body: {
+              partyUrn: '1234!',
+            },
+            session,
+          };
+
+          await partiesController.postBuyerPartyDetails(req, res);
+
+          const expectedErrorSummary = {
+            errorSummary: [{ text: 'Enter a minimum of 3 numbers', href: '#partyUrn' }],
+            fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
+          };
+
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer-edit.njk', {
+            userCanEdit: userCanEdit(req.session.user),
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
+            dealId: req.params._id,
+            user: session.user,
+            urn: req.body.partyUrn,
+            errors: expectedErrorSummary,
+          });
+        });
+      });
+
+      describe('when deal does NOT exist', () => {
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve();
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+        });
+
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session,
+          };
+
+          await partiesController.postBuyerPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when user is not allowed to edit', () => {
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session: {
+              user: userNotAllowedToEdit,
+            },
+          };
+
+          await partiesController.postBuyerPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
       });
     });
   });

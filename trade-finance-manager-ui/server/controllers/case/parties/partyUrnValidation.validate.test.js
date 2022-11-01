@@ -25,6 +25,28 @@ describe('validatePartyURN()', () => {
     expect(response.urn).toEqual('');
   });
 
+  it('should return validation error if partyUrn is null and partyUrnRequired', () => {
+    partyUrnParams.urnValue = null;
+    partyUrnParams.partyType = 'buyer';
+    partyUrnParams.urnValidationErrors = [];
+
+    const response = validatePartyURN(partyUrnParams);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a unique reference number', href: '#partyUrn' }]);
+    expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a unique reference number' } });
+    expect(response.urn).toEqual(null);
+  });
+
+  it('should return validation error if partyUrn is undefined and partyUrnRequired', () => {
+    partyUrnParams.urnValue = undefined;
+    partyUrnParams.partyType = 'buyer';
+    partyUrnParams.urnValidationErrors = [];
+
+    const response = validatePartyURN(partyUrnParams);
+    expect(response.errorsObject.errors.errorSummary).toEqual([{ text: 'Enter a unique reference number', href: '#partyUrn' }]);
+    expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a unique reference number' } });
+    expect(response.urn).toEqual(undefined);
+  });
+
   it('should return empty object if partyUrn is empty string and partyUrnRequired is false', () => {
     partyUrnParams.partyUrnRequired = false;
     partyUrnParams.urnValidationErrors = [];

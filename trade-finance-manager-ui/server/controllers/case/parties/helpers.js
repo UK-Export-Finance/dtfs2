@@ -36,6 +36,7 @@ const constructErrRef = (partyType, index) => {
   return errRef;
 };
 
+// checks if string is empty - checks that string is '' and does not have a length and returns true if so
 const isEmptyString = (str) => {
   if (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length)) {
     return true;

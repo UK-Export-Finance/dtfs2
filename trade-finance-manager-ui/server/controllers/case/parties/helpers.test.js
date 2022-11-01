@@ -1,4 +1,4 @@
-import { userCanEdit, bondPartyType, isBondPartyType, constructErrRef } from './helpers';
+import { userCanEdit, bondPartyType, isBondPartyType, constructErrRef, isEmptyString } from './helpers';
 
 describe('case - parties - helpers', () => {
   describe('userCanEdit', () => {
@@ -110,6 +110,38 @@ describe('case - parties - helpers', () => {
       const response = constructErrRef('bondIssuerPartyUrn', 2);
 
       expect(response).toEqual('partyUrn-2');
+    });
+  });
+
+  describe('isEmptyString()', () => {
+    it('should return `true` if string is empty', () => {
+      const response = isEmptyString('');
+
+      expect(response).toEqual(true);
+    });
+
+    it('should return `false` if string has letters', () => {
+      const response = isEmptyString('a');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return `false` if string has numbers', () => {
+      const response = isEmptyString('1');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return `true` if string has space only', () => {
+      const response = isEmptyString(' ');
+
+      expect(response).toEqual(true);
+    });
+
+    it('should return `true` if string has tab only', () => {
+      const response = isEmptyString('  ');
+
+      expect(response).toEqual(true);
     });
   });
 });
