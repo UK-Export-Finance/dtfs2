@@ -1,10 +1,9 @@
-const { nowPlusDays, nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../../e2e-fixtures/dateConstants');
 const dealReadyToSubmitForReview = require('./dealReadyToSubmit');
 
 module.exports = () => {
-  const aMonthInTheFuture = nowPlusMonths(1);
-  const dealSubmissionDate = nowPlusDays(-1).valueOf();
-  const coverStartDateBeforeDealSubmissionDate = nowPlusDays(-7).valueOf();
+  const dealSubmissionDate = `${dateConstants.yesterdayUnix}000`;
+  const coverStartDateBeforeDealSubmissionDate = `${dateConstants.sevenDaysAgoUnix}000`;
 
   const deal = { ...dealReadyToSubmitForReview() };
 
@@ -12,9 +11,9 @@ module.exports = () => {
 
   deal.bondTransactions.items[0].requestedCoverStartDate = coverStartDateBeforeDealSubmissionDate;
 
-  deal.bondTransactions.items[0]['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
-  deal.bondTransactions.items[0]['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
-  deal.bondTransactions.items[0]['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
+  deal.bondTransactions.items[0]['coverEndDate-day'] = (dateConstants.oneMonthDay).toString();
+  deal.bondTransactions.items[0]['coverEndDate-month'] = (dateConstants.oneMonthMonth).toString();
+  deal.bondTransactions.items[0]['coverEndDate-year'] = (dateConstants.oneMonthYear).toString();
   deal.bondTransactions.items[0].facilityStage = 'Issued';
   deal.bondTransactions.items[0].name = '1234';
 
