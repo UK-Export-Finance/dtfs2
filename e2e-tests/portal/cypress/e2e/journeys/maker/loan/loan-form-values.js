@@ -1,7 +1,12 @@
-const { padDate, nowPlusMonths } = require('../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
-const now = new Date();
-const nowPlusMonth = nowPlusMonths(1);
+const nowDay = (dateConstants.todayDay).toString();
+const nowMonth = (dateConstants.todayMonth).toString();
+const nowYear = (dateConstants.todayYear).toString();
+
+const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
+const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
+const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
 
 const GUARANTEE_DETAILS = {
   // 'Conditional' facility stage specifics
@@ -9,12 +14,12 @@ const GUARANTEE_DETAILS = {
 
   // 'Unconditional' facility stage specifics
   name: '123456',
-  requestedCoverStartDateDay: padDate(now.getDate()),
-  requestedCoverStartDateMonth: padDate(now.getMonth() + 1),
-  requestedCoverStartDateYear: now.getFullYear(),
-  coverEndDateDay: padDate(nowPlusMonth.getDate()),
-  coverEndDateMonth: padDate(nowPlusMonth.getMonth() + 1),
-  coverEndDateYear: nowPlusMonth.getFullYear(),
+  requestedCoverStartDateDay: nowDay,
+  requestedCoverStartDateMonth: nowMonth,
+  requestedCoverStartDateYear: nowYear,
+  coverEndDateDay: nowPlusMonthDay,
+  coverEndDateMonth: nowPlusMonthMonth,
+  coverEndDateYear: nowPlusMonthYear,
 };
 
 const FINANCIAL_DETAILS = {
@@ -25,9 +30,9 @@ const FINANCIAL_DETAILS = {
     text: 'EUR - Euros',
   },
   conversionRate: '100',
-  conversionRateDateDay: padDate(now.getDate()),
-  conversionRateDateMonth: padDate(now.getMonth() + 1),
-  conversionRateDateYear: now.getFullYear(),
+  conversionRateDateDay: nowDay,
+  conversionRateDateMonth: nowMonth,
+  conversionRateDateYear: nowYear,
   disbursementAmount: '10.00',
   interestMarginFee: '20',
   coveredPercentage: '5',
