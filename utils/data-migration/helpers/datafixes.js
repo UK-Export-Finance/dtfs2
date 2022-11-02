@@ -553,6 +553,12 @@ const eStore = async () => {
 };
 
 /**
+ * Migrate tasks attributes to TFM tasks (deal.tfm.tasks)
+ */
+const tasks = async () => {
+};
+
+/**
  * Add agent's commission rate to deal TFM (deal.tfm.agent.commissionRate)
  */
 const agentCommissionRate = async () => {
@@ -1063,14 +1069,15 @@ const datafixesTfmDeal = async (deals) => {
       let updated = 0;
 
       // TFM Deal - Data fixes
-      await creditRating();
-      await partyUrn();
-      await agentCommissionRate();
-      await comment();
-      await ACBS();
-      await ukefDecision();
-      await supportingInformations();
-      await eStore();
+      // await creditRating();
+      // await partyUrn();
+      // await agentCommissionRate();
+      // await comment();
+      // await ACBS();
+      // await ukefDecision();
+      // await supportingInformations();
+      // await eStore();
+      await tasks();
 
       const updates = allDeals.map(async (deal) => {
         // Ensure `_id` are kept as ObjectId

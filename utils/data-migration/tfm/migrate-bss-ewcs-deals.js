@@ -146,12 +146,12 @@ const tfm = async (data) => {
 const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM migration v${version}.`, '\n\n');
 
-  deals()
-    .then((d) => datafixes(d))
-    .then((d) => tfm(d))
+  getTfmDeals()
+    // .then((d) => datafixes(d))
+    // .then((d) => tfm(d))
     .then((d) => datafixesTfmDeal(d))
-    .then(() => getTfmDeals())
-    .then((d) => datafixesTfmFacilities(d))
+    // .then(() => getTfmDeals())
+    // .then((d) => datafixesTfmFacilities(d))
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {
