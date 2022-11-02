@@ -1,10 +1,8 @@
 const { mandatoryCriteria } = require('../../../../../../../e2e-fixtures');
-const { nowPlusMonths, nowPlusDays } = require('../../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date();
-const nowPlus1Month = nowPlusMonths(1);
-const nowPlus2Months = nowPlusMonths(2);
-const nowPlusWeek = nowPlusDays(7).valueOf();
+const nowPlusWeek = `${dateConstants.sevenDaysUnix}000`;
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
@@ -216,13 +214,13 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': (nowPlus2Months.getDate()).toString(),
-      'coverEndDate-month': (nowPlus2Months.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlus2Months.getFullYear()).toString(),
+      'coverEndDate-day': (dateConstants.twoMonthsDay).toString(),
+      'coverEndDate-month': (dateConstants.twoMonthsMonth).toString(),
+      'coverEndDate-year': (dateConstants.twoMonthsYear).toString(),
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
-      requestedCoverStartDate: nowPlus1Month.valueOf(),
+      requestedCoverStartDate: `${dateConstants.oneMonthUnix}000`,
       issuedDate: nowPlusWeek,
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
@@ -254,9 +252,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': (nowPlus2Months.getDate()).toString(),
-      'coverEndDate-month': (nowPlus2Months.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlus2Months.getFullYear()).toString(),
+      'coverEndDate-day': (dateConstants.twoMonthsDay).toString(),
+      'coverEndDate-month': (dateConstants.twoMonthsMonth).toString(),
+      'coverEndDate-year': (dateConstants.twoMonthsYear).toString(),
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -264,7 +262,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
       previousFacilityStage: 'Conditional',
-      requestedCoverStartDate: nowPlus1Month.valueOf(),
+      requestedCoverStartDate: `${dateConstants.oneMonthUnix}000`,
     },
   ],
   summary: {},
