@@ -1,15 +1,17 @@
 const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview');
-const { nowPlusMonths } = require('../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
-const date = nowPlusMonths(1);
+const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
+const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
+const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
 
 const dealWithNoCoverStartDate = { ...dealReadyToSubmitForReview };
 
 const bond = dealWithNoCoverStartDate.mockFacilities.find((f) => f.type === 'Bond');
 
-bond['coverEndDate-day'] = (date.getDate()).toString();
-bond['coverEndDate-month'] = (date.getMonth() + 1).toString();
-bond['coverEndDate-year'] = (date.getFullYear()).toString();
+bond['coverEndDate-day'] = nowPlusMonthDay;
+bond['coverEndDate-month'] = nowPlusMonthMonth;
+bond['coverEndDate-year'] = nowPlusMonthYear;
 bond.facilityStage = 'Issued';
 bond.hasBeenIssued = true;
 
