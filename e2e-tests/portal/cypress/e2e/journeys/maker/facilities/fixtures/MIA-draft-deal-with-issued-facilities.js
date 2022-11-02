@@ -1,8 +1,7 @@
 const { mandatoryCriteria } = require('../../../../../../../e2e-fixtures');
-const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf();
-const nowPlusMonth = nowPlusMonths(1);
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
@@ -190,9 +189,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': (dateConstants.oneMonthDay).toString(),
+      'coverEndDate-month': (dateConstants.oneMonthMonth).toString(),
+      'coverEndDate-year': (dateConstants.oneMonthYear).toString(),
       name: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '10.8000',
@@ -218,9 +217,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': (dateConstants.oneMonthDay).toString(),
+      'coverEndDate-month': (dateConstants.oneMonthMonth).toString(),
+      'coverEndDate-year': (dateConstants.oneMonthYear).toString(),
       name: '1234',
       guaranteeFeePayableByBank: '21.6000',
       updatedAt: Date.now(),

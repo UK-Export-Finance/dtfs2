@@ -1,7 +1,11 @@
 const { mandatoryCriteria } = require('../../../../../../../e2e-fixtures');
-const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf();
+const nowPlusOneMonth = `${dateConstants.oneMonthUnix}000`;
+const nowPlusTwoMonthsDay = (dateConstants.twoMonthsDay).toString();
+const nowPlusTwoMonthsMonth = (dateConstants.twoMonthsMonth).toString();
+const nowPlusTwoMonthsYear = (dateConstants.twoMonthsYear).toString();
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -202,9 +206,9 @@ const deal = {
         'requestedCoverStartDate-day': '',
         'requestedCoverStartDate-month': '',
         'requestedCoverStartDate-year': '',
-        'coverEndDate-day': nowPlusMonths(2).getDate().toString(),
-        'coverEndDate-month': (nowPlusMonths(2).getMonth() + 1).toString(),
-        'coverEndDate-year': nowPlusMonths(2).getFullYear().toString(),
+        'coverEndDate-day': nowPlusTwoMonthsDay,
+        'coverEndDate-month': nowPlusTwoMonthsMonth,
+        'coverEndDate-year': nowPlusTwoMonthsYear,
         name: '1234',
         bondBeneficiary: '',
         guaranteeFeePayableByBank: '18.0000',
@@ -221,7 +225,7 @@ const deal = {
           text: 'GBP - UK Sterling',
           id: 'GBP',
         },
-        requestedCoverStartDate: nowPlusMonths(1).valueOf(),
+        requestedCoverStartDate: nowPlusOneMonth,
       },
     ],
   },
@@ -235,9 +239,9 @@ const deal = {
         'requestedCoverStartDate-day': '',
         'requestedCoverStartDate-month': '',
         'requestedCoverStartDate-year': '',
-        'coverEndDate-day': nowPlusMonths(2).getDate().toString(),
-        'coverEndDate-month': (nowPlusMonths(2).getMonth() + 1).toString(),
-        'coverEndDate-year': nowPlusMonths(2).getFullYear().toString(),
+        'coverEndDate-day': nowPlusTwoMonthsDay,
+        'coverEndDate-month': nowPlusTwoMonthsMonth,
+        'coverEndDate-year': nowPlusTwoMonthsYear,
         name: '12345678',
         guaranteeFeePayableByBank: '10.8000',
         updatedAt: Date.now(),
@@ -254,7 +258,7 @@ const deal = {
           text: 'GBP - UK Sterling',
           id: 'GBP',
         },
-        requestedCoverStartDate: nowPlusMonths(1).valueOf(),
+        requestedCoverStartDate: nowPlusOneMonth,
       },
     ],
   },
