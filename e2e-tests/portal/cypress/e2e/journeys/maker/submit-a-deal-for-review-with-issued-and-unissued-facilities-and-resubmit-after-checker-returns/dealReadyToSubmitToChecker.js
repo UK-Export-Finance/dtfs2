@@ -1,8 +1,13 @@
-const { nowPlusMonths } = require('../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf;
 const nowFormatted = new Date();
-const nowPlusMonth = nowPlusMonths(1);
+const nowDay = (dateConstants.todayDay).toString();
+const nowMonth = (dateConstants.todayMonth).toString();
+const nowYear = (dateConstants.todayYear).toString();
+const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
+const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
+const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -200,12 +205,12 @@ const deal = {
       facilityStage: 'Issued',
       hasBeenIssued: true,
       requestedCoverStartDate: nowFormatted.valueOf().toString(),
-      'requestedCoverStartDate-day': nowFormatted.getDate().toString(),
-      'requestedCoverStartDate-month': (nowFormatted.getMonth() + 1).toString(),
-      'requestedCoverStartDate-year': nowFormatted.getFullYear().toString(),
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'requestedCoverStartDate-day': nowDay,
+      'requestedCoverStartDate-month': nowMonth,
+      'requestedCoverStartDate-year': nowYear,
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       name: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
@@ -243,12 +248,12 @@ const deal = {
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
       requestedCoverStartDate: nowFormatted.valueOf().toString(),
-      'requestedCoverStartDate-day': nowFormatted.getDate().toString(),
-      'requestedCoverStartDate-month': (nowFormatted.getMonth() + 1).toString(),
-      'requestedCoverStartDate-year': nowFormatted.getFullYear().toString(),
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'requestedCoverStartDate-day': nowDay,
+      'requestedCoverStartDate-month': nowMonth,
+      'requestedCoverStartDate-year': nowYear,
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       name: '12345678',
       guaranteeFeePayableByBank: '45.0000',
       updatedAt: Date.now(),
