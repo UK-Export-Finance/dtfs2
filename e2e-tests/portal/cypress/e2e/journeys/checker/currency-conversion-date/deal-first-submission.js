@@ -1,9 +1,7 @@
-const { nowPlusDays, nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 const CONSTANTS = require('../../../../fixtures/constants');
+const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
 const date = new Date();
-const datePlusDay = nowPlusDays(1);
-const datePlusMonth = nowPlusMonths(1);
 
 const deal = {
   submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
@@ -192,10 +190,10 @@ const deal = {
       'conversionRateDate-day': '28',
       'conversionRateDate-month': '04',
       'conversionRateDate-year': '2022',
-      issuedDate: datePlusDay.valueOf(),
-      'coverEndDate-day': (datePlusMonth.getDate()).toString(),
-      'coverEndDate-month': (datePlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (datePlusMonth.getFullYear()).toString(),
+      issuedDate: `${dateConstants.tomorrowUnix}000`,
+      'coverEndDate-day': (dateConstants.oneMonthDay).toString(),
+      'coverEndDate-month': (dateConstants.oneMonthMonth).toString(),
+      'coverEndDate-year': (dateConstants.oneMonthYear).toString(),
       name: '1234',
       nameRequiredForIssuance: true,
       issueFacilityDetailsStarted: true,
@@ -212,9 +210,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': (datePlusMonth.getDate()).toString(),
-      'coverEndDate-month': (datePlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (datePlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': (dateConstants.oneMonthDay).toString(),
+      'coverEndDate-month': (dateConstants.oneMonthMonth).toString(),
+      'coverEndDate-year': (dateConstants.oneMonthYear).toString(),
       name: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
@@ -263,10 +261,10 @@ const deal = {
       'conversionRateDate-day': '28',
       'conversionRateDate-month': '04',
       'conversionRateDate-year': '2022',
-      issuedDate: datePlusDay.valueOf(),
-      'coverEndDate-day': (datePlusMonth.getDate()).toString(),
-      'coverEndDate-month': (datePlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (datePlusMonth.getFullYear()).toString(),
+      issuedDate: `${dateConstants.tomorrowUnix}000`,
+      'coverEndDate-day': (dateConstants.oneMonthDay).toString(),
+      'coverEndDate-month': (dateConstants.oneMonthMonth).toString(),
+      'coverEndDate-year': (dateConstants.oneMonthYear).toString(),
       nameRequiredForIssuance: true,
       issueFacilityDetailsStarted: true,
       issueFacilityDetailsProvided: true,
@@ -283,9 +281,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': (datePlusMonth.getDate()).toString(),
-      'coverEndDate-month': (datePlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (datePlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': (dateConstants.oneMonthDay).toString(),
+      'coverEndDate-month': (dateConstants.oneMonthMonth).toString(),
+      'coverEndDate-year': (dateConstants.oneMonthYear).toString(),
       name: '12345678',
       guaranteeFeePayableByBank: '45.0000',
       updatedAt: Date.now(),
