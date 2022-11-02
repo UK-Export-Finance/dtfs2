@@ -1,21 +1,27 @@
 const dealThatJustNeedsConversionDate = require('./dealThatJustNeedsConversionDate');
-const { nowPlusMonths } = require('../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
 module.exports = () => {
   const now = new Date();
 
+  const nowDay = (dateConstants.todayDay).toString();
+  const nowMonth = (dateConstants.todayMonth).toString();
+  const nowYear = (dateConstants.todayYear).toString();
+  const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
+  const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
+  const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
+
   const deal = { ...dealThatJustNeedsConversionDate() };
 
-  deal.submissionDetails['supplyContractConversionDate-day'] = now.getDate();
-  deal.submissionDetails['supplyContractConversionDate-month'] = now.getMonth() + 1;
-  deal.submissionDetails['supplyContractConversionDate-year'] = now.getFullYear();
+  deal.submissionDetails['supplyContractConversionDate-day'] = nowDay;
+  deal.submissionDetails['supplyContractConversionDate-month'] = nowMonth;
+  deal.submissionDetails['supplyContractConversionDate-year'] = nowYear;
 
   const loan = deal.mockFacilities.find((f) => f.type === 'Loan');
   loan.requestedCoverStartDate = now.valueOf();
 
-  const aMonthInTheFuture = nowPlusMonths(1);
-  loan['coverEndDate-day'] = (aMonthInTheFuture.getDate()).toString();
-  loan['coverEndDate-month'] = (aMonthInTheFuture.getMonth() + 1).toString();
-  loan['coverEndDate-year'] = (aMonthInTheFuture.getFullYear()).toString();
+  loan['coverEndDate-day'] = nowPlusMonthDay;
+  loan['coverEndDate-month'] = nowPlusMonthMonth;
+  loan['coverEndDate-year'] = nowPlusMonthYear;
   return deal;
 };
