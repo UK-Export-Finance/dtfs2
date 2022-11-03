@@ -13,6 +13,9 @@ context('Parties - user can view and edit bond issuer', () => {
       dealId = insertedDeal._id;
 
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+      // adds another bond to mock facilities
+      const facilityToAdd = mockFacilities[0];
+      mockFacilities.push(facilityToAdd);
 
       cy.createFacilities(dealId, mockFacilities, MOCK_MAKER_TFM).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
@@ -42,7 +45,8 @@ context('Parties - user can view and edit bond issuer', () => {
         cy.url().should('eq', relative(`/case/${dealId}/parties/bond-issuer`));
         pages.partiesPage.bondIssuerEditLink().should('not.exist');
 
-        pages.bondIssuerPage.urnInput().should('exist');
+        pages.bondIssuerPage.urnInput(1).should('exist');
+        pages.bondIssuerPage.urnInput(2).should('exist');
         pages.bondIssuerPage.heading().should('have.text', 'Edit bond issuer details');
 
         pages.bondIssuerPage.saveButton().should('exist');
@@ -52,11 +56,44 @@ context('Parties - user can view and edit bond issuer', () => {
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
       });
 
-      it('should save entered details', () => {
+      it('should show validation errors on incorrectly entered details', () => {
         const partyUrn = 'test partyurn';
 
         pages.partiesPage.bondIssuerEditLink().click();
-        pages.bondIssuerPage.urnInput().type(partyUrn);
+        pages.bondIssuerPage.urnInput(1).type(partyUrn);
+        pages.bondIssuerPage.urnInput(2).type(partyUrn);
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/bond-issuer`));
+        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
+
+        pages.bondIssuerPage.urnInput(1).clear().type('!!22');
+        pages.bondIssuerPage.urnInput(2).clear().type('1222');
+
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/bond-issuer`));
+        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(2).should('not.exist');
+
+        pages.bondIssuerPage.urnInput(1).clear().type('1222');
+        pages.bondIssuerPage.urnInput(2).clear().type('!');
+
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/bond-issuer`));
+        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(1).should('not.exist');
+        pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
+      });
+
+      it('should not validation errors if correctly entered or empty', () => {
+        pages.partiesPage.bondIssuerEditLink().click();
+        pages.bondIssuerPage.urnInput(1).clear();
+        pages.bondIssuerPage.urnInput(2).clear();
 
         pages.bondIssuerPage.saveButton().click();
 
@@ -64,8 +101,29 @@ context('Parties - user can view and edit bond issuer', () => {
 
         pages.partiesPage.bondIssuerEditLink().click();
 
-        pages.bondIssuerPage.urnInput().invoke('val').then((value) => {
-          expect(value.trim()).equal(partyUrn);
+        pages.bondIssuerPage.urnInput(1).invoke('val').then((value) => {
+          expect(value.trim()).equal('');
+        });
+
+        pages.bondIssuerPage.urnInput(2).invoke('val').then((value) => {
+          expect(value.trim()).equal('');
+        });
+
+        pages.bondIssuerPage.urnInput(1).clear().type('1233');
+        pages.bondIssuerPage.urnInput(2).clear().type('1233');
+
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties`));
+
+        pages.partiesPage.bondIssuerEditLink().click();
+
+        pages.bondIssuerPage.urnInput(1).invoke('val').then((value) => {
+          expect(value.trim()).equal('1233');
+        });
+
+        pages.bondIssuerPage.urnInput(2).invoke('val').then((value) => {
+          expect(value.trim()).equal('1233');
         });
       });
     });

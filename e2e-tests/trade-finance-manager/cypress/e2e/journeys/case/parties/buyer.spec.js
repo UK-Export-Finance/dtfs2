@@ -57,6 +57,63 @@ context('Parties - user can view and edit buyer', () => {
 
         pages.partiesPage.buyerEditLink().click();
         pages.buyerPage.urnInput().clear();
+
+        pages.buyerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
+        pages.buyerPage.errorSummary().contains('Enter a unique reference number');
+        pages.buyerPage.urnError().contains('Enter a unique reference number');
+
+        pages.buyerPage.urnInput().clear();
+        pages.buyerPage.urnInput().type(partyUrn);
+
+        pages.buyerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
+        pages.buyerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.buyerPage.urnInput().clear().type('12');
+        pages.buyerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
+        pages.buyerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.buyerPage.urnInput().clear().type('ABC123');
+        pages.buyerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
+        pages.buyerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.buyerPage.urnInput().clear().type('"!£!"£!"£!"£');
+        pages.buyerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
+        pages.buyerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.buyerPage.urnInput().clear().type('1234!');
+        pages.buyerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
+        pages.buyerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.buyerPage.urnInput().clear().type(' ');
+        pages.buyerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/buyer`));
+        pages.buyerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
+      });
+
+      it('should save entered details if partyUrn correctly entered', () => {
+        const partyUrn = '12345';
+
+        pages.partiesPage.buyerEditLink().click();
+        pages.buyerPage.urnInput().clear();
         pages.buyerPage.urnInput().type(partyUrn);
 
         pages.buyerPage.saveButton().click();
@@ -68,7 +125,7 @@ context('Parties - user can view and edit buyer', () => {
         });
 
         pages.partiesPage.buyerEditLink().click();
-        pages.buyerPage.urnInput().invoke('val').then((value) => {
+        pages.exporterPage.urnInput().invoke('val').then((value) => {
           expect(value.trim()).equal(partyUrn);
         });
       });
