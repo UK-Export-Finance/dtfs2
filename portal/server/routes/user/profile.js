@@ -5,7 +5,7 @@ const {
   getApiData,
   requestParams,
   errorHref,
-  generateErrorSummary
+  generateErrorSummary,
 } = require('../../helpers');
 
 const router = express.Router();
