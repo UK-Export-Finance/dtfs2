@@ -1,4 +1,5 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% import './parties-key-value-grid-row.njk' as keyValueGridRow %}
 {% import './parties-key-value-array-grid-row.njk' as keyValueArrayGridRow %}
@@ -11,9 +12,21 @@
   {% set renderEditLink = params.renderEditLink %}
   {% set renderEditForm = params.renderEditForm %}
   {% set agent = params.tfm.parties.agent %}
+  {% set urn = params.urn %}
+  {% set errors = params.errors %}
 
   {% if not agent.partyUrn %}
     {% set uniqueRefStyle = "govuk-tag govuk-tag--red govuk-!-margin-top-2" %}
+  {% endif %}
+
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
   {% endif %}
 
   <div class="govuk-grid-row separator-line {% if renderEditLink %}ukef-flex-container deal{% endif %}" data-cy="parties-agent">
@@ -58,7 +71,13 @@
                 attributes: {
                   "data-cy": "agent-unique-ref-input"
                 },
-                value: agent.partyUrn
+                value: urn,
+                errorMessage: errors and errors.fieldErrors.partyUrn and {
+                  text: errors.fieldErrors.partyUrn.text,
+                  attributes: {
+                    'data-cy': 'partyUrn--inline-error'
+                  }
+                }
               }) }}
               </div>
             </div>
