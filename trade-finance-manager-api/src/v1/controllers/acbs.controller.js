@@ -74,12 +74,12 @@ const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster }) =>
 const updateAmendedFacilityAcbs = (taskResult) => {
   if (taskResult.instanceId && taskResult.output) {
     const { instanceId } = taskResult;
-    const { facilityMasterRecordAmendments, facilityLoanRecordAmendments } = taskResult.output;
+    const { facilityMasterRecord, facilityLoanRecord } = taskResult.output;
     const { _id } = taskResult.input.amendment.facility;
     const acbsUpdate = {
       [instanceId]: {
-        facilityMasterRecordAmendments,
-        facilityLoanRecordAmendments,
+        facilityMasterRecord,
+        facilityLoanRecord,
       },
     };
 
