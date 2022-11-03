@@ -954,7 +954,7 @@ describe('validation()', () => {
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
-  it('should return object with errors populated MIA and coverStartDate over 3 months in future from now', async () => {
+  it('should return object with errors populated if MIA and coverStartDate is over 3 months in future from today', async () => {
     api.getApplication.mockResolvedValue({ submissionDate: `${getUnixTime(oneYearAgo)}608`, submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIA });
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';
@@ -999,7 +999,7 @@ describe('validation()', () => {
     expect(result.aboutFacilityErrors).toEqual(expectedFacilityErrors);
   });
 
-  it('should not return object with errors populated MIA and coverStartDate over 3 months in future from submission date and coverStartsOnSubmission', async () => {
+  it('should not return errors if cover starts on submission (today) and is MIA even if submission date is more than 3 months in past', async () => {
     api.getApplication.mockResolvedValue({ submissionDate: `${getUnixTime(oneYearAgo)}608`, submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIA });
     mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
     mockRequest.body.facilityName = 'UKEF123';

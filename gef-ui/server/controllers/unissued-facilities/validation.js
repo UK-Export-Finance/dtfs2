@@ -56,6 +56,7 @@ const facilityValidation = async (body, query, params, facility) => {
   const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
 
   if (application.manualInclusionNoticeSubmissionDate) {
+    // If MIN, then MIN submission date plus three months
     const minSubmissionDate = (new Date(Number(application.manualInclusionNoticeSubmissionDate))).setHours(0, 0, 0, 0);
     threeMonthsFromSubmission = add(minSubmissionDate, { months: 3 });
   } else if (application.submissionType === DEAL_SUBMISSION_TYPE.MIA) {
