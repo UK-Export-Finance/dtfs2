@@ -2,6 +2,7 @@ const {
   add, isAfter, isBefore, isEqual, set,
 } = require('date-fns');
 const api = require('../../services/api');
+const { DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { validationErrorHandler } = require('../../utils/helpers');
 const coverDatesValidation = require('../../utils/coverDatesValidation.helper');
 
@@ -57,7 +58,11 @@ const facilityValidation = async (body, query, params, facility) => {
   if (application.manualInclusionNoticeSubmissionDate) {
     const minSubmissionDate = (new Date(Number(application.manualInclusionNoticeSubmissionDate))).setHours(0, 0, 0, 0);
     threeMonthsFromSubmission = add(minSubmissionDate, { months: 3 });
+  } else if (application.submissionType === DEAL_SUBMISSION_TYPE.MIA) {
+    // if MIA, 3 months from now
+    threeMonthsFromSubmission = add(new Date(), { months: 3 });
   } else {
+    // if AIN then 3 months from submission date
     threeMonthsFromSubmission = add(submissionDate, { months: 3 });
   }
   const now = (new Date()).setHours(0, 0, 0, 0);
