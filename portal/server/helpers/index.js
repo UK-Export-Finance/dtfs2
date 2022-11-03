@@ -17,6 +17,7 @@ const postToApi = require('./postToApi');
 const requestParams = require('./requestParams');
 const sanitizeCurrency = require('./sanitizeCurrency');
 const validationErrorHandler = require('./validationErrorHandler');
+const constructPayload = require('./constructPayload');
 
 module.exports = {
   dealFormsCompleted,
@@ -39,4 +40,5 @@ module.exports = {
   requestParams,
   sanitizeCurrency,
   validationErrorHandler,
+  constructPayload,
 };
