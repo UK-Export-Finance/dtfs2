@@ -55,26 +55,73 @@ context('Parties - user can view and edit agent', () => {
       it('should save entered details', () => {
         pages.partiesPage.agentEditLink().click();
         pages.agentPage.agentUniqueRefInput().clear();
+
+        pages.agentPage.saveButton().click();
+
+        pages.agentPage.errorSummary().contains('Enter a unique reference number');
+        pages.agentPage.urnError().contains('Enter a unique reference number');
+
+        pages.agentPage.agentUniqueRefInput().clear();
         pages.agentPage.agentUniqueRefInput().type('agent partyurn');
+
+        pages.agentPage.saveButton().click();
+
+        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.agentPage.agentUniqueRefInput().clear().type('12');
+        pages.agentPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/agent`));
+        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.agentPage.agentUniqueRefInput().clear().type('ABC123');
+        pages.agentPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/agent`));
+        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.agentPage.agentUniqueRefInput().clear().type('"!£!"£!"£!"£');
+        pages.agentPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/agent`));
+        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.agentPage.agentUniqueRefInput().clear().type('1234!');
+        pages.agentPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/agent`));
+        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.agentPage.agentUniqueRefInput().clear().type(' ');
+        pages.agentPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/agent`));
+        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
+      });
+
+      it('should save entered details if partyUrn correctly entered', () => {
+        const partyUrn = '12345';
+
+        pages.partiesPage.agentEditLink().click();
         pages.agentPage.agentCommissionRateInput().type('2.5');
+        pages.agentPage.agentUniqueRefInput().clear();
+        pages.agentPage.agentUniqueRefInput().type(partyUrn);
 
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
         pages.agentPage.agentUniqueRef().invoke('text').then((text) => {
-          expect(text.trim()).equal('agent partyurn');
+          expect(text.trim()).equal(partyUrn);
         });
         pages.agentPage.agentCommissionRate().invoke('text').then((text) => {
           expect(text.trim()).equal('2.5');
-        });
-
-        pages.partiesPage.agentEditLink().click();
-        pages.agentPage.agentUniqueRefInput().invoke('val').then((value) => {
-          expect(value.trim()).equal('agent partyurn');
-        });
-        pages.agentPage.agentCommissionRateInput().invoke('val').then((value) => {
-          expect(value.trim()).equal('2.5');
         });
       });
     });
