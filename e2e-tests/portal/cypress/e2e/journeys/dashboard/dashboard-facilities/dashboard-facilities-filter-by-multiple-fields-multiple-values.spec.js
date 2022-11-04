@@ -206,7 +206,8 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
 
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ type, submissionType, hasBeenIssued }) =>
       (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA)
-      && (hasBeenIssued || hasBeenIssued === false) && (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN));
+      && (hasBeenIssued || hasBeenIssued === false)
+      && (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN));
 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
 
@@ -231,11 +232,14 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     filters.panel.form.applyFiltersButton().click();
 
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ type, submissionType, hasBeenIssued }) =>
-      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
+      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
         || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN)
       && (hasBeenIssued || hasBeenIssued === false)
-      && (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN
-        || type === CONSTANTS.FACILITY.FACILITY_TYPE.CASH || type === CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT));
+      && (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND
+        || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN
+        || type === CONSTANTS.FACILITY.FACILITY_TYPE.CASH
+        || type === CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT));
 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
 
