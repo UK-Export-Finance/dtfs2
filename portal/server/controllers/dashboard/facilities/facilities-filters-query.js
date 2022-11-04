@@ -34,7 +34,12 @@ const dashboardFacilitiesFiltersQuery = (
   dashboardFilters = filtered;
 
   if (dashboardFilters.length) {
-    query.$or = [];
+    // if created, then copy else create blank array
+    if (query.$and) {
+      query.$and = [...query.$and];
+    } else {
+      query.$and = [];
+    }
 
     dashboardFilters.forEach((filterObj) => {
       const fieldName = Object.keys(filterObj)[0];
@@ -46,18 +51,24 @@ const dashboardFacilitiesFiltersQuery = (
         const keywordValue = filterValue[0];
         const keywordFilters = keywordQuery(keywordValue);
 
-        query.$or = [
-          ...query.$or,
-          ...keywordFilters,
-        ];
+        const keywordFilter = {};
+        keywordFilter.$or = [];
+        keywordFilter.$or.push(...keywordFilters);
+
+        query.$and.push(keywordFilter);
       }
 
       if (!isKeywordField) {
+        const fieldFilter = {};
+        // or for field (eg dealType)
+        fieldFilter.$or = [];
         filterValue.forEach((value) => {
-          query.$or.push({
+          fieldFilter.$or.push({
             [fieldName]: value,
           });
         });
+        // adds $or to $and query
+        query.$and.push(fieldFilter);
       }
     });
   }

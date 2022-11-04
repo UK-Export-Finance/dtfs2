@@ -154,9 +154,8 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
 
   it('renders only deals that have matching fields - MIA, AIN, Draft status, Ready for check status', () => {
     const EXPECTED_DEALS = ALL_DEALS.filter(({ submissionType, status }) =>
-      status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT
-      || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
-      || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN);
+      (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL)
+      && (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN));
 
     dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
 
@@ -171,5 +170,87 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
     dashboardSubNavigation.facilities().invoke('attr', 'aria-label').then((label) => {
       expect(label).to.equal('');
     });
+  });
+
+  it('renders only deals that have matching fields - Draft status, Ready for check status', () => {
+    cy.login(BANK1_MAKER1);
+    dashboardDeals.visit();
+
+    filters.showHideButton().click();
+    dashboardDeals.filters.panel.form.status.draft.checkbox().click();
+    dashboardDeals.filters.panel.form.status.readyForChecker.checkbox().click();
+    filters.panel.form.applyFiltersButton().click();
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+
+    const EXPECTED_DEALS = ALL_DEALS.filter(({ status }) =>
+      status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
+
+    dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
+  });
+
+  it('renders only deals that have matching fields - AIN, MIA', () => {
+    cy.login(BANK1_MAKER1);
+    dashboardDeals.visit();
+
+    filters.showHideButton().click();
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.AIN.checkbox().click();
+    filters.panel.form.applyFiltersButton().click();
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+
+    const EXPECTED_DEALS = ALL_DEALS.filter(({ submissionType }) =>
+      submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN);
+
+    dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
+  });
+
+  it('renders only deals that have matching fields for all filters', () => {
+    cy.login(BANK1_MAKER1);
+    dashboardDeals.visit();
+
+    filters.showHideButton().click();
+    dashboardDeals.filters.panel.form.status.draft.checkbox().click();
+    dashboardDeals.filters.panel.form.status.readyForChecker.checkbox().click();
+    dashboardDeals.filters.panel.form.status.makerInputRequired.checkbox().click();
+    dashboardDeals.filters.panel.form.status.submitted.checkbox().click();
+    dashboardDeals.filters.panel.form.status.acknowledgedByUKEF.checkbox().click();
+    dashboardDeals.filters.panel.form.status.inProgressByUKEF.checkbox().click();
+    dashboardDeals.filters.panel.form.status.acceptedByUKEFWithConditions.checkbox().click();
+    dashboardDeals.filters.panel.form.status.acceptedByUKEFWithoutConditions.checkbox().click();
+    dashboardDeals.filters.panel.form.status.rejectedByUKEF.checkbox().click();
+    dashboardDeals.filters.panel.form.status.abandoned.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.AIN.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.MIN.checkbox().click();
+    dashboardDeals.filters.panel.form.dealType.gef.checkbox().click();
+    dashboardDeals.filters.panel.form.dealType.bssEwcs.checkbox().click();
+
+    filters.panel.form.applyFiltersButton().click();
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
+
+    const EXPECTED_DEALS = ALL_DEALS.filter(({ dealType, status, submissionType }) =>
+      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
+        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN)
+      && (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
+        || dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS)
+        && (
+          status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT
+        || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL
+        || status === CONSTANTS.DEALS.DEAL_STATUS.CHANGES_REQUIRED
+        || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL
+        || status === CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF
+        || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED
+        || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED
+         || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
+        || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
+        || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_IN_PROGRESS
+        || status === CONSTANTS.DEALS.DEAL_STATUS.ABANDONED
+        ));
+
+    dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
   });
 });
