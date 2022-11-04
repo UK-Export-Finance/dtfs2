@@ -155,8 +155,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
   it('renders only deals that have matching fields - MIA, AIN, Draft status, Ready for check status', () => {
     const EXPECTED_DEALS = ALL_DEALS.filter(({ submissionType, status }) =>
       (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL)
-      && (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
-      || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN));
+      && (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN));
 
     dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
 
@@ -234,15 +233,23 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
 
     const EXPECTED_DEALS = ALL_DEALS.filter(({ dealType, status, submissionType }) =>
       (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
-        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN)
-      && (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF || dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) && (
-        status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL
-        || status === CONSTANTS.DEALS.DEAL_STATUS.CHANGES_REQUIRED || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL
-        || status === CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED
-        || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
-        || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_IN_PROGRESS
+        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN)
+      && (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF
+        || dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS)
+        && (
+          status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT
+        || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL
+        || status === CONSTANTS.DEALS.DEAL_STATUS.CHANGES_REQUIRED
+        || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL
+        || status === CONSTANTS.DEALS.DEAL_STATUS.SUBMITTED_TO_UKEF
+        || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED
+        || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED
+         || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
+        || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS
+        || status === CONSTANTS.DEALS.DEAL_STATUS.UKEF_IN_PROGRESS
         || status === CONSTANTS.DEALS.DEAL_STATUS.ABANDONED
-      ));
+        ));
 
     dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
   });
