@@ -1,14 +1,8 @@
 const { ELIGIBILITY_COMPLETED, SUBMISSION_DETAILS } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { todayDay, todayMonth, todayYear, oneMonthDay, oneMonthMonth, oneMonthYear } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = Date.now();
 const nowFormatted = new Date();
-const nowDay = (dateConstants.todayDay).toString();
-const nowMonth = (dateConstants.todayMonth).toString();
-const nowYear = (dateConstants.todayYear).toString();
-const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
-const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
-const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -57,12 +51,12 @@ const deal = {
       facilityStage: 'Issued',
       hasBeenIssued: true,
       requestedCoverStartDate: nowFormatted.valueOf().toString(),
-      'requestedCoverStartDate-day': nowDay,
-      'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowYear,
-      'coverEndDate-day': nowPlusMonthDay,
-      'coverEndDate-month': nowPlusMonthMonth,
-      'coverEndDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-day': todayDay,
+      'requestedCoverStartDate-month': todayMonth,
+      'requestedCoverStartDate-year': todayYear,
+      'coverEndDate-day': oneMonthDay,
+      'coverEndDate-month': oneMonthMonth,
+      'coverEndDate-year': oneMonthYear,
       name: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
@@ -100,12 +94,12 @@ const deal = {
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
       requestedCoverStartDate: nowFormatted.valueOf().toString(),
-      'requestedCoverStartDate-day': nowDay,
-      'requestedCoverStartDate-month': nowMonth,
-      'requestedCoverStartDate-year': nowYear,
-      'coverEndDate-day': nowPlusMonthDay,
-      'coverEndDate-month': nowPlusMonthMonth,
-      'coverEndDate-year': nowPlusMonthYear,
+      'requestedCoverStartDate-day': todayDay,
+      'requestedCoverStartDate-month': todayMonth,
+      'requestedCoverStartDate-year': todayYear,
+      'coverEndDate-day': oneMonthDay,
+      'coverEndDate-month': oneMonthMonth,
+      'coverEndDate-year': oneMonthYear,
       name: '12345678',
       guaranteeFeePayableByBank: '45.0000',
       updatedAt: now,
