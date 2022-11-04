@@ -33,7 +33,10 @@ const MOCK_DEAL = {
     submissionDate: '1606900616651',
     submissionCount: 1,
   },
-  submissionDetails: SUBMISSION_DETAILS,
+  submissionDetails: {
+    ...SUBMISSION_DETAILS,
+    'indemnifier-name': 'Mock name',
+  },
   eligibility: ELIGIBILITY_COMPLETED,
   exporter: {
     companyName: 'Mock company name',

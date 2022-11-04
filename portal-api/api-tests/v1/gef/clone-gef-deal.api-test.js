@@ -22,6 +22,7 @@ describe(baseUrl, () => {
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
 
   beforeAll(async () => {
+    await wipeDB.wipe([collectionName]);
     const testUsers = await testUserCache.initialise(app);
     aChecker = testUsers().withRole('checker').one();
     aMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
@@ -29,8 +30,6 @@ describe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    await wipeDB.wipe([collectionName]);
-
     api.tfmDealSubmit = tfmDealSubmitSpy;
   });
 

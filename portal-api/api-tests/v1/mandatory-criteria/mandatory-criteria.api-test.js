@@ -25,13 +25,10 @@ describe('/v1/mandatory-criteria', () => {
   let anEditor;
 
   beforeAll(async () => {
+    await wipeDB.wipe(['mandatoryCriteria']);
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     anEditor = testUsers().withRole('editor').one();
-  });
-
-  beforeEach(async () => {
-    await wipeDB.wipe(['mandatoryCriteria']);
   });
 
   describe('GET /v1/mandatory-criteria', () => {
@@ -48,14 +45,11 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('returns a list of mandatory-criteria sorted by id', async () => {
-      const payload = [{ ...allMandatoryCriteria[0], updatedAt: expect.any(Number) }, { ...allMandatoryCriteria[1], updatedAt: expect.any(Number) }];
-      await as(anEditor).post({ ...payload[0] }).to('/v1/mandatory-criteria');
+      const payload = [{ ...allMandatoryCriteria[1], updatedAt: expect.any(Number) }, { ...allMandatoryCriteria[0], updatedAt: expect.any(Number) }];
       await as(anEditor).post({ ...payload[1] }).to('/v1/mandatory-criteria');
+      await as(anEditor).post({ ...payload[0] }).to('/v1/mandatory-criteria');
       const { body } = await as(noRoles).get('/v1/mandatory-criteria');
-      expect(body).toEqual({
-        count: payload.length,
-        mandatoryCriteria: expectMongoIds(payload),
-      });
+      expect(body).toEqual(expectMongoIds(payload));
     });
   });
 

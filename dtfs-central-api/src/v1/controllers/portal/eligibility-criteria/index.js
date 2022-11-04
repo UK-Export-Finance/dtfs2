@@ -20,7 +20,6 @@ exports.getOneEligibilityCriteria = async (req, res) => {
 
 const findLatest = async (dealType) => {
   const collection = await getCollection(collectionName);
-  let criteria = {};
 
   let filter = {};
   if (dealType === BSS_EWCS) {
@@ -29,7 +28,7 @@ const findLatest = async (dealType) => {
     filter = { $match: { dealType: GEF, isInDraft: false } };
   }
 
-  [criteria] = await collection.aggregate([filter, { $sort: { version: -1 } }, { $limit: 1 }]).toArray();
+  const [criteria] = await collection.aggregate([filter, { $sort: { version: -1 } }, { $limit: 1 }]).toArray();
   return criteria;
 };
 
@@ -78,10 +77,9 @@ exports.putEligibilityCriteria = async (req, res) => {
   let response = {};
   const payload = req.body;
   payload.updatedAt = Date.now();
-
   const collection = await getCollection(collectionName);
   response = await collection.findOneAndUpdate(
-    { _id: ObjectId(version), dealType },
+    { version, dealType },
     { $set: req.body },
     { returnDocument: 'after', returnNewDocument: true }
   );

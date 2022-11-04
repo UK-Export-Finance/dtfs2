@@ -26,14 +26,11 @@ describe('/v1/deals/:id/eligibility-criteria', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
+    await wipeDB.wipe(['deals', 'facilities']);
     noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     anHSBCMaker = testUsers().withRole('maker').withBankName('HSBC').one();
     aSuperuser = testUsers().superuser().one();
-  });
-
-  beforeEach(async () => {
-    await wipeDB.wipe(['deals', 'facilities']);
   });
 
   describe('PUT /v1/deals/:id/eligibility-criteria', () => {
