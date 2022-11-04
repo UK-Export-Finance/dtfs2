@@ -62,12 +62,20 @@ describe('controllers/dashboard/facilities - filters query', () => {
     const expected = {
       $and: [
         { 'deal.bank.id': mockUser.bank.id },
-      ],
-      $or: [
-        { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[0] },
-        { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[1] },
-        { [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: mockFilters[1].hasBeenIssued[0] },
-        ...keywordQuery(mockKeyword),
+        {
+          $or: [
+            { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[0] },
+            { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[1] },
+          ],
+        },
+        {
+          $or: [
+            { [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: mockFilters[1].hasBeenIssued[0] },
+          ],
+        },
+        {
+          $or: [...keywordQuery(mockKeyword)],
+        },
       ],
     };
 

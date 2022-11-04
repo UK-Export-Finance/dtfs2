@@ -110,7 +110,7 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
   it('renders only deals that have matching fields - MIA and Draft status', () => {
     const EXPECTED_MIA_DRAFT_DEALS = ALL_DEALS.filter(({ submissionType, status }) =>
       status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT
-      || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+      && submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
 
     dashboardDeals.rows().should('have.length', EXPECTED_MIA_DRAFT_DEALS.length);
 

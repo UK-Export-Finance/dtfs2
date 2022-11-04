@@ -119,11 +119,19 @@ describe('controllers/dashboard/deals - filters query', () => {
     );
 
     const expected = {
-      $or: [
-        { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] },
-        { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] },
-        { [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] },
-        ...keywordQuery(mockKeyword),
+      $and: [
+        {
+          $or: [
+            { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] },
+            { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] },
+          ],
+        },
+        {
+          $or: [{ [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] }],
+        },
+        {
+          $or: [...keywordQuery(mockKeyword)],
+        },
       ],
     };
 

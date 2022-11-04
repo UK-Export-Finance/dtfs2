@@ -136,16 +136,14 @@ context('Dashboard Facilities filters - filter by multiple fields', () => {
 
   it('renders only facilities that have matching fields - AIN deal and Issued stage', () => {
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ submissionType, hasBeenIssued }) =>
-      submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || hasBeenIssued);
+      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN)
+      && hasBeenIssued);
 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
 
     const facility1 = EXPECTED_FACILITIES[0];
-    const facility2 = EXPECTED_FACILITIES[1];
 
     dashboardFacilities.row.type(facility1._id).should('exist');
-    dashboardFacilities.row.type(facility2._id).should('exist');
     cy.url().should('eq', relative('/dashboard/facilities/0'));
   });
 });
