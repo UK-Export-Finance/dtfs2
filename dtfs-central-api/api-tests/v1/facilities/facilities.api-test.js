@@ -67,19 +67,6 @@ describe('/v1/portal/facilities', () => {
       expect(facilityAfterCreation.updatedAt).toBeNumber();
     });
 
-    it('returns 400 where user is missing', async () => {
-      const facilities = [MOCK_BSS_FACILITY, MOCK_BSS_FACILITY];
-
-      const postBody = {
-        facilities,
-        dealId,
-      };
-
-      const { status } = await api.post(postBody).to('/v1/portal/multiple-facilities');
-
-      expect(status).toEqual(404);
-    });
-
     it('returns 400 where deal is not found', async () => {
       const facilities = [MOCK_BSS_FACILITY, MOCK_BSS_FACILITY];
 
@@ -89,7 +76,6 @@ describe('/v1/portal/facilities', () => {
       };
 
       const { status } = await api.post(postBody).to('/v1/portal/multiple-facilities');
-
       expect(status).toEqual(404);
     });
   });

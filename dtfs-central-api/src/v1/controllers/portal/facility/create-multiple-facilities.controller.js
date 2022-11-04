@@ -34,11 +34,7 @@ const createFacilities = async (facilities, dealId) => {
 };
 
 exports.createMultipleFacilitiesPost = (req, res) => {
-  const { facilities, dealId, user } = req.body;
-
-  if (!user) {
-    return res.status(400).send();
-  }
+  const { facilities, dealId } = req.body;
 
   return findOneBssDeal(dealId, async (deal) => {
     if (deal) {
