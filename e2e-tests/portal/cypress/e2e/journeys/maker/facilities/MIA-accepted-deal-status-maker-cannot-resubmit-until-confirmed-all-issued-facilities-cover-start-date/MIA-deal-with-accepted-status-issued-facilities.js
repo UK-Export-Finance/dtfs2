@@ -1,8 +1,10 @@
 const { mandatoryCriteria, ELIGIBILITY_COMPLETED, SUBMISSION_DETAILS } = require('../../../../../../../e2e-fixtures');
-const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date().valueOf();
-const nowPlusMonth = nowPlusMonths(1);
+const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
+const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
+const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
@@ -89,9 +91,9 @@ const deal = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -125,9 +127,9 @@ const deal = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       name: '1234',
       requestedCoverStartDate: now,
       issueFacilityDetailsSubmitted: true,
@@ -179,9 +181,9 @@ const deal = {
         text: 'GBP - UK Sterling',
         id: 'GBP',
       },
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -209,9 +211,9 @@ const deal = {
       ukefExposure: '246.80',
       premiumType: 'At maturity',
       dayCountBasis: '365',
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -239,9 +241,9 @@ const deal = {
       ukefExposure: '246.80',
       premiumType: 'At maturity',
       dayCountBasis: '365',
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       disbursementAmount: '1,234.00',
       requestedCoverStartDate: now,
       issueFacilityDetailsSubmitted: true,
@@ -285,9 +287,9 @@ const deal = {
       ukefExposure: '246.80',
       premiumType: 'At maturity',
       dayCountBasis: '365',
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -299,7 +301,6 @@ const deal = {
       issueFacilityDetailsSubmitted: true,
     },
   ],
-  summary: {},
   comments: [
     {
       user: {
@@ -325,88 +326,10 @@ const deal = {
       timestamp: '1598276463161',
       text: 'Issued facilities',
     },
-    {
-      user: {
-        username: 'MAKER',
-        roles: [
-          'maker',
-        ],
-        bank: {
-          id: '9',
-          name: 'UKEF test bank (Delegated)',
-          emails: [
-            'maker@ukexportfinance.gov.uk',
-            'checker@ukexportfinance.gov.uk',
-          ],
-        },
-        lastLogin: '1597911455834',
-        firstname: 'Hugo',
-        surname: 'Drax',
-        email: 'maker@ukexportfinance.gov.uk',
-        timezone: 'Europe/London',
-        'user-status': 'active',
-      },
-      timestamp: '1597912832819',
-      text: 'test',
-    },
-    {
-      user: {
-        username: 'CHECKER',
-        roles: [
-          'checker',
-        ],
-        bank: {
-          id: '9',
-          name: 'UKEF test bank (Delegated)',
-          emails: [
-            'maker@ukexportfinance.gov.uk',
-            'checker@ukexportfinance.gov.uk',
-          ],
-        },
-        lastLogin: '1597912650103',
-        firstname: 'Emilio',
-        surname: 'Largo',
-        email: 'checker@ukexportfinance.gov.uk',
-        timezone: 'Europe/London',
-        'user-status': 'active',
-      },
-      timestamp: '1597912805016',
-      text: 'sdfaf',
-    },
-    {
-      user: {
-        username: 'MAKER',
-        roles: [
-          'maker',
-        ],
-        bank: {
-          id: '9',
-          name: 'UKEF test bank (Delegated)',
-          emails: [
-            'maker@ukexportfinance.gov.uk',
-            'checker@ukexportfinance.gov.uk',
-          ],
-        },
-        lastLogin: '1597911455834',
-        firstname: 'Hugo',
-        surname: 'Drax',
-        email: 'maker@ukexportfinance.gov.uk',
-        timezone: 'Europe/London',
-        'user-status': 'active',
-      },
-      timestamp: '1597912636542',
-      text: 'test',
-    },
   ],
   editedBy: [],
   mandatoryCriteria,
   supportingInformation: {
-    validationErrors: {
-      count: 0,
-      errorList: {
-        exporterQuestionnaire: {},
-      },
-    },
     exporterQuestionnaire: [
       {
         type: 'general_correspondence',

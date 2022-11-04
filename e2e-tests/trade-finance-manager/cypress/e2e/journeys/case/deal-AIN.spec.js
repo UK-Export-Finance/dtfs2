@@ -72,7 +72,7 @@ context('User can view a case deal', () => {
       // constructs date
       const coverEndDateRaw = new Date(dealFacilities[0]['coverEndDate-year'], dealFacilities[0]['coverEndDate-month'] - 1, dealFacilities[0]['coverEndDate-day']);
       // formats to correct format in table
-      const coverEndDate = format(coverEndDateRaw, 'dd MMMM yyyy');
+      const coverEndDate = format(coverEndDateRaw, 'd MMMM yyyy');
 
       facilityRow.facilityEndDate().contains(coverEndDate);
       facilityRow.facilityEndDate().should('not.contain', '(expected)');
