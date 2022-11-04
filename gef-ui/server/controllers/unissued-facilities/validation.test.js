@@ -980,19 +980,19 @@ describe('validation()', () => {
       errorSummary: [
         {
           href: '#coverStartDate',
-          text: 'The cover start date must be within 3 months of the inclusion notice submission date',
+          text: 'The cover start date must be within 3 months from today\'s date',
         },
       ],
       fieldErrors: {
         coverStartDate: {
-          text: 'The cover start date must be within 3 months of the inclusion notice submission date',
+          text: 'The cover start date must be within 3 months from today\'s date',
         },
       },
     };
 
     const expectedFacilityErrors = [{
       errRef: 'coverStartDate',
-      errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+      errMsg: 'The cover start date must be within 3 months from today\'s date',
     }];
 
     expect(result.errorsObject.errors).toEqual(expectedErrors);

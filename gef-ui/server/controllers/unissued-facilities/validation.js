@@ -207,9 +207,15 @@ const facilityValidation = async (body, query, params, facility) => {
        * else validation takes place so start date cannot be more than 3 months ahead of notice submission date
        */
       if (isAfter(startDate, threeMonthsFromSubmission) && !facility?.specialIssuePermission) {
+        let errMsg = 'The cover start date must be within 3 months of the inclusion notice submission date';
+        // if MIA, from todays date so different error message
+        if (application.submissionType === DEAL_SUBMISSION_TYPE.MIA) {
+          errMsg = 'The cover start date must be within 3 months from today\'s date';
+        }
+
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
-          errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+          errMsg,
         });
       }
 
