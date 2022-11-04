@@ -18,15 +18,32 @@ const newBank = {
 };
 
 describe('/v1/bank/:id', () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await wipeDB.wipe(['banks']);
+  });
+
+  describe('POST /v1/bank', () => {
+    it('creates a bank', async () => {
+      const { body, status } = await api.post(newBank).to('/v1/portal/banks');
+
+      expect(status).toEqual(200);
+
+      expect(body).toEqual({ _id: expect.any(String) });
+
+      const { body: bankAfterCreation } = await api.get(`/v1/portal/banks/${newBank.id}`);
+
+      expect(bankAfterCreation).toEqual({
+        _id: body._id,
+        ...newBank,
+      });
+    });
   });
 
   describe('GET /v1/bank/:id', () => {
     it('returns a bank', async () => {
-      const { body: createdBank } = await api.post(newBank).to('/v1/bank');
+      const { body: createdBank } = await api.post(newBank).to('/v1/portal/banks');
 
-      const { body, status } = await api.get(`/v1/bank/${newBank.id}`);
+      const { body, status } = await api.get(`/v1/portal/banks/${newBank.id}`);
 
       expect(status).toEqual(200);
 

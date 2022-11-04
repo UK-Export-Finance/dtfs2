@@ -1006,7 +1006,7 @@ const findBankById = async (bankId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/bank/${bankId}`,
+      url: `${centralApiUrl}/v1/portal/banks/${bankId}`,
       headers: { 'Content-Type': 'application/json' },
     });
     return response.data;

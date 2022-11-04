@@ -3,11 +3,11 @@ const compression = require('compression');
 const seo = require('./v1/routes/middleware/headers/seo');
 const security = require('./v1/routes/middleware/headers/security');
 
-const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, SWAGGER_ROUTE } = require('./constants/routes');
+const { PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, SWAGGER_ROUTE } = require('./constants/routes');
 
 const healthcheck = require('./healthcheck');
 
-const { bankRoutes, portalRoutes, tfmRoutes, userRoutes, swaggerRoutes } = require('./v1/routes');
+const { portalRoutes, tfmRoutes, userRoutes, swaggerRoutes } = require('./v1/routes');
 
 const app = express();
 
@@ -19,7 +19,6 @@ app.use(healthcheck);
 app.use(express.json({ limit: '500kb' }));
 app.use(compression());
 
-app.use(`/v1/${BANK_ROUTE}`, bankRoutes);
 app.use(`/v1/${PORTAL_ROUTE}`, portalRoutes);
 app.use(`/v1/${TFM_ROUTE}`, tfmRoutes);
 app.use(`/v1/${USER_ROUTE}`, userRoutes);
