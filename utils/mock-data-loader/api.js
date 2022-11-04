@@ -166,20 +166,6 @@ const listIndustrySectors = async (token) => {
   return response.data.industrySectors;
 };
 
-const listMandatoryCriteria = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-      Authorization: token || '',
-    },
-    url: `${portalApiUrl}/v1/mandatory-criteria`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data.mandatoryCriteria;
-};
-
 const listUsers = async () => {
   const response = await axios({
     method: 'get',
@@ -234,7 +220,6 @@ module.exports = {
   createUser,
   listCurrencies,
   listIndustrySectors,
-  listMandatoryCriteria,
   listUsers,
   updateCountry,
   updateCurrency,

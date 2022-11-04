@@ -17,14 +17,13 @@ exports.getOneMandatoryCriteria = async (req, res) => {
 
 const findLatest = async (dealType) => {
   const collection = await getCollection(collectionName);
-  let criteria = {};
 
   let filter = { $match: { dealType: GEF, isInDraft: false } };
   if (dealType === BSS_EWCS) {
     filter = { $match: { dealType: BSS_EWCS } };
   }
 
-  [criteria] = await collection.aggregate([filter, { $sort: { version: -1 } }, { $limit: 1 }]).toArray();
+  const [criteria] = await collection.aggregate([filter, { $sort: { version: -1 } }, { $limit: 1 }]).toArray();
   return criteria;
 };
 

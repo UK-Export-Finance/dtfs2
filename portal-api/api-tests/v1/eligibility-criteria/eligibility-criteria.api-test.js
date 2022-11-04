@@ -24,13 +24,10 @@ describe('/v1/eligibility-criteria', () => {
   let anEditor;
 
   beforeAll(async () => {
+    await wipeDB.wipe(['eligibilityCriteria']);
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     anEditor = testUsers().withRole('editor').one();
-  });
-
-  beforeEach(async () => {
-    await wipeDB.wipe(['eligibilityCriteria']);
   });
 
   describe('GET /v1/eligibility-criteria', () => {

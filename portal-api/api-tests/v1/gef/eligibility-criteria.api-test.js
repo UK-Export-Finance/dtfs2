@@ -45,6 +45,7 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token', async () => {
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { status } = await as(aMaker).get(`${baseUrl}/latest`);
 
       expect(status).toEqual(200);
