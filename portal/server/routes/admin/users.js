@@ -1,7 +1,11 @@
 const express = require('express');
 const api = require('../../api');
 const {
-  getApiData, requestParams, errorHref, generateErrorSummary,
+  getApiData,
+  requestParams,
+  errorHref,
+  generateErrorSummary,
+  constructPayload,
 } = require('../../helpers');
 
 const router = express.Router();
@@ -110,11 +114,18 @@ router.get('/users/edit/:_id', async (req, res) => {
 
 // Admin - user edit
 router.post('/users/edit/:_id', async (req, res) => {
+  const payloadProperties = [
+    'firstname',
+    'surname',
+    'user-status',
+    'roles',
+  ];
+  const payload = constructPayload(req.body, payloadProperties);
   const { _id, userToken } = requestParams(req);
 
   const update = {
-    ...req.body,
-    roles: handleRoles(req.body.roles),
+    ...payload,
+    roles: handleRoles(payload.roles),
   };
 
   await api.updateUser(_id, update, userToken);
@@ -157,17 +168,19 @@ router.get('/users/change-password/:_id', async (req, res) => {
 
 // Admin - Change user password
 router.post('/users/change-password/:_id', async (req, res) => {
+  const payloadProperties = [
+    'password',
+    'passwordConfirm',
+  ];
+  const payload = constructPayload(req.body, payloadProperties);
   const { _id, userToken } = requestParams(req);
-  const update = {
-    ...req.body,
-  };
 
   // Get user information
   const user = await getApiData(api.user(_id, userToken), res);
   // Update user password
-  const { status, data } = await api.updateUser(_id, update, userToken);
+  const { status, data } = await api.updateUser(_id, payload, userToken);
 
-  // Successfull
+  // Successful
   if (status === 200) {
     return res.redirect(`/admin/users/edit/${_id}`);
   }
