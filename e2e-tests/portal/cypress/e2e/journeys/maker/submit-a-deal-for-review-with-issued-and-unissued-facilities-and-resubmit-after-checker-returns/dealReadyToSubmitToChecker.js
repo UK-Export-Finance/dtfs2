@@ -1,13 +1,18 @@
-const { nowPlusMonths } = require('../../../../support/utils/dateFuncs');
 const { ELIGIBILITY_COMPLETED, SUBMISSION_DETAILS } = require('../../../../../../e2e-fixtures');
+const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
-const now = new Date().valueOf;
+const now = Date.now();
 const nowFormatted = new Date();
-const nowPlusMonth = nowPlusMonths(1);
+const nowDay = (dateConstants.todayDay).toString();
+const nowMonth = (dateConstants.todayMonth).toString();
+const nowYear = (dateConstants.todayYear).toString();
+const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
+const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
+const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
-  updatedAt: Date.now(),
+  updatedAt: now,
   bankInternalRefName: 'mock id',
   additionalRefName: 'mock name',
   status: 'Draft',
@@ -52,16 +57,16 @@ const deal = {
       facilityStage: 'Issued',
       hasBeenIssued: true,
       requestedCoverStartDate: nowFormatted.valueOf().toString(),
-      'requestedCoverStartDate-day': nowFormatted.getDate().toString(),
-      'requestedCoverStartDate-month': (nowFormatted.getMonth() + 1).toString(),
-      'requestedCoverStartDate-year': nowFormatted.getFullYear().toString(),
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'requestedCoverStartDate-day': nowDay,
+      'requestedCoverStartDate-month': nowMonth,
+      'requestedCoverStartDate-year': nowYear,
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       name: '1234',
       bondBeneficiary: '',
       guaranteeFeePayableByBank: '18.0000',
-      updatedAt: Date.now(),
+      updatedAt: now,
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '20',
@@ -79,7 +84,7 @@ const deal = {
       ukefGuaranteeInMonths: '12',
       name: '',
       guaranteeFeePayableByBank: '18.0000',
-      updatedAt: Date.now(),
+      updatedAt: now,
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       interestMarginFee: '20',
@@ -95,15 +100,15 @@ const deal = {
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
       requestedCoverStartDate: nowFormatted.valueOf().toString(),
-      'requestedCoverStartDate-day': nowFormatted.getDate().toString(),
-      'requestedCoverStartDate-month': (nowFormatted.getMonth() + 1).toString(),
-      'requestedCoverStartDate-year': nowFormatted.getFullYear().toString(),
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'requestedCoverStartDate-day': nowDay,
+      'requestedCoverStartDate-month': nowMonth,
+      'requestedCoverStartDate-year': nowYear,
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       name: '12345678',
       guaranteeFeePayableByBank: '45.0000',
-      updatedAt: Date.now(),
+      updatedAt: now,
       value: '1234.00',
       currencySameAsSupplyContractCurrency: 'true',
       disbursementAmount: '200.00',
@@ -115,16 +120,7 @@ const deal = {
       dayCountBasis: '365',
     },
   ],
-  summary: {},
-  comments: [],
-  editedBy: [],
   supportingInformation: {
-    validationErrors: {
-      count: 0,
-      errorList: {
-        exporterQuestionnaire: {},
-      },
-    },
     exporterQuestionnaire: [
       {
         type: 'general_correspondence',

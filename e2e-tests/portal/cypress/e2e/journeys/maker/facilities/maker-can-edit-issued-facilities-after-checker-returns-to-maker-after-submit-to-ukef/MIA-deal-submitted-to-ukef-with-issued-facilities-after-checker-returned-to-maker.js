@@ -1,10 +1,8 @@
 const { mandatoryCriteria, ELIGIBILITY_COMPLETED, SUBMISSION_DETAILS } = require('../../../../../../../e2e-fixtures');
-const { nowPlusMonths, nowPlusDays } = require('../../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date();
-const nowPlus1Month = nowPlusMonths(1);
-const nowPlus2Months = nowPlusMonths(2);
-const nowPlusWeek = nowPlusDays(7).valueOf();
+const nowPlusWeek = `${dateConstants.sevenDaysUnix}000`;
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
@@ -94,13 +92,13 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': (nowPlus2Months.getDate()).toString(),
-      'coverEndDate-month': (nowPlus2Months.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlus2Months.getFullYear()).toString(),
+      'coverEndDate-day': (dateConstants.twoMonthsDay).toString(),
+      'coverEndDate-month': (dateConstants.twoMonthsMonth).toString(),
+      'coverEndDate-year': (dateConstants.twoMonthsYear).toString(),
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
-      requestedCoverStartDate: nowPlus1Month.valueOf(),
+      requestedCoverStartDate: `${dateConstants.oneMonthUnix}000`,
       issuedDate: nowPlusWeek,
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
@@ -132,9 +130,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': (nowPlus2Months.getDate()).toString(),
-      'coverEndDate-month': (nowPlus2Months.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlus2Months.getFullYear()).toString(),
+      'coverEndDate-day': (dateConstants.twoMonthsDay).toString(),
+      'coverEndDate-month': (dateConstants.twoMonthsMonth).toString(),
+      'coverEndDate-year': (dateConstants.twoMonthsYear).toString(),
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -142,10 +140,9 @@ const deal = {
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
       previousFacilityStage: 'Conditional',
-      requestedCoverStartDate: nowPlus1Month.valueOf(),
+      requestedCoverStartDate: `${dateConstants.oneMonthUnix}000`,
     },
   ],
-  summary: {},
   comments: [
     {
       user: {
@@ -171,88 +168,10 @@ const deal = {
       timestamp: '1599049985118',
       text: 'zsdf',
     },
-    {
-      user: {
-        username: 'CHECKER',
-        roles: [
-          'checker',
-        ],
-        bank: {
-          id: '9',
-          name: 'UKEF test bank (Delegated)',
-          emails: [
-            'maker@ukexportfinance.gov.uk',
-            'checker@ukexportfinance.gov.uk',
-          ],
-        },
-        lastLogin: '1599048724584',
-        firstname: 'Emilio',
-        surname: 'Largo',
-        email: 'checker@ukexportfinance.gov.uk',
-        timezone: 'Europe/London',
-        'user-status': 'active',
-      },
-      timestamp: '1599048760960',
-      text: 'asdfsadf',
-    },
-    {
-      user: {
-        username: 'MAKER',
-        roles: [
-          'maker',
-        ],
-        bank: {
-          id: '9',
-          name: 'UKEF test bank (Delegated)',
-          emails: [
-            'maker@ukexportfinance.gov.uk',
-            'checker@ukexportfinance.gov.uk',
-          ],
-        },
-        lastLogin: '1599048728874',
-        firstname: 'Hugo',
-        surname: 'Drax',
-        email: 'maker@ukexportfinance.gov.uk',
-        timezone: 'Europe/London',
-        'user-status': 'active',
-      },
-      timestamp: '1599048733918',
-      text: 'Issued a facility',
-    },
-    {
-      user: {
-        username: 'MAKER',
-        roles: [
-          'maker',
-        ],
-        bank: {
-          id: '9',
-          name: 'UKEF test bank (Delegated)',
-          emails: [
-            'maker@ukexportfinance.gov.uk',
-            'checker@ukexportfinance.gov.uk',
-          ],
-        },
-        lastLogin: '1597782864959',
-        firstname: 'Hugo',
-        surname: 'Drax',
-        email: 'maker@ukexportfinance.gov.uk',
-        timezone: 'Europe/London',
-        'user-status': 'active',
-      },
-      timestamp: '1597782964434',
-      text: 'test',
-    },
   ],
   editedBy: [],
   mandatoryCriteria,
   supportingInformation: {
-    validationErrors: {
-      count: 0,
-      errorList: {
-        exporterQuestionnaire: {},
-      },
-    },
     exporterQuestionnaire: [
       {
         type: 'general_correspondence',

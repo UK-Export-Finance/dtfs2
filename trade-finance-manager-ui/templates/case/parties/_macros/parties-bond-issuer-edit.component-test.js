@@ -21,6 +21,7 @@ describe(page, () => {
           bondIssuerPartyUrn: '1234-test',
         },
       },
+      index: 1,
     };
 
     beforeEach(() => {
@@ -35,7 +36,7 @@ describe(page, () => {
 
     it('should render bond issuer urn input', () => {
       wrapper
-        .expectInput('[data-cy="urn-input"]')
+        .expectInput('[data-cy="urn-input-1"]')
         .toHaveValue(params.bond.tfm.bondIssuerPartyUrn);
     });
   });

@@ -63,7 +63,7 @@ const MOCK_DEAL = {
       'coverEndDate-day': dateConstants.oneMonthDay,
       'coverEndDate-month': dateConstants.oneMonthMonth,
       'coverEndDate-year': dateConstants.oneMonthYear,
-      issuedDate: '1606900616651',
+      issuedDate: `${dateConstants.twoYearsAgoUnix}000`,
       requestedCoverStartDate: '1606900616652',
       name: 'Test-123',
       updatedAt: Date.now(),

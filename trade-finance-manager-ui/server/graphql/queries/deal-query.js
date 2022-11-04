@@ -10,16 +10,20 @@ const dealQuery = gql`
         parties {
           exporter {
             partyUrn
+            partyUrnRequired
           }
           buyer {
             partyUrn
+            partyUrnRequired
           }
           indemnifier {
             partyUrn
+            partyUrnRequired
           }
           agent {
             partyUrn
             commissionRate
+            partyUrnRequired
           }
         }
         activities {

@@ -52,8 +52,65 @@ context('Parties - user can view and edit exporter', () => {
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
       });
 
-      it('should save entered details', () => {
+      it('should not save entered details if incorrectly formatted partyURN such as letters only or less than 3 numbers', () => {
         const partyUrn = 'test partyurn';
+
+        pages.partiesPage.exporterEditLink().click();
+        pages.exporterPage.urnInput().clear();
+
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        pages.exporterPage.errorSummary().contains('Enter a unique reference number');
+        pages.exporterPage.urnError().contains('Enter a unique reference number');
+
+        pages.exporterPage.urnInput().clear();
+        pages.exporterPage.urnInput().type(partyUrn);
+
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.exporterPage.urnInput().clear().type('12');
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.exporterPage.urnInput().clear().type('ABC123');
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.exporterPage.urnInput().clear().type('"!£!"£!"£!"£');
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.exporterPage.urnInput().clear().type('1234!');
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        pages.exporterPage.urnInput().clear().type(' ');
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
+      });
+
+      it('should save entered details if partyUrn correctly entered', () => {
+        const partyUrn = '12345';
 
         pages.partiesPage.exporterEditLink().click();
         pages.exporterPage.urnInput().clear();
