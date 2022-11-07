@@ -661,6 +661,26 @@ const comment = async () => {
 // ******************** TFM FACILITIES *************************
 
 /**
+ * Add dates to TFM facility, following properties
+ * are effected:
+ * 1. submittedAsIssuedDate (facility.facilitySnapshot.submittedAsIssuedDate)
+ * Date when the facility is issued
+ */
+const dates = () => {
+  Object.values(allFacilities).forEach((facility, index) => {
+    if (facility.facilitySnapshot && facility.facilitySnapshot.hasBeenIssued) {
+      const { tfm } = facility;
+      // BSS/EWCS
+      if (tfm.premiumSchedule && tfm.premiumSchedule.length) {
+        allFacilities[index].facilitySnapshot.submittedAsIssuedDate = new Date(tfm.premiumSchedule[0].created).valueOf();
+      }
+
+      // GEF
+    }
+  });
+};
+
+/**
  * Add Premium Schedule (deal.tfm.premiumSchedule) for pre-calculated
  * Workflow/K2 deals. This also includes PS
  * pre-calculated for Amendments.
@@ -1149,13 +1169,14 @@ const datafixesTfmFacilities = async (deals) => {
 
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
-        await partyUrn(true);
-        await premiumSchedule();
-        await dayBasis();
-        await feeType();
-        await feeFrequency();
-        await ACBS(true);
-        await amendment();
+        // await partyUrn(true);
+        // await premiumSchedule();
+        // await dayBasis();
+        // await feeType();
+        // await feeFrequency();
+        // await ACBS(true);
+        // await amendment();
+        await dates();
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {
@@ -1325,7 +1346,7 @@ const actionSheetFacilityPortal = async () => {
                     const value = update[1];
                     switch (path) {
                       case 'coverEndDate':
-                        // antipated issue if null
+                        // `Anticipated Issue` if null
                         if (value !== 'Anticipated Issue') {
                           allFacilities[index].coverEndDate = value;
                         }

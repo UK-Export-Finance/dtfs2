@@ -149,9 +149,9 @@ const migrate = () => {
   getTfmDeals()
     // .then((d) => datafixes(d))
     // .then((d) => tfm(d))
-    .then((d) => datafixesTfmDeal(d))
+    // .then((d) => datafixesTfmDeal(d))
     // .then(() => getTfmDeals())
-    // .then((d) => datafixesTfmFacilities(d))
+    .then((d) => datafixesTfmFacilities(d))
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {
