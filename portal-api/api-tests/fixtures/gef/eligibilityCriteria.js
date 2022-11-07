@@ -1,8 +1,6 @@
 const ELIGIBILITY_CRITERIA = [
   {
     version: 1,
-    isInDraft: false,
-    createdAt: '2021-01-02T00:00',
     dealType: 'GEF',
     criteria: [{
       text: 'This one shouldn\'t show as it\'s an old version',
@@ -11,8 +9,6 @@ const ELIGIBILITY_CRITERIA = [
   },
   {
     version: 2,
-    isInDraft: false,
-    createdAt: '2022-03-22T00:00',
     dealType: 'GEF',
     criteria: [
       {
@@ -78,19 +74,6 @@ const ELIGIBILITY_CRITERIA = [
         name: 'facilityPaymentCurrency',
         text: 'Facility  Letter  satisfies  the  following  conditions:  in  relation  to  which,  any  upfront, arrangement or similar fee, (in the case of a Cash Facility) any ordinary interest rate and (in the case of a Contingent Facility) any Risk Margin Fee, is denominated in an Approved Payment Currency.',
         errMsg: 'Select if the Facility Letter satisfies the condition',
-      },
-    ],
-  },
-  {
-    version: 3,
-    isInDraft: true,
-    createdAt: '2021-01-02T00:00',
-    dealType: 'GEF',
-    criteria: [
-      {
-        id: 12,
-        text: 'This one shouldn\'t show as it\'s in draft',
-        errMsg: 'This one shouldn\'t show as it\'s in draft',
       },
     ],
   },

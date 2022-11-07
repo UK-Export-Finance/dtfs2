@@ -1,8 +1,6 @@
 const ELIGIBILITY_CRITERIA = [
   {
     version: 1.5,
-    isInDraft: false,
-    createdAt: '2021-01-02T00:00',
     dealType: 'GEF',
     criteria: [
       {
@@ -67,8 +65,6 @@ const ELIGIBILITY_CRITERIA = [
   },
   {
     version: 2,
-    isInDraft: false,
-    createdAt: '2022-03-22T00:00',
     dealType: 'GEF',
     criteria: [
       {

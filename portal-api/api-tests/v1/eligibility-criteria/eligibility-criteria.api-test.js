@@ -44,15 +44,15 @@ describe('/v1/eligibility-criteria', () => {
     });
 
     it('returns a list of eligibility-criteria sorted by id', async () => {
-      const payload = [{ ...allEligibilityCriteria[0], updatedAt: expect.any(Number) }, { ...allEligibilityCriteria[1], updatedAt: expect.any(Number) }];
+      const payload = [
+        { ...allEligibilityCriteria[0], updatedAt: expect.any(Number), createdAt: expect.any(Number) },
+        { ...allEligibilityCriteria[1], updatedAt: expect.any(Number), createdAt: expect.any(Number) },
+      ];
       await as(anEditor).post({ ...payload[0] }).to('/v1/eligibility-criteria');
       await as(anEditor).post({ ...payload[1] }).to('/v1/eligibility-criteria');
 
       const { body } = await as(noRoles).get('/v1/eligibility-criteria');
-      expect(body).toEqual({
-        count: allEligibilityCriteria.length,
-        eligibilityCriteria: expectMongoIds(payload),
-      });
+      expect(body).toEqual(expectMongoIds(payload));
     });
   });
 
@@ -75,7 +75,7 @@ describe('/v1/eligibility-criteria', () => {
       const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${newEligibilityCriteria.version}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId({ ...newEligibilityCriteria, updatedAt: expect.any(Number) }));
+      expect(body).toEqual(expectMongoId({ ...newEligibilityCriteria, updatedAt: expect.any(Number), createdAt: expect.any(Number) }));
     });
   });
 
@@ -99,7 +99,7 @@ describe('/v1/eligibility-criteria', () => {
       const { status, body } = await as(anEditor).get(`/v1/eligibility-criteria/${newEligibilityCriteria.version}`);
 
       expect(status).toEqual(200);
-      expect(body).toEqual(expectMongoId({ ...newEligibilityCriteria, updatedAt: expect.any(Number) }));
+      expect(body).toEqual(expectMongoId({ ...newEligibilityCriteria, updatedAt: expect.any(Number), createdAt: expect.any(Number) }));
     });
   });
 
@@ -163,7 +163,8 @@ describe('/v1/eligibility-criteria', () => {
       expect(body).toEqual(expectMongoId({
         ...eligibilityCriteria,
         criteria: update.criteria,
-        updatedAt: expect.any(Number)
+        updatedAt: expect.any(Number),
+        createdAt: expect.any(Number)
       }));
     });
   });

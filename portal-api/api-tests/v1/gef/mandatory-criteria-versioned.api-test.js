@@ -53,8 +53,6 @@ describe(baseUrl, () => {
       await as(anEditor).post(allMandatoryCriteria[0]).to(baseUrl);
       await as(anEditor).post(allMandatoryCriteria[1]).to(baseUrl);
       await as(anEditor).post(allMandatoryCriteria[2]).to(baseUrl);
-      await as(anEditor).post(allMandatoryCriteria[3]).to(baseUrl);
-      await as(anEditor).post(allMandatoryCriteria[4]).to(baseUrl);
 
       const { body } = await as(aMaker).get(`${baseUrl}/latest`);
 
@@ -146,7 +144,6 @@ describe(baseUrl, () => {
       const itemUpdate = {
         ...JSON.parse(item.text),
         version: 99,
-        isInDraft: true,
         title: 'test 99',
         introText: 'intro 99',
         criteria: [
@@ -186,7 +183,6 @@ describe(baseUrl, () => {
 
     it('deletes the mandatory-criteria', async () => {
       const { body: createdItem } = await as(anEditor).post(newMandatoryCriteria).to(baseUrl);
-      await as(anEditor).get(`${baseUrl}/${createdItem.version}`);
 
       const { status, body } = await as(anEditor).remove(`${baseUrl}/${createdItem.version}`);
       expect(status).toEqual(200);

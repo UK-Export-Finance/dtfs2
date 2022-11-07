@@ -54,13 +54,13 @@ describe(baseUrl, () => {
     it('returns the latest eligibility-criteria version', async () => {
       await as(anEditor).post(items[0]).to(baseUrl);
       await as(anEditor).post(items[1]).to(baseUrl);
-      await as(anEditor).post(items[2]).to(baseUrl);
 
       const { body } = await as(aMaker).get(`${baseUrl}/latest`);
 
       expect(body).toEqual(expect.objectContaining({
         ...expectMongoId(items[1]),
         createdAt: expect.any(Number),
+        updatedAt: expect.any(Number),
         criteria: expect.any(Array),
       }));
     });
@@ -85,7 +85,6 @@ describe(baseUrl, () => {
       const expected = {
         ...expectMongoId(items[0]),
         version: items[0].version,
-        isInDraft: expect.any(Boolean),
         createdAt: expect.any(Number),
         updatedAt: expect.any(Number),
         criteria: expect.any(Array),
@@ -128,11 +127,11 @@ describe(baseUrl, () => {
 
     it('deletes the eligibility-criteria', async () => {
       await as(anEditor).post(items[0]).to(baseUrl);
-      const { body: item } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
+      await as(anEditor).get(`${baseUrl}/${items[0].version}`);
 
       const { status, body } = await as(anEditor).remove(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(200);
-      expect(body).toEqual(item);
+      expect(body).toEqual({});
     });
   });
 });

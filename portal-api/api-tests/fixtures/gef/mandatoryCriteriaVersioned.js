@@ -1,9 +1,6 @@
 const MANDATORY_CRITERIA_VERSIONED = [
   {
     version: 1.0,
-    createdAt: new Date('2021-01-01T00:00'),
-    updatedAt: null,
-    isInDraft: false,
     title: 'test 1',
     introText: 'Test intro 1',
     criteria: [
@@ -13,9 +10,6 @@ const MANDATORY_CRITERIA_VERSIONED = [
   },
   {
     version: 1.1,
-    createdAt: new Date('2021-01-02T00:00'),
-    updatedAt: null,
-    isInDraft: false,
     title: 'test 2',
     criteria: [
       { id: '1', body: 'Test is a mock test' },
@@ -25,8 +19,6 @@ const MANDATORY_CRITERIA_VERSIONED = [
   {
     version: 2,
     createdAt: new Date('2021-01-03T00:00'),
-    updatedAt: null,
-    isInDraft: false,
     title: 'Confirm eligibility (mandatory criteria)',
     introText: 'You must confirm that all the following will be true for this application on the date that cover starts.',
     criteria: [
@@ -86,28 +78,6 @@ const MANDATORY_CRITERIA_VERSIONED = [
           'it provides that your bank has the right to accelerate the facility if any of the circumstances set out in paragraph 9.4 of the exporter declaration occur',
         ],
       },
-    ],
-    dealType: 'GEF'
-  },
-  {
-    version: 0.1,
-    createdAt: new Date('2021-01-04T00:00'),
-    updatedAt: null,
-    isInDraft: false,
-    title: 'test 4 (old version)',
-    criteria: [
-      { id: '1', body: 'Test is a mock test' },
-    ],
-    dealType: 'GEF'
-  },
-  {
-    version: 3.4,
-    createdAt: new Date('2021-01-04T00:00'),
-    updatedAt: null,
-    isInDraft: true,
-    title: 'test 5 (draft)',
-    criteria: [
-      { id: '1', body: 'Test is a mock test' },
     ],
     dealType: 'GEF'
   },

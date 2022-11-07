@@ -29,7 +29,7 @@ describe(baseUrl, () => {
     anotherMaker = testUsers().withRole('maker').withBankName('HSBC').one();
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     api.tfmDealSubmit = tfmDealSubmitSpy;
   });
 

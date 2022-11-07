@@ -2,9 +2,6 @@ const MANDATORY_CRITERIA_VERSIONED = [
   {
     version: 33,
     dealType: 'GEF',
-    createdAt: new Date('2021-01-03T00:00'),
-    updatedAt: null,
-    isInDraft: false,
     title: 'Confirm eligibility (mandatory criteria)',
     introText: 'You must confirm that all the following will be true for this application on the date that cover starts.',
     criteria: [
@@ -46,7 +43,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
         childList: [
           'free and clear of any security or quasi-security (other than permitted security)',
           'freely assignable by the bank without the need to obtain the consent of any obligor or other person',
-        ]
+        ],
       },
       {
         id: '9',
@@ -65,7 +62,7 @@ const MANDATORY_CRITERIA_VERSIONED = [
         ],
       },
     ],
-  }
+  },
 ];
 
 module.exports = MANDATORY_CRITERIA_VERSIONED;

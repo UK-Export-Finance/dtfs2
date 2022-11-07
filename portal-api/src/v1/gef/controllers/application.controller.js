@@ -41,9 +41,9 @@ exports.create = async (req, res) => {
       newDeal.exporter.updatedAt = Date.now();
     }
 
-    const response = await api.findLatestMandatoryCriteria(DEAL_TYPE.GEF);
-    if (response?.data?.version) {
-      newDeal.mandatoryVersionId = response.data.version;
+    const { data } = await api.findLatestMandatoryCriteria(DEAL_TYPE.GEF);
+    if (data?.version) {
+      newDeal.mandatoryVersionId = data.version;
     }
 
     const createdApplication = await applicationCollection.insertOne(new Application(newDeal, eligibility));
