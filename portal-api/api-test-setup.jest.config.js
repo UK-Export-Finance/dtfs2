@@ -2,7 +2,7 @@ const db = require('./src/drivers/db-client');
 
 const mockFiles = [
   './src/reference-data/api',
-  './src/v1/email',
+  './src/reference-data/send-email',
 ];
 
 mockFiles.forEach((mockFile) => {

@@ -8,8 +8,8 @@ const users = require('./test-data');
 
 const aMaker = users.find((user) => user.username === 'MAKER_WITH_EMAIL');
 
-jest.mock('../../../src/v1/email');
-const sendEmail = require('../../../src/v1/email');
+jest.mock('../../../src/reference-data/send-email');
+const sendEmail = require('../../../src/reference-data/send-email');
 
 const resetPasswordEmailTemplateId = '6935e539-1a0c-4eca-a6f3-f239402c0987';
 const passwordUpdateConfirmationTemplateId = '41235821-7e52-4d63-a773-fa147362c5f0';

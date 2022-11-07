@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const utils = require('../../../utils/crypto.util');
 const { userNotFound, incorrectPassword, userIsDisabled } = require('../../../constants/login-results.constant');
 const {
-  create, update, removeTfmUserById, findOne, findByUsername,
+  create, update, findOne, findByUsername,
 } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -107,16 +107,6 @@ module.exports.updateTfmUserById = (req, res, next) => {
       }
     } else {
       res.status(404).json({});
-    }
-  });
-};
-
-module.exports.removeTfmUserById = (req, res, next) => {
-  removeTfmUserById(req.params.user, (err, status) => {
-    if (err) {
-      next(err);
-    } else {
-      res.status(200).json(status);
     }
   });
 };
