@@ -1,5 +1,5 @@
 const db = require('../../drivers/db-client');
-const sendEmail = require('../email');
+const sendEmail = require('../../reference-data/send-email');
 const { createPasswordToken } = require('./controller');
 
 const sendResetEmail = async (emailAddress, resetToken) => {

@@ -3,7 +3,6 @@ const api = require('../api');
 const db = require('../../drivers/db-client');
 const CONSTANTS = require('../../constants');
 const dealSubmitController = require('./deal.submit.controller');
-const gefController = require('./gef.controller');
 
 const otherDealTasksStillRunning = (task, taskList) => taskList.some((t) => t.dealId === task.dealId && ['Pending', 'Running'].includes(t.runtimeStatus));
 
@@ -27,13 +26,13 @@ const updatePortalDeal = (input, { ukefId }) => {
 
 const updateGefApplication = (input, { ukefId }) => {
   if (input.entityType === 'deal') {
-    return gefController.updateGefApplication(input.entityId, {
+    return api.updatePortalGefDeal(input.entityId, {
       ukefDealId: ukefId,
     });
   }
 
   if (input.entityType === 'facility') {
-    return gefController.updateGefFacility(input.entityId, {
+    return api.updateGefFacility(input.entityId, {
       ukefFacilityId: ukefId,
     });
   }

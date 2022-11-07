@@ -1,4 +1,4 @@
-const sendEmail = require('../../email');
+const sendEmail = require('../../../reference-data/send-email');
 
 const sendEmailsToOwningBanks = async (templateId, emailVariables, owningBankEmails) => {
   await owningBankEmails.forEach(async (email) => {

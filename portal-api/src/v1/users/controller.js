@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const now = require('../../now');
 const db = require('../../drivers/db-client');
-const sendEmail = require('../email');
+const sendEmail = require('../../reference-data/send-email');
 const businessRules = require('../../config/businessRules');
 const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');

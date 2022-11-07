@@ -5,7 +5,7 @@ const { format, getUnixTime, fromUnixTime } = require('date-fns');
 
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
-const sendEmail = require('../email');
+const sendEmail = require('../../reference-data/send-email');
 
 const findFeedbacks = async (callback) => {
   const collection = await db.getCollection('feedback');
