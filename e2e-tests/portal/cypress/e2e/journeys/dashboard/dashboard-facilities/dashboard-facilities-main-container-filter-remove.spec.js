@@ -94,4 +94,36 @@ context('Dashboard Facilities - main container selected filters - remove a filte
     dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('not.be.checked');
     dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('be.checked');
   });
+
+  it('should remove both issued and unissued filters when they are selected and removed', () => {
+    cy.login(BANK1_MAKER1);
+    dashboardFacilities.visit();
+
+    // toggle to show filters (hidden by default)
+    filters.showHideButton().click();
+
+    // apply filters
+    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+    filters.panel.form.applyFiltersButton().click();
+
+    cy.url().should('eq', relative('/dashboard/facilities/0'));
+
+    // remove one of the filters
+    dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued().click();
+    dashboardFacilities.filters.mainContainer.selectedFilters.typeUnissued().click();
+
+    // should have removed the filter
+    dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued().should('not.exist');
+
+    // should NOT have removed the other filter
+    dashboardFacilities.filters.mainContainer.selectedFilters.typeUnissued().should('not.exist');
+
+    // toggle to show filters (hidden by default)
+    filters.showHideButton().click();
+
+    // check checkboxes
+    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('not.be.checked');
+    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().should('not.be.checked');
+  });
 });

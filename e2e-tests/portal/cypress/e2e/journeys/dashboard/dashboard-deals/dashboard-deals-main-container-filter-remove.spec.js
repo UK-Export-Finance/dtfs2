@@ -70,15 +70,21 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     // apply filters
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.MIN.checkbox().click();
+    dashboardDeals.filters.panel.form.submissionType.AIN.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
 
     // remove one of the filters
     dashboardDeals.filters.mainContainer.selectedFilters.statusDraft().click();
+    dashboardDeals.filters.mainContainer.selectedFilters.noticeAIN().click();
+    dashboardDeals.filters.mainContainer.selectedFilters.noticeMIN().click();
 
     // should have removed the filter
     dashboardDeals.filters.mainContainer.selectedFilters.statusDraft().should('not.exist');
+    dashboardDeals.filters.mainContainer.selectedFilters.noticeAIN().should('not.exist');
+    dashboardDeals.filters.mainContainer.selectedFilters.noticeMIN().should('not.exist');
 
     // should NOT have removed the other filter
     dashboardDeals.filters.mainContainer.selectedFilters.noticeMIA().should('exist');

@@ -2,6 +2,7 @@ const {
   add, isAfter, isBefore, isEqual, set,
 } = require('date-fns');
 const api = require('../../services/api');
+const { DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { validationErrorHandler } = require('../../utils/helpers');
 const coverDatesValidation = require('../../utils/coverDatesValidation.helper');
 
@@ -55,9 +56,14 @@ const facilityValidation = async (body, query, params, facility) => {
   const submissionDate = (new Date(Number(application.submissionDate))).setHours(0, 0, 0, 0);
 
   if (application.manualInclusionNoticeSubmissionDate) {
+    // If MIN, then MIN submission date plus three months
     const minSubmissionDate = (new Date(Number(application.manualInclusionNoticeSubmissionDate))).setHours(0, 0, 0, 0);
     threeMonthsFromSubmission = add(minSubmissionDate, { months: 3 });
+  } else if (application.submissionType === DEAL_SUBMISSION_TYPE.MIA) {
+    // if MIA, 3 months from now
+    threeMonthsFromSubmission = add(new Date(), { months: 3 });
   } else {
+    // if AIN then 3 months from submission date
     threeMonthsFromSubmission = add(submissionDate, { months: 3 });
   }
   const now = (new Date()).setHours(0, 0, 0, 0);
@@ -201,9 +207,15 @@ const facilityValidation = async (body, query, params, facility) => {
        * else validation takes place so start date cannot be more than 3 months ahead of notice submission date
        */
       if (isAfter(startDate, threeMonthsFromSubmission) && !facility?.specialIssuePermission) {
+        let errMsg = 'The cover start date must be within 3 months of the inclusion notice submission date';
+        // if MIA, from todays date so different error message
+        if (application.submissionType === DEAL_SUBMISSION_TYPE.MIA) {
+          errMsg = 'The cover start date must be within 3 months from today\'s date';
+        }
+
         aboutFacilityErrors.push({
           errRef: 'coverStartDate',
-          errMsg: 'The cover start date must be within 3 months of the inclusion notice submission date',
+          errMsg,
         });
       }
 

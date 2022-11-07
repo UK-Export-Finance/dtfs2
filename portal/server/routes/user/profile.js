@@ -80,7 +80,7 @@ router.post('/:_id/change-password', async (req, res) => {
 
       formattedValidationErrors = generateErrorSummary(error, errorHref);
     } else {
-      const { status, data } = await api.updateUser(_id, req.body, req.session.userToken);
+      const { status, data } = await api.updateUser(_id, payload, req.session.userToken);
 
       if (status === 200) {
         return res.redirect(`/user/${_id}`);

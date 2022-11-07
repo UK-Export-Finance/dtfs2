@@ -1,3 +1,5 @@
+const { formatFieldValue } = require('./helpers');
+
 const sanitiseFieldValue = (value) => {
   if (value === 'true') {
     return true;
@@ -20,12 +22,10 @@ const removeSessionFilter = (req) => {
 
   const filter = sessionFilters[fieldName];
 
-  const sanitisedFieldValue = sanitiseFieldValue(fieldValue);
-
-  if (filter) {
+  if (filter || filter === false) {
     if (Array.isArray(filter)) {
-      const modifiedFilter = sessionFilters[fieldName].filter((value) =>
-        value !== sanitisedFieldValue);
+      // formatFieldValue used to remove whitespaces from value so can match against fieldvalue which has whitespaces removed
+      const modifiedFilter = sessionFilters[fieldName].filter((value) => formatFieldValue(value) !== fieldValue);
 
       if (!modifiedFilter.length) {
         delete req.session.dashboardFilters[fieldName];
