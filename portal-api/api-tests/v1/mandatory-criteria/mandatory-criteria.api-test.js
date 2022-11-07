@@ -45,7 +45,10 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('returns a list of mandatory-criteria sorted by id', async () => {
-      const payload = [{ ...allMandatoryCriteria[1], updatedAt: expect.any(Number) }, { ...allMandatoryCriteria[0], updatedAt: expect.any(Number) }];
+      const payload = [
+        { ...allMandatoryCriteria[0], updatedAt: expect.any(Number), createdAt: expect.any(Number) },
+        { ...allMandatoryCriteria[1], updatedAt: expect.any(Number), createdAt: expect.any(Number) },
+      ];
       await as(anEditor).post({ ...payload[1] }).to('/v1/mandatory-criteria');
       await as(anEditor).post({ ...payload[0] }).to('/v1/mandatory-criteria');
       const { body } = await as(noRoles).get('/v1/mandatory-criteria');
@@ -76,6 +79,7 @@ describe('/v1/mandatory-criteria', () => {
       expect(body).toEqual(expectMongoId({
         ...newMandatoryCriteria,
         updatedAt: expect.any(Number),
+        createdAt: expect.any(Number),
         dealType: expect.any(String)
       }));
     });
@@ -89,8 +93,8 @@ describe('/v1/mandatory-criteria', () => {
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
-      await as(anEditor).post(allMandatoryCriteria[1]).to('/v1/mandatory-criteria');
-      const { status } = await as(noRoles).get('/v1/mandatory-criteria/1');
+      await as(anEditor).post(allMandatoryCriteria[0]).to('/v1/mandatory-criteria');
+      const { status } = await as(noRoles).get('/v1/mandatory-criteria/2');
 
       expect(status).toEqual(200);
     });
@@ -103,6 +107,7 @@ describe('/v1/mandatory-criteria', () => {
       expect(status).toEqual(200);
       expect(body).toEqual(expectMongoId({ ...newMandatoryCriteria,
         updatedAt: expect.any(Number),
+        createdAt: expect.any(Number),
         dealType: expect.any(String), }));
     });
   });
@@ -167,6 +172,7 @@ describe('/v1/mandatory-criteria', () => {
         ...mandatoryCriteria,
         criteria: update.criteria,
         updatedAt: expect.any(Number),
+        createdAt: expect.any(Number),
         dealType: expect.any(String)
       }));
     });

@@ -91,7 +91,6 @@ describe(baseUrl, () => {
             dealType: expect.any(String),
             createdAt: expect.any(Number),
             updatedAt: expect.any(Number),
-            isInDraft: false,
             version: expect.any(Number),
             criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
               ...criterion,
@@ -146,7 +145,6 @@ describe(baseUrl, () => {
           createdAt: expect.any(Number),
           updatedAt: expect.any(Number),
           dealType: expect.any(String),
-          isInDraft: false,
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
             ...criterion,
             answer: null,
@@ -235,7 +233,6 @@ describe(baseUrl, () => {
           createdAt: expect.any(Number),
           updatedAt: expect.any(Number),
           dealType: expect.any(String),
-          isInDraft: false,
           criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
             ...criterion,
             answer: null,

@@ -10,6 +10,7 @@ const expectAddedFields = (obj) => {
       _id: expect.any(String),
       version: expect.any(Number),
       updatedAt: expect.any(Number),
+      createdAt: expect.any(Number),
       criteria: expect.any(Array),
       dealType: expect.any(String)
     },

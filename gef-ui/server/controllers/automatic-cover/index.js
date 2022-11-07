@@ -78,7 +78,6 @@ const validateAutomaticCover = async (req, res, next) => {
       eligibility: {
         _id: eligibility?._id,
         version: eligibility.version,
-        isInDraft: eligibility.isInDraft,
         criteria: newAnswers,
       },
       editorId,
