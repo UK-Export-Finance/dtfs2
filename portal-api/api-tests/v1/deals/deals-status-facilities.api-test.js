@@ -26,8 +26,7 @@ describe('/v1/deals/:id/status - facilities', () => {
   };
 
   beforeAll(async () => {
-    await wipeDB.wipe(['deals']);
-    await wipeDB.wipe(['facilities']);
+    await wipeDB.wipe(['deals', 'facilities']);
 
     const testUsers = await testUserCache.initialise(app);
     const barclaysMakers = testUsers().withRole('maker').withBankName('Barclays Bank').all();
@@ -35,6 +34,10 @@ describe('/v1/deals/:id/status - facilities', () => {
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
 
     aSuperuser = testUsers().superuser().one();
+  });
+
+  beforeEach(() => {
+    api.sendEmail = jest.fn(() => Promise.resolve());
   });
 
   describe('PUT /v1/deals/:id/status', () => {
@@ -76,7 +79,7 @@ describe('/v1/deals/:id/status - facilities', () => {
         updatedDeal = deal;
       });
 
-      describe('any issued bonds orloans that have details provided, but not yet been submitted', () => {
+      describe('any issued bonds or loans that have details provided, but not yet been submitted', () => {
         it('should add `Ready for check` status', async () => {
           expect(updatedDeal.status).toEqual(200);
           expect(updatedDeal.body).toBeDefined();

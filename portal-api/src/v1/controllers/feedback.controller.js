@@ -5,7 +5,7 @@ const { format, getUnixTime, fromUnixTime } = require('date-fns');
 
 const db = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
-const sendEmail = require('../../reference-data/send-email');
+const api = require('../api');
 
 const findFeedbacks = async (callback) => {
   const collection = await db.getCollection('feedback');
@@ -80,7 +80,7 @@ exports.create = async (req, res) => {
   const EMAIL_TEMPLATE_ID = '4214bdb8-b3f5-4081-a664-3bfcfe648b8d';
   const EMAIL_RECIPIENT = process.env.GOV_NOTIFY_EMAIL_RECIPIENT;
 
-  await sendEmail(
+  await api.sendEmail(
     EMAIL_TEMPLATE_ID,
     EMAIL_RECIPIENT,
     emailVariables,

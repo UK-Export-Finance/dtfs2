@@ -4,11 +4,12 @@ const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 
 describe('user controller', () => {
   let userId = '';
-  it('creates a new TFM user', async () => {
+
+  beforeAll(async () => {
     const user = MOCK_USERS[0];
     delete user._id;
-    const { body } = await api.post(user).to('/v1/users');
-    userId = body.user._id;
+    const { body: { user: { _id } } } = await api.post(user).to('/v1/users');
+    userId = _id;
   });
 
   it('returns the requested user if matched', async () => {
@@ -26,10 +27,5 @@ describe('user controller', () => {
     expect(status).toEqual(404);
     expect(body.status).toEqual(404);
     expect(body.message).toEqual('User does not exist');
-  });
-
-  it('removes the TFM user by _id', async () => {
-    const { status } = await api.remove().to(`/v1/users/${userId}`);
-    expect(status).toEqual(200);
   });
 });

@@ -3,21 +3,20 @@ const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 
 const { resetPassword, getUserByPasswordToken } = require('../../../src/v1/users/reset-password.controller');
-
 const users = require('./test-data');
+const api = require('../../../src/v1/api');
 
 const aMaker = users.find((user) => user.username === 'MAKER_WITH_EMAIL');
 
-jest.mock('../../../src/reference-data/send-email');
-const sendEmail = require('../../../src/reference-data/send-email');
-
 const resetPasswordEmailTemplateId = '6935e539-1a0c-4eca-a6f3-f239402c0987';
 const passwordUpdateConfirmationTemplateId = '41235821-7e52-4d63-a773-fa147362c5f0';
+const sendEmailApiSpy = jest.fn(() => Promise.resolve());
 
 describe('password reset', () => {
   beforeEach(async () => {
     await wipeDB.wipe(['users']);
     await as().post(aMaker).to('/v1/users');
+    api.sendEmail = sendEmailApiSpy;
   });
 
   afterEach(() => {
@@ -32,7 +31,7 @@ describe('password reset', () => {
   it('should return success=true and sendEmail for existing email', async () => {
     const reset = await resetPassword(aMaker.email);
     expect(reset).toMatchObject({ success: true });
-    expect(sendEmail).toHaveBeenCalledWith(resetPasswordEmailTemplateId, aMaker.email, {
+    expect(sendEmailApiSpy).toHaveBeenCalledWith(resetPasswordEmailTemplateId, aMaker.email, {
       resetToken: expect.any(String),
     });
   });
@@ -61,14 +60,14 @@ describe('password reset', () => {
         const { status, body } = await as().post({ email: 'no.user@email.com' }).to('/v1/users/reset-password');
         expect(status).toEqual(200);
         expect(body).toMatchObject({ success: false });
-        expect(sendEmail).not.toHaveBeenCalled();
+        expect(sendEmailApiSpy).not.toHaveBeenCalled();
       });
 
       it('should send an email with reset token', async () => {
         const { status, body } = await as().post({ email: aMaker.email }).to('/v1/users/reset-password');
         expect(status).toEqual(200);
         expect(body).toMatchObject({ success: true });
-        expect(sendEmail).toHaveBeenCalledWith(resetPasswordEmailTemplateId, aMaker.email, {
+        expect(sendEmailApiSpy).toHaveBeenCalledWith(resetPasswordEmailTemplateId, aMaker.email, {
           resetToken: expect.any(String),
         });
       });
@@ -112,7 +111,7 @@ describe('password reset', () => {
         const { status, body } = await as().post({ currentPassword: aMaker.password, password: newPassword, passwordConfirm: newPassword }).to(`/v1/users/reset-password/${resetToken}`);
         expect(status).toEqual(200);
         expect(body.success).toEqual(true);
-        expect(sendEmail).toHaveBeenCalledWith(passwordUpdateConfirmationTemplateId, aMaker.email, {
+        expect(sendEmailApiSpy).toHaveBeenCalledWith(passwordUpdateConfirmationTemplateId, aMaker.email, {
           timestamp: expect.any(String),
         });
         const login = await as().post({ username: aMaker.username, password: newPassword }).to('/v1/login');

@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { CENTRAL_API, TFM_API } = require('../config/environment.config');
+const { CENTRAL_API, TFM_API, REFERENCE_DATA_PROXY_URL } = require('../config/environment.config');
 
 const findOneDeal = async (dealId) => {
   try {
@@ -217,6 +217,27 @@ const deleteEligibilityCriteria = async (version, dealType) => {
   }
 };
 
+const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
+  try {
+    const { data } = await axios({
+      method: 'post',
+      url: `${REFERENCE_DATA_PROXY_URL}/email`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        templateId,
+        sendToEmailAddress,
+        emailVariables,
+      },
+    });
+    return data;
+  } catch (err) {
+    console.error(`Error sending email to ${sendToEmailAddress}: ${err}`);
+    return false;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -240,5 +261,6 @@ module.exports = {
   findOneEligibilityCriteria,
   postEligibilityCriteria,
   putEligibilityCriteria,
-  deleteEligibilityCriteria
+  deleteEligibilityCriteria,
+  sendEmail
 };

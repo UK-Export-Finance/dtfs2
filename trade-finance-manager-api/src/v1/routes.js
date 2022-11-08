@@ -110,6 +110,7 @@ openRouter.route('/feedback').post(feedbackController.create);
 openRouter.route('/users').post(users.createTfmUser);
 
 openRouter.route('/login').post(users.login);
+openRouter.route('/users/:user').get(users.findTfmUser).put(users.updateTfmUserById);
 
 openRouter.route('/facility/:facilityId/amendment').post(amendmentController.createFacilityAmendment);
 
