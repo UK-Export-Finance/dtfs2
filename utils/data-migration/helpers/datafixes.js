@@ -669,13 +669,16 @@ const comment = async () => {
 const dates = () => {
   Object.values(allFacilities).forEach((facility, index) => {
     if (facility.facilitySnapshot && facility.facilitySnapshot.hasBeenIssued) {
-      const { tfm } = facility;
+      const { facilitySnapshot, tfm } = facility;
       // BSS/EWCS
       if (tfm.premiumSchedule && tfm.premiumSchedule.length) {
         allFacilities[index].facilitySnapshot.submittedAsIssuedDate = new Date(tfm.premiumSchedule[0].created).valueOf();
       }
 
       // GEF
+      if (facilitySnapshot.issuedDate) {
+        allFacilities[index].facilitySnapshot.submittedAsIssuedDate = facilitySnapshot.issuedDate;
+      }
     }
   });
 };
@@ -1503,8 +1506,9 @@ const datafixesTfmFacilitiesGef = async (deals) => {
 
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
-        await actionSheetFacility();
-        await ACBS(true);
+        // await actionSheetFacility();
+        // await ACBS(true);
+        await dates();
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {
