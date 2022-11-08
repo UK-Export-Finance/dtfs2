@@ -221,10 +221,8 @@ describe('areUnissuedFacilitiesPresent', () => {
 });
 
 describe('facilityIssueDeadline()', () => {
-  const timestamp = 1639586124100;
-
   it('should return a correct timestamp 3 months in advance from submissionDate if AIN in the right format', () => {
-    MOCK_AIN_APPLICATION.submissionDate = timestamp;
+    MOCK_AIN_APPLICATION.submissionDate = 1639586124100;
     const result = facilityIssueDeadline(MOCK_AIN_APPLICATION);
 
     const expected = '15 Mar 2022';
@@ -262,10 +260,10 @@ describe('facilityIssueDeadline()', () => {
 });
 
 describe('formatIssueDeadlineDate()', () => {
-  const timestamp = 1639586124100;
-
   it('should return a correct timestamp 3 months in advance in the right format from date if providing date', () => {
-    const date = new Date(parseInt(timestamp, 10));
+    MOCK_AIN_APPLICATION.submissionDate = 1639586124100;
+
+    const date = new Date(parseInt(MOCK_AIN_APPLICATION.submissionDate, 10));
     const result = formatIssueDeadlineDate(date);
 
     const expected = '15 Mar 2022';
