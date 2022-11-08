@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const now = require('../../now');
 const db = require('../../drivers/db-client');
-const sendEmail = require('../../reference-data/send-email');
+const api = require('../api');
 const businessRules = require('../../config/businessRules');
 const { BLOCKED, ACTIVE } = require('../../constants/user').DEAL_STATUS;
 const { sanitizeUser } = require('./sanitizeUserData');
@@ -25,7 +25,7 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
     timeZoneName: 'short'
   });
 
-  await sendEmail(
+  await api.sendEmail(
     CONSTANTS.EMAIL_TEMPLATE_IDS.PASSWORD_UPDATE,
     emailAddress,
     {
@@ -58,7 +58,7 @@ const createPasswordToken = async (email) => {
 exports.createPasswordToken = createPasswordToken;
 
 const sendBlockedEmail = async (emailAddress) => {
-  await sendEmail(
+  await api.sendEmail(
     CONSTANTS.EMAIL_TEMPLATE_IDS.BLOCKED,
     emailAddress,
     {},
@@ -66,7 +66,7 @@ const sendBlockedEmail = async (emailAddress) => {
 };
 
 const sendUnblockedEmail = async (emailAddress) => {
-  await sendEmail(
+  await api.sendEmail(
     CONSTANTS.EMAIL_TEMPLATE_IDS.UNBLOCKED,
     emailAddress,
     {},
@@ -86,7 +86,7 @@ const sendNewAccountEmail = async (user, resetToken) => {
     resetToken,
   };
 
-  await sendEmail(
+  await api.sendEmail(
     CONSTANTS.EMAIL_TEMPLATE_IDS.NEW_ACCOUNT,
     emailAddress,
     variables,
