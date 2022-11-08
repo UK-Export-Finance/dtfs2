@@ -1,3 +1,5 @@
+import { format, add } from 'date-fns';
+
 import {
   getIssuedFacilitiesAsArray,
   coverDatesConfirmed,
@@ -5,6 +7,7 @@ import {
   facilitiesChangedToIssuedAsArray,
   areUnissuedFacilitiesPresent,
   facilityIssueDeadline,
+  formatIssueDeadlineDate,
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
   issuedFacilityConfirmation,
@@ -218,20 +221,63 @@ describe('areUnissuedFacilitiesPresent', () => {
 });
 
 describe('facilityIssueDeadline()', () => {
-  const timestamp = 1639586124100;
-
-  it('should return a correct timestamp 3 months in advance in the right format', () => {
-    const result = facilityIssueDeadline(timestamp);
+  it('should return a correct timestamp 3 months in advance from submissionDate if AIN in the right format', () => {
+    MOCK_AIN_APPLICATION.submissionDate = 1639586124100;
+    const result = facilityIssueDeadline(MOCK_AIN_APPLICATION);
 
     const expected = '15 Mar 2022';
 
     expect(result).toEqual(expected);
   });
 
+  it('should return a correct timestamp 3 months in advance from now if MIA in the right format', () => {
+    const result = facilityIssueDeadline(MOCK_MIA_APPLICATION_UNISSUED_ONLY);
+
+    const nowPlus3Months = add(new Date(), { months: 3 });
+    const expected = format(nowPlus3Months, 'dd MMM yyyy');
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should return a correct timestamp 3 months in advance from MIN submission date if MIN in the right format', () => {
+    const MOCK_MIN_APPLICATION = { ...MOCK_AIN_APPLICATION };
+    MOCK_MIN_APPLICATION.submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.MIN;
+    MOCK_MIN_APPLICATION.manualInclusionNoticeSubmissionDate = 1636373639000;
+
+    const result = facilityIssueDeadline(MOCK_MIN_APPLICATION);
+
+    const expected = '08 Feb 2022';
+
+    expect(result).toEqual(expected);
+  });
+
   it('should return null when there is no submissionDate', () => {
-    const result = facilityIssueDeadline();
+    MOCK_AIN_APPLICATION.submissionDate = null;
+    const result = facilityIssueDeadline(MOCK_AIN_APPLICATION);
 
     expect(result).toEqual(null);
+  });
+});
+
+describe('formatIssueDeadlineDate()', () => {
+  it('should return a correct timestamp 3 months in advance in the right format from date if providing date', () => {
+    MOCK_AIN_APPLICATION.submissionDate = 1639586124100;
+
+    const date = new Date(parseInt(MOCK_AIN_APPLICATION.submissionDate, 10));
+    const result = formatIssueDeadlineDate(date);
+
+    const expected = '15 Mar 2022';
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should return a correct timestamp 3 months in advance from today if do not provide a date', () => {
+    const result = formatIssueDeadlineDate();
+
+    const nowPlus3Months = add(new Date(), { months: 3 });
+    const expected = format(nowPlus3Months, 'dd MMM yyyy');
+
+    expect(result).toEqual(expected);
   });
 });
 
