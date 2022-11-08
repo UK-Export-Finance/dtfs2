@@ -7,7 +7,6 @@ const api = require('../../../src/v1/api');
 const CONSTANTS = require('../../../src/constants');
 
 const baseUrl = '/v1/gef/application';
-const collectionName = 'deals';
 
 const mockApplication = {
   ...mockApplications[0],
@@ -22,7 +21,7 @@ describe(baseUrl, () => {
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
 
   beforeAll(async () => {
-    await wipeDB.wipe([collectionName]);
+    await wipeDB.wipe(['deals', 'facilities']);
     const testUsers = await testUserCache.initialise(app);
     aChecker = testUsers().withRole('checker').one();
     aMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
@@ -40,16 +39,16 @@ describe(baseUrl, () => {
   describe(`POST ${baseUrl}/clone`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
         maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
+        createdAt: Date.now(),
+        mandatoryVersionId: 33,
         status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
+        updatedAt: Date.now(),
         submissionCount: 0,
       }).to(baseUrl);
 
@@ -61,16 +60,16 @@ describe(baseUrl, () => {
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
       const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
         maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
+        createdAt: Date.now(),
+        mandatoryVersionId: 33,
         status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
+        updatedAt: Date.now(),
         submissionCount: 0,
       }).to(baseUrl);
 
@@ -82,16 +81,16 @@ describe(baseUrl, () => {
 
     it('successfully clones a GEF deal and returns a new application ID', async () => {
       const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
         maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
+        createdAt: Date.now(),
+        mandatoryVersionId: 33,
         status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
+        updatedAt: Date.now(),
         submissionCount: 0,
       }).to(baseUrl);
 
@@ -104,16 +103,16 @@ describe(baseUrl, () => {
 
     it('returns a `404` status if the maker belongs to a different bank', async () => {
       const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
         maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
+        createdAt: Date.now(),
+        mandatoryVersionId: 33,
         status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
+        updatedAt: Date.now(),
         submissionCount: 0,
       }).to(baseUrl);
 
@@ -126,16 +125,16 @@ describe(baseUrl, () => {
 
     it('returns a `401` status if the user role is `Checker`', async () => {
       const mockDeal = await as(aChecker).post({
-        dealType: 'GEF',
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
         maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
+        createdAt: Date.now(),
+        mandatoryVersionId: 33,
         status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
+        updatedAt: Date.now(),
         submissionCount: 0,
       }).to(baseUrl);
 
@@ -147,16 +146,16 @@ describe(baseUrl, () => {
 
     it('returns an error message when Bank Internal Ref Name is null', async () => {
       const mockDeal = await as(aMaker).post({
-        dealType: 'GEF',
+        dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
         maker: aMaker,
         bank: { id: aMaker.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},
-        createdAt: '2021-01-01T00:00',
-        mandatoryVersionId: '123',
+        createdAt: Date.now(),
+        mandatoryVersionId: 33,
         status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-        updatedAt: null,
+        updatedAt: Date.now(),
         submissionCount: 0,
       }).to(baseUrl);
 

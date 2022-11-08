@@ -11,7 +11,6 @@ const { isSuperUser } = require('../../users/checks');
 const { Application } = require('../models/application');
 const { addSubmissionData } = require('./application-submit');
 const api = require('../../api');
-const { sendEmail } = require('../../../reference-data/api');
 const { EMAIL_TEMPLATE_IDS, DEAL: { DEAL_STATUS, DEAL_TYPE } } = require('../../../constants');
 
 const dealsCollection = 'deals';
@@ -174,7 +173,7 @@ const sendStatusUpdateEmail = (user, existingApplication, status) => {
   const { companyName = '' } = exporter;
 
   user.bank.emails.forEach(async (email) => {
-    await sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
+    await api.sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
       firstName,
       surname,
       submissionType: existingApplication.submissionType || '',
