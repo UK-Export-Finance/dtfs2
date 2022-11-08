@@ -97,8 +97,10 @@ const areUnissuedFacilitiesPresent = (application) => {
 };
 
 // adds 3 months to date and returns formatted string deadline date
-const formatIssueDeadlineDate = (date) => {
-  const deadlineDate = add(new Date(date), { months: 3 });
+const formatIssueDeadlineDate = (initialDate) => {
+  // if initialDate then uses that or if not provided then uses today
+  const date = initialDate || new Date();
+  const deadlineDate = add(date, { months: 3 });
 
   return format(deadlineDate, 'dd MMM yyyy');
 };
@@ -111,7 +113,7 @@ const formatIssueDeadlineDate = (date) => {
 const facilityIssueDeadline = (application) => {
   // if MIA, then deadline should be 3 months from today
   if (application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA) {
-    return formatIssueDeadlineDate(new Date());
+    return formatIssueDeadlineDate();
   }
 
   // if MIN, then deadline should be 3 months from MIN submission date
@@ -234,4 +236,5 @@ module.exports = {
   summaryIssuedUnchanged,
   issuedFacilityConfirmation,
   facilityTypeStringGenerator,
+  formatIssueDeadlineDate,
 };
