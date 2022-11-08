@@ -1,3 +1,5 @@
+import { format, add } from 'date-fns';
+
 import {
   getIssuedFacilitiesAsArray,
   coverDatesConfirmed,
@@ -219,17 +221,45 @@ describe('areUnissuedFacilitiesPresent', () => {
 
 describe('facilityIssueDeadline()', () => {
   const timestamp = 1639586124100;
+  const application = {
+    submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
+    submissionDate: timestamp,
+  };
 
-  it('should return a correct timestamp 3 months in advance in the right format', () => {
-    const result = facilityIssueDeadline(timestamp);
+  it('should return a correct timestamp 3 months in advance from submissionDate if AIN in the right format', () => {
+    const result = facilityIssueDeadline(application);
 
     const expected = '15 Mar 2022';
 
     expect(result).toEqual(expected);
   });
 
+  it('should return a correct timestamp 3 months in advance from now if MIA in the right format', () => {
+    application.submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.MIA;
+
+    const result = facilityIssueDeadline(application);
+
+    const nowPlus3Months = add(new Date(), { months: 3 });
+    const expected = format(nowPlus3Months, 'dd MMM yyyy');
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should return a correct timestamp 3 months in advance from MIN submission date if MIN in the right format', () => {
+    application.submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.MIN;
+    application.manualInclusionNoticeSubmissionDate = 1636373639000;
+
+    const result = facilityIssueDeadline(application);
+
+    const expected = '08 Feb 2022';
+
+    expect(result).toEqual(expected);
+  });
+
   it('should return null when there is no submissionDate', () => {
-    const result = facilityIssueDeadline();
+    application.submissionType = CONSTANTS.DEAL_SUBMISSION_TYPE.AIN;
+    application.submissionDate = null;
+    const result = facilityIssueDeadline(application);
 
     expect(result).toEqual(null);
   });
