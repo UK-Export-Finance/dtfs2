@@ -1092,14 +1092,14 @@ const datafixesTfmDeal = async (deals) => {
       let updated = 0;
 
       // TFM Deal - Data fixes
-      // await creditRating();
-      // await partyUrn();
-      // await agentCommissionRate();
-      // await comment();
-      // await ACBS();
-      // await ukefDecision();
-      // await supportingInformations();
-      // await eStore();
+      await creditRating();
+      await partyUrn();
+      await agentCommissionRate();
+      await comment();
+      await ACBS();
+      await ukefDecision();
+      await supportingInformations();
+      await eStore();
       await tasks();
 
       const updates = allDeals.map(async (deal) => {
@@ -1506,8 +1506,8 @@ const datafixesTfmFacilitiesGef = async (deals) => {
 
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
-        // await actionSheetFacility();
-        // await ACBS(true);
+        await actionSheetFacility();
+        await ACBS(true);
         await dates();
 
         // Update TFM Facilities
