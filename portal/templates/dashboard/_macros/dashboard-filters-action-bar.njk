@@ -13,44 +13,6 @@
       <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
         <div class="moj-action-bar__filter"></div>
       </div>
-
-      {% if renderCreatedByYou %}
-        <div class="govuk-grid-column-one-half">
-
-          <form method="POST" autocomplete="off" class="created-by-you-form">
-            <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-            {{ govukCheckboxes({
-              name: "createdByYou",
-              classes: "govuk-checkboxes--small created-by-you",
-              items: [
-                {
-                  value: "true",
-                  text: "Created by you",
-                  checked: createdByYou,
-                  label: {
-                    classes: 'govuk-!-padding-right-0'
-                  },
-                  attributes: {
-                    "data-cy": "created-by-you-checkbox",
-                    'onChange': 'this.form.submit()'
-                  }
-                }
-              ]
-            }) }}
-            <div class="moj-button-action">
-              {{ govukButton({
-                text: 'Submit',
-                classes: 'moj-js-hidden text-align-right',
-                attributes: {
-                  'data-cy': 'created-by-you-submit'
-                }
-              }) }}
-            </div>
-
-          </form>
-
-        </div>
-      {% endif %}
     </div>
 
     {% if selectedFilters.length %}
