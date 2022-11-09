@@ -9,6 +9,19 @@ const {
   submissionTypeFilters,
 } = require('../filters/generate-template-filters');
 
+const createdByYouFilter = (submittedFilters) => {
+  const fieldName = FIELD_NAMES.DEAL.CREATED_BY;
+
+  const fieldInputs = [
+    {
+      text: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.CREATED_BY_YOU,
+      value: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.CREATED_BY_YOU,
+    },
+  ];
+
+  return generateFiltersArray(fieldName, fieldInputs, submittedFilters);
+};
+
 /**
  * Create filters array for the 'dealType' (or 'product') field.
  * This will used in the checkboxes component 'items' array.
@@ -86,6 +99,7 @@ const statusFilters = (submittedFilters) => {
  * This will used in multiple checkboxes components.
  */
 const dealsTemplateFilters = (submittedFilters = {}) => ({
+  createdBy: createdByYouFilter(submittedFilters),
   dealType: dealTypeFilters(submittedFilters),
   submissionType: submissionTypeFilters(
     FIELD_NAMES.DEAL.SUBMISSION_TYPE,
@@ -95,6 +109,7 @@ const dealsTemplateFilters = (submittedFilters = {}) => ({
 });
 
 module.exports = {
+  createdByYouFilter,
   dealTypeFilters,
   statusFilters,
   dealsTemplateFilters,

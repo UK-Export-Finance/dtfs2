@@ -29,7 +29,6 @@ const getAllDealsData = async (
   const filtersArray = submittedFiltersArray(sessionFilters);
 
   const filtersQuery = dashboardDealsFiltersQuery(
-    sessionFilters.createdByYou,
     filtersArray,
     user,
   );

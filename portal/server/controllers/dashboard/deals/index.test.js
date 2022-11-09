@@ -83,7 +83,7 @@ describe('controllers/dashboard/deals', () => {
   });
 
   describe('getAllDealsData', () => {
-    it('should calls api.allDeals with filters query', async () => {
+    it.only('should calls api.allDeals with filters query', async () => {
       await getAllDealsData(
         'mock-token',
         mockReq.session.user,
@@ -92,7 +92,7 @@ describe('controllers/dashboard/deals', () => {
         CONSTANTS.SORT_BY.DEFAULT,
         mockRes,
       );
-
+      console.log(mockReq.session.user);
       expect(api.allDeals).toBeCalledTimes(1);
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
