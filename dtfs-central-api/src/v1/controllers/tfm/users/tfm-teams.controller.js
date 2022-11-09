@@ -4,7 +4,7 @@ const teamsCollection = 'tfm-teams';
 
 exports.postTeam = async (req, res) => {
   let response = {};
-  let status = 200;
+  let status;
   try {
     const collection = await getCollection(teamsCollection);
     response = await collection.insertOne(req.body.team);
@@ -18,7 +18,7 @@ exports.postTeam = async (req, res) => {
 
 exports.getTeams = async (req, res) => {
   let response = {};
-  let status = 200;
+  let status;
   try {
     const collection = await getCollection(teamsCollection);
     response = await collection.find({}).toArray();
