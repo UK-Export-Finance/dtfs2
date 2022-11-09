@@ -74,7 +74,7 @@ const updateBssDeal = async (dealId, dealChanges, user, existingDeal, routePath)
     }
 
     let originalDealDetails;
-    if (originalDeal && originalDeal.details) {
+    if (originalDeal?.details) {
       originalDealDetails = originalDeal.details;
     }
 
@@ -84,12 +84,12 @@ const updateBssDeal = async (dealId, dealChanges, user, existingDeal, routePath)
     }
 
     let originalDealEligibility;
-    if (originalDeal && originalDeal.eligibility) {
+    if (originalDeal?.eligibility) {
       originalDealEligibility = originalDeal.eligibility;
     }
 
     let dealChangesEligibility;
-    if (dealChanges && dealChanges.eligibility) {
+    if (dealChanges?.eligibility) {
       dealChangesEligibility = dealChanges.eligibility;
     }
 
