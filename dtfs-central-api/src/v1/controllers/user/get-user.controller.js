@@ -1,25 +1,22 @@
 const { ObjectId } = require('mongodb');
-const db = require('../../../database/mongo-client');
+const { getCollection } = require('../../../database/mongo-client');
 
-const findOnePortalUser = async (_id) => {
-  const usersCollection = await db.getCollection('users');
-  return usersCollection.findOne({ _id: ObjectId(_id) });
-};
-exports.findOnePortalUser = findOnePortalUser;
-
-exports.findOnePortalUserGet = async (req, res) => {
-  const { userId } = req.params;
-  const user = await findOnePortalUser(userId);
-
-  if (user) {
-    return res.status(200).send(user);
+exports.getPortalUserById = async (req, res) => {
+  let response = {};
+  let status;
+  try {
+    const collection = await getCollection('users');
+    response = await collection.findOne({ _id: ObjectId(req.params.userId) });
+    status = response ? 200 : 404;
+  } catch (error) {
+    status = 404;
   }
 
-  return res.status(404).send({ status: 404, message: 'User not found' });
+  return res.status(status).send(response);
 };
 
-const listPortalUsers = async () => {
-  const collection = await db.getCollection('users');
+const findPortalUsers = async () => {
+  const collection = await getCollection('users');
 
   return collection.aggregate([
     {
@@ -39,14 +36,16 @@ const listPortalUsers = async () => {
   ]).toArray();
 };
 
-exports.listAllPortalUsers = async (req, res) => {
-  const users = await listPortalUsers();
-  if (users) {
-    return res.status(200).send({
-      success: true,
-      count: users.length,
-      users,
-    });
+exports.getPortalUsers = async (req, res) => {
+  let response = [];
+  let status;
+  try {
+    response = await findPortalUsers();
+    status = response.length ? 200 : 404;
+  } catch (error) {
+    status = 500;
   }
-  return res.status(500).send({ success: false });
+  const success = status === 200;
+
+  return res.status(status).send({ success, users: response, count: response.length });
 };

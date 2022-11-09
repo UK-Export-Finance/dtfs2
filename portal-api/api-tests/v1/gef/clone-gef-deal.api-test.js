@@ -19,6 +19,7 @@ describe(baseUrl, () => {
   let anotherMaker;
   let aChecker;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
+  const findLatestEligibilityCriteriaSpy = jest.fn(() => Promise.resolve({ data: { criteria: [] } }));
 
   beforeAll(async () => {
     await wipeDB.wipe(['deals', 'facilities']);
@@ -30,6 +31,7 @@ describe(baseUrl, () => {
 
   beforeEach(() => {
     api.tfmDealSubmit = tfmDealSubmitSpy;
+    api.findLatestEligibilityCriteria = findLatestEligibilityCriteriaSpy;
   });
 
   afterEach(() => {

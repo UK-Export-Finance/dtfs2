@@ -1,8 +1,8 @@
-const { createUserPost } = require('./create-user.controller');
-const { findOnePortalUserGet, listAllPortalUsers } = require('./get-user.controller');
+const { postPortalUser } = require('./create-user.controller');
+const { getPortalUserById, getPortalUsers } = require('./get-user.controller');
 
 module.exports = {
-  createUserPost,
-  findOnePortalUserGet,
-  listAllPortalUsers,
+  postPortalUser,
+  getPortalUserById,
+  getPortalUsers,
 };

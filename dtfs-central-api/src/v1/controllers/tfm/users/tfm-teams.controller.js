@@ -1,58 +1,59 @@
-const db = require('../../../../database/mongo-client');
+const { getCollection } = require('../../../../database/mongo-client');
 
 const teamsCollection = 'tfm-teams';
 
-const createTeam = async (team) => {
-  const collection = await db.getCollection(teamsCollection);
-  return collection.insertOne(team);
-};
-exports.createTeam = createTeam;
-
-exports.createTeamPOST = async (req, res) => {
-  const team = await createTeam(req.body.team);
-
-  const { insertedId } = team;
-
-  res.status(200).json({
-    _id: insertedId,
-  });
-};
-
-const listTeams = async () => {
-  const collection = await db.getCollection(teamsCollection);
-  return collection.find({}).toArray();
-};
-exports.listTeams = listTeams;
-
-exports.listTeamsGET = async (req, res) => {
-  const teams = await listTeams();
-  return res.status(200).send({ teams });
-};
-
-const findOneTeam = async (id) => {
-  const collection = await db.getCollection(teamsCollection);
-  return collection.findOne({ id });
-};
-exports.findOneTeam = findOneTeam;
-
-exports.getTeamById = async (req, res) => {
-  const team = await findOneTeam(req.params.id);
-  if (team) {
-    return res.status(200).send({
-      team,
-    });
+exports.postTeam = async (req, res) => {
+  let response = {};
+  let status = 200;
+  try {
+    const collection = await getCollection(teamsCollection);
+    response = await collection.insertOne(req.body.team);
+    status = response ? 200 : 400;
+  } catch (error) {
+    status = 500;
   }
 
-  return res.status(404).send();
+  return res.status(status).send({ _id: response?.insertedId });
 };
 
-const deleteTeam = async (id) => {
-  const collection = await db.getCollection(teamsCollection);
-  return collection.deleteOne({ id });
+exports.getTeams = async (req, res) => {
+  let response = {};
+  let status = 200;
+  try {
+    const collection = await getCollection(teamsCollection);
+    response = await collection.find({}).toArray();
+    status = response.length ? 200 : 404;
+  } catch (error) {
+    status = 404;
+  }
+
+  return res.status(status).send({ teams: response });
 };
-exports.deleteTeam = deleteTeam;
+
+exports.getTeamById = async (req, res) => {
+  let response = {};
+  let status;
+  try {
+    const collection = await getCollection(teamsCollection);
+    response = await collection.findOne({ id: { $eq: req.params.id } });
+    status = response ? 200 : 404;
+  } catch (error) {
+    status = 404;
+  }
+
+  return res.status(status).send({ team: response });
+};
 
 exports.deleteTeamById = async (req, res) => {
-  const deleted = await deleteTeam(req.params.id);
-  return res.status(200).send(deleted);
+  let status;
+  let response = {};
+  try {
+    const collection = await getCollection(teamsCollection);
+    response = await collection.deleteOne({ id: { $eq: req.params.id } });
+    status = response ? 200 : 404;
+  } catch (error) {
+    status = 404;
+  }
+
+  return res.status(status).send(response);
 };

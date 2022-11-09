@@ -38,7 +38,7 @@ exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 const createPasswordToken = async (email) => {
   const collection = await db.getCollection('users');
 
-  const user = await collection.findOne({ email }, { collation: { locale: 'en', strength: 2 } });
+  const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
   if (!user) {
     return false;
@@ -51,7 +51,7 @@ const createPasswordToken = async (email) => {
     resetPwdTimestamp: `${Date.now()}`,
   };
 
-  await collection.updateOne({ _id: user._id }, { $set: userUpdate }, {});
+  await collection.updateOne({ _id: { $eq: user._id } }, { $set: userUpdate }, {});
 
   return hash;
 };
@@ -107,12 +107,12 @@ exports.findOne = async (_id, callback) => {
 
 exports.findByUsername = async (username, callback) => {
   const collection = await db.getCollection('users');
-  collection.findOne({ username }, { collation: { locale: 'en', strength: 2 } }, callback);
+  collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
 exports.findByEmail = async (email, callback) => {
   const collection = await db.getCollection('users');
-  collection.findOne({ email }, callback);
+  collection.findOne({ email: { $eq: email } }, callback);
 };
 
 exports.create = async (user, callback) => {
@@ -130,7 +130,7 @@ exports.create = async (user, callback) => {
 
   const { insertedId: userId } = createUserResult;
 
-  const createdUser = await collection.findOne({ _id: userId });
+  const createdUser = await collection.findOne({ _id: { $eq: userId } });
 
   const sanitizedUser = sanitizeUser(createdUser);
 
@@ -188,7 +188,7 @@ exports.update = async (_id, update, callback) => {
     delete userUpdate.passwordConfirm;
     delete userUpdate.currentPassword;
     delete userUpdate._csrf;
-    await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
+    await collection.updateOne({ _id: ObjectId(_id) }, { $set: userUpdate }, {});
     callback(null, userUpdate);
   });
 };
@@ -238,7 +238,7 @@ exports.disable = async (_id, callback) => {
     disabled: true,
   };
 
-  const status = await collection.updateOne({ _id: { $eq: ObjectId(_id) } }, { $set: userUpdate }, {});
+  const status = await collection.updateOne({ _id: ObjectId(_id) }, { $set: userUpdate }, {});
 
   callback(null, status);
 };

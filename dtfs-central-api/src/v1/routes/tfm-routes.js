@@ -467,7 +467,7 @@ tfmRouter.route('/facilities/:facilityId/amendment/:amendmentId').put(tfmPutAmen
  *             schema:
  *               $ref: '#/definitions/TFMTeams'
  */
-tfmRouter.route('/teams').get(tfmTeamsController.listTeamsGET);
+tfmRouter.route('/teams').get(tfmTeamsController.getTeams);
 
 /**
  * @openapi
@@ -491,7 +491,7 @@ tfmRouter.route('/teams').get(tfmTeamsController.listTeamsGET);
  *             example:
  *               _id: '123456abc'
  */
-tfmRouter.route('/teams').post(tfmTeamsController.createTeamPOST);
+tfmRouter.route('/teams').post(tfmTeamsController.postTeam);
 
 /**
  * @openapi
@@ -559,7 +559,7 @@ tfmRouter.route('/teams/:id').delete(param('id').not().isEmpty(), hasValidationE
  *             schema:
  *               $ref: '#/definitions/TFMUsers'
  */
-tfmRouter.route('/users').get(tfmUsersController.listUsersGET);
+tfmRouter.route('/users').get(tfmUsersController.getTfmUsers);
 
 /**
  * @openapi
@@ -583,7 +583,7 @@ tfmRouter.route('/users').get(tfmUsersController.listUsersGET);
  *             example:
  *               _id: '123456abc'
  */
-tfmRouter.route('/users').post(tfmUsersController.createUserPOST);
+tfmRouter.route('/users').post(tfmUsersController.postTfmUser);
 
 /**
  * @openapi
@@ -609,7 +609,7 @@ tfmRouter.route('/users').post(tfmUsersController.createUserPOST);
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/users/:username').get(param('username').not().isEmpty(), hasValidationErrors, tfmUsersController.findOneUserGET);
+tfmRouter.route('/users/:username').get(param('username').not().isEmpty(), hasValidationErrors, tfmUsersController.getTfmUserByUsername);
 
 /**
  * @openapi
