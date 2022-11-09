@@ -1,6 +1,7 @@
 const DASHBOARD_FILTERS = {
   FILTER_HEADINGS: {
-    CREATED: 'Created',
+    // empty string for created as does not have heading - necessary to keep
+    CREATED: '',
     KEYWORD: 'Keyword',
     PRODUCT: 'Product',
     NOTICE_TYPE: 'Notice Type',

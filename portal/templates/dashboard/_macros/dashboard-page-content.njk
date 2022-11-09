@@ -11,8 +11,6 @@
   {% set filters = params.filters %}
   {% set selectedFilters = params.selectedFilters %}
   {% set keyword = params.keyword %}
-  {% set renderCreatedByYou = params.renderCreatedByYou %}
-  {% set createdByYou = params.createdByYou %}
   {% set selectedFilters = params.selectedFilters %}
   {% set selectedFiltersString = params.selectedFiltersString %}
   {% set table = params.table %}
@@ -40,8 +38,6 @@
     <div class="moj-filter-layout__content">
 
       {{dashboardFitlersActionBar.render({
-        renderCreatedByYou: renderCreatedByYou,
-        createdByYou: createdByYou,
         selectedFilters: selectedFilters,
         csrfToken: csrfToken
       })}}

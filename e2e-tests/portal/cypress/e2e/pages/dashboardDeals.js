@@ -20,6 +20,10 @@ const page = {
   filters: {
     panel: {
       form: {
+        createdByYou: {
+          label: () => cy.get('[data-cy="filter-label-createdBy-Created-by-you"]'),
+          checkbox: () => cy.get('[data-cy="filter-input-createdBy-Created-by-you"]'),
+        },
         dealType: {
           bssEwcs: {
             label: () => cy.get('[data-cy="filter-label-dealType-BSS-EWCS"]'),
@@ -93,8 +97,9 @@ const page = {
       },
     },
     mainContainer: {
-      createdByYouCheckbox: () => cy.get('[data-cy="created-by-you-checkbox"]'),
       selectedFilters: {
+        createdByYou: () => cy.get('[data-cy="main-container-selected-filter-Created-by-you'),
+
         noticeAIN: () => cy.get('[data-cy="main-container-selected-filter-Automatic-Inclusion-Notice'),
         noticeMIN: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Notice'),
         noticeMIA: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Application'),

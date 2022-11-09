@@ -75,7 +75,6 @@ const getTemplateVariables = (
     pages,
     filters: templateFilters(filtersObj),
     selectedFilters: selectedFilters(filtersObj),
-    createdByYou: sessionFilters.createdByYou,
     keyword: sessionFilters.keyword,
   };
 
