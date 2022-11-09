@@ -74,7 +74,7 @@ app.use(session(sessionOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', supportingDocuments);
-app.use(csrf({ cookie: true }));
+app.use(csrf());
 app.use(csrfToken());
 app.use(flash());
 
