@@ -9,10 +9,6 @@
 const submittedFiltersArray = (allSubmittedFilters = {}) => {
   const submittedFilters = allSubmittedFilters;
 
-  if (submittedFilters.createdByYou) {
-    delete submittedFilters.createdByYou;
-  }
-
   const consistentArray = [];
 
   const filtersArray = Object.keys(submittedFilters);

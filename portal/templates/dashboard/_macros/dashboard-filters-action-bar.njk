@@ -2,8 +2,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% macro render(params) %}
-  {% set renderCreatedByYou = params.renderCreatedByYou %}
-  {% set createdByYou = params.createdByYou %}
   {% set selectedFilters = params.selectedFilters %}
   {% set csrfToken = params.csrfToken %}
 

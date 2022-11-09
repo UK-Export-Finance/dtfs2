@@ -63,7 +63,6 @@ describe('controllers/dashboard/deals', () => {
   beforeEach(() => {
     mockReq = {
       body: {
-        createdByYou: '',
         keyword: '',
       },
       params: { page: 1 },
@@ -83,7 +82,7 @@ describe('controllers/dashboard/deals', () => {
   });
 
   describe('getAllDealsData', () => {
-    it.only('should calls api.allDeals with filters query', async () => {
+    it('should calls api.allDeals with filters query', async () => {
       await getAllDealsData(
         'mock-token',
         mockReq.session.user,
@@ -92,13 +91,12 @@ describe('controllers/dashboard/deals', () => {
         CONSTANTS.SORT_BY.DEFAULT,
         mockRes,
       );
-      console.log(mockReq.session.user);
+
       expect(api.allDeals).toBeCalledTimes(1);
 
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
       const expectedFilters = dashboardDealsFiltersQuery(
-        mockReq.body.createdByYou,
         filtersArray,
         mockReq.session.user,
       );
@@ -152,7 +150,6 @@ describe('controllers/dashboard/deals', () => {
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
       const expectedFilters = dashboardDealsFiltersQuery(
-        mockReq.body.createdByYou,
         filtersArray,
         mockReq.session.user,
       );
@@ -199,7 +196,6 @@ describe('controllers/dashboard/deals', () => {
         pages: expectedPages,
         filters: templateFilters(expectedFiltersObj),
         selectedFilters: selectedFilters(expectedFiltersObj),
-        createdByYou: mockReq.session.dashboardFilters.createdByYou,
         keyword: mockReq.session.dashboardFilters.keyword,
       };
 
