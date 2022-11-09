@@ -96,18 +96,38 @@ const areUnissuedFacilitiesPresent = (application) => {
   return hasUnissuedFacilities;
 };
 
+// adds 3 months to date and returns formatted string deadline date
+const formatIssueDeadlineDate = (initialDate) => {
+  // if initialDate then uses that or if not provided then uses today
+  const date = initialDate || new Date();
+  const deadlineDate = add(date, { months: 3 });
+
+  return format(deadlineDate, 'dd MMM yyyy');
+};
+
 /*
    This function sets the deadline to display for unissued
    facilities on the unissued facilities table 3 months
-   from date of submission
+   from date of submission or MIN submission or now based on submission type
 */
-const facilityIssueDeadline = (submissionDate) => {
-  if (submissionDate) {
-  // converts to timestamp from epoch - '+' to convert from str to int
-    const date = new Date(parseInt(submissionDate, 10));
-    const deadlineDate = add(new Date(date), { months: 3 });
+const facilityIssueDeadline = (application) => {
+  // if MIA, then deadline should be 3 months from today
+  if (application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIA) {
+    return formatIssueDeadlineDate();
+  }
 
-    return format(deadlineDate, 'dd MMM yyyy');
+  // if MIN, then deadline should be 3 months from MIN submission date
+  if (application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN && application.manualInclusionNoticeSubmissionDate) {
+    // converts to timestamp from epoch
+    const date = new Date(parseInt(application.manualInclusionNoticeSubmissionDate, 10));
+    return formatIssueDeadlineDate(date);
+  }
+
+  // if AIN then 3 months from submission date
+  if (application.submissionDate) {
+    // converts to timestamp from epoch
+    const date = new Date(parseInt(application.submissionDate, 10));
+    return formatIssueDeadlineDate(date);
   }
 
   return null;
@@ -124,8 +144,7 @@ const getUnissuedFacilitiesAsArray = (facilities, application) =>
       { text: details.ukefFacilityId },
       { text: `${details.currency.id} ${details.value.toLocaleString('en', { minimumFractionDigits: 2 })}` },
       {
-        text: application.manualInclusionNoticeSubmissionDate ? facilityIssueDeadline(application.manualInclusionNoticeSubmissionDate)
-          : facilityIssueDeadline(application.submissionDate),
+        text: facilityIssueDeadline(application),
       },
       {
         html: `<a href = '/gef/application-details/${details.dealId}/unissued-facilities/${details._id}/about' class='govuk-button govuk-button--secondary govuk-!-margin-0' data-cy='update-facility-button-${index}'>Update</a>`,
@@ -217,4 +236,5 @@ module.exports = {
   summaryIssuedUnchanged,
   issuedFacilityConfirmation,
   facilityTypeStringGenerator,
+  formatIssueDeadlineDate,
 };
