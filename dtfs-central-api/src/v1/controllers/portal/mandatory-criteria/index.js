@@ -11,7 +11,7 @@ exports.getOneMandatoryCriteria = async (req, res) => {
   const { dealType } = req.query;
 
   const collection = await getCollection(collectionName);
-  const criteria = await collection.findOne({ dealType, version });
+  const criteria = await collection.findOne({ dealType: { $eq: dealType }, version: { $eq: version } });
 
   const status = criteria ? 200 : 404;
   return res.status(status).send(criteria);
@@ -70,7 +70,7 @@ exports.putMandatoryCriteria = async (req, res) => {
 
   const collection = await getCollection(collectionName);
   const response = await collection.findOneAndUpdate(
-    { version, dealType },
+    { dealType: { $eq: dealType }, version: { $eq: version } },
     $.flatten(payload),
     { returnDocument: 'after', returnNewDocument: true }
   );
@@ -82,7 +82,7 @@ exports.deleteMandatoryCriteria = async (req, res) => {
   const { dealType } = req.query;
   const { version } = req.params;
   const collection = await getCollection(collectionName);
-  const response = await collection.deleteOne({ version, dealType });
+  const response = await collection.deleteOne({ dealType: { $eq: dealType }, version: { $eq: version } });
   const status = response ? 200 : 404;
   return res.status(status).send();
 };

@@ -19,7 +19,6 @@ const referenceData = require('../../../src/reference-data/api');
 const api = require('../../../src/v1/api');
 
 jest.mock('../../../src/reference-data/api', () => ({
-  sendEmail: jest.fn(() => Promise.resolve({})),
   numberGenerator: {
     create: () => ({ ukefId: '1' }),
   },
@@ -35,6 +34,7 @@ describe(baseUrl, () => {
   let aMaker;
   let aChecker;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
+  const sendEmailSpy = jest.fn(() => Promise.resolve({}));
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
@@ -46,6 +46,7 @@ describe(baseUrl, () => {
     await wipeDB.wipe([collectionName]);
 
     api.tfmDealSubmit = tfmDealSubmitSpy;
+    api.sendEmail = sendEmailSpy;
   });
 
   afterEach(() => {
@@ -366,7 +367,7 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL }).to(`${baseUrl}/status/${dealId}`);
 
-          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+          const firstSendEmailCall = api.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
@@ -389,7 +390,7 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED }).to(`${baseUrl}/status/${dealId}`);
 
-          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+          const firstSendEmailCall = api.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,
@@ -412,7 +413,7 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
-          const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
+          const firstSendEmailCall = api.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
             CONSTANTS.EMAIL_TEMPLATE_IDS.UPDATE_STATUS,

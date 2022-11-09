@@ -1,23 +1,14 @@
-const db = require('../../../database/mongo-client');
+const { getCollection } = require('../../../database/mongo-client');
 
-const createUser = async (user) => {
-  const collection = await db.getCollection('users');
-
-  const response = await collection.insertOne(user);
-
-  const { insertedId } = response;
-
-  return {
-    _id: insertedId,
-  };
-};
-
-exports.createUserPost = async (req, res) => {
-  const user = await createUser(req.body);
-
-  if (user) {
-    return res.status(200).send(user);
+exports.postPortalUser = async (req, res) => {
+  let response = {};
+  let status = 200;
+  try {
+    const collection = await getCollection('users');
+    response = await collection.insertOne(req.body);
+  } catch (error) {
+    status = 500;
   }
 
-  return res.status(404).send();
+  return res.status(status).send({ _id: response?.insertedId });
 };

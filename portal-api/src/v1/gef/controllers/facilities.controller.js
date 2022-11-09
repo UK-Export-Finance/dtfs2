@@ -20,10 +20,10 @@ exports.create = async (req, res) => {
     if (enumValidationErr) {
       res.status(422).send(enumValidationErr);
     } else {
-      const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
-      const createdFacility = await facilitiesQuery.insertOne(new Facility(req.body));
+      const collection = await db.getCollection(facilitiesCollectionName);
+      const createdFacility = await collection.insertOne(new Facility(req.body));
 
-      const facility = await facilitiesQuery.findOne({
+      const facility = await collection.findOne({
         _id: ObjectId(createdFacility.insertedId),
       });
 
@@ -94,18 +94,18 @@ exports.getById = async (req, res) => {
 
 const update = async (id, updateBody) => {
   try {
-    const facilitiesQuery = await db.getCollection(facilitiesCollectionName);
-    const dealsQuery = await db.getCollection(dealsCollectionName);
+    const facilitiescollection = await db.getCollection(facilitiesCollectionName);
+    const dealsCollection = await db.getCollection(dealsCollectionName);
 
     const facilityId = ObjectId(String(id));
-    const existingFacility = await facilitiesQuery.findOne({ _id: facilityId });
+    const existingFacility = await facilitiescollection.findOne({ _id: facilityId });
     const facilityUpdate = new Facility({
       ...updateBody,
       ukefExposure: calculateUkefExposure(updateBody, existingFacility),
       guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
     });
 
-    const updatedFacility = await facilitiesQuery.findOneAndUpdate(
+    const updatedFacility = await facilitiescollection.findOneAndUpdate(
       { _id: { $eq: facilityId } },
       { $set: facilityUpdate },
       { returnDocument: 'after', returnNewDocument: true }
@@ -118,7 +118,7 @@ const update = async (id, updateBody) => {
       };
       const dealUpdate = new Application(dealUpdateObj);
 
-      await dealsQuery.updateOne(
+      await dealsCollection.updateOne(
         { _id: { $eq: ObjectId(existingFacility.dealId) } },
         { $set: dealUpdate }
       );
@@ -159,6 +159,6 @@ exports.delete = async (req, res) => {
 
 exports.deleteByDealId = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollectionName);
-  const response = await collection.deleteMany({ dealId: req.query.dealId });
+  const response = await collection.deleteMany({ dealId: { $eq: req.query.dealId } });
   res.status(200).send(response);
 };
