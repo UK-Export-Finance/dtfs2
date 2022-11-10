@@ -328,7 +328,8 @@ const internalAmendmentEmail = async (ukefFacilityId) => {
       return false;
     }
 
-    return sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
+    const email = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
+    return email;
   } catch (error) {
     console.error('Error sending internal amendment email', { error });
     return error;

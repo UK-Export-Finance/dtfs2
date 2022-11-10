@@ -14,14 +14,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.1.3",
     "bson": "^4.7.0",
-    "date-fns": "^2.29.2",
-    "dotenv": "^16.0.2",
+    "date-fns": "^2.29.3",
+    "dotenv": "^16.0.3",
     "generate-password": "^1.7.0",
     "html-entities": "^2.3.3",
     "json2csv": "^5.0.7",
-    "minimist": "^1.2.6",
+    "minimist": "^1.2.7",
     "moment": "^2.29.4",
     "mongodb": "^4.0.0",
     "xml2js": "^0.4.23"
