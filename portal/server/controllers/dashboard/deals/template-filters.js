@@ -3,7 +3,7 @@ const {
   PRODUCT,
   STATUS,
 } = require('../../../constants');
-const CONTENT_STRINGS = require('../../../content-strings');
+const { DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES } } = require('../../../content-strings');
 const {
   generateFiltersArray,
   submissionTypeFilters,
@@ -14,8 +14,8 @@ const createdByYouFilter = (submittedFilters) => {
 
   const fieldInputs = [
     {
-      text: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.CREATED_BY_YOU,
-      value: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.CREATED_BY_YOU,
+      text: BESPOKE_FILTER_VALUES.DEALS.CREATED_BY_YOU,
+      value: BESPOKE_FILTER_VALUES.DEALS.CREATED_BY_YOU,
     },
   ];
 
@@ -46,8 +46,8 @@ const statusFilters = (submittedFilters) => {
 
   const fieldInputs = [
     {
-      text: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES,
-      value: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES,
+      text: BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES,
+      value: BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES,
     },
     {
       text: STATUS.DRAFT,
