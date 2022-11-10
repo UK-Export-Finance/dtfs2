@@ -6,7 +6,7 @@ const deleteGefApplications = (token, deals) => {
 };
 
 module.exports = (opts) => logIn(opts).then((token) => {
-  listGefApplications(token).then(async (deals) => {
-    await deleteGefApplications(token, deals);
+  listGefApplications(token).then((deals) => {
+    deleteGefApplications(token, deals);
   });
 });

@@ -23,8 +23,8 @@ describe(component, () => {
       const criterionIdSelector = `criterion-${criterion.id}`;
       wrapper.expectText(`[data-cy="${criterionIdSelector}-heading"]`).toRead(`Eligibility criterion ${criterion.id}`);
 
-      const expectedAnwser = criterion.answer.toString().charAt(0).toUpperCase() + criterion.answer.toString().slice(1);
-      wrapper.expectText(`[data-cy="${criterionIdSelector}-answer"]`).toRead(expectedAnwser);
+      const expectedAnswer = criterion.answer.toString().charAt(0).toUpperCase() + criterion.answer.toString().slice(1);
+      wrapper.expectText(`[data-cy="${criterionIdSelector}-answer"]`).toRead(expectedAnswer);
 
       wrapper.expectText(`[data-cy="${criterionIdSelector}-description"]`).toRead(criterion.description);
     }

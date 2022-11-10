@@ -75,9 +75,6 @@ context('Application Details Submission', () => {
       applicationSubmission.confirmationPanelTitle();
       // Just asserting the link is there as the error on dashboard page causes test to fail
       applicationSubmission.backToDashboadLink();
-      // TODO: Swap this above for below
-      // applicationSubmission.backToDashboadLink().click();
-      // cy.url().should('contain', 'dashboard');
     });
   });
 

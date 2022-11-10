@@ -6,7 +6,7 @@ const deleteGefFacilities = (facilities, token) => {
 };
 
 module.exports = (dealId, opts) => logIn(opts).then((token) => {
-  listGefFacilities(token, dealId).then(async (facilities) => {
-    await deleteGefFacilities(facilities, token);
+  listGefFacilities(token, dealId).then((facilities) => {
+    deleteGefFacilities(facilities, token);
   });
 });
