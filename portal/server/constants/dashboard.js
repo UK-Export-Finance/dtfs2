@@ -8,7 +8,6 @@ const DASHBOARD = {
     FACILITIES: 'facilities',
   },
   DEFAULT_FILTERS: {
-    createdByYou: null,
     keyword: null,
   },
   DEFAULT_SORT: {

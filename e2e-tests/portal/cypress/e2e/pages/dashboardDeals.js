@@ -20,81 +20,86 @@ const page = {
   filters: {
     panel: {
       form: {
+        createdByYou: {
+          label: () => cy.get('[data-cy="filter-label-Created-by-you"]'),
+          checkbox: () => cy.get('[data-cy="filter-input-Created-by-you"]'),
+        },
         dealType: {
           bssEwcs: {
-            label: () => cy.get('[data-cy="filter-label-dealType-BSS-EWCS"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-dealType-BSS-EWCS"]'),
+            label: () => cy.get('[data-cy="filter-label-BSS-EWCS"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-BSS-EWCS"]'),
           },
           gef: {
-            label: () => cy.get('[data-cy="filter-label-dealType-GEF"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-dealType-GEF"]'),
+            label: () => cy.get('[data-cy="filter-label-GEF"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-GEF"]'),
           },
         },
         submissionType: {
           AIN: {
-            label: () => cy.get('[data-cy="filter-label-submissionType-Automatic-Inclusion-Notice"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Automatic-Inclusion-Notice"]'),
+            label: () => cy.get('[data-cy="filter-label-Automatic-Inclusion-Notice"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Automatic-Inclusion-Notice"]'),
           },
           MIA: {
-            label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Application"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Application"]'),
+            label: () => cy.get('[data-cy="filter-label-Manual-Inclusion-Application"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Manual-Inclusion-Application"]'),
           },
           MIN: {
-            label: () => cy.get('[data-cy="filter-label-submissionType-Manual-Inclusion-Notice"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-submissionType-Manual-Inclusion-Notice"]'),
+            label: () => cy.get('[data-cy="filter-label-Manual-Inclusion-Notice"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Manual-Inclusion-Notice"]'),
           },
         },
         status: {
           all: {
-            label: () => cy.get('[data-cy="filter-label-status-All-statuses"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-All-statuses"]'),
+            label: () => cy.get('[data-cy="filter-label-All-statuses"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-All-statuses"]'),
           },
           draft: {
-            label: () => cy.get('[data-cy="filter-label-status-Draft"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-Draft"]'),
+            label: () => cy.get('[data-cy="filter-label-Draft"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Draft"]'),
           },
           readyForChecker: {
-            label: () => cy.get('[data-cy="filter-label-status-Ready-for-Checkers-approval"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-Ready-for-Checkers-approval"]'),
+            label: () => cy.get('[data-cy="filter-label-Ready-for-Checkers-approval"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Ready-for-Checkers-approval"]'),
           },
           makerInputRequired: {
-            label: () => cy.get('[data-cy="filter-label-status-Further-Makers-input-required"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-Further-Makers-input-required"]'),
+            label: () => cy.get('[data-cy="filter-label-Further-Makers-input-required"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Further-Makers-input-required"]'),
           },
           submitted: {
-            label: () => cy.get('[data-cy="filter-label-status-Submitted"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-Submitted"]'),
+            label: () => cy.get('[data-cy="filter-label-Submitted"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Submitted"]'),
           },
           acknowledgedByUKEF: {
-            label: () => cy.get('[data-cy="filter-label-status-Acknowledged"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-Acknowledged"]'),
+            label: () => cy.get('[data-cy="filter-label-Acknowledged"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Acknowledged"]'),
           },
           inProgressByUKEF: {
-            label: () => cy.get('[data-cy="filter-label-status-In-progress-by-UKEF"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-In-progress-by-UKEF"]'),
+            label: () => cy.get('[data-cy="filter-label-In-progress-by-UKEF"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-In-progress-by-UKEF"]'),
           },
           acceptedByUKEFWithConditions: {
-            label: () => cy.get('[data-cy="filter-label-status-Accepted-by-UKEF-(with-conditions)"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-Accepted-by-UKEF-(with-conditions)"]'),
+            label: () => cy.get('[data-cy="filter-label-Accepted-by-UKEF-(with-conditions)"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Accepted-by-UKEF-(with-conditions)"]'),
           },
           acceptedByUKEFWithoutConditions: {
-            label: () => cy.get('[data-cy="filter-label-status-Accepted-by-UKEF-(without-conditions)"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-Accepted-by-UKEF-(without-conditions)"]'),
+            label: () => cy.get('[data-cy="filter-label-Accepted-by-UKEF-(without-conditions)"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Accepted-by-UKEF-(without-conditions)"]'),
           },
           rejectedByUKEF: {
-            label: () => cy.get('[data-cy="filter-label-status-Rejected-by-UKEF"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-Rejected-by-UKEF"]'),
+            label: () => cy.get('[data-cy="filter-label-Rejected-by-UKEF"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Rejected-by-UKEF"]'),
           },
           abandoned: {
-            label: () => cy.get('[data-cy="filter-label-status-Abandoned"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-status-Abandoned"]'),
+            label: () => cy.get('[data-cy="filter-label-Abandoned"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Abandoned"]'),
           },
         },
       },
     },
     mainContainer: {
-      createdByYouCheckbox: () => cy.get('[data-cy="created-by-you-checkbox"]'),
       selectedFilters: {
+        createdByYou: () => cy.get('[data-cy="main-container-selected-filter-Created-by-you'),
+
         noticeAIN: () => cy.get('[data-cy="main-container-selected-filter-Automatic-Inclusion-Notice'),
         noticeMIN: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Notice'),
         noticeMIA: () => cy.get('[data-cy="main-container-selected-filter-Manual-Inclusion-Application'),
