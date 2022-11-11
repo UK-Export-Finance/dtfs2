@@ -21,6 +21,10 @@ const page = {
   filters: {
     panel: {
       form: {
+        createdByYou: {
+          label: () => cy.get('[data-cy="filter-label-Created-by-you"]'),
+          checkbox: () => cy.get('[data-cy="filter-input-Created-by-you"]'),
+        },
         type: {
           cash: {
             label: () => cy.get('[data-cy="filter-label-Cash"]'),
@@ -66,7 +70,9 @@ const page = {
       },
     },
     mainContainer: {
+      createdByYouCheckbox: () => cy.get('[data-cy="created-by-you-checkbox"]'),
       selectedFilters: {
+        createdByYou: () => cy.get('[data-cy="main-container-selected-filter-Created-by-you'),
         typeCash: () => cy.get('[data-cy="main-container-selected-filter-Cash'),
         typeContingent: () => cy.get('[data-cy="main-container-selected-filter-Contingent'),
         typeBond: () => cy.get('[data-cy="main-container-selected-filter-Bond'),
