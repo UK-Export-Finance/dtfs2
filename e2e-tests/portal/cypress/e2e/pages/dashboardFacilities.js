@@ -23,44 +23,44 @@ const page = {
       form: {
         type: {
           cash: {
-            label: () => cy.get('[data-cy="filter-label-type-Cash"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-type-Cash"]'),
+            label: () => cy.get('[data-cy="filter-label-Cash"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Cash"]'),
           },
           contingent: {
-            label: () => cy.get('[data-cy="filter-label-type-Contingent"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-type-Contingent"]'),
+            label: () => cy.get('[data-cy="filter-label-Contingent"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Contingent"]'),
           },
           bond: {
-            label: () => cy.get('[data-cy="filter-label-type-Bond"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-type-Bond"]'),
+            label: () => cy.get('[data-cy="filter-label-Bond"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Bond"]'),
           },
           loan: {
-            label: () => cy.get('[data-cy="filter-label-type-Loan"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-type-Loan"]'),
+            label: () => cy.get('[data-cy="filter-label-Loan"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Loan"]'),
           },
         },
         submissionType: {
           AIN: {
-            label: () => cy.get('[data-cy="filter-label-deal.submissionType-Automatic-Inclusion-Notice"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Automatic-Inclusion-Notice"]'),
+            label: () => cy.get('[data-cy="filter-label-Automatic-Inclusion-Notice"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Automatic-Inclusion-Notice"]'),
           },
           MIA: {
-            label: () => cy.get('[data-cy="filter-label-deal.submissionType-Manual-Inclusion-Application"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Manual-Inclusion-Application"]'),
+            label: () => cy.get('[data-cy="filter-label-Manual-Inclusion-Application"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Manual-Inclusion-Application"]'),
           },
           MIN: {
-            label: () => cy.get('[data-cy="filter-label-deal.submissionType-Manual-Inclusion-Notice"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-deal.submissionType-Manual-Inclusion-Notice"]'),
+            label: () => cy.get('[data-cy="filter-label-Manual-Inclusion-Notice"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-Manual-Inclusion-Notice"]'),
           },
         },
         hasBeenIssued: {
           issued: {
-            label: () => cy.get('[data-cy="filter-label-hasBeenIssued-true"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-hasBeenIssued-true"]'),
+            label: () => cy.get('[data-cy="filter-label-true"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-true"]'),
           },
           unissued: {
-            label: () => cy.get('[data-cy="filter-label-hasBeenIssued-false"]'),
-            checkbox: () => cy.get('[data-cy="filter-input-hasBeenIssued-false"]'),
+            label: () => cy.get('[data-cy="filter-label-false"]'),
+            checkbox: () => cy.get('[data-cy="filter-input-false"]'),
           },
         },
       },
