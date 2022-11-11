@@ -21,6 +21,20 @@
     }
   }) }}
 
+   {% if filters.createdBy %}
+    {{ govukCheckboxes({
+      idPrefix: 'createdBy',
+      name: 'createdBy',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: filters.createdBy
+    }) }}
+  {% endif %}
+
   {% if filters.dealType %}
     {{ govukCheckboxes({
       idPrefix: 'dealType',

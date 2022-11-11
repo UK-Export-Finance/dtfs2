@@ -63,7 +63,6 @@ describe('controllers/dashboard/deals', () => {
   beforeEach(() => {
     mockReq = {
       body: {
-        createdByYou: '',
         keyword: '',
       },
       params: { page: 1 },
@@ -98,7 +97,6 @@ describe('controllers/dashboard/deals', () => {
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
       const expectedFilters = dashboardDealsFiltersQuery(
-        mockReq.body.createdByYou,
         filtersArray,
         mockReq.session.user,
       );
@@ -152,7 +150,6 @@ describe('controllers/dashboard/deals', () => {
       const filtersArray = submittedFiltersArray(mockReq.session.dashboardFilters);
 
       const expectedFilters = dashboardDealsFiltersQuery(
-        mockReq.body.createdByYou,
         filtersArray,
         mockReq.session.user,
       );
@@ -199,7 +196,6 @@ describe('controllers/dashboard/deals', () => {
         pages: expectedPages,
         filters: templateFilters(expectedFiltersObj),
         selectedFilters: selectedFilters(expectedFiltersObj),
-        createdByYou: mockReq.session.dashboardFilters.createdByYou,
         keyword: mockReq.session.dashboardFilters.keyword,
       };
 
