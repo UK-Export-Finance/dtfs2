@@ -3,7 +3,7 @@ const {
   FACILITY_HAS_BEEN_ISSUED,
   FACILITY_TYPE,
 } = require('../../../constants');
-const CONTENT_STRINGS = require('../../../content-strings');
+const { DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES } } = require('../../../content-strings');
 const {
   generateFiltersArray,
   submissionTypeFilters,
@@ -35,12 +35,25 @@ const hasBeenIssuedFilters = (submittedFilters) => {
 
   const fieldInputs = [
     {
-      text: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
+      text: BESPOKE_FILTER_VALUES.FACILITIES.ISSUED,
       value: FACILITY_HAS_BEEN_ISSUED.ISSUED,
     },
     {
-      text: CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED,
+      text: BESPOKE_FILTER_VALUES.FACILITIES.UNISSUED,
       value: FACILITY_HAS_BEEN_ISSUED.UNISSUED,
+    },
+  ];
+
+  return generateFiltersArray(fieldName, fieldInputs, submittedFilters);
+};
+
+const createdByYouFilter = (submittedFilters) => {
+  const fieldName = FIELD_NAMES.FACILITY.CREATED_BY;
+
+  const fieldInputs = [
+    {
+      text: BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU,
+      value: BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU,
     },
   ];
 
@@ -52,6 +65,7 @@ const hasBeenIssuedFilters = (submittedFilters) => {
  * This will used in multiple checkboxes components.
  */
 const facilitiesTemplateFilters = (submittedFilters = {}) => ({
+  createdBy: createdByYouFilter(submittedFilters),
   type: typeFilters(submittedFilters),
   'deal.submissionType': submissionTypeFilters(
     `deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`,
@@ -64,4 +78,5 @@ module.exports = {
   typeFilters,
   hasBeenIssuedFilters,
   facilitiesTemplateFilters,
+  createdByYouFilter,
 };

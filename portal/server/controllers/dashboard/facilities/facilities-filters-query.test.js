@@ -82,6 +82,77 @@ describe('controllers/dashboard/facilities - filters query', () => {
     expect(result).toEqual(expected);
   });
 
+  it('should return maker._id filter', () => {
+    const mockFilters = [
+      { [CONSTANTS.FIELD_NAMES.FACILITY.CREATED_BY]: ['Created by you'] },
+    ];
+
+    const result = dashboardFacilitiesFiltersQuery(
+      mockFilters,
+      mockUser,
+    );
+
+    const expected = {
+      $and: [
+        { 'deal.bank.id': mockUser.bank.id },
+        { 'deal.maker._id': mockUser._id },
+      ],
+    };
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should return maker._id filter and other filters if many selected', () => {
+    const mockKeyword = 'test';
+    const mockFilters = [
+      {
+        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [
+          CONSTANTS.FACILITY_TYPE.CASH,
+          CONSTANTS.FACILITY_TYPE.BOND,
+        ],
+      },
+      {
+        [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [
+          true,
+        ],
+      },
+      {
+        [CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FIELD_NAMES.KEYWORD]: [
+          mockKeyword,
+        ],
+      },
+      { [CONSTANTS.FIELD_NAMES.FACILITY.CREATED_BY]: ['Created by you'] },
+    ];
+
+    const result = dashboardFacilitiesFiltersQuery(
+      mockFilters,
+      mockUser,
+    );
+
+    const expected = {
+      $and: [
+        { 'deal.bank.id': mockUser.bank.id },
+        {
+          $or: [
+            { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[0] },
+            { [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: mockFilters[0].type[1] },
+          ],
+        },
+        {
+          $or: [
+            { [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: mockFilters[1].hasBeenIssued[0] },
+          ],
+        },
+        {
+          $or: [...keywordQuery(mockKeyword)],
+        },
+        { 'deal.maker._id': mockUser._id },
+      ],
+    };
+
+    expect(result).toEqual(expected);
+  });
+
   it('should remove _crsf from the query', () => {
     const mockFilters = [
       {
