@@ -130,7 +130,7 @@ const sendAinMinAcknowledgement = async (deal) => {
     const {
       dealType, submissionType, maker, facilities,
     } = deal;
-
+    console.log('===SENDING EMAIL 2');
     if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIN && submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.AIN) {
       console.info('The current deal is not an AIN or MIN deal', deal?._id);
       return null;
@@ -165,6 +165,7 @@ const sendAinMinAcknowledgement = async (deal) => {
     }
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+      console.log('===SENDING EMAIL 3', makerEmailAddress);
       facilityLists = gefFacilitiesList(facilities);
 
       templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION;
@@ -191,7 +192,7 @@ const sendDealSubmitEmails = async (deal) => {
     if (!deal) {
       return false;
     }
-
+    console.log('===SENDING EMAIL 1', deal.submissionType);
     const firstTaskEmail = await sendFirstTaskEmail(deal);
     const emailAcknowledgementMIA = await sendMiaAcknowledgement(deal);
     const emailAcknowledgementAinMin = await sendAinMinAcknowledgement(deal);
