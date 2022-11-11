@@ -24,8 +24,8 @@ describe('controllers/dashboard/filters - ui-filters', () => {
 
       const expectedFormattedFieldValue = formatFieldValue(mockValue);
 
-      const expectedLabelDataCy = `filter-label-${mockField}-${expectedFormattedFieldValue}`;
-      const expectedValueDataCy = `filter-input-${mockField}-${expectedFormattedFieldValue}`;
+      const expectedLabelDataCy = `filter-label-${expectedFormattedFieldValue}`;
+      const expectedValueDataCy = `filter-input-${expectedFormattedFieldValue}`;
 
       const expected = {
         label: {

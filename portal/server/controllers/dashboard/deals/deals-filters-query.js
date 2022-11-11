@@ -12,7 +12,7 @@ const keywordQuery = require('./deals-filters-keyword-query');
  * @example ( 'true', [ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' } )
  * @returns { $and: [ { 'bank.id': '9'} ], $or: [{ dealType: 'BSS/EWCS' }] }
  */
-const dashboardDealsFiltersQuery = (createdByYou, filters, user) => {
+const dashboardDealsFiltersQuery = (filters, user) => {
   const { isMaker, isChecker } = getUserRoles(user.roles);
   let dashboardFilters = filters;
 
@@ -20,12 +20,6 @@ const dashboardDealsFiltersQuery = (createdByYou, filters, user) => {
 
   if (!isSuperUser(user)) {
     query.$and = [{ 'bank.id': user.bank.id }];
-  }
-
-  if (createdByYou) {
-    query.$and.push({
-      'maker._id': user._id,
-    });
   }
 
   if (isChecker && !isMaker) {
@@ -94,15 +88,24 @@ const dashboardDealsFiltersQuery = (createdByYou, filters, user) => {
        *    { $or: [{dealType: 'GEF}, {dealType: 'BSS'}] },
        *    {status: 'Draft'},
        * ]
+       * if created by you filter, follows different logic so if else statement to check
        */
       if (!isKeywordField && !hasAllStatusesFilterValue) {
         const fieldFilter = {};
         // or for field (eg dealType)
         fieldFilter.$or = [];
         filterValue.forEach((value) => {
-          fieldFilter.$or.push({
-            [fieldName]: value,
-          });
+          // if created by you then adding user id as compared to or statement
+          if (value === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.CREATED_BY_YOU) {
+            // delete or filter as not needed for created by you
+            delete fieldFilter.$or;
+            fieldFilter['maker._id'] = user._id;
+          } else {
+            // else for all other filters apart from createdByYou
+            fieldFilter.$or.push({
+              [fieldName]: value,
+            });
+          }
         });
         // adds $or to $and query
         query.$and.push(fieldFilter);

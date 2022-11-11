@@ -2,6 +2,7 @@ const DEAL = {
   DEAL_TYPE: 'dealType',
   SUBMISSION_TYPE: 'submissionType',
   STATUS: 'status',
+  CREATED_BY: 'createdBy',
   BANK_INTERNAL_REF_NAME: 'bankInternalRefName',
   EXPORTER_COMPANY_NAME: 'exporter.companyName',
   GEF_UKEF_DEAL_ID: 'ukefDealId',
