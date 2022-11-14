@@ -83,6 +83,7 @@ const checkAzureNumberGeneratorFunction = async () => {
       // Only trigger this update if the Azure function task's ID, is the same as the deal ID.
       // Without this conditional, every task (i.e multiple facilities) will trigger multiple deal submissions.
       if (input.entityId === input.dealId) {
+        console.log('===Submit deal after UKEFDEAL ID', { input });
         await dealSubmitController.submitDealAfterUkefIds(input.entityId, input.dealType, input.user);
       }
 

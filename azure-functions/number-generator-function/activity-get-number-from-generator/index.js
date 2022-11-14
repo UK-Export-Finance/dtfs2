@@ -13,7 +13,7 @@ const MAX_NUMBER_OF_TRIES = 5;
 
 const getNumberFromGenerator = async (context) => {
   const { entityType } = context.bindingData;
-
+  console.log('===NG=1', entityType);
   let numberIsAvailable = false;
   let numberFromGenerator;
   let loopCount = 0;
@@ -47,8 +47,9 @@ const getNumberFromGenerator = async (context) => {
     }
 
     const { status } = await checkAcbs(numberFromGenerator);
-    numberIsAvailable = (status === 404);
+    // numberIsAvailable = (status === 404);
     loopCount += 1;
+    console.log('===NG=2', status, loopCount, MAX_NUMBER_OF_TRIES);
   }
 
   return {

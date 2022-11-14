@@ -65,6 +65,7 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
  * Azure function
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
+  console.log('===5');
   const deal = await getDeal(dealId, dealType);
   console.info('Submitting deal after UKEF IDs');
 
@@ -175,15 +176,18 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker) => {
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
 
 const submitDealPUT = async (req, res) => {
+  console.log('===1');
   const { dealId, dealType, checker } = req.body;
   let deal;
 
   if (dealId) {
     const { status } = await dealHasAllUkefIds(dealId);
-
+    console.log('===2', status);
     if (status) {
+      console.log('===3');
       deal = await submitDealAfterUkefIds(dealId, dealType, checker);
     } else {
+      console.log('===4');
       deal = await submitDealBeforeUkefIds(dealId, dealType);
     }
 
