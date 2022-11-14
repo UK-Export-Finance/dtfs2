@@ -242,6 +242,65 @@ const DEAL = {
           ],
         },
       },
+      6: {
+        11: {
+          text: 'There are no agents involved in the supply contract.',
+          textList: [],
+        },
+        12: {
+          text: 'The cover period is less than either:',
+          textList: [
+            '5 years',
+            'another period approved by UKEF',
+          ],
+        },
+        13: {
+          text: 'The UKEF exposure for this exporter, across all short term schemes, is less than either:',
+          textList: [
+            '£5 million',
+            'another limit approved by UKEF',
+          ],
+        },
+        14: {
+          text: 'None of the following apply:',
+          textList: [
+            'a bond has already been issued',
+            'if a bond is issued, this was no more than 3 months before the bank submitted their application to UKEF',
+            'a loan has already been advanced',
+          ],
+        },
+        15: {
+          text: 'The cover start date the bank has requested is not more than 3 months after the date they submitted their application to UKEF.',
+          textList: [],
+        },
+        16: {
+          text: 'The supply contract does not involve one of the following controlled sectors:',
+          textList: [
+            'sharp arms defence',
+            'nuclear',
+            'radiological',
+            'biological',
+            'human cloning',
+            'pornography',
+            'coal',
+            'oil',
+            'gas',
+            'fossil fuel energy',
+            'tobacco or gambling',
+          ],
+        },
+        17: {
+          text: 'The bank has completed due diligence to its own satisfaction, without needing to escalate to a relevant person.',
+          textList: [],
+        },
+        18: {
+          text: 'The fees, interest rate and/or risk margin apply to the whole Cover Period, and have been set in accordance with:',
+          textList: [
+            'The bank’s normal pricing policies',
+            'Include, if any, pricing requirements set by UKEF',
+          ],
+        },
+      },
     },
     GEF: {
       1.5: {
