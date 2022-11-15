@@ -24,12 +24,13 @@ const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, { $o
 /**
    * Strips commas and return UKEF exposure
    * as number.
-   * @param {String} string
+   * @param {String} string Raw string with commas
+   * @param {Boolean} Number Whether output should be a `Number`
    * @returns {Integer} Formatted value
    */
-const stripCommas = (string) => {
+const stripCommas = (string, number = false) => {
   if (string) {
-    return Number(string.toString().replace(/,/g, ''));
+    return number ? Number(string.toString().replace(/,/g, '')) : string.replace(/,/g, '');
   }
   return string;
 };
@@ -42,7 +43,7 @@ const stripCommas = (string) => {
 const getMaximumLiability = (facilities) => {
   if (facilities) {
     return facilities
-      .map((f) => stripCommas(f.ukefExposure) ?? 0)
+      .map((f) => stripCommas(f.ukefExposure, true) ?? 0)
       .reduce((p, c) => p + c, 0);
   }
 
@@ -91,7 +92,7 @@ const constructRows = (deals) => {
       const maximumLiability = `£${getMaximumLiability(dealSnapshot.facilities)}`;
       // `Complete risk analysis (RAD)` task
       const radTask = filterTask(tfm, 'Complete risk analysis (RAD)');
-      const approver = radTask?.assignedTo?.userFullName ?? '';
+      const approver = stripCommas(radTask?.assignedTo?.userFullName) ?? '';
       const approveDate = radTask?.dateCompleted
         ? new Date(Number(radTask.dateCompleted))
         : '';
