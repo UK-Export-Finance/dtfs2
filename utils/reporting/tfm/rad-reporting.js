@@ -93,8 +93,8 @@ const constructRows = (deals) => {
       const maximumLiability = getMaximumLiability(dealSnapshot.facilities);
       // `Complete risk analysis (RAD)` task
       const radTask = filterTask(tfm, 'Complete risk analysis (RAD)');
-      const approver = radTask.assignedTo.userFullName ?? '';
-      const approveDate = radTask.dateCompleted
+      const approver = radTask?.assignedTo?.userFullName ?? '';
+      const approveDate = radTask?.dateCompleted
         ? new Date(Number(radTask.dateCompleted.$numberLong))
         : '';
 
@@ -120,8 +120,7 @@ const constructRows = (deals) => {
 };
 
 /**
- * Generates bespoke report as an
- * HTML table output.
+ * Generates bespoke report as CSV
  * @param {Array} rows Array of processed deals
  * @returns {Null} Null is returned
  */
@@ -141,26 +140,6 @@ const generateReport = (rows) => {
     'Date approved',
     'Submission date',
   ];
-
-  // Output deals as HTML table
-  document.write('<table>');
-
-  // Table heading
-  document.write('<tr>');
-  columns.map((column) => document.write(`<th>${column}</th>`));
-  document.write('</tr>');
-
-  // Table data
-  rows.map((row) => {
-    document.write('<tr>');
-    row.map((cell) => {
-      document.write(`<td>${cell}</td>`);
-      return null;
-    });
-    document.write('</tr>');
-    return null;
-  });
-  document.write('</table>');
 };
 
 // ******************** MAIN *************************
