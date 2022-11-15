@@ -64,7 +64,9 @@ const filterTask = (tfm, taskName) => {
 
   return '';
 };
+// Fetch deals
 
+// Process deals
 deals.map((deal) => {
   if (deal) {
     const { dealSnapshot, tfm } = deal;
@@ -106,6 +108,7 @@ deals.map((deal) => {
   return null;
 });
 
+// Output deals as HTML table
 document.write('<table>');
 rows.map((row) => {
   document.write('<tr>');
