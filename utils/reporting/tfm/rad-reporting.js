@@ -64,7 +64,6 @@ const filterTask = (tfm, taskName) => {
 
   return '';
 };
-// Fetch deals
 
 // Process deals
 deals.map((deal) => {
