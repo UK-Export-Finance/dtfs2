@@ -7,6 +7,7 @@
 
 const CONSTANTS = require('../../data-migration/constant');
 const { getCollection, disconnect } = require('../../data-migration/helpers/database');
+const { write } = require('../../data-migration/helpers/io');
 
 const currency = new Intl.NumberFormat('en-GB', {
   style: 'currency',
@@ -125,6 +126,8 @@ const constructRows = (deals) => {
  * @returns {Null} Null is returned
  */
 const generateReport = (rows) => {
+  const path = `${__dirname}/report/csv/RAD.csv`;
+  const data = [];
   const columns = [
     'UKEF Deal ID',
     'Deal status',
@@ -140,6 +143,11 @@ const generateReport = (rows) => {
     'Date approved',
     'Submission date',
   ];
+
+  data.push(columns);
+  data.push(rows);
+
+  write(path, data);
 };
 
 // ******************** MAIN *************************
