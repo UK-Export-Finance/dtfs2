@@ -1,24 +1,27 @@
-const deals = [];
-const header = [
-  'UKEF Deal ID',
-  'Deal status',
-  'Deal type',
-  'Submission type',
-  'Destination country',
-  'Exporter name',
-  'Exporter URN',
-  'Guarantor',
-  'Exporter credit rating',
-  'Maximum liability (GBP)',
-  'Approval level name',
-  'Date approved',
-  'Submission date',
-];
-const rows = [header];
+/**
+ * RAD REPORTING
+ * **************
+ * Purpose of this script is to generate a bespoke
+ * report for RAD as per all the TFM deals.
+ */
+
+const CONSTANTS = require('../../data-migration/constant');
+const { getCollection, disconnect } = require('../../data-migration/helpers/database');
+
 const currency = new Intl.NumberFormat('en-GB', {
   style: 'currency',
   currency: 'GBP',
 });
+
+// ******************** DEALS *************************
+/**
+  * Return all the TFM deals, without (default) or with filter specified.
+  * @param {Object} filter Mongo filter
+  * @returns {Object} Collection object
+  */
+const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, { 'dealSnapshot.dealType': CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS });
+
+// ******************** FORMATTING *************************
 
 /**
    * Strips commas and return UKEF exposure
@@ -65,57 +68,120 @@ const filterTask = (tfm, taskName) => {
   return '';
 };
 
-// Process deals
-deals.map((deal) => {
-  if (deal) {
-    const { dealSnapshot, tfm } = deal;
-    const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
-    const submissionDate = dealSnapshot.submissionDate ?? dealSnapshot.details.submissionDate;
-    const destinationCountry = dealSnapshot.submissionDetails
-      ? dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name
-      : '';
-    const exporterName = dealSnapshot.exporter.companyName
-        ?? dealSnapshot.submissionDetails['supplier-name'];
-    const exporterUrn = tfm.parties.exporter.partyUrn;
-    const { exporterCreditRating } = tfm;
-    // Amalgamation of all facilities `facility.ukefExposure`
-    const maximumLiability = getMaximumLiability(dealSnapshot.facilities);
-    // `Complete risk analysis (RAD)` task
-    const radTask = filterTask(tfm, 'Complete risk analysis (RAD)');
-    const approver = radTask.assignedTo.userFullName ?? '';
-    const approveDate = radTask.dateCompleted
-      ? new Date(Number(radTask.dateCompleted.$numberLong))
-      : '';
+/**
+ * Process TFM deals into bespoke array of data
+ * to match reporting columns.
+ * @param {Array} deals Array of deals object
+ * @return {Array} Processed deals
+ */
+const constructRows = (deals) => {
+  const rows = [];
 
-    rows.push([
-      ukefDealId,
-      tfm.stage,
-      dealSnapshot.dealType,
-      dealSnapshot.submissionType,
-      destinationCountry,
-      exporterName,
-      exporterUrn,
-      '',
-      exporterCreditRating || '',
-      currency.format(maximumLiability),
-      approver,
-      approveDate,
-      new Date(Number(submissionDate)),
-    ]);
-  }
+  deals.map((deal) => {
+    if (deal) {
+      const { dealSnapshot, tfm } = deal;
+      const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
+      const submissionDate = dealSnapshot.submissionDate ?? dealSnapshot.details.submissionDate;
+      const destinationCountry = dealSnapshot.submissionDetails
+        ? dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name
+        : '';
+      const exporterName = dealSnapshot.exporter.companyName
+          ?? dealSnapshot.submissionDetails['supplier-name'];
+      const exporterUrn = tfm.parties.exporter.partyUrn;
+      const { exporterCreditRating } = tfm;
+      // Amalgamation of all facilities `facility.ukefExposure`
+      const maximumLiability = getMaximumLiability(dealSnapshot.facilities);
+      // `Complete risk analysis (RAD)` task
+      const radTask = filterTask(tfm, 'Complete risk analysis (RAD)');
+      const approver = radTask.assignedTo.userFullName ?? '';
+      const approveDate = radTask.dateCompleted
+        ? new Date(Number(radTask.dateCompleted.$numberLong))
+        : '';
 
-  return null;
-});
+      rows.push([
+        ukefDealId,
+        tfm.stage,
+        dealSnapshot.dealType,
+        dealSnapshot.submissionType,
+        destinationCountry,
+        exporterName,
+        exporterUrn,
+        '',
+        exporterCreditRating || '',
+        currency.format(maximumLiability),
+        approver,
+        approveDate,
+        new Date(Number(submissionDate)),
+      ]);
+    }
 
-// Output deals as HTML table
-document.write('<table>');
-rows.map((row) => {
+    return rows;
+  });
+};
+
+/**
+ * Generates bespoke report as an
+ * HTML table output.
+ * @param {Array} rows Array of processed deals
+ * @returns {Null} Null is returned
+ */
+const generateReport = (rows) => {
+  const columns = [
+    'UKEF Deal ID',
+    'Deal status',
+    'Deal type',
+    'Submission type',
+    'Destination country',
+    'Exporter name',
+    'Exporter URN',
+    'Guarantor',
+    'Exporter credit rating',
+    'Maximum liability (GBP)',
+    'Approval level name',
+    'Date approved',
+    'Submission date',
+  ];
+
+  // Output deals as HTML table
+  document.write('<table>');
+
+  // Table heading
   document.write('<tr>');
-  row.map((cell) => {
-    document.write(`<td>${cell}</td>`);
+  columns.map((column) => document.write(`<th>${column}</th>`));
+  document.write('</tr>');
+
+  // Table data
+  rows.map((row) => {
+    document.write('<tr>');
+    row.map((cell) => {
+      document.write(`<td>${cell}</td>`);
+      return null;
+    });
+    document.write('</tr>');
     return null;
   });
-  document.write('</tr>');
-  return null;
-});
-document.write('</table>');
+  document.write('</table>');
+};
+
+// ******************** MAIN *************************
+
+/**
+ * Entry point function.
+ * Initiates report generation process
+ * @returns {Boolean} Execution status
+ */
+const generate = () => {
+  console.info('\n\x1b[33m%s\x1b[0m', '🚀 Initiating RAD reporting.', '\n\n');
+
+  getTfmDeals()
+    .then((deals) => constructRows(deals))
+    .then((rows) => generateReport(rows))
+    .then(() => disconnect())
+    .then(() => process.exit(1))
+    .catch((error) => {
+      console.error('\n\x1b[31m%s\x1b[0m', '🚩 Report generation failed.\n', { error });
+      process.exit(1);
+    });
+};
+
+generate();
