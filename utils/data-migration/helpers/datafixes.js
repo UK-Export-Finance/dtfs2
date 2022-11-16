@@ -684,6 +684,41 @@ const dates = () => {
 };
 
 /**
+ * Converts following properties to `ObjectId`
+ * 1. amendments[i].amendmentId
+ * 2. amendments[i].facilityId
+ * 3. amendments[i].dealId
+ */
+const toObjectId = () => {
+  Object.values(allFacilities).forEach((facility, index) => {
+    if (facility && facility.amendments) {
+      const { amendments } = facility;
+      if (amendments.length) {
+        amendments.forEach((amendment, pointer) => {
+          const modifiedAmendment = {
+            ...amendment
+          };
+
+          if (modifiedAmendment.amendmentId) {
+            modifiedAmendment.amendmentId = ObjectId(modifiedAmendment.amendmentId);
+          }
+
+          if (modifiedAmendment.facilityId) {
+            modifiedAmendment.facilityId = ObjectId(modifiedAmendment.facilityId);
+          }
+
+          if (modifiedAmendment.dealId) {
+            modifiedAmendment.dealId = ObjectId(modifiedAmendment.dealId);
+          }
+
+          allFacilities[index].amendments[pointer] = modifiedAmendment;
+        });
+      }
+    }
+  });
+};
+
+/**
  * Add Premium Schedule (deal.tfm.premiumSchedule) for pre-calculated
  * Workflow/K2 deals. This also includes PS
  * pre-calculated for Amendments.
@@ -1172,14 +1207,15 @@ const datafixesTfmFacilities = async (deals) => {
 
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
-        // await partyUrn(true);
-        // await premiumSchedule();
-        // await dayBasis();
-        // await feeType();
-        // await feeFrequency();
-        // await ACBS(true);
-        // await amendment();
+        await partyUrn(true);
+        await premiumSchedule();
+        await dayBasis();
+        await feeType();
+        await feeFrequency();
+        await ACBS(true);
+        await amendment();
         await dates();
+        await toObjectId();
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {
