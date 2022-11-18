@@ -25,11 +25,8 @@ const findAllGefFacilitiesByDealId = async (dealId) => {
 exports.findAllGefFacilitiesByDealId = findAllGefFacilitiesByDealId;
 
 exports.getAllGefFacilitiesByDealId = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    const facilities = await findAllGefFacilitiesByDealId(req.params.id);
-    return res.status(200).send(facilities);
-  }
-  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+  const facilities = await findAllGefFacilitiesByDealId(req.params.id);
+  return res.status(200).send(facilities);
 };
 
 exports.findAllGefFacilities = async (req, res) => {

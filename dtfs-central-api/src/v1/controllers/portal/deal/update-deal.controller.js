@@ -174,25 +174,22 @@ exports.putBssDeal = async (req, res) => {
 };
 
 const updateGefDeal = async (dealId, update) => {
-  if (ObjectId.isValid(dealId)) {
-    const collection = await db.getCollection('deals');
+  const collection = await db.getCollection('deals');
 
-    const dealUpdate = {
-      ...update,
-      updatedAt: Date.now(),
-    };
+  const dealUpdate = {
+    ...update,
+    updatedAt: Date.now(),
+  };
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate(
-      { _id: { $eq: ObjectId(dealId) } },
-      $.flatten(dealUpdate),
-      { returnDocument: 'after', returnNewDocument: true },
-    );
+  const findAndUpdateResponse = await collection.findOneAndUpdate(
+    { _id: { $eq: ObjectId(dealId) } },
+    $.flatten(dealUpdate),
+    { returnDocument: 'after', returnNewDocument: true },
+  );
 
-    console.info('Portal GEF deal Updated');
+  console.info('Portal GEF deal Updated');
 
-    return findAndUpdateResponse.value;
-  }
-  return { status: 400, message: 'Invalid Deal Id' };
+  return findAndUpdateResponse.value;
 };
 exports.updateGefDeal = updateGefDeal;
 
