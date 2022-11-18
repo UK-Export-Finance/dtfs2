@@ -172,36 +172,32 @@ const ukefSubmissionPortalActivity = async (application) => {
  * @param {*} res
  */
 const generateMINActivities = async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    try {
-      const dealId = req.params.id;
+  try {
+    const dealId = req.params.id;
 
-      const application = await findOneGefDeal(dealId);
+    const application = await findOneGefDeal(dealId);
 
-      if (application) {
-        const facilities = await findAllGefFacilitiesByDealId(dealId);
-        let { portalActivities } = application;
+    if (application) {
+      const facilities = await findAllGefFacilitiesByDealId(dealId);
+      let { portalActivities } = application;
 
-        portalActivities = await ukefSubmissionPortalActivity(application);
-        portalActivities = await facilityChangePortalActivity(application, facilities);
+      portalActivities = await ukefSubmissionPortalActivity(application);
+      portalActivities = await facilityChangePortalActivity(application, facilities);
 
-        const update = {
-          portalActivities,
-        };
+      const update = {
+        portalActivities,
+      };
 
-        updateChangedToIssued(facilities);
+      updateChangedToIssued(facilities);
 
-        const updatedDeal = await updateGefDeal(dealId, update);
+      const updatedDeal = await updateGefDeal(dealId, update);
 
-        res.status(200).send(updatedDeal);
-      }
-      res.status(404).send();
-    } catch (err) {
-      console.error(`Central-API - Error generating MIN activities ${err}`);
-      res.status(400).send();
+      res.status(200).send(updatedDeal);
     }
-  } else {
-    res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    res.status(404).send();
+  } catch (err) {
+    console.error(`Central-API - Error generating MIN activities ${err}`);
+    res.status(400).send();
   }
 };
 

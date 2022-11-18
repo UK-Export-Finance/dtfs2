@@ -176,7 +176,7 @@ portalRouter.route('/deals').post(createDealController.postBssDeal);
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id').get(getDealController.getOneBssDeal);
+portalRouter.route('/deals/:id').get(param('id').isMongoId(), hasValidationErrors, getDealController.getOneBssDeal);
 
 /**
  * @openapi
@@ -216,7 +216,7 @@ portalRouter.route('/deals/:id').get(getDealController.getOneBssDeal);
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id').put(updateDealController.putBssDeal);
+portalRouter.route('/deals/:id').put(param('id').isMongoId(), hasValidationErrors, updateDealController.putBssDeal);
 
 /**
  * @openapi
@@ -241,7 +241,7 @@ portalRouter.route('/deals/:id').put(updateDealController.putBssDeal);
  *               acknowledged: true
  *               deletedCount: 1
  */
-portalRouter.route('/deals/:id').delete(deleteDealController.deleteDeal);
+portalRouter.route('/deals/:id').delete(param('id').isMongoId(), hasValidationErrors, deleteDealController.deleteDeal);
 
 /**
  * @openapi
@@ -284,7 +284,7 @@ portalRouter.route('/deals/:id').delete(deleteDealController.deleteDeal);
  *       404:
  *         description: Not found
  */
-portalRouter.route('/deals/:id/status').put(updateDealStatusController.putBssDealStatus);
+portalRouter.route('/deals/:id/status').put(param('id').isMongoId(), hasValidationErrors, updateDealStatusController.putBssDealStatus);
 
 /**
  * @openapi
@@ -331,7 +331,7 @@ portalRouter.route('/deals/:id/status').put(updateDealStatusController.putBssDea
  *       404:
  *         description: Deal not found
  */
-portalRouter.route('/deals/:id/comment').post(addDealCommentController.postCommentToDeal);
+portalRouter.route('/deals/:id/comment').post(param('id').isMongoId(), hasValidationErrors, addDealCommentController.postCommentToDeal);
 
 /**
  * @openapi
@@ -422,7 +422,7 @@ portalRouter.route('/multiple-facilities').post(createMultipleFacilitiesControll
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityGet);
+portalRouter.route('/facilities/:id').get(param('id').isMongoId(), hasValidationErrors, getFacilityController.findOneFacilityGet);
 
 /**
  * @openapi
@@ -460,7 +460,7 @@ portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityG
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').put(updateFacilityController.putBssFacility);
+portalRouter.route('/facilities/:id').put(param('id').isMongoId(), hasValidationErrors, updateFacilityController.putBssFacility);
 
 /**
  * @openapi
@@ -487,7 +487,7 @@ portalRouter.route('/facilities/:id').put(updateFacilityController.putBssFacilit
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFacility);
+portalRouter.route('/facilities/:id').delete(param('id').isMongoId(), hasValidationErrors, deleteFacilityController.deleteFacility);
 
 /**
  * @openapi
@@ -527,7 +527,7 @@ portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFaci
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.updateFacilityStatusPut);
+portalRouter.route('/facilities/:id/status').put(param('id').isMongoId(), hasValidationErrors, updateFacilityStatusController.updateFacilityStatusPut);
 
 /**
  * @openapi
@@ -570,7 +570,7 @@ portalRouter.route('/gef/deals').post(createDealController.postGefDeal);
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id').get(getDealController.getOneGefDeal);
+portalRouter.route('/gef/deals/:id').get(param('id').isMongoId(), hasValidationErrors, getDealController.getOneGefDeal);
 
 /**
  * @openapi
@@ -610,7 +610,7 @@ portalRouter.route('/gef/deals/:id').get(getDealController.getOneGefDeal);
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id').put(updateDealController.putGefDeal);
+portalRouter.route('/gef/deals/:id').put(param('id').isMongoId(), hasValidationErrors, updateDealController.putGefDeal);
 
 /**
  * @openapi
@@ -636,7 +636,7 @@ portalRouter.route('/gef/deals/:id').put(updateDealController.putGefDeal);
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/activity/:id').put(gefActivityController.generateMINActivities);
+portalRouter.route('/gef/deals/activity/:id').put(param('id').isMongoId(), hasValidationErrors, gefActivityController.generateMINActivities);
 
 /**
  * @openapi
@@ -677,7 +677,7 @@ portalRouter.route('/gef/deals/activity/:id').put(gefActivityController.generate
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id/status').put(updateDealStatusController.putGefDealStatus);
+portalRouter.route('/gef/deals/:id/status').put(param('id').isMongoId(), hasValidationErrors, updateDealStatusController.putGefDealStatus);
 
 /**
  * @openapi
@@ -724,7 +724,7 @@ portalRouter.route('/gef/deals/:id/status').put(updateDealStatusController.putGe
  *       404:
  *         description: Deal not found
  */
-portalRouter.route('/gef/deals/:id/comment').post(addDealCommentController.postCommentToDeal);
+portalRouter.route('/gef/deals/:id/comment').post(param('id').isMongoId(), hasValidationErrors, addDealCommentController.postCommentToDeal);
 
 /**
  * @openapi
@@ -748,7 +748,7 @@ portalRouter.route('/gef/deals/:id/comment').post(addDealCommentController.postC
  *             schema:
  *               $ref: '#/definitions/FacilitiesGEF'
  */
-portalRouter.route('/gef/deals/:id/facilities').get(getFacilitiesController.getAllGefFacilitiesByDealId);
+portalRouter.route('/gef/deals/:id/facilities').get(param('id').isMongoId(), hasValidationErrors, getFacilitiesController.getAllGefFacilitiesByDealId);
 
 /**
  * @openapi
@@ -822,7 +822,7 @@ portalRouter.route('/gef/facilities').get(getFacilitiesController.findAllGefFaci
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/facilities/:id').put(updateFacilityController.putGefFacility);
+portalRouter.route('/gef/facilities/:id').put(param('id').isMongoId(), hasValidationErrors, updateFacilityController.putGefFacility);
 
 /**
  * @openapi
