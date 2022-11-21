@@ -8,6 +8,7 @@ const FILES = {
   ELIGIBILITY_RESPONSE: 8,
   AMENDMENTS: 9,
   FACILITY_COMMENTS: 10,
+  TASKS: 11,
 };
 
 module.exports = {

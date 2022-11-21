@@ -553,9 +553,200 @@ const eStore = async () => {
 };
 
 /**
- * Migrate tasks attributes to TFM tasks (deal.tfm.tasks)
+ * This is a composite data-migration function.
+ * This function performs following two major actions:
+ *
+ * 1. Add COMPLETE_AGENT_CHECK task when void.
+ * 2. Migrate tasks attributes to TFM tasks (deal.tfm.tasks)
+ * This function sifts through WF tasks, if in pre-defined
+ * tasks list then respective tasks are updated with data
+ * from WorkFlow.
  */
-const tasks = async () => {
+const dealTask = async () => {
+  const workflowTasks = await workflow(CONSTANTS.WORKFLOW.FILES.TASKS);
+
+  Object.values(allDeals).forEach((deal, index) => {
+    let agentTaskExists;
+    const workflowTfmTasks = {
+      'create parties': 'match or create the parties in this deal',
+      'create ct': 'create a credit submission document',
+      'ahc request': 'complete an adverse history check',
+      'obligor exposure': 'check exposure',
+      'complete ct': 'complete the credit submission',
+      'ct approval': 'check the credit submission',
+      'rad t1 review': 'complete risk analysis (rad)',
+      'rad t2 review': 'complete risk analysis (rad)',
+      'rad t3 review': 'complete risk analysis (rad)',
+      'uw approval': 'approve or decline the deal',
+      'agent check': 'complete an agent check',
+    };
+
+    if (deal.tfm) {
+      if (!deal.tfm.tasks) {
+        return false;
+      }
+
+      const { tasks } = deal.tfm;
+
+      // 1. Agent task existence check
+      // 1.1. Verify TFM tasks exists
+      if (tasks?.length) {
+        tasks.forEach(({ groupTasks }) => {
+          if (groupTasks?.length) {
+            groupTasks.forEach((task) => {
+            // Agent task existence check
+              if (!agentTaskExists) {
+                agentTaskExists = task.title.toString().toLowerCase() === 'complete an agent check';
+              }
+            });
+          }
+        });
+
+        // 1.2. Create COMPLETE_AGENT_CHECK if it does not exists
+        if (!agentTaskExists) {
+          tasks.forEach(({ groupTasks, id }) => {
+            // Target `Set up deal` task group only
+            if (id === 1) {
+              allDeals[index].tfm.tasks[id - 1].groupTasks.push({
+                id: (groupTasks.length + 1).toString(),
+                groupId: 1,
+                title: 'Complete an agent check',
+                team: {
+                  id: 'UNDERWRITING_SUPPORT',
+                  name: 'Underwriting support'
+                },
+                isConditional: true,
+                status: 'Done',
+                assignedTo: {
+                  userId: 'Unassigned',
+                  userFullName: 'Unassigned'
+                },
+                canEdit: false,
+                history: []
+              });
+            }
+          });
+        }
+      }
+
+      // 2. Iterate through Workflow Tasks
+      workflowTasks
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal))
+        .map(({ DEAL }) => {
+          const {
+            NAME,
+            USER_NAME,
+            START_DATE,
+            END_DATE,
+            ASSIGNED_DATE,
+          } = DEAL.ACTIVITY;
+
+          if (NAME.toString().toLowerCase() in workflowTfmTasks) {
+            // Verify TFM tasks exists
+            if (tasks?.length) {
+              // Group tasks
+              tasks.forEach(({ groupTasks }, groupTaskIndex) => {
+                if (groupTasks?.length) {
+                  groupTasks.forEach((task, taskIndex) => {
+                    // Group Tasks - Individual task iteration
+                    const { title } = task;
+                    // Ensure task title matches pre-defined mapping
+                    if (title.toLowerCase() === workflowTfmTasks[NAME.toLowerCase()]) {
+                      const { dateCompleted } = allDeals[index].tfm.tasks[groupTaskIndex].groupTasks[taskIndex];
+
+                      if (new Date(END_DATE).valueOf() > dateCompleted || !dateCompleted) {
+                      // Task name
+                        allDeals[index].tfm.tasks[groupTaskIndex].groupTasks[taskIndex].assignedTo.userFullName = USER_NAME;
+                        // Task dates
+                        allDeals[index].tfm.tasks[groupTaskIndex].groupTasks[taskIndex].updatedAt = new Date(ASSIGNED_DATE).valueOf();
+                        allDeals[index].tfm.tasks[groupTaskIndex].groupTasks[taskIndex].dateStarted = new Date(START_DATE).valueOf();
+                        allDeals[index].tfm.tasks[groupTaskIndex].groupTasks[taskIndex].dateCompleted = new Date(END_DATE).valueOf();
+                      }
+                    }
+                  });
+                }
+              });
+            }
+          }
+        });
+    }
+
+    return null;
+  });
+};
+
+/**
+ * Migrate tasks attributes to TFM tasks (facility.amendments[index].tasks)
+ * This function sifts through WF tasks, if in pre-defined
+ * tasks list then respective tasks are updated with data
+ * from WorkFlow.
+ */
+const facilityTask = async () => {
+  const workflowTasks = await workflow(CONSTANTS.WORKFLOW.FILES.TASKS);
+
+  Object.values(allFacilities).forEach(async (facility, facilityIndex) => {
+    const workflowTfmTasks = {
+      'create parties': 'match or create the parties in this deal',
+      'create ct': 'create a credit submission document',
+      'ahc request': 'complete an adverse history check',
+      'obligor exposure': 'check exposure',
+      'complete ct': 'complete the credit submission',
+      'ct approval': 'check the credit submission',
+      'rad t1 review': 'complete risk analysis (rad)',
+      'rad t2 review': 'complete risk analysis (rad)',
+      'rad t3 review': 'complete risk analysis (rad)',
+      'uw approval': 'approve or decline the deal',
+      'agent check': 'complete an agent check',
+    };
+
+    if (facility.amendments) {
+      const ukefDealId = await getUkefDealIdFromObjectId(facility.facilitySnapshot.dealId);
+
+      // 1. Iterate through Workflow Tasks
+      workflowTasks
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === ukefDealId)
+        .map(({ DEAL }) => {
+          const {
+            NAME,
+            USER_NAME,
+            START_DATE,
+            END_DATE,
+            ASSIGNED_DATE,
+          } = DEAL.ACTIVITY;
+
+          if (NAME.toString().toLowerCase() in workflowTfmTasks) {
+            // Amendments iteration
+            facility.amendments.forEach(({ tasks }, amendmentIndex) => {
+              // Group task
+              tasks.forEach(({ groupTasks }, groupTaskIndex) => {
+                // Individual Tasks
+                groupTasks.forEach((task, taskIndex) => {
+                  const { title } = task;
+                  // Ensure task title matches pre-defined mapping
+                  if (title.toLowerCase() === workflowTfmTasks[NAME.toLowerCase()]) {
+                    const { dateCompleted } = allFacilities[facilityIndex].amendments[amendmentIndex].tasks[groupTaskIndex].groupTasks[taskIndex];
+
+                    if (new Date(END_DATE).valueOf() > dateCompleted || !dateCompleted) {
+                      // Task name
+                      allFacilities[facilityIndex].amendments[amendmentIndex].tasks[groupTaskIndex].groupTasks[taskIndex].assignedTo.userFullName = USER_NAME;
+                      // Task dates
+                      allFacilities[facilityIndex].amendments[amendmentIndex].tasks[groupTaskIndex]
+                        .groupTasks[taskIndex].updatedAt = new Date(ASSIGNED_DATE).valueOf();
+                      allFacilities[facilityIndex].amendments[amendmentIndex].tasks[groupTaskIndex]
+                        .groupTasks[taskIndex].dateStarted = new Date(START_DATE).valueOf();
+                      allFacilities[facilityIndex].amendments[amendmentIndex].tasks[groupTaskIndex]
+                        .groupTasks[taskIndex].dateCompleted = new Date(END_DATE).valueOf();
+                    }
+                  }
+                });
+              });
+            });
+          }
+        });
+    }
+
+    return null;
+  });
 };
 
 /**
@@ -1127,15 +1318,15 @@ const datafixesTfmDeal = async (deals) => {
       let updated = 0;
 
       // TFM Deal - Data fixes
-      await creditRating();
-      await partyUrn();
-      await agentCommissionRate();
-      await comment();
-      await ACBS();
-      await ukefDecision();
-      await supportingInformations();
-      await eStore();
-      await tasks();
+      // await creditRating();
+      // await partyUrn();
+      // await agentCommissionRate();
+      // await comment();
+      // await ACBS();
+      // await ukefDecision();
+      // await supportingInformations();
+      // await eStore();
+      await dealTask();
 
       const updates = allDeals.map(async (deal) => {
         // Ensure `_id` are kept as ObjectId
@@ -1207,15 +1398,16 @@ const datafixesTfmFacilities = async (deals) => {
 
       if (allFacilities && allFacilities.length > 0) {
       // TFM Facilities - Data fixes
-        await partyUrn(true);
-        await premiumSchedule();
-        await dayBasis();
-        await feeType();
-        await feeFrequency();
-        await ACBS(true);
-        await amendment();
-        await dates();
-        await toObjectId();
+        // await partyUrn(true);
+        // await premiumSchedule();
+        // await dayBasis();
+        // await feeType();
+        // await feeFrequency();
+        // await ACBS(true);
+        // await amendment();
+        // await dates();
+        // await toObjectId();
+        await facilityTask();
 
         // Update TFM Facilities
         const updates = allFacilities.map(async (facility) => {
