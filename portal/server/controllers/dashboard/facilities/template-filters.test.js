@@ -2,6 +2,7 @@ import {
   typeFilters,
   hasBeenIssuedFilters,
   facilitiesTemplateFilters,
+  createdByYouFilter,
 } from './template-filters';
 import {
   FIELD_NAMES,
@@ -74,6 +75,7 @@ describe('controllers/dashboard/facilities - template-filters', () => {
       const result = facilitiesTemplateFilters();
 
       const expected = {
+        createdBy: createdByYouFilter({}),
         type: typeFilters({}),
         'deal.submissionType': submissionTypeFilters(
           `deal.${FIELD_NAMES.DEAL.SUBMISSION_TYPE}`,

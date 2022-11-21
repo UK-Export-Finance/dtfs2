@@ -12,6 +12,8 @@ const notifyClient = new NotifyClient(notifyKey);
 export const emailNotification = async (req: Request, res: Response) => {
   try {
     const { templateId, sendToEmailAddress, emailVariables } = req.body;
+    // Add a unique reference to an email
+    const reference = `${templateId}-${new Date().valueOf()}`;
 
     console.info('Calling Notify API. templateId: ', templateId);
 
@@ -20,7 +22,7 @@ export const emailNotification = async (req: Request, res: Response) => {
     const notifyResponse = await notifyClient
       .sendEmail(templateId, sendToEmailAddress, {
         personalisation,
-        reference: null,
+        reference,
       })
       .then((response: any) => response);
 
