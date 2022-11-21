@@ -18,6 +18,7 @@ const FACILITY = {
   VALUE: 'value',
   DEAL_SUBMISSION_TYPE: 'deal.submissionType',
   EXPORTER_COMPANY_NAME: 'deal.exporter.companyName',
+  CREATED_BY: 'createdBy',
 };
 
 module.exports = {
