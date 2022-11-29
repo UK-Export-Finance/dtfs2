@@ -373,22 +373,6 @@ describe('controllers/supporting-documents', () => {
       });
     });
 
-    // it('returns error if error thrown when uploading', async () => {
-    //   uploadAndSaveToDeal.mockRejectedValueOnce('mock thrown error');
-
-    //   await uploadSupportingDocument(mockRequest, mockResponse, mockNext);
-
-    //   expect(mockResponse.status).toHaveBeenCalledWith(200);
-    //   expect(mockResponse.send).toHaveBeenCalledWith({
-    //     file: {
-    //       filename: 'mock-file.pdf',
-    //       originalname: 'mock-file.pdf',
-    //       error: 'mock-file.pdf could not be uploaded',
-    //     },
-    //     error: { message: 'mock-file.pdf could not be uploaded' },
-    //   });
-    // });
-
     it('returns file with success message if everything valid', async () => {
       uploadAndSaveToDeal.mockResolvedValueOnce([{
         _id: 'mock-file-id',

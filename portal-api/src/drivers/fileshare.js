@@ -89,11 +89,9 @@ const tmpTests = async () => {
 const uploadFile = async ({
   fileshare, folder, filename, buffer, allowOverwrite,
 }) => {
-  // const exportDirectory = await getExportDirectory(fileshare);
   if (process.env.AZURE_LOG_LEVEL) {
     tmpTests();
   }
-  // const directoryClient = await exportDirectory.getDirectoryClient(folder);
   const directoryClient = await getDirectory(fileshare, folder);
 
   await directoryClient.create().catch(({ details }) => {

@@ -20,8 +20,6 @@ module.exports = df.orchestrator(function* numbergenerator(context) {
     console.error('Environment variables missing for Number Generator');
   }
 
-
-  //  const { dealId, facilities = [] } = context.df.getInput();
   const { entityType } = context.df.getInput();
 
   if (entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL

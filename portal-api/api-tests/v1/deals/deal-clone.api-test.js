@@ -133,8 +133,6 @@ describe('/v1/deals/:id/clone', () => {
         await createDealEligibility(originalDeal.eligibility);
 
         expect(cloned.deal.eligibility.status).toEqual('Not started');
-        // const criteriaWithoutId = originalDeal.eligibility.criteria.map(({ _id, ...rest }) => rest);
-        // expect(cloned.deal.eligibility.criteria).toMatchObject(criteriaWithoutId);
         expect(cloned.deal.eligibility.validationErrors).toEqual(originalDeal.eligibility.validationErrors);
       });
 
