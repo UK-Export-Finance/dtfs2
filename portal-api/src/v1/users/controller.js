@@ -233,7 +233,6 @@ exports.incrementFailedLoginCount = async (user) => {
 
 exports.disable = async (_id, callback) => {
   const collection = await db.getCollection('users');
-  // const status = await collection.deleteOne({ _id: ObjectId(_id) });
   const userUpdate = {
     disabled: true,
   };

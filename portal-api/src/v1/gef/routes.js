@@ -53,7 +53,6 @@ router.route('/eligibility-criteria/latest')
 
 router.route('/eligibility-criteria/:version')
   .get(validate({ role: ['maker', 'checker', 'editor', 'data-admin', 'admin'] }), eligibilityCriteria.getByVersion)
-  // .put(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.update)
   .delete(validate({ role: ['editor', 'data-admin'] }), eligibilityCriteria.delete);
 
 // Mandatory Criteria

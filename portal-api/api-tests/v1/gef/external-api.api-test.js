@@ -13,7 +13,6 @@ xdescribe(baseUrl, () => {
   });
 
   beforeEach(async () => {
-    // await wipeDB.wipe([collectionName]);
   });
 
   describe(`GET ${baseUrl}/company (Companies House)`, () => {

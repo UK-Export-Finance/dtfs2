@@ -117,18 +117,5 @@ context('Admin dashboard', () => {
   });
 
   // TODO: ADD lighthouse checks DTFS2-4994
-  //   it('Dashboard screen should pass Lighthouse audit', () => {
-  //     // login and go to dashboard
-  //     cy.login(ADMIN_LOGIN);
-  //     dashboardDeals.visit();
 
-  //     cy.lighthouse({
-  //       performance: 85,
-  //       accessibility: 100,
-  //       'best-practices': 85,
-  //       seo: 85,
-  //       pwa: 100,
-  //     });
-  //     cy.pa11y();
-  //   });
 });
