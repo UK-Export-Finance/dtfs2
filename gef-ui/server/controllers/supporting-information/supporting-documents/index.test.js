@@ -373,6 +373,8 @@ describe('controllers/supporting-documents', () => {
       });
     });
 
+    // TODO: DTFS2-6212 add test for "Check - returns error if error thrown when uploading".
+
     it('returns file with success message if everything valid', async () => {
       uploadAndSaveToDeal.mockResolvedValueOnce([{
         _id: 'mock-file-id',
