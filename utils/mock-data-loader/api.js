@@ -292,8 +292,6 @@ const listCountries = async (token) => {
 };
 
 const listDeals = async (token) => {
-  // const response = await apollo('GET', QUERY.dealsQuery, {}, token);
-
   const response = await axios({
     method: 'get',
     headers: {

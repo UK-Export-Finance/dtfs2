@@ -32,7 +32,6 @@ const mapBasisDetails = (v1Basis) => {
   if (v1Basis) {
     v1Basis.forEach((v1) => {
       if (MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]) {
-        // return MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value];
         mapped.details.push(MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]);
       } else {
         mapped.details.push(V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.OTHER);

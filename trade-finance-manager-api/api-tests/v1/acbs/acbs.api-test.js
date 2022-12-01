@@ -73,11 +73,6 @@ describe('acbs controller', () => {
       expect(result).toEqual(false);
     });
 
-    // it('should return false if no tfm.acbs object exists', async () => {
-    //   const result = await acbsController.issueAcbsFacilities({ dealSnapshot: {}, tfm: {} });
-    //   expect(result).toEqual(false);
-    // });
-
     it('should call updateACBSfacility ACBS function', async () => {
       const mockDeal = {
         exporter: { companyName: 'test' },

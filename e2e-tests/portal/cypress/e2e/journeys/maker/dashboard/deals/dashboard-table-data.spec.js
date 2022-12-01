@@ -176,30 +176,6 @@ context('View dashboard deals as a maker', () => {
   });
 
   // TODO: DTFS2-5372 - fix.
-  // it('selecting the `created by me` checkbox refreshes the page and shows only deals created by the logged in maker', () => {
-  //   // login as Maker 2, go to dashboard
-  //   cy.login(BANK1_MAKER2);
-  //   dashboardDeals.visit();
-
-  //   // should see all deals in bank 1
-  //   dashboardDeals.totalItems().invoke('text').then((text) => {
-  //     expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
-  //   });
-
-  //   // select/submit `created by you` checkbox
-  //   dashboardDeals.filters.mainContainer.createdByYouCheckbox().check();
-
-  //   // should only see deals made by Maker 2.
-  //   const DEALS_BY_MAKER_2 = ALL_BANK1_DEALS.filter(({ maker }) => maker.username === BANK1_MAKER2.username);
-
-  //   dashboardDeals.totalItems().invoke('text').then((text) => {
-  //     expect(text.trim()).equal(`(${DEALS_BY_MAKER_2.length} items)`);
-  //   });
-
-  //   // checkbox should be remain checked
-  //   dashboardDeals.filters.mainContainer.createdByYouCheckbox().should('be.checked');
-  // });
-
   it('should not show deals created by other banks', () => {
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();

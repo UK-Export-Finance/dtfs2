@@ -43,7 +43,6 @@ describe('controllers/provided-facility', () => {
     mockRequest = MockRequest();
     mockProvidedFacilityResponse = MockProvidedFacilityResponse();
 
-    // api.getApplication.mockResolvedValue();
     api.getFacility.mockResolvedValue(mockProvidedFacilityResponse);
     api.updateFacility.mockResolvedValue(mockProvidedFacilityResponse);
     api.updateApplication = updateApplicationSpy;
