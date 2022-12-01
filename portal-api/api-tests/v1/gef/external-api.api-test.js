@@ -12,10 +12,6 @@ xdescribe(baseUrl, () => {
     aMaker = testUsers().withRole('maker').one();
   });
 
-  beforeEach(async () => {
-    // await wipeDB.wipe([collectionName]);
-  });
-
   describe(`GET ${baseUrl}/company (Companies House)`, () => {
     it('Returns a mapped company profile', async () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}/company/00000006`);

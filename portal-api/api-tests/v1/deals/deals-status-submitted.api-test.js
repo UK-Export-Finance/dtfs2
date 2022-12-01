@@ -12,8 +12,6 @@ const { as } = require('../../api')(app);
 
 const CONSTANTS = require('../../../src/constants');
 
-// jest.unmock('@azure/storage-file-share');
-
 describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {
   let aBarclaysMaker;
   let aBarclaysChecker;
