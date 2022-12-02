@@ -5,7 +5,7 @@ import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
-const { format } = require('date-fns');
+import {todayFormatted} from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Users can create and submit comments', () => {
   let dealId;
@@ -89,7 +89,7 @@ context('Users can create and submit comments', () => {
       activitiesPage.activitiesTimeline().contains('test');
       activitiesPage.activitiesTimeline().contains(userFullName);
 
-      const expectedDate = format(new Date(), 'd MMMM yyyy');
+      const expectedDate = todayFormatted;
 
       activitiesPage.activitiesTimeline().contains(expectedDate);
     });

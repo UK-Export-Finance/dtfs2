@@ -7,7 +7,7 @@ import applicationSubmission from './pages/application-submission';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-const { format } = require('date-fns');
+import {todayFormattedShort} from '../../../e2e-fixtures/dateConstants';
 
 let dealId;
 
@@ -51,8 +51,7 @@ context('Submit to UKEF as MIA', () => {
 
       statusBanner.bannerStatus().contains('Draft');
 
-      const todayFormatted = format(new Date(), 'dd MMM yyyy');
-      statusBanner.bannerDateCreated().contains(todayFormatted);
+      statusBanner.bannerDateCreated().contains(todayFormattedShort);
 
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
