@@ -125,8 +125,6 @@ module.exports = df.orchestrator(function* HDeal(context) {
         exporter: exporterTask.result,
         bank: bankTask.result,
         buyer: buyerTask.result,
-        // agent: agentTask.result,
-        // indemnifier: indemnifierTask.result,
       };
     }
 

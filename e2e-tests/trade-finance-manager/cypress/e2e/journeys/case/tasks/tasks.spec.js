@@ -211,8 +211,7 @@ context('Case tasks - AIN deal', () => {
 
     assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then((userObj) => {
       const { firstName, lastName } = userObj;
-      // cy.wait(100); // for some reason this prevents flaky test
-
+      
       pages.tasksPage.filterRadioYourTeam().click();
 
       //---------------------------------------------------------------
@@ -311,8 +310,7 @@ context('Case tasks - AIN deal', () => {
       const differentUserInSameTeam = usersInTeam.find((u) => u.username !== MOCK_USERS.BUSINESS_SUPPORT_USER_1.username);
 
       assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then(() => {
-        // cy.wait(100); // for some reason this prevents flaky test
-
+        
         pages.tasksPage.filterRadioYourTeam().click();
 
         //---------------------------------------------------------------

@@ -1,7 +1,6 @@
 const { ObjectId } = require('mongodb');
 const db = require('../../../drivers/db-client');
 
-// const { cloneAzureFiles } = require('../utils/clone-azure-files.utils');
 const { validateApplicationReferences } = require('./validation/application');
 const { exporterStatus } = require('./validation/exporter');
 const CONSTANTS = require('../../../constants');
@@ -18,48 +17,6 @@ const cloneExporter = (currentExporter) => {
 };
 
 // TODO: DTFS2-5907 Re-enable cloneSupportingInformation for GEF deals
-// const cloneSupportingInformation = async (existingDealId, newDealId) => {
-//   const applicationCollectionName = 'deals';
-//   const applicationCollection = await db.getCollection(applicationCollectionName);
-//   const filesCollectionName = 'files';
-//   const filesCollection = await db.getCollection(filesCollectionName);
-
-//   // get all existing files
-//   const allFiles = await filesCollection.aggregate([{ $match: { parentId: ObjectId(String(existingDealId)) } }]).toArray();
-
-//   // check if there are any files in the db
-//   if (allFiles.length) {
-//     Object.entries(allFiles).forEach((key, val) => {
-//       // delete the existing `_id` property - this will be re-created when a new deal is inserted
-//       delete allFiles[val]._id;
-//       // updated the `dealId` property to match the new application ID
-//       allFiles[val].parentId = ObjectId(newDealId);
-//     });
-
-//     await filesCollection.insertMany(allFiles);
-
-//     // get all existing files
-//     const existingFiles = await filesCollection.aggregate([{ $match: { parentId: ObjectId(String(newDealId)) } }]).toArray();
-
-//     if (existingFiles.length) {
-//       existingFiles.forEach(async (v) => {
-//         const value = v;
-//         // convert the ids to string format
-//         value._id = (ObjectId(value._id)).toHexString();
-//         value.parentId = (ObjectId(value.parentId)).toHexString();
-//         await applicationCollection.findOneAndUpdate(
-//           { _id: { $eq: ObjectId(newDealId) } },
-//           {
-//             // set the updatedAt property to the current time in EPOCH format
-//             $set: { updatedAt: Date.now() },
-//             // insert new documents into the supportingInformation object -> array. i.e. supportingInformation.manualInclusion
-//             $push: { [`supportingInformation.${value.documentPath}`]: value }
-//           }
-//         );
-//       });
-//     }
-//   }
-// };
 
 const cloneFacilities = async (currentDealId, newDealId) => {
   const facilitiesCollection = 'facilities';
@@ -183,12 +140,6 @@ exports.clone = async (req, res) => {
     const { newDealId } = response;
     // clone the corresponding facilities
     await cloneFacilities(existingDealId, newDealId);
-
-    // clone the supporting information
-    // await cloneSupportingInformation(existingDealId, newDealId);
-
-    // clone the azure files from one folder to another
-    // await cloneAzureFiles(existingDealId, newDealId);
 
     return res.status(200).send({ dealId: newDealId });
   }
