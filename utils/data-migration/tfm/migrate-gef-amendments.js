@@ -57,7 +57,18 @@ const migrateGefAmendments = async () => {
     'GE Extension',
     'GE Extension, Increase in Value',
     'Increase in Value, Cover percentage increase',
-    'ML Increase'
+    'ML Increase',
+    'Decrease in Value',
+    'Increase in Value',
+    'Increase in Value, Cover percentage increase',
+    'GE Extension',
+    'GE Extension, Decrease in Value',
+    'Increase in Value, Cover Remains',
+    'GE Extension, Increase in Value',
+    'GE Extension,Increase in Value,Fee Increase',
+    'Fee % reduction',
+    'Tenor Extension',
+    'GE Extension',
   ];
   const { MANUAL, AUTOMATIC } = CONSTANTS.AMENDMENT.AMENDMENT_TYPE;
   const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
