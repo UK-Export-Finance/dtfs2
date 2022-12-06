@@ -40,7 +40,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/deal`));
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('25 months');
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('26 months');
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.oneMonthFormattedTable);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
@@ -53,7 +53,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
     facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
-    facilityPage.facilityTenor().contains('25 months');
+    facilityPage.facilityTenor().contains('26 months');
   });
 
   it('should submit an amendment request', () => {
@@ -188,7 +188,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/deal`));
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('25 months');
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('26 months');
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.oneMonthFormattedTable);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
@@ -201,7 +201,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
     facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
-    facilityPage.facilityTenor().contains('25 months');
+    facilityPage.facilityTenor().contains('26 months');
   });
 
   it('should show add decision button if logged in as PIM user', () => {
@@ -477,7 +477,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/deal`));
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('25 months');
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains('26 months');
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.oneMonthFormattedTable);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
@@ -490,6 +490,6 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at 5 June 2022`);
 
     facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
-    facilityPage.facilityTenor().contains('25 months');
+    facilityPage.facilityTenor().contains('26 months');
   });
 });
