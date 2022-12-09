@@ -12,12 +12,14 @@ const { write } = require('../../data-migration/helpers/io');
 // ******************** DEALS *************************
 /**
    * Return all the TFM deals with `MIA/MIN` filter.
-   * @param {Object} filter Mongo filter
+   * @param {Integer} EPOCH Fetch records greater than.
+   * Defaulted to `1648684800` (31-03-2022). This argument
+   * accepts EPOCH with `ms`
    * @returns {Object} Collection object
    */
-const getTfmDeals = () => getCollection(
+const getTfmDeals = (epoch = 1648684800) => getCollection(
   CONSTANTS.DATABASE.TABLES.TFM_DEAL,
-  { 'tfm.stage': 'Confirmed', 'tfm.dateReceivedTimestamp': { $gte: 1648684800 } },
+  { 'tfm.stage': 'Confirmed', 'tfm.dateReceivedTimestamp': { $gte: epoch } },
 );
 
 // ******************** FORMATTING *************************
