@@ -8,6 +8,7 @@
 const CONSTANTS = require('../../data-migration/constant');
 const { getCollection, disconnect } = require('../../data-migration/helpers/database');
 const { write } = require('../../data-migration/helpers/io');
+const { stripCommas, getMaximumLiability } = require('../../data-migration/helpers/format');
 
 // ******************** DEALS *************************
 /**
@@ -21,37 +22,6 @@ const getTfmDeals = (epoch = 1648684800) => getCollection(
   CONSTANTS.DATABASE.TABLES.TFM_DEAL,
   { 'tfm.stage': 'Confirmed', 'tfm.dateReceivedTimestamp': { $gte: epoch } },
 );
-
-// ******************** FORMATTING *************************
-
-/**
-    * Strips commas and return UKEF exposure
-    * as number.
-    * @param {String} string Raw string with commas
-    * @param {Boolean} Number Whether output should be a `Number`
-    * @returns {Integer} Formatted value
-    */
-const stripCommas = (string, number = false) => {
-  if (string) {
-    return number ? Number(string.toString().replace(/,/g, '')) : string.replace(/,/g, '');
-  }
-  return string;
-};
-
-/**
-   * Returns deal's total maximum liability in GBP.
-   * @param {Array} facilities Array of facilities
-   * @returns {Integer} Total of deal's maximum liability in GBP
-   */
-const getMaximumLiability = (facilities) => {
-  if (facilities) {
-    return facilities
-      .map((f) => stripCommas(f.ukefExposure, true) ?? 0)
-      .reduce((p, c) => p + c, 0);
-  }
-
-  return 0;
-};
 
 // ******************** REPORTING *************************
 
