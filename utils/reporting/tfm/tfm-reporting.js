@@ -1,71 +1,78 @@
 /**
- * RAD REPORTING
+ * TFM REPORTING
  * **************
  * Purpose of this script is to generate a bespoke
- * report for RAD as per all the TFM deals.
+ * report of all completed deals from TFM
  */
 
 const CONSTANTS = require('../../data-migration/constant');
 const { getCollection, disconnect } = require('../../data-migration/helpers/database');
 const { write } = require('../../data-migration/helpers/io');
-const { stripCommas, getMaximumLiability, filterTask } = require('../../data-migration/helpers/format');
+const { stripCommas, getMaximumLiability } = require('../../data-migration/helpers/format');
 
 // ******************** DEALS *************************
 /**
-  * Return all the TFM deals with `MIA/MIN` filter.
-  * @param {Object} filter Mongo filter
-  * @returns {Object} Collection object
-  */
-const getTfmDeals = () => getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, { $or: [
-  { 'dealSnapshot.submissionType': 'Manual Inclusion Application' },
-  { 'dealSnapshot.submissionType': 'Manual Inclusion Notice' }] });
+   * Return all the TFM deals with `MIA/MIN` filter.
+   * @param {Integer} EPOCH Fetch records greater than.
+   * Defaulted to `1648684800` (31-03-2022). This argument
+   * accepts EPOCH with `ms`
+   * @returns {Object} Collection object
+   */
+const getTfmDeals = (epoch = 1648684800) => getCollection(
+  CONSTANTS.DATABASE.TABLES.TFM_DEAL,
+  { 'tfm.stage': 'Confirmed', 'tfm.dateReceivedTimestamp': { $gte: epoch } },
+);
 
 // ******************** REPORTING *************************
 
 /**
- * Process TFM deals into bespoke array of data
- * to match reporting columns.
- * @param {Array} deals Array of deals object
- * @return {Promise} Processed deals
- */
+  * Process TFM deals into bespoke array of data
+  * to match reporting columns.
+  * @param {Array} deals Array of deals object
+  * @return {Promise} Processed deals
+  */
 const constructRows = (deals) => {
   const rows = deals.map((deal) => {
     const processed = [];
 
     if (deal) {
       const { dealSnapshot, tfm } = deal;
+      const { bank, dealType, submissionType } = dealSnapshot;
+      const { stage, lastUpdated, parties } = tfm;
       const ukefDealId = dealSnapshot.ukefDealId ?? dealSnapshot.details.ukefDealId;
-      const submissionDate = dealSnapshot.submissionDate ?? dealSnapshot.details.submissionDate;
       const destinationCountry = dealSnapshot.submissionDetails
         ? stripCommas(dealSnapshot.submissionDetails.destinationOfGoodsAndServices.name)
         : '';
       const exporterName = stripCommas(dealSnapshot.exporter.companyName)
           ?? stripCommas(dealSnapshot.submissionDetails['supplier-name']);
-      const exporterUrn = tfm.parties.exporter.partyUrn;
+      const exporterUrn = parties.exporter.partyUrn;
       const { exporterCreditRating } = tfm;
+      const buyerName = dealSnapshot.submissionDetails
+        ? stripCommas(dealSnapshot.submissionDetails['buyer-name'])
+        : '';
+      const buyerUrn = parties.buyer.bankUrn;
+      const bankName = bank.name;
+      const bankUrn = bank.partyUrn;
       // Amalgamation of all facilities `facility.ukefExposure`
       const maximumLiability = `£${getMaximumLiability(dealSnapshot.facilities)}`;
-      // `Complete risk analysis (RAD)` task
-      const radTask = filterTask(tfm, 'Complete risk analysis (RAD)');
-      const approver = stripCommas(radTask?.assignedTo?.userFullName) ?? '';
-      const approveDate = radTask?.dateCompleted
-        ? new Date(Number(radTask.dateCompleted))
-        : '';
+      const submissionDate = dealSnapshot.submissionDate ?? dealSnapshot.details.submissionDate;
 
       processed.push([
         ukefDealId,
-        tfm.stage,
-        dealSnapshot.dealType,
-        dealSnapshot.submissionType,
+        dealType,
+        submissionType,
+        stage,
         destinationCountry,
         exporterName,
         exporterUrn,
-        '',
         exporterCreditRating || '',
+        buyerName,
+        buyerUrn,
+        bankName,
+        bankUrn,
         maximumLiability,
-        approver,
-        approveDate,
         new Date(Number(submissionDate)),
+        new Date(Number(lastUpdated)),
       ]);
     }
 
@@ -76,28 +83,30 @@ const constructRows = (deals) => {
 };
 
 /**
- * Generates bespoke report as CSV
- * @param {Array} rows Array of processed deals
- * @returns {Null} Null is returned
- */
+  * Generates bespoke report as CSV
+  * @param {Array} rows Array of processed deals
+  * @returns {Null} Null is returned
+  */
 const generateReport = async (rows) => {
-  const path = `${__dirname}/report/csv/RAD_${new Date().valueOf()}.csv`;
+  const path = `${__dirname}/report/csv/TFM_${new Date().valueOf()}.csv`;
   let csv = '';
   const data = [
     [
       'UKEF Deal ID',
-      'Deal status',
       'Deal type',
       'Submission type',
+      'TFM stage',
       'Destination country',
       'Exporter name',
       'Exporter URN',
-      'Guarantor',
       'Exporter credit rating',
+      'Buyer name',
+      'Buyer URN',
+      'Bank name',
+      'Bank URN',
       'Maximum liability (GBP)',
-      'Approval level name',
-      'Date approved',
       'Submission date',
+      'Last updated',
     ],
   ];
 
@@ -122,12 +131,12 @@ const generateReport = async (rows) => {
 // ******************** MAIN *************************
 
 /**
- * Entry point function.
- * Initiates report generation process
- * @returns {Boolean} Execution status
- */
+  * Entry point function.
+  * Initiates report generation process
+  * @returns {Boolean} Execution status
+  */
 const generate = () => {
-  console.info('\n\x1b[33m%s\x1b[0m', '🚀 Initiating RAD reporting.', '\n\n');
+  console.info('\n\x1b[33m%s\x1b[0m', '🚀 Initiating TFM reporting.', '\n\n');
 
   getTfmDeals()
     .then((deals) => constructRows(deals))
