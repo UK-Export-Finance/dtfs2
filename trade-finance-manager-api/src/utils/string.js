@@ -1,14 +1,12 @@
-const isEmptyString = (str) => !str || ((typeof str === 'string' || str instanceof String) && !str.trim().length);
+const isEmptyString = (s) => !s || ((typeof s === 'string' || s instanceof String) && !s.trim().length);
 
-const hasValue = (str) => str && !isEmptyString(str);
+const hasValue = (s) => Boolean(s) && !isEmptyString(s);
 
-const stripCommas = (str) => str.toString().replace(/,/g, '');
+const stripCommas = (s) => (hasValue(s) ? s.toString().replace(/,/g, '') : s);
 
-const capitalizeFirstLetter = (str) =>
-  str.toString().charAt(0).toUpperCase() + str.slice(1);
+const capitalizeFirstLetter = (s) => (hasValue(s) ? s.toString().charAt(0).toUpperCase() + s.toString().slice(1) : s);
 
-const lowercaseFirstLetter = (str) =>
-  str.toString().charAt(0).toLowerCase() + str.slice(1);
+const lowercaseFirstLetter = (s) => (hasValue(s) ? s.toString().charAt(0).toLowerCase() + s.toString().slice(1) : s);
 
 module.exports = {
   isEmptyString,
