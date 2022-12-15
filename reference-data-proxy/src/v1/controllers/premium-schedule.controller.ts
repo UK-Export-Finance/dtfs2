@@ -38,8 +38,8 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
     }).catch((error: any) => {
       console.error(
         `Error calling POST Premium schedule with facilityURN: ${premiumSchedulePayloadFormatted.facilityURN} \n`,
-        error.response.data,
-        error.response.status,
+        error?.response?.data,
+        error?.response?.status,
       );
       return { data: error?.response?.data, status: error?.response?.status };
     });
@@ -47,7 +47,7 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
     console.info(`Premium schedule successfully created for ${premiumSchedulePayloadFormatted.facilityURN}`);
     return response.status ? response.status : response;
   } catch (error) {
-    console.error('Error calling POST Premium schedule in try catch', { error });
+    console.error('Error calling POST Premium schedule', { error });
     return null;
   }
 };
