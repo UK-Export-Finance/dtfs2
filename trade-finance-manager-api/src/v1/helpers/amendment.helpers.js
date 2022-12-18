@@ -2,6 +2,7 @@ const { format, fromUnixTime } = require('date-fns');
 const api = require('../api');
 const sendTfmEmail = require('../controllers/send-tfm-email');
 const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
+const { PIM } = require('../../constants/teams');
 const {
   AMENDMENT_UW_DECISION,
   AMENDMENT_BANK_DECISION,
@@ -63,14 +64,18 @@ const amendmentDeclined = (amendment) => {
 };
 
 const sendAutomaticAmendmentEmail = async (amendmentVariables) => {
+  const { email: pimEmail } = await api.findOneTeam(PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.AUTOMATIC_AMENDMENT;
   const emailVariables = automaticAmendmentEmailVariables(amendmentVariables);
 
   try {
     const emailResponse = await sendTfmEmail(templateId, user.email, emailVariables);
+    // Send a copy to `PIM`
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables);
+
     // if successful, then updates flag to say email has been sent
-    if (emailResponse) {
+    if (emailResponse && pimEmailResponse) {
       await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true });
     }
   } catch (err) {
@@ -89,14 +94,18 @@ const managersDecisionUpdateEmailConfirmation = async (facilityId, amendmentId) 
 };
 
 const emailApprovedWithWithoutConditions = async (amendmentVariables) => {
+  const { email: pimEmail } = await api.findOneTeam(PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS;
   const emailVariables = approvedWithWithoutConditionsDecision(amendmentVariables);
 
   try {
     const emailResponse = await sendTfmEmail(templateId, user.email, emailVariables);
+    // Send a copy to `PIM`
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables);
+
     // if successful, then updates flag to say email has been sent
-    if (emailResponse) {
+    if (pimEmailResponse && emailResponse) {
       await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
   } catch (err) {
@@ -105,14 +114,18 @@ const emailApprovedWithWithoutConditions = async (amendmentVariables) => {
 };
 
 const emailApprovedWithoutConditions = async (amendmentVariables) => {
+  const { email: pimEmail } = await api.findOneTeam(PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS;
   const emailVariables = approvedWithWithoutConditionsDecision(amendmentVariables);
 
   try {
     const emailResponse = await sendTfmEmail(templateId, user.email, emailVariables);
+    // Send a copy to `PIM`
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables);
+
     // if successful, then updates flag to say email has been sent
-    if (emailResponse) {
+    if (pimEmailResponse && emailResponse) {
       await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
   } catch (err) {
@@ -121,14 +134,18 @@ const emailApprovedWithoutConditions = async (amendmentVariables) => {
 };
 
 const emailApprovedWithConditionsDeclined = async (amendmentVariables) => {
+  const { email: pimEmail } = await api.findOneTeam(PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_W_CONDITIONS_DECLINED;
   const emailVariables = approvedWithConditionsDeclinedDecision(amendmentVariables);
 
   try {
     const emailResponse = await sendTfmEmail(templateId, user.email, emailVariables);
+    // Send a copy to `PIM`
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables);
+
     // if successful, then updates flag to say email has been sent
-    if (emailResponse) {
+    if (pimEmailResponse && emailResponse) {
       await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
   } catch (err) {
@@ -137,14 +154,18 @@ const emailApprovedWithConditionsDeclined = async (amendmentVariables) => {
 };
 
 const emailApprovedWithoutConditionsDeclined = async (amendmentVariables) => {
+  const { email: pimEmail } = await api.findOneTeam(PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_APPROVED_WO_CONDITIONS_DECLINED;
   const emailVariables = approvedWithoutConditionsDeclinedDecision(amendmentVariables);
 
   try {
     const emailResponse = await sendTfmEmail(templateId, user.email, emailVariables);
+    // Send a copy to `PIM`
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables);
+
     // if successful, then updates flag to say email has been sent
-    if (emailResponse) {
+    if (pimEmailResponse && emailResponse) {
       await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
   } catch (err) {
@@ -153,14 +174,18 @@ const emailApprovedWithoutConditionsDeclined = async (amendmentVariables) => {
 };
 
 const emailDeclined = async (amendmentVariables) => {
+  const { email: pimEmail } = await api.findOneTeam(PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const templateId = EMAIL_TEMPLATE_IDS.MANUAL_AMENDMENT_DECISION_DECLINED;
   const emailVariables = declinedDecision(amendmentVariables);
 
   try {
     const emailResponse = await sendTfmEmail(templateId, user.email, emailVariables);
+    // Send a copy to `PIM`
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables);
+
     // if successful, then updates flag to say email has been sent
-    if (emailResponse) {
+    if (pimEmailResponse && emailResponse) {
       await managersDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
   } catch (err) {
@@ -211,13 +236,17 @@ const banksDecisionUpdateEmailConfirmation = async (facilityId, amendmentId) => 
 };
 
 const emailBankDecision = async (amendmentVariables, templateId) => {
+  const { email: pimEmail } = await api.findOneTeam(PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
   const emailVariables = banksDecisionEmailVariables(amendmentVariables);
 
   try {
     const emailResponse = await sendTfmEmail(templateId, user.email, emailVariables);
+    // Send a copy to `PIM`
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables);
+
     // if successful, then updates flag to say email has been sent
-    if (emailResponse) {
+    if (pimEmailResponse && emailResponse) {
       await banksDecisionUpdateEmailConfirmation(facilityId, amendmentId);
     }
   } catch (err) {
@@ -302,6 +331,7 @@ const sendFirstTaskEmail = async (taskVariables) => {
     const emailVariables = generateTaskEmailVariables(urlOrigin, firstTask, dealId, exporter.companyName, ukefDealId);
 
     const emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables);
+
     // if successful, then updates flag to say email has been sent
     if (emailResponse) {
       await firstTaskEmailConfirmation(facilityId, amendmentId);
