@@ -11,17 +11,17 @@ const monthString = (period) => (Number(period) === 1 ? 'month' : 'months');
  * or plural `months` text.
  * @param {Boolean} hasBeenIssued Facility issuance stage
  * @param {Integer} months Number of cover months
- * @param {Integer} exposurePeriod Exposure in months
+ * @param {Integer} exposurePeriodMonths Exposure period in months
  * @returns {String} Tenor dates with `month(s)` appended, otherwise null
  */
 const mapTenorDate = (
   hasBeenIssued,
   months,
-  exposurePeriod,
+  exposurePeriodMonths,
 ) => {
   // If issued
-  if (exposurePeriod) {
-    return `${exposurePeriod} ${monthString(exposurePeriod)}`;
+  if (exposurePeriodMonths) {
+    return `${exposurePeriodMonths} ${monthString(exposurePeriodMonths)}`;
   }
 
   if (!months) {
