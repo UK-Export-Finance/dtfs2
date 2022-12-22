@@ -7,26 +7,17 @@
 
 {% block content %}
 
+ {% set componentData = {
+      deal: deal,
+      tfm: tfm,
+      user: user,
+      amendment: amendment
+  } %}
+
   {% if tfm.nonDelegatedBank %}
-    {% set componentData = {
-      deal: deal,
-      tfm: tfm,
-      user: user,
-      amendment: amendment
-    } %}
-
     {{caseSummaryNdb.render(componentData)}}
-
   {% else %}
-    {% set componentData = {
-      deal: deal,
-      tfm: tfm,
-      user: user,
-      amendment: amendment
-    } %}
-
     {{caseSummary.render(componentData)}}
-
   {% endif %}
 
   {% include "_partials/case_sub_navigation.njk" %}
