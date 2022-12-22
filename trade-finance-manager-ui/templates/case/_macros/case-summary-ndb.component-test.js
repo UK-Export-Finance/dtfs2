@@ -1,7 +1,7 @@
 const fs = require('fs');
 const componentRenderer = require('../../../component-tests/componentRenderer');
 
-const component = '../templates/case/_macros/case-summary.njk';
+const component = '../templates/case/_macros/case-summary-ndb.njk';
 
 const formatDateString = require('../../../server/nunjucks-configuration/filter-formatDateString');
 
@@ -22,6 +22,7 @@ let params = {
     stage: 'Confirmed',
     dateReceived: '01-02-2021',
     product: 'GEF',
+    nonDelegatedBank: true,
   },
   user: {
     timezone: 'Europe/London',
@@ -40,7 +41,7 @@ describe(component, () => {
   });
 
   it('should render supplier type', () => {
-    wrapper.expectText('[data-cy="case-summary"] [data-cy="supplier-type"]').toRead('Exporter');
+    wrapper.expectText('[data-cy="case-summary-ndb"] [data-cy="supplier-type"]').toRead('Exporter');
   });
 
   it('should render exporter (supplier) name', () => {
@@ -55,8 +56,8 @@ describe(component, () => {
     wrapper.expectElement('[data-cy="supplier-column"]').hasClass('case-summary-supplier chevron-right');
   });
 
-  it('should render ukef deal stage component', () => {
-    wrapper.expectElement('[data-cy="ukef-deal-stage"]').toExist();
+  it('should not render ukef deal stage component', () => {
+    wrapper.expectElement('[data-cy="ukef-deal-stage"]').notToExist();
   });
 
   it('should render destination country', () => {
@@ -96,8 +97,8 @@ describe(component, () => {
     wrapper.expectText('[data-cy="ukef-product"]').toRead(params.tfm.product);
   });
 
-  it('should render submission type', () => {
-    wrapper.expectText('[data-cy="submission-type"]').toRead(params.deal.submissionType);
+  it('should render submission type of "Non-bank delegation"', () => {
+    wrapper.expectText('[data-cy="submission-type"]').toRead('Non-bank delegation');
   });
 
   describe('when there is no date received', () => {
@@ -142,7 +143,7 @@ describe(component, () => {
     });
 
     it('should render correct supplier type', () => {
-      wrapper.expectText('[data-cy="case-summary"] [data-cy="supplier-type"]').toRead('Tier 1 supplier');
+      wrapper.expectText('[data-cy="case-summary-ndb"] [data-cy="supplier-type"]').toRead('Tier 1 supplier');
     });
   });
 });
