@@ -7,7 +7,7 @@
   {% set tfm = params.tfm %}
   {% set user = params.user %}
 
-  <div data-cy="case-summary" class="case-summary">
+  <div data-cy="case-summary-ndb" class="case-summary">
     <div>
       <div class="case-summary-deal-id">
         <div class="label">Deal ID</div>
@@ -36,12 +36,14 @@
     </div>
     <div class="case-summary-overview-container">
       <div class="ukef-grid-column-one-sixth case-summary-overview-column">
-        {% set componentData = {
-          stage: tfm.stage
-        }%}
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Product</div>
+          <div class="ukef-body-s" data-cy="ukef-product">{{ tfm.product | dashIfEmpty }}</div>
+        </div>
 
-        <div class="case-summary-overview-item case-summary-overview-item__stage">
-          {{ukefDealStage.render(componentData)}}
+        <div class="case-summary-overview-item">
+          <div class="ukef-heading-xs">Bank</div>
+          <div class="ukef-body-s" data-cy="bank-name">{{ deal.bank.name | dashIfEmpty }}</div>
         </div>
 
         <div class="case-summary-overview-item">
@@ -54,18 +56,8 @@
 
       <div class="case-summary-overview-column ukef-grid-column-one-sixth">
         <div class="case-summary-overview-item">
-          <div class="ukef-heading-xs">Product</div>
-          <div class="ukef-body-s" data-cy="ukef-product">{{ tfm.product | dashIfEmpty }}</div>
-        </div>
-
-        <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Type</div>
-          <div class="ukef-body-s" data-cy="submission-type">{{ deal.submissionType | dashIfEmpty }}</div>
-        </div>
-
-        <div class="case-summary-overview-item">
-          <div class="ukef-heading-xs">Bank</div>
-          <div class="ukef-body-s" data-cy="bank-name">{{ deal.bank.name | dashIfEmpty }}</div>
+          <div class="ukef-body-s" data-cy="submission-type">Non-bank delegation</div>
         </div>
       </div>
 
@@ -91,7 +83,7 @@
           <div class="ukef-heading-xs">Export contract value</div>
           <div class="ukef-body-s">
             <span data-cy="contract-value">
-              {{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency | dashIfEmpty }}
+                {{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency | dashIfEmpty }}
             </span>
             {% if tfm.supplyContractValueInGBP %}
               <span data-cy="contract-value-in-gbp">{{ tfm.supplyContractValueInGBP | dashIfEmpty }}</span>
