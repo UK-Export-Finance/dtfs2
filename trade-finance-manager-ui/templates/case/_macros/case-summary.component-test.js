@@ -43,7 +43,6 @@ describe(component, () => {
     wrapper.expectText('[data-cy="case-summary"] [data-cy="supplier-type"]').toRead('Exporter');
   });
 
-
   it('should render exporter (supplier) name', () => {
     wrapper.expectText('[data-cy="exporter-name"]').toRead(params.deal.exporter.companyName);
   });

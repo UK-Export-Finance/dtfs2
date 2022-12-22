@@ -49,7 +49,7 @@
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Date received</div>
             <div class="ukef-body-s" data-cy="date-received">
-              {{ tfm.dateReceived | formatDateString("DD-MM-YYYY", "D MMMM YYYY") | dashIfEmpty }}
+              {{ tfm.dateReceived | formatDateString("DD-MM-YYYY", "D MMMM YYYY") | dashIfEmpty}}
             </div>
         </div>
       </div>
@@ -83,7 +83,7 @@
           <div class="ukef-heading-xs">Export contract value</div>
           <div class="ukef-body-s">
             <span data-cy="contract-value">
-              {{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency | dashIfEmpty }}
+                {{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency | dashIfEmpty }}
             </span>
             {% if tfm.supplyContractValueInGBP %}
               <span data-cy="contract-value-in-gbp">{{ tfm.supplyContractValueInGBP | dashIfEmpty }}</span>
