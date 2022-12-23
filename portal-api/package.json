@@ -48,7 +48,7 @@
     "graphql": "^15.8.0",
     "graphql-middleware": "^6.1.33",
     "joi": "^17.6.0",
-    "jsonwebtoken": "8.5.1",
+    "jsonwebtoken": "9.0.0",
     "moment": "2.29.4",
     "moment-timezone": "0.5.37",
     "mongodb": "~3.6.12",
