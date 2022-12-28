@@ -35,7 +35,7 @@
   "dependencies": {
     "@azure/storage-file-share": "12.11.0",
     "@graphql-tools/schema": "^8.5.0",
-    "apollo-server-express": "2.26.1",
+    "apollo-server-express": "^2.26.1",
     "apollo-server-testing": "^2.20.0",
     "axios": "^0.27.2",
     "comma-number": "^2.1.0",
