@@ -10,19 +10,11 @@
 const CONSTANTS = require('../constant');
 
 const { NON_DELEGATED_BANKS_DEALS } = CONSTANTS.DEAL;
-const { workflow } = require('../helpers/io');
+const { extractComments } = require('../helpers/datafixes');
 
 const version = '0.0.1';
 
 // ******************** WORKFLOW *************************
-const raw = async () => {
-  const deals = await workflow(CONSTANTS.WORKFLOW.FILES.DEAL);
-
-  deals
-    .filter(({ DEAL }) => NON_DELEGATED_BANKS_DEALS.includes(DEAL['UKEF DEAL ID']))
-    .map(({ DEAL }, index) => {
-    });
-};
 
 // ******************** MAIN *************************
 
@@ -34,7 +26,7 @@ const raw = async () => {
 const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating NDB ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM migration v${version}.`, '\n\n');
 
-  raw()
+  extractComments(NON_DELEGATED_BANKS_DEALS)
     .then(() => process.exit(1))
     .catch((error) => {
       console.error('\n\x1b[31m%s\x1b[0m', '🚩 Migration failed.\n', { error });

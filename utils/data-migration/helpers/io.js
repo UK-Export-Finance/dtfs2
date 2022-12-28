@@ -2,6 +2,7 @@
  * I/O helper functions
  */
 const fs = require('fs');
+const path = require('path');
 const { open, get } = require('./actionsheets');
 
 /**
@@ -10,6 +11,20 @@ const { open, get } = require('./actionsheets');
  * @returns Sleeps for `ms` provided
  */
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Write a file to local storage
+ * @param {String} path File path
+ * @param {String} data Data to write
+ * @returns {Boolean} Boolean upon file write
+ */
+const write = async (path, data) => {
+  if (path && data) {
+    fs.writeFileSync(path, data, 'utf8', (e) => (!e));
+    return true;
+  }
+  return false;
+};
 
 /**
  * Returns JSON file name from type
@@ -119,8 +134,31 @@ const actionsheet = async (search) => {
   }
 };
 
+/**
+ * Write data array into a CSV file
+ * @param {Array} rows Array of processed deals
+ * @param {Text} Filename Name of tile
+ * @returns {Null} Null is returned
+ */
+const writeCSV = async (data, filename) => {
+  let csv = '';
+  const filepath = path.join(__dirname, '..', '..', 'reporting', 'tfm', 'report', 'csv', `${filename}_${new Date().valueOf()}.csv`);
+
+  data.forEach((row) => {
+    csv = csv.concat(row.join(','), '\n');
+  });
+
+  if (await write(filepath, csv)) {
+    console.info('\x1b[33m%s\x1b[0m', `✅ CSV successfully written at ${filepath}.`, '\n');
+    return Promise.resolve(true);
+  }
+
+  return Promise.reject();
+};
+
 module.exports = {
   sleep,
   workflow,
   actionsheet,
+  writeCSV,
 };

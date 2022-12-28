@@ -12,7 +12,7 @@ const {
   tfmFacilityUpdate,
   portalFacilityUpdate,
 } = require('./database');
-const { actionsheet, workflow, sleep } = require('./io');
+const { actionsheet, workflow, writeCSV } = require('./io');
 const { epochInSeconds, getEpoch } = require('./date');
 const getFacilityPremiumSchedule = require('../../../trade-finance-manager-api/src/v1/controllers/get-facility-premium-schedule');
 const mapWorkflowStatus = require('./amendment');
@@ -68,8 +68,8 @@ const updateAmendment = async (facilityId, amendmentId, data) => {
     const response = await axios({
       method: 'PUT',
       url: `${TFM_API}/v1/facility/${facilityId}/amendment/${amendmentId}`,
-      headers: { 'Content-Type': 'application/json' },
       data,
+      headers: { 'Content-Type': 'application/json' },
     })
       .catch((e) => new Error(e));
 
@@ -104,6 +104,8 @@ const formatString = (string) => {
     raw = raw.replace(/\\"/g, '"');
     // Escaped forward slash
     raw = raw.replace(/\\\//g, '/');
+    // Replace comma character
+    raw = raw.replace(/,/g, ' ');
     // Replace unknown character
     raw = raw.replace(//g, '');
   }
@@ -134,6 +136,75 @@ const getUkefDealIdFromObjectId = (_id) => {
     .filter((d) => d._id.toString() === _id.toString())
     .map((d) => d.dealSnapshot.ukefDealId ?? d.dealSnapshot.details.ukefDealId);
   return id[0];
+};
+
+/**
+ * Extract comments from both `deal` and `facility`
+ * exports. Array of deal IDs as an argument used
+ * during filtration process.
+ * @param {Array} dealIds Array of deal IDs
+ * @returns {Array} Array of filtered comments
+ */
+const extractComments = async (dealIds) => {
+  if (dealIds && dealIds.length) {
+    const deals = await workflow(CONSTANTS.WORKFLOW.FILES.COMMENTS);
+    const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY_COMMENTS);
+    const comments = [[
+      'UKEF Deal ID',
+      'UKEF Facility ID',
+      'Comment',
+      'Comment type',
+      'Comment By',
+      'Timestamp'
+    ]];
+
+    deals
+      .filter(({ DEAL }) => dealIds.includes(DEAL['UKEF DEAL ID']))
+      .map(({ DEAL }) => {
+        const {
+          COMMENT_TEXT,
+          COMMENT_TYPE_NAME,
+          COMMENT_BY,
+          FACILITY: {
+            COMMENT_DATE_CREATED_DATETIME
+          }
+        } = DEAL;
+        comments.push([
+          DEAL['UKEF DEAL ID'],
+          '', // UKEF Facility ID
+          formatString(COMMENT_TEXT),
+          COMMENT_TYPE_NAME,
+          COMMENT_BY,
+          COMMENT_DATE_CREATED_DATETIME,
+        ]);
+      });
+
+    facilities
+      .filter(({ DEAL }) => dealIds.includes(DEAL['UKEF DEAL ID']))
+      .map(({ DEAL }) => {
+        const {
+          FACILITY: {
+            UKEF_FACILITY_ID,
+            COMMENT_TEXT,
+            COMMENT_TYPE_NAME,
+            COMMENT_BY,
+            COMMENT_DATE_CREATED_DATETIME
+          }
+        } = DEAL;
+        comments.push([
+          DEAL['UKEF DEAL ID'],
+          UKEF_FACILITY_ID,
+          formatString(COMMENT_TEXT),
+          COMMENT_TYPE_NAME,
+          COMMENT_BY,
+          COMMENT_DATE_CREATED_DATETIME,
+        ]);
+      });
+
+    return writeCSV(comments, 'NDB_Comments');
+  }
+
+  throw new Error('Void argument, empty deal IDs array.');
 };
 
 // ******************** DEALS *************************
@@ -1778,6 +1849,7 @@ const datafixesTfmFacilitiesGef = async (deals) => {
 };
 
 module.exports = {
+  extractComments,
   datafixes,
   datafixesTfmDeal,
   datafixesTfmFacilities,
