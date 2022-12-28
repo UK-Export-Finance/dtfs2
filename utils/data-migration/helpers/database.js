@@ -72,6 +72,26 @@ const ukefDealIdPath = (dealType) => {
 };
 
 /**
+ * Insert deal to `tfm-deal` collection.
+ * @param {Object} data Deal object
+ * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
+ */
+const portalDealInsert = async (data) => {
+  try {
+    if (!connection) await connect();
+
+    const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL).insertOne(data);
+
+    return (response.acknowledged)
+      ? Promise.resolve(true)
+      : Promise.reject(response);
+  } catch (e) {
+    console.error('Unable to insert into tfm-deals: ', { e });
+    return Promise.reject(new Error(false));
+  }
+};
+
+/**
  * Portal - Updates collection property(ies)
  * @param {String} ukefDealId UKEF Deal ID
  * @param {Object} updates Properties to update
@@ -184,6 +204,7 @@ const tfmFacilityUpdate = async (updatedFacility) => {
 module.exports = {
   getCollection,
   disconnect,
+  portalDealInsert,
   portalDealUpdate,
   portalFacilityUpdate,
   tfmDealUpdate,
