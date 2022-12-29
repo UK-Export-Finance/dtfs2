@@ -45,7 +45,7 @@ const submitTfmDeals = async (deals) => {
 
   if (deals && deals.length) {
     for (const data of deals) {
-        const { DEAL } = data;
+      const { DEAL } = data;
       await deal(DEAL)
         .then((r) => {
           if (r) {
