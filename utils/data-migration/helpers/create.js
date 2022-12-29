@@ -4,6 +4,7 @@ const { ObjectID } = require('bson');
 const CONSTANTS = require('../constant');
 const { portalDealInsert } = require('./database');
 const { party } = require('./parties');
+const { getEpoch } = require('./date');
 
 /**
  * Construct deal object for `tfm-deals` collection.
@@ -24,8 +25,8 @@ const deal = async (DEAL) => {
     tfmDeal.dealSnapshot.ukefDealId = ukefDealId;
 
     // `dealSnapshot.details`
-    tfmDeal.dealSnapshot.details.created.$numberLong = '';
-    tfmDeal.dealSnapshot.details.submissionDate = '';
+    tfmDeal.dealSnapshot.details.created.$numberLong = getEpoch(DEAL['DATE CREATED DATETIME']);
+    tfmDeal.dealSnapshot.details.submissionDate = getEpoch(DEAL['DATE LAST UPDATED DATETIME']);
     tfmDeal.dealSnapshot.details.submissionCount = 2;
     tfmDeal.dealSnapshot.details.ukefDealId = ukefDealId;
     tfmDeal.dealSnapshot.details.checker = {
