@@ -50,12 +50,12 @@ const NDB_TASKS = {
     TASKS: [
       {
         groupId: 1,
-        title: NDB_GROUP_1_TASKS.GROUP_1.MATCH_OR_CREATE_PARTIES,
+        title: NDB_GROUP_1_TASKS.MATCH_OR_CREATE_PARTIES,
         team: TEAMS.BUSINESS_SUPPORT,
       },
       {
         groupId: 1,
-        title: NDB_GROUP_1_TASKS.GROUP_1.CREATE_OR_LINK_SALESFORCE,
+        title: NDB_GROUP_1_TASKS.CREATE_OR_LINK_SALESFORCE,
         team: TEAMS.BUSINESS_SUPPORT,
       },
       {
