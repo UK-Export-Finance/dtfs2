@@ -1,9 +1,10 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 const { ObjectID } = require('bson');
 const CONSTANTS = require('../constant');
 const { portalDealInsert } = require('./database');
-const { party } = require('./parties');
+const { party, country } = require('./parties');
 const { getEpoch } = require('./date');
 
 /**
@@ -20,11 +21,49 @@ const deal = async (DEAL) => {
     const ukefDealId = DEAL['UKEF DEAL ID'];
     tfmDeal._id = _id;
 
+    // Parties
+    const bank = {
+      name: await party(ukefDealId, 'BANK'),
+      urn: await party(ukefDealId, 'BANK', 1),
+    };
+    const exporter = {
+      name: await party(ukefDealId, 'EXPORTER'),
+      urn: await party(ukefDealId, 'EXPORTER', 1),
+      party: await party(ukefDealId, 'EXPORTER', -1),
+    };
+    const buyer = {
+      name: await party(ukefDealId, 'BUYER'),
+      urn: await party(ukefDealId, 'BUYER', 1),
+      party: await party(ukefDealId, 'BUYER', -1),
+    };
+
+    const indemnifier = {
+      name: await party(ukefDealId, 'INDEMNIFIER'),
+      urn: await party(ukefDealId, 'INDEMNIFIER', 1),
+      party: await party(ukefDealId, 'INDEMNIFIER', -1),
+    };
+    const agent = {
+      name: await party(ukefDealId, 'AGENT'),
+      urn: await party(ukefDealId, 'AGENT', 1),
+      party: await party(ukefDealId, 'AGENT', -1),
+    };
+
     // dealSnapshot
     tfmDeal.dealSnapshot._id = _id;
     tfmDeal.dealSnapshot.ukefDealId = ukefDealId;
 
-    // `dealSnapshot.details`
+    // Bank
+    tfmDeal.dealSnapshot.bank = {
+      id: '',
+      name: bank.name,
+      emails: [
+        DEAL['BANK CONTACT EMAIL ADDRESS']
+      ],
+      companiesHouseNo: '',
+      partyUrn: bank.urn
+    };
+
+    // `dealSnapshot.details` and Checker
     tfmDeal.dealSnapshot.details.created.$numberLong = getEpoch(DEAL['DATE CREATED DATETIME']);
     tfmDeal.dealSnapshot.details.submissionDate = getEpoch(DEAL['DATE LAST UPDATED DATETIME']);
     tfmDeal.dealSnapshot.details.submissionCount = 2;
@@ -36,12 +75,12 @@ const deal = async (DEAL) => {
       ],
       bank: {
         id: '',
-        name: await party(ukefDealId, 'BANK'),
+        name: bank.name,
         emails: [
           DEAL['BANK CONTACT EMAIL ADDRESS']
         ],
         companiesHouseNo: '',
-        partyUrn: await party(ukefDealId, 'BANK', 1)
+        partyUrn: bank.urn
       },
       lastLogin: '',
       firstname: DEAL['BANK CONTACT NAME'].split(' ')[0] ?? '',
@@ -50,6 +89,118 @@ const deal = async (DEAL) => {
       timezone: 'Europe/London',
       'user-status': 'nonactive',
       _id: ''
+    };
+
+    // Maker
+    tfmDeal.dealSnapshot.maker = {
+      username: DEAL['BANK CONTACT EMAIL ADDRESS'],
+      roles: [
+        'maker'
+      ],
+      bank: {
+        _id: '',
+        id: '',
+        name: bank.name,
+        mga: [
+          ''
+        ],
+        emails: [
+          DEAL['BANK CONTACT EMAIL ADDRESS']
+        ],
+        companiesHouseNo: '',
+        partyUrn: bank.urn
+      },
+      lastLogin: '',
+      firstname: DEAL['BANK CONTACT NAME'].split(' ')[0] ?? '',
+      surname: DEAL['BANK CONTACT NAME'].split(' ')[1] ?? '',
+      email: DEAL['BANK CONTACT EMAIL ADDRESS'],
+      timezone: 'Europe/London',
+      'user-status': 'nonactive',
+      _id: ''
+    };
+
+    // submissionDetails
+    tfmDeal.dealSnapshot.submissionDetails = {
+      ...tfmDeal.submissionDetails,
+      status: 'Complete',
+      'supplier-companies-house-registration-number': '',
+      'supplier-name': exporter.name,
+      'supplier-address-country': {
+        name: exporter.party.COUNTRY_OF_BUSINESS,
+        code: country(exporter.party.COUNTRY_OF_BUSINESS),
+      },
+      'supplier-address-line-1': exporter.party.ADDRESS_LINE1,
+      'supplier-address-line-2': exporter.party.ADDRESS_LINE2,
+      'supplier-address-line-3': exporter.party.ADDRESS_LINE3,
+      'supplier-address-town': exporter.party.ADDRESS_LINE4,
+      'supplier-address-postcode': '',
+      'supplier-correspondence-address-is-different': 'false',
+      'supplier-correspondence-address-country': {},
+      'supplier-correspondence-address-line-1': '',
+      'supplier-correspondence-address-line-2': '',
+      'supplier-correspondence-address-line-3': '',
+      'supplier-correspondence-address-town': '',
+      'supplier-correspondence-address-postcode': '',
+      'indemnifier-companies-house-registration-number': '',
+      'indemnifier-name': indemnifier.name,
+      'indemnifier-address-country': {
+        name: indemnifier.party ? indemnifier.party.COUNTRY_OF_BUSINESS : '',
+        code: indemnifier.party ? country(indemnifier.party.COUNTRY_OF_BUSINESS) : '',
+      },
+      'indemnifier-address-line-1': indemnifier.party ? indemnifier.party.ADDRESS_LINE1 : '',
+      'indemnifier-address-line-2': indemnifier.party ? indemnifier.party.ADDRESS_LINE2 : '',
+      'indemnifier-address-line-3': indemnifier.party ? indemnifier.party.ADDRESS_LINE3 : '',
+      'indemnifier-address-town': indemnifier.party ? indemnifier.party.ADDRESS_LINE4 : '',
+      'indemnifier-address-postcode': '',
+      'indemnifier-correspondence-address-country': {},
+      'indemnifier-correspondence-address-line-1': '',
+      'indemnifier-correspondence-address-line-2': '',
+      'indemnifier-correspondence-address-line-3': '',
+      'indemnifier-correspondence-address-town': '',
+      'indemnifier-correspondence-address-postcode': '',
+      indemnifierCorrespondenceAddressDifferent: 'false',
+      'buyer-name': buyer.name,
+      'buyer-address-country': {
+        name: buyer.party.COUNTRY_OF_BUSINESS,
+        code: country(buyer.party.COUNTRY_OF_BUSINESS),
+      },
+      'buyer-address-line-1': buyer.party.ADDRESS_LINE1,
+      'buyer-address-line-2': buyer.party.ADDRESS_LINE2,
+      'buyer-address-line-3': buyer.party.ADDRESS_LINE3,
+      'buyer-address-town': buyer.party.ADDRESS_LINE4,
+      'buyer-address-postcode': '',
+      destinationOfGoodsAndServices: {
+        name: buyer.party.COUNTRY_OF_BUSINESS,
+        code: country(buyer.party.COUNTRY_OF_BUSINESS),
+      },
+    };
+
+    // Timestamps
+    tfmDeal.dealSnapshot.updatedAt.$numberLong = getEpoch(DEAL['DATE LAST UPDATED DATETIME']);
+    tfmDeal.dealSnapshot.facilitiesUpdated.$numberLong = getEpoch(DEAL['DATE LAST UPDATED DATETIME']);
+    tfmDeal.tfm.dateReceived = DEAL['DATE LAST UPDATED DATETIME'].split('T')[0];
+    tfmDeal.tfm.dateReceivedTimestamp = getEpoch(DEAL['DATE LAST UPDATED DATETIME']);
+    tfmDeal.tfm.lastUpdated.$numberLong = getEpoch(DEAL['DATE LAST UPDATED DATETIME']);
+
+    // Parties
+    tfmDeal.tfm.parties = {
+      exporter: {
+        partyUrn: exporter.urn,
+        partyUrnRequired: true
+      },
+      buyer: {
+        partyUrn: buyer.urn,
+        partyUrnRequired: true
+      },
+      indemnifier: {
+        partyUrn: indemnifier.urn,
+        partyUrnRequired: Boolean(indemnifier.urn)
+      },
+      agent: {
+        partyUrn: agent.urn,
+        partyUrnRequired: Boolean(agent.urn),
+        commissionRate: ''
+      }
     };
 
     // `dealSnapshot.exporter.companyName`
@@ -61,17 +212,6 @@ const deal = async (DEAL) => {
 
     // Type
     tfmDeal.dealSnapshot.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIN;
-
-    // `dealSnapshot.bank`
-    tfmDeal.dealSnapshot.bank = {
-      id: '',
-      name: await party(ukefDealId, 'BANK'),
-      emails: [
-        DEAL['BANK CONTACT EMAIL ADDRESS']
-      ],
-      companiesHouseNo: '',
-      partyUrn: await party(ukefDealId, 'BANK', 1)
-    };
 
     // References
     tfmDeal.dealSnapshot.bankInternalRefName = DEAL['BUYER NAME'];

@@ -5,6 +5,7 @@ const AMENDMENT = require('./amendment');
 const WORKFLOW = require('./workflow');
 const TASKS = require('./tasks');
 const TEMPLATE = require('./template');
+const COUNTRIES = require('./countries');
 
 module.exports = {
   DATABASE,
@@ -14,4 +15,5 @@ module.exports = {
   WORKFLOW,
   TASKS,
   TEMPLATE,
+  COUNTRIES,
 };
