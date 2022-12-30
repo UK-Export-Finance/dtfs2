@@ -49,7 +49,7 @@ const facilityMaster = (deal, facility, acbsData, acbsReference) => {
 
   const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
   const facilityStageCode = helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType);
-  const currency = facility.facilitySnapshot.currency.id ?? CONSTANTS.DEAL.CURRENCY.DEFAULT;
+  const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
   return {
     _id: deal._id,
