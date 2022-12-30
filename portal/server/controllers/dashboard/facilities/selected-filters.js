@@ -94,6 +94,14 @@ const selectedFilters = (submittedFilters) => {
     ));
   }
 
+  if (submittedFilters[CONSTANTS.FIELD_NAMES.FACILITY.CREATED_BY]) {
+    selected.push(generateSelectedFiltersObject(
+      CONTENT_STRINGS.DASHBOARD_FILTERS.FILTER_HEADINGS.CREATED,
+      CONSTANTS.FIELD_NAMES.FACILITY.CREATED_BY,
+      submittedFilters.createdBy,
+    ));
+  }
+
   return selected;
 };
 

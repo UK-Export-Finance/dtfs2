@@ -16,7 +16,6 @@ exports.userHasAccess = (user, deal, roles = []) => {
   // super-users can get at anything
   if (isSuperUser(user)) return true;
 
-  // if we've somehow got a user that doesn't have bank details; reject
   if (!user?.bank?.id) return false;
 
   // if the deal has no bank ID for some reason

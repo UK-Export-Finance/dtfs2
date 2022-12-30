@@ -749,7 +749,7 @@ describe('controllers - case', () => {
   });
 
   describe('POST facility edit', () => {
-    describe('when deal exists', () => {
+    describe('when deal exists and no validation errors, it should redirect to parties page', () => {
       const mockDeal = {
         _id: '61f6ac5b02ffda01b1e8efef',
         mock: true,
@@ -766,7 +766,648 @@ describe('controllers - case', () => {
           },
           body: {
             facilityId: [1, 2],
-            bondIssuerPartyUrn: [123, 234],
+            bondIssuerPartyUrn: ['123', '234'],
+          },
+          session,
+        };
+
+        await caseController.postTfmFacility(req, res);
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+      });
+    });
+
+    describe('when deal exists and no validation errors with bondBeneficiaryPartyUrn, it should redirect to parties page', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to parties page if both URNs are correct', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1, 2],
+            bondBeneficiaryPartyUrn: ['123', '234'],
+          },
+          session,
+        };
+
+        await caseController.postTfmFacility(req, res);
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+      });
+    });
+
+    describe('should return validation errors for both urns if both are incorrectly entered for bond beneficiary', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to bonds-beneficiary-edit page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1, 2],
+            bondBeneficiaryPartyUrn: ['!11', ' '],
+          },
+          session,
+        };
+
+        const errors = {
+          errorSummary: [
+            {
+              href: '#partyUrn-1',
+              text: 'Enter a minimum of 3 numbers',
+            },
+            {
+              href: '#partyUrn-2',
+              text: 'Enter a minimum of 3 numbers',
+            },
+          ],
+          fieldErrors: {
+            'partyUrn-1': {
+              text: 'Enter a minimum of 3 numbers',
+            },
+            'partyUrn-2': {
+              text: 'Enter a minimum of 3 numbers',
+            },
+          },
+        };
+
+        await caseController.postTfmFacility(req, res);
+        expect(res.render).toHaveBeenCalledWith(
+          'case/parties/edit/bonds-beneficiary-edit.njk',
+          {
+            userCanEdit: false,
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            user: session.user,
+            urn: req.body.bondBeneficiaryPartyUrn,
+            errors,
+          },
+        );
+      });
+    });
+
+    describe('should return validation errors for both urns if both are incorrectly entered for bond issuer', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to bonds-issuer-edit page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1, 2],
+            bondIssuerPartyUrn: ['!11', ' '],
+          },
+          session,
+        };
+
+        const errors = {
+          errorSummary: [
+            {
+              href: '#partyUrn-1',
+              text: 'Enter a minimum of 3 numbers',
+            },
+            {
+              href: '#partyUrn-2',
+              text: 'Enter a minimum of 3 numbers',
+            },
+          ],
+          fieldErrors: {
+            'partyUrn-1': {
+              text: 'Enter a minimum of 3 numbers',
+            },
+            'partyUrn-2': {
+              text: 'Enter a minimum of 3 numbers',
+            },
+          },
+        };
+
+        await caseController.postTfmFacility(req, res);
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/parties/edit/bonds-issuer-edit.njk',
+          {
+            userCanEdit: false,
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            user: session.user,
+            urn: req.body.bondIssuerPartyUrn,
+            errors,
+          },
+        );
+      });
+    });
+
+    describe('should return validation errors for first urn if incorrectly entered for bond beneficiary', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to bonds-beneficiary-edit page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1, 2],
+            bondBeneficiaryPartyUrn: ['11', '1234'],
+          },
+          session,
+        };
+
+        const errors = {
+          errorSummary: [
+            {
+              href: '#partyUrn-1',
+              text: 'Enter a minimum of 3 numbers',
+            },
+          ],
+          fieldErrors: {
+            'partyUrn-1': {
+              text: 'Enter a minimum of 3 numbers',
+            },
+          },
+        };
+
+        await caseController.postTfmFacility(req, res);
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/parties/edit/bonds-beneficiary-edit.njk',
+          {
+            userCanEdit: false,
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            user: session.user,
+            urn: req.body.bondBeneficiaryPartyUrn,
+            errors,
+          },
+        );
+      });
+    });
+
+    describe('should return validation errors for first urn is incorrectly entered for bond issuer', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to bonds-issuer-edit page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1, 2],
+            bondIssuerPartyUrn: [' ', '1234'],
+          },
+          session,
+        };
+
+        const errors = {
+          errorSummary: [
+            {
+              href: '#partyUrn-1',
+              text: 'Enter a minimum of 3 numbers',
+            },
+          ],
+          fieldErrors: {
+            'partyUrn-1': {
+              text: 'Enter a minimum of 3 numbers',
+            },
+          },
+        };
+
+        await caseController.postTfmFacility(req, res);
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/parties/edit/bonds-issuer-edit.njk',
+          {
+            userCanEdit: false,
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            user: session.user,
+            urn: req.body.bondIssuerPartyUrn,
+            errors,
+          },
+        );
+      });
+    });
+
+    describe('should return validation errors for second urn if second bond is incorrectly entered for bond beneficiary', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to bonds-beneficiary-edit page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1, 2],
+            bondBeneficiaryPartyUrn: ['123', '123@'],
+          },
+          session,
+        };
+
+        const errors = {
+          errorSummary: [
+            {
+              href: '#partyUrn-2',
+              text: 'Enter a minimum of 3 numbers',
+            },
+          ],
+          fieldErrors: {
+            'partyUrn-2': {
+              text: 'Enter a minimum of 3 numbers',
+            },
+          },
+        };
+
+        await caseController.postTfmFacility(req, res);
+        expect(res.render).toHaveBeenCalledWith(
+          'case/parties/edit/bonds-beneficiary-edit.njk',
+          {
+            userCanEdit: false,
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            user: session.user,
+            urn: req.body.bondBeneficiaryPartyUrn,
+            errors,
+          },
+        );
+      });
+    });
+
+    describe('should return validation errors for second urn is incorrectly entered for bond issuer', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to bonds-issuer-edit page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1, 2],
+            bondIssuerPartyUrn: ['1233', 'NA'],
+          },
+          session,
+        };
+
+        const errors = {
+          errorSummary: [
+            {
+              href: '#partyUrn-2',
+              text: 'Enter a minimum of 3 numbers',
+            },
+          ],
+          fieldErrors: {
+            'partyUrn-2': {
+              text: 'Enter a minimum of 3 numbers',
+            },
+          },
+        };
+
+        await caseController.postTfmFacility(req, res);
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/parties/edit/bonds-issuer-edit.njk',
+          {
+            userCanEdit: false,
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            user: session.user,
+            urn: req.body.bondIssuerPartyUrn,
+            errors,
+          },
+        );
+      });
+    });
+
+    describe('should redirect to parties page if both URNS are left blank for bond beneficiary', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to parties page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1, 2],
+            bondBeneficiaryPartyUrn: ['', ''],
+          },
+          session,
+        };
+
+        await caseController.postTfmFacility(req, res);
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+      });
+    });
+
+    describe('should redirect to parties page if both URNS are left blank for bond issuer', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to parties page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1, 2],
+            bondIssuerPartyUrn: ['', ''],
+          },
+          session,
+        };
+
+        await caseController.postTfmFacility(req, res);
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+      });
+    });
+
+    describe('should return validation errors for first urn is incorrectly entered for bond beneficiary and only one URN and bond', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to bonds-beneficiary-edit page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1],
+            bondBeneficiaryPartyUrn: ['NA'],
+          },
+          session,
+        };
+
+        const errors = {
+          errorSummary: [
+            {
+              href: '#partyUrn-1',
+              text: 'Enter a minimum of 3 numbers',
+            },
+          ],
+          fieldErrors: {
+            'partyUrn-1': {
+              text: 'Enter a minimum of 3 numbers',
+            },
+          },
+        };
+
+        await caseController.postTfmFacility(req, res);
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/parties/edit/bonds-beneficiary-edit.njk',
+          {
+            userCanEdit: false,
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            user: session.user,
+            urn: req.body.bondBeneficiaryPartyUrn,
+            errors,
+          },
+        );
+      });
+    });
+
+    describe('should return validation errors for first urn is incorrectly entered for bond issuer and only one URN and bond', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to bonds-issuer-edit page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1],
+            bondIssuerPartyUrn: ['NA'],
+          },
+          session,
+        };
+
+        const errors = {
+          errorSummary: [
+            {
+              href: '#partyUrn-1',
+              text: 'Enter a minimum of 3 numbers',
+            },
+          ],
+          fieldErrors: {
+            'partyUrn-1': {
+              text: 'Enter a minimum of 3 numbers',
+            },
+          },
+        };
+
+        await caseController.postTfmFacility(req, res);
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/parties/edit/bonds-issuer-edit.njk',
+          {
+            userCanEdit: false,
+            renderEditLink: false,
+            renderEditForm: true,
+            activePrimaryNavigation: 'manage work',
+            activeSubNavigation: 'parties',
+            deal: mockDeal.dealSnapshot,
+            user: session.user,
+            urn: req.body.bondIssuerPartyUrn,
+            errors,
+          },
+        );
+      });
+    });
+
+    describe('should redirect to parties page if only one URN and left blank for bond beneficiary', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to parties page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1],
+            bondBeneficiaryPartyUrn: [''],
+          },
+          session,
+        };
+
+        await caseController.postTfmFacility(req, res);
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+      });
+    });
+
+    describe('should redirect to parties page if only one URN and left blank for bond issuer', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to parties page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1],
+            bondIssuerPartyUrn: [''],
+          },
+          session,
+        };
+
+        await caseController.postTfmFacility(req, res);
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+      });
+    });
+
+    describe('should redirect to parties page if only one URN and entered correctly for bond beneficiary', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to parties page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1],
+            bondBeneficiaryPartyUrn: ['12121'],
+          },
+          session,
+        };
+
+        await caseController.postTfmFacility(req, res);
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties`);
+      });
+    });
+
+    describe('should redirect to parties page if only one URN and entered correctly for bond issuer', () => {
+      const mockDeal = {
+        _id: '61f6ac5b02ffda01b1e8efef',
+        mock: true,
+      };
+
+      beforeEach(() => {
+        api.getDeal = () => Promise.resolve(mockDeal);
+      });
+
+      it('should redirect to parties page', async () => {
+        const req = {
+          params: {
+            _id: mockDeal._id,
+          },
+          body: {
+            facilityId: [1],
+            bondIssuerPartyUrn: ['45454'],
           },
           session,
         };

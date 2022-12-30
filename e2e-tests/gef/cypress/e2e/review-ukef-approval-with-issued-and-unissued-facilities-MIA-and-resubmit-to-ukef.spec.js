@@ -175,40 +175,6 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
     });
 
     // TODO: DTFS2-5348 reenable test
-
-    // it('entering cover date in past on confirm cover start date shows an error', () => {
-    //   cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
-    //   coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
-
-    //   coverStartDate.coverStartDateNo().click();
-
-    //   coverStartDate.coverStartDateDay().clear();
-    //   coverStartDate.coverStartDateDay().type(dateConstants.threeDaysDay);
-    //   coverStartDate.coverStartDateMonth().clear();
-    //   coverStartDate.coverStartDateMonth().type(dateConstants.threeDaysMonth);
-    //   coverStartDate.coverStartDateYear().clear();
-    //   coverStartDate.coverStartDateYear().type(dateConstants.threeDaysYear);
-
-    //   coverStartDate.continueButton().click();
-
-    //   coverStartDate.errorSummary().contains('Cover date cannot be in the past');
-    //   coverStartDate.coverStartDateNo().click();
-    //   coverStartDate.errorInput().contains('Cover date cannot be in the past');
-
-    //   coverStartDate.coverStartDateDay().clear();
-    //   coverStartDate.coverStartDateDay().type(dateConstants.threeMonthsOneDayDay);
-    //   coverStartDate.coverStartDateMonth().clear();
-    //   coverStartDate.coverStartDateMonth().type(dateConstants.threeMonthsOneDayMonth);
-    //   coverStartDate.coverStartDateYear().clear();
-    //   coverStartDate.coverStartDateYear().type(dateConstants.threeMonthsOneDayYear);
-
-    //   coverStartDate.continueButton().click();
-
-    //   coverStartDate.errorSummary().contains('Cover date must be within 3 months');
-    //   coverStartDate.coverStartDateNo().click();
-    //   coverStartDate.errorInput().contains('Cover date must be within 3 months');
-    // });
-
     it('entering cover date correctly shows success message and redirects to unissued facilities table', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
 
@@ -229,7 +195,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(dateConstants.threeDaysAgoPlusMonth, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(format(dateConstants.threeMonths, 'dd MMM yyyy'));
       unissuedFacilityTable.updateFacilitiesLater().click();
 
       // link on application preview exists

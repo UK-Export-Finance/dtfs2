@@ -35,14 +35,14 @@ const generateFilterObject = (
   return {
     label: {
       attributes: {
-        'data-cy': `filter-label-${field}-${formattedFieldValue}`,
+        'data-cy': `filter-label-${formattedFieldValue}`,
       },
     },
     text,
     value,
     checked,
     attributes: {
-      'data-cy': `filter-input-${field}-${formattedFieldValue}`,
+      'data-cy': `filter-input-${formattedFieldValue}`,
     },
   };
 };

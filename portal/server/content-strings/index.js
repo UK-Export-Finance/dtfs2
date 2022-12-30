@@ -1,5 +1,7 @@
 const DASHBOARD_FILTERS = {
   FILTER_HEADINGS: {
+    // empty string for created as does not have heading - necessary to keep
+    CREATED: '',
     KEYWORD: 'Keyword',
     PRODUCT: 'Product',
     NOTICE_TYPE: 'Notice Type',
@@ -14,10 +16,12 @@ const DASHBOARD_FILTERS = {
   BESPOKE_FILTER_VALUES: {
     DEALS: {
       ALL_STATUSES: 'All statuses',
+      CREATED_BY_YOU: 'Created by you',
     },
     FACILITIES: {
       ISSUED: 'Issued',
       UNISSUED: 'Unissued',
+      CREATED_BY_YOU: 'Created by you',
     },
   },
 };

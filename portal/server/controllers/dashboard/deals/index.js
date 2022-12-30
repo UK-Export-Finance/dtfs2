@@ -29,7 +29,6 @@ const getAllDealsData = async (
   const filtersArray = submittedFiltersArray(sessionFilters);
 
   const filtersQuery = dashboardDealsFiltersQuery(
-    sessionFilters.createdByYou,
     filtersArray,
     user,
   );
@@ -76,7 +75,6 @@ const getTemplateVariables = (
     pages,
     filters: templateFilters(filtersObj),
     selectedFilters: selectedFilters(filtersObj),
-    createdByYou: sessionFilters.createdByYou,
     keyword: sessionFilters.keyword,
   };
 

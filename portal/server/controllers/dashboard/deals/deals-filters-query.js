@@ -12,7 +12,7 @@ const keywordQuery = require('./deals-filters-keyword-query');
  * @example ( 'true', [ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' } )
  * @returns { $and: [ { 'bank.id': '9'} ], $or: [{ dealType: 'BSS/EWCS' }] }
  */
-const dashboardDealsFiltersQuery = (createdByYou, filters, user) => {
+const dashboardDealsFiltersQuery = (filters, user) => {
   const { isMaker, isChecker } = getUserRoles(user.roles);
   let dashboardFilters = filters;
 
@@ -20,12 +20,6 @@ const dashboardDealsFiltersQuery = (createdByYou, filters, user) => {
 
   if (!isSuperUser(user)) {
     query.$and = [{ 'bank.id': user.bank.id }];
-  }
-
-  if (createdByYou) {
-    query.$and.push({
-      'maker._id': user._id,
-    });
   }
 
   if (isChecker && !isMaker) {
@@ -55,8 +49,9 @@ const dashboardDealsFiltersQuery = (createdByYou, filters, user) => {
     const hasOnlyAllStatusesFilterValue = (hasOnlyStatusFilter
       && statusFilterValues[0] === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES);
 
-    if (!hasOnlyAllStatusesFilterValue) {
-      query.$or = [];
+    if (!hasOnlyAllStatusesFilterValue && !query.$and) {
+      // empty and query if not created yet
+      query.$and = [];
     }
 
     dashboardFilters.forEach((filterObj) => {
@@ -67,19 +62,53 @@ const dashboardDealsFiltersQuery = (createdByYou, filters, user) => {
 
       const hasAllStatusesFilterValue = filterValue.includes(CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.ALL_STATUSES);
 
+      /**
+       * overall filtering logic is $and
+       * however keyword is contructed by matching all fields to keyword
+       * if and logic will not work as cannot match all field so has to be or for keyword search
+       * so or array is pushed to overall $and query
+       */
       if (isKeywordField) {
         const keywordValue = filterValue[0];
         const keywordFilters = keywordQuery(keywordValue);
 
-        query.$or = [...query.$or, ...keywordFilters];
+        const keywordFilter = {};
+        keywordFilter.$or = [];
+        keywordFilter.$or.push(...keywordFilters);
+
+        query.$and.push(keywordFilter);
       }
 
+      /**
+       * overall filtering logic is $and
+       * however for each fieldFilter (eg dealType) should be $or
+       * example for filter dealType: GEF and BSS
+       * if $and logic, will fail as no deals are both GEF and BSS so need or logic
+       * $and: [
+       *    { $or: [{dealType: 'GEF}, {dealType: 'BSS'}] },
+       *    {status: 'Draft'},
+       * ]
+       * if created by you filter, follows different logic so if else statement to check
+       */
       if (!isKeywordField && !hasAllStatusesFilterValue) {
+        const fieldFilter = {};
+        // or for field (eg dealType)
+        fieldFilter.$or = [];
         filterValue.forEach((value) => {
-          query.$or.push({
-            [fieldName]: value,
-          });
+          // if created by you then adding user id as compared to or statement
+          if (value === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.DEALS.CREATED_BY_YOU) {
+            // delete or filter as not needed for created by you
+            delete fieldFilter.$or;
+            fieldFilter['maker._id'] = user._id;
+          } else {
+            // else for all other filters apart from createdByYou
+            fieldFilter.$or.push({
+              [fieldName]: value,
+            });
+          }
         });
+        // adds $or to $and query
+        query.$and.push(fieldFilter);
       }
     });
   }

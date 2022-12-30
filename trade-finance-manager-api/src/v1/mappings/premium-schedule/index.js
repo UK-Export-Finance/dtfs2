@@ -1,6 +1,7 @@
 const { mapPremiumFrequencyId, mapPremiumTypeId } = require('./map-premium-ids');
 const isFacilityValidForPremiumSchedule = require('../../helpers/is-facility-valid-for-premium-schedule');
 const mapProductGroup = require('./map-product-group');
+const { stripCommas } = require('../../../utils/string');
 
 const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGuaranteeDates) => {
   if (!isFacilityValidForPremiumSchedule(facility, facilityExposurePeriod, facilityGuaranteeDates)) {
@@ -23,11 +24,11 @@ const mapPremiumScheduleFacility = (facility, facilityExposurePeriod, facilityGu
 
   mapped.dayBasis = String(facility.dayCountBasis);
   mapped.exposurePeriod = facilityExposurePeriod;
-  mapped.maximumLiability = facility.ukefExposure;
+  mapped.maximumLiability = Number(stripCommas(facility.ukefExposure));
 
   mapped.cumulativeAmount = 0;
   if (facility.disbursementAmount) {
-    mapped.cumulativeAmount = facility.disbursementAmount;
+    mapped.cumulativeAmount = Number(stripCommas(facility.disbursementAmount));
   }
 
   return mapped;

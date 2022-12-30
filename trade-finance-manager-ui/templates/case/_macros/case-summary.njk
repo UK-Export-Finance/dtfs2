@@ -6,7 +6,7 @@
   {% set deal = params.deal %}
   {% set tfm = params.tfm %}
   {% set user = params.user %}
-  
+
   <div data-cy="case-summary" class="case-summary">
     <div>
       <div class="case-summary-deal-id">
@@ -47,11 +47,7 @@
         <div class="case-summary-overview-item">
           <div class="ukef-heading-xs">Date received</div>
             <div class="ukef-body-s" data-cy="date-received">
-              {% if tfm.dateReceived %}
-                {{ tfm.dateReceived | formatDateString("DD-MM-YYYY", "D MMMM YYYY") }}
-              {% else %}
-                -
-              {% endif %}
+              {{ tfm.dateReceived | formatDateString("DD-MM-YYYY", "D MMMM YYYY") | dashIfEmpty}}
             </div>
         </div>
       </div>
@@ -95,11 +91,7 @@
           <div class="ukef-heading-xs">Export contract value</div>
           <div class="ukef-body-s">
             <span data-cy="contract-value">
-              {% if deal.submissionDetails.supplyContractCurrency and deal.submissionDetails.supplyContractValue %}
-                {{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency }}
-                {% else %}
-                -
-              {% endif %}
+              {{ deal.submissionDetails.supplyContractCurrency }} {{ deal.submissionDetails.supplyContractValue | formatAsCurrency | dashIfEmpty }}
             </span>
             {% if tfm.supplyContractValueInGBP %}
               <span data-cy="contract-value-in-gbp">{{ tfm.supplyContractValueInGBP | dashIfEmpty }}</span>

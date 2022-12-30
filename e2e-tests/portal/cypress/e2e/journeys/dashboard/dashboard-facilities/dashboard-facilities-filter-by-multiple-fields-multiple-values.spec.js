@@ -172,10 +172,8 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
 
   it('renders all facilities that have matching fields - AIN deal, MIA deal, Issued stage, Unissued stage', () => {
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ submissionType, hasBeenIssued }) =>
-      submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
-      || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
-      || hasBeenIssued
-      || hasBeenIssued === false);
+      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA)
+      && (hasBeenIssued || hasBeenIssued === false));
 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
 
@@ -190,5 +188,61 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     dashboardSubNavigation.deals().invoke('attr', 'aria-label').then((label) => {
       expect(label).to.equal('');
     });
+  });
+
+  it('renders all facilities that have matching fields - Bond, Loan, AIN deal, MIA deal, Issued stage, Unissued stage', () => {
+    cy.login(BANK1_MAKER1);
+    dashboardFacilities.visit();
+    cy.url().should('eq', relative('/dashboard/facilities/0'));
+
+    filters.showHideButton().click();
+    dashboardFacilities.filters.panel.form.type.bond.checkbox().click();
+    dashboardFacilities.filters.panel.form.type.loan.checkbox().click();
+    dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
+    dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+    filters.panel.form.applyFiltersButton().click();
+
+    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ type, submissionType, hasBeenIssued }) =>
+      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA)
+      && (hasBeenIssued || hasBeenIssued === false)
+      && (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN));
+
+    dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
+
+    cy.url().should('eq', relative('/dashboard/facilities/0'));
+  });
+
+  it('renders all facilities that have matching fields for all filters', () => {
+    cy.login(BANK1_MAKER1);
+    dashboardFacilities.visit();
+    cy.url().should('eq', relative('/dashboard/facilities/0'));
+
+    filters.showHideButton().click();
+    dashboardFacilities.filters.panel.form.type.bond.checkbox().click();
+    dashboardFacilities.filters.panel.form.type.loan.checkbox().click();
+    dashboardFacilities.filters.panel.form.type.cash.checkbox().click();
+    dashboardFacilities.filters.panel.form.type.contingent.checkbox().click();
+    dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
+    dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().click();
+    dashboardFacilities.filters.panel.form.submissionType.MIN.checkbox().click();
+    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
+    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+    filters.panel.form.applyFiltersButton().click();
+
+    const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ type, submissionType, hasBeenIssued }) =>
+      (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN
+        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA
+        || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN)
+      && (hasBeenIssued || hasBeenIssued === false)
+      && (type === CONSTANTS.FACILITY.FACILITY_TYPE.BOND
+        || type === CONSTANTS.FACILITY.FACILITY_TYPE.LOAN
+        || type === CONSTANTS.FACILITY.FACILITY_TYPE.CASH
+        || type === CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT));
+
+    dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
+
+    cy.url().should('eq', relative('/dashboard/facilities/0'));
   });
 });

@@ -1,9 +1,17 @@
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const { nowPlusMonths, nowPlusDays } = require('../../../../support/utils/dateFuncs');
+const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
-const now = new Date();
-const nowPlusMonth = nowPlusMonths(1);
-const nowMinusDay = nowPlusDays(-1);
+const nowDay = (dateConstants.todayDay).toString();
+const nowMonth = (dateConstants.todayMonth).toString();
+const nowYear = (dateConstants.todayYear).toString();
+
+const nowPlusMonthDay = (dateConstants.oneMonthDay).toString();
+const nowPlusMonthMonth = (dateConstants.oneMonthMonth).toString();
+const nowPlusMonthYear = (dateConstants.oneMonthYear).toString();
+
+const nowMinusDayDay = (dateConstants.yesterdayDay).toString();
+const nowMinusDayMonth = (dateConstants.yesterdayMonth).toString();
+const nowMinusDayYear = (dateConstants.yesterdayYear).toString();
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -29,12 +37,12 @@ const deal = {
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
-      'requestedCoverStartDate-day': now.getDate(),
-      'requestedCoverStartDate-month': now.getMonth() + 1,
-      'requestedCoverStartDate-year': now.getFullYear(),
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'requestedCoverStartDate-day': nowDay,
+      'requestedCoverStartDate-month': nowMonth,
+      'requestedCoverStartDate-year': nowYear,
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       name: '1234567890',
       bondBeneficiary: 'test',
       value: '1234',
@@ -44,9 +52,9 @@ const deal = {
         id: 'GBP',
       },
       conversionRate: '100',
-      'conversionRateDate-day': nowMinusDay.getDate(),
-      'conversionRateDate-month': nowMinusDay.getMonth() + 1,
-      'conversionRateDate-year': nowMinusDay.getFullYear(),
+      'conversionRateDate-day': nowMinusDayDay,
+      'conversionRateDate-month': nowMinusDayMonth,
+      'conversionRateDate-year': nowMinusDayYear,
       riskMarginFee: '12',
       coveredPercentage: '24',
       minimumRiskMarginFee: '1',
@@ -63,12 +71,12 @@ const deal = {
       facilityStage: 'Issued',
       hasBeenIssued: true,
       ukefGuaranteeInMonths: '12',
-      'requestedCoverStartDate-day': now.getDate(),
-      'requestedCoverStartDate-month': now.getMonth() + 1,
-      'requestedCoverStartDate-year': now.getFullYear(),
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'requestedCoverStartDate-day': nowDay,
+      'requestedCoverStartDate-month': nowMonth,
+      'requestedCoverStartDate-year': nowYear,
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       name: '1234567890',
       bondBeneficiary: 'test',
       value: '5678',
@@ -111,12 +119,12 @@ const deal = {
       type: 'Loan',
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
-      'requestedCoverStartDate-day': now.getDate(),
-      'requestedCoverStartDate-month': now.getMonth() + 1,
-      'requestedCoverStartDate-year': now.getFullYear(),
-      'coverEndDate-day': (nowPlusMonth.getDate()).toString(),
-      'coverEndDate-month': (nowPlusMonth.getMonth() + 1).toString(),
-      'coverEndDate-year': (nowPlusMonth.getFullYear()).toString(),
+      'requestedCoverStartDate-day': nowDay,
+      'requestedCoverStartDate-month': nowMonth,
+      'requestedCoverStartDate-year': nowYear,
+      'coverEndDate-day': nowPlusMonthDay,
+      'coverEndDate-month': nowPlusMonthMonth,
+      'coverEndDate-year': nowPlusMonthYear,
       name: '12345678',
       guaranteeFeePayableByBank: '10.8000',
       ukefExposure: '3,703,703.40',
@@ -127,9 +135,9 @@ const deal = {
         id: 'AUD',
       },
       conversionRate: '80',
-      'conversionRateDate-day': nowMinusDay.getDate(),
-      'conversionRateDate-month': nowMinusDay.getMonth() + 1,
-      'conversionRateDate-year': nowMinusDay.getFullYear(),
+      'conversionRateDate-day': nowMinusDayDay,
+      'conversionRateDate-month': nowMinusDayMonth,
+      'conversionRateDate-year': nowMinusDayYear,
       disbursementAmount: '10',
       interestMarginFee: '12',
       coveredPercentage: '30',
@@ -266,9 +274,9 @@ const deal = {
       id: 'USD',
     },
     supplyContractValue: '10,000',
-    'supplyContractConversionDate-day': nowMinusDay.getDate(),
-    'supplyContractConversionDate-month': nowMinusDay.getMonth() + 1,
-    'supplyContractConversionDate-year': nowMinusDay.getFullYear(),
+    'supplyContractConversionDate-day': nowMinusDayDay,
+    'supplyContractConversionDate-month': nowMinusDayMonth,
+    'supplyContractConversionDate-year': nowMinusDayYear,
   },
   summary: {
     totalValue: {

@@ -5,7 +5,10 @@
 {% import './parties-edit-unique-reference-link.njk' as uniqueReferenceNumberEditLink %}
 
 {% macro render(params) %}
-{% set bond = params.bond %}
+  {% set bond = params.bond %}
+  {% set errors = params.errors %}
+  {% set urn = params.urn %}
+  {% set index = params.index %}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
@@ -22,11 +25,17 @@
             text: "Unique reference number (URN)"
           },
           attributes: {
-            "data-cy": "urn-input"
+            "data-cy": "urn-input-" + index
           },
-          id: "party-urn",
+          id: "partyUrn-" + index,
           name: "bondBeneficiaryPartyUrn[]",
-          value: bond.tfm.bondBeneficiaryPartyUrn
+          value: urn[index - 1] or bond.tfm.bondBeneficiaryPartyUrn,
+          errorMessage: errors and errors.fieldErrors["partyUrn-" + index] and {
+            text: errors.fieldErrors["partyUrn-" + index].text,
+            attributes: {
+              'data-cy': 'partyUrn--inline-error-' + index
+            }
+          }
         }) }}
         </div>
       </div>

@@ -1,5 +1,5 @@
 # Node Alpine Docker Image
-FROM node:18.9-alpine3.16
+FROM node:18.12-alpine3.16
 
 # Variables
 ARG GITHUB_SHA
@@ -23,7 +23,7 @@ EXPOSE 80 ${SSH_PORT}
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 RUN npm install -g typescript
 RUN npm cache clean --force
 COPY . .

@@ -1,6 +1,12 @@
 const express = require('express');
 const api = require('../../api');
-const { getApiData, requestParams, errorHref, generateErrorSummary } = require('../../helpers');
+const {
+  constructPayload,
+  getApiData,
+  requestParams,
+  errorHref,
+  generateErrorSummary,
+} = require('../../helpers');
 
 const router = express.Router();
 
@@ -33,9 +39,14 @@ router.post('/:_id/change-password', async (req, res) => {
   // Ensure that the user is logged in
   if (req?.session?.user) {
     let formattedValidationErrors;
-
+    const payloadProperties = [
+      'currentPassword',
+      'password',
+      'passwordConfirm',
+    ];
+    const payload = constructPayload(req.body, payloadProperties);
     const { _id } = requestParams(req);
-    const { currentPassword, password, passwordConfirm } = req.body;
+    const { currentPassword, password, passwordConfirm } = payload;
 
     if (!currentPassword || !password || !passwordConfirm) {
       const error = {
@@ -69,7 +80,7 @@ router.post('/:_id/change-password', async (req, res) => {
 
       formattedValidationErrors = generateErrorSummary(error, errorHref);
     } else {
-      const { status, data } = await api.updateUser(_id, req.body, req.session.userToken);
+      const { status, data } = await api.updateUser(_id, payload, req.session.userToken);
 
       if (status === 200) {
         return res.redirect(`/user/${_id}`);

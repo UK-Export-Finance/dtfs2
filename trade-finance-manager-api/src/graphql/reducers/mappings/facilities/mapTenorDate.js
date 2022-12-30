@@ -1,39 +1,41 @@
-const CONSTANTS = require('../../../../constants');
+/**
+ * Evaluates whether to return `month` or `months` based
+ * on number of months provided.
+ * @param {Integer} period Number of months
+ * @returns {String} Singular or plural `month` string
+ */
+const monthString = (period) => (Number(period) === 1 ? 'month' : 'months');
 
-const monthString = (period) => {
-  if (Number(period) === 1) {
-    return 'month';
-  }
-
-  return 'months';
-};
-
+/**
+ * Maps tenor dates and return as string with singular
+ * or plural `months` text.
+ * @param {Boolean} hasBeenIssued Facility issuance stage
+ * @param {Integer} months Number of cover months
+ * @param {Integer} exposurePeriodMonths Exposure period in months
+ * @returns {String} Tenor dates with `month(s)` appended, otherwise null
+ */
 const mapTenorDate = (
-  facilityStage,
-  ukefGuaranteeInMonths,
-  exposurePeriodInMonths,
+  hasBeenIssued,
+  months,
+  exposurePeriodMonths,
 ) => {
-  let period;
-
-  if (exposurePeriodInMonths) {
-    period = exposurePeriodInMonths;
-
-    return `${period} ${monthString(period)}`;
+  // If issued
+  if (exposurePeriodMonths) {
+    return `${exposurePeriodMonths} ${monthString(exposurePeriodMonths)}`;
   }
 
-  if (!ukefGuaranteeInMonths) {
+  if (!months) {
     return null;
   }
 
-  if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.COMMITMENT) {
-    period = ukefGuaranteeInMonths;
-    return `${period} ${monthString(period)}`;
+  // Un-issued facility
+  if (!hasBeenIssued) {
+    return `${months} ${monthString(months)}`;
   }
 
-  if (facilityStage === CONSTANTS.FACILITIES.FACILITY_STAGE.ISSUED) {
-    period = ukefGuaranteeInMonths;
-
-    return `${period} ${monthString(period)}`;
+  // Issued facility
+  if (hasBeenIssued) {
+    return `${months} ${monthString(months)}`;
   }
 
   return null;

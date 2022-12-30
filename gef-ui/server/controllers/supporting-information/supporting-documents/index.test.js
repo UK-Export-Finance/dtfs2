@@ -373,21 +373,7 @@ describe('controllers/supporting-documents', () => {
       });
     });
 
-    // it('returns error if error thrown when uploading', async () => {
-    //   uploadAndSaveToDeal.mockRejectedValueOnce('mock thrown error');
-
-    //   await uploadSupportingDocument(mockRequest, mockResponse, mockNext);
-
-    //   expect(mockResponse.status).toHaveBeenCalledWith(200);
-    //   expect(mockResponse.send).toHaveBeenCalledWith({
-    //     file: {
-    //       filename: 'mock-file.pdf',
-    //       originalname: 'mock-file.pdf',
-    //       error: 'mock-file.pdf could not be uploaded',
-    //     },
-    //     error: { message: 'mock-file.pdf could not be uploaded' },
-    //   });
-    // });
+    // TODO: DTFS2-6212 add test for "Check - returns error if error thrown when uploading".
 
     it('returns file with success message if everything valid', async () => {
       uploadAndSaveToDeal.mockResolvedValueOnce([{

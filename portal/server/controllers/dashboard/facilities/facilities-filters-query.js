@@ -34,7 +34,12 @@ const dashboardFacilitiesFiltersQuery = (
   dashboardFilters = filtered;
 
   if (dashboardFilters.length) {
-    query.$or = [];
+    // if created, then copy else create blank array
+    if (query.$and) {
+      query.$and = [...query.$and];
+    } else {
+      query.$and = [];
+    }
 
     dashboardFilters.forEach((filterObj) => {
       const fieldName = Object.keys(filterObj)[0];
@@ -46,18 +51,32 @@ const dashboardFacilitiesFiltersQuery = (
         const keywordValue = filterValue[0];
         const keywordFilters = keywordQuery(keywordValue);
 
-        query.$or = [
-          ...query.$or,
-          ...keywordFilters,
-        ];
+        const keywordFilter = {};
+        keywordFilter.$or = [];
+        keywordFilter.$or.push(...keywordFilters);
+
+        query.$and.push(keywordFilter);
       }
 
       if (!isKeywordField) {
+        const fieldFilter = {};
+        // or for field (eg dealType)
+        fieldFilter.$or = [];
         filterValue.forEach((value) => {
-          query.$or.push({
-            [fieldName]: value,
-          });
+          // if created by you then adding user id as compared to or statement
+          if (value === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU) {
+            // delete or filter as not needed for created by you
+            delete fieldFilter.$or;
+            // have to match deal.maker._id (joined table) as maker does not exist in facilities collection
+            fieldFilter['deal.maker._id'] = user._id;
+          } else {
+            fieldFilter.$or.push({
+              [fieldName]: value,
+            });
+          }
         });
+        // adds $or to $and query
+        query.$and.push(fieldFilter);
       }
     });
   }
