@@ -44,3 +44,4 @@ To manage secrets across multiple environments, an automation script has been cr
 ## Using AZ command-line locally
 To run Azure CLI commands locally you'll need to install the az cli, additionally you'll need:
  * The Front Door extension: `az extension add --name front-door`
+ 
