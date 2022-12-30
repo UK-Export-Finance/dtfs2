@@ -9,11 +9,12 @@ const api = require('../api');
 const mapDeal = async (deal) => {
   const mappedDeal = JSON.parse(JSON.stringify(deal));
 
-  mappedDeal.eligibility.criteria = mapEligibilityCriteriaContentStrings(
-    mappedDeal.eligibility,
-    deal.dealType,
-  );
-
+  if (mappedDeal.eligibility) {
+    mappedDeal.eligibility.criteria = mapEligibilityCriteriaContentStrings(
+      mappedDeal.eligibility,
+      deal.dealType,
+    );
+  }
   if (deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     const allFacilityIds = deal.facilities.map((facility) => facility._id);
 

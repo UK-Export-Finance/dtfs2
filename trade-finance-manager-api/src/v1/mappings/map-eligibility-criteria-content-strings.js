@@ -1,6 +1,10 @@
 const CONTENT_STRINGS = require('../content-strings');
 
 const mapEligibilityCriteriaContentStrings = (eligibility, dealType) => {
+  if (!eligibility) {
+    return null;
+  }
+
   // NOTE: BSS and GEF have different content strings.
   const mappedCriteria = eligibility.criteria;
   const contentStrings = CONTENT_STRINGS.DEAL.ELIGIBILITY_CRITERIA[dealType];
