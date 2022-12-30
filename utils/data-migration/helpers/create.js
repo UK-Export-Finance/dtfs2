@@ -3,9 +3,94 @@
 /* eslint-disable no-restricted-syntax */
 const { ObjectID } = require('bson');
 const CONSTANTS = require('../constant');
-const { portalDealInsert } = require('./database');
+const { portalDealInsert, portalFacilityInsert } = require('./database');
 const { party, country } = require('./parties');
 const { getEpoch } = require('./date');
+const { workflow } = require('./io');
+const { issued } = require('./facility');
+
+/**
+ * Construct deal object for `tfm-deals` collection.
+ * @param {Object} workflow Deal workflow object
+ * @param {String} dealId Deal Object ID
+ * @param {Object} DEAL Workflow DEAL object
+ * @param {Boolean} facilitySnapshot Returns facilitySnapshot only
+ * @returns {Object} Facility object
+ */
+const facility = async (data, dealId, DEAL, facilitySnapshot = false) => {
+  if (data) {
+    const { FACILITY } = data;
+    const { facility: f } = CONSTANTS.TEMPLATE;
+
+    // Object ID
+    const _id = ObjectID();
+    const ukefDealId = data.UKEF_DEAL_ID;
+    const ukefFacilityId = FACILITY['UKEF FACILITY ID'];
+    f._id = _id;
+    f.facilitySnapshot._id = _id;
+    f.facilitySnapshot.dealId = dealId;
+
+    // Parties
+    const bank = {
+      name: await party(ukefDealId, 'BANK'),
+      urn: await party(ukefDealId, 'BANK', 1),
+    };
+
+    // UKEF Facility ID
+    f.facilitySnapshot.ukefFacilityId = ukefFacilityId;
+
+    // Bank
+    f.facilitySnapshot.submittedAsIssuedBy = {
+      username: DEAL['BANK CONTACT EMAIL ADDRESS'],
+      roles: [
+        'checker'
+      ],
+      bank: {
+        id: '',
+        name: bank.name,
+        emails: [
+          DEAL['BANK CONTACT EMAIL ADDRESS']
+        ],
+        companiesHouseNo: '',
+        partyUrn: bank.urn
+      },
+      lastLogin: '',
+      firstname: DEAL['BANK CONTACT NAME'].split(' ')[0] ?? '',
+      surname: DEAL['BANK CONTACT NAME'].split(' ')[0] ?? '',
+      email: DEAL['BANK CONTACT EMAIL ADDRESS'],
+      timezone: 'Europe/London',
+      'user-status': 'nonactive',
+      _id: '',
+    };
+
+    // Status
+    f.facilitySnapshot.status = CONSTANTS.FACILITY.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
+    f.facilitySnapshot.previousStatus = CONSTANTS.FACILITY.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
+    f.facilitySnapshot.hasBeenIssuedAndAcknowledged = issued(FACILITY.STAGE);
+    f.facilitySnapshot.hasBeenAcknowledged = issued(FACILITY.STAGE);
+    f.facilitySnapshot.issueFacilityDetailsSubmitted = issued(FACILITY.STAGE);
+    f.facilitySnapshot.facilityStage = issued(FACILITY.STAGE) ? 'Issued' : 'Unissued';
+
+    // Value
+    f.facilitySnapshot.value = FACILITY['FACILITY VALUE'];
+    f.facilitySnapshot.ukefExposure = FACILITY['MAXIMUM LIABILITY'];
+    f.tfm.ukefExposure = FACILITY['MAXIMUM LIABILITY'];
+
+    // Other
+    f.facilitySnapshot.dayCountBasis = FACILITY['DAY BASIS'];
+
+    // Add `nonDelegatedBank` flag
+    f.tfm.nonDelegatedBank = true;
+
+    // Insert into `tfm-deals` collection
+    await portalFacilityInsert(f);
+
+    // Return facility object
+    return facilitySnapshot ? f.facilitySnapshot : f;
+  }
+
+  throw new Error('Void facilities object');
+};
 
 /**
  * Construct deal object for `tfm-deals` collection.
@@ -13,13 +98,22 @@ const { getEpoch } = require('./date');
  */
 const deal = async (DEAL) => {
   if (DEAL) {
-    const { tfm } = CONSTANTS.TEMPLATE;
-    const { deal: tfmDeal } = tfm;
+    const { deal: data } = CONSTANTS.TEMPLATE;
+    const { deal: tfmDeal } = data;
+    const all = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
 
     // Object ID
     const _id = ObjectID();
     const ukefDealId = DEAL['UKEF DEAL ID'];
     tfmDeal._id = _id;
+
+    // Facilities
+    const facilities = all.filter(({ UKEF_DEAL_ID }) => ukefDealId === UKEF_DEAL_ID);
+
+    for (const f of facilities) {
+      const snapshot = await facility(f, _id, DEAL, true);
+      tfmDeal.dealSnapshot.facilities.push(snapshot);
+    }
 
     // Parties
     const bank = {
@@ -236,10 +330,10 @@ const deal = async (DEAL) => {
 };
 
 /**
- * Converts workflow deal into TFM deal.
+ * Converts workflow deal and facilities into TFM deal and facilities.
  * @param {Array} deals array of workflow deals object
  */
-const submitTfmDeals = async (deals) => {
+const tfm = async (deals) => {
   let counter = 0;
 
   if (deals && deals.length) {
@@ -265,5 +359,5 @@ const submitTfmDeals = async (deals) => {
 };
 
 module.exports = {
-  submitTfmDeals,
+  tfm,
 };

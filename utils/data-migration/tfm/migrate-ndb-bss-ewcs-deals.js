@@ -12,7 +12,7 @@ const CONSTANTS = require('../constant');
 const { NON_DELEGATED_BANKS_DEALS } = CONSTANTS.DEAL;
 const { disconnect } = require('../helpers/database');
 const { workflow } = require('../helpers/io');
-const { submitTfmDeals } = require('../helpers/create');
+const { tfm } = require('../helpers/create');
 
 const version = '0.0.1';
 
@@ -23,9 +23,9 @@ const version = '0.0.1';
  */
 const ndb = async () => {
   if (NON_DELEGATED_BANKS_DEALS && NON_DELEGATED_BANKS_DEALS.length) {
-    const deals = await workflow(CONSTANTS.WORKFLOW.FILES.DEAL);
+    const d = await workflow(CONSTANTS.WORKFLOW.FILES.DEAL);
 
-    return deals
+    return d
       .filter(({ DEAL }) => NON_DELEGATED_BANKS_DEALS.includes(DEAL['UKEF DEAL ID']));
   }
 
@@ -43,7 +43,7 @@ const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating NDB ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM migration v${version}.`, '\n\n');
 
   ndb()
-    .then((deals) => submitTfmDeals(deals))
+    .then((d) => tfm(d))
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {

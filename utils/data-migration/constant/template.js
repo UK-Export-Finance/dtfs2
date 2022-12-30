@@ -1,4 +1,4 @@
-const tfm = {
+const deal = {
   deal: {
     _id: {
       $oid: ''
@@ -344,6 +344,98 @@ const tfm = {
   }
 };
 
+const facility = {
+  _id: {
+    $oid: ''
+  },
+  facilitySnapshot: {
+    _id: {
+      $oid: ''
+    },
+    type: 'Bond',
+    dealId: {
+      $oid: ''
+    },
+    createdDate: '',
+    updatedAt: '',
+    bondIssuer: '',
+    bondType: '',
+    ukefGuaranteeInMonths: null,
+    facilityStage: 'Issued',
+    'requestedCoverStartDate-day': 30,
+    'requestedCoverStartDate-month': 12,
+    'requestedCoverStartDate-year': 2022,
+    'coverEndDate-day': '12',
+    'coverEndDate-month': '12',
+    'coverEndDate-year': '2024',
+    name: '',
+    bondBeneficiary: '',
+    hasBeenIssued: false,
+    requestedCoverStartDate: 0,
+    coverEndDate: '',
+    value: '0.00',
+    currencySameAsSupplyContractCurrency: 'true',
+    currency: {
+      text: 'GBP - UK Sterling',
+      id: 'GBP',
+      currencyId: 12
+    },
+    conversionRate: null,
+    'conversionRateDate-day': null,
+    'conversionRateDate-month': null,
+    'conversionRateDate-year': null,
+    riskMarginFee: '0.0',
+    coveredPercentage: '0',
+    minimumRiskMarginFee: '',
+    guaranteeFeePayableByBank: '0.0',
+    ukefExposure: '0.00',
+    feeFrequency: null,
+    feeType: 'At maturity',
+    dayCountBasis: '365',
+    issueFacilityDetailsSubmitted: false,
+    submittedAsIssuedDate: 0,
+    submittedAsIssuedBy: {
+      username: '',
+      roles: [
+        'checker'
+      ],
+      bank: {
+        id: '',
+        name: '',
+        mga: [],
+        emails: [],
+        companiesHouseNo: '',
+        partyUrn: ''
+      },
+      lastLogin: '',
+      firstname: '',
+      surname: '',
+      email: '',
+      timezone: 'Europe/London',
+      'user-status': 'nonactive',
+      _id: ''
+    },
+    status: '',
+    ukefFacilityId: '',
+    previousStatus: '',
+    hasBeenIssuedAndAcknowledged: false,
+    hasBeenAcknowledged: false
+  },
+  tfm: {
+    premiumSchedule: [],
+    ukefExposure: 0,
+    ukefExposureCalculationTimestamp: '',
+    exposurePeriodInMonths: 0,
+    facilityGuaranteeDates: {
+      guaranteeCommencementDate: '2022-12-30',
+      guaranteeExpiryDate: '2024-12-12',
+      effectiveDate: '2022-12-30'
+    },
+    riskProfile: 'Flat'
+  }
+};
+
 module.exports = {
-  tfm,
+  deal,
+  facility
 };

@@ -92,6 +92,26 @@ const portalDealInsert = async (data) => {
 };
 
 /**
+ * Insert deal to `tfm-facilities` collection.
+ * @param {Object} data facility object
+ * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
+ */
+const portalFacilityInsert = async (data) => {
+  try {
+    if (!connection) await connect();
+
+    const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_FACILITIES).insertOne(data);
+
+    return (response.acknowledged)
+      ? Promise.resolve(true)
+      : Promise.reject(response);
+  } catch (e) {
+    console.error('Unable to insert into tfm-facility: ', { e });
+    return Promise.reject(new Error(false));
+  }
+};
+
+/**
  * Portal - Updates collection property(ies)
  * @param {String} ukefDealId UKEF Deal ID
  * @param {Object} updates Properties to update
@@ -206,6 +226,7 @@ module.exports = {
   disconnect,
   portalDealInsert,
   portalDealUpdate,
+  portalFacilityInsert,
   portalFacilityUpdate,
   tfmDealUpdate,
   tfmFacilityUpdate,
