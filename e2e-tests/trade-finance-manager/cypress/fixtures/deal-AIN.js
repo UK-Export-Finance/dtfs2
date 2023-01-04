@@ -29,7 +29,7 @@ const MOCK_DEAL = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionDate: '1606900616651',
+    submissionDate: `${dateConstants.twoYearsAgoUnix}000`,
     submissionCount: 1,
   },
   submissionDetails: {
@@ -194,7 +194,7 @@ const MOCK_DEAL = {
       'coverEndDate-month': dateConstants.oneMonthMonth,
       'coverEndDate-year': dateConstants.oneMonthYear,
       issuedDate: `${dateConstants.twoYearsAgoUnix}000`,
-      requestedCoverStartDate: '1606900616652',
+      requestedCoverStartDate: `${dateConstants.twoYearsAgoUnix}000`,
       name: 'Test-123',
       updatedAt: Date.now(),
     },
