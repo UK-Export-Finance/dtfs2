@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import {todayFormattedShort} from '../../../e2e-fixtures/dateConstants';
 
 import relative from './relativeURL';
 import automaticCover from './pages/automatic-cover';
@@ -107,10 +107,9 @@ context('Clone GEF (AIN) deal', () => {
         .click();
       cy.url().then((url) => {
         cy.visit(`${url}`);
-        const bannerDate = format(new Date(), 'dd MMM yyyy');
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
-        statusBanner.bannerDateCreated().contains(bannerDate);
+        statusBanner.bannerDateCreated().contains(todayFormattedShort);
 
         applicationDetails.bankRefName().contains('Cloned AIN deal');
         applicationDetails.automaticCoverStatus().contains('Not started');
@@ -304,10 +303,9 @@ context('Clone GEF (MIA) deal', () => {
         .click();
       cy.url().then((url) => {
         cy.visit(`${url}`);
-        const bannerDate = format(new Date(), 'dd MMM yyyy');
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
-        statusBanner.bannerDateCreated().contains(bannerDate);
+        statusBanner.bannerDateCreated().contains(todayFormattedShort);
 
         applicationDetails.bankRefName().contains('Cloned MIA deal');
         applicationDetails.automaticCoverStatus().contains('Not started');

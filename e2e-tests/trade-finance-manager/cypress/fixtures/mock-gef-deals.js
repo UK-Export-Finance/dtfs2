@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import { getUnixTime } from 'date-fns';
+import {todayUnix} from '../../../e2e-fixtures/dateConstants';
 
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from './constants';
 
@@ -94,7 +94,7 @@ const commonApplicationDetails = {
   mandatoryVersionId: null,
   createdAt: 1638363403942,
   updatedAt: 1638983294975,
-  submissionDate: `${getUnixTime(new Date())}503`,
+  submissionDate: todayUnix * 1000,
   ukefDealId: '0030113304',
   checkerId: '619bae3467cc7c002069fc21',
   editedBy: ['619bae3467cc7c002069fc1e'],
