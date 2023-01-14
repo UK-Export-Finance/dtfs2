@@ -35,6 +35,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
     api.sendEmail = sendEmailApiSpy;
     api.updateFacilityAmendment = updateFacilityAmendmentSpy;
     api.findOneTeam = jest.fn(() => Promise.resolve({ email: 'pim@test.com' }));
+    api.findOneFacility = jest.fn(() => Promise.resolve({}));
   });
 
   it('should send approved without conditions email with correct details for both amendments', async () => {

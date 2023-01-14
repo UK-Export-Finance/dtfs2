@@ -1,147 +1,97 @@
 const mapTenorDate = require('./mapTenorDate');
 
-describe('mapTenorDate', () => {
-  describe('when facilityStage is `Commitment`', () => {
-    it('should return facility.ukefGuaranteeInMonths', () => {
-      const mockFacility = {
-        facilityStage: 'Commitment',
-        ukefGuaranteeInMonths: '11',
-      };
-
-      const result = mapTenorDate(
-        mockFacility.facilityStage,
-        mockFacility.ukefGuaranteeInMonths,
-      );
-
-      const expected = `${mockFacility.ukefGuaranteeInMonths} months`;
-
-      expect(result).toEqual(expected);
-    });
-
-    describe('when ukefGuaranteeInMonths is exactly 1', () => {
-      it('should return `month` instead and not `months`', () => {
-        const mockFacility = {
-          facilityStage: 'Commitment',
-          ukefGuaranteeInMonths: '1',
-        };
-
-        const result = mapTenorDate(
-          mockFacility.facilityStage,
-          mockFacility.ukefGuaranteeInMonths,
-        );
-
-        const expected = `${mockFacility.ukefGuaranteeInMonths} month`;
-
-        expect(result).toEqual(expected);
-      });
-    });
-  });
-
-  describe('when facilityStage is `Issued`', () => {
-    it('should return facility.ukefGuaranteeInMonths', () => {
-      const mockFacility = {
-        facilityStage: 'Issued',
-        hasBeenIssued: true,
-        ukefGuaranteeInMonths: '11',
-      };
-
-      const result = mapTenorDate(
-        mockFacility.facilityStage,
-        mockFacility.ukefGuaranteeInMonths,
-      );
-
-      const expected = `${mockFacility.ukefGuaranteeInMonths} months`;
-
-      expect(result).toEqual(expected);
-    });
-
-    describe('when ukefGuaranteeInMonths is exactly 1', () => {
-      it('should return `month` instead and not `months`', () => {
-        const mockFacility = {
-          facilityStage: 'Issued',
-          hasBeenIssued: true,
-          ukefGuaranteeInMonths: '1',
-        };
-
-        const result = mapTenorDate(
-          mockFacility.facilityStage,
-          mockFacility.ukefGuaranteeInMonths,
-        );
-
-        const expected = `${mockFacility.ukefGuaranteeInMonths} month`;
-
-        expect(result).toEqual(expected);
-      });
-    });
-  });
-
-  describe('when facilityTfm has exposurePeriodInMonths', () => {
-    const mockFacility = {
-      facilityStage: 'Issued',
+describe('Mapping tenor dates across products', () => {
+  const mockGefFacility = {
+    facilitySnapshot: {
       hasBeenIssued: true,
-    };
+      monthsOfCover: 12,
+    },
+    tfm: {
+      exposurePeriodInMonths: 12,
+    },
+  };
 
-    it('should return exposurePeriodInMonths', () => {
-      const mockFacilityTfm = {
-        exposurePeriodInMonths: 3,
-      };
+  const mockBssEwcsFacility = {
+    facilitySnapshot: {
+      hasBeenIssued: true,
+      ukefGuaranteeInMonths: 12,
+    },
+    tfm: {
+      exposurePeriodInMonths: 12,
+    },
+  };
 
-      const result = mapTenorDate(
-        mockFacility.facilityStage,
-        mockFacility.ukefGuaranteeInMonths,
-        mockFacilityTfm.exposurePeriodInMonths,
-      );
+  const mockGefFacilityUnissued = {
+    facilitySnapshot: {
+      hasBeenIssued: false,
+      monthsOfCover: 21,
+    },
+    tfm: {
+    },
+  };
 
-      const expected = `${mockFacilityTfm.exposurePeriodInMonths} months`;
+  const mockBssEwcsFacilityUnissued = {
+    facilitySnapshot: {
+      hasBeenIssued: false,
+      ukefGuaranteeInMonths: 21,
+    },
+    tfm: {
+    },
+  };
+
+  describe('Should return `exposurePeriod` if the facility is issued', () => {
+    it('GEF', () => {
+      const { facilitySnapshot, tfm } = mockGefFacility;
+      const result = mapTenorDate(facilitySnapshot.hasBeenIssued, facilitySnapshot.monthsOfCover, tfm.exposurePeriodInMonths);
+      const expected = `${tfm.exposurePeriodInMonths} months`;
 
       expect(result).toEqual(expected);
     });
+    it('BSS/EWCS', () => {
+      const { facilitySnapshot, tfm } = mockBssEwcsFacility;
+      const result = mapTenorDate(facilitySnapshot.hasBeenIssued, facilitySnapshot.ukefGuaranteeInMonths, tfm.exposurePeriodInMonths);
+      const expected = `${tfm.exposurePeriodInMonths} months`;
 
-    describe('when exposurePeriodInMonths is exactly 1', () => {
-      it('should return `month` instead and not `months`', () => {
-        const mockFacilityTfm = {
-          exposurePeriodInMonths: 1,
-        };
-
-        const result = mapTenorDate(
-          mockFacility.facilityStage,
-          mockFacility.ukefGuaranteeInMonths,
-          mockFacilityTfm.exposurePeriodInMonths,
-        );
-
-        const expected = `${mockFacilityTfm.exposurePeriodInMonths} month`;
-
-        expect(result).toEqual(expected);
-      });
+      expect(result).toEqual(expected);
     });
   });
 
-  it('should return null when there is no ukefGuaranteeInMonths', () => {
-    const mockFacility = {
-      facilityStage: 'Issued',
-      hasBeenIssued: true,
-      ukefGuaranteeInMonths: '',
-    };
+  describe('Should return cover months if the facility is un-issued', () => {
+    it('GEF', () => {
+      const { facilitySnapshot, tfm } = mockGefFacilityUnissued;
+      const result = mapTenorDate(facilitySnapshot.hasBeenIssued, facilitySnapshot.monthsOfCover, tfm.exposurePeriodInMonths);
+      const expected = `${facilitySnapshot.monthsOfCover} months`;
 
-    const result = mapTenorDate(
-      mockFacility.facilityStage,
-      mockFacility.ukefGuaranteeInMonths,
-    );
+      expect(result).toEqual(expected);
+    });
+    it('BSS/EWCS', () => {
+      const { facilitySnapshot, tfm } = mockBssEwcsFacilityUnissued;
+      const result = mapTenorDate(facilitySnapshot.hasBeenIssued, facilitySnapshot.ukefGuaranteeInMonths, tfm.exposurePeriodInMonths);
+      const expected = `${facilitySnapshot.ukefGuaranteeInMonths} months`;
 
-    expect(result).toEqual(null);
+      expect(result).toEqual(expected);
+    });
   });
 
-  it('should return null when there is no facilityStage', () => {
-    const mockFacility = {
-      facilityStage: '',
-      ukefGuaranteeInMonths: '1',
-    };
+  describe('Should return `null`', () => {
+    it('When months are null', () => {
+      const { facilitySnapshot, tfm } = mockGefFacilityUnissued;
+      const result = mapTenorDate(facilitySnapshot.hasBeenIssued, null, tfm.exposurePeriodInMonths);
 
-    const result = mapTenorDate(
-      mockFacility.facilityStage,
-      mockFacility.ukefGuaranteeInMonths,
-    );
+      expect(result).toEqual(null);
+    });
 
-    expect(result).toEqual(null);
+    it('Upon void argument sets', () => {
+      const { tfm } = mockGefFacilityUnissued;
+      const result = mapTenorDate(null, null, tfm.exposurePeriodInMonths);
+
+      expect(result).toEqual(null);
+    });
+
+    it('Upon void argument sets', () => {
+      const result = mapTenorDate(null, null, null);
+
+      expect(result).toEqual(null);
+    });
   });
 });

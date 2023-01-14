@@ -108,14 +108,16 @@
         </div>
       </div>
 
-      {% set componentData = {
-        eligibilityCriteria: deal.eligibility.criteria
-      } %}
+      {% if not tfm.nonDelegatedBank %}
+        {% set componentData = {
+          eligibilityCriteria: deal.eligibility.criteria
+        } %}
 
-      {{ govukDetails({
-        summaryText: "Eligibility criteria",
-        html: eligibilityCriteriaAnswers.render(componentData)
-      }) }}
+        {{ govukDetails({
+          summaryText: "Eligibility criteria",
+          html: eligibilityCriteriaAnswers.render(componentData)
+        }) }}
+      {% endif %}
     </div>
   </div>
 

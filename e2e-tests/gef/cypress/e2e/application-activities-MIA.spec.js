@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import {todayFormatted, todayFormattedShort} from '../../../e2e-fixtures/dateConstants';
 
 import relative from './relativeURL';
 import applicationActivities from './pages/application-activities';
@@ -100,23 +100,21 @@ context('Submit AIN deal and check portalActivities', () => {
     });
 
     // ensures that timeline has relevant information
-    const date = format(new Date(), 'd MMMM yyyy');
     it('should display the activity timeline with submission information', () => {
       applicationActivities.subNavigationBarActivities().click();
       applicationActivities.activityTimeline().should('exist');
       applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`);
       applicationActivities.activityTimeline().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)}`).should('not.exist');
-      applicationActivities.activityTimeline().contains(date);
+      applicationActivities.activityTimeline().contains(todayFormatted);
       applicationActivities.activityTimeline().contains(CREDENTIALS.CHECKER.firstname);
     });
 
     // ensures that banner is populated correctly
-    const bannerDate = format(new Date(), 'dd MMM yyyy');
     it('should display the blue status banner', () => {
       applicationActivities.subNavigationBarActivities().click();
       statusBanner.applicationBanner().should('exist');
-      statusBanner.bannerDateCreated().contains(bannerDate);
-      statusBanner.bannerDateSubmitted().contains(bannerDate);
+      statusBanner.bannerDateCreated().contains(todayFormattedShort);
+      statusBanner.bannerDateSubmitted().contains(todayFormattedShort);
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(CREDENTIALS.CHECKER.firstname);
       statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);

@@ -219,7 +219,8 @@ const updateFacilityAmendment = async (req, res) => {
   try {
     if (amendmentId && facilityId && payload) {
       if (payload.createTasks && payload.submittedByPim) {
-        const tasks = createAmendmentTasks(payload.requireUkefApproval);
+        const { tfm } = await api.findOneFacility(facilityId);
+        const tasks = createAmendmentTasks(payload.requireUkefApproval, tfm);
         payload.tasks = tasks;
         delete payload.createTasks;
         delete payload.requireUkefApproval;

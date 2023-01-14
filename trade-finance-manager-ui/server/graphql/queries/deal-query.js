@@ -76,6 +76,7 @@ const dealQuery = gql`
           folderName
         }
         leadUnderwriter
+        nonDelegatedBank
       }
       dealSnapshot {
         _id,

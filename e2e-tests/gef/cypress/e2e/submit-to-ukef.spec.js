@@ -1,4 +1,4 @@
-const { format } = require('date-fns');
+import {todayFormattedShort} from '../../../e2e-fixtures/dateConstants';
 
 import relative from './relativeURL';
 import automaticCover from './pages/automatic-cover';
@@ -93,11 +93,10 @@ context('Submit to UKEF', () => {
     describe('After submission', () => {
       it('application banner displays the submission date, pending UKEF deal ID and updated status and contains comment in correct format', () => {
         cy.visit(relative(`/gef/application-details/${dealId}`));
-        const todayFormatted = format(new Date(), 'dd MMM yyyy');
 
-        statusBanner.bannerDateSubmitted().contains(todayFormatted);
+        statusBanner.bannerDateSubmitted().contains(todayFormattedShort);
         statusBanner.bannerUkefDealId();
-        statusBanner.bannerDateCreated().contains(todayFormatted);
+        statusBanner.bannerDateCreated().contains(todayFormattedShort);
       });
     });
   });

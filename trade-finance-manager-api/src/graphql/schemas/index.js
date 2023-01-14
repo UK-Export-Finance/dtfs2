@@ -277,6 +277,7 @@ type TFMDealData {
   leadUnderwriter: String
   activities: [TFMActivity]
   lastUpdated: Float
+  nonDelegatedBank: Boolean
 }
 
 type PremiumScheduleData {

@@ -1,4 +1,5 @@
 const pageRenderer = require('../../component-tests/pageRenderer');
+
 const page = '../templates/case/case.njk';
 const render = pageRenderer(page);
 
@@ -12,19 +13,38 @@ describe(page, () => {
         supplierName: 'The Supplier name',
         buyerName: 'The Buyer name',
       },
-    }
+    },
   };
 
   beforeEach(() => {
     wrapper = render(params);
   });
 
-  it('should render case summary component', () => {
-    wrapper.expectElement('[data-cy="case-summary"]').toExist();
+  describe('Non NDB deal', () => {
+    params.tfm = {
+      nonDelegatedBank: false,
+    };
+
+    it('should render case summary component', () => {
+      wrapper.expectElement('[data-cy="case-summary-ndb"]').toExist();
+    });
+
+    it('should render case sub navigation', () => {
+      wrapper.expectElement('[data-cy="case-sub-navigation"]').toExist();
+    });
   });
 
-  it('should render case sub navigation', () => {
-    wrapper.expectElement('[data-cy="case-sub-navigation"]').toExist();
-  });
+  describe('NDB deal', () => {
+    params.tfm = {
+      nonDelegatedBank: true,
+    };
 
+    it('should render NDB case summary component', () => {
+      wrapper.expectElement('[data-cy="case-summary-ndb"]').toExist();
+    });
+
+    it('should render case sub navigation', () => {
+      wrapper.expectElement('[data-cy="case-sub-navigation"]').toExist();
+    });
+  });
 });

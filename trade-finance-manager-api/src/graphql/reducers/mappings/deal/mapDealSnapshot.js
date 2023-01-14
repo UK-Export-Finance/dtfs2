@@ -18,7 +18,7 @@ const mapDealSnapshot = (deal) => {
   const mapped = {
     ...dealSnapshot,
     submissionDetails: mapSubmissionDetails(submissionDetails),
-    eligibility: mapEligibility(eligibility),
+    eligibility: eligibility ? mapEligibility(eligibility) : {},
     facilities: mapFacilities(facilities, dealSnapshot.details, dealTfm),
     totals: mapTotals(facilities),
     isFinanceIncreasing: false,

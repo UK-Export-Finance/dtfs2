@@ -71,43 +71,74 @@ const createTasksAutomaticAmendment = () => [
 
 /**
  * Create MIA tasks/task groups
- * @param {Array} additional/special tasks to add to the group
+ * @param {Boolean} NDBDeal true/false for non delegated bank deal flag.  false by default
  * @returns {Array} created task groups
  */
-const createTasksManualAmendment = () => [
-  {
-    groupTitle: CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_1.GROUP_TITLE,
-    id: 1,
-    groupTasks: createGroupTasks(CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_1.TASKS, 1),
-  },
-  {
-    groupTitle: CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_2.GROUP_TITLE,
-    id: 2,
-    groupTasks: createGroupTasks(CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_2.TASKS, 2),
-  },
-  {
-    groupTitle: CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_3.GROUP_TITLE,
-    id: 3,
-    groupTasks: createGroupTasks(CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_3.TASKS, 3),
-  },
-  {
-    groupTitle: CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_4.GROUP_TITLE,
-    id: 4,
-    groupTasks: createGroupTasks(CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_4.TASKS, 4),
-  },
-];
+const createTasksManualAmendment = (NDBDeal = false) => {
+  // if non delegated bank
+  if (NDBDeal) {
+    return [
+      {
+        groupTitle: CONSTANTS.NDB_TASKS_AMENDMENT.NDB_AMENDMENT.GROUP_1.GROUP_TITLE,
+        id: 1,
+        groupTasks: createGroupTasks(CONSTANTS.NDB_TASKS_AMENDMENT.NDB_AMENDMENT.GROUP_1.TASKS, 1),
+      },
+      {
+        groupTitle: CONSTANTS.NDB_TASKS_AMENDMENT.NDB_AMENDMENT.GROUP_2.GROUP_TITLE,
+        id: 2,
+        groupTasks: createGroupTasks(CONSTANTS.NDB_TASKS_AMENDMENT.NDB_AMENDMENT.GROUP_2.TASKS, 2),
+      },
+      {
+        groupTitle: CONSTANTS.NDB_TASKS_AMENDMENT.NDB_AMENDMENT.GROUP_3.GROUP_TITLE,
+        id: 3,
+        groupTasks: createGroupTasks(CONSTANTS.NDB_TASKS_AMENDMENT.NDB_AMENDMENT.GROUP_3.TASKS, 3),
+      },
+      {
+        groupTitle: CONSTANTS.NDB_TASKS_AMENDMENT.NDB_AMENDMENT.GROUP_4.GROUP_TITLE,
+        id: 4,
+        groupTasks: createGroupTasks(CONSTANTS.NDB_TASKS_AMENDMENT.NDB_AMENDMENT.GROUP_4.TASKS, 4),
+      },
+    ];
+  }
+  return [
+    {
+      groupTitle: CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_1.GROUP_TITLE,
+      id: 1,
+      groupTasks: createGroupTasks(CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_1.TASKS, 1),
+    },
+    {
+      groupTitle: CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_2.GROUP_TITLE,
+      id: 2,
+      groupTasks: createGroupTasks(CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_2.TASKS, 2),
+    },
+    {
+      groupTitle: CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_3.GROUP_TITLE,
+      id: 3,
+      groupTasks: createGroupTasks(CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_3.TASKS, 3),
+    },
+    {
+      groupTitle: CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_4.GROUP_TITLE,
+      id: 4,
+      groupTasks: createGroupTasks(CONSTANTS.TASKS_AMENDMENT.MANUAL_AMENDMENT.GROUP_4.TASKS, 4),
+    },
+  ];
+};
 
 /**
  * Create tasks/task groups depending on the amendment type (automatic or manual)
  * @param {String} requireUkefApproval - true/false
+ * @param {Object} tfm - facility TFM object
  * @returns {Array} created task groups
  */
-const createAmendmentTasks = (requireUkefApproval) => {
+const createAmendmentTasks = (requireUkefApproval, tfm) => {
   let tasks = [];
-  if (!requireUkefApproval) {
+  if (!requireUkefApproval && !tfm.nonDelegatedBank) {
     tasks = createTasksAutomaticAmendment();
-  } else if (requireUkefApproval) {
+  } else if (requireUkefApproval && !tfm.nonDelegatedBank) {
     tasks = createTasksManualAmendment();
+  } else if (tfm.nonDelegatedBank) {
+    // if non delegated bank, then map through non delegated bank amendments
+    tasks = createTasksManualAmendment(tfm.nonDelegatedBank);
   }
 
   return tasks;

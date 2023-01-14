@@ -1,4 +1,4 @@
-const { format } = require('date-fns');
+import {todayFormattedShort} from '../../../e2e-fixtures/dateConstants';
 
 import relative from './relativeURL';
 import applicationDetails from './pages/application-details';
@@ -53,8 +53,7 @@ context('Application Details Page', () => {
       statusBanner.bannerStatus().contains('Draft');
       statusBanner.bannerProduct().should('have.text', 'General Export Facility');
 
-      const todayFormatted = format(new Date(), 'dd MMM yyyy');
-      statusBanner.bannerDateCreated().contains(todayFormatted);
+      statusBanner.bannerDateCreated().contains(todayFormattedShort);
       statusBanner.bannerSubmissionType().should('have.text', '-');
       statusBanner.bannerCreatedBy().should('have.text', `${dealWithEmptyExporter.maker.firstname} ${dealWithEmptyExporter.maker.surname}`);
       statusBanner.bannerExporter().should('have.text', '-');

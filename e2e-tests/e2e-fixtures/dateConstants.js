@@ -34,7 +34,7 @@ const twoMonths = add(today, { months: 2 });
 const twoMonthsDay = format(twoMonths, 'dd');
 const twoMonthsMonth = format(twoMonths, 'MM');
 const twoMonthsYear = format(twoMonths, 'yyyy');
-const twoMonthsFormatted = format(twoMonths, 'dd LLL yyyy');
+const twoMonthsFormatted = format(twoMonths, 'dd MMM yyyy');
 const twoMonthsFormattedFull = format(twoMonths, 'dd MMMM yyyy');
 const twoMonthsFormattedTable = format(twoMonths, 'd MMMM yyyy');
 
@@ -48,6 +48,16 @@ const twoDays = add(today, { days: 2 });
 const twoDaysDay = format(twoDays, 'dd');
 const twoDaysMonth = format(twoDays, 'MM');
 const twoDaysYear = format(twoDays, 'yyyy');
+
+// 25 days ago
+const twentyFiveDaysAgo = sub(today, { days: 25 });
+const twentyFiveDaysAgoUnix = getUnixTime(twentyFiveDaysAgo).toString();
+const twentyFiveDaysAgoFormatted = format(twentyFiveDaysAgo, 'dd MMM yyyy');
+
+// 35 days ago
+const thirtyFiveDaysAgo = sub(today, { days: 35 });
+const thirtyFiveDaysAgoUnix = getUnixTime(thirtyFiveDaysAgo).toString();
+const thirtyFiveDaysAgoFormatted = format(thirtyFiveDaysAgo, 'dd MMM yyyy');
 
 const threeMonths = add(today, { months: 3 });
 const threeMonthsDay = format(threeMonths, 'dd');
@@ -113,8 +123,9 @@ const todayUnixYear = format(threeDaysAgo, 'yyyy');
 
 const todayFormattedFull = format(today, 'dd MMMM yyyy');
 const todayFormatted = format(today, 'd MMMM yyyy');
+const todayFormattedShort = format(today, 'dd MMM yyyy');
 const tomorrowFormattedFull = format(tomorrow, 'd MMMM yyyy');
-const tomorrowFormattedFacilityPage = format(tomorrow, 'dd LLL yyyy');
+const tomorrowFormattedFacilityPage = format(tomorrow, 'dd MMM yyyy');
 const tomorrowUnix = getUnixTime(tomorrow).toString();
 
 const todayFormattedTimeHours = format(today, 'h');
@@ -134,6 +145,12 @@ export default {
   twoDaysDay,
   twoDaysMonth,
   twoDaysYear,
+  twentyFiveDaysAgo,
+  twentyFiveDaysAgoUnix,
+  twentyFiveDaysAgoFormatted,
+  thirtyFiveDaysAgo,
+  thirtyFiveDaysAgoUnix,
+  thirtyFiveDaysAgoFormatted,
   yesterday,
   yesterdayDay,
   yesterdayMonth,
@@ -194,6 +211,7 @@ export default {
   todayTaskFormat,
   todayFormattedFull,
   todayFormatted,
+  todayFormattedShort,
   tomorrowFormattedFull,
   tomorrowFormattedFacilityPage,
   todayFormattedTimeHours,

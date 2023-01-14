@@ -1,19 +1,24 @@
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 {% import './_macros/case-summary.njk' as caseSummary %}
+{% import './_macros/case-summary-ndb.njk' as caseSummaryNdb %}
 
 {% extends "index.njk" %}
 {% set primary = 'cases' %}
 
 {% block content %}
 
-  {% set componentData = {
-    deal: deal,
-    tfm: tfm,
-    user: user,
-    amendment: amendment
+ {% set componentData = {
+      deal: deal,
+      tfm: tfm,
+      user: user,
+      amendment: amendment
   } %}
 
-  {{caseSummary.render(componentData)}}
+  {% if tfm.nonDelegatedBank %}
+    {{caseSummaryNdb.render(componentData)}}
+  {% else %}
+    {{caseSummary.render(componentData)}}
+  {% endif %}
 
   {% include "_partials/case_sub_navigation.njk" %}
 

@@ -133,3 +133,54 @@ describe(`${page} when deal is GEF`, () => {
     wrapper.expectElement('[data-cy="bank-security-facility-text"]').toExist();
   });
 });
+
+describe(`${page} when deal is NDB`, () => {
+  let wrapper;
+
+  beforeEach(() => {
+    params.tfm = {
+      nonDelegatedBank: true,
+    };
+    wrapper = render(params);
+  });
+
+  it('should render bank', () => {
+    wrapper.expectText('[data-cy="deal-bank"]').toRead(params.deal.bank.name);
+  });
+
+  it('should render contact name', () => {
+    wrapper.expectText('[data-cy="contact-name"]').toRead(`${params.deal.maker.firstname} ${params.deal.maker.surname}`);
+  });
+
+  it('should render email', () => {
+    wrapper.expectText('[data-cy="email"]').toRead(params.deal.maker.email);
+  });
+
+  it('should render bank reference', () => {
+    wrapper.expectText('[data-cy="bank-reference"]').toRead(params.deal.bankInternalRefName);
+  });
+
+  it('should render bank additional reference', () => {
+    wrapper.expectText('[data-cy="bank-additional-reference"]').toRead(params.deal.additionalRefName);
+  });
+
+  it('should not render eligibility criteria answers', () => {
+    wrapper.expectElement('[data-cy="eligibility-criteria-answers"]').notToExist();
+  });
+
+  it('should render facilities table', () => {
+    wrapper.expectElement('[data-cy="facilities-table"]').toExist();
+  });
+
+  it('should render bank\'s financing to exporter', () => {
+    wrapper.expectElement('[data-cy="finance-increasing"]').toExist();
+  });
+
+  it('should render bank\'s security details', () => {
+    wrapper.expectElement('[data-cy="deal-bank-security-details"]').toExist();
+    wrapper.expectElement('[data-cy="bank-security-sub-heading"]').toExist();
+    wrapper.expectElement('[data-cy="bank-security-text"]').toExist();
+    wrapper.expectElement('[data-cy="bank-security-facility-sub-heading"]').toExist();
+    wrapper.expectElement('[data-cy="bank-security-facility-text"]').toExist();
+  });
+});
