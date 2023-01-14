@@ -34,6 +34,7 @@
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
     "@graphql-tools/schema": "^9.0.13",
+    "apollo-server-express": "3.11.1",
     "apollo-server-testing": "^2.25.3",
     "axios": "^1.2.2",
     "bson": "^4.7.2",
