@@ -1,4 +1,3 @@
-const dotenv = require('dotenv');
 const express = require('express');
 const compression = require('compression');
 const swaggerUi = require('swagger-ui-express');
@@ -16,7 +15,6 @@ const initScheduler = require('./scheduler');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
 
-dotenv.config();
 initScheduler();
 
 const app = express();
