@@ -100,6 +100,7 @@ export const COUNTRIES: Country[] = [
     id: 112,
     name: 'Belarus',
     code: 'BLR',
+    disabled: true
   },
   {
     id: 56,
@@ -135,6 +136,7 @@ export const COUNTRIES: Country[] = [
     id: 70,
     name: 'Bosnia and Herzegovina',
     code: 'BIH',
+    disabled: true
   },
   {
     id: 72,
@@ -177,6 +179,7 @@ export const COUNTRIES: Country[] = [
     id: 108,
     name: 'Burundi',
     code: 'BDI',
+    disabled: true
   },
   {
     id: 116,
@@ -207,6 +210,7 @@ export const COUNTRIES: Country[] = [
     id: 140,
     name: 'Central African Republic',
     code: 'CAF',
+    disabled: true
   },
   {
     id: 148,
@@ -237,6 +241,7 @@ export const COUNTRIES: Country[] = [
     id: 178,
     name: 'Congo',
     code: 'COG',
+    disabled: true
   },
   {
     id: 935,
@@ -437,11 +442,13 @@ export const COUNTRIES: Country[] = [
     id: 324,
     name: 'Guinea',
     code: 'GIN',
+    disabled: true
   },
   {
     id: 624,
     name: 'Guinea Bissau',
     code: 'GNB',
+    disabled: true
   },
   {
     id: 328,
@@ -487,11 +494,13 @@ export const COUNTRIES: Country[] = [
     id: 364,
     name: 'Iran',
     code: 'IRN',
+    disabled: true
   },
   {
     id: 368,
     name: 'Iraq',
     code: 'IRQ',
+    disabled: true
   },
   {
     id: 372,
@@ -639,6 +648,7 @@ export const COUNTRIES: Country[] = [
     id: 466,
     name: 'Mali',
     code: 'MLI',
+    disabled: true
   },
   {
     id: 470,
@@ -744,6 +754,7 @@ export const COUNTRIES: Country[] = [
     id: 558,
     name: 'Nicaragua',
     code: 'NIC',
+    disabled: true
   },
   {
     id: 562,
@@ -789,6 +800,7 @@ export const COUNTRIES: Country[] = [
     id: 275,
     name: 'Palestinian National Authority',
     code: 'PSE',
+    disabled: true
   },
   {
     id: 591,
@@ -849,6 +861,7 @@ export const COUNTRIES: Country[] = [
     id: 643,
     name: 'Russian Federation',
     code: 'RUS',
+    disabled: true
   },
   {
     id: 646,
@@ -991,6 +1004,7 @@ export const COUNTRIES: Country[] = [
     id: 760,
     name: 'Syrian Arab Republic',
     code: 'SYR',
+    disabled: true
   },
   {
     id: 158,
@@ -1106,6 +1120,7 @@ export const COUNTRIES: Country[] = [
     id: 862,
     name: 'Venezuela',
     code: 'VEN',
+    disabled: true
   },
   {
     id: 704,
@@ -1131,6 +1146,7 @@ export const COUNTRIES: Country[] = [
     id: 732,
     name: 'Western Sahara',
     code: 'ESH',
+    disabled: true
   },
   {
     id: 887,
