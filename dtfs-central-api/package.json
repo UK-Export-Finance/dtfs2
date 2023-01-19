@@ -34,23 +34,23 @@
   },
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.2.2",
     "compression": "^1.7.4",
-    "date-fns": "^2.29.2",
-    "dotenv": "16.0.2",
-    "express": "4.18.1",
+    "date-fns": "^2.29.3",
+    "dotenv": "16.0.3",
+    "express": "4.18.2",
     "moment": "^2.29.4",
-    "mongo-dot-notation": "2.0.0",
+    "mongo-dot-notation": "3.1.0",
     "mongodb": "~3.6.12",
-    "swagger-jsdoc": "^6.2.5",
-    "swagger-ui-express": "^4.5.0",
-    "nodemon": "^2.0.19"
+    "swagger-jsdoc": "^6.2.7",
+    "swagger-ui-express": "^4.6.0",
+    "nodemon": "^2.0.20"
   },
   "devDependencies": {
-    "eslint": "^8.23.0",
+    "eslint": "^8.31.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "supertest": "6.2.4",
-    "jest": "29.0.3"
+    "eslint-plugin-import": "^2.27.4",
+    "supertest": "6.3.3",
+    "jest": "29.3.1"
   }
 }
