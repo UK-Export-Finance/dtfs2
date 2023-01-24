@@ -68,7 +68,7 @@
     "nodemon": "^2.0.20",
     "nunjucks": "3.2.3",
     "path": "0.12.7",
-    "redis": "^3.1.2",
+    "redis": "^4.5.1",
     "sanitize-html": "^2.8.1"
   },
   "devDependencies": {
