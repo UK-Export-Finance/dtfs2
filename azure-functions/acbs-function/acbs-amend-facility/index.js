@@ -43,6 +43,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
       // Payload verification
       if (hasFacilityId && hasAmendment && hasFacility && hasDeal) {
         const { facility, deal, facilityId } = amendment;
+
         // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
         const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
 
