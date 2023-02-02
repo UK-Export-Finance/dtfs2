@@ -12,7 +12,7 @@
   },
   "author": "",
   "dependencies": {
-    "axios": "^1.2.2",
+    "axios": "^0.27.2",
     "dotenv": "^16.0.3",
     "durable-functions": "^1.5.4",
     "eslint": "^8.31.0",

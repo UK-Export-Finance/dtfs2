@@ -11,6 +11,10 @@
  * This function is not intended to be invoked directly.
  * This function is trigger by an HTTP starter function (acbs-http).
  *
+ * Check
+ * ------
+ * 1. `07`facility only
+ *
  * Prerequisites
  * -------------
  * 0. 'npm install durable-functions'
@@ -20,6 +24,8 @@
 
 const df = require('durable-functions');
 const retryOptions = require('../helpers/retryOptions');
+
+const acceptableFacilityStage = ['07'];
 
 module.exports = df.orchestrator(function* amendACBSFacility(context) {
   try {
@@ -40,6 +46,27 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
 
         // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
         const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
+
+        /**
+         * Check 1 - Facility stage `07` only
+         * Ensure facility is `Issued` before processing amendment payload
+         */
+        const { facilityStageCode } = fmr;
+
+        if (!acceptableFacilityStage.includes(facilityStageCode)) {
+          // Error upon unacceptable facility stage
+          console.error(`Facility ${facilityId} stage is ${facilityStageCode}, amendment will not be processed`);
+
+          return {
+            facilityId,
+            facilityLoanRecord: {
+              error: `Facility ${facilityId} stage is ${facilityStageCode}, amendment will not be processed`,
+            },
+            facilityMasterRecord: {
+              error: `Facility ${facilityId} stage is ${facilityStageCode}, amendment will not be processed`,
+            },
+          };
+        }
 
         if (!!fmr && !!etag && !!facility.facilitySnapshot) {
           const amendments = {
