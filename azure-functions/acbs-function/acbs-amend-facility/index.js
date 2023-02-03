@@ -24,6 +24,7 @@
 
 const df = require('durable-functions');
 const retryOptions = require('../helpers/retryOptions');
+const { FACILITY } = require('../constants');
 
 const acceptableFacilityStage = ['07'];
 
@@ -43,6 +44,8 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
       // Payload verification
       if (hasFacilityId && hasAmendment && hasFacility && hasDeal) {
         const { facility, deal, facilityId } = amendment;
+        const { facilitySnapshot } = facility;
+        let facilityLoanRecord;
 
         // 1. DAF : activity-get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
         const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
@@ -68,7 +71,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
           };
         }
 
-        if (!!fmr && !!etag && !!facility.facilitySnapshot) {
+        if (!!fmr && !!etag && !!facilitySnapshot) {
           const amendments = {
             amendment,
           };
@@ -78,14 +81,21 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
            */
 
           // 1. SOF: Facility Loan Record (FLR)
-          const facilityLoanRecord = context.df.callSubOrchestrator('acbs-amend-facility-loan-record', {
-            facilityId,
-            facility,
-            amendments,
-            fmr,
-          });
+          // `Bond` facility only
+          if (facilitySnapshot.type === FACILITY.FACILITY_TYPE.BOND) {
+            facilityLoanRecord = context.df.callSubOrchestrator('acbs-amend-facility-loan-record', {
+              facilityId,
+              facility,
+              amendments,
+              fmr,
+            });
 
-          yield context.df.Task.all([facilityLoanRecord]);
+            yield context.df.Task.all([facilityLoanRecord]);
+          } else {
+            facilityLoanRecord = {
+              result: `Facility type ${facilitySnapshot.type} will not be amended.`,
+            };
+          }
 
           // 2. SOF: Facility Master Record (FMR)
           const facilityMasterRecord = context.df.callSubOrchestrator('acbs-amend-facility-master-record', {
