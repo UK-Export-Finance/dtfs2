@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "lint": "eslint ./",
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js "
   },
   "engines": {
