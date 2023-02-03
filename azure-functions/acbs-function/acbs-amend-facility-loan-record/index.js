@@ -50,8 +50,8 @@ module.exports = df.orchestrator(function* Facility(context) {
         loanId,
       };
 
-      // 1.3.1 - UKEF Exposure (Except `Loan`)
-      if (amendment.amount && facilitySnapshot.type !== FACILITY.FACILITY_TYPE.LOAN) {
+      // 1.3.1 - UKEF Exposure (Only `Bond`)
+      if (amendment.amount && facilitySnapshot.type === FACILITY.FACILITY_TYPE.BOND) {
         const amount = yield context.df.callActivityWithRetry('activity-update-facility-loan-amount', retryOptions, {
           loanId,
           facilityId,
