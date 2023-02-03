@@ -23,7 +23,6 @@
 const df = require('durable-functions');
 const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
-const { FACILITY } = require('../constants');
 
 module.exports = df.orchestrator(function* Facility(context) {
   if (context.df.getInput()) {
@@ -34,7 +33,6 @@ module.exports = df.orchestrator(function* Facility(context) {
       fmr,
     } = context.df.getInput();
     const { amendment } = amendments;
-    const { facilitySnapshot } = facility;
     let facilityLoanRecordAmendments;
 
     // 1.1. Facility Loan Record (FLR) amendment mapping
@@ -50,8 +48,8 @@ module.exports = df.orchestrator(function* Facility(context) {
         loanId,
       };
 
-      // 1.3.1 - UKEF Exposure (Only `Bond`)
-      if (amendment.amount && facilitySnapshot.type === FACILITY.FACILITY_TYPE.BOND) {
+      // 1.3.1 - UKEF Exposure
+      if (amendment.amount) {
         const amount = yield context.df.callActivityWithRetry('activity-update-facility-loan-amount', retryOptions, {
           loanId,
           facilityId,

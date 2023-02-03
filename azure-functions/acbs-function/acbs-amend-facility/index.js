@@ -71,7 +71,7 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
           };
         }
 
-        if (!!fmr && !!etag && !!facility.facilitySnapshot) {
+        if (!!fmr && !!etag && !!facilitySnapshot) {
           const amendments = {
             amendment,
           };
