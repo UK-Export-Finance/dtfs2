@@ -40,17 +40,26 @@
 const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
-const facilityUpdate = (facility, acbsFacility, deal) => ({
-  ...acbsFacility,
-  exposurePeriod: helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType),
-  description: helpers.getDescription(facility, deal.dealSnapshot.dealType),
-  capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
-  issueDate: helpers.getIssueDate(facility, acbsFacility.effectiveDate),
-  facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
-  foreCastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
-  guaranteePercentage: CONSTANTS.FACILITY.GUARANTEE_PERCENTAGE.ISSUED,
-  productTypeName: deal.dealSnapshot.dealType,
-  obligorName: deal.exporter.companyName.substring(0, 35),
-});
+const facilityUpdate = (facility, acbsFacility, deal) => {
+  const issueDate = helpers.getIssueDate(facility, acbsFacility.effectiveDate);
+  const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
+    ? facility.tfm.facilityGuaranteeDates
+    : '';
+  console.log('===', guaranteeExpiryDate, issueDate);
+  return {
+    ...acbsFacility,
+    issueDate,
+    // guaranteeExpiryDate,
+    // nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
+    exposurePeriod: helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType),
+    description: helpers.getDescription(facility, deal.dealSnapshot.dealType),
+    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
+    facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
+    foreCastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
+    guaranteePercentage: CONSTANTS.FACILITY.GUARANTEE_PERCENTAGE.ISSUED,
+    productTypeName: deal.dealSnapshot.dealType,
+    obligorName: deal.exporter.companyName.substring(0, 35),
+  };
+};
 
 module.exports = facilityUpdate;
