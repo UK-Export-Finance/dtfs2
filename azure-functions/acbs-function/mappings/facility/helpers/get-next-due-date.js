@@ -12,9 +12,7 @@ const { FACILITY } = CONSTANTS;
  */
 
 const getNextDueDate = (facility) => {
-  const { guaranteeCommencementDate, guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
-    ? facility.tfm.facilityGuaranteeDates
-    : facility.update;
+  const { guaranteeCommencementDate, guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
   const months = getFeeFrequencyMonths(facility);
   const feeType = mapFeeType(facility.facilitySnapshot);
 

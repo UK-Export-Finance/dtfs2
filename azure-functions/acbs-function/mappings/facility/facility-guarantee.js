@@ -13,13 +13,8 @@
 const helpers = require('./helpers');
 
 const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
-  const {
-    guaranteeCommencementDate,
-    guaranteeExpiryDate,
-    effectiveDate,
-  } = facility.tfm.facilityGuaranteeDates
-    ? facility.tfm.facilityGuaranteeDates
-    : '';
+  const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
+
   return {
     facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
     guaranteeCommencementDate,
