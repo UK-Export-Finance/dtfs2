@@ -17,7 +17,7 @@ const getDealGuaranteeExpiryDate = (deal) => {
   }
 
   const latestGuaranteeExpiry = deal.dealSnapshot.facilities.reduce((latestDate, facility) => {
-    const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates ? facility.tfm.facilityGuaranteeDates : '';
+    const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
     return guaranteeExpiryDate > latestDate ? guaranteeExpiryDate : latestDate;
   }, formatTimestamp(getDealSubmissionDate(deal)));
 

@@ -43,10 +43,7 @@ const CONSTANTS = require('../../constants');
 const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date');
 
 const facilityMaster = (deal, facility, acbsData, acbsReference) => {
-  const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates
-    ? facility.tfm.facilityGuaranteeDates
-    : '';
-
+  const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
   const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
   const facilityStageCode = helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType);
   const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;

@@ -42,9 +42,7 @@ const CONSTANTS = require('../../constants');
 
 const facilityUpdate = (facility, acbsFacility, deal) => {
   const issueDate = helpers.getIssueDate(facility, acbsFacility.effectiveDate);
-  const { guaranteeCommencementDate, guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
-    ? facility.tfm.facilityGuaranteeDates
-    : '';
+  const { guaranteeCommencementDate, guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
 
   return {
     ...acbsFacility,

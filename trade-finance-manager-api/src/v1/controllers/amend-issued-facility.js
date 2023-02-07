@@ -122,7 +122,7 @@ const amendIssuedFacility = async (amendment, facility, deal) => {
 
         // facility.tfm.feeRecord or facility.tfm.premiumSchedule
         // TO-DO DTFS2-4614 & DTFS2-5201: De-comment below upon PS/FF BR completion.
-        
+
         // Save TFM in `tfm.history`
         history.push(tfm);
         facilityTfmUpdate = {

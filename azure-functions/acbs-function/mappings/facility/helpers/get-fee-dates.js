@@ -9,9 +9,7 @@ const CONSTANTS = require('../../../constants');
  */
 
 const getFeeDates = (facility, dealType, premiumScheduleIndex) => {
-  const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
-    ? facility.tfm.facilityGuaranteeDates
-    : '';
+  const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
 
   // GEF
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {

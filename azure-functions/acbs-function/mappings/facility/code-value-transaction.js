@@ -17,11 +17,7 @@
 const CONSTANTS = require('../../constants');
 
 const codeValueTransaction = (deal, facility) => {
-  const {
-    effectiveDate,
-  } = facility.tfm.facilityGuaranteeDates
-    ? facility.tfm.facilityGuaranteeDates
-    : '';
+  const { effectiveDate } = facility.tfm.facilityGuaranteeDates;
 
   return {
     facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),

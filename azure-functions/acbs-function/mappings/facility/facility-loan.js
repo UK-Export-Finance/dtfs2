@@ -29,9 +29,7 @@ const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date'
 const facilityLoan = (deal, facility, acbsData) => {
   try {
     const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
-    const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates
-      ? facility.tfm.facilityGuaranteeDates
-      : facility.update;
+    const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
     const ukefExposure = helpers.getMaximumLiability(facility);
 
     let loanRecord = {
