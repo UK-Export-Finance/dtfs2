@@ -6,6 +6,7 @@ const addDealStage = require('./dealStage');
 
 const addTfmDealData = async (deal) => {
   if (!deal) {
+    console.error(`Unable to add TFM object to deal ${deal._id}`);
     return false;
   }
 

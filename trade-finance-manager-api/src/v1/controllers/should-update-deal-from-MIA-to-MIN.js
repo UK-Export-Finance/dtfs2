@@ -1,6 +1,11 @@
 const CONSTANTS = require('../../constants');
 
 const shouldUpdateDealFromMIAtoMIN = (deal, tfmDeal) => {
+  if (!tfmDeal) {
+    console.error(`${deal._id} TFM object does not exists`);
+    return false;
+  }
+
   const isMIA = deal.submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
 
   if (tfmDeal.underwriterManagersDecision) {
