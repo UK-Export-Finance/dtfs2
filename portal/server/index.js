@@ -17,6 +17,7 @@ const { csrf: csrfToken, seo, security } = require('./routes/middleware');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const https = Boolean(process.env.HTTPS || 0);
+const secureCookieName = https ? '__Secure-dtfs-session' : 'dtfs-session';
 
 if (https) {
   app.set('trust proxy', 1);
@@ -38,6 +39,7 @@ if (!process.env.SESSION_SECRET) {
 }
 
 const sessionOptions = {
+  name: secureCookieName,
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
