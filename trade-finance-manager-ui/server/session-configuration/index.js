@@ -6,7 +6,7 @@ const redis = require('redis');
 const RedisStore = require('connect-redis')(session);
 
 const https = Boolean(process.env.HTTPS || 0);
-const secureCookieName = https ? '__Secure-dtfs-session' : 'dtfs-session';
+const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
 const sessionConfig = () => {
   const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(256 / 8).toString('hex');

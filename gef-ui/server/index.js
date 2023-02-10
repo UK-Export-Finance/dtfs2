@@ -20,7 +20,7 @@ const app = express();
 
 const PORT = process.env.PORT || 5006;
 const https = Boolean(process.env.HTTPS || 0);
-const secureCookieName = https ? '__Secure-dtfs-session' : 'dtfs-session';
+const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
 if (https) {
   app.set('trust proxy', 1);
