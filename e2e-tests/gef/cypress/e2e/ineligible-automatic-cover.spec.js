@@ -19,7 +19,7 @@ context('Ineligible Automatic Cover Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    Cypress.Cookies.preserveOnce('dtfs-session');
     cy.visit(relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
   });
 

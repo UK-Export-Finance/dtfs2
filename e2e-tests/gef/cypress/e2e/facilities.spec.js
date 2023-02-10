@@ -23,7 +23,7 @@ context('Facilities Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    Cypress.Cookies.preserveOnce('dtfs-session');
   });
 
   describe('Visiting facility page', () => {

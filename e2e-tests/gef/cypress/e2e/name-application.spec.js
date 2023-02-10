@@ -21,7 +21,7 @@ context('Name Application Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    Cypress.Cookies.preserveOnce('dtfs-session');
     cy.visit(relative('/gef/mandatory-criteria'));
     mandatoryCriteria.trueRadio().click();
     mandatoryCriteria.form().submit();

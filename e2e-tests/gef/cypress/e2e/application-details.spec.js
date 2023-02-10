@@ -41,7 +41,7 @@ context('Application Details Page', () => {
 
   describe('Visiting page for the first time - NOT STARTED', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      Cypress.Cookies.preserveOnce('dtfs-session');
       cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
 
@@ -154,7 +154,7 @@ context('Application Details Page', () => {
     });
 
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      Cypress.Cookies.preserveOnce('dtfs-session');
     });
 
     it('displays the application banner', () => {
@@ -215,7 +215,7 @@ context('Application Details Page', () => {
     });
 
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      Cypress.Cookies.preserveOnce('dtfs-session');
     });
 
     it('displays the application banner', () => {
@@ -284,7 +284,7 @@ context('Application Details Page', () => {
     });
 
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      Cypress.Cookies.preserveOnce('dtfs-session');
     });
 
     it('displays the correct submission type heading and text in banner', () => {

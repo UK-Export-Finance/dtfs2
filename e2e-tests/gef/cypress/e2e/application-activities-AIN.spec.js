@@ -34,7 +34,7 @@ context('Submit AIN deal and check portalActivities', () => {
 
   describe('creates and submits AIN', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      Cypress.Cookies.preserveOnce('dtfs-session');
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -57,7 +57,7 @@ context('Submit AIN deal and check portalActivities', () => {
 
   describe('submits to UKEF', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      Cypress.Cookies.preserveOnce('dtfs-session');
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -71,7 +71,7 @@ context('Submit AIN deal and check portalActivities', () => {
 
   describe('check portalActivity Page', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      Cypress.Cookies.preserveOnce('dtfs-session');
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });

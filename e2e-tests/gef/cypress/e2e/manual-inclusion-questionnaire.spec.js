@@ -29,7 +29,7 @@ context('manual inclusion Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    Cypress.Cookies.preserveOnce('dtfs-session');
     id = applications[1].id;
   });
 

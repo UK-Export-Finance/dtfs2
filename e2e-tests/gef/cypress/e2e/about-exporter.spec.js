@@ -39,7 +39,7 @@ context('About Exporter Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    Cypress.Cookies.preserveOnce('dtfs-session');
   });
 
   describe('With no exporter fields provided', () => {

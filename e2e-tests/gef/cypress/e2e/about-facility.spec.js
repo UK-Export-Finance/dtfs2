@@ -32,7 +32,7 @@ context('About Facility Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    Cypress.Cookies.preserveOnce('dtfs-session');
   });
 
   describe('Visiting page with already issued cash facility', () => {

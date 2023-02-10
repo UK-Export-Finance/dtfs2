@@ -47,7 +47,7 @@ context('Users can create and submit comments', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    Cypress.Cookies.preserveOnce('dtfs-session');
     cy.visit(relative(`/case/${dealId}/activity`));
   });
 

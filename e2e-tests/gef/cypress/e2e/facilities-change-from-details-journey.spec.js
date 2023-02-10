@@ -34,7 +34,7 @@ context('Changing facility details from application-details page should take you
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    Cypress.Cookies.preserveOnce('dtfs-session');
   });
 
   describe('Next page on facility journey', () => {

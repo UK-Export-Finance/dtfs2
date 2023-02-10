@@ -46,7 +46,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
   describe('Change facility to issued from unissued table', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      Cypress.Cookies.preserveOnce('dtfs-session');
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });

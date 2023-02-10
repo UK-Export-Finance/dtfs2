@@ -24,7 +24,7 @@ context('Enter Exporters Correspondence Address Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    Cypress.Cookies.preserveOnce('dtfs-session');
     cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`), { headers: { Referer: relative(`/gef/application-details/${dealIds[0].id}`) } });
   });
 
