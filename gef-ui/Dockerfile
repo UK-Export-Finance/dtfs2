@@ -1,5 +1,5 @@
 # Node Alpine Docker Image
-FROM node:18.13-alpine3.17
+FROM node:18-alpine3.17
 
 # Variable
 ARG GITHUB_SHA
