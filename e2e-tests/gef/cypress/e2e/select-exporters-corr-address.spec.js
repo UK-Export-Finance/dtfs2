@@ -20,7 +20,7 @@ context('Select Exporters Correspondence Address Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
     cy.visit(relative(`/gef/application-details/${dealId}/exporters-address`));
     exportersAddress.yesRadioButton().click();
     exportersAddress.correspondenceAddress().type('E1 6JE');

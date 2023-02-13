@@ -64,7 +64,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
   describe('Change facility to issued from unissued table', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -134,7 +134,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 context('Return to maker for unissued to issued facilities', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -222,7 +222,7 @@ context('Return to maker for unissued to issued facilities', () => {
   */
   describe('Check application details page works as expected with correct fields unlocked', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -380,7 +380,7 @@ context('Return to maker for unissued to issued facilities', () => {
 context('Submit to UKEF with unissued to issued facilities', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -473,7 +473,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
    */
   describe('Check the activity feed shows issued facilities activity', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });

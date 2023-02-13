@@ -27,7 +27,7 @@ context('Application Details Submission', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
     cy.visit(relative(`/gef/application-details/${dealIds[0]}/submit`));
   });
 

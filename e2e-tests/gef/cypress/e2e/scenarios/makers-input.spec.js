@@ -25,7 +25,7 @@ context('Review application when returned to maker', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
     // login as the maker
     cy.login(CREDENTIALS.MAKER);
     cy.visit(relative(`/gef/application-details/${dealIds[2]}`));

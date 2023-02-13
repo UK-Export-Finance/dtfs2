@@ -50,7 +50,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
 
   describe('Change facility to issued from application preview', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });

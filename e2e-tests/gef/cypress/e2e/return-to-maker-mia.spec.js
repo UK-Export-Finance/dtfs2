@@ -30,7 +30,7 @@ context('Return to Maker as MIA', () => {
     before(() => {
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
     });
 
     it('create an MIA as a Maker and submit it to the Checker', () => {
@@ -62,7 +62,7 @@ context('Return to Maker as MIA', () => {
   describe('return the application to the Maker', () => {
     before(() => {
       cy.login(CREDENTIALS.CHECKER);
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -83,7 +83,7 @@ context('Return to Maker as MIA', () => {
     });
 
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
     });
 
     it('comments are showing and application details page should be fully unlocked', () => {

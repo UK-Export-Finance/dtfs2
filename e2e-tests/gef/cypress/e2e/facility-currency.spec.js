@@ -28,7 +28,7 @@ context('Facility Currency Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
   });
 
   describe('Visiting page as cash facility', () => {

@@ -8,7 +8,7 @@ const {
 
 context('User submit feedback on portal', () => {
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
     Cypress.Cookies.preserveOnce('_csrf');
   });
   it('feedback should contain correct components and text', () => {

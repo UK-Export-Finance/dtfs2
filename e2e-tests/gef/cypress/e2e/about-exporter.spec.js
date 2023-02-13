@@ -2,7 +2,6 @@ import relative from './relativeURL';
 import aboutExporter from './pages/about-exporter';
 import applicationDetails from './pages/application-details';
 import CREDENTIALS from '../fixtures/credentials.json';
-import 'cypress-v10-preserve-cookie';
 
 const dealIds = [];
 let dealWithNoExporterIndustries;
@@ -40,12 +39,7 @@ context('About Exporter Page', () => {
   });
 
   beforeEach(() => {
-    /**
-     * Since cookies are cleared before individual tests execution.
-     * Preserving the cookie, eliminates repeated logins.
-     * Thus reduces execution time.
-     */
-    cy.preserveCookieOnce('dtfs-session');
+    cy.saveSession();
   });
 
   describe('With no exporter fields provided', () => {
@@ -76,7 +70,7 @@ context('About Exporter Page', () => {
     });
 
     it('redirects user to enter exporters address page when clicking on `Back` Link', () => {
-      aboutExporter.backLink().click();
+      aboutExporter.backLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/exporters-address`));
     });
 

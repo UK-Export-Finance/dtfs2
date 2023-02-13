@@ -28,7 +28,7 @@ context('Facility Guarantee Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
   });
 
   describe('Visiting facility guarantee page', () => {

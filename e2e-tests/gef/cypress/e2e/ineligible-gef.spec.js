@@ -8,7 +8,7 @@ context('Ineligible GEF Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
     cy.visit(relative('/gef/ineligible-gef'));
   });
 

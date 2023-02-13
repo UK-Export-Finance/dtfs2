@@ -12,7 +12,7 @@ context('Amendments underwriting - add underwriter decision', () => {
   const dealFacilities = [];
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
   });
 
   before(() => {

@@ -26,7 +26,7 @@ context('Submit to UKEF as MIA', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
   });
 
   describe('Submit to UKEF', () => {

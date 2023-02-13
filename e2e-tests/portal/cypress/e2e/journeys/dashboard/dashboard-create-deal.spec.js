@@ -15,7 +15,7 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
   describe('from deals dashboard page', () => {
     describe('Create application as gef-only bank', () => {
       beforeEach(() => {
-        Cypress.Cookies.preserveOnce('dtfs-session');
+        cy.saveSession();
         Cypress.Cookies.preserveOnce('_csrf');
       });
       before(() => {
@@ -38,7 +38,7 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
 
     describe('Create application as GEF-and-BSS banks', () => {
       beforeEach(() => {
-        Cypress.Cookies.preserveOnce('dtfs-session');
+        cy.saveSession();
         Cypress.Cookies.preserveOnce('_csrf');
       });
       before(() => {
@@ -63,7 +63,7 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
   describe('from facilities dashboard page', () => {
     describe('Create application as gef-only bank', () => {
       beforeEach(() => {
-        Cypress.Cookies.preserveOnce('dtfs-session');
+        cy.saveSession();
         Cypress.Cookies.preserveOnce('_csrf');
       });
       before(() => {
@@ -86,7 +86,7 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
 
     describe('Create application as GEF-and-BSS banks', () => {
       beforeEach(() => {
-        Cypress.Cookies.preserveOnce('dtfs-session');
+        cy.saveSession();
         Cypress.Cookies.preserveOnce('_csrf');
       });
       before(() => {

@@ -37,7 +37,7 @@ context('Parties - user can view and edit bond beneficiary', () => {
         cy.login(BUSINESS_SUPPORT_USER_1);
       });
       beforeEach(() => {
-        Cypress.Cookies.preserveOnce('dtfs-session');
+        cy.saveSession();
         cy.visit(relative(`/case/${dealId}/parties`));
       });
 

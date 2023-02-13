@@ -29,6 +29,9 @@ import 'cypress-audit/commands';
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+// Preserve session cookie
+Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
 

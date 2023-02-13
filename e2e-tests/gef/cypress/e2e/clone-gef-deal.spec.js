@@ -37,7 +37,7 @@ context('Clone GEF (AIN) deal', () => {
 
   describe('Validate the creation of a cloned deal', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.visit(relative(`/gef/application-details/${testDealId}`));
     });
 
@@ -63,7 +63,7 @@ context('Clone GEF (AIN) deal', () => {
 
   describe('Clone AIN deal', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.visit(relative(`/gef/application-details/${AINdealId}`));
     });
 
@@ -185,7 +185,7 @@ context('Clone GEF (MIA) deal', () => {
   });
   describe('Clone MIA deal', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.visit(relative(`/gef/application-details/${MIAdealId}`));
     });
 
@@ -341,7 +341,7 @@ context('Clone GEF (MIN) deal', () => {
   });
   describe('Clone MIN deal', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${MINdealId}`));
     });

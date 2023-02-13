@@ -26,7 +26,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
   });
 
   describe('BANK1_MAKER1 makes application, MAKER_CHECKER adds document only, MAKER_CHECKER should not be able to submit to ukef', () => {

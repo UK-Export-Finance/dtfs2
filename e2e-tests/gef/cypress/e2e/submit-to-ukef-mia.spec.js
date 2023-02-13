@@ -30,7 +30,7 @@ context('Submit MIA to UKEF', () => {
 
   describe('Login as a Maker', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -68,7 +68,7 @@ context('Submit MIA to UKEF', () => {
 
   describe('Login as a Checker', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -80,7 +80,7 @@ context('Submit MIA to UKEF', () => {
 
   describe('Submit to UKEF', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${dealId}/submit-to-ukef`));
     });

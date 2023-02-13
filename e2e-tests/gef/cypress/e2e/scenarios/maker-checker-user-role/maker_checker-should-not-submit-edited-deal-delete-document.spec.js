@@ -24,7 +24,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('dtfs-session');
+    cy.saveSession();
     Cypress.Cookies.preserveOnce('_csrf');
   });
 

@@ -56,7 +56,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
   describe('Change facility to issued from unissued table', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });

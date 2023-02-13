@@ -19,7 +19,7 @@ context('Upload files to Azure', () => {
 
   describe('Upload files as a Maker', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('dtfs-session');
+      cy.saveSession();
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
