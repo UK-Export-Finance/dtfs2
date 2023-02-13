@@ -40,6 +40,11 @@ context('About Exporter Page', () => {
   });
 
   beforeEach(() => {
+    /**
+     * Since cookies are cleared before individual tests execution.
+     * Preserving the cookie, eliminates repeated logins.
+     * Thus reduces execution time.
+     */
     cy.preserveCookieOnce('dtfs-session');
   });
 

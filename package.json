@@ -8,10 +8,10 @@
     "npm": ">=6.0.0"
   },
   "scripts": {
-    "lint": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests",
-    "lint:fix": "eslint ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src --fix",
-    "linte2e": "eslint ./e2e-tests",
-    "linte2e:fix": "eslint ./e2e-tests --fix"
+    "install:all": "npm i --prefix ./azure-functions/acbs-function && npm i --prefix ./azure-functions/number-generator-function && npm i --prefix ./dtfs-central-api && npm i --prefix ./reference-data-proxy && npm i --legacy-peer-deps --prefix ./gef-ui && npm i --legacy-peer-deps --prefix ./portal && npm i --prefix ./portal-api && npm i --legacy-peer-deps --prefix ./trade-finance-manager-ui && npm i --legacy-peer-deps --prefix ./trade-finance-manager-api",
+    "audit:all": "npm audit --prefix ./azure-functions/acbs-function && npm audit --prefix ./azure-functions/number-generator-function && npm audit --prefix ./dtfs-central-api && npm audit --prefix ./reference-data-proxy && npm audit --prefix ./gef-ui && npm audit --prefix ./portal && npm audit --prefix ./portal-api && npm audit --prefix ./trade-finance-manager-ui && npm audit --prefix ./trade-finance-manager-api",
+    "lint": "eslint ./azure-functions/acbs-function ./azure-functions/number-generator-function ./reference-data-proxy ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./gef-ui ./e2e-tets",
+    "lint:fix": "eslint ./azure-functions/acbs-function ./azure-functions/number-generator-function ./reference-data-proxy ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src ./gef-ui ./e2e-tests --fix"
   },
   "repository": {
     "type": "git",
