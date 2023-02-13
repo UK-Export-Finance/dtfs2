@@ -2,6 +2,7 @@ import relative from './relativeURL';
 import aboutExporter from './pages/about-exporter';
 import applicationDetails from './pages/application-details';
 import CREDENTIALS from '../fixtures/credentials.json';
+import 'cypress-v10-preserve-cookie';
 
 const dealIds = [];
 let dealWithNoExporterIndustries;
@@ -36,15 +37,10 @@ context('About Exporter Page', () => {
           deal.exporter.status === 'Completed');
       });
     cy.login(CREDENTIALS.MAKER);
-    console.log('===>Cookies===>1', cy.getCookie('connect.sid'));
   });
 
   beforeEach(() => {
-    cy.session('session', () => {
-      Cypress.Cookies.debug(true);
-      console.log('===>Cookies===>2', cy.getCookie('connect.sid'));
-      cy.setCookie('dtfs-session', cy.getCookie('connect.sid'));
-    });
+    cy.preserveCookieOnce('dtfs-session');
   });
 
   describe('With no exporter fields provided', () => {
