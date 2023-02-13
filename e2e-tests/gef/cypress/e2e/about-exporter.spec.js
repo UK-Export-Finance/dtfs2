@@ -36,13 +36,14 @@ context('About Exporter Page', () => {
           deal.exporter.status === 'Completed');
       });
     cy.login(CREDENTIALS.MAKER);
+    console.log('===>Cookies===>1', cy.getCookie('connect.sid'));
   });
 
   beforeEach(() => {
     cy.session('session', () => {
       Cypress.Cookies.debug(true);
-      console.log('===>Cookies===>', cy.getcookie('dtfs-session'));
-      cy.setCookie('dtfs-session');
+      console.log('===>Cookies===>2', cy.getCookie('connect.sid'));
+      cy.setCookie('dtfs-session', cy.getCookie('connect.sid'));
     });
   });
 
