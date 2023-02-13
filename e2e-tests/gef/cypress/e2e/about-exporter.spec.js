@@ -41,7 +41,7 @@ context('About Exporter Page', () => {
   beforeEach(() => {
     cy.session('session', () => {
       Cypress.Cookies.debug(true);
-      cy.getcookie('dtfs-session');
+      console.log('===>Cookies===>', cy.getcookie('dtfs-session'));
       cy.setCookie('dtfs-session');
     });
   });
