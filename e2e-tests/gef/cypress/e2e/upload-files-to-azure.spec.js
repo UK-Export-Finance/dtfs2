@@ -68,18 +68,18 @@ context('Upload files to Azure', () => {
         .should('contain', 'file1.png (1 kB)');
     });
 
-    it('should delete one of the documents', () => {
-      uploadFiles.supportingInfoManagementAccountsButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/management-accounts`));
-      uploadFiles.deleteSupportingDocument('file1.png').click();
-      uploadFiles.uploadSuccess('file1.png').should('not.exist');
-    });
-
     it('should upload files to the `Management Accounts` section', () => {
       uploadFiles.supportingInfoManagementAccountsButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/management-accounts`));
       cy.uploadFile('file1.png', `/gef/application-details/${dealId}/supporting-information/document/management-accounts/upload`);
       uploadFiles.uploadSuccess('file1.png');
+    });
+
+    it('should delete one of the documents', () => {
+      uploadFiles.supportingInfoManagementAccountsButton().click();
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/management-accounts`));
+      uploadFiles.deleteSupportingDocument('file1.png').click();
+      uploadFiles.uploadSuccess('file1.png').should('not.exist');
     });
 
     it('should upload files to the `Financial Statements` section', () => {

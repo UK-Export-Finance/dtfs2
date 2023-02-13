@@ -155,6 +155,7 @@ context('Application Details Page', () => {
 
     beforeEach(() => {
       cy.saveSession();
+      cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
 
     it('displays the application banner', () => {
@@ -204,8 +205,6 @@ context('Application Details Page', () => {
 
   describe('Visiting page when COMPLETED status', () => {
     before(() => {
-      cy.visit(relative(`/gef/application-details/${dealWithCompletedExporterAndFacilities._id}`));
-
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       automaticCover.automaticCoverTerm().each(($el) => {
@@ -216,6 +215,7 @@ context('Application Details Page', () => {
 
     beforeEach(() => {
       cy.saveSession();
+      cy.visit(relative(`/gef/application-details/${dealWithCompletedExporterAndFacilities._id}`));
     });
 
     it('displays the application banner', () => {
@@ -273,7 +273,6 @@ context('Application Details Page', () => {
   context('Manual Inclusion Application', () => {
     before(() => {
       cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
 
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
@@ -285,6 +284,7 @@ context('Application Details Page', () => {
 
     beforeEach(() => {
       cy.saveSession();
+      cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
     });
 
     it('displays the correct submission type heading and text in banner', () => {

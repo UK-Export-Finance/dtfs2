@@ -29,8 +29,11 @@ context('Return to Maker as MIA', () => {
   describe('create and submit an MIA', () => {
     before(() => {
       cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${dealId}`));
+    });
+
+    beforeEach(() => {
       cy.saveSession();
+      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     it('create an MIA as a Maker and submit it to the Checker', () => {
@@ -62,6 +65,9 @@ context('Return to Maker as MIA', () => {
   describe('return the application to the Maker', () => {
     before(() => {
       cy.login(CREDENTIALS.CHECKER);
+    });
+
+    beforeEach(() => {
       cy.saveSession();
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -79,11 +85,11 @@ context('Return to Maker as MIA', () => {
   describe('return to maker', () => {
     before(() => {
       cy.login(CREDENTIALS.MAKER);
-      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     beforeEach(() => {
       cy.saveSession();
+      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     it('comments are showing and application details page should be fully unlocked', () => {
