@@ -5,4 +5,7 @@ import 'cypress-v10-preserve-cookie';
 * Preserving the cookie, eliminates repeated logins.
 * Thus reduces execution time.
 */
-export default () => cy.preserveCookieOnce('dtfs-session');
+export default () => cy.preserveCookieOnce(
+  'dtfs-session', // Session cookie
+  '_csrf', // CSRF cookie
+);

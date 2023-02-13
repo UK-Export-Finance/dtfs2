@@ -16,7 +16,6 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
     describe('Create application as gef-only bank', () => {
       beforeEach(() => {
         cy.saveSession();
-        Cypress.Cookies.preserveOnce('_csrf');
       });
       before(() => {
         cy.login(BANK3_GEF_MAKER1);
@@ -39,7 +38,6 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
     describe('Create application as GEF-and-BSS banks', () => {
       beforeEach(() => {
         cy.saveSession();
-        Cypress.Cookies.preserveOnce('_csrf');
       });
       before(() => {
         cy.login(BANK1_MAKER1);
@@ -64,7 +62,6 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
     describe('Create application as gef-only bank', () => {
       beforeEach(() => {
         cy.saveSession();
-        Cypress.Cookies.preserveOnce('_csrf');
       });
       before(() => {
         cy.login(BANK3_GEF_MAKER1);
@@ -87,7 +84,6 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
     describe('Create application as GEF-and-BSS banks', () => {
       beforeEach(() => {
         cy.saveSession();
-        Cypress.Cookies.preserveOnce('_csrf');
       });
       before(() => {
         cy.login(BANK1_MAKER1);

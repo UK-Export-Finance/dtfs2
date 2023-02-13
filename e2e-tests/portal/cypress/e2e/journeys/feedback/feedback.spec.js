@@ -9,7 +9,6 @@ const {
 context('User submit feedback on portal', () => {
   beforeEach(() => {
     cy.saveSession();
-    Cypress.Cookies.preserveOnce('_csrf');
   });
   it('feedback should contain correct components and text', () => {
     login.visit();
