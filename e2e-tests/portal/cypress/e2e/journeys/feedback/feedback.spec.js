@@ -1,7 +1,6 @@
 import relative from '../../relativeURL';
 
 const {
-  login,
   feedbackPage,
   header,
 } = require('../../pages');
@@ -9,12 +8,11 @@ const {
 context('User submit feedback on portal', () => {
   beforeEach(() => {
     cy.saveSession();
-  });
-  it('feedback should contain correct components and text', () => {
-    login.visit();
-    header.betaBannerHref().should('have.attr', 'target', '_blank');
-
     feedbackPage.visit();
+  });
+
+  it('feedback should contain correct components and text', () => {
+    header.betaBannerHref().should('have.attr', 'target', '_blank');
 
     feedbackPage.feedBackPageHeading().contains('Feedback');
 
