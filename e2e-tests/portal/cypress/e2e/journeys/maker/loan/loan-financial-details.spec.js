@@ -146,6 +146,8 @@ context('Loan Financial Details', () => {
 
   describe('when changing the `interestMarginFee` field', () => {
     it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
+      goToPageWithUnconditionalFacilityStage(deal);
+
       let interestMarginFee = '20';
       pages.loanFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
       pages.loanFinancialDetails.interestMarginFeeInput().type(interestMarginFee).blur();
