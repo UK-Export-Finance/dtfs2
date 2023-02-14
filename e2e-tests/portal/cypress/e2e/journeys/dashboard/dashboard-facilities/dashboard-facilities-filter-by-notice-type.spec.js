@@ -51,25 +51,36 @@ context('Dashboard Facilities filters - filter by deal notice type', () => {
       cy.url().should('eq', relative('/dashboard/facilities/0'));
     });
 
-    it('submits the filter and redirects to the dashboard', () => {
+    beforeEach(() => {
+      cy.saveSession();
+      dashboardFacilities.visit();
+
       // toggle to show filters (hidden by default)
       filters.showHideButton().click();
+    });
 
+    it('submits the filter and redirects to the dashboard', () => {
       submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox());
     });
 
     it('renders checked checkbox', () => {
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox());
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInPanelSelectedFilters('Notice Type', CONSTANTS.DEALS.SUBMISSION_TYPE.AIN);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         filters.mainContainer.selectedFilters.noticeAIN(),
         CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,

@@ -14,13 +14,15 @@ const { BANK3_GEF_MAKER1, BANK1_MAKER1 } = MOCK_USERS;
 context('Create application as gef-only bank and GEF-and-BSS bank', () => {
   describe('from deals dashboard page', () => {
     describe('Create application as gef-only bank', () => {
-      beforeEach(() => {
-        cy.saveSession();
-      });
       before(() => {
         cy.login(BANK3_GEF_MAKER1);
         dashboardDeals.visit();
         cy.url().should('eq', relative('/dashboard/deals/0'));
+      });
+
+      beforeEach(() => {
+        cy.saveSession();
+        dashboardDeals.visit();
       });
 
       it('When clicking Create new button, it takes user straight to mandatory criteria page', () => {
@@ -29,6 +31,8 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
       });
 
       it('When clicking continue, it should lead to name your application', () => {
+        dashboard.createNewSubmission().click();
+
         dashboard.mandatoryCriteriaYes().click();
         dashboard.continueButton().click();
         cy.url().should('eq', relative('/gef/name-application'));
@@ -36,13 +40,15 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
     });
 
     describe('Create application as GEF-and-BSS banks', () => {
-      beforeEach(() => {
-        cy.saveSession();
-      });
       before(() => {
         cy.login(BANK1_MAKER1);
         dashboardDeals.visit();
         cy.url().should('eq', relative('/dashboard/deals/0'));
+      });
+
+      beforeEach(() => {
+        cy.saveSession();
+        dashboardDeals.visit();
       });
 
       it('When clicking Create new button, it takes user to select scheme page', () => {
@@ -51,6 +57,8 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
       });
 
       it('When clicking on gef, should then take you to mandatory criteria page', () => {
+        dashboard.createNewSubmission().click();
+
         selectScheme.gef().click();
         selectScheme.continue().click();
         cy.url().should('eq', relative('/gef/mandatory-criteria'));
@@ -60,13 +68,15 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
 
   describe('from facilities dashboard page', () => {
     describe('Create application as gef-only bank', () => {
-      beforeEach(() => {
-        cy.saveSession();
-      });
       before(() => {
         cy.login(BANK3_GEF_MAKER1);
         dashboardFacilities.visit();
         cy.url().should('eq', relative('/dashboard/facilities/0'));
+      });
+
+      beforeEach(() => {
+        cy.saveSession();
+        dashboardDeals.visit();
       });
 
       it('When clicking Create new button, it takes user straight to mandatory criteria page', () => {
@@ -75,6 +85,8 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
       });
 
       it('When clicking continue, it should lead to name your application', () => {
+        dashboard.createNewSubmission().click();
+
         dashboard.mandatoryCriteriaYes().click();
         dashboard.continueButton().click();
         cy.url().should('eq', relative('/gef/name-application'));
@@ -82,13 +94,15 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
     });
 
     describe('Create application as GEF-and-BSS banks', () => {
-      beforeEach(() => {
-        cy.saveSession();
-      });
       before(() => {
         cy.login(BANK1_MAKER1);
         dashboardFacilities.visit();
         cy.url().should('eq', relative('/dashboard/facilities/0'));
+      });
+
+      beforeEach(() => {
+        cy.saveSession();
+        dashboardDeals.visit();
       });
 
       it('When clicking Create new button, it takes user to select scheme page', () => {
@@ -97,6 +111,8 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
       });
 
       it('When clicking on gef, should then take you to mandatory criteria page', () => {
+        dashboard.createNewSubmission().click();
+
         selectScheme.gef().click();
         selectScheme.continue().click();
         cy.url().should('eq', relative('/gef/mandatory-criteria'));
