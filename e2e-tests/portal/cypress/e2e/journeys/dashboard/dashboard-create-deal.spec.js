@@ -1,6 +1,5 @@
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../fixtures/users');
-const page = require('../../pages/header');
 
 const {
   dashboard,
