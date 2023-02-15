@@ -88,7 +88,7 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     filters.showHideButton().click();
   });
 
-  it('Should visit correct page', () => {
+  it('should visit correct page', () => {
     cy.url().should('eq', relative('/dashboard/facilities/0'));
   });
 

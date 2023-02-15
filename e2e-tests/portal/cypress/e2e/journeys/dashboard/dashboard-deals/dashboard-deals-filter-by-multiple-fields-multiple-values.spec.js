@@ -71,7 +71,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
     filters.showHideButton().click();
   });
 
-  it('Should visit correct page', () => {
+  it('should visit correct page', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 

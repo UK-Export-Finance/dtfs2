@@ -70,7 +70,7 @@ context('Dashboard Deals filters - Created by you', () => {
     filters.showHideButton().click();
   });
 
-  it('Visit the correct page', () => {
+  it('should visit correct page', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
