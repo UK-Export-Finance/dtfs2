@@ -47,6 +47,7 @@ context('Dashboard Deals filters', () => {
       dashboardFacilities.row.nameText(ALL_FACILITIES[1]._id).should('exist');
       dashboardFacilities.rows().should('have.length', ALL_FACILITIES.length);
     });
+
     it('renders all facilities (Maker)', () => {
       cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
@@ -57,6 +58,9 @@ context('Dashboard Deals filters', () => {
     });
 
     it('hides filters and renders `show filter` button', () => {
+      cy.login(BANK1_MAKER1);
+      dashboardFacilities.visit();
+
       filters.panel.container().should('not.be.visible');
 
       filters.showHideButton().should('be.visible');
@@ -65,9 +69,18 @@ context('Dashboard Deals filters', () => {
   });
 
   describe('clicking `show filter` button', () => {
-    it('renders all filters container', () => {
-      filters.showHideButton().click();
+    before(() => {
+      cy.login(BANK1_MAKER1);
+    });
 
+    beforeEach(() => {
+      cy.saveSession();
+      dashboardFacilities.visit();
+
+      filters.showHideButton().click();
+    });
+
+    it('renders all filters container', () => {
       filters.panel.container().should('be.visible');
     });
 
@@ -83,6 +96,17 @@ context('Dashboard Deals filters', () => {
   });
 
   describe('renders all filters empty/unchecked by default', () => {
+    before(() => {
+      cy.login(BANK1_MAKER1);
+    });
+
+    beforeEach(() => {
+      cy.saveSession();
+      dashboardFacilities.visit();
+
+      filters.showHideButton().click();
+    });
+
     it('keyword', () => {
       filters.panel.form.keyword.label().contains('Keyword');
       filters.panel.form.keyword.input().should('be.visible');

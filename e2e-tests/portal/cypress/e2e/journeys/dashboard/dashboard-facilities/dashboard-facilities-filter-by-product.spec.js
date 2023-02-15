@@ -59,21 +59,22 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
         });
       });
     });
+
+    cy.login(BANK1_MAKER1);
+  });
+
+  beforeEach(() => {
+    cy.saveSession();
+    dashboardFacilities.visit();
+
+    // toggle to show filters (hidden by default)
+    filters.showHideButton().click();
   });
 
   describe('Cash', () => {
     before(() => {
-      cy.login(BANK1_MAKER1);
       dashboardFacilities.visit();
       cy.url().should('eq', relative('/dashboard/facilities/0'));
-    });
-
-    beforeEach(() => {
-      cy.saveSession();
-      dashboardFacilities.visit();
-
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
     });
 
     it('submits the filter and redirects to the dashboard', () => {
@@ -81,14 +82,23 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
     });
 
     it('renders checked checkbox', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.cash.checkbox());
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.type.cash.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.cash.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInPanelSelectedFilters('Product', CONSTANTS.FACILITY.FACILITY_TYPE.CASH);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.cash.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         dashboardFacilities.filters.mainContainer.selectedFilters.typeCash(),
         CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
@@ -96,6 +106,15 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
     });
 
     it('renders only Cash facilities', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.cash.checkbox());
+
+      filters.showHideButton().click();
+
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(
+        dashboardFacilities.filters.mainContainer.selectedFilters.typeCash(),
+        CONSTANTS.FACILITY.FACILITY_TYPE.CASH,
+      );
+
       shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'type', CONSTANTS.FACILITY.FACILITY_TYPE.CASH);
     });
   });
@@ -120,14 +139,23 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
     });
 
     it('renders checked checkbox', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.contingent.checkbox());
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.type.contingent.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.contingent.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInPanelSelectedFilters('Product', CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.contingent.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         dashboardFacilities.filters.mainContainer.selectedFilters.typeContingent(),
         CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT,
@@ -135,6 +163,15 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
     });
 
     it('renders only Contingent facilities', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.contingent.checkbox());
+
+      filters.showHideButton().click();
+
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(
+        dashboardFacilities.filters.mainContainer.selectedFilters.typeContingent(),
+        CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT,
+      );
+
       shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'type', CONSTANTS.FACILITY.FACILITY_TYPE.CONTINGENT);
     });
   });
@@ -159,14 +196,23 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
     });
 
     it('renders checked checkbox', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.bond.checkbox());
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.type.bond.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.bond.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInPanelSelectedFilters('Product', CONSTANTS.FACILITY.FACILITY_TYPE.BOND);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.bond.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         dashboardFacilities.filters.mainContainer.selectedFilters.typeBond(),
         CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
@@ -174,6 +220,15 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
     });
 
     it('renders only Bond facilities', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.bond.checkbox());
+
+      filters.showHideButton().click();
+
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(
+        dashboardFacilities.filters.mainContainer.selectedFilters.typeBond(),
+        CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
+      );
+
       shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'type', CONSTANTS.FACILITY.FACILITY_TYPE.BOND);
     });
   });
@@ -198,14 +253,23 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
     });
 
     it('renders checked checkbox', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.loan.checkbox());
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.type.loan.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.loan.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInPanelSelectedFilters('Product', CONSTANTS.FACILITY.FACILITY_TYPE.LOAN);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.loan.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         dashboardFacilities.filters.mainContainer.selectedFilters.typeLoan(),
         CONSTANTS.FACILITY.FACILITY_TYPE.LOAN,
@@ -213,6 +277,15 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
     });
 
     it('renders only Bond facilities', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.type.loan.checkbox());
+
+      filters.showHideButton().click();
+
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(
+        dashboardFacilities.filters.mainContainer.selectedFilters.typeLoan(),
+        CONSTANTS.FACILITY.FACILITY_TYPE.LOAN,
+      );
+
       shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'type', CONSTANTS.FACILITY.FACILITY_TYPE.LOAN);
     });
   });
