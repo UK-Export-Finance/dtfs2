@@ -25,14 +25,14 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    cy.clearCookie('connect.sid');
+    cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
   });
 
   after(() => {
     cy.clearCookies();
-    cy.clearCookie('connect.sid');
+    cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
   });

@@ -77,7 +77,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
   describe('Review UKEF decision', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -229,7 +229,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 context('Return to maker', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.saveSession();
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -308,7 +308,7 @@ context('Return to maker', () => {
   */
   describe('Check application details page works as expected with correct fields unlocked', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -413,7 +413,7 @@ context('Return to maker', () => {
 context('Submit to UKEF', () => {
   describe('Check all fields are populated and return to maker', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.saveSession();
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
@@ -447,7 +447,7 @@ context('Submit to UKEF', () => {
 context('Check activity feed', () => {
   describe('Check activity feed contains MIA->MIN activity and does not contain any issued facilities activities', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });

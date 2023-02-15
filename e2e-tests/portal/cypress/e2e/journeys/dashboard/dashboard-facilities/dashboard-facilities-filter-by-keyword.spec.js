@@ -49,10 +49,15 @@ context('Dashboard Facilities filters - filter by keyword', () => {
       cy.url().should('eq', relative('/dashboard/facilities/0'));
     });
 
-    it('submits the filter and redirects to the dashboard', () => {
+    beforeEach(() => {
+      cy.saveSession();
+      dashboardFacilities.visit();
+
       // toggle to show filters (hidden by default)
       filters.showHideButton().click();
+    });
 
+    it('submits the filter and redirects to the dashboard', () => {
       // apply filter
       filters.panel.form.keyword.input().type(MOCK_KEYWORD);
       filters.panel.form.applyFiltersButton().click();
@@ -61,13 +66,19 @@ context('Dashboard Facilities filters - filter by keyword', () => {
     });
 
     it('renders submitted keyword', () => {
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-
+      // apply filter
+      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
       filters.panel.form.keyword.input().should('have.value', MOCK_KEYWORD);
     });
 
     it('renders the applied keyword in the `applied filters` section', () => {
+      // apply filter
+      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      filters.panel.form.applyFiltersButton().click();
+
+      // toggle to show filters (hidden by default)
+      filters.showHideButton().click();
+
       filters.panel.selectedFilters.container().should('be.visible');
       filters.panel.selectedFilters.list().should('be.visible');
 
@@ -85,6 +96,13 @@ context('Dashboard Facilities filters - filter by keyword', () => {
     });
 
     it('renders the applied keyword in the `main container selected filters` section', () => {
+      // apply filter
+      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      filters.panel.form.applyFiltersButton().click();
+
+      // toggle to show filters (hidden by default)
+      filters.showHideButton().click();
+
       filters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).should('be.visible');
 
       const expectedText = `Remove this filter ${MOCK_KEYWORD}`;
@@ -92,6 +110,13 @@ context('Dashboard Facilities filters - filter by keyword', () => {
     });
 
     it(`renders only facilities that have ${MOCK_KEYWORD} in a field`, () => {
+      // apply filter
+      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      filters.panel.form.applyFiltersButton().click();
+
+      // toggle to show filters (hidden by default)
+      filters.showHideButton().click();
+
       const ALL_KEYWORD_FACILITIES = ALL_FACILITIES.filter(({ name }) => name === MOCK_KEYWORD);
       dashboardFacilities.rows().should('have.length', ALL_KEYWORD_FACILITIES.length);
 

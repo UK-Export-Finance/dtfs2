@@ -12,8 +12,11 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 const BAD_LOGIN = { username: 'doesntExist', password: 'whatever' };
 
 context('Login', () => {
-  it('When a user that is not logged in navigates to a protected route, they are sent to the homepage', () => {
+  beforeEach(() => {
     beforeYouStart.visit();
+  });
+
+  it('When a user that is not logged in navigates to a protected route, they are sent to the homepage', () => {
     cy.url().should('eq', relative('/login'));
 
     bankDetails.visit();

@@ -9,7 +9,7 @@ context('Mandatory Criteria Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.saveSession();
     cy.visit(relative('/gef/mandatory-criteria'));
   });
 

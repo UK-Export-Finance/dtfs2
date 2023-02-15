@@ -14,6 +14,23 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
+const applyFilters = () => {
+  // apply filter 1
+  dashboardDeals.filters.panel.form.status.draft.checkbox().click();
+
+  // apply filter 2
+  dashboardDeals.filters.panel.form.status.readyForChecker.checkbox().click();
+
+  // apply filter 3
+  dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
+
+  // apply filter 4
+  dashboardDeals.filters.panel.form.submissionType.AIN.checkbox().click();
+
+  // submit filters
+  filters.panel.form.applyFiltersButton().click();
+};
+
 context('Dashboard Deals filters - filter by multiple fields with multiple values', () => {
   const ALL_DEALS = [];
 
@@ -44,34 +61,27 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
 
   before(() => {
     cy.login(BANK1_MAKER1);
+  });
+
+  beforeEach(() => {
+    cy.saveSession();
     dashboardDeals.visit();
+
+    // toggle to show filters (hidden by default)
+    filters.showHideButton().click();
+  });
+
+  it('should visit correct page', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
   it('submits the filters and redirects to the dashboard', () => {
-    // toggle to show filters (hidden by default)
-    filters.showHideButton().click();
-
-    // apply filter 1
-    dashboardDeals.filters.panel.form.status.draft.checkbox().click();
-
-    // apply filter 2
-    dashboardDeals.filters.panel.form.status.readyForChecker.checkbox().click();
-
-    // apply filter 3
-    dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
-
-    // apply filter 4
-    dashboardDeals.filters.panel.form.submissionType.AIN.checkbox().click();
-
-    // submit filters
-    filters.panel.form.applyFiltersButton().click();
-
-    cy.url().should('eq', relative('/dashboard/deals/0'));
+    applyFilters();
   });
 
   it('renders checked checkboxes', () => {
-    // toggle to show filters (hidden by default)
+    applyFilters();
+
     filters.showHideButton().click();
 
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');

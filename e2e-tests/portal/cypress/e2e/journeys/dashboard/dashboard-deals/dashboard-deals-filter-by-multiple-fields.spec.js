@@ -38,10 +38,15 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
-  it('submits the filters and redirects to the dashboard', () => {
+  beforeEach(() => {
+    cy.saveSession();
+    dashboardDeals.visit();
+
     // toggle to show filters (hidden by default)
     filters.showHideButton().click();
+  });
 
+  it('submits the filters and redirects to the dashboard', () => {
     // apply filter 1
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
 
@@ -55,9 +60,6 @@ context('Dashboard Deals filters - filter by multiple fields', () => {
   });
 
   it('renders checked checkboxes', () => {
-    // toggle to show filters (hidden by default)
-    filters.showHideButton().click();
-
     dashboardDeals.filters.panel.form.status.draft.checkbox().should('be.checked');
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
   });

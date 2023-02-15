@@ -19,7 +19,7 @@ context('Exporters Address Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.saveSession();
     cy.visit(relative(`/gef/application-details/${dealId}/exporters-address`));
   });
 

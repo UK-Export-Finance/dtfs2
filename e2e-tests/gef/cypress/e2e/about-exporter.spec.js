@@ -39,7 +39,7 @@ context('About Exporter Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.saveSession();
   });
 
   describe('With no exporter fields provided', () => {
@@ -53,7 +53,7 @@ context('About Exporter Page', () => {
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/about-exporter`));
 
-      aboutExporter.backLink();
+      aboutExporter.backLink().should('exist');
       aboutExporter.headingCaption();
       aboutExporter.mainHeading();
       aboutExporter.form();
@@ -70,6 +70,7 @@ context('About Exporter Page', () => {
     });
 
     it('redirects user to enter exporters address page when clicking on `Back` Link', () => {
+      cy.visit(relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/about-exporter`));
       aboutExporter.backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/exporters-address`));
     });

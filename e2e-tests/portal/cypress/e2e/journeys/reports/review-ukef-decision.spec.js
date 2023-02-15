@@ -61,8 +61,7 @@ context('Dashboard: Review UKEF Decision report', () => {
     beforeEach(() => {
       cy.login(BANK1_MAKER1);
       cy.visit(relative('/reports'));
-      Cypress.Cookies.preserveOnce('connect.sid');
-      Cypress.Cookies.preserveOnce('_csrf');
+      cy.saveSession();
     });
 
     it('returns the reports page with UKEF decisions', () => {

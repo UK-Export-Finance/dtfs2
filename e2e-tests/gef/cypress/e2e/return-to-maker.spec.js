@@ -18,7 +18,7 @@ context('Return to Maker', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.saveSession();
     cy.apiLogin(CREDENTIALS.CHECKER)
       .then((token) => token)
       .then((token) => {

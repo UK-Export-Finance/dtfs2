@@ -14,6 +14,13 @@ const { BANK1_MAKER1, BANK1_MAKER2, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
+const applyCreatedByYouFilter = () => {
+  // apply created by you filter
+  dashboardFacilities.filters.panel.form.createdByYou.checkbox().click();
+  // submit filters
+  filters.panel.form.applyFiltersButton().click();
+};
+
 context('Dashboard Facilities filters - Created by you', () => {
   const ALL_FACILITIES = [];
 
@@ -63,35 +70,39 @@ context('Dashboard Facilities filters - Created by you', () => {
 
   before(() => {
     cy.login(BANK1_MAKER1);
+  });
+
+  beforeEach(() => {
+    cy.saveSession();
     dashboardFacilities.visit();
+
+    // toggle to show filters (hidden by default)
+    filters.showHideButton().click();
+  });
+
+  it('should visit correct page', () => {
     cy.url().should('eq', relative('/dashboard/facilities/0'));
   });
 
   it('should apply created by you filter', () => {
     dashboardFacilities.rows().should('have.length', ALL_FACILITIES.length);
-
-    // toggle to show filters (hidden by default)
-    filters.showHideButton().click();
-
-    // apply created by you filter
-    dashboardFacilities.filters.panel.form.createdByYou.checkbox().click();
-
-    // submit filters
-    filters.panel.form.applyFiltersButton().click();
-
-    cy.url().should('eq', relative('/dashboard/facilities/0'));
+    applyCreatedByYouFilter();
   });
 
   it('should have the correct number of facilities when createdByYou selected', () => {
+    applyCreatedByYouFilter();
+
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ makerUser }) => makerUser === BANK1_MAKER1.username);
 
     dashboardFacilities.rows().should('have.length', EXPECTED_FACILITIES.length);
   });
 
   it('should have the correct labels when createdByYou selected', () => {
-    dashboardFacilities.filters.mainContainer.selectedFilters.createdByYou().should('be.visible');
+    applyCreatedByYouFilter();
 
     filters.showHideButton().click();
+
+    dashboardFacilities.filters.mainContainer.selectedFilters.createdByYou().should('be.visible');
 
     const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().eq(0);
 
@@ -113,15 +124,7 @@ context('Dashboard Facilities filters - Created by you', () => {
   });
 
   it('should be able to remove filter from filter container and see all facilities again', () => {
-    cy.login(BANK1_MAKER1);
-    dashboardFacilities.visit();
-    cy.url().should('eq', relative('/dashboard/facilities/0'));
-
-    filters.showHideButton().click();
-
-    // apply created by you filter
-    dashboardFacilities.filters.panel.form.createdByYou.checkbox().click();
-    filters.panel.form.applyFiltersButton().click();
+    applyCreatedByYouFilter();
 
     filters.showHideButton().click();
 
@@ -133,15 +136,9 @@ context('Dashboard Facilities filters - Created by you', () => {
   });
 
   it('should be able to remove filter from main container and see all facilities again', () => {
-    cy.login(BANK1_MAKER1);
-    dashboardFacilities.visit();
-    cy.url().should('eq', relative('/dashboard/facilities/0'));
+    applyCreatedByYouFilter();
 
     filters.showHideButton().click();
-
-    // apply created by you filter
-    dashboardFacilities.filters.panel.form.createdByYou.checkbox().click();
-    filters.panel.form.applyFiltersButton().click();
 
     dashboardFacilities.filters.mainContainer.selectedFilters.createdByYou().click('');
 
@@ -150,11 +147,6 @@ context('Dashboard Facilities filters - Created by you', () => {
   });
 
   it('renders all facilities that have matching fields for all filters including created by you', () => {
-    cy.login(BANK1_MAKER1);
-    dashboardFacilities.visit();
-    cy.url().should('eq', relative('/dashboard/facilities/0'));
-
-    filters.showHideButton().click();
     dashboardFacilities.filters.panel.form.createdByYou.checkbox().click();
     dashboardFacilities.filters.panel.form.type.bond.checkbox().click();
     dashboardFacilities.filters.panel.form.type.loan.checkbox().click();

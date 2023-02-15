@@ -31,6 +31,9 @@ import 'cypress-audit/commands';
 
 const { downloadFile } = require('./portal-api/fileshare');
 
+// Preserve session cookie
+Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertOneDeal', require('./portal-api/insertOneDeal'));
 Cypress.Commands.add('updateDeal', require('./portal-api/updateDeal'));

@@ -1,3 +1,6 @@
+// Preserve session cookie
+Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+
 // commands used to interact directly with TFM UI
 Cypress.Commands.add('login', require('./ui/logIn'));
 

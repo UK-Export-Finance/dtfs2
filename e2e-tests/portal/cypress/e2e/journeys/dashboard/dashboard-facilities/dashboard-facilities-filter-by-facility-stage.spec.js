@@ -43,6 +43,14 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
   });
 
+  beforeEach(() => {
+    cy.saveSession();
+    dashboardFacilities.visit();
+
+    // toggle to show filters (hidden by default)
+    filters.showHideButton().click();
+  });
+
   describe('Issued', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
@@ -51,24 +59,27 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('submits the filter and redirects to the dashboard', () => {
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-
       submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
     });
 
     it('renders checked checkbox', () => {
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInPanelSelectedFilters('Bank\'s facility stage', CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED);
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued(),
         CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
@@ -76,6 +87,15 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('renders only facilities that are Issued', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox());
+
+      filters.showHideButton().click();
+
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(
+        dashboardFacilities.filters.mainContainer.selectedFilters.typeIssued(),
+        CONSTANTS.FACILITY.FACILITY_STAGE.ISSUED,
+      );
+
       shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'hasBeenIssued', true);
     });
   });
@@ -88,20 +108,19 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('submits the filter and redirects to the dashboard', () => {
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-
       submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
     });
 
     it('renders checked checkbox', () => {
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
       shouldRenderCheckedCheckbox(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
     });
 
     it('renders the applied filter in the `applied filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInPanelSelectedFilters(
         'Bank\'s facility stage',
         CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
@@ -109,6 +128,10 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('renders the applied filter in the `main container selected filters` section', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
+
+      filters.showHideButton().click();
+
       shouldRenderAppliedFilterInMainContainerSelectedFilters(
         dashboardFacilities.filters.mainContainer.selectedFilters.typeUnissued(),
         CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
@@ -116,6 +139,15 @@ context('Dashboard Facilities filters - filter by facility stage/hasBeenIssued',
     });
 
     it('renders only facilities that are Unissued', () => {
+      submitRedirectsToDashboard(dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox());
+
+      filters.showHideButton().click();
+
+      shouldRenderAppliedFilterInMainContainerSelectedFilters(
+        dashboardFacilities.filters.mainContainer.selectedFilters.typeUnissued(),
+        CONSTANTS.FACILITY.FACILITY_STAGE.UNISSUED,
+      );
+
       shouldRenderOnlyGivenTypes(ALL_FACILITIES, 'hasBeenIssued', false);
     });
   });

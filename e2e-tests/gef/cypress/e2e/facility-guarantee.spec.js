@@ -28,7 +28,7 @@ context('Facility Guarantee Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.saveSession();
   });
 
   describe('Visiting facility guarantee page', () => {

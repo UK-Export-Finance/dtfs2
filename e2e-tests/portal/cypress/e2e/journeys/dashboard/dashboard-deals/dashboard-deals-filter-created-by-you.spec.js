@@ -61,15 +61,21 @@ context('Dashboard Deals filters - Created by you', () => {
 
   before(() => {
     cy.login(BANK1_MAKER1);
+  });
+
+  beforeEach(() => {
+    cy.saveSession();
+
     dashboardDeals.visit();
+    filters.showHideButton().click();
+  });
+
+  it('should visit correct page', () => {
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
   it('should apply the `Created by you` filter', () => {
     dashboardDeals.rows().should('have.length', ALL_DEALS.length);
-
-    // toggle to show filters (hidden by default)
-    filters.showHideButton().click();
 
     // apply created by you filter
     dashboardDeals.filters.panel.form.createdByYou.label().contains('Created by you');
@@ -92,8 +98,6 @@ context('Dashboard Deals filters - Created by you', () => {
   it('should have the correct labels when createdByYou selected', () => {
     dashboardDeals.filters.mainContainer.selectedFilters.createdByYou().should('be.visible');
 
-    filters.showHideButton().click();
-
     const firstAppliedFilterHeading = filters.panel.selectedFilters.heading().eq(0);
 
     // does not have heading
@@ -114,12 +118,6 @@ context('Dashboard Deals filters - Created by you', () => {
   });
 
   it('should be able to remove filter from filter container and see all deals again', () => {
-    cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-
-    filters.showHideButton().click();
-
     // apply created by you filter
     dashboardDeals.filters.panel.form.createdByYou.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
@@ -134,12 +132,6 @@ context('Dashboard Deals filters - Created by you', () => {
   });
 
   it('should be able to remove filter from main container and see all deals again', () => {
-    cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-
-    filters.showHideButton().click();
-
     // apply created by you filter
     dashboardDeals.filters.panel.form.createdByYou.checkbox().click();
     filters.panel.form.applyFiltersButton().click();
@@ -151,12 +143,6 @@ context('Dashboard Deals filters - Created by you', () => {
   });
 
   it('should be able to select multiple filters and list relevant deals', () => {
-    cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-
-    filters.showHideButton().click();
-
     // apply created by you filter
     dashboardDeals.filters.panel.form.createdByYou.checkbox().click();
     dashboardDeals.filters.panel.form.dealType.bssEwcs.checkbox().click();
@@ -168,6 +154,8 @@ context('Dashboard Deals filters - Created by you', () => {
 
     filters.panel.form.applyFiltersButton().click();
 
+    filters.showHideButton().click();
+
     const EXPECTED_DEALS = ALL_DEALS.filter(({ maker, status, submissionType }) =>
       (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIN)
        && (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL)
@@ -177,12 +165,6 @@ context('Dashboard Deals filters - Created by you', () => {
   });
 
   it('should be able to select multiple filters and remove created by you filter and list relevant deals', () => {
-    cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-
-    filters.showHideButton().click();
-
     // apply created by you filter
     dashboardDeals.filters.panel.form.createdByYou.checkbox().click();
     dashboardDeals.filters.panel.form.dealType.bssEwcs.checkbox().click();

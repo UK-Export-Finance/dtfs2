@@ -20,7 +20,7 @@ context('Security Details Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.saveSession();
   });
 
   describe('Visiting page as cash facility', () => {

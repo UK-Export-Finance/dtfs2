@@ -1,21 +1,18 @@
 import relative from '../../relativeURL';
 
 const {
-  login,
   feedbackPage,
   header,
 } = require('../../pages');
 
 context('User submit feedback on portal', () => {
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
-    Cypress.Cookies.preserveOnce('_csrf');
-  });
-  it('feedback should contain correct components and text', () => {
-    login.visit();
-    header.betaBannerHref().should('have.attr', 'target', '_blank');
-
+    cy.saveSession();
     feedbackPage.visit();
+  });
+
+  it('feedback should contain correct components and text', () => {
+    header.betaBannerHref().should('have.attr', 'target', '_blank');
 
     feedbackPage.feedBackPageHeading().contains('Feedback');
 

@@ -6,6 +6,9 @@ import reinsertMocks from './commands/reinsertMocks';
 import * as api from './commands/api';
 import uploadFile from './commands/uploadFile';
 
+// Preserve session cookie
+Cypress.Commands.add('saveSession', require('./commands/saveSession'));
+
 Cypress.Commands.add('reinsertMocks', reinsertMocks);
 Cypress.Commands.add('login', login);
 Cypress.Commands.add('apiLogin', api.login);

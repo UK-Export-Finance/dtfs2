@@ -29,8 +29,11 @@ context('User can login', () => {
     });
   });
 
-  it('login page should contain correct components and text', () => {
+  beforeEach(() => {
     pages.landingPage.visit();
+  });
+
+  it('login page should contain correct components and text', () => {
     pages.landingPage.signInHeading().contains('Sign in');
     pages.landingPage.emailHeading().contains('Email address');
     pages.landingPage.passwordHeading().contains('Password');
@@ -38,7 +41,6 @@ context('User can login', () => {
   });
 
   it('should login, redirect to /deals. Header displays user\'s first and last name and logout link', () => {
-    pages.landingPage.visit();
     cy.login(T1_USER_1);
 
     pages.landingPage.submitButton().click();
@@ -53,7 +55,6 @@ context('User can login', () => {
   });
 
   it('should login, and show relevant header information', () => {
-    pages.landingPage.visit();
     cy.login(T1_USER_1);
     pages.landingPage.submitButton().click();
     cy.url().should('eq', relative('/deals'));
@@ -83,15 +84,12 @@ context('User can login', () => {
   });
 
   it('should not login and redirect to /deals with invalid email/username', () => {
-    pages.landingPage.visit();
     pages.landingPage.email().type('wrongUser');
     pages.landingPage.submitButton().click();
     cy.url().should('eq', relative('/'));
   });
 
   it('should show relevant header items when logged out', () => {
-    pages.landingPage.visit();
-
     partials.header.ukefLogo().should('exist');
     partials.header.headerName().should('exist');
     partials.header.headerName().contains('Trade Finance Manager');

@@ -1,9 +1,7 @@
-const relative = require('../relativeURL');
-
 import page from '../pages/header';
 
+const relative = require('../relativeURL');
 const { dashboardDeals } = require('../pages');
-
 const MOCK_USERS = require('../../fixtures/users');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -13,6 +11,11 @@ context('Portal GOVUK header displays correctly', () => {
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
     cy.url().should('eq', relative('/dashboard/deals/0'));
+  });
+
+  beforeEach(() => {
+    cy.saveSession();
+    dashboardDeals.visit();
   });
 
   describe('portal GOVUK header when logged in', () => {
@@ -54,9 +57,10 @@ context('Portal GOVUK header displays correctly', () => {
   });
 
   describe('portal GOVUK header when logged out ', () => {
-    before(() => {
+    it('Logout from portal', () => {
       page.logoutLink().click();
     });
+
     it('displays the header homelink correctly', () => {
       page.homeLink().contains('GOV.UK');
       page.homeLink().invoke('attr', 'href').then((href) => {

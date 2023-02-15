@@ -54,7 +54,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
 
   describe('Change facility to issued from unissued table', () => {
     beforeEach(() => {
-      Cypress.Cookies.preserveOnce('connect.sid');
+      cy.saveSession();
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });

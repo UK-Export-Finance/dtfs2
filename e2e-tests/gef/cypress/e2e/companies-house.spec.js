@@ -20,7 +20,7 @@ context('Companies House Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.saveSession();
     cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/companies-house`));
   });
 

@@ -20,6 +20,7 @@ const app = express();
 
 const PORT = process.env.PORT || 5006;
 const https = Boolean(process.env.HTTPS || 0);
+const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
 if (https) {
   app.set('trust proxy', 1);
@@ -43,6 +44,7 @@ if (!process.env.SESSION_SECRET) {
 }
 
 const sessionOptions = {
+  name: secureCookieName,
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,

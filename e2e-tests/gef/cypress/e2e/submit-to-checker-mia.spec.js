@@ -26,7 +26,7 @@ context('Submit to UKEF as MIA', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.saveSession();
   });
 
   describe('Submit to UKEF', () => {
@@ -64,6 +64,8 @@ context('Submit to UKEF as MIA', () => {
     });
 
     it('displays correct MIA checker submission message', () => {
+      cy.visit(relative(`/gef/application-details/${dealId}/submit`));
+
       applicationSubmission.submitButton().click();
       applicationSubmission.confirmationPanelTitle().contains('Manual inclusion application submitted for checking at your bank');
       applicationSubmission.confirmation().invoke('attr', 'aria-label').then((label) => {

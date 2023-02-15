@@ -14,6 +14,23 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
+const applyFilters = () => {
+  // apply filter 1
+  dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
+
+  // apply filter 2
+  dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().click();
+
+  // apply filter 3
+  dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
+
+  // apply filter 4
+  dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+
+  // submit filters
+  filters.panel.form.applyFiltersButton().click();
+};
+
 context('Dashboard Facilities filters - filter by multiple fields with multiple values', () => {
   const ALL_FACILITIES = [];
 
@@ -61,34 +78,27 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
 
   before(() => {
     cy.login(BANK1_MAKER1);
+  });
+
+  beforeEach(() => {
+    cy.saveSession();
     dashboardFacilities.visit();
+
+    // toggle to show filters (hidden by default)
+    filters.showHideButton().click();
+  });
+
+  it('should visit correct page', () => {
     cy.url().should('eq', relative('/dashboard/facilities/0'));
   });
 
   it('submits the filters and redirects to the dashboard', () => {
-    // toggle to show filters (hidden by default)
-    filters.showHideButton().click();
-
-    // apply filter 1
-    dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
-
-    // apply filter 2
-    dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().click();
-
-    // apply filter 3
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
-
-    // apply filter 4
-    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
-
-    // submit filters
-    filters.panel.form.applyFiltersButton().click();
-
-    cy.url().should('eq', relative('/dashboard/facilities/0'));
+    applyFilters();
   });
 
   it('renders checked checkboxes', () => {
-    // toggle to show filters (hidden by default)
+    applyFilters();
+
     filters.showHideButton().click();
 
     dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().should('be.checked');
@@ -98,6 +108,10 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   });
 
   it('renders the applied filters in the `applied filters` section', () => {
+    applyFilters();
+
+    filters.showHideButton().click();
+
     filters.panel.selectedFilters.container().should('be.visible');
     filters.panel.selectedFilters.list().should('be.visible');
 
@@ -145,6 +159,10 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   });
 
   it('renders the applied filters in the `main container selected filters` section', () => {
+    applyFilters();
+
+    filters.showHideButton().click();
+
     // applied filter 1
     filters.mainContainer.selectedFilters.noticeAIN().should('be.visible');
 
@@ -181,6 +199,10 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   });
 
   it('renders the correct aria-labels based on filter selected', () => {
+    applyFilters();
+
+    filters.showHideButton().click();
+
     dashboardSubNavigation.facilities().invoke('attr', 'aria-label').then((label) => {
       expect(label).to.equal('facilities: ,Filters selected: , Notice Type: , Automatic Inclusion Notice, Manual Inclusion Application, Bank\'s facility stage: , Issued, Unissued');
     });
@@ -191,11 +213,8 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   });
 
   it('renders all facilities that have matching fields - Bond, Loan, AIN deal, MIA deal, Issued stage, Unissued stage', () => {
-    cy.login(BANK1_MAKER1);
-    dashboardFacilities.visit();
     cy.url().should('eq', relative('/dashboard/facilities/0'));
 
-    filters.showHideButton().click();
     dashboardFacilities.filters.panel.form.type.bond.checkbox().click();
     dashboardFacilities.filters.panel.form.type.loan.checkbox().click();
     dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
@@ -215,11 +234,8 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   });
 
   it('renders all facilities that have matching fields for all filters', () => {
-    cy.login(BANK1_MAKER1);
-    dashboardFacilities.visit();
     cy.url().should('eq', relative('/dashboard/facilities/0'));
 
-    filters.showHideButton().click();
     dashboardFacilities.filters.panel.form.type.bond.checkbox().click();
     dashboardFacilities.filters.panel.form.type.loan.checkbox().click();
     dashboardFacilities.filters.panel.form.type.cash.checkbox().click();

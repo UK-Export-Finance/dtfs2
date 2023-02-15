@@ -21,6 +21,11 @@ context('Check GEF GOVUK header displays correctly', () => {
       });
   });
 
+  beforeEach(() => {
+    cy.saveSession();
+    cy.visit(relative(`/gef/application-details/${dealId}`));
+  });
+
   describe('GEF GOVUK header', () => {
     it('displays the header homelink correctly', () => {
       pageBanner.homeLink().contains('GOV.UK');

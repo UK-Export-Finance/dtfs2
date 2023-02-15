@@ -23,8 +23,7 @@ context('Eligibility Criterion 16', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
-    Cypress.Cookies.preserveOnce('_csrf');
+    cy.saveSession();
     cy.visit(relative(`/gef/application-details/${dealId}/automatic-cover`));
   });
 

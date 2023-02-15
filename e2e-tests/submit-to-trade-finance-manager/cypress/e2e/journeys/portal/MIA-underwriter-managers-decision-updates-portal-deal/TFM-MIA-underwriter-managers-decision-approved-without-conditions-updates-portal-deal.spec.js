@@ -28,14 +28,14 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    cy.clearCookie('connect.sid');
+    cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
   });
 
   after(() => {
     cy.clearCookies();
-    cy.clearCookie('connect.sid');
+    cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
   });
@@ -55,7 +55,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
     //---------------------------------------------------------------
-    cy.clearCookie('connect.sid');
+    cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 
@@ -72,7 +72,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Underwriter Manager logs in to TFM
     //---------------------------------------------------------------
-    cy.clearCookie('connect.sid');
+    cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 
@@ -96,7 +96,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Go back to Portal
     //---------------------------------------------------------------
-    cy.clearCookie('connect.sid');
+    cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
 

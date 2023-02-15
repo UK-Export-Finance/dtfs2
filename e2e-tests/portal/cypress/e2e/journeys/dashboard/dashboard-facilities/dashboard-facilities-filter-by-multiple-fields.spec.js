@@ -14,6 +14,15 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
+const submitFilters = () => {
+  // apply filter 1
+  dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
+  // apply filter 2
+  dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
+  // submit filters
+  filters.panel.form.applyFiltersButton().click();
+};
+
 context('Dashboard Facilities filters - filter by multiple fields', () => {
   const ALL_FACILITIES = [];
 
@@ -61,28 +70,27 @@ context('Dashboard Facilities filters - filter by multiple fields', () => {
 
   before(() => {
     cy.login(BANK1_MAKER1);
+  });
+
+  beforeEach(() => {
+    cy.saveSession();
     dashboardFacilities.visit();
+
+    // toggle to show filters (hidden by default)
+    filters.showHideButton().click();
+  });
+
+  it('Visit correct page', () => {
     cy.url().should('eq', relative('/dashboard/facilities/0'));
   });
 
   it('submits the filters and redirects to the dashboard', () => {
-    // toggle to show filters (hidden by default)
-    filters.showHideButton().click();
-
-    // apply filter 1
-    dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
-
-    // apply filter 2
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
-
-    // submit filters
-    filters.panel.form.applyFiltersButton().click();
-
-    cy.url().should('eq', relative('/dashboard/facilities/0'));
+    submitFilters();
   });
 
   it('renders checked checkboxes', () => {
-    // toggle to show filters (hidden by default)
+    submitFilters();
+
     filters.showHideButton().click();
 
     dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().should('be.checked');
@@ -90,6 +98,10 @@ context('Dashboard Facilities filters - filter by multiple fields', () => {
   });
 
   it('renders the applied filters in the `applied filters` section', () => {
+    submitFilters();
+
+    filters.showHideButton().click();
+
     filters.panel.selectedFilters.container().should('be.visible');
     filters.panel.selectedFilters.list().should('be.visible');
 
@@ -121,6 +133,10 @@ context('Dashboard Facilities filters - filter by multiple fields', () => {
   });
 
   it('renders the applied filters in the `main container selected filters` section', () => {
+    submitFilters();
+
+    filters.showHideButton().click();
+
     // applied filter 1
     filters.mainContainer.selectedFilters.noticeAIN().should('be.visible');
 
@@ -135,6 +151,10 @@ context('Dashboard Facilities filters - filter by multiple fields', () => {
   });
 
   it('renders only facilities that have matching fields - AIN deal and Issued stage', () => {
+    submitFilters();
+
+    filters.showHideButton().click();
+
     const EXPECTED_FACILITIES = ALL_FACILITIES.filter(({ submissionType, hasBeenIssued }) =>
       (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN)
       && hasBeenIssued);

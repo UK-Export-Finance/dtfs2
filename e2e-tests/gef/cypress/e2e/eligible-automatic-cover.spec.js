@@ -19,7 +19,7 @@ context('Eligible Automatic Cover Page', () => {
   });
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('connect.sid');
+    cy.saveSession();
     cy.visit(relative(`/gef/application-details/${dealId}/eligible-automatic-cover`));
   });
 
