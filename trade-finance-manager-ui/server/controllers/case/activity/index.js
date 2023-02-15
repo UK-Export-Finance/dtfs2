@@ -8,19 +8,25 @@ const { DEAL } = CONSTANTS;
 
 const MAX_COMMENT_LENGTH = 1000;
 
-const mappedActivities = (activities) => activities.map((activity) => ({
-  label: {
-    text: activity.label,
-  },
-  text: activity.text,
-  datetime: {
-    timestamp: fromUnixTime(new Date(activity.timestamp)),
-    type: 'datetime',
-  },
-  byline: {
-    text: `${activity.author.firstName} ${activity.author.lastName}`,
-  },
-}));
+const mappedActivities = (activities) => {
+  if (!activities) {
+    return false;
+  }
+
+  return activities.map((activity) => ({
+    label: {
+      text: activity.label,
+    },
+    text: activity.text,
+    datetime: {
+      timestamp: fromUnixTime(new Date(activity.timestamp)),
+      type: 'datetime',
+    },
+    byline: {
+      text: `${activity.author.firstName} ${activity.author.lastName}`,
+    },
+  }));
+};
 
 const getActivity = async (req, res) => {
   const dealId = req.params._id;
