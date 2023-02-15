@@ -99,6 +99,8 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   it('renders checked checkboxes', () => {
     applyFilters();
 
+    filters.showHideButton().click();
+
     dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().should('be.checked');
     dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
     dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('be.checked');
@@ -106,6 +108,10 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   });
 
   it('renders the applied filters in the `applied filters` section', () => {
+    applyFilters();
+
+    filters.showHideButton().click();
+
     filters.panel.selectedFilters.container().should('be.visible');
     filters.panel.selectedFilters.list().should('be.visible');
 
@@ -153,6 +159,10 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   });
 
   it('renders the applied filters in the `main container selected filters` section', () => {
+    applyFilters();
+
+    filters.showHideButton().click();
+
     // applied filter 1
     filters.mainContainer.selectedFilters.noticeAIN().should('be.visible');
 
@@ -189,6 +199,10 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
   });
 
   it('renders the correct aria-labels based on filter selected', () => {
+    applyFilters();
+
+    filters.showHideButton().click();
+
     dashboardSubNavigation.facilities().invoke('attr', 'aria-label').then((label) => {
       expect(label).to.equal('facilities: ,Filters selected: , Notice Type: , Automatic Inclusion Notice, Manual Inclusion Application, Bank\'s facility stage: , Issued, Unissued');
     });
