@@ -14,6 +14,23 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
+const applyFilters = () => {
+  // apply filter 1
+  dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
+
+  // apply filter 2
+  dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().click();
+
+  // apply filter 3
+  dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
+
+  // apply filter 4
+  dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
+
+  // submit filters
+  filters.panel.form.applyFiltersButton().click();
+};
+
 context('Dashboard Facilities filters - filter by multiple fields with multiple values', () => {
   const ALL_FACILITIES = [];
 
@@ -57,7 +74,9 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
         });
       });
     });
+  });
 
+  before(() => {
     cy.login(BANK1_MAKER1);
   });
 
@@ -69,30 +88,17 @@ context('Dashboard Facilities filters - filter by multiple fields with multiple 
     filters.showHideButton().click();
   });
 
-  it('Visit the correct page', () => {
+  it('Should visit correct page', () => {
     cy.url().should('eq', relative('/dashboard/facilities/0'));
   });
 
   it('submits the filters and redirects to the dashboard', () => {
-    // apply filter 1
-    dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().click();
-
-    // apply filter 2
-    dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().click();
-
-    // apply filter 3
-    dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().click();
-
-    // apply filter 4
-    dashboardFacilities.filters.panel.form.hasBeenIssued.unissued.checkbox().click();
-
-    // submit filters
-    filters.panel.form.applyFiltersButton().click();
-
-    cy.url().should('eq', relative('/dashboard/facilities/0'));
+    applyFilters();
   });
 
   it('renders checked checkboxes', () => {
+    applyFilters();
+
     dashboardFacilities.filters.panel.form.submissionType.AIN.checkbox().should('be.checked');
     dashboardFacilities.filters.panel.form.submissionType.MIA.checkbox().should('be.checked');
     dashboardFacilities.filters.panel.form.hasBeenIssued.issued.checkbox().should('be.checked');
