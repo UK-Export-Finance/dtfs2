@@ -25,18 +25,28 @@ context('Dashboard Deals filters', () => {
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
     });
+
+    cy.login(BANK1_MAKER1);
+  });
+
+  beforeEach(() => {
+    cy.saveSession();
+    dashboardDeals.visit();
+
+    // toggle to show filters (hidden by default)
+    filters.showHideButton().click();
   });
 
   describe('by default', () => {
     it('renders all deals', () => {
-      cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
-
       dashboardDeals.rows().should('be.visible');
       dashboardDeals.rows().should('have.length', ALL_DEALS.length);
     });
 
     it('hides filters and renders `show filter` button', () => {
+      // toggle to show filters (hidden by default)
+      filters.showHideButton().click();
+
       filters.panel.container().should('not.be.visible');
 
       filters.showHideButton().should('be.visible');
@@ -46,8 +56,6 @@ context('Dashboard Deals filters', () => {
 
   describe('clicking `show filter` button', () => {
     it('renders all filters container', () => {
-      filters.showHideButton().click();
-
       filters.panel.container().should('be.visible');
     });
 
