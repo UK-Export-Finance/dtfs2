@@ -1,5 +1,3 @@
-import {todayFormattedShort} from '../../../e2e-fixtures/dateConstants';
-
 import relative from './relativeURL';
 import applicationDetails from './pages/application-details';
 import automaticCover from './pages/automatic-cover';
@@ -7,6 +5,8 @@ import facilities from './pages/facilities';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 import CONSTANTS from '../fixtures/constants';
+
+const { todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
 
 let dealWithEmptyExporter;
 let dealWithEmptyExporterName;
@@ -143,6 +143,7 @@ context('Application Details Page', () => {
 
   describe('Visiting page when IN PROGRESS status', () => {
     before(() => {
+      cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
 
       // Start the Eligibility Criteria selection, but don't complete it.
@@ -154,6 +155,10 @@ context('Application Details Page', () => {
         }
       });
       automaticCover.saveAndReturnButton().click();
+    });
+
+    beforeEach(() => {
+      cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
     });
 
     it('displays the application banner', () => {
@@ -203,6 +208,7 @@ context('Application Details Page', () => {
 
   describe('Visiting page when COMPLETED status', () => {
     before(() => {
+      cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${dealWithCompletedExporterAndFacilities._id}`));
 
       // Make the deal an Automatic Inclusion Application
@@ -211,6 +217,10 @@ context('Application Details Page', () => {
         $el.find('[data-cy="automatic-cover-true"]').trigger('click');
       });
       automaticCover.saveAndReturnButton().click();
+    });
+
+    beforeEach(() => {
+      cy.visit(relative(`/gef/application-details/${dealWithCompletedExporterAndFacilities._id}`));
     });
 
     it('displays the application banner', () => {
@@ -276,6 +286,10 @@ context('Application Details Page', () => {
         $el.find('[data-cy="automatic-cover-false"]').trigger('click');
       });
       automaticCover.saveAndReturnButton().click();
+    });
+
+    beforeEach(() => {
+      cy.visit(relative(`/gef/application-details/${dealWithInProgressExporter._id}`));
     });
 
     it('displays the correct submission type heading and text in banner', () => {
