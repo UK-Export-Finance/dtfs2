@@ -35,6 +35,8 @@ context('User submit feedback on TFM', () => {
   });
 
   it('feedback should give errors if incorrectly filled up', () => {
+    pages.feedbackPage.visit();
+
     pages.feedbackPage.emailAddress().type('a');
 
     pages.feedbackPage.submitButton().click();
@@ -55,6 +57,8 @@ context('User submit feedback on TFM', () => {
   });
 
   it('feedback should submit without errors and with correct thank you page', () => {
+    pages.feedbackPage.visit();
+
     pages.feedbackPage.role().type('test');
     pages.feedbackPage.team().type('test');
     pages.feedbackPage.whyUsingService().type('test');

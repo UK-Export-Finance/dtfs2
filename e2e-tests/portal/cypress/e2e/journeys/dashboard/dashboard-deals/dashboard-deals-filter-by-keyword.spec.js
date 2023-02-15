@@ -36,17 +36,22 @@ context('Dashboard Deals filters - filter by keyword', () => {
     });
   });
 
+  beforeEach(() => {
+    cy.saveSession();
+    dashboardDeals.visit();
+
+    // toggle to show filters (hidden by default)
+    filters.showHideButton().click();
+  });
+
   describe('Keyword', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
+
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
     it('submits the filter and redirects to the dashboard', () => {
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-
       // apply filter
       filters.panel.form.keyword.input().type(MOCK_KEYWORD);
       filters.panel.form.applyFiltersButton().click();
@@ -55,9 +60,6 @@ context('Dashboard Deals filters - filter by keyword', () => {
     });
 
     it('renders submitted keyword', () => {
-      // toggle to show filters (hidden by default)
-      filters.showHideButton().click();
-
       filters.panel.form.keyword.input().should('have.value', MOCK_KEYWORD);
     });
 
