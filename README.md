@@ -329,7 +329,7 @@ docker system prune --volumes
 
 ## Cookies
 
-Cookies are used for persistent session and CSRF.
+Cookies are used for persistent session (login) and CSRF.
 
 Flags:
 * Secure
