@@ -327,3 +327,16 @@ After some time, docker eats up hard drive space. Clean it up by running
 docker system prune --volumes
 ```
 
+## Cookies
+
+Cookies are used for persistent session and CSRF.
+
+Flags:
+* Secure
+* HTTP only
+* SameSite as `Strict`
+* `__Host-` prefix (Session cookie only)
+
+Name:
+* Session: `__Host-dtfs-session`
+* CSRF: `_csrf`
