@@ -63,11 +63,11 @@ if [ -n "$selection" ]; then
 
     # Deploy
     git checkout -b "${destination}"
-    git push -f --set-upstream origin $destination
+    git push -f --set-upstream origin "${destination}"
 
     # Clean up
     git checkout "${branch}"
-    git branch -d $destination
+    git branch -d "${destination}"
     printf "\n\n✅ ${destination} deployment initiated, switched to ${branch}.\n\n"
     fi
 
@@ -77,7 +77,7 @@ else
 fi
 
 #######################################
-# UKEF deployment shell script v0.0.3
-# 26/04/2022
+# UKEF deployment shell script v0.0.5
+# 20/02/2023
 # Abhi Markan
 #######################################
