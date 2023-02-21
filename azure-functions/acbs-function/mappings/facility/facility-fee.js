@@ -26,6 +26,7 @@ const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
       nextDueDate,
       nextAccrueToDate,
     } = helpers.getFeeDates(facility, deal.dealSnapshot.dealType, premiumScheduleIndex);
+    const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
     return {
       facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
@@ -35,7 +36,7 @@ const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
       nextDueDate,
       nextAccrueToDate,
       period: helpers.getFeeRecordPeriod(facility, deal.dealSnapshot.dealType, premiumScheduleIndex),
-      currency: facility.facilitySnapshot.currency.id,
+      currency,
       lenderTypeCode: CONSTANTS.FACILITY.LENDER_TYPE.TYPE1,
       incomeClassCode: helpers.getIncomeClassCode(facility),
       spreadToInvestorsIndicator: true,
