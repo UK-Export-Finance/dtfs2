@@ -31,6 +31,7 @@ const facilityLoan = (deal, facility, acbsData) => {
     const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
     const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
     const ukefExposure = helpers.getMaximumLiability(facility);
+    const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
     let loanRecord = {
       portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
@@ -39,7 +40,7 @@ const facilityLoan = (deal, facility, acbsData) => {
       borrowerPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
       productTypeId: helpers.getProductTypeId(facility),
       productTypeGroup: helpers.getProductTypeGroup(facility, deal.dealSnapshot.dealType),
-      currency: facility.facilitySnapshot.currency.id,
+      currency,
       amount: helpers.getLoanMaximumLiability(ukefExposure, facility, deal.dealSnapshot.dealType),
       issueDate,
       expiryDate: guaranteeExpiryDate,
