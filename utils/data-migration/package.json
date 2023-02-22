@@ -5,8 +5,8 @@
   "main": "migrate-users.js",
   "engineStrict": true,
   "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=18",
+    "npm": ">=9.5.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
