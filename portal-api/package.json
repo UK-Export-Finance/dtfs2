@@ -29,8 +29,8 @@
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "engineStrict": true,
   "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=18",
+    "npm": ">=9.5.0"
   },
   "dependencies": {
     "@azure/storage-file-share": "12.12.0",

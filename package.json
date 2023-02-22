@@ -4,8 +4,8 @@
   "description": "DTFS2",
   "engineStrict": true,
   "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=18",
+    "npm": ">=9.5.0"
   },
   "scripts": {
     "install:all": "npm i && npm i --prefix ./azure-functions/acbs-function && npm i --prefix ./azure-functions/number-generator-function && npm i --prefix ./dtfs-central-api && npm i --prefix ./reference-data-proxy && npm i --legacy-peer-deps --prefix ./gef-ui && npm i --legacy-peer-deps --prefix ./portal && npm i --prefix ./portal-api && npm i --legacy-peer-deps --prefix ./trade-finance-manager-ui && npm i --legacy-peer-deps --prefix ./trade-finance-manager-api",
