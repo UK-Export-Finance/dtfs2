@@ -68,19 +68,23 @@ router.post('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/ch
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.getAmendmentTask);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.postAmendmentTask);
 
-router.get('/:_id/parties', partiesController.getCaseParties);
+router.get('/:_id/parties', partiesController.getAllParties);
 
-router.get('/:_id/parties/exporter', partiesController.getExporterPartyDetails);
-router.post('/:_id/parties/exporter', partiesController.postExporterPartyDetails);
+router.get('/:_id/parties/exporter', partiesController.getPartyDetails);
+router.post('/:_id/parties/exporter', partiesController.confirmPartyUrn);
+router.post('/:_id/parties/exporter/confirm', partiesController.postPartyDetails);
 
-router.get('/:_id/parties/buyer', partiesController.getBuyerPartyDetails);
-router.post('/:_id/parties/buyer', partiesController.postBuyerPartyDetails);
+router.get('/:_id/parties/buyer', partiesController.getPartyDetails);
+router.post('/:_id/parties/buyer', partiesController.confirmPartyUrn);
+router.post('/:_id/parties/buyer/confirm', partiesController.postPartyDetails);
 
-router.get('/:_id/parties/agent', partiesController.getAgentPartyDetails);
-router.post('/:_id/parties/agent', partiesController.postAgentPartyDetails);
+router.get('/:_id/parties/agent', partiesController.getPartyDetails);
+router.post('/:_id/parties/agent', partiesController.confirmPartyUrn);
+router.post('/:_id/parties/agent/confirm', partiesController.postPartyDetails);
 
-router.get('/:_id/parties/indemnifier', partiesController.getIndemnifierPartyDetails);
-router.post('/:_id/parties/indemnifier', partiesController.postIndemnifierPartyDetails);
+router.get('/:_id/parties/indemnifier', partiesController.getPartyDetails);
+router.post('/:_id/parties/indemnifier', partiesController.confirmPartyUrn);
+router.post('/:_id/parties/indemnifier/confirm', partiesController.postPartyDetails);
 
 router.get('/:_id/parties/bond-issuer', partiesController.getBondIssuerPartyDetails);
 router.post('/:_id/parties/bond-issuer', caseController.postTfmFacility);

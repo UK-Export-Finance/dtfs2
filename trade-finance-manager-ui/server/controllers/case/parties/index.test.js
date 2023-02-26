@@ -45,7 +45,7 @@ describe('controllers - case - parties', () => {
           session,
         };
 
-        await partiesController.getCaseParties(req, res);
+        await partiesController.getAllParties(req, res);
         expect(res.render).toHaveBeenCalledWith('case/parties/parties.njk', {
           userCanEdit: userCanEdit(req.session.user),
           renderEditLink: userCanEdit(req.session.user),
@@ -75,7 +75,7 @@ describe('controllers - case - parties', () => {
           session,
         };
 
-        await partiesController.getCaseParties(req, res);
+        await partiesController.getAllParties(req, res);
         expect(res.redirect).toHaveBeenCalledWith('/not-found');
       });
     });
@@ -115,7 +115,7 @@ describe('controllers - case - parties', () => {
         };
 
         await partiesController.getExporterPartyDetails(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter.njk', {
           userCanEdit: userCanEdit(req.session.user),
           renderEditLink: false,
           renderEditForm: true,
@@ -200,7 +200,7 @@ describe('controllers - case - parties', () => {
         };
 
         await partiesController.getAgentPartyDetails(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent-edit.njk', {
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent.njk', {
           userCanEdit: userCanEdit(req.session.user),
           renderEditLink: false,
           renderEditForm: true,
@@ -285,7 +285,7 @@ describe('controllers - case - parties', () => {
         };
 
         await partiesController.getBuyerPartyDetails(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer-edit.njk', {
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer.njk', {
           userCanEdit: userCanEdit(req.session.user),
           renderEditLink: false,
           renderEditForm: true,
@@ -370,7 +370,7 @@ describe('controllers - case - parties', () => {
         };
 
         await partiesController.getIndemnifierPartyDetails(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier-edit.njk', {
+        expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier.njk', {
           userCanEdit: userCanEdit(req.session.user),
           renderEditLink: false,
           renderEditForm: true,
@@ -644,7 +644,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a unique reference number' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -677,7 +677,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -710,7 +710,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/exporter.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -820,7 +820,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a unique reference number' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -853,7 +853,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -886,7 +886,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/agent.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -996,7 +996,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a unique reference number' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -1029,7 +1029,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -1062,7 +1062,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/indemnifier.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -1172,7 +1172,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a unique reference number' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -1205,7 +1205,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,
@@ -1238,7 +1238,7 @@ describe('controllers - case - parties', () => {
             fieldErrors: { partyUrn: { text: 'Enter a minimum of 3 numbers' } },
           };
 
-          expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer-edit.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/edit/buyer.njk', {
             userCanEdit: userCanEdit(req.session.user),
             renderEditLink: false,
             renderEditForm: true,

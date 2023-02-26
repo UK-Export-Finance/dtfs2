@@ -1,0 +1,28 @@
+{% import '../../_macros/save-only-button.njk' as saveButton %}
+{% import '../../_macros/back.njk' as back %}
+
+{% extends "index.njk" %}
+
+    {{ back.render({
+        return: "/case/" + deal._id + "/parties/exporter"
+    }) }}
+
+  {% block pageTitle %}
+    Check the unique reference number
+  {% endblock %}
+
+  {% block content %}
+
+    <form autocomplete="off" method="POST">
+
+      <div class="govuk-grid-row">
+
+        <div class="govuk-grid-column-one-half">
+          {{ saveButton.render() }}
+        </div>
+
+      </div>
+
+    </form>
+
+  {% endblock %}

@@ -398,7 +398,7 @@ const postTfmFacility = async (req, res) => {
   if (validationErrors.errorsObject) {
     const canEdit = userCanEdit(user);
 
-    return res.render(`case/parties/edit/${partyType}-edit.njk`, {
+    return res.render(`case/parties/edit/${partyType}.njk`, {
       userCanEdit: canEdit,
       renderEditLink: false,
       renderEditForm: true,

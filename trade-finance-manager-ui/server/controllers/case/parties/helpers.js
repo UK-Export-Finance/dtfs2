@@ -44,10 +44,34 @@ const isEmptyString = (str) => {
   return false;
 };
 
+/**
+ * Extracts party name from the URL
+ * @param {String} url Request URL
+ * @returns {String} Party name
+ */
+const partyType = (url) => {
+  if (!url || typeof url !== 'string' || !url.trim()) {
+    return false;
+  }
+
+  const routes = url.toLowerCase().split('/');
+
+  if (!routes || !routes.length) {
+    return false;
+  }
+
+  const { PARTIES } = CONSTANTS.PARTY;
+
+  return PARTIES
+    .filter((party) => routes.includes(party))
+    .toString();
+};
+
 module.exports = {
   userCanEdit,
   bondPartyType,
   isBondPartyType,
   constructErrRef,
   isEmptyString,
+  partyType,
 };

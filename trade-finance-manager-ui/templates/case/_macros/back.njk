@@ -1,0 +1,17 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% macro render(params) %}
+
+    <div class="govuk-!-margin-bottom-6 govuk-grid-row">
+        <div class="govuk-grid-column-full-from-desktop">
+            {{ govukBackLink({
+                text: "Back",
+                href: {{ params.return }},
+                attributes: {
+                'data-cy': 'back-link'
+                }
+            }) }}
+        </div>
+    </div>
+
+{% endmacro %}

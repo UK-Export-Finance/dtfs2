@@ -29,7 +29,7 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId', caseController.getCaseFacility);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties', partiesController.getCaseParties);
+    expect(get).toHaveBeenCalledWith('/:_id/parties', partiesController.getAllParties);
 
     expect(get).toHaveBeenCalledWith('/:_id/parties/exporter', partiesController.getExporterPartyDetails);
 
