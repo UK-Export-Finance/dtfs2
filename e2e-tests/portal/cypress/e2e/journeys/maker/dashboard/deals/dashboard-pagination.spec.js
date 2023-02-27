@@ -16,8 +16,7 @@ context('Dashboard deals pagination', () => {
 
     const twentyOneDeals = Array.from(Array(21), () => BSS_DEAL);
 
-    cy.insertManyDeals(twentyOneDeals, BANK1_MAKER1)
-      .then(() => {});
+    cy.insertManyDeals(twentyOneDeals, BANK1_MAKER1);
   });
 
   it('displays 20 results per page, total number of items and working First/Previous/Next/Last links', () => {

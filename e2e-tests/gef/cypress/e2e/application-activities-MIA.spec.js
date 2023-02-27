@@ -1,4 +1,4 @@
-const { todayFormatted, todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
+import { todayFormatted, todayFormattedShort } from '../../../e2e-fixtures/dateConstants';
 
 import relative from './relativeURL';
 import applicationActivities from './pages/application-activities';

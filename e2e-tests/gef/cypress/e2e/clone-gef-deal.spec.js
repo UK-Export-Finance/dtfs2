@@ -1,3 +1,5 @@
+import { todayFormattedShort } from '../../../e2e-fixtures/dateConstants';
+
 import relative from './relativeURL';
 import automaticCover from './pages/automatic-cover';
 import manualInclusion from './pages/manual-inclusion-questionnaire';
@@ -16,8 +18,6 @@ import CREDENTIALS from '../fixtures/credentials.json';
 import { MOCK_FACILITY_ONE } from '../fixtures/mocks/mock-facilities';
 import { MOCK_USER_MAKER } from '../fixtures/mocks/mock-user-maker';
 import { MOCK_APPLICATION_MIN } from '../fixtures/mocks/mock-deals';
-
-const { todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
 
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;
@@ -109,7 +109,9 @@ context('Clone GEF (AIN) deal', () => {
         cy.visit(`${url}`);
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
+        console.log('===', todayFormattedShort);
         statusBanner.bannerDateCreated().contains(todayFormattedShort);
+
         applicationDetails.bankRefName().contains('Cloned AIN deal');
         applicationDetails.automaticCoverStatus().contains('Not started');
         applicationDetails.facilityStatus().contains('Completed');

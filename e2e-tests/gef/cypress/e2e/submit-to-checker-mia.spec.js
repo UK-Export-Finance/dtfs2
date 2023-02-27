@@ -7,7 +7,7 @@ import applicationSubmission from './pages/application-submission';
 import statusBanner from './pages/application-status-banner';
 import CREDENTIALS from '../fixtures/credentials.json';
 
-const { todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
+import { todayFormattedShort } from '../../../e2e-fixtures/dateConstants';
 
 let dealId;
 
