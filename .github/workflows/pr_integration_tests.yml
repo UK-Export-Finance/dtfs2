@@ -50,7 +50,7 @@ jobs:
         node-version: '16'
         cache: 'npm'
     - run: npm ci --legacy-peer-deps
-    - run: npm run lint:all
+    - run: npm run lint
     - run: npm t
     - uses: act10ns/slack@v1
       with:
@@ -83,7 +83,7 @@ jobs:
         node-version: '16'
         cache: 'npm'
     - run: npm ci --legacy-peer-deps
-    - run: npm run lint:all
+    - run: npm run lint
     - run: npm t
     - uses: act10ns/slack@v1
       with:
@@ -116,7 +116,7 @@ jobs:
         node-version: '16'
         cache: 'npm'
     - run: npm ci --legacy-peer-deps
-    - run: npm run lint:all
+    - run: npm run lint
     - run: npm t
     - uses: act10ns/slack@v1
       with:
