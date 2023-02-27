@@ -5,7 +5,7 @@ import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
-import todayFormatted from '../../../../../../e2e-fixtures/dateConstants';
+const { todayFormatted } = require('../../../../../../e2e-fixtures/dateConstants');
 
 context('Users can create and submit comments', () => {
   let dealId;
