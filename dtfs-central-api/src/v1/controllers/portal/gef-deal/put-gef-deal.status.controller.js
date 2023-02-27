@@ -26,6 +26,7 @@ const updateDealStatus = async (dealId, previousStatus, newStatus) => {
 };
 exports.updateDealStatus = updateDealStatus;
 
+// eslint-disable-next-line consistent-return
 exports.updateDealStatusPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;
@@ -47,6 +48,4 @@ exports.updateDealStatusPut = async (req, res) => {
   } else {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
-
-  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };

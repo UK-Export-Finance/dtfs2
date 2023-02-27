@@ -174,6 +174,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
 
 exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 
+// eslint-disable-next-line consistent-return
 exports.updateDealPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;
@@ -196,6 +197,4 @@ exports.updateDealPut = async (req, res) => {
   } else {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
-
-  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };

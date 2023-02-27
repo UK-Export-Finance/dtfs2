@@ -37,6 +37,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
 };
 exports.updateFacilityStatus = updateFacilityStatus;
 
+// eslint-disable-next-line consistent-return
 exports.updateFacilityStatusPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const facilityId = req.params.id;
@@ -58,6 +59,4 @@ exports.updateFacilityStatusPut = async (req, res) => {
   } else {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
-
-  return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
 };

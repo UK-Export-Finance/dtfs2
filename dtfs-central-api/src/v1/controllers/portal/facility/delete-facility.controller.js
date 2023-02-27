@@ -3,6 +3,7 @@ const { findOneFacility } = require('./get-facility.controller');
 const { removeFacilityIdFromDeal } = require('../deal/update-deal.controller');
 const db = require('../../../../drivers/db-client');
 
+// eslint-disable-next-line consistent-return
 exports.deleteFacility = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const facilityId = req.params.id;
@@ -25,6 +26,4 @@ exports.deleteFacility = async (req, res) => {
   } else {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
-
-  return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
 };
