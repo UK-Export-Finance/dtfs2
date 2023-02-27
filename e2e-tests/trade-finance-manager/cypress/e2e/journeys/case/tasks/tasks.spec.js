@@ -211,7 +211,7 @@ context('Case tasks - AIN deal', () => {
 
     assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then((userObj) => {
       const { firstName, lastName } = userObj;
-      
+
       pages.tasksPage.filterRadioYourTeam().click();
 
       //---------------------------------------------------------------
@@ -310,7 +310,6 @@ context('Case tasks - AIN deal', () => {
       const differentUserInSameTeam = usersInTeam.find((u) => u.username !== MOCK_USERS.BUSINESS_SUPPORT_USER_1.username);
 
       assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then(() => {
-        
         pages.tasksPage.filterRadioYourTeam().click();
 
         //---------------------------------------------------------------

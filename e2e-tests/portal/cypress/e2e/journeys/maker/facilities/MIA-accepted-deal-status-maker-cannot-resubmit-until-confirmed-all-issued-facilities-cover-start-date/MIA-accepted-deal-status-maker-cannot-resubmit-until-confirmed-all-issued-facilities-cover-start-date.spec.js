@@ -7,7 +7,6 @@ const { nowPlusMonths } = require('../../../../../support/utils/dateFuncs');
 const {
   ADMIN,
   BANK1_MAKER1,
-  BANK1_CHECKER1,
 } = MOCK_USERS;
 
 context('Given a deal that has `Accepted` status with Issued, Unissued, Unconditional and Conditional facilities', () => {

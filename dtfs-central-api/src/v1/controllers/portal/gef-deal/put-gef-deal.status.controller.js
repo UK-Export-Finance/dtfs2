@@ -47,4 +47,6 @@ exports.updateDealStatusPut = async (req, res) => {
   } else {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
+
+  return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };

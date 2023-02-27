@@ -11,8 +11,9 @@
     "install:all": "npm i && npm i --prefix ./azure-functions/acbs-function && npm i --prefix ./azure-functions/number-generator-function && npm i --prefix ./dtfs-central-api && npm i --prefix ./reference-data-proxy && npm i --legacy-peer-deps --prefix ./gef-ui && npm i --legacy-peer-deps --prefix ./portal && npm i --prefix ./portal-api && npm i --legacy-peer-deps --prefix ./trade-finance-manager-ui && npm i --legacy-peer-deps --prefix ./trade-finance-manager-api",
     "update:all": "npm update && npm update --prefix ./azure-functions/acbs-function && npm update --prefix ./azure-functions/number-generator-function && npm update --prefix ./dtfs-central-api && npm update --prefix ./reference-data-proxy && npm update --legacy-peer-deps --prefix ./gef-ui && npm update --legacy-peer-deps --prefix ./portal && npm update --prefix ./portal-api && npm update --legacy-peer-deps --prefix ./trade-finance-manager-ui && npm update --legacy-peer-deps --prefix ./trade-finance-manager-api",
     "audit:all": "npm audit && npm audit --prefix ./azure-functions/acbs-function && npm audit --prefix ./azure-functions/number-generator-function && npm audit --prefix ./dtfs-central-api && npm audit --prefix ./reference-data-proxy && npm audit --prefix ./gef-ui && npm audit --prefix ./portal && npm audit --prefix ./portal-api && npm audit --prefix ./trade-finance-manager-ui && npm audit --prefix ./trade-finance-manager-api",
-    "lint": "eslint ./azure-functions/acbs-function ./azure-functions/number-generator-function ./reference-data-proxy ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./gef-ui ./e2e-tets",
-    "lint:fix": "eslint ./azure-functions/acbs-function ./azure-functions/number-generator-function ./reference-data-proxy ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src ./gef-ui ./e2e-tests --fix"
+    "lint:all": "eslint ./azure-functions/acbs-function ./azure-functions/number-generator-function ./reference-data-proxy ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./gef-ui ./e2e-tests",
+    "lint:all:fix": "eslint ./azure-functions/acbs-function ./azure-functions/number-generator-function ./reference-data-proxy ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src ./gef-ui ./e2e-tests --fix",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -31,17 +32,18 @@
     "cypress-audit": "^1.1.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
+    "cypress-v10-preserve-cookie": "^1.2.1",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "npm-check-updates": "^16.7.4"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.51.0",
-    "cypress-v10-preserve-cookie": "^1.2.1",
     "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.27.5",
+    "husky": "^8.0.3",
     "prettier": "2.8.2"
   }
 }

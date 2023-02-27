@@ -15,6 +15,7 @@ module.exports = (deals, opts) => {
       dealWithId.submissionDetails['supplier-name'] = `Mock-Supplier-${ukefId}`;
 
       insertDeal(dealWithId, token).then((insertedDeal) => {
+        // eslint-disable-next-line consistent-return
         getDeal(insertedDeal._id, token).then(({ deal }) => {
           persistedDeals.push(deal);
           if (persistedDeals.length === deals.length) {

@@ -1,3 +1,5 @@
+/* eslint-disable no-new */
+/* eslint-disable no-restricted-syntax */
 const getAllTfmDeals = require('./getAllTfmDeals');
 const deleteTfmDeal = require('./deleteTfmDeal');
 

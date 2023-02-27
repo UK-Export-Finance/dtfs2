@@ -7,6 +7,8 @@ const deleteOneDeal = (token, dealId) => {
   if (dealId) {
     return deleteDeal(token, dealId);
   }
+
+  return false;
 };
 
 module.exports = (dealId, user) => {

@@ -10,8 +10,6 @@ const {
 const { BSS_DEAL } = MOCK_DEALS;
 
 context('Dashboard deals pagination', () => {
-  let deals;
-
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
@@ -19,7 +17,7 @@ context('Dashboard deals pagination', () => {
     const twentyOneDeals = Array.from(Array(21), () => BSS_DEAL);
 
     cy.insertManyDeals(twentyOneDeals, BANK1_MAKER1)
-      .then((insertedDeals) => { deals = insertedDeals; });
+      .then(() => {});
   });
 
   it('displays 20 results per page, total number of items and working First/Previous/Next/Last links', () => {

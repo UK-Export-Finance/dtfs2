@@ -32,7 +32,7 @@ context('Review application when returned to maker', () => {
 
     // Make the deal an Automatic Inclusion Application
     applicationDetails.automaticCoverDetailsLink().click();
-    automaticCover.automaticCoverTerm().each(($el, index) => {
+    automaticCover.automaticCoverTerm().each(($el) => {
       $el.find('[data-cy="automatic-cover-true"]').trigger('click');
     });
     automaticCover.saveAndReturnButton().click();

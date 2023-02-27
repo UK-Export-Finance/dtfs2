@@ -25,4 +25,6 @@ exports.deleteFacility = async (req, res) => {
   } else {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
+
+  return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
 };

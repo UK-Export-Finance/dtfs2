@@ -13,6 +13,8 @@ const deleteAllDeals = (token, deals) => {
     if (deal.product === 'GEF') {
       return deleteGefApplication(token, deal._id);
     }
+
+    return false;
   });
 };
 
