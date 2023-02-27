@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { ObjectId } = require('mongodb');
 import addSeconds from 'date-fns/addSeconds';
 import { getCollection } from '../database';
 import { TermStoreResponse, BuyerFolderResponse } from '../interfaces';
@@ -48,8 +50,8 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     { returnDocument: 'after' },
   );
 
-  // ensure that there is only 1 retry for buyer folder creation
-  if (response?.value?.buyerFolderRetries === 1) {
+  // ensure that there is less than 3 retries for buyer folder creation
+  if (response?.value?.buyerFolderRetries <= 3) {
     // create the Buyer folder
     const buyerFolderResponse: BuyerFolderResponse = await createBuyerFolder(eStoreData.siteName, {
       exporterName: eStoreData.exporterName,
@@ -58,7 +60,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
 
     if (buyerFolderResponse?.status === 201) {
       console.info(`API Call finished: The Buyer folder for ${eStoreData.buyerName} was successfully created`);
-      const folderCreationTimer = addSeconds(new Date(), 59);
+      const folderCreationTimer = addSeconds(new Date(), 99);
 
       // add a new job to the `Cron Job manager` queue that executes after 59 seconds
       eStoreCronJobManager.add(`Deal${eStoreData.dealId}`, folderCreationTimer, async () => {
@@ -69,6 +71,10 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
         { dealId: eStoreData.dealId },
         { $set: { 'dealCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'dealCronJob.startDate': new Date() } },
       );
+      const tfmDealsCollection = await getCollection('tfm-deals');
+      // update the `tfm-deals` collection once the buyer and deal folders have been created
+      tfmDealsCollection.updateOne({ _id: ObjectId(eStoreData.dealId) }, { $set: { 'tfm.estore': { siteName: eStoreData.siteName } } });
+
       console.info('Cron job started: eStore Deal folder Cron Job started');
       eStoreCronJobManager.start(`Deal${eStoreData.dealId}`);
     } else {
