@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { ObjectId } = require('mongodb');
 import addSeconds from 'date-fns/addSeconds';
 import { getCollection } from '../database';
 import { Estore } from '../interfaces';
@@ -11,7 +9,6 @@ import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
 export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
   try {
     const cronJobLogsCollection = await getCollection('cron-job-logs');
-    const tfmDealsCollection = await getCollection('tfm-deals');
 
     // create the Deal folder
     console.info('API Call started: Create the Deal folder for ', eStoreData.dealIdentifier);
@@ -27,9 +24,6 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       console.info('API Call finished: The Deal folder was successfully created');
       // stop and the delete the cron job to release the memory
       eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
-
-      // update the `tfm-deals` collection once the buyer and deal folders have been created
-      tfmDealsCollection.updateOne({ _id: ObjectId(eStoreData.dealId) }, { $set: { 'tfm.estore': { siteName: eStoreData.siteName } } });
 
       // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
       await cronJobLogsCollection.updateOne(
@@ -47,7 +41,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       // check if there are any facilityIds
       if (eStoreData.facilityIdentifiers.length) {
         // add a new job to the `Cron Job Manager` to create the Facility Folders for the current Deal
-        const facilityCreationTimer = addSeconds(new Date(), 59);
+        const facilityCreationTimer = addSeconds(new Date(), 99);
         eStoreCronJobManager.add(`Facility${eStoreData.dealId}`, facilityCreationTimer, async () => {
           await eStoreFacilityFolderCreationJob(eStoreData);
         });
