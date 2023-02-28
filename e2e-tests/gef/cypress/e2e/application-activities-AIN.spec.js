@@ -1,5 +1,3 @@
-import {todayFormatted, todayFormattedShort} from '../../../e2e-fixtures/dateConstants';
-
 import relative from './relativeURL';
 import applicationActivities from './pages/application-activities';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -12,6 +10,7 @@ import submitToUkef from './pages/submit-to-ukef';
 
 import CONSTANTS from '../fixtures/constants';
 import { toTitleCase } from '../fixtures/helpers';
+import { todayFormatted, todayFormattedShort } from '../../../e2e-fixtures/dateConstants';
 
 let deal;
 let dealId;
@@ -25,6 +24,7 @@ context('Submit AIN deal and check portalActivities', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
+        // eslint-disable-next-line prefer-destructuring
         deal = body.items[2];
         dealId = deal._id;
 

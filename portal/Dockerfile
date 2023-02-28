@@ -19,6 +19,9 @@ RUN apk add bash openrc openssh curl \
 #3. Expose SSH port
 EXPOSE 80 ${SSH_PORT}
 
+# NPM
+RUN npm i -g npm@latest
+
 # Node Setup
 WORKDIR /app
 COPY package.json .

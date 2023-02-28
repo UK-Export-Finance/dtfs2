@@ -23,6 +23,7 @@ module.exports = {
     }],
     'no-unneeded-ternary': 0,
   },
+  ignorePatterns: ['**/node_modules/**', '**/public/**'],
   parserOptions: {
     ecmaVersion: 2020,
   },
