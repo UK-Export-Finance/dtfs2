@@ -8,8 +8,4 @@ ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
 COPY . /home/site/wwwroot
 
 WORKDIR /home/site/wwwroot
-
-# NPM
-RUN npm i -g npm@latest
-
 RUN npm install --legacy-peer-deps
