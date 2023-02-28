@@ -1,4 +1,4 @@
-import {todayFormattedShort} from '../../../e2e-fixtures/dateConstants';
+import { todayFormattedShort } from '../../../e2e-fixtures/dateConstants';
 
 import relative from './relativeURL';
 import automaticCover from './pages/automatic-cover';

@@ -1,4 +1,5 @@
 import { app } from '../../src/createApp';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const api = require('../api')(app);
 
 const mockResponses: any = {

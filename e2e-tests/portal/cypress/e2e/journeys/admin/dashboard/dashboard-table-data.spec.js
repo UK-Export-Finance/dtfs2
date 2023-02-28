@@ -117,5 +117,4 @@ context('Admin dashboard', () => {
   });
 
   // TODO: ADD lighthouse checks DTFS2-4994
-
 });

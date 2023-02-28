@@ -1,6 +1,9 @@
-import {
-  sub, add, format, getUnixTime,
-} from 'date-fns';
+const {
+  sub,
+  add,
+  format,
+  getUnixTime,
+} = require('date-fns');
 
 const today = new Date();
 const todayDay = format(today, 'dd');
@@ -131,7 +134,7 @@ const tomorrowUnix = getUnixTime(tomorrow).toString();
 const todayFormattedTimeHours = format(today, 'h');
 const todayFormattedTimeAmPm = format(today, 'aaa');
 
-export default {
+module.exports = {
   today,
   todayDay,
   todayMonth,
