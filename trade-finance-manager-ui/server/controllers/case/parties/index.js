@@ -135,11 +135,12 @@ const confirmPartyUrn = async (req, res) => {
      * PartyURN input validation.
      * 1. Should be at least 3 numbers
      */
-  if (req.body.partyUrn || isEmptyString(req.body.partyUrn)) {
+  const { partyUrn } = req.body;
+  if (partyUrn || isEmptyString(partyUrn)) {
     const urnValidationErrors = [];
 
     const partyUrnParams = {
-      urnValue: req.body.partyUrn,
+      urnValue: partyUrn,
       partyUrnRequired: deal.tfm.parties[party].partyUrnRequired,
       // index not required for these fields as only 1 URN box on page
       index: null,
@@ -168,6 +169,23 @@ const confirmPartyUrn = async (req, res) => {
     }
   }
 
+  // Fetches company information from URN
+  const company = await api.getParty(partyUrn);
+
+  // Non-existent party urn
+  if (!company.data) {
+    return res.render('case/parties/void.njk', {
+      dealId,
+      party,
+    });
+  }
+
+  let name;
+
+  if (company.data && company.data.length) {
+    name = company.data[0].name;
+  }
+
   // Render PartyURN confirmation page
   return res.render('case/parties/confirm/party.njk', {
     userCanEdit: canEdit,
@@ -179,8 +197,8 @@ const confirmPartyUrn = async (req, res) => {
     tfm: deal.tfm,
     dealId,
     user: req.session.user,
-    urn: req.body.partyUrn,
-    name: 'test123',
+    urn: partyUrn,
+    name,
     party,
   });
 };

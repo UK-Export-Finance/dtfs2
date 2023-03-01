@@ -8,6 +8,7 @@ const dealSubmit = require('./controllers/deal.submit.controller');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const users = require('./controllers/user/user.routes');
+const party = require('./controllers/deal.party-db');
 
 openRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
@@ -150,5 +151,7 @@ openRouter.route('/deal/:dealId/amendments/').get(amendmentController.getAmendme
 openRouter.route('/deal/:dealId/amendment/status/in-progress').get(amendmentController.getAmendmentInProgressByDealId);
 openRouter.route('/deal/:dealId/amendment/status/completed').get(amendmentController.getCompletedAmendmentByDealId);
 openRouter.route('/deal/:dealId/amendment/status/completed/latest').get(amendmentController.getLatestCompletedAmendmentByDealId);
+
+openRouter.route('/party/urn/:urn').get(party.getCompany);
 
 module.exports = openRouter;

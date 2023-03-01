@@ -587,6 +587,28 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
   }
 };
 
+/**
+ * Get company information from Party URN
+ * @param {Integer} partyUrn Party URN
+ * @returns {Object} Company information
+ */
+const getCompanyInfo = async (partyUrn) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${refDataUrl}/party-db/urn/${encodeURIComponent(partyUrn)}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data;
+  } catch ({ error }) {
+    console.error('Unable to get company information from PartyURN', { error });
+    return false;
+  }
+};
+
 const findUser = async (username) => {
   try {
     const response = await axios({
@@ -1062,6 +1084,7 @@ module.exports = {
   updateGefFacility,
   queryDeals,
   getPartyDbInfo,
+  getCompanyInfo,
   findUser,
   findUserById,
   findPortalUserById,
