@@ -131,7 +131,45 @@ const confirmPartyUrn = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  return res.render(`case/parties/confirm/${party}.njk`, {
+  /**
+     * PartyURN input validation.
+     * 1. Should be at least 3 numbers
+     */
+  if (req.body.partyUrn || isEmptyString(req.body.partyUrn)) {
+    const urnValidationErrors = [];
+
+    const partyUrnParams = {
+      urnValue: req.body.partyUrn,
+      partyUrnRequired: deal.tfm.parties[party].partyUrnRequired,
+      // index not required for these fields as only 1 URN box on page
+      index: null,
+      party,
+      urnValidationErrors,
+    };
+
+    // Validates partyURN input
+    const validationError = validatePartyURN(partyUrnParams);
+
+    if (validationError.errorsObject) {
+      // Render party specific page with error
+      return res.render(`case/parties/edit/${party}.njk`, {
+        userCanEdit: canEdit,
+        renderEditLink: false,
+        renderEditForm: true,
+        activePrimaryNavigation: 'manage work',
+        activeSubNavigation: 'parties',
+        deal: deal.dealSnapshot,
+        tfm: deal.tfm,
+        dealId,
+        user: req.session.user,
+        errors: validationError.errorsObject.errors,
+        urn: validationError.urn,
+      });
+    }
+  }
+
+  // Render PartyURN confirmation page
+  return res.render('case/parties/confirm/party.njk', {
     userCanEdit: canEdit,
     renderEditLink: false,
     renderEditForm: true,
@@ -141,7 +179,9 @@ const confirmPartyUrn = async (req, res) => {
     tfm: deal.tfm,
     dealId,
     user: req.session.user,
-    urn: deal.tfm.parties[party].partyUrn,
+    urn: req.body.partyUrn,
+    name: 'test123',
+    party,
   });
 };
 
@@ -179,46 +219,6 @@ const postPartyDetails = async (req, res) => {
   if (!party) {
     console.error('Invalid party type specified.');
     return res.redirect('/not-found');
-  }
-
-  /**
-     * checks if `party` is exporter and if partyUrn input exists or is a blank string (nothing inputted)
-     * validates input - should only be at least 3 numbers
-     * validation error rendered if error exists on edit partyUrn page
-     * if no error, then updates partyURN
-     */
-  if (req.body.partyUrn || isEmptyString(req.body.partyUrn)) {
-    const urnValidationErrors = [];
-
-    const partyUrnParams = {
-      urnValue: req.body.partyUrn,
-      partyUrnRequired: deal.tfm.parties[party].partyUrnRequired,
-      // index not required for these fields as only 1 URN box on page
-      index: null,
-      party,
-      urnValidationErrors,
-    };
-
-    // validates input
-    const validationError = validatePartyURN(partyUrnParams);
-    const canEdit = userCanEdit(user);
-
-    if (validationError.errorsObject) {
-      // Render all parties URN page
-      return res.render('case/parties/parties.njk', {
-        userCanEdit: canEdit,
-        renderEditLink: false,
-        renderEditForm: true,
-        activePrimaryNavigation: 'manage work',
-        activeSubNavigation: 'parties',
-        deal: deal.dealSnapshot,
-        tfm: deal.tfm,
-        dealId,
-        user: req.session.user,
-        errors: validationError.errorsObject.errors,
-        urn: validationError.urn,
-      });
-    }
   }
 
   const update = {
