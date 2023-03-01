@@ -1,4 +1,4 @@
-import {todayFormatted, todayFormattedShort} from '../../../e2e-fixtures/dateConstants';
+const { todayFormatted, todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
 
 import relative from './relativeURL';
 import applicationActivities from './pages/application-activities';
@@ -25,6 +25,7 @@ context('Submit AIN deal and check portalActivities', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
+        // eslint-disable-next-line prefer-destructuring
         deal = body.items[2];
         dealId = deal._id;
 

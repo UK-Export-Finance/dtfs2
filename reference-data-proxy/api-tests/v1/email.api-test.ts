@@ -1,4 +1,5 @@
 import { app } from '../../src/createApp';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { post } = require('../api')(app);
 const mockResponse = {
   status: 200,
@@ -13,6 +14,7 @@ const mockResponse = {
 
 jest.mock('notifications-node-client', () => {
   class MockNotifyClient {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     sendEmail: () => Promise<{ status: number; data: { content: { body: {} }; id: string; template: {} } }>;
 
     constructor() {

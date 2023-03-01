@@ -1,7 +1,6 @@
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 const {
-  header,
   dashboardFacilities,
 } = require('../../../pages');
 const {
@@ -16,8 +15,6 @@ const {
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Dashboard Deals filters - reset after applying and navigating away', () => {
-  const ALL_DEALS = [];
-
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);

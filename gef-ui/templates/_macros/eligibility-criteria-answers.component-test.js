@@ -103,9 +103,6 @@ describe(component, () => {
   });
 
   it('should render `last` class for the table cells in last table row', () => {
-    const lastCriterion = params.eligibilityCriteria[params.eligibilityCriteria.length - 1];
-    const lastCriterionIndex = params.eligibilityCriteria.indexOf(lastCriterion);
-
     const tableCellClassSelector = '.govuk-table__cell--last';
     wrapper.expectElement(tableCellClassSelector).lengthToEqual(3);
   });

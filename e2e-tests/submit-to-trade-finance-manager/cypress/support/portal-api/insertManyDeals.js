@@ -6,8 +6,10 @@ module.exports = (deals, opts) => {
   logIn(opts).then((token) => {
     const persisted = [];
 
+    // eslint-disable-next-line no-restricted-syntax
     for (const dealToInsert of deals) {
       insertDeal(dealToInsert, token).then((insertedDeal) => {
+        // eslint-disable-next-line consistent-return
         getDeal(insertedDeal._id, token).then(({ deal }) => {
           persisted.push(deal);
           if (persisted.length === deals.length) {

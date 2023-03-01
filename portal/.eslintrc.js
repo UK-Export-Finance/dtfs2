@@ -22,7 +22,7 @@ module.exports = {
       consistent: true,
     }],
   },
-  ignorePatterns: ['**/node_modules/**'],
+  ignorePatterns: ['**/node_modules/**', '**/public/**'],
   parserOptions: {
     ecmaVersion: 2020,
   },

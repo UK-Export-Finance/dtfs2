@@ -1,8 +1,8 @@
-import { agent as request } from 'supertest';
+import agent = require('supertest');
 
 module.exports = (app: any) => ({
-   get: async (url: string) => request(app).get(url),
-   post: (data: any) => ({
-      to: async (url: string) => request(app).post(url).send(data),
-   }),
+  get: async (url: string) => agent(app).get(url),
+  post: (data: any) => ({
+    to: async (url: string) => agent(app).post(url).send(data),
+  }),
 });

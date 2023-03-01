@@ -2,6 +2,7 @@ const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const db = require('../../../../drivers/db-client');
 
+// eslint-disable-next-line consistent-return
 exports.deleteDeal = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     findOneDeal(req.params.id, async (deal) => {

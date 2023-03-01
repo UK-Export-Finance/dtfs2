@@ -37,6 +37,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
 };
 exports.updateFacilityStatus = updateFacilityStatus;
 
+// eslint-disable-next-line consistent-return
 exports.updateFacilityStatusPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const facilityId = req.params.id;

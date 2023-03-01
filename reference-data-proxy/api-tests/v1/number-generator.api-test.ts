@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { app } from '../../src/createApp';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { post } = require('../api')(app);
 import { addDurableFunctionLog } from '../../src/v1/controllers/durable-functions-log.controller';
 

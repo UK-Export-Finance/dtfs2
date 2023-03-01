@@ -174,6 +174,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath) => 
 
 exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
 
+// eslint-disable-next-line consistent-return
 exports.updateDealPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;

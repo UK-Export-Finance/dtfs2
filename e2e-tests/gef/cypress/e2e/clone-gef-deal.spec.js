@@ -1,4 +1,4 @@
-import {todayFormattedShort} from '../../../e2e-fixtures/dateConstants';
+import { todayFormattedShort } from '../../../e2e-fixtures/dateConstants';
 
 import relative from './relativeURL';
 import automaticCover from './pages/automatic-cover';
@@ -109,6 +109,7 @@ context('Clone GEF (AIN) deal', () => {
         cy.visit(`${url}`);
         statusBanner.bannerStatus().contains('Draft');
         statusBanner.bannerUkefDealId().should('not.exist');
+        console.log('===', todayFormattedShort);
         statusBanner.bannerDateCreated().contains(todayFormattedShort);
 
         applicationDetails.bankRefName().contains('Cloned AIN deal');

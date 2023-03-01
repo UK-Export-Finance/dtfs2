@@ -6,6 +6,7 @@ module.exports = (deals) => {
 
   deals.forEach((dealToInsert) => {
     submitDeal(dealToInsert._id, dealToInsert.dealType).then(() => {
+      // eslint-disable-next-line consistent-return
       submitDealAfterUkefIds(dealToInsert._id, dealToInsert.dealType).then((deal) => {
         persistedDeals.push(deal);
         if (persistedDeals.length === deals.length) {

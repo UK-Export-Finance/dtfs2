@@ -29,6 +29,7 @@ const updateDeal = async (dealId, update) => {
 };
 exports.updateDeal = updateDeal;
 
+// eslint-disable-next-line consistent-return
 exports.updateDealPut = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;

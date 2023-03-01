@@ -6,6 +6,9 @@ import reinsertMocks from './commands/reinsertMocks';
 import * as api from './commands/api';
 import uploadFile from './commands/uploadFile';
 
+// Mitigates test fails due to js errors (third-party js)
+Cypress.on('uncaught:exception', () => false);
+
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./commands/saveSession'));
 

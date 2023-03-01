@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import {todayUnix} from '../../../e2e-fixtures/dateConstants';
+import todayUnix from '../../../e2e-fixtures/dateConstants';
 
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from './constants';
 
