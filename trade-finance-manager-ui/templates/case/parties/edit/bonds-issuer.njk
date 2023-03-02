@@ -1,7 +1,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-
 {% import '../_macros/parties-bond-issuer-edit.njk' as bondIssuerEdit %}
 {% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+{% import '../../_macros/back.njk' as back %}
 
 {% extends "index.njk" %}
   {% set primary = 'cases' %}
@@ -11,6 +11,13 @@
   {% endblock %}
 
   {% block content %}
+
+      {{
+      back.render({
+        return: "/case/" + deal._id + "/parties"
+      })
+    }}
+
     {% set filteredFacilities = deal.facilities | bondIssuerFacilities %}
 
     {% if errors %}

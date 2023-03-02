@@ -1,5 +1,6 @@
 {% import '../_macros/parties-buyer-area.njk' as buyerArea %}
 {% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+{% import '../../_macros/back.njk' as back %}
 
 {% extends "index.njk" %}
   {% set primary = 'cases' %}
@@ -9,6 +10,13 @@
   {% endblock %}
 
   {% block content %}
+  
+      {{
+      back.render({
+        return: "/case/" + deal._id + "/parties"
+      })
+    }}
+
     <form autocomplete="off" method="POST">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ buyerArea.render({

@@ -1,5 +1,6 @@
 {% import '../_macros/parties-indemnifier-area.njk' as indemnifierArea %}
 {% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+{% import '../../_macros/back.njk' as back %}
 
 {% extends "index.njk" %}
   {% set primary = 'cases' %}
@@ -8,7 +9,15 @@
     Edit agent details: {{ deal.submissionDetails.indemnifierName }}
   {% endblock %}
 
-  {% block content %}
+    {% block content %}
+
+      {{
+      back.render({
+        return: "/case/" + deal._id + "/parties"
+      })
+    }}
+
+
     <form autocomplete="off" method="POST">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ indemnifierArea.render({
