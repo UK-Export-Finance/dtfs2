@@ -48,7 +48,7 @@ const getAllParties = async (req, res) => {
 };
 
 /**
- * Renders specific party URN edit page
+ * Renders party specific URN edit page
  * @param {Object} req Express request
  * @param {Object} res Express response
  * @returns {Object} Express response as rendered party page.
@@ -93,6 +93,77 @@ const getPartyDetails = async (req, res) => {
     dealId,
     user: req.session.user,
     urn: deal.tfm.parties[party].partyUrn,
+  });
+};
+
+/**
+ * Renders party specific urn confirmation page
+ * @param {Object} req Express request
+ * @param {Object} res Express response
+ * @returns {Object} Express response as rendered party page.
+ */
+const getPartyUrnDetails = async (req, res) => {
+  if (!req) {
+    console.error('Invalid request received');
+    return res.redirect('/not-found');
+  }
+
+  const { user } = req.session;
+  const party = partyType(req.url);
+
+  const canEdit = userCanEdit(user);
+
+  if (!canEdit) {
+    console.error('Invalid user privilege.');
+    return res.redirect('/not-found');
+  }
+
+  const dealId = req.params._id;
+  const partyUrn = req.params.urn;
+  const deal = await api.getDeal(dealId);
+
+  if (!deal) {
+    console.error('Invalid deal.');
+    return res.redirect('/not-found');
+  }
+
+  if (!party) {
+    console.error('Invalid party type specified.');
+    return res.redirect('/not-found');
+  }
+
+  if (!partyUrn && !partyUrn.trim()) {
+    console.error('Invalid party urn.');
+    return res.redirect('/not-found');
+  }
+
+  // Fetches company information from URN
+  const company = await api.getParty(partyUrn);
+
+  if (!company || !company.data) {
+    return res.render('case/parties/void.njk', {
+      dealId,
+      party,
+    });
+  }
+
+  const name = company.data.length
+    ? company.data[0].name
+    : '';
+
+  return res.render('case/parties/confirm/party.njk', {
+    userCanEdit: canEdit,
+    renderEditLink: false,
+    renderEditForm: true,
+    activePrimaryNavigation: 'manage work',
+    activeSubNavigation: 'parties',
+    deal: deal.dealSnapshot,
+    tfm: deal.tfm,
+    dealId,
+    user: req.session.user,
+    urn: partyUrn,
+    name,
+    party,
   });
 };
 
@@ -180,27 +251,8 @@ const confirmPartyUrn = async (req, res) => {
     });
   }
 
-  let name;
-
-  if (company.data && company.data.length) {
-    name = company.data[0].name;
-  }
-
   // Render PartyURN confirmation page
-  return res.render('case/parties/confirm/party.njk', {
-    userCanEdit: canEdit,
-    renderEditLink: false,
-    renderEditForm: true,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'parties',
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    dealId,
-    user: req.session.user,
-    urn: partyUrn,
-    name,
-    party,
-  });
+  return res.redirect(`/case/${dealId}/parties/${party}/confirm/${partyUrn}`);
 };
 
 /**
@@ -318,6 +370,7 @@ const getBondBeneficiaryPartyDetails = async (req, res) => {
 
 module.exports = {
   getPartyDetails,
+  getPartyUrnDetails,
   confirmPartyUrn,
   postPartyDetails,
   getAllParties,
