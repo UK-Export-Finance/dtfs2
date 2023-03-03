@@ -151,7 +151,7 @@ const getPartyUrnDetails = async (req, res) => {
     ? company.data[0].name
     : '';
 
-  return res.render('case/parties/confirm/party.njk', {
+  return res.render('case/parties/summary/party.njk', {
     userCanEdit: canEdit,
     renderEditLink: false,
     renderEditForm: true,
@@ -207,6 +207,7 @@ const confirmPartyUrn = async (req, res) => {
      * 1. Should be at least 3 numbers
      */
   const { partyUrn } = req.body;
+
   if (partyUrn || isEmptyString(partyUrn)) {
     const urnValidationErrors = [];
 
@@ -251,8 +252,13 @@ const confirmPartyUrn = async (req, res) => {
     });
   }
 
-  // Render PartyURN confirmation page
-  return res.redirect(`/case/${dealId}/parties/${party}/confirm/${partyUrn}`);
+  // Agent party only - Commission rate
+  if (req.body.commissionRate) {
+    req.session.commissionRate = req.body.commissionRate;
+  }
+
+  // Redirect to summary (confirmation) page
+  return res.redirect(`/case/${dealId}/parties/${party}/summary/${partyUrn}`);
 };
 
 /**
@@ -297,11 +303,18 @@ const postPartyDetails = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  // Party URN
   const update = {
     [party]: {
       partyUrn,
     },
   };
+
+  // Agent party only - Commission rate
+  if (req.session.commissionRate) {
+    update[party].commissionRate = req.session.commissionRate;
+    delete req.session.commissionRate;
+  }
 
   await api.updateParty(dealId, update);
 

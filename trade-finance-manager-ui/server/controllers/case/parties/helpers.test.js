@@ -224,7 +224,7 @@ describe('case - parties - helpers', () => {
     });
 
     it('Should return the party name (indemnifier)', () => {
-      const url = '/abc1233/indemnifier/confirm/post';
+      const url = '/abc1233/indemnifier/summary/post';
       const response = partyType(url);
 
       expect(response).toEqual('indemnifier');
@@ -245,7 +245,7 @@ describe('case - parties - helpers', () => {
     });
 
     it('Should return the party name in lower case', () => {
-      const url = '/abc1233/party/ExPorTeR/confirm/post';
+      const url = '/abc1233/party/ExPorTeR/summary/post';
       const response = partyType(url);
 
       expect(response).toEqual('exporter');
