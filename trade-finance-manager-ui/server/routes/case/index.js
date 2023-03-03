@@ -72,25 +72,21 @@ router.get('/:_id/parties', partiesController.getAllParties);
 
 router.get('/:_id/parties/exporter', partiesController.getPartyDetails);
 router.post('/:_id/parties/exporter', partiesController.confirmPartyUrn);
-
 router.get('/:_id/parties/exporter/confirm/:urn', partiesController.getPartyUrnDetails);
 router.post('/:_id/parties/exporter/confirm/:urn', partiesController.postPartyDetails);
 
 router.get('/:_id/parties/buyer', partiesController.getPartyDetails);
 router.post('/:_id/parties/buyer', partiesController.confirmPartyUrn);
-
 router.get('/:_id/parties/buyer/confirm/:urn', partiesController.getPartyUrnDetails);
 router.post('/:_id/parties/buyer/confirm/:urn', partiesController.postPartyDetails);
 
 router.get('/:_id/parties/agent', partiesController.getPartyDetails);
 router.post('/:_id/parties/agent', partiesController.confirmPartyUrn);
-
 router.get('/:_id/parties/agent/confirm/:urn', partiesController.getPartyUrnDetails);
 router.post('/:_id/parties/agent/confirm/:urn', partiesController.postPartyDetails);
 
 router.get('/:_id/parties/indemnifier', partiesController.getPartyDetails);
 router.post('/:_id/parties/indemnifier', partiesController.confirmPartyUrn);
-
 router.get('/:_id/parties/indemnifier/confirm/:urn', partiesController.getPartyUrnDetails);
 router.post('/:_id/parties/indemnifier/confirm/:urn', partiesController.postPartyDetails);
 

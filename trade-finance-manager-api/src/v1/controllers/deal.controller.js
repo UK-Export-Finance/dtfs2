@@ -110,9 +110,9 @@ const updateTfmParty = async (dealId, tfmUpdate) => {
       parties: tfmUpdate,
     },
   };
-  console.log('===3', partyUpdate);
+
   const updatedDeal = await api.updateDeal(dealId, partyUpdate);
-  console.log('===4', updatedDeal);
+
   if (updatedDeal.dealSnapshot) {
     if (await canDealBeSubmittedToACBS(updatedDeal.dealSnapshot.submissionType)) {
       await submitACBSIfAllPartiesHaveUrn(dealId);

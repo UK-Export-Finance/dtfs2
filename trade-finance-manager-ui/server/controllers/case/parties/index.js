@@ -298,7 +298,9 @@ const postPartyDetails = async (req, res) => {
   }
 
   const update = {
-    [party]: partyUrn,
+    [party]: {
+      partyUrn,
+    },
   };
 
   await api.updateParty(dealId, update);

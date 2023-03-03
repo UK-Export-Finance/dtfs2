@@ -93,7 +93,7 @@ const updateParty = async (id, partyUpdate) => {
     id,
     partyUpdate,
   };
-  console.log('===1', updateVariables);
+
   const response = await apollo('PUT', updatePartiesMutation, updateVariables);
   return response;
 };
