@@ -18,7 +18,7 @@ const getAllParties = async (req, res) => {
   const { data: amendments } = await api.getAmendmentsByDealId(dealId);
   const { user } = req.session;
 
-  if (!deal) {
+  if (!deal && !deal.tfm) {
     console.error('Invalid deal.');
     return res.redirect('/not-found');
   }
@@ -72,7 +72,7 @@ const getPartyDetails = async (req, res) => {
   const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  if (!deal && !deal.tfm) {
     console.error('Invalid deal.');
     return res.redirect('/not-found');
   }
@@ -122,7 +122,7 @@ const getPartyUrnDetails = async (req, res) => {
   const partyUrn = req.params.urn;
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  if (!deal && !deal.tfm) {
     console.error('Invalid deal.');
     return res.redirect('/not-found');
   }
@@ -192,7 +192,7 @@ const confirmPartyUrn = async (req, res) => {
   const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  if (!deal && !deal.tfm) {
     console.error('Invalid deal.');
     return res.redirect('/not-found');
   }
@@ -284,7 +284,7 @@ const postPartyDetails = async (req, res) => {
   const dealId = req.params._id;
   const deal = await api.getDeal(dealId);
 
-  if (!deal) {
+  if (!deal && !deal.tfm) {
     console.error('Invalid deal.');
     return res.redirect('/not-found');
   }

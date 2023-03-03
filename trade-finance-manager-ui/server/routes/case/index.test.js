@@ -31,13 +31,21 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith('/:_id/parties', partiesController.getAllParties);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/exporter', partiesController.getExporterPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/exporter', partiesController.getPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/buyer', partiesController.getBuyerPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/buyer', partiesController.getPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/agent', partiesController.getAgentPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/agent', partiesController.getPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/indemnifier', partiesController.getIndemnifierPartyDetails);
+    expect(get).toHaveBeenCalledWith('/:_id/parties/indemnifier', partiesController.getPartyDetails);
+
+    expect(get).toHaveBeenCalledWith('/:_id/parties/exporter/:urn', partiesController.getPartyUrnDetails);
+
+    expect(get).toHaveBeenCalledWith('/:_id/parties/buyer/:urn', partiesController.getPartyUrnDetails);
+
+    expect(get).toHaveBeenCalledWith('/:_id/parties/agent/:urn', partiesController.getPartyUrnDetails);
+
+    expect(get).toHaveBeenCalledWith('/:_id/parties/indemnifier/:urn', partiesController.getPartyUrnDetails);
 
     expect(get).toHaveBeenCalledWith('/:_id/parties/bond-issuer', partiesController.getBondIssuerPartyDetails);
 
@@ -83,13 +91,21 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks/:groupId/:taskId', caseController.putCaseTask);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/exporter', partiesController.postExporterPartyDetails);
+    expect(post).toHaveBeenCalledWith('/:_id/parties/exporter', partiesController.confirmPartyUrn);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/buyer', partiesController.postBuyerPartyDetails);
+    expect(post).toHaveBeenCalledWith('/:_id/parties/buyer', partiesController.confirmPartyUrn);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/agent', partiesController.postAgentPartyDetails);
+    expect(post).toHaveBeenCalledWith('/:_id/parties/agent', partiesController.confirmPartyUrn);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/indemnifier', partiesController.postIndemnifierPartyDetails);
+    expect(post).toHaveBeenCalledWith('/:_id/parties/indemnifier', partiesController.confirmPartyUrn);
+
+    expect(post).toHaveBeenCalledWith('/:_id/parties/exporter/:urn', partiesController.postPartyDetails);
+
+    expect(post).toHaveBeenCalledWith('/:_id/parties/buyer/:urn', partiesController.postPartyDetails);
+
+    expect(post).toHaveBeenCalledWith('/:_id/parties/agent/:urn', partiesController.postPartyDetails);
+
+    expect(post).toHaveBeenCalledWith('/:_id/parties/indemnifier/:urn', partiesController.postPartyDetails);
 
     expect(post).toHaveBeenCalledWith('/:_id/parties/bond-issuer', caseController.postTfmFacility);
 

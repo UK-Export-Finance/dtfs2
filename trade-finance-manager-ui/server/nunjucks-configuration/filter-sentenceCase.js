@@ -1,4 +1,4 @@
-const setenceCase = (text) => {
+const sentenceCase = (text) => {
   // Void `text` check
   if (!text || typeof text !== 'string') {
     return text;
@@ -10,4 +10,4 @@ const setenceCase = (text) => {
   );
 };
 
-module.exports = setenceCase;
+module.exports = sentenceCase;
