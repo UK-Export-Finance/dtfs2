@@ -256,7 +256,7 @@ const confirmPartyUrn = async (req, res) => {
 };
 
 /**
- * Submits party URN
+ * Submits confirmed party URN to the TFM
  * @param {Object} req Express request
  * @param {Object} res Express response
  * @returns {Object} Express response, if successful then re-directed to all parties page
@@ -276,7 +276,6 @@ const postPartyDetails = async (req, res) => {
   }
 
   const dealId = req.params._id;
-
   const deal = await api.getDeal(dealId);
 
   if (!deal) {
@@ -291,8 +290,15 @@ const postPartyDetails = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  const partyUrn = req.params.urn;
+
+  if (!partyUrn && !partyUrn.trim()) {
+    console.error('Invalid party urn.');
+    return res.redirect('/not-found');
+  }
+
   const update = {
-    [party]: req.body,
+    [party]: partyUrn,
   };
 
   await api.updateParty(dealId, update);

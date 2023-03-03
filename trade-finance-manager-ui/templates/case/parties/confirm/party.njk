@@ -17,8 +17,6 @@
       })
     }}
 
-    <form autocomplete="off" method="POST">
-
       <!-- Heading -->
       <div class="govuk-grid-row" data-cy="parties-confirm">
         <div class="govuk-grid-column-one-half">
@@ -74,15 +72,18 @@
       </div>
 
       <!-- User with edit privileges only -->
-      {% if userCanEdit %}
+      <form autocomplete="off" method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
-            {{ saveButton.render() }}
+        {% if userCanEdit %}
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              {{ saveButton.render() }}
+            </div>
           </div>
-        </div>
 
-      {% endif %}
+        {% endif %}
 
     </form>
 
