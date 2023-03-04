@@ -8,8 +8,8 @@ const { DEAL } = CONSTANTS;
 
 /**
  * Renders all parties URN page
- * @param {Object} req Express request
- * @param {Object} res Express response
+ * @param {Express.Request} req
+ * @param {Express.Response} res
  * @returns {Object} Express response, which renders all party URN page.
  */
 const getAllParties = async (req, res) => {
@@ -54,8 +54,8 @@ const getAllParties = async (req, res) => {
 
 /**
  * Renders party specific URN edit page
- * @param {Object} req Express request
- * @param {Object} res Express response
+ * @param {Express.Request} req
+ * @param {Express.Response} res
  * @returns {Object} Express response as rendered party page.
  */
 const getPartyDetails = async (req, res) => {
@@ -103,8 +103,8 @@ const getPartyDetails = async (req, res) => {
 
 /**
  * Renders party specific urn summary page
- * @param {Object} req Express request
- * @param {Object} res Express response
+ * @param {Express.Request} req
+ * @param {Express.Response} res
  * @returns {Object} Express response as rendered party page.
  */
 const getPartyUrnDetails = async (req, res) => {
@@ -174,8 +174,8 @@ const getPartyUrnDetails = async (req, res) => {
 
 /**
  * Post party URN summary page
- * @param {Object} req Express request
- * @param {Object} res Express response
+ * @param {Express.Request} req
+ * @param {Express.Response} res
  * @returns {Object} Express response as rendered confirm party URN page.
  */
 const confirmPartyUrn = async (req, res) => {
@@ -209,7 +209,11 @@ const confirmPartyUrn = async (req, res) => {
      */
     const { partyUrn } = req.body;
 
-    if (isEmptyString(partyUrn)) {
+    /**
+     * Check `partyUrn` is minimum 3 digits
+     * and is not empty.
+     */
+    if (partyUrn || isEmptyString(partyUrn)) {
       const urnValidationErrors = [];
 
       const partyUrnParams = {
@@ -268,8 +272,8 @@ const confirmPartyUrn = async (req, res) => {
 
 /**
  * Submits confirmed party URN to the TFM
- * @param {Object} req Express request
- * @param {Object} res Express response
+ * @param {Express.Request} req
+ * @param {Express.Response} res
  * @returns {Object} Express response, if successful then re-directed to all parties page
  */
 const postPartyDetails = async (req, res) => {

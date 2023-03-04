@@ -2,8 +2,8 @@ const api = require('../api');
 
 /**
  * Gets company information from Party URN
- * @param {Object} req Express request
- * @param {Object} res Express response
+ * @param {Express.Request} req
+ * @param {Express.Response} res
  * @returns {Object} Company information
  */
 const getCompany = async (req, res) => {

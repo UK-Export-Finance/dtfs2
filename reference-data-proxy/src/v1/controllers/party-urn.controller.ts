@@ -9,8 +9,8 @@ const partyDbURL: any = process.env.MULESOFT_API_PARTY_DB_URL;
 
 /**
  * Fetches company information from party URN
- * @param {Object} req Express request
- * @param {Object} res Express response
+ * @param {Express.Request} req
+ * @param {Express.Response} res
  * @returns {Object} Express response with `status` and `data`.
  */
 export const lookup = async (req: Request, res: Response) => {
