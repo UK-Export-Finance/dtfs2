@@ -1,36 +1,40 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{% import '../../_macros/back.njk' as back %}
+{% import '../../_macros/back-link.njk' as back %}
 {% import '../../_macros/save-only-button.njk' as saveButton %}
 
 {% extends "index.njk" %}
-  {% set edit = "/case/" + deal._id + "/parties/" + party %}
+{% set edit = "/case/" + deal._id + "/parties/" + party %}
 
-  {% block pageTitle %}
+{% block pageTitle %}
     Check the unique reference number
   {% endblock %}
 
-  {% block content %}
+{% block content %}
 
-    {{
+  {{
       back.render({
         return: edit
       })
     }}
 
-      <!-- Heading -->
-      <div class="govuk-grid-row" data-cy="parties-confirm">
-        <div class="govuk-grid-column-one-half">
-          <h1 class="ukef-heading-l govuk-!-margin-top-0" data-cy="confirm-heading">Check the unique reference number</h1>
-        </div>
-      </div>
+  <!-- Heading -->
+  <div class="govuk-grid-row" data-cy="parties-confirm">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="ukef-heading-l govuk-!-margin-top-0" data-cy="confirm-heading">Check the unique reference number</h1>
+    </div>
+  </div>
 
-      <!-- Party details table -->
-      <div class="govuk-grid-row govuk-body">
-        <div class="govuk-grid-column-two-thirds">
-          {% set caption = [ party | sentence , ' ', 'details'] | join %}
-          {% set change = "<a href = '" + edit + "' + party data-cy='change-party-urn'>Change</a>" %}
-  
-          {{ govukTable
+  <!-- Party details table -->
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-two-thirds">
+      {% set caption = [
+        party | sentence,
+        ' ',
+        'details'
+      ] | join %}
+      {% set change = "<a href = '" + edit + "' + party data-cy='change-party-urn'>Change</a>" %}
+
+      {{ govukTable
               ({
                   caption: caption,
                   captionClasses: "govuk-table__caption--l govuk-!-margin-top-1",
@@ -68,23 +72,23 @@
                   ]
               })
             }}
+    </div>
+  </div>
+
+  <!-- User with edit privileges only -->
+  <form autocomplete="off" method="POST">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+    {% if userCanEdit %}
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          {{ saveButton.render() }}
         </div>
       </div>
 
-      <!-- User with edit privileges only -->
-      <form autocomplete="off" method="POST">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {% endif %}
 
-        {% if userCanEdit %}
+  </form>
 
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-              {{ saveButton.render() }}
-            </div>
-          </div>
-
-        {% endif %}
-
-    </form>
-
-  {% endblock %}
+{% endblock %}

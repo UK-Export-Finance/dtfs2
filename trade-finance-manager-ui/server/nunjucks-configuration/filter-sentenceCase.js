@@ -1,6 +1,8 @@
+const { isEmptyString } = require('../helpers/string');
+
 const sentenceCase = (text) => {
   // Void `text` check
-  if (!text || typeof text !== 'string') {
+  if (isEmptyString(text)) {
     return text;
   }
 
