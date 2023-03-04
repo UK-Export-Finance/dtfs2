@@ -133,7 +133,7 @@ const getPartyUrnDetails = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    if (!partyUrn && !partyUrn.trim()) {
+    if (isEmptyString(partyUrn)) {
       console.error('Invalid party urn.');
       return res.redirect('/not-found');
     }
@@ -303,7 +303,7 @@ const postPartyDetails = async (req, res) => {
 
     const partyUrn = req.params.urn;
 
-    if (!partyUrn && !partyUrn.trim()) {
+    if (isEmptyString(partyUrn)) {
       console.error('Invalid party urn.');
       return res.redirect('/not-found');
     }

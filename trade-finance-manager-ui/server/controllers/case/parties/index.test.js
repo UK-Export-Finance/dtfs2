@@ -73,7 +73,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -115,7 +114,6 @@ describe('PartyURN: controllers - case - parties', () => {
 
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should render exporter edit template with data', async () => {
@@ -146,7 +144,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -206,7 +203,6 @@ describe('PartyURN: controllers - case - parties', () => {
 
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should render agent edit template with data', async () => {
@@ -237,7 +233,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -297,7 +292,6 @@ describe('PartyURN: controllers - case - parties', () => {
 
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should render agent edit template with data', async () => {
@@ -328,7 +322,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -387,7 +380,6 @@ describe('PartyURN: controllers - case - parties', () => {
 
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should render indemnifier edit template with data', async () => {
@@ -418,7 +410,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -475,7 +466,6 @@ describe('PartyURN: controllers - case - parties', () => {
 
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should render bond issuer edit template with data', async () => {
@@ -505,7 +495,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -560,7 +549,6 @@ describe('PartyURN: controllers - case - parties', () => {
 
         beforeEach(() => {
           api.getDeal = () => Promise.resolve(mockDeal);
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should render bond beneficiary edit template with data', async () => {
@@ -590,7 +578,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -626,6 +613,7 @@ describe('PartyURN: controllers - case - parties', () => {
 
   // POST HTTP METHOD
   describe('POST', () => {
+    // 1. POST to summary page for confirmation
     describe('POST: Exporter party URN to summary page', () => {
       const party = 'exporter';
 
@@ -659,7 +647,6 @@ describe('PartyURN: controllers - case - parties', () => {
             status: 200,
             data: mockCompany,
           });
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should render error page when party type is invalid', async () => {
@@ -765,7 +752,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -839,7 +825,6 @@ describe('PartyURN: controllers - case - parties', () => {
             status: 200,
             data: mockCompany,
           });
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should render error page when party type is invalid', async () => {
@@ -945,7 +930,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -1019,7 +1003,6 @@ describe('PartyURN: controllers - case - parties', () => {
             status: 200,
             data: mockCompany,
           });
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should render error page when party type is invalid', async () => {
@@ -1134,7 +1117,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -1208,7 +1190,6 @@ describe('PartyURN: controllers - case - parties', () => {
             status: 200,
             data: mockCompany,
           });
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should render error page when party type is invalid', async () => {
@@ -1314,7 +1295,6 @@ describe('PartyURN: controllers - case - parties', () => {
       describe('when deal does NOT exist', () => {
         beforeEach(() => {
           api.getDeal = () => Promise.resolve();
-          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         });
 
         it('should redirect to not-found route', async () => {
@@ -1351,6 +1331,450 @@ describe('PartyURN: controllers - case - parties', () => {
 
           await partiesController.postPartyDetails(req, res);
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+    });
+
+    // 2. POST to TFM
+    describe('POST: Exporter party URN to TFM post confirmation', () => {
+      const party = 'exporter';
+
+      describe('when user is not allowed to edit', () => {
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session: {
+              user: userNotAllowedToEdit,
+            },
+            url: `/case/1/parties/${party}`,
+          };
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when deal does NOT exist', () => {
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve();
+        });
+
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session,
+            url: `/case/1/parties/${party}`,
+          };
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when deal exists', () => {
+        const mockDeal = {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          mock: true,
+          tfm: {
+            parties: {
+              exporter: {
+                partyUrnRequired: true,
+              },
+            },
+          },
+        };
+
+        const req = {
+          params: {
+            _id: mockDeal._id,
+            urn: '1234',
+          },
+          body: {
+            csrf: '12345',
+          },
+          session,
+          url: `/case/1/parties/${party}`,
+        };
+
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve(mockDeal);
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+          api.getParty = () => Promise.resolve({
+            status: 200,
+            data: mockCompany,
+          });
+          api.updateParty = () => jest.fn();
+        });
+
+        it('should render error page when party type is invalid', async () => {
+          req.body.url = '/';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should render error page when party URN is empty', async () => {
+          req.body.url = `/case/1/parties/${party}`;
+          req.params.urn = '';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should render error page when party URN is empty with spaces', async () => {
+          req.params.urn = '  ';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should submit party urn to TFM', async () => {
+          req.params.urn = '1234';
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${req.params._id}/parties`);
+        });
+      });
+    });
+
+    describe('POST: Buyer party URN to TFM post confirmation', () => {
+      const party = 'buyer';
+
+      describe('when user is not allowed to edit', () => {
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session: {
+              user: userNotAllowedToEdit,
+            },
+            url: `/case/1/parties/${party}`,
+          };
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when deal does NOT exist', () => {
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve();
+        });
+
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session,
+            url: `/case/1/parties/${party}`,
+          };
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when deal exists', () => {
+        const mockDeal = {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          mock: true,
+          tfm: {
+            parties: {
+              buyer: {
+                partyUrnRequired: true,
+              },
+            },
+          },
+        };
+
+        const req = {
+          params: {
+            _id: mockDeal._id,
+            urn: '1234',
+          },
+          body: {
+            csrf: '12345',
+          },
+          session,
+          url: `/case/1/parties/${party}`,
+        };
+
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve(mockDeal);
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+          api.getParty = () => Promise.resolve({
+            status: 200,
+            data: mockCompany,
+          });
+          api.updateParty = () => jest.fn();
+        });
+
+        it('should render error page when party type is invalid', async () => {
+          req.body.url = '/';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should render error page when party URN is empty', async () => {
+          req.body.url = `/case/1/parties/${party}`;
+          req.params.urn = '';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should render error page when party URN is empty with spaces', async () => {
+          req.params.urn = '  ';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should submit party urn to TFM', async () => {
+          req.params.urn = '1234';
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${req.params._id}/parties`);
+        });
+      });
+    });
+
+    describe('POST: Agent party URN to TFM post confirmation', () => {
+      const party = 'agent';
+
+      describe('when user is not allowed to edit', () => {
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session: {
+              user: userNotAllowedToEdit,
+            },
+            url: `/case/1/parties/${party}`,
+          };
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when deal does NOT exist', () => {
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve();
+        });
+
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session,
+            url: `/case/1/parties/${party}`,
+          };
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when deal exists', () => {
+        const mockDeal = {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          mock: true,
+          tfm: {
+            parties: {
+              agent: {
+                partyUrnRequired: true,
+              },
+            },
+          },
+        };
+
+        const req = {
+          params: {
+            _id: mockDeal._id,
+            urn: '1234',
+          },
+          body: {
+            csrf: '12345',
+          },
+          session,
+          url: `/case/1/parties/${party}`,
+        };
+
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve(mockDeal);
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+          api.getParty = () => Promise.resolve({
+            status: 200,
+            data: mockCompany,
+          });
+          api.updateParty = () => jest.fn();
+        });
+
+        it('should render error page when party type is invalid', async () => {
+          req.body.url = '/';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should render error page when party URN is empty', async () => {
+          req.body.url = `/case/1/parties/${party}`;
+          req.params.urn = '';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should render error page when party URN is empty with spaces', async () => {
+          req.params.urn = '  ';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should submit party urn to TFM', async () => {
+          req.params.urn = '1234';
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${req.params._id}/parties`);
+        });
+
+        it('should submit party urn and commission rate to TFM', async () => {
+          req.params.urn = '1234';
+          req.session.commissionRate = '1.234';
+
+          await partiesController.postPartyDetails(req, res);
+
+          // Delete session variable `commissionRate`
+          expect(req.session.commissionRate).toEqual(undefined);
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${req.params._id}/parties`);
+        });
+      });
+    });
+
+    describe('POST: Indemnifier party URN to TFM post confirmation', () => {
+      const party = 'indemnifier';
+
+      describe('when user is not allowed to edit', () => {
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session: {
+              user: userNotAllowedToEdit,
+            },
+            url: `/case/1/parties/${party}`,
+          };
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when deal does NOT exist', () => {
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve();
+        });
+
+        it('should redirect to not-found route', async () => {
+          const req = {
+            body: {
+              csrf: '12345',
+            },
+            params: {
+              _id: '1',
+            },
+            session,
+            url: `/case/1/parties/${party}`,
+          };
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+      });
+
+      describe('when deal exists', () => {
+        const mockDeal = {
+          _id: '61f6ac5b02ffda01b1e8efef',
+          mock: true,
+          tfm: {
+            parties: {
+              indemnifier: {
+                partyUrnRequired: true,
+              },
+            },
+          },
+        };
+
+        const req = {
+          params: {
+            _id: mockDeal._id,
+            urn: '1234',
+          },
+          body: {
+            csrf: '12345',
+          },
+          session,
+          url: `/case/1/parties/${party}`,
+        };
+
+        beforeEach(() => {
+          api.getDeal = () => Promise.resolve(mockDeal);
+          api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
+          api.getParty = () => Promise.resolve({
+            status: 200,
+            data: mockCompany,
+          });
+          api.updateParty = () => jest.fn();
+        });
+
+        it('should render error page when party type is invalid', async () => {
+          req.body.url = '/';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should render error page when party URN is empty', async () => {
+          req.body.url = `/case/1/parties/${party}`;
+          req.params.urn = '';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should render error page when party URN is empty with spaces', async () => {
+          req.params.urn = '  ';
+
+          expect(res.redirect).toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should submit party urn to TFM', async () => {
+          req.params.urn = '1234';
+
+          await partiesController.postPartyDetails(req, res);
+          expect(res.redirect).toHaveBeenCalledWith(`/case/${req.params._id}/parties`);
         });
       });
     });
