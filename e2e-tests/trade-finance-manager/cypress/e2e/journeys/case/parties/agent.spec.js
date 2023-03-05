@@ -9,7 +9,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
   const dealFacilities = [];
   const party = 'agent';
   const mockUrn = '1234';
-  const partyUrn = '00305203';
+  const partyUrn = '00307249';
 
   // Submit a deal with facilities
   before(() => {

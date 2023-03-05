@@ -9,7 +9,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
   const dealFacilities = [];
   const party = 'indemnifier';
   const mockUrn = '1234';
-  const partyUrn = '00305203';
+  const partyUrn = '00307249';
 
   // Submit a deal with facilities
   before(() => {
