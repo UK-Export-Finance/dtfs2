@@ -4,10 +4,14 @@ import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { T1_USER_1, BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
-context('Parties - user can view and edit exporter', () => {
+context('Exporter Party URN - User can add, edit, confirm and submit URN to the TFM', () => {
   let dealId;
   const dealFacilities = [];
+  const party = 'exporter';
+  const mockUrn = '1234';
+  const partyUrn = '00305203';
 
+  // Submit a deal with facilities
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
       dealId = insertedDeal._id;
@@ -22,6 +26,7 @@ context('Parties - user can view and edit exporter', () => {
     });
   });
 
+  // Delete deal and facilities post E2E
   after(() => {
     cy.deleteDeals(dealId, ADMIN_LOGIN);
     dealFacilities.forEach((facility) => {
@@ -29,8 +34,12 @@ context('Parties - user can view and edit exporter', () => {
     });
   });
 
-  describe('Exporter page', () => {
-    describe('when user is in BUSINESS_SUPPORT team', () => {
+  describe('Exporter party', () => {
+    /**
+    * Only TFM users in `BUSINESS_SUPPORT` team can add/edit
+    * or confirm party URN.
+    */
+    describe('when the TFM user is in `BUSINESS_SUPPORT` team', () => {
       beforeEach(() => {
         cy.login(BUSINESS_SUPPORT_USER_1);
         cy.visit(relative(`/case/${dealId}/parties`));
@@ -39,7 +48,7 @@ context('Parties - user can view and edit exporter', () => {
       it('should render edit page', () => {
         pages.partiesPage.exporterEditLink().click();
 
-        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         pages.partiesPage.exporterEditLink().should('not.exist');
 
         pages.exporterPage.urnInput().should('exist');
@@ -48,76 +57,108 @@ context('Parties - user can view and edit exporter', () => {
         pages.exporterPage.saveButton().should('exist');
         pages.exporterPage.closeLink().should('exist');
 
+        // Go back
         pages.exporterPage.closeLink().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
       });
 
-      it('should not save entered details if incorrectly formatted partyURN such as letters only or less than 3 numbers', () => {
-        const partyUrn = 'test partyurn';
+      it('should have the back link', () => {
+        pages.partiesPage.exporterEditLink().click();
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
 
+        pages.partiesPage.backLink().should('exist');
+
+        pages.partiesPage.backLink().click();
+        cy.url().should('eq', relative(`/case/${dealId}/parties`));
+      });
+
+      it('should throw an error upon validation failure', () => {
         pages.partiesPage.exporterEditLink().click();
         pages.exporterPage.urnInput().clear();
 
         pages.exporterPage.saveButton().click();
 
-        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         pages.exporterPage.errorSummary().contains('Enter a unique reference number');
         pages.exporterPage.urnError().contains('Enter a unique reference number');
 
         pages.exporterPage.urnInput().clear();
-        pages.exporterPage.urnInput().type(partyUrn);
+        pages.exporterPage.urnInput().type('test');
 
         pages.exporterPage.saveButton().click();
 
-        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.exporterPage.urnInput().clear().type('12');
         pages.exporterPage.saveButton().click();
 
-        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.exporterPage.urnInput().clear().type('ABC123');
         pages.exporterPage.saveButton().click();
 
-        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.exporterPage.urnInput().clear().type('"!£!"£!"£!"£');
         pages.exporterPage.saveButton().click();
 
-        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.exporterPage.urnInput().clear().type('1234!');
         pages.exporterPage.saveButton().click();
 
-        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.exporterPage.urnInput().clear().type(' ');
         pages.exporterPage.saveButton().click();
 
-        cy.url().should('eq', relative(`/case/${dealId}/parties/exporter`));
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         pages.exporterPage.errorSummary().contains('Enter a minimum of 3 numbers');
         pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
       });
 
-      it('should save entered details if partyUrn correctly entered', () => {
-        const partyUrn = '12345';
+      it('should re-direct to non-existent party urn page', () => {
+        pages.partiesPage.exporterEditLink().click();
+        pages.exporterPage.urnInput().clear();
+        pages.exporterPage.urnInput().type(mockUrn);
 
+        pages.exporterPage.saveButton().click();
+
+        pages.partiesPage.nonExistentHeading().should('exist');
+      });
+
+      it('should re-direct to summary page', () => {
         pages.partiesPage.exporterEditLink().click();
         pages.exporterPage.urnInput().clear();
         pages.exporterPage.urnInput().type(partyUrn);
 
         pages.exporterPage.saveButton().click();
 
+        pages.partiesPage.partyUrnSummaryTable().should('exist');
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}/summary/${partyUrn}`));
+      });
+
+      it('should submit the party URN to TFM', () => {
+        pages.partiesPage.exporterEditLink().click();
+        pages.exporterPage.urnInput().clear();
+        pages.exporterPage.urnInput().type(partyUrn);
+
+        pages.exporterPage.saveButton().click();
+
+        pages.partiesPage.partyUrnSummaryTable().should('exist');
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}/summary/${partyUrn}`));
+
+        pages.exporterPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
         pages.exporterPage.uniqueRef().invoke('text').then((text) => {
@@ -130,16 +171,31 @@ context('Parties - user can view and edit exporter', () => {
         });
       });
     });
+  });
 
-    describe('when user is NOT in BUSINESS_SUPPORT team', () => {
-      beforeEach(() => {
-        cy.login(T1_USER_1);
-      });
+  describe('when the TFM user is NOT in `BUSINESS_SUPPORT` team', () => {
+    beforeEach(() => {
+      cy.login(T1_USER_1);
+    });
 
-      it('user cannot manually to the page', () => {
-        cy.visit(`/case/${dealId}/parties/exporter`);
-        cy.url().should('eq', relative('/not-found'));
-      });
+    it('ensure user cannot add or edit party URN', () => {
+      cy.visit(`/case/${dealId}/parties`);
+      pages.partiesPage.exporterEditLink().should('not.exist');
+    });
+
+    it('ensure user cannot manually visit the party URN page', () => {
+      cy.visit(`/case/${dealId}/parties/${party}`);
+      cy.url().should('eq', relative('/not-found'));
+    });
+
+    it('ensure user cannot confirm party URN', () => {
+      cy.visit(`/case/${dealId}/parties/${party}/summary/${mockUrn}`);
+      pages.partiesPage.partyUrnSummaryTable().should('not.exist');
+    });
+
+    it('ensure user cannot manually visit the party URN summary page', () => {
+      cy.visit(`/case/${dealId}/parties/${party}/summary/${mockUrn}`);
+      cy.url().should('eq', relative('/not-found'));
     });
   });
 });
