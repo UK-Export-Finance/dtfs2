@@ -29,10 +29,10 @@
     }) }}
   {% endif %}
 
-  <div class="govuk-grid-row separator-line {% if renderEditLink %}ukef-flex-container deal{% endif %}" data-cy="parties-agent">
+  <div class="govuk-grid-row {% if renderEditLink %}ukef-flex-container deal{% endif %}" data-cy="parties-agent">
     <div class="govuk-grid-column-one-half">
       {% if userCanEdit and renderEditForm %}
-        <h1 class="ukef-heading-l govuk-!-margin-top-9" data-cy="edit-heading" >Edit agent details</h1>
+        <h1 class="ukef-heading-l govuk-!-margin-top-0" data-cy="edit-heading" >Edit agent details</h1>
       {% else %}
         <h2 class="ukef-heading-l" data-cy="edit-heading">Agent</h2>
       {% endif %}
@@ -61,7 +61,7 @@
 
           {% if userCanEdit and renderEditForm %}
             <div class="govuk-grid-row">
-              <div class="govuk-grid-column-one-half">
+              <div class="govuk-grid-column-one-half govuk-!-margin-top-4">
               {{ govukInput({
                 label: {
                   text: "Unique reference number (URN)"

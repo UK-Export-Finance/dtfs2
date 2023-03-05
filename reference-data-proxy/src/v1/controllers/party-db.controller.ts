@@ -11,7 +11,7 @@ export const lookup = async (req: Request, res: Response) => {
 
   const response = await axios({
     method: 'get',
-    url: `${partyDbURL}/${partyDbCompanyRegistrationNumber}`,
+    url: `${partyDbURL}/companyreg/${partyDbCompanyRegistrationNumber}`,
     auth: { username, password },
   }).catch((error: any) => {
     console.error('Error calling Party DB API', { error });

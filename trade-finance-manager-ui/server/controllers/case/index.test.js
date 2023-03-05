@@ -848,7 +848,7 @@ describe('controllers - case', () => {
 
         await caseController.postTfmFacility(req, res);
         expect(res.render).toHaveBeenCalledWith(
-          'case/parties/edit/bonds-beneficiary-edit.njk',
+          'case/parties/edit/bonds-beneficiary.njk',
           {
             userCanEdit: false,
             renderEditLink: false,
@@ -910,7 +910,7 @@ describe('controllers - case', () => {
         await caseController.postTfmFacility(req, res);
 
         expect(res.render).toHaveBeenCalledWith(
-          'case/parties/edit/bonds-issuer-edit.njk',
+          'case/parties/edit/bonds-issuer.njk',
           {
             userCanEdit: false,
             renderEditLink: false,
@@ -965,7 +965,7 @@ describe('controllers - case', () => {
         await caseController.postTfmFacility(req, res);
 
         expect(res.render).toHaveBeenCalledWith(
-          'case/parties/edit/bonds-beneficiary-edit.njk',
+          'case/parties/edit/bonds-beneficiary.njk',
           {
             userCanEdit: false,
             renderEditLink: false,
@@ -1020,7 +1020,7 @@ describe('controllers - case', () => {
         await caseController.postTfmFacility(req, res);
 
         expect(res.render).toHaveBeenCalledWith(
-          'case/parties/edit/bonds-issuer-edit.njk',
+          'case/parties/edit/bonds-issuer.njk',
           {
             userCanEdit: false,
             renderEditLink: false,
@@ -1074,7 +1074,7 @@ describe('controllers - case', () => {
 
         await caseController.postTfmFacility(req, res);
         expect(res.render).toHaveBeenCalledWith(
-          'case/parties/edit/bonds-beneficiary-edit.njk',
+          'case/parties/edit/bonds-beneficiary.njk',
           {
             userCanEdit: false,
             renderEditLink: false,
@@ -1129,7 +1129,7 @@ describe('controllers - case', () => {
         await caseController.postTfmFacility(req, res);
 
         expect(res.render).toHaveBeenCalledWith(
-          'case/parties/edit/bonds-issuer-edit.njk',
+          'case/parties/edit/bonds-issuer.njk',
           {
             userCanEdit: false,
             renderEditLink: false,
@@ -1238,7 +1238,7 @@ describe('controllers - case', () => {
         await caseController.postTfmFacility(req, res);
 
         expect(res.render).toHaveBeenCalledWith(
-          'case/parties/edit/bonds-beneficiary-edit.njk',
+          'case/parties/edit/bonds-beneficiary.njk',
           {
             userCanEdit: false,
             renderEditLink: false,
@@ -1293,7 +1293,7 @@ describe('controllers - case', () => {
         await caseController.postTfmFacility(req, res);
 
         expect(res.render).toHaveBeenCalledWith(
-          'case/parties/edit/bonds-issuer-edit.njk',
+          'case/parties/edit/bonds-issuer.njk',
           {
             userCanEdit: false,
             renderEditLink: false,
