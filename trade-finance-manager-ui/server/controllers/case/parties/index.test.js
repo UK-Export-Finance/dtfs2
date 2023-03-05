@@ -38,6 +38,13 @@ describe('PartyURN: controllers - case - parties', () => {
           dealSnapshot: {
             _id: '61f6ac5b02ffda01b1e8efef',
           },
+          tfm: {
+            parties: {
+              exporter: {
+                partyUrn: '1234',
+              },
+            },
+          },
           mock: true,
         };
 
@@ -60,12 +67,13 @@ describe('PartyURN: controllers - case - parties', () => {
             renderEditLink: userCanEdit(req.session.user),
             renderEditForm: false,
             deal: mockDeal.dealSnapshot,
+            tfm: mockDeal.tfm,
             activePrimaryNavigation: 'manage work',
             activeSubNavigation: 'parties',
             dealId: req.params._id,
             user: session.user,
-            amendmentsInProgress: [],
             hasAmendmentInProgress: false,
+            amendmentsInProgress: [],
           });
         });
       });
