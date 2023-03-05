@@ -735,7 +735,7 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '12345';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.render).toHaveBeenCalledWith('case/parties/void.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
           });
@@ -913,7 +913,7 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '12345';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.render).toHaveBeenCalledWith('case/parties/void.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
           });
@@ -1091,7 +1091,7 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '12345';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.render).toHaveBeenCalledWith('case/parties/void.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
           });
@@ -1278,7 +1278,7 @@ describe('PartyURN: controllers - case - parties', () => {
           req.body.partyUrn = '12345';
 
           await partiesController.confirmPartyUrn(req, res);
-          expect(res.render).toHaveBeenCalledWith('case/parties/void.njk', {
+          expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
           });

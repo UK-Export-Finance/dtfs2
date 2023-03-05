@@ -14,18 +14,23 @@ const partyDbURL: any = process.env.MULESOFT_API_PARTY_DB_URL;
  * @returns {Object} Express response with `status` and `data`.
  */
 export const lookup = async (req: Request, res: Response) => {
-  const { urn } = req.params;
+  try {
+    const { urn } = req.params;
 
-  const response = await axios({
-    method: 'get',
-    url: `${partyDbURL}/find-customers?partyUrn=${urn}`,
-    auth: { username, password },
-  }).catch((error: any) => {
-    console.error('Error calling Party URN lookup', { error });
-    return { data: error?.response?.data, status: error?.response?.status };
-  });
+    const response = await axios({
+      method: 'get',
+      url: `${partyDbURL}/find-customers?partyUrn=${urn}`,
+      auth: { username, password },
+    }).catch((error: any) => {
+      console.error('Error calling Party URN lookup', { error });
+      return { data: error?.response?.data, status: error?.response?.status };
+    });
 
-  const { status, data } = response;
+    const { status, data } = response;
 
-  return res.status(status).send(data);
+    return res.status(status).send(data);
+  } catch (e) {
+    console.error('Unable to lookup for company from party URN ', { e });
+    return res.status(400);
+  }
 };

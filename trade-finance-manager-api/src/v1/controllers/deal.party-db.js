@@ -23,7 +23,7 @@ const getCompany = async (req, res) => {
 
     return res.status(200).send(company);
   } catch (e) {
-    console.error('Unable to get company: ', { e });
+    console.error('Unable to get company from URN: ', { e });
     return false;
   }
 };

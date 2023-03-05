@@ -4,33 +4,31 @@
 {% import '../../_macros/back-link.njk' as back %}
 
 {% extends "index.njk" %}
-  {% set primary = 'cases' %}
+{% set primary = 'cases' %}
 
-  {% block pageTitle %}
+{% block pageTitle %}
     Edit bond issuer details
   {% endblock %}
 
-  {% block content %}
+{% block content %}
 
-      {{
-      back.render({
-        return: "/case/" + deal._id + "/parties"
-      })
-    }}
+  {{ back.render({
+      return: "/case/" + deal._id + "/parties"
+  }) }}
 
-    {% set filteredFacilities = deal.facilities | bondIssuerFacilities %}
+  {% set filteredFacilities = deal.facilities | bondIssuerFacilities %}
 
-    {% if errors %}
-      {{ govukErrorSummary({
+  {% if errors %}
+    {{ govukErrorSummary({
         titleText: "There is a problem",
         errorList: errors.errorSummary,
         attributes: {
           'data-cy': 'error-summary'
         }
       }) }}
-    {% endif %}
+  {% endif %}
 
-   <form autocomplete="off" method="POST">
+  <form autocomplete="off" method="POST">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <div class="govuk-grid-row {% if params.renderEditLink %}ukef-flex-container deal{% endif %}">
       <div class="govuk-grid-column-one-half">
@@ -39,7 +37,7 @@
     </div>
 
     {% for facility in filteredFacilities %}
-      <input name="facilityId[]" type="hidden" value="{{ facility._id }}" />
+      <input name="facilityId[]" type="hidden" value="{{ facility._id }}"/>
       {{ bondIssuerEdit.render({
         bond: facility,
         userCanEdit: userCanEdit,
@@ -56,7 +54,6 @@
       </div>
     </div>
   </form>
-  {% endblock %}
+{% endblock %}
 
-  {% block sub_content %}
-  {% endblock %}
+{% block sub_content %}{% endblock %}

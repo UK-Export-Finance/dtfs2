@@ -19,7 +19,7 @@ const getAllParties = async (req, res) => {
     const { data: amendments } = await api.getAmendmentsByDealId(dealId);
     const { user } = req.session;
 
-    if (!deal && !deal.tfm) {
+    if (!deal?.tfm) {
       console.error('Invalid deal.');
       return res.redirect('/not-found');
     }
@@ -73,7 +73,7 @@ const getPartyDetails = async (req, res) => {
     const dealId = req.params._id;
     const deal = await api.getDeal(dealId);
 
-    if (!deal && !deal.tfm) {
+    if (!deal?.tfm) {
       console.error('Invalid deal.');
       return res.redirect('/not-found');
     }
@@ -123,7 +123,7 @@ const getPartyUrnDetails = async (req, res) => {
     const partyUrn = req.params.urn;
     const deal = await api.getDeal(dealId);
 
-    if (!deal && !deal.tfm) {
+    if (!deal?.tfm) {
       console.error('Invalid deal.');
       return res.redirect('/not-found');
     }
@@ -142,7 +142,7 @@ const getPartyUrnDetails = async (req, res) => {
     const company = await api.getParty(partyUrn);
 
     if (!company || !company.data) {
-      return res.render('case/parties/void.njk', {
+      return res.render('case/parties/non-existent.njk', {
         dealId,
         party,
       });
@@ -193,7 +193,7 @@ const confirmPartyUrn = async (req, res) => {
     const dealId = req.params._id;
     const deal = await api.getDeal(dealId);
 
-    if (!deal && !deal.tfm) {
+    if (!deal?.tfm) {
       console.error('Invalid deal.');
       return res.redirect('/not-found');
     }
@@ -251,7 +251,7 @@ const confirmPartyUrn = async (req, res) => {
 
     // Non-existent party urn
     if (!company && !company.data) {
-      return res.render('case/parties/void.njk', {
+      return res.render('case/parties/non-existent.njk', {
         dealId,
         party,
       });
@@ -289,7 +289,7 @@ const postPartyDetails = async (req, res) => {
     const dealId = req.params._id;
     const deal = await api.getDeal(dealId);
 
-    if (!deal && !deal.tfm) {
+    if (!deal?.tfm) {
       console.error('Invalid deal.');
       return res.redirect('/not-found');
     }

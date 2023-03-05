@@ -12,8 +12,8 @@
 {% block content %}
 
   {{ back.render({
-        return: "/case/" + deal._id + "/parties"
-      }) }}
+      return: "/case/" + deal._id + "/parties"
+  }) }}
 
   <form autocomplete="off" method="POST">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
