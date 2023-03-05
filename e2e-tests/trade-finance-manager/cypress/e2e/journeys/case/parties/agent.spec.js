@@ -197,9 +197,9 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.agentUniqueRefInput().invoke('val').then((value) => {
           expect(value.trim()).equal(partyUrn);
         });
-        // pages.agentPage.agentCommissionRateInput().invoke('text').then((text) => {
-        //   expect(text.trim()).equal('1.234');
-        // });
+        pages.agentPage.agentCommissionRateInput().invoke('val').then((text) => {
+          expect(text.trim()).equal('1.234');
+        });
       });
     });
   });
