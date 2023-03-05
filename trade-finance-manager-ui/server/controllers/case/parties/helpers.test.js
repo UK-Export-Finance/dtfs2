@@ -181,14 +181,14 @@ describe('case - parties - helpers', () => {
       expect(response).toEqual(false);
     });
 
-    it('Should return `false` when URL is an not string', () => {
+    it('Should return `false` when URL is an array', () => {
       const url = [];
       const response = partyType(url);
 
       expect(response).toEqual(false);
     });
 
-    it('Should return `false` when URL is an not string', () => {
+    it('Should return `false` when URL is a number', () => {
       const url = 123.123;
       const response = partyType(url);
 
