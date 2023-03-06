@@ -1,6 +1,6 @@
 import {
   userCanEdit,
-  bondPartyType,
+  bondType,
   isBondPartyType,
   constructErrRef,
   isEmptyString,
@@ -32,27 +32,53 @@ describe('case - parties - helpers', () => {
     });
   });
 
-  describe('bondPartyType()', () => {
-    it('should return bondBeneficiaryPartyUrn and bonds-beneficiary if body contains bondBeneficiaryPartyUrn', () => {
-      const body = {
-        bondBeneficiaryPartyUrn: ['123'],
-      };
+  describe('bondType()', () => {
+    it('should return `bondIssuerPartyUrn`', () => {
+      const response = bondType('bond-issuer');
 
-      const response = bondPartyType(body);
-
-      expect(response.bodyType).toEqual('bondBeneficiaryPartyUrn');
-      expect(response.partyType).toEqual('bonds-beneficiary');
+      expect(response).toEqual('bondIssuerPartyUrn');
     });
 
-    it('should return bondIssuerPartyUrn and bonds-issuer if body does not contain bondBeneficiaryPartyUrn', () => {
-      const body = {
-        bondIssuerPartyUrn: ['123'],
-      };
+    it('should return `bondBeneficiaryPartyUrn`', () => {
+      const response = bondType('bond-beneficiary');
 
-      const response = bondPartyType(body);
+      expect(response).toEqual('bondBeneficiaryPartyUrn');
+    });
 
-      expect(response.bodyType).toContain('bondIssuerPartyUrn');
-      expect(response.partyType).toContain('bonds-issuer');
+    it('should return `bondBeneficiaryPartyUrn`', () => {
+      const response = bondType('ABC123');
+
+      expect(response).toEqual('bondBeneficiaryPartyUrn');
+    });
+
+    it('should return `bondBeneficiaryPartyUrn`', () => {
+      const response = bondType('ABC');
+
+      expect(response).toEqual('bondBeneficiaryPartyUrn');
+    });
+
+    it('should return `bondBeneficiaryPartyUrn`', () => {
+      const response = bondType('123');
+
+      expect(response).toEqual('bondBeneficiaryPartyUrn');
+    });
+
+    it('should return `bondBeneficiaryPartyUrn`', () => {
+      const response = bondType('');
+
+      expect(response).toEqual('bondBeneficiaryPartyUrn');
+    });
+
+    it('should return `bondBeneficiaryPartyUrn`', () => {
+      const response = bondType(null);
+
+      expect(response).toEqual('bondBeneficiaryPartyUrn');
+    });
+
+    it('should return `bondBeneficiaryPartyUrn`', () => {
+      const response = bondType(undefined);
+
+      expect(response).toEqual('bondBeneficiaryPartyUrn');
     });
   });
 

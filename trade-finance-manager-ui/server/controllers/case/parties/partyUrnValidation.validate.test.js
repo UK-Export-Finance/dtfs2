@@ -47,12 +47,12 @@ describe('validatePartyURN()', () => {
     expect(response.urn).toEqual(undefined);
   });
 
-  it('should return empty object if partyUrn is empty string and partyUrnRequired is false', () => {
+  it('should return validation error if partyUrn is empty string and partyUrnRequired is false', () => {
     partyUrnParams.partyUrnRequired = false;
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response).toEqual({});
+    expect(response.errorsObject.errors.fieldErrors).toEqual({ partyUrn: { text: 'Enter a minimum of 3 numbers' } });
   });
 
   it('should return validation error if partyUrn is 1 number', () => {
@@ -146,7 +146,7 @@ describe('validatePartyURN()', () => {
     expect(response.urn).toEqual(' ');
   });
 
-  it('should not return validation error if partyUrn is blank and partyType is bondBeneficiaryPartyUrn', () => {
+  it('should return validation error if partyUrn is blank and partyType is bondBeneficiaryPartyUrn', () => {
     partyUrnParams.urnValue = '';
     partyUrnParams.partyUrnRequired = null;
     partyUrnParams.index = 1;
@@ -154,10 +154,10 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response).toEqual({});
+    expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
   });
 
-  it('should not return validation error if partyUrn is blank and partyType is bondIssuerPartyUrn', () => {
+  it('should return validation error if partyUrn is blank and partyType is bondIssuerPartyUrn', () => {
     partyUrnParams.urnValue = '';
     partyUrnParams.partyUrnRequired = null;
     partyUrnParams.index = 1;
@@ -165,7 +165,29 @@ describe('validatePartyURN()', () => {
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
-    expect(response).toEqual({});
+    expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
+  });
+
+  it('should return validation error if partyUrn is blank and partyType is bondBeneficiaryPartyUrn', () => {
+    partyUrnParams.urnValue = '  ';
+    partyUrnParams.partyUrnRequired = null;
+    partyUrnParams.index = 1;
+    partyUrnParams.partyType = 'bondBeneficiaryPartyUrn';
+    partyUrnParams.urnValidationErrors = [];
+
+    const response = validatePartyURN(partyUrnParams);
+    expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
+  });
+
+  it('should return validation error if partyUrn is blank and partyType is bondIssuerPartyUrn', () => {
+    partyUrnParams.urnValue = '  ';
+    partyUrnParams.partyUrnRequired = null;
+    partyUrnParams.index = 1;
+    partyUrnParams.partyType = 'bondIssuerPartyUrn';
+    partyUrnParams.urnValidationErrors = [];
+
+    const response = validatePartyURN(partyUrnParams);
+    expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
   });
 
   it('should not return validation error if partyUrn is valid and partyType is bondBeneficiaryPartyUrn', () => {

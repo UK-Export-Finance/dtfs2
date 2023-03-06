@@ -3,20 +3,12 @@ const { userIsInTeam } = require('../../../helpers/user');
 
 const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.BUSINESS_SUPPORT]);
 
-// takes body if bondIssuer or bond beneficiary and returns body and party type
-const bondPartyType = (body) => {
-  if (body.bondBeneficiaryPartyUrn) {
-    return {
-      bodyType: 'bondBeneficiaryPartyUrn',
-      partyType: 'bonds-beneficiary',
-    };
-  }
-
-  return {
-    bodyType: 'bondIssuerPartyUrn',
-    partyType: 'bonds-issuer',
-  };
-};
+/**
+ * Returns bond type from party type
+ * @param {String} party party type either as `bond-issuer` or `bond-beneficiary`.
+ * @returns {String} bond type
+ */
+const bondType = (party) => (party === 'bond-issuer' ? 'bondIssuerPartyUrn' : 'bondBeneficiaryPartyUrn');
 
 // checks if bond type and returns true or false
 const isBondPartyType = (partyType) => (partyType === 'bondBeneficiaryPartyUrn' || partyType === 'bondIssuerPartyUrn');
@@ -69,7 +61,7 @@ const partyType = (url) => {
 
 module.exports = {
   userCanEdit,
-  bondPartyType,
+  bondType,
   isBondPartyType,
   constructErrRef,
   isEmptyString,

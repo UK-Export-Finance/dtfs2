@@ -308,7 +308,7 @@ describe('PartyURN: controllers - case - parties', () => {
               _id: mockDeal._id,
             },
             session,
-            url: `/case/${mockDeal._id}/agent/${party}`,
+            url: `/case/${mockDeal._id}/parties/${party}`,
           };
 
           await partiesController.getPartyDetails(req, res);
@@ -338,7 +338,7 @@ describe('PartyURN: controllers - case - parties', () => {
               _id: '1',
             },
             session,
-            url: `/case/1/agent/${party}`,
+            url: `/case/1/parties/${party}`,
           };
 
           await partiesController.getPartyDetails(req, res);
@@ -355,7 +355,7 @@ describe('PartyURN: controllers - case - parties', () => {
             session: {
               user: userNotAllowedToEdit,
             },
-            url: `/case/1/agent/${party}`,
+            url: `/case/1/parties/${party}`,
           };
 
           await partiesController.getPartyDetails(req, res);
@@ -396,7 +396,7 @@ describe('PartyURN: controllers - case - parties', () => {
               _id: mockDeal._id,
             },
             session,
-            url: `/case/${mockDeal._id}/indemnifier/${party}`,
+            url: `/case/${mockDeal._id}/parties/${party}`,
           };
 
           await partiesController.getPartyDetails(req, res);
@@ -426,7 +426,7 @@ describe('PartyURN: controllers - case - parties', () => {
               _id: '1',
             },
             session,
-            url: `/case/1/indemnifier/${party}`,
+            url: `/case/1/parties/${party}`,
           };
 
           await partiesController.getPartyDetails(req, res);
@@ -443,7 +443,7 @@ describe('PartyURN: controllers - case - parties', () => {
             session: {
               user: userNotAllowedToEdit,
             },
-            url: `/case/1/indemnifier/${party}`,
+            url: `/case/1/parties/${party}`,
           };
 
           await partiesController.getPartyDetails(req, res);
@@ -452,7 +452,10 @@ describe('PartyURN: controllers - case - parties', () => {
       });
     });
 
+    // 4. Bond issuer
     describe('GET bond issuer edit', () => {
+      const party = 'bond-issuer';
+
       describe('when deal exists', () => {
         const mockDeal = {
           _id: '61f6ac5b02ffda01b1e8efef',
@@ -482,11 +485,12 @@ describe('PartyURN: controllers - case - parties', () => {
               _id: mockDeal._id,
             },
             session,
+            url: `/case/${mockDeal._id}/parties/${party}`,
           };
 
-          await partiesController.getBondIssuerPartyDetails(req, res);
+          await partiesController.getPartyDetails(req, res);
           expect(res.render).toHaveBeenCalledWith(
-            'case/parties/edit/bonds-issuer.njk',
+            `case/parties/edit/${party}.njk`,
             {
               userCanEdit: userCanEdit(req.session.user),
               renderEditLink: false,
@@ -494,7 +498,10 @@ describe('PartyURN: controllers - case - parties', () => {
               activePrimaryNavigation: 'manage work',
               activeSubNavigation: 'parties',
               deal: mockDeal.dealSnapshot,
+              tfm: mockDeal.tfm,
+              dealId: req.params._id,
               user: session.user,
+              urn: '',
             },
           );
         });
@@ -513,7 +520,7 @@ describe('PartyURN: controllers - case - parties', () => {
             session,
           };
 
-          await partiesController.getBondIssuerPartyDetails(req, res);
+          await partiesController.getBondUrnDetails(req, res);
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
       });
@@ -529,13 +536,16 @@ describe('PartyURN: controllers - case - parties', () => {
             },
           };
 
-          await partiesController.getBondIssuerPartyDetails(req, res);
+          await partiesController.getBondUrnDetails(req, res);
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
       });
     });
 
+    // 4. Bond beneficiary
     describe('GET bond beneficiary edit', () => {
+      const party = 'bond-beneficiary';
+
       describe('when deal exists', () => {
         const mockDeal = {
           _id: '61f6ac5b02ffda01b1e8efef',
@@ -565,11 +575,12 @@ describe('PartyURN: controllers - case - parties', () => {
               _id: mockDeal._id,
             },
             session,
+            url: `/case/${mockDeal._id}/parties/${party}`,
           };
 
-          await partiesController.getBondBeneficiaryPartyDetails(req, res);
+          await partiesController.getPartyDetails(req, res);
           expect(res.render).toHaveBeenCalledWith(
-            'case/parties/edit/bonds-beneficiary.njk',
+            `case/parties/edit/${party}.njk`,
             {
               userCanEdit: userCanEdit(req.session.user),
               renderEditLink: false,
@@ -577,7 +588,10 @@ describe('PartyURN: controllers - case - parties', () => {
               activePrimaryNavigation: 'manage work',
               activeSubNavigation: 'parties',
               deal: mockDeal.dealSnapshot,
+              tfm: mockDeal.tfm,
+              dealId: req.params._id,
               user: session.user,
+              urn: '',
             },
           );
         });
@@ -596,7 +610,7 @@ describe('PartyURN: controllers - case - parties', () => {
             session,
           };
 
-          await partiesController.getBondBeneficiaryPartyDetails(req, res);
+          await partiesController.getBondUrnDetails(req, res);
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
       });
@@ -612,7 +626,7 @@ describe('PartyURN: controllers - case - parties', () => {
             },
           };
 
-          await partiesController.getBondBeneficiaryPartyDetails(req, res);
+          await partiesController.getBondUrnDetails(req, res);
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
       });
@@ -746,6 +760,7 @@ describe('PartyURN: controllers - case - parties', () => {
           expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
+            urn: req.body.partyUrn,
           });
         });
 
@@ -924,6 +939,7 @@ describe('PartyURN: controllers - case - parties', () => {
           expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
+            urn: req.body.partyUrn,
           });
         });
 
@@ -1102,6 +1118,7 @@ describe('PartyURN: controllers - case - parties', () => {
           expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
+            urn: req.body.partyUrn,
           });
         });
 
@@ -1289,6 +1306,7 @@ describe('PartyURN: controllers - case - parties', () => {
           expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
+            urn: req.body.partyUrn,
           });
         });
 
