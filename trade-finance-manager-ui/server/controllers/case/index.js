@@ -362,6 +362,7 @@ const getCaseDocuments = async (req, res) => {
  */
 const confirmTfmFacility = async (req, res) => {
   try {
+    const { facilityId } = req.body;
     delete req.body._csrf;
 
     const party = partyType(req.url);
@@ -461,6 +462,8 @@ const confirmTfmFacility = async (req, res) => {
 
     // Redirect to summary (confirmation) page
     req.session.urn = req.body[bond];
+    req.session.facilityId = facilityId;
+
     return res.redirect(`/case/${dealId}/parties/${party}/summary`);
   } catch (e) {
     console.error('Error posting bond party URN ', { e });
@@ -476,13 +479,14 @@ const confirmTfmFacility = async (req, res) => {
  */
 const postTfmFacility = async (req, res) => {
   try {
-    console.log('===', req.body);
-    const { facilityId, ...facilityUpdateFields } = req.body;
     delete req.body._csrf;
-    delete facilityUpdateFields._csrf;
 
     const party = partyType(req.url);
-    const { user } = req.session;
+    const bond = bondType(party);
+    const { user, urn, facilityId } = req.session;
+
+    delete req.session.urn;
+    delete req.session.facilityId;
 
     const canEdit = userCanEdit(user);
 
@@ -507,11 +511,10 @@ const postTfmFacility = async (req, res) => {
     // Update facilities
     await Promise.all(
       facilityId.map((id, index) => {
-        const facilityUpdate = {};
-        Object.entries(facilityUpdateFields).forEach(([fieldName, values]) => {
-          facilityUpdate[fieldName] = values[index];
-        });
-        return api.updateFacility(id, facilityUpdate);
+        const update = {
+          [bond]: urn[index],
+        };
+        return api.updateFacility(id, update);
       }),
     );
 

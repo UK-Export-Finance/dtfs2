@@ -27,14 +27,22 @@
   <!-- Party details table -->
   <div class="govuk-grid-row govuk-body">
     <div class="govuk-grid-column-two-thirds">
-      {% set caption = [
-        party | sentence,
-        ' ',
-        'details'
-      ] | join %}
+
       {% set change = "<a href = '" + edit + "' + party data-cy='change-party-urn'>Change</a>" %}
 
-      {{ govukTable ({
+      {% for partyUrn in urn %}
+        {% if loop.index0 === 0 %} 
+            {% set caption = [
+                party | sentence,
+                ' ',
+                'details'
+            ] | join %}
+        {% else %}
+            {% set caption = '' %}
+        {% endif %}
+
+
+        {{ govukTable ({
           caption: caption,
           captionClasses: "govuk-table__caption--l govuk-!-margin-top-1",
           firstCellIsHeader: true,
@@ -49,7 +57,7 @@
               classes: 'govuk-!-width-one-quarter'
             },
             {
-              text: name,
+              text: name[loop.index0],
               classes: 'govuk-!-width-one-third'
             },
             {
@@ -62,7 +70,7 @@
               text: 'Unique reference number'
             },
             {
-              text: urn
+              text: partyUrn
             },
             {
               html: change
@@ -70,6 +78,10 @@
             ]
           ]
         }) }}
+
+
+      {% endfor %}
+
     </div>
   </div>
 
