@@ -69,7 +69,7 @@ const validatePartyURN = (partyUrnParams) => {
   const urnSchema = Joi.string().min(3).pattern(/^\d+$/).required();
   const urnValidation = urnSchema.validate(urnValue);
 
-  if (urnValue && urnValidation.error) {
+  if (urnValidation.error) {
     return invalidURNValidation(partyUrnParams, urnValidation);
   }
 

@@ -83,6 +83,10 @@ const getPartyDetails = async (req, res) => {
       return res.redirect('/not-found');
     }
 
+    const urn = deal.tfm.parties[party]
+      ? deal.tfm.parties[party].partyUrn
+      : '';
+
     return res.render(`case/parties/edit/${party}.njk`, {
       userCanEdit: canEdit,
       renderEditLink: false,
@@ -93,7 +97,7 @@ const getPartyDetails = async (req, res) => {
       tfm: deal.tfm,
       dealId,
       user: req.session.user,
-      urn: deal.tfm.parties[party].partyUrn,
+      urn,
     });
   } catch (e) {
     console.error('Error rendering party URN edit page', { e });
@@ -145,6 +149,7 @@ const getPartyUrnDetails = async (req, res) => {
       return res.render('case/parties/non-existent.njk', {
         dealId,
         party,
+        urn: partyUrn,
       });
     }
 
@@ -173,7 +178,66 @@ const getPartyUrnDetails = async (req, res) => {
 };
 
 /**
- * Post party URN summary page
+ * Renders bond specific urn summary page
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Object} Express response as rendered party page.
+ */
+const getBondUrnDetails = async (req, res) => {
+  try {
+    const { user } = req.session;
+    const party = partyType(req.url);
+
+    const canEdit = userCanEdit(user);
+
+    if (!canEdit) {
+      console.error('Invalid user privilege.');
+      return res.redirect('/not-found');
+    }
+
+    const dealId = req.params._id;
+    const partyUrns = req.session.urn;
+
+    const deal = await api.getDeal(dealId);
+
+    if (!deal?.tfm) {
+      console.error('Invalid deal.');
+      return res.redirect('/not-found');
+    }
+
+    if (!party) {
+      console.error('Invalid party type specified.');
+      return res.redirect('/not-found');
+    }
+
+    const companies = partyUrns.map(async (urn) => api.getParty(urn)
+      // Non-existent party urn
+      .then((company) => (!company?.data?.length ? Promise.resolve() : Promise.resolve(company.data[0].name))));
+
+    const name = await Promise.all(companies);
+
+    return res.render('case/parties/summary/bond.njk', {
+      userCanEdit: canEdit,
+      renderEditLink: false,
+      renderEditForm: true,
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'parties',
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
+      dealId,
+      user: req.session.user,
+      urn: partyUrns,
+      name,
+      party,
+    });
+  } catch (e) {
+    console.error('Error rendering bond specific urn summary page', { e });
+    return res.redirect('/not-found');
+  }
+};
+
+/**
+ * Post party URN to the summary page for confirmation
  * @param {Express.Request} req
  * @param {Express.Response} res
  * @returns {Object} Express response as rendered confirm party URN page.
@@ -254,6 +318,7 @@ const confirmPartyUrn = async (req, res) => {
       return res.render('case/parties/non-existent.njk', {
         dealId,
         party,
+        urn: partyUrn,
       });
     }
 
@@ -265,7 +330,7 @@ const confirmPartyUrn = async (req, res) => {
     // Redirect to summary (confirmation) page
     return res.redirect(`/case/${dealId}/parties/${party}/summary/${partyUrn}`);
   } catch (e) {
-    console.error('Error posting party URN summary page', { e });
+    console.error('Error posting party URN', { e });
     return res.redirect('/not-found');
   }
 };
@@ -330,70 +395,11 @@ const postPartyDetails = async (req, res) => {
   }
 };
 
-const getBondIssuerPartyDetails = async (req, res) => {
-  const { user } = req.session;
-
-  const canEdit = userCanEdit(user);
-
-  if (!canEdit) {
-    console.error('Invalid user privilege.');
-    return res.redirect('/not-found');
-  }
-
-  const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-
-  if (!deal) {
-    console.error('Invalid deal.');
-    return res.redirect('/not-found');
-  }
-
-  return res.render('case/parties/edit/bonds-issuer.njk', {
-    userCanEdit: canEdit,
-    renderEditLink: false,
-    renderEditForm: true,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'parties',
-    deal: deal.dealSnapshot,
-    user,
-  });
-};
-
-const getBondBeneficiaryPartyDetails = async (req, res) => {
-  const { user } = req.session;
-
-  const canEdit = userCanEdit(user);
-
-  if (!canEdit) {
-    console.error('Invalid user privilege.');
-    return res.redirect('/not-found');
-  }
-
-  const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-
-  if (!deal) {
-    console.error('Invalid deal.');
-    return res.redirect('/not-found');
-  }
-
-  return res.render('case/parties/edit/bonds-beneficiary.njk', {
-    userCanEdit: canEdit,
-    renderEditLink: false,
-    renderEditForm: true,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'parties',
-    deal: deal.dealSnapshot,
-    user,
-  });
-};
-
 module.exports = {
   getPartyDetails,
   getPartyUrnDetails,
+  getBondUrnDetails,
   confirmPartyUrn,
   postPartyDetails,
   getAllParties,
-  getBondIssuerPartyDetails,
-  getBondBeneficiaryPartyDetails,
 };

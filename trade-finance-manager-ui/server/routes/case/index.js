@@ -90,11 +90,15 @@ router.post('/:_id/parties/indemnifier', partiesController.confirmPartyUrn);
 router.get('/:_id/parties/indemnifier/summary/:urn', partiesController.getPartyUrnDetails);
 router.post('/:_id/parties/indemnifier/summary/:urn', partiesController.postPartyDetails);
 
-router.get('/:_id/parties/bond-issuer', partiesController.getBondIssuerPartyDetails);
-router.post('/:_id/parties/bond-issuer', caseController.postTfmFacility);
+router.get('/:_id/parties/bond-issuer', partiesController.getPartyDetails);
+router.post('/:_id/parties/bond-issuer', caseController.confirmTfmFacility);
+router.get('/:_id/parties/bond-issuer/summary', partiesController.getBondUrnDetails);
+router.post('/:_id/parties/bond-issuer/summary', caseController.postTfmFacility);
 
-router.get('/:_id/parties/bond-beneficiary', partiesController.getBondBeneficiaryPartyDetails);
-router.post('/:_id/parties/bond-beneficiary', caseController.postTfmFacility);
+router.get('/:_id/parties/bond-beneficiary', partiesController.getPartyDetails);
+router.post('/:_id/parties/bond-beneficiary', caseController.confirmTfmFacility);
+router.get('/:_id/parties/bond-beneficiary/summary', partiesController.getBondUrnDetails);
+router.post('/:_id/parties/bond-beneficiary/summary', caseController.postTfmFacility);
 
 router.get('/:_id/activity', activityController.getActivity);
 router.post('/:_id/activity', activityController.filterActivities);

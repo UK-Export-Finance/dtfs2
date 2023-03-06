@@ -7,7 +7,7 @@ const CONSTANTS = require('../../constants');
 const { filterTasks } = require('../helpers/tasks.helper');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
-const { bondPartyType, userCanEdit } = require('./parties/helpers');
+const { bondType, partyType, userCanEdit } = require('./parties/helpers');
 
 const {
   DEAL,
@@ -354,81 +354,178 @@ const getCaseDocuments = async (req, res) => {
   }
 };
 
-const postTfmFacility = async (req, res) => {
-  const { facilityId, ...facilityUpdateFields } = req.body;
-  const dealId = req.params._id;
-  delete req.body._csrf;
-  delete facilityUpdateFields._csrf;
-  const { user } = req.session;
-  const deal = await api.getDeal(dealId);
+/**
+ * Post party URNs to bond summary page for confirmation
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Object} Express response as rendered confirm party URN page.
+ */
+const confirmTfmFacility = async (req, res) => {
+  try {
+    delete req.body._csrf;
 
-  if (!deal) {
-    return res.redirect('/not-found');
-  }
+    const party = partyType(req.url);
+    const bond = bondType(party);
+    const { user } = req.session;
 
-  // gets the bodyType and partyType from body for URN validation
-  const { bodyType, partyType } = bondPartyType(req.body);
-
-  const urnValidationErrors = [];
-  // object to store final error object if any validation errors
-  let validationErrors = {};
-
-  // loops through array of URNs
-  req.body[bodyType].forEach((eachType, index) => {
-    // constructs object for validation
-    const partyUrnParams = {
-      urnValue: eachType,
-      // partyURN not required for these fields
-      partyUrnRequired: null,
-      // adds 1 to index as nunjucks indexes start at 1
-      index: index + 1,
-      partyType: bodyType,
-      urnValidationErrors,
-    };
-
-    const errors = validatePartyURN(partyUrnParams);
-
-    // if errors, then overrides validationErrors object
-    if (errors.errorsObject) {
-      validationErrors = errors;
-    }
-  });
-
-  // if error, then rerender template with error message
-  if (validationErrors.errorsObject) {
     const canEdit = userCanEdit(user);
 
-    return res.render(`case/parties/edit/${partyType}.njk`, {
-      userCanEdit: canEdit,
-      renderEditLink: false,
-      renderEditForm: true,
-      activePrimaryNavigation: 'manage work',
-      activeSubNavigation: 'parties',
-      deal: deal.dealSnapshot,
-      user,
-      errors: validationErrors.errorsObject.errors,
-      // returns URN from request body
-      urn: req.body[bodyType],
-    });
-  }
+    if (!canEdit) {
+      console.error('Invalid user privilege.');
+      return res.redirect('/not-found');
+    }
 
-  await Promise.all(
-    facilityId.map((id, index) => {
-      const facilityUpdate = {};
-      Object.entries(facilityUpdateFields).forEach(([fieldName, values]) => {
-        facilityUpdate[fieldName] = values[index];
+    const dealId = req.params._id;
+    const deal = await api.getDeal(dealId);
+
+    if (!deal?.tfm) {
+      console.error('Invalid deal.');
+      return res.redirect('/not-found');
+    }
+
+    if (!party) {
+      console.error('Invalid party type specified.');
+      return res.redirect('/not-found');
+    }
+
+    /**
+     * Check `partyUrn` is minimum 3 digits
+     * and is not empty.
+     */
+    if (req.body[bond]?.length) {
+      const urnValidationErrors = [];
+      let validationErrors = {};
+
+      // loops through array of URNs
+      req.body[bond].forEach((urn, index) => {
+        // constructs object for validation
+        const partyUrnParams = {
+          urnValue: urn,
+          // partyURN not required for these fields
+          partyUrnRequired: null,
+          // adds 1 to index as nunjucks indexes start at 1
+          index: index + 1,
+          party,
+          urnValidationErrors,
+        };
+
+        // Validates partyURN input
+        const errors = validatePartyURN(partyUrnParams);
+
+        // if errors, then overrides validationErrors object
+        if (errors.errorsObject) {
+          validationErrors = errors;
+        }
       });
-      return api.updateFacility(id, facilityUpdate);
-    }),
-  );
 
-  /**
+      if (validationErrors.errorsObject) {
+        // Render bond specific page with error
+        return res.render(`case/parties/edit/${party}.njk`, {
+          userCanEdit: canEdit,
+          renderEditLink: false,
+          renderEditForm: true,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: 'parties',
+          deal: deal.dealSnapshot,
+          user,
+          errors: validationErrors.errorsObject.errors,
+          urn: req.body[bond],
+        });
+      }
+    }
+
+    // Fetches company information from URN
+    const companies = req.body[bond].map(async (urn) => api.getParty(urn)
+      // Non-existent party urn
+      .then((company) => (!company || !company.data ? Promise.resolve(false) : Promise.resolve(true))));
+
+    const responses = await Promise.all(companies);
+    let invalidUrn = 0;
+    const validUrn = responses.every((response, index) => {
+      if (!response) {
+        invalidUrn = index;
+        return false;
+      }
+
+      return true;
+    });
+
+    // Re-direct if any party urn is invalid
+    if (!validUrn) {
+      return res.render('case/parties/non-existent.njk', {
+        dealId,
+        party,
+        urn: req.body[bond][invalidUrn],
+      });
+    }
+
+    // Redirect to summary (confirmation) page
+    req.session.urn = req.body[bond];
+    return res.redirect(`/case/${dealId}/parties/${party}/summary`);
+  } catch (e) {
+    console.error('Error posting bond party URN ', { e });
+    return res.redirect('/not-found');
+  }
+};
+
+/**
+ * Post bond party URNs to the TFM
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Object} Express response as rendered confirm party URN page.
+ */
+const postTfmFacility = async (req, res) => {
+  try {
+    console.log('===', req.body);
+    const { facilityId, ...facilityUpdateFields } = req.body;
+    delete req.body._csrf;
+    delete facilityUpdateFields._csrf;
+
+    const party = partyType(req.url);
+    const { user } = req.session;
+
+    const canEdit = userCanEdit(user);
+
+    if (!canEdit) {
+      console.error('Invalid user privilege.');
+      return res.redirect('/not-found');
+    }
+
+    const dealId = req.params._id;
+    const deal = await api.getDeal(dealId);
+
+    if (!deal?.tfm) {
+      console.error('Invalid deal.');
+      return res.redirect('/not-found');
+    }
+
+    if (!party) {
+      console.error('Invalid party type specified.');
+      return res.redirect('/not-found');
+    }
+
+    // Update facilities
+    await Promise.all(
+      facilityId.map((id, index) => {
+        const facilityUpdate = {};
+        Object.entries(facilityUpdateFields).forEach(([fieldName, values]) => {
+          facilityUpdate[fieldName] = values[index];
+        });
+        return api.updateFacility(id, facilityUpdate);
+      }),
+    );
+
+    /**
    * Trigger's ACBS upon bond `beneficiary`
    * and `issuer` URN criteria match.
    * */
-  await api.updateParty(dealId, deal.parties);
+    await api.updateParty(dealId, deal.parties);
 
-  return res.redirect(`/case/${dealId}/parties`);
+    return res.redirect(`/case/${dealId}/parties`);
+  } catch (e) {
+    console.error('Error posting bond party URN to TFM ', { e });
+    return res.redirect('/not-found');
+  }
 };
 
 module.exports = {
@@ -440,5 +537,6 @@ module.exports = {
   getCaseFacility,
   postFacilityAmendment,
   getCaseDocuments,
+  confirmTfmFacility,
   postTfmFacility,
 };

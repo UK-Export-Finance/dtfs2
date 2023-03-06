@@ -746,6 +746,7 @@ describe('PartyURN: controllers - case - parties', () => {
           expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
+            urn: req.body.partyUrn,
           });
         });
 
@@ -924,6 +925,7 @@ describe('PartyURN: controllers - case - parties', () => {
           expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
+            urn: req.body.partyUrn,
           });
         });
 
@@ -1102,6 +1104,7 @@ describe('PartyURN: controllers - case - parties', () => {
           expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
+            urn: req.body.partyUrn,
           });
         });
 
@@ -1289,6 +1292,7 @@ describe('PartyURN: controllers - case - parties', () => {
           expect(res.render).toHaveBeenCalledWith('case/parties/non-existent.njk', {
             dealId: req.params._id,
             party,
+            urn: req.body.partyUrn,
           });
         });
 
