@@ -30,12 +30,12 @@ const emptyURNValidation = (partyUrnParams) => {
 const invalidURNValidation = (partyUrnParams, urnValidation) => {
   const {
     index,
-    partyType,
+    party,
     urnValidationErrors,
   } = partyUrnParams;
 
   // constructs error ref based on partyType and determines if to add index or not
-  const errRef = constructErrRef(partyType, index);
+  const errRef = constructErrRef(party, index);
 
   urnValidationErrors.push({
     errRef,

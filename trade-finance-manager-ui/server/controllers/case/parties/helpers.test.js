@@ -84,19 +84,19 @@ describe('case - parties - helpers', () => {
 
   describe('isBondPartyType()', () => {
     it('should return true if party type is bondBeneficiaryPartyUrn', () => {
-      const response = isBondPartyType('bondBeneficiaryPartyUrn');
+      const response = isBondPartyType('bond-beneficiary');
 
       expect(response).toEqual(true);
     });
 
     it('should return true if party type is bondIssuerPartyUrn', () => {
-      const response = isBondPartyType('bondIssuerPartyUrn');
+      const response = isBondPartyType('bond-issuer');
 
       expect(response).toEqual(true);
     });
 
     it('should return true if party type is bondBeneficiaryPartyUrn', () => {
-      const response = isBondPartyType('bondBeneficiaryPartyUrn');
+      const response = isBondPartyType('bond-beneficiary');
 
       expect(response).toEqual(true);
     });
@@ -112,35 +112,77 @@ describe('case - parties - helpers', () => {
 
       expect(response).toEqual(false);
     });
+
+    it('should return true if party type is buyer', () => {
+      const response = isBondPartyType('buyer');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return true if party type is indemnifier', () => {
+      const response = isBondPartyType('indemnifier');
+
+      expect(response).toEqual(false);
+    });
+
+    it('should return true if party type is blank', () => {
+      const response = isBondPartyType('');
+
+      expect(response).toEqual(false);
+    });
   });
 
   describe('constructErrRef()', () => {
+    it('should return `partyUrn` if partyType is blank', () => {
+      const response = constructErrRef('', null);
+
+      expect(response).toEqual('partyUrn');
+    });
+
     it('should return `partyUrn` if partyType is exporter', () => {
       const response = constructErrRef('exporter', null);
 
       expect(response).toEqual('partyUrn');
     });
 
-    it('should return `partyUrn-1` if partyType is bondBeneficiaryPartyUrn and index 1', () => {
-      const response = constructErrRef('bondBeneficiaryPartyUrn', 1);
+    it('should return `partyUrn` if partyType is buyer', () => {
+      const response = constructErrRef('buyer', null);
+
+      expect(response).toEqual('partyUrn');
+    });
+
+    it('should return `partyUrn` if partyType is agent', () => {
+      const response = constructErrRef('agent', null);
+
+      expect(response).toEqual('partyUrn');
+    });
+
+    it('should return `partyUrn` if partyType is indemnifier', () => {
+      const response = constructErrRef('indemnifier', null);
+
+      expect(response).toEqual('partyUrn');
+    });
+
+    it('should return `partyUrn-1` if partyType is bond-beneficiary and index 1', () => {
+      const response = constructErrRef('bond-beneficiary', 1);
 
       expect(response).toEqual('partyUrn-1');
     });
 
-    it('should return `partyUrn-2` if partyType is bondBeneficiaryPartyUrn and index 2', () => {
-      const response = constructErrRef('bondBeneficiaryPartyUrn', 2);
+    it('should return `partyUrn-2` if partyType is bond-beneficiary and index 2', () => {
+      const response = constructErrRef('bond-beneficiary', 2);
 
       expect(response).toEqual('partyUrn-2');
     });
 
-    it('should return `partyUrn-1` if partyType is bondIssuerPartyUrn and index 1', () => {
-      const response = constructErrRef('bondIssuerPartyUrn', 1);
+    it('should return `partyUrn-1` if partyType is bond-issuer and index 1', () => {
+      const response = constructErrRef('bond-issuer', 1);
 
       expect(response).toEqual('partyUrn-1');
     });
 
-    it('should return `partyUrn-2` if partyType is bondIssuerPartyUrn and index 2', () => {
-      const response = constructErrRef('bondIssuerPartyUrn', 2);
+    it('should return `partyUrn-2` if partyType is bond-issuer and index 2', () => {
+      const response = constructErrRef('bond-issuer', 2);
 
       expect(response).toEqual('partyUrn-2');
     });

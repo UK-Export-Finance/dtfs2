@@ -5,7 +5,7 @@ describe('validatePartyURN()', () => {
     urnValue: '123456',
     partyUrnRequired: true,
     index: null,
-    partyType: 'exporter',
+    party: 'exporter',
     urnValidationErrors: [],
   };
 
@@ -16,7 +16,7 @@ describe('validatePartyURN()', () => {
 
   it('should return validation error if partyUrn is empty string and partyUrnRequired', () => {
     partyUrnParams.urnValue = '';
-    partyUrnParams.partyType = 'buyer';
+    partyUrnParams.party = 'buyer';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
@@ -27,7 +27,7 @@ describe('validatePartyURN()', () => {
 
   it('should return validation error if partyUrn is null and partyUrnRequired', () => {
     partyUrnParams.urnValue = null;
-    partyUrnParams.partyType = 'buyer';
+    partyUrnParams.party = 'buyer';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
@@ -38,7 +38,7 @@ describe('validatePartyURN()', () => {
 
   it('should return validation error if partyUrn is undefined and partyUrnRequired', () => {
     partyUrnParams.urnValue = undefined;
-    partyUrnParams.partyType = 'buyer';
+    partyUrnParams.party = 'buyer';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
@@ -57,7 +57,7 @@ describe('validatePartyURN()', () => {
 
   it('should return validation error if partyUrn is 1 number', () => {
     partyUrnParams.urnValue = '1';
-    partyUrnParams.partyType = 'agent';
+    partyUrnParams.party = 'agent';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
@@ -146,77 +146,77 @@ describe('validatePartyURN()', () => {
     expect(response.urn).toEqual(' ');
   });
 
-  it('should return validation error if partyUrn is blank and partyType is bondBeneficiaryPartyUrn', () => {
+  it('should return validation error if partyUrn is blank and party is bond-beneficiary', () => {
     partyUrnParams.urnValue = '';
     partyUrnParams.partyUrnRequired = null;
     partyUrnParams.index = 1;
-    partyUrnParams.partyType = 'bondBeneficiaryPartyUrn';
+    partyUrnParams.party = 'bond-beneficiary';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
   });
 
-  it('should return validation error if partyUrn is blank and partyType is bondIssuerPartyUrn', () => {
+  it('should return validation error if partyUrn is blank and party is bond-issuer', () => {
     partyUrnParams.urnValue = '';
     partyUrnParams.partyUrnRequired = null;
     partyUrnParams.index = 1;
-    partyUrnParams.partyType = 'bondIssuerPartyUrn';
+    partyUrnParams.party = 'bond-issuer';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
   });
 
-  it('should return validation error if partyUrn is blank and partyType is bondBeneficiaryPartyUrn', () => {
+  it('should return validation error if partyUrn is blank and party is bond-beneficiary', () => {
     partyUrnParams.urnValue = '  ';
     partyUrnParams.partyUrnRequired = null;
     partyUrnParams.index = 1;
-    partyUrnParams.partyType = 'bondBeneficiaryPartyUrn';
+    partyUrnParams.party = 'bond-beneficiary';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
   });
 
-  it('should return validation error if partyUrn is blank and partyType is bondIssuerPartyUrn', () => {
+  it('should return validation error if partyUrn is blank and party is bond-issuer', () => {
     partyUrnParams.urnValue = '  ';
     partyUrnParams.partyUrnRequired = null;
     partyUrnParams.index = 1;
-    partyUrnParams.partyType = 'bondIssuerPartyUrn';
+    partyUrnParams.party = 'bond-issuer';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
     expect(response.errorsObject.errors.fieldErrors).toEqual({ 'partyUrn-1': { text: 'Enter a minimum of 3 numbers' } });
   });
 
-  it('should not return validation error if partyUrn is valid and partyType is bondBeneficiaryPartyUrn', () => {
+  it('should not return validation error if partyUrn is valid and party is bond-beneficiary', () => {
     partyUrnParams.urnValue = '1121';
     partyUrnParams.partyUrnRequired = null;
     partyUrnParams.index = 1;
-    partyUrnParams.partyType = 'bondBeneficiaryPartyUrn';
+    partyUrnParams.party = 'bond-beneficiary';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
     expect(response).toEqual({});
   });
 
-  it('should not return validation error if partyUrn is valid and partyType is bondIssuerPartyUrn', () => {
+  it('should not return validation error if partyUrn is valid and party is bond-issuer', () => {
     partyUrnParams.urnValue = '1234';
     partyUrnParams.partyUrnRequired = null;
     partyUrnParams.index = 1;
-    partyUrnParams.partyType = 'bondIssuerPartyUrn';
+    partyUrnParams.party = 'bond-issuer';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
     expect(response).toEqual({});
   });
 
-  it('should return validation error if partyUrn is a single number and partyType is bondBeneficiaryPartyUrn with partyUrnId with index in error', () => {
+  it('should return validation error if partyUrn is a single number and party is bond-beneficiary with partyUrnId with index in error', () => {
     partyUrnParams.urnValue = '1';
     partyUrnParams.partyUrnRequired = null;
     partyUrnParams.index = 2;
-    partyUrnParams.partyType = 'bondBeneficiaryPartyUrn';
+    partyUrnParams.party = 'bond-beneficiary';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
@@ -225,11 +225,11 @@ describe('validatePartyURN()', () => {
     expect(response.urn).toEqual('1');
   });
 
-  it('should return validation error if partyUrn is single number and partyType is bondIssuerPartyUrn with partyUrnId with index in error', () => {
+  it('should return validation error if partyUrn is single number and party is bond-issuer with partyUrnId with index in error', () => {
     partyUrnParams.urnValue = '1';
     partyUrnParams.partyUrnRequired = null;
     partyUrnParams.index = 1;
-    partyUrnParams.partyType = 'bondIssuerPartyUrn';
+    partyUrnParams.party = 'bond-issuer';
     partyUrnParams.urnValidationErrors = [];
 
     const response = validatePartyURN(partyUrnParams);
