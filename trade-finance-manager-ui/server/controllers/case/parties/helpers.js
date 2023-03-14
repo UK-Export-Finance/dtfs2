@@ -1,6 +1,11 @@
 const CONSTANTS = require('../../../constants');
 const { userIsInTeam } = require('../../../helpers/user');
 
+const bondParties = [
+  CONSTANTS.PARTY.BOND.BOND_ISSUER,
+  CONSTANTS.PARTY.BOND.BOND_BENEFICIARY,
+];
+
 const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.BUSINESS_SUPPORT]);
 
 /**
@@ -8,10 +13,10 @@ const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.BUSINESS_SUPPO
  * @param {String} party party type either as `bond-issuer` or `bond-beneficiary`.
  * @returns {String} bond type
  */
-const bondType = (party) => (party === 'bond-issuer' ? 'bondIssuerPartyUrn' : 'bondBeneficiaryPartyUrn');
+const bondType = (party) => (party === CONSTANTS.PARTY.BOND.BOND_ISSUER ? 'bondIssuerPartyUrn' : 'bondBeneficiaryPartyUrn');
 
 // checks if bond type and returns true or false
-const isBondPartyType = (partyType) => (partyType === 'bond-beneficiary' || partyType === 'bond-issuer');
+const isBondPartyType = (partyType) => bondParties.includes(partyType);
 
 /**
  * Constructs `errRef` based on `partyType`

@@ -4,12 +4,14 @@ import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { T1_USER_1, BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
+const CONSTANTS = require('../../../../fixtures/constants');
+
 context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM', () => {
   let dealId;
   const dealFacilities = [];
-  const party = 'agent';
-  const mockUrn = '1234';
-  const partyUrn = '00307249';
+  const party = CONSTANTS.PARTIES.AGENT;
+  const mockUrn = CONSTANTS.PARTY_URN.INVALID;
+  const partyUrn = CONSTANTS.PARTY_URN.VALID;
 
   // Submit a deal with facilities
   before(() => {
