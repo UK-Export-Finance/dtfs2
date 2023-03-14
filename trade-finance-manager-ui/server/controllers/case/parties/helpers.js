@@ -1,6 +1,11 @@
 const CONSTANTS = require('../../../constants');
 const { userIsInTeam } = require('../../../helpers/user');
 
+const bondParties = [
+  CONSTANTS.PARTY.BOND.BOND_ISSUER,
+  CONSTANTS.PARTY.BOND.BOND_BENEFICIARY,
+];
+
 const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.BUSINESS_SUPPORT]);
 
 /**
@@ -8,33 +13,23 @@ const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.BUSINESS_SUPPO
  * @param {String} party party type either as `bond-issuer` or `bond-beneficiary`.
  * @returns {String} bond type
  */
-const bondType = (party) => (party === 'bond-issuer' ? 'bondIssuerPartyUrn' : 'bondBeneficiaryPartyUrn');
+const bondType = (party) => (party === CONSTANTS.PARTY.BOND.BOND_ISSUER ? 'bondIssuerPartyUrn' : 'bondBeneficiaryPartyUrn');
 
 // checks if bond type and returns true or false
-const isBondPartyType = (partyType) => (partyType === 'bondBeneficiaryPartyUrn' || partyType === 'bondIssuerPartyUrn');
+const isBondPartyType = (partyType) => bondParties.includes(partyType);
 
 /**
- * constructs errRef based on partyType
- * if bondBeneficiary or bondIssuer, then needs index to specify which urn box it is referring to,
- * else should just be partyUrn
+ * Constructs `errRef` based on `partyType`
+ * if `bondBeneficiary` or `bondIssuer`, then add index for field reference
+ * otherwise should return default field reference.
+ * @param {String} partyType Party type
+ * @param {Integer} index Party URN field index
+ * @returns {String} Party URN reference for an inline error display
  */
-const constructErrRef = (partyType, index) => {
-  let errRef = 'partyUrn';
-
-  if (isBondPartyType(partyType)) {
-    errRef = `partyUrn-${index}`;
-  }
-
-  return errRef;
-};
+const constructErrRef = (party, index) => (isBondPartyType(party) ? `partyUrn-${index}` : 'partyUrn');
 
 // checks if string is empty - checks that string is '' and does not have a length and returns true if so
-const isEmptyString = (str) => {
-  if (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length)) {
-    return true;
-  }
-  return false;
-};
+const isEmptyString = (str) => (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length) ? true : false);
 
 /**
  * Extracts party name from the URL

@@ -1,15 +1,23 @@
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { T1_USER_1 } from '../../../../../../e2e-fixtures';
+import { T1_USER_1, BUSINESS_SUPPORT_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
+
+const CONSTANTS = require('../../../../fixtures/constants');
 
 context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM', () => {
   let dealId;
   const dealFacilities = [];
-  const party = 'bond-issuer';
-  // const mockUrn = ['1234', '1234'];
-  // const partyUrn = ['00307249', '00307249'];
+  const party = CONSTANTS.PARTIES.BOND_ISSUER;
+  const mockUrn = [
+    CONSTANTS.PARTY_URN.INVALID,
+    CONSTANTS.PARTY_URN.INVALID,
+  ];
+  const partyUrn = [
+    CONSTANTS.PARTY_URN.VALID,
+    CONSTANTS.PARTY_URN.VALID,
+  ];
 
   // Submit a deal with facilities
   before(() => {
@@ -38,6 +46,170 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
   });
 
   describe('Bond issuer party', () => {
+    describe('when the TFM user is in `BUSINESS_SUPPORT team', () => {
+      beforeEach(() => {
+        cy.login(BUSINESS_SUPPORT_USER_1);
+        cy.visit(relative(`/case/${dealId}/parties`));
+      });
+
+      it('should render edit page', () => {
+        pages.partiesPage.bondIssuerEditLink().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        pages.partiesPage.bondIssuerEditLink().should('not.exist');
+
+        pages.bondIssuerPage.urnInput(1).should('exist');
+        pages.bondIssuerPage.urnInput(2).should('exist');
+        pages.bondIssuerPage.heading().should('have.text', 'Edit bond issuer details');
+
+        pages.bondIssuerPage.saveButton().should('exist');
+        pages.bondIssuerPage.closeLink().should('exist');
+
+        // Go back
+        pages.bondIssuerPage.closeLink().click();
+        cy.url().should('eq', relative(`/case/${dealId}/parties`));
+      });
+
+      it('should have the back link', () => {
+        pages.partiesPage.bondIssuerEditLink().click();
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+
+        pages.partiesPage.backLink().should('exist');
+
+        pages.partiesPage.backLink().click();
+        cy.url().should('eq', relative(`/case/${dealId}/parties`));
+      });
+
+      it('should throw an error upon validation failure', () => {
+        pages.partiesPage.bondIssuerEditLink().click();
+        pages.bondIssuerPage.urnInput(1).clear();
+        pages.bondIssuerPage.urnInput(2).clear();
+
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
+
+        pages.bondIssuerPage.urnInput(1).clear();
+        pages.bondIssuerPage.urnInput(2).clear();
+        pages.bondIssuerPage.urnInput(1).type('test');
+        pages.bondIssuerPage.urnInput(2).type('test');
+
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
+
+        pages.bondIssuerPage.urnInput(1).clear().type('12');
+        pages.bondIssuerPage.urnInput(2).clear().type('12');
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
+
+        pages.bondIssuerPage.urnInput(1).clear().type('ABC123');
+        pages.bondIssuerPage.urnInput(2).clear().type('ABC123');
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
+
+        pages.bondIssuerPage.urnInput(1).clear().type('"!£!"£!"£!"£');
+        pages.bondIssuerPage.urnInput(2).clear().type('"!£!"£!"£!"£');
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
+
+        pages.bondIssuerPage.urnInput(1).clear().type('1234!');
+        pages.bondIssuerPage.urnInput(2).clear().type('1234!');
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
+
+        pages.bondIssuerPage.urnInput(1).clear().type(' ');
+        pages.bondIssuerPage.urnInput(2).clear().type(' ');
+        pages.bondIssuerPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
+        pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
+      });
+
+      it('should re-direct to non-existent party urn page when both URNs are non-existent', () => {
+        pages.partiesPage.bondIssuerEditLink().click();
+
+        pages.bondIssuerPage.urnInput(1).clear();
+        pages.bondIssuerPage.urnInput(2).clear();
+        pages.bondIssuerPage.urnInput(1).type(mockUrn[0]);
+        pages.bondIssuerPage.urnInput(2).type(mockUrn[1]);
+
+        pages.bondIssuerPage.saveButton().click();
+
+        pages.partiesPage.nonExistentHeading().should('exist');
+      });
+
+      it('should re-direct to non-existent party urn page when at least one URNs is non-existent', () => {
+        pages.partiesPage.bondIssuerEditLink().click();
+
+        pages.bondIssuerPage.urnInput(1).clear();
+        pages.bondIssuerPage.urnInput(2).clear();
+        pages.bondIssuerPage.urnInput(1).type(mockUrn[0]);
+        pages.bondIssuerPage.urnInput(2).type(partyUrn[0]);
+
+        pages.bondIssuerPage.saveButton().click();
+
+        pages.partiesPage.nonExistentHeading().should('exist');
+      });
+
+      it('should re-direct to summary page', () => {
+        pages.partiesPage.bondIssuerEditLink().click();
+
+        pages.bondIssuerPage.urnInput(1).clear();
+        pages.bondIssuerPage.urnInput(2).clear();
+        pages.bondIssuerPage.urnInput(1).type(partyUrn[0]);
+        pages.bondIssuerPage.urnInput(2).type(partyUrn[1]);
+
+        pages.bondIssuerPage.saveButton().click();
+
+        pages.partiesPage.partyUrnSummaryTable().should('exist');
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}/summary`));
+      });
+
+      it('should submit the party URN to TFM', () => {
+        pages.partiesPage.bondIssuerEditLink().click();
+
+        pages.bondIssuerPage.urnInput(1).clear();
+        pages.bondIssuerPage.urnInput(2).clear();
+        pages.bondIssuerPage.urnInput(1).type(partyUrn[0]);
+        pages.bondIssuerPage.urnInput(2).type(partyUrn[1]);
+
+        pages.bondIssuerPage.saveButton().click();
+
+        pages.partiesPage.partyUrnSummaryTable().should('exist');
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}/summary`));
+
+        pages.bondIssuerPage.saveButton().click();
+        cy.url().should('eq', relative(`/case/${dealId}/parties`));
+
+        pages.partiesPage.bondIssuerEditLink().should('exist');
+      });
+    });
+
     describe('when the TFM user is NOT in `BUSINESS_SUPPORT` team', () => {
       beforeEach(() => {
         cy.login(T1_USER_1);
@@ -45,7 +217,7 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
 
       it('ensure user cannot add or edit party URN', () => {
         cy.visit(`/case/${dealId}/parties`);
-        pages.partiesPage.exporterEditLink().should('not.exist');
+        pages.partiesPage.bondIssuerEditLink().should('not.exist');
       });
 
       it('ensure user cannot manually visit the party URN page', () => {
