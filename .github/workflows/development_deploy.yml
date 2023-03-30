@@ -79,14 +79,14 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Azure CLI defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: 7. Slot
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
@@ -94,7 +94,7 @@ jobs:
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
     
     - name: 8. Restart
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
@@ -146,14 +146,14 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Azure CLI defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: 7. Slot
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
@@ -161,7 +161,7 @@ jobs:
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
 
     - name: 8. Restart
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
@@ -213,14 +213,14 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Azure CLI defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: 7. Slot
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
@@ -228,7 +228,7 @@ jobs:
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
 
     - name: 8. Restart
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
@@ -280,14 +280,14 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Azure CLI defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: 7. Slot
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
@@ -295,7 +295,7 @@ jobs:
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
 
     - name: 8. Restart
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
@@ -347,14 +347,14 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Azure CLI defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: 7. Slot
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
@@ -362,7 +362,7 @@ jobs:
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
 
     - name: 8. Restart
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
@@ -414,14 +414,14 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Azure CLI defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: 7. Slot
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
@@ -429,7 +429,7 @@ jobs:
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
 
     - name: 8. Restart
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
@@ -481,14 +481,14 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Azure CLI defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: 7. Slot
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp deployment slot create --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.repository }}
@@ -496,7 +496,7 @@ jobs:
           az webapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.repository }} --slot ${{ github.sha }}
 
     - name: 8. Restart
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
@@ -550,14 +550,14 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Azure CLI defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: 7. Slot
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az functionapp deployment slot create --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.name }}
@@ -565,7 +565,7 @@ jobs:
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }}
 
     - name: 8. Restart
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az functionapp restart --name tfs-${{ env.environment }}-${{ env.name }}
@@ -619,14 +619,14 @@ jobs:
         creds: ${{ env.credentials }}
 
     - name: 6. Azure CLI defaults
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az configure --defaults location=${{ secrets.AZURE_REGION }}
           az configure --defaults group=${{ secrets.RESOURCE_GROUP }}
 
     - name: 7. Slot
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az functionapp deployment slot create --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-${{ env.name }}
@@ -634,7 +634,7 @@ jobs:
           az functionapp deployment slot delete --name tfs-${{ env.environment }}-${{ env.name }} --slot ${{ github.sha }}
 
     - name: 8. Restart
-      uses: azure/cli@v1.0.0
+      uses: azure/cli@v1.0.7
       with:
         inlineScript: |
           az functionapp restart --name tfs-${{ env.environment }}-${{ env.name }}
