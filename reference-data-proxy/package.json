@@ -70,6 +70,6 @@
     "openapi-types": "^12.1.0",
     "prettier": "^2.8.7",
     "supertest": "^6.3.3",
-    "ts-jest": "^29.0.5"
+    "ts-jest": "^29.1.0"
   }
 }
