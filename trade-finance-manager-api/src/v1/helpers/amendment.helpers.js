@@ -346,7 +346,7 @@ const sendFirstTaskEmail = async (taskVariables) => {
  * submission (automatic) and approval (manual)
  * @param {String} ukefFacilityId UKEF Facility ID
  */
-const internalAmendmentEmail = async (ukefFacilityId) => {
+const internalAmendmentEmail = (ukefFacilityId) => {
   try {
     const templateId = EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION;
     const sendToEmailAddress = process.env.UKEF_INTERNAL_NOTIFICATION;

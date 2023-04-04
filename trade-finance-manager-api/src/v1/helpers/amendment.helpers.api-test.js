@@ -28,7 +28,7 @@ describe('sendManualDecisionAmendmentEmail()', () => {
 
   const updateFacilityAmendmentSpy = jest.fn(() => Promise.resolve({}));
 
-  beforeEach(async () => {
+  beforeEach(() => {
     sendEmailApiSpy.mockClear();
     updateFacilityAmendmentSpy.mockClear();
 
@@ -550,7 +550,7 @@ describe('sendFirstTaskEmail()', () => {
 
   const updateFacilityAmendmentSpy = jest.fn(() => Promise.resolve({}));
 
-  beforeEach(async () => {
+  beforeEach(() => {
     sendEmailApiSpy.mockClear();
     updateFacilityAmendmentSpy.mockClear();
 
@@ -559,7 +559,7 @@ describe('sendFirstTaskEmail()', () => {
     api.findOneTeam = jest.fn(() => Promise.resolve({ email: 'test@test.com' }));
   });
 
-  it('should send first task email with corrrect variables with gef deal', async () => {
+  it('should send first task email with correct variables with gef deal', async () => {
     await sendFirstTaskEmail(amendmentVariables.firstTaskVariables);
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(
@@ -1018,7 +1018,7 @@ describe('internalAmendmentEmail()', () => {
     MOCK_NOTIFY_EMAIL_RESPONSE,
   ));
 
-  beforeEach(async () => {
+  beforeEach(() => {
     sendEmailApiSpy.mockClear();
     api.sendEmail = sendEmailApiSpy;
   });

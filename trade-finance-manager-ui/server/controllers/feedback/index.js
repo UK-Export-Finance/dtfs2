@@ -1,11 +1,11 @@
 const api = require('../../api');
 const generateValidationErrors = require('../../helpers/validation');
 
-const getFeedback = async (req, res) =>
+const getFeedback = (req, res) =>
   res.render('feedback/feedback-form.njk');
 
 // thank you page once feedback posted
-const thankYouFeedback = async (req, res) =>
+const thankYouFeedback = (req, res) =>
   res.render('feedback/feedback-thankyou.njk');
 
 const postFeedback = async (req, res) => {

@@ -53,7 +53,9 @@ services:
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - SESSION_SECRET
       - TZ=Europe/London
-      - REDIS_HOSTNAME=redis
+      - REDIS_HOSTNAME=redis://redis
+      - REDIS_PORT=6379
+      - NODE_ENV=development
     command: npx nodemon --inspect=0.0.0.0:9224 server/index.js -L
 
   trade-finance-manager-api:

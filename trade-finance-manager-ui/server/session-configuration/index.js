@@ -1,9 +1,9 @@
 // Fail-safe fallback to a 256-bit random value:
 
 const crypto = require('crypto');
-const session = require('express-session');
 const redis = require('redis');
-const RedisStore = require('connect-redis')(session);
+
+const RedisStore = require('connect-redis').default;
 
 const https = Boolean(process.env.HTTPS || 0);
 const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
@@ -18,8 +18,6 @@ const sessionConfig = () => {
   };
 
   if (process.env.REDIS_HOSTNAME) {
-    console.info(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
-
     let redisOptions = {};
 
     if (process.env.REDIS_KEY) {
@@ -29,22 +27,15 @@ const sessionConfig = () => {
       };
     }
 
-    const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
+    console.info(`TFM UI: connecting to redis server: ${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`);
+    const client = redis.createClient({ url: `${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`, legacyMode: true, ...redisOptions });
 
-    redisClient.on('error', (err) => {
-      console.info(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
-    });
+    client.on('error', (err) => console.error('TFM UI: Redis Client Error', err));
+    client.on('ready', () => { console.info('TFM UI: REDIS ready'); });
+    client.on('connect', () => { console.info('TFM UI: REDIS connected'); });
 
-    redisClient.on('ready', () => {
-      console.info('REDIS ready');
-    });
-
-    redisClient.on('connect', () => {
-      console.info('REDIS connected');
-    });
-
-    const sessionStore = new RedisStore({ client: redisClient });
-
+    client.connect();
+    const sessionStore = new RedisStore({ client });
     sessionOptions.store = sessionStore;
   } else {
     console.error('No REDIS configured, using default MemoryStore');

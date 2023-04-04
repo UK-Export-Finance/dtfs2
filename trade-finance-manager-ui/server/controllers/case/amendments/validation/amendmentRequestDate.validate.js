@@ -10,7 +10,7 @@ const amendmentmentYearValidation = require('./amendmentYearValidation.validate'
  * function to validate the amendment request date
  * checks if in future or before submission date
  */
-const amendmentRequestDateValidation = async (body, facility) => {
+const amendmentRequestDateValidation = (body, facility) => {
   const {
     'amendment-request-date-day': amendmentRequestDateDay,
     'amendment-request-date-month': amendmentRequestDateMonth,

@@ -436,7 +436,7 @@ const confirmTfmFacility = async (req, res) => {
     }
 
     // Fetches company information from URN
-    const companies = req.body[bond].map(async (urn) => api.getParty(urn)
+    const companies = req.body[bond].map((urn) => api.getParty(urn)
       // Non-existent party urn
       .then((company) => (!company || !company.data ? Promise.resolve(false) : Promise.resolve(true))));
 

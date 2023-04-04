@@ -66,6 +66,9 @@ services:
       - ESTORE_URL=${ESTORE_URL}
       - SESSION_SECRET
       - TZ=Europe/London
+      - REDIS_HOSTNAME=redis://redis
+      - REDIS_PORT=6379
+      - NODE_ENV=development
     command: npx nodemon server/index.js -L
 
   trade-finance-manager-api:

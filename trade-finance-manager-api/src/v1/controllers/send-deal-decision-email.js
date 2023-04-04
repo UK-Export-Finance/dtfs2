@@ -44,7 +44,7 @@ const sendDealDecisionEmail = async (mappedDeal) => {
 
   await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, mappedDeal);
   // send a copy of the email to bank's general email address
-  const bankResponse = bankEmails.map(async (email) => sendTfmEmail(templateId, email, emailVariables, mappedDeal));
+  const bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, mappedDeal));
   // send a copy of the email to PIM
   await sendTfmEmail(templateId, pimEmail, emailVariables, mappedDeal);
 

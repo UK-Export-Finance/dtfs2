@@ -210,7 +210,7 @@ const getBondUrnDetails = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const companies = partyUrns.map(async (urn) => api.getParty(urn)
+    const companies = partyUrns.map((urn) => api.getParty(urn)
       // Non-existent party urn
       .then((company) => (!company?.data?.length ? Promise.resolve() : Promise.resolve(company.data[0].name))));
 

@@ -35,11 +35,11 @@
     "cypress-v10-preserve-cookie": "^1.2.1",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
-    "npm-check-updates": "^16.9.0"
+    "npm-check-updates": "^16.10.1"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "eslint": "^8.36.0",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "eslint": "^8.37.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.13.2",
     "eslint-plugin-import": "^2.27.5",

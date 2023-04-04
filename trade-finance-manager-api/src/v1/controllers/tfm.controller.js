@@ -1,7 +1,7 @@
 const activity = require('../helpers/activity');
 const api = require('../api');
 
-const updateTfmParty = async (dealId, tfmUpdate) => {
+const updateTfmParty = (dealId, tfmUpdate) => {
   const partyUpdate = {
     tfm: {
       parties: tfmUpdate,
