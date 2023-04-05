@@ -16,7 +16,7 @@ const fetchTest = () => urlList.map(async (url) => {
 });
 
 const shareTest = async () => {
-  const ports = await fetchTest();
+  const ports = fetchTest();
 
   const portRes = await Promise.all(ports);
 
