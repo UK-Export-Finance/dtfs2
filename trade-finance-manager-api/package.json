@@ -55,7 +55,7 @@
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.42",
     "mongo-dot-notation": "^3.1.0",
-    "mongodb": "4.0.0",
+    "mongodb": "5.2.0",
     "node-cron": "^3.0.2",
     "nodemon": "^2.0.22",
     "sanitize-html": "^2.10.0",
