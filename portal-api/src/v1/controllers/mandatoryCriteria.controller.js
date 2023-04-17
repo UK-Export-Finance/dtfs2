@@ -29,7 +29,7 @@ exports.create = async (req, res) => {
   const collection = await db.getCollection('mandatoryCriteria');
   const mandatoryCriteria = await collection.insertOne(req.body);
 
-  res.status(200).send(mandatoryCriteria.ops[0]);
+  res.status(200).send(mandatoryCriteria);
 };
 
 exports.findAll = (req, res) => (
