@@ -58,7 +58,7 @@
     "http-errors": "^2.0.0",
     "imask": "^6.4.3",
     "joi": "^17.9.1",
-    "jquery": "3.6.3",
+    "jquery": "3.6.4",
     "lodash": "^4.17.21",
     "moment": "2.29.4",
     "moment-timezone": "0.5.40",
