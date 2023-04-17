@@ -26,7 +26,7 @@ const updateFacilityStatus = async (facilityId, status, existingFacility) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: ObjectId(facilityId) },
       $.flatten(withoutId(update)),
-      { returnOriginal: false },
+      { returnDocument: 'after', returnNewDocument: true }
     );
 
     console.info(`Updated Portal facility status from ${previousStatus} to ${status}`);

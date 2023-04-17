@@ -17,7 +17,7 @@ const updateFacility = async (facilityId, facilityBody, dealId, user, routePath)
 
     const update = { ...facilityBody, dealId: ObjectId(dealId), updatedAt: Date.now() };
 
-    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: ObjectId(facilityId) }, $.flatten(withoutId(update)), { returnOriginal: false });
+    const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: ObjectId(facilityId) }, $.flatten(withoutId(update)), { returnDocument: 'after', returnNewDocument: true });
 
     const { value: updatedFacility } = findAndUpdateResponse;
 

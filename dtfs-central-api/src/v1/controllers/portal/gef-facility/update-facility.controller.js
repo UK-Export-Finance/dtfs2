@@ -11,7 +11,7 @@ const updateFacility = async (id, updateBody) => {
     const existingFacility = await facilitiesCollection.findOne({ _id: ObjectId(id) });
 
     if (existingFacility) {
-      updatedFacility = await facilitiesCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: updateBody }, { returnOriginal: false });
+      updatedFacility = await facilitiesCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: updateBody }, { returnDocument: 'after', returnNewDocument: true });
       if (updatedFacility) {
         // update facilitiesUpdated timestamp in the deal
         const dealUpdateObj = { facilitiesUpdated: new Date().valueOf() };

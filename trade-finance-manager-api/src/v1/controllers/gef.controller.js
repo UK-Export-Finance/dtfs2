@@ -9,7 +9,7 @@ const updateGefApplication = async (dealId, applicationUpdate) => {
     {
       $set: applicationUpdate,
     },
-    { returnDocument: 'after', returnOriginal: false },
+    { returnDocument: 'after', returnNewDocument: true },
   );
 
   return updatedApplication;
@@ -23,7 +23,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
     {
       $set: facilityUpdate,
     },
-    { returnDocument: 'after', returnOriginal: false },
+    { returnDocument: 'after', returnNewDocument: true },
   );
 
   return updatedFacility;

@@ -69,7 +69,7 @@ const updateDeal = async (dealId, dealChanges, existingDeal) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: { $eq: ObjectId(dealId) } },
       $.flatten(withoutId(dealUpdate)),
-      { returnOriginal: false },
+      { returnDocument: 'after', returnNewDocument: true }
     );
 
     return findAndUpdateResponse.value;
@@ -114,7 +114,7 @@ const updateDealSnapshot = async (deal, snapshotChanges) => {
       const findAndUpdateResponse = await collection.findOneAndUpdate(
         { _id: { $eq: ObjectId(String(dealId)) } },
         $.flatten(withoutId(update)),
-        { returnOriginal: false, upsert: true },
+        { returnDocument: 'after', returnNewDocument: true, upsert: true },
       );
 
       return findAndUpdateResponse.value;

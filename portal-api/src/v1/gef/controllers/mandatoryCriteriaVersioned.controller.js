@@ -68,7 +68,7 @@ exports.update = async (req, res) => {
   const response = await collection.findOneAndUpdate(
     { _id: ObjectId(req.params.id) },
     { $set: update },
-    { returnOriginal: false },
+    { returnDocument: 'after', returnNewDocument: true }
   );
 
   res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
