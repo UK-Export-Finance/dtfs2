@@ -52,7 +52,7 @@ jobs:
     - run: npm ci --legacy-peer-deps
     - run: npm run lint
     - run: npm t
-    - uses: act10ns/slack@v2
+    - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}
@@ -85,7 +85,7 @@ jobs:
     - run: npm ci --legacy-peer-deps
     - run: npm run lint
     - run: npm t
-    - uses: act10ns/slack@v2
+    - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}
@@ -118,7 +118,7 @@ jobs:
     - run: npm ci --legacy-peer-deps
     - run: npm run lint
     - run: npm t
-    - uses: act10ns/slack@v2
+    - uses: act10ns/slack@v1
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}
