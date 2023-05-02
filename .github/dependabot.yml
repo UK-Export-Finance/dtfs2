@@ -1,6 +1,6 @@
 # DTFS Git Hub Actions
 #####################################
-# Automatic daily dependencies updates
+# Automatic monthly dependencies updates
 # for the following services:
 # 1. NPM
 # 2. Docker
@@ -12,7 +12,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -20,7 +20,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/reference-data-proxy'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -28,7 +28,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/portal-api'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -36,7 +36,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/trade-finance-manager-api'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -44,7 +44,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/gef-ui'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -52,7 +52,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/portal'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -60,7 +60,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/trade-finance-manager-ui'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -68,7 +68,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/azure-functions/number-generator-function'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -76,7 +76,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/azure-functions/acbs-function'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -84,7 +84,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/dtfs-central-api'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -92,7 +92,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/reference-data-proxy'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -100,7 +100,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/portal-api'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -108,7 +108,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/trade-finance-manager-api'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -116,7 +116,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/gef-ui'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -124,7 +124,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/portal'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -132,7 +132,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/trade-finance-manager-ui'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -140,7 +140,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/azure-functions/number-generator-function'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -148,7 +148,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/azure-functions/acbs-function'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -156,7 +156,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/dtfs-central-api'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -164,7 +164,7 @@ updates:
   - package-ecosystem: 'docker'
     directory: '/reverse-proxy'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'
 
@@ -174,6 +174,6 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'chore'

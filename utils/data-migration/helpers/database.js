@@ -139,7 +139,7 @@ const tfmDealUpdate = async (updatedDeal) => {
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL).updateOne(
       { _id: { $eq: ObjectId(String(_id)) } },
       { $set: updatedDeal },
-      { returnDocument: 'after', returnNewDocument: true },
+      { returnNewDocument: true, returnDocument: 'after' },
     ).catch((e) => new Error(e));
 
     return (response.acknowledged)

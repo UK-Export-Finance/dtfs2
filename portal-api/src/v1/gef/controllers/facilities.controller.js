@@ -108,7 +108,7 @@ const update = async (id, updateBody) => {
     const updatedFacility = await collection.findOneAndUpdate(
       { _id: { $eq: facilityId } },
       { $set: facilityUpdate },
-      { returnOriginal: false },
+      { returnNewDocument: true, returnDocument: 'after' },
     );
 
     if (existingFacility) {
@@ -121,7 +121,7 @@ const update = async (id, updateBody) => {
       await dbQuery.findOneAndUpdate(
         { _id: { $eq: ObjectId(existingFacility.dealId) } },
         { $set: dealUpdate },
-        { returnOriginal: false },
+        { returnNewDocument: true, returnDocument: 'after' }
       );
     }
     return updatedFacility;

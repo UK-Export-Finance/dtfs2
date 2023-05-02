@@ -1,9 +1,8 @@
-// Fail-safe fallback to a 256-bit random value:
-
 const crypto = require('crypto');
+const session = require('express-session');
 const redis = require('redis');
 
-const RedisStore = require('connect-redis').default;
+const RedisStore = require('connect-redis')(session);
 
 const https = Boolean(process.env.HTTPS || 0);
 const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
