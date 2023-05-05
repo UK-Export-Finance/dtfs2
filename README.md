@@ -30,6 +30,7 @@ This repository contains the code for the UK Export Finance Trade Finance Servic
   * `JWT_SIGNING_KEY=1234`
   * `JWT_VALIDATING_KEY=5678`
 * Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`
+* Install all packages using `npm run install:all`
 * Start up your local environment: `docker-compose up --build`
 * Create mock data: navigate to `utils/mock-data-loader`, run `npm install` and then `node re-insert-mocks.js`. This should generate mocks in your DB.
 * Run `npm run pipeline` in the root directory of the repo to run a full build and test to make sure that everything is working.
