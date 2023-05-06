@@ -5,7 +5,6 @@ const render = componentRenderer(component);
 
 describe(component, () => {
   describe('when viewed by a maker', () => {
-
     it("should display when deal status=Draft and status=Further Maker's input required and canFullyCalculateDealSummary flag is false", () => {
       const user = { roles: ['maker'] };
       const deals = [

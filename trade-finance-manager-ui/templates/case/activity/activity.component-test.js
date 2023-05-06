@@ -33,6 +33,6 @@ describe(page, () => {
   });
 
   it('should render timeline', () => {
-   wrapper.expectElement('[data-cy="activities-timeline"]').toExist();
- });
+    wrapper.expectElement('[data-cy="activities-timeline"]').toExist();
+  });
 });

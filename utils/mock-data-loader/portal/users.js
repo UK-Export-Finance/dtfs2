@@ -8,8 +8,8 @@ const USERS = [
   {
     username: 'BANK1_MAKER1',
     password: 'AbC!2345',
-    firstname: 'Tamil',
-    surname: 'Rahani',
+    firstname: 'First',
+    surname: 'Last',
     email: 'maker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker'],
@@ -48,8 +48,8 @@ const USERS = [
   {
     username: 'BANK1_CHECKER1',
     password: 'AbC!2345',
-    firstname: 'Nikolaevich',
-    surname: 'Chernov',
+    firstname: 'Mister',
+    surname: 'Checker',
     email: 'checker1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['checker'],
@@ -88,8 +88,8 @@ const USERS = [
   {
     username: 'BANK2_MAKER1',
     password: 'AbC!2345',
-    firstname: 'Tamil',
-    surname: 'Rahani',
+    firstname: 'First',
+    surname: 'Last',
     email: 'maker6@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker'],
@@ -98,8 +98,8 @@ const USERS = [
   {
     username: 'BANK2_CHECKER1',
     password: 'AbC!2345',
-    firstname: 'Nikolaevich',
-    surname: 'Chernov',
+    firstname: 'Mister',
+    surname: 'Checker',
     email: 'checker4@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['checker'],

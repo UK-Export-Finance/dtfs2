@@ -4,8 +4,8 @@ const api = require('../../api')(app);
 
 const newUser = {
   username: 'BANK1_MAKER1',
-  firstname: 'Tamil',
-  surname: 'Rahani',
+  firstname: 'First',
+  surname: 'Last',
   email: 'maker1@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
   roles: ['maker'],

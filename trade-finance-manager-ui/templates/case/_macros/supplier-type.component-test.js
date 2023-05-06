@@ -3,7 +3,6 @@ const componentRenderer = require('../../../component-tests/componentRenderer');
 const component = '../templates/case/_macros/supplier-type.njk';
 const render = componentRenderer(component);
 
-
 describe(component, () => {
   it('should render Exporter when supplier type = Exporter', () => {
     const wrapper = render('Exporter');

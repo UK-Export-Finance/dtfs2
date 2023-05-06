@@ -24,7 +24,6 @@ describe(component, () => {
   });
 
   describe('when params.answer is `false`', () => {
-
     beforeEach(() => {
       const params = { answer: 'false' };
       wrapper = render(params);
@@ -37,5 +36,5 @@ describe(component, () => {
     it('should render red colour class', () => {
       wrapper.expectElement('[data-cy="eligibility-criteria-answer-tag"]').hasClass('govuk-tag--red');
     });
-  });  
+  });
 });
