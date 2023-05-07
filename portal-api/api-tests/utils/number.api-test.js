@@ -51,7 +51,6 @@ describe('utils - number', () => {
     });
   });
 
-
   describe('sanitize Currency', () => {
     it('should return sanitized currency', () => {
       expect(sanitizeCurrency(1234)).toEqual(
@@ -103,7 +102,6 @@ describe('utils - number', () => {
       );
     });
   });
-
 
   describe('roundNumber', () => {
     it('should round a number up with passed digits/decimals', () => {

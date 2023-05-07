@@ -1,4 +1,5 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
+
 const component = '../templates/case/tasks/_macros/task-status-tag.njk';
 
 const render = componentRenderer(component);
@@ -35,7 +36,7 @@ describe(component, () => {
         status: 'In progress',
       };
       const wrapper = render(params);
-     
+
       wrapper.expectElement('[data-cy="status-tag"]').hasClass('govuk-tag--yellow');
       wrapper.expectText('[data-cy="status-tag"]').toRead(params.status);
     });

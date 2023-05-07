@@ -1,4 +1,5 @@
 const pageRenderer = require('../../../component-tests/pageRenderer');
+
 const page = '../templates/case/tasks/task.njk';
 
 const render = pageRenderer(page);
@@ -20,8 +21,8 @@ describe(page, () => {
     task: {
       title: 'Task title',
       team: {
-        name: 'Business support group'
-      }
+        name: 'Business support group',
+      },
     },
     user: {
       timezone: 'Europe/London',
@@ -39,7 +40,7 @@ describe(page, () => {
         text: 'Sarah Jones',
         selected: false,
       },
-    ]
+    ],
   };
 
   beforeEach(() => {
@@ -55,7 +56,7 @@ describe(page, () => {
   });
 
   it('should render deal subheading', () => {
-    const expected = `${params.deal.details.ukefDealId} ${params.deal.submissionDetails.supplierName} > ${params.deal.submissionDetails.buyerName}`;
+    const expected = `${params.deal.details.ukefDealId} ${params.deal.submissionDetails.supplierName} > ${params.deal.submissionDetails.buyerName}`;
     wrapper.expectText('[data-cy="deal-subheading"]').toRead(expected);
   });
 
@@ -98,9 +99,7 @@ describe(page, () => {
 
     it('should render close link', () => {
       wrapper.expectLink('[data-cy="close-link"]')
-      .toLinkTo(`/case/${params.dealId}/tasks`, 'Close without saving');
+        .toLinkTo(`/case/${params.dealId}/tasks`, 'Close without saving');
     });
-
   });
-  
 });

@@ -7,6 +7,7 @@ const { as } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allEligibilityCriteria = require('../../fixtures/eligibilityCriteria');
+
 const newEligibilityCriteria = allEligibilityCriteria[0];
 const updatedEligibilityCriteria = {
   ...newEligibilityCriteria,
@@ -22,7 +23,7 @@ describe('/v1/eligibility-criteria', () => {
   let noRoles;
   let anEditor;
 
-  beforeAll(async() => {
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     noRoles = testUsers().withoutAnyRoles().one();
     anEditor = testUsers().withRole('editor').one();
@@ -50,7 +51,7 @@ describe('/v1/eligibility-criteria', () => {
       await as(anEditor).post(allEligibilityCriteria[0]).to('/v1/eligibility-criteria');
       await as(anEditor).post(allEligibilityCriteria[1]).to('/v1/eligibility-criteria');
 
-      const { body } = await as(noRoles).get(`/v1/eligibility-criteria`);
+      const { body } = await as(noRoles).get('/v1/eligibility-criteria');
       expect(body).toEqual({
         count: allEligibilityCriteria.length,
         eligibilityCriteria: expectMongoIds(allEligibilityCriteria),

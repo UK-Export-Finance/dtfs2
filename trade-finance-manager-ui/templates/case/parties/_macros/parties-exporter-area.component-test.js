@@ -74,7 +74,7 @@ describe(page, () => {
         agentName: 'AGENT NAME',
       },
       exporter: {
-        companyName: 'The company name'
+        companyName: 'The company name',
       },
     },
   };
