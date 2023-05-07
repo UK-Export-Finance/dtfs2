@@ -125,9 +125,9 @@ const update = async (id, updateBody) => {
       );
     }
     return updatedFacility;
-  } catch (e) {
-    console.error('Unable to update the facility', { e });
-    return e;
+  } catch (error) {
+    console.error('Unable to update the facility', { error });
+    return error;
   }
 };
 exports.update = update;

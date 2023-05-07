@@ -26,8 +26,8 @@ const mapDeals = (
       count: mappedDeals.length,
       deals: mappedDeals,
     };
-  } catch (e) {
-    console.error('Error mapping deal for GQL reducer: ', { e });
+  } catch (error) {
+    console.error('Error mapping deal for GQL reducer: ', { error });
     return null;
   }
 };

@@ -29,8 +29,8 @@ export const lookup = async (req: Request, res: Response) => {
     const { status, data } = response;
 
     return res.status(status).send(data);
-  } catch (e) {
-    console.error('Unable to lookup for company from party URN ', { e });
+  } catch (error) {
+    console.error('Unable to lookup for company from party URN ', { error });
     return res.status(400);
   }
 };

@@ -48,9 +48,9 @@ const facilityLoanAmend = (amendments, facility, facilityMasterRecord) => {
     }
 
     return record;
-  } catch (e) {
-    console.error('Unable to map facility loan record: ', { e });
-    return e;
+  } catch (error) {
+    console.error('Unable to map facility loan record: ', { error });
+    return error;
   }
 };
 
