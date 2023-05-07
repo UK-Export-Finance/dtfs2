@@ -142,8 +142,8 @@ const testUsers = [
   {
     username: 'maker-tfm',
     password: 'AbC!2345',
-    firstname: 'Tamil',
-    surname: 'Rahani',
+    firstname: 'First',
+    surname: 'Last',
     email: 'maker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker'],
@@ -152,8 +152,8 @@ const testUsers = [
   {
     username: 'checker-tfm',
     password: 'AbC!2345',
-    firstname: 'Nikolaevich',
-    surname: 'Chernov',
+    firstname: 'Mister',
+    surname: 'Checker',
     email: 'checker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['checker'],

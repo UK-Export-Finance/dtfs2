@@ -59,5 +59,4 @@ describe(page, () => {
       wrapper.expectLink('[data-cy="feedback-link"]').notToExist();
     });
   });
-
 });
