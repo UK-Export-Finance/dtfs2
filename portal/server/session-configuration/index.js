@@ -25,6 +25,7 @@ const sessionConfig = () => {
         tls: { servername: process.env.REDIS_HOSTNAME },
       };
     }
+
     const url = `redis://${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`;
     const client = redis.createClient({
       ...redisOptions,
@@ -32,15 +33,15 @@ const sessionConfig = () => {
       url,
     });
 
-    console.info(`TFM UI: Connecting to redis server: ${url}`);
+    console.info(`Portal UI: Connecting to redis server: ${url}`);
     client.connect();
 
-    client.on('error', (err) => console.error('TFM UI: Redis Client Error', err));
+    client.on('error', (err) => console.error('Portal UI: Redis Client Error', err));
     client.on('ready', () => {
-      console.info('TFM UI: REDIS ready');
+      console.info('Portal UI: REDIS ready');
     });
     client.on('connect', () => {
-      console.info('TFM UI: REDIS connected');
+      console.info('Portal UI: REDIS connected');
     });
 
     const sessionStore = new RedisStore({ client });

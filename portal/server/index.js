@@ -1,23 +1,21 @@
 const express = require('express');
 const morgan = require('morgan');
 const session = require('express-session');
-const redis = require('redis');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const path = require('path');
 require('./azure-env');
-const RedisStore = require('connect-redis')(session);
 const routes = require('./routes');
 const eligibilityRoutes = require('./routes/contract/eligibility');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 const { csrf: csrfToken, seo, security } = require('./routes/middleware');
+const sessionOptions = require('./session-configuration');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const https = Boolean(process.env.HTTPS || 0);
-const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
 if (https) {
   app.set('trust proxy', 1);
@@ -38,35 +36,8 @@ if (!process.env.SESSION_SECRET) {
   console.error('Portal UI server - SESSION_SECRET missing');
 }
 
-const sessionOptions = {
-  name: secureCookieName,
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie,
-};
-
-let redisOptions = {};
-
-if (process.env.REDIS_KEY) {
-  redisOptions = {
-    auth_pass: process.env.REDIS_KEY,
-    tls: { servername: process.env.REDIS_HOSTNAME },
-  };
-}
-
-console.info(`BSS/EWCS: Connecting to redis server: ${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`);
-const client = redis.createClient({ url: `${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`, legacyMode: true, ...redisOptions });
-
-client.on('error', (err) => console.error('BSS/EWCS: Redis Client Error', err));
-client.on('ready', () => { console.info('BSS/EWCS: REDIS ready'); });
-client.on('connect', () => { console.info('BSS/EWCS: REDIS connected'); });
-
-client.connect();
-const sessionStore = new RedisStore({ client });
-sessionOptions.store = sessionStore;
-
-app.use(session(sessionOptions));
+const sessionConfiguration = sessionOptions();
+app.use(session({ ...sessionConfiguration, cookie }));
 
 app.use(flash());
 
