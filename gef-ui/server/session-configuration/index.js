@@ -1,12 +1,12 @@
 const crypto = require('crypto');
 const session = require('express-session');
 const redis = require('redis');
-
 const RedisStore = require('connect-redis')(session);
+const dotenv = require('dotenv');
 
+dotenv.config();
 const https = Boolean(process.env.HTTPS || 0);
 const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
-
 const sessionConfig = () => {
   const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(256 / 8).toString('hex');
   const sessionOptions = {
@@ -47,7 +47,7 @@ const sessionConfig = () => {
     const sessionStore = new RedisStore({ client });
     sessionOptions.store = sessionStore;
   } else {
-    console.error('No REDIS configured, using default MemoryStore');
+    console.error('REDIS is not configured, using default MemoryStore');
   }
 
   return sessionOptions;

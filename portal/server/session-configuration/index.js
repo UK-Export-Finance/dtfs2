@@ -47,7 +47,7 @@ const sessionConfig = () => {
     const sessionStore = new RedisStore({ client });
     sessionOptions.store = sessionStore;
   } else {
-    console.error('No REDIS configured, using default MemoryStore');
+    console.error('REDIS is not configured, using default MemoryStore');
   }
 
   return sessionOptions;

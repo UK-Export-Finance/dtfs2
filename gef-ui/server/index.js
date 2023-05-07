@@ -16,6 +16,7 @@ const { csrf: csrfToken, security, seo } = require('./middleware');
 const sessionOptions = require('./session-configuration');
 
 const app = express();
+dotenv.config();
 
 const PORT = process.env.PORT || 5006;
 const https = Boolean(process.env.HTTPS || 0);
@@ -35,11 +36,6 @@ const cookie = {
 app.use(seo);
 app.use(security);
 app.use(compression());
-dotenv.config();
-
-if (!process.env.SESSION_SECRET) {
-  console.error('GEF UI server - SESSION_SECRET missing');
-}
 
 const sessionConfiguration = sessionOptions();
 app.use(session({ ...sessionConfiguration, cookie }));

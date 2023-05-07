@@ -49,6 +49,9 @@ env:
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  REDIS_HOSTNAME: ${{ secrets.REDIS_HOSTNAME }}
+  REDIS_PORT: ${{ secrets.REDIS_PORT }}
+  NODE_END: ${{ secrets.NODE_END }}
 
 jobs:
   set-environment:
@@ -99,7 +102,7 @@ jobs:
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run GEF-UI E2E tests
-      uses: cypress-io/github-action@v4
+      uses: cypress-io/github-action@v5
       with:
         record: true
         parallel: true
@@ -163,7 +166,7 @@ jobs:
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run E2E tests
-      uses: cypress-io/github-action@v4
+      uses: cypress-io/github-action@v5
       with:
         record: true
         parallel: true
@@ -228,7 +231,7 @@ jobs:
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run E2E tests
-      uses: cypress-io/github-action@v4
+      uses: cypress-io/github-action@v5
       with:
         record: true
         parallel: true
@@ -295,7 +298,7 @@ jobs:
     - name: Wake up Azure Function
       run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
     - name: Run E2E tests
-      uses: cypress-io/github-action@v4
+      uses: cypress-io/github-action@v5
       with:
         record: true
         parallel: true
