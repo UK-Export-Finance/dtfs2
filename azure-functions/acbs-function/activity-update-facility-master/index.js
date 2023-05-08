@@ -89,9 +89,9 @@ const updateFacilityMaster = async (context) => {
       dataSent: acbsFacilityMasterInput,
       ...data,
     };
-  } catch (e) {
-    console.error('Error updating facility master record: ', { e });
-    throw new Error(e);
+  } catch (error) {
+    console.error('Error updating facility master record: ', { error });
+    throw new Error(error);
   }
 };
 

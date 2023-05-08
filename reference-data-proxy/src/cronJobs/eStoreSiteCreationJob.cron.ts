@@ -41,7 +41,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: eStoreData.dealId },
       { $inc: { siteCreationRetries: 1 } },
-      { returnDocument: 'after' },
+      { returnNewDocument: true, returnDocument: 'after' },
     );
     // stop the siteCreation Cron Job after 50 retries
     // this is to prevent it from running forever

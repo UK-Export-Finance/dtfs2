@@ -179,7 +179,7 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
-const createActivity = async (dealId, activityUpdate) => {
+const createActivity = (dealId, activityUpdate) => {
   const updateVariable = {
     dealId,
     activityUpdate,

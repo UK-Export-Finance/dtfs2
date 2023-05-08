@@ -5,7 +5,7 @@ const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 
 const MOCK_DEAL_AIN_SUBMITTED = require('../../v1/__mocks__/mock-deal-AIN-submitted');
 const MOCK_GEF_DEAL = require('../../v1/__mocks__/mock-gef-deal');
-const MOCK_CASH_CONTINGENT_FACILIIES = require('../../v1/__mocks__/mock-cash-contingent-facilities');
+const MOCK_CASH_CONTINGENT_FACILITIES = require('../../v1/__mocks__/mock-cash-contingent-facilities');
 
 describe('reducer - deal', () => {
   it('should return mapped object', () => {
@@ -45,14 +45,14 @@ describe('reducer - deal', () => {
   });
 
   describe('when dealType is `GEF`', () => {
-    it('should return mapGefDeal', async () => {
+    it('should return mapGefDeal', () => {
       const mockGefDeal = {
         _id: MOCK_GEF_DEAL._id,
         dealSnapshot: {
           ...MOCK_GEF_DEAL,
           facilities: [
             {
-              facilitySnapshot: MOCK_CASH_CONTINGENT_FACILIIES[0],
+              facilitySnapshot: MOCK_CASH_CONTINGENT_FACILITIES[0],
               tfm: {},
             },
           ],

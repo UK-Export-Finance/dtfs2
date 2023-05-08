@@ -108,7 +108,7 @@ const update = async (id, updateBody) => {
     const updatedFacility = await collection.findOneAndUpdate(
       { _id: { $eq: facilityId } },
       { $set: facilityUpdate },
-      { returnDocument: 'after', returnNewDocument: true },
+      { returnNewDocument: true, returnDocument: 'after' },
     );
 
     if (existingFacility) {
@@ -121,13 +121,13 @@ const update = async (id, updateBody) => {
       await dbQuery.findOneAndUpdate(
         { _id: { $eq: ObjectId(existingFacility.dealId) } },
         { $set: dealUpdate },
-        { returnDocument: 'after', returnNewDocument: true }
+        { returnNewDocument: true, returnDocument: 'after' }
       );
     }
     return updatedFacility;
-  } catch (e) {
-    console.error('Unable to update the facility', { e });
-    return e;
+  } catch (error) {
+    console.error('Unable to update the facility', { error });
+    return error;
   }
 };
 exports.update = update;

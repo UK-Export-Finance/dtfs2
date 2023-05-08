@@ -1,6 +1,6 @@
 const { set, getUnixTime } = require('date-fns');
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
-const amendmentmentYearValidation = require('./amendmentYearValidation.validate');
+const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  *
@@ -10,7 +10,7 @@ const amendmentmentYearValidation = require('./amendmentYearValidation.validate'
  * function to validate the amendment effective date
  * checks if in future or before submission date
  */
-const effectiveDateValidation = async (body) => {
+const effectiveDateValidation = (body) => {
   const {
     'amendment-effective-date-day': effectiveDateDay,
     'amendment-effective-date-month': effectiveDateMonth,
@@ -54,7 +54,7 @@ const effectiveDateValidation = async (body) => {
     });
   } else if (amendmentEffectiveIsFullyComplete) {
     // if year in wrong format
-    if (amendmentmentYearValidation(effectiveDateYear)) {
+    if (amendmentYearValidation(effectiveDateYear)) {
       effectiveDateErrors.push({
         errRef: 'effectiveDate',
         errMsg: 'The year for the effective date must include 4 numbers',

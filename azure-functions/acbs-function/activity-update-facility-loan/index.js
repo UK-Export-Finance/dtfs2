@@ -62,9 +62,9 @@ const updateFacilityLoan = async (context) => {
       dataSent: acbsFacilityLoanInput,
       ...data,
     };
-  } catch (e) {
-    console.error('Error amending facility loan record: ', { e });
-    throw new Error(e);
+  } catch (error) {
+    console.error('Error amending facility loan record: ', { error });
+    throw new Error(error);
   }
 };
 

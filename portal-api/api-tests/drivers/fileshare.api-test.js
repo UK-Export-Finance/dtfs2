@@ -157,7 +157,7 @@ xdescribe('fileshare', () => {
             fileshare.deleteDirectory(fileshare, nonExistentFolder);
           });
         });
-      } catch (e) { return false; }
+      } catch (error) { return false; }
     });
 
     it('creates parent folders if they don\'t exist', async () => {

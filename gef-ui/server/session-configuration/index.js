@@ -1,12 +1,12 @@
 const crypto = require('crypto');
 const session = require('express-session');
 const redis = require('redis');
-
 const RedisStore = require('connect-redis')(session);
+const dotenv = require('dotenv');
 
+dotenv.config();
 const https = Boolean(process.env.HTTPS || 0);
 const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
-
 const sessionConfig = () => {
   const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(256 / 8).toString('hex');
   const sessionOptions = {
@@ -25,6 +25,7 @@ const sessionConfig = () => {
         tls: { servername: process.env.REDIS_HOSTNAME },
       };
     }
+
     const url = `redis://${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`;
     const client = redis.createClient({
       ...redisOptions,
@@ -32,15 +33,15 @@ const sessionConfig = () => {
       url,
     });
 
-    console.info(`TFM UI: Connecting to redis server: ${url}`);
+    console.info(`GEF UI: Connecting to redis server: ${url}`);
     client.connect();
 
-    client.on('error', (err) => console.error('TFM UI: Redis Client Error', err));
+    client.on('error', (err) => console.error('GEF UI: Redis Client Error', err));
     client.on('ready', () => {
-      console.info('TFM UI: REDIS ready');
+      console.info('GEF UI: REDIS ready');
     });
     client.on('connect', () => {
-      console.info('TFM UI: REDIS connected');
+      console.info('GEF UI: REDIS connected');
     });
 
     const sessionStore = new RedisStore({ client });

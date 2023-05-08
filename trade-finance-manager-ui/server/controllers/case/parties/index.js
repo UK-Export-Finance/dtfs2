@@ -46,8 +46,8 @@ const getAllParties = async (req, res) => {
       hasAmendmentInProgress,
       amendmentsInProgress,
     });
-  } catch (e) {
-    console.error('Error rendering all parties page', { e });
+  } catch (error) {
+    console.error('Error rendering all parties page', { error });
     return res.redirect('/not-found');
   }
 };
@@ -99,8 +99,8 @@ const getPartyDetails = async (req, res) => {
       user: req.session.user,
       urn,
     });
-  } catch (e) {
-    console.error('Error rendering party URN edit page', { e });
+  } catch (error) {
+    console.error('Error rendering party URN edit page', { error });
     return res.redirect('/not-found');
   }
 };
@@ -171,8 +171,8 @@ const getPartyUrnDetails = async (req, res) => {
       name,
       party,
     });
-  } catch (e) {
-    console.error('Error rendering party specific urn summary page', { e });
+  } catch (error) {
+    console.error('Error rendering party specific urn summary page', { error });
     return res.redirect('/not-found');
   }
 };
@@ -210,7 +210,7 @@ const getBondUrnDetails = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const companies = partyUrns.map(async (urn) => api.getParty(urn)
+    const companies = partyUrns.map((urn) => api.getParty(urn)
       // Non-existent party urn
       .then((company) => (!company?.data?.length ? Promise.resolve() : Promise.resolve(company.data[0].name))));
 
@@ -230,8 +230,8 @@ const getBondUrnDetails = async (req, res) => {
       name,
       party,
     });
-  } catch (e) {
-    console.error('Error rendering bond specific urn summary page', { e });
+  } catch (error) {
+    console.error('Error rendering bond specific urn summary page', { error });
     return res.redirect('/not-found');
   }
 };
@@ -329,8 +329,8 @@ const confirmPartyUrn = async (req, res) => {
 
     // Redirect to summary (confirmation) page
     return res.redirect(`/case/${dealId}/parties/${party}/summary/${partyUrn}`);
-  } catch (e) {
-    console.error('Error posting party URN', { e });
+  } catch (error) {
+    console.error('Error posting party URN', { error });
     return res.redirect('/not-found');
   }
 };
@@ -389,8 +389,8 @@ const postPartyDetails = async (req, res) => {
     await api.updateParty(dealId, update);
 
     return res.redirect(`/case/${dealId}/parties`);
-  } catch (e) {
-    console.error('Error posting party URN to TFM', { e });
+  } catch (error) {
+    console.error('Error posting party URN to TFM', { error });
     return res.redirect('/not-found');
   }
 };

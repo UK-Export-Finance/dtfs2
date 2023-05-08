@@ -436,7 +436,7 @@ const confirmTfmFacility = async (req, res) => {
     }
 
     // Fetches company information from URN
-    const companies = req.body[bond].map(async (urn) => api.getParty(urn)
+    const companies = req.body[bond].map((urn) => api.getParty(urn)
       // Non-existent party urn
       .then((company) => (!company || !company.data ? Promise.resolve(false) : Promise.resolve(true))));
 
@@ -465,8 +465,8 @@ const confirmTfmFacility = async (req, res) => {
     req.session.facilityId = facilityId;
 
     return res.redirect(`/case/${dealId}/parties/${party}/summary`);
-  } catch (e) {
-    console.error('Error posting bond party URN ', { e });
+  } catch (error) {
+    console.error('Error posting bond party URN ', { error });
     return res.redirect('/not-found');
   }
 };
@@ -525,8 +525,8 @@ const postTfmFacility = async (req, res) => {
     await api.updateParty(dealId, deal.parties);
 
     return res.redirect(`/case/${dealId}/parties`);
-  } catch (e) {
-    console.error('Error posting bond party URN to TFM ', { e });
+  } catch (error) {
+    console.error('Error posting bond party URN to TFM ', { error });
     return res.redirect('/not-found');
   }
 };

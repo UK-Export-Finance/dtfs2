@@ -151,8 +151,8 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
       const { status, data } = response;
       return res.status(status).send(data);
     }
-  } catch (e) {
-    console.error('Error during ACBS facility issue POST: ', { e });
+  } catch (error) {
+    console.error('Error during ACBS facility issue POST: ', { error });
     return res.status(400).send();
   }
 
@@ -231,8 +231,8 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
       const { status, data } = response;
       return res.status(status).send(data);
     }
-  } catch (e) {
-    console.error('Error executing ACBS Facility POST: ', { e });
+  } catch (error) {
+    console.error('Error executing ACBS Facility POST: ', { error });
     return res.status(400).send();
   }
 

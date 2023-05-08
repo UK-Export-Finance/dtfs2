@@ -67,7 +67,7 @@ const updateDealEditedByPortal = async (dealId, user) => {
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: ObjectId(dealId) },
       $.flatten(withoutId({ editedBy })),
-      { returnDocument: 'after', returnNewDocument: true }
+      { returnNewDocument: true, returnDocument: 'after' }
     );
 
     const { value } = findAndUpdateResponse;
@@ -127,7 +127,7 @@ const updateDeal = async (dealId, dealChanges, user, existingDeal, routePath) =>
     const findAndUpdateResponse = await collection.findOneAndUpdate(
       { _id: ObjectId(dealId) },
       $.flatten(withoutId(update)),
-      { returnDocument: 'after', returnNewDocument: true }
+      { returnNewDocument: true, returnDocument: 'after' }
     );
 
     return findAndUpdateResponse.value;

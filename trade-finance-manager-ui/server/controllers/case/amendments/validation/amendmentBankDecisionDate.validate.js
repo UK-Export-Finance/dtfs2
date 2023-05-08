@@ -1,7 +1,7 @@
 const { set, getUnixTime } = require('date-fns');
 
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
-const amendmentmentYearValidation = require('./amendmentYearValidation.validate');
+const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  * @param {Object} body
@@ -14,7 +14,7 @@ const amendmentmentYearValidation = require('./amendmentYearValidation.validate'
  * returns errors or epoch received/effective date (with blank errors) in an object
  */
 
-const amendmentBankDecisionDateValidation = async (body, type, message) => {
+const amendmentBankDecisionDateValidation = (body, type, message) => {
   const {
     'amendment--bank-decision-date-day': amendmentBankDecisionDateDay,
     'amendment--bank-decision-date-month': amendmentBankDecisionDateMonth,
@@ -38,7 +38,7 @@ const amendmentBankDecisionDateValidation = async (body, type, message) => {
     });
   } else if (amendmentRequestIsFullyComplete) {
     // if year in wrong format
-    if (amendmentmentYearValidation(amendmentBankDecisionDateYear)) {
+    if (amendmentYearValidation(amendmentBankDecisionDateYear)) {
       amendmentBankDecisionDateErrors.push({
         errRef: type,
         errMsg: 'The year must include 4 numbers',

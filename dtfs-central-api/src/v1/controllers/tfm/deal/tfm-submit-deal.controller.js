@@ -45,8 +45,8 @@ const createDealSnapshot = async (deal) => {
     }
 
     const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(deal._id) } }, $.flatten(withoutId(dealObj)), {
-      returnDocument: 'after',
       returnNewDocument: true,
+      returnDocument: 'after',
       upsert: true,
     });
 
@@ -78,8 +78,8 @@ const createFacilitiesSnapshot = async (deal) => {
       const updatedFacilities = Promise.all(
         dealFacilities.map(async (facility) =>
           collection.findOneAndUpdate({ _id: { $eq: ObjectId(facility._id) } }, $.flatten({ facilitySnapshot: facility, ...tfmInit }), {
-            returnDocument: 'after',
             returnNewDocument: true,
+            returnDocument: 'after',
             upsert: true,
           })),
       );

@@ -24,6 +24,7 @@ describe('tfm get deals controller - date helpers', () => {
         'dealSnapshot.eligibility.lastUpdated',
         'dealSnapshot.details.submissionDate',
         'dealSnapshot.facilitiesUpdated',
+        'tfm.lastUpdated',
       ];
 
       expect(TIMESTAMP_FIELDS).toEqual(expected);
