@@ -69,9 +69,9 @@ const facilityLoan = (deal, facility, acbsData) => {
     }
 
     return loanRecord;
-  } catch (e) {
-    console.error('Unable to map Facility Loan Record.', { e });
-    return e;
+  } catch (error) {
+    console.error('Unable to map Facility Loan Record.', { error });
+    return error;
   }
 };
 

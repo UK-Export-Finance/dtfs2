@@ -18,7 +18,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
     const response = await cronJobLogsCollection.findOneAndUpdate(
       { dealId: eStoreData.dealId },
       { $inc: { termStoreRetries: 1 } },
-      { returnDocument: 'after' },
+      { returnNewDocument: true, returnDocument: 'after' },
     );
 
     // ensure that there is only 1 retry for term store creation
@@ -47,7 +47,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
   const response = await cronJobLogsCollection.findOneAndUpdate(
     { dealId: eStoreData.dealId },
     { $inc: { buyerFolderRetries: 1 } },
-    { returnDocument: 'after' },
+    { returnNewDocument: true, returnDocument: 'after' },
   );
 
   // ensure that there is less than 3 retries for buyer folder creation

@@ -1,62 +1,93 @@
 const api = require('../../../api');
-const { userCanEdit, isEmptyString } = require('./helpers');
+const { userCanEdit, isEmptyString, partyType } = require('./helpers');
 const validatePartyURN = require('./partyUrnValidation.validate');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 
 const { DEAL } = CONSTANTS;
 
-const getCaseParties = async (req, res) => {
-  const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
-  const { user } = req.session;
+/**
+ * Renders all parties URN page
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Object} Express response, which renders all party URN page.
+ */
+const getAllParties = async (req, res) => {
+  try {
+    const dealId = req.params._id;
+    const deal = await api.getDeal(dealId);
+    const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+    const { user } = req.session;
 
-  if (!deal) {
+    if (!deal?.tfm) {
+      console.error('Invalid deal.');
+      return res.redirect('/not-found');
+    }
+
+    const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+    if (hasAmendmentInProgress) {
+      deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+    }
+    const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+
+    const canEdit = userCanEdit(user);
+
+    // Render all parties URN page
+    return res.render('case/parties/parties.njk', {
+      userCanEdit: canEdit,
+      renderEditLink: canEdit,
+      renderEditForm: false,
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'parties',
+      dealId,
+      user,
+      hasAmendmentInProgress,
+      amendmentsInProgress,
+    });
+  } catch (error) {
+    console.error('Error rendering all parties page', { error });
     return res.redirect('/not-found');
   }
-
-  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
-  if (hasAmendmentInProgress) {
-    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-  }
-  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
-
-  const canEdit = userCanEdit(user);
-
-  return res.render('case/parties/parties.njk', {
-    userCanEdit: canEdit,
-    renderEditLink: canEdit,
-    renderEditForm: false,
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'parties',
-    dealId,
-    user,
-    hasAmendmentInProgress,
-    amendmentsInProgress,
-  });
 };
 
-const getPartyDetails = (partyType) => (
-  async (req, res) => {
+/**
+ * Renders party specific URN edit page
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Object} Express response as rendered party page.
+ */
+const getPartyDetails = async (req, res) => {
+  try {
     const { user } = req.session;
+    const party = partyType(req.url);
 
     const canEdit = userCanEdit(user);
 
     if (!canEdit) {
+      console.error('Invalid user privilege.');
       return res.redirect('/not-found');
     }
 
     const dealId = req.params._id;
     const deal = await api.getDeal(dealId);
 
-    if (!deal) {
+    if (!deal?.tfm) {
+      console.error('Invalid deal.');
       return res.redirect('/not-found');
     }
 
-    return res.render(`case/parties/edit/${partyType}-edit.njk`, {
+    if (!party) {
+      console.error('Invalid party type specified.');
+      return res.redirect('/not-found');
+    }
+
+    const urn = deal.tfm.parties[party]
+      ? deal.tfm.parties[party].partyUrn
+      : '';
+
+    return res.render(`case/parties/edit/${party}.njk`, {
       userCanEdit: canEdit,
       renderEditLink: false,
       renderEditForm: true,
@@ -66,111 +97,204 @@ const getPartyDetails = (partyType) => (
       tfm: deal.tfm,
       dealId,
       user: req.session.user,
-      urn: deal.tfm.parties[partyType].partyUrn,
+      urn,
     });
-  }
-);
-
-const getExporterPartyDetails = getPartyDetails('exporter');
-const getBuyerPartyDetails = getPartyDetails('buyer');
-const getAgentPartyDetails = getPartyDetails('agent');
-const getIndemnifierPartyDetails = getPartyDetails('indemnifier');
-
-const getBondIssuerPartyDetails = async (req, res) => {
-  const { user } = req.session;
-
-  const canEdit = userCanEdit(user);
-
-  if (!canEdit) {
+  } catch (error) {
+    console.error('Error rendering party URN edit page', { error });
     return res.redirect('/not-found');
   }
-
-  const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-
-  if (!deal) {
-    return res.redirect('/not-found');
-  }
-
-  return res.render('case/parties/edit/bonds-issuer-edit.njk', {
-    userCanEdit: canEdit,
-    renderEditLink: false,
-    renderEditForm: true,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'parties',
-    deal: deal.dealSnapshot,
-    user,
-  });
 };
 
-const getBondBeneficiaryPartyDetails = async (req, res) => {
-  const { user } = req.session;
-
-  const canEdit = userCanEdit(user);
-
-  if (!canEdit) {
-    return res.redirect('/not-found');
-  }
-
-  const dealId = req.params._id;
-  const deal = await api.getDeal(dealId);
-
-  if (!deal) {
-    return res.redirect('/not-found');
-  }
-
-  return res.render('case/parties/edit/bonds-beneficiary-edit.njk', {
-    userCanEdit: canEdit,
-    renderEditLink: false,
-    renderEditForm: true,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'parties',
-    deal: deal.dealSnapshot,
-    user,
-  });
-};
-
-const postPartyDetails = (partyType) => (
-  async (req, res) => {
+/**
+ * Renders party specific urn summary page
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Object} Express response as rendered party page.
+ */
+const getPartyUrnDetails = async (req, res) => {
+  try {
     const { user } = req.session;
-    delete req.body._csrf;
+    const party = partyType(req.url);
 
-    if (!userCanEdit(user)) {
+    const canEdit = userCanEdit(user);
+
+    if (!canEdit) {
+      console.error('Invalid user privilege.');
       return res.redirect('/not-found');
     }
 
     const dealId = req.params._id;
+    const partyUrn = req.params.urn;
+    const deal = await api.getDeal(dealId);
+
+    if (!deal?.tfm) {
+      console.error('Invalid deal.');
+      return res.redirect('/not-found');
+    }
+
+    if (!party) {
+      console.error('Invalid party type specified.');
+      return res.redirect('/not-found');
+    }
+
+    if (isEmptyString(partyUrn)) {
+      console.error('Invalid party urn.');
+      return res.redirect('/not-found');
+    }
+
+    // Fetches company information from URN
+    const company = await api.getParty(partyUrn);
+
+    if (!company || !company.data) {
+      return res.render('case/parties/non-existent.njk', {
+        dealId,
+        party,
+        urn: partyUrn,
+      });
+    }
+
+    const name = company.data.length
+      ? company.data[0].name
+      : '';
+
+    return res.render('case/parties/summary/party.njk', {
+      userCanEdit: canEdit,
+      renderEditLink: false,
+      renderEditForm: true,
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'parties',
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
+      dealId,
+      user: req.session.user,
+      urn: partyUrn,
+      name,
+      party,
+    });
+  } catch (error) {
+    console.error('Error rendering party specific urn summary page', { error });
+    return res.redirect('/not-found');
+  }
+};
+
+/**
+ * Renders bond specific urn summary page
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Object} Express response as rendered party page.
+ */
+const getBondUrnDetails = async (req, res) => {
+  try {
+    const { user } = req.session;
+    const party = partyType(req.url);
+
+    const canEdit = userCanEdit(user);
+
+    if (!canEdit) {
+      console.error('Invalid user privilege.');
+      return res.redirect('/not-found');
+    }
+
+    const dealId = req.params._id;
+    const partyUrns = req.session.urn;
 
     const deal = await api.getDeal(dealId);
 
-    if (!deal) {
+    if (!deal?.tfm) {
+      console.error('Invalid deal.');
+      return res.redirect('/not-found');
+    }
+
+    if (!party) {
+      console.error('Invalid party type specified.');
+      return res.redirect('/not-found');
+    }
+
+    const companies = partyUrns.map((urn) => api.getParty(urn)
+      // Non-existent party urn
+      .then((company) => (!company?.data?.length ? Promise.resolve() : Promise.resolve(company.data[0].name))));
+
+    const name = await Promise.all(companies);
+
+    return res.render('case/parties/summary/bond.njk', {
+      userCanEdit: canEdit,
+      renderEditLink: false,
+      renderEditForm: true,
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: 'parties',
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
+      dealId,
+      user: req.session.user,
+      urn: partyUrns,
+      name,
+      party,
+    });
+  } catch (error) {
+    console.error('Error rendering bond specific urn summary page', { error });
+    return res.redirect('/not-found');
+  }
+};
+
+/**
+ * Post party URN to the summary page for confirmation
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Object} Express response as rendered confirm party URN page.
+ */
+const confirmPartyUrn = async (req, res) => {
+  try {
+    const party = partyType(req.url);
+    const { user } = req.session;
+
+    const canEdit = userCanEdit(user);
+
+    if (!canEdit) {
+      console.error('Invalid user privilege.');
+      return res.redirect('/not-found');
+    }
+
+    const dealId = req.params._id;
+    const deal = await api.getDeal(dealId);
+
+    if (!deal?.tfm) {
+      console.error('Invalid deal.');
+      return res.redirect('/not-found');
+    }
+
+    if (!party) {
+      console.error('Invalid party type specified.');
       return res.redirect('/not-found');
     }
 
     /**
-     * checks if partyType is exporter and if partyUrn input exists or is a blank string (nothing inputted)
-     * validates input - should only be at least 3 numbers
-     * validation error rendered if error exists on edit partyUrn page
-     * if no error, then updates partyURN
+     * PartyURN input validation.
+     * 1. Should be at least 3 numbers
      */
-    if (req.body.partyUrn || isEmptyString(req.body.partyUrn)) {
+    const { partyUrn } = req.body;
+
+    /**
+     * Check `partyUrn` is minimum 3 digits
+     * and is not empty.
+     */
+    if (partyUrn || isEmptyString(partyUrn)) {
       const urnValidationErrors = [];
 
       const partyUrnParams = {
-        urnValue: req.body.partyUrn,
-        partyUrnRequired: deal.tfm.parties[partyType].partyUrnRequired,
+        urnValue: partyUrn,
+        partyUrnRequired: deal.tfm.parties[party].partyUrnRequired,
         // index not required for these fields as only 1 URN box on page
         index: null,
-        partyType,
+        party,
         urnValidationErrors,
       };
 
-      // validates input
+      // Validates partyURN input
       const validationError = validatePartyURN(partyUrnParams);
-      const canEdit = userCanEdit(user);
 
       if (validationError.errorsObject) {
-        return res.render(`case/parties/edit/${partyType}-edit.njk`, {
+      // Render party specific page with error
+        return res.render(`case/parties/edit/${party}.njk`, {
           userCanEdit: canEdit,
           renderEditLink: false,
           renderEditForm: true,
@@ -186,31 +310,96 @@ const postPartyDetails = (partyType) => (
       }
     }
 
+    // Fetches company information from URN
+    const company = await api.getParty(partyUrn);
+
+    // Non-existent party urn
+    if (!company && !company.data) {
+      return res.render('case/parties/non-existent.njk', {
+        dealId,
+        party,
+        urn: partyUrn,
+      });
+    }
+
+    // Agent party only - Commission rate
+    if (req.body.commissionRate) {
+      req.session.commissionRate = req.body.commissionRate;
+    }
+
+    // Redirect to summary (confirmation) page
+    return res.redirect(`/case/${dealId}/parties/${party}/summary/${partyUrn}`);
+  } catch (error) {
+    console.error('Error posting party URN', { error });
+    return res.redirect('/not-found');
+  }
+};
+
+/**
+ * Submits confirmed party URN to the TFM
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Object} Express response, if successful then re-directed to all parties page
+ */
+const postPartyDetails = async (req, res) => {
+  try {
+    const { user } = req.session;
+
+    delete req.body._csrf;
+
+    if (!userCanEdit(user)) {
+      return res.redirect('/not-found');
+    }
+
+    const dealId = req.params._id;
+    const deal = await api.getDeal(dealId);
+
+    if (!deal?.tfm) {
+      console.error('Invalid deal.');
+      return res.redirect('/not-found');
+    }
+
+    const party = partyType(req.url);
+
+    if (!party) {
+      console.error('Invalid party type specified.');
+      return res.redirect('/not-found');
+    }
+
+    const partyUrn = req.params.urn;
+
+    if (isEmptyString(partyUrn)) {
+      console.error('Invalid party urn.');
+      return res.redirect('/not-found');
+    }
+
+    // Party URN
     const update = {
-      [partyType]: req.body,
+      [party]: {
+        partyUrn,
+      },
     };
+
+    // Agent party only - Commission rate
+    if (req.session.commissionRate) {
+      update[party].commissionRate = req.session.commissionRate;
+      delete req.session.commissionRate;
+    }
 
     await api.updateParty(dealId, update);
 
     return res.redirect(`/case/${dealId}/parties`);
+  } catch (error) {
+    console.error('Error posting party URN to TFM', { error });
+    return res.redirect('/not-found');
   }
-);
-
-const postExporterPartyDetails = postPartyDetails('exporter');
-const postBuyerPartyDetails = postPartyDetails('buyer');
-const postAgentPartyDetails = postPartyDetails('agent');
-const postIndemnifierPartyDetails = postPartyDetails('indemnifier');
+};
 
 module.exports = {
-  getCaseParties,
-  getExporterPartyDetails,
-  getBuyerPartyDetails,
-  getAgentPartyDetails,
-  getIndemnifierPartyDetails,
-  getBondIssuerPartyDetails,
-  getBondBeneficiaryPartyDetails,
-  postExporterPartyDetails,
-  postBuyerPartyDetails,
-  postAgentPartyDetails,
-  postIndemnifierPartyDetails,
+  getPartyDetails,
+  getPartyUrnDetails,
+  getBondUrnDetails,
+  confirmPartyUrn,
+  postPartyDetails,
+  getAllParties,
 };

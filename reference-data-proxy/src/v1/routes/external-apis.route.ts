@@ -6,6 +6,7 @@ import * as currencies from '../controllers/currencies.controller';
 import * as industrySectors from '../controllers/industry-sectors.controller';
 import * as numberGenerator from '../controllers/number-generator.controller';
 import * as partyDb from '../controllers/party-db.controller';
+import * as partyUrn from '../controllers/party-urn.controller';
 import * as acbs from '../controllers/acbs.controller';
 import * as currencyExchangeRate from '../controllers/currency-exchange-rate.controller';
 import * as exposurePeriod from '../controllers/exposure-period.controller';
@@ -352,6 +353,33 @@ apiRoutes.post('/acbs/facility/:id/amendments', acbs.amendAcbsFacilityPost);
  *         description: Not found
  */
 apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
+
+/**
+ * @openapi
+ * /party-db/urn/:urn:
+ *   get:
+ *     summary: Get a UKEF company
+ *     tags: [PartyDB, Mulesoft, Salesforce, MCD]
+ *     description: Fetches complete company object from Party URN
+ *     parameters:
+ *       - in: path
+ *         name: partyDbPartyUrn
+ *         schema:
+ *           type: integer
+ *           example: 1234
+ *         required: true
+ *         description: Party unique reference number
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/PartyDB'
+ *       404:
+ *         description: Not found
+ */
+apiRoutes.get('/party-db/urn/:urn', partyUrn.lookup);
 
 /**
  * @openapi

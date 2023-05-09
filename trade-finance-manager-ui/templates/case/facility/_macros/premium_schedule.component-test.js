@@ -1,5 +1,5 @@
 const pageRenderer = require('../../../../component-tests/componentRenderer');
-const formatAsCurrencyFilter = require('../../../../server/nunjucks-configuration/formatAsCurrency');
+const formatAsCurrencyFilter = require('../../../../server/nunjucks-configuration/filter-formatAsCurrency');
 
 const page = '../templates/case/facility/_macros/premium_schedule.njk';
 

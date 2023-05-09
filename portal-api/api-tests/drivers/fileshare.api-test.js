@@ -5,7 +5,6 @@ const fileshare = require('../../src/drivers/fileshare');
 const someXML = '<?xml version="1.0" encoding="UTF-8"?><Deal/>';
 const someXML2 = '<?xml version="1.0" encoding="UTF-8"?>XML2<Deal/>';
 
-
 const folder = 'api_tests/fileshare';
 const fileshareName = 'portal';
 
@@ -72,7 +71,6 @@ xdescribe('fileshare', () => {
 
       await Promise.all(fileshareWritePromises);
 
-
       await fileshare.deleteMultipleFiles(fileshareName, folder, fileList);
 
       fileList.forEach((filename) => {
@@ -93,7 +91,6 @@ xdescribe('fileshare', () => {
       });
     });
   });
-
 
   describe('Upload existing files', () => {
     const filename = 'duplicate.xml';
@@ -119,7 +116,6 @@ xdescribe('fileshare', () => {
 
       expect(duplicateFile.error.message).toEqual('could not be uploaded. Each file must have unique filename');
     });
-
 
     it('allows overwrite of file that already exists if flag set', async () => {
       await fileshare.uploadFile({
@@ -161,7 +157,7 @@ xdescribe('fileshare', () => {
             fileshare.deleteDirectory(fileshare, nonExistentFolder);
           });
         });
-      } catch (e) { return false; }
+      } catch (error) { return false; }
     });
 
     it('creates parent folders if they don\'t exist', async () => {
@@ -240,7 +236,6 @@ xdescribe('fileshare', () => {
         buffer: Buffer.from(someXML, 'utf-8'),
       };
 
-
       const copy = await fileshare.copyFile({
         from: fromFile,
         to: toFile,
@@ -316,7 +311,6 @@ xdescribe('fileshare', () => {
     beforeEach(async () => {
       await fileshare.deleteMultipleFiles(fileshareName, listFolder, fileList);
     });
-
 
     it('list files in a directory', async () => {
       const fileshareWritePromises = [];

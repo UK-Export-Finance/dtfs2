@@ -1,11 +1,8 @@
 const componentRenderer = require('../../../../component-tests/componentRenderer');
 
 const component = '../templates/case/facility/_macros/credit-rating.njk';
-const filterLocaliseTimestamp = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const render = componentRenderer(component);
-
-const localiseTimestamp = filterLocaliseTimestamp.default;
 
 describe(component, () => {
   let wrapper;

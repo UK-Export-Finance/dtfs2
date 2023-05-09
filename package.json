@@ -9,7 +9,7 @@
   },
   "scripts": {
     "install:all": "npm i && npm i --prefix ./azure-functions/acbs-function && npm i --prefix ./azure-functions/number-generator-function && npm i --prefix ./dtfs-central-api && npm i --prefix ./reference-data-proxy && npm i --legacy-peer-deps --prefix ./gef-ui && npm i --legacy-peer-deps --prefix ./portal && npm i --prefix ./portal-api && npm i --legacy-peer-deps --prefix ./trade-finance-manager-ui && npm i --legacy-peer-deps --prefix ./trade-finance-manager-api",
-    "update:all": "npm update && npm update --prefix ./azure-functions/acbs-function && npm update --prefix ./azure-functions/number-generator-function && npm update --prefix ./dtfs-central-api && npm update --prefix ./reference-data-proxy && npm update --legacy-peer-deps --prefix ./gef-ui && npm update --legacy-peer-deps --prefix ./portal && npm update --prefix ./portal-api && npm update --legacy-peer-deps --prefix ./trade-finance-manager-ui && npm update --legacy-peer-deps --prefix ./trade-finance-manager-api",
+    "update:all": "npm update --save && npm update --save --prefix ./azure-functions/acbs-function && npm update --save --prefix ./azure-functions/number-generator-function && npm update --save --prefix ./dtfs-central-api && npm update --save --prefix ./reference-data-proxy && npm update --save --legacy-peer-deps --prefix ./gef-ui && npm update --save --legacy-peer-deps --prefix ./portal && npm update --save --prefix ./portal-api && npm update --save --legacy-peer-deps --prefix ./trade-finance-manager-ui && npm update --save --legacy-peer-deps --prefix ./trade-finance-manager-api",
     "audit:all": "npm audit && npm audit --prefix ./azure-functions/acbs-function && npm audit --prefix ./azure-functions/number-generator-function && npm audit --prefix ./dtfs-central-api && npm audit --prefix ./reference-data-proxy && npm audit --prefix ./gef-ui && npm audit --prefix ./portal && npm audit --prefix ./portal-api && npm audit --prefix ./trade-finance-manager-ui && npm audit --prefix ./trade-finance-manager-api",
     "lint:all": "eslint ./azure-functions/acbs-function ./azure-functions/number-generator-function ./reference-data-proxy ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./gef-ui ./e2e-tests",
     "lint:all:fix": "eslint ./azure-functions/acbs-function ./azure-functions/number-generator-function ./reference-data-proxy ./portal-api/src ./portal/server ./portal/scripts ./trade-finance-manager-ui/server ./trade-finance-manager-ui/scripts ./dtfs-central-api/src ./trade-finance-manager-api/src ./trade-finance-manager-api/api-tests ./reference-data-proxy/src ./gef-ui ./e2e-tests --fix",
@@ -27,23 +27,23 @@
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
     "bson": "^4.7.2",
-    "chance": "^1.1.9",
-    "cypress": "^12.5.1",
+    "chance": "^1.1.11",
+    "cypress": "^12.11.0",
     "cypress-audit": "^1.1.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-plugin-tab": "^1.0.5",
     "cypress-v10-preserve-cookie": "^1.2.1",
-    "date-fns": "^2.29.3",
+    "date-fns": "^2.30.0",
     "dotenv": "^16.0.3",
-    "npm-check-updates": "^16.7.4"
+    "npm-check-updates": "^16.10.10"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.51.0",
-    "eslint": "^8.34.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "eslint": "^8.40.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-cypress": "^2.13.3",
     "eslint-plugin-import": "^2.27.5",
     "husky": "^8.0.3",
-    "prettier": "2.8.2"
+    "prettier": "2.8.8"
   }
 }

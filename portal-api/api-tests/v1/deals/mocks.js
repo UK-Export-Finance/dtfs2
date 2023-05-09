@@ -15,7 +15,6 @@ const updatedECCompleted = {
   'criterion-18': 'true',
 };
 
-
 const updatedECCompletedAllTrue = {
   'criterion-11': 'true',
   'criterion-12': 'true',

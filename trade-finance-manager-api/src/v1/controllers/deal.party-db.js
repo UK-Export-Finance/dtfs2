@@ -1,5 +1,33 @@
 const api = require('../api');
 
+/**
+ * Gets company information from Party URN
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ * @returns {Object} Company information
+ */
+const getCompany = async (req, res) => {
+  try {
+    const { urn } = req.params;
+
+    if (!urn) {
+      return res.status(404).send(false);
+    }
+
+    const company = await api.getCompanyInfo(urn);
+
+    if (!company) {
+      console.error('Void company response received');
+      return res.status(404).send(false);
+    }
+
+    return res.status(200).send(company);
+  } catch (error) {
+    console.error('Unable to get company from URN: ', { error });
+    return false;
+  }
+};
+
 const getPartyUrn = async ({ companyRegNo }) => {
   if (!companyRegNo) {
     return '';
@@ -60,4 +88,8 @@ const addPartyUrns = async (deal) => {
     tfm: updatedDeal.tfm,
   };
 };
-exports.addPartyUrns = addPartyUrns;
+
+module.exports = {
+  getCompany,
+  addPartyUrns,
+};

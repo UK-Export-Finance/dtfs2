@@ -56,21 +56,6 @@ const getCollection = async (name, filter = null, raw = null) => {
 };
 
 /**
- * Ascertain UKEF deal ID property path
- * as per deal type.
- * @param {String} dealType Deal Type
- * @returns {String} UKEF Deal ID property path
- */
-const ukefDealIdPath = (dealType) => {
-  switch (dealType) {
-    case 'GEF':
-      return 'dealSnapshot.ukefDealId';
-    default:
-      return 'dealSnapshot.details.ukefDealId';
-  }
-};
-
-/**
  * Portal - Updates collection property(ies)
  * @param {String} ukefDealId UKEF Deal ID
  * @param {Object} updates Properties to update
@@ -91,8 +76,8 @@ const portalDealUpdate = async (id, updates) => {
     return (response.acknowledged)
       ? Promise.resolve(true)
       : Promise.reject(response);
-  } catch (e) {
-    console.error(`Portal deal ${id} update error: `, { e });
+  } catch (error) {
+    console.error(`Portal deal ${id} update error: `, { error });
     return Promise.reject(new Error(false));
   }
 };
@@ -118,8 +103,8 @@ const portalFacilityUpdate = async (id, updates) => {
     return (response.acknowledged)
       ? Promise.resolve(true)
       : Promise.reject(response);
-  } catch (e) {
-    console.error(`Portal deal ${id} update error: `, { e });
+  } catch (error) {
+    console.error(`Portal deal ${id} update error: `, { error });
     return Promise.reject(new Error(false));
   }
 };
@@ -139,15 +124,15 @@ const tfmDealUpdate = async (updatedDeal) => {
     const response = await connection.collection(CONSTANTS.DATABASE.TABLES.TFM_DEAL).updateOne(
       { _id: { $eq: ObjectId(String(_id)) } },
       { $set: updatedDeal },
-      { returnDocument: 'after', returnNewDocument: true },
+      { returnNewDocument: true, returnDocument: 'after' },
     ).catch((e) => new Error(e));
 
     return (response.acknowledged)
       ? Promise.resolve(true)
       : Promise.reject(response);
-  } catch (e) {
-    console.error(`TFM deal ${updatedDeal._id} update error: `, { e });
-    return Promise.reject(new Error(e));
+  } catch (error) {
+    console.error(`TFM deal ${updatedDeal._id} update error: `, { error });
+    return Promise.reject(new Error(error));
   }
 };
 
@@ -174,9 +159,9 @@ const tfmFacilityUpdate = async (updatedFacility) => {
     return (response.acknowledged)
       ? Promise.resolve(true)
       : Promise.reject(response);
-  } catch (e) {
-    console.error(`TFM facility ${updatedFacility._id} update error: `, { e });
-    return Promise.reject(new Error(e));
+  } catch (error) {
+    console.error(`TFM facility ${updatedFacility._id} update error: `, { error });
+    return Promise.reject(new Error(error));
   }
 };
 

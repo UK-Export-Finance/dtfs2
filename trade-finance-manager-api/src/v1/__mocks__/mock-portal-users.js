@@ -3,8 +3,8 @@ const MOCK_PORTAL_USERS = [
     'user-status': 'active',
     timezone: 'Europe/London',
     username: 'BANK1_MAKER1',
-    firstname: 'Tamil',
-    surname: 'Rahani',
+    firstname: 'First',
+    surname: 'Last',
     email: 'maker1@ukexportfinance.gov.uk',
     roles: ['maker'],
     bank: {

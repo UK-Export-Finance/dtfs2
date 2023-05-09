@@ -47,12 +47,12 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: 'latest'
         cache: 'npm'
     - run: npm ci --legacy-peer-deps
     - run: npm run lint
     - run: npm t
-    - uses: act10ns/slack@v1
+    - uses: act10ns/slack@v2
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}
@@ -80,12 +80,12 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: 'latest'
         cache: 'npm'
     - run: npm ci --legacy-peer-deps
     - run: npm run lint
     - run: npm t
-    - uses: act10ns/slack@v1
+    - uses: act10ns/slack@v2
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}
@@ -113,12 +113,12 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: 'latest'
         cache: 'npm'
     - run: npm ci --legacy-peer-deps
     - run: npm run lint
     - run: npm t
-    - uses: act10ns/slack@v1
+    - uses: act10ns/slack@v2
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}

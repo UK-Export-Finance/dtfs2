@@ -41,6 +41,7 @@ describe('/v1/tfm/facilities', () => {
       const { body: allFacilitiesAfterCreation } = await api.get('/v1/tfm/facilities');
 
       const expectedFacilityShape = {
+        companyName: expect.any(String),
         tfmFacilities: {
           dealId: expect.any(String),
           ukefFacilityId: expect.any(String),
@@ -52,6 +53,7 @@ describe('/v1/tfm/facilities', () => {
           currency: expect.any(String),
           coverEndDate: expect.any(String),
         },
+        ukefFacilityId: expect.any(String)
       };
 
       expect(allFacilitiesAfterCreation[0]).toEqual(expectedFacilityShape);

@@ -179,7 +179,7 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
-const createActivity = async (dealId, activityUpdate) => {
+const createActivity = (dealId, activityUpdate) => {
   const updateVariable = {
     dealId,
     activityUpdate,
@@ -457,6 +457,24 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
   }
 };
 
+const getParty = async (partyUrn) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${tfmAPIurl}/v1/party/urn/${partyUrn}`,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (err) {
+    console.error('Unable to get party %O', { response: err?.response?.data });
+    return { status: err?.response?.status, data: err?.response?.data };
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -490,4 +508,5 @@ module.exports = {
   getAllAmendmentsInProgress,
   getLatestCompletedValueAmendment,
   getLatestCompletedDateAmendment,
+  getParty,
 };

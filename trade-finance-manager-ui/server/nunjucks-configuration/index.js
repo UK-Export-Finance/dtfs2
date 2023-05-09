@@ -4,12 +4,13 @@ const filterLocaliseTimestamp = require('./filter-localiseTimestamp');
 const filterFormatDateString = require('./filter-formatDateString');
 const dashIfEmpty = require('./filter-dashIfEmpty');
 const displayName = require('./filter-displayName');
-const formatAsCurrency = require('./formatAsCurrency');
+const formatAsCurrency = require('./filter-formatAsCurrency');
 const countriesWithEmptyInitialOption = require('./filter-countriesWithEmptyInitialOption');
 const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
 const bondBeneficiaryFacilities = require('./filter-bondBeneficiaryFacilities');
 const bondIssuerFacilities = require('./filter-bondIssuerFacilities');
-const formatAsDecimal = require('./formatAsDecimal');
+const formatAsDecimal = require('./filter-formatAsDecimal');
+const sentenceCase = require('./filter-sentenceCase');
 
 const configureNunjucks = (opts) => {
   const appViews = [
@@ -31,6 +32,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('bondBeneficiaryFacilities', bondBeneficiaryFacilities);
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);
+  nunjucksEnvironment.addFilter('sentence', sentenceCase);
 
   mojFilters = Object.assign(mojFilters);
   Object.keys(mojFilters).forEach((filterName) => {

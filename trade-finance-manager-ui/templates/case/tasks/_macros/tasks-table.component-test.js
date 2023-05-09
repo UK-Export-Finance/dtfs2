@@ -155,7 +155,7 @@ describe(component, () => {
 
     it('should render status tag', () => {
       params.tasks.forEach((group) => {
-        group.groupTasks.forEach((task) => {
+        group.groupTasks.forEach(() => {
           const selector = '[data-cy="status-tag"]';
           wrapper.expectElement(selector).toExist();
         });

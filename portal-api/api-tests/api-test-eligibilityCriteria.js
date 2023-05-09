@@ -23,6 +23,4 @@ module.exports.initialise = async (app, user) => {
 
     notYetInitialised = false;
   }
-
-  return;
 };

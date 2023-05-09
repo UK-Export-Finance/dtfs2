@@ -6,6 +6,7 @@ const TEAMS = require('./teams');
 const ACTIVITIES = require('./activities');
 const AMENDMENTS = require('./amendments');
 const DECISIONS = require('./decisions.constant');
+const PARTY = require('./party');
 
 module.exports = {
   DEAL,
@@ -16,4 +17,5 @@ module.exports = {
   ACTIVITIES,
   AMENDMENTS,
   DECISIONS,
+  PARTY,
 };

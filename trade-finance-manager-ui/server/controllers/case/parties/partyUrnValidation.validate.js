@@ -30,12 +30,12 @@ const emptyURNValidation = (partyUrnParams) => {
 const invalidURNValidation = (partyUrnParams, urnValidation) => {
   const {
     index,
-    partyType,
+    party,
     urnValidationErrors,
   } = partyUrnParams;
 
   // constructs error ref based on partyType and determines if to add index or not
-  const errRef = constructErrRef(partyType, index);
+  const errRef = constructErrRef(party, index);
 
   urnValidationErrors.push({
     errRef,
@@ -69,7 +69,7 @@ const validatePartyURN = (partyUrnParams) => {
   const urnSchema = Joi.string().min(3).pattern(/^\d+$/).required();
   const urnValidation = urnSchema.validate(urnValue);
 
-  if (urnValue && urnValidation.error) {
+  if (urnValidation.error) {
     return invalidURNValidation(partyUrnParams, urnValidation);
   }
 

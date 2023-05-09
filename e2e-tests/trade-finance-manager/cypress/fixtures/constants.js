@@ -61,6 +61,20 @@ const NOT_ADDED = {
   DASH: '-',
 };
 
+const PARTIES = {
+  EXPORTER: 'exporter',
+  BUYER: 'buyer',
+  AGENT: 'agent',
+  INDEMNIFIER: 'indemnifier',
+  BOND_ISSUER: 'bond-issuer',
+  BOND_BENEFICIARY: 'bond-beneficiary',
+};
+
+const PARTY_URN = {
+  INVALID: '1234',
+  VALID: '00307249',
+};
+
 module.exports = {
   DEAL_TYPE,
   DEAL_SUBMISSION_TYPE,
@@ -69,4 +83,6 @@ module.exports = {
   DEAL_STAGE_TFM,
   USER_TEAMS,
   NOT_ADDED,
+  PARTY_URN,
+  PARTIES,
 };

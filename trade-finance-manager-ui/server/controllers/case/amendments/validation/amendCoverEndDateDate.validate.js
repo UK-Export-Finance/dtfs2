@@ -1,6 +1,6 @@
 const { isSameDay, set, getUnixTime } = require('date-fns');
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
-const amendmentmentYearValidation = require('./amendmentYearValidation.validate');
+const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  *
@@ -9,7 +9,7 @@ const amendmentmentYearValidation = require('./amendmentYearValidation.validate'
  * @returns {Object} containing errors and amendment cover end date
  * function to validate the amendment cover end date
  */
-const coverEndDateValidation = async (body, currentEndDate) => {
+const coverEndDateValidation = (body, currentEndDate) => {
   const { 'cover-end-date-day': coverEndDay, 'cover-end-date-month': coverEndMonth, 'cover-end-date-year': coverEndYear } = body;
 
   const coverEndDateErrors = [];
@@ -33,7 +33,7 @@ const coverEndDateValidation = async (body, currentEndDate) => {
       });
     }
     // if year in wrong format
-    if (amendmentmentYearValidation(coverEndYear)) {
+    if (amendmentYearValidation(coverEndYear)) {
       coverEndDateErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'The year for the amendment cover end date must include 4 numbers',

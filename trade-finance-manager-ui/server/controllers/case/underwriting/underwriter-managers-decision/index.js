@@ -2,7 +2,7 @@ const api = require('../../../../api');
 const userCanEditManagersDecision = require('./helpers');
 const { mapDecisionObject, validateSubmittedValues } = require('../../../helpers');
 
-const getUnderwriterManagersDecision = async (deal, user) => {
+const getUnderwriterManagersDecision = (deal, user) => {
   const userCanEdit = userCanEditManagersDecision(user, deal.dealSnapshot.submissionType, deal.tfm);
 
   return {

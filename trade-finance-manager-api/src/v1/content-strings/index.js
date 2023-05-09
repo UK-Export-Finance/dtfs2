@@ -331,7 +331,7 @@ const DEAL = {
             'human cloning',
             'pornography',
             'tobacco or gambling',
-            'coal or coal power related',
+            'coal, oil, gas or fossil fuel energy',
           ],
         },
         16: {
@@ -379,7 +379,7 @@ const DEAL = {
             'human cloning',
             'pornography',
             'tobacco or gambling',
-            'coal or coal power related',
+            'coal, oil, gas or fossil fuel energy',
           ],
         },
         16: {

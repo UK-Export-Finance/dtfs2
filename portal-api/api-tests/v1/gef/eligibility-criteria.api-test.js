@@ -115,7 +115,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(201);
     });
   });
-  
+
   describe(`DELETE ${baseUrl}/:version`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
       const item = await as(anEditor).post(items[0]).to(baseUrl);

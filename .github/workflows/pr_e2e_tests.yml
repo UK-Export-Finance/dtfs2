@@ -49,6 +49,9 @@ env:
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  REDIS_HOSTNAME: ${{ secrets.REDIS_HOSTNAME }}
+  REDIS_PORT: ${{ secrets.REDIS_PORT }}
+  NODE_ENV: ${{ secrets.NODE_ENV }}
 
 jobs:
   set-environment:
@@ -117,7 +120,7 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
-    - uses: act10ns/slack@v1
+    - uses: act10ns/slack@v2
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}
@@ -181,7 +184,7 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
-    - uses: act10ns/slack@v1
+    - uses: act10ns/slack@v2
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}
@@ -246,7 +249,7 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
-    - uses: act10ns/slack@v1
+    - uses: act10ns/slack@v2
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}
@@ -313,7 +316,7 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
-    - uses: act10ns/slack@v1
+    - uses: act10ns/slack@v2
       with:
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}

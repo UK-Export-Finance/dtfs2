@@ -1,17 +1,23 @@
 {% import '../_macros/parties-indemnifier-area.njk' as indemnifierArea %}
 {% import '../../_macros/save-close-buttons.njk' as saveCloseButtons %}
+{% import '../../_macros/back-link.njk' as back %}
 
 {% extends "index.njk" %}
-  {% set primary = 'cases' %}
+{% set primary = 'cases' %}
 
-  {% block pageTitle %}
+{% block pageTitle %}
     Edit agent details: {{ deal.submissionDetails.indemnifierName }}
-  {% endblock %}
+{% endblock %}
 
-  {% block content %}
-    <form autocomplete="off" method="POST">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-      {{ indemnifierArea.render({
+{% block content %}
+
+  {{ back.render({
+      return: "/case/" + deal._id + "/parties"
+  }) }}
+
+  <form autocomplete="off" method="POST">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ indemnifierArea.render({
         deal: deal,
         tfm: tfm,
         userCanEdit: userCanEdit,
@@ -28,5 +34,4 @@
 
   {% endblock %}
 
-  {% block sub_content %}
-  {% endblock %}
+  {% block sub_content %}{% endblock %}

@@ -68,7 +68,7 @@ describe('GEF controllers validation - eligibilityCriteria', () => {
 
         const result = eligibilityCriteriaStatus(mockAnswers);
 
-        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED)
+        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED);
       });
     });
 
@@ -81,7 +81,7 @@ describe('GEF controllers validation - eligibilityCriteria', () => {
 
         const result = eligibilityCriteriaStatus(mockAnswers);
 
-        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS)
+        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS);
       });
     });
 
@@ -94,7 +94,7 @@ describe('GEF controllers validation - eligibilityCriteria', () => {
 
         const result = eligibilityCriteriaStatus(mockAnswers);
 
-        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.COMPLETED)
+        expect(result).toEqual(CONSTANTS.DEAL.DEAL_STATUS.COMPLETED);
       });
     });
   });

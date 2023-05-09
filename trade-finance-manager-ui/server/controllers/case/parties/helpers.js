@@ -1,53 +1,64 @@
 const CONSTANTS = require('../../../constants');
 const { userIsInTeam } = require('../../../helpers/user');
 
+const bondParties = [
+  CONSTANTS.PARTY.BOND.BOND_ISSUER,
+  CONSTANTS.PARTY.BOND.BOND_BENEFICIARY,
+];
+
 const userCanEdit = (user) => userIsInTeam(user, [CONSTANTS.TEAMS.BUSINESS_SUPPORT]);
 
-// takes body if bondIssuer or bond beneficiary and returns body and party type
-const bondPartyType = (body) => {
-  if (body.bondBeneficiaryPartyUrn) {
-    return {
-      bodyType: 'bondBeneficiaryPartyUrn',
-      partyType: 'bonds-beneficiary',
-    };
-  }
-
-  return {
-    bodyType: 'bondIssuerPartyUrn',
-    partyType: 'bonds-issuer',
-  };
-};
+/**
+ * Returns bond type from party type
+ * @param {String} party party type either as `bond-issuer` or `bond-beneficiary`.
+ * @returns {String} bond type
+ */
+const bondType = (party) => (party === CONSTANTS.PARTY.BOND.BOND_ISSUER ? 'bondIssuerPartyUrn' : 'bondBeneficiaryPartyUrn');
 
 // checks if bond type and returns true or false
-const isBondPartyType = (partyType) => (partyType === 'bondBeneficiaryPartyUrn' || partyType === 'bondIssuerPartyUrn');
+const isBondPartyType = (partyType) => bondParties.includes(partyType);
 
 /**
- * constructs errRef based on partyType
- * if bondBeneficiary or bondIssuer, then needs index to specify which urn box it is referring to,
- * else should just be partyUrn
+ * Constructs `errRef` based on `partyType`
+ * if `bondBeneficiary` or `bondIssuer`, then add index for field reference
+ * otherwise should return default field reference.
+ * @param {String} partyType Party type
+ * @param {Integer} index Party URN field index
+ * @returns {String} Party URN reference for an inline error display
  */
-const constructErrRef = (partyType, index) => {
-  let errRef = 'partyUrn';
-
-  if (isBondPartyType(partyType)) {
-    errRef = `partyUrn-${index}`;
-  }
-
-  return errRef;
-};
+const constructErrRef = (party, index) => (isBondPartyType(party) ? `partyUrn-${index}` : 'partyUrn');
 
 // checks if string is empty - checks that string is '' and does not have a length and returns true if so
-const isEmptyString = (str) => {
-  if (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length)) {
-    return true;
+const isEmptyString = (str) => (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length) ? true : false);
+
+/**
+ * Extracts party name from the URL
+ * @param {String} url Request URL
+ * @returns {String} Party name
+ */
+const partyType = (url) => {
+  if (!url || typeof url !== 'string' || !url.trim()) {
+    return false;
   }
-  return false;
+
+  const routes = url.toLowerCase().split('/');
+
+  if (!routes || !routes.length) {
+    return false;
+  }
+
+  const { PARTIES } = CONSTANTS.PARTY;
+
+  return PARTIES
+    .filter((party) => routes.includes(party))
+    .toString();
 };
 
 module.exports = {
   userCanEdit,
-  bondPartyType,
+  bondType,
   isBondPartyType,
   constructErrRef,
   isEmptyString,
+  partyType,
 };

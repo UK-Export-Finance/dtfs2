@@ -58,9 +58,9 @@ const createFacilityFee = async (context) => {
       receivedFromACBS: moment().format(),
       ...data,
     };
-  } catch (e) {
-    console.error('Unable to create facility fee', { e });
-    return e;
+  } catch (error) {
+    console.error('Unable to create facility fee', { error });
+    return error;
   }
 };
 

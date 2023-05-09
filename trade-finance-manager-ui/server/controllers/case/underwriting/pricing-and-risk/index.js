@@ -10,7 +10,7 @@ const {
   userCanEditGeneral,
 } = require('./helpers');
 
-const getUnderWritingPricingAndRisk = async (deal, user) => ({
+const getUnderWritingPricingAndRisk = (deal, user) => ({
   userCanEditGeneral: userCanEditGeneral(user),
   activePrimaryNavigation: 'manage work',
   activeSubNavigation: 'underwriting',
