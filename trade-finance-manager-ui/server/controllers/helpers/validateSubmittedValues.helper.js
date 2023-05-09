@@ -4,7 +4,7 @@ const { hasValue, isAlphanumeric } = require('../../helpers/string');
 const { increment } = require('../../helpers/number');
 const generateValidationErrors = require('../../helpers/validation');
 
-const MAX_COMMENTS_LENGTH = 1000;
+const MAX_COMMENTS_LENGTH = 8000;
 
 const validateCommentField = (validationErrors, errorsCount, fieldLabel, fieldId, value) => {
   let errors = validationErrors;

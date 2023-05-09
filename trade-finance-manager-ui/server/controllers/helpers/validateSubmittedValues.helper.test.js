@@ -28,18 +28,18 @@ describe('POST underwriting - managers decision - validate submitted values', ()
       });
     });
 
-    describe('when value is over 1000 characters ', () => {
+    describe('when value is over 8000 characters ', () => {
       it('should return validationError', () => {
         const errors = {};
         const count = 0;
         const fieldLabel = 'the field label';
         const fieldId = 'fieldId';
 
-        const result = validateCommentField(errors, count, fieldLabel, fieldId, 'a'.repeat(1001));
+        const result = validateCommentField(errors, count, fieldLabel, fieldId, 'a'.repeat(8001));
 
         const expected = {
           errorsCount: 1,
-          validationErrors: generateValidationErrors(fieldId, `${fieldLabel} must be 1000 characters or fewer`, count + 1, errors),
+          validationErrors: generateValidationErrors(fieldId, `${fieldLabel} must be 8000 characters or fewer`, count + 1, errors),
         };
 
         expect(result).toEqual(expected);
@@ -107,7 +107,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
     it('should return multiple validation errors', () => {
       const result = validateSubmittedValues({
         decision: '',
-        internalComments: 'a'.repeat(1001),
+        internalComments: 'a'.repeat(8001),
       });
 
       expect(result.count).toEqual(2);
@@ -116,7 +116,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
 
       expect(result.errorList.decision).toEqual(decisionError);
 
-      const internalCommentsError = generateValidationErrors('internalComments', 'Comments must be 1000 characters or fewer', 2).errorList.internalComments;
+      const internalCommentsError = generateValidationErrors('internalComments', 'Comments must be 8000 characters or fewer', 2).errorList.internalComments;
 
       expect(result.errorList.internalComments).toEqual(internalCommentsError);
     });
