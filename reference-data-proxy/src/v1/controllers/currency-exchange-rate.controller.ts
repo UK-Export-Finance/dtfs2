@@ -63,7 +63,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
   }
 
   if (exchangeRateDate) {
-    url = `${exchangeRateURL}currencies/exchange?source=${actualSource}&target=${actualTarget}&exchangeRateDate=${exchangeRateDate}`;
+    url = `${url}&exchangeRateDate=${exchangeRateDate}`;
   }
 
   const response = await axios({
