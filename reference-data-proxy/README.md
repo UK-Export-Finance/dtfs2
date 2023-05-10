@@ -9,7 +9,7 @@ Master data management endpoints are responsible for providing wide variety of i
 They range from `/currencies` to `/interest-rates`, RDP `.env` requires following three variables
 to be fulfilled before any consumption.
 
-```
+```shell
 APIM_MDM_URL=
 APIM_MDM_KEY=
 APIM_MDM_VALUE=
@@ -17,7 +17,7 @@ APIM_MDM_VALUE=
 
 Please note `APIM_MDM_KEY` is the header name, whereas `APIM_MDM_VALUE` is the authentication code, since `value` is applied to a `key`.
 
-```
+```javascript
 headers: {
     APIM_MDM_KEY: APIM_MDM_VALUE
 }
