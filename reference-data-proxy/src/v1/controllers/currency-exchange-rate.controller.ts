@@ -55,15 +55,16 @@ export const getExchangeRate = async (req: Request, res: Response) => {
   // API does not support XYZ to GBP conversion so we have to reverse and calculate
   let actualSource = source;
   let actualTarget = target;
+  let url = `${exchangeRateURL}currencies/exchange?source=${actualSource}&target=${actualTarget}`;
 
   if (source !== 'GBP' && target === 'GBP') {
     actualSource = 'GBP';
     actualTarget = source;
   }
 
-  const url = exchangeRateDate
-    ? `${exchangeRateURL}currencies/exchange?source=${actualSource}&target=${actualTarget}&exchangeRateDate=${exchangeRateDate}`
-    : `${exchangeRateURL}currencies/exchange?source=${actualSource}&target=${actualTarget}`;
+  if (exchangeRateDate) {
+    url = `${exchangeRateURL}currencies/exchange?source=${actualSource}&target=${actualTarget}&exchangeRateDate=${exchangeRateDate}`;
+  }
 
   const response = await axios({
     method: 'get',
