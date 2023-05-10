@@ -14,6 +14,14 @@ APIM_MDM_URL=
 APIM_MDM_KEY=
 APIM_MDM_VALUE=
 ```
+
+Please note `APIM_MDM_KEY` is the header name, whereas `APIM_MDM_VALUE` is the authentication code, since `value` is applied to a `key`.
+
+```
+headers: {
+    APIM_MDM_KEY: APIM_MDM_VALUE
+}
+```
 ### 2. Companies house
 CS entity fetch
 ### 3. OS
