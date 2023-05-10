@@ -34,8 +34,8 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
   const productGroup = mapProductGroup(facilityType);
 
   console.info('Calling Exposure Period API');
-  const username: any = process.env.APIM_MDM_KEY;
-  const password: any = process.env.APIM_MDM_VALUE;
+  const username: any = process.env.MULESOFT_API_UKEF_MDM_EA_KEY;
+  const password: any = process.env.MULESOFT_API_UKEF_MDM_EA_SECRET;
   const exposurePeriodURL: any = process.env.MULESOFT_API_EXPOSURE_PERIOD_URL;
 
   try {
