@@ -48,11 +48,11 @@ jest.mock('axios', () =>
     const { method, url } = args;
 
     if (method === 'get') {
-      if (url === `${process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL}?source=GBP&target=USD`) {
+      if (url === `${process.env.APIM_MDM_URL}currencies/exchange?source=GBP&target=USD`) {
         return Promise.resolve(mockResponses.GBPToUSD);
       }
 
-      if (url === `${process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL}?source=GBP&target=CAD`) {
+      if (url === `${process.env.APIM_MDM_URL}currencies/exchange?source=GBP&target=CAD`) {
         return Promise.resolve(mockResponses.GBPtoCAD);
       }
     }

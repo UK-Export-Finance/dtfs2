@@ -30,9 +30,9 @@ export const schemas = {
     MONGODB_URI: Joi.string().required(),
 
     // Currency exchange
-    MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: Joi.string().required(),
-    MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: Joi.string().required(),
-    MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: Joi.string().required(),
+    APIM_MDM_URL: Joi.string().required(),
+    APIM_MDM_KEY: Joi.string().required(),
+    APIM_MDM_VALUE: Joi.string().required(),
 
     // Ordnance Survey
     ORDNANCE_SURVEY_API_URL: Joi.string().required(),

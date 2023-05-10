@@ -6,8 +6,8 @@ import { INDUSTRY_SECTORS } from '../../reference-data';
 
 dotenv.config();
 const mdmEAurl: any = process.env.MULESOFT_API_UKEF_MDM_EA_URL;
-const username: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY;
-const password: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET;
+const username: any = process.env.APIM_MDM_KEY;
+const password: any = process.env.APIM_MDM_VALUE;
 
 export const findACBSIndustrySector = async (industryId: any) => {
   const response = await axios({
