@@ -11,18 +11,23 @@ const headers = {
  * @returns Response object
  */
 const getAPI = async (endpoint) => {
-  const response = await axios({
-    method: 'get',
-    url: `${process.env.APIM_MDM_URL}${endpoint}`,
-    headers,
-  }).catch((err) => ({
-    status: err.response.status ?? err,
-    data: {
-      error: err.response.data.error ?? err,
-    },
-  }));
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${process.env.APIM_MDM_URL}${endpoint}`,
+      headers,
+    }).catch((err) => ({
+      status: err.response.status ?? err,
+      data: {
+        error: err.response.data.error ?? err,
+      },
+    }));
 
-  return response;
+    return response;
+  } catch (error) {
+    console.error('Error calling GET MDM endpoints: ', { error });
+    return null;
+  }
 };
 
 const getCurrency = (currencyCode) => getAPI(`currencies/${currencyCode}`);

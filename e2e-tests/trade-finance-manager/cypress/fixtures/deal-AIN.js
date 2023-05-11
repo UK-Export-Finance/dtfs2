@@ -184,6 +184,7 @@ const MOCK_DEAL = {
       coveredPercentage: '20',
       minimumRiskMarginFee: '30',
       ukefExposure: '2,469.00',
+      feeFrequency: 'Quarterly',
       feeType: 'At maturity',
       dayCountBasis: '365',
       currency: {
@@ -214,6 +215,7 @@ const MOCK_DEAL = {
       minimumQuarterlyFee: '10',
       ukefExposure: '246.80',
       premiumType: 'At maturity',
+      feeFrequency: 'Quarterly',
       dayCountBasis: '365',
       'issuedDate-day': '25',
       'issuedDate-month': '08',
