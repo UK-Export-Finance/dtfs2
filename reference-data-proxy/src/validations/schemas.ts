@@ -44,9 +44,9 @@ export const schemas = {
     MULESOFT_API_PARTY_DB_SECRET: Joi.string().required(),
 
     // Premium schedule
-    MULESOFT_API_UKEF_MDM_EA_URL: Joi.string().required(),
-    MULESOFT_API_UKEF_MDM_EA_KEY: Joi.string().required(),
-    MULESOFT_API_UKEF_MDM_EA_SECRET: Joi.string().required(),
+    APIM_MDM_URL: Joi.string().required(),
+    APIM_MDM_KEY: Joi.string().required(),
+    APIM_MDM_VALUE: Joi.string().required(),
 
     // Companies House
     COMPANIES_HOUSE_API_KEY: Joi.string().required(),

@@ -10,10 +10,18 @@ import { Request, Response } from 'express';
 import { objectIsEmpty } from '../../utils';
 dotenv.config();
 
-const mdmEAurl: any = process.env.MULESOFT_API_UKEF_MDM_EA_URL;
-const username: any = process.env.MULESOFT_API_UKEF_MDM_EA_KEY;
-const password: any = process.env.MULESOFT_API_UKEF_MDM_EA_SECRET;
+const mdm: any = process.env.APIM_MDM_URL;
+const headers: any = {
+  'Content-Type': 'application/json',
+  [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
+};
+const successStatus: Array<number> = [200, 201];
 
+/**
+ * Post premium schedule segments
+ * @param {Array} premiumSchedulePayload PS entries
+ * @returns Premium schedule segments
+ */
 const postPremiumSchedule = async (premiumSchedulePayload: any) => {
   const premiumSchedulePayloadFormatted = premiumSchedulePayload;
 
@@ -29,11 +37,8 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${mdmEAurl}/premium/schedule`,
-      auth: { username, password },
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${mdm}/premium/schedule`,
+      headers,
       data: [premiumSchedulePayloadFormatted],
     }).catch((error: any) => {
       console.error(
@@ -52,19 +57,25 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
   }
 };
 
-const getScheduleData = async (facilityURN: any) => {
-  const url = `${mdmEAurl}/premium/segments/${facilityURN}`;
+/**
+ * Get premium schedule segments from facility URN
+ * @param {String} facilityId Facility ID
+ * @returns {Array} Array of premium schedule segments
+ */
+const getScheduleData = async (facilityId: any) => {
+  const url = `${mdm}/premium/segments/${facilityId}`;
 
   const response = await axios({
     method: 'GET',
     url,
-    auth: { username, password },
+    headers,
   }).catch((error: any) => error);
+
   if (response) {
     return response;
   }
 
-  return new Error(`Error getting Premium schedule segments. Facility:${facilityURN}`);
+  return new Error(`Error getting Premium schedule segments. Facility:${facilityId}`);
 };
 
 export const getPremiumSchedule = async (req: Request, res: Response) => {
@@ -77,10 +88,10 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
     return res.status(400).send();
   }
 
-  if (postPremiumScheduleResponse === 200 || postPremiumScheduleResponse === 201) {
+  if (successStatus.includes(postPremiumScheduleResponse)) {
     const response = await getScheduleData(Number(premiumScheduleParameters.facilityURN));
 
-    if (response.status === 200 || response.status === 201) {
+    if (successStatus.includes(response.status)) {
       return res.status(response.status).send(response.data);
     }
   }
