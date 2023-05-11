@@ -1,37 +1,43 @@
-# reference-data-proxy
+# REFERENCE-DATA-PROXY MICRO-SERVICE 📦️
+RDP is predominately responsible for external API consumption and communication.
+## Endpoints 🌐
+### 1. APIM
+APIM provides various crucial endpoints across varied services (MDM, TFS and ESTORE).
+RDP has an high exposure to MDM endpoints.
+#### 1. MDM
+Master data management endpoints are responsible for providing wide variety of imperative data.
+They range from `/currencies` to `/interest-rates`, RDP `.env` requires following three variables
+to be fulfilled before any consumption.
 
-This service integrates with many external APIs such as:
+```shell
+APIM_MDM_URL=
+APIM_MDM_KEY=
+APIM_MDM_VALUE=
+```
 
-- Companies House
-- Ordanance Survey
-- Many UKEF APIs via Mulesoft
+Please note `APIM_MDM_KEY` is the header name, whereas `APIM_MDM_VALUE` is the authentication code, since `value` is applied to a `key`.
 
+```javascript
+headers: {
+    APIM_MDM_KEY: APIM_MDM_VALUE
+}
+```
+### 2. Companies house
+CS entity fetch
+### 3. OS
+Places API
 The service also hosts some reference data for countries, currencies and industry sectors. These need to be removed and obtained through Mulesoft API calls.
-
 This service initially started purely as a reference data api (i.e, no external API calls). Service should be renamed to external-apis.
 
 ## Why
-
-Seperation of concerns and reusability. By having external API calls in it's own service, and external endpoint can be used from anywhere in the same way. It also allows us to gracefully wrap or map requests, responses and errors etc.
+Separation of concerns and reusability.
+By having external API calls in it's own service, and external endpoint can be used from anywhere in the same way. It also allows us to gracefully wrap or map requests, responses and errors etc.
 
 ## Prerequisite
-
 Make sure you have an `.env`. Use `.env.sample` as a base. Some sensitive variables need to be shared from the team.
 
-## Running locally
-
-```shell
-docker-compose up
-```
-
-If the service hasn't been run before, you'll need to run `docker-compose up --build`.
-
-Alternatively, every service can be started from the root directory (`docker-compose up`).
 
 ## Testing
-
-In a second terminal, simply run:
-
 ```shell
 npm run api-test
 ```
@@ -39,9 +45,6 @@ npm run api-test
 Test coverage will be generated.
 
 ### **Run a single API test**
-
 ```shell
 npm run api-test-file "**/*/deals-party-db.api-test.js"
 ```
-
-# DTFS
