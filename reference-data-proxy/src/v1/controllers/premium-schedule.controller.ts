@@ -37,7 +37,7 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${mdm}/premium/schedule`,
+      url: `${mdm}premium/schedule`,
       headers,
       data: [premiumSchedulePayloadFormatted],
     }).catch((error: any) => {
@@ -63,7 +63,7 @@ const postPremiumSchedule = async (premiumSchedulePayload: any) => {
  * @returns {Array} Array of premium schedule segments
  */
 const getScheduleData = async (facilityId: any) => {
-  const url = `${mdm}/premium/segments/${facilityId}`;
+  const url = `${mdm}premium/segments/${facilityId}`;
 
   const response = await axios({
     method: 'GET',

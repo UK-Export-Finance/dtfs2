@@ -17,9 +17,13 @@ const getAPI = async (endpoint) => {
       url: `${process.env.APIM_MDM_URL}${endpoint}`,
       headers,
     }).catch((err) => ({
-      status: err.response.status ?? err,
+      status: err.response
+        ? err.response.status
+        : err,
       data: {
-        error: err.response.data.error ?? err,
+        error: err.response
+          ? err.response.data.error
+          : err,
       },
     }));
 
@@ -32,7 +36,7 @@ const getAPI = async (endpoint) => {
 
 const getCurrency = (currencyCode) => getAPI(`currencies/${currencyCode}`);
 const getACBSIndustrySector = async (industryId) => getAPI(`sector-industries?ukefIndustryId=${industryId}`);
-const getACBSCountryCode = async (country) => getAPI(`markets?searchtext=${country}`);
+const getACBSCountryCode = async (country) => getAPI(`markets?search=${country}`);
 
 module.exports = {
   getCurrency,

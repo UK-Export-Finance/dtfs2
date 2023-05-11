@@ -31,7 +31,7 @@ const getAPI = async (type) => {
  * @returns API endpoint invoke response
  */
 const postToAPI = async (endpoint, payload) => {
-  console.info('Calling number generator');
+  console.info(`Invoking MDM POST ${endpoint}`);
 
   if (!process.env.APIM_MDM_URL) {
     return false;

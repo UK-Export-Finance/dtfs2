@@ -9,8 +9,8 @@
  * case err object does not have expected properties due to network connection, SSL verification or other issues.
  */
 const acbs = process.env.MULESOFT_API_UKEF_TF_EA_URL;
-const username = process.env.APIM_MDM_KEY;
-const password = process.env.APIM_MDM_VALUE;
+const username = process.env.MULESOFT_API_KEY;
+const password = process.env.MULESOFT_API_SECRET;
 const axios = require('axios');
 
 require('dotenv').config();
