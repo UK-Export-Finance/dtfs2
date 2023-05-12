@@ -6,7 +6,6 @@
  */
 const numberGeneratorController = require('../controllers/number-generator.controller');
 const api = require('../api');
-
 const CONSTANTS = require('../constants');
 
 const MAX_NUMBER_OF_TRIES = 5;
@@ -34,12 +33,14 @@ const getNumberFromGenerator = async (context) => {
       throw new Error(JSON.stringify(`Invalid entityType: ${entityType}`));
   }
 
-  // Set the maximum number of tries in case acbsCheck is unavailable and it gets stuck in an infinite loop
+  /**
+   * Maximum tries mitigates infinite loop execution
+   */
   while (!numberIsAvailable && loopCount < MAX_NUMBER_OF_TRIES) {
-    console.info('Azure functions - getNumberFromGenerator - trying. Count ', loopCount);
+    console.info(`⚡️ Execution #${loopCount}`);
 
     numberFromGenerator = await numberGeneratorController.callNumberGenerator(numberType);
-    console.info('Azure functions - numberFromGenerator ', numberFromGenerator);
+    console.info('✅ Number successfully received: ', numberFromGenerator);
 
     if (numberFromGenerator.error) {
       throw new Error(JSON.stringify(numberFromGenerator.error));

@@ -46,19 +46,7 @@ const postToAPI = async (endpoint, payload) => {
   };
 
   const response = await axios(request)
-    .catch(({
-      response: {
-        status, statusText, data,
-      },
-    }) => ({
-      error: {
-        status,
-        statusText,
-        data,
-        request,
-        date: new Date().toISOString(),
-      },
-    }));
+    .catch((error) => error);
 
   return response;
 };

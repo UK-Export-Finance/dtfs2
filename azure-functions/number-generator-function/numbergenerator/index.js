@@ -17,17 +17,18 @@ module.exports = df.orchestrator(function* numbergenerator(context) {
   console.info('⚡️ Invoking number generator');
 
   if (!process.env.APIM_MDM_URL || !process.env.APIM_MDM_KEY || !process.env.APIM_MDM_VALUE) {
-    console.error('🚩 Missing environment variables');
+    throw new Error('🚩 Missing environment variables');
+  }
+
+  if (!context.df.getInput()) {
+    throw new Error('🚩 Void input');
   }
 
   const { entityType } = context.df.getInput();
 
   if (entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.DEAL
     && entityType !== CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE.FACILITY) {
-    return {
-      num: 'ERROR_NUM_GENERATOR',
-      error: 'No dealId provided',
-    };
+    throw new Error('🚩 Void entityType argument specified');
   }
 
   try {
@@ -41,21 +42,10 @@ module.exports = df.orchestrator(function* numbergenerator(context) {
 
     return result;
   } catch (error) {
-    console.error('Azure functions - error calling Number Generator ActivityWithRetry');
-    const errorList = [...error.message.matchAll(/Error: ({(?:(?!\\n).)*})/g)];
-
-    // Attempt to parse each error message to return as JSON
-    const errorMessageJson = errorList.map((err) => {
-      const errStr = err[1];
-      try {
-        const errObj = JSON.parse(errStr);
-        return errObj;
-      } catch (parseErr) { return errStr; }
-    });
-
+    console.error('🚩 Error while executing number generator DAF');
     return {
       num: 'ERROR_NUM_GENERATOR',
-      error: errorMessageJson,
+      error,
     };
   }
 });
