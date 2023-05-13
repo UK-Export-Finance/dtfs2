@@ -15,3 +15,5 @@ services:
       - APIM_MDM_KEY
       - APIM_MDM_VALUE
       - MULESOFT_API_UKEF_TF_EA_URL
+      - MULESOFT_API_KEY
+      - MULESOFT_API_SECRET
