@@ -177,7 +177,7 @@ jobs:
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-latest
     strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
