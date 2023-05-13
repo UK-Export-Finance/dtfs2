@@ -14,7 +14,7 @@ const getNumberFromGenerator = async (context) => {
   const { entityType } = context.bindingData;
 
   let numberIsAvailable = false;
-  let numberFromGenerator;
+  let number;
   let loopCount = 0;
 
   let numberType;
@@ -39,20 +39,16 @@ const getNumberFromGenerator = async (context) => {
   while (!numberIsAvailable && loopCount < MAX_NUMBER_OF_TRIES) {
     console.info(`⚡️ Execution #${loopCount}`);
 
-    numberFromGenerator = await numberGeneratorController.callNumberGenerator(numberType);
-    console.info('✅ Number successfully received: ', numberFromGenerator);
+    number = await numberGeneratorController.callNumberGenerator(numberType);
+    console.info(`✅ ${number} successfully received`);
 
-    if (numberFromGenerator.error) {
-      throw new Error(JSON.stringify(numberFromGenerator.error));
-    }
-
-    const { status } = await checkAcbs(numberFromGenerator);
+    const { status } = await checkAcbs(number);
     numberIsAvailable = (status === 404);
     loopCount += 1;
   }
 
   return {
-    ukefId: numberFromGenerator,
+    ukefId: number,
   };
 };
 
