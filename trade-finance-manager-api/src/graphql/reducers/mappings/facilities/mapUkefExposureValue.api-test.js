@@ -61,6 +61,6 @@ describe('mapUkefExposureValue()', () => {
   it('should return undefined if no facilityTfm', () => {
     const result = mapUkefExposureValue(null, mockFacility);
 
-    expect(result).toEqual(undefined);
+    expect(result).toBeUndefined();
   });
 });

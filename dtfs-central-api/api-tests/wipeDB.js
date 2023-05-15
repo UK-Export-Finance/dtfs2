@@ -4,7 +4,7 @@ const wipe = async (collections) => {
   const drop = async (collection) => new Promise(async (resolve, reject) => {
     const collectionToDrop = await db.getCollection(collection);
 
-    collectionToDrop.drop((err, delOK) => {
+    collectionToDrop.drop(() => {
       resolve();
     });
   });

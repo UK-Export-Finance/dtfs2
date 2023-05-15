@@ -41,9 +41,9 @@ const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
       incomeClassCode: helpers.getIncomeClassCode(facility),
       spreadToInvestorsIndicator: true,
     };
-  } catch (e) {
-    console.error('Unable to map facility fixed fee record.', { e });
-    return e;
+  } catch (error) {
+    console.error('Unable to map facility fixed fee record.', { error });
+    return error;
   }
 };
 

@@ -119,8 +119,8 @@ module.exports = df.orchestrator(function* amendACBSFacility(context) {
     }
 
     throw new Error('Void argument set');
-  } catch (e) {
-    console.error('ACBS facility amendment error: ', { e });
-    return e;
+  } catch (error) {
+    console.error('ACBS facility amendment error: ', { error });
+    return error;
   }
 });

@@ -184,8 +184,8 @@ const checkCoverDateConfirmed = async (app) => {
         });
         return hasUpdated;
       }
-    } catch (e) {
-      console.error('Unable to set coverDateConfirmed for AIN facilities.', { e });
+    } catch (error) {
+      console.error('Unable to set coverDateConfirmed for AIN facilities.', { error });
     }
   }
   return hasUpdated;

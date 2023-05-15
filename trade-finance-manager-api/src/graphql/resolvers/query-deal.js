@@ -19,8 +19,8 @@ const queryDeal = async ({ params }) => {
     };
 
     return dealReducer(filtered);
-  } catch (e) {
-    console.error('Unable to resolve GQL queryDeal: ', { e });
+  } catch (error) {
+    console.error('Unable to resolve GQL queryDeal: ', { error });
     return null;
   }
 };

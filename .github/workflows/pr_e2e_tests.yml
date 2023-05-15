@@ -27,28 +27,26 @@ env:
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
   ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
   ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
+  MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
   MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
   MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
-  MULESOFT_API_NUMBER_GENERATOR_URL: ${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}
   MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}
   MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}
   MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
   MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
   MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
-  MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}
-  MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}
-  MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET: ${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}
-  MULESOFT_API_EXPOSURE_PERIOD_URL: ${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}
-  MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
-  MULESOFT_API_UKEF_MDM_EA_URL: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }}
-  MULESOFT_API_UKEF_MDM_EA_KEY: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }}
-  MULESOFT_API_UKEF_MDM_EA_SECRET: ${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
+  APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
+  APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
+  APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
   COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  REDIS_HOSTNAME: ${{ secrets.REDIS_HOSTNAME }}
+  REDIS_PORT: ${{ secrets.REDIS_PORT }}
+  NODE_ENV: ${{ secrets.NODE_ENV }}
 
 jobs:
   set-environment:
@@ -117,14 +115,6 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
-    - uses: act10ns/slack@v2
-      with:
-        status: ${{ job.status }}
-        steps: ${{ toJson(steps) }}
-        channel: '#dtfs-github-actions'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      if: failure()
 
   portal-tests:
     name: "Run - Portal End-To-End tests"
@@ -181,15 +171,6 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
-    - uses: act10ns/slack@v2
-      with:
-        status: ${{ job.status }}
-        steps: ${{ toJson(steps) }}
-        channel: '#dtfs-github-actions'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        TZ: Europe/London
-      if: failure()
 
   tfm-tests:
     name: "Run - Trade Finance Manager End-To-End tests"
@@ -246,14 +227,6 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
-    - uses: act10ns/slack@v2
-      with:
-        status: ${{ job.status }}
-        steps: ${{ toJson(steps) }}
-        channel: '#dtfs-github-actions'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      if: failure()
 
 
   tfm-submit-tests:
@@ -313,11 +286,3 @@ jobs:
       with:
         name: screenshots
         path: './cypress/screenshots'
-    - uses: act10ns/slack@v2
-      with:
-        status: ${{ job.status }}
-        steps: ${{ toJson(steps) }}
-        channel: '#dtfs-github-actions'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      if: failure()

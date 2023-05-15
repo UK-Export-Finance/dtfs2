@@ -671,7 +671,7 @@ describe('PartyURN: controllers - case - parties', () => {
           });
         });
 
-        it('should render error page when party type is invalid', async () => {
+        it('should render error page when party type is invalid', () => {
           req.body.url = '/';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
@@ -850,7 +850,7 @@ describe('PartyURN: controllers - case - parties', () => {
           });
         });
 
-        it('should render error page when party type is invalid', async () => {
+        it('should render error page when party type is invalid', () => {
           req.body.url = '/';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
@@ -1029,7 +1029,7 @@ describe('PartyURN: controllers - case - parties', () => {
           });
         });
 
-        it('should render error page when party type is invalid', async () => {
+        it('should render error page when party type is invalid', () => {
           req.body.url = '/';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
@@ -1129,7 +1129,7 @@ describe('PartyURN: controllers - case - parties', () => {
           expect(res.redirect).toHaveBeenCalledWith(`/case/${mockDeal._id}/parties/${party}/summary/${req.body.partyUrn}`);
         });
 
-        it('should render party edit template with data including agent commision rate', async () => {
+        it('should render party edit template with data including agent commission rate', async () => {
           req.body.partyUrn = '1234';
           req.body.commissionRate = '1.234';
 
@@ -1217,7 +1217,7 @@ describe('PartyURN: controllers - case - parties', () => {
           });
         });
 
-        it('should render error page when party type is invalid', async () => {
+        it('should render error page when party type is invalid', () => {
           req.body.url = '/';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
@@ -1442,20 +1442,20 @@ describe('PartyURN: controllers - case - parties', () => {
           api.updateParty = () => jest.fn();
         });
 
-        it('should render error page when party type is invalid', async () => {
+        it('should render error page when party type is invalid', () => {
           req.body.url = '/';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
 
-        it('should render error page when party URN is empty', async () => {
+        it('should render error page when party URN is empty', () => {
           req.body.url = `/case/1/parties/${party}`;
           req.params.urn = '';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
 
-        it('should render error page when party URN is empty with spaces', async () => {
+        it('should render error page when party URN is empty with spaces', () => {
           req.params.urn = '  ';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
@@ -1550,20 +1550,20 @@ describe('PartyURN: controllers - case - parties', () => {
           api.updateParty = () => jest.fn();
         });
 
-        it('should render error page when party type is invalid', async () => {
+        it('should render error page when party type is invalid', () => {
           req.body.url = '/';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
 
-        it('should render error page when party URN is empty', async () => {
+        it('should render error page when party URN is empty', () => {
           req.body.url = `/case/1/parties/${party}`;
           req.params.urn = '';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
 
-        it('should render error page when party URN is empty with spaces', async () => {
+        it('should render error page when party URN is empty with spaces', () => {
           req.params.urn = '  ';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
@@ -1658,20 +1658,20 @@ describe('PartyURN: controllers - case - parties', () => {
           api.updateParty = () => jest.fn();
         });
 
-        it('should render error page when party type is invalid', async () => {
+        it('should render error page when party type is invalid', () => {
           req.body.url = '/';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
 
-        it('should render error page when party URN is empty', async () => {
+        it('should render error page when party URN is empty', () => {
           req.body.url = `/case/1/parties/${party}`;
           req.params.urn = '';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
 
-        it('should render error page when party URN is empty with spaces', async () => {
+        it('should render error page when party URN is empty with spaces', () => {
           req.params.urn = '  ';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
@@ -1777,20 +1777,20 @@ describe('PartyURN: controllers - case - parties', () => {
           api.updateParty = () => jest.fn();
         });
 
-        it('should render error page when party type is invalid', async () => {
+        it('should render error page when party type is invalid', () => {
           req.body.url = '/';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
 
-        it('should render error page when party URN is empty', async () => {
+        it('should render error page when party URN is empty', () => {
           req.body.url = `/case/1/parties/${party}`;
           req.params.urn = '';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');
         });
 
-        it('should render error page when party URN is empty with spaces', async () => {
+        it('should render error page when party URN is empty with spaces', () => {
           req.params.urn = '  ';
 
           expect(res.redirect).toHaveBeenCalledWith('/not-found');

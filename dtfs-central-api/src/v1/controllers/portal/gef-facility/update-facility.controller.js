@@ -11,7 +11,7 @@ const updateFacility = async (id, updateBody) => {
     const existingFacility = await facilitiesCollection.findOne({ _id: ObjectId(id) });
 
     if (existingFacility) {
-      updatedFacility = await facilitiesCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: updateBody }, { returnDocument: 'after', returnNewDocument: true });
+      updatedFacility = await facilitiesCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: updateBody }, { returnNewDocument: true, returnDocument: 'after' });
       if (updatedFacility) {
         // update facilitiesUpdated timestamp in the deal
         const dealUpdateObj = { facilitiesUpdated: new Date().valueOf() };
@@ -24,9 +24,9 @@ const updateFacility = async (id, updateBody) => {
     }
 
     return updatedFacility;
-  } catch (e) {
-    console.error('Unable to update the facility', { e });
-    return e;
+  } catch (error) {
+    console.error('Unable to update the facility', { error });
+    return error;
   }
 };
 exports.updateFacility = updateFacility;

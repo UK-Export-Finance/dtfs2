@@ -54,8 +54,8 @@ const getUserAuthorisationLevelsToApplication = (user, application) => {
     });
     const unique = new Set(levels);
     return [...unique];
-  } catch (e) {
-    console.error('Authorisation error', { e });
+  } catch (error) {
+    console.error('Authorisation error', { error });
   }
 
   return [];

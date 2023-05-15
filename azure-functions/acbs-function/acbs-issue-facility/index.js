@@ -113,8 +113,8 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
     }
 
     throw new Error('Void argument set');
-  } catch (e) {
-    console.error('Error processing facility issuance: ', { e });
+  } catch (error) {
+    console.error('Error processing facility issuance: ', { error });
     return {};
   }
 });

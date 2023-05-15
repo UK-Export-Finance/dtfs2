@@ -281,7 +281,7 @@ const updateFacilityAmendment = async (req, res) => {
           // Amendment email notification to PDC
           await internalAmendmentEmail(ukefFacilityId);
           // Amend facility ACBS records
-          await acbs.amendAcbsFacility(amendment, facility, deal);
+          acbs.amendAcbsFacility(amendment, facility, deal);
         }
       }
 
@@ -289,8 +289,8 @@ const updateFacilityAmendment = async (req, res) => {
         return res.status(200).send(createdAmendment);
       }
     }
-  } catch (e) {
-    console.error('Unable to update amendment: ', { e });
+  } catch (error) {
+    console.error('Unable to update amendment: ', { error });
     return res.status(400).send({ data: 'Unable to update amendment' });
   }
 

@@ -2,12 +2,12 @@ import isObject from './isObject.helper';
 
 describe('isObject()', () => {
   it('returns the correct boolean', () => {
-    expect(isObject({})).toBe(true);
-    expect(isObject({ foo: 'bar' })).toBe(true);
-    expect(isObject([])).toBe(false);
-    expect(isObject('')).toBe(false);
-    expect(isObject(1)).toBe(false);
-    expect(isObject(true)).toBe(false);
-    expect(isObject(false)).toBe(false);
+    expect(isObject({})).toBeTruthy();
+    expect(isObject({ foo: 'bar' })).toBeTruthy();
+    expect(isObject([])).toBeFalsy();
+    expect(isObject('')).toBeFalsy();
+    expect(isObject(1)).toBeFalsy();
+    expect(isObject(true)).toBeFalsy();
+    expect(isObject(false)).toBeFalsy();
   });
 });

@@ -22,6 +22,7 @@ module.exports = {
       consistent: true,
     }],
     'no-unneeded-ternary': 0,
+    'require-await': 'error',
   },
   ignorePatterns: ['**/node_modules/**', '**/public/**'],
   parserOptions: {

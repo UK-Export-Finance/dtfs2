@@ -44,7 +44,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
 
       /**
      * Check whether the exporter's country is in the UK.
-     * If it is set to GBR (Default) and skip ACBS country code Mulesoft call
+     * If it is set to GBR (Default) and skip ACBS country code APIM MDM call
      */
       if (CONSTANTS.DEAL.UNITED_KINGDOM.includes(country.toLowerCase())) {
         acbsReference.country = {
@@ -193,8 +193,8 @@ module.exports = df.orchestrator(function* HDeal(context) {
       };
     }
     console.error('No input specified');
-  } catch (e) {
-    console.error('Error processing ACBS payload: ', { e });
+  } catch (error) {
+    console.error('Error processing ACBS payload: ', { error });
     return false;
   }
 });

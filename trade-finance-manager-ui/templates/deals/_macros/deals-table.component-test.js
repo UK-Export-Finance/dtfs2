@@ -105,7 +105,6 @@ describe(component, () => {
     });
   });
 
-
   describe('for each deal', () => {
     it('should render ukefDealId link, linking to deal id', () => {
       params.deals.forEach((deal) => {

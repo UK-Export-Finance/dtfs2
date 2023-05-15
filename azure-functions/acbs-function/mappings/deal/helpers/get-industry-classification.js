@@ -1,4 +1,4 @@
-const mdmApi = require('../../../api-ukef-mdm-ea');
+const mdmApi = require('../../../apim-mdm');
 
 const getIndustryClassification = (async (industryCode) => {
   const { status, data } = await mdmApi.getACBSIndustrySector(industryCode);

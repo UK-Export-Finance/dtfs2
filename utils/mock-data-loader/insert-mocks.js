@@ -20,8 +20,8 @@ const insertMocks = async () => {
   const tfmMaker = {
     username: 'BANK3_MAKER3',
     password: 'AbC!2345',
-    firstname: 'Tamil',
-    surname: 'Rahani',
+    firstname: 'First',
+    surname: 'Last',
     email: 'maker33@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker'],

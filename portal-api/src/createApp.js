@@ -3,12 +3,7 @@ const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
-const { ApolloServer } = require('apollo-server-express');
-const { applyMiddleware } = require('graphql-middleware');
-const { makeExecutableSchema } = require('@graphql-tools/schema');
 const healthcheck = require('./healthcheck');
-const { resolvers, typeDefs, graphQlRouter } = require('./graphql');
-const { validateUserMiddleware } = require('./graphql/middleware');
 
 dotenv.config();
 const { CORS_ORIGIN } = process.env;
@@ -37,19 +32,14 @@ app.use('/v1', openRouter);
 app.use('/v1', authRouterAllowXss);
 app.use('/v1', authRouter);
 
-app.use(graphQlRouter);
-
-const schema = makeExecutableSchema({ typeDefs, resolvers });
-const schemaWithMiddleware = applyMiddleware(schema, validateUserMiddleware);
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: ({ req }) => ({ user: req.user }),
-  schema: schemaWithMiddleware,
+// Return 200 on get to / to confirm to Azure that
+// the container has started successfully:
+const rootRouter = express.Router();
+rootRouter.get('/', async (req, res) => {
+  res.status(200).send();
 });
 
-server.applyMiddleware({ app });
+app.use('/', rootRouter);
 
 app.use((err) => { console.error(err); });
 
