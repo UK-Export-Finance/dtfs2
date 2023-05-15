@@ -1,31 +1,48 @@
-# azure-functions
-
+# AZURE-FUNCTIONS MICRO-SERVICE 📦️
 This service contains background tasks that are kicked off during deal submission to UKEF/TFM.
 
-## Why
+## Endpoints 🌐
+### 1. APIM
+APIM provides various crucial endpoints across varied services (MDM, TFS and ESTORE).
+Azure functions consumes `currencies`, `sector-industries` and `market` endpoint
+#### 1. MDM
+Master data management endpoints are responsible for providing wide variety of imperative data.
+They range from `/currencies` to `/interest-rates`, RDP `.env` requires following three variables
+to be fulfilled before any consumption.
 
+```shell
+APIM_MDM_URL=
+APIM_MDM_KEY=
+APIM_MDM_VALUE=
+```
+
+Please note `APIM_MDM_KEY` is the header name, whereas `APIM_MDM_VALUE` is the authentication code, since `value` is applied to a `key`.
+
+```javascript
+headers: {
+    APIM_MDM_KEY: APIM_MDM_VALUE
+}
+```
+
+## Why
 Some external Mulesoft APIs can take a long time complete, for example ACBS has over 10 API calls. Some endpoints can fail and need retrying.
 
 By running these as background tasks, we take the load off of deal submission calls. Also allows us to retry and endpoints that fail (service could be down or having performance issues for example).
 
 ## Running locally
-
 1. Run everything as normal (`docker-compose up` from the root directory)
 2. In a seperate terminal tab, go to azure-functions directory and run `docker-compose up`
 
-Ideally, azure-functions would be run in the same root docker, but this caused memory issues in github actions.
-
+Ideally, `azure-functions` would be run in the same root docker, but this caused memory issues in github actions.
 Number Generator Function is now run in root `docker-compose.yml`.
 
 ## Integrated APIs
-
 | API              | Why                                        | Additional info                                      |
 | ---------------- | ------------------------------------------ | ---------------------------------------------------- |
 | ACBS             | UKEF system we need to send data to        | -                                                    |
 | Number Generator | Generates UKEF IDs required for other APIs | Also uses an ACBS function to 'double check' the IDs |
 
 ## Moving forwards
-
 On submission to UKEF/TFM, there are _alot_ of calls to external Mulesoft APIs. This eats up submission time and therefore causes some e2e tests to take a long time.
 
 It can also cause problems - for example if an API call fails and we don't get the required data, submission can fail. Some API calls rely on data from other APIs.

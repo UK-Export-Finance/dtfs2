@@ -1,4 +1,9 @@
-﻿const df = require('durable-functions');
+﻿/**
+ * This code represents an HTTP-triggered Azure Function that starts a new instance of a Durable Function based on the provided function name
+ * and request body data.
+ * The response of the HTTP trigger includes a URL that can be used to check the status of the Durable Function instance.
+ */
+const df = require('durable-functions');
 
 const numberGeneratorHttp = async (context, req) => {
   try {

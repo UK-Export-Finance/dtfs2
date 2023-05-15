@@ -10,7 +10,7 @@
  */
 const moment = require('moment');
 const api = require('../api');
-const mdmEaApi = require('../api-ukef-mdm-ea');
+const mdm = require('../apim-mdm');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
@@ -39,7 +39,7 @@ const createFacilityCovenant = async (context) => {
   }
 
   // Replace ISO currency with ACBS currency code
-  const currencyReq = await mdmEaApi.getCurrency(acbsFacilityCovenantInput.currency);
+  const currencyReq = await mdm.getCurrency(acbsFacilityCovenantInput.currency);
 
   // Default currency code to GBP (O)
   acbsFacilityCovenantInput.currency = (currencyReq.status === 200 && currencyReq.data.length > 1) ? currencyReq.data[0].acbsCode : 'O';

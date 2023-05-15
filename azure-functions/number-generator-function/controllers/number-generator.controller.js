@@ -8,21 +8,50 @@
 // if the ID from number-generator is already in use
 // we keep iterating over this flow until we get an ID that can be used.
 
+/**
+ * EXPECTED RESPONSE
+ * ******************
+ * [
+    {
+        "id": 12345678,
+        "maskedId": "0030000000",
+        "type": 1,
+        "createdBy": "Portal v2/TFM",
+        "createdDatetime": "1970-01-01T00:00:00.000Z",
+        "requestingSystem": "Portal v2/TFM"
+    }
+]
+ */
+
 const api = require('../api');
 
 const callNumberGenerator = async (numberType) => {
-  console.info('Azure functions - callNumberGenerator');
+  try {
+    const response = await api.callNumberGenerator(numberType);
 
-  const response = await api.callNumberGenerator(numberType);
+    if (response.error) {
+      throw new Error(response.error);
+    }
 
-  if (response.error) {
-    console.error('Azure functions - callNumberGenerator error');
+    if (!response.data) {
+      throw new Error('Void response received');
+    }
 
+    if (!response.data.length) {
+      throw new Error('Void response length');
+    }
+
+    if (!response.data[0].maskedId) {
+      throw new Error('Non-existent `maskedId` in response');
+    }
+
+    // Return number
+    return response.data[0].maskedId;
+  } catch (error) {
+    console.error('🚩 Error while calling number generator');
     return {
-      error: response.error,
+      error,
     };
   }
-
-  return response.data.maskedId;
 };
 exports.callNumberGenerator = callNumberGenerator;

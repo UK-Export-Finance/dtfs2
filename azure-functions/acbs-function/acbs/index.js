@@ -44,7 +44,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
 
       /**
      * Check whether the exporter's country is in the UK.
-     * If it is set to GBR (Default) and skip ACBS country code Mulesoft call
+     * If it is set to GBR (Default) and skip ACBS country code APIM MDM call
      */
       if (CONSTANTS.DEAL.UNITED_KINGDOM.includes(country.toLowerCase())) {
         acbsReference.country = {

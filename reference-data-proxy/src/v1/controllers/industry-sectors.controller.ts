@@ -5,17 +5,23 @@ import * as utils from '../../utils';
 import { INDUSTRY_SECTORS } from '../../reference-data';
 
 dotenv.config();
-const mdmEAurl: any = process.env.MULESOFT_API_UKEF_MDM_EA_URL;
-const username: any = process.env.APIM_MDM_KEY;
-const password: any = process.env.APIM_MDM_VALUE;
+const mdm: any = process.env.APIM_MDM_URL;
+const headers: any = {
+  [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
+};
 
+/**
+ * Maps industry ID to ACBS compliant sector ID
+ * @param {String} industryId UKEF Industry ID
+ * @returns ACBS compliant industry ID
+ */
 export const findACBSIndustrySector = async (industryId: any) => {
   const response = await axios({
     method: 'GET',
-    url: `${mdmEAurl}/map-industry-sector?ukefIndustryId=${industryId}`,
-    auth: { username, password },
+    url: `${mdm}sector-industries?ukefIndustryId=${industryId}`,
+    headers,
   }).catch((error: any) => {
-    console.error('Error calling Map Industry Sector API', error.response.data, error.response.status);
+    console.error('Error calling ACBS industry sector', error.response.data, error.response.status);
     return { data: error.response.data, status: error.response.status };
   });
   return response;

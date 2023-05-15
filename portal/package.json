@@ -48,7 +48,7 @@
     "form-data": "4.0.0",
     "govuk-frontend": "4.3.1",
     "imask": "^6.6.1",
-    "jquery": "^3.6.4",
+    "jquery": "^3.7.0",
     "json2csv": "^5.0.7",
     "lodash.isequal": "^4.5.0",
     "moment": "2.29.4",
@@ -79,7 +79,7 @@
     "sass-loader": "13.2.2",
     "style-loader": "3.3.2",
     "terser-webpack-plugin": "^5.3.8",
-    "webpack": "^5.82.0",
+    "webpack": "^5.82.1",
     "webpack-cli": "^5.1.1",
     "webpack-merge": "^5.8.0"
   }

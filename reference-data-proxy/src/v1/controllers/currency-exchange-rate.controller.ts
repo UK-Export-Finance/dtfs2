@@ -32,7 +32,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 const key: any = process.env.APIM_MDM_KEY;
 const value: any = process.env.APIM_MDM_VALUE;
-const exchangeRateURL: any = process.env.APIM_MDM_URL;
+const mdm: any = process.env.APIM_MDM_URL;
 
 const headers = {
   [String(key)]: value,
@@ -55,7 +55,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
   // API does not support XYZ to GBP conversion so we have to reverse and calculate
   let actualSource = source;
   let actualTarget = target;
-  let url = `${exchangeRateURL}currencies/exchange?source=${actualSource}&target=${actualTarget}`;
+  let url = `${mdm}currencies/exchange?source=${actualSource}&target=${actualTarget}`;
 
   if (source !== 'GBP' && target === 'GBP') {
     actualSource = 'GBP';
@@ -71,7 +71,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
     url,
     headers,
   }).catch((error: any) => {
-    console.error('Error calling Exchange rate API, ', error.response.data, error.response.status);
+    console.error('Error calling Exchange rate API, ', error);
     return { data: error.response.data, status: error.response.status };
   });
 
