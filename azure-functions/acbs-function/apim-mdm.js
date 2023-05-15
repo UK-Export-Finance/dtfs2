@@ -22,7 +22,7 @@ const getAPI = async (endpoint) => {
         : err,
       data: {
         error: err.response
-          ? err.response.data.error
+          ? err.response.data
           : err,
       },
     }));

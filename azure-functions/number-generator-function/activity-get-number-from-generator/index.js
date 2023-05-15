@@ -37,9 +37,14 @@ const getNumberFromGenerator = async (context) => {
    * Maximum tries mitigates infinite loop execution
    */
   while (!numberIsAvailable && loopCount < MAX_NUMBER_OF_TRIES) {
-    console.info(`⚡️ Execution #${loopCount}`);
+    console.info(`⚡️ Number generator execution #${loopCount}`);
 
     number = await numberGeneratorController.callNumberGenerator(numberType);
+
+    if (!number) {
+      throw new Error(`🚩 Void response received: ${number}`);
+    }
+
     console.info(`✅ ${number} successfully received`);
 
     const { status } = await checkAcbs(number);
