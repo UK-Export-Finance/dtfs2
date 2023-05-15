@@ -115,8 +115,8 @@ openRouter.route('/users').post(users.createTfmUser);
 openRouter
   .route('/users/:user')
   .get(validation.userEndpointValidation, validationHandler.handleValidationResult, users.findTfmUser)
-  .put(users.updateTfmUserById)
-  .delete(users.removeTfmUserById);
+  .put(validation.userEndpointValidation, validationHandler.handleValidationResult, users.updateTfmUserById)
+  .delete(validation.userEndpointValidation, validationHandler.handleValidationResult, users.removeTfmUserById);
 
 openRouter.route('/login').post(users.login);
 
@@ -186,6 +186,6 @@ openRouter
     amendmentController.getLatestCompletedAmendmentByDealId,
   );
 
-openRouter.route('/party/urn/:urn').get(party.getCompany);
+openRouter.route('/party/urn/:urn').get(validation.getCompanyValidations, validationHandler.handleValidationResult, party.getCompany);
 
 module.exports = openRouter;
