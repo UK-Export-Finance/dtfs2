@@ -147,6 +147,7 @@ const getAmendmentById = async (req, res) => {
 };
 
 const getAmendmentByFacilityId = async (req, res) => {
+  const validationErrors = validationResult(req)
   const { facilityId } = req.params;
   const amendment = await api.getAmendmentByFacilityId(facilityId);
   if (amendment) {

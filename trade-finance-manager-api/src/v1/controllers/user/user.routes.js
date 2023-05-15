@@ -8,6 +8,7 @@ const {
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { loginCallback } = require('./helpers/loginCallback.helper');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
+const { validationResult } = require('express-validator');
 
 const combineErrors = (listOfErrors) =>
   listOfErrors.reduce((obj, error) => {
