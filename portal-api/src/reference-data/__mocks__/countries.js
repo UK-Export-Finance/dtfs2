@@ -239,6 +239,7 @@ const COUNTRIES = [
     id: 935,
     name: 'Congo, Democratic Republic of',
     code: 'COD',
+    disabled: true,
   },
   {
     id: 184,
@@ -449,6 +450,7 @@ const COUNTRIES = [
     id: 332,
     name: 'Haiti',
     code: 'HTI',
+    disabled: true,
   },
   {
     id: 340,
@@ -570,6 +572,7 @@ const COUNTRIES = [
     id: 422,
     name: 'Lebanon',
     code: 'LBN',
+    disabled: true,
   },
   {
     id: 426,
