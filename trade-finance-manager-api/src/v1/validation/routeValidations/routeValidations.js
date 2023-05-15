@@ -10,9 +10,9 @@ exports.userEndpointValidation = [userParamNumericValidation];
 
 exports.createFacilityAmendmentValidations = [facilityIdNumericValidation];
 
-exports.getAmendmentFacilityByFacilityIdValidations = [facilityIdNumericValidation];
+exports.getAmendmentByFacilityIdValidations = [facilityIdNumericValidation];
 
-exports.getAmendmentFacilityByIdValidations = [facilityIdNumericValidation, amendmentIdNumericValidation];
+exports.getAmendmentByIdValidations = [facilityIdNumericValidation, amendmentIdNumericValidation];
 
 exports.updateFacilityAmendmentValidations = [facilityIdNumericValidation, amendmentIdNumericValidation];
 
