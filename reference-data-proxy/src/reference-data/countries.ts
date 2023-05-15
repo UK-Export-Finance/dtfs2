@@ -247,6 +247,7 @@ export const COUNTRIES: Country[] = [
     id: 935,
     name: 'Congo, Democratic Republic of',
     code: 'COD',
+    disabled: true,
   },
   {
     id: 184,
@@ -459,6 +460,7 @@ export const COUNTRIES: Country[] = [
     id: 332,
     name: 'Haiti',
     code: 'HTI',
+    disabled: true,
   },
   {
     id: 340,
@@ -582,6 +584,7 @@ export const COUNTRIES: Country[] = [
     id: 422,
     name: 'Lebanon',
     code: 'LBN',
+    disabled: true,
   },
   {
     id: 426,
