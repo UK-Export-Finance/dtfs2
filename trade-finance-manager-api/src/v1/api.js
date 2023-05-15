@@ -341,7 +341,7 @@ const getCompletedAmendment = async (facilityId) => {
   }
 };
 
-const getLatestCompletedValueAmendment = async (facilityId) => {
+const getLatestCompletedAmendmentValue = async (facilityId) => {
   const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
@@ -362,7 +362,7 @@ const getLatestCompletedValueAmendment = async (facilityId) => {
   }
 };
 
-const getLatestCompletedDateAmendment = async (facilityId) => {
+const getLatestCompletedAmendmentDate = async (facilityId) => {
   const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
@@ -1072,8 +1072,8 @@ module.exports = {
   updateFacilityAmendment,
   getAmendmentInProgress,
   getCompletedAmendment,
-  getLatestCompletedValueAmendment,
-  getLatestCompletedDateAmendment,
+  getLatestCompletedAmendmentValue,
+  getLatestCompletedAmendmentDate,
   getAmendmentById,
   getAmendmentByFacilityId,
   getAmendmentsByDealId,

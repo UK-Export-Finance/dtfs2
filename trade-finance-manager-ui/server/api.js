@@ -337,7 +337,7 @@ const getCompletedAmendment = async (facilityId) => {
   }
 };
 
-const getLatestCompletedValueAmendment = async (facilityId) => {
+const getLatestCompletedAmendmentValue = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
@@ -352,7 +352,7 @@ const getLatestCompletedValueAmendment = async (facilityId) => {
   }
 };
 
-const getLatestCompletedDateAmendment = async (facilityId) => {
+const getLatestCompletedAmendmentDate = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
@@ -506,7 +506,7 @@ module.exports = {
   getCompletedAmendmentByDealId,
   getLatestCompletedAmendmentByDealId,
   getAllAmendmentsInProgress,
-  getLatestCompletedValueAmendment,
-  getLatestCompletedDateAmendment,
+  getLatestCompletedAmendmentValue,
+  getLatestCompletedAmendmentDate,
   getParty,
 };

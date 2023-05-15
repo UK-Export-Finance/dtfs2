@@ -266,8 +266,8 @@ describe('graphql query - get deal', () => {
   });
 
   it('should return a mapped deal via dealReducer', async () => {
-    api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    api.getLatestCompletedAmendmentValue = () => Promise.resolve({});
+    api.getLatestCompletedAmendmentDate = () => Promise.resolve({});
 
     const mappedDeal = await mapDeal(MOCK_DEAL);
 

@@ -81,8 +81,8 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId) => {
 const createAmendmentTFMObject = async (amendmentId, facilityId) => {
   try {
     // gets latest amendment value and dates
-    const latestValue = await api.getLatestCompletedValueAmendment(facilityId);
-    const latestCoverEndDate = await api.getLatestCompletedDateAmendment(facilityId);
+    const latestValue = await api.getLatestCompletedAmendmentValue(facilityId);
+    const latestCoverEndDate = await api.getLatestCompletedAmendmentDate(facilityId);
 
     let tfmToAdd = {};
     // populates array with latest value/exposure and date/tenor values
@@ -119,18 +119,18 @@ const getCompletedAmendment = async (req, res) => {
   return res.status(422).send({ data: 'Unable to get the completed amendment' });
 };
 
-const getLatestCompletedValueAmendment = async (req, res) => {
+const getLatestCompletedAmendmentValue = async (req, res) => {
   const { facilityId } = req.params;
-  const amendment = await api.getLatestCompletedValueAmendment(facilityId);
+  const amendment = await api.getLatestCompletedAmendmentValue(facilityId);
   if (amendment) {
     return res.status(200).send(amendment);
   }
   return res.status(422).send({ data: 'Unable to get the latest completed value amendment' });
 };
 
-const getLatestCompletedDateAmendment = async (req, res) => {
+const getLatestCompletedAmendmentDate = async (req, res) => {
   const { facilityId } = req.params;
-  const amendment = await api.getLatestCompletedDateAmendment(facilityId);
+  const amendment = await api.getLatestCompletedAmendmentDate(facilityId);
   if (amendment) {
     return res.status(200).send(amendment);
   }
@@ -147,7 +147,6 @@ const getAmendmentById = async (req, res) => {
 };
 
 const getAmendmentByFacilityId = async (req, res) => {
-  const validationErrors = validationResult(req)
   const { facilityId } = req.params;
   const amendment = await api.getAmendmentByFacilityId(facilityId);
   if (amendment) {
@@ -312,7 +311,7 @@ module.exports = {
   getAllAmendmentsInProgress,
   sendAmendmentEmail,
   updateTFMDealLastUpdated,
-  getLatestCompletedValueAmendment,
-  getLatestCompletedDateAmendment,
+  getLatestCompletedAmendmentValue,
+  getLatestCompletedAmendmentDate,
   createAmendmentTFMObject,
 };

@@ -72,8 +72,8 @@ describe('graphql query - authentication', () => {
     });
 
     beforeEach(() => {
-      api.getLatestCompletedValueAmendment = () => Promise.resolve({});
-      api.getLatestCompletedDateAmendment = () => Promise.resolve({});
+      api.getLatestCompletedAmendmentValue = () => Promise.resolve({});
+      api.getLatestCompletedAmendmentDate = () => Promise.resolve({});
       api.getAmendmentById = () => Promise.resolve({});
     });
 
