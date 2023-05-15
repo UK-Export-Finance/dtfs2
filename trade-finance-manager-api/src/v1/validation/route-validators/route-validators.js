@@ -1,6 +1,6 @@
 const { param } = require('express-validator');
 
-const userParamNumericValidation = param('user').isAlphanumeric().withMessage('The User ID (user) provided should be numeric');
+const userParamNumericValidation = param('user').isNumeric().withMessage('The User ID (user) provided should be numeric');
 const facilityIdNumericValidation = param('facilityId').isNumeric().withMessage('The Facility ID (facilityId) provided should be numeric');
 const amendmentIdNumericValidation = param('amendmentId').isNumeric().withMessage('The Amendment ID (amendmentId) provided should be numeric');
 const dealIdNumericValidation = param('dealId').isNumeric().withMessage('The Amendment ID (amendmentId) provided should be numeric');

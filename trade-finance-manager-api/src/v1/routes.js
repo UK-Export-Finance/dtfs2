@@ -9,8 +9,8 @@ const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
-const validation = require('./validation/routeValidations/routeValidations');
-const handleValidationResult = require('./validation/routeValidations/validationHandler');
+const validation = require('./validation/route-validators/route-validators');
+const handleValidationResult = require('./validation/route-validators/validation-handler');
 
 openRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
