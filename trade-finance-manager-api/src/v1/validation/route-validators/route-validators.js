@@ -1,20 +1,23 @@
 const { param } = require('express-validator');
 
-const userParamNumericValidation = param('user').isAlphanumeric().withMessage('The User ID (user) provided should be alphanumeric, a Mongo ID or username');
-const facilityIdNumericValidation = param('facilityId').isMongoId().withMessage('The Facility ID (facilityId) provided should be a Mongo ID');
-const amendmentIdNumericValidation = param('amendmentId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be a Mongo ID');
-const dealIdNumericValidation = param('dealId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be a Mongo ID');
-const partyURNNumericValidation = param('urn')
+const userParamAlphanumericValidation = param('user').isAlphanumeric().withMessage('The User ID (user) provided should be alphanumeric - a Mongo ID or a username');
+const userParamMongoIdcValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be a Mongo ID');
+const facilityIdMongoIdValidation = param('facilityId').isMongoId().withMessage('The Facility ID (facilityId) provided should be a Mongo ID');
+const amendmentIdMongoIdValidation = param('amendmentId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be a Mongo ID');
+const dealIdMongoIdValidation = param('dealId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be a Mongo ID');
+const partyURNValidation = param('urn')
   .isString()
   .matches(/^"\d+"$/)
   .withMessage('The party URN (urn) provided should be of the form /^"\d+"$/');
 
-exports.userIdValidation = [userParamNumericValidation];
+exports.userIdAlphanumericValidation = [userParamAlphanumericValidation];
 
-exports.facilityIdValidation = [facilityIdNumericValidation];
+exports.userIdMongoIdValidation = [userParamMongoIdcValidation];
 
-exports.facilityIdAndAmendmentIdValidations = [facilityIdNumericValidation, amendmentIdNumericValidation];
+exports.facilityIdValidation = [facilityIdMongoIdValidation];
 
-exports.dealIdValidation = [dealIdNumericValidation];
+exports.facilityIdAndAmendmentIdValidations = [facilityIdMongoIdValidation, amendmentIdMongoIdValidation];
 
-exports.paryUrnValidation = [partyURNNumericValidation];
+exports.dealIdValidation = [dealIdMongoIdValidation];
+
+exports.paryUrnValidation = [partyURNValidation];
