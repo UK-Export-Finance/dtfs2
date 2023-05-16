@@ -1,35 +1,20 @@
 const { param } = require('express-validator');
 
-const userParamNumericValidation = param('user').isAlphanumeric().withMessage('The User ID (user) provided should be numeric');
-const facilityIdNumericValidation = param('facilityId').isNumeric().withMessage('The Facility ID (facilityId) provided should be numeric');
-const amendmentIdNumericValidation = param('amendmentId').isNumeric().withMessage('The Amendment ID (amendmentId) provided should be numeric');
-const dealIdNumericValidation = param('dealId').isNumeric().withMessage('The Amendment ID (amendmentId) provided should be numeric');
-const partyURNNumericValidation = param('urn').isNumeric().withMessage('The party URN (urn) provided should be numeric');
+const userParamNumericValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be numeric');
+const facilityIdNumericValidation = param('facilityId').isMongoId().withMessage('The Facility ID (facilityId) provided should be numeric');
+const amendmentIdNumericValidation = param('amendmentId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be numeric');
+const dealIdNumericValidation = param('dealId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be numeric');
+const partyURNNumericValidation = param('urn')
+  .isString()
+  .matches(/^"\d+"$/)
+  .withMessage('The party URN (urn) provided should be numeric');
 
-exports.userEndpointValidation = [userParamNumericValidation];
+exports.userIdValidation = [userParamNumericValidation];
 
-exports.createFacilityAmendmentValidations = [facilityIdNumericValidation];
+exports.facilityIdValidation = [facilityIdNumericValidation];
 
-exports.getAmendmentByFacilityIdValidations = [facilityIdNumericValidation];
+exports.facilityIdAndAmendmentIdValidations = [facilityIdNumericValidation, amendmentIdNumericValidation];
 
-exports.getAmendmentByIdValidations = [facilityIdNumericValidation, amendmentIdNumericValidation];
+exports.dealIdValidation = [dealIdNumericValidation];
 
-exports.updateFacilityAmendmentValidations = [facilityIdNumericValidation, amendmentIdNumericValidation];
-
-exports.getAmendmentInProgressValidations = [facilityIdNumericValidation];
-
-exports.getCompletedAmendmentValidations = [facilityIdNumericValidation];
-
-exports.getLatestCompletedAmendmentValueValidations = [facilityIdNumericValidation];
-
-exports.getLatestCompletedAmendmentDateValidations = [facilityIdNumericValidation];
-
-exports.getAmendmentsByDealIdValidations = [dealIdNumericValidation];
-
-exports.getAmendmentInProgressByDealIdValidations = [dealIdNumericValidation];
-
-exports.getCompletedAmendmentByDealIdValidations = [dealIdNumericValidation];
-
-exports.getLatestCompletedAmendmentByDealIdValidations = [dealIdNumericValidation];
-
-exports.getCompanyValidations = [partyURNNumericValidation];
+exports.paryUrnValidation = [partyURNNumericValidation];
