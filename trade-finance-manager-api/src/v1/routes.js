@@ -114,7 +114,7 @@ openRouter.route('/users').post(users.createTfmUser);
 
 openRouter
   .route('/users/:user')
-  .get(validation.userIdAlphanumericValidation, handleValidationResult, users.findTfmUser)
+  .get(validation.userIdEscapingSanitization, handleValidationResult, users.findTfmUser)
   .put(validation.userIdMongoIdValidation, handleValidationResult, users.updateTfmUserById)
   .delete(validation.userIdMongoIdValidation, handleValidationResult, users.removeTfmUserById);
 
