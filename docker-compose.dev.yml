@@ -54,8 +54,6 @@ services:
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - SESSION_SECRET
       - TZ=Europe/London
-      - REDIS_HOSTNAME=${REDIS_HOSTNAME}
-      - REDIS_PORT=${REDIS_PORT}
       - NODE_ENV=${NODE_ENV}
     command: npx nodemon --inspect=0.0.0.0:9224 server/index.js -L
 
@@ -110,8 +108,6 @@ services:
       - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
-      - REDIS_HOSTNAME=${REDIS_HOSTNAME}
-      - REDIS_PORT=${REDIS_PORT}
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
     command: npx nodemon --inspect=0.0.0.0:9226 server/index.js -L
@@ -215,8 +211,6 @@ services:
       - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
-      - REDIS_HOSTNAME=${REDIS_HOSTNAME}
-      - REDIS_PORT=${REDIS_PORT}
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - TZ=Europe/London
