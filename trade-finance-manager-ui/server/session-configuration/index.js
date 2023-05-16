@@ -25,25 +25,22 @@ const sessionConfig = () => {
         tls: { servername: process.env.REDIS_HOSTNAME },
       };
     }
-    const url = `redis://${process.env.REDIS_HOSTNAME}:${process.env.REDIS_PORT}`;
-    const client = redis.createClient({
-      ...redisOptions,
-      legacyMode: true,
-      url,
+    const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
+
+    redisClient.on('error', (err) => {
+      console.info(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
     });
 
-    console.info(`TFM UI: Connecting to redis server: ${url}`);
-    client.connect();
-
-    client.on('error', (err) => console.error('TFM UI: Redis Client Error', err));
-    client.on('ready', () => {
-      console.info('TFM UI: REDIS ready');
-    });
-    client.on('connect', () => {
-      console.info('TFM UI: REDIS connected');
+    redisClient.on('ready', () => {
+      console.info('REDIS ready');
     });
 
-    const sessionStore = new RedisStore({ client });
+    redisClient.on('connect', () => {
+      console.info('REDIS connected');
+    });
+
+    const sessionStore = new RedisStore({ client: redisClient });
+
     sessionOptions.store = sessionStore;
   } else {
     console.error('REDIS is not configured, using default MemoryStore');
