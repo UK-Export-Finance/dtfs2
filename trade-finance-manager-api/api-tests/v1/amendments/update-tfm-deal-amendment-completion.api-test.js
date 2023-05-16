@@ -7,9 +7,9 @@ const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-s
 
 describe('update tfm-deals on amendment completion', () => {
   const mockAmendment = {
-    dealId: '123',
-    facilityId: '321',
-    amendmentId: '111',
+    dealId: '1234abcd1234abcd1234abcd',
+    facilityId: '4321dcba4321dcba4321dcba',
+    amendmentId: '1111aaaa1111aaaa1111aaaa',
     status: AMENDMENT_STATUS.COMPLETED,
   };
 
