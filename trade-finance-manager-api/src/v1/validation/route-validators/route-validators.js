@@ -1,5 +1,5 @@
 const { param } = require('express-validator');
-const { escape } = require('validator')
+const { escape } = require('validator');
 
 const userParamEscapingSanitization = param('user').isString('User ID must be a string').escape();
 const userParamMongoIdcValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be a Mongo ID');
@@ -9,7 +9,7 @@ const dealIdMongoIdValidation = param('dealId').isMongoId().withMessage('The Ame
 const partyURNValidation = param('urn')
   .isString()
   .matches(/^"\d+"$/)
-  .withMessage('The party URN (urn) provided should be of the form /^"\d+"$/');
+  .withMessage('The party URN (urn) provided should be of the form /^"d+"$/');
 
 exports.userIdEscapingSanitization = [userParamEscapingSanitization];
 
