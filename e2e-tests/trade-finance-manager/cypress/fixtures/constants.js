@@ -71,7 +71,7 @@ const PARTIES = {
 };
 
 const PARTY_URN = {
-  INVALID: '1234',
+  INVALID: '"1234"',
   VALID: '"00307249"',
 };
 

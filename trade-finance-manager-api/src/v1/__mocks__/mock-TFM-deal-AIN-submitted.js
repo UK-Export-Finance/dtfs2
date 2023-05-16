@@ -171,7 +171,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
     parties: {
       agent: { partyUrn: '', partyUrnRequired: false },
       buyer: { partyUrn: '', partyUrnRequired: false },
-      exporter: { partyUrn: '00307249', partyUrnRequired: true },
+      exporter: { partyUrn: '"00307249"', partyUrnRequired: true },
       indemnifier: { partyUrn: '', partyUrnRequired: false },
     },
     probabilityOfDefault: 1,
