@@ -38,6 +38,9 @@ const rootRouter = express.Router();
 rootRouter.get('/', async (req, res) => {
   res.status(200).send();
 });
+rootRouter.get('/robots933456.txt', async (req, res) => {
+  res.status(200).send();
+});
 
 app.use('/', rootRouter);
 
