@@ -1,10 +1,10 @@
 const { param } = require('express-validator');
 
 const userParamEscapingSanitization = param('user').isString('User ID must be a string').escape();
-const userParamMongoIdcValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be a Mongo ID');
-const facilityIdMongoIdValidation = param('facilityId').isMongoId().withMessage('The Facility ID (facilityId) provided should be a Mongo ID');
-const amendmentIdMongoIdValidation = param('amendmentId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be a Mongo ID');
-const dealIdMongoIdValidation = param('dealId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be a Mongo ID');
+const userParamValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be a Mongo ID');
+const facilityIdValidation = param('facilityId').isMongoId().withMessage('The Facility ID (facilityId) provided should be a Mongo ID');
+const amendmentIdValidation = param('amendmentId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be a Mongo ID');
+const dealIdValidation = param('dealId').isMongoId().withMessage('The Amendment ID (amendmentId) provided should be a Mongo ID');
 const partyURNValidation = param('urn')
   .isString()
   .matches(/^\d+$/)
@@ -12,12 +12,12 @@ const partyURNValidation = param('urn')
 
 exports.userIdEscapingSanitization = [userParamEscapingSanitization];
 
-exports.userIdMongoIdValidation = [userParamMongoIdcValidation];
+exports.userIdMongoIdValidation = [userParamValidation];
 
-exports.facilityIdValidation = [facilityIdMongoIdValidation];
+exports.facilityIdValidation = [facilityIdValidation];
 
-exports.facilityIdAndAmendmentIdValidations = [facilityIdMongoIdValidation, amendmentIdMongoIdValidation];
+exports.facilityIdAndAmendmentIdValidations = [facilityIdValidation, amendmentIdValidation];
 
-exports.dealIdValidation = [dealIdMongoIdValidation];
+exports.dealIdValidation = [dealIdValidation];
 
 exports.paryUrnValidation = [partyURNValidation];
