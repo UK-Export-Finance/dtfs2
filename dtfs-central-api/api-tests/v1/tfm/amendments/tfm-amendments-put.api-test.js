@@ -49,16 +49,16 @@ describe('PUT TFM amendments', () => {
     newFacility.dealId = dealId;
   });
 
-  describe('PUT /v1/tfm/facilities/:id/amendment/:amendmentId', () => {
+  describe('PUT /v1/tfm/facilities/:id/amendments/:amendmentId', () => {
     it('should update an amendment based on facilityId and amendmentId', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendment/`);
+      const { status, body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments/`);
       const updatePayload = { createdBy: mockUser };
-      const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendment/${body.amendmentId}`);
+      const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/${body.amendmentId}`);
 
       const expected = {
         dealId: expect.any(String),

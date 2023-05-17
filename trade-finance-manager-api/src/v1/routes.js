@@ -120,11 +120,11 @@ openRouter
 
 openRouter.route('/login').post(users.login);
 
-openRouter.route('/facility/:facilityId/amendment').post(validation.facilityIdValidation, handleValidationResult, amendmentController.createFacilityAmendment);
+openRouter.route('/facilities/:facilityId/amendments').post(validation.facilityIdValidation, handleValidationResult, amendmentController.createFacilityAmendment);
 
 /**
  * @openapi
- * /facility/:facilityId/amendment:amendmentId:
+ * /facility/:facilityId/amendments:amendmentId:
  *   post:
  *     summary: Update amendment
  *     description: Updates the amendment with the given id
@@ -145,35 +145,35 @@ openRouter.route('/facility/:facilityId/amendment').post(validation.facilityIdVa
  *       400:
  *         description: Cannot update the amendment
  */
-openRouter.route('/amendments/status/in-progress').get(amendmentController.getAllAmendmentsInProgress);
-openRouter.route('/facility/:facilityId/amendment/').get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
+openRouter.route('/amendments?status=in-progress').get(amendmentController.getAllAmendmentsInProgress);
+openRouter.route('/facilities/:facilityId/amendments/').get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
 openRouter
-  .route('/facility/:facilityId/amendment/:amendmentId')
+  .route('/facilities/:facilityId/amendments/:amendmentId')
   .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment);
 openRouter
-  .route('/facility/:facilityId/amendment/:amendmentId')
+  .route('/facilities/:facilityId/amendments/:amendmentId')
   .get(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.getAmendmentById);
 openRouter
-  .route('/facility/:facilityId/amendment/status/in-progress')
+  .route('/facilities/:facilityId/amendments/status/in-progress')
   .get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentInProgress);
 openRouter
-  .route('/facility/:facilityId/amendment/status/completed')
+  .route('/facilities/:facilityId/amendments/status/completed')
   .get(validation.facilityIdValidation, handleValidationResult, amendmentController.getCompletedAmendment);
 openRouter
-  .route('/facility/:facilityId/amendment/status/completed/latest-value')
+  .route('/facilities/:facilityId/amendments/status/completed/latest-value')
   .get(validation.facilityIdValidation, handleValidationResult, amendmentController.getLatestCompletedAmendmentValue);
 openRouter
-  .route('/facility/:facilityId/amendment/status/completed/latest-cover-end-date')
+  .route('/facilities/:facilityId/amendments/status/completed/latest-cover-end-date')
   .get(validation.facilityIdValidation, handleValidationResult, amendmentController.getLatestCompletedAmendmentDate);
 openRouter.route('/deal/:dealId/amendments/').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 openRouter
-  .route('/deal/:dealId/amendment/status/in-progress')
+  .route('/deals/:dealId/amendment/status/in-progress')
   .get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentInProgressByDealId);
 openRouter
-  .route('/deal/:dealId/amendment/status/completed')
+  .route('/deals/:dealId/amendment/status/completed')
   .get(validation.dealIdValidation, handleValidationResult, amendmentController.getCompletedAmendmentByDealId);
 openRouter
-  .route('/deal/:dealId/amendment/status/completed/latest')
+  .route('/deals/:dealId/amendment/status/completed/latest')
   .get(validation.dealIdValidation, handleValidationResult, amendmentController.getLatestCompletedAmendmentByDealId);
 
 openRouter.route('/party/urn/:urn').get(validation.paryUrnValidation, handleValidationResult, party.getCompany);
