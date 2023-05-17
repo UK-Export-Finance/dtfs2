@@ -443,7 +443,7 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
 };
 exports.findLatestCompletedAmendmentByFacilityIdVersion = findLatestCompletedAmendmentByFacilityIdVersion;
 
-exports.getLatestCompletedValueAmendment = async (req, res) => {
+exports.getLatestCompletedAmendmentValue = async (req, res) => {
   const { facilityId } = req.params;
   if (ObjectId.isValid(facilityId)) {
     const newValue = await findLatestCompletedValueAmendmentByFacilityId(facilityId) ?? {};
@@ -452,7 +452,7 @@ exports.getLatestCompletedValueAmendment = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
 };
 
-exports.getLatestCompletedDateAmendment = async (req, res) => {
+exports.getLatestCompletedAmendmentDate = async (req, res) => {
   const { facilityId } = req.params;
   if (ObjectId.isValid(facilityId)) {
     const coverEndDate = await findLatestCompletedDateAmendmentByFacilityId(facilityId) ?? {};

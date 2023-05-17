@@ -12,7 +12,7 @@ const getAmendFacilityValue = async (req, res) => {
   }
 
   const facility = await api.getFacility(facilityId);
-  const { data: latestAmendmentValue } = await api.getLatestCompletedValueAmendment(facilityId);
+  const { data: latestAmendmentValue } = await api.getLatestCompletedAmendmentValue(facilityId);
 
   const { dealId, value } = amendment;
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
@@ -40,7 +40,7 @@ const postAmendFacilityValue = async (req, res) => {
 
   const facility = await api.getFacility(facilityId);
 
-  const { data: latestAmendmentValue } = await api.getLatestCompletedValueAmendment(facilityId);
+  const { data: latestAmendmentValue } = await api.getLatestCompletedAmendmentValue(facilityId);
   const { currency } = facility.facilitySnapshot;
   let { coveredPercentage } = facility.facilitySnapshot;
   let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
