@@ -409,7 +409,7 @@ tfmRouter.route('/facilities/:id').put(
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/amendments?status=in-progress').get(tfmGetAmendmentController.getAllAmendmentsInProgress);
+tfmRouter.route('/amendments').get(tfmGetAmendmentController.getAllAmendmentsInProgress);
 tfmRouter.route('/facilities/:facilityId/amendments').get(tfmGetAmendmentController.getAllAmendmentsByFacilityId);
 tfmRouter.route('/facilities/:facilityId/amendments/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgress);
 tfmRouter.route('/facilities/:facilityId/amendments/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendmentsByFacilityId);

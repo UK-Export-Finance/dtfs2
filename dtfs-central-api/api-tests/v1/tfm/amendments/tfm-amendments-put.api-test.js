@@ -82,7 +82,7 @@ describe('PUT TFM amendments', () => {
 
       const updatePayload = { createdBy: mockUser };
       const { status } = await api.post().to(`/v1/tfm/facilities/${newId}/amendment/`);
-      const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendment/626aa00e2446022434c52148`);
+      const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);
 
       expect(status).toEqual(200);
       expect(bodyPutResponse).toEqual({ status: 404, message: 'The amendment does not exist' });
@@ -91,7 +91,7 @@ describe('PUT TFM amendments', () => {
     it('should return 400 if invalid dealId', async () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
-      const { status, body } = await api.put({ amendmentsUpdate: {} }).to('/v1/tfm/facilities/123/amendment/1234');
+      const { status, body } = await api.put({ amendmentsUpdate: {} }).to('/v1/tfm/facilities/123/amendments/1234');
 
       expect(status).toEqual(400);
       expect(body).toEqual({ status: 400, message: 'Invalid facility or amendment id' });
