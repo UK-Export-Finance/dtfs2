@@ -81,7 +81,7 @@ describe('PUT TFM amendments', () => {
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
       const updatePayload = { createdBy: mockUser };
-      const { status } = await api.post().to(`/v1/tfm/facilities/${newId}/amendment/`);
+      const { status } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments/`);
       const { body: bodyPutResponse } = await api.put({ updatePayload }).to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);
 
       expect(status).toEqual(200);
