@@ -150,13 +150,13 @@ const getAmendmentByFacilityId = async (req, res) => {
   const { facilityId } = req.params;
   const { status, type } = req.query;
   let amendment;
-  if (status == 'in-progress') {
+  if (status === 'in-progress') {
     await api.getAmendmentInProgress(facilityId)
   }
-  else if (status == 'completed') {
-    if (type == 'latest-cover-end-date') {
+  else if (status === 'completed') {
+    if (type === 'latest-cover-end-date') {
       amendment = await api.getLatestCompletedAmendmentDate(facilityId);
-    } else if (type == 'latest-value') {
+    } else if (type === 'latest-value') {
       amendment = await api.getLatestCompletedAmendmentValue(facilityId);
     } else {
       amendment = await api.getCompletedAmendment(facilityId);
@@ -174,14 +174,14 @@ const getAmendmentsByDealId = async (req, res) => {
   const { dealId } = req.params;
   const { status, type } = req.query;
   let amendment;
-  if (status == 'in-progress') {
+  if (status === 'in-progress') {
     amendment = await api.getAmendmentInProgressByDealId(dealId);
   }
-  else if (status == 'completed') {
+  else if (status === 'completed') {
+    if (type === 'latest') {
+      amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
+    }
     amendment = await api.getCompletedAmendmentByDealId(dealId);
-  }
-  else if (status == 'completed' && type == 'latest') {
-    amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
   }
   else if (!status && !type) {
     amendment = await api.getAmendmentsByDealId(dealId);
