@@ -55,7 +55,6 @@ export const getExchangeRate = async (req: Request, res: Response) => {
 
     let sourceCurrency = source;
     let targetCurrency = target;
-    let url = `${mdm}currencies/exchange?source=${sourceCurrency}&target=${targetCurrency}`;
 
     console.info(`⚡️ Invoking MDM currencies/exchange endpoint: ${sourceCurrency}:${targetCurrency}`);
 
@@ -64,6 +63,8 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       sourceCurrency = GBP;
       targetCurrency = source;
     }
+
+    let url = `${mdm}currencies/exchange?source=${sourceCurrency}&target=${targetCurrency}`;
 
     if (date) {
       url = `${url}&exchangeRateDate=${date}`;
