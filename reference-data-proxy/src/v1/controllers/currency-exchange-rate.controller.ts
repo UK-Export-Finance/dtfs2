@@ -97,7 +97,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       exchange.exchangeRate = 1 / midPrice;
     }
 
-    console.info(`✅ Exchange rate ${exchange.exchangeRate}`);
+    console.info(`✅ Exchange rate for ${sourceCurrency}:${targetCurrency} is at ${exchange.exchangeRate}`);
 
     return res.status(status).send(exchange);
   } catch (e) {
