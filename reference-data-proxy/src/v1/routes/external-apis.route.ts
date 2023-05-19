@@ -391,7 +391,7 @@ apiRoutes.get('/party-db/urn/:urn', partyUrn.lookup);
  *       ISO 3 currency codes.
  *       Note - the Mulesoft API does not support XYZ to GBP conversion.
  *       To handle this scenario - behind the scenes in our controller, the source and target are reversed.
- *       In our response handler, we only return the midPrice field.
+ *       In our response handler, we only return the `exchangeRate` (midPrice) field.
  *     parameters:
  *       - in: path
  *         name: source
@@ -407,6 +407,13 @@ apiRoutes.get('/party-db/urn/:urn', partyUrn.lookup);
  *           example: USD
  *         required: true
  *         description: Currency Code to exchange to
+ *      - in: path
+ *         name: date
+ *         schema:
+ *           type: string
+ *           example: 1970-01-01
+ *         required: false
+ *         description: Historic date, in a valid ISO 8601 format.
  *     responses:
  *       200:
  *         description: OK
