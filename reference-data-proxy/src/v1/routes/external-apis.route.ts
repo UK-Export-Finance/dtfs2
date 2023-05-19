@@ -407,7 +407,7 @@ apiRoutes.get('/party-db/urn/:urn', partyUrn.lookup);
  *           example: USD
  *         required: true
  *         description: Currency Code to exchange to
- *      - in: path
+ *       - in: path
  *         name: date
  *         schema:
  *           type: string
