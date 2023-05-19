@@ -94,7 +94,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
 
     // Conversion inversion for non-GBP source
     if (source !== GBP) {
-      exchange.exchangeRate = 1 / midPrice;
+      exchange.exchangeRate = Number(Number(1 / midPrice).toFixed(2));
     }
 
     console.info(`✅ Exchange rate for ${sourceCurrency}:${targetCurrency} is at ${exchange.exchangeRate}`);
