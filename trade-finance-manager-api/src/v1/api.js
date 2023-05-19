@@ -305,7 +305,7 @@ const getAmendmentInProgress = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/status/in-progress`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments?status=in-progress`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -452,7 +452,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/status/in-progress`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/status/in-progress`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -473,7 +473,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/status/completed`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/status/completed`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -515,7 +515,7 @@ const getAllAmendmentsInProgress = async () => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/amendments?status=in-progress`,
+        url: `${centralApiUrl}/v1/tfm/amendments/status/in-progress`,
         headers: { 'Content-Type': 'application/json' },
       });
 

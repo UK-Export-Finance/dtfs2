@@ -145,7 +145,7 @@ openRouter.route('/facilities/:facilityId/amendments').post(validation.facilityI
  *       400:
  *         description: Cannot update the amendment
  */
-openRouter.route('/amendments?status=in-progress').get(amendmentController.getAllAmendmentsInProgress);
+openRouter.route('/amendments').get(amendmentController.getAllAmendments);
 openRouter.route('/facilities/:facilityId/amendments/').get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
 openRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
@@ -153,9 +153,6 @@ openRouter
 openRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
   .get(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.getAmendmentById);
-openRouter
-  .route('/facilities/:facilityId/amendments/status/in-progress')
-  .get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentInProgress);
 openRouter
   .route('/facilities/:facilityId/amendments/status/completed')
   .get(validation.facilityIdValidation, handleValidationResult, amendmentController.getCompletedAmendment);
@@ -166,16 +163,6 @@ openRouter
   .route('/facilities/:facilityId/amendments/status/completed/latest-cover-end-date')
   .get(validation.facilityIdValidation, handleValidationResult, amendmentController.getLatestCompletedAmendmentDate);
 openRouter.route('/deal/:dealId/amendments/').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
-openRouter
-  .route('/deals/:dealId/amendment/status/in-progress')
-  .get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentInProgressByDealId);
-openRouter
-  .route('/deals/:dealId/amendment/status/completed')
-  .get(validation.dealIdValidation, handleValidationResult, amendmentController.getCompletedAmendmentByDealId);
-openRouter
-  .route('/deals/:dealId/amendment/status/completed/latest')
-  .get(validation.dealIdValidation, handleValidationResult, amendmentController.getLatestCompletedAmendmentByDealId);
-
 openRouter.route('/party/urn/:urn').get(validation.paryUrnValidation, handleValidationResult, party.getCompany);
 
 module.exports = openRouter;
