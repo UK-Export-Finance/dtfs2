@@ -1,29 +1,28 @@
 /**
 Objective:
-  The objective of the getExchangeRate function is to call an external API to retrieve the exchange rate
-  between two currencies and return the midPrice value. It also handles a specific case where the API
-  does not support a certain conversion and requires a workaround.
+  The objective of the `getExchangeRate` function is to retrieve the exchange rate between two currencies, with an optional date parameter,
+  by calling an external API. The function handles the conversion inversion for non-GBP source currencies and returns the exchange rate in the response.
 
 Inputs:
-  req: Request object from Express containing the source and target currencies as parameters.
-  res: Response object from Express to send the response back to the client.
+  1. `req`: request object from Express
+  2. `res`: response object from Express
 
 Flow:
-  1. Extract the source and target currencies from the request parameters.
-  2. Check if the API supports the conversion, if not, use a workaround to reverse the conversion.
-  3. Call the external API using Axios with the appropriate parameters and headers.
-  4. Handle any errors that may occur during the API call.
-  5. Extract the midPrice value from the API response.
-  6. If the source currency is not GBP, calculate the inverse of the midPrice value.
-  7. Send the midPrice value or the inverse of it as the response to the client.
+  1. Retrieve `source`, `target`, and `date` parameters from `req.params`
+  2. Build API URL with `source` and `target` parameters
+  3. If `source` is not `GBP`, convert to `GBP` and set `target` as `source`
+  4. If `date` parameter is provided, add it to the API URL
+  5. Call external API with `axios` and `headers`
+  6. Handle errors and return response data or error message
+  7. Calculate exchange rate and handle conversion inversion if necessary
+  8. Return exchange rate in response with appropriate status code
 
 Outputs:
-  midPrice value or the inverse of it as the response to the client.
+  1. Response with HTTP status code and exchange rate data
 
 Additional aspects:
-  Uses Axios library to make HTTP requests to the external API.
-  Uses dotenv library to retrieve the API URL from environment variables.
-  Handles errors that may occur during the API call.
+  1. The function uses `dotenv` to retrieve the MDM URL from environment variables
+  2. The function logs information and errors to the console for debugging purposes
  */
 
 import { Request, Response } from 'express';
@@ -40,55 +39,69 @@ const headers = {
 
 /**
  * Get Exchange rate between `source` and `target` currency.
- * An optional `exchangeRateDate` can also be specified in
+ * An optional `date` can also be specified in
  * a valid ISO 8601 date string format.
+ * Please note, API only supports `GBP` as source
  * @param req request object
  * @param res response object
  * @returns response with HTTP status `code` and `data`
  */
 export const getExchangeRate = async (req: Request, res: Response) => {
-  const { source, target } = req.params;
-  const exchangeRateDate = req.params?.exchangeRateDate ?? false;
+  try {
+    const { source, target } = req.params;
+    const date = req.params?.date ?? false;
+    // TODO: centralised constants
+    const GBP = 'GBP';
 
-  console.info(`Calling Exchange rate API - ${source} to ${target}`);
+    let sourceCurrency = source;
+    let targetCurrency = target;
 
-  // API does not support XYZ to GBP conversion so we have to reverse and calculate
-  let actualSource = source;
-  let actualTarget = target;
-  let url = `${mdm}currencies/exchange?source=${actualSource}&target=${actualTarget}`;
+    console.info(`⚡️ Invoking MDM currencies/exchange endpoint: ${sourceCurrency}:${targetCurrency}`);
 
-  if (source !== 'GBP' && target === 'GBP') {
-    actualSource = 'GBP';
-    actualTarget = source;
+    // Conversion inversion for non-GBP source
+    if (source !== GBP) {
+      sourceCurrency = GBP;
+      targetCurrency = source;
+    }
+
+    let url = `${mdm}currencies/exchange?source=${sourceCurrency}&target=${targetCurrency}`;
+
+    if (date) {
+      url = `${url}&exchangeRateDate=${date}`;
+    }
+
+    const response = await axios({
+      method: 'get',
+      url,
+      headers,
+    }).catch((error: any) => {
+      console.error('Error calling Exchange rate API, ', error);
+      return { data: error.response.data, status: error.response.status };
+    });
+
+    if (!response?.data) {
+      throw new Error('void response received');
+    }
+
+    const { status, data } = response;
+
+    if (status !== 200) {
+      return res.status(status).send(data);
+    }
+
+    const { midPrice } = data[0];
+    const exchange = { exchangeRate: midPrice };
+
+    // Conversion inversion for non-GBP source
+    if (source !== GBP) {
+      exchange.exchangeRate = Number(Number(1 / midPrice).toFixed(2));
+    }
+
+    console.info(`✅ Exchange rate for ${sourceCurrency}:${targetCurrency} is at ${exchange.exchangeRate}`);
+
+    return res.status(status).send(exchange);
+  } catch (e) {
+    console.error('🚩 Error occurred during currencies/exchange endpoint call: ', { e });
+    return res.status(400);
   }
-
-  if (exchangeRateDate) {
-    url = `${url}&exchangeRateDate=${exchangeRateDate}`;
-  }
-
-  const response = await axios({
-    method: 'get',
-    url,
-    headers,
-  }).catch((error: any) => {
-    console.error('Error calling Exchange rate API, ', error);
-    return { data: error.response.data, status: error.response.status };
-  });
-
-  const { status, data } = response;
-
-  if (status !== 200) {
-    return res.status(status).send(data);
-  }
-
-  const { midPrice } = data[0];
-
-  const responseObj = { midPrice };
-
-  // workaround for API not supporting XYZ to GBP conversion
-  if (source !== 'GBP') {
-    responseObj.midPrice = 1 / midPrice;
-  }
-
-  return res.status(status).send(responseObj);
 };
