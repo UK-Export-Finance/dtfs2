@@ -212,7 +212,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
-    entrypoint: npx nodemon src/index.ts -L --max-old-space-size=350
+    entrypoint: npx nodemon src/index.ts -L
 
   gef-ui:
     build: ./gef-ui

@@ -22,7 +22,7 @@ module.exports = {
     library: ['DTFS_PORTAL', '[name]'],
     libraryTarget: 'var',
   },
-  target: ['web'],
+  target: ['web', 'es5'],
   optimization: {
     minimize: true,
     minimizer: [
