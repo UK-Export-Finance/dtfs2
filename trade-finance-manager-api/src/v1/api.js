@@ -437,7 +437,7 @@ const getAmendmentsByDealId = async (dealId) => {
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the amendment by deal Id %O', { response: err?.response?.data });
+      console.error('Unable to get the amendments by deal Id %O', { response: err?.response?.data });
       return { status: 500, data: err?.response?.data };
     }
   } else {
@@ -515,7 +515,7 @@ const getAllAmendmentsInProgress = async () => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/amendments/status/in-progress`,
+        url: `${centralApiUrl}/v1/tfm/amendments`,
         headers: { 'Content-Type': 'application/json' },
       });
 

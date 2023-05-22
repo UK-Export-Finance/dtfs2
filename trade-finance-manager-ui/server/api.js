@@ -326,7 +326,7 @@ const getCompletedAmendment = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/status/completed`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments?status=completed`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -341,7 +341,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/status/completed/latest-value`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments?status=completed&type=latest-value`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -356,7 +356,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/status/completed/latest-cover-end-date`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments?status=completed&type=latest-cover-end-date`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -431,7 +431,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/status/completed`,
+      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments?status=completed`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -446,7 +446,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/status/completed/latest`,
+      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments?status=completed&type=latest`,
       headers: { 'Content-Type': 'application/json' },
     });
 
