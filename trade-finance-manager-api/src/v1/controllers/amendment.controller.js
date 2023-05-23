@@ -15,6 +15,7 @@ const {
   addLatestAmendmentValue,
   addLatestAmendmentDates,
 } = require('../helpers/amendment.helpers');
+const CONSTANTS = require('../../constants');
 
 const sendAmendmentEmail = async (amendmentId, facilityId) => {
   try {
@@ -114,13 +115,13 @@ const getAmendmentByFacilityId = async (req, res) => {
   const { facilityId } = req.params;
   const { status, type } = req.query;
   let amendment;
-  if (status === 'in-progress') {
+  if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
     await api.getAmendmentInProgress(facilityId)
   }
-  else if (status === 'completed') {
-    if (type === 'latest-cover-end-date') {
+  else if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
+    if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
       amendment = await api.getLatestCompletedAmendmentDate(facilityId);
-    } else if (type === 'latest-value') {
+    } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_VALUE) {
       amendment = await api.getLatestCompletedAmendmentValue(facilityId);
     } else {
       amendment = await api.getCompletedAmendment(facilityId);
@@ -138,11 +139,10 @@ const getAmendmentsByDealId = async (req, res) => {
   const { dealId } = req.params;
   const { status, type } = req.query;
   let amendment;
-  if (status === 'in-progress') {
+  if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
     amendment = await api.getAmendmentInProgressByDealId(dealId);
-  }
-  else if (status === 'completed') {
-    if (type === 'latest') {
+  } else if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
+    if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST) {
       amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
     } else {
       amendment = await api.getCompletedAmendmentByDealId(dealId);
@@ -160,7 +160,7 @@ const getAmendmentsByDealId = async (req, res) => {
 const getAllAmendments = async (req, res) => {
   const { status } = req.query;
   let amendment;
-  if (status == 'in-progress') {
+  if (status == CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
     amendment = await api.getAllAmendmentsInProgress();
   }
   if (amendment) {

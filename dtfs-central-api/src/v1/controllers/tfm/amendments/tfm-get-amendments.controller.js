@@ -13,13 +13,15 @@ const CONSTANTS = require('../../../../constants');
 const findAllAmendmentsByStatus = async (status) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
-    const amendment = await collection.aggregate([
-      { $project: { _id: 0, amendments: '$amendments' } },
-      { $unwind: '$amendments' },
-      { $match: { 'amendments.status': status } },
-      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-      { $project: { _id: 0, amendments: 1 } },
-    ]).toArray();
+    const amendment = await collection
+      .aggregate([
+        { $project: { _id: 0, amendments: '$amendments' } },
+        { $unwind: '$amendments' },
+        { $match: { 'amendments.status': status } },
+        { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+        { $project: { _id: 0, amendments: 1 } },
+      ])
+      .toArray();
 
     // returns the amendment object for the given facilityId and amendmentId
     return amendment[0]?.amendments ?? null;
@@ -30,7 +32,7 @@ const findAllAmendmentsByStatus = async (status) => {
 };
 
 exports.getAllAmendmentsInProgress = async (req, res) => {
-  const amendment = await findAllAmendmentsByStatus(CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
+  const amendment = (await findAllAmendmentsByStatus(CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
 
   return res.status(200).send(amendment);
 };
@@ -46,15 +48,17 @@ exports.getAllAmendmentsInProgress = async (req, res) => {
 const findAllAmendmentsByFacilityId = async (facilityId) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
-    const amendment = await collection.aggregate([
-      { $match: { _id: ObjectId(facilityId) } },
-      { $project: { _id: 0, amendments: '$amendments' } },
-      { $unwind: '$amendments' },
-      { $sort: { 'amendments.version': -1 } },
-      { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED } } },
-      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-      { $project: { _id: 0, amendments: 1 } },
-    ]).toArray();
+    const amendment = await collection
+      .aggregate([
+        { $match: { _id: ObjectId(facilityId) } },
+        { $project: { _id: 0, amendments: '$amendments' } },
+        { $unwind: '$amendments' },
+        { $sort: { 'amendments.version': -1 } },
+        { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED } } },
+        { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+        { $project: { _id: 0, amendments: 1 } },
+      ])
+      .toArray();
 
     // returns the amendment object for the given facilityId and amendmentId
     return amendment[0]?.amendments ?? null;
@@ -67,22 +71,22 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
 exports.getAllAmendmentsByFacilityId = async (req, res) => {
   const { facilityId } = req.params;
   const { status, type } = req.query;
-  
+
   if (ObjectId.isValid(facilityId)) {
     let amendment;
-    if (status === 'in-progress') {
-      let amendments = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
+    if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
+      let amendments = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
       amendment = amendments[0] ?? {};
-    } else if (status === 'completed') {
-      if (type === 'latest-value') {
-        amendment = await findLatestCompletedValueAmendmentByFacilityId(facilityId) ?? {};
-      } else if (type === 'latest-cover-end-date') {
-        amendment = await findLatestCompletedDateAmendmentByFacilityId(facilityId) ?? {};
+    } else if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED) {
+      if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_VALUE) {
+        amendment = (await findLatestCompletedValueAmendmentByFacilityId(facilityId)) ?? {};
+      } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
+        amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
       } else {
-        amendment = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED) ?? [];
+        amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
       }
     } else {
-      amendment = await findAllAmendmentsByFacilityId(facilityId) ?? [];
+      amendment = (await findAllAmendmentsByFacilityId(facilityId)) ?? [];
     }
     return res.status(200).send(amendment);
   }
@@ -96,33 +100,35 @@ exports.getAllAmendmentsByFacilityId = async (req, res) => {
  *   "createdAt": 1651058790,
  *   "updatedAt": 1651059653,
  *   "status": "In progress",
-  * }
-*/
+ * }
+ */
 
 const findAmendmentById = async (facilityId, amendmentId) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
-    const amendment = await collection.aggregate([
-      { $match: { _id: ObjectId(facilityId), 'amendments.amendmentId': ObjectId(amendmentId) } },
-      {
-        $addFields: {
-          'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId'
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          amendments: {
-            $filter: {
-              input: '$amendments',
-              as: 'amendment',
-              cond: { $eq: ['$$amendment.amendmentId', ObjectId(amendmentId)] },
+    const amendment = await collection
+      .aggregate([
+        { $match: { _id: ObjectId(facilityId), 'amendments.amendmentId': ObjectId(amendmentId) } },
+        {
+          $addFields: {
+            'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            amendments: {
+              $filter: {
+                input: '$amendments',
+                as: 'amendment',
+                cond: { $eq: ['$$amendment.amendmentId', ObjectId(amendmentId)] },
+              },
             },
           },
         },
-      },
-      { $unwind: '$amendments' },
-    ]).toArray();
+        { $unwind: '$amendments' },
+      ])
+      .toArray();
 
     // returns the amendment object for the given facilityId and amendmentId
     return amendment[0]?.amendments ?? null;
@@ -137,7 +143,7 @@ exports.findAmendmentById = findAmendmentById;
 exports.getAmendmentById = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   if (ObjectId.isValid(facilityId) && ObjectId.isValid(amendmentId)) {
-    const amendment = await findAmendmentById(facilityId, amendmentId) ?? {};
+    const amendment = (await findAmendmentById(facilityId, amendmentId)) ?? {};
     return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility or amendment Id' });
@@ -150,26 +156,28 @@ exports.getAmendmentById = async (req, res) => {
  *   "createdAt": 1651058790,
  *   "updatedAt": 1651059653,
  *   "status": "In progress",
-  * }
-*/
+ * }
+ */
 
 const findAmendmentsByDealId = async (dealId) => {
   try {
     const collection = await db.getCollection('tfm-facilities');
-    const amendment = await collection.aggregate([
-      { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
-      {
-        $addFields: {
-          'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId'
-        }
-      },
-      { $project: { _id: 0, amendments: 1 } },
-      { $unwind: '$amendments' },
-      { $sort: { 'amendments.submittedAt': -1 } },
-      { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED }, 'amendments.submittedByPim': true } },
-      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-      { $project: { _id: 0, amendments: 1 } },
-    ]).toArray();
+    const amendment = await collection
+      .aggregate([
+        { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
+        {
+          $addFields: {
+            'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
+          },
+        },
+        { $project: { _id: 0, amendments: 1 } },
+        { $unwind: '$amendments' },
+        { $sort: { 'amendments.submittedAt': -1 } },
+        { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED }, 'amendments.submittedByPim': true } },
+        { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+        { $project: { _id: 0, amendments: 1 } },
+      ])
+      .toArray();
     // returns the amendment object for the given dealId
     return amendment[0]?.amendments ?? null;
   } catch (err) {
@@ -181,8 +189,20 @@ exports.findAmendmentByDealId = findAmendmentsByDealId;
 
 exports.getAmendmentsByDealId = async (req, res) => {
   const { dealId } = req.params;
+  const { status, type } = req.query;
   if (ObjectId.isValid(dealId)) {
-    const amendment = await findAmendmentsByDealId(dealId) ?? [];
+    let amendment;
+    if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
+      amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+    } else if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED) {
+      if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST) {
+        amendment = (await findLatestCompletedAmendmentByDealId(dealId)) ?? {};
+      } else {
+        amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+      }
+    } else {
+      amendment = (await findAmendmentsByDealId(dealId)) ?? [];
+    }
     return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid deal Id' });
@@ -202,14 +222,16 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
   if (ObjectId.isValid(facilityId)) {
     try {
       const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection.aggregate([
-        { $match: { _id: ObjectId(facilityId) } },
-        { $unwind: '$amendments' },
-        { $match: { 'amendments.status': status, } },
-        { $project: { _id: 0, amendments: 1 } },
-        { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-        { $project: { _id: 0, amendments: 1 } },
-      ]).toArray();
+      const amendment = await collection
+        .aggregate([
+          { $match: { _id: ObjectId(facilityId) } },
+          { $unwind: '$amendments' },
+          { $match: { 'amendments.status': status } },
+          { $project: { _id: 0, amendments: 1 } },
+          { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+          { $project: { _id: 0, amendments: 1 } },
+        ])
+        .toArray();
       // returns the amendment object for the given facilityId
       return amendment[0]?.amendments ?? null;
     } catch (err) {
@@ -221,25 +243,6 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
   return null;
 };
 exports.findAmendmentByStatusAndFacilityId = findAmendmentByStatusAndFacilityId;
-
-// exports.getAmendmentInProgress = async (req, res) => {
-//   const { facilityId } = req.params;
-//   if (ObjectId.isValid(facilityId)) {
-//     let amendment = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
-//     amendment = amendment[0] ?? {};
-//     return res.status(200).send(amendment);
-//   }
-//   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
-// };
-
-// exports.getAllCompletedAmendmentsByFacilityId = async (req, res) => {
-//   const { facilityId } = req.params;
-//   if (ObjectId.isValid(facilityId)) {
-//     const amendment = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED) ?? [];
-//     return res.status(200).send(amendment);
-//   }
-//   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
-// };
 
 /**
  *  returns an object containing an amendment that's `in progress` or `completed` based on a given dealId:
@@ -255,19 +258,21 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
   if (ObjectId.isValid(dealId)) {
     try {
       const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection.aggregate([
-        { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
-        {
-          $addFields: {
-            'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId'
-          }
-        },
-        { $unwind: '$amendments' },
-        { $match: { 'amendments.status': status } },
-        { $project: { _id: 0, amendments: 1 } },
-        { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-        { $project: { amendments: 1, type: 1, _id: 0, } },
-      ]).toArray();
+      const amendment = await collection
+        .aggregate([
+          { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
+          {
+            $addFields: {
+              'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
+            },
+          },
+          { $unwind: '$amendments' },
+          { $match: { 'amendments.status': status } },
+          { $project: { _id: 0, amendments: 1 } },
+          { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+          { $project: { amendments: 1, type: 1, _id: 0 } },
+        ])
+        .toArray();
 
       // returns the amendment object for the given dealId
       return amendment[0]?.amendments ?? null;
@@ -280,24 +285,6 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
   return null;
 };
 exports.findAmendmentByStatusAndDealId = findAmendmentByStatusAndDealId;
-
-exports.getAmendmentInProgressByDealId = async (req, res) => {
-  const { dealId } = req.params;
-  if (ObjectId.isValid(dealId)) {
-    const amendment = await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
-    return res.status(200).send(amendment);
-  }
-  return res.status(400).send({ status: 400, message: 'Invalid deal Id' });
-};
-
-exports.getCompletedAmendmentByDealId = async (req, res) => {
-  const { dealId } = req.params;
-  if (ObjectId.isValid(dealId)) {
-    const amendment = await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED) ?? [];
-    return res.status(200).send(amendment);
-  }
-  return res.status(400).send({ status: 400, message: 'Invalid deal Id' });
-};
 
 /**
  *  returns an object containing the latest completed amendment value, currency and amendmentId based on a given facilityId:
@@ -316,45 +303,47 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
 
     try {
       const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection.aggregate([
-        { $match: { _id: ObjectId(facilityId) } },
-        { $unwind: '$amendments' },
-        {
-          $match: {
-            $or: [
-              {
-                'amendments.status': COMPLETED,
-                'amendments.submittedByPim': true,
-                'amendments.requireUkefApproval': false,
-                'amendments.changeFacilityValue': true
-              },
-              {
-                'amendments.status': COMPLETED,
-                'amendments.bankDecision.decision': PROCEED,
-                'amendments.bankDecision.submitted': true,
-                'amendments.ukefDecision.value': APPROVED_WITH_CONDITIONS,
-                'amendments.changeFacilityValue': true
-              },
-              {
-                'amendments.status': COMPLETED,
-                'amendments.bankDecision.decision': PROCEED,
-                'amendments.bankDecision.submitted': true,
-                'amendments.ukefDecision.value': APPROVED_WITHOUT_CONDITIONS,
-                'amendments.changeFacilityValue': true
-              }
-            ]
-          }
-        },
-        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-        { $project: { _id: 0, amendments: 1 } },
-        { $limit: 1 }
-      ]).toArray();
+      const amendment = await collection
+        .aggregate([
+          { $match: { _id: ObjectId(facilityId) } },
+          { $unwind: '$amendments' },
+          {
+            $match: {
+              $or: [
+                {
+                  'amendments.status': COMPLETED,
+                  'amendments.submittedByPim': true,
+                  'amendments.requireUkefApproval': false,
+                  'amendments.changeFacilityValue': true,
+                },
+                {
+                  'amendments.status': COMPLETED,
+                  'amendments.bankDecision.decision': PROCEED,
+                  'amendments.bankDecision.submitted': true,
+                  'amendments.ukefDecision.value': APPROVED_WITH_CONDITIONS,
+                  'amendments.changeFacilityValue': true,
+                },
+                {
+                  'amendments.status': COMPLETED,
+                  'amendments.bankDecision.decision': PROCEED,
+                  'amendments.bankDecision.submitted': true,
+                  'amendments.ukefDecision.value': APPROVED_WITHOUT_CONDITIONS,
+                  'amendments.changeFacilityValue': true,
+                },
+              ],
+            },
+          },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+          { $project: { _id: 0, amendments: 1 } },
+          { $limit: 1 },
+        ])
+        .toArray();
 
       if (amendment[0]?.amendments?.value) {
         return {
           amendmentId: amendment[0].amendments.amendmentId,
           value: amendment[0].amendments.value,
-          currency: amendment[0].amendments.currency
+          currency: amendment[0].amendments.currency,
         };
       }
       return null;
@@ -384,44 +373,46 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
 
     try {
       const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection.aggregate([
-        { $match: { _id: ObjectId(facilityId) } },
-        { $unwind: '$amendments' },
-        {
-          $match: {
-            $or: [
-              {
-                'amendments.status': COMPLETED,
-                'amendments.submittedByPim': true,
-                'amendments.requireUkefApproval': false,
-                'amendments.changeCoverEndDate': true
-              },
-              {
-                'amendments.status': COMPLETED,
-                'amendments.bankDecision.decision': PROCEED,
-                'amendments.bankDecision.submitted': true,
-                'amendments.ukefDecision.coverEndDate': APPROVED_WITH_CONDITIONS,
-                'amendments.changeCoverEndDate': true
-              },
-              {
-                'amendments.status': COMPLETED,
-                'amendments.bankDecision.decision': PROCEED,
-                'amendments.bankDecision.submitted': true,
-                'amendments.ukefDecision.coverEndDate': APPROVED_WITHOUT_CONDITIONS,
-                'amendments.changeCoverEndDate': true
-              }
-            ]
-          }
-        },
-        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-        { $project: { _id: 0, amendments: 1 } },
-        { $limit: 1 }
-      ]).toArray();
+      const amendment = await collection
+        .aggregate([
+          { $match: { _id: ObjectId(facilityId) } },
+          { $unwind: '$amendments' },
+          {
+            $match: {
+              $or: [
+                {
+                  'amendments.status': COMPLETED,
+                  'amendments.submittedByPim': true,
+                  'amendments.requireUkefApproval': false,
+                  'amendments.changeCoverEndDate': true,
+                },
+                {
+                  'amendments.status': COMPLETED,
+                  'amendments.bankDecision.decision': PROCEED,
+                  'amendments.bankDecision.submitted': true,
+                  'amendments.ukefDecision.coverEndDate': APPROVED_WITH_CONDITIONS,
+                  'amendments.changeCoverEndDate': true,
+                },
+                {
+                  'amendments.status': COMPLETED,
+                  'amendments.bankDecision.decision': PROCEED,
+                  'amendments.bankDecision.submitted': true,
+                  'amendments.ukefDecision.coverEndDate': APPROVED_WITHOUT_CONDITIONS,
+                  'amendments.changeCoverEndDate': true,
+                },
+              ],
+            },
+          },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+          { $project: { _id: 0, amendments: 1 } },
+          { $limit: 1 },
+        ])
+        .toArray();
 
       if (amendment[0]?.amendments?.coverEndDate) {
         return {
           amendmentId: amendment[0].amendments.amendmentId,
-          coverEndDate: amendment[0].amendments.coverEndDate
+          coverEndDate: amendment[0].amendments.coverEndDate,
         };
       }
       return null;
@@ -441,14 +432,16 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
 
     try {
       const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection.aggregate([
-        { $match: { _id: ObjectId(facilityId) } },
-        { $unwind: '$amendments' },
-        { $match: { 'amendments.status': COMPLETED } },
-        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-        { $project: { _id: 0, amendments: 1 } },
-        { $limit: 1 }
-      ]).toArray();
+      const amendment = await collection
+        .aggregate([
+          { $match: { _id: ObjectId(facilityId) } },
+          { $unwind: '$amendments' },
+          { $match: { 'amendments.status': COMPLETED } },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+          { $project: { _id: 0, amendments: 1 } },
+          { $limit: 1 },
+        ])
+        .toArray();
       return amendment[0]?.amendments?.version ?? null;
     } catch (err) {
       console.error('Unable to find amendments object %O', { err });
@@ -458,24 +451,6 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
   return null;
 };
 exports.findLatestCompletedAmendmentByFacilityIdVersion = findLatestCompletedAmendmentByFacilityIdVersion;
-
-// exports.getLatestCompletedAmendmentValue = async (req, res) => {
-//   const { facilityId } = req.params;
-//   if (ObjectId.isValid(facilityId)) {
-//     const newValue = await findLatestCompletedValueAmendmentByFacilityId(facilityId) ?? {};
-//     return res.status(200).send(newValue);
-//   }
-//   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
-// };
-
-// exports.getLatestCompletedAmendmentDate = async (req, res) => {
-//   const { facilityId } = req.params;
-//   if (ObjectId.isValid(facilityId)) {
-//     const coverEndDate = await findLatestCompletedDateAmendmentByFacilityId(facilityId) ?? {};
-//     return res.status(200).send(coverEndDate);
-//   }
-//   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
-// };
 
 /**
  *  returns an object containing the latest completed amendment based on a given dealId:
@@ -490,14 +465,16 @@ const findLatestCompletedAmendmentByDealId = async (dealId) => {
   if (ObjectId.isValid(dealId)) {
     try {
       const collection = await db.getCollection('tfm-facilities');
-      const amendment = await collection.aggregate([
-        { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
-        { $unwind: '$amendments' },
-        { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
-        { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-        { $project: { _id: 0, amendments: 1 } },
-        { $limit: 1 }
-      ]).toArray();
+      const amendment = await collection
+        .aggregate([
+          { $match: { 'facilitySnapshot.dealId': ObjectId(dealId) } },
+          { $unwind: '$amendments' },
+          { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+          { $project: { _id: 0, amendments: 1 } },
+          { $limit: 1 },
+        ])
+        .toArray();
       return amendment[0]?.amendments ?? null;
     } catch (err) {
       console.error('Unable to find amendments object %O', { err });
@@ -511,7 +488,7 @@ exports.findLatestCompletedAmendmentByDealId = findLatestCompletedAmendmentByDea
 exports.getLatestCompletedAmendmentByDealId = async (req, res) => {
   const { dealId } = req.params;
   if (ObjectId.isValid(dealId)) {
-    const amendment = await findLatestCompletedAmendmentByDealId(dealId) ?? {};
+    const amendment = (await findLatestCompletedAmendmentByDealId(dealId)) ?? {};
     return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });

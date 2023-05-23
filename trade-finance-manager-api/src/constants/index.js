@@ -8,6 +8,7 @@ const EMAIL_TEMPLATE_IDS = require('./email-template-ids');
 const DURABLE_FUNCTIONS = require('./durable-functions');
 const ACTIVITY = require('./activity');
 const CURRENCY = require('./currency.constant');
+const AMENDMENTS = require('./amendments');
 
 module.exports = {
   FACILITIES,
@@ -20,4 +21,5 @@ module.exports = {
   TASKS_AMENDMENT,
   NDB_TASKS_AMENDMENT,
   CURRENCY,
+  AMENDMENTS,
 };
