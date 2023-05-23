@@ -68,31 +68,6 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
   }
 };
 
-exports.getAllAmendmentsByFacilityId = async (req, res) => {
-  const { facilityId } = req.params;
-  const { status, type } = req.query;
-
-  if (ObjectId.isValid(facilityId)) {
-    let amendment;
-    if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-      let amendments = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
-      amendment = amendments[0] ?? {};
-    } else if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED) {
-      if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_VALUE) {
-        amendment = (await findLatestCompletedValueAmendmentByFacilityId(facilityId)) ?? {};
-      } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
-        amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
-      } else {
-        amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
-      }
-    } else {
-      amendment = (await findAllAmendmentsByFacilityId(facilityId)) ?? [];
-    }
-    return res.status(200).send(amendment);
-  }
-  return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
-};
-
 /**
  * returns an object containing all properties for a given amendmentId:
  * {
@@ -186,27 +161,6 @@ const findAmendmentsByDealId = async (dealId) => {
   }
 };
 exports.findAmendmentByDealId = findAmendmentsByDealId;
-
-exports.getAmendmentsByDealId = async (req, res) => {
-  const { dealId } = req.params;
-  const { status, type } = req.query;
-  if (ObjectId.isValid(dealId)) {
-    let amendment;
-    if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-      amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
-    } else if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED) {
-      if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST) {
-        amendment = (await findLatestCompletedAmendmentByDealId(dealId)) ?? {};
-      } else {
-        amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
-      }
-    } else {
-      amendment = (await findAmendmentsByDealId(dealId)) ?? [];
-    }
-    return res.status(200).send(amendment);
-  }
-  return res.status(400).send({ status: 400, message: 'Invalid deal Id' });
-};
 
 /**
  *  returns an object containing an amendment that's `in progress` or `completed` based on a given facilityId:
@@ -492,4 +446,50 @@ exports.getLatestCompletedAmendmentByDealId = async (req, res) => {
     return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
+};
+
+exports.getAllAmendmentsByFacilityId = async (req, res) => {
+  const { facilityId } = req.params;
+  const { status, type } = req.query;
+
+  if (ObjectId.isValid(facilityId)) {
+    let amendment;
+    if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
+      let amendments = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+      amendment = amendments[0] ?? {};
+    } else if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED) {
+      if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_VALUE) {
+        amendment = (await findLatestCompletedValueAmendmentByFacilityId(facilityId)) ?? {};
+      } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
+        amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
+      } else {
+        amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+      }
+    } else {
+      amendment = (await findAllAmendmentsByFacilityId(facilityId)) ?? [];
+    }
+    return res.status(200).send(amendment);
+  }
+  return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
+};
+
+exports.getAmendmentsByDealId = async (req, res) => {
+  const { dealId } = req.params;
+  const { status, type } = req.query;
+  if (ObjectId.isValid(dealId)) {
+    let amendment;
+    if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
+      amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+    } else if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED) {
+      if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST) {
+        amendment = (await findLatestCompletedAmendmentByDealId(dealId)) ?? {};
+      } else {
+        amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+      }
+    } else {
+      amendment = (await findAmendmentsByDealId(dealId)) ?? [];
+    }
+    return res.status(200).send(amendment);
+  }
+  return res.status(400).send({ status: 400, message: 'Invalid deal Id' });
 };
