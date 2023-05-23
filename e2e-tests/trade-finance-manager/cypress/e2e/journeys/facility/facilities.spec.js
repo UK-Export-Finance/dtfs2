@@ -67,23 +67,21 @@ context('Facility page', () => {
     page.facilitiesPage.coverEndDateColumn().should('contain', 'Cover end date');
     page.facilitiesPage.facilityStageColumn().should('contain', 'Facility stage');
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '1000000');
-    cy.get('@row1').find('[data-cy="facility__product"]').should('contain', dealTwo.dealType);
-    cy.get('@row1').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[1].type);
-    cy.get('@row1').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
-    cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
-    cy.get('@row1').find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
-    cy.get('@row1').find('[data-cy="facility__facilityStage"]').should('contain', 'Unissued');
+    cy.get('tr:nth-child(n+1) [data-cy="facility__ukefFacilityId"]').contains('1000000');
+    cy.get('tr:nth-child(n+1) [data-cy="facility__product"]').contains(dealTwo.dealType);
+    cy.get('tr:nth-child(n+1) [data-cy="facility__type"]').contains(dealTwoFacilities[1].type);
+    cy.get('tr:nth-child(n+1) [data-cy="facility__companyName"]').contains(dealTwo.exporter.companyName);
+    cy.get('tr:nth-child(n+1) [data-cy="facility__facilityValue"]').contains('GBP 1,234.00');
+    cy.get('tr:nth-child(n+1) [data-cy="facility__coverEndDate"]').contains('24 Sep 2020');
+    cy.get('tr:nth-child(n+1) [data-cy="facility__facilityStage"]').contains('Unissued');
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__ukefFacilityId"]').should('contain', '1000000');
-    cy.get('@row2').find('[data-cy="facility__product"]').should('contain', dealTwo.dealType);
-    cy.get('@row2').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[0].type);
-    cy.get('@row2').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
-    cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
-    cy.get('@row2').find('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
-    cy.get('@row2').find('[data-cy="facility__facilityStage"]').should('contain', 'Issued');
+    cy.get('tr:nth-child(n+2) [data-cy="facility__ukefFacilityId"]').contains('1000000');
+    cy.get('tr:nth-child(n+2) [data-cy="facility__product"]').contains(dealTwo.dealType);
+    cy.get('tr:nth-child(n+2) [data-cy="facility__type"]').contains(dealTwoFacilities[0].type);
+    cy.get('tr:nth-child(n+2) [data-cy="facility__companyName"]').contains(dealTwo.exporter.companyName);
+    cy.get('tr:nth-child(n+2) [data-cy="facility__facilityValue"]').contains('GBP 1,234,567,890.1');
+    cy.get('tr:nth-child(n+2) [data-cy="facility__coverEndDate"]').contains(dateConstants.oneMonthFormattedShort);
+    cy.get('tr:nth-child(n+2) [data-cy="facility__facilityStage"]').contains('Issued');
   });
 
   it('renders case summary with deal data', () => {
@@ -141,10 +139,10 @@ context('Facility page', () => {
     page.facilitiesPage.dataTypeColumn().find('button').click();
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[0].type);
+    cy.get('[data-cy="facility__type"]').should('contain', dealTwoFacilities[0].type);
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__type"]').should('contain', dealOneFacilities[0].type);
+    cy.get('[data-cy="facility__type"]').should('contain', dealOneFacilities[0].type);
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
     cy.get('@row3').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[1].type);
@@ -160,10 +158,10 @@ context('Facility page', () => {
     page.facilitiesPage.dataTypeColumn().find('button').dblclick();
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__type"]').should('contain', dealOneFacilities[1].type);
+    cy.get('[data-cy="facility__type"]').should('contain', dealOneFacilities[1].type);
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__type"]').should('contain', dealTwoFacilities[1].type);
+    cy.get('[data-cy="facility__type"]').should('contain', dealTwoFacilities[1].type);
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
     cy.get('@row3').find('[data-cy="facility__type"]').should('contain', dealOneFacilities[0].type);
@@ -179,10 +177,10 @@ context('Facility page', () => {
     page.facilitiesPage.exporterColumn().find('button').click();
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__companyName"]').should('contain', dealOne.exporter.companyName);
+    cy.get('[data-cy="facility__companyName"]').should('contain', dealOne.exporter.companyName);
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__companyName"]').should('contain', dealOne.exporter.companyName);
+    cy.get('[data-cy="facility__companyName"]').should('contain', dealOne.exporter.companyName);
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
     cy.get('@row3').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
@@ -198,10 +196,10 @@ context('Facility page', () => {
     page.facilitiesPage.exporterColumn().find('button').dblclick();
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
+    cy.get('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
+    cy.get('[data-cy="facility__companyName"]').should('contain', dealTwo.exporter.companyName);
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
     cy.get('@row3').find('[data-cy="facility__companyName"]').should('contain', dealOne.exporter.companyName);
@@ -217,10 +215,10 @@ context('Facility page', () => {
     page.facilitiesPage.valueColumn().find('button').click();
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
+    cy.get('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
+    cy.get('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
     cy.get('@row3').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
@@ -236,10 +234,10 @@ context('Facility page', () => {
     page.facilitiesPage.valueColumn().find('button').dblclick();
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
+    cy.get('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
+    cy.get('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234,567,890.1');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
     cy.get('@row3').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 1,234.00');
@@ -255,10 +253,10 @@ context('Facility page', () => {
     page.facilitiesPage.coverEndDateColumn().find('button').click();
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
+    cy.get('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
+    cy.get('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
     cy.get('@row3').find('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
@@ -274,10 +272,10 @@ context('Facility page', () => {
     page.facilitiesPage.coverEndDateColumn().find('button').dblclick();
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(1).as('row1');
-    cy.get('@row1').find('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
+    cy.get('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(2).as('row2');
-    cy.get('@row2').find('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
+    cy.get('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
 
     page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').eq(3).as('row3');
     cy.get('@row3').find('[data-cy="facility__coverEndDate"]').should('contain', '24 Sep 2020');

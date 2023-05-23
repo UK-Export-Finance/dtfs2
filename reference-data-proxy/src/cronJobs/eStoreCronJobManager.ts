@@ -2,7 +2,8 @@ import CronJobManager from 'cron-job-manager';
 import { getCollection } from '../database';
 
 const cronJobTimer = new Date();
-if (process.env.NODE_ENV === 'dev') {
+
+if (process.env.NODE_ENV === 'development') {
   // Artificial 30 second delay to allow for race condition on slow machines in local development
   cronJobTimer.setSeconds(cronJobTimer.getSeconds() + 30)
 }

@@ -1,9 +1,9 @@
 const page = {
   visit: () => cy.visit('/before-you-start/bank-deal'),
   bankDealId: () => cy.get('[data-cy="bankInternalRefName"]'),
-  bankDealIdCount: () => cy.get('[data-cy="bankInternalRefName-count"]'),
+  bankDealIdCount: () => cy.get('#bankInternalRefName-info + .govuk-character-count__message'),
   bankDealName: () => cy.get('[data-cy="additionalRefName"]'),
-  bankDealNameCount: () => cy.get('[data-cy="additionalRefName-count"]'),
+  bankDealNameCount: () => cy.get('#additionalRefName-info + .govuk-character-count__message'),
   submit: () => cy.get('[data-cy="submit-button"]'),
   cancel: () => cy.get('[data-cy="Cancel"]'),
 };
