@@ -55,7 +55,7 @@ context('Facility page', () => {
     });
   });
 
-  it.only('renders all facilities from TFM', () => {
+  it('renders all facilities from TFM', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities'));
 
