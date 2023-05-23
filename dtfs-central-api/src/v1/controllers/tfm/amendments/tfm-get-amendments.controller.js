@@ -66,8 +66,24 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
 
 exports.getAllAmendmentsByFacilityId = async (req, res) => {
   const { facilityId } = req.params;
+  const { status, type } = req.query;
+  
   if (ObjectId.isValid(facilityId)) {
-    const amendment = await findAllAmendmentsByFacilityId(facilityId) ?? [];
+    let amendment;
+    if (status === 'in-progress') {
+      let amendments = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
+      amendment = amendments[0] ?? {};
+    } else if (status === 'completed') {
+      if (type === 'latest-value') {
+        amendment = await findLatestCompletedValueAmendmentByFacilityId(facilityId) ?? {};
+      } else if (type === 'latest-cover-end-date') {
+        amendment = await findLatestCompletedDateAmendmentByFacilityId(facilityId) ?? {};
+      } else {
+        amendment = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED) ?? [];
+      }
+    } else {
+      amendment = await findAllAmendmentsByFacilityId(facilityId) ?? [];
+    }
     return res.status(200).send(amendment);
   }
   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
@@ -206,24 +222,24 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
 };
 exports.findAmendmentByStatusAndFacilityId = findAmendmentByStatusAndFacilityId;
 
-exports.getAmendmentInProgress = async (req, res) => {
-  const { facilityId } = req.params;
-  if (ObjectId.isValid(facilityId)) {
-    let amendment = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
-    amendment = amendment[0] ?? {};
-    return res.status(200).send(amendment);
-  }
-  return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
-};
+// exports.getAmendmentInProgress = async (req, res) => {
+//   const { facilityId } = req.params;
+//   if (ObjectId.isValid(facilityId)) {
+//     let amendment = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS) ?? [];
+//     amendment = amendment[0] ?? {};
+//     return res.status(200).send(amendment);
+//   }
+//   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
+// };
 
-exports.getAllCompletedAmendmentsByFacilityId = async (req, res) => {
-  const { facilityId } = req.params;
-  if (ObjectId.isValid(facilityId)) {
-    const amendment = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED) ?? [];
-    return res.status(200).send(amendment);
-  }
-  return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
-};
+// exports.getAllCompletedAmendmentsByFacilityId = async (req, res) => {
+//   const { facilityId } = req.params;
+//   if (ObjectId.isValid(facilityId)) {
+//     const amendment = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED) ?? [];
+//     return res.status(200).send(amendment);
+//   }
+//   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
+// };
 
 /**
  *  returns an object containing an amendment that's `in progress` or `completed` based on a given dealId:
@@ -443,23 +459,23 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
 };
 exports.findLatestCompletedAmendmentByFacilityIdVersion = findLatestCompletedAmendmentByFacilityIdVersion;
 
-exports.getLatestCompletedAmendmentValue = async (req, res) => {
-  const { facilityId } = req.params;
-  if (ObjectId.isValid(facilityId)) {
-    const newValue = await findLatestCompletedValueAmendmentByFacilityId(facilityId) ?? {};
-    return res.status(200).send(newValue);
-  }
-  return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
-};
+// exports.getLatestCompletedAmendmentValue = async (req, res) => {
+//   const { facilityId } = req.params;
+//   if (ObjectId.isValid(facilityId)) {
+//     const newValue = await findLatestCompletedValueAmendmentByFacilityId(facilityId) ?? {};
+//     return res.status(200).send(newValue);
+//   }
+//   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
+// };
 
-exports.getLatestCompletedAmendmentDate = async (req, res) => {
-  const { facilityId } = req.params;
-  if (ObjectId.isValid(facilityId)) {
-    const coverEndDate = await findLatestCompletedDateAmendmentByFacilityId(facilityId) ?? {};
-    return res.status(200).send(coverEndDate);
-  }
-  return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
-};
+// exports.getLatestCompletedAmendmentDate = async (req, res) => {
+//   const { facilityId } = req.params;
+//   if (ObjectId.isValid(facilityId)) {
+//     const coverEndDate = await findLatestCompletedDateAmendmentByFacilityId(facilityId) ?? {};
+//     return res.status(200).send(coverEndDate);
+//   }
+//   return res.status(400).send({ status: 400, message: 'Invalid facility Id' });
+// };
 
 /**
  *  returns an object containing the latest completed amendment based on a given dealId:

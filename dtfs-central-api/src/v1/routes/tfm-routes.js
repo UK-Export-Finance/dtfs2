@@ -411,15 +411,15 @@ tfmRouter.route('/facilities/:id').put(
  */
 tfmRouter.route('/amendments').get(tfmGetAmendmentController.getAllAmendmentsInProgress);
 tfmRouter.route('/facilities/:facilityId/amendments').get(tfmGetAmendmentController.getAllAmendmentsByFacilityId);
-tfmRouter.route('/facilities/:facilityId/amendments/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgress);
-tfmRouter.route('/facilities/:facilityId/amendments/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendmentsByFacilityId);
-tfmRouter.route('/facilities/:facilityId/amendments/status/completed/latest-value').get(tfmGetAmendmentController.getLatestCompletedAmendmentValue);
-tfmRouter.route('/facilities/:facilityId/amendments/status/completed/latest-cover-end-date').get(tfmGetAmendmentController.getLatestCompletedAmendmentDate);
+// tfmRouter.route('/facilities/:facilityId/amendments/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgress);
+// tfmRouter.route('/facilities/:facilityId/amendments/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendmentsByFacilityId);
+// tfmRouter.route('/facilities/:facilityId/amendments/status/completed/latest-value').get(tfmGetAmendmentController.getLatestCompletedAmendmentValue);
+// tfmRouter.route('/facilities/:facilityId/amendments/status/completed/latest-cover-end-date').get(tfmGetAmendmentController.getLatestCompletedAmendmentDate);
 tfmRouter.route('/facilities/:facilityId/amendments/:amendmentId').get(tfmGetAmendmentController.getAmendmentById);
 tfmRouter.route('/deals/:dealId/amendments').get(tfmGetAmendmentController.getAmendmentsByDealId);
-tfmRouter.route('/deals/:dealId/amendments/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgressByDealId);
-tfmRouter.route('/deals/:dealId/amendments/status/completed').get(tfmGetAmendmentController.getCompletedAmendmentByDealId);
-tfmRouter.route('/deals/:dealId/amendments/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendmentByDealId);
+// tfmRouter.route('/deals/:dealId/amendments/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgressByDealId);
+// tfmRouter.route('/deals/:dealId/amendments/status/completed').get(tfmGetAmendmentController.getCompletedAmendmentByDealId);
+// tfmRouter.route('/deals/:dealId/amendments/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendmentByDealId);
 
 /**
  * @openapi
