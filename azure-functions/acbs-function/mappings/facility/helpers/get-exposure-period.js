@@ -37,14 +37,23 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
   }
 
   // New facility exposure calculation
+  const { exposurePeriodInMonths } = facility.tfm;
+  const { hasBeenIssued } = facilitySnapshot;
+
   if (dealType === PRODUCT.TYPE.GEF) {
     // GEF
-    const { exposurePeriodInMonths } = facility.tfm;
-    const { hasBeenIssued, monthsOfCover } = facilitySnapshot;
+    const { monthsOfCover } = facilitySnapshot;
 
     exposure = hasBeenIssued ? exposurePeriodInMonths : monthsOfCover;
   } else if (dealType === PRODUCT.TYPE.BSS_EWCS) {
     // BSS/EWCS
+
+    // If already calculated by TFM then return
+    if (hasBeenIssued && exposurePeriodInMonths) {
+      return String(exposurePeriodInMonths);
+    }
+
+    // If not already calculated
     let coverStartDate;
     const {
       requestedCoverStartDate,
