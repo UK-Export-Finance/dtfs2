@@ -1,5 +1,9 @@
 param location string
-// TODO:DTFS-6422 consider naming
+param nextHopIpAddress string
+param mulesoftSubnetCidr string
+param productionSubnetCidr string
+
+// TODO:DTFS-6422 consider resource naming convention
 var routeTableName = '${resourceGroup().name}-UDR'
 
 resource routeTable 'Microsoft.Network/routeTables@2022-11-01' = {
@@ -15,9 +19,9 @@ resource routeTable 'Microsoft.Network/routeTables@2022-11-01' = {
   resource mulesoftSubnet 'routes' = {
     name: 'MulesoftSubnet'
     properties: {
-      addressPrefix: '172.16.10.0/23'
+      addressPrefix: mulesoftSubnetCidr
       nextHopType: 'VirtualAppliance'
-      nextHopIpAddress: '10.50.0.100'
+      nextHopIpAddress: nextHopIpAddress
       hasBgpOverride: false
     }
   }
@@ -25,9 +29,9 @@ resource routeTable 'Microsoft.Network/routeTables@2022-11-01' = {
   resource productionSubnet 'routes' = {
     name: 'ProductionSubnet'
     properties: {
-      addressPrefix: '10.60.0.0/16'
+      addressPrefix: productionSubnetCidr
       nextHopType: 'VirtualAppliance'
-      nextHopIpAddress: '10.50.0.100'
+      nextHopIpAddress: nextHopIpAddress
       hasBgpOverride: false
     }
   }  
