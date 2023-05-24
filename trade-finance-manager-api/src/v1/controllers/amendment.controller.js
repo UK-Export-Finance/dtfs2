@@ -116,9 +116,8 @@ const getAmendmentByFacilityId = async (req, res) => {
   const { status, type } = req.query;
   let amendment;
   if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-    await api.getAmendmentInProgress(facilityId);
-  }
-  else if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
+    amendment = await api.getAmendmentInProgress(facilityId);
+  } else if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
     if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
       amendment = await api.getLatestCompletedAmendmentDate(facilityId);
     } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_VALUE) {
