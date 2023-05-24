@@ -1,21 +1,23 @@
 const express = require('express');
 const morgan = require('morgan');
 const session = require('express-session');
+const redis = require('redis');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const path = require('path');
 require('./azure-env');
+const RedisStore = require('connect-redis')(session);
 const routes = require('./routes');
 const eligibilityRoutes = require('./routes/contract/eligibility');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 const { csrf: csrfToken, seo, security } = require('./routes/middleware');
-const sessionOptions = require('./session-configuration');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const https = Boolean(process.env.HTTPS || 0);
+const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
 if (https) {
   app.set('trust proxy', 1);
@@ -36,8 +38,44 @@ if (!process.env.SESSION_SECRET) {
   console.error('Portal UI server - SESSION_SECRET missing');
 }
 
-const sessionConfiguration = sessionOptions();
-app.use(session({ ...sessionConfiguration, cookie }));
+const sessionOptions = {
+  name: secureCookieName,
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie,
+};
+
+console.info(`Connecting to redis server: redis://${process.env.REDIS_HOSTNAME} `);
+
+let redisOptions = {};
+
+if (process.env.REDIS_KEY) {
+  redisOptions = {
+    auth_pass: process.env.REDIS_KEY,
+    tls: { servername: process.env.REDIS_HOSTNAME },
+  };
+}
+
+const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
+
+redisClient.on('error', (err) => {
+  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
+});
+
+redisClient.on('ready', () => {
+  console.info('REDIS ready');
+});
+
+redisClient.on('connect', () => {
+  console.info('REDIS connected');
+});
+
+const sessionStore = new RedisStore({ client: redisClient });
+
+sessionOptions.store = sessionStore;
+
+app.use(session(sessionOptions));
 
 app.use(flash());
 
@@ -87,4 +125,4 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.listen(PORT, () => console.info(`BSS: Listening on port ${PORT}!`));
+app.listen(PORT, () => console.info(`BSS app listening on port ${PORT}!`));

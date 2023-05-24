@@ -110,7 +110,7 @@
         "riskMarginFee": "1",
         "coveredPercentage": "2",
         "feeType": "test",
-        "feeFrequency": "test",
+        "feeFrequency": "Quarterly",
         "dayCountBasis": "test"
     }
   ]

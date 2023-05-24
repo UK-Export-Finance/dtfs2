@@ -15,7 +15,7 @@ const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
     const currencyExchange = await api.getCurrencyExchangeRate(currencyCode, 'GBP');
 
     const {
-      midPrice: exchangeRate,
+      exchangeRate,
     } = currencyExchange;
 
     const facilityValueInGBP = value * exchangeRate;

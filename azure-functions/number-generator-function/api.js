@@ -1,6 +1,10 @@
+require('dotenv').config();
 const axios = require('axios');
 
-require('dotenv').config();
+const headers = {
+  [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
+  'Content-Type': 'application/json',
+};
 
 const getAPI = async (type) => {
   const response = await axios({
@@ -20,40 +24,29 @@ const getAPI = async (type) => {
   return response;
 };
 
-const postToAPI = async (apiEndpoint, apiData) => {
-  console.info('Azure functions - api.postToAPI');
-  if (!process.env.MULESOFT_API_UKEF_TF_EA_URL) {
+/**
+ * Post to MDM endpoints
+ * @param {String} endpoint MDM endpoints
+ * @param {Object} payload Payload
+ * @returns API endpoint invoke response
+ */
+const postToAPI = async (endpoint, payload) => {
+  console.info(`Invoking MDM POST ${endpoint}`);
+
+  if (!process.env.APIM_MDM_URL) {
     return false;
   }
 
-  const url = `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${apiEndpoint}`;
-  console.info('Azure functions - api.postToAPI calling ', url);
-
-  const requestConfig = {
+  const url = `${process.env.APIM_MDM_URL}${endpoint}`;
+  const request = {
     method: 'post',
     url,
-    auth: {
-      username: process.env.MULESOFT_API_KEY,
-      password: process.env.MULESOFT_API_SECRET,
-    },
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: [apiData],
+    headers,
+    data: [payload],
   };
-  const response = await axios(requestConfig).catch(({
-    response: {
-      status, statusText, data,
-    },
-  }) => ({
-    error: {
-      status,
-      statusText,
-      data,
-      requestConfig,
-      date: new Date().toISOString(),
-    },
-  }));
+
+  const response = await axios(request)
+    .catch((error) => error);
 
   return response;
 };
@@ -61,6 +54,11 @@ const postToAPI = async (apiEndpoint, apiData) => {
 const checkDealId = (dealId) => getAPI(`deal/${dealId}`);
 const checkFacilityId = (facilityId) => getAPI(`facility/${facilityId}`);
 
+/**
+ * Call number generator
+ * @param {Integer} numberType Number type usually `1` represents for deal and facilities
+ * @returns Number generator response object
+ */
 const callNumberGenerator = (numberType) => postToAPI('numbers', {
   numberTypeId: numberType,
   createdBy: 'Portal v2/TFM',

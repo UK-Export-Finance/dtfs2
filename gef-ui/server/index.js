@@ -2,8 +2,10 @@ const express = require('express');
 const compression = require('compression');
 const morgan = require('morgan');
 const session = require('express-session');
+const redis = require('redis');
 const flash = require('connect-flash');
 const path = require('path');
+const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
@@ -13,13 +15,12 @@ const supportingDocuments = require('./routes/supporting-documents.route');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 const { csrf: csrfToken, security, seo } = require('./middleware');
-const sessionOptions = require('./session-configuration');
 
 const app = express();
-dotenv.config();
 
 const PORT = process.env.PORT || 5006;
 const https = Boolean(process.env.HTTPS || 0);
+const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
 if (https) {
   app.set('trust proxy', 1);
@@ -36,11 +37,49 @@ const cookie = {
 app.use(seo);
 app.use(security);
 app.use(compression());
+dotenv.config();
 
-const sessionConfiguration = sessionOptions();
-app.use(session({ ...sessionConfiguration, cookie }));
+if (!process.env.SESSION_SECRET) {
+  console.error('GEF UI server - SESSION_SECRET missing');
+}
+
+const sessionOptions = {
+  name: secureCookieName,
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie,
+};
+
+let redisOptions = {};
+
+if (process.env.REDIS_KEY) {
+  redisOptions = {
+    auth_pass: process.env.REDIS_KEY,
+    tls: { servername: process.env.REDIS_HOSTNAME },
+  };
+}
+
+const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
+
+redisClient.on('error', (err) => {
+  console.error(`Unable to connect to Redis: ${process.env.REDIS_HOSTNAME}`, { err });
+});
+
+redisClient.on('ready', () => {
+  console.info('REDIS ready');
+});
+
+redisClient.on('connect', () => {
+  console.info('REDIS connected');
+});
+
+const sessionStore = new RedisStore({ client: redisClient });
+
+sessionOptions.store = sessionStore;
 
 app.set('trustproxy', true);
+app.use(session(sessionOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', supportingDocuments);

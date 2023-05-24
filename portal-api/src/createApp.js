@@ -32,6 +32,18 @@ app.use('/v1', openRouter);
 app.use('/v1', authRouterAllowXss);
 app.use('/v1', authRouter);
 
+// Return 200 on get to / to confirm to Azure that
+// the container has started successfully:
+const rootRouter = express.Router();
+rootRouter.get('/', async (req, res) => {
+  res.status(200).send();
+});
+rootRouter.get('/robots933456.txt', async (req, res) => {
+  res.status(200).send();
+});
+
+app.use('/', rootRouter);
+
 app.use((err) => { console.error(err); });
 
 module.exports = app;

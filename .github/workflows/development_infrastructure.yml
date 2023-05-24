@@ -2,7 +2,7 @@ name: Development environment complete infrastructure setup
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ infrastructure ]
     paths:
     - '.github/workflows/development_infrastructure.yml'
 
@@ -810,9 +810,9 @@ jobs:
               MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
               MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} \
               MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
-              MULESOFT_API_UKEF_MDM_EA_URL=${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }} \
-              MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} \
-              MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }}
+              APIM_MDM_URL=${{ secrets.APIM_MDM_URL }} \
+              APIM_MDM_KEY=${{ secrets.APIM_MDM_KEY }} \
+              APIM_MDM_VALUE=${{ secrets.APIM_MDM_VALUE }}
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
@@ -1165,7 +1165,6 @@ jobs:
               WEBSITES_PORT=5000 \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
-              MULESOFT_API_NUMBER_GENERATOR_URL="${{ secrets.MULESOFT_API_NUMBER_GENERATOR_URL }}" \
               MULESOFT_API_ACBS_DEAL_URL="${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}" \
               MULESOFT_API_ACBS_FACILITY_URL="${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}" \
               MULESOFT_API_KEY="${{ secrets.MULESOFT_API_KEY }}" \
@@ -1173,16 +1172,12 @@ jobs:
               MULESOFT_API_PARTY_DB_KEY="${{ secrets.MULESOFT_API_PARTY_DB_KEY}}" \
               MULESOFT_API_PARTY_DB_SECRET="${{ secrets.MULESOFT_API_PARTY_DB_SECRET}}" \
               MULESOFT_API_PARTY_DB_URL="${{ secrets.MULESOFT_API_PARTY_DB_URL}}" \
-              MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL }}" \
-              MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY }}" \
-              MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET="${{ secrets.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET }}" \
-              MULESOFT_API_EXPOSURE_PERIOD_URL="${{ secrets.MULESOFT_API_EXPOSURE_PERIOD_URL }}" \
+              APIM_MDM_URL="${{ secrets.APIM_MDM_URL }}" \
+              APIM_MDM_KEY="${{ secrets.APIM_MDM_KEY }}" \
+              APIM_MDM_VALUE="${{ secrets.APIM_MDM_VALUE }}" \
               MULESOFT_API_UKEF_ESTORE_EA_URL="${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_URL }}" \
               MULESOFT_API_UKEF_ESTORE_EA_KEY="${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_KEY }}" \
               MULESOFT_API_UKEF_ESTORE_EA_SECRET="${{ secrets.MULESOFT_API_UKEF_ESTORE_EA_SECRET }}" \
-              MULESOFT_API_UKEF_MDM_EA_URL=${{ secrets.MULESOFT_API_UKEF_MDM_EA_URL }} \
-              MULESOFT_API_UKEF_MDM_EA_KEY=${{ secrets.MULESOFT_API_UKEF_MDM_EA_KEY }} \
-              MULESOFT_API_UKEF_MDM_EA_SECRET=${{ secrets.MULESOFT_API_UKEF_MDM_EA_SECRET }} \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
               COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}" \
               ORDNANCE_SURVEY_API_URL="${{ env.ORDNANCE_SURVEY_API_URL }}" \

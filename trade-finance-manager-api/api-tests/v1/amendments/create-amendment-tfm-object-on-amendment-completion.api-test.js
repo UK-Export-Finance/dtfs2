@@ -43,8 +43,8 @@ describe('update amendment-tfm on amendment completion', () => {
   beforeEach(() => {
     updateDealSpy.mockClear();
     externalApis.getAmendmentById = jest.fn(() => Promise.resolve(mockAmendment));
-    externalApis.getLatestCompletedValueAmendment = jest.fn(() => Promise.resolve(valueChange));
-    externalApis.getLatestCompletedDateAmendment = jest.fn(() => Promise.resolve(dateChange));
+    externalApis.getLatestCompletedAmendmentValue = jest.fn(() => Promise.resolve(valueChange));
+    externalApis.getLatestCompletedAmendmentDate = jest.fn(() => Promise.resolve(dateChange));
 
     externalApis.updateFacilityAmendment = jest.fn(() => Promise.resolve(mockAmendment));
     externalApis.findOneDeal = jest.fn(() => Promise.resolve(MOCK_GEF_AIN_DEAL));
@@ -55,15 +55,15 @@ describe('update amendment-tfm on amendment completion', () => {
     jest.resetAllMocks();
   });
 
-  it('createAmendmentTFMObject() - should not create tfm object when no getLatestCompletedValueAmendment or getLatestCompletedDateAmendment', async () => {
-    externalApis.getLatestCompletedValueAmendment = jest.fn(() => Promise.resolve({}));
-    externalApis.getLatestCompletedDateAmendment = jest.fn(() => Promise.resolve({}));
+  it('createAmendmentTFMObject() - should not create tfm object when no getLatestCompletedAmendmentValue or getLatestCompletedAmendmentDate', async () => {
+    externalApis.getLatestCompletedAmendmentValue = jest.fn(() => Promise.resolve({}));
+    externalApis.getLatestCompletedAmendmentDate = jest.fn(() => Promise.resolve({}));
     const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
     expect(result).toEqual({});
   });
 
-  it('createAmendmentTFMObject() - should create tfm object when getLatestCompletedValueAmendment and getLatestCompletedDateAmendment', async () => {
+  it('createAmendmentTFMObject() - should create tfm object when getLatestCompletedAmendmentValue and getLatestCompletedAmendmentDate', async () => {
     externalApis.getFacilityExposurePeriod = jest.fn(() => Promise.resolve({ exposurePeriodInMonths: 5 }));
 
     const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
@@ -85,7 +85,7 @@ describe('update amendment-tfm on amendment completion', () => {
     expect(result).toEqual(expected);
   });
 
-  it('createAmendmentTFMObject() - should create tfm object when getLatestCompletedValueAmendment and getLatestCompletedDateAmendment', async () => {
+  it('createAmendmentTFMObject() - should create tfm object when getLatestCompletedAmendmentValue and getLatestCompletedAmendmentDate', async () => {
     externalApis.getFacilityExposurePeriod = jest.fn(() => Promise.resolve({ exposurePeriodInMonths: 5 }));
 
     const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
@@ -107,8 +107,8 @@ describe('update amendment-tfm on amendment completion', () => {
     expect(result).toEqual(expected);
   });
 
-  it('createAmendmentTFMObject() - should create tfm object when getLatestCompletedValueAmendment only', async () => {
-    externalApis.getLatestCompletedDateAmendment = jest.fn(() => Promise.resolve({}));
+  it('createAmendmentTFMObject() - should create tfm object when getLatestCompletedAmendmentValue only', async () => {
+    externalApis.getLatestCompletedAmendmentDate = jest.fn(() => Promise.resolve({}));
 
     const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
@@ -127,9 +127,9 @@ describe('update amendment-tfm on amendment completion', () => {
     expect(result).toEqual(expected);
   });
 
-  it('createAmendmentTFMObject() - should create tfm object when only getLatestCompletedDateAmendment', async () => {
+  it('createAmendmentTFMObject() - should create tfm object when only getLatestCompletedAmendmentDate', async () => {
     externalApis.getFacilityExposurePeriod = jest.fn(() => Promise.resolve({ exposurePeriodInMonths: 5 }));
-    externalApis.getLatestCompletedValueAmendment = jest.fn(() => Promise.resolve({}));
+    externalApis.getLatestCompletedAmendmentValue = jest.fn(() => Promise.resolve({}));
 
     const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 

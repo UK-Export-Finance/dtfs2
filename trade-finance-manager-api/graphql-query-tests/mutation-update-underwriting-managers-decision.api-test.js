@@ -46,8 +46,8 @@ describe('graphql mutation - update underwriting managers decision', () => {
   });
 
   beforeEach(() => {
-    externalApis.getLatestCompletedValueAmendment = () => Promise.resolve({});
-    externalApis.getLatestCompletedDateAmendment = () => Promise.resolve({});
+    externalApis.getLatestCompletedAmendmentValue = () => Promise.resolve({});
+    externalApis.getLatestCompletedAmendmentDate = () => Promise.resolve({});
     externalApis.getAmendmentById = () => Promise.resolve({});
   });
 
