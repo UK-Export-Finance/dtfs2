@@ -137,20 +137,20 @@ const getAmendmentByFacilityId = async (req, res) => {
 const getAmendmentsByDealId = async (req, res) => {
   const { dealId } = req.params;
   const { status, type } = req.query;
-  let amendment;
+  let centralApiAmendmentResponse;
   if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-    amendment = await api.getAmendmentInProgressByDealId(dealId);
+    centralApiAmendmentResponse = await api.getAmendmentInProgressByDealId(dealId);
   } else if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
     if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST) {
-      amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
+      centralApiAmendmentResponse = await api.getLatestCompletedAmendmentByDealId(dealId);
     } else {
-      amendment = await api.getCompletedAmendmentByDealId(dealId);
+      centralApiAmendmentResponse = await api.getCompletedAmendmentByDealId(dealId);
     }
   }
   else if (!status && !type) {
-    amendment = await api.getAmendmentsByDealId(dealId);
+    centralApiAmendmentResponse = await api.getAmendmentsByDealId(dealId);
   }
-  if (amendment) {
+  if (centralApiAmendmentResponse.status === 200 && centralApiAmendmentResponse.data) {
     return res.status(200).send(amendment);
   }
   return res.status(422).send({ data: 'Unable to get the amendments by deal Id' });
