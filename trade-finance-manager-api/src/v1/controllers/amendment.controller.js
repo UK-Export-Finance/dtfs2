@@ -114,22 +114,22 @@ const getAmendmentById = async (req, res) => {
 const getAmendmentByFacilityId = async (req, res) => {
   const { facilityId } = req.params;
   const { status, type } = req.query;
-  let amendment;
+  let centralApiAmendmentResponse;
   if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-    amendment = await api.getAmendmentInProgress(facilityId);
+    centralApiAmendmentResponse = await api.getAmendmentInProgress(facilityId);
   } else if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
     if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
-      amendment = await api.getLatestCompletedAmendmentDate(facilityId);
+      centralApiAmendmentResponse = await api.getLatestCompletedAmendmentDate(facilityId);
     } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_VALUE) {
-      amendment = await api.getLatestCompletedAmendmentValue(facilityId);
+      centralApiAmendmentResponse = await api.getLatestCompletedAmendmentValue(facilityId);
     } else {
-      amendment = await api.getCompletedAmendment(facilityId);
+      centralApiAmendmentResponse = await api.getCompletedAmendment(facilityId);
     }
   } else if (!status && !type) {
-    amendment = await api.getAmendmentByFacilityId(facilityId);
+    centralApiAmendmentResponse = await api.getAmendmentByFacilityId(facilityId);
   }
-  if (amendment) {
-    return res.status(200).send(amendment);
+  if (centralApiAmendmentResponse?.status === 200 && centralApiAmendmentResponse.data) {
+    return res.status(200).send(centralApiAmendmentResponse.data);
   }
   return res.status(422).send({ data: 'Unable to get the amendment by facilityId' });
 };
