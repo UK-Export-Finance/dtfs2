@@ -1,9 +1,10 @@
 param publicIPAddresses_tfs_dev_ip_name string = 'tfs-dev-ip'
+param location string
 
 
 resource publicIPAddresses_tfs_dev_ip_name_resource 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
   name: publicIPAddresses_tfs_dev_ip_name
-  location: 'uksouth'
+  location: location
   tags: {
     Environment: 'Preproduction'
   }
