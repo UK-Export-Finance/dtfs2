@@ -1,9 +1,13 @@
-param publicIPAddresses_tfs_dev_ip_name string = 'tfs-dev-ip'
+param environment string
 param location string
 
+var ipNames = [
+  'tfs-${environment}-ip'
+  'tfs-${environment}-tfm-ip'
+]
 
-resource publicIPAddresses_tfs_dev_ip_name_resource 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
-  name: publicIPAddresses_tfs_dev_ip_name
+resource publicIps 'Microsoft.Network/publicIPAddresses@2022-11-01' = [for ipName in ipNames: {
+  name: ipName
   location: location
   tags: {
     Environment: 'Preproduction'
@@ -18,11 +22,8 @@ resource publicIPAddresses_tfs_dev_ip_name_resource 'Microsoft.Network/publicIPA
     '3'
   ]
   properties: {
-    ipAddress: '20.49.219.203'
     publicIPAddressVersion: 'IPv4'
     publicIPAllocationMethod: 'Static'
-    idleTimeoutInMinutes: 4
-    ipTags: []
   }
-}
+}]
 
