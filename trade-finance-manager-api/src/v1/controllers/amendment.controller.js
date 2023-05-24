@@ -114,22 +114,22 @@ const getAmendmentById = async (req, res) => {
 const getAmendmentByFacilityId = async (req, res) => {
   const { facilityId } = req.params;
   const { status, type } = req.query;
-  let centralApiAmendmentResponse;
+  let amendment;
   if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-    centralApiAmendmentResponse = await api.getAmendmentInProgress(facilityId);
+    amendment = (await api.getAmendmentInProgress(facilityId)).data;
   } else if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
     if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
-      centralApiAmendmentResponse = await api.getLatestCompletedAmendmentDate(facilityId);
+      amendment = await api.getLatestCompletedAmendmentDate(facilityId);
     } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_VALUE) {
-      centralApiAmendmentResponse = await api.getLatestCompletedAmendmentValue(facilityId);
+      amendment = await api.getLatestCompletedAmendmentValue(facilityId);
     } else {
-      centralApiAmendmentResponse = await api.getCompletedAmendment(facilityId);
+      amendment = await api.getCompletedAmendment(facilityId);
     }
   } else if (!status && !type) {
-    centralApiAmendmentResponse = await api.getAmendmentByFacilityId(facilityId);
+    amendment = await api.getAmendmentByFacilityId(facilityId);
   }
-  if (centralApiAmendmentResponse?.status === 200 && centralApiAmendmentResponse.data) {
-    return res.status(200).send(centralApiAmendmentResponse.data);
+  if (amendment) {
+    return res.status(200).send(amendment);
   }
   return res.status(422).send({ data: 'Unable to get the amendment by facilityId' });
 };
@@ -137,20 +137,20 @@ const getAmendmentByFacilityId = async (req, res) => {
 const getAmendmentsByDealId = async (req, res) => {
   const { dealId } = req.params;
   const { status, type } = req.query;
-  let centralApiAmendmentResponse;
+  let amendment;
   if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-    centralApiAmendmentResponse = await api.getAmendmentInProgressByDealId(dealId);
+    amendment = await api.getAmendmentInProgressByDealId(dealId);
   } else if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
     if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST) {
-      centralApiAmendmentResponse = await api.getLatestCompletedAmendmentByDealId(dealId);
+      amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
     } else {
-      centralApiAmendmentResponse = await api.getCompletedAmendmentByDealId(dealId);
+      amendment = await api.getCompletedAmendmentByDealId(dealId);
     }
   }
   else if (!status && !type) {
-    centralApiAmendmentResponse = await api.getAmendmentsByDealId(dealId);
+    amendment = await api.getAmendmentsByDealId(dealId);
   }
-  if (centralApiAmendmentResponse.status === 200 && centralApiAmendmentResponse.data) {
+  if (amendment) {
     return res.status(200).send(amendment);
   }
   return res.status(422).send({ data: 'Unable to get the amendments by deal Id' });
