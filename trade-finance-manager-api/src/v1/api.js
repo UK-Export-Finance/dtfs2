@@ -326,7 +326,7 @@ const getCompletedAmendment = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/status/completed`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments?status=completed`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -347,7 +347,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/status/completed/latest-value`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments?status=completed&type=latest-value`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -368,7 +368,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/status/completed/latest-cover-end-date`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments?status=completed&type=latest-cover-end-date`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -452,7 +452,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/status/in-progress`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments?status=in-progress`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -473,7 +473,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/status/completed`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments?status=completed`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -494,7 +494,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/status/completed/latest`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment?status=completed&type=latest`,
         headers: { 'Content-Type': 'application/json' },
       });
 

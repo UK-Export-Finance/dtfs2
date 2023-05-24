@@ -252,7 +252,7 @@ describe('GET TFM amendments', () => {
     });
   });
 
-  describe('GET /v1/tfm/facilities/:id/amendments/status/completed/latest', () => {
+  describe('GET /v1/tfm/facilities/:id/amendments?status=completed&type=latest', () => {
     it('should return 200 status if the facility has an amendment that\'s COMPLETED', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId = postResult.body._id;
