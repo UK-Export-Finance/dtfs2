@@ -5,6 +5,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 module.exports = {
   entry: {
     main: './scripts/main.js',
+    govukFrontend: './scripts/govuk-frontend.js',
     jsEnabled: './scripts/js-enabled.js',
     fileUpload: './scripts/file-upload.js',
     correspondenceAddress: './scripts/correspondence-address.js',

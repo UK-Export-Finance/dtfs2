@@ -1,5 +1,3 @@
-const { todayFormatted, todayFormattedShort } = require('../../../e2e-fixtures/dateConstants');
-
 import relative from './relativeURL';
 import applicationActivities from './pages/application-activities';
 import CREDENTIALS from '../fixtures/credentials.json';
@@ -12,6 +10,7 @@ import submitToUkef from './pages/submit-to-ukef';
 
 import CONSTANTS from '../fixtures/constants';
 import { toTitleCase } from '../fixtures/helpers';
+import { todayFormatted, todayFormattedShort } from '../../../e2e-fixtures/dateConstants';
 
 let deal;
 let dealId;
