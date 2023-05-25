@@ -45,6 +45,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
   }
 }
 
+// TODO:DTFS-6422 Work out what these demo resources are for.
 resource demoGatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
   parent: vnet
   name: 'demo-gateway'
@@ -105,17 +106,19 @@ resource gatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = 
   name: gatewaySubnetName
   properties: {
     addressPrefix: applicationGatewatCidr
-    networkSecurityGroup: {
-      id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/networkSecurityGroups/tfs-dev-gw-nsg'
-    }
-    applicationGatewayIPConfigurations: [
-      {
-        id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/applicationGateways/tfs-dev-tfm-gw/gatewayIPConfigurations/appGatewayFrontendIP'
-      }
-      {
-        id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/applicationGateways/tfs-dev-gw/gatewayIPConfigurations/appGatewayFrontendIP'
-      }
-    ]
+    // TODO:DTFS-6422 add nsg when included 
+    // networkSecurityGroup: {
+    //   id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/networkSecurityGroups/tfs-dev-gw-nsg'
+    // }
+    // TODO:DTFS-6422 add app gateways when included 
+    // applicationGatewayIPConfigurations: [
+    //   {
+    //     id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/applicationGateways/tfs-dev-tfm-gw/gatewayIPConfigurations/appGatewayFrontendIP'
+    //   }
+    //   {
+    //     id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/applicationGateways/tfs-dev-gw/gatewayIPConfigurations/appGatewayFrontendIP'
+    //   }
+    // ]
     serviceEndpoints: [
       {
         service: 'Microsoft.Storage'
@@ -133,9 +136,10 @@ resource privateEndpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-
   name: privateEndpointsSubnetName
   properties: {
     addressPrefix: privateEndpointsCidr
-    networkSecurityGroup: {
-      id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/networkSecurityGroups/tfs-dev-gw-nsg'
-    }
+    // TODO:DTFS-6422 add nsg when included 
+    // networkSecurityGroup: {
+    //   id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/networkSecurityGroups/tfs-dev-gw-nsg'
+    // }
     serviceEndpoints: [
       {
         service: 'Microsoft.AzureCosmosDB'
@@ -198,9 +202,10 @@ resource vnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2
   properties: {
     peeringState: 'Connected'
     peeringSyncLevel: 'FullyInSync'
-    remoteVirtualNetwork: {
-      id: '/subscriptions/08887298-3821-49f0-8303-f88859c12b9b/resourceGroups/UKEF-Firewall-Appliance-UKS/providers/Microsoft.Network/virtualNetworks/VNET_UKEF_UKS'
-    }
+    // TODO:DTFS-6422 add virtual network when included 
+    // remoteVirtualNetwork: {
+    //   id: '/subscriptions/08887298-3821-49f0-8303-f88859c12b9b/resourceGroups/UKEF-Firewall-Appliance-UKS/providers/Microsoft.Network/virtualNetworks/VNET_UKEF_UKS'
+    // }
     allowVirtualNetworkAccess: true
     allowForwardedTraffic: true
     allowGatewayTransit: false
