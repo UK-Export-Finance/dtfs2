@@ -441,11 +441,11 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
         amendment = (await findLatestCompletedValueAmendmentByFacilityId(facilityId)) ?? {};
       } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
         amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
-      } else if (ObjectId.isValid(amendmentIdOrStatus)) {
-        amendment = (await findAmendmentById(facilityId, amendmentIdOrStatus)) ?? {};
-      } else {
+      }  else {
         amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
       }
+    } else if (ObjectId.isValid(amendmentIdOrStatus)) {
+      amendment = (await findAmendmentById(facilityId, amendmentIdOrStatus)) ?? {};
     } else {
       amendment = (await findAllAmendmentsByFacilityId(facilityId)) ?? [];
     }
