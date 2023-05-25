@@ -17,7 +17,6 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
     subnets: [
       {
         name: 'dev-app-service-plan-egress'
-        id: tfs_dev_vnet_dev_app_service_plan_egress.id
         properties: {
           addressPrefix: '172.16.42.0/28'
           serviceEndpoints: [
@@ -38,7 +37,6 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
           delegations: [
             {
               name: '0'
-              id: '${tfs_dev_vnet_dev_app_service_plan_egress.id}/delegations/0'
               properties: {
                 serviceName: 'Microsoft.Web/serverFarms'
               }
@@ -52,7 +50,6 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       }
       {
         name: 'dev-private-endpoints'
-        id: tfs_dev_vnet_dev_private_endpoints.id
         properties: {
           addressPrefix: '172.16.40.0/24'
           networkSecurityGroup: {
@@ -81,7 +78,6 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       }
       {
         name: 'demo-gateway'
-        id: tfs_dev_vnet_demo_gateway.id
         properties: {
           addressPrefix: '172.16.61.0/24'
           serviceEndpoints: []
@@ -93,7 +89,6 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       }
       {
         name: 'demo-private-endpoints'
-        id: tfs_dev_vnet_demo_private_endpoints.id
         properties: {
           addressPrefix: '172.16.60.0/24'
           serviceEndpoints: []
@@ -105,7 +100,6 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       }
       {
         name: 'dev-gateway'
-        id: tfs_dev_vnet_dev_gateway.id
         properties: {
           addressPrefix: '172.16.41.0/24'
           networkSecurityGroup: {
@@ -136,7 +130,6 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       }
       {
         name: 'Digital-Dev-vm'
-        id: tfs_dev_vnet_Digital_Dev_vm.id
         properties: {
           addressPrefix: '172.16.43.0/28'
           routeTable: {
@@ -160,7 +153,6 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
           delegations: [
             {
               name: 'delegation'
-              id: '${tfs_dev_vnet_Digital_Dev_vm.id}/delegations/delegation'
               properties: {
                 serviceName: 'Microsoft.Web/serverfarms'
               }
@@ -176,7 +168,6 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
     virtualNetworkPeerings: [
       {
         name: 'tfs-dev-vnet_vnet-ukef-uks'
-        id: tfs_dev_vnet_tfs_dev_vnet_vnet_ukef_uks.id
         properties: {
           peeringState: 'Connected'
           peeringSyncLevel: 'FullyInSync'
@@ -256,7 +247,6 @@ resource tfs_dev_vnet_dev_app_service_plan_egress 'Microsoft.Network/virtualNetw
     delegations: [
       {
         name: '0'
-        id: '${tfs_dev_vnet_dev_app_service_plan_egress.id}/delegations/0'
         properties: {
           serviceName: 'Microsoft.Web/serverFarms'
         }
@@ -360,7 +350,6 @@ resource tfs_dev_vnet_Digital_Dev_vm 'Microsoft.Network/virtualNetworks/subnets@
     delegations: [
       {
         name: 'delegation'
-        id: '${tfs_dev_vnet_Digital_Dev_vm.id}/delegations/delegation'
         properties: {
           serviceName: 'Microsoft.Web/serverfarms'
         }
