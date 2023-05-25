@@ -449,8 +449,7 @@ exports.getLatestCompletedAmendmentByDealId = async (req, res) => {
 };
 
 exports.getAllAmendmentsByFacilityId = async (req, res) => {
-  const { facilityId } = req.params;
-  const { status, type } = req.query;
+  const { facilityId, status, type } = req.params;
 
   if (ObjectId.isValid(facilityId)) {
     let amendment;
@@ -474,8 +473,7 @@ exports.getAllAmendmentsByFacilityId = async (req, res) => {
 };
 
 exports.getAmendmentsByDealId = async (req, res) => {
-  const { dealId } = req.params;
-  const { status, type } = req.query;
+  const { dealId, status, type } = req.params;
   if (ObjectId.isValid(dealId)) {
     let amendment;
     if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
