@@ -5,6 +5,15 @@ param appServicePlanName string = 'feature'
 param appServicePlanSku string = 'p2v2'
 param appServicePlanKind string = 'linux'
 
+@minLength(5)
+@maxLength(50)
+@description('Provide a globally unique name of your Azure Container Registry')
+param acrName string = 'tfsfeatureacr${uniqueString(resourceGroup().id)}'
+@description('Provide a tier of your Azure Container Registry.')
+// Dev uses 'Standard'
+param acrSku string = 'Basic'
+
+
 // Dev uses 172.16.4x.x
 // Feature can use 172.16.2x.x
 param routeTableNextHopIpAddress string = '10.50.0.100'
@@ -35,6 +44,18 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
     name: appServicePlanSku
   }
   kind: appServicePlanKind
+}
+
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
+  name: acrName
+  location: location
+  sku: {
+    name: acrSku
+  }
+  properties: {
+    // Admin needs to be enabled for App Service continuous deployment
+    adminUserEnabled: true
+  }
 }
 
 module routeTable 'modules/route-tables.bicep' = {

@@ -2,7 +2,7 @@ param location string = 'uksouth'
 param resourceGroupName string = 'Digital-Feature'
 
 
-// I probbaly don't need a resource group module and can probably do everything here...
+// I probably don't need a resource group module and can probably do everything here...
 
 module resourceGroup 'modules/resourceGroup.bicep' = {
   scope: subscription()

@@ -100,6 +100,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
         type: 'Microsoft.Network/virtualNetworks/subnets'
       }
       // TODO:DTFS-6422 Work out what these demo resources are for.
+      // Gabriel says it is a very old legacy item.
       {
         name: 'demo-gateway'
         properties: {
