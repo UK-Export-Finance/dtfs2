@@ -2,7 +2,6 @@ const {
   isEmptyString,
   hasValue,
   containsNumber,
-  isAlphanumeric,
 } = require('./string');
 
 describe('helpers - string', () => {
@@ -39,35 +38,6 @@ describe('helpers - string', () => {
 
     it('should return false wen string does NOT contain a number', () => {
       const result = containsNumber('asdf');
-      expect(result).toEqual(false);
-    });
-  });
-
-  describe('isAlphanumeric', () => {
-    it('should return true when string contains letters, numbers, spaces, commas, full stops and hypens', () => {
-      const str = 'hello, testing. 123 test\'s - TEST';
-
-      const result = isAlphanumeric(str);
-      expect(result).toEqual(true);
-    });
-
-    it('should return true when string contains multiple lines', () => {
-      // eslint-disable-next-line no-multi-str
-      const str = 'this\
-      is\
-      a\
-      multi\
-      line\
-      string';
-
-      const result = isAlphanumeric(str);
-      expect(result).toEqual(true);
-    });
-
-    it('should return false when invalid characters provided', () => {
-      const str = '!@£$%^&*(){}[];;"|<>?/`~';
-
-      const result = isAlphanumeric(str);
       expect(result).toEqual(false);
     });
   });

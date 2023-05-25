@@ -5,29 +5,6 @@ import generateValidationErrors from '../../helpers/validation';
 
 describe('POST underwriting - managers decision - validate submitted values', () => {
   describe('validateCommentField', () => {
-    describe('when field is NOT alphanumeric', () => {
-      it('should return validationError and errorsCount', () => {
-        const errors = {};
-        const count = 0;
-        const fieldLabel = 'the field label';
-        const fieldId = 'fieldId';
-
-        const result = validateCommentField(errors, count, fieldLabel, fieldId, '!@£$%^&*()');
-
-        const expected = {
-          errorsCount: 1,
-          validationErrors: generateValidationErrors(
-            fieldId,
-            `${fieldLabel} must only include letters a to z, numbers, hyphens, commas and spaces`,
-            count + 1,
-            errors,
-          ),
-        };
-
-        expect(result).toEqual(expected);
-      });
-    });
-
     describe('when value is over 8000 characters ', () => {
       it('should return validationError', () => {
         const errors = {};
