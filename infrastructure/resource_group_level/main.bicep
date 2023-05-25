@@ -5,13 +5,14 @@ param appServicePlanName string = 'feature'
 param appServicePlanSku string = 'p2v2'
 param appServicePlanKind string = 'linux'
 
-
+// Dev uses 172.16.4x.x
+// Feature can use 172.16.2x.x
 param routeTableNextHopIpAddress string = '10.50.0.100'
 param mulesoftSubnetCidr string = '172.16.10.0/23'
 param productionSubnetCidr string = '10.60.0.0/16'
-param appServicePlanEgressPrefixCidr string = '172.16.42.0/28'
-param applicationGatewayCidr string = '172.16.41.0/24'
-param vmCidr string = '172.16.43.0/28'
+param appServicePlanEgressPrefixCidr string = '172.16.22.0/28'
+param applicationGatewayCidr string = '172.16.21.0/24'
+param vmCidr string = '172.16.23.0/28'
 param storageLocations array = [
   'uksouth'
   'ukwest'
@@ -21,10 +22,10 @@ param demoPrivateEndpointsPrefixCidr string = '172.16.60.0/24'
 
 // I think these are the "private endpoints" and "demo endpoints"
 param vnetAddressPrefixes array = [
-  '172.16.40.0/22'
+  '172.16.20.0/22'
   '172.16.60.0/23'
 ]
-param privateEndpointsCidr string = '172.16.40.0/24'
+param privateEndpointsCidr string = '172.16.20.0/24'
 param peeringAddressSpace string = '10.50.0.0/16'
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
