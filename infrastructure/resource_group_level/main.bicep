@@ -10,7 +10,7 @@ param routeTableNextHopIpAddress string = '10.50.0.100'
 param mulesoftSubnetCidr string = '172.16.10.0/23'
 param productionSubnetCidr string = '10.60.0.0/16'
 param appServicePlanEgressPrefixCidr string = '172.16.42.0/28'
-param applicationGatewatCidr string = '172.16.41.0/24'
+param applicationGatewayCidr string = '172.16.41.0/24'
 param vmCidr string = '172.16.43.0/28'
 param storageLocations array = [
   'uksouth'
@@ -19,6 +19,7 @@ param storageLocations array = [
 param demoGatewayPrefixCidr string = '172.16.61.0/24'
 param demoPrivateEndpointsPrefixCidr string = '172.16.60.0/24'
 
+// I think these are the "private endpoints" and "demo endpoints"
 param vnetAddressPrefixes array = [
   '172.16.40.0/22'
   '172.16.60.0/23'
@@ -62,7 +63,7 @@ module vnet 'modules/vnet.bicep' = {
     addressPrefixes: vnetAddressPrefixes
     privateEndpointsCidr: privateEndpointsCidr
     appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
-    applicationGatewatCidr: applicationGatewatCidr
+    applicationGatewayCidr: applicationGatewayCidr
     vmCidr: vmCidr
     storageLocations: storageLocations
     demoGatewayPrefixCidr: demoGatewayPrefixCidr
