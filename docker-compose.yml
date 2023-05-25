@@ -65,6 +65,7 @@ services:
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL=${ESTORE_URL}
+      - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
@@ -127,6 +128,7 @@ services:
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
@@ -235,6 +237,7 @@ services:
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}

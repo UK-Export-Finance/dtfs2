@@ -35,10 +35,9 @@ context('Amendments all facilities table - should show amendment value and cover
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities'));
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').last().as('row1');
-    cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '1000000');
-    cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 12,345');
-    cy.get('@row1').find('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.oneMonthFormattedShort);
+    cy.get('tr:nth-child(n+1) [data-cy="facility__ukefFacilityId"]').contains('1000000');
+    cy.get('tr:nth-child(n+1) [data-cy="facility__facilityValue"]').contains('GBP 12,345');
+    cy.get('tr:nth-child(n+1) [data-cy="facility__coverEndDate"]').contains(dateConstants.oneMonthFormattedShort);
   });
 
   it('should submit an automatic amendment request for coverEndDate', () => {
@@ -133,9 +132,8 @@ context('Amendments all facilities table - should show amendment value and cover
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities'));
 
-    page.facilitiesPage.tfmFacilitiesTable().find('.govuk-table__row').last().as('row1');
-    cy.get('@row1').find('[data-cy="facility__ukefFacilityId"]').should('contain', '1000000');
-    cy.get('@row1').find('[data-cy="facility__facilityValue"]').should('contain', 'GBP 123');
-    cy.get('@row1').find('[data-cy="facility__coverEndDate"]').should('contain', dateConstants.tomorrowFormattedFacilityPage);
+    cy.get('tr:nth-child(n+1) [data-cy="facility__ukefFacilityId"]').contains('1000000');
+    cy.get('tr:nth-child(n+1) [data-cy="facility__facilityValue"]').contains('GBP 123');
+    cy.get('tr:nth-child(n+1) [data-cy="facility__coverEndDate"]').contains(dateConstants.tomorrowFormattedFacilityPage);
   });
 });
