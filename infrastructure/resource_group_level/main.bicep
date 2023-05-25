@@ -1,6 +1,9 @@
 param location string  = resourceGroup().location
 param environment string = 'feature'
 
+// The app service plan is created at the subscription level
+param appServicePlanName string = 'feature'
+
 param routeTableNextHopIpAddress string = '10.50.0.100'
 param mulesoftSubnetCidr string = '172.16.10.0/23'
 param productionSubnetCidr string = '10.60.0.0/16'
@@ -16,7 +19,7 @@ param demoPrivateEndpointsPrefixCidr string = '172.16.60.0/24'
 
 param vnetAddressPrefixes array = [
   '172.16.40.0/22'
-   '172.16.60.0/23'
+  '172.16.60.0/23'
 ]
 param privateEndpointsCidr string = '172.16.40.0/24'
 param peeringAddressSpace string = '10.50.0.0/16'
@@ -43,7 +46,9 @@ module tfsIp 'modules/tfs-ip.bicep' = {
 module vnet 'modules/vnet.bicep' = {
   name: 'vnet'
   params: {
+    environment: environment
     location: location
+    appServicePlanName: appServicePlanName
     addressPrefixes: vnetAddressPrefixes
     privateEndpointsCidr: privateEndpointsCidr
     appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
