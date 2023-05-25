@@ -337,7 +337,7 @@ module.exports = {
   findOneTeam: (teamId) =>
     MOCK_TEAMS.find((team) => team.id === teamId),
   getCurrencyExchangeRate: () => ({
-    midPrice: MOCK_CURRENCY_EXCHANGE_RATE,
+    exchangeRate: MOCK_CURRENCY_EXCHANGE_RATE,
   }),
   createACBS: jest.fn(() => ({})),
   updateACBSfacility: jest.fn(() => Promise.resolve({

@@ -26,7 +26,7 @@ const convertDealCurrencies = async (deal) => {
       };
     } else {
       const {
-        midPrice: exchangeRate,
+        exchangeRate,
       } = currencyExchange;
 
       const strippedDealValue = Number(dealValue.replace(/,/g, ''));

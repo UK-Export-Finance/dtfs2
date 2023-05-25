@@ -28,14 +28,14 @@ context('Create deal', () => {
 
     const BANK_DEAL_ID_CHARACTER_COUNT = 30;
     bankDetails.bankDealId().type('a'.repeat(BANK_DEAL_ID_CHARACTER_COUNT + 1));
-    bankDetails.bankDealIdCount().should('have.text', 'You have 0 characters remaining');
+    bankDetails.bankDealIdCount().should('have.text', 'You have 1 character too many');
 
     const BANK_DEAL_NAME_CHARACTER_COUNT = 100;
     bankDetails.bankDealName().type('a'.repeat(BANK_DEAL_NAME_CHARACTER_COUNT + 1));
-    bankDetails.bankDealNameCount().should('have.text', 'You have 0 characters remaining');
+    bankDetails.bankDealNameCount().should('have.text', 'You have 1 character too many');
   });
 
-  it('When the a user fills in the bank detais they progress to the deal page and the data they entered is visible', () => {
+  it('When the a user fills in the bank details they progress to the deal page and the data they entered is visible', () => {
     cy.passRedLine(BANK1_MAKER1);
 
     // confirm that we're on '/before-you-start/bank-deal'
