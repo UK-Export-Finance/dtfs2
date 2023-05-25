@@ -1,8 +1,10 @@
 param location string  = resourceGroup().location
 param environment string = 'feature'
 
-// The app service plan is created at the subscription level
 param appServicePlanName string = 'feature'
+param appServicePlanSku string = 'p2v2'
+param appServicePlanKind string = 'linux'
+
 
 param routeTableNextHopIpAddress string = '10.50.0.100'
 param mulesoftSubnetCidr string = '172.16.10.0/23'
@@ -24,6 +26,14 @@ param vnetAddressPrefixes array = [
 param privateEndpointsCidr string = '172.16.40.0/24'
 param peeringAddressSpace string = '10.50.0.0/16'
 
+resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
+  name: appServicePlanName
+  location: location
+  sku: {
+    name: appServicePlanSku
+  }
+  kind: appServicePlanKind
+}
 
 module routeTable 'modules/route-tables.bicep' = {
   name: 'routeTable'

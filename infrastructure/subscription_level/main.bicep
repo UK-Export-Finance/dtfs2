@@ -1,6 +1,9 @@
 param location string = 'uksouth'
 param resourceGroupName string = 'Digital-Feature'
 
+
+// I probbaly don't need a resource group module and can probably do everything here...
+
 module resourceGroup 'modules/resourceGroup.bicep' = {
   scope: subscription()
   name: 'resourceGroup'
@@ -9,5 +12,3 @@ module resourceGroup 'modules/resourceGroup.bicep' = {
     resourceGroupName: resourceGroupName
   }
 }
-
-// I probbaly don't need a resource group module and can probably do everything here...
