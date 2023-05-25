@@ -60,3 +60,11 @@ module vnet 'modules/vnet.bicep' = {
     peeringAddressSpace: peeringAddressSpace
   }
 }
+
+module natGateway 'modules/nat-gw_nat_ip.bicep' = {
+  name: 'natGateway'
+  params: {
+    appServicePlanName: appServicePlanName
+    location: location
+  }
+}
