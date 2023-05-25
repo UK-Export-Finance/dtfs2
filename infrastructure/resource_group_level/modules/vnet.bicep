@@ -1,15 +1,25 @@
+param location string
+param addressPrefixes array
+param privateEndpointsCidr string
+param appServicePlanEgressPrefixCidr string
+param applicationGatewatCidr string
+param vmCidr string
+
+// TODO:DTFS-6422 Note that none of these parameters/values seem to appear in the old IaC scripts
+param demoGatewayPrefixCidr string
+param demoPrivateEndpointsPrefixCidr string
+param peeringAddressSpace string
+param storageLocations array
+
 resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
   name: 'tfs-dev-vnet'
-  location: 'uksouth'
+  location: location
   tags: {
     Environment: 'Preproduction'
   }
   properties: {
     addressSpace: {
-      addressPrefixes: [
-        '172.16.40.0/22'
-        '172.16.60.0/23'
-      ]
+      addressPrefixes: addressPrefixes
     }
     dhcpOptions: {
       dnsServers: []
@@ -18,7 +28,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       {
         name: 'dev-app-service-plan-egress'
         properties: {
-          addressPrefix: '172.16.42.0/28'
+          addressPrefix: appServicePlanEgressPrefixCidr
           serviceEndpoints: [
             {
               service: 'Microsoft.AzureCosmosDB'
@@ -28,10 +38,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
             }
             {
               service: 'Microsoft.Storage'
-              locations: [
-                'uksouth'
-                'ukwest'
-              ]
+              locations: storageLocations
             }
           ]
           delegations: [
@@ -51,7 +58,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       {
         name: 'dev-private-endpoints'
         properties: {
-          addressPrefix: '172.16.40.0/24'
+          addressPrefix: privateEndpointsCidr
           networkSecurityGroup: {
             id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/networkSecurityGroups/tfs-dev-gw-nsg'
           }
@@ -64,10 +71,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
             }
             {
               service: 'Microsoft.Storage'
-              locations: [
-                'uksouth'
-                'ukwest'
-              ]
+              locations: storageLocations
             }
           ]
           delegations: []
@@ -79,7 +83,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       {
         name: 'demo-gateway'
         properties: {
-          addressPrefix: '172.16.61.0/24'
+          addressPrefix: demoGatewayPrefixCidr
           serviceEndpoints: []
           delegations: []
           privateEndpointNetworkPolicies: 'Enabled'
@@ -90,7 +94,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       {
         name: 'demo-private-endpoints'
         properties: {
-          addressPrefix: '172.16.60.0/24'
+          addressPrefix: demoPrivateEndpointsPrefixCidr
           serviceEndpoints: []
           delegations: []
           privateEndpointNetworkPolicies: 'Enabled'
@@ -101,7 +105,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       {
         name: 'dev-gateway'
         properties: {
-          addressPrefix: '172.16.41.0/24'
+          addressPrefix: applicationGatewatCidr
           networkSecurityGroup: {
             id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/networkSecurityGroups/tfs-dev-gw-nsg'
           }
@@ -116,10 +120,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
           serviceEndpoints: [
             {
               service: 'Microsoft.Storage'
-              locations: [
-                'uksouth'
-                'ukwest'
-              ]
+              locations: storageLocations
             }
           ]
           delegations: []
@@ -131,7 +132,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       {
         name: 'Digital-Dev-vm'
         properties: {
-          addressPrefix: '172.16.43.0/28'
+          addressPrefix: vmCidr
           routeTable: {
             id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/routeTables/Digital-Dev-UDR'
           }
@@ -144,10 +145,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
             }
             {
               service: 'Microsoft.Storage'
-              locations: [
-                'uksouth'
-                'ukwest'
-              ]
+              locations: storageLocations
             }
           ]
           delegations: [
@@ -181,12 +179,12 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
           doNotVerifyRemoteGateways: false
           remoteAddressSpace: {
             addressPrefixes: [
-              '10.50.0.0/16'
+              peeringAddressSpace
             ]
           }
           remoteVirtualNetworkAddressSpace: {
             addressPrefixes: [
-              '10.50.0.0/16'
+              peeringAddressSpace
             ]
           }
         }
@@ -200,7 +198,7 @@ resource tfs_dev_vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
 resource tfs_dev_vnet_demo_gateway 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
   name: 'tfs-dev-vnet/demo-gateway'
   properties: {
-    addressPrefix: '172.16.61.0/24'
+    addressPrefix: demoGatewayPrefixCidr
     serviceEndpoints: []
     delegations: []
     privateEndpointNetworkPolicies: 'Enabled'
@@ -214,7 +212,7 @@ resource tfs_dev_vnet_demo_gateway 'Microsoft.Network/virtualNetworks/subnets@20
 resource tfs_dev_vnet_demo_private_endpoints 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
   name: 'tfs-dev-vnet/demo-private-endpoints'
   properties: {
-    addressPrefix: '172.16.60.0/24'
+    addressPrefix: demoPrivateEndpointsPrefixCidr
     serviceEndpoints: []
     delegations: []
     privateEndpointNetworkPolicies: 'Enabled'
@@ -228,7 +226,7 @@ resource tfs_dev_vnet_demo_private_endpoints 'Microsoft.Network/virtualNetworks/
 resource tfs_dev_vnet_dev_app_service_plan_egress 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
   name: 'tfs-dev-vnet/dev-app-service-plan-egress'
   properties: {
-    addressPrefix: '172.16.42.0/28'
+    addressPrefix: appServicePlanEgressPrefixCidr
     serviceEndpoints: [
       {
         service: 'Microsoft.AzureCosmosDB'
@@ -238,10 +236,7 @@ resource tfs_dev_vnet_dev_app_service_plan_egress 'Microsoft.Network/virtualNetw
       }
       {
         service: 'Microsoft.Storage'
-        locations: [
-          'uksouth'
-          'ukwest'
-        ]
+        locations: storageLocations
       }
     ]
     delegations: [
@@ -264,7 +259,7 @@ resource tfs_dev_vnet_dev_app_service_plan_egress 'Microsoft.Network/virtualNetw
 resource tfs_dev_vnet_dev_gateway 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
   name: 'tfs-dev-vnet/dev-gateway'
   properties: {
-    addressPrefix: '172.16.41.0/24'
+    addressPrefix: applicationGatewatCidr
     networkSecurityGroup: {
       id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/networkSecurityGroups/tfs-dev-gw-nsg'
     }
@@ -279,10 +274,7 @@ resource tfs_dev_vnet_dev_gateway 'Microsoft.Network/virtualNetworks/subnets@202
     serviceEndpoints: [
       {
         service: 'Microsoft.Storage'
-        locations: [
-          'uksouth'
-          'ukwest'
-        ]
+        locations: storageLocations
       }
     ]
     delegations: []
@@ -297,7 +289,7 @@ resource tfs_dev_vnet_dev_gateway 'Microsoft.Network/virtualNetworks/subnets@202
 resource tfs_dev_vnet_dev_private_endpoints 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
   name: 'tfs-dev-vnet/dev-private-endpoints'
   properties: {
-    addressPrefix: '172.16.40.0/24'
+    addressPrefix: privateEndpointsCidr
     networkSecurityGroup: {
       id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/networkSecurityGroups/tfs-dev-gw-nsg'
     }
@@ -310,10 +302,7 @@ resource tfs_dev_vnet_dev_private_endpoints 'Microsoft.Network/virtualNetworks/s
       }
       {
         service: 'Microsoft.Storage'
-        locations: [
-          'uksouth'
-          'ukwest'
-        ]
+        locations: storageLocations
       }
     ]
     delegations: []
@@ -328,7 +317,7 @@ resource tfs_dev_vnet_dev_private_endpoints 'Microsoft.Network/virtualNetworks/s
 resource tfs_dev_vnet_Digital_Dev_vm 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' = {
   name: 'tfs-dev-vnet/Digital-Dev-vm'
   properties: {
-    addressPrefix: '172.16.43.0/28'
+    addressPrefix: vmCidr
     routeTable: {
       id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/routeTables/Digital-Dev-UDR'
     }
@@ -341,10 +330,7 @@ resource tfs_dev_vnet_Digital_Dev_vm 'Microsoft.Network/virtualNetworks/subnets@
       }
       {
         service: 'Microsoft.Storage'
-        locations: [
-          'uksouth'
-          'ukwest'
-        ]
+        locations: storageLocations
       }
     ]
     delegations: [
@@ -379,12 +365,12 @@ resource tfs_dev_vnet_tfs_dev_vnet_vnet_ukef_uks 'Microsoft.Network/virtualNetwo
     doNotVerifyRemoteGateways: false
     remoteAddressSpace: {
       addressPrefixes: [
-        '10.50.0.0/16'
+        peeringAddressSpace
       ]
     }
     remoteVirtualNetworkAddressSpace: {
       addressPrefixes: [
-        '10.50.0.0/16'
+        peeringAddressSpace
       ]
     }
   }
