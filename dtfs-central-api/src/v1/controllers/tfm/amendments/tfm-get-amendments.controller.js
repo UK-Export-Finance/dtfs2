@@ -442,7 +442,7 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
       } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
         amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
       } else if (ObjectId.isValid(amendmentIdOrStatus)) {
-        amendment = (await findAmendmentById(facilityId, amendmentId)) ?? {};
+        amendment = (await findAmendmentById(facilityId, amendmentIdOrStatus)) ?? {};
       } else {
         amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
       }
