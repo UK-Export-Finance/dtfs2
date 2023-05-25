@@ -58,7 +58,7 @@ module vnet 'modules/vnet.bicep' = {
   params: {
     environment: environment
     location: location
-    appServicePlanName: appServicePlanName
+    appServicePlanName: appServicePlan.name
     addressPrefixes: vnetAddressPrefixes
     privateEndpointsCidr: privateEndpointsCidr
     appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
@@ -74,7 +74,7 @@ module vnet 'modules/vnet.bicep' = {
 module natGateway 'modules/nat-gw_nat_ip.bicep' = {
   name: 'natGateway'
   params: {
-    appServicePlanName: appServicePlanName
+    appServicePlanName: appServicePlan.name
     location: location
   }
 }
