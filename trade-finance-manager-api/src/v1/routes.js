@@ -146,11 +146,10 @@ openRouter.route('/facilities/:facilityId/amendments').post(validation.facilityI
  *         description: Cannot update the amendment
  */
 openRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
-openRouter.route('/facilities/:facilityId/amendments/:status?/:type?').get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
+openRouter.route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?').get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
 openRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
-  .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment)
-  .get(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.getAmendmentById);
+  .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment);
 openRouter.route('/deals/:dealId/amendments/:status?/:type?').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 openRouter.route('/party/urn/:urn').get(validation.paryUrnValidation, handleValidationResult, party.getCompany);
 

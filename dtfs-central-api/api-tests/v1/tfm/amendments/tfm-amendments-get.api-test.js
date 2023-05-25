@@ -143,7 +143,7 @@ describe('GET TFM amendments', () => {
     });
   });
 
-  describe('GET /v1/tfm/facilities/:id/amendments?status=in-progress', () => {
+  describe('GET /v1/tfm/facilities/:id/amendments/in-progress', () => {
     it('should return 200 status if the facility has an amendment that\'s in progress', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId = postResult.body._id;
@@ -153,7 +153,7 @@ describe('GET TFM amendments', () => {
       const { body: bodyPostResponse } = await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
       const updatePayload = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api.put(updatePayload).to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse.amendmentId}`);
-      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments?status=in-progress`);
+      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/in-progress`);
 
       expect(status).toEqual(200);
       expect(body).toEqual({
@@ -173,7 +173,7 @@ describe('GET TFM amendments', () => {
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments?status=in-progress`);
+      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/in-progress`);
 
       expect(status).toEqual(200);
       expect(body).toEqual({});
@@ -183,14 +183,14 @@ describe('GET TFM amendments', () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.get('/v1/tfm/facilities/123/amendments?status=in-progress');
+      const { status, body } = await api.get('/v1/tfm/facilities/123/amendments/in-progress');
 
       expect(status).toEqual(400);
       expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
     });
   });
 
-  describe('GET /v1/tfm/facilities/:id/amendments?status=completed', () => {
+  describe('GET /v1/tfm/facilities/:id/amendments/completed', () => {
     it('should return 200 status if the facility has an amendment that\'s COMPLETED', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId = postResult.body._id;
@@ -205,7 +205,7 @@ describe('GET TFM amendments', () => {
 
       await api.post().to(`/v1/tfm/facilities/${facilityId}/amendments`);
 
-      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments?status=completed`);
+      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/completed`);
 
       expect(status).toEqual(200);
       expect(body).toEqual([
@@ -235,7 +235,7 @@ describe('GET TFM amendments', () => {
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments?status=completed`);
+      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/completed`);
 
       expect(status).toEqual(200);
       expect(body).toEqual([]);
@@ -245,14 +245,14 @@ describe('GET TFM amendments', () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.get('/v1/tfm/facilities/123/amendments?status=completed');
+      const { status, body } = await api.get('/v1/tfm/facilities/123/amendments/completed');
 
       expect(status).toEqual(400);
       expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
     });
   });
 
-  describe('GET /v1/tfm/facilities/:id/amendments?status=completed&type=latest', () => {
+  describe('GET /v1/tfm/facilities/:id/amendments/completed/latest', () => {
     it('should return 200 status if the facility has an amendment that\'s COMPLETED', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId = postResult.body._id;
@@ -264,7 +264,7 @@ describe('GET TFM amendments', () => {
         status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED, submittedByPim: true, requireUkefApproval: false, changeFacilityValue: true, value: 123
       }).to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
-      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments?status=completed&type=latest-value`);
+      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`);
       expect(status).toEqual(200);
       expect(body).toEqual({
         amendmentId: expect.any(String),
@@ -278,7 +278,7 @@ describe('GET TFM amendments', () => {
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments?status=completed&type=latest-value`);
+      const { status, body } = await api.get(`/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`);
 
       expect(status).toEqual(200);
       expect(body).toEqual({});
@@ -288,14 +288,14 @@ describe('GET TFM amendments', () => {
       await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api.get('/v1/tfm/facilities/123/amendments?status=completed&type=latest-value');
+      const { status, body } = await api.get('/v1/tfm/facilities/123/amendments/completed/latest-value');
 
       expect(status).toEqual(400);
       expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
     });
   });
 
-  describe('GET /v1/tfm/amendments?status=in-progress', () => {
+  describe('GET /v1/tfm/amendments/in-progress', () => {
     it('should return 200 status and all amendments that are in progress', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId1 = postResult.body._id;
@@ -315,7 +315,7 @@ describe('GET TFM amendments', () => {
       const updatePayload2 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api.put(updatePayload2).to(`/v1/tfm/facilities/${facilityId2}/amendments/${bodyPostResponse2.amendmentId}`);
 
-      const { status, body } = await api.get('/v1/tfm/amendments?status=in-progress');
+      const { status, body } = await api.get('/v1/tfm/amendments/in-progress');
 
       expect(status).toEqual(200);
       expect(body).toEqual([
