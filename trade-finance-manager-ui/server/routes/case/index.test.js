@@ -9,15 +9,16 @@ import activityController from '../../controllers/case/activity';
 import amendmentsController from '../../controllers/case/amendments';
 
 describe('routes - case', () => {
-  beforeEach(() => {
-    require('./index'); // eslint-disable-line global-require
-  });
-
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   it('should setup routes with controllers', () => {
+    const mockXss = jest.fn();
+    jest.mock('express-xss-sanitizer', () => { return { xss: () => mockXss } });
+
+    require('./index'); // eslint-disable-line global-require
+
     // GET routes
     expect(get).toHaveBeenCalledTimes(44);
 
@@ -129,7 +130,7 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
 
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
+    expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', mockXss, underwritingController.postUnderwriterManagersDecision);
 
     expect(post).toHaveBeenCalledWith('/:_id/activity', activityController.filterActivities);
 
