@@ -15,7 +15,7 @@ describe('routes - case', () => {
 
   it('should setup routes with controllers', () => {
     const mockXss = jest.fn();
-    jest.mock('express-xss-sanitizer', () => { return { xss: () => mockXss } });
+    jest.mock('express-xss-sanitizer', () => ({ xss: () => mockXss }));
 
     require('./index'); // eslint-disable-line global-require
 
