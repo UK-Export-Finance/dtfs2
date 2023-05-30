@@ -45,7 +45,7 @@
 
             <h4 class="govuk-heading-m govuk-!-font-weight-bold" data-cy="comments-heading">{{commentsHeadingText }} </h4>
 
-            <p class="ukef-preserve-white-space" data-cy="conditions-value">{{ decision.comments | safe }}</p>
+            <p class="ukef-preserve-white-space" data-cy="conditions-value">{{ decision.comments }}</p>
 
           </div>
         </div>
@@ -57,7 +57,7 @@
 
             <h4 class="govuk-heading-m govuk-!-font-weight-bold govuk-!-margin-bottom-1" data-cy="internal-comments-heading">Comments</h4>
             <p class="ukef-hint-grey govuk-!-margin-top-0">Only UKEF staff will see this.</p>
-            <p class="ukef-preserve-white-space" data-cy="internal-comments-value">{{ decision.internalComments | safe }}<p>
+            <p class="ukef-preserve-white-space" data-cy="internal-comments-value">{{ decision.internalComments }}<p>
 
           </div>
         </div>
