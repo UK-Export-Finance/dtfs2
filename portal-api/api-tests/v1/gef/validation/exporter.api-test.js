@@ -1,7 +1,5 @@
 const {
   unansweredFields,
-  exporterValidation,
-  exporterCheckEnums,
   exporterStatus,
 } = require('../../../../src/v1/gef/controllers/validation/exporter');
 const CONSTANTS = require('../../../../src/constants');

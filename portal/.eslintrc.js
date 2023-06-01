@@ -21,6 +21,7 @@ module.exports = {
     'object-curly-newline': ['error', {
       consistent: true,
     }],
+    'no-restricted-syntax': 0,
   },
   ignorePatterns: ['**/node_modules/**', '**/public/**'],
   parserOptions: {

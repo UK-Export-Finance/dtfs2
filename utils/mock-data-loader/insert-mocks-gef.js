@@ -31,7 +31,7 @@ const insertMocks = async () => {
 
   const latestEligibilityCriteria = await api.latestEligibilityCriteria(token);
 
-  for (const [index, item] of MOCKS.APPLICATION.entries()) {
+  for (const item of MOCKS.APPLICATION.entries()) {
     item.userId = makerUserId;
     const application = await api.createApplication(item, token);
 

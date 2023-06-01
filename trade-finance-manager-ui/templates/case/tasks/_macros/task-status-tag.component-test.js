@@ -5,8 +5,6 @@ const component = '../templates/case/tasks/_macros/task-status-tag.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  let wrapper;
-
   describe('when status is `Cannot start yet`', () => {
     it('should render govukTag with grey class', () => {
       const params = {

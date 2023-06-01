@@ -155,11 +155,15 @@ module.exports.initialise = async (app) => {
     const currentUsersResponse = await get('/v1/user');
     const existingUsers = currentUsersResponse.body.users;
 
+    // eslint-disable-next-line no-restricted-syntax
     for (const existingUser of existingUsers) {
+      // eslint-disable-next-line no-await-in-loop
       await remove(`/v1/users/${existingUser._id}`);
     }
 
+    // eslint-disable-next-line no-restricted-syntax
     for (const testUser of testUsers) {
+      // eslint-disable-next-line no-await-in-loop
       const { body } = await post(testUser).to('/v1/user/');
 
       loadedUsers.push({
