@@ -152,6 +152,6 @@ openRouter
   .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment)
   .get(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.getAmendmentById);
 openRouter.route('/deals/:dealId/amendments').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
-openRouter.route('/party/urn/:urn').get(validation.paryUrnValidation, handleValidationResult, party.getCompany);
+openRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
 
 module.exports = openRouter;

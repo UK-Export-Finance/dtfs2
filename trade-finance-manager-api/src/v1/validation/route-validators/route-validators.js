@@ -20,4 +20,4 @@ exports.facilityIdAndAmendmentIdValidations = [facilityIdValidation, amendmentId
 
 exports.dealIdValidation = [dealIdValidation];
 
-exports.paryUrnValidation = [partyURNValidation];
+exports.partyUrnValidation = [partyURNValidation];
