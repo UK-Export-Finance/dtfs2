@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const {
   fromUnixTime,
   getUnixTime,

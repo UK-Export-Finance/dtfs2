@@ -53,7 +53,7 @@ const migrateUsers = async () => {
   const userNoBanksError = [];
 
   const usersV1 = loadUsersFromFile();
-  const usersV1Bank = bankId ? usersV1.filter(({ Bank_id }) => Bank_id === bankId.toString()) : usersV1;
+  const usersV1Bank = bankId ? usersV1.filter(({ bankID }) => bankID === bankId.toString()) : usersV1;
   const importBank = bankId ? banks.find((b) => b.id === bankId.toString()) : { name: 'All banks' };
 
   const usersV2 = usersV1Bank.map((userV1) => {

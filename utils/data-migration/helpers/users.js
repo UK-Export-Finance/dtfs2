@@ -8,10 +8,10 @@ const initUsers = async (token) => {
   return users;
 };
 
-const getUserByEmail = (users, email) => {
+const getUserByEmail = (userData, email) => {
   if (!email) return {};
 
-  const user = users.find((u) => u.email?.toLowerCase() === email.toLowerCase());
+  const user = userData.find((u) => u.email?.toLowerCase() === email.toLowerCase());
   if (!user) return {};
 
   return {

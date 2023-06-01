@@ -19,6 +19,10 @@ module.exports = {
     'implicit-arrow-linebreak': 0,
     'comma-dangle': 'off',
     'no-loop-func': 'off',
+    'import/no-unresolved': 0,
+    'no-await-in-loop': 0,
+    'import/extensions': 0,
+    'no-restricted-syntax': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

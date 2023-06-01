@@ -76,7 +76,7 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
       ? value.map((filename) => v2SingleDealFile(filename, type))
       : [v2SingleDealFile(value, type)];
 
-    const copyFiles = await copyDealFile(v2DealFiles);
+    await copyDealFile(v2DealFiles);
 
     return v2DealFiles;
   };
