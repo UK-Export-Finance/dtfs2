@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -25,7 +26,7 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
     if (amendmentEmailEligible(amendment)) {
       const { dealSnapshot } = await api.findOneDeal(amendment.dealId);
       if (dealSnapshot) {
-      // gets portal user to ensure latest details
+        // gets portal user to ensure latest details
         const user = await api.findPortalUserById(dealSnapshot.maker._id);
 
         // if automaticApprovalEmail and !automaticApprovalEmailSent (email not sent before)
@@ -112,13 +113,11 @@ const getAmendmentById = async (req, res) => {
 };
 
 const getAmendmentByFacilityId = async (req, res) => {
-  const { facilityId } = req.params;
-  const { status, type } = req.query;
+  const { facilityId, amendmentIdOrStatus, type } = req.params;
   let amendment;
-  if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-    await api.getAmendmentInProgress(facilityId)
-  }
-  else if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
+  if (amendmentIdOrStatus === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
+    amendment = (await api.getAmendmentInProgress(facilityId)).data;
+  } else if (amendmentIdOrStatus === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
     if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
       amendment = await api.getLatestCompletedAmendmentDate(facilityId);
     } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_VALUE) {
@@ -126,7 +125,9 @@ const getAmendmentByFacilityId = async (req, res) => {
     } else {
       amendment = await api.getCompletedAmendment(facilityId);
     }
-  } else if (!status && !type) {
+  } else if (ObjectId.isValid(amendmentIdOrStatus)) {
+    amendment = await api.getAmendmentById(facilityId, amendmentIdOrStatus);
+  } else if (!amendmentIdOrStatus && !type) {
     amendment = await api.getAmendmentByFacilityId(facilityId);
   }
   if (amendment) {
@@ -136,8 +137,7 @@ const getAmendmentByFacilityId = async (req, res) => {
 };
 
 const getAmendmentsByDealId = async (req, res) => {
-  const { dealId } = req.params;
-  const { status, type } = req.query;
+  const { dealId, status, type } = req.params;
   let amendment;
   if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
     amendment = await api.getAmendmentInProgressByDealId(dealId);
@@ -147,8 +147,7 @@ const getAmendmentsByDealId = async (req, res) => {
     } else {
       amendment = await api.getCompletedAmendmentByDealId(dealId);
     }
-  }
-  else if (!status && !type) {
+  } else if (!status && !type) {
     amendment = await api.getAmendmentsByDealId(dealId);
   }
   if (amendment) {
@@ -160,7 +159,7 @@ const getAmendmentsByDealId = async (req, res) => {
 const getAllAmendments = async (req, res) => {
   const { status } = req.query;
   let amendment;
-  if (status == CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
+  if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
     amendment = await api.getAllAmendmentsInProgress();
   }
   if (amendment) {

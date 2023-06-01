@@ -410,9 +410,8 @@ tfmRouter.route('/facilities/:id').put(
  *         description: Not found
  */
 tfmRouter.route('/amendments').get(tfmGetAmendmentController.getAllAmendmentsInProgress);
-tfmRouter.route('/facilities/:facilityId/amendments').get(tfmGetAmendmentController.getAllAmendmentsByFacilityId);
-tfmRouter.route('/facilities/:facilityId/amendments/:amendmentId').get(tfmGetAmendmentController.getAmendmentById);
-tfmRouter.route('/deals/:dealId/amendments').get(tfmGetAmendmentController.getAmendmentsByDealId);
+tfmRouter.route('/facilities/:facilityId/amendments/:status?/:type?').get(tfmGetAmendmentController.getAmendmentsByFacilityId);
+tfmRouter.route('/deals/:dealId/amendments/:status?/:type?').get(tfmGetAmendmentController.getAmendmentsByDealId);
 
 /**
  * @openapi

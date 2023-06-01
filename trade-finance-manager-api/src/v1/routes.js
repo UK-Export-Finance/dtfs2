@@ -145,13 +145,12 @@ openRouter.route('/facilities/:facilityId/amendments').post(validation.facilityI
  *       400:
  *         description: Cannot update the amendment
  */
-openRouter.route('/amendments').get(amendmentController.getAllAmendments);
-openRouter.route('/facilities/:facilityId/amendments').get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
+openRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
+openRouter.route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?').get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
 openRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
-  .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment)
-  .get(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.getAmendmentById);
-openRouter.route('/deals/:dealId/amendments').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
+  .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment);
+openRouter.route('/deals/:dealId/amendments/:status?/:type?').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
 openRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
 
 module.exports = openRouter;
