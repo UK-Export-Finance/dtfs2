@@ -2,6 +2,7 @@ import {
   get,
   post,
 } from '../../test-mocks/router-mock';
+import { expect, jest, test }from '@jest/globals';
 import caseController from '../../controllers/case';
 import partiesController from '../../controllers/case/parties';
 import underwritingController from '../../controllers/case/underwriting';
@@ -15,7 +16,7 @@ describe('routes - case', () => {
 
   it('should setup routes with controllers', () => {
     const mockXss = jest.fn();
-    jest.mock('express-xss-sanitizer', () => ({ xss: () => mockXss }));
+    jest.mock('../../middleware/xss-sanitizer', () => ({ sanitizeXss: () => mockXss }));
 
     require('./index'); // eslint-disable-line global-require
 
