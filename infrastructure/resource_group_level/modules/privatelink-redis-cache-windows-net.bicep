@@ -1,16 +1,23 @@
-param privateDnsZones_privatelink_redis_cache_windows_net_name string = 'privatelink.redis.cache.windows.net'
-param virtualNetworks_tfs_dev_vnet_externalid string = '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet'
+param redisDnsZoneName string = 'privatelink.redis.cache.windows.net'
+param appServicePlanName string
 
-resource privateDnsZones_privatelink_redis_cache_windows_net_name_resource 'Microsoft.Network/privateDnsZones@2018-09-01' = {
-  name: privateDnsZones_privatelink_redis_cache_windows_net_name
+// TODO:DTFS-6422 It doesn't seem quite right to construct the vnet name here as well as in venet.bicep
+var vnetName = 'tfs-${appServicePlanName}-vnet'
+
+resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
+  name: vnetName
+}
+
+resource redisDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
+  name: redisDnsZoneName
   location: 'global'
   tags: {
     Environment: 'Preproduction'
   }
 }
 
-resource Microsoft_Network_privateDnsZones_SOA_privateDnsZones_privatelink_redis_cache_windows_net_name 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
-  parent: privateDnsZones_privatelink_redis_cache_windows_net_name_resource
+resource redisSoaRecord 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
+  parent: redisDnsZone
   name: '@'
   properties: {
     ttl: 3600
@@ -26,8 +33,8 @@ resource Microsoft_Network_privateDnsZones_SOA_privateDnsZones_privatelink_redis
   }
 }
 
-resource privateDnsZones_privatelink_redis_cache_windows_net_name_storage_dns 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
-  parent: privateDnsZones_privatelink_redis_cache_windows_net_name_resource
+resource redisStorageVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
+  parent: redisDnsZone
   name: 'storage-dns'
   location: 'global'
   tags: {
@@ -36,7 +43,7 @@ resource privateDnsZones_privatelink_redis_cache_windows_net_name_storage_dns 'M
   properties: {
     registrationEnabled: false
     virtualNetwork: {
-      id: virtualNetworks_tfs_dev_vnet_externalid
+      id: vnet.id
     }
   }
 }
