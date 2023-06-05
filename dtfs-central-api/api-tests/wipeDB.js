@@ -1,17 +1,13 @@
 const db = require('../src/drivers/db-client');
 
 const wipe = async (collections) => {
-  // eslint-disable-next-line no-async-promise-executor
-  const drop = async (collection) => new Promise(async (resolve) => {
-    const collectionToDrop = await db.getCollection(collection);
-
-    collectionToDrop.drop(() => {
-      resolve();
-    });
+  const drop = async (collection) => new Promise((resolve) => {
+    db.getCollection(collection)
+      .then((c) => c.drop(() => resolve()));
   });
 
   const dropPromises = [];
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const collection of collections) {
     dropPromises.push(drop(collection));
   }

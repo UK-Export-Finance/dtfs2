@@ -12,9 +12,7 @@ module.exports = (app) => ({
     to: async (url) => {
       const results = [];
 
-      // eslint-disable-next-line no-restricted-syntax
       for (const data of list) {
-        // eslint-disable-next-line no-await-in-loop
         const result = await request(app)
           .post(url)
           .send(data);

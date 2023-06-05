@@ -36,7 +36,6 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
       fileshare.setConfig(AZURE_WORKFLOW_FILESHARE_CONFIG);
       const fileshareConfig = fileshare.getConfig();
 
-      // eslint-disable-next-line no-await-in-loop
       const fileBuffer = await fileshare.readFile(from).catch((err) => console.info({ err }));
 
       if (fileBuffer.error) {
@@ -51,7 +50,6 @@ const mapDealFiles = async (portalDealId, v1Deal) => {
 
         // Set fileshare to portal fileshare
         fileshare.setConfig(AZURE_PORTAL_FILESHARE_CONFIG);
-        // eslint-disable-next-line no-await-in-loop
         const uploadFile = await fileshare.uploadFile(to);
 
         if (uploadFile.error) {

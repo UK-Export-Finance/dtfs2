@@ -164,7 +164,6 @@ const migrateDeals = async () => {
 
   for (let i = 0; i < dealFolders.length; i += 1) {
     console.info(`processing deal ${i + 1}: DealId ${dealFolders[i].name}`);
-    // eslint-disable-next-line no-await-in-loop
     const success = await importSingleDeal(dealFolders[i].name);
     consoleLogColor(`Processed ${i + 1} of ${dealFolders.length}: DealId ${dealFolders[i].name}`, success ? 'green' : 'red');
   }
