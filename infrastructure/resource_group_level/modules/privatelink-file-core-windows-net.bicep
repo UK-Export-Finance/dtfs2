@@ -1,42 +1,24 @@
-param privateDnsZones_privatelink_file_core_windows_net_name string = 'privatelink.file.core.windows.net'
-param virtualNetworks_tfs_dev_vnet_externalid string = '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet'
+param filesDnsZoneName string = 'privatelink.file.core.windows.net'
+param appServicePlanName string
 
-resource privateDnsZones_privatelink_file_core_windows_net_name_resource 'Microsoft.Network/privateDnsZones@2018-09-01' = {
-  name: privateDnsZones_privatelink_file_core_windows_net_name
+// TODO:DTFS-6422 It doesn't seem quite right to construct the vnet name here as well as in venet.bicep
+var vnetName = 'tfs-${appServicePlanName}-vnet'
+
+resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
+  name: vnetName
+}
+
+resource filesDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
+  name: filesDnsZoneName
   location: 'global'
   tags: {
     Environment: 'Preproduction'
   }
 }
 
-resource privateDnsZones_privatelink_file_core_windows_net_name_tfsdemostorage 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-  parent: privateDnsZones_privatelink_file_core_windows_net_name_resource
-  name: 'tfsdemostorage'
-  properties: {
-    ttl: 3600
-    aRecords: [
-      {
-        ipv4Address: '172.16.60.4'
-      }
-    ]
-  }
-}
 
-resource privateDnsZones_privatelink_file_core_windows_net_name_tfsdevstorage 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-  parent: privateDnsZones_privatelink_file_core_windows_net_name_resource
-  name: 'tfsdevstorage'
-  properties: {
-    ttl: 3600
-    aRecords: [
-      {
-        ipv4Address: '172.16.40.4'
-      }
-    ]
-  }
-}
-
-resource Microsoft_Network_privateDnsZones_SOA_privateDnsZones_privatelink_file_core_windows_net_name 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
-  parent: privateDnsZones_privatelink_file_core_windows_net_name_resource
+resource azureDnsSoaRecord 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
+  parent: filesDnsZone
   name: '@'
   properties: {
     ttl: 3600
@@ -52,8 +34,8 @@ resource Microsoft_Network_privateDnsZones_SOA_privateDnsZones_privatelink_file_
   }
 }
 
-resource privateDnsZones_privatelink_file_core_windows_net_name_storage_dns 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
-  parent: privateDnsZones_privatelink_file_core_windows_net_name_resource
+resource filesVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
+  parent: filesDnsZone
   name: 'storage-dns'
   location: 'global'
   tags: {
@@ -62,7 +44,38 @@ resource privateDnsZones_privatelink_file_core_windows_net_name_storage_dns 'Mic
   properties: {
     registrationEnabled: false
     virtualNetwork: {
-      id: virtualNetworks_tfs_dev_vnet_externalid
+      id: vnet.id
     }
+  }
+}
+
+// Demo A records
+// TODO:DTFS-6422 update ip values
+resource demoStorage 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+  parent: filesDnsZone
+  name: 'tfsdemostorage'
+  properties: {
+    ttl: 3600
+    aRecords: [
+      {
+        ipv4Address: '172.16.60.4'
+      }
+    ]
+  }
+}
+
+// Dev A records
+
+// TODO:DTFS-6422 update ip values
+resource devStorage 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+  parent: filesDnsZone
+  name: 'tfsdevstorage'
+  properties: {
+    ttl: 3600
+    aRecords: [
+      {
+        ipv4Address: '172.16.40.4'
+      }
+    ]
   }
 }

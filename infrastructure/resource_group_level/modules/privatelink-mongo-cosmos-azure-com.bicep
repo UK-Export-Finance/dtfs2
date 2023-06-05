@@ -1,7 +1,14 @@
 param privateDnsZones_privatelink_mongo_cosmos_azure_com_name string = 'privatelink.mongo.cosmos.azure.com'
-param virtualNetworks_tfs_dev_vnet_externalid string = '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet'
+param appServicePlanName string
 
-resource privateDnsZones_privatelink_mongo_cosmos_azure_com_name_resource 'Microsoft.Network/privateDnsZones@2018-09-01' = {
+// TODO:DTFS-6422 It doesn't seem quite right to construct the vnet name here as well as in venet.bicep
+var vnetName = 'tfs-${appServicePlanName}-vnet'
+
+resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
+  name: vnetName
+}
+
+resource mongoDbDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
   name: privateDnsZones_privatelink_mongo_cosmos_azure_com_name
   location: 'global'
   tags: {
@@ -9,60 +16,8 @@ resource privateDnsZones_privatelink_mongo_cosmos_azure_com_name_resource 'Micro
   }
 }
 
-resource privateDnsZones_privatelink_mongo_cosmos_azure_com_name_tfs_demo_mongo 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-  parent: privateDnsZones_privatelink_mongo_cosmos_azure_com_name_resource
-  name: 'tfs-demo-mongo'
-  properties: {
-    ttl: 3600
-    aRecords: [
-      {
-        ipv4Address: '172.16.60.7'
-      }
-    ]
-  }
-}
-
-resource privateDnsZones_privatelink_mongo_cosmos_azure_com_name_tfs_demo_mongo_uksouth 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-  parent: privateDnsZones_privatelink_mongo_cosmos_azure_com_name_resource
-  name: 'tfs-demo-mongo-uksouth'
-  properties: {
-    ttl: 3600
-    aRecords: [
-      {
-        ipv4Address: '172.16.60.8'
-      }
-    ]
-  }
-}
-
-resource privateDnsZones_privatelink_mongo_cosmos_azure_com_name_tfs_dev_mongo 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-  parent: privateDnsZones_privatelink_mongo_cosmos_azure_com_name_resource
-  name: 'tfs-dev-mongo'
-  properties: {
-    ttl: 3600
-    aRecords: [
-      {
-        ipv4Address: '172.16.40.6'
-      }
-    ]
-  }
-}
-
-resource privateDnsZones_privatelink_mongo_cosmos_azure_com_name_tfs_dev_mongo_uksouth 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-  parent: privateDnsZones_privatelink_mongo_cosmos_azure_com_name_resource
-  name: 'tfs-dev-mongo-uksouth'
-  properties: {
-    ttl: 3600
-    aRecords: [
-      {
-        ipv4Address: '172.16.40.7'
-      }
-    ]
-  }
-}
-
-resource Microsoft_Network_privateDnsZones_SOA_privateDnsZones_privatelink_mongo_cosmos_azure_com_name 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
-  parent: privateDnsZones_privatelink_mongo_cosmos_azure_com_name_resource
+resource mongoDbDnsSoaRecord 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
+  parent: mongoDbDnsZone
   name: '@'
   properties: {
     ttl: 3600
@@ -78,8 +33,8 @@ resource Microsoft_Network_privateDnsZones_SOA_privateDnsZones_privatelink_mongo
   }
 }
 
-resource privateDnsZones_privatelink_mongo_cosmos_azure_com_name_mongo_dns 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
-  parent: privateDnsZones_privatelink_mongo_cosmos_azure_com_name_resource
+resource mongoDbVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
+  parent: mongoDbDnsZone
   name: 'mongo-dns'
   location: 'global'
   tags: {
@@ -88,7 +43,64 @@ resource privateDnsZones_privatelink_mongo_cosmos_azure_com_name_mongo_dns 'Micr
   properties: {
     registrationEnabled: false
     virtualNetwork: {
-      id: virtualNetworks_tfs_dev_vnet_externalid
+      id: vnet.id
     }
+  }
+}
+
+// TODO:DTFS-6422 update IP addresses
+
+// Demo A records
+
+resource demoMongoDb 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+  parent: mongoDbDnsZone
+  name: 'tfs-demo-mongo'
+  properties: {
+    ttl: 3600
+    aRecords: [
+      {
+        ipv4Address: '172.16.60.7'
+      }
+    ]
+  }
+}
+
+resource demoMongoDbUkSouth 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+  parent: mongoDbDnsZone
+  name: 'tfs-demo-mongo-uksouth'
+  properties: {
+    ttl: 3600
+    aRecords: [
+      {
+        ipv4Address: '172.16.60.8'
+      }
+    ]
+  }
+}
+
+// Dev A records
+resource devMongoDb 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+  parent: mongoDbDnsZone
+  name: 'tfs-dev-mongo'
+  properties: {
+    ttl: 3600
+    aRecords: [
+      {
+        ipv4Address: '172.16.40.6'
+      }
+    ]
+  }
+}
+
+resource devMongoDbUkSouth 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+  parent: mongoDbDnsZone
+  name: 'tfs-dev-mongo-uksouth'
+  properties: {
+    ttl: 3600
+    aRecords: [
+      {
+        ipv4Address: '172.16.40.7'
+      }
+    ]
   }
 }
