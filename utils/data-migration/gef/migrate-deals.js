@@ -30,7 +30,7 @@ const doMigration = async () => {
       } = await mapToV2(v1DealJson, v2Banks, v2Users);
 
       if (!mappingErrors) {
-        const imported = await addToDatabase(
+        await addToDatabase(
           v2Deal,
           v2Facilities,
         );
@@ -55,4 +55,3 @@ doMigration().then(async ({ totalV1Deals }) => {
 
   await teardown();
 });
-

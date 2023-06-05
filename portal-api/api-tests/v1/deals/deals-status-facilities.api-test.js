@@ -234,6 +234,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           completedDeal.mockFacilities.forEach((facility) => {
             if (facility._id) {
+              // eslint-disable-next-line no-param-reassign
               delete facility._id;
             }
           });
@@ -314,6 +315,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         completedDeal.mockFacilities.forEach((facility) => {
           if (facility._id) {
+            // eslint-disable-next-line no-param-reassign
             delete facility._id;
           }
         });
@@ -595,6 +597,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         completedDeal.mockFacilities.forEach((facility) => {
           if (facility._id) {
+            // eslint-disable-next-line no-param-reassign
             delete facility._id;
           }
         });

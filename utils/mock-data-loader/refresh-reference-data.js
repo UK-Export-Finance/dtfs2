@@ -1,3 +1,7 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable import/no-unresolved */
+/* eslint-disable no-return-assign */
+/* eslint-disable import/extensions */
 const api = require('./api');
 const tokenFor = require('./temporary-token-handler');
 const latestCurrencies = require('./mocks/currencies');

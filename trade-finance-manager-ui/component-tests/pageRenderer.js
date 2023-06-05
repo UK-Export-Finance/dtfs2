@@ -1,4 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable import/no-import-module-exports */
 import cheerio from 'cheerio';
 
 import assertions from './assertions';

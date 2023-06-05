@@ -150,6 +150,7 @@ xdescribe('fileshare', () => {
     const nonExistentFolder = `${folder}/${randomFolderName}`;
     const nonExistentSubFolder = `${nonExistentFolder}/${randomFolderName + 1}`;
 
+    // eslint-disable-next-line consistent-return
     afterEach(async () => {
       try {
         await fileshare.deleteMultipleFiles(fileshare, nonExistentSubFolder, ['out.xml']).then(async () => {

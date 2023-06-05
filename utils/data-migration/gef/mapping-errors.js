@@ -23,7 +23,6 @@ const dealMappingErrors = (v2Deal, v1DealId) => {
     errors.push('submissionDate');
   }
 
-
   if (!hasObjectValues(v2Deal.exporter)) {
     errors.push('exporter');
   }
