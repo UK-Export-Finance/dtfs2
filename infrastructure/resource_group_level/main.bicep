@@ -14,8 +14,14 @@ param acrName string = 'tfsfeatureacr${uniqueString(resourceGroup().id)}'
 param acrSku string = 'Basic'
 
 
-// Dev uses 172.16.4x.x
-// Feature can use 172.16.2x.x
+// Dev uses 172.16.4x.xx
+// Demo (legacy?) uses 172.16.6x.xx
+
+// Test uses 172.16.5x.xx 
+// Staging uses 172.16.7x.xx
+
+// Feature can use 172.16.2x.xx
+
 param routeTableNextHopIpAddress string = '10.50.0.100'
 param mulesoftSubnetCidr string = '172.16.10.0/23'
 param productionSubnetCidr string = '10.60.0.0/16'

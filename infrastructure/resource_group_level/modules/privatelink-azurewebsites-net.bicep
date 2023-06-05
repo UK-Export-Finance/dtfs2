@@ -53,6 +53,7 @@ resource appServiceVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
 // Dev seems to include a set of "Demo" values too
 // Test seeems to include a set of "Staging" values too.
 
+// TODO:DTFS-6422 update for "Feature" values
 
 // Demo A records
 
