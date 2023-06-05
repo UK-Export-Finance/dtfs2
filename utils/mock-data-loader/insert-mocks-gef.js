@@ -31,7 +31,8 @@ const insertMocks = async () => {
 
   const latestEligibilityCriteria = await api.latestEligibilityCriteria(token);
 
-  for (const item of MOCKS.APPLICATION.entries()) {
+  // eslint-disable-next-line no-unused-vars
+  for (const [index, item] of MOCKS.APPLICATION.entries()) {
     item.userId = makerUserId;
     const application = await api.createApplication(item, token);
 
