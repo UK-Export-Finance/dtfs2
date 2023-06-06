@@ -86,6 +86,16 @@ module tfsIp 'modules/tfs-ip.bicep' = {
   }
 }
 
+module networkSecurityGroup 'modules/gw-nsg.bicep' = {
+  name: 'networkSecurityGroup'
+  params: {
+    location: location
+    environment: environment
+    frontDoorAccess: frontDoorAccess
+    apiPortalAccessPort: apiPortalAccessPort
+  }
+}
+
 module vnet 'modules/vnet.bicep' = {
   name: 'vnet'
   params: {
@@ -102,6 +112,7 @@ module vnet 'modules/vnet.bicep' = {
     demoPrivateEndpointsPrefixCidr: demoPrivateEndpointsPrefixCidr
     peeringAddressSpace: peeringAddressSpace
     routeTableId: routeTable.outputs.routeTableId
+    networkSecurityGroupId: networkSecurityGroup.outputs.networkSecurityGroupId
   }
 }
 
@@ -138,15 +149,5 @@ module redisCacheDns 'modules/privatelink-redis-cache-windows-net.bicep' = {
   name: 'redisCacheDns'
   params: {
     vnetId: vnet.outputs.vnetId
-  }
-}
-
-module networkSecurityGroup 'modules/gw-nsg.bicep' = {
-  name: 'networkSecurityGroup'
-  params: {
-    location: location
-    environment: environment
-    frontDoorAccess: frontDoorAccess
-    apiPortalAccessPort: apiPortalAccessPort
   }
 }

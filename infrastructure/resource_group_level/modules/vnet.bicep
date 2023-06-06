@@ -9,7 +9,7 @@ param vmCidr string
 param appServicePlanName string
 
 param routeTableId string
-
+param networkSecurityGroupId string
 // TODO:DTFS-6422 Note that none of these parameters/values seem to appear in the old IaC scripts
 param demoGatewayPrefixCidr string
 param demoPrivateEndpointsPrefixCidr string
@@ -75,10 +75,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
         name: privateEndpointsSubnetName
         properties: {
           addressPrefix: privateEndpointsCidr
-          // TODO:DTFS-6422 add nsg when included 
-          // networkSecurityGroup: {
-          //   id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/networkSecurityGroups/tfs-dev-gw-nsg'
-          // }
+          networkSecurityGroup: {
+            id: networkSecurityGroupId
+          }
           serviceEndpoints: [
             {
               service: 'Microsoft.AzureCosmosDB'
@@ -125,10 +124,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
         name: gatewaySubnetName
         properties: {
           addressPrefix: applicationGatewayCidr
-          // TODO:DTFS-6422 add nsg when included 
-          // networkSecurityGroup: {
-          //   id: '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/networkSecurityGroups/tfs-dev-gw-nsg'
-          // }
+          networkSecurityGroup: {
+            id: networkSecurityGroupId
+          }
           // TODO:DTFS-6422 add app gateways when included 
           // applicationGatewayIPConfigurations: [
           //   {

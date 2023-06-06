@@ -149,3 +149,5 @@ resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2022-11-0
     ]
   }
 }
+
+output networkSecurityGroupId string = networkSecurityGroup.id
