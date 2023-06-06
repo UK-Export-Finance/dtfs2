@@ -1,12 +1,5 @@
 param privateDnsZones_privatelink_mongo_cosmos_azure_com_name string = 'privatelink.mongo.cosmos.azure.com'
-param appServicePlanName string
-
-// TODO:DTFS-6422 It doesn't seem quite right to construct the vnet name here as well as in venet.bicep
-var vnetName = 'tfs-${appServicePlanName}-vnet'
-
-resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
-  name: vnetName
-}
+param vnetId string
 
 resource mongoDbDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
   name: privateDnsZones_privatelink_mongo_cosmos_azure_com_name
@@ -43,7 +36,7 @@ resource mongoDbVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@
   properties: {
     registrationEnabled: false
     virtualNetwork: {
-      id: vnet.id
+      id: vnetId
     }
   }
 }

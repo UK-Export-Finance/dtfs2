@@ -112,27 +112,27 @@ module natGateway 'modules/nat-gw_nat_ip.bicep' = {
 module websitesDns 'modules/privatelink-azurewebsites-net.bicep' = {
   name: 'websitesDns'
   params: {
-    appServicePlanName: appServicePlan.name
+    vnetId: vnet.outputs.vnetId
   }
 }
 
 module filesDns 'modules/privatelink-file-core-windows-net.bicep' = {
   name: 'filesDns'
   params: {
-    appServicePlanName: appServicePlan.name 
+    vnetId: vnet.outputs.vnetId
   }
 }
 
 module mongoDbDns 'modules/privatelink-mongo-cosmos-azure-com.bicep' = {
   name: 'mongoDbDns'
   params: {
-    appServicePlanName: appServicePlan.name
+    vnetId: vnet.outputs.vnetId
   }
 }
 
 module redisCacheDns 'modules/privatelink-redis-cache-windows-net.bicep' = {
   name: 'redisCacheDns'
   params: {
-    appServicePlanName: appServicePlan.name 
+    vnetId: vnet.outputs.vnetId
   }
 }

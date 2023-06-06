@@ -1,12 +1,5 @@
 param filesDnsZoneName string = 'privatelink.file.core.windows.net'
-param appServicePlanName string
-
-// TODO:DTFS-6422 It doesn't seem quite right to construct the vnet name here as well as in venet.bicep
-var vnetName = 'tfs-${appServicePlanName}-vnet'
-
-resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
-  name: vnetName
-}
+param vnetId string
 
 resource filesDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
   name: filesDnsZoneName
@@ -15,7 +8,6 @@ resource filesDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
     Environment: 'Preproduction'
   }
 }
-
 
 resource azureDnsSoaRecord 'Microsoft.Network/privateDnsZones/SOA@2018-09-01' = {
   parent: filesDnsZone
@@ -44,7 +36,7 @@ resource filesVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@20
   properties: {
     registrationEnabled: false
     virtualNetwork: {
-      id: vnet.id
+      id: vnetId
     }
   }
 }
