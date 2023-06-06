@@ -46,7 +46,7 @@ resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' 
     natGateway: {
       id: natGateway.id
     }
-// TODO:DTFS-6422 I'm not sure where the following ip address comes from. Is us Azure assigned?
+// TODO:DTFS-6422 I'm not sure where the following ip address comes from. Is it Azure assigned?
 //    ipAddress: '51.132.155.239'
     publicIPAddressVersion: 'IPv4'
     publicIPAllocationMethod: 'Static'
