@@ -1,8 +1,9 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { expect, jest } from '@jest/globals';
 import {
   get,
   post,
 } from '../../test-mocks/router-mock';
-import { expect, jest, test }from '@jest/globals';
 import caseController from '../../controllers/case';
 import partiesController from '../../controllers/case/parties';
 import underwritingController from '../../controllers/case/underwriting';

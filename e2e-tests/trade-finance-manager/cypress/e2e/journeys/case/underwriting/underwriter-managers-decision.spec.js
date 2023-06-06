@@ -87,7 +87,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Form and Validati
 
     it('should reveal comments input', () => {
       pages.managersDecisionPage.commentsInputApproveWithConditions().should('be.visible');
-    })
+    });
 
     it('should throw validation error if no comment provided and persists radio selection', () => {
       pages.managersDecisionPage.submitButton().click();
