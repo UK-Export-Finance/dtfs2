@@ -8,6 +8,8 @@ param vmCidr string
 
 param appServicePlanName string
 
+param routeTableId string
+
 // TODO:DTFS-6422 Note that none of these parameters/values seem to appear in the old IaC scripts
 param demoGatewayPrefixCidr string
 param demoPrivateEndpointsPrefixCidr string
@@ -23,10 +25,6 @@ var privateEndpointsSubnetName = '${environment}-private-endpoints'
 
 // TODO:DTFS-6422 - I don't think this is explicitly named in the scripts. We should come up with a better name.
 var vnetPeeringName = 'tfs-dev-vnet_vnet-ukef-uks'
-
-// We import resources rather than pass them around to get their ids
-// TODO:DTFS-6422 see route-table.bicep and possibly make a parameter?
-var routeTableName = '${resourceGroup().name}-UDR'
 
 resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
   name: vnetName
@@ -157,7 +155,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
         properties: {
           addressPrefix: vmCidr
           routeTable: {
-            id: routeTable.id
+            id: routeTableId
           }
           serviceEndpoints: [
             {
@@ -219,7 +217,4 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
   }
 }
 
-
-resource routeTable 'Microsoft.Network/routeTables@2022-11-01' existing = {
-  name: routeTableName
-}
+output vnetId string = vnet.id

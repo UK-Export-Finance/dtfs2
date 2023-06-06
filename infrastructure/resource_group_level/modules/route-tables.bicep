@@ -36,3 +36,6 @@ resource routeTable 'Microsoft.Network/routeTables@2022-11-01' = {
     }
   }  
 }
+
+@description('The id of the route table created')
+output routeTableId string = routeTable.id

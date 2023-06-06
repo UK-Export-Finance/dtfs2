@@ -97,6 +97,7 @@ module vnet 'modules/vnet.bicep' = {
     demoGatewayPrefixCidr: demoGatewayPrefixCidr
     demoPrivateEndpointsPrefixCidr: demoPrivateEndpointsPrefixCidr
     peeringAddressSpace: peeringAddressSpace
+    routeTableId: routeTable.outputs.routeTableId
   }
 }
 
