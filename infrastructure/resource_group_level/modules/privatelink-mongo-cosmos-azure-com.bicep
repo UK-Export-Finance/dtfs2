@@ -50,6 +50,12 @@ resource mongoDbVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@
 
 // TODO:DTFS-6422 update IP addresses
 
+// Notes from deployment script:
+//  We have to add explicit A records so that Mongo names resolve correctly to the private endpoint address
+//  https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints#integrate-the-private-endpoint-with-a-private-dns-zone-1
+//  NB the zone name needs to be "privatelink.mongo.cosmos.azure.com" rather than "privatelink.documents.azure.com" as per the link above.
+//  NB ipConfigurations[0] appears to be the "primary". There's also a property called "requiredMemberName" that *seems* to be the value needed for record-set-name but I can't find any documentation on it, so sticking with [0] and [1] for now:
+
 // Demo A records
 
 resource demoMongoDb 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
