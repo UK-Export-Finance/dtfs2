@@ -53,6 +53,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
 
       completedDeal.mockFacilities.forEach((facility) => {
         if (facility._id) {
+          // eslint-disable-next-line no-param-reassign
           delete facility._id;
         }
       });
@@ -136,6 +137,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
 
       completedDeal.mockFacilities.forEach((facility) => {
         if (facility._id) {
+          // eslint-disable-next-line no-param-reassign
           delete facility._id;
         }
       });

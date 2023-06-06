@@ -118,6 +118,7 @@ const getV1ExtraInfo = (ecList) => ({
 
 const mapEligibility = (portalDealId, v1Deal) => {
   let hasError = false;
+  // eslint-disable-next-line no-unused-vars
   const logError = (error) => {
     hasError = false;
     log.addError(portalDealId, error);

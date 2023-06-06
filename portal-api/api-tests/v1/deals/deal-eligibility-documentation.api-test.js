@@ -248,6 +248,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
         },
       ];
 
+      // eslint-disable-next-line no-unused-vars
       const expectedFiles = files.map(({ filename, fieldname, type }) => ([{
         filename: filename.replaceAll(/-/g, '_'),
         fullPath: `${process.env.AZURE_PORTAL_EXPORT_FOLDER}/${newId}/${filename.replaceAll(/-/g, '_')}`,

@@ -30,8 +30,8 @@ const init = async () => {
   };
 };
 
-const mapToV2 = async (v1Deal, v2Banks, v2Users) => {
-  const v2Deal = await mapDeal(token, v1Deal, v2Banks, v2Users);
+const mapToV2 = async (v1Deal, v2Bank, v2User) => {
+  const v2Deal = await mapDeal(token, v1Deal, v2Bank, v2User);
 
   const v1Facilities = v1Deal.children.facilities;
   const v2Facilities = mapFacilities(

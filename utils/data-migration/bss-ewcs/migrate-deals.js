@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 const xml2js = require('xml2js');
+const Entities = require('html-entities').AllHtmlEntities;
 const fileshare = require('./helpers/fileshare');
 require('dotenv').config();
 const {
@@ -18,15 +20,12 @@ const { initUsers } = require('../helpers/users');
 const { initCountries } = require('./helpers/countries');
 const { initCurrencies } = require('./helpers/currencies');
 const { initIndustrySectors } = require('./helpers/industry-sectors');
-const { convertV1Date } = require('./helpers/date-helpers');
 const consoleLogColor = require('./helpers/console-log-colour');
 const shouldMigrateDeal = require('./helpers/should-migrate-deal');
 
 const log = require('../helpers/logs');
 const { getToken, removeMigrationUser } = require('../temporary-token-handler');
 const api = require('../api');
-
-const Entities = require('html-entities').AllHtmlEntities;
 
 const entities = new Entities();
 
@@ -128,7 +127,10 @@ const archiveFile = async (dealId) => {
 const processXml = async (dealId) => {
   const dealXml = await fileshare.readFile({ fileshare: 'workflow', folder: `${AZURE_WORKFLOW_FILESHARE_CONFIG.MIGRATION_FOLDER}/${dealId}`, filename: `deal_${dealId}.xml` });
 
-  const { Deal: workflowDeal } = await xml2js.parseStringPromise(dealXml.toString(), { ignoreAttrs: true, explicitArray: false, valueProcessors: [convertHtmlEntities] });
+  const { Deal: workflowDeal } = await xml2js.parseStringPromise(
+    dealXml.toString(),
+    { ignoreAttrs: true, explicitArray: false, valueProcessors: [convertHtmlEntities] }
+  );
   return workflowDeal;
 };
 
@@ -136,8 +138,8 @@ const importSingleDeal = async (dealId) =>
   processXml(dealId).then(async (workflowDeal) => mapV2(dealId, workflowDeal).then(async (v2Deal) => {
     if (v2Deal) {
       if (shouldMigrateDeal(v2Deal.status)) {
-        const success = await api.importBssEwcsDeal(v2Deal, token).then(async ({ success, deal }) => {
-          if (success) {
+        const completed = await api.importBssEwcsDeal(v2Deal, token).then(async ({ success, deal }) => {
+          if (completed) {
             log.addSuccess(dealId);
           } else if (deal.validationErrors) {
             log.addError(dealId, deal.validationErrors.errorList);
@@ -146,9 +148,9 @@ const importSingleDeal = async (dealId) =>
           } else {
             log.addError(dealId, 'unknown API deal create error');
           }
-          return success;
+          return completed;
         });
-        return success;
+        return completed;
       }
     }
     log.addError(dealId, `Error mapping v1 ${dealId} to v2`);
@@ -162,7 +164,6 @@ const migrateDeals = async () => {
 
   for (let i = 0; i < dealFolders.length; i += 1) {
     console.info(`processing deal ${i + 1}: DealId ${dealFolders[i].name}`);
-    // eslint-disable-next-line no-await-in-loop
     const success = await importSingleDeal(dealFolders[i].name);
     consoleLogColor(`Processed ${i + 1} of ${dealFolders.length}: DealId ${dealFolders[i].name}`, success ? 'green' : 'red');
   }

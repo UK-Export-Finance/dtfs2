@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const { ObjectID } = require('bson');
 const MIGRATION_MAP = require('./migration-map');
 const V2_CONSTANTS = require('../../../portal-api/src/constants');
