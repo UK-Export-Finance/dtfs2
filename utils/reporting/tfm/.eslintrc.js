@@ -15,8 +15,8 @@ module.exports = {
     }],
     'no-console': ['error', { allow: ['info', 'error'] }],
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
-    'import/no-named-as-default': 0,
-    'implicit-arrow-linebreak': 0,
+    'import/no-named-as-default': 'off',
+    'implicit-arrow-linebreak': 'off',
     'object-curly-newline': ['error', {
       consistent: true,
     }],

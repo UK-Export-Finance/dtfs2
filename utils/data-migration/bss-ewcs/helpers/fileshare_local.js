@@ -1,4 +1,3 @@
-const { map } = require('cypress/types/bluebird');
 const fs = require('fs');
 
 module.exports = {

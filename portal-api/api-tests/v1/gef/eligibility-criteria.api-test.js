@@ -77,13 +77,13 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that do present a valid Authorization token', async () => {
-      const item = await as(anEditor).post(items[0]).to(baseUrl);
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { status } = await as(aMaker).get(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(200);
     });
 
     it('returns an eligibility criteria', async () => {
-      const item = await as(anEditor).post(items[0]).to(baseUrl);
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { status, body } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(200);
       const expected = {
@@ -118,18 +118,19 @@ describe(baseUrl, () => {
 
   describe(`DELETE ${baseUrl}/:version`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const item = await as(anEditor).post(items[0]).to(baseUrl);
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { status } = await as().remove(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(401);
     });
 
     it('accepts requests that present a valid Authorization token with "editor" role', async () => {
-      const item = await as(anEditor).post(items[0]).to(baseUrl);
+      await as(anEditor).post(items[0]).to(baseUrl);
       const { status } = await as(anEditor).remove(`${baseUrl}/${items[0].version}`);
       expect(status).toEqual(200);
     });
 
     it('deletes the eligibilty-criteria', async () => {
+      // eslint-disable-next-line no-unused-vars
       const { body: createdItem } = await as(anEditor).post(items[0]).to(baseUrl);
       const { body: item } = await as(anEditor).get(`${baseUrl}/${items[0].version}`);
 

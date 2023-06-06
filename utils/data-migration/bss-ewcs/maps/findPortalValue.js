@@ -10,6 +10,7 @@ const findPortalValue = (v1Value, v1FieldName, v2FieldType, v2FieldName, logErro
   return v2Value;
 };
 
+// eslint-disable-next-line no-unused-vars
 const findFacilityStageValue = (v1Value, v1FieldName, type, logError) => {
   const mappedStage = Object.entries(CONSTANTS.FACILITIES.FACILITIES_STAGE[type]).find((s) => s === v1Value);
   if (v1Value && !mappedStage) {

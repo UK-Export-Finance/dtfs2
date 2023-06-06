@@ -31,7 +31,8 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
       hasBeenIssued,
       value: loan.EWCS_Financial_details.EWCS_value,
       currency: getCurrencyById(loan.EWCS_Financial_details.EWCS_currency_code),
-      currencySameAsSupplyContractCurrency: (loan.EWCS_Financial_details.EWCS_currency_code === v1Deal.Deal_information.Financial.Deal_currency_code).toString(),
+      currencySameAsSupplyContractCurrency: (
+        loan.EWCS_Financial_details.EWCS_currency_code === v1Deal.Deal_information.Financial.Deal_currency_code).toString(),
       conversionRate: loan.EWCS_Financial_details.EWCS_conversion_rate_deal,
       disbursementAmount: formatCurrency(loan.EWCS_Financial_details.EWCS_disbursement_amount),
       interestMarginFee: loan.EWCS_Financial_details.EWCS_interest_rate,

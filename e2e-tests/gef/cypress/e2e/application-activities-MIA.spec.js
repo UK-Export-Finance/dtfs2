@@ -27,9 +27,9 @@ context('Submit AIN deal and check portalActivities', () => {
         cy.apiFetchAllApplications(token);
       })
       .then(({ body }) => {
-        // eslint-disable-next-line prefer-destructuring
-        deal = body.items[2];
-        dealId = deal._id;
+        const { 2: mia } = body.items;
+        deal = mia;
+        dealId = mia._id;
 
         cy.login(CREDENTIALS.MAKER);
       });

@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-restricted-syntax */
 const api = require('../../mock-data-loader/tfm/api');
 const tokenFor = require('../../mock-data-loader/temporary-token-handler');
 const USERS = require('./users_with_passwords.json');

@@ -342,7 +342,7 @@ describe(baseUrl, () => {
     });
 
     describe('status update emails', () => {
-      const expectedEmailVariables = (maker, updatedByUser, deal, newStatus) => ({
+      const expectedEmailVariables = (maker, updatedByUser, deal) => ({
         firstName: maker.firstName,
         surname: maker.surname,
         submissionType: deal.submissionType,
@@ -363,7 +363,6 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL }).to(`${baseUrl}/status/${dealId}`);
 
-          const sendEmailCalls = referenceData.sendEmail.mock.calls;
           const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
@@ -388,7 +387,6 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.CHANGES_REQUIRED }).to(`${baseUrl}/status/${dealId}`);
 
-          const sendEmailCalls = referenceData.sendEmail.mock.calls;
           const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
@@ -413,7 +411,6 @@ describe(baseUrl, () => {
           const dealId = body._id;
           await as(aChecker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${baseUrl}/status/${dealId}`);
 
-          const sendEmailCalls = referenceData.sendEmail.mock.calls;
           const firstSendEmailCall = referenceData.sendEmail.mock.calls[0][0];
 
           expect(firstSendEmailCall).toEqual(
