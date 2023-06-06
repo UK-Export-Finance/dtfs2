@@ -109,32 +109,30 @@ module natGateway 'modules/nat-gw_nat_ip.bicep' = {
   }
 }
 
-// TODO:DTFS-6422 include dns modules when we have the IPs & a sensible way of mapping them.
+module websitesDns 'modules/privatelink-azurewebsites-net.bicep' = {
+  name: 'websitesDns'
+  params: {
+    appServicePlanName: appServicePlan.name
+  }
+}
 
-// module websitesDns 'modules/privatelink-azurewebsites-net.bicep' = {
-//   name: 'websitesDns'
-//   params: {
-//     appServicePlanName: appServicePlan.name
-//   }
-// }
+module filesDns 'modules/privatelink-file-core-windows-net.bicep' = {
+  name: 'filesDns'
+  params: {
+    appServicePlanName: appServicePlan.name 
+  }
+}
 
-// module filesDns 'modules/privatelink-file-core-windows-net.bicep' = {
-//   name: 'filesDns'
-//   params: {
-//     appServicePlanName: appServicePlan.name 
-//   }
-// }
+module mongoDbDns 'modules/privatelink-mongo-cosmos-azure-com.bicep' = {
+  name: 'mongoDbDns'
+  params: {
+    appServicePlanName: appServicePlan.name
+  }
+}
 
-// module mongoDbDns 'modules/privatelink-mongo-cosmos-azure-com.bicep' = {
-//   name: 'mongoDbDns'
-//   params: {
-//     appServicePlanName: appServicePlan.name
-//   }
-// }
-
-// module redisCacheDns 'modules/privatelink-redis-cache-windows-net.bicep' = {
-//   name: 'redisCacheDns'
-//   params: {
-//     appServicePlanName: appServicePlan.name 
-//   }
-// }
+module redisCacheDns 'modules/privatelink-redis-cache-windows-net.bicep' = {
+  name: 'redisCacheDns'
+  params: {
+    appServicePlanName: appServicePlan.name 
+  }
+}
