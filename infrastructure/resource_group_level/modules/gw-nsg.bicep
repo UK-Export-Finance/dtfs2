@@ -1,7 +1,13 @@
 param location string
+param environment string
+@allowed(['Allow', 'Deny'])
+param frontDoorAccess string
+param apiPortalAccessPort string
 
-resource tfs_dev_gw_nsg 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
-  name: 'tfs-dev-gw-nsg'
+var nsgName = 'tfs-${environment}-gw-nsg'
+
+resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
+  name: nsgName
   location: location
   tags: {
     Environment: 'Preproduction'
@@ -35,7 +41,7 @@ resource tfs_dev_gw_nsg 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
           destinationPortRange: '*'
           sourceAddressPrefix: 'AzureFrontDoor.Backend'
           destinationAddressPrefix: '*'
-          access: 'Allow'
+          access: frontDoorAccess
           priority: 200
           direction: 'Inbound'
           sourcePortRanges: []
@@ -44,14 +50,18 @@ resource tfs_dev_gw_nsg 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
           destinationAddressPrefixes: []
         }
       }
-      // TODO:DTFS-6422 Note that staging doesn't have the api-port rule. Investigate!
+      // TODO:DTFS-6422 Note that staging / prod don't have the api-port rule.
+      // It is set much later around like 2310 in development_infrastructure.yml as part of the
+      // "Configure Portal API access" task.
+      // Either add the rule later as part of that, or build the list of rules up conditionally.
+      // (e.g. unioning the others with this one?)
       {
         name: 'api-port'
         type: 'Microsoft.Network/networkSecurityGroups/securityRules'
         properties: {
           protocol: '*'
           sourcePortRange: '*'
-          destinationPortRange: '44232'
+          destinationPortRange: apiPortalAccessPort
           sourceAddressPrefix: 'Internet'
           destinationAddressPrefix: '*'
           access: 'Allow'
@@ -81,6 +91,7 @@ resource tfs_dev_gw_nsg 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
           destinationAddressPrefixes: []
         }
       }
+      // TODO:DTFS-6422 We will probably need a 'vm-ips-feature'
       {
         name: 'vm-ips-test'
         type: 'Microsoft.Network/networkSecurityGroups/securityRules'

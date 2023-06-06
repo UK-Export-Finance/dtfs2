@@ -43,6 +43,10 @@ param vnetAddressPrefixes array = [
 param privateEndpointsCidr string = '172.16.20.0/24'
 param peeringAddressSpace string = '10.50.0.0/16'
 
+@allowed(['Allow', 'Deny'])
+param frontDoorAccess string = 'Allow'
+param apiPortalAccessPort string = '44232' // not set in staging / prod
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
   location: location
@@ -134,5 +138,15 @@ module redisCacheDns 'modules/privatelink-redis-cache-windows-net.bicep' = {
   name: 'redisCacheDns'
   params: {
     vnetId: vnet.outputs.vnetId
+  }
+}
+
+module networkSecurityGroup 'modules/gw-nsg.bicep' = {
+  name: 'networkSecurityGroup'
+  params: {
+    location: location
+    environment: environment
+    frontDoorAccess: frontDoorAccess
+    apiPortalAccessPort: apiPortalAccessPort
   }
 }
