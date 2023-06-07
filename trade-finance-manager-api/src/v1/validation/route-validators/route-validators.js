@@ -12,7 +12,7 @@ const partyURNValidation = param('urn')
 
 exports.userIdEscapingSanitization = [userParamEscapingSanitization];
 
-exports.userIdMongoIdValidation = [userParamValidation];
+exports.userIdValidation = [userParamValidation];
 
 exports.facilityIdValidation = [facilityIdValidation];
 
@@ -20,4 +20,4 @@ exports.facilityIdAndAmendmentIdValidations = [facilityIdValidation, amendmentId
 
 exports.dealIdValidation = [dealIdValidation];
 
-exports.paryUrnValidation = [partyURNValidation];
+exports.partyUrnValidation = [partyURNValidation];

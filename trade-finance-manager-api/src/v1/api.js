@@ -261,7 +261,7 @@ const createFacilityAmendment = async (facilityId) => {
     try {
       const response = await axios({
         method: 'post',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
         headers: { 'Content-Type': 'application/json' },
         data: { facilityId },
       });
@@ -283,7 +283,7 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
     try {
       const response = await axios({
         method: 'put',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/${amendmentId}`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
         headers: { 'Content-Type': 'application/json' },
         data: payload,
       });
@@ -305,7 +305,7 @@ const getAmendmentInProgress = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/in-progress`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/in-progress`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -326,7 +326,7 @@ const getCompletedAmendment = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/completed`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -347,7 +347,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/completed/latest-value`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -368,7 +368,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/status/completed/latest-cover-end-date`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -389,7 +389,7 @@ const getAmendmentById = async (facilityId, amendmentId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment/${amendmentId}`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -410,7 +410,7 @@ const getAmendmentByFacilityId = async (facilityId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendment`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -437,7 +437,7 @@ const getAmendmentsByDealId = async (dealId) => {
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get the amendment by deal Id %O', { response: err?.response?.data });
+      console.error('Unable to get the amendments by deal Id %O', { response: err?.response?.data });
       return { status: 500, data: err?.response?.data };
     }
   } else {
@@ -452,7 +452,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/status/in-progress`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/in-progress`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -473,7 +473,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/status/completed`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/completed`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -494,7 +494,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/status/completed/latest`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/completed/latest`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -515,7 +515,7 @@ const getAllAmendmentsInProgress = async () => {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/amendments/status/in-progress`,
+        url: `${centralApiUrl}/v1/tfm/amendments`,
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -547,11 +547,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
   }
 };
 
-const queryDeals = async ({
-  queryParams,
-  start = 0,
-  pagesize = 0,
-}) => {
+const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
   try {
     const response = await axios({
       method: 'get',
@@ -887,11 +883,7 @@ const createEstoreFolders = async (data) => {
   }
 };
 
-const sendEmail = async (
-  templateId,
-  sendToEmailAddress,
-  emailVariables,
-) => {
+const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   try {
     const response = await axios({
       method: 'post',

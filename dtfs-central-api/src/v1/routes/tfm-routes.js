@@ -409,21 +409,13 @@ tfmRouter.route('/facilities/:id').put(
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/amendments/status/in-progress').get(tfmGetAmendmentController.getAllAmendmentsInProgress);
-tfmRouter.route('/facilities/:facilityId/amendment').get(tfmGetAmendmentController.getAllAmendmentsByFacilityId);
-tfmRouter.route('/facilities/:facilityId/amendment/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgress);
-tfmRouter.route('/facilities/:facilityId/amendment/status/completed').get(tfmGetAmendmentController.getAllCompletedAmendmentsByFacilityId);
-tfmRouter.route('/facilities/:facilityId/amendment/status/completed/latest-value').get(tfmGetAmendmentController.getLatestCompletedAmendmentValue);
-tfmRouter.route('/facilities/:facilityId/amendment/status/completed/latest-cover-end-date').get(tfmGetAmendmentController.getLatestCompletedAmendmentDate);
-tfmRouter.route('/facilities/:facilityId/amendment/:amendmentId').get(tfmGetAmendmentController.getAmendmentById);
-tfmRouter.route('/deals/:dealId/amendments').get(tfmGetAmendmentController.getAmendmentsByDealId);
-tfmRouter.route('/deals/:dealId/amendment/status/in-progress').get(tfmGetAmendmentController.getAmendmentInProgressByDealId);
-tfmRouter.route('/deals/:dealId/amendment/status/completed').get(tfmGetAmendmentController.getCompletedAmendmentByDealId);
-tfmRouter.route('/deals/:dealId/amendment/status/completed/latest').get(tfmGetAmendmentController.getLatestCompletedAmendmentByDealId);
+tfmRouter.route('/amendments').get(tfmGetAmendmentController.getAllAmendmentsInProgress);
+tfmRouter.route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?').get(tfmGetAmendmentController.getAmendmentsByFacilityId);
+tfmRouter.route('/deals/:dealId/amendments/:status?/:type?').get(tfmGetAmendmentController.getAmendmentsByDealId);
 
 /**
  * @openapi
- * /tfm/facilities/:facilityId/amendment:
+ * /tfm/facilities/:facilityId/amendments:
  *   post:
  *     summary: Creates new amendment object and changes status
  *     tags: [TFM, Amendments]
@@ -461,7 +453,7 @@ tfmRouter.route('/deals/:dealId/amendment/status/completed/latest').get(tfmGetAm
 *       404:
 *         description: Not found
 */
-tfmRouter.route('/facilities/:facilityId/amendment').post(tfmPostAmendmentController.postTfmAmendment);
+tfmRouter.route('/facilities/:facilityId/amendments').post(tfmPostAmendmentController.postTfmAmendment);
 
 /**
 * @openapi
@@ -470,7 +462,7 @@ tfmRouter.route('/facilities/:facilityId/amendment').post(tfmPostAmendmentContro
 *       404:
 *         description: Not found
 */
-tfmRouter.route('/facilities/:facilityId/amendment/:amendmentId').put(tfmPutAmendmentController.updateTfmAmendment);
+tfmRouter.route('/facilities/:facilityId/amendments/:amendmentId').put(tfmPutAmendmentController.updateTfmAmendment);
 
 /**
  * @openapi

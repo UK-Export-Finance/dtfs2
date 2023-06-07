@@ -50,14 +50,14 @@ describe('POST TFM amendments', () => {
     newFacility.dealId = dealId;
   });
 
-  describe('POST /v1/tfm/facilities/:id/amendment', () => {
+  describe('POST /v1/tfm/facilities/:id/amendments', () => {
     it('should create a new amendment based on facilityId', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const newId = postResult.body._id;
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendment`);
+      const { body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments`);
       expect(body).toEqual({ amendmentId: expect.any(String) });
     });
 
@@ -67,10 +67,10 @@ describe('POST TFM amendments', () => {
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { body: bodyPostResponse1 } = await api.post().to(`/v1/tfm/facilities/${newId}/amendment`);
+      const { body: bodyPostResponse1 } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments`);
       const updatePayload1 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
-      await api.put(updatePayload1).to(`/v1/tfm/facilities/${newId}/amendment/${bodyPostResponse1.amendmentId}`);
-      const { body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendment`);
+      await api.put(updatePayload1).to(`/v1/tfm/facilities/${newId}/amendments/${bodyPostResponse1.amendmentId}`);
+      const { body } = await api.post().to(`/v1/tfm/facilities/${newId}/amendments`);
       expect(body).toEqual({ status: 400, message: 'The current facility already has an amendment in progress' });
     });
 
@@ -80,15 +80,15 @@ describe('POST TFM amendments', () => {
 
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      await api.post().to(`/v1/tfm/facilities/${newId}/amendment`);
-      const { body } = await api.post().to('/v1/tfm/facilities/62727d055ca1841f08216353/amendment');
+      await api.post().to(`/v1/tfm/facilities/${newId}/amendments`);
+      const { body } = await api.post().to('/v1/tfm/facilities/62727d055ca1841f08216353/amendments');
       expect(body).toEqual({ status: 404, message: 'The current facility does not exist' });
     });
 
     it('should return 400 if the facility Id is not valid', async () => {
       await api.put({ dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit');
 
-      const { body } = await api.post().to('/v1/tfm/facilities/123/amendment');
+      const { body } = await api.post().to('/v1/tfm/facilities/123/amendments');
       expect(body).toEqual({ status: 400, message: 'Invalid facility id' });
     });
   });
