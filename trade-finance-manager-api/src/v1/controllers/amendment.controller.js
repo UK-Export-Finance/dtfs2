@@ -115,20 +115,25 @@ const getAmendmentById = async (req, res) => {
 const getAmendmentByFacilityId = async (req, res) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
   let amendment;
-  if (amendmentIdOrStatus === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-    amendment = (await api.getAmendmentInProgress(facilityId)).data;
-  } else if (amendmentIdOrStatus === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
-    if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
-      amendment = await api.getLatestCompletedAmendmentDate(facilityId);
-    } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_VALUE) {
-      amendment = await api.getLatestCompletedAmendmentValue(facilityId);
-    } else {
-      amendment = await api.getCompletedAmendment(facilityId);
-    }
-  } else if (ObjectId.isValid(amendmentIdOrStatus)) {
-    amendment = await api.getAmendmentById(facilityId, amendmentIdOrStatus);
-  } else if (!amendmentIdOrStatus && !type) {
-    amendment = await api.getAmendmentByFacilityId(facilityId);
+  switch (amendmentIdOrStatus) {
+    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
+      amendment = (await api.getAmendmentInProgress(facilityId)).data;
+      break;
+    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED:
+      if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
+        amendment = await api.getLatestCompletedAmendmentDate(facilityId);
+      } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_VALUE) {
+        amendment = await api.getLatestCompletedAmendmentValue(facilityId);
+      } else {
+        amendment = await api.getCompletedAmendment(facilityId);
+      }
+      break;
+    default:
+      if (ObjectId.isValid(amendmentIdOrStatus)) {
+        amendment = await api.getAmendmentById(facilityId, amendmentIdOrStatus);
+      } else if (!amendmentIdOrStatus && !type) {
+        amendment = await api.getAmendmentByFacilityId(facilityId);
+      }
   }
   if (amendment) {
     return res.status(200).send(amendment);
@@ -139,16 +144,21 @@ const getAmendmentByFacilityId = async (req, res) => {
 const getAmendmentsByDealId = async (req, res) => {
   const { dealId, status, type } = req.params;
   let amendment;
-  if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-    amendment = await api.getAmendmentInProgressByDealId(dealId);
-  } else if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED) {
-    if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST) {
-      amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
-    } else {
-      amendment = await api.getCompletedAmendmentByDealId(dealId);
-    }
-  } else if (!status && !type) {
-    amendment = await api.getAmendmentsByDealId(dealId);
+  switch (status) {
+    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
+      amendment = await api.getAmendmentInProgressByDealId(dealId);
+      break;
+    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED:
+      if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST) {
+        amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
+      } else {
+        amendment = await api.getCompletedAmendmentByDealId(dealId);
+      }
+      break;
+    default:
+      if (!status && !type) {
+        amendment = await api.getAmendmentsByDealId(dealId);
+      }
   }
   if (amendment) {
     return res.status(200).send(amendment);

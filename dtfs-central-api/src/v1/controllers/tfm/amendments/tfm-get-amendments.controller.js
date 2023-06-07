@@ -433,21 +433,26 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
   if (ObjectId.isValid(facilityId)) {
     let amendment;
-    if (amendmentIdOrStatus === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-      const amendments = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
-      amendment = amendments[0] ?? {};
-    } else if (amendmentIdOrStatus === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED) {
-      if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_VALUE) {
-        amendment = (await findLatestCompletedValueAmendmentByFacilityId(facilityId)) ?? {};
-      } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
-        amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
-      }  else {
-        amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
-      }
-    } else if (ObjectId.isValid(amendmentIdOrStatus)) {
-      amendment = (await findAmendmentById(facilityId, amendmentIdOrStatus)) ?? {};
-    } else {
-      amendment = (await findAllAmendmentsByFacilityId(facilityId)) ?? [];
+    switch (amendmentIdOrStatus) {
+      case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
+        const amendmentsInProgress = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+        amendment = amendmentsInProgress[0] ?? {};
+        break;
+      case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED:
+        if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_VALUE) {
+          amendment = (await findLatestCompletedValueAmendmentByFacilityId(facilityId)) ?? {};
+        } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
+          amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
+        } else {
+          amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+        }
+        break;
+      default:
+        if (ObjectId.isValid(amendmentIdOrStatus)) {
+          amendment = (await findAmendmentById(facilityId, amendmentIdOrStatus)) ?? {};
+        } else {
+          amendment = (await findAllAmendmentsByFacilityId(facilityId)) ?? [];
+        }
     }
     return res.status(200).send(amendment);
   }
@@ -458,16 +463,19 @@ exports.getAmendmentsByDealId = async (req, res) => {
   const { dealId, status, type } = req.params;
   if (ObjectId.isValid(dealId)) {
     let amendment;
-    if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
-      amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
-    } else if (status === CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED) {
-      if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST) {
-        amendment = (await findLatestCompletedAmendmentByDealId(dealId)) ?? {};
-      } else {
-        amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
-      }
-    } else {
-      amendment = (await findAmendmentsByDealId(dealId)) ?? [];
+    switch (status) {
+      case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
+        amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+        break;
+      case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED:
+        if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST) {
+          amendment = (await findLatestCompletedAmendmentByDealId(dealId)) ?? {};
+        } else {
+          amendment = (await findAmendmentByStatusAndDealId(dealId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+        }
+        break;
+      default:
+        amendment = (await findAmendmentsByDealId(dealId)) ?? [];
     }
     return res.status(200).send(amendment);
   }
