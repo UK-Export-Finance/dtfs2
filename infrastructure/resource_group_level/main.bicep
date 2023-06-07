@@ -44,6 +44,19 @@ param peeringAddressSpace string = '10.50.0.0/16'
 param frontDoorAccess string = 'Allow'
 param apiPortalAccessPort string = '44232' // not set in staging / prod
 
+param onPremiseNetworkIps array = [
+  //'COLT Technology Services Group Limited'
+  '213.86.43.20'
+  //'COLT Technology Services Group Limited'
+  '213.86.43.22'
+  // UKEF Office
+  '51.140.76.208'
+]
+
+@allowed(['Allow', 'Deny'])
+param storageNetworkAccessDefaultAction string= 'Allow'
+// Staging has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
   location: location
@@ -135,5 +148,18 @@ module redisCacheDns 'modules/privatelink-redis-cache-windows-net.bicep' = {
   name: 'redisCacheDns'
   params: {
     vnetId: vnet.outputs.vnetId
+  }
+}
+
+module storage 'modules/storage.bicep' = {
+  name: 'storage'
+  params: {
+    location: location
+    environment: environment
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    gatewaySubnetId: vnet.outputs.gatewaySubnetId
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    allowedIps: onPremiseNetworkIps
+    networkAccessDefaultAction: storageNetworkAccessDefaultAction
   }
 }
