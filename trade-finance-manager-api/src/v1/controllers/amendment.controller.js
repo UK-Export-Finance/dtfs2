@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -15,6 +16,7 @@ const {
   addLatestAmendmentValue,
   addLatestAmendmentDates,
 } = require('../helpers/amendment.helpers');
+const CONSTANTS = require('../../constants');
 
 const sendAmendmentEmail = async (amendmentId, facilityId) => {
   try {
@@ -24,7 +26,7 @@ const sendAmendmentEmail = async (amendmentId, facilityId) => {
     if (amendmentEmailEligible(amendment)) {
       const { dealSnapshot } = await api.findOneDeal(amendment.dealId);
       if (dealSnapshot) {
-      // gets portal user to ensure latest details
+        // gets portal user to ensure latest details
         const user = await api.findPortalUserById(dealSnapshot.maker._id);
 
         // if automaticApprovalEmail and !automaticApprovalEmailSent (email not sent before)
@@ -101,42 +103,6 @@ const createAmendmentTFMObject = async (amendmentId, facilityId) => {
   }
 };
 
-const getAmendmentInProgress = async (req, res) => {
-  const { facilityId } = req.params;
-  const { data: amendment, status } = await api.getAmendmentInProgress(facilityId);
-  if (status === 200) {
-    return res.status(200).send(amendment);
-  }
-  return res.status(422).send({ data: 'Unable to get amendment in progress' });
-};
-
-const getCompletedAmendment = async (req, res) => {
-  const { facilityId } = req.params;
-  const amendment = await api.getCompletedAmendment(facilityId);
-  if (amendment) {
-    return res.status(200).send(amendment);
-  }
-  return res.status(422).send({ data: 'Unable to get the completed amendment' });
-};
-
-const getLatestCompletedAmendmentValue = async (req, res) => {
-  const { facilityId } = req.params;
-  const amendment = await api.getLatestCompletedAmendmentValue(facilityId);
-  if (amendment) {
-    return res.status(200).send(amendment);
-  }
-  return res.status(422).send({ data: 'Unable to get the latest completed value amendment' });
-};
-
-const getLatestCompletedAmendmentDate = async (req, res) => {
-  const { facilityId } = req.params;
-  const amendment = await api.getLatestCompletedAmendmentDate(facilityId);
-  if (amendment) {
-    return res.status(200).send(amendment);
-  }
-  return res.status(422).send({ data: 'Unable to get the latest completed coverEndDate amendment' });
-};
-
 const getAmendmentById = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const amendment = await api.getAmendmentById(facilityId, amendmentId);
@@ -147,8 +113,28 @@ const getAmendmentById = async (req, res) => {
 };
 
 const getAmendmentByFacilityId = async (req, res) => {
-  const { facilityId } = req.params;
-  const amendment = await api.getAmendmentByFacilityId(facilityId);
+  const { facilityId, amendmentIdOrStatus, type } = req.params;
+  let amendment;
+  switch (amendmentIdOrStatus) {
+    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
+      amendment = (await api.getAmendmentInProgress(facilityId)).data;
+      break;
+    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED:
+      if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
+        amendment = await api.getLatestCompletedAmendmentDate(facilityId);
+      } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_VALUE) {
+        amendment = await api.getLatestCompletedAmendmentValue(facilityId);
+      } else {
+        amendment = await api.getCompletedAmendment(facilityId);
+      }
+      break;
+    default:
+      if (ObjectId.isValid(amendmentIdOrStatus)) {
+        amendment = await api.getAmendmentById(facilityId, amendmentIdOrStatus);
+      } else if (!amendmentIdOrStatus && !type) {
+        amendment = await api.getAmendmentByFacilityId(facilityId);
+      }
+  }
   if (amendment) {
     return res.status(200).send(amendment);
   }
@@ -156,47 +142,40 @@ const getAmendmentByFacilityId = async (req, res) => {
 };
 
 const getAmendmentsByDealId = async (req, res) => {
-  const { dealId } = req.params;
-  const amendment = await api.getAmendmentsByDealId(dealId);
+  const { dealId, status, type } = req.params;
+  let amendment;
+  switch (status) {
+    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
+      amendment = await api.getAmendmentInProgressByDealId(dealId);
+      break;
+    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED:
+      if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST) {
+        amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
+      } else {
+        amendment = await api.getCompletedAmendmentByDealId(dealId);
+      }
+      break;
+    default:
+      if (!status && !type) {
+        amendment = await api.getAmendmentsByDealId(dealId);
+      }
+  }
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ data: 'Unable to get the amendment by deal Id' });
+  return res.status(422).send({ data: 'Unable to get the amendments by deal Id' });
 };
 
-const getAmendmentInProgressByDealId = async (req, res) => {
-  const { dealId } = req.params;
-  const amendment = await api.getAmendmentInProgressByDealId(dealId);
+const getAllAmendments = async (req, res) => {
+  const { status } = req.query;
+  let amendment;
+  if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
+    amendment = await api.getAllAmendmentsInProgress();
+  }
   if (amendment) {
     return res.status(200).send(amendment);
   }
-  return res.status(422).send({ data: 'Unable to get the amendment in progress by deal Id' });
-};
-
-const getCompletedAmendmentByDealId = async (req, res) => {
-  const { dealId } = req.params;
-  const amendment = await api.getCompletedAmendmentByDealId(dealId);
-  if (amendment) {
-    return res.status(200).send(amendment);
-  }
-  return res.status(422).send({ data: 'Unable to get the completed amendment by deal Id' });
-};
-
-const getLatestCompletedAmendmentByDealId = async (req, res) => {
-  const { dealId } = req.params;
-  const amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
-  if (amendment) {
-    return res.status(200).send(amendment);
-  }
-  return res.status(422).send({ data: 'Unable to get the latest completed amendment by deal Id' });
-};
-
-const getAllAmendmentsInProgress = async (req, res) => {
-  const amendment = await api.getAllAmendmentsInProgress();
-  if (amendment) {
-    return res.status(200).send(amendment);
-  }
-  return res.status(422).send({ data: 'Unable to get the amendments in progress' });
+  return res.status(422).send({ data: 'Unable to get the amendments' });
 };
 
 const createFacilityAmendment = async (req, res) => {
@@ -300,18 +279,11 @@ const updateFacilityAmendment = async (req, res) => {
 module.exports = {
   createFacilityAmendment,
   updateFacilityAmendment,
-  getAmendmentInProgress,
-  getCompletedAmendment,
   getAmendmentById,
   getAmendmentByFacilityId,
   getAmendmentsByDealId,
-  getAmendmentInProgressByDealId,
-  getCompletedAmendmentByDealId,
-  getLatestCompletedAmendmentByDealId,
-  getAllAmendmentsInProgress,
+  getAllAmendments,
   sendAmendmentEmail,
   updateTFMDealLastUpdated,
-  getLatestCompletedAmendmentValue,
-  getLatestCompletedAmendmentDate,
   createAmendmentTFMObject,
 };
