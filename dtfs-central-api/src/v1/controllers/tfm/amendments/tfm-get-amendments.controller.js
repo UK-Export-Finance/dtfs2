@@ -434,10 +434,11 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
   if (ObjectId.isValid(facilityId)) {
     let amendment;
     switch (amendmentIdOrStatus) {
-      case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
+      case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS: {
         const amendmentsInProgress = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
         amendment = amendmentsInProgress[0] ?? {};
         break;
+      }
       case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED:
         if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_VALUE) {
           amendment = (await findLatestCompletedValueAmendmentByFacilityId(facilityId)) ?? {};
