@@ -95,7 +95,7 @@
           {{ govukCharacterCount({
             name: "internalComments",
             id: "internalComments",
-            maxlength: 1000,
+            maxlength: 8000,
             rows: 9,
             label: {
               text: "Comments (optional)"
@@ -108,7 +108,10 @@
             },
             value: submittedValues.internalComments,
             errorMessage: validationErrors.errorList.internalComments and {
-              text: validationErrors.errorList.internalComments.text
+              text: validationErrors.errorList.internalComments.text,
+              attributes: {
+                'data-cy': 'internalComments-input-error'
+              }
             }
           }) }}
 
