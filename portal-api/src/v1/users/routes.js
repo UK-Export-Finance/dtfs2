@@ -53,7 +53,6 @@ module.exports.create = async (req, res, next) => {
     delete req.body._csrf;
   }
   await findByEmail(req.body.email, (error, account) => {
-    console.log('===>', req.body.email, account);
     let userExists = {};
     if (account) {
       // User exists with same email address
