@@ -18,17 +18,6 @@ exports.create = async (req, res) => {
     });
   }
 
-  const modifiedFeedback = {
-    ...req.body,
-    created: getUnixTime(new Date()),
-  };
-
-  const collection = await db.getCollection('tfm-feedback');
-  const createdFeedback = await collection.insertOne(modifiedFeedback);
-
-  // get formatted date from created timestamp, to display in email
-  const formattedCreated = format(fromUnixTime(modifiedFeedback.created), 'dd/MM/yyyy HH:mm');
-
   const {
     role,
     team,
@@ -38,7 +27,25 @@ exports.create = async (req, res) => {
     howCanWeImprove,
     emailAddress,
     submittedBy,
-  } = modifiedFeedback;
+  } = req.body;
+
+  const modifiedFeedback = {
+    role,
+    team,
+    whyUsingService,
+    easyToUse,
+    satisfied,
+    howCanWeImprove,
+    emailAddress,
+    submittedBy,
+    created: getUnixTime(new Date())
+  };
+
+  const collection = await db.getCollection('tfm-feedback');
+  const createdFeedback = await collection.insertOne(modifiedFeedback);
+
+  // get formatted date from created timestamp, to display in email
+  const formattedCreated = format(fromUnixTime(modifiedFeedback.created), 'dd/MM/yyyy HH:mm');
 
   if (!submittedBy.username) {
     submittedBy.username = 'N/A';
