@@ -1,31 +1,17 @@
 const CONSTANTS = require('../../constants');
 
-const { hasValue, isAlphanumeric } = require('../../helpers/string');
+const { hasValue } = require('../../helpers/string');
 const { increment } = require('../../helpers/number');
 const generateValidationErrors = require('../../helpers/validation');
-
-const MAX_COMMENTS_LENGTH = 1000;
 
 const validateCommentField = (validationErrors, errorsCount, fieldLabel, fieldId, value) => {
   let errors = validationErrors;
   let count = errorsCount;
 
-  if (!isAlphanumeric(value)) {
+  if (value.length > CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS_MAX_COMMENT_LENGTH) {
     count = increment(count);
 
-    errors = generateValidationErrors(fieldId, `${fieldLabel} must only include letters a to z, numbers, hyphens, commas and spaces`, count, errors);
-  }
-
-  // remove new lines from textarea input value
-  const strippedValueArray = value.split(/[\r]/g);
-
-  // combine split values into single array
-  const strippedValue = strippedValueArray.reduce((a, b) => [...a, ...b], []);
-
-  if (strippedValue.length > MAX_COMMENTS_LENGTH) {
-    count = increment(count);
-
-    errors = generateValidationErrors(fieldId, `${fieldLabel} must be ${MAX_COMMENTS_LENGTH} characters or fewer`, count, errors);
+    errors = generateValidationErrors(fieldId, `${fieldLabel} must be ${CONSTANTS.DECISIONS.UNDERWRITER_MANAGER_DECISIONS_MAX_COMMENT_LENGTH} characters or fewer`, count, errors);
   }
 
   return {
