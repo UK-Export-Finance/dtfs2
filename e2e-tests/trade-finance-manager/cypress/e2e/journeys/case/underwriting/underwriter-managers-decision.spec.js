@@ -208,7 +208,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Submit Form', () 
     pages.underwritingPage.addUnderwriterManagerDecisionButton().click({ force: true });
 
     const MOCK_COMMENTS = 'Approval comment. <div>Div contents</div><script>Script contents</script> &lt;img src = \'data:abc\' /&gt;';
-    const MOCK_INTERNAL_COMMENTS = 'Internal comment. <div>Div contents</div><script>Script contents</script>> &lt;img src = \'data:abc\' /&gt;';
+    const MOCK_INTERNAL_COMMENTS = 'Internal comment. <div>Div contents</div><script>Script contents</script> &lt;img src = \'data:abc\' /&gt;';
 
     pages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
 
@@ -237,11 +237,11 @@ context('Case Underwriting - Underwriter Manager\'s decision - Submit Form', () 
     });
 
     pages.managersDecisionPage.conditions().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Approval comment. Div contents> &lt;img src = \'data:abc\' /&gt;');
+      expect(text.trim()).to.equal('Approval comment. Div contents &lt;img src = \'data:abc\' /&gt;');
     });
 
     pages.managersDecisionPage.internalComments().invoke('text').then((text) => {
-      expect(text.trim()).to.equal('Internal comment. Div contents> &lt;img src = \'data:abc\' /&gt;');
+      expect(text.trim()).to.equal('Internal comment. Div contents &lt;img src = \'data:abc\' /&gt;');
     });
 
     // deal stage
