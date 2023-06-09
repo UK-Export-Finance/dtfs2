@@ -4,6 +4,7 @@ const swaggerUi = require('swagger-ui-express');
 const { ApolloServer } = require('apollo-server-express');
 const { applyMiddleware } = require('graphql-middleware');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
+const mongoSanitise = require('express-mongo-sanitize');
 const graphqlKeyAuthentication = require('./graphql/key-authentication');
 const graphqlPermissions = require('./graphql/middleware/graphql-permissions');
 const {
@@ -26,6 +27,11 @@ app.use(compression());
 app.use(healthcheck);
 app.use('/v1', openRouter);
 app.use(graphQlRouter);
+
+app.use(mongoSanitise({
+  allowDots: true,
+  replaceWith: 'USD',
+}));
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schemaWithMiddleware = applyMiddleware(schema, graphqlPermissions);

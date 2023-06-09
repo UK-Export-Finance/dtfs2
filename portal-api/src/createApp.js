@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
+const mongoSanitise = require('express-mongo-sanitize');
 const healthcheck = require('./healthcheck');
 
 dotenv.config();
@@ -22,6 +23,10 @@ app.use(healthcheck);
 app.use(passport.initialize());
 app.use(express.json());
 app.use(compression());
+app.use(mongoSanitise({
+  allowDots: true,
+  replaceWith: 'USD',
+}));
 
 app.use(cors({
   origin: CORS_ORIGIN,
