@@ -26,8 +26,8 @@ context('Admin user creates a new user', () => {
   };
 
   const userWithInjection = {
-    username: '"$gt": ""',
-    email: '"$gt": ""',
+    username: '{ "$gt": "" }',
+    email: '{ "$gt": "" }',
     password: 'TestPassword123!',
     firstname: 'test',
     surname: 'injection',
@@ -141,7 +141,7 @@ context('Admin user creates a new user', () => {
     });
   });
 
-  it('Admin user adds a new user using " "$gt": "" ", triggering validation error for email', () => {
+  it('Admin user adds a new user using "{ "$gt": "" }", triggering validation error for email', () => {
     // Login and go to the dashboard
     cy.login(ADMIN);
 
@@ -154,7 +154,8 @@ context('Admin user creates a new user', () => {
       createUser.role(role).click();
     });
 
-    createUser.username().type(userWithInjection.username);
+    // as the string has object characters, need to use parseSpecialCharSequences
+    createUser.username().type(userWithInjection.username, { parseSpecialCharSequences: false });
     createUser.manualPassword().click();
     createUser.password().type(userWithInjection.password);
     createUser.confirmPassword().type(userWithInjection.password);
@@ -169,13 +170,13 @@ context('Admin user creates a new user', () => {
     // checks html form validation pop up contains correct error message
     cy.get('input:invalid').should('have.length', 1);
     createUser.username().then(($input) => {
-      expect($input[0].validationMessage).to.eq('Please include an \'@\' in the email address. \'"$gt":""\' is missing an \'@\'.');
+      expect($input[0].validationMessage).to.eq("Please include an '@' in the email address. '{\"$gt\":\"\"}' is missing an '@'.");
     });
 
     /**
      * to check that user has not been created
      * gets list of users from portal-api
-     * finds one with email "$gt": ""
+     * finds one with email { "$gt": "" }
      * should be undefined
      */
     cy.listAllUsers().then((usersInDb) => {
