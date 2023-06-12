@@ -52,6 +52,25 @@ module.exports.create = async (req, res, next) => {
   if (req?.body?._csrf) {
     delete req.body._csrf;
   }
+
+  if (!req.body?.email) {
+    // Empty email address
+    const invalidEmail = {
+      email: {
+        order: '1',
+        text: 'Enter an email address in the correct format',
+      },
+    };
+
+    return res.status(400).json({
+      success: false,
+      errors: {
+        count: invalidEmail.length,
+        errorList: invalidEmail,
+      },
+    });
+  }
+
   await findByEmail(req.body.email, (error, account) => {
     let userExists = {};
     if (account) {
@@ -106,6 +125,8 @@ module.exports.create = async (req, res, next) => {
       return res.json({ success: true, user });
     });
   });
+
+  return null;
 };
 
 module.exports.findById = (req, res, next) => {
