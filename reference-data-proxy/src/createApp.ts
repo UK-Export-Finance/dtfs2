@@ -13,7 +13,11 @@ app.use(express.json());
 app.use(compression());
 
 // MongoDB sanitisation
-app.use(mongoSanitise());
+app.use(
+  mongoSanitise({
+    allowDots: true,
+  }),
+);
 
 // API documentation route
 app.use('/api-docs', swaggerRoutes);

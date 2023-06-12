@@ -6,6 +6,7 @@ const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
 const { findLatest: findLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const api = require('../api');
+const { escapeOperators } = require('../helpers/escapeOperators');
 
 /**
  * Find a deal (BSS, EWCS only)
@@ -179,7 +180,7 @@ const queryAllDeals = async (
   const collection = await db.getCollection('deals');
 
   const results = await collection.aggregate([
-    { $match: filters },
+    { $match: escapeOperators(filters) },
     {
       $project: {
         _id: 1,

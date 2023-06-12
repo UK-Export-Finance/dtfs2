@@ -25,7 +25,9 @@ app.use(express.json());
 app.use(compression());
 
 // MongoDB sanitisation
-app.use(mongoSanitise());
+app.use(mongoSanitise({
+  allowDots: true,
+}));
 
 app.use(cors({
   origin: CORS_ORIGIN,

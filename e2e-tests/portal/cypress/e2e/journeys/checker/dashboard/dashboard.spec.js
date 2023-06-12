@@ -55,8 +55,8 @@ context('View dashboard deals as a checker', () => {
 
   before(() => {
     cy.deleteGefApplications(ADMIN);
-
     cy.deleteDeals(ADMIN);
+
     cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, BANK1_MAKER1)
       .then((createdDeal) => {
         BANK1_DEALS.push(createdDeal);
