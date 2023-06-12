@@ -16,6 +16,7 @@ const {
   mapCurrencies,
   generateErrorSummary,
   formattedTimestamp,
+  constructPayload,
 } = require('../../../helpers');
 const {
   bondDetailsValidationErrors,
@@ -316,11 +317,19 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
   const { user } = req.session;
 
+  const payloadProperties = [
+    'issuedDate',
+    'requestedCoverStartDate',
+    'coverEndDate',
+    'name'
+  ];
+  const payload = constructPayload(req.body, payloadProperties);
+
   const { validationErrors, bond } = await postToApi(
     api.updateBondIssueFacility(
       dealId,
       bondId,
-      req.body,
+      payload,
       userToken,
     ),
     errorHref,

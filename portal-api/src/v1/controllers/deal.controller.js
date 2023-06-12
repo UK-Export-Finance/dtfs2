@@ -75,7 +75,11 @@ const createNewDealData = async (deal, maker) => {
  * Create a deal (BSS, EWCS only)
  */
 const createDeal = async (dealBody, user) => {
-  const deal = await createNewDealData(dealBody, user);
+  const dealData = {
+    ...dealBody.bankInternalRefName,
+    ...dealBody.additionalRefName
+  };
+  const deal = await createNewDealData(dealData, user);
   return api.createDeal(deal, user);
 };
 exports.createDeal = createDeal;
@@ -114,6 +118,8 @@ exports.findOne = (req, res) => {
 };
 
 const updateDeal = async (dealId, dealUpdate, user) => {
+  // write custom logic to only allow certain subsets of values
+  // allow facilityValue, coverEndDate, 
   const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
 
   return updatedDeal;

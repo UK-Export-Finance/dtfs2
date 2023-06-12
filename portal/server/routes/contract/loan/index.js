@@ -14,6 +14,7 @@ const {
   mapCurrencies,
   generateErrorSummary,
   formattedTimestamp,
+  constructPayload,
 } = require('../../../helpers');
 const {
   loanGuaranteeDetailsValidationErrors,
@@ -109,6 +110,7 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
+  // filter req.body here
   const modifiedBody = handleNameField(req.body);
 
   await postToApi(
@@ -273,6 +275,7 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
 
   let modifiedBody = handleNameField(req.body);
   modifiedBody = premiumFrequencyField(req.body, loan);
+  // create custom payload here
 
   // UI form submit only has the currency code. API has a currency object.
   // to check if something has changed, only use the currency code.
@@ -319,11 +322,20 @@ router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
   const { user } = req.session;
 
+  const payloadProperties = [
+    'issuedDate',
+    'requestedCoverStartDate',
+    'coverEndDate',
+    'disbursementAmount',
+    'name'
+  ];
+  const payload = constructPayload(req.body, payloadProperties);
+
   const { validationErrors, loan } = await postToApi(
     api.updateLoanIssueFacility(
       dealId,
       loanId,
-      req.body,
+      payload,
       userToken,
     ),
     errorHref,
