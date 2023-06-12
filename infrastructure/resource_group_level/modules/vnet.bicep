@@ -4,7 +4,6 @@ param addressPrefixes array
 param privateEndpointsCidr string
 param appServicePlanEgressPrefixCidr string
 param applicationGatewayCidr string
-param vmCidr string
 
 param appServicePlanName string
 

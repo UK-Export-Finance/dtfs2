@@ -27,7 +27,6 @@ param mulesoftSubnetCidr string = '172.16.10.0/23'
 param productionSubnetCidr string = '10.60.0.0/16'
 param appServicePlanEgressPrefixCidr string = '172.16.22.0/28'
 param applicationGatewayCidr string = '172.16.21.0/24'
-param vmCidr string = '172.16.23.0/28'
 param storageLocations array = [
   'uksouth'
   'ukwest'
@@ -104,7 +103,6 @@ module vnet 'modules/vnet.bicep' = {
     privateEndpointsCidr: privateEndpointsCidr
     appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
     applicationGatewayCidr: applicationGatewayCidr
-    vmCidr: vmCidr
     storageLocations: storageLocations
     peeringAddressSpace: peeringAddressSpace
     routeTableId: routeTable.outputs.routeTableId
