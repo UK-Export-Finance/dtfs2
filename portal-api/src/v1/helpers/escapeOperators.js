@@ -1,3 +1,8 @@
+/**
+ * This function escapes MongoDB operators from the filter object
+ * @param {Object} filter Object comprising of filters
+ * @returns {Object} Escaped filter object
+ */
 const escapeOperators = (filter) => {
   if (filter) {
     // Escape `AND` operator
