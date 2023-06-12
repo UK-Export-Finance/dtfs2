@@ -32,14 +32,12 @@ param storageLocations array = [
   'uksouth'
   'ukwest'
 ]
-param demoGatewayPrefixCidr string = '172.16.61.0/24'
-param demoPrivateEndpointsPrefixCidr string = '172.16.60.0/24'
 
-// I think these are the "private endpoints" and "demo endpoints"
+// These are the "private endpoints"
 param vnetAddressPrefixes array = [
   '172.16.20.0/22'
-  '172.16.60.0/23'
 ]
+
 param privateEndpointsCidr string = '172.16.20.0/24'
 param peeringAddressSpace string = '10.50.0.0/16'
 
@@ -108,8 +106,6 @@ module vnet 'modules/vnet.bicep' = {
     applicationGatewayCidr: applicationGatewayCidr
     vmCidr: vmCidr
     storageLocations: storageLocations
-    demoGatewayPrefixCidr: demoGatewayPrefixCidr
-    demoPrivateEndpointsPrefixCidr: demoPrivateEndpointsPrefixCidr
     peeringAddressSpace: peeringAddressSpace
     routeTableId: routeTable.outputs.routeTableId
     networkSecurityGroupId: networkSecurityGroup.outputs.networkSecurityGroupId

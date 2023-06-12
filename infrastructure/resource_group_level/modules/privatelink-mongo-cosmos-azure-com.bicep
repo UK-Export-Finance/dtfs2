@@ -49,34 +49,6 @@ resource mongoDbVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@
 //  NB the zone name needs to be "privatelink.mongo.cosmos.azure.com" rather than "privatelink.documents.azure.com" as per the link above.
 //  NB ipConfigurations[0] appears to be the "primary". There's also a property called "requiredMemberName" that *seems* to be the value needed for record-set-name but I can't find any documentation on it, so sticking with [0] and [1] for now:
 
-// // Demo A records
-
-// resource demoMongoDb 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: mongoDbDnsZone
-//   name: 'tfs-demo-mongo'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.60.7'
-//       }
-//     ]
-//   }
-// }
-
-// resource demoMongoDbUkSouth 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: mongoDbDnsZone
-//   name: 'tfs-demo-mongo-uksouth'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.60.8'
-//       }
-//     ]
-//   }
-// }
-
 // // Dev A records
 // resource devMongoDb 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
 //   parent: mongoDbDnsZone

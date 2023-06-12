@@ -10,9 +10,7 @@ param appServicePlanName string
 
 param routeTableId string
 param networkSecurityGroupId string
-// TODO:DTFS-6422 Note that none of these parameters/values seem to appear in the old IaC scripts
-param demoGatewayPrefixCidr string
-param demoPrivateEndpointsPrefixCidr string
+// TODO:DTFS-6422 Note that peeringAddressSpace doesn't seem to appear in the old IaC scripts
 param peeringAddressSpace string
 param storageLocations array
 
@@ -96,30 +94,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
         }
         type: 'Microsoft.Network/virtualNetworks/subnets'
       }
-      // TODO:DTFS-6422 Work out what these demo resources are for.
-      // Gabriel says it is a very old legacy item.
-      {
-        name: 'demo-gateway'
-        properties: {
-          addressPrefix: demoGatewayPrefixCidr
-          serviceEndpoints: []
-          delegations: []
-          privateEndpointNetworkPolicies: 'Enabled'
-          privateLinkServiceNetworkPolicies: 'Enabled'
-        }
-        type: 'Microsoft.Network/virtualNetworks/subnets'
-      }
-      {
-        name: 'demo-private-endpoints'
-        properties: {
-          addressPrefix: demoPrivateEndpointsPrefixCidr
-          serviceEndpoints: []
-          delegations: []
-          privateEndpointNetworkPolicies: 'Enabled'
-          privateLinkServiceNetworkPolicies: 'Enabled'
-        }
-        type: 'Microsoft.Network/virtualNetworks/subnets'
-      }
+
       {
         name: gatewaySubnetName
         properties: {
