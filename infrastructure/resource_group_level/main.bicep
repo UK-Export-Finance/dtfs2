@@ -110,14 +110,6 @@ module vnet 'modules/vnet.bicep' = {
   }
 }
 
-module natGateway 'modules/nat-gw_nat_ip.bicep' = {
-  name: 'natGateway'
-  params: {
-    appServicePlanName: appServicePlan.name
-    location: location
-  }
-}
-
 module websitesDns 'modules/privatelink-azurewebsites-net.bicep' = {
   name: 'websitesDns'
   params: {

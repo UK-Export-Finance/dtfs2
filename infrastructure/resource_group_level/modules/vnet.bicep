@@ -13,6 +13,9 @@ param networkSecurityGroupId string
 param peeringAddressSpace string
 param storageLocations array
 
+var natGatewayName = 'tfs-${appServicePlanName}-nat-gw'
+var natGatewayIpAddressesName = 'tfs-${appServicePlanName}-nat-ip'
+
 var vnetName = 'tfs-${appServicePlanName}-vnet'
 
 var appServicePlanEgressSubnetName = '${appServicePlanName}-app-service-plan-egress'
@@ -21,6 +24,50 @@ var privateEndpointsSubnetName = '${environment}-private-endpoints'
 
 // TODO:DTFS-6422 - I don't think this is explicitly named in the scripts. We should come up with a better name.
 var vnetPeeringName = 'tfs-dev-vnet_vnet-ukef-uks'
+
+
+resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
+  name: natGatewayIpAddressesName
+  location: location
+  tags: {
+    Environment: 'Preproduction'
+  }
+  sku: {
+    name: 'Standard'
+    tier: 'Regional'
+  }
+  zones: [
+    '1'
+    '2'
+    '3'
+  ]
+  properties: {
+    // the ipAddress value is assigned by Azure
+    publicIPAddressVersion: 'IPv4'
+    publicIPAllocationMethod: 'Static'
+    idleTimeoutInMinutes: 4
+    ipTags: []
+  }
+}
+
+resource natGateway 'Microsoft.Network/natGateways@2022-11-01' = {
+  name: natGatewayName
+  location: location
+  tags: {
+    Environment: 'Preproduction'
+  }
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    idleTimeoutInMinutes: 4
+    publicIpAddresses: [
+      {
+        id: natGatewayIpAddresses.id
+      }
+    ]
+  }
+}
 
 resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
   name: vnetName
@@ -41,8 +88,11 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
         name: appServicePlanEgressSubnetName
         properties: {
           // TODO:DTFS-6422 if using test / prod as our template, this should be linked with the following nat gateway.
-          // It isn't clear why dev does not have this.
-          // natGateway: tfs-feature-nat-gateway.id
+          // It isn't clear why dev does not have this and links with sub-prototypekit-dev-001 in the 
+          // rg-prototypekit-dev-001 RG instead
+          natGateway: {
+            id: natGateway.id
+          }
           addressPrefix: appServicePlanEgressPrefixCidr
           serviceEndpoints: [
             {
