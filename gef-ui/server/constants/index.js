@@ -74,6 +74,13 @@ const DATE_FORMAT = {
   COVER: 'MMMM d, yyyy',
 };
 
+const USER_ROLES = {
+  ADMIN: 'admin',
+  MAKER: 'maker',
+  CHECKER: 'checker',
+  UKEF_OPERATIONS: 'ukef_operations',
+};
+
 module.exports = {
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
@@ -86,4 +93,5 @@ module.exports = {
   AUTHORISATION_LEVEL,
   DEFAULT_COUNTRY,
   DATE_FORMAT,
+  USER_ROLES,
 };

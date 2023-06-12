@@ -22,6 +22,7 @@ const {
   isUkefReviewAvailable,
   isUkefReviewPositive,
   makerCanReSubmit,
+  canAmendFacilities,
 } = require('../../utils/deal-helpers');
 const {
   exporterItems, facilityItems,
@@ -114,6 +115,7 @@ function buildBody(app, previewMode, user) {
       }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
+    canAmendFacilities: canAmendFacilities(userSession, app),
     supportingInfo: {
       ...app.supportingInformation,
       status: app.supportingInfoStatus,

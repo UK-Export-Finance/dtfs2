@@ -28,9 +28,11 @@
         {{item.heading}} facility
       </h3>
     </header>
-    {{ govukButton({
-      text: "Make an amendment"
-    }) }}
+    {% if canAmendFacilities %}
+      {{ govukButton({
+        text: "Make an amendment"
+      }) }}
+    {% endif %}
     {{ govukSummaryList({
       rows: item.rows,
       attributes: {
