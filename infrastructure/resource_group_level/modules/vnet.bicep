@@ -40,6 +40,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
       {
         name: appServicePlanEgressSubnetName
         properties: {
+          // TODO:DTFS-6422 if using test / prod as our template, this should be linked with the following nat gateway.
+          // It isn't clear why dev does not have this.
+          // natGateway: tfs-feature-nat-gateway.id
           addressPrefix: appServicePlanEgressPrefixCidr
           serviceEndpoints: [
             {

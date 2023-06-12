@@ -4,8 +4,12 @@ param appServicePlanName string
 var natGatewayName = 'tfs-${appServicePlanName}-nat-gw'
 var natGatewayIpAddressesName = 'tfs-${appServicePlanName}-nat-ip'
 
-// TODO:DTFS-6422 It looks like this is duplicated by the natGatewayIpAddresses below. Remove if all is ok.
-// param publicIPAddresses_tfs_dev_nat_ip_externalid string = '/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/publicIPAddresses/tfs-dev-nat-ip'
+// TODO:DTFS-6422 The NAT Gateway won't be functional until it is linked with a subnet.
+// The tfs-dev-nat-gw Gateway is associated with the sub-prototypekit-dev-001 subnet in
+// the rg-prototypekit-dev-001 resource group (with tfs-dev-gw-nsg Network Security Group).
+// This doesn't get produced in the Nat GW template export - hopefully it will appear elsewhere.
+// Test uses test-app-service-plan-egress, which seems more reasonable. (prod uses prod-app-service-plan-egress)
+// It isn't clear what we should use yet.
 
 resource natGateway 'Microsoft.Network/natGateways@2022-11-01' = {
   name: natGatewayName
@@ -18,12 +22,11 @@ resource natGateway 'Microsoft.Network/natGateways@2022-11-01' = {
   }
   properties: {
     idleTimeoutInMinutes: 4
-// TODO:DTFS-6422 It looks like this is duplicated by the natGatewayIpAddresses below. Remove if all is ok.
-    // publicIpAddresses: [
-    //   {
-    //     id: publicIPAddresses_tfs_dev_nat_ip_externalid
-    //   }
-    // ]
+    publicIpAddresses: [
+      {
+        id: natGatewayIpAddresses.id
+      }
+    ]
   }
 }
 
@@ -43,11 +46,7 @@ resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' 
     '3'
   ]
   properties: {
-    natGateway: {
-      id: natGateway.id
-    }
-// TODO:DTFS-6422 I'm not sure where the following ip address comes from. Is it Azure assigned?
-//    ipAddress: '51.132.155.239'
+    // the ipAddress value is assigned by Azure
     publicIPAddressVersion: 'IPv4'
     publicIPAllocationMethod: 'Static'
     idleTimeoutInMinutes: 4
