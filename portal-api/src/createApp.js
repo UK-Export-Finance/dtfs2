@@ -23,9 +23,9 @@ app.use(healthcheck);
 app.use(passport.initialize());
 app.use(express.json());
 app.use(compression());
-app.use(mongoSanitise({
-  allowDots: true,
-}));
+
+// MongoDB sanitisation
+app.use(mongoSanitise());
 
 app.use(cors({
   origin: CORS_ORIGIN,

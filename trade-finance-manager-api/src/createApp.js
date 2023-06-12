@@ -28,9 +28,8 @@ app.use(healthcheck);
 app.use('/v1', openRouter);
 app.use(graphQlRouter);
 
-app.use(mongoSanitise({
-  allowDots: true,
-}));
+// MongoDB sanitisation
+app.use(mongoSanitise());
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schemaWithMiddleware = applyMiddleware(schema, graphqlPermissions);

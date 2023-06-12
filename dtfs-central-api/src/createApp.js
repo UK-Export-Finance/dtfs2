@@ -31,9 +31,8 @@ app.use(healthcheck);
 app.use(express.json({ limit: '500kb' }));
 app.use(compression());
 
-app.use(mongoSanitise({
-  allowDots: true,
-}));
+// MongoDB sanitisation
+app.use(mongoSanitise());
 
 app.use(`/v1/${BANK_ROUTE}`, bankRoutes);
 app.use(`/v1/${PORTAL_ROUTE}`, portalRoutes);
