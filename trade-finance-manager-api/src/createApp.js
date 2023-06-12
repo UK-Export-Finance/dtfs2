@@ -30,7 +30,6 @@ app.use(graphQlRouter);
 
 app.use(mongoSanitise({
   allowDots: true,
-  replaceWith: 'USD',
 }));
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });

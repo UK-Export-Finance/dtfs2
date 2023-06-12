@@ -25,7 +25,6 @@ app.use(express.json());
 app.use(compression());
 app.use(mongoSanitise({
   allowDots: true,
-  replaceWith: 'USD',
 }));
 
 app.use(cors({

@@ -16,7 +16,6 @@ app.use(compression());
 app.use(
   mongoSanitise({
     allowDots: true,
-    replaceWith: 'USD',
   }),
 );
 
