@@ -15,7 +15,6 @@ param peeringAddressSpace string
 param storageLocations array
 
 var vnetName = 'tfs-${appServicePlanName}-vnet'
-var maintenanceVmSubnetName = '${resourceGroup().name}-vm'
 
 var appServicePlanEgressSubnetName = '${appServicePlanName}-app-service-plan-egress'
 var gatewaySubnetName = '${environment}-gateway'
@@ -118,39 +117,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
             }
           ]
           delegations: []
-          privateEndpointNetworkPolicies: 'Enabled'
-          privateLinkServiceNetworkPolicies: 'Enabled'
-        }
-        type: 'Microsoft.Network/virtualNetworks/subnets'
-      }
-      {
-        name: maintenanceVmSubnetName
-        properties: {
-          addressPrefix: vmCidr
-          routeTable: {
-            id: routeTableId
-          }
-          serviceEndpoints: [
-            {
-              service: 'Microsoft.AzureCosmosDB'
-              locations: [
-                '*'
-              ]
-            }
-            {
-              service: 'Microsoft.Storage'
-              locations: storageLocations
-            }
-          ]
-          delegations: [
-            {
-              name: 'delegation'
-              properties: {
-                serviceName: 'Microsoft.Web/serverfarms'
-              }
-              type: 'Microsoft.Network/virtualNetworks/subnets/delegations'
-            }
-          ]
           privateEndpointNetworkPolicies: 'Enabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
