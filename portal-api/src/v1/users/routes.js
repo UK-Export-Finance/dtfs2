@@ -18,6 +18,7 @@ const {
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
+const { isValidEmail } = require('../../utils/string');
 
 module.exports.list = (req, res, next) => {
   list((err, users) => {
@@ -53,12 +54,12 @@ module.exports.create = async (req, res, next) => {
     delete req.body._csrf;
   }
 
-  if (!req.body?.email) {
+  if (!isValidEmail(req.body?.email)) {
     // Empty email address
     const invalidEmail = {
       email: {
         order: '1',
-        text: 'Enter an email address in the correct format',
+        text: 'Enter an email address in the correct format, for example, name@example.com',
       },
     };
 
