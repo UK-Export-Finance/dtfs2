@@ -91,11 +91,27 @@ router.get('/contract/:_id/bond/:bondId/details', provide([DEAL]), async (req, r
 router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
+  const payloadProperties = [
+    'bondIssuer',
+    'bondType',
+    'facilityStage',
+    'bondBeneficiary',
+    'requestedCoverStartDate-day',
+    'requestedCoverStartDate-month',
+    'requestedCoverStartDate-year',
+    'coverEndDate-day',
+    'coverEndDate-month',
+    'coverEndDate-year',
+    'name',
+    'ukefGuaranteeInMonths',
+  ]
+  const bondPayload = constructPayload(req.body, payloadProperties);
+
   await postToApi(
     api.updateBond(
       dealId,
       bondId,
-      req.body,
+      bondPayload,
       userToken,
     ),
     errorHref,
@@ -141,11 +157,22 @@ router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES,
 router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
+  const payloadProperties = [
+    'facilityValue',
+    'currencySameAsSupplyContractCurrency',
+    'riskMarginFee',
+    'coveredPercentage',
+    'minimumRiskMarginFee',
+    'guaranteeFeePayableByBank',
+    'ukefExposure',
+  ]
+  const bondPayload = constructPayload(req.body, payloadProperties);
+
   await postToApi(
     api.updateBond(
       dealId,
       bondId,
-      req.body,
+      bondPayload,
       userToken,
     ),
     errorHref,
@@ -188,7 +215,15 @@ router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), async (re
 router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
-  const modifiedBody = feeFrequencyField(req.body);
+  const payloadProperties = [
+    'feeFrequency',
+    'feeType',
+    'inAdvanceFeeFrequency',
+    'inArrearFeeFrequency',
+    'dayCountBasis',
+  ]
+  const sanitizedBody = constructPayload(req.body, payloadProperties);
+  const modifiedBody = feeFrequencyField(sanitizedBody);
 
   await postToApi(
     api.updateBond(
@@ -269,7 +304,34 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
   const { _id: dealId, bondId, userToken } = requestParams(req);
   const { bond } = req.apiData.bond;
 
-  const modifiedBody = feeFrequencyField(req.body, bond);
+  const allowedProperties = [
+    'bondIssuer',
+    'bondType',
+    'facilityStage',
+    'bondBeneficiary',
+    'requestedCoverStartDate-day',
+    'requestedCoverStartDate-month',
+    'requestedCoverStartDate-year',
+    'coverEndDate-day',
+    'coverEndDate-month',
+    'coverEndDate-year',
+    'name',
+    'ukefGuaranteeInMonths',
+    'facilityValue',
+    'currencySameAsSupplyContractCurrency',
+    'riskMarginFee',
+    'coveredPercentage',
+    'minimumRiskMarginFee',
+    'guaranteeFeePayableByBank',
+    'ukefExposure',
+    'feeFrequency',
+    'feeType',
+    'inAdvanceFeeFrequency',
+    'inArrearFeeFrequency',
+    'dayCountBasis',
+  ]
+  const sanitizedBody = constructPayload(req.body, allowedProperties);
+  const modifiedBody = feeFrequencyField(sanitizedBody, bond);
 
   // UI form submit only has the currency code. API has a currency object.
   // to check if something has changed, only use the currency code.
