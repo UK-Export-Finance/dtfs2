@@ -1,3 +1,5 @@
+const joi = require('joi');
+
 const isEmptyString = (str) => {
   if (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length)) {
     return true;
@@ -14,32 +16,42 @@ const hasValue = (str) => {
 
 /**
  * Objective:
-The main objective of the isValidEmail function is to validate whether a given email
-address is in a correct format or not. It checks if the email address follows the standard syntax rules for email addresses.
+  The objective of the isValidEmail function is to validate whether a
+  given email address is valid or not. It checks if the input is a non-empty
+  string and then uses the joi library to validate the email format.
 
 Inputs:
-- email: a string representing the email address to be validated.
+  email: a string representing the email address to be validated
 
 Flow:
-- The function takes in an email address as input.
-- It creates a regular expression pattern using the regex variable.
-- It uses the test method of the regex object to check if the email address matches the pattern.
-- If the email address matches the pattern, the function returns true, indicating that the email address is valid. Otherwise, it returns false.
+  1. Check if the email is a non-empty string
+  2. Use the joi library to validate the email format
+  3. Return true if the email is valid, false otherwise
 
 Outputs:
-- true: if the email address is valid and matches the pattern.
-- false: if the email address is not valid and does not match the pattern.
+  true: if the email is valid
+  false: if the email is invalid
 
 Additional aspects:
-- The regular expression pattern used in the function checks for the standard syntax rules for
-email addresses, including the presence of an "@" symbol, a domain name, and a top-level domain.
-- The function does not check if the email address actually exists or is deliverable. It only checks if the email address is in a correct format.
+  The function uses the joi library for email validation
+  The email must be at least 3 characters long and in a valid email format
+  The function returns false if the input is not a non-empty string
+
  * @param {String} email Email address as string
  * @returns Boolean
  */
 const isValidEmail = (email) => {
-  const regex = /^(([^<>()[\]\\.,;:\s@\\"]+(\.[^<>()[\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return regex.test(email);
+  if (typeof email === 'string' && email.length > 0) {
+    const validation = joi
+      .string()
+      .email()
+      .required()
+      .validate(email);
+
+    return !validation.error;
+  }
+
+  return false;
 };
 
 module.exports = {

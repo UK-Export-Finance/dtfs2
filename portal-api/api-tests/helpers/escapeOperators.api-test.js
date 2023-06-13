@@ -71,8 +71,7 @@ describe('escapeOperators function', () => {
 
   // Tests that the function returns undefined when undefined input is passed
   it('should test undefined input', () => {
-    const filter = undefined;
-    const result = escapeOperators(filter);
+    const result = escapeOperators(undefined);
     expect(result).toBeUndefined();
   });
 
