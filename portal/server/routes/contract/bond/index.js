@@ -390,9 +390,15 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   const { user } = req.session;
 
   const payloadProperties = [
-    'issuedDate',
-    'requestedCoverStartDate',
-    'coverEndDate',
+    'issuedDate-day',
+    'issuedDate-month',
+    'issuedDate-year',
+    'requestedCoverStartDate-day',
+    'requestedCoverStartDate-month',
+    'requestedCoverStartDate-year',
+    'coverEndDate-day',
+    'coverEndDate-month',
+    'coverEndDate-year',
     'name',
   ];
   const payload = constructPayload(req.body, payloadProperties);
