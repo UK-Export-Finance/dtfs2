@@ -169,7 +169,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
   const payloadProperties = [
-    'facilityValue',
+    'value',
     'currencySameAsSupplyContractCurrency',
     'disbursementAmount',
     'interestMarginFee',
@@ -316,7 +316,7 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
     'coverEndDate-day',
     'coverEndDate-month',
     'coverEndDate-year',
-    'facilityValue',
+    'value',
     'currencySameAsSupplyContractCurrency',
     'disbursementAmount',
     'interestMarginFee',

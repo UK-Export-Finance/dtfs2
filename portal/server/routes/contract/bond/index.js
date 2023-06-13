@@ -158,7 +158,7 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
   const payloadProperties = [
-    'facilityValue',
+    'value',
     'currencySameAsSupplyContractCurrency',
     'riskMarginFee',
     'coveredPercentage',
@@ -317,7 +317,7 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
     'coverEndDate-year',
     'name',
     'ukefGuaranteeInMonths',
-    'facilityValue',
+    'value',
     'currencySameAsSupplyContractCurrency',
     'riskMarginFee',
     'coveredPercentage',
