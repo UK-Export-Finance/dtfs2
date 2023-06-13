@@ -1,3 +1,4 @@
+const CONSTANTS = require('../../src/constants');
 const { escapeOperators } = require('../../src/v1/helpers/escapeOperators');
 
 describe('escapeOperators function', () => {
@@ -39,7 +40,7 @@ describe('escapeOperators function', () => {
         {
           OR: [
             {
-              status: "Ready for Checker's approval"
+              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
             }
           ]
         }
@@ -54,7 +55,7 @@ describe('escapeOperators function', () => {
         {
           $or: [
             {
-              status: "Ready for Checker's approval"
+              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
             }
           ]
         }
@@ -155,7 +156,7 @@ describe('escapeOperators function', () => {
         {
           OR: [
             {
-              status: "Ready for Checker's approval"
+              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
             }
           ]
         }
@@ -169,7 +170,7 @@ describe('escapeOperators function', () => {
         {
           $or: [
             {
-              status: "Ready for Checker's approval"
+              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
             }
           ]
         }

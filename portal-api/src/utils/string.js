@@ -41,7 +41,7 @@ Additional aspects:
  * @returns Boolean
  */
 const isValidEmail = (email) => {
-  if (typeof email === 'string' && email.length > 0) {
+  if (email) {
     const validation = joi
       .string()
       .email()
