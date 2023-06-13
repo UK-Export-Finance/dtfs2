@@ -118,8 +118,6 @@ exports.findOne = (req, res) => {
 };
 
 const updateDeal = async (dealId, dealUpdate, user) => {
-  // write custom logic to only allow certain subsets of values
-  // allow facilityValue, coverEndDate, 
   const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
 
   return updatedDeal;
