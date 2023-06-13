@@ -2,32 +2,122 @@ const CONSTANTS = require('../../src/constants');
 const { escapeOperators } = require('../../src/v1/helpers/escapeOperators');
 
 describe('escapeOperators function', () => {
-  // Tests that the function returns an empty object when an empty filter object is passed
-  it('should test empty filter object', () => {
-    const filter = {};
-    const result = escapeOperators(filter);
+  // Tests that the function returns null when the input is null
+  it('should null input', () => {
+    const result = escapeOperators(null);
+    expect(result).toBeNull();
+  });
+
+  // Tests that the function returns the original input when the input is not an object
+  it('should non object input', () => {
+    const result = escapeOperators('not an object');
+    expect(result).toEqual('not an object');
+  });
+
+  // Tests that the function returns the original input when the input is an empty object
+  it('should empty object input', () => {
+    const result = escapeOperators({});
     expect(result).toEqual({});
   });
 
-  // Tests that the function returns the same filter object when no AND operator is present
-  it('should test no and operator', () => {
-    const filter = { key: 'value' };
+  // Tests that the function returns the original input when the input has no operators
+  it('should no operators', () => {
+    const filter = { name: 'ABC' };
     const result = escapeOperators(filter);
     expect(result).toEqual(filter);
   });
 
-  // Tests that the function returns the same filter object when an invalid operator key is present
-  it('should test invalid operator key', () => {
-    const filter = { OR: [{ key: 'value' }] };
+  // Tests that the function escapes the AND operator correctly
+  it('should AND operator', () => {
+    const filter = { AND: [{ name: 'ABC' }, { age: 30 }] };
+    const expected = { $and: [{ name: 'ABC' }, { age: 30 }] };
     const result = escapeOperators(filter);
-    expect(result).toEqual(filter);
+    expect(result).toEqual(expected);
   });
 
-  // Tests that the function correctly escapes the AND operator when it is the only operator present
-  it('should test filter object with only and operator', () => {
-    const filter = { AND: [{ key: 'value' }] };
+  // Tests that the function handles cases where the input filter has multiple operators
+  it('should multiple operators', () => {
+    const filter = {
+      AND: [
+        {
+          'bank.id': '9',
+        },
+        {
+          OR: [{ age: 30 }, { city: 'London' }, { name: { REGEX: '.*ABC.*' } }]
+        }],
+    };
+    const expected = {
+      $and: [
+        {
+          'bank.id': '9',
+        },
+        {
+          $or: [{ age: 30 }, { city: 'London' }, { name: { $regex: '.*ABC.*' } }],
+        },
+      ],
+    };
     const result = escapeOperators(filter);
-    expect(result).toEqual({ $and: [{ key: 'value' }] });
+    expect(result).toEqual(expected);
+  });
+
+  // Tests that the function handles mixed string REGEX
+  it('should handle mixed string regex', () => {
+    const filter = {
+      AND: [
+        {
+          'bank.id': '9',
+        },
+        {
+          OR: [{ age: 30 }, { city: 'London' }, { name: { REGEX: 'ABC!"£123' } }]
+        }],
+    };
+    const expected = {
+      $and: [
+        {
+          'bank.id': '9',
+        },
+        {
+          $or: [{ age: 30 }, { city: 'London' }, { name: { $regex: 'ABC!"£123' } }],
+        },
+      ],
+    };
+    const result = escapeOperators(filter);
+    expect(result).toEqual(expected);
+  });
+
+  // Tests that the function handles cases where the multiple regex exists
+  it('should multiple regex be transformed', () => {
+    const filter = {
+      AND: [
+        {
+          'bank.id': '9',
+        },
+        {
+          OR:
+          [
+            { name: { REGEX: '.*ABC.*' } },
+            { exporter: { REGEX: 'Test' } },
+            { deal: { REGEX: 'AIN' } },
+          ]
+        }],
+    };
+    const expected = {
+      $and: [
+        {
+          'bank.id': '9',
+        },
+        {
+          $or:
+          [
+            { name: { $regex: '.*ABC.*' } },
+            { exporter: { $regex: 'Test' } },
+            { deal: { $regex: 'AIN' } },
+          ],
+        },
+      ],
+    };
+    const result = escapeOperators(filter);
+    expect(result).toEqual(expected);
   });
 
   // Tests that the function correctly escapes the OR operator when it is nested inside an AND operator
@@ -35,52 +125,32 @@ describe('escapeOperators function', () => {
     const filter = {
       AND: [
         {
-          'bank.id': '9'
+          'bank.id': '9',
         },
         {
           OR: [
             {
-              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
-            }
-          ]
-        }
-      ]
+              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
+            },
+          ],
+        },
+      ],
     };
     const result = escapeOperators(filter);
     expect(result).toEqual({
       $and: [
         {
-          'bank.id': '9'
+          'bank.id': '9',
         },
         {
           $or: [
             {
-              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
-            }
-          ]
-        }
-      ]
+              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
+            },
+          ],
+        },
+      ],
     });
-  });
-
-  // Tests that the function returns null when null input is passed
-  it('should test null input', () => {
-    const filter = null;
-    const result = escapeOperators(filter);
-    expect(result).toBeNull();
-  });
-
-  // Tests that the function returns undefined when undefined input is passed
-  it('should test undefined input', () => {
-    const result = escapeOperators(undefined);
-    expect(result).toBeUndefined();
-  });
-
-  // Tests that the function returns the same input when non-object input is passed
-  it('should test non object input', () => {
-    const filter = 'string';
-    const result = escapeOperators(filter);
-    expect(result).toEqual(filter);
   });
 
   // Tests that the function correctly handles an empty OR array inside an AND operator
@@ -107,7 +177,7 @@ describe('escapeOperators function', () => {
   // Tests that a filter object with no AND operator returns the same object
   it('should test no and operator', () => {
     const filter = {
-      'bank.id': '9'
+      'bank.id': '9',
     };
     const result = escapeOperators(filter);
     expect(result).toEqual(filter);
@@ -118,9 +188,9 @@ describe('escapeOperators function', () => {
     const filter = {
       INVALID: [
         {
-          'bank.id': '9'
-        }
-      ]
+          'bank.id': '9',
+        },
+      ],
     };
     const result = escapeOperators(filter);
     expect(result).toEqual(filter);
@@ -131,16 +201,16 @@ describe('escapeOperators function', () => {
     const filter = {
       AND: [
         {
-          'bank.id': '9'
-        }
-      ]
+          'bank.id': '9',
+        },
+      ],
     };
     const expected = {
       $and: [
         {
-          'bank.id': '9'
-        }
-      ]
+          'bank.id': '9',
+        },
+      ],
     };
     const result = escapeOperators(filter);
     expect(result).toEqual(expected);
@@ -151,30 +221,30 @@ describe('escapeOperators function', () => {
     const filter = {
       AND: [
         {
-          'bank.id': '9'
+          'bank.id': '9',
         },
         {
           OR: [
             {
-              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
-            }
-          ]
-        }
-      ]
+              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
+            },
+          ],
+        },
+      ],
     };
     const expected = {
       $and: [
         {
-          'bank.id': '9'
+          'bank.id': '9',
         },
         {
           $or: [
             {
-              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL
-            }
-          ]
-        }
-      ]
+              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
+            },
+          ],
+        },
+      ],
     };
     const result = escapeOperators(filter);
     expect(result).toEqual(expected);
@@ -206,22 +276,22 @@ describe('escapeOperators function', () => {
     const filter = {
       AND: [
         {
-          'bank.id': '9'
+          'bank.id': '9',
         },
         {
-          OR: []
-        }
-      ]
+          OR: [],
+        },
+      ],
     };
     const expected = {
       $and: [
         {
-          'bank.id': '9'
+          'bank.id': '9',
         },
         {
-          $or: []
-        }
-      ]
+          $or: [],
+        },
+      ],
     };
     const result = escapeOperators(filter);
     expect(result).toEqual(expected);
@@ -232,9 +302,9 @@ describe('escapeOperators function', () => {
     const filter = {
       AND: [
         {
-          'bank.id': '9'
-        }
-      ]
+          'bank.id': '9',
+        },
+      ],
     };
     const result = escapeOperators(filter);
     expect(result).not.toHaveProperty('AND');

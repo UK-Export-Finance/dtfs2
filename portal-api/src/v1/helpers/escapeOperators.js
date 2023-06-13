@@ -1,25 +1,24 @@
 /**
  * Objective:
-    The objective of the "escapeOperators" function is to escape the
-    "AND" and "OR" operators in a given filter object and return a new object with the escaped operators.
+  The objective of the "escapeOperators" function is to escape certain operators in a given
+  filter object and return a new object with the escaped operators.
 
 Inputs:
-    "filter": a JavaScript object that may contain "AND" and "OR" operators.
+  "filter": a filter object that may contain certain operators that need to be escaped.
 
 Flow:
-    Check if "filter" exists.
-    If "AND" operator exists in "filter", create a new object with "$and" key and value of "filter.AND".
-    For each element in "$and" array, check if "OR" operator exists.
-    If "OR" operator exists, create a new object with "$or" key and value of "e.OR", delete "OR" key from "e", and return the new object.
-    Replace the original element with the new object in the "$and" array.
-    Delete the "AND" key from the new object and return it.
+  Check if the input "filter" is an object and not null.
+  If the input "filter" contains the "AND" operator, escape it by creating a new object with the "$and" operator and map through its conditions.
+  If a condition contains the "OR" operator, escape it by creating a new object with the "$or" operator and map through its criteria.
+  If a criteria contains the "REGEX" operator, escape it by creating a new object with the "$regex" operator.
+  Delete the original operators from the new objects and return the final escaped filter object.
 
 Outputs:
-    A new JavaScript object with escaped "AND" and "OR" operators.
+  A new filter object with the escaped operators.
 
 Additional aspects:
-    The function only escapes "AND" and "OR" operators, and does not modify any other keys or values in the input object.
-    If the input object does not contain "AND" or "OR" operators, the function simply returns the input object.
+  The function only escapes the "AND", "OR", and "REGEX" operators.
+  If the input "filter" is not an object or is null, it will be returned as is.
  */
 
 /**
@@ -37,17 +36,41 @@ const escapeOperators = (filter) => {
 
       // Escape `OR` operator
       payload.$and = payload.$and.map((e) => {
-        if (e.OR) {
+        const condition = e;
+
+        if (condition.OR) {
           const orPayload = {
-            $or: e.OR,
+            $or: condition.OR,
           };
 
-          delete e.OR;
+          // Escape `REGEX` operator
+          orPayload.$or = orPayload.$or.map((criteria) => {
+            const value = Object.values(criteria);
+            const key = Object.keys(criteria);
+
+            if (!value || !value.length) {
+              return criteria;
+            }
+
+            if (value[0].REGEX) {
+              const regexPayload = {
+                [key]: {
+                  $regex: value[0].REGEX,
+                },
+              };
+
+              return regexPayload;
+            }
+
+            return criteria;
+          });
+
+          delete condition.OR;
 
           return orPayload;
         }
 
-        return e;
+        return condition;
       });
 
       delete payload.AND;
