@@ -55,6 +55,9 @@ param storageNetworkAccessDefaultAction string = 'Allow'
 @description('Enable 7-day soft deletes on file shares')
 param shareDeleteRetentionEnabled bool = false
 
+@allowed(['Provisioned Throughput', 'Serverless'])
+param cosmosDbCapacityMode string = 'Serverless' // All current environments use 'Provisioned Throughput'
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
   location: location
@@ -160,5 +163,17 @@ module storage 'modules/storage.bicep' = {
     allowedIpsString: onPremiseNetworkIpsString
     networkAccessDefaultAction: storageNetworkAccessDefaultAction
     shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
+  }
+}
+
+module cosmosDb 'modules/cosmosdb.bicep' = {
+  name: 'mongoDb'
+  params: {
+    location: location
+    environment: environment
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    onPremiseNetworkIps: onPremiseNetworkIps
+    capacityMode: cosmosDbCapacityMode
   }
 }

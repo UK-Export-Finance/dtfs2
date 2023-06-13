@@ -1,8 +1,8 @@
-param privateDnsZones_privatelink_mongo_cosmos_azure_com_name string = 'privatelink.mongo.cosmos.azure.com'
+param privateDnsZoneName string = 'privatelink.mongo.cosmos.azure.com'
 param vnetId string
 
 resource mongoDbDnsZone 'Microsoft.Network/privateDnsZones@2018-09-01' = {
-  name: privateDnsZones_privatelink_mongo_cosmos_azure_com_name
+  name: privateDnsZoneName
   location: 'global'
   tags: {
     Environment: 'Preproduction'
