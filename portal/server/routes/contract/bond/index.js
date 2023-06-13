@@ -104,7 +104,7 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
     'coverEndDate-year',
     'name',
     'ukefGuaranteeInMonths',
-  ]
+  ];
   const bondPayload = constructPayload(req.body, payloadProperties);
 
   await postToApi(
@@ -165,7 +165,7 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
     'minimumRiskMarginFee',
     'guaranteeFeePayableByBank',
     'ukefExposure',
-  ]
+  ];
   const bondPayload = constructPayload(req.body, payloadProperties);
 
   await postToApi(
@@ -221,7 +221,7 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
     'inAdvanceFeeFrequency',
     'inArrearFeeFrequency',
     'dayCountBasis',
-  ]
+  ];
   const sanitizedBody = constructPayload(req.body, payloadProperties);
   const modifiedBody = feeFrequencyField(sanitizedBody);
 
@@ -329,7 +329,7 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
     'inAdvanceFeeFrequency',
     'inArrearFeeFrequency',
     'dayCountBasis',
-  ]
+  ];
   const sanitizedBody = constructPayload(req.body, allowedProperties);
   const modifiedBody = feeFrequencyField(sanitizedBody, bond);
 
@@ -383,7 +383,7 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
     'issuedDate',
     'requestedCoverStartDate',
     'coverEndDate',
-    'name'
+    'name',
   ];
   const payload = constructPayload(req.body, payloadProperties);
 
@@ -497,7 +497,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
         'requestedCoverStartDate-day',
         'requestedCoverStartDate-month',
         'requestedCoverStartDate-year',
-        'needToChangeRequestedCoverStartDate'
+        'needToChangeRequestedCoverStartDate',
       ];
       const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties);
 

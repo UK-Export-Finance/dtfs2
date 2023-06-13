@@ -121,7 +121,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
     'coverEndDate-day',
     'coverEndDate-month',
     'coverEndDate-year',
-  ]
+  ];
   const loanBody = constructPayload(req.body, payloadProperties);
   const modifiedBody = handleNameField(loanBody);
 
@@ -177,7 +177,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
     'minimumQuarterlyFee',
     'guaranteeFeePayableByBank',
     'ukefExposure',
-  ]
+  ];
   const payload = constructPayload(req.body, payloadProperties);
 
   await postToApi(
@@ -227,7 +227,7 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
     'inAdvancePremiumFrequency',
     'inArrearPremiumFrequency',
     'dayCountBasis',
-  ]
+  ];
   const loanBody = constructPayload(req.body, payloadProperties);
   const modifiedBody = premiumFrequencyField(loanBody);
 
@@ -384,7 +384,7 @@ router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
     'requestedCoverStartDate',
     'coverEndDate',
     'disbursementAmount',
-    'name'
+    'name',
   ];
   const payload = constructPayload(req.body, payloadProperties);
 
@@ -485,7 +485,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
         'requestedCoverStartDate-day',
         'requestedCoverStartDate-month',
         'requestedCoverStartDate-year',
-        'needToChangeRequestedCoverStartDate'
+        'needToChangeRequestedCoverStartDate',
       ];
       const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties);
 
