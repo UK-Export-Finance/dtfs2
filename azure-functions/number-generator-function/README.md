@@ -30,7 +30,7 @@ The code checks if certain required environment variables `(APIM_MDM_URL, APIM_M
 
 Next, it checks if there is any input provided to the orchestrator function using `context.df.getInput()`. If no input is provided, it throws an error indicating the void input. The code extracts the `entityType` property from the input.
 
-It checks if the entityType matches specific values defined in the C`ONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE` object. If the entityType does not match any of the expected values, it throws an error indicating the void entityType argument specified.
+It checks if the entityType matches specific values defined in the `CONSTANTS.NUMBER_GENERATOR.ENTITY_TYPE` object. If the entityType does not match any of the expected values, it throws an error indicating the void entityType argument specified.
 
 Inside a `try-catch` block, the code calls an activity function named 'activity-get-number-from-generator' using context.df.callActivityWithRetry. It passes the retryOptions object and an object containing the `entityType` as input to the activity function. If the activity function is executed successfully, the result is returned.
 

@@ -44,10 +44,10 @@ const banks = {
 
 const testUsers = [
   {
-    username: 'no-roles', email: 'no-roles', password: 'P@ssword1234', roles: []
+    username: 'no-roles', email: 'no-roles@ukexportfinance.gov.uk', password: 'P@ssword1234', roles: []
   },
   {
-    username: 'an-editor', email: 'an-editor', password: 'P@ssword1234', roles: ['editor']
+    username: 'an-editor', email: 'an-editor@ukexportfinance.gov.uk', password: 'P@ssword1234', roles: ['editor']
   },
   {
     username: 'HSBC-maker-1',
