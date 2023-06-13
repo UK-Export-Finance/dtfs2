@@ -46,6 +46,7 @@ const applicationPreview = {
     .find('.govuk-summary-list__value'),
   facilitySummaryListRowAction: (tableNum, rowNum) => cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
     .find('.govuk-summary-list__actions'),
+  amendFacilityButton: () => cy.get('[data-cy="amend-facility-button"]'),
 
   supportingInfoListRowKey: (tableNum, rowNum) => cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum)
     .find('.govuk-summary-list__key'),
