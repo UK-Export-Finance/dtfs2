@@ -131,7 +131,7 @@ const USERS = [
     password: 'AbC!2345',
     firstname: 'Julius',
     surname: 'No',
-    email: '',
+    email: 'adminnomaker@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['admin'],
     bank: {

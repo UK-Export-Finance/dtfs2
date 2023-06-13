@@ -13,7 +13,7 @@ const insertMocks = async () => {
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['maker', 'editor', 'data-admin'],
-    email: 're-insert-mocks-data-loader',
+    email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
     bank: MOCK_BANKS.find((bank) => bank.id === '9'),
   });
 
