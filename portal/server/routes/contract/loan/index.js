@@ -392,7 +392,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
   };
 
   if (req.body.needToChangeRequestedCoverStartDate === 'true') {
-    if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day']) {
+    if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-month'] || !req.body['requestedCoverStartDate-year']) {
       requestedCoverValidationErrors = {
         count: 1,
         errorList: {
@@ -424,8 +424,16 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
 
       const dateOfCoverChangeTimestamp = moment(dateOfCoverChange).utc().valueOf().toString();
 
+      const payloadProperties = [
+        'requestedCoverStartDate-day',
+        'requestedCoverStartDate-month',
+        'requestedCoverStartDate-year',
+        'needToChangeRequestedCoverStartDate'
+      ];
+      const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties);
+
       const newLoanDetails = {
-        ...req.body,
+        ...newRequestedCoverStartDate,
         previousCoverStartDate: previousCoverStartDateTimestamp,
         dateOfCoverChange: dateOfCoverChangeTimestamp,
       };
