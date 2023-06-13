@@ -7,6 +7,7 @@ const {
   mapIndustryClasses,
   errorHref,
   generateErrorSummary,
+  constructPayload,
 } = require('../../../helpers');
 
 const {
@@ -100,7 +101,45 @@ router.get('/contract/:_id/about/supplier', provide([DEAL, INDUSTRY_SECTORS, COU
 router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async (req, res) => {
   const { industrySectors } = req.apiData;
   const { _id, userToken } = requestParams(req);
-  let submissionDetails = req.body;
+  const submissionDetailsFields = [
+    'supplier-type',
+    'supplier-companies-house-registration-number',
+    'supplier-name',
+    'supplier-address-country',
+    'supplier-address-line-1',
+    'supplier-address-line-2',
+    'supplier-address-line-3',
+    'supplier-address-line-town',
+    'supplier-address-line-postcode',
+    'supplier-correspondence-address-is-different',
+    'supplier-correspondence-address-country',
+    'supplier-correspondence-address-line-1',
+    'supplier-correspondence-address-line-2',
+    'supplier-correspondence-address-line-3',
+    'supplier-correspondence-address-town',
+    'supplier-correspondence-address-postcode',
+    'industry-sector',
+    'industry-class',
+    'sme-type',
+    'supply-contract-description',
+    'legallyDistinct',
+    'indemnifier-companies-house-registration-number',
+    'indemnifier-name',
+    'indemnifier-address-country',
+    'indemnifier-address-line-1',
+    'indemnifier-address-line-2',
+    'indemnifier-address-line-3',
+    'indemnifier-address-line-town',
+    'indemnifier-address-line-postcode',
+    'indemnifierCorrespondenceAddressDifferent',
+    'indemnifier-correspondence-address-country',
+    'indemnifier-correspondence-address-line-1',
+    'indemnifier-correspondence-address-line-2',
+    'indemnifier-correspondence-address-line-3',
+    'indemnifier-correspondence-address-line-town',
+    'indemnifier-correspondence-address-line-postcode',
+  ];
+  let submissionDetails = constructPayload(req.body, submissionDetailsFields);
 
   if (submissionDetails['supplier-correspondence-address-is-different'] === 'false') {
     // clear supplier correspondence address fields:
@@ -171,7 +210,45 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTR
     'indemnifier-correspondence-address-country': (indemnifierCorrespondenceAddressCountry && indemnifierCorrespondenceAddressCountry.code) ? indemnifierCorrespondenceAddressCountry.code : '',
   };
 
-  let submissionDetails = req.body;
+  const submissionDetailsFields = [
+    'supplier-type',
+    'supplier-companies-house-registration-number',
+    'supplier-name',
+    'supplier-address-country',
+    'supplier-address-line-1',
+    'supplier-address-line-2',
+    'supplier-address-line-3',
+    'supplier-address-line-town',
+    'supplier-address-line-postcode',
+    'supplier-correspondence-address-is-different',
+    'supplier-correspondence-address-country',
+    'supplier-correspondence-address-line-1',
+    'supplier-correspondence-address-line-2',
+    'supplier-correspondence-address-line-3',
+    'supplier-correspondence-address-town',
+    'supplier-correspondence-address-postcode',
+    'industry-sector',
+    'industry-class',
+    'sme-type',
+    'supply-contract-description',
+    'legallyDistinct',
+    'indemnifier-companies-house-registration-number',
+    'indemnifier-name',
+    'indemnifier-address-country',
+    'indemnifier-address-line-1',
+    'indemnifier-address-line-2',
+    'indemnifier-address-line-3',
+    'indemnifier-address-line-town',
+    'indemnifier-address-line-postcode',
+    'indemnifierCorrespondenceAddressDifferent',
+    'indemnifier-correspondence-address-country',
+    'indemnifier-correspondence-address-line-1',
+    'indemnifier-correspondence-address-line-2',
+    'indemnifier-correspondence-address-line-3',
+    'indemnifier-correspondence-address-line-town',
+    'indemnifier-correspondence-address-line-postcode',
+  ];
+  let submissionDetails = constructPayload(req.body, submissionDetailsFields);
 
   if (submissionDetails['supplier-correspondence-address-is-different'] === 'false') {
     // clear supplier correspondence address fields:
