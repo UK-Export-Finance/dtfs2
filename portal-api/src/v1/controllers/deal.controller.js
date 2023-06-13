@@ -5,8 +5,8 @@ const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
 const { findLatest: findLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
-const api = require('../api');
 const { escapeOperators } = require('../helpers/escapeOperators');
+const api = require('../api');
 
 /**
  * Find a deal (BSS, EWCS only)
