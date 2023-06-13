@@ -110,8 +110,20 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  // filter req.body here
-  const modifiedBody = handleNameField(req.body);
+  const payloadProperties = [
+    'facilityStage',
+    'facilityStageConditional-name',
+    'facilityStageUnconditional-name',
+    'ukefGuaranteeInMonths',
+    'requestedCoverStartDate-day',
+    'requestedCoverStartDate-month',
+    'requestedCoverStartDate-year',
+    'coverEndDate-day',
+    'coverEndDate-month',
+    'coverEndDate-year',
+  ]
+  const loanBody = constructPayload(req.body, payloadProperties);
+  const modifiedBody = handleNameField(loanBody);
 
   await postToApi(
     api.updateLoan(
@@ -156,11 +168,23 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL,
 router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
+  const payloadProperties = [
+    'facilityValue',
+    'currencySameAsSupplyContractCurrency',
+    'disbursementAmount',
+    'interestMarginFee',
+    'coveredPercentage',
+    'minimumQuarterlyFee',
+    'guaranteeFeePayableByBank',
+    'ukefExposure',
+  ]
+  const payload = constructPayload(req.body, payloadProperties);
+
   await postToApi(
     api.updateLoan(
       dealId,
       loanId,
-      req.body,
+      payload,
       userToken,
     ),
     errorHref,
@@ -197,7 +221,15 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL])
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const modifiedBody = premiumFrequencyField(req.body);
+  const payloadProperties = [
+    'premiumFrequency',
+    'premiumType',
+    'inAdvancePremiumFrequency',
+    'inArrearPremiumFrequency',
+    'dayCountBasis',
+  ]
+  const loanBody = constructPayload(req.body, payloadProperties);
+  const modifiedBody = premiumFrequencyField(loanBody);
 
   await postToApi(
     api.updateLoan(
@@ -273,9 +305,34 @@ router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (
   const { _id: dealId, loanId, userToken } = requestParams(req);
   const { loan } = req.apiData.loan;
 
-  let modifiedBody = handleNameField(req.body);
-  modifiedBody = premiumFrequencyField(req.body, loan);
-  // create custom payload here
+  const allowedProperties = [
+    'facilityStage',
+    'facilityStageConditional-name',
+    'facilityStageUnconditional-name',
+    'ukefGuaranteeInMonths',
+    'requestedCoverStartDate-day',
+    'requestedCoverStartDate-month',
+    'requestedCoverStartDate-year',
+    'coverEndDate-day',
+    'coverEndDate-month',
+    'coverEndDate-year',
+    'facilityValue',
+    'currencySameAsSupplyContractCurrency',
+    'disbursementAmount',
+    'interestMarginFee',
+    'coveredPercentage',
+    'minimumQuarterlyFee',
+    'guaranteeFeePayableByBank',
+    'ukefExposure',
+    'premiumFrequency',
+    'premiumType',
+    'inAdvancePremiumFrequency',
+    'inArrearPremiumFrequency',
+    'dayCountBasis',
+  ];
+  const sanitizedBody = constructPayload(req.body, allowedProperties);
+  let modifiedBody = handleNameField(sanitizedBody);
+  modifiedBody = premiumFrequencyField(modifiedBody, loan);
 
   // UI form submit only has the currency code. API has a currency object.
   // to check if something has changed, only use the currency code.
