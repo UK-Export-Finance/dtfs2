@@ -75,11 +75,7 @@ const createNewDealData = async (deal, maker) => {
  * Create a deal (BSS, EWCS only)
  */
 const createDeal = async (dealBody, user) => {
-  const dealData = {
-    ...dealBody.bankInternalRefName,
-    ...dealBody.additionalRefName
-  };
-  const deal = await createNewDealData(dealData, user);
+  const deal = await createNewDealData(dealBody, user);
   return api.createDeal(deal, user);
 };
 exports.createDeal = createDeal;
