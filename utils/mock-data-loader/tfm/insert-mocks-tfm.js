@@ -10,7 +10,7 @@ const insertMocks = async () => {
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['data-admin'],
-    email: 're-insert-mocks-data-loader-tfm',
+    email: 're-insert-mocks-data-loader-tfm@ukexportfinance.gov.uk',
   });
 
   console.info('inserting TFM teams');
