@@ -6,6 +6,7 @@ const {
   errorHref,
   generateErrorSummary,
   sanitizeCurrency,
+  constructPayload,
 } = require('../../../helpers');
 
 const {
@@ -57,9 +58,17 @@ router.get('/contract/:_id/about/financial', provide([CURRENCIES]), async (req, 
 
 router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) => {
   const { userToken } = requestParams(req);
-  const submissionDetails = req.body;
+  const submissionDetailsProperties = [
+    'supplyContractValue',
+    'supplyContractCurrency',
+    'supplyContractConversionRateToGBP',
+    'supplyContractConversionDate-day',
+    'supplyContractConversionDate-month',
+    'supplyContractConversionDate-year',
+  ];
+  const submissionDetailsPayload = constructPayload(req.body, submissionDetailsProperties);
 
-  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
+  await updateSubmissionDetails(req.apiData[DEAL], submissionDetailsPayload, userToken);
 
   const redirectUrl = `/contract/${req.params._id}/about/check-your-answers`;
   return res.redirect(redirectUrl);
@@ -68,7 +77,15 @@ router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) 
 router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const deal = req.apiData[DEAL];
-  const submissionDetails = req.body;
+  const submissionDetailsProperties = [
+    'supplyContractValue',
+    'supplyContractCurrency',
+    'supplyContractConversionRateToGBP',
+    'supplyContractConversionDate-day',
+    'supplyContractConversionDate-month',
+    'supplyContractConversionDate-year',
+  ];
+  const submissionDetails = constructPayload(req.body, submissionDetailsProperties);
 
   const mappedFormDataForMatchCheck = {
     ...submissionDetails,

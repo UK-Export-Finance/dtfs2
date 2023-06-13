@@ -5,6 +5,7 @@ const {
   mapCountries,
   errorHref,
   generateErrorSummary,
+  constructPayload,
 } = require('../../../helpers');
 
 const {
@@ -65,9 +66,20 @@ router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req,
 
 router.post('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
-  const submissionDetails = req.body;
 
-  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
+  const submissionDetailsProperties = [
+    'buyer-name',
+    'buyer-address-country',
+    'buyer-address-line-1',
+    'buyer-address-line-2',
+    'buyer-address-line-3',
+    'buyer-address-line-town',
+    'buyer-address-line-postcode',
+    'destinationOfGoodsAndServices',
+  ];
+  const submissionDetailsPayload = constructPayload(req.body, submissionDetailsProperties);
+
+  await updateSubmissionDetails(req.apiData[DEAL], submissionDetailsPayload, userToken);
 
   const redirectUrl = `/contract/${_id}/about/financial`;
   return res.redirect(redirectUrl);
@@ -92,8 +104,20 @@ router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (r
     destinationOfGoodsAndServices: destinationOfGoodsAndServicesCode,
   };
 
-  if (!formDataMatchesOriginalData(req.body, mappedOriginalData)) {
-    await updateSubmissionDetails(deal, req.body, userToken);
+  const submissionDetailsProperties = [
+    'buyer-name',
+    'buyer-address-country',
+    'buyer-address-line-1',
+    'buyer-address-line-2',
+    'buyer-address-line-3',
+    'buyer-address-line-town',
+    'buyer-address-line-postcode',
+    'destinationOfGoodsAndServices',
+  ];
+  const submissionDetailsPayload = constructPayload(req.body, submissionDetailsProperties);
+
+  if (!formDataMatchesOriginalData(submissionDetailsPayload, mappedOriginalData)) {
+    await updateSubmissionDetails(deal, submissionDetailsPayload, userToken);
   }
 
   const redirectUrl = `/contract/${_id}`;
