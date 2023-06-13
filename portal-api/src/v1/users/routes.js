@@ -237,7 +237,7 @@ module.exports.resetPassword = async (req, res) => {
 /**
  * Portal reset password route caters for following user scenarios:
  * 1. User initiated password reset
- * 2. Adminstrator adds a new user, where user need to specify the password.
+ * 2. Administrator adds a new user, where user need to specify the password.
  */
 module.exports.resetPasswordWithToken = async (req, res, next) => {
   const { resetPwdToken } = req.params;
