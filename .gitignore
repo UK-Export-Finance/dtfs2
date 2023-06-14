@@ -18,7 +18,7 @@ Library/
 secrets/**
 jwt_key
 **/generated_reports
-reference-data-proxy/generated_reports
+external-api/generated_reports
 *.ipynb
 .ipynb_checkpoints
 .vscode

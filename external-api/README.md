@@ -1,4 +1,4 @@
-# REFERENCE-DATA-PROXY MICRO-SERVICE 📦️
+# external-api MICRO-SERVICE 📦️
 RDP is predominately responsible for external API consumption and communication.
 ## Endpoints 🌐
 ### 1. APIM
@@ -27,7 +27,6 @@ CS entity fetch
 ### 3. OS
 Places API
 The service also hosts some reference data for countries, currencies and industry sectors. These need to be removed and obtained through Mulesoft API calls.
-This service initially started purely as a reference data api (i.e, no external API calls). Service should be renamed to external-apis.
 
 ## Why
 Separation of concerns and reusability.
