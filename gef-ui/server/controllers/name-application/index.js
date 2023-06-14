@@ -26,7 +26,7 @@ const createApplication = async (req, res, next) => {
   const payloadProperties = [
     'bankInternalRefName',
     'additionalRefName',
-  ]
+  ];
   const createApplicationPayload = constructPayload(body, payloadProperties);
 
   try {
@@ -58,9 +58,9 @@ const updateApplicationReferences = async (req, res, next) => {
   const payloadProperties = [
     'bankInternalRefName',
     'additionalRefName',
-  ]
+  ];
   const updateApplicationPayload = constructPayload(body, payloadProperties);
-  
+
   updateApplicationPayload.bankInternalRefName = updateApplicationPayload.bankInternalRefName ?? '';
   updateApplicationPayload.additionalRefName = updateApplicationPayload.additionalRefName ?? '';
 

@@ -1,6 +1,7 @@
 const api = require('../../services/api');
 const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
 const { DEFAULT_COUNTRY } = require('../../constants');
+const constructPayload = require('../../utils/constructPayload');
 
 const enterExportersCorrespondenceAddress = async (req, res) => {
   const { params, session, query } = req;
