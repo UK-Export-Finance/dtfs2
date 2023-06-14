@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
-    "@ministryofjustice/frontend": "1.6.4",
+    "@ministryofjustice/frontend": "1.8.0",
     "axios": "^1.4.0",
     "cheerio": "^1.0.0-rc.12",
     "connect-flash": "0.1.1",
