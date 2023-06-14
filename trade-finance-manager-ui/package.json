@@ -37,7 +37,7 @@
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "@ministryofjustice/frontend": "1.6.6",
+    "@ministryofjustice/frontend": "1.8.0",
     "ajv": "^8.12.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
