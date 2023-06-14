@@ -42,7 +42,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "moment": "^2.29.4",
     "mongo-dot-notation": "3.1.0",
-    "mongodb": "4.2.0",
+    "mongodb": "5.6.0",
     "nodemon": "^2.0.22",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3"
