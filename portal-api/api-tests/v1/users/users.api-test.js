@@ -249,7 +249,7 @@ describe('a user', () => {
 
   const expectedBody = { msg: 'could not find user', success: false };
 
-  describe('Attempting to login with NoSQL ', () => {
+  describe('Attempting to login with NoSQL injection ', () => {
     it('should return a user cannot be found message', async () => {
       const username = "{$or: [{role: { $ne: '' }}]}";
       const password = 'AbC!2345';
