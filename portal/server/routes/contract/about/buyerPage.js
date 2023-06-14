@@ -73,8 +73,8 @@ router.post('/contract/:_id/about/buyer', async (req, res) => {
     'buyer-address-line-1',
     'buyer-address-line-2',
     'buyer-address-line-3',
-    'buyer-address-line-town',
-    'buyer-address-line-postcode',
+    'buyer-address-town',
+    'buyer-address-postcode',
     'destinationOfGoodsAndServices',
   ];
   const submissionDetailsPayload = constructPayload(req.body, submissionDetailsProperties);
