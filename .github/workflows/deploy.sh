@@ -46,8 +46,8 @@ if [ -n "$selection" ]; then
     ############### ACR PURGE ###############
     destination=""
     branch=""
-    az acr run --cmd "acr purge --filter 'portal-ui:.*' --filter 'gef-ui:.*' --filter 'trade-finance-manager-ui:.*' --filter 'portal-api:.*' --filter 'trade-finance-manager-api:.*' --filter 'dtfs-central-api:.*' --filter 'reference-data-proxy:.*' --filter 'azure-function-number-generator:.*' --filter 'azure-function-acbs:.*' --ago 15d" --registry tfsdev /dev/null
-    az acr run --cmd "acr purge --filter 'portal-ui:.*' --filter 'gef-ui:.*' --filter 'trade-finance-manager-ui:.*' --filter 'portal-api:.*' --filter 'trade-finance-manager-api:.*' --filter 'dtfs-central-api:.*' --filter 'reference-data-proxy:.*' --filter 'azure-function-number-generator:.*' --filter 'azure-function-acbs:.*' --ago 15d" --registry tfsstaging /dev/null
+    az acr run --cmd "acr purge --filter 'portal-ui:.*' --filter 'gef-ui:.*' --filter 'trade-finance-manager-ui:.*' --filter 'portal-api:.*' --filter 'trade-finance-manager-api:.*' --filter 'dtfs-central-api:.*' --filter 'external-api:.*' --filter 'azure-function-number-generator:.*' --filter 'azure-function-acbs:.*' --ago 15d" --registry tfsdev /dev/null
+    az acr run --cmd "acr purge --filter 'portal-ui:.*' --filter 'gef-ui:.*' --filter 'trade-finance-manager-ui:.*' --filter 'portal-api:.*' --filter 'trade-finance-manager-api:.*' --filter 'dtfs-central-api:.*' --filter 'external-api:.*' --filter 'azure-function-number-generator:.*' --filter 'azure-function-acbs:.*' --ago 15d" --registry tfsstaging /dev/null
     ############### ACR PURGE ###############
     fi
 

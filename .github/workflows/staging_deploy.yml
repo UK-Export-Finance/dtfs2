@@ -10,7 +10,7 @@ on:
     - 'trade-finance-manager-ui/**'
     - 'trade-finance-manager-api/**'
     - 'dtfs-central-api/**'
-    - 'reference-data-proxy/**'
+    - 'external-api/**'
     - 'azure-functions/number-generator-function/**'
     - 'azure-functions/acbs-function/**'
   
@@ -442,7 +442,7 @@ jobs:
     environment:
       name: ${{ needs.deployment-environment.outputs.environment }}
     env:
-      repository: reference-data-proxy
+      repository: external-api
       
     steps:
     - name: 1. Latest commit hash
