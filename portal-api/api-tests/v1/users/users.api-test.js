@@ -246,4 +246,89 @@ describe('a user', () => {
     const second = await as().post(aMaker).to('/v1/users');
     expect(second.status).toEqual(400);
   });
+
+  describe('NoSQL injection attempts', () => {
+    const expectedBody = { msg: 'could not find user', success: false };
+
+    const injectedUserVariables = {
+      password: '1!aB5678',
+      firstname: 'Injected',
+      surname: 'Test',
+      roles: ['maker', 'checker'],
+      bank: {
+        id: '961',
+        name: 'HSBC',
+      }
+    };
+
+    describe('when username is "{ "$ne": "" }"', () => {
+      it('should return a user cannot be found message', async () => {
+        const injectedUser = {
+          username: '{ "$ne": "" }',
+          email: '{ "$ne": "" }',
+          ...injectedUserVariables,
+        };
+
+        const { username, password } = injectedUser;
+        await as().post(injectedUser).to('/v1/users');
+
+        const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+        expect(status).toEqual(401);
+        expect(body).toEqual(expectedBody);
+      });
+    });
+
+    describe('when username is "{ "$gt": "" }"', () => {
+      it('should return a user cannot be found message', async () => {
+        const injectedUser = {
+          username: '{ "$gt": "" }',
+          email: '{ "$gt": "" }',
+          ...injectedUserVariables,
+        };
+
+        const { username, password } = injectedUser;
+        await as().post(injectedUser).to('/v1/users');
+
+        const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+        const expectedUserData = {
+          ...injectedUser,
+          _id: expect.any(String),
+          timezone: 'Europe/London',
+          'user-status': 'active',
+        };
+        delete expectedUserData.password;
+
+        expect(status).toEqual(401);
+        expect(body).toEqual(expectedBody);
+      });
+
+      describe('when username is "{ "$lt": "" }"', () => {
+        it('should return a user cannot be found message', async () => {
+          const injectedUser = {
+            username: '{ "$lt": "" }',
+            email: '{ "$lt": "" }',
+            ...injectedUserVariables,
+          };
+
+          const { username, password } = injectedUser;
+          await as().post(injectedUser).to('/v1/users');
+
+          const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+          const expectedUserData = {
+            ...injectedUser,
+            _id: expect.any(String),
+            timezone: 'Europe/London',
+            'user-status': 'active',
+          };
+          delete expectedUserData.password;
+
+          expect(status).toEqual(401);
+          expect(body).toEqual(expectedBody);
+        });
+      });
+    });
+  });
 });
