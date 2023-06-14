@@ -2,7 +2,7 @@ const { header, users, createUser } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 
-const { ADMIN } = MOCK_USERS;
+const { ADMIN, USER_WITH_INJECTION } = MOCK_USERS;
 
 context('Admin user creates a new user', () => {
   const validUser = {
@@ -21,16 +21,6 @@ context('Admin user creates a new user', () => {
     password: 'aaa',
     firstname: 'alfred',
     surname: 'd. great',
-    bank: 'HSBC',
-    roles: ['maker'],
-  };
-
-  const userWithInjection = {
-    username: '{ "$gt": "" }',
-    email: '{ "$gt": "" }',
-    password: 'TestPassword123!',
-    firstname: 'test',
-    surname: 'injection',
     bank: 'HSBC',
     roles: ['maker'],
   };
@@ -155,13 +145,13 @@ context('Admin user creates a new user', () => {
     });
 
     // as the string has object characters, need to use parseSpecialCharSequences
-    createUser.username().type(userWithInjection.username, { parseSpecialCharSequences: false });
+    createUser.username().type(USER_WITH_INJECTION.username, { parseSpecialCharSequences: false });
     createUser.manualPassword().click();
-    createUser.password().type(userWithInjection.password);
-    createUser.confirmPassword().type(userWithInjection.password);
-    createUser.firstname().type(userWithInjection.firstname);
-    createUser.surname().type(userWithInjection.surname);
-    createUser.bank().select(userWithInjection.bank);
+    createUser.password().type(USER_WITH_INJECTION.password);
+    createUser.confirmPassword().type(USER_WITH_INJECTION.password);
+    createUser.firstname().type(USER_WITH_INJECTION.firstname);
+    createUser.surname().type(USER_WITH_INJECTION.surname);
+    createUser.bank().select(USER_WITH_INJECTION.bank);
 
     createUser.createUser().click();
 
