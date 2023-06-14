@@ -1,4 +1,4 @@
-# external-api MICRO-SERVICE 📦️
+# EXTERNAL API MICRO-SERVICE 📦️
 RDP is predominately responsible for external API consumption and communication.
 ## Endpoints 🌐
 ### 1. APIM
