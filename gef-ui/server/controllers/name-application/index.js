@@ -69,8 +69,8 @@ const updateApplicationReferences = async (req, res, next) => {
 
     if (application.status === 422) {
       return res.render('partials/name-application.njk', {
-        bankInternalRefName: body.bankInternalRefName,
-        additionalRefName: body.additionalRefName,
+        bankInternalRefName: updateApplicationPayload.bankInternalRefName,
+        additionalRefName: updateApplicationPayload.additionalRefName,
         errors: validationErrorHandler(application.data),
       });
     }
