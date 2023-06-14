@@ -247,9 +247,21 @@ describe('a user', () => {
     expect(second.status).toEqual(400);
   });
 
-  describe('NoSQL injection attempts', () => {
-    const expectedBody = { msg: 'could not find user', success: false };
+  const expectedBody = { msg: 'could not find user', success: false };
 
+  describe('Attempting to login with NoSQL ', () => {
+    it('should return a user cannot be found message', async () => {
+      const username = "{$or: [{role: { $ne: '' }}]}";
+      const password = 'AbC!2345';
+
+      const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+      expect(status).toEqual(401);
+      expect(body).toEqual(expectedBody);
+    });
+  });
+
+  describe('NoSQL injection attempts', () => {
     const injectedUserVariables = {
       password: '1!aB5678',
       firstname: 'Injected',
