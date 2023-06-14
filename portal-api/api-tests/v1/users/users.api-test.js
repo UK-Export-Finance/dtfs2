@@ -292,14 +292,6 @@ describe('a user', () => {
 
         const { status, body } = await as().post({ username, password }).to('/v1/login');
 
-        const expectedUserData = {
-          ...injectedUser,
-          _id: expect.any(String),
-          timezone: 'Europe/London',
-          'user-status': 'active',
-        };
-        delete expectedUserData.password;
-
         expect(status).toEqual(401);
         expect(body).toEqual(expectedBody);
       });
@@ -316,14 +308,6 @@ describe('a user', () => {
           await as().post(injectedUser).to('/v1/users');
 
           const { status, body } = await as().post({ username, password }).to('/v1/login');
-
-          const expectedUserData = {
-            ...injectedUser,
-            _id: expect.any(String),
-            timezone: 'Europe/London',
-            'user-status': 'active',
-          };
-          delete expectedUserData.password;
 
           expect(status).toEqual(401);
           expect(body).toEqual(expectedBody);
