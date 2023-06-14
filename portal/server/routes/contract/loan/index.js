@@ -83,6 +83,35 @@ router.get('/contract/:_id/loan/create', async (req, res) => {
   return res.redirect(`/contract/${dealId}/loan/${loanId}/guarantee-details`);
 });
 
+const saveLoanAndGoBackToDeal = async (req, res, sanitizedBody) => {
+  const { _id: dealId, loanId, userToken } = requestParams(req);
+  const { loan } = req.apiData.loan;
+
+  // UI form submit only has the currency code. API has a currency object.
+  // to check if something has changed, only use the currency code.
+  const mappedOriginalData = loan;
+
+  if (loan.currency && loan.currency.id) {
+    mappedOriginalData.currency = loan.currency.id;
+  }
+  delete mappedOriginalData._id;
+  delete mappedOriginalData.status;
+
+  if (!formDataMatchesOriginalData(sanitizedBody, mappedOriginalData)) {
+    await postToApi(
+      api.updateLoan(
+        dealId,
+        loanId,
+        sanitizedBody,
+        userToken,
+      ),
+    );
+  }
+
+  const redirectUrl = `/contract/${req.params._id}`;
+  return res.redirect(redirectUrl);
+};
+
 router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), async (req, res) => {
   const {
     dealId,
@@ -107,22 +136,23 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]
   });
 });
 
+const loanGuaranteeDetailsPayloadProperties = [
+  'facilityStage',
+  'facilityStageConditional-name',
+  'facilityStageUnconditional-name',
+  'ukefGuaranteeInMonths',
+  'requestedCoverStartDate-day',
+  'requestedCoverStartDate-month',
+  'requestedCoverStartDate-year',
+  'coverEndDate-day',
+  'coverEndDate-month',
+  'coverEndDate-year',
+];
+
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const payloadProperties = [
-    'facilityStage',
-    'facilityStageConditional-name',
-    'facilityStageUnconditional-name',
-    'ukefGuaranteeInMonths',
-    'requestedCoverStartDate-day',
-    'requestedCoverStartDate-month',
-    'requestedCoverStartDate-year',
-    'coverEndDate-day',
-    'coverEndDate-month',
-    'coverEndDate-year',
-  ];
-  const loanBody = constructPayload(req.body, payloadProperties);
+  const loanBody = constructPayload(req.body, loanGuaranteeDetailsPayloadProperties);
   const modifiedBody = handleNameField(loanBody);
 
   await postToApi(
@@ -137,6 +167,13 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/financial-details`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', provide([LOAN]), async (req, res) => {
+  const loanBody = constructPayload(req.body, loanGuaranteeDetailsPayloadProperties);
+  const modifiedBody = handleNameField(loanBody);
+
+  return saveLoanAndGoBackToDeal(req, res, modifiedBody);
 });
 
 router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), async (req, res) => {
@@ -165,25 +202,26 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL,
   });
 });
 
+const loanFinancialDetailsPayloadProperties = [
+  'value',
+  'currencySameAsSupplyContractCurrency',
+  'currency',
+  'conversionRate',
+  'conversionRateDate-day',
+  'conversionRateDate-month',
+  'conversionRateDate-year',
+  'disbursementAmount',
+  'interestMarginFee',
+  'coveredPercentage',
+  'minimumQuarterlyFee',
+  'guaranteeFeePayableByBank',
+  'ukefExposure',
+];
+
 router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const payloadProperties = [
-    'value',
-    'currencySameAsSupplyContractCurrency',
-    'currency',
-    'conversionRate',
-    'conversionRateDate-day',
-    'conversionRateDate-month',
-    'conversionRateDate-year',
-    'disbursementAmount',
-    'interestMarginFee',
-    'coveredPercentage',
-    'minimumQuarterlyFee',
-    'guaranteeFeePayableByBank',
-    'ukefExposure',
-  ];
-  const payload = constructPayload(req.body, payloadProperties);
+  const payload = constructPayload(req.body, loanFinancialDetailsPayloadProperties);
 
   await postToApi(
     api.updateLoan(
@@ -197,6 +235,12 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/dates-repayments`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provide([LOAN]), async (req, res) => {
+  const sanitizedPayload = constructPayload(req.body, loanFinancialDetailsPayloadProperties);
+
+  return saveLoanAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
 router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), async (req, res) => {
@@ -223,17 +267,18 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL])
   });
 });
 
+const loanRepaymentDatesPayloadProperties = [
+  'premiumFrequency',
+  'premiumType',
+  'inAdvancePremiumFrequency',
+  'inArrearPremiumFrequency',
+  'dayCountBasis',
+];
+
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const payloadProperties = [
-    'premiumFrequency',
-    'premiumType',
-    'inAdvancePremiumFrequency',
-    'inArrearPremiumFrequency',
-    'dayCountBasis',
-  ];
-  const loanBody = constructPayload(req.body, payloadProperties);
+  const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties);
   const modifiedBody = premiumFrequencyField(loanBody);
 
   await postToApi(
@@ -248,6 +293,13 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/check-your-answers`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/loan/:loanId/dates-repayments/save-go-back', provide([LOAN]), async (req, res) => {
+  const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties);
+  const modifiedBody = premiumFrequencyField(loanBody);
+
+  return saveLoanAndGoBackToDeal(req, res, modifiedBody);
 });
 
 router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), async (req, res) => {
@@ -304,69 +356,6 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), as
     taskListItems: loanTaskList(completedForms),
     user: req.session.user,
   });
-});
-
-router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (req, res) => {
-  const { _id: dealId, loanId, userToken } = requestParams(req);
-  const { loan } = req.apiData.loan;
-
-  const allowedProperties = [
-    'facilityStage',
-    'facilityStageConditional-name',
-    'facilityStageUnconditional-name',
-    'ukefGuaranteeInMonths',
-    'requestedCoverStartDate-day',
-    'requestedCoverStartDate-month',
-    'requestedCoverStartDate-year',
-    'coverEndDate-day',
-    'coverEndDate-month',
-    'coverEndDate-year',
-    'value',
-    'currencySameAsSupplyContractCurrency',
-    'currency',
-    'conversionRate',
-    'conversionRateDate-day',
-    'conversionRateDate-month',
-    'conversionRateDate-year',
-    'disbursementAmount',
-    'interestMarginFee',
-    'coveredPercentage',
-    'minimumQuarterlyFee',
-    'guaranteeFeePayableByBank',
-    'ukefExposure',
-    'premiumFrequency',
-    'premiumType',
-    'inAdvancePremiumFrequency',
-    'inArrearPremiumFrequency',
-    'dayCountBasis',
-  ];
-  const sanitizedBody = constructPayload(req.body, allowedProperties);
-  let modifiedBody = handleNameField(sanitizedBody);
-  modifiedBody = premiumFrequencyField(modifiedBody, loan);
-
-  // UI form submit only has the currency code. API has a currency object.
-  // to check if something has changed, only use the currency code.
-  const mappedOriginalData = loan;
-
-  if (loan.currency && loan.currency.id) {
-    mappedOriginalData.currency = loan.currency.id;
-  }
-  delete mappedOriginalData._id;
-  delete mappedOriginalData.status;
-
-  if (!formDataMatchesOriginalData(modifiedBody, mappedOriginalData)) {
-    await postToApi(
-      api.updateLoan(
-        dealId,
-        loanId,
-        modifiedBody,
-        userToken,
-      ),
-    );
-  }
-
-  const redirectUrl = `/contract/${req.params._id}`;
-  return res.redirect(redirectUrl);
 });
 
 router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), async (req, res) => {
