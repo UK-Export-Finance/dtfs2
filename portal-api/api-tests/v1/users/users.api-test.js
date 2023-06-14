@@ -252,7 +252,7 @@ describe('a user', () => {
   describe('Attempting to login with NoSQL injection ', () => {
     it('should return a user cannot be found message', async () => {
       const username = "{$or: [{role: { $ne: '' }}]}";
-      const password = 'AbC!2345';
+      const { password } = aMaker;
 
       const { status, body } = await as().post({ username, password }).to('/v1/login');
 
@@ -262,23 +262,12 @@ describe('a user', () => {
   });
 
   describe('NoSQL injection attempts', () => {
-    const injectedUserVariables = {
-      password: '1!aB5678',
-      firstname: 'Injected',
-      surname: 'Test',
-      roles: ['maker', 'checker'],
-      bank: {
-        id: '961',
-        name: 'HSBC',
-      }
-    };
-
     describe('when username is "{ "$ne": "" }"', () => {
       it('should return a user cannot be found message', async () => {
         const injectedUser = {
+          ...aMaker,
           username: '{ "$ne": "" }',
           email: '{ "$ne": "" }',
-          ...injectedUserVariables,
         };
 
         const { username, password } = injectedUser;
@@ -294,9 +283,9 @@ describe('a user', () => {
     describe('when username is "{ "$gt": "" }"', () => {
       it('should return a user cannot be found message', async () => {
         const injectedUser = {
+          ...aMaker,
           username: '{ "$gt": "" }',
           email: '{ "$gt": "" }',
-          ...injectedUserVariables,
         };
 
         const { username, password } = injectedUser;
@@ -311,9 +300,9 @@ describe('a user', () => {
       describe('when username is "{ "$lt": "" }"', () => {
         it('should return a user cannot be found message', async () => {
           const injectedUser = {
+            ...aMaker,
             username: '{ "$lt": "" }',
             email: '{ "$lt": "" }',
-            ...injectedUserVariables,
           };
 
           const { username, password } = injectedUser;
