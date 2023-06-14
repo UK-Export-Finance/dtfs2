@@ -1,5 +1,6 @@
 const { validationErrorHandler } = require('../../utils/helpers');
 const api = require('../../services/api');
+const constructPayload = require('../../utils/constructPayload');
 
 const nameApplication = async (req, res, next) => {
   const { params } = req;
@@ -22,9 +23,15 @@ const createApplication = async (req, res, next) => {
   const { body, session } = req;
   const { _id: userId, bank } = session.user;
 
+  const payloadProperties = [
+    'bankInternalRefName',
+    'additionalRefName',
+  ]
+  const createApplicationPayload = constructPayload(body, payloadProperties);
+
   try {
     const application = await api.createApplication({
-      ...body,
+      ...createApplicationPayload,
       userId,
       bank,
     });
@@ -48,10 +55,17 @@ const updateApplicationReferences = async (req, res, next) => {
   const { body, params } = req;
   const { dealId } = params;
 
-  body.bankInternalRefName = body.bankInternalRefName ?? '';
-  body.additionalRefName = body.additionalRefName ?? '';
+  const payloadProperties = [
+    'bankInternalRefName',
+    'additionalRefName',
+  ]
+  const updateApplicationPayload = constructPayload(body, payloadProperties);
+  
+  updateApplicationPayload.bankInternalRefName = updateApplicationPayload.bankInternalRefName ?? '';
+  updateApplicationPayload.additionalRefName = updateApplicationPayload.additionalRefName ?? '';
+
   try {
-    const application = await api.updateApplication(dealId, body);
+    const application = await api.updateApplication(dealId, updateApplicationPayload);
 
     if (application.status === 422) {
       return res.render('partials/name-application.njk', {
