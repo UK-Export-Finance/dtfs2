@@ -238,15 +238,15 @@ router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTR
     'indemnifier-address-line-1',
     'indemnifier-address-line-2',
     'indemnifier-address-line-3',
-    'indemnifier-address-line-town',
-    'indemnifier-address-line-postcode',
+    'indemnifier-address-town',
+    'indemnifier-address-postcode',
     'indemnifierCorrespondenceAddressDifferent',
     'indemnifier-correspondence-address-country',
     'indemnifier-correspondence-address-line-1',
     'indemnifier-correspondence-address-line-2',
     'indemnifier-correspondence-address-line-3',
-    'indemnifier-correspondence-address-line-town',
-    'indemnifier-correspondence-address-line-postcode',
+    'indemnifier-correspondence-address-town',
+    'indemnifier-correspondence-address-postcode',
   ];
   let submissionDetails = constructPayload(req.body, submissionDetailsFields);
 
