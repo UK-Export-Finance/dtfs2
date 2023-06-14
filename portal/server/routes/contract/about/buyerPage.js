@@ -72,7 +72,7 @@ const buyerSubmissionDetailsProperties = [
   'buyer-address-town',
   'buyer-address-postcode',
   'destinationOfGoodsAndServices',
-];;
+];
 
 router.post('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
