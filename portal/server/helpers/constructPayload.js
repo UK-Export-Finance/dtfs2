@@ -25,13 +25,11 @@ const constructPayload = (body, properties, csrf = true) => {
   // Property insertion
   properties
     .filter((property) => property in body)
-    .map((property) => {
+    .forEach((property) => {
       payload = {
         ...payload,
         [property]: body[[property]],
       };
-
-      return null;
     });
 
   return payload;
