@@ -56,17 +56,18 @@ router.get('/contract/:_id/about/financial', provide([CURRENCIES]), async (req, 
   });
 });
 
+const financialSubmissionDetailsProperties = [
+  'supplyContractValue',
+  'supplyContractCurrency',
+  'supplyContractConversionRateToGBP',
+  'supplyContractConversionDate-day',
+  'supplyContractConversionDate-month',
+  'supplyContractConversionDate-year',
+];
+
 router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) => {
   const { userToken } = requestParams(req);
-  const submissionDetailsProperties = [
-    'supplyContractValue',
-    'supplyContractCurrency',
-    'supplyContractConversionRateToGBP',
-    'supplyContractConversionDate-day',
-    'supplyContractConversionDate-month',
-    'supplyContractConversionDate-year',
-  ];
-  const submissionDetailsPayload = constructPayload(req.body, submissionDetailsProperties);
+  const submissionDetailsPayload = constructPayload(req.body, financialSubmissionDetailsProperties);
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetailsPayload, userToken);
 
@@ -77,15 +78,7 @@ router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) 
 router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const deal = req.apiData[DEAL];
-  const submissionDetailsProperties = [
-    'supplyContractValue',
-    'supplyContractCurrency',
-    'supplyContractConversionRateToGBP',
-    'supplyContractConversionDate-day',
-    'supplyContractConversionDate-month',
-    'supplyContractConversionDate-year',
-  ];
-  const submissionDetails = constructPayload(req.body, submissionDetailsProperties);
+  const submissionDetails = constructPayload(req.body, financialSubmissionDetailsProperties);
 
   const mappedFormDataForMatchCheck = {
     ...submissionDetails,

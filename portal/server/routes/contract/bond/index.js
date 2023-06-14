@@ -88,24 +88,25 @@ router.get('/contract/:_id/bond/:bondId/details', provide([DEAL]), async (req, r
   });
 });
 
+const bondDetailsPayloadProperties = [
+  'bondIssuer',
+  'bondType',
+  'facilityStage',
+  'bondBeneficiary',
+  'requestedCoverStartDate-day',
+  'requestedCoverStartDate-month',
+  'requestedCoverStartDate-year',
+  'coverEndDate-day',
+  'coverEndDate-month',
+  'coverEndDate-year',
+  'name',
+  'ukefGuaranteeInMonths',
+];
+
 router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
-  const payloadProperties = [
-    'bondIssuer',
-    'bondType',
-    'facilityStage',
-    'bondBeneficiary',
-    'requestedCoverStartDate-day',
-    'requestedCoverStartDate-month',
-    'requestedCoverStartDate-year',
-    'coverEndDate-day',
-    'coverEndDate-month',
-    'coverEndDate-year',
-    'name',
-    'ukefGuaranteeInMonths',
-  ];
-  const bondPayload = constructPayload(req.body, payloadProperties);
+  const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties);
 
   await postToApi(
     api.updateBond(
@@ -119,6 +120,11 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
 
   const redirectUrl = `/contract/${dealId}/bond/${bondId}/financial-details`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/bond/:bondId/details/save-go-back', provide([BOND]), async (req, res) => {
+  const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties);
+  return await saveBondAndGoBackToDeal(req, res, bondPayload);
 });
 
 router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES, DEAL]), async (req, res) => {
@@ -154,24 +160,24 @@ router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES,
   });
 });
 
+const bondFinancialDetailsPayloadProperties = [
+  'value',
+  'currencySameAsSupplyContractCurrency',
+  'currency',
+  'conversionRate',
+  'conversionRateDate-day',
+  'conversionRateDate-month',
+  'conversionRateDate-year',
+  'riskMarginFee',
+  'coveredPercentage',
+  'minimumRiskMarginFee',
+  'guaranteeFeePayableByBank',
+  'ukefExposure',
+];
+
 router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
-
-  const payloadProperties = [
-    'value',
-    'currencySameAsSupplyContractCurrency',
-    'currency',
-    'conversionRate',
-    'conversionRateDate-day',
-    'conversionRateDate-month',
-    'conversionRateDate-year',
-    'riskMarginFee',
-    'coveredPercentage',
-    'minimumRiskMarginFee',
-    'guaranteeFeePayableByBank',
-    'ukefExposure',
-  ];
-  const bondPayload = constructPayload(req.body, payloadProperties);
+  const bondPayload = constructPayload(req.body, bondFinancialDetailsPayloadProperties);
 
   await postToApi(
     api.updateBond(
@@ -185,6 +191,11 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
 
   const redirectUrl = `/contract/${dealId}/bond/${bondId}/fee-details`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', provide([BOND]), async (req, res) => {
+  const bondPayload = constructPayload(req.body, bondFinancialDetailsPayloadProperties);
+  return await saveBondAndGoBackToDeal(req, res, bondPayload);
 });
 
 router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), async (req, res) => {
@@ -217,17 +228,17 @@ router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), async (re
   });
 });
 
+const bondFeeDetailsPayloadProperties = [
+  'feeFrequency',
+  'feeType',
+  'inAdvanceFeeFrequency',
+  'inArrearFeeFrequency',
+  'dayCountBasis',
+];
+
 router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
-
-  const payloadProperties = [
-    'feeFrequency',
-    'feeType',
-    'inAdvanceFeeFrequency',
-    'inArrearFeeFrequency',
-    'dayCountBasis',
-  ];
-  const sanitizedBody = constructPayload(req.body, payloadProperties);
+  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties);
   const modifiedBody = feeFrequencyField(sanitizedBody);
 
   await postToApi(
@@ -242,6 +253,11 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
 
   const redirectUrl = `/contract/${dealId}/bond/${bondId}/check-your-answers`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/bond/:bondId/fee-details/save-go-back', provide([BOND]), async (req, res) => {
+  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties);
+  return await saveBondAndGoBackToDeal(req, res, sanitizedBody);
 });
 
 router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) => {
@@ -305,42 +321,9 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) =>
   });
 });
 
-router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (req, res) => {
+const saveBondAndGoBackToDeal = async (req, res, sanitizedBody) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
   const { bond } = req.apiData.bond;
-
-  const allowedProperties = [
-    'bondIssuer',
-    'bondType',
-    'facilityStage',
-    'bondBeneficiary',
-    'requestedCoverStartDate-day',
-    'requestedCoverStartDate-month',
-    'requestedCoverStartDate-year',
-    'coverEndDate-day',
-    'coverEndDate-month',
-    'coverEndDate-year',
-    'name',
-    'ukefGuaranteeInMonths',
-    'value',
-    'currencySameAsSupplyContractCurrency',
-    'currency',
-    'conversionRate',
-    'conversionRateDate-day',
-    'conversionRateDate-month',
-    'conversionRateDate-year',
-    'riskMarginFee',
-    'coveredPercentage',
-    'minimumRiskMarginFee',
-    'guaranteeFeePayableByBank',
-    'ukefExposure',
-    'feeFrequency',
-    'feeType',
-    'inAdvanceFeeFrequency',
-    'inArrearFeeFrequency',
-    'dayCountBasis',
-  ];
-  const sanitizedBody = constructPayload(req.body, allowedProperties);
   const modifiedBody = feeFrequencyField(sanitizedBody, bond);
 
   // UI form submit only has the currency code. API has a currency object.
@@ -367,7 +350,71 @@ router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (
 
   const redirectUrl = `/contract/${req.params._id}`;
   return res.redirect(redirectUrl);
-});
+}
+
+// router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (req, res) => {
+//   const { _id: dealId, bondId, userToken } = requestParams(req);
+//   const { bond } = req.apiData.bond;
+
+//   const allowedProperties = [
+//     'bondIssuer',
+//     'bondType',
+//     'facilityStage',
+//     'bondBeneficiary',
+//     'requestedCoverStartDate-day',
+//     'requestedCoverStartDate-month',
+//     'requestedCoverStartDate-year',
+//     'coverEndDate-day',
+//     'coverEndDate-month',
+//     'coverEndDate-year',
+//     'name',
+//     'ukefGuaranteeInMonths',
+//     'value',
+//     'currencySameAsSupplyContractCurrency',
+//     'currency',
+//     'conversionRate',
+//     'conversionRateDate-day',
+//     'conversionRateDate-month',
+//     'conversionRateDate-year',
+//     'riskMarginFee',
+//     'coveredPercentage',
+//     'minimumRiskMarginFee',
+//     'guaranteeFeePayableByBank',
+//     'ukefExposure',
+//     'feeFrequency',
+//     'feeType',
+//     'inAdvanceFeeFrequency',
+//     'inArrearFeeFrequency',
+//     'dayCountBasis',
+//   ];
+//   const sanitizedBody = constructPayload(req.body, allowedProperties);
+//   const modifiedBody = feeFrequencyField(sanitizedBody, bond);
+
+//   // UI form submit only has the currency code. API has a currency object.
+//   // to check if something has changed, only use the currency code.
+//   const mappedOriginalData = bond;
+
+//   if (bond.currency && bond.currency.id) {
+//     mappedOriginalData.currency = bond.currency.id;
+//   }
+//   delete mappedOriginalData._id;
+//   delete mappedOriginalData.status;
+
+//   if (!formDataMatchesOriginalData(modifiedBody, mappedOriginalData)) {
+//     await postToApi(
+//       api.updateBond(
+//         dealId,
+//         bondId,
+//         modifiedBody,
+//         userToken,
+//       ),
+//       errorHref,
+//     );
+//   }
+
+//   const redirectUrl = `/contract/${req.params._id}`;
+//   return res.redirect(redirectUrl);
+// });
 
 router.get('/contract/:_id/bond/:bondId/issue-facility', provide([BOND, DEAL]), async (req, res) => {
   const { _id: dealId } = requestParams(req);

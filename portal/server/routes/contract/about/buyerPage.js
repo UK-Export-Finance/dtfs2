@@ -63,21 +63,21 @@ router.get('/contract/:_id/about/buyer', provide([DEAL, COUNTRIES]), async (req,
     taskListItems: aboutTaskList(completedForms),
   });
 });
+const buyerSubmissionDetailsProperties = [
+  'buyer-name',
+  'buyer-address-country',
+  'buyer-address-line-1',
+  'buyer-address-line-2',
+  'buyer-address-line-3',
+  'buyer-address-town',
+  'buyer-address-postcode',
+  'destinationOfGoodsAndServices',
+];;
 
 router.post('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  const submissionDetailsProperties = [
-    'buyer-name',
-    'buyer-address-country',
-    'buyer-address-line-1',
-    'buyer-address-line-2',
-    'buyer-address-line-3',
-    'buyer-address-town',
-    'buyer-address-postcode',
-    'destinationOfGoodsAndServices',
-  ];
-  const submissionDetailsPayload = constructPayload(req.body, submissionDetailsProperties);
+  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties);
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetailsPayload, userToken);
 
@@ -104,17 +104,7 @@ router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (r
     destinationOfGoodsAndServices: destinationOfGoodsAndServicesCode,
   };
 
-  const submissionDetailsProperties = [
-    'buyer-name',
-    'buyer-address-country',
-    'buyer-address-line-1',
-    'buyer-address-line-2',
-    'buyer-address-line-3',
-    'buyer-address-town',
-    'buyer-address-postcode',
-    'destinationOfGoodsAndServices',
-  ];
-  const submissionDetailsPayload = constructPayload(req.body, submissionDetailsProperties);
+  const submissionDetailsPayload = constructPayload(req.body, buyerSubmissionDetailsProperties);
 
   if (!formDataMatchesOriginalData(submissionDetailsPayload, mappedOriginalData)) {
     await updateSubmissionDetails(deal, submissionDetailsPayload, userToken);
