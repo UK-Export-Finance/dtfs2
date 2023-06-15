@@ -1,5 +1,6 @@
 const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
+const { FACILITY } = require('../../../../fixtures/constants');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 const {
   fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate,
@@ -23,7 +24,7 @@ context('Issue Loan Form - Submit issued loan with inserted element on page', ()
 
         const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        const loans = mockFacilities.filter((f) => f.type === 'Loan');
+        const loans = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.LOAN);
 
         cy.createFacilities(dealId, loans, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.loans = createdFacilities;

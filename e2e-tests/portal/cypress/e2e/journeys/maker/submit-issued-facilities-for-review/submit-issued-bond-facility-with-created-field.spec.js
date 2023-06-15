@@ -1,5 +1,6 @@
 const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
+const { FACILITY } = require('../../../../fixtures/constants');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
@@ -20,7 +21,7 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
 
         const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-        const bonds = mockFacilities.filter((f) => f.type === 'Bond');
+        const bonds = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.BOND);
 
         cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities.bonds = createdFacilities;

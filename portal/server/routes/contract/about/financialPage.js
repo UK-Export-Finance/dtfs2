@@ -18,6 +18,7 @@ const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
 const { financialPageValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
+const { CURRENCY } = require('../../../constants');
 
 const router = express.Router();
 
@@ -68,7 +69,7 @@ const financialSubmissionDetailsProperties = [
 const filterFinancialSubmissionDetailsPayload = (body) => {
   const payload = constructPayload(body, financialSubmissionDetailsProperties);
 
-  if (payload.supplyContractCurrency === 'GBP') {
+  if (payload.supplyContractCurrency === CURRENCY.GBP) {
     delete payload.supplyContractConversionRateToGBP;
     delete payload['supplyContractConversionDate-day'];
     delete payload['supplyContractConversionDate-month'];

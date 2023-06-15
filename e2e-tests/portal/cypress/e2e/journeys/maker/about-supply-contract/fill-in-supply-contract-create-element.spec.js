@@ -2,9 +2,12 @@ const {
   contract, contractAboutSupplier,
 } = require('../../../pages');
 const MOCK_USERS = require('../../../../fixtures/users');
+const CONSTANTS = require('../../../../fixtures/constants');
 const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+
+const { COMPANIES_HOUSE_NUMBERS, INDUSTRY_SECTOR_CODES } = CONSTANTS;
 
 context('Supply contract form - create element and check if inserted into deal', () => {
   let deal;
@@ -41,16 +44,16 @@ context('Supply contract form - create element and check if inserted into deal',
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('08547313');
+    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(COMPANIES_HOUSE_NUMBERS[1]);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     //---
     // fill in the simplest version of the form so we can submit it and save it..
     //---
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
-    contractAboutSupplier.industrySector().select('1009'); // Information and communication
+    contractAboutSupplier.industrySector().select(INDUSTRY_SECTOR_CODES.INFORMATION); // Information and communication
     contractAboutSupplier.industryClass().should('have.value', '');
-    contractAboutSupplier.industryClass().select('62012'); // Business and domestic software development
+    contractAboutSupplier.industryClass().select(INDUSTRY_SECTOR_CODES.BUSINESS); // Business and domestic software development
     contractAboutSupplier.smeTypeMicro().click();
     contractAboutSupplier.supplyContractDescription().type('Typing in tests takes time.');
     contractAboutSupplier.notLegallyDistinct().click();
