@@ -91,7 +91,7 @@ jobs:
     - name: Load mock data
       run: node ./re-insert-mocks.js
 
-    - name: Run Reference Data Proxy API tests
+    - name: Run External API API tests
       run: docker-compose exec -T external-api npm run api-test
 
     - name: Load mock data

@@ -68,7 +68,7 @@ const callNumberGenerator = async ({ dealType, entityType, entityId, dealId, use
 export const callNumberGeneratorPOST = async (req: Request, res: Response) => {
   const { dealType, entityType, entityId, dealId, user } = req.body;
 
-  console.info('Reference Data API - calling Number Generator');
+  console.info('External API - calling Number Generator');
 
   const { status } = await callNumberGenerator({
     dealType,

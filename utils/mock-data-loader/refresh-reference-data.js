@@ -22,7 +22,7 @@ const refreshCountries = async (token) => {
     const matchById = latestCountries.find((country) => country.id === existingCountry.id);
     if (!matchById) {
       // existing currency has gone.. so we need to delete..
-      console.info(`deleting from API as no longer found in reference data: ${JSON.stringify(existingCountry)}`);
+      console.info(`deleting from API as no longer found in External API: ${JSON.stringify(existingCountry)}`);
       await api.deleteCountry(existingCountry, token);
     } else if (!matches(existingCountry, matchById)) {
       console.info(`update: ${JSON.stringify(existingCountry)} -> ${JSON.stringify(matchById)}`);
@@ -45,7 +45,7 @@ const refreshCurrencies = async (token) => {
     const matchById = latestCurrencies.find((currency) => currency.id === existingCurrency.id);
     if (!matchById) {
       // existing currency has gone.. so we need to delete..
-      console.info(`deleting from API as no longer found in reference data: ${JSON.stringify(existingCurrency)}`);
+      console.info(`deleting from API as no longer found in External API: ${JSON.stringify(existingCurrency)}`);
       await api.deleteCurrency(existingCurrency, token);
     } else if (!matches(existingCurrency, matchById)) {
       console.info(`update: ${JSON.stringify(existingCurrency)} -> ${JSON.stringify(matchById)}`);
