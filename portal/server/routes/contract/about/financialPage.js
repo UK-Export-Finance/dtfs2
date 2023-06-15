@@ -65,9 +65,22 @@ const financialSubmissionDetailsProperties = [
   'supplyContractConversionDate-year',
 ];
 
+const filterFinancialSubmissionDetailsPayload = (body) => {
+  const payload = constructPayload(body, financialSubmissionDetailsProperties);
+
+  if (payload.supplyContractCurrency === 'GBP') {
+    delete payload.supplyContractConversionRateToGBP;
+    delete payload['supplyContractConversionDate-day'];
+    delete payload['supplyContractConversionDate-month'];
+    delete payload['supplyContractConversionDate-year'];
+  }
+
+  return payload;
+};
+
 router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) => {
   const { userToken } = requestParams(req);
-  const submissionDetailsPayload = constructPayload(req.body, financialSubmissionDetailsProperties);
+  const submissionDetailsPayload = filterFinancialSubmissionDetailsPayload(req.body);
 
   await updateSubmissionDetails(req.apiData[DEAL], submissionDetailsPayload, userToken);
 
@@ -78,7 +91,7 @@ router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) 
 router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const deal = req.apiData[DEAL];
-  const submissionDetails = constructPayload(req.body, financialSubmissionDetailsProperties);
+  const submissionDetails = filterFinancialSubmissionDetailsPayload(body);
 
   const mappedFormDataForMatchCheck = {
     ...submissionDetails,
