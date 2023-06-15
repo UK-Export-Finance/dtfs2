@@ -31,6 +31,15 @@ const fetchAllApplications = (token) => cy.request({
   },
 }).then((res) => res);
 
+const fetchApplicationById = (dealId, token) => cy.request({
+  url: `${portalApi}/gef/application/${dealId}`,
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((res) => res);
+
 const fetchAllFacilities = (dealId, token) => cy.request({
   url: `${portalApi}/gef/facilities`,
   qs: {
@@ -141,6 +150,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) => cy.request({
 export {
   login,
   fetchAllApplications,
+  fetchApplicationById,
   fetchAllFacilities,
   updateApplication,
   setApplicationStatus,
