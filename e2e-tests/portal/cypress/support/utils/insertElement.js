@@ -1,3 +1,9 @@
+/**
+ * insertElement
+ * inserts an element in a div
+ *
+ * @param {String} divId
+ */
 const insertElement = (divId) => {
   cy.window().then((win) => {
     // input type is created
