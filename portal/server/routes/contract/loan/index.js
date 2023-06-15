@@ -91,7 +91,7 @@ const saveLoanAndGoBackToDeal = async (req, res, sanitizedBody) => {
   // to check if something has changed, only use the currency code.
   const mappedOriginalData = loan;
 
-  if (loan.currency && loan.currency.id) {
+  if (loan?.currency && loan?.currency?.id) {
     mappedOriginalData.currency = loan.currency.id;
   }
   delete mappedOriginalData._id;
@@ -108,8 +108,7 @@ const saveLoanAndGoBackToDeal = async (req, res, sanitizedBody) => {
     );
   }
 
-  const redirectUrl = `/contract/${req.params._id}`;
-  return res.redirect(redirectUrl);
+  return res.redirect(`/contract/${req.params._id}`);
 };
 
 router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), async (req, res) => {
