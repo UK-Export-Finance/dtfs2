@@ -246,4 +246,74 @@ describe('a user', () => {
     const second = await as().post(aMaker).to('/v1/users');
     expect(second.status).toEqual(400);
   });
+
+  const expectedBody = { msg: 'could not find user', success: false };
+
+  describe('Attempting to login with NoSQL injection ', () => {
+    it('should return a user cannot be found message', async () => {
+      const username = "{$or: [{role: { $ne: '' }}]}";
+      const { password } = aMaker;
+
+      const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+      expect(status).toEqual(401);
+      expect(body).toEqual(expectedBody);
+    });
+  });
+
+  describe('NoSQL injection attempts', () => {
+    describe('when username is "{ "$ne": "" }"', () => {
+      it('should return a user cannot be found message', async () => {
+        const injectedUser = {
+          ...aMaker,
+          username: '{ "$ne": "" }',
+          email: '{ "$ne": "" }',
+        };
+
+        const { username, password } = injectedUser;
+        await as().post(injectedUser).to('/v1/users');
+
+        const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+        expect(status).toEqual(401);
+        expect(body).toEqual(expectedBody);
+      });
+    });
+
+    describe('when username is "{ "$gt": "" }"', () => {
+      it('should return a user cannot be found message', async () => {
+        const injectedUser = {
+          ...aMaker,
+          username: '{ "$gt": "" }',
+          email: '{ "$gt": "" }',
+        };
+
+        const { username, password } = injectedUser;
+        await as().post(injectedUser).to('/v1/users');
+
+        const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+        expect(status).toEqual(401);
+        expect(body).toEqual(expectedBody);
+      });
+
+      describe('when username is "{ "$lt": "" }"', () => {
+        it('should return a user cannot be found message', async () => {
+          const injectedUser = {
+            ...aMaker,
+            username: '{ "$lt": "" }',
+            email: '{ "$lt": "" }',
+          };
+
+          const { username, password } = injectedUser;
+          await as().post(injectedUser).to('/v1/users');
+
+          const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+          expect(status).toEqual(401);
+          expect(body).toEqual(expectedBody);
+        });
+      });
+    });
+  });
 });

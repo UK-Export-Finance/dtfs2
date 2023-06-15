@@ -2,7 +2,7 @@ const { header, users, createUser } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../fixtures/users');
 
-const { ADMIN } = MOCK_USERS;
+const { ADMIN, USER_WITH_INJECTION } = MOCK_USERS;
 
 context('Admin user creates a new user', () => {
   const validUser = {
@@ -128,6 +128,51 @@ context('Admin user creates a new user', () => {
 
     createUser.passwordError().invoke('text').then((text) => {
       expect(text.trim()).to.contain('Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.');
+    });
+  });
+
+  it('Admin user adds a new user using "{ "$gt": "" }", triggering validation error for email', () => {
+    // Login and go to the dashboard
+    cy.login(ADMIN);
+
+    header.users().click();
+    users.user(userWithInvalidPassword).should('not.exist');
+
+    users.addUser().click();
+
+    userWithInvalidPassword.roles.forEach((role) => {
+      createUser.role(role).click();
+    });
+
+    // as the string has object characters, need to use parseSpecialCharSequences
+    createUser.username().type(USER_WITH_INJECTION.username, { parseSpecialCharSequences: false });
+    createUser.manualPassword().click();
+    createUser.password().type(USER_WITH_INJECTION.password);
+    createUser.confirmPassword().type(USER_WITH_INJECTION.password);
+    createUser.firstname().type(USER_WITH_INJECTION.firstname);
+    createUser.surname().type(USER_WITH_INJECTION.surname);
+    createUser.bank().select(USER_WITH_INJECTION.bank);
+
+    createUser.createUser().click();
+
+    cy.url().should('eq', relative('/admin/users/create'));
+
+    // checks html form validation pop up contains correct error message
+    cy.get('input:invalid').should('have.length', 1);
+    createUser.username().then(($input) => {
+      expect($input[0].validationMessage).to.eq("Please include an '@' in the email address. '{\"$gt\":\"\"}' is missing an '@'.");
+    });
+
+    /**
+     * to check that user has not been created
+     * gets list of users from portal-api
+     * finds one with email { "$gt": "" }
+     * should be undefined
+     */
+    cy.listAllUsers().then((usersInDb) => {
+      const injectedUser = usersInDb.find((user) => user.email === {});
+
+      expect(injectedUser).to.be.an('undefined');
     });
   });
 
