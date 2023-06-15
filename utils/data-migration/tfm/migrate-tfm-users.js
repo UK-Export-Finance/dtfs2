@@ -10,7 +10,7 @@ const insertTfmUsersAndTeams = async () => {
     firstname: 'Mock',
     surname: 'DataLoader',
     roles: ['data-admin'],
-    email: 're-insert-mocks-tfm',
+    email: 're-insert-mocks-tfm@ukexportfinance.gov.uk',
   });
 
   console.info('Cleaning TFM teams');

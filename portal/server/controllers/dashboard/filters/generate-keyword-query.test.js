@@ -17,7 +17,7 @@ describe('controllers/dashboard/filters - generate-keyword-query', () => {
 
       const expected = {
         [mockFieldName]: {
-          $regex: mockKeywordValue, $options: 'i',
+          REGEX: mockKeywordValue, $options: 'i',
         },
       };
 

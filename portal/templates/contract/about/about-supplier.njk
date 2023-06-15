@@ -43,64 +43,66 @@
 
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-    {{ supplierTypeDropdown.render({
-      deal: deal,
-      validationErrors: validationErrors
-    }) }}
+    <div id="supplier-form">
+      {{ supplierTypeDropdown.render({
+        deal: deal,
+        validationErrors: validationErrors
+      }) }}
 
-    {{ supplierNameAndAddressLookup.render({
-      deal: deal,
-      mappedCountries: mappedCountries,
-      validationErrors: validationErrors
-    }) }}
+      {{ supplierNameAndAddressLookup.render({
+        deal: deal,
+        mappedCountries: mappedCountries,
+        validationErrors: validationErrors
+      }) }}
 
-    {{ supplierCorrespondenceAddress.render({
-      deal: deal,
-      mappedCountries: mappedCountries,
-      validationErrors: validationErrors
-    }) }}
+      {{ supplierCorrespondenceAddress.render({
+        deal: deal,
+        mappedCountries: mappedCountries,
+        validationErrors: validationErrors
+      }) }}
 
-    {{ industrySectorsDropdown.render({
-      mappedIndustrySectors: mappedIndustrySectors,
-      deal: deal,
-      validationErrors: validationErrors
-    }) }}
+      {{ industrySectorsDropdown.render({
+        mappedIndustrySectors: mappedIndustrySectors,
+        deal: deal,
+        validationErrors: validationErrors
+      }) }}
 
-    {{ industryClassesDropdown.render({
-      mappedIndustryClasses: mappedIndustryClasses,
-      deal: deal,
-      validationErrors: validationErrors
-    }) }}
+      {{ industryClassesDropdown.render({
+        mappedIndustryClasses: mappedIndustryClasses,
+        deal: deal,
+        validationErrors: validationErrors
+      }) }}
 
-    {{ smeTypeRadios.render({
-      deal: deal,
-      validationErrors: validationErrors
-    }) }}
+      {{ smeTypeRadios.render({
+        deal: deal,
+        validationErrors: validationErrors
+      }) }}
 
-    {{ supplyContractDescription.render({
-      deal: deal,
-      validationErrors: validationErrors
-    }) }}
+      {{ supplyContractDescription.render({
+        deal: deal,
+        validationErrors: validationErrors
+      }) }}
 
-    {{ legallyDistinct.render({
-      deal: deal,
-      mappedCountries: mappedCountries,
-      validationErrors: validationErrors
-    }) }}
+      {{ legallyDistinct.render({
+        deal: deal,
+        mappedCountries: mappedCountries,
+        validationErrors: validationErrors
+      }) }}
 
-    {{ govukButton({
-      "text": "NextPage",
-      "attributes" : { "data-cy" : "NextPage" }
-    }) }}
+      {{ govukButton({
+        "text": "NextPage",
+        "attributes" : { "data-cy" : "NextPage" }
+      }) }}
 
-    {{ govukButton({
-      "text": "Save and go back to deal",
-      "classes" : "govuk-button govuk-button--secondary",
-      "attributes" : {
-        "data-cy" : "SaveAndGoBack",
-        "formaction" : "/contract/"+ deal._id +"/about/supplier/save-go-back"
-      }
-    }) }}
+      {{ govukButton({
+        "text": "Save and go back to deal",
+        "classes" : "govuk-button govuk-button--secondary",
+        "attributes" : {
+          "data-cy" : "SaveAndGoBack",
+          "formaction" : "/contract/"+ deal._id +"/about/supplier/save-go-back"
+        }
+      }) }}
+    </div>
 
   </form>
 

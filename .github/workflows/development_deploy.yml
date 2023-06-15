@@ -10,7 +10,7 @@ on:
     - 'trade-finance-manager-ui/**'
     - 'trade-finance-manager-api/**'
     - 'dtfs-central-api/**'
-    - 'reference-data-proxy/**'
+    - 'external-api/**'
     - 'azure-functions/number-generator-function/**'
     - 'azure-functions/acbs-function/**'
   
@@ -434,15 +434,15 @@ jobs:
         inlineScript: |
           az webapp restart --name tfs-${{ env.environment }}-${{ env.repository }}
 
-  #################### 7. RDP API ####################
+  #################### 7. EXTERNAL API ####################
   deploy-rdp-api:
     needs: deployment-environment
-    name: RDP API
+    name: EXTERNAL API
     runs-on: [self-hosted, linux, deployment]
     environment:
       name: ${{ needs.deployment-environment.outputs.environment }}
     env:
-      repository: reference-data-proxy
+      repository: external-api
       
     steps:
     - name: 1. Latest commit hash

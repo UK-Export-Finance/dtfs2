@@ -7,7 +7,7 @@ APIM provides various crucial endpoints across varied services (MDM, TFS and EST
 Azure functions consumes `currencies`, `sector-industries` and `market` endpoint
 #### 1. MDM
 Master data management endpoints are responsible for providing wide variety of imperative data.
-They range from `/currencies` to `/interest-rates`, RDP `.env` requires following three variables
+They range from `/currencies` to `/interest-rates`, EXTERNAL `.env` requires following three variables
 to be fulfilled before any consumption.
 
 ```shell

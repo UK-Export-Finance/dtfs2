@@ -82,7 +82,7 @@ const cleanUsers = async () => {
 const cleanAllTables = async () => {
   const token = await tokenFor({
     username: 'admin',
-    email: 'admin-2',
+    email: 'admin-2@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     roles: ['maker', 'editor'],
     bank: { id: '*' },

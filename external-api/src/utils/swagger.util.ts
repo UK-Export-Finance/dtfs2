@@ -3,7 +3,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 export const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
-    title: 'Reference Data Proxy API',
+    title: 'External API API',
     version: '1.0.0',
     description:
       'API to call external APIs and handle requests/responses. To see the Mulesoft endpoints we consume, see the "External APIs we call" page in Confluence. This API also contains some local data instead of integrating with an API.',
@@ -11,7 +11,7 @@ export const swaggerDefinition = {
   tags: [
     {
       name: 'Local Data',
-      description: 'Reference data that is stored locally. No external APIs consumed.',
+      description: 'External API that is stored locally. No external APIs consumed.',
     },
     {
       name: 'Countries',

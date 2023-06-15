@@ -49,7 +49,7 @@ Several services are built:
 | ------- | --- |
 | Portal UI | http://localhost:5000 |
 | Portal API | http://localhost:5001 |
-| Reference Data Proxy | http://localhost:5002 |
+| External API | http://localhost:5002 |
 | TFM UI | http://localhost:5003 |
 | TFM API | http://localhost:5004 |
 | Central API | http://localhost:5005 |
@@ -109,7 +109,7 @@ npx cypress run --config video=false
 #### **Run a single E2E test**
 
 ```shell
-npx cypress run --spec "cypress/integration/**/my-test.spec.js" --config video=false
+npx cypress run --spec "cypress/e2e/**/my-test.spec.js" --config video=false
 ```
 
 #### **For live debugging, open the GUI and select the test:**
@@ -284,8 +284,8 @@ We use [GOV.UK Notify](https://notifications.service.gov.uk) to trigger email no
 Each service that triggers an email has it's own "send email" function:
 
 * Portal (BSS): `sendEmail` (currently calls Notify directly)
-* Portal (GEF): `sendEmail` (calls Reference Data Proxy which then calls Notify)
-* TFM: `sendTfmEmail` (calls Reference Data Proxy which then calls Notify)
+* Portal (GEF): `sendEmail` (calls External API which then calls Notify)
+* TFM: `sendTfmEmail` (calls External API which then calls Notify)
 
 Each function is very similar - at the moment there is not a way to share between different services. Each function requires:
 

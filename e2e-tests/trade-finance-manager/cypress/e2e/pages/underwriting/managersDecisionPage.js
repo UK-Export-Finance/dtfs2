@@ -17,6 +17,7 @@ const managersDecisionPage = {
   commentsInputDeclineValidationError: () => cy.get('[data-cy="declineComments-input-error"]'),
 
   commentsInputInternal: () => cy.get('[data-cy="internalComments-input"]'),
+  commentsInputInternalValidationError: () => cy.get('[data-cy="internalComments-input-error"]'),
 
   submitButton: () => cy.get('[data-cy="submit-button"]'),
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),

@@ -5,45 +5,36 @@ import generateValidationErrors from '../../helpers/validation';
 
 describe('POST underwriting - managers decision - validate submitted values', () => {
   describe('validateCommentField', () => {
-    describe('when field is NOT alphanumeric', () => {
-      it('should return validationError and errorsCount', () => {
-        const errors = {};
-        const count = 0;
-        const fieldLabel = 'the field label';
-        const fieldId = 'fieldId';
+    it('should return validationError when value is over 8000 characters', () => {
+      const errors = {};
+      const count = 0;
+      const fieldLabel = 'the field label';
+      const fieldId = 'fieldId';
 
-        const result = validateCommentField(errors, count, fieldLabel, fieldId, '!@£$%^&*()');
+      const result = validateCommentField(errors, count, fieldLabel, fieldId, 'a'.repeat(8001));
 
-        const expected = {
-          errorsCount: 1,
-          validationErrors: generateValidationErrors(
-            fieldId,
-            `${fieldLabel} must only include letters a to z, numbers, hyphens, commas and spaces`,
-            count + 1,
-            errors,
-          ),
-        };
+      const expected = {
+        errorsCount: 1,
+        validationErrors: generateValidationErrors(fieldId, `${fieldLabel} must be 8000 characters or fewer`, count + 1, errors),
+      };
 
-        expect(result).toEqual(expected);
-      });
+      expect(result).toEqual(expected);
     });
 
-    describe('when value is over 1000 characters ', () => {
-      it('should return validationError', () => {
-        const errors = {};
-        const count = 0;
-        const fieldLabel = 'the field label';
-        const fieldId = 'fieldId';
+    it('should not return validationError for text with symbols', () => {
+      const errors = {};
+      const count = 0;
+      const fieldLabel = 'the field label';
+      const fieldId = 'fieldId';
 
-        const result = validateCommentField(errors, count, fieldLabel, fieldId, 'a'.repeat(1001));
+      const result = validateCommentField(errors, count, fieldLabel, fieldId, 'A sample comment, featuring various "punctuation!" £$%^@~#;[]{}');
 
-        const expected = {
-          errorsCount: 1,
-          validationErrors: generateValidationErrors(fieldId, `${fieldLabel} must be 1000 characters or fewer`, count + 1, errors),
-        };
+      const expected = {
+        errorsCount: 0,
+        validationErrors: {},
+      };
 
-        expect(result).toEqual(expected);
-      });
+      expect(result).toEqual(expected);
     });
 
     describe('with no validationErrors', () => {
@@ -107,7 +98,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
     it('should return multiple validation errors', () => {
       const result = validateSubmittedValues({
         decision: '',
-        internalComments: 'a'.repeat(1001),
+        internalComments: 'a'.repeat(8001),
       });
 
       expect(result.count).toEqual(2);
@@ -116,7 +107,7 @@ describe('POST underwriting - managers decision - validate submitted values', ()
 
       expect(result.errorList.decision).toEqual(decisionError);
 
-      const internalCommentsError = generateValidationErrors('internalComments', 'Comments must be 1000 characters or fewer', 2).errorList.internalComments;
+      const internalCommentsError = generateValidationErrors('internalComments', 'Comments must be 8000 characters or fewer', 2).errorList.internalComments;
 
       expect(result.errorList.internalComments).toEqual(internalCommentsError);
     });

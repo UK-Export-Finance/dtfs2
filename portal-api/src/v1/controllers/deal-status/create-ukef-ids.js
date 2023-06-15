@@ -1,4 +1,4 @@
-const refDataApi = require('../../../reference-data/api');
+const refDataApi = require('../../../external-api/api');
 const { updateDeal } = require('../deal.controller');
 const facilitiesController = require('../facilities.controller');
 const CONSTANTS = require('../../../constants');
