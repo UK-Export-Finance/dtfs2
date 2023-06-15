@@ -1,6 +1,7 @@
 import relative from './relativeURL';
 import aboutExporter from './pages/about-exporter';
 import CREDENTIALS from '../fixtures/credentials.json';
+import CONSTANTS from '../fixtures/constants';
 
 const dealIds = [];
 let dealWithCompletedExporter;
@@ -20,7 +21,7 @@ context('About Exporter Page - Add element to page', () => {
         });
 
         dealWithCompletedExporter = body.items.find((deal) =>
-          deal.exporter.status === 'Completed');
+          deal.exporter.status === CONSTANTS.DEAL_STATUS.COMPLETED);
       });
     cy.login(CREDENTIALS.MAKER);
   });
