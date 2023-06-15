@@ -1,0 +1,73 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Redis_tfs_dev_redis_name": {
+            "defaultValue": "tfs-dev-redis",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Cache/Redis",
+            "apiVersion": "2023-05-01-preview",
+            "name": "[parameters('Redis_tfs_dev_redis_name')]",
+            "location": "UK South",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "redisVersion": "6.0",
+                "sku": {
+                    "name": "Basic",
+                    "family": "C",
+                    "capacity": 0
+                },
+                "enableNonSslPort": false,
+                "minimumTlsVersion": "1.2",
+                "publicNetworkAccess": "Enabled",
+                "tenantSettings": {},
+                "redisConfiguration": {
+                    "maxmemory-reserved": "0",
+                    "maxfragmentationmemory-reserved": "0",
+                    "maxmemory-policy": "volatile-lru",
+                    "maxmemory-delta": "0"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Cache/Redis/accessPolicies",
+            "apiVersion": "2023-05-01-preview",
+            "name": "[concat(parameters('Redis_tfs_dev_redis_name'), '/Contributor')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cache/Redis', parameters('Redis_tfs_dev_redis_name'))]"
+            ],
+            "properties": {
+                "permissions": "+@all -@dangerous allkeys"
+            }
+        },
+        {
+            "type": "Microsoft.Cache/Redis/accessPolicies",
+            "apiVersion": "2023-05-01-preview",
+            "name": "[concat(parameters('Redis_tfs_dev_redis_name'), '/Owner')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cache/Redis', parameters('Redis_tfs_dev_redis_name'))]"
+            ],
+            "properties": {
+                "permissions": "+@all allkeys"
+            }
+        },
+        {
+            "type": "Microsoft.Cache/Redis/accessPolicies",
+            "apiVersion": "2023-05-01-preview",
+            "name": "[concat(parameters('Redis_tfs_dev_redis_name'), '/Reader')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cache/Redis', parameters('Redis_tfs_dev_redis_name'))]"
+            ],
+            "properties": {
+                "permissions": "+@read allkeys"
+            }
+        }
+    ]
+}
