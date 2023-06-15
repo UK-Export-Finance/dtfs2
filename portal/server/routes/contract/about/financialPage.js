@@ -91,7 +91,7 @@ router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) 
 router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const deal = req.apiData[DEAL];
-  const submissionDetails = filterFinancialSubmissionDetailsPayload(body);
+  const submissionDetails = filterFinancialSubmissionDetailsPayload(req.body);
 
   const mappedFormDataForMatchCheck = {
     ...submissionDetails,
