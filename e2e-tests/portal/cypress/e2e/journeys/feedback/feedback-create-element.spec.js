@@ -5,7 +5,7 @@ const MOCK_USERS = require('../../../fixtures/users');
 
 const { ADMIN } = MOCK_USERS;
 
-context('Feedback - create element and check if inserted into deal', () => {
+context('Feedback - create element and check if inserted into feedback', () => {
   beforeEach(() => {
     cy.saveSession();
     feedbackPage.visit();
