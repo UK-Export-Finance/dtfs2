@@ -7,7 +7,7 @@ const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
-const { COMPANIES_HOUSE_NUMBERS, INDUSTRY_SECTOR_CODES } = CONSTANTS;
+const { COMPANIES_HOUSE_NUMBERS, INDUSTRY_SECTOR_CODES, DEALS } = CONSTANTS;
 
 context('Supply contract form - create element and check if inserted into deal', () => {
   let deal;
@@ -16,7 +16,7 @@ context('Supply contract form - create element and check if inserted into deal',
     const aDealWithAboutSupplyContractInStatus = (status) => {
       const candidates = twentyOneDeals
         .filter((aDeal) => (aDeal.submissionDetails && status === aDeal.submissionDetails.status)
-          && (aDeal.status === 'Draft')
+          && (aDeal.status === DEALS.DEAL_STATUS.DRAFT)
           && (!aDeal.details || !aDeal.details.submissionDate));
 
       const aDeal = candidates[0];

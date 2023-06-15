@@ -1,6 +1,7 @@
 const DASHBOARD = require('./dashboard');
 const FACILITY_HAS_BEEN_ISSUED = require('./facility-has-been-issued');
 const FACILITY_TYPE = require('./facility-type');
+const FACILITY_STAGE = require('./facility-stage');
 const FIELD_NAMES = require('./field-names');
 const PRODUCT = require('./product');
 const STATUS = require('./status');
@@ -15,6 +16,7 @@ module.exports = {
   DASHBOARD,
   FACILITY_HAS_BEEN_ISSUED,
   FACILITY_TYPE,
+  FACILITY_STAGE,
   FIELD_NAMES,
   PRODUCT,
   STATUS,

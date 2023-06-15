@@ -28,6 +28,7 @@ const saveFacilityAndGoBackToDeal = require('../saveFacilityAndGoBack');
 const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
 const isDealEditable = require('../isDealEditable');
 const premiumFrequencyField = require('./premiumFrequencyField');
+const { FACILITY_STAGE, STATUS } = require('../../../constants');
 
 const router = express.Router();
 
@@ -38,11 +39,11 @@ const userCanAccessLoan = (user, deal) => {
 
   const { status } = deal.details;
 
-  if (status === 'Ready for checker\'s approval'
-    || status === 'Acknowledged'
-    || status === 'Accepted by UKEF (with conditions)'
-    || status === 'Accepted by UKEF (without conditions)'
-    || status === 'Submitted') {
+  if (status === STATUS.READY_FOR_APPROVAL
+    || status === STATUS.UKEF_ACKNOWLEDGED
+    || status === STATUS.UKEF_APPROVED_WITH_CONDITIONS
+    || status === STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
+    || status === STATUS.SUBMITTED_TO_UKEF) {
     return false;
   }
 
@@ -65,9 +66,9 @@ const handleNameField = (loanBody) => {
     'facilityStageUnconditional-name': unconditionalName,
   } = modifiedLoan;
 
-  if (facilityStage === 'Conditional') {
+  if (facilityStage === FACILITY_STAGE.CONDITIONAL) {
     modifiedLoan.name = conditionalName;
-  } else if (facilityStage === 'Unconditional') {
+  } else if (facilityStage === FACILITY_STAGE.UNCONDITIONAL) {
     modifiedLoan.name = unconditionalName;
   }
 
@@ -122,14 +123,14 @@ const loanGuaranteeDetailsPayloadProperties = [
 
 const filterLoanGuaranteeDetailsPayload = (body) => {
   const payload = constructPayload(body, loanGuaranteeDetailsPayloadProperties);
-  if (payload.facilityStage === 'Conditional') {
+  if (payload.facilityStage === FACILITY_STAGE.CONDITIONAL) {
     delete payload['requestedCoverStartDate-day'];
     delete payload['requestedCoverStartDate-month'];
     delete payload['requestedCoverStartDate-year'];
     delete payload['coverEndDate-day'];
     delete payload['coverEndDate-month'];
     delete payload['coverEndDate-year'];
-  } else if (payload.facilityStage === 'Unconditional') {
+  } else if (payload.facilityStage === FACILITY_STAGE.UNCONDITIONAL) {
     delete payload.ukefGuaranteeInMonths;
   }
   return payload;
