@@ -33,12 +33,17 @@ const { downloadFile } = require('./portal-api/fileshare');
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+// create an element in a div
+Cypress.Commands.add('insertElement', require('./utils/insertElement'));
 
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertOneDeal', require('./portal-api/insertOneDeal'));
+Cypress.Commands.add('getDeal', require('./portal-api/getDeal'));
 Cypress.Commands.add('updateDeal', require('./portal-api/updateDeal'));
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
 Cypress.Commands.add('deleteDeals', require('./portal-api/deleteDeals'));
+
+Cypress.Commands.add('getAllFeedback', require('./portal-api/getAllFeedback'));
 
 // commands used to interact with GEF (via portal-api)
 Cypress.Commands.add('deleteGefApplications', require('./portal-api/deleteGefApplications'));

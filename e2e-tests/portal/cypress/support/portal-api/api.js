@@ -238,3 +238,15 @@ module.exports.updateGefFacility = (facilityId, payload, token) => cy.request({
   expect(resp.status).to.equal(200);
   return resp.body;
 });
+
+module.exports.getAllFeedback = (token) => cy.request({
+  url: `${api()}/v1/feedback`,
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body;
+});
