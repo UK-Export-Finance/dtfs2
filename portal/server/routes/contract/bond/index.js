@@ -26,10 +26,10 @@ const {
 } = require('./pageSpecificValidationErrors');
 const completedBondForms = require('./completedForms');
 const bondTaskList = require('./bondTaskList');
-const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
 const isDealEditable = require('../isDealEditable');
 const feeFrequencyField = require('./feeFrequencyField');
+const saveFacilityAndGoBackToDeal = require('../saveFacilityAndGoBack');
 
 const router = express.Router();
 
@@ -57,36 +57,6 @@ router.get('/contract/:_id/bond/create', async (req, res) => {
 
   return res.redirect(`/contract/${dealId}/bond/${bondId}/details`);
 });
-
-const saveBondAndGoBackToDeal = async (req, res, sanitizedBody) => {
-  const { _id: dealId, bondId, userToken } = requestParams(req);
-  const { bond } = req.apiData.bond;
-
-  // UI form submit only has the currency code. API has a currency object.
-  // to check if something has changed, only use the currency code.
-  const mappedOriginalData = bond;
-
-  if (bond.currency && bond.currency.id) {
-    mappedOriginalData.currency = bond.currency.id;
-  }
-  delete mappedOriginalData._id;
-  delete mappedOriginalData.status;
-
-  if (!formDataMatchesOriginalData(sanitizedBody, mappedOriginalData)) {
-    await postToApi(
-      api.updateBond(
-        dealId,
-        bondId,
-        sanitizedBody,
-        userToken,
-      ),
-      errorHref,
-    );
-  }
-
-  const redirectUrl = `/contract/${req.params._id}`;
-  return res.redirect(redirectUrl);
-};
 
 router.get('/contract/:_id/bond/:bondId/details', provide([DEAL]), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
@@ -171,7 +141,7 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
 router.post('/contract/:_id/bond/:bondId/details/save-go-back', provide([BOND]), async (req, res) => {
   const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties);
   const filteredBondPayload = filterBondDetailsPayload(bondPayload);
-  return saveBondAndGoBackToDeal(req, res, filteredBondPayload);
+  return saveFacilityAndGoBackToDeal(req, res, filteredBondPayload);
 });
 
 router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES, DEAL]), async (req, res) => {
@@ -252,7 +222,7 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
 
 router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', provide([BOND]), async (req, res) => {
   const bondPayload = filterBondFinancialDetailsPayload(req.body);
-  return saveBondAndGoBackToDeal(req, res, bondPayload);
+  return saveFacilityAndGoBackToDeal(req, res, bondPayload);
 });
 
 router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), async (req, res) => {
@@ -315,7 +285,7 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
 router.post('/contract/:_id/bond/:bondId/fee-details/save-go-back', provide([BOND]), async (req, res) => {
   const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties);
   const modifiedBody = feeFrequencyField(sanitizedBody);
-  return saveBondAndGoBackToDeal(req, res, modifiedBody);
+  return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
 router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) => {

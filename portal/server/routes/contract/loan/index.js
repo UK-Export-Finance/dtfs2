@@ -24,7 +24,7 @@ const {
 } = require('./pageSpecificValidationErrors');
 const completedLoanForms = require('./completedForms');
 const loanTaskList = require('./loanTaskList');
-const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
+const saveFacilityAndGoBackToDeal = require('../saveFacilityAndGoBack');
 const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
 const isDealEditable = require('../isDealEditable');
 const premiumFrequencyField = require('./premiumFrequencyField');
@@ -82,34 +82,6 @@ router.get('/contract/:_id/loan/create', async (req, res) => {
 
   return res.redirect(`/contract/${dealId}/loan/${loanId}/guarantee-details`);
 });
-
-const saveLoanAndGoBackToDeal = async (req, res, sanitizedBody) => {
-  const { _id: dealId, loanId, userToken } = requestParams(req);
-  const { loan } = req.apiData.loan;
-
-  // UI form submit only has the currency code. API has a currency object.
-  // to check if something has changed, only use the currency code.
-  const mappedOriginalData = loan;
-
-  if (loan?.currency && loan?.currency?.id) {
-    mappedOriginalData.currency = loan.currency.id;
-  }
-  delete mappedOriginalData._id;
-  delete mappedOriginalData.status;
-
-  if (!formDataMatchesOriginalData(sanitizedBody, mappedOriginalData)) {
-    await postToApi(
-      api.updateLoan(
-        dealId,
-        loanId,
-        sanitizedBody,
-        userToken,
-      ),
-    );
-  }
-
-  return res.redirect(`/contract/${req.params._id}`);
-};
 
 router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]), async (req, res) => {
   const {
@@ -187,7 +159,7 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', provid
   const loanBody = constructPayload(req.body, loanGuaranteeDetailsPayloadProperties);
   const modifiedBody = handleNameField(loanBody);
 
-  return saveLoanAndGoBackToDeal(req, res, modifiedBody);
+  return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
 router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), async (req, res) => {
@@ -264,7 +236,7 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
 router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provide([LOAN]), async (req, res) => {
   const sanitizedPayload = constructPayload(req.body, loanFinancialDetailsPayloadProperties);
 
-  return saveLoanAndGoBackToDeal(req, res, sanitizedPayload);
+  return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
 router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), async (req, res) => {
@@ -323,7 +295,7 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments/save-go-back', provide
   const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties);
   const modifiedBody = premiumFrequencyField(loanBody);
 
-  return saveLoanAndGoBackToDeal(req, res, modifiedBody);
+  return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
 router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), async (req, res) => {
