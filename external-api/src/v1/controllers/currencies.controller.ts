@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as utils from '../../utils';
 import { Currency } from '../../interfaces';
-import { CURRENCIES } from '../../reference-data';
+import { CURRENCIES } from '../../external-api';
 const allCurrencies: Currency[] = CURRENCIES;
 
 export const findOneCurrency = (id: any) => allCurrencies.find((c: any) => c.id.toLowerCase() === id.toLowerCase());

@@ -7,7 +7,7 @@ const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
 
-jest.unmock('../../../src/reference-data/api');
+jest.unmock('../../../src/external-api/api');
 
 const usd = {
   currencyId: 37,
