@@ -49,7 +49,7 @@ context('Bond form - Submit bond with created element on page', () => {
     // gets deal
     cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {
       // get bond from deal facility id
-      cy.getBond(deal._id, updatedDeal.facilities[0], BANK1_MAKER1).then((bond) => {
+      cy.getFacility(deal._id, updatedDeal.facilities[0], BANK1_MAKER1).then((bond) => {
         // checks bond does not contain inserted field
         expect(bond.intruder).to.be.an('undefined');
       });
