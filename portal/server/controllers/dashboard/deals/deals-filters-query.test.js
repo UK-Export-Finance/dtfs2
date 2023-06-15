@@ -23,7 +23,7 @@ describe('controllers/dashboard/deals - filters query', () => {
     );
 
     const expected = {
-      $and: [
+      AND: [
         { 'bank.id': mockUser.bank.id },
       ],
     };
@@ -43,7 +43,7 @@ describe('controllers/dashboard/deals - filters query', () => {
       );
 
       const expected = {
-        $and: [
+        AND: [
           { 'bank.id': mockUser.bank.id },
           { 'maker._id': mockUser._id },
         ],
@@ -65,16 +65,16 @@ describe('controllers/dashboard/deals - filters query', () => {
       );
 
       const expected = {
-        $and: [
+        AND: [
           { 'bank.id': mockUser.bank.id },
           {
-            $or: [
+            OR: [
               { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] },
               { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] },
             ],
           },
           {
-            $or: [{ [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] }],
+            OR: [{ [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] }],
           },
           { 'maker._id': mockUser._id },
         ],
@@ -95,7 +95,7 @@ describe('controllers/dashboard/deals - filters query', () => {
       );
 
       const expected = {
-        $and: [
+        AND: [
           { 'bank.id': mockUser.bank.id },
           { status: STATUS.READY_FOR_APPROVAL },
         ],
@@ -142,18 +142,18 @@ describe('controllers/dashboard/deals - filters query', () => {
     );
 
     const expected = {
-      $and: [
+      AND: [
         {
-          $or: [
+          OR: [
             { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[0] },
             { [FIELD_NAMES.DEAL.DEAL_TYPE]: mockFilters[0].dealType[1] },
           ],
         },
         {
-          $or: [{ [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] }],
+          OR: [{ [FIELD_NAMES.DEAL.SUBMISSION_TYPE]: mockFilters[1].submissionType[0] }],
         },
         {
-          $or: [...keywordQuery(mockKeyword)],
+          OR: [...keywordQuery(mockKeyword)],
         },
       ],
     };

@@ -1,5 +1,6 @@
 const db = require('../../drivers/db-client');
 const api = require('../api');
+const { escapeOperators } = require('../helpers/escapeOperators');
 const { updateDeal } = require('./deal.controller');
 
 /**
@@ -102,7 +103,7 @@ const queryAllFacilities = async (
         },
       },
       { $unwind: '$deal' },
-      { $match: filters },
+      { $match: escapeOperators(filters) },
       {
         $project: {
           _id: 1,

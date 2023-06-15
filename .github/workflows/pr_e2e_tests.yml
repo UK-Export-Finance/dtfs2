@@ -9,7 +9,7 @@ on:
     - 'portal-api/**'
     - 'trade-finance-manager-ui/**'
     - 'trade-finance-manager-api/**'
-    - 'reference-data-proxy/**'
+    - 'external-api/**'
     - 'dtfs-central-api/**'
     - 'e2e-tests/**'
     - 'utils/mock-data-loader/**'

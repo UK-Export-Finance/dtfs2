@@ -5,6 +5,7 @@ const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
 const calculateDealSummary = require('../deal-summary');
 const { findLatest: findLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
+const { escapeOperators } = require('../helpers/escapeOperators');
 const api = require('../api');
 
 /**
@@ -179,7 +180,7 @@ const queryAllDeals = async (
   const collection = await db.getCollection('deals');
 
   const results = await collection.aggregate([
-    { $match: filters },
+    { $match: escapeOperators(filters) },
     {
       $project: {
         _id: 1,

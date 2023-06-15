@@ -157,7 +157,7 @@ jobs:
         inlineScript: |
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
 
-  reference-data-proxy:
+  external-api:
     name: Promote Reference Data Proxy
     runs-on: [self-hosted, linux, deployment]
     needs: set-environment
@@ -193,23 +193,23 @@ jobs:
 
     - name: Promote container image
       run: |
-        docker pull ${{ env.registry_from }}/reference-data-proxy:${{ env.tag_from }}
-        docker tag ${{ env.registry_from }}/reference-data-proxy:${{ env.tag_from }} ${{ env.registry_to }}/reference-data-proxy:${{ env.tag_to }}
-        docker push ${{ env.registry_to }}/reference-data-proxy:${{ env.tag_to }}
+        docker pull ${{ env.registry_from }}/external-api:${{ env.tag_from }}
+        docker tag ${{ env.registry_from }}/external-api:${{ env.tag_from }} ${{ env.registry_to }}/external-api:${{ env.tag_to }}
+        docker push ${{ env.registry_to }}/external-api:${{ env.tag_to }}
 
     - name: Create slot
       uses: azure/cli@v1.0.0
       with:
         azcliversion: latest
         inlineScript: |
-          az webapp deployment slot create --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-reference-data-proxy
+          az webapp deployment slot create --name tfs-${{ env.environment }}-external-api --slot ${{ github.sha }} --configuration-source tfs-${{ env.environment }}-external-api
 
     - name: Swap slot
       uses: azure/cli@v1.0.0
       with:
         azcliversion: latest
         inlineScript: |
-          az webapp deployment slot swap --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }} --action swap
+          az webapp deployment slot swap --name tfs-${{ env.environment }}-external-api --slot ${{ github.sha }} --action swap
           
     - name: Delete slot
       # Clean up the slot regardless of errors
@@ -218,7 +218,7 @@ jobs:
       with:
         azcliversion: latest
         inlineScript: |
-          az webapp deployment slot delete --name tfs-${{ env.environment }}-reference-data-proxy --slot ${{ github.sha }}
+          az webapp deployment slot delete --name tfs-${{ env.environment }}-external-api --slot ${{ github.sha }}
 
   trade-finance-manager-ui:
     name: Promote TFM UI

@@ -9,7 +9,7 @@ const { isSuperUser } = require('../../../helpers');
  * @param {object} user
  * @param {array} custom filters
  * @example ( { _id: '1234', bank: { id: '9' } }, [ type: ['Bond'] ] )
- * @returns { $and: [ { 'deal.bank.id': '9'} ], $or: [{ hasBeenIssued: true }, { type: 'Bond' } ] }
+ * @returns { AND: [ { 'deal.bank.id': '9'} ], OR: [{ hasBeenIssued: true }, { type: 'Bond' } ] }
  */
 const dashboardFacilitiesFiltersQuery = (
   filters,
@@ -20,7 +20,7 @@ const dashboardFacilitiesFiltersQuery = (
 
   // if user is admin, then deal.bank.id should not be set so cannot see all
   if (!isSuperUser(user)) {
-    query.$and = [
+    query.AND = [
       { 'deal.bank.id': user.bank.id },
     ];
   }
@@ -35,10 +35,10 @@ const dashboardFacilitiesFiltersQuery = (
 
   if (dashboardFilters.length) {
     // if created, then copy else create blank array
-    if (query.$and) {
-      query.$and = [...query.$and];
+    if (query.AND) {
+      query.AND = [...query.AND];
     } else {
-      query.$and = [];
+      query.AND = [];
     }
 
     dashboardFilters.forEach((filterObj) => {
@@ -52,31 +52,31 @@ const dashboardFacilitiesFiltersQuery = (
         const keywordFilters = keywordQuery(keywordValue);
 
         const keywordFilter = {};
-        keywordFilter.$or = [];
-        keywordFilter.$or.push(...keywordFilters);
+        keywordFilter.OR = [];
+        keywordFilter.OR.push(...keywordFilters);
 
-        query.$and.push(keywordFilter);
+        query.AND.push(keywordFilter);
       }
 
       if (!isKeywordField) {
         const fieldFilter = {};
         // or for field (eg dealType)
-        fieldFilter.$or = [];
+        fieldFilter.OR = [];
         filterValue.forEach((value) => {
           // if created by you then adding user id as compared to or statement
           if (value === CONTENT_STRINGS.DASHBOARD_FILTERS.BESPOKE_FILTER_VALUES.FACILITIES.CREATED_BY_YOU) {
             // delete or filter as not needed for created by you
-            delete fieldFilter.$or;
+            delete fieldFilter.OR;
             // have to match deal.maker._id (joined table) as maker does not exist in facilities collection
             fieldFilter['deal.maker._id'] = user._id;
           } else {
-            fieldFilter.$or.push({
+            fieldFilter.OR.push({
               [fieldName]: value,
             });
           }
         });
-        // adds $or to $and query
-        query.$and.push(fieldFilter);
+        // adds OR to AND query
+        query.AND.push(fieldFilter);
       }
     });
   }
