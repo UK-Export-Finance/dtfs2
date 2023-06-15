@@ -158,7 +158,7 @@ jobs:
           az webapp deployment slot delete --name tfs-${{ env.environment }}-portal-api --slot ${{ github.sha }}
 
   external-api:
-    name: Promote Reference Data Proxy
+    name: Promote External API
     runs-on: [self-hosted, linux, deployment]
     needs: set-environment
     environment:

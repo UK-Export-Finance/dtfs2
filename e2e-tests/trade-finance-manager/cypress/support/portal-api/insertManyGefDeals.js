@@ -1,5 +1,5 @@
 const { insertGefDeal, logIn } = require('./api');
-const { getIdFromNumberGenerator } = require('../reference-data-api/api');
+const { getIdFromNumberGenerator } = require('../external-api/api');
 
 module.exports = (deals, opts) => {
   console.info('createManyGefDeals::');

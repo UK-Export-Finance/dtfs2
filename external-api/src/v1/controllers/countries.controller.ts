@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { sortArrayAlphabetically } from '../../utils';
 import { Country } from '../../interfaces';
-import { COUNTRIES } from '../../reference-data';
+import { COUNTRIES } from '../../external-api';
 
 const allCountries: Country[] = COUNTRIES;
 

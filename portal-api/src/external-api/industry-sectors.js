@@ -13,7 +13,7 @@ const getIndustrySectors = async () => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => {
-    console.error('Error retrieving industry sectors from Reference Data API. ', err);
+    console.error('Error retrieving industry sectors from External API. ', err);
     return err;
   });
 
@@ -31,7 +31,7 @@ const getIndustrySector = async (id) => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => {
-    console.error('Error retrieving industry sector from Reference Data API. ', err);
+    console.error('Error retrieving industry sector from External API. ', err);
     return err;
   });
 

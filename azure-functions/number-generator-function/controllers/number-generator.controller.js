@@ -54,4 +54,5 @@ const callNumberGenerator = async (numberType) => {
     };
   }
 };
+
 exports.callNumberGenerator = callNumberGenerator;

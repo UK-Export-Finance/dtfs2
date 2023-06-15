@@ -6,7 +6,7 @@ const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const createFacilities = require('../../createFacilities');
 const api = require('../../../src/v1/api');
-const externalApis = require('../../../src/reference-data/api');
+const externalApis = require('../../../src/external-api/api');
 
 const { as } = require('../../api')(app);
 

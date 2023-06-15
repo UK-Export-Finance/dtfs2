@@ -12,7 +12,7 @@ const { getLatestCriteria: getLatestEligibilityCriteria } = require('./eligibili
 const { Application } = require('../models/application');
 const { addSubmissionData } = require('./application-submit');
 const api = require('../../api');
-const { sendEmail } = require('../../../reference-data/api');
+const { sendEmail } = require('../../../external-api/api');
 const { EMAIL_TEMPLATE_IDS, DEAL: { DEAL_STATUS, DEAL_TYPE } } = require('../../../constants');
 
 const dealsCollection = 'deals';

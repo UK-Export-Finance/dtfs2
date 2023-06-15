@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import * as utils from '../../utils';
-import { INDUSTRY_SECTORS } from '../../reference-data';
+import { INDUSTRY_SECTORS } from '../../external-api';
 
 dotenv.config();
 const mdm: any = process.env.APIM_MDM_URL;

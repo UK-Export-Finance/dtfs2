@@ -1,5 +1,5 @@
 const now = require('../../../now');
-const refDataApi = require('../../../reference-data/api');
+const refDataApi = require('../../../external-api/api');
 const {
   getAllFacilitiesByDealId,
   update: updateFacility,
