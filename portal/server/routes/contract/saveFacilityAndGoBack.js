@@ -8,7 +8,7 @@ const { formDataMatchesOriginalData } = require('./formDataMatchesOriginalData')
 
 const saveFacilityAndGoBackToDeal = async (req, res, sanitizedBody) => {
   const { _id: dealId, bondId, loanId, userToken } = requestParams(req);
-  const facility = req.apiData.bond?.bond ?? req.apiData.loan?.loan;
+  const facility = req.apiData?.bond?.bond ?? req.apiData?.loan?.loan;
   const facilityId = bondId || loanId;
 
   // UI form submit only has the currency code. API has a currency object.
@@ -22,7 +22,7 @@ const saveFacilityAndGoBackToDeal = async (req, res, sanitizedBody) => {
   delete mappedOriginalData.status;
 
   if (!formDataMatchesOriginalData(sanitizedBody, mappedOriginalData)) {
-    const update = req.apiData.bond ? api.updateBond : api.updateLoan;
+    const update = req.apiData?.bond ? api.updateBond : api.updateLoan;
     await postToApi(
       update(
         dealId,
