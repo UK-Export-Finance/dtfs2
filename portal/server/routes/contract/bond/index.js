@@ -133,10 +133,26 @@ const bondDetailsPayloadProperties = [
   'ukefGuaranteeInMonths',
 ];
 
+const filterBondDetailsPayload = (body) => {
+  const payload = constructPayload(body, bondDetailsPayloadProperties);
+  if (payload.facilityStage === 'Unissued') {
+    delete payload['requestedCoverStartDate-day'];
+    delete payload['requestedCoverStartDate-month'];
+    delete payload['requestedCoverStartDate-year'];
+    delete payload['coverEndDate-day'];
+    delete payload['coverEndDate-month'];
+    delete payload['coverEndDate-year'];
+    delete payload.name;
+  } else {
+    delete payload.ukefGuaranteeInMonths;
+  }
+  return payload;
+};
+
 router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
-  const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties);
+  const bondPayload = filterBondDetailsPayload(req.body);
 
   await postToApi(
     api.updateBond(
@@ -154,7 +170,8 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
 
 router.post('/contract/:_id/bond/:bondId/details/save-go-back', provide([BOND]), async (req, res) => {
   const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties);
-  return saveBondAndGoBackToDeal(req, res, bondPayload);
+  const filteredBondPayload = filterBondDetailsPayload(bondPayload);
+  return saveBondAndGoBackToDeal(req, res, filteredBondPayload);
 });
 
 router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES, DEAL]), async (req, res) => {
@@ -201,13 +218,23 @@ const bondFinancialDetailsPayloadProperties = [
   'riskMarginFee',
   'coveredPercentage',
   'minimumRiskMarginFee',
-  'guaranteeFeePayableByBank',
-  'ukefExposure',
 ];
+
+const filterBondFinancialDetailsPayload = (body) => {
+  const payload = constructPayload(body, bondFinancialDetailsPayloadProperties);
+  if (payload.currencySameAsSupplyContractCurrency === 'true') {
+    delete payload.currency;
+    delete payload.conversionRate;
+    delete payload['conversionRateDate-day'];
+    delete payload['conversionRateDate-month'];
+    delete payload['conversionRateDate-year'];
+  }
+  return payload;
+};
 
 router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
-  const bondPayload = constructPayload(req.body, bondFinancialDetailsPayloadProperties);
+  const bondPayload = filterBondFinancialDetailsPayload(req.body);
 
   await postToApi(
     api.updateBond(
@@ -224,7 +251,7 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
 });
 
 router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', provide([BOND]), async (req, res) => {
-  const bondPayload = constructPayload(req.body, bondFinancialDetailsPayloadProperties);
+  const bondPayload = filterBondFinancialDetailsPayload(req.body);
   return saveBondAndGoBackToDeal(req, res, bondPayload);
 });
 

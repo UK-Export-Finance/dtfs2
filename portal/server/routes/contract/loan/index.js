@@ -148,10 +148,25 @@ const loanGuaranteeDetailsPayloadProperties = [
   'coverEndDate-year',
 ];
 
+const filterLoanGuaranteeDetailsPayload = (body) => {
+  const payload = constructPayload(body, loanGuaranteeDetailsPayloadProperties);
+  if (payload.facilityStage === 'Conditional') {
+    delete payload['requestedCoverStartDate-day'];
+    delete payload['requestedCoverStartDate-month'];
+    delete payload['requestedCoverStartDate-year'];
+    delete payload['coverEndDate-day'];
+    delete payload['coverEndDate-month'];
+    delete payload['coverEndDate-year'];
+  } else if (payload.facilityStage === 'Unconditional') {
+    delete payload.ukefGuaranteeInMonths;
+  }
+  return payload;
+};
+
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const loanBody = constructPayload(req.body, loanGuaranteeDetailsPayloadProperties);
+  const loanBody = filterLoanGuaranteeDetailsPayload(req.body);
   const modifiedBody = handleNameField(loanBody);
 
   await postToApi(
@@ -213,14 +228,24 @@ const loanFinancialDetailsPayloadProperties = [
   'interestMarginFee',
   'coveredPercentage',
   'minimumQuarterlyFee',
-  'guaranteeFeePayableByBank',
-  'ukefExposure',
 ];
+
+const filterLoanFinancialDetailsPayload = (body) => {
+  const payload = constructPayload(body, loanFinancialDetailsPayloadProperties);
+  if (payload.currencySameAsSupplyContractCurrency === 'true') {
+    delete payload.currency;
+    delete payload.conversionRate;
+    delete payload['conversionRateDate-day'];
+    delete payload['conversionRateDate-month'];
+    delete payload['conversionRateDate-year'];
+  }
+  return payload;
+};
 
 router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const payload = constructPayload(req.body, loanFinancialDetailsPayloadProperties);
+  const payload = filterLoanFinancialDetailsPayload(req.body);
 
   await postToApi(
     api.updateLoan(
