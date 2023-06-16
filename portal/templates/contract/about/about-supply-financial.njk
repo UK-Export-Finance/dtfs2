@@ -30,38 +30,40 @@
 
   <form method="POST" autocomplete="off">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-    {{ govukInput({
-      label: { text: 'Supply Contract value (in Supply Contract currency)' },
-      id: "supplyContractValue",
-      name: "supplyContractValue",
-      value: deal.submissionDetails["supplyContractValue"],
-      classes: "govuk-!-width-one-half",
-      attributes: {
-        size: "60",
-        maxlength: "255",
-        placeholder: "0.00",
-        "data-cy": "supplyContractValue",
-        "data-mask": "currency"
-      },
-      errorMessage: validationErrors.errorList["supplyContractValue"]
-    }) }}
-
-    {{ govukSelect({
-        id: "supplyContractCurrency",
-        name: "supplyContractCurrency",
-        label: { text: "Supply Contract currency" },
+    <div id="financial-form">
+      {{ govukInput({
+        label: { text: 'Supply Contract value (in Supply Contract currency)' },
+        id: "supplyContractValue",
+        name: "supplyContractValue",
+        value: deal.submissionDetails["supplyContractValue"],
+        classes: "govuk-!-width-one-half",
         attributes: {
-          "data-cy": "supplyContractCurrency"
+          size: "60",
+          maxlength: "255",
+          placeholder: "0.00",
+          "data-cy": "supplyContractValue",
+          "data-mask": "currency"
         },
-        items: currencies,
-        errorMessage: validationErrors.errorList["supplyContractCurrency"]
+        errorMessage: validationErrors.errorList["supplyContractValue"]
       }) }}
 
-    {% if deal.submissionDetails["supplyContractCurrency"] == null %}
-      {% set hideByDefault = true %}
-    {% else %}
-      {% set hideByDefault = (deal.submissionDetails["supplyContractCurrency"].id and deal.submissionDetails["supplyContractCurrency"].id==='GBP') %}
-    {% endif %}
+      {{ govukSelect({
+          id: "supplyContractCurrency",
+          name: "supplyContractCurrency",
+          label: { text: "Supply Contract currency" },
+          attributes: {
+            "data-cy": "supplyContractCurrency"
+          },
+          items: currencies,
+          errorMessage: validationErrors.errorList["supplyContractCurrency"]
+        }) }}
+
+      {% if deal.submissionDetails["supplyContractCurrency"] == null %}
+        {% set hideByDefault = true %}
+      {% else %}
+        {% set hideByDefault = (deal.submissionDetails["supplyContractCurrency"].id and deal.submissionDetails["supplyContractCurrency"].id==='GBP') %}
+      {% endif %}
+    </div>
 
     <div id="supply-contract-currency-conversion-fields" class="{% if hideByDefault %}display-none{% endif %}">
 
