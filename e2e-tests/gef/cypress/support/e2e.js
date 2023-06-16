@@ -5,6 +5,8 @@ import login from './commands/login';
 import reinsertMocks from './commands/reinsertMocks';
 import * as api from './commands/api';
 import uploadFile from './commands/uploadFile';
+import insertElement from './commands/insertElement';
+import getApplicationById from './commands/getApplicationById';
 
 // Mitigates test fails due to js errors (third-party js)
 Cypress.on('uncaught:exception', () => false);
@@ -23,7 +25,9 @@ Cypress.Commands.add('apiCreateApplication', api.createApplication);
 Cypress.Commands.add('apiCreateFacility', api.createFacility);
 Cypress.Commands.add('apiUpdateFacility', api.updateFacility);
 Cypress.Commands.add('uploadFile', uploadFile);
+Cypress.Commands.add('insertElement', insertElement);
 Cypress.Commands.add('addCommentObjToDeal', api.addCommentObjToDeal);
 Cypress.Commands.add('submitDealAfterUkefIds', api.submitDealAfterUkefIds);
 Cypress.Commands.add('submitDealToTfm', api.submitDealToTfm);
 Cypress.Commands.add('addUnderwriterCommentToTfm', api.addUnderwriterCommentToTfm);
+Cypress.Commands.add('getApplicationById', getApplicationById);
