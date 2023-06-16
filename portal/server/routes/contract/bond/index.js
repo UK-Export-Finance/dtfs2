@@ -16,6 +16,7 @@ const {
   mapCurrencies,
   generateErrorSummary,
   formattedTimestamp,
+  constructPayload,
 } = require('../../../helpers');
 const {
   bondDetailsValidationErrors,
@@ -25,10 +26,10 @@ const {
 } = require('./pageSpecificValidationErrors');
 const completedBondForms = require('./completedForms');
 const bondTaskList = require('./bondTaskList');
-const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
 const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
 const isDealEditable = require('../isDealEditable');
 const feeFrequencyField = require('./feeFrequencyField');
+const saveFacilityAndGoBackToDeal = require('../saveFacilityAndGoBack');
 
 const router = express.Router();
 
@@ -87,14 +88,47 @@ router.get('/contract/:_id/bond/:bondId/details', provide([DEAL]), async (req, r
   });
 });
 
+const bondDetailsPayloadProperties = [
+  'bondIssuer',
+  'bondType',
+  'facilityStage',
+  'bondBeneficiary',
+  'requestedCoverStartDate-day',
+  'requestedCoverStartDate-month',
+  'requestedCoverStartDate-year',
+  'coverEndDate-day',
+  'coverEndDate-month',
+  'coverEndDate-year',
+  'name',
+  'ukefGuaranteeInMonths',
+];
+
+const filterBondDetailsPayload = (body) => {
+  const payload = constructPayload(body, bondDetailsPayloadProperties);
+  if (payload.facilityStage === 'Unissued') {
+    delete payload['requestedCoverStartDate-day'];
+    delete payload['requestedCoverStartDate-month'];
+    delete payload['requestedCoverStartDate-year'];
+    delete payload['coverEndDate-day'];
+    delete payload['coverEndDate-month'];
+    delete payload['coverEndDate-year'];
+    delete payload.name;
+  } else {
+    delete payload.ukefGuaranteeInMonths;
+  }
+  return payload;
+};
+
 router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
+
+  const bondPayload = filterBondDetailsPayload(req.body);
 
   await postToApi(
     api.updateBond(
       dealId,
       bondId,
-      req.body,
+      bondPayload,
       userToken,
     ),
     errorHref,
@@ -102,6 +136,12 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
 
   const redirectUrl = `/contract/${dealId}/bond/${bondId}/financial-details`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/bond/:bondId/details/save-go-back', provide([BOND]), async (req, res) => {
+  const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties);
+  const filteredBondPayload = filterBondDetailsPayload(bondPayload);
+  return saveFacilityAndGoBackToDeal(req, res, filteredBondPayload);
 });
 
 router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES, DEAL]), async (req, res) => {
@@ -137,14 +177,40 @@ router.get('/contract/:_id/bond/:bondId/financial-details', provide([CURRENCIES,
   });
 });
 
+const bondFinancialDetailsPayloadProperties = [
+  'value',
+  'currencySameAsSupplyContractCurrency',
+  'currency',
+  'conversionRate',
+  'conversionRateDate-day',
+  'conversionRateDate-month',
+  'conversionRateDate-year',
+  'riskMarginFee',
+  'coveredPercentage',
+  'minimumRiskMarginFee',
+];
+
+const filterBondFinancialDetailsPayload = (body) => {
+  const payload = constructPayload(body, bondFinancialDetailsPayloadProperties);
+  if (payload.currencySameAsSupplyContractCurrency === 'true') {
+    delete payload.currency;
+    delete payload.conversionRate;
+    delete payload['conversionRateDate-day'];
+    delete payload['conversionRateDate-month'];
+    delete payload['conversionRateDate-year'];
+  }
+  return payload;
+};
+
 router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
+  const bondPayload = filterBondFinancialDetailsPayload(req.body);
 
   await postToApi(
     api.updateBond(
       dealId,
       bondId,
-      req.body,
+      bondPayload,
       userToken,
     ),
     errorHref,
@@ -152,6 +218,11 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
 
   const redirectUrl = `/contract/${dealId}/bond/${bondId}/fee-details`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', provide([BOND]), async (req, res) => {
+  const bondPayload = filterBondFinancialDetailsPayload(req.body);
+  return saveFacilityAndGoBackToDeal(req, res, bondPayload);
 });
 
 router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), async (req, res) => {
@@ -184,10 +255,18 @@ router.get('/contract/:_id/bond/:bondId/fee-details', provide([DEAL]), async (re
   });
 });
 
+const bondFeeDetailsPayloadProperties = [
+  'feeFrequency',
+  'feeType',
+  'inAdvanceFeeFrequency',
+  'inArrearFeeFrequency',
+  'dayCountBasis',
+];
+
 router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
-
-  const modifiedBody = feeFrequencyField(req.body);
+  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties);
+  const modifiedBody = feeFrequencyField(sanitizedBody);
 
   await postToApi(
     api.updateBond(
@@ -201,6 +280,12 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
 
   const redirectUrl = `/contract/${dealId}/bond/${bondId}/check-your-answers`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/bond/:bondId/fee-details/save-go-back', provide([BOND]), async (req, res) => {
+  const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties);
+  const modifiedBody = feeFrequencyField(sanitizedBody);
+  return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
 router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) => {
@@ -264,38 +349,6 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', async (req, res) =>
   });
 });
 
-router.post('/contract/:_id/bond/:bondId/save-go-back', provide([BOND]), async (req, res) => {
-  const { _id: dealId, bondId, userToken } = requestParams(req);
-  const { bond } = req.apiData.bond;
-
-  const modifiedBody = feeFrequencyField(req.body, bond);
-
-  // UI form submit only has the currency code. API has a currency object.
-  // to check if something has changed, only use the currency code.
-  const mappedOriginalData = bond;
-
-  if (bond.currency && bond.currency.id) {
-    mappedOriginalData.currency = bond.currency.id;
-  }
-  delete mappedOriginalData._id;
-  delete mappedOriginalData.status;
-
-  if (!formDataMatchesOriginalData(modifiedBody, mappedOriginalData)) {
-    await postToApi(
-      api.updateBond(
-        dealId,
-        bondId,
-        modifiedBody,
-        userToken,
-      ),
-      errorHref,
-    );
-  }
-
-  const redirectUrl = `/contract/${req.params._id}`;
-  return res.redirect(redirectUrl);
-});
-
 router.get('/contract/:_id/bond/:bondId/issue-facility', provide([BOND, DEAL]), async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { bond } = req.apiData.bond;
@@ -316,11 +369,25 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
   const { user } = req.session;
 
+  const payloadProperties = [
+    'issuedDate-day',
+    'issuedDate-month',
+    'issuedDate-year',
+    'requestedCoverStartDate-day',
+    'requestedCoverStartDate-month',
+    'requestedCoverStartDate-year',
+    'coverEndDate-day',
+    'coverEndDate-month',
+    'coverEndDate-year',
+    'name',
+  ];
+  const payload = constructPayload(req.body, payloadProperties);
+
   const { validationErrors, bond } = await postToApi(
     api.updateBondIssueFacility(
       dealId,
       bondId,
-      req.body,
+      payload,
       userToken,
     ),
     errorHref,
@@ -390,7 +457,7 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
     );
     bondToRender = apiData.bond;
 
-    if (!req.body['requestedCoverStartDate-day']) {
+    if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-month'] || !req.body['requestedCoverStartDate-year']) {
       requestedCoverValidationErrors = {
         count: 1,
         errorList: {
@@ -422,8 +489,16 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
 
       const dateOfCoverChangeTimestamp = moment(dateOfCoverChange).utc().valueOf().toString();
 
+      const payloadProperties = [
+        'requestedCoverStartDate-day',
+        'requestedCoverStartDate-month',
+        'requestedCoverStartDate-year',
+        'needToChangeRequestedCoverStartDate',
+      ];
+      const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties);
+
       const newBondDetails = {
-        ...req.body,
+        ...newRequestedCoverStartDate,
         previousCoverStartDate: previousCoverStartDateTimestamp,
         dateOfCoverChange: dateOfCoverChangeTimestamp,
       };

@@ -41,169 +41,170 @@
     <div class="govuk-grid-column-one-half">
       <form method="post" data-cy="form">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <div id="about-exporter-form">
+          {% if industries.length <= 1 %}
+            <p class="govuk-body" data-cy="industry-title"><strong>Industry</strong></p>
+            <p class="govuk-body govuk-!-margin-bottom-7" data-cy="industry">{{ selectedIndustry.name }}<br>{{ selectedIndustry.class.name }}</p>
+          {% else %}
+            {{ govukRadios({
+              idPrefix: "industry",
+              name: "selectedIndustry",
+              classes: "govuk-!-margin-bottom-4",
+              fieldset: {
+                legend: {
+                  text: "Select the most appropriate industry",
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              hint: {
+                text: "Select one option"
+              },
+              errorMessage: errors and errors.fieldErrors.selectedIndustry and {
+                text: errors.fieldErrors.selectedIndustry.text,
+                attributes: {
+                  'data-cy': 'selected-industry-index-error'
+                }
+              },
+              items: industries,
+              attributes: {
+                'data-cy': 'industries'
+              }
+            }) }}
 
-        {% if industries.length <= 1 %}
-          <p class="govuk-body" data-cy="industry-title"><strong>Industry</strong></p>
-          <p class="govuk-body govuk-!-margin-bottom-7" data-cy="industry">{{ selectedIndustry.name }}<br>{{ selectedIndustry.class.name }}</p>
-        {% else %}
+          {% endif %}
+
           {{ govukRadios({
-            idPrefix: "industry",
-            name: "selectedIndustry",
+            idPrefix: "smeType",
+            name: "smeType",
             classes: "govuk-!-margin-bottom-4",
             fieldset: {
               legend: {
-                text: "Select the most appropriate industry",
+                text: "What type of small to medium enterprise (SME) are they?",
+
                 classes: "govuk-fieldset__legend--s"
               }
             },
             hint: {
               text: "Select one option"
             },
-            errorMessage: errors and errors.fieldErrors.selectedIndustry and {
-              text: errors.fieldErrors.selectedIndustry.text,
+            errorMessage: errors and errors.fieldErrors.smeType and {
+              text: errors.fieldErrors.smeType.text,
               attributes: {
-                'data-cy': 'selected-industry-index-error'
+                'data-cy': 'sme-type-error'
               }
             },
-            items: industries,
+            items: [
+              {
+                value: "Micro",
+                text: "Micro",
+                checked: smeType === "Micro",
+                attributes: {
+                  'data-cy': 'micro-radio-button'
+                }
+              },
+              {
+                value: "Small",
+                text: "Small",
+                checked: smeType === "Small",
+                attributes: {
+                  'data-cy': 'small-radio-button'
+                }
+              },
+              {
+                value: "Medium",
+                text: "Medium",
+                checked: smeType === "Medium",
+                attributes: {
+                  'data-cy': 'medium-radio-button'
+                }
+              },
+              {
+                value: "Not SME",
+                text: "They're not an SME",
+                checked: smeType === "Not SME",
+                attributes: {
+                  'data-cy': 'not-sme-radio-button'
+                }
+              }
+            ]
+          }) }}
+
+          {{ govukInput({
+            id: "probabilityOfDefault",
+            name: "probabilityOfDefault",
+            value: probabilityOfDefault,
+            label: {
+              text: "Enter the one year probability of default for the obligor (whoever is legally responsible for the debt)",
+              classes: "govuk-label--s"
+            },
+            suffix: {
+              text: "%"
+            },
+            classes: "govuk-input--width-2 govuk-!-margin-bottom-4",
+            errorMessage: errors and errors.fieldErrors.probabilityOfDefault and {
+              text: errors.fieldErrors.probabilityOfDefault.text,
+              attributes: {
+                'data-cy': 'probability-of-default-error'
+              }
+            },
             attributes: {
-              'data-cy': 'industries'
+              'data-cy': 'probability-of-default-input'
             }
           }) }}
 
-        {% endif %}
-
-        {{ govukRadios({
-          idPrefix: "smeType",
-          name: "smeType",
-          classes: "govuk-!-margin-bottom-4",
-          fieldset: {
-            legend: {
-              text: "What type of small to medium enterprise (SME) are they?",
-
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          hint: {
-            text: "Select one option"
-          },
-          errorMessage: errors and errors.fieldErrors.smeType and {
-            text: errors.fieldErrors.smeType.text,
-            attributes: {
-              'data-cy': 'sme-type-error'
-            }
-          },
-          items: [
-            {
-              value: "Micro",
-              text: "Micro",
-              checked: smeType === "Micro",
-              attributes: {
-                'data-cy': 'micro-radio-button'
+          {{ govukRadios({
+            classes: "govuk-radios--inline govuk-!-margin-bottom-4",
+            idPrefix: "isFinanceIncreasing",
+            name: "isFinanceIncreasing",
+            fieldset: {
+              legend: {
+                text: "Is your financing to the exporter increasing as a result of these facilities?",
+                classes: "govuk-fieldset__legend--s"
               }
             },
-            {
-              value: "Small",
-              text: "Small",
-              checked: smeType === "Small",
+            errorMessage: errors and errors.fieldErrors.isFinanceIncreasing and {
+              text: errors.fieldErrors.isFinanceIncreasing.text,
               attributes: {
-                'data-cy': 'small-radio-button'
+                'data-cy': 'is-financing-increasing-error'
               }
             },
-            {
-              value: "Medium",
-              text: "Medium",
-              checked: smeType === "Medium",
-              attributes: {
-                'data-cy': 'medium-radio-button'
+            items: [
+              {
+                value: 'true',
+                text: "Yes",
+                checked: isFinanceIncreasing === 'true',
+                attributes: {
+                  'data-cy': 'is-financing-increasing-radio-yes'
+                }
+              },
+              {
+                value: 'false',
+                text: "No",
+                checked: isFinanceIncreasing === 'false',
+                attributes: {
+                  'data-cy': 'is-financing-increasing-radio-no'
+                }
               }
-            },
-            {
-              value: "Not SME",
-              text: "They're not an SME",
-              checked: smeType === "Not SME",
-              attributes: {
-                'data-cy': 'not-sme-radio-button'
-              }
-            }
-          ]
-        }) }}
-
-        {{ govukInput({
-          id: "probabilityOfDefault",
-          name: "probabilityOfDefault",
-          value: probabilityOfDefault,
-          label: {
-            text: "Enter the one year probability of default for the obligor (whoever is legally responsible for the debt)",
-            classes: "govuk-label--s"
-          },
-          suffix: {
-            text: "%"
-          },
-          classes: "govuk-input--width-2 govuk-!-margin-bottom-4",
-          errorMessage: errors and errors.fieldErrors.probabilityOfDefault and {
-            text: errors.fieldErrors.probabilityOfDefault.text,
-            attributes: {
-              'data-cy': 'probability-of-default-error'
-            }
-          },
-          attributes: {
-            'data-cy': 'probability-of-default-input'
-          }
-        }) }}
-
-        {{ govukRadios({
-          classes: "govuk-radios--inline govuk-!-margin-bottom-4",
-          idPrefix: "isFinanceIncreasing",
-          name: "isFinanceIncreasing",
-          fieldset: {
-            legend: {
-              text: "Is your financing to the exporter increasing as a result of these facilities?",
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          errorMessage: errors and errors.fieldErrors.isFinanceIncreasing and {
-            text: errors.fieldErrors.isFinanceIncreasing.text,
-            attributes: {
-              'data-cy': 'is-financing-increasing-error'
-            }
-          },
-          items: [
-            {
-              value: 'true',
-              text: "Yes",
-              checked: isFinanceIncreasing === 'true',
-              attributes: {
-                'data-cy': 'is-financing-increasing-radio-yes'
-              }
-            },
-            {
-              value: 'false',
-              text: "No",
-              checked: isFinanceIncreasing === 'false',
-              attributes: {
-                'data-cy': 'is-financing-increasing-radio-no'
-              }
-            }
-          ]
-        }) }}
-
-        <div class="govuk-button-group">
-          {{ govukButton({
-            text: "Done",
-            attributes: {
-              'data-cy': 'done-button'
-            }
+            ]
           }) }}
 
-          {{ govukButton({
-            text: "Save and return",
-            classes: "govuk-button--secondary",
-            attributes: {
-              formaction: "about-exporter?saveAndReturn=true",
-              'data-cy': 'save-and-return-button'
-            }
-          }) }}
+          <div class="govuk-button-group">
+            {{ govukButton({
+              text: "Done",
+              attributes: {
+                'data-cy': 'done-button'
+              }
+            }) }}
+
+            {{ govukButton({
+              text: "Save and return",
+              classes: "govuk-button--secondary",
+              attributes: {
+                formaction: "about-exporter?saveAndReturn=true",
+                'data-cy': 'save-and-return-button'
+              }
+            }) }}
+          </div>
         </div>
       </form>
     </div>

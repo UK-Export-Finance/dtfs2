@@ -14,6 +14,7 @@ const {
   mapCurrencies,
   generateErrorSummary,
   formattedTimestamp,
+  constructPayload,
 } = require('../../../helpers');
 const {
   loanGuaranteeDetailsValidationErrors,
@@ -23,10 +24,11 @@ const {
 } = require('./pageSpecificValidationErrors');
 const completedLoanForms = require('./completedForms');
 const loanTaskList = require('./loanTaskList');
-const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
+const saveFacilityAndGoBackToDeal = require('../saveFacilityAndGoBack');
 const canIssueOrEditIssueFacility = require('../canIssueOrEditIssueFacility');
 const isDealEditable = require('../isDealEditable');
 const premiumFrequencyField = require('./premiumFrequencyField');
+const { FACILITY_STAGE, STATUS } = require('../../../constants');
 
 const router = express.Router();
 
@@ -37,11 +39,11 @@ const userCanAccessLoan = (user, deal) => {
 
   const { status } = deal.details;
 
-  if (status === 'Ready for checker\'s approval'
-    || status === 'Acknowledged'
-    || status === 'Accepted by UKEF (with conditions)'
-    || status === 'Accepted by UKEF (without conditions)'
-    || status === 'Submitted') {
+  if (status === STATUS.READY_FOR_APPROVAL
+    || status === STATUS.UKEF_ACKNOWLEDGED
+    || status === STATUS.UKEF_APPROVED_WITH_CONDITIONS
+    || status === STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS
+    || status === STATUS.SUBMITTED_TO_UKEF) {
     return false;
   }
 
@@ -64,9 +66,9 @@ const handleNameField = (loanBody) => {
     'facilityStageUnconditional-name': unconditionalName,
   } = modifiedLoan;
 
-  if (facilityStage === 'Conditional') {
+  if (facilityStage === FACILITY_STAGE.CONDITIONAL) {
     modifiedLoan.name = conditionalName;
-  } else if (facilityStage === 'Unconditional') {
+  } else if (facilityStage === FACILITY_STAGE.UNCONDITIONAL) {
     modifiedLoan.name = unconditionalName;
   }
 
@@ -106,10 +108,39 @@ router.get('/contract/:_id/loan/:loanId/guarantee-details', provide([LOAN, DEAL]
   });
 });
 
+const loanGuaranteeDetailsPayloadProperties = [
+  'facilityStage',
+  'facilityStageConditional-name',
+  'facilityStageUnconditional-name',
+  'ukefGuaranteeInMonths',
+  'requestedCoverStartDate-day',
+  'requestedCoverStartDate-month',
+  'requestedCoverStartDate-year',
+  'coverEndDate-day',
+  'coverEndDate-month',
+  'coverEndDate-year',
+];
+
+const filterLoanGuaranteeDetailsPayload = (body) => {
+  const payload = constructPayload(body, loanGuaranteeDetailsPayloadProperties);
+  if (payload.facilityStage === FACILITY_STAGE.CONDITIONAL) {
+    delete payload['requestedCoverStartDate-day'];
+    delete payload['requestedCoverStartDate-month'];
+    delete payload['requestedCoverStartDate-year'];
+    delete payload['coverEndDate-day'];
+    delete payload['coverEndDate-month'];
+    delete payload['coverEndDate-year'];
+  } else if (payload.facilityStage === FACILITY_STAGE.UNCONDITIONAL) {
+    delete payload.ukefGuaranteeInMonths;
+  }
+  return payload;
+};
+
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const modifiedBody = handleNameField(req.body);
+  const loanBody = filterLoanGuaranteeDetailsPayload(req.body);
+  const modifiedBody = handleNameField(loanBody);
 
   await postToApi(
     api.updateLoan(
@@ -123,6 +154,13 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/financial-details`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', provide([LOAN]), async (req, res) => {
+  const loanBody = constructPayload(req.body, loanGuaranteeDetailsPayloadProperties);
+  const modifiedBody = handleNameField(loanBody);
+
+  return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
 router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL, CURRENCIES]), async (req, res) => {
@@ -151,14 +189,42 @@ router.get('/contract/:_id/loan/:loanId/financial-details', provide([LOAN, DEAL,
   });
 });
 
+const loanFinancialDetailsPayloadProperties = [
+  'value',
+  'currencySameAsSupplyContractCurrency',
+  'currency',
+  'conversionRate',
+  'conversionRateDate-day',
+  'conversionRateDate-month',
+  'conversionRateDate-year',
+  'disbursementAmount',
+  'interestMarginFee',
+  'coveredPercentage',
+  'minimumQuarterlyFee',
+];
+
+const filterLoanFinancialDetailsPayload = (body) => {
+  const payload = constructPayload(body, loanFinancialDetailsPayloadProperties);
+  if (payload.currencySameAsSupplyContractCurrency === 'true') {
+    delete payload.currency;
+    delete payload.conversionRate;
+    delete payload['conversionRateDate-day'];
+    delete payload['conversionRateDate-month'];
+    delete payload['conversionRateDate-year'];
+  }
+  return payload;
+};
+
 router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
+
+  const payload = filterLoanFinancialDetailsPayload(req.body);
 
   await postToApi(
     api.updateLoan(
       dealId,
       loanId,
-      req.body,
+      payload,
       userToken,
     ),
     errorHref,
@@ -166,6 +232,12 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/dates-repayments`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provide([LOAN]), async (req, res) => {
+  const sanitizedPayload = constructPayload(req.body, loanFinancialDetailsPayloadProperties);
+
+  return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
 router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL]), async (req, res) => {
@@ -192,10 +264,19 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', provide([LOAN, DEAL])
   });
 });
 
+const loanRepaymentDatesPayloadProperties = [
+  'premiumFrequency',
+  'premiumType',
+  'inAdvancePremiumFrequency',
+  'inArrearPremiumFrequency',
+  'dayCountBasis',
+];
+
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
-  const modifiedBody = premiumFrequencyField(req.body);
+  const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties);
+  const modifiedBody = premiumFrequencyField(loanBody);
 
   await postToApi(
     api.updateLoan(
@@ -209,6 +290,13 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
 
   const redirectUrl = `/contract/${dealId}/loan/${loanId}/check-your-answers`;
   return res.redirect(redirectUrl);
+});
+
+router.post('/contract/:_id/loan/:loanId/dates-repayments/save-go-back', provide([LOAN]), async (req, res) => {
+  const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties);
+  const modifiedBody = premiumFrequencyField(loanBody);
+
+  return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
 router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), async (req, res) => {
@@ -267,38 +355,6 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', provide([LOAN]), as
   });
 });
 
-router.post('/contract/:_id/loan/:loanId/save-go-back', provide([LOAN]), async (req, res) => {
-  const { _id: dealId, loanId, userToken } = requestParams(req);
-  const { loan } = req.apiData.loan;
-
-  let modifiedBody = handleNameField(req.body);
-  modifiedBody = premiumFrequencyField(req.body, loan);
-
-  // UI form submit only has the currency code. API has a currency object.
-  // to check if something has changed, only use the currency code.
-  const mappedOriginalData = loan;
-
-  if (loan.currency && loan.currency.id) {
-    mappedOriginalData.currency = loan.currency.id;
-  }
-  delete mappedOriginalData._id;
-  delete mappedOriginalData.status;
-
-  if (!formDataMatchesOriginalData(modifiedBody, mappedOriginalData)) {
-    await postToApi(
-      api.updateLoan(
-        dealId,
-        loanId,
-        modifiedBody,
-        userToken,
-      ),
-    );
-  }
-
-  const redirectUrl = `/contract/${req.params._id}`;
-  return res.redirect(redirectUrl);
-});
-
 router.get('/contract/:_id/loan/:loanId/issue-facility', provide([LOAN, DEAL]), async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
@@ -319,11 +375,26 @@ router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
   const { user } = req.session;
 
+  const payloadProperties = [
+    'issuedDate-day',
+    'issuedDate-month',
+    'issuedDate-year',
+    'requestedCoverStartDate-day',
+    'requestedCoverStartDate-month',
+    'requestedCoverStartDate-year',
+    'coverEndDate-day',
+    'coverEndDate-month',
+    'coverEndDate-year',
+    'disbursementAmount',
+    'name',
+  ];
+  const payload = constructPayload(req.body, payloadProperties);
+
   const { validationErrors, loan } = await postToApi(
     api.updateLoanIssueFacility(
       dealId,
       loanId,
-      req.body,
+      payload,
       userToken,
     ),
     errorHref,
@@ -380,7 +451,7 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
   };
 
   if (req.body.needToChangeRequestedCoverStartDate === 'true') {
-    if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-day']) {
+    if (!req.body['requestedCoverStartDate-day'] || !req.body['requestedCoverStartDate-month'] || !req.body['requestedCoverStartDate-year']) {
       requestedCoverValidationErrors = {
         count: 1,
         errorList: {
@@ -412,8 +483,16 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
 
       const dateOfCoverChangeTimestamp = moment(dateOfCoverChange).utc().valueOf().toString();
 
+      const payloadProperties = [
+        'requestedCoverStartDate-day',
+        'requestedCoverStartDate-month',
+        'requestedCoverStartDate-year',
+        'needToChangeRequestedCoverStartDate',
+      ];
+      const newRequestedCoverStartDate = constructPayload(req.body, payloadProperties);
+
       const newLoanDetails = {
-        ...req.body,
+        ...newRequestedCoverStartDate,
         previousCoverStartDate: previousCoverStartDateTimestamp,
         dateOfCoverChange: dateOfCoverChangeTimestamp,
       };

@@ -33,7 +33,7 @@
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     <div class="govuk-grid-row">
 
-      <div class="govuk-grid-column-full">
+      <div class="govuk-grid-column-full" id="loan-guarantee-form">
 
         {{ govukRadios({
           idPrefix: "facilityStage",
@@ -82,7 +82,7 @@
 
         <input
           type="submit"
-          formaction="/contract/{{ dealId }}/loan/{{ loan._id }}/save-go-back"
+          formaction="/contract/{{ dealId }}/loan/{{ loan._id }}/guarantee-details/save-go-back"
           class="govuk-button govuk-button--secondary"
           data-module="govuk-button"
           value="Save and go back to deal"

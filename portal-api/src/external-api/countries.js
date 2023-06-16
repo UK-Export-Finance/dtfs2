@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
+const referenceProxyUrl = process.env.EXTERNAL_API_URL;
 
 const getCountries = async () => {
   const response = await axios({
@@ -13,7 +13,7 @@ const getCountries = async () => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => {
-    console.error('Error retrieving countries from Reference Data API %O ', { status: err?.response?.status, data: err?.response?.data });
+    console.error('Error retrieving countries from External API %O ', { status: err?.response?.status, data: err?.response?.data });
     return err?.response?.data;
   });
 
@@ -28,7 +28,7 @@ const getCountry = async (code) => {
       'Content-Type': 'application/json',
     },
   }).catch((err) => {
-    console.error('Error retrieving country from Reference Data API %O ', { status: err?.response?.status, data: err?.response?.data });
+    console.error('Error retrieving country from External API %O ', { status: err?.response?.status, data: err?.response?.data });
 
     return err?.response?.data;
   });

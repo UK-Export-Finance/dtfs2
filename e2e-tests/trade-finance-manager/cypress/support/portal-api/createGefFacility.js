@@ -1,5 +1,5 @@
 const { logIn, createGefFacilities, updateGefFacilities } = require('./api');
-const { getIdFromNumberGenerator } = require('../reference-data-api/api');
+const { getIdFromNumberGenerator } = require('../external-api/api');
 
 module.exports = (dealId, facilities, user) => {
   console.info('createGEFFacilities::');

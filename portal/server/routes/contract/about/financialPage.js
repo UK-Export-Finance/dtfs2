@@ -6,6 +6,7 @@ const {
   errorHref,
   generateErrorSummary,
   sanitizeCurrency,
+  constructPayload,
 } = require('../../../helpers');
 
 const {
@@ -17,6 +18,7 @@ const calculateStatusOfEachPage = require('./navStatusCalculations');
 const aboutTaskList = require('./aboutTaskList');
 const { financialPageValidationErrors } = require('./pageSpecificValidationErrors');
 const { formDataMatchesOriginalData } = require('../formDataMatchesOriginalData');
+const { CURRENCY } = require('../../../constants');
 
 const router = express.Router();
 
@@ -55,11 +57,33 @@ router.get('/contract/:_id/about/financial', provide([CURRENCIES]), async (req, 
   });
 });
 
+const financialSubmissionDetailsProperties = [
+  'supplyContractValue',
+  'supplyContractCurrency',
+  'supplyContractConversionRateToGBP',
+  'supplyContractConversionDate-day',
+  'supplyContractConversionDate-month',
+  'supplyContractConversionDate-year',
+];
+
+const filterFinancialSubmissionDetailsPayload = (body) => {
+  const payload = constructPayload(body, financialSubmissionDetailsProperties);
+
+  if (payload.supplyContractCurrency === CURRENCY.GBP) {
+    delete payload.supplyContractConversionRateToGBP;
+    delete payload['supplyContractConversionDate-day'];
+    delete payload['supplyContractConversionDate-month'];
+    delete payload['supplyContractConversionDate-year'];
+  }
+
+  return payload;
+};
+
 router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) => {
   const { userToken } = requestParams(req);
-  const submissionDetails = req.body;
+  const submissionDetailsPayload = filterFinancialSubmissionDetailsPayload(req.body);
 
-  await updateSubmissionDetails(req.apiData[DEAL], submissionDetails, userToken);
+  await updateSubmissionDetails(req.apiData[DEAL], submissionDetailsPayload, userToken);
 
   const redirectUrl = `/contract/${req.params._id}/about/check-your-answers`;
   return res.redirect(redirectUrl);
@@ -68,7 +92,7 @@ router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) 
 router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const deal = req.apiData[DEAL];
-  const submissionDetails = req.body;
+  const submissionDetails = filterFinancialSubmissionDetailsPayload(req.body);
 
   const mappedFormDataForMatchCheck = {
     ...submissionDetails,

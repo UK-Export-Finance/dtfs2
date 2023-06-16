@@ -1,6 +1,6 @@
 const utils = require('../../utils/array');
 
-const refDataApi = require('../../reference-data/api');
+const refDataApi = require('../../external-api/api');
 
 const getCountryFromArray = (arr, code) => arr.filter((country) => country.code === code)[0];
 

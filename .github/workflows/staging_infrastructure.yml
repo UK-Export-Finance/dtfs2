@@ -1020,8 +1020,8 @@ jobs:
   # END Function setup
 
   # START API setup
-  reference-data-proxy:
-    name: Reference data API
+  external-api:
+    name: External API
     needs: [set-environment, vnet, private-dns, functions-acbs, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -1042,16 +1042,16 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp create --name tfs-${{ env.environment }}-reference-data-proxy \
+          az webapp create --name tfs-${{ env.environment }}-external-api \
             --plan ${{ env.app_service_plan }} \
-            --deployment-container-image-name ${{ env.registry }}/reference-data-proxy:${{ env.environment }}
+            --deployment-container-image-name ${{ env.registry }}/external-api:${{ env.environment }}
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
       with:
         # Enable outbound traffic from Portal API to the services subnet so we can access Cosmos and Storage
         inlineScript: |
-          az webapp vnet-integration add --name tfs-${{ env.environment }}-reference-data-proxy \
+          az webapp vnet-integration add --name tfs-${{ env.environment }}-external-api \
             --vnet tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.app_service_plan }}-app-service-plan-egress
 
@@ -1062,14 +1062,14 @@ jobs:
         # NB: group-id isn't well documented. It means "Target sub-resource".
         #     The purpose of connection-name is unknown.
         inlineScript: |
-          reference_data_api_id=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query "id" -o tsv)
+          external_api_id=$(az webapp show --name tfs-${{ env.environment }}-external-api --query "id" -o tsv)
           az network private-endpoint create \
-            --name tfs-${{ env.environment }}-reference-data-proxy \
+            --name tfs-${{ env.environment }}-external-api \
             --vnet-name tfs-${{ env.app_service_plan }}-vnet \
             --subnet ${{ env.environment }}-private-endpoints \
-            --private-connection-resource-id "$reference_data_api_id" \
+            --private-connection-resource-id "$external_api_id" \
             --group-id sites \
-            --connection-name tfs-${{ env.environment }}-reference-data-proxy
+            --connection-name tfs-${{ env.environment }}-external-api
 
     - name: DNS A-records
       uses: azure/cli@v1.0.0
@@ -1078,9 +1078,9 @@ jobs:
         # https://docs.microsoft.com/en-us/azure/app-service/networking/private-endpoint#dns
         # NB the -z tests below are checking
         inlineScript: |
-          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-reference-data-proxy --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
+          ipv4_address=$(az network private-dns record-set a show --name tfs-${{ env.environment }}-external-api --zone-name "privatelink.azurewebsites.net" --query "aRecords[0].ipv4Address" -o tsv || echo "")
 
-          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-reference-data-proxy --query 'networkInterfaces[0].id' -o tsv)
+          interface_id=$(az network private-endpoint show --name tfs-${{ env.environment }}-external-api --query 'networkInterfaces[0].id' -o tsv)
           interface_ip=$(az resource show --ids "$interface_id" --query "properties.ipConfigurations[0].properties.privateIPAddress" -o tsv)
 
           # Create
@@ -1088,15 +1088,15 @@ jobs:
           then
             echo Setting private link IP address...
 
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-reference-data-proxy --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-external-api --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-reference-data-proxy \
+              --record-set-name tfs-${{ env.environment }}-external-api \
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
 
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-reference-data-proxy.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-external-api.scm --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-reference-data-proxy.scm \
+              --record-set-name tfs-${{ env.environment }}-external-api.scm \
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
           fi
@@ -1106,17 +1106,17 @@ jobs:
           then
             echo Update private link IP address...
 
-            az network private-dns record-set a delete --name tfs-${{ env.environment }}-reference-data-proxy --zone-name "privatelink.azurewebsites.net" --yes
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-reference-data-proxy --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-external-api --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-external-api --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-reference-data-proxy \
+              --record-set-name tfs-${{ env.environment }}-external-api \
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
 
-            az network private-dns record-set a delete --name tfs-${{ env.environment }}-reference-data-proxy.scm --zone-name "privatelink.azurewebsites.net" --yes
-            az network private-dns record-set a create --name tfs-${{ env.environment }}-reference-data-proxy.scm --zone-name "privatelink.azurewebsites.net"
+            az network private-dns record-set a delete --name tfs-${{ env.environment }}-external-api.scm --zone-name "privatelink.azurewebsites.net" --yes
+            az network private-dns record-set a create --name tfs-${{ env.environment }}-external-api.scm --zone-name "privatelink.azurewebsites.net"
             az network private-dns record-set a add-record \
-              --record-set-name tfs-${{ env.environment }}-reference-data-proxy.scm \
+              --record-set-name tfs-${{ env.environment }}-external-api.scm \
               --zone-name "privatelink.azurewebsites.net" \
               --ipv4-address $interface_ip
           fi
@@ -1125,21 +1125,21 @@ jobs:
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp deployment container config --name tfs-${{ env.environment }}-reference-data-proxy \
+          az webapp deployment container config --name tfs-${{ env.environment }}-external-api \
             --enable-cd true
 
     - name: Enable container logging
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp log config --name tfs-${{ env.environment }}-reference-data-proxy \
+          az webapp log config --name tfs-${{ env.environment }}-external-api \
             --docker-container-logging filesystem
 
     - name: Always-on
       uses: azure/cli@v1.0.0
       with:
         inlineScript: |
-          az webapp config set --name tfs-${{ env.environment }}-reference-data-proxy \
+          az webapp config set --name tfs-${{ env.environment }}-external-api \
             --always-on true
 
     - name: Environment variables
@@ -1157,7 +1157,7 @@ jobs:
 
           mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
 
-          az webapp config appsettings set --name tfs-${{ env.environment }}-reference-data-proxy \
+          az webapp config appsettings set --name tfs-${{ env.environment }}-external-api \
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
@@ -1189,7 +1189,7 @@ jobs:
 
   dtfs-central-api:
     name: DTFS Central API
-    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1330,22 +1330,22 @@ jobs:
           mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
           echo "Mongo connection string: $mongo_connection_string"
 
-          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+          EXTERNAL_API_URL=$(az webapp show --name tfs-${{ env.environment }}-external-api --query defaultHostName -o tsv)
 
           portal_file_storage_key=$(az storage account keys list --account-name tfs${{ env.environment }}storage --query [0].value -o tsv)
 
-          echo "Reference data proxy url: http://$reference_data_proxy_url"
+          echo "External API url: http://$EXTERNAL_API_URL"
 
           az webapp config connection-string set --name tfs-${{ env.environment }}-dtfs-central-api \
             --connection-string-type custom \
             --settings \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url"
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL"
 
   portal-api:
     name: Portal API
-    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, file-storage, trade-finance-manager-api]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api, file-storage, trade-finance-manager-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1486,8 +1486,8 @@ jobs:
           mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
           echo "Mongo connection string: $mongo_connection_string"
 
-          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
-          echo "Reference data proxy url: http://$reference_data_proxy_url"
+          EXTERNAL_API_URL=$(az webapp show --name tfs-${{ env.environment }}-external-api --query defaultHostName -o tsv)
+          echo "External API url: http://$EXTERNAL_API_URL"
 
           dtfs_central_api_url=$(az webapp show --name tfs-${{ env.environment }}-dtfs-central-api --query defaultHostName -o tsv)
           echo "DTFS central API url: http://$dtfs_central_api_url"
@@ -1518,7 +1518,7 @@ jobs:
               GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
               DTFS_PORTAL_SCHEDULER="${{ secrets.DTFS_PORTAL_SCHEDULER }}" \
               FETCH_WORKFLOW_TYPE_B_SCHEDULE="${{ secrets.FETCH_WORKFLOW_TYPE_B_SCHEDULE }}" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
               TFM_API="http://$tfm_api_url" \
               COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
@@ -1526,7 +1526,7 @@ jobs:
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs: [set-environment, vnet, private-dns, cosmos-db-private, reference-data-proxy, dtfs-central-api, functions-number-generator]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api, functions-number-generator]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1667,8 +1667,8 @@ jobs:
           mongo_connection_string=$(az cosmosdb keys list --name tfs-${{ env.environment }}-mongo --type connection-strings --query "connectionStrings[0].connectionString" -o tsv | sed -e "s/&replicaSet=globaldb//g")
           echo "Mongo connection string: $mongo_connection_string"
 
-          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
-          echo "Reference data proxy url: http://$reference_data_proxy_url"
+          EXTERNAL_API_URL=$(az webapp show --name tfs-${{ env.environment }}-external-api --query defaultHostName -o tsv)
+          echo "External API url: http://$EXTERNAL_API_URL"
 
           dtfs_central_api_url=$(az webapp show --name tfs-${{ env.environment }}-dtfs-central-api --query defaultHostName -o tsv)
           echo "DTFS central API url: http://$dtfs_central_api_url"
@@ -1680,7 +1680,7 @@ jobs:
             --settings \
               MONGO_INITDB_DATABASE="${{ env.database_name }}" \
               MONGODB_URI="$mongo_connection_string" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
               DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
               UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
               UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
@@ -1694,7 +1694,7 @@ jobs:
   # START UI setup
   portal-ui:
     name: Portal UI
-    needs: [set-environment, vnet, private-dns, portal-api, reference-data-proxy, redis]
+    needs: [set-environment, vnet, private-dns, portal-api, external-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1821,7 +1821,7 @@ jobs:
         # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
           deal_api=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query defaultHostName -o tsv)
-          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+          EXTERNAL_API_URL=$(az webapp show --name tfs-${{ env.environment }}-external-api --query defaultHostName -o tsv)
 
           redis_hostname=$(az redis show --name tfs-${{ env.environment }}-redis --query hostName --output tsv)
           redis_sslPort=$(az redis show --name tfs-${{ env.environment }}-redis --query sslPort --output tsv)
@@ -1839,7 +1839,7 @@ jobs:
               REDIS_HOSTNAME="$redis_hostname" \
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
               HTTPS=1
 
     - name: Secrets
@@ -1981,7 +1981,7 @@ jobs:
         # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
           tfm_api=$(az webapp show --name tfs-${{ env.environment }}-trade-finance-manager-api --query defaultHostName -o tsv)
-          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+          EXTERNAL_API_URL=$(az webapp show --name tfs-${{ env.environment }}-external-api --query defaultHostName -o tsv)
 
           redis_hostname=$(az redis show --name tfs-${{ env.environment }}-redis --query hostName --output tsv)
           redis_sslPort=$(az redis show --name tfs-${{ env.environment }}-redis --query sslPort --output tsv)
@@ -1998,7 +1998,7 @@ jobs:
               REDIS_HOSTNAME="$redis_hostname" \
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
               UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
               ESTORE_URL="${{ secrets.ESTORE_URL }}" \
               HTTPS=1
@@ -2014,7 +2014,7 @@ jobs:
 
   gef-ui:
     name: GEF UI
-    needs: [set-environment, vnet, private-dns, portal-api, reference-data-proxy, redis]
+    needs: [set-environment, vnet, private-dns, portal-api, external-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -2141,7 +2141,7 @@ jobs:
         # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
         inlineScript: |
           deal_api=$(az webapp show --name tfs-${{ env.environment }}-portal-api --query defaultHostName -o tsv)
-          reference_data_proxy_url=$(az webapp show --name tfs-${{ env.environment }}-reference-data-proxy --query defaultHostName -o tsv)
+          EXTERNAL_API_URL=$(az webapp show --name tfs-${{ env.environment }}-external-api --query defaultHostName -o tsv)
 
           redis_hostname=$(az redis show --name tfs-${{ env.environment }}-redis --query hostName --output tsv)
           redis_sslPort=$(az redis show --name tfs-${{ env.environment }}-redis --query sslPort --output tsv)
@@ -2159,7 +2159,7 @@ jobs:
               REDIS_HOSTNAME="$redis_hostname" \
               REDIS_PORT="$redis_sslPort" \
               REDIS_KEY="$redis_key" \
-              REFERENCE_DATA_PROXY_URL="http://$reference_data_proxy_url" \
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
               HTTPS=1
 
     - name: Secrets

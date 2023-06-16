@@ -1,7 +1,7 @@
 const db = require('./src/drivers/db-client');
 
 const mockFiles = [
-  './src/reference-data/api',
+  './src/external-api/api',
 ];
 
 mockFiles.forEach((mockFile) => {

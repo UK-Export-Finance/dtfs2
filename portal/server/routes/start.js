@@ -1,6 +1,6 @@
 const express = require('express');
 const api = require('../api');
-const { requestParams, generateErrorSummary, errorHref, postToApi } = require('../helpers');
+const { requestParams, generateErrorSummary, errorHref, postToApi, constructPayload } = require('../helpers');
 const { validateToken, validateRole } = require('./middleware');
 const { provide, MANDATORY_CRITERIA } = require('./api-data-provider');
 const beforeYouStartValidation = require('../validation/before-you-start');
@@ -44,8 +44,14 @@ router.get('/before-you-start/bank-deal', validateRole({ role: ['maker'] }), asy
 router.post('/before-you-start/bank-deal', [provide([MANDATORY_CRITERIA]), validateRole({ role: ['maker'] })], async (req, res) => {
   const { userToken } = requestParams(req);
 
+  const allowedFields = [
+    'bankInternalRefName',
+    'additionalRefName',
+  ];
+  const sanitizedBody = constructPayload(req.body, allowedFields);
+
   const newDeal = {
-    ...req.body,
+    ...sanitizedBody,
     mandatoryCriteria: req.apiData[MANDATORY_CRITERIA],
   };
 

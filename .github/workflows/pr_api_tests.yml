@@ -9,7 +9,7 @@ on:
     - 'portal-api/**'
     - 'trade-finance-manager-ui/**'
     - 'trade-finance-manager-api/**'
-    - 'reference-data-proxy/**'
+    - 'external-api/**'
     - 'dtfs-central-api/**'
     - 'e2e-tests/**'
     - 'utils/mock-data-loader/**'
@@ -91,8 +91,8 @@ jobs:
     - name: Load mock data
       run: node ./re-insert-mocks.js
 
-    - name: Run Reference Data Proxy API tests
-      run: docker-compose exec -T reference-data-proxy npm run api-test
+    - name: Run External API API tests
+      run: docker-compose exec -T external-api npm run api-test
 
     - name: Load mock data
       run: node ./re-insert-mocks.js

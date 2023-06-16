@@ -1,6 +1,7 @@
 import relative from './relativeURL';
 import exportersAddress from './pages/exporters-address';
 import CREDENTIALS from '../fixtures/credentials.json';
+import { POSTCODE } from '../fixtures/constants';
 
 let dealId;
 
@@ -74,7 +75,7 @@ context('Exporters Address Page', () => {
 
     it('redirects user to Select exporters correspondence address page if form filled in correctly', () => {
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().type('E1 6JE');
+      exportersAddress.correspondenceAddress().type(POSTCODE);
       exportersAddress.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/select-exporters-correspondence-address`));
     });

@@ -83,6 +83,15 @@ module.exports.getDeal = (dealId, token) => cy.request({
   },
 }).then((resp) => resp.body);
 
+module.exports.getFacility = (dealId, bondId, token) => cy.request({
+  url: `${api()}/v1/deals/${dealId}/bond/${bondId}`,
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => resp.body);
+
 module.exports.updateDeal = (dealId, update, token) => cy.request({
   url: `${api()}/v1/deals/${dealId}`,
   method: 'PUT',
@@ -230,6 +239,18 @@ module.exports.updateGefFacility = (facilityId, payload, token) => cy.request({
   url: `${api()}/v1/gef/facilities/${facilityId}`,
   method: 'PUT',
   body: payload,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+  return resp.body;
+});
+
+module.exports.getAllFeedback = (token) => cy.request({
+  url: `${api()}/v1/feedback`,
+  method: 'GET',
   headers: {
     'Content-Type': 'application/json',
     Authorization: token,

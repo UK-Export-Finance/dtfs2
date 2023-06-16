@@ -32,7 +32,7 @@
 
     <div class="govuk-grid-row">
 
-      <div class="govuk-grid-column-three-quarters">
+      <div class="govuk-grid-column-three-quarters" id="loan-repayment-form">
 
         {{ govukRadios({
           idPrefix: "premiumType",
@@ -105,7 +105,7 @@
 
     <input
       type="submit"
-      formaction="/contract/{{ dealId }}/loan/{{ loan._id }}/save-go-back"
+      formaction="/contract/{{ dealId }}/loan/{{ loan._id }}/dates-repayments/save-go-back"
       class="govuk-button govuk-button--secondary"
       data-module="govuk-button"
       value="Save and go back to deal"

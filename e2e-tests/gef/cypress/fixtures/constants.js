@@ -48,6 +48,8 @@ const PORTAL_ACTIVITY_LABEL = {
   FACILITY_CHANGED_ISSUED: 'Bank facility stage changed',
 };
 
+const POSTCODE = 'E1 6JE';
+
 module.exports = {
   DEAL_TYPE,
   DEAL_SUBMISSION_TYPE,
@@ -55,4 +57,5 @@ module.exports = {
   FACILITY_TYPE,
   DEAL_COMMENT_TYPE_PORTAL,
   PORTAL_ACTIVITY_LABEL,
+  POSTCODE,
 };
