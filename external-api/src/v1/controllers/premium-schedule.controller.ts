@@ -79,6 +79,12 @@ const getScheduleData = async (facilityId: any) => {
   return new Error(`Error getting Premium schedule segments. Facility:${facilityId}`);
 };
 
+/**
+ * Get premium schedule segments from facility URN
+ * @param {Express.Request} req Facility ID
+ * @param {Express.Response} res Facility ID
+ * @returns {Object} Premium schedule data
+ */
 export const getPremiumSchedule = async (req: Request, res: Response) => {
   const premiumScheduleParameters: PremiumSchedule = req.body;
 

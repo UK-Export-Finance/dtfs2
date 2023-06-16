@@ -1,14 +1,14 @@
 export interface PremiumSchedule {
-  premiumTypeId: string;
-  premiumFrequencyId: string;
+  premiumTypeId: number;
+  premiumFrequencyId: number;
   productGroup: string;
-  facilityURN: string;
+  facilityURN: number;
   guaranteeCommencementDate: string;
   guaranteeExpiryDate: string;
-  guaranteeFeePercentage: string;
-  guaranteePercentage: string;
+  guaranteeFeePercentage: number;
+  guaranteePercentage: number;
   dayBasis: string;
-  exposurePeriod: string;
+  exposurePeriod: number;
   maximumLiability: number;
   cumulativeAmount: number;
 }
