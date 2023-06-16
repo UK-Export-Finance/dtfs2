@@ -74,6 +74,8 @@ const DATE_FORMAT = {
   COVER: 'MMMM d, yyyy',
 };
 
+// TODO DTFS2-6529: Refactor gef-ui user roles to use constants rather than strings
+// We should replace any times these strings are hard coded in gef-ui with these constants
 const USER_ROLES = {
   ADMIN: 'admin',
   MAKER: 'maker',

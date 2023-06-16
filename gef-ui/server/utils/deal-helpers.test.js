@@ -154,6 +154,18 @@ describe('canAmendFacilities', () => {
 
     expect(canAmendFacilities(mockUserSession, mockDeal)).toEqual(false);
   });
+
+  it('Should return FALSE if user does not have a bank', () => {
+    const mockDeal = MOCK_BASIC_DEAL;
+    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
+    mockDeal.bank = MOCK_BANK;
+
+    const mockUserSession = MOCK_REQUEST;
+    mockUserSession.roles = [CONSTANTS.USER_ROLES.MAKER];
+    mockUserSession.bank = undefined;
+
+    expect(canAmendFacilities(mockUserSession, mockDeal)).toEqual(false);
+  });
 });
 
 describe('isDealNotice()', () => {

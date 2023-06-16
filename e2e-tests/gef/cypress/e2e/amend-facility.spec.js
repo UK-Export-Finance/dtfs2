@@ -47,9 +47,9 @@ context('Amend a facility', () => {
     it('clicking amend facility button should start the make an amendment journey', () => {
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${acknowledgedDealId}`));
-      applicationPreview.amendFacilityButton().should('exist');
+      applicationPreview.createFacilityAmendmentButton().should('exist');
 
-      applicationPreview.amendFacilityButton().click();
+      applicationPreview.createFacilityAmendmentButton().click();
 
       cy.url().should('eq', relative('/gef/amend-facility/what-do-you-need-to-change'));
     });
@@ -58,14 +58,14 @@ context('Amend a facility', () => {
       cy.login(CREDENTIALS.MAKER);
       cy.visit(relative(`/gef/application-details/${submittedDealId}`));
 
-      applicationPreview.amendFacilityButton().should('not.exist');
+      applicationPreview.createFacilityAmendmentButton().should('not.exist');
     });
 
     it('should not show amend facility button if not logged in as a maker', () => {
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${acknowledgedDealId}`));
 
-      applicationPreview.amendFacilityButton().should('not.exist');
+      applicationPreview.createFacilityAmendmentButton().should('not.exist');
     });
   });
 });
