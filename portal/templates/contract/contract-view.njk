@@ -68,118 +68,110 @@
     </div>
 
     <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
-      <div class="box__header">
-        <div class="govuk-grid-column-three-quarters">
-          <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-            <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
-                  About the Supply Contract
-                </span>
-            <span data-cy="aboutSupplierDetailsStatus" class="govuk-grid-column-one-quarter">
-              {{ statusTag.render(deal.submissionDetails.status) }}
-            </span>
-          </h2>
-        </div>
-        <div class="govuk-grid-column-one-quarter box__header-link">
-          {{ aboutSupplyContractLink.render(componentData) }}
-        </div>
-      </div>
-    </div>
-
-    <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
-      <div class="box__header">
-        <div class="govuk-grid-column-three-quarters">
-          <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-
-            <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
-                  Confirm eligibility
-                </span>
-
-            {% if deal.eligibility.status %}
-              <span class="govuk-grid-column-one-quarter" data-cy="eligibility-status">
-                {{ statusTag.render(deal.eligibility.status) }}
+      <div class="govuk-grid-column-three-quarters">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+          <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                About the Supply Contract
               </span>
-            {% endif %}
-
-            {% if deal.submissionType %}
-              <span class="govuk-grid-column-one-quarter govuk-!-font-weight-regular govuk-!-font-size-16"  data-cy="eligibility-submission-type">
-                <span class="govuk-!-font-weight-bold">Submission type: </span>
-                <br/>
-                {{ deal.submissionType }}
-              </span>
-            {% endif %}
-
-          </h2>
-        </div>
-
-        {% if deal.details.manualInclusionNoticeSubmissionDate %}
-          <span class="govuk-heading-m govuk-grid-column-one-quarter govuk-!-font-weight-regular govuk-!-font-size-16 govuk-!-padding-right-0 govuk-!-padding-left-0 width-auto"  data-cy="manual-inclusion-notice-submission-date">
-            <span class="govuk-!-font-weight-bold">Submission date: </span>
-            <br/>
-            {{ deal.details.manualInclusionNoticeSubmissionDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+          <span data-cy="aboutSupplierDetailsStatus" class="govuk-grid-column-one-quarter">
+            {{ statusTag.render(deal.submissionDetails.status) }}
           </span>
-        {% endif %}
-
-        {% if deal.details.submissionDate %}
-          {% set submissionDateClass = "govuk-grid-column-one-quarter govuk-!-padding-right-0 box__header-link width-auto" %}
-
-        {% else %}
-          {% set submissionDateClass = "govuk-grid-column-one-quarter box__header-link" %}
-        {% endif %}
-
-        <div class="{{ submissionDateClass }}">
-          {{ eligibilityCriteriaLink.render(componentData) }}
-        </div>
+        </h2>
+      </div>
+      <div class="govuk-grid-column-one-quarter box__header-link">
+        {{ aboutSupplyContractLink.render(componentData) }}
       </div>
     </div>
 
     <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
-      <div class="box__header">
-        <div class="govuk-grid-column-three-quarters">
-          <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-            <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
-                  Bond transactions
-                </span>
-            <span class="govuk-!-margin-left-6">
-              {{ statusTag.render(deal.bondTransactions.status) }}
+      <div class="govuk-grid-column-three-quarters">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+
+          <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                Confirm eligibility
+              </span>
+
+          {% if deal.eligibility.status %}
+            <span class="govuk-grid-column-one-quarter" data-cy="eligibility-status">
+              {{ statusTag.render(deal.eligibility.status) }}
             </span>
-          </h2>
-        </div>
+          {% endif %}
 
-        <div class="govuk-grid-column-one-quarter box__header-link">
-          {{ addABondButton.render(componentData) }}
-        </div>
+          {% if deal.submissionType %}
+            <span class="govuk-grid-column-one-quarter govuk-!-font-weight-regular govuk-!-font-size-16"  data-cy="eligibility-submission-type">
+              <span class="govuk-!-font-weight-bold">Submission type: </span>
+              <br/>
+              {{ deal.submissionType }}
+            </span>
+          {% endif %}
 
-        {% if deal.bondTransactions.items.length %}
-          {{ bondTransactionsTable.render(componentData) }}
-        {% endif %}
+        </h2>
+      </div>
 
+      {% if deal.details.manualInclusionNoticeSubmissionDate %}
+        <span class="govuk-heading-m govuk-grid-column-one-quarter govuk-!-font-weight-regular govuk-!-font-size-16 govuk-!-padding-right-0 govuk-!-padding-left-0 width-auto"  data-cy="manual-inclusion-notice-submission-date">
+          <span class="govuk-!-font-weight-bold">Submission date: </span>
+          <br/>
+          {{ deal.details.manualInclusionNoticeSubmissionDate | localiseTimestamp('DD/MM/YYYY', user.timezone) }}
+        </span>
+      {% endif %}
+
+      {% if deal.details.submissionDate %}
+        {% set submissionDateClass = "govuk-grid-column-one-quarter govuk-!-padding-right-0 box__header-link width-auto" %}
+
+      {% else %}
+        {% set submissionDateClass = "govuk-grid-column-one-quarter box__header-link" %}
+      {% endif %}
+
+      <div class="{{ submissionDateClass }}">
+        {{ eligibilityCriteriaLink.render(componentData) }}
       </div>
     </div>
 
     <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
-      <div class="box__header">
-        <div class="govuk-grid-column-three-quarters">
-          <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
-            <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
-                  Loan transactions
-                </span>
-
-            <span class="govuk-!-margin-left-6">
-              {{ statusTag.render(deal.loanTransactions.status) }}
-            </span>
-
-          </h2>
-        </div>
-
-        <div class="govuk-grid-column-one-quarter box__header-link">
-          {{ addALoanButton.render(componentData) }}
-        </div>
-
-        {% if deal.loanTransactions.items.length %}
-          {{ loanTransactionsTable.render(componentData) }}
-        {% endif %}
-
+      <div class="govuk-grid-column-three-quarters">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+          <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                Bond transactions
+              </span>
+          <span class="govuk-!-margin-left-6">
+            {{ statusTag.render(deal.bondTransactions.status) }}
+          </span>
+        </h2>
       </div>
+
+      <div class="govuk-grid-column-one-quarter box__header-link">
+        {{ addABondButton.render(componentData) }}
+      </div>
+
+      {% if deal.bondTransactions.items.length %}
+        {{ bondTransactionsTable.render(componentData) }}
+      {% endif %}
+
+    </div>
+
+    <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
+      <div class="govuk-grid-column-three-quarters">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+          <span class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                Loan transactions
+              </span>
+
+          <span class="govuk-!-margin-left-6">
+            {{ statusTag.render(deal.loanTransactions.status) }}
+          </span>
+
+        </h2>
+      </div>
+
+      <div class="govuk-grid-column-one-quarter box__header-link">
+        {{ addALoanButton.render(componentData) }}
+      </div>
+
+      {% if deal.loanTransactions.items.length %}
+        {{ loanTransactionsTable.render(componentData) }}
+      {% endif %}
+
     </div>
 
     <div class="govuk-grid-row govuk-!-padding-top-2 govuk-!-padding-bottom-2 box">
