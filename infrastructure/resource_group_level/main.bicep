@@ -55,8 +55,10 @@ param storageNetworkAccessDefaultAction string = 'Allow'
 @description('Enable 7-day soft deletes on file shares')
 param shareDeleteRetentionEnabled bool = false
 
+// All current environments use 'Provisioned Throughput'
+// TODO:DTFS-6422 Ensure we use 'Provisioned Throughput' for extant environments, but consider changing.
 @allowed(['Provisioned Throughput', 'Serverless'])
-param cosmosDbCapacityMode string = 'Serverless' // All current environments use 'Provisioned Throughput'
+param cosmosDbCapacityMode string = 'Serverless'
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
