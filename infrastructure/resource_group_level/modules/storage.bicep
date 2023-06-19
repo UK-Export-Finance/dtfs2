@@ -135,7 +135,6 @@ resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2022
   }
 }
 
-
 resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
   parent: storageAccount
   name: 'default'

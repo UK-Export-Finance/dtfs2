@@ -44,14 +44,8 @@ param peeringAddressSpace string = '10.50.0.0/16'
 param frontDoorAccess string = 'Allow'
 param apiPortalAccessPort string = '44232' // not set in staging / prod
 
-param onPremiseNetworkIps array = [
-  //'COLT Technology Services Group Limited'
-  '213.86.43.20'
-  //'COLT Technology Services Group Limited'
-  '213.86.43.22'
-  // UKEF Office
-  '51.140.76.208'
-]
+@secure()
+param onPremiseNetworkIpsString string
 
 // For public access to storage, Dev has the default as 'Allow' but we may want to update this to Deny.
 // Staging has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
@@ -60,6 +54,8 @@ param storageNetworkAccessDefaultAction string = 'Allow'
 
 @description('Enable 7-day soft deletes on file shares')
 param shareDeleteRetentionEnabled bool = false
+
+param onPremiseNetworkIps array = json(onPremiseNetworkIpsString)
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
