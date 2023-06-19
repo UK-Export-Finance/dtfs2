@@ -73,10 +73,19 @@
 
                   {% set requestedCoverDateCanEdit = userIsMaker and bond.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.facilityStage === 'Issued' and bond.issueFacilityDetailsSubmitted %}
 
-                  {% if requestedCoverDateCanEdit %}
-                    {{ requestedCoverStartDateLink.render(componentData) }}
+                  {% set canAmendFacility = true %}
 
-                    {% else %}
+                  {% if requestedCoverDateCanEdit or canAmendFacility %}
+                    {% if requestedCoverDateCanEdit %}
+                      {{ requestedCoverStartDateLink.render(componentData) }}
+                    {% endif %}
+                    {% if requestedCoverDateCanEdit and canAmendFacility %}
+                      <span>|</span>
+                    {% endif %}
+                    {% if canAmendFacility %}
+                      <a href="/" class="govuk-link">Amend</a>
+                    {% endif %}
+                  {% else %}
                     {{ issueOrDeleteFacilityLink.render(componentData) }}
                   {% endif %}
                 </td>
