@@ -173,7 +173,7 @@ module cosmosDb 'modules/cosmosdb.bicep' = {
     environment: environment
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    onPremiseNetworkIps: onPremiseNetworkIps
+    allowedIpsString: onPremiseNetworkIpsString
     capacityMode: cosmosDbCapacityMode
   }
 }

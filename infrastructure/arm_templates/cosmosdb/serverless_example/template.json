@@ -85,9 +85,6 @@
                     },
                     {
                         "ipAddressOrRange": "52.187.184.26"
-                    },
-                    {
-                        "ipAddressOrRange": "51.140.76.208"
                     }
                 ],
                 "backupPolicy": {

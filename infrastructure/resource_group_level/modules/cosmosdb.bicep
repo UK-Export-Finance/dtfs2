@@ -3,7 +3,10 @@ param environment string
 param appServicePlanEgressSubnetId string
 param privateEndpointsSubnetId string
 
-param onPremiseNetworkIps array
+
+@description('Netowrk IPs to permit access to CosmosDB')
+@secure()
+param allowedIpsString string
 
 // See https://learn.microsoft.com/en-gb/azure/cosmos-db/throughput-serverless
 @allowed(['Provisioned Throughput', 'Serverless'])
@@ -12,14 +15,7 @@ param capacityMode string
 var cosmosDbName = 'tfs-${environment}-mongo'
 var privateEndpointName = 'tfs-${environment}-mongo'
 
-
-// TODO:FN-416 Work out what these misc. IPs with access are.
-// Misc IPs
-var miscIps =  [
-  '86.130.182.52'
-  '81.154.165.161'
-  '86.139.72.145'
-] 
+var allowedIps = json(allowedIpsString)
 
 // On activating "Allow access from Azure Portal":
 // https://github.com/Azure/azure-cli/issues/7495 ->
@@ -37,7 +33,7 @@ var azurePortalIps = [
 // We need this for Azure functions.
 var acceptPublicAzureDatacentersIp = ['0.0.0.0']
 
-var allowedIps = concat(onPremiseNetworkIps, miscIps, azurePortalIps, acceptPublicAzureDatacentersIp)
+var allAllowedIps = concat(allowedIps, azurePortalIps, acceptPublicAzureDatacentersIp)
 
 var capabilities = capacityMode == 'Provisioned Throughput' ? [
   {
@@ -105,7 +101,7 @@ resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
     ]
     cors: []
     capabilities: capabilities
-    ipRules: [for ip in allowedIps: {
+    ipRules: [for ip in allAllowedIps: {
       ipAddressOrRange: ip
     }]
     backupPolicy: {

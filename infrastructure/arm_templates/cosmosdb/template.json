@@ -79,24 +79,6 @@
                 ],
                 "ipRules": [
                     {
-                        "ipAddressOrRange": "51.140.76.208"
-                    },
-                    {
-                        "ipAddressOrRange": "213.86.43.20"
-                    },
-                    {
-                        "ipAddressOrRange": "213.86.43.22"
-                    },
-                    {
-                        "ipAddressOrRange": "86.130.182.52"
-                    },
-                    {
-                        "ipAddressOrRange": "81.154.165.161"
-                    },
-                    {
-                        "ipAddressOrRange": "86.139.72.145"
-                    },
-                    {
                         "ipAddressOrRange": "104.42.195.92"
                     },
                     {
