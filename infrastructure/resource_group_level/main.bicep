@@ -53,9 +53,13 @@ param onPremiseNetworkIps array = [
   '51.140.76.208'
 ]
 
-@allowed(['Allow', 'Deny'])
-param storageNetworkAccessDefaultAction string= 'Allow'
+// For public access to storage, Dev has the default as 'Allow' but we may want to update this to Deny.
 // Staging has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
+@allowed(['Allow', 'Deny'])
+param storageNetworkAccessDefaultAction string = 'Allow'
+
+@description('Enable 7-day soft deletes on file shares')
+param shareDeleteRetentionEnabled bool = false
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
@@ -161,5 +165,6 @@ module storage 'modules/storage.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     allowedIps: onPremiseNetworkIps
     networkAccessDefaultAction: storageNetworkAccessDefaultAction
+    shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
   }
 }

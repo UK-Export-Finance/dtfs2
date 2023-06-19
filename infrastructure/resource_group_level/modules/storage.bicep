@@ -15,6 +15,8 @@ param allowedIps array
 @allowed(['Allow', 'Deny'])
 param networkAccessDefaultAction string
 
+param shareDeleteRetentionEnabled bool
+
 var storageAccountName = 'tfs${environment}storage'
 var ipRules = [for ip in allowedIps: {
   value: ip
@@ -133,9 +135,18 @@ resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2022
   }
 }
 
+
 resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
   parent: storageAccount
   name: 'default'
+  // TODO:DTFS-6422 Note that the extant envrionments don't have
+  // 7 day soft deletes enabled. We may want to enable this functionality.
+  properties: {
+    shareDeleteRetentionPolicy: {
+      enabled: shareDeleteRetentionEnabled
+      days: 7
+    }
+  }
 }
 
 resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2022-09-01' = {
