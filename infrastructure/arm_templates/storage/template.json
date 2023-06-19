@@ -67,18 +67,6 @@
                         }
                     ],
                     "ipRules": [
-                        {
-                            "value": "213.86.43.20",
-                            "action": "Allow"
-                        },
-                        {
-                            "value": "213.86.43.22",
-                            "action": "Allow"
-                        },
-                        {
-                            "value": "51.140.76.208",
-                            "action": "Allow"
-                        }
                     ],
                     "defaultAction": "Allow"
                 },
