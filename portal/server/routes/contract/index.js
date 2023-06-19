@@ -17,7 +17,7 @@ const { provide, DEAL, MANDATORY_CRITERIA } = require('../api-data-provider');
 const isDealEditable = require('./isDealEditable');
 const userCanSubmitDeal = require('./userCanSubmitDeal');
 const dealHasIssuedFacilitiesToSubmit = require('./dealHasIssuedFacilitiesToSubmit');
-const dealWithCanIssueOrEditIssueFacilityFlags = require('./dealWithCanIssueOrEditIssueFacilityFlags');
+const dealWithFacilityFlags = require('./dealWithFacilityFlags');
 const { validateToken, validateBank, validateRole } = require('../middleware');
 
 const router = express.Router();
@@ -60,7 +60,7 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
 
   return res.render('contract/contract-view.njk', {
     successMessage: getFlashSuccessMessage(req),
-    deal: dealWithCanIssueOrEditIssueFacilityFlags(user.roles, deal),
+    deal: dealWithFacilityFlags(user.roles, deal),
     user,
     dealFormsCompleted: dealFormsCompleted(deal),
     canFullyCalculateDealSummary,

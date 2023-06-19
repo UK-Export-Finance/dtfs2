@@ -1,7 +1,7 @@
-import dealWithCanIssueOrEditIssueFacilityFlags from './dealWithCanIssueOrEditIssueFacilityFlags';
+import dealWithFacilityFlags from './dealWithFacilityFlags';
 import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
 
-describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
+describe('dealWithFacilityFlags', () => {
   const mockUserRoles = ['maker'];
 
   const mockDeal = {
@@ -33,7 +33,7 @@ describe('dealWithCanIssueOrEditIssueFacilityFlags', () => {
   };
 
   it('should return bonds with canIssueOrEditIssueFacility result', () => {
-    const result = dealWithCanIssueOrEditIssueFacilityFlags(mockUserRoles, mockDeal);
+    const result = dealWithFacilityFlags(mockUserRoles, mockDeal);
 
     const expectedBonds = mockDeal.bondTransactions.items.map((bond) => {
       const b = bond;

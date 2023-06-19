@@ -1,6 +1,6 @@
 const canIssueOrEditIssueFacility = require('./canIssueOrEditIssueFacility');
 
-const dealWithCanIssueFacilityFlags = (userRoles, deal) => {
+const dealWithFacilityFlags = (userRoles, deal) => {
   const modifiedDeal = deal;
 
   const bonds = modifiedDeal.bondTransactions.items;
@@ -27,4 +27,4 @@ const dealWithCanIssueFacilityFlags = (userRoles, deal) => {
   return modifiedDeal;
 };
 
-module.exports = dealWithCanIssueFacilityFlags;
+module.exports = dealWithFacilityFlags;
