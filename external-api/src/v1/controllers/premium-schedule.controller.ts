@@ -86,7 +86,35 @@ const getScheduleData = async (facilityId: any) => {
  * @returns {Object} Premium schedule data
  */
 export const getPremiumSchedule = async (req: Request, res: Response) => {
-  const premiumScheduleParameters: PremiumSchedule = req.body;
+  const { 
+    premiumTypeId, 
+    premiumFrequencyId, 
+    productGroup,
+    facilityURN, 
+    guaranteeCommencementDate, 
+    guaranteeExpiryDate, 
+    guaranteeFeePercentage, 
+    guaranteePercentage, 
+    dayBasis, 
+    exposurePeriod, 
+    maximumLiability, 
+    cumulativeAmount 
+  } = req.body;
+
+  const premiumScheduleParameters: PremiumSchedule = {
+    premiumTypeId,
+    premiumFrequencyId,
+    productGroup,
+    facilityURN,
+    guaranteeCommencementDate,
+    guaranteeExpiryDate,
+    guaranteeFeePercentage,
+    guaranteePercentage,
+    dayBasis,
+    exposurePeriod,
+    maximumLiability,
+    cumulativeAmount,
+  };
 
   const postPremiumScheduleResponse = await postPremiumSchedule(premiumScheduleParameters);
 
