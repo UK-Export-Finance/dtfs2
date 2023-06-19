@@ -9,7 +9,8 @@ param gatewaySubnetId string
 param privateEndpointsSubnetId string
 
 @description('IPs or CIDRs still allowed to access the storage if the default action is Deny')
-param allowedIps array
+@secure()
+param allowedIpsString string
 
 @description('Is public access to the storage account allowed or denied for evertone')
 @allowed(['Allow', 'Deny'])
@@ -18,6 +19,9 @@ param networkAccessDefaultAction string
 param shareDeleteRetentionEnabled bool
 
 var storageAccountName = 'tfs${environment}storage'
+
+var allowedIps = json(allowedIpsString)
+
 var ipRules = [for ip in allowedIps: {
   value: ip
   action: 'Allow'

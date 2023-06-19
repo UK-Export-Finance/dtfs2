@@ -55,8 +55,6 @@ param storageNetworkAccessDefaultAction string = 'Allow'
 @description('Enable 7-day soft deletes on file shares')
 param shareDeleteRetentionEnabled bool = false
 
-param onPremiseNetworkIps array = json(onPremiseNetworkIpsString)
-
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
   location: location
@@ -159,7 +157,7 @@ module storage 'modules/storage.bicep' = {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     gatewaySubnetId: vnet.outputs.gatewaySubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
-    allowedIps: onPremiseNetworkIps
+    allowedIpsString: onPremiseNetworkIpsString
     networkAccessDefaultAction: storageNetworkAccessDefaultAction
     shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
   }
