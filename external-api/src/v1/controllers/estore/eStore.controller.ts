@@ -4,6 +4,7 @@ import { Estore } from '../../../interfaces';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, UKEF_ID } from '../../../constants';
 import { eStoreCronJobManager, eStoreTermStoreAndBuyerFolder, eStoreSiteCreationJob } from '../../../cronJobs';
 import { createExporterSite, siteExists } from './eStoreApi';
+import { objectIsEmpty } from '../../../utils';
 
 const siteCreationTimer = '50 * * * * *'; // ~ 50 seconds
 
@@ -20,29 +21,22 @@ const validateEstoreInput = (eStoreData: any) => {
 };
 
 export const createEstore = async (req: Request, res: Response) => {
-  const { 
-    dealId, 
-    siteName, 
-    facilityIdentifiers,
-    supportingInformation, 
-    exporterName, 
-    buyerName, 
-    dealIdentifier, 
-    destinationMarket, 
-    riskMarket,
-  } = req.body;
+  const { dealId, siteName, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = req.body;
+  let eStoreData = {} as Estore;
 
-  const eStoreData: Estore = { 
-    dealId, 
-    siteName, 
-    facilityIdentifiers,
-    supportingInformation, 
-    exporterName, 
-    buyerName, 
-    dealIdentifier, 
-    destinationMarket, 
-    riskMarket,
-  };
+  if (!objectIsEmpty(req.body)) {
+    eStoreData = {
+      dealId,
+      siteName,
+      facilityIdentifiers,
+      supportingInformation,
+      exporterName,
+      buyerName,
+      dealIdentifier,
+      destinationMarket,
+      riskMarket,
+    };
+  }
 
   // check if the body is not empty
   if (Object.keys(eStoreData).length) {
