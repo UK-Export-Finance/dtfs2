@@ -1,6 +1,6 @@
 import { app } from '../../src/createApp';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { getData } = require('../api')(app);
+const { getWithRequestBody } = require('../api')(app);
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import premiumScheduleController from '../../src/v1/controllers/premium-schedule.controller';
@@ -37,7 +37,7 @@ describe('/premium-schedule', () => {
 
   describe('when premium schedule parameters are empty', () => {
     it('should return a status of 400', async () => {
-      const { status, body } = await getData().to('/premium-schedule');
+      const { status, body } = await getWithRequestBody().to('/premium-schedule');
 
       expect(status).toEqual(400);
       expect(body.results).toBeUndefined();
@@ -46,7 +46,7 @@ describe('/premium-schedule', () => {
 
   describe('when premium schedule parameters are correct', () => {
     it('should return a status of 200', async () => {
-      const { status, body } = await getData(payload).to('/premium-schedule');
+      const { status, body } = await getWithRequestBody(payload).to('/premium-schedule');
 
       expect(status).toEqual(200);
       expect(body.data.result).toBeDefined();
@@ -62,7 +62,7 @@ describe('/premium-schedule', () => {
         injection: 1,
       };
 
-      const { status } = await getData(data).to('/premium-schedule');
+      const { status } = await getWithRequestBody(data).to('/premium-schedule');
 
       expect(status).toEqual(200);
 
