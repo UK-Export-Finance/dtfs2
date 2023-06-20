@@ -238,3 +238,5 @@ resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' 
     // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
   }
 }
+
+output storageAccountName string = storageAccount.name

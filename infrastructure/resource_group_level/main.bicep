@@ -1,4 +1,5 @@
 param location string  = resourceGroup().location
+// Expected values are 'feature', 'dev', 'test', 'staging' & 'prod'
 param environment string = 'feature'
 
 param appServicePlanName string = 'feature'
@@ -8,7 +9,8 @@ param appServicePlanKind string = 'linux'
 @minLength(5)
 @maxLength(50)
 @description('Provide a globally unique name of your Azure Container Registry')
-param acrName string = 'tfsfeatureacr${uniqueString(resourceGroup().id)}'
+// Note that the existing environments have: tfsdev, tfsstaging & tfsproduction
+param containerRegistryName string = 'tfsfeatureacr${uniqueString(resourceGroup().id)}'
 @description('Provide a tier of your Azure Container Registry.')
 // Dev uses 'Standard'
 param acrSku string = 'Basic'
@@ -72,10 +74,15 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
     name: appServicePlanSku
   }
   kind: appServicePlanKind
+  properties: {
+    // Linux ASPs need to have reserved as true:
+    // https://learn.microsoft.com/en-us/azure/templates/microsoft.web/serverfarms?pivots=deployment-language-bicep#appserviceplanproperties
+    reserved: appServicePlanKind == 'linux'
+  }
 }
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
-  name: acrName
+  name: containerRegistryName
   location: location
   sku: {
     name: acrSku
@@ -191,5 +198,18 @@ module redis 'modules/redis.bicep' = {
   params: {
     location: location
     environment: environment
+  }
+}
+
+module functionAcbs 'modules/function-acbs.bicep' = {
+  name: 'functionAcbs'
+  params: {
+    environment: environment
+    location: location
+    containerRegistryName: containerRegistryName
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    storageAccountName: storage.outputs.storageAccountName
   }
 }
