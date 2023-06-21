@@ -90,6 +90,20 @@ const queryAllFacilities = async (
   start = 0,
   pagesize = 0,
 ) => {
+  let startPage = start;
+  // has additional filters after bank.id match
+  const hasAdditionalFilters = filters?.AND[1]?.OR;
+
+  /**
+   * if has additional filters selected (apart from bank id match)
+   * and not sort query is not selected
+   * sets start to 0 so all facilities show
+   */
+  if (hasAdditionalFilters && !Object.keys(sort).length) {
+    // eslint-disable-next-line no-param-reassign
+    startPage = 0;
+  }
+
   const collection = await db.getCollection('facilities');
 
   const results = await collection
@@ -132,7 +146,7 @@ const queryAllFacilities = async (
         $facet: {
           count: [{ $count: 'total' }],
           facilities: [
-            { $skip: start },
+            { $skip: startPage },
             ...(pagesize ? [{ $limit: pagesize }] : []),
           ],
         },
