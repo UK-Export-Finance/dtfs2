@@ -1,5 +1,6 @@
 import dealWithFacilityFlags from './dealWithFacilityFlags';
 import canIssueOrEditIssueFacility from './canIssueOrEditIssueFacility';
+import canAmendFacility from './canAmendFacility';
 
 describe('dealWithFacilityFlags', () => {
   const mockUserRoles = ['maker'];
@@ -32,18 +33,20 @@ describe('dealWithFacilityFlags', () => {
     },
   };
 
-  it('should return bonds with canIssueOrEditIssueFacility result', () => {
+  it('should return bonds with facility flag results', () => {
     const result = dealWithFacilityFlags(mockUserRoles, mockDeal);
 
     const expectedBonds = mockDeal.bondTransactions.items.map((bond) => {
       const b = bond;
       b.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(mockUserRoles, mockDeal, bond);
+      b.canAmendFacility = canAmendFacility(mockUserRoles);
       return b;
     });
 
     const expectedLoans = mockDeal.loanTransactions.items.map((loan) => {
       const l = loan;
       l.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(mockUserRoles, mockDeal, loan);
+      l.canAmendFacility = canAmendFacility(mockUserRoles);
       return l;
     });
 

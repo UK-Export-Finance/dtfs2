@@ -11,6 +11,7 @@ const TRANSACTION_TYPE = require('./transaction-type');
 const PORTAL_URL = require('./portalUrl.constant');
 const SORT_BY = require('./sort');
 const CURRENCY = require('./currency');
+const USER_ROLES = require('./user-roles');
 
 module.exports = {
   DASHBOARD,
@@ -26,4 +27,5 @@ module.exports = {
   PORTAL_URL,
   SORT_BY,
   CURRENCY,
+  USER_ROLES,
 };

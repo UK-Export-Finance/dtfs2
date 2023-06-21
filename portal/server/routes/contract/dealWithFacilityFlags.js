@@ -1,3 +1,4 @@
+const canAmendFacility = require('./canAmendFacility');
 const canIssueOrEditIssueFacility = require('./canIssueOrEditIssueFacility');
 
 const dealWithFacilityFlags = (userRoles, deal) => {
@@ -8,18 +9,17 @@ const dealWithFacilityFlags = (userRoles, deal) => {
 
   bonds.map((b) => {
     const bond = b;
-    if (canIssueOrEditIssueFacility(userRoles, deal, b)) {
-      bond.canIssueOrEditIssueFacility = true;
-    }
+
+    bond.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(userRoles, deal, b);
+    bond.canAmendFacility = canAmendFacility(userRoles);
 
     return bond;
   });
 
   loans.map((l) => {
     const loan = l;
-    if (canIssueOrEditIssueFacility(userRoles, deal, l)) {
-      loan.canIssueOrEditIssueFacility = true;
-    }
+    loan.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(userRoles, deal, l);
+    loan.canAmendFacility = canAmendFacility(userRoles);
 
     return loan;
   });

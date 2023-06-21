@@ -50,6 +50,7 @@ const page = {
         issueFacilityLink: () => cy.get('@row').get(`[data-cy="bond-issue-facility-${bondId}"]`),
         deleteLink: () => cy.get('@row').get(`[data-cy="bond-delete-${bondId}"]`),
         changeOrConfirmCoverStartDateLink: () => cy.get('@row').get(`[data-cy="bond-change-or-confirm-cover-start-date-${bondId}"]`),
+        createFacilityAmendmentLink: () => cy.get('@row').get(`[data-cy="create-facility-amendment-link-${bondId}"]`),
       };
     },
   },
@@ -69,6 +70,7 @@ const page = {
         issueFacilityLink: () => cy.get('@row').get(`[data-cy="loan-issue-facility-${loanId}"]`),
         deleteLink: () => cy.get('@row').get(`[data-cy="loan-delete-${loanId}"]`),
         changeOrConfirmCoverStartDateLink: () => cy.get('@row').get(`[data-cy="loan-change-or-confirm-cover-start-date-${loanId}"]`),
+        createFacilityAmendmentLink: () => cy.get('@row').get(`[data-cy="create-facility-amendment-link-${loanId}"]`),
       };
     },
   },
