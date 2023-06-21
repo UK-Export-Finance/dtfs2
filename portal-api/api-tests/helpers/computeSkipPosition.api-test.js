@@ -1,11 +1,11 @@
-const hasAdditionalFiltersStart = require('../../src/v1/helpers/hasAdditionalFiltersStart');
+const computeSkipPosition = require('../../src/v1/helpers/computeSkipPosition');
 
 describe('hasAdditionalFiltersStart', () => {
   it('should return provided start page when additional filters is empty', () => {
     const filters = {};
 
     const sort = {};
-    const result = hasAdditionalFiltersStart(20, filters, sort);
+    const result = computeSkipPosition(20, filters, sort);
 
     expect(result).toEqual(20);
   });
@@ -20,7 +20,7 @@ describe('hasAdditionalFiltersStart', () => {
     };
 
     const sort = {};
-    const result = hasAdditionalFiltersStart(20, filters, sort);
+    const result = computeSkipPosition(20, filters, sort);
 
     expect(result).toEqual(20);
   });
@@ -38,7 +38,7 @@ describe('hasAdditionalFiltersStart', () => {
     };
 
     const sort = {};
-    const result = hasAdditionalFiltersStart(20, filters, sort);
+    const result = computeSkipPosition(20, filters, sort);
 
     expect(result).toEqual(0);
   });
@@ -57,7 +57,7 @@ describe('hasAdditionalFiltersStart', () => {
 
     const sort = { exporterName: 1 };
 
-    const result = hasAdditionalFiltersStart(20, filters, sort);
+    const result = computeSkipPosition(20, filters, sort);
 
     expect(result).toEqual(20);
   });

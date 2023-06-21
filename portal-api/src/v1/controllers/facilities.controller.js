@@ -1,7 +1,7 @@
 const db = require('../../drivers/db-client');
 const api = require('../api');
 const { escapeOperators } = require('../helpers/escapeOperators');
-const hasAdditionalFiltersStart = require('../helpers/hasAdditionalFiltersStart');
+const computeSkipPosition = require('../helpers/computeSkipPosition');
 const { updateDeal } = require('./deal.controller');
 
 /**
@@ -91,7 +91,7 @@ const queryAllFacilities = async (
   start = 0,
   pagesize = 0,
 ) => {
-  const startPage = hasAdditionalFiltersStart(start, filters, sort);
+  const startPage = computeSkipPosition(start, filters, sort);
 
   const collection = await db.getCollection('facilities');
 

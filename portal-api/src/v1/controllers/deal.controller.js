@@ -7,7 +7,7 @@ const calculateDealSummary = require('../deal-summary');
 const { findLatest: findLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const { escapeOperators } = require('../helpers/escapeOperators');
 const api = require('../api');
-const hasAdditionalFiltersStart = require('../helpers/hasAdditionalFiltersStart');
+const computeSkipPosition = require('../helpers/computeSkipPosition');
 
 /**
  * Find a deal (BSS, EWCS only)
@@ -178,7 +178,7 @@ const queryAllDeals = async (
   start = 0,
   pagesize = 0,
 ) => {
-  const startPage = hasAdditionalFiltersStart(start, filters, sort);
+  const startPage = computeSkipPosition(start, filters, sort);
 
   const collection = await db.getCollection('deals');
 

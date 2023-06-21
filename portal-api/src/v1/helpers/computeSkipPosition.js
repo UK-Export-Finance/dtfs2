@@ -9,7 +9,7 @@
  * @param {Object} sort
  * @returns {Number} startpage
  */
-const hasAdditionalFiltersStart = (currentStartPage, filters, sort) => {
+const computeSkipPosition = (currentStartPage, filters, sort) => {
   let startPage = currentStartPage;
 
   // has additional filters after bank.id match
@@ -18,7 +18,7 @@ const hasAdditionalFiltersStart = (currentStartPage, filters, sort) => {
   /**
      * if has additional filters selected (apart from bank id match)
      * and not sort query is not selected
-     * sets start to 0 so all facilities show
+     * sets start to 0 so all deals / facilities are visible
      */
   if (hasAdditionalFilters && !Object.keys(sort).length) {
     startPage = 0;
@@ -27,4 +27,4 @@ const hasAdditionalFiltersStart = (currentStartPage, filters, sort) => {
   return startPage;
 };
 
-module.exports = hasAdditionalFiltersStart;
+module.exports = computeSkipPosition;
