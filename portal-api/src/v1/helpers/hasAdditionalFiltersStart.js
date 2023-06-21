@@ -10,7 +10,6 @@ const hasAdditionalFiltersStart = (currentStartPage, filters, sort) => {
      * sets start to 0 so all facilities show
      */
   if (hasAdditionalFilters && !Object.keys(sort).length) {
-    // eslint-disable-next-line no-param-reassign
     startPage = 0;
   }
 
