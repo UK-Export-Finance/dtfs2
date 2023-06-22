@@ -1,6 +1,7 @@
 const MOCK_USERS = require('../../../fixtures/users');
 const { contract } = require('../../pages');
 const { MOCK_BOND, MOCK_LOAN } = require('../../../fixtures/mockFacilities');
+const { DEALS } = require('../../../fixtures/constants');
 
 const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -15,19 +16,27 @@ context('Amend a facility', () => {
     let amendableBond;
     let amendableLoan;
 
+    let notAcknowledgedDeal;
+    let notAcknowledgedBond;
+    let notAcknowledgedLoan;
+
     const facilitiesToCleanUp = [];
 
-    const createDealWithFacilities = (setDealCallback, setBondCallback, setLoanCallback) => {
+    const createDealWithFacilities = (setDealCallback, setBondCallback, setLoanCallback, status) => {
       cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
         .then((insertedDeal) => {
-          setDealCallback(insertedDeal);
+          const dealUpdates = { ...insertedDeal, status };
 
-          cy.createFacilities(insertedDeal._id, [MOCK_BOND, MOCK_LOAN], BANK1_MAKER1)
-            .then((createdFacilities) => {
-              setBondCallback(createdFacilities.filter((f) => f.type === 'Bond')[0]);
-              setLoanCallback(createdFacilities.filter((f) => f.type === 'Loan')[0]);
+          cy.updateDeal(insertedDeal._id, dealUpdates, BANK1_MAKER1)
+            .then((updatedDeal) => {
+              setDealCallback(updatedDeal);
+              cy.createFacilities(updatedDeal._id, [MOCK_BOND, MOCK_LOAN], BANK1_MAKER1)
+                .then((createdFacilities) => {
+                  setBondCallback(createdFacilities.filter((f) => f.type === 'Bond')[0]);
+                  setLoanCallback(createdFacilities.filter((f) => f.type === 'Loan')[0]);
 
-              facilitiesToCleanUp.push(...createdFacilities);
+                  facilitiesToCleanUp.push(...createdFacilities);
+                });
             });
         });
     };
@@ -38,6 +47,14 @@ context('Amend a facility', () => {
         (deal) => { dealWithAmendableFacilities = deal; },
         (bond) => { amendableBond = bond; },
         (loan) => { amendableLoan = loan; },
+        DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+      );
+
+      createDealWithFacilities(
+        (deal) => { notAcknowledgedDeal = deal; },
+        (bond) => { notAcknowledgedBond = bond; },
+        (loan) => { notAcknowledgedLoan = loan; },
+        DEALS.DEAL_STATUS.UKEF_IN_PROGRESS,
       );
     });
 
@@ -51,7 +68,7 @@ context('Amend a facility', () => {
       });
     });
 
-    it('shows amend facility link for makers', () => {
+    it('shows amend facility link for makers and acknowledged deals', () => {
       cy.login(BANK1_MAKER1);
       contract.visit(dealWithAmendableFacilities);
 
@@ -65,6 +82,14 @@ context('Amend a facility', () => {
 
       contract.bondTransactionsTable.row(amendableBond._id).createFacilityAmendmentLink().should('not.exist');
       contract.loansTransactionsTable.row(amendableLoan._id).createFacilityAmendmentLink().should('not.exist');
+    });
+
+    it('does not show amend facility link if the deal is not acknowledged', () => {
+      cy.login(BANK1_MAKER1);
+      contract.visit(notAcknowledgedDeal);
+
+      contract.bondTransactionsTable.row(notAcknowledgedBond._id).createFacilityAmendmentLink().should('not.exist');
+      contract.loansTransactionsTable.row(notAcknowledgedLoan._id).createFacilityAmendmentLink().should('not.exist');
     });
   });
 });

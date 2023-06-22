@@ -1,5 +1,7 @@
-const CONSTANTS = require('../../constants');
+const { STATUS, USER_ROLES } = require('../../constants');
 
-const canAmendFacility = (userRoles) => userRoles.includes(CONSTANTS.USER_ROLES.MAKER);
+const canAmendFacility = (userRoles, deal) =>
+  userRoles.includes(USER_ROLES.MAKER)
+    && deal.status === STATUS.UKEF_ACKNOWLEDGED;
 
 module.exports = canAmendFacility;
