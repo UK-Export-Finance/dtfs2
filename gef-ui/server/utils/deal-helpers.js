@@ -70,17 +70,6 @@ const makerCanReSubmit = (maker, application) => {
   return Boolean(ukefDecisionAccepted) && coverDateConfirmed && facilitiesChangedToIssued && acceptableStatus.includes(application.status) && makerAuthorised;
 };
 
-/**
- * Returns true if the user is allowed to amend the facilities on this application
- * @param {Object} userSession
- * @param {Object} application
- * @returns {Boolean}
- */
-const canAmendFacilities = (userSession, application) =>
-  application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED
-    && userSession.roles.includes(CONSTANTS.USER_ROLES.MAKER)
-    && userSession?.bank?.id === application.bank.id;
-
 const getApplicationType = (isAutomaticCover) => {
   if (isAutomaticCover === true) {
     return 'Automatic inclusion notice';
@@ -106,7 +95,6 @@ module.exports = {
   isUkefReviewAvailable,
   isUkefReviewPositive,
   makerCanReSubmit,
-  canAmendFacilities,
   getApplicationType,
   isDealNotice,
 };

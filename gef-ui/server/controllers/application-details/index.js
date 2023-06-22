@@ -17,12 +17,12 @@ const {
   getFacilityCoverStartDate,
   coverDatesConfirmed,
   hasChangedToIssued,
+  canAmendFacility,
 } = require('../../utils/facility-helpers');
 const {
   isUkefReviewAvailable,
   isUkefReviewPositive,
   makerCanReSubmit,
-  canAmendFacilities,
 } = require('../../utils/deal-helpers');
 const {
   exporterItems, facilityItems,
@@ -112,10 +112,10 @@ function buildBody(app, previewMode, user) {
         facilityName: item.details.name,
         // ukefFacilityId required for html facility summary table id
         ukefFacilityId: item.details.ukefFacilityId,
+        canAmendFacility: canAmendFacility(item, userSession, app),
       }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
-    canAmendFacilities: canAmendFacilities(userSession, app),
     supportingInfo: {
       ...app.supportingInformation,
       status: app.supportingInfoStatus,

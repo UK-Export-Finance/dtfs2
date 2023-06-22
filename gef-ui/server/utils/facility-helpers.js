@@ -222,6 +222,19 @@ const facilityTypeStringGenerator = (facilityType) => {
   return null;
 };
 
+/**
+ * Returns true if the user is allowed to amend the facility on this application
+ * @param {Object} facility
+ * @param {Object} userSession
+ * @param {Object} application
+ * @returns {Boolean}
+ */
+const canAmendFacility = (facility, userSession, application) =>
+  facility.details.hasBeenIssued
+    && application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED
+    && userSession.roles.includes(CONSTANTS.USER_ROLES.MAKER)
+    && userSession?.bank?.id === application.bank.id;
+
 module.exports = {
   areUnissuedFacilitiesPresent,
   getUnissuedFacilitiesAsArray,
@@ -237,4 +250,5 @@ module.exports = {
   issuedFacilityConfirmation,
   facilityTypeStringGenerator,
   formatIssueDeadlineDate,
+  canAmendFacility,
 };

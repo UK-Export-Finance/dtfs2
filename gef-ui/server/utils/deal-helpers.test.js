@@ -6,7 +6,6 @@ import {
   isUkefReviewPositive,
   makerCanReSubmit,
   isDealNotice,
-  canAmendFacilities,
 } from './deal-helpers';
 
 import {
@@ -101,70 +100,6 @@ describe('makerCanReSubmit', () => {
   });
   it('Should return FALSE as the deal does not have changed facilities, is AIN and has status UKEF_AKNOWLEDGED', () => {
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_AIN_APPLICATION_UNISSUED_ONLY)).toEqual(false);
-  });
-});
-
-describe('canAmendFacilities', () => {
-  const MOCK_BANK = { id: '123' };
-
-  it('Should return TRUE for a maker and acknowledged deal at the same bank', () => {
-    const mockDeal = MOCK_BASIC_DEAL;
-    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
-    mockDeal.bank = MOCK_BANK;
-
-    const mockUserSession = MOCK_REQUEST;
-    mockUserSession.roles = [CONSTANTS.USER_ROLES.MAKER];
-    mockUserSession.bank = MOCK_BANK;
-
-    expect(canAmendFacilities(mockUserSession, mockDeal)).toEqual(true);
-  });
-
-  it('Should return FALSE if deal is not acknowleged', () => {
-    const mockDeal = MOCK_BASIC_DEAL;
-    mockDeal.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
-    mockDeal.bank = MOCK_BANK;
-
-    const mockUserSession = MOCK_REQUEST;
-    mockUserSession.roles = [CONSTANTS.USER_ROLES.MAKER];
-    mockUserSession.bank = MOCK_BANK;
-
-    expect(canAmendFacilities(mockUserSession, mockDeal)).toEqual(false);
-  });
-
-  it('Should return FALSE if user is not a maker', () => {
-    const mockDeal = MOCK_BASIC_DEAL;
-    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
-    mockDeal.bank = MOCK_BANK;
-
-    const mockUserSession = MOCK_REQUEST;
-    mockUserSession.roles = [CONSTANTS.USER_ROLES.CHECKER];
-    mockUserSession.bank = MOCK_BANK;
-
-    expect(canAmendFacilities(mockUserSession, mockDeal)).toEqual(false);
-  });
-
-  it('Should return FALSE if user is a maker for a different bank to the deal', () => {
-    const mockDeal = MOCK_BASIC_DEAL;
-    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
-    mockDeal.bank = MOCK_BANK;
-
-    const mockUserSession = MOCK_REQUEST;
-    mockUserSession.roles = [CONSTANTS.USER_ROLES.MAKER];
-    mockUserSession.bank = { id: 'DifferentBank' };
-
-    expect(canAmendFacilities(mockUserSession, mockDeal)).toEqual(false);
-  });
-
-  it('Should return FALSE if user does not have a bank', () => {
-    const mockDeal = MOCK_BASIC_DEAL;
-    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
-    mockDeal.bank = MOCK_BANK;
-
-    const mockUserSession = MOCK_REQUEST;
-    mockUserSession.roles = [CONSTANTS.USER_ROLES.MAKER];
-    mockUserSession.bank = undefined;
-
-    expect(canAmendFacilities(mockUserSession, mockDeal)).toEqual(false);
   });
 });
 

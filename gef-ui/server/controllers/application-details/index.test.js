@@ -109,7 +109,6 @@ describe('controllers/application-details', () => {
               class: expect.any(String),
             },
           },
-          canAmendFacilities: expect.any(Boolean),
           supportingInfo: {
             requiredFields: expect.any(Array),
             status: {

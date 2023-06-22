@@ -28,7 +28,7 @@
         {{item.heading}} facility
       </h3>
     </header>
-    {% if canAmendFacilities %}
+    {% if item.canAmendFacility %}
       {{ govukButton({
         text: "Make an amendment",
         href: "/gef/amend-facility/what-do-you-need-to-change",

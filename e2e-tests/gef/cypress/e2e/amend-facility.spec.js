@@ -10,19 +10,21 @@ let token;
 
 let acknowledgedDealId;
 let submittedDealId;
+let unissuedFacilityDealId;
 
-const addFacility = (dealId) => {
+const addFacility = (dealId, hasBeenIssued) => {
   cy.apiCreateFacility(dealId, FACILITY_TYPE.CASH, token).then((facility) => {
     const mockFacility = MOCK_FACILITY_ONE;
     mockFacility._id = facility.body.details._id;
+    mockFacility.hasBeenIssued = hasBeenIssued;
     cy.apiUpdateFacility(facility.body.details._id, token, mockFacility);
   });
 };
 
-const createApplication = (dealStatus, user, setDealIdCallback) => {
+const createApplication = (dealStatus, user, hasBeenIssued, setDealIdCallback) => {
   cy.apiCreateApplication(user, token).then(({ body }) => {
     cy.apiUpdateApplication(body._id, token, MOCK_APPLICATION_AIN).then(() => {
-      addFacility(body._id);
+      addFacility(body._id, hasBeenIssued);
       cy.apiSetApplicationStatus(body._id, token, dealStatus);
       setDealIdCallback(body._id);
     });
@@ -34,8 +36,9 @@ context('Amend a facility', () => {
     cy.apiLogin(CREDENTIALS.MAKER).then((t) => {
       token = t;
     }).then(() => {
-      createApplication(DEAL_STATUS.UKEF_ACKNOWLEDGED, MOCK_USER_MAKER, (dealId) => { acknowledgedDealId = dealId; });
-      createApplication(DEAL_STATUS.SUBMITTED_TO_UKEF, MOCK_USER_MAKER, (dealId) => { submittedDealId = dealId; });
+      createApplication(DEAL_STATUS.UKEF_ACKNOWLEDGED, MOCK_USER_MAKER, true, (dealId) => { acknowledgedDealId = dealId; });
+      createApplication(DEAL_STATUS.SUBMITTED_TO_UKEF, MOCK_USER_MAKER, true, (dealId) => { submittedDealId = dealId; });
+      createApplication(DEAL_STATUS.UKEF_ACKNOWLEDGED, MOCK_USER_MAKER, false, (dealId) => { unissuedFacilityDealId = dealId; });
     });
   });
 
@@ -64,6 +67,13 @@ context('Amend a facility', () => {
     it('should not show amend facility button if not logged in as a maker', () => {
       cy.login(CREDENTIALS.CHECKER);
       cy.visit(relative(`/gef/application-details/${acknowledgedDealId}`));
+
+      applicationPreview.createFacilityAmendmentButton().should('not.exist');
+    });
+
+    it('should not show amend facility button if facility has not been issued', () => {
+      cy.login(CREDENTIALS.MAKER);
+      cy.visit(relative(`/gef/application-details/${unissuedFacilityDealId}`));
 
       applicationPreview.createFacilityAmendmentButton().should('not.exist');
     });
