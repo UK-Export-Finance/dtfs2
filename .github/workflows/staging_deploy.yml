@@ -437,7 +437,7 @@ jobs:
   #################### 7. EXTERNAL API ####################
   deploy-rdp-api:
     needs: deployment-environment
-    name: EXTERNAL API
+    name: External API
     runs-on: [self-hosted, linux, deployment]
     environment:
       name: ${{ needs.deployment-environment.outputs.environment }}

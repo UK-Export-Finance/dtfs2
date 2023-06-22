@@ -8,6 +8,7 @@ import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { objectIsEmpty } from '../../utils';
+import { PremiumSchedule } from '../../interfaces';
 dotenv.config();
 
 const mdm: any = process.env.APIM_MDM_URL;
@@ -78,8 +79,14 @@ const getScheduleData = async (facilityId: any) => {
   return new Error(`Error getting Premium schedule segments. Facility:${facilityId}`);
 };
 
+/**
+ * Get premium schedule segments from facility URN
+ * @param {Express.Request} req Facility ID
+ * @param {Express.Response} res Facility ID
+ * @returns {Object} Premium schedule data
+ */
 export const getPremiumSchedule = async (req: Request, res: Response) => {
-  const premiumScheduleParameters = req.body;
+  const premiumScheduleParameters: PremiumSchedule = req.body;
 
   const postPremiumScheduleResponse = await postPremiumSchedule(premiumScheduleParameters);
 
