@@ -1,7 +1,7 @@
 const MOCK_USERS = require('../../../fixtures/users');
 const { contract } = require('../../pages');
 const { MOCK_BOND, MOCK_LOAN } = require('../../../fixtures/mockFacilities');
-const { DEALS } = require('../../../fixtures/constants');
+const { DEALS, FACILITY } = require('../../../fixtures/constants');
 
 const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -20,9 +20,18 @@ context('Amend a facility', () => {
     let notAcknowledgedBond;
     let notAcknowledgedLoan;
 
+    let dealWithUnissuedFacilities;
+    let unissuedBond;
+    let unissuedLoan;
+
     const facilitiesToCleanUp = [];
 
-    const createDealWithFacilities = (setDealCallback, setBondCallback, setLoanCallback, status) => {
+    const createMockFacility = (baseMockFacility, isIssued) => ({
+      ...baseMockFacility,
+      facilityStage: isIssued ? FACILITY.FACILITY_STAGE.ISSUED : FACILITY.FACILITY_STAGE.UNISSUED,
+    });
+
+    const createDealWithFacilities = (setDealCallback, setBondCallback, setLoanCallback, status, areFacilitiesIssued) => {
       cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1)
         .then((insertedDeal) => {
           const dealUpdates = { ...insertedDeal, status };
@@ -30,7 +39,11 @@ context('Amend a facility', () => {
           cy.updateDeal(insertedDeal._id, dealUpdates, BANK1_MAKER1)
             .then((updatedDeal) => {
               setDealCallback(updatedDeal);
-              cy.createFacilities(updatedDeal._id, [MOCK_BOND, MOCK_LOAN], BANK1_MAKER1)
+
+              const mockBond = createMockFacility(MOCK_BOND, areFacilitiesIssued);
+              const mockLoan = createMockFacility(MOCK_LOAN, areFacilitiesIssued);
+
+              cy.createFacilities(updatedDeal._id, [mockBond, mockLoan], BANK1_MAKER1)
                 .then((createdFacilities) => {
                   setBondCallback(createdFacilities.filter((f) => f.type === 'Bond')[0]);
                   setLoanCallback(createdFacilities.filter((f) => f.type === 'Loan')[0]);
@@ -48,6 +61,7 @@ context('Amend a facility', () => {
         (bond) => { amendableBond = bond; },
         (loan) => { amendableLoan = loan; },
         DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+        true,
       );
 
       createDealWithFacilities(
@@ -55,6 +69,15 @@ context('Amend a facility', () => {
         (bond) => { notAcknowledgedBond = bond; },
         (loan) => { notAcknowledgedLoan = loan; },
         DEALS.DEAL_STATUS.UKEF_IN_PROGRESS,
+        true,
+      );
+
+      createDealWithFacilities(
+        (deal) => { dealWithUnissuedFacilities = deal; },
+        (bond) => { unissuedBond = bond; },
+        (loan) => { unissuedLoan = loan; },
+        DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
+        false,
       );
     });
 
@@ -90,6 +113,14 @@ context('Amend a facility', () => {
 
       contract.bondTransactionsTable.row(notAcknowledgedBond._id).createFacilityAmendmentLink().should('not.exist');
       contract.loansTransactionsTable.row(notAcknowledgedLoan._id).createFacilityAmendmentLink().should('not.exist');
+    });
+
+    it('does not show amend facility link if facilities are unissued', () => {
+      cy.login(BANK1_MAKER1);
+      contract.visit(dealWithUnissuedFacilities);
+
+      contract.bondTransactionsTable.row(unissuedBond._id).createFacilityAmendmentLink().should('not.exist');
+      contract.loansTransactionsTable.row(unissuedLoan._id).createFacilityAmendmentLink().should('not.exist');
     });
   });
 });

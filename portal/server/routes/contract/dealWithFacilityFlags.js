@@ -11,7 +11,7 @@ const dealWithFacilityFlags = (userRoles, deal) => {
     const bond = b;
 
     bond.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(userRoles, deal, b);
-    bond.canAmendFacility = canAmendFacility(userRoles, deal);
+    bond.canAmendFacility = canAmendFacility(userRoles, deal, b);
 
     return bond;
   });
@@ -19,7 +19,7 @@ const dealWithFacilityFlags = (userRoles, deal) => {
   loans.map((l) => {
     const loan = l;
     loan.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(userRoles, deal, l);
-    loan.canAmendFacility = canAmendFacility(userRoles, deal);
+    loan.canAmendFacility = canAmendFacility(userRoles, deal, l);
 
     return loan;
   });
