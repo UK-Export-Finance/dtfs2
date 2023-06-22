@@ -81,7 +81,7 @@
                       <span>|</span>
                     {% endif %}
                     {% if bond.canAmendFacility %}
-                      <a href="/" class="govuk-link" data-cy="create-facility-amendment-link-{{ bond._id }}">Amend</a>
+                      <a href="/amend-facility/what-do-you-need-to-change" class="govuk-link" data-cy="create-facility-amendment-link-{{ bond._id }}">Amend</a>
                     {% endif %}
                   {% else %}
                     {{ issueOrDeleteFacilityLink.render(componentData) }}

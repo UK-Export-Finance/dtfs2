@@ -2,6 +2,7 @@ const MOCK_USERS = require('../../../fixtures/users');
 const { contract } = require('../../pages');
 const { MOCK_BOND, MOCK_LOAN } = require('../../../fixtures/mockFacilities');
 const { DEALS, FACILITY } = require('../../../fixtures/constants');
+const relative = require('../../relativeURL');
 
 const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -91,12 +92,24 @@ context('Amend a facility', () => {
       });
     });
 
-    it('shows amend facility link for makers and acknowledged deals', () => {
+    it('clicking amend bond link should start the make an amendment journey', () => {
       cy.login(BANK1_MAKER1);
       contract.visit(dealWithAmendableFacilities);
-
       contract.bondTransactionsTable.row(amendableBond._id).createFacilityAmendmentLink().should('exist');
+
+      contract.bondTransactionsTable.row(amendableBond._id).createFacilityAmendmentLink().click();
+
+      cy.url().should('eq', relative('/amend-facility/what-do-you-need-to-change'));
+    });
+
+    it('clicking amend loan link should start the make an amendment journey', () => {
+      cy.login(BANK1_MAKER1);
+      contract.visit(dealWithAmendableFacilities);
       contract.loansTransactionsTable.row(amendableLoan._id).createFacilityAmendmentLink().should('exist');
+
+      contract.loansTransactionsTable.row(amendableLoan._id).createFacilityAmendmentLink().click();
+
+      cy.url().should('eq', relative('/amend-facility/what-do-you-need-to-change'));
     });
 
     it('does not show amend facility link if user is not a maker', () => {
