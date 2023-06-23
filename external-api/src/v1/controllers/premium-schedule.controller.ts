@@ -9,6 +9,7 @@ import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { objectIsEmpty } from '../../utils';
 import { PremiumSchedule } from '../../interfaces';
+import { UKEF_ID } from '../../constants';
 dotenv.config();
 
 const mdm: any = process.env.APIM_MDM_URL;
@@ -27,7 +28,7 @@ const premiumScheduleCalls = {
   postPremiumSchedule: async (premiumSchedulePayload: any) => {
     const premiumSchedulePayloadFormatted = premiumSchedulePayload;
 
-    if (objectIsEmpty(premiumSchedulePayload) || premiumSchedulePayload.facilityURN === 'PENDING') {
+    if (objectIsEmpty(premiumSchedulePayload) || premiumSchedulePayload.facilityURN === UKEF_ID.PENDING) {
       console.error('Unable to create premium schedule.', { premiumSchedulePayload });
       return null;
     }
@@ -44,7 +45,8 @@ const premiumScheduleCalls = {
         data: [premiumSchedulePayloadFormatted],
       }).catch((error: any) => {
         console.error(
-          `Error calling POST Premium schedule with facilityURN: ${premiumSchedulePayloadFormatted.facilityURN} \n`,
+          `Error calling POST Premium schedule with facilityURN: %s:`,
+          premiumSchedulePayloadFormatted?.facilityURN,
           error?.response?.data,
           error?.response?.status,
         );
