@@ -23,11 +23,20 @@
 
 {% if facilities.data.length > 0 %}
   {% for item in facilities.data %}
-    <header class="is-flex is-justify-content-space-between">
+    <header>
       <h3 class="govuk-heading-m" data-cy="facility-type-heading">
         {{item.heading}} facility
       </h3>
     </header>
+    {% if item.canAmendFacility %}
+      {{ govukButton({
+        text: "Make an amendment",
+        href: "/gef/amend-facility/what-do-you-need-to-change",
+        attributes: {
+          'data-cy': 'create-facility-amendment-button'
+        }
+      }) }}
+    {% endif %}
     {{ govukSummaryList({
       rows: item.rows,
       attributes: {
