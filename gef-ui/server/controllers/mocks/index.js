@@ -17,7 +17,7 @@ const MockRequest = () => ({
     user: {
       username: 'maker',
       bank: { id: 'BANKID' },
-      roles: ['MAKER'],
+      roles: [CONSTANTS.USER_ROLES.MAKER],
       _id: 1235,
     },
     userToken: 'TEST',
@@ -30,7 +30,7 @@ const MockRequestChecker = () => ({
   session: {
     user: {
       bank: { id: 'BANKID' },
-      roles: ['CHECKER'],
+      roles: [CONSTANTS.USER_ROLES.CHECKER],
       _id: 1235,
     },
     userToken: 'TEST',
@@ -44,7 +44,7 @@ const MockRequestUrl = (url) => ({
   session: {
     user: {
       bank: { id: 'BANKID' },
-      roles: ['MAKER'],
+      roles: [CONSTANTS.USER_ROLES.MAKER],
       _id: 1235,
     },
     userToken: 'TEST',
@@ -58,7 +58,7 @@ const MockRequestUrlChecker = (url) => ({
   session: {
     user: {
       bank: { id: 'BANKID' },
-      roles: ['CHECKER'],
+      roles: [CONSTANTS.USER_ROLES.CHECKER],
       _id: 1235,
     },
     userToken: 'TEST',

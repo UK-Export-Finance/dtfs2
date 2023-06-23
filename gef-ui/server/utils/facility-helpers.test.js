@@ -12,6 +12,7 @@ import {
   summaryIssuedUnchanged,
   issuedFacilityConfirmation,
   facilityTypeStringGenerator,
+  canAmendFacility,
 } from './facility-helpers';
 
 import {
@@ -24,6 +25,7 @@ import {
   MOCK_AIN_APPLICATION_GENERATOR,
   MOCK_MIA_APPLICATION_UNISSUED_ONLY,
   MOCK_APPLICATION_GENERATOR_SUBCOUNT,
+  MOCK_BASIC_DEAL,
 } from './mocks/mock_applications';
 
 import {
@@ -483,5 +485,81 @@ describe('facilityTypeStringGenerator', () => {
   });
   it('Should return `contingent` for Contingent facility', () => {
     expect(facilityTypeStringGenerator(CONSTANTS.FACILITY_TYPE.CONTINGENT)).toEqual('contingent');
+  });
+});
+
+describe('canAmendFacility', () => {
+  const MOCK_BANK = { id: '123' };
+
+  it('Should return TRUE for a maker and acknowledged deal at the same bank', () => {
+    const mockDeal = MOCK_BASIC_DEAL;
+    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
+    mockDeal.bank = MOCK_BANK;
+
+    const mockUserSession = MOCK_REQUEST;
+    mockUserSession.roles = [CONSTANTS.USER_ROLES.MAKER];
+    mockUserSession.bank = MOCK_BANK;
+
+    expect(canAmendFacility(MOCK_ISSUED_FACILITY, mockUserSession, mockDeal)).toEqual(true);
+  });
+
+  it('Should return FALSE if deal is not acknowleged', () => {
+    const mockDeal = MOCK_BASIC_DEAL;
+    mockDeal.status = CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF;
+    mockDeal.bank = MOCK_BANK;
+
+    const mockUserSession = MOCK_REQUEST;
+    mockUserSession.roles = [CONSTANTS.USER_ROLES.MAKER];
+    mockUserSession.bank = MOCK_BANK;
+
+    expect(canAmendFacility(MOCK_ISSUED_FACILITY, mockUserSession, mockDeal)).toEqual(false);
+  });
+
+  it('Should return FALSE if user is not a maker', () => {
+    const mockDeal = MOCK_BASIC_DEAL;
+    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
+    mockDeal.bank = MOCK_BANK;
+
+    const mockUserSession = MOCK_REQUEST;
+    mockUserSession.roles = [CONSTANTS.USER_ROLES.CHECKER];
+    mockUserSession.bank = MOCK_BANK;
+
+    expect(canAmendFacility(MOCK_ISSUED_FACILITY, mockUserSession, mockDeal)).toEqual(false);
+  });
+
+  it('Should return FALSE if user is a maker for a different bank to the deal', () => {
+    const mockDeal = MOCK_BASIC_DEAL;
+    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
+    mockDeal.bank = MOCK_BANK;
+
+    const mockUserSession = MOCK_REQUEST;
+    mockUserSession.roles = [CONSTANTS.USER_ROLES.MAKER];
+    mockUserSession.bank = { id: 'DifferentBank' };
+
+    expect(canAmendFacility(MOCK_ISSUED_FACILITY, mockUserSession, mockDeal)).toEqual(false);
+  });
+
+  it('Should return FALSE if user does not have a bank', () => {
+    const mockDeal = MOCK_BASIC_DEAL;
+    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
+    mockDeal.bank = MOCK_BANK;
+
+    const mockUserSession = MOCK_REQUEST;
+    mockUserSession.roles = [CONSTANTS.USER_ROLES.MAKER];
+    mockUserSession.bank = undefined;
+
+    expect(canAmendFacility(MOCK_ISSUED_FACILITY, mockUserSession, mockDeal)).toEqual(false);
+  });
+
+  it('Should return FALSE if the facility is not issued', () => {
+    const mockDeal = MOCK_BASIC_DEAL;
+    mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
+    mockDeal.bank = MOCK_BANK;
+
+    const mockUserSession = MOCK_REQUEST;
+    mockUserSession.roles = [CONSTANTS.USER_ROLES.MAKER];
+    mockUserSession.bank = MOCK_BANK;
+
+    expect(canAmendFacility(MOCK_UNISSUED_FACILITY, mockUserSession, mockDeal)).toEqual(false);
   });
 });

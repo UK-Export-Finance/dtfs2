@@ -74,6 +74,15 @@ const DATE_FORMAT = {
   COVER: 'MMMM d, yyyy',
 };
 
+// TODO DTFS2-6529: Refactor gef-ui user roles to use constants rather than strings
+// We should replace any times these strings are hard coded in gef-ui with these constants
+const USER_ROLES = {
+  ADMIN: 'admin',
+  MAKER: 'maker',
+  CHECKER: 'checker',
+  UKEF_OPERATIONS: 'ukef_operations',
+};
+
 module.exports = {
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
@@ -86,4 +95,5 @@ module.exports = {
   AUTHORISATION_LEVEL,
   DEFAULT_COUNTRY,
   DATE_FORMAT,
+  USER_ROLES,
 };
