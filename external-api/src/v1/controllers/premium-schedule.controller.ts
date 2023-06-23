@@ -9,6 +9,7 @@ import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { objectIsEmpty } from '../../utils';
 import { PremiumSchedule } from '../../interfaces';
+import { UKEF_ID } from '../../constants';
 dotenv.config();
 
 const mdm: any = process.env.APIM_MDM_URL;
@@ -18,65 +19,67 @@ const headers: any = {
 };
 const successStatus: Array<number> = [200, 201];
 
-/**
- * Post premium schedule segments
- * @param {Array} premiumSchedulePayload PS entries
- * @returns Premium schedule segments
- */
-const postPremiumSchedule = async (premiumSchedulePayload: any) => {
-  const premiumSchedulePayloadFormatted = premiumSchedulePayload;
+const premiumScheduleCalls = {
+  /**
+   * Post premium schedule segments
+   * @param {Array} premiumSchedulePayload PS entries
+   * @returns Premium schedule segments
+   */
+  postPremiumSchedule: async (premiumSchedulePayload: any) => {
+    const premiumSchedulePayloadFormatted = premiumSchedulePayload;
 
-  if (objectIsEmpty(premiumSchedulePayload) || premiumSchedulePayload.facilityURN === 'PENDING') {
-    console.error('Unable to create premium schedule.', { premiumSchedulePayload });
-    return null;
-  }
+    if (objectIsEmpty(premiumSchedulePayload) || premiumSchedulePayload.facilityURN === UKEF_ID.PENDING) {
+      console.error('Unable to create premium schedule.', { premiumSchedulePayload });
+      return null;
+    }
 
-  // Convert UKEF Facility ID to number else Mulesoft will throw 400
-  if (premiumSchedulePayload.facilityURN) {
-    premiumSchedulePayloadFormatted.facilityURN = Number(premiumSchedulePayload.facilityURN);
-  }
-  try {
+    // Convert UKEF Facility ID to number else Mulesoft will throw 400
+    if (premiumSchedulePayload.facilityURN) {
+      premiumSchedulePayloadFormatted.facilityURN = Number(premiumSchedulePayload.facilityURN);
+    }
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${mdm}premium/schedule`,
+        headers,
+        data: [premiumSchedulePayloadFormatted],
+      }).catch((error: any) => {
+        console.error(
+          `Error calling POST Premium schedule with facilityURN: %s:`,
+          premiumSchedulePayloadFormatted?.facilityURN,
+          error?.response?.data,
+          error?.response?.status,
+        );
+        return { data: error?.response?.data, status: error?.response?.status };
+      });
+
+      console.info(`Premium schedule successfully created for ${premiumSchedulePayloadFormatted.facilityURN}`);
+      return response.status ? response.status : response;
+    } catch (error) {
+      console.error('Error calling POST Premium schedule', { error });
+      return null;
+    }
+  },
+  /**
+   * Get premium schedule segments from facility URN
+   * @param {String} facilityId Facility ID
+   * @returns {Array} Array of premium schedule segments
+   */
+  getScheduleData: async (facilityId: any) => {
+    const url = `${mdm}premium/segments/${facilityId}`;
+
     const response = await axios({
-      method: 'post',
-      url: `${mdm}premium/schedule`,
+      method: 'GET',
+      url,
       headers,
-      data: [premiumSchedulePayloadFormatted],
-    }).catch((error: any) => {
-      console.error(
-        `Error calling POST Premium schedule with facilityURN: ${premiumSchedulePayloadFormatted.facilityURN} \n`,
-        error?.response?.data,
-        error?.response?.status,
-      );
-      return { data: error?.response?.data, status: error?.response?.status };
-    });
+    }).catch((error: any) => error);
 
-    console.info(`Premium schedule successfully created for ${premiumSchedulePayloadFormatted.facilityURN}`);
-    return response.status ? response.status : response;
-  } catch (error) {
-    console.error('Error calling POST Premium schedule', { error });
-    return null;
-  }
-};
+    if (response) {
+      return response;
+    }
 
-/**
- * Get premium schedule segments from facility URN
- * @param {String} facilityId Facility ID
- * @returns {Array} Array of premium schedule segments
- */
-const getScheduleData = async (facilityId: any) => {
-  const url = `${mdm}premium/segments/${facilityId}`;
-
-  const response = await axios({
-    method: 'GET',
-    url,
-    headers,
-  }).catch((error: any) => error);
-
-  if (response) {
-    return response;
-  }
-
-  return new Error(`Error getting Premium schedule segments. Facility:${facilityId}`);
+    return new Error(`Error getting Premium schedule segments. Facility:${facilityId}`);
+  },
 };
 
 /**
@@ -86,9 +89,41 @@ const getScheduleData = async (facilityId: any) => {
  * @returns {Object} Premium schedule data
  */
 export const getPremiumSchedule = async (req: Request, res: Response) => {
-  const premiumScheduleParameters: PremiumSchedule = req.body;
+  let premiumScheduleParameters = {} as PremiumSchedule;
 
-  const postPremiumScheduleResponse = await postPremiumSchedule(premiumScheduleParameters);
+  if (!objectIsEmpty(req.body)) {
+    const {
+      premiumTypeId,
+      premiumFrequencyId,
+      productGroup,
+      facilityURN,
+      guaranteeCommencementDate,
+      guaranteeExpiryDate,
+      guaranteeFeePercentage,
+      guaranteePercentage,
+      dayBasis,
+      exposurePeriod,
+      maximumLiability,
+      cumulativeAmount,
+    } = req.body;
+
+    premiumScheduleParameters = {
+      premiumTypeId,
+      premiumFrequencyId,
+      productGroup,
+      facilityURN,
+      guaranteeCommencementDate,
+      guaranteeExpiryDate,
+      guaranteeFeePercentage,
+      guaranteePercentage,
+      dayBasis,
+      exposurePeriod,
+      maximumLiability,
+      cumulativeAmount,
+    };
+  }
+
+  const postPremiumScheduleResponse = await premiumScheduleCalls.postPremiumSchedule(premiumScheduleParameters);
 
   if (!postPremiumScheduleResponse) {
     console.error('Error calling Premium schedule API', postPremiumScheduleResponse);
@@ -96,7 +131,7 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
   }
 
   if (successStatus.includes(postPremiumScheduleResponse)) {
-    const response = await getScheduleData(Number(premiumScheduleParameters.facilityURN));
+    const response = await premiumScheduleCalls.getScheduleData(Number(premiumScheduleParameters.facilityURN));
 
     if (successStatus.includes(response.status)) {
       return res.status(response.status).send(response.data);
@@ -105,3 +140,5 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
 
   return new Error(`Error calling Premium schedule. Facility:${premiumScheduleParameters.facilityURN}`);
 };
+
+export default premiumScheduleCalls;
