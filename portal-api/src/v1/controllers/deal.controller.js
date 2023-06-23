@@ -7,6 +7,7 @@ const calculateDealSummary = require('../deal-summary');
 const { findLatest: findLatestEligibilityCriteria } = require('./eligibilityCriteria.controller');
 const { escapeOperators } = require('../helpers/escapeOperators');
 const api = require('../api');
+const computeSkipPosition = require('../helpers/computeSkipPosition');
 
 /**
  * Find a deal (BSS, EWCS only)
@@ -177,6 +178,8 @@ const queryAllDeals = async (
   start = 0,
   pagesize = 0,
 ) => {
+  const startPage = computeSkipPosition(start, filters, sort);
+
   const collection = await db.getCollection('deals');
 
   const results = await collection.aggregate([
@@ -204,7 +207,7 @@ const queryAllDeals = async (
       $facet: {
         count: [{ $count: 'total' }],
         deals: [
-          { $skip: start },
+          { $skip: startPage },
           ...(pagesize ? [{ $limit: pagesize }] : []),
         ],
       },
