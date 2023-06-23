@@ -10,7 +10,10 @@ const dealWithFacilityFlags = (userRoles, deal) => {
   bonds.map((b) => {
     const bond = b;
 
-    bond.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(userRoles, deal, b);
+    if (canIssueOrEditIssueFacility(userRoles, deal, b)) {
+      bond.canIssueOrEditIssueFacility = true;
+    }
+
     bond.canAmendFacility = canAmendFacility(userRoles, deal, b);
 
     return bond;
@@ -18,7 +21,11 @@ const dealWithFacilityFlags = (userRoles, deal) => {
 
   loans.map((l) => {
     const loan = l;
-    loan.canIssueOrEditIssueFacility = canIssueOrEditIssueFacility(userRoles, deal, l);
+
+    if (canIssueOrEditIssueFacility(userRoles, deal, l)) {
+      loan.canIssueOrEditIssueFacility = true;
+    }
+
     loan.canAmendFacility = canAmendFacility(userRoles, deal, l);
 
     return loan;
