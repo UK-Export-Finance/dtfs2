@@ -73,18 +73,19 @@
 
                   {% set requestedCoverDateCanEdit = userIsMaker and bond.status !== "Maker's input required" and dealStatusAllowsRequestedCoverDateChange and dealSubmissionType === 'Manual Inclusion Application' and bond.facilityStage === 'Issued' and bond.issueFacilityDetailsSubmitted %}
 
-                  {% if requestedCoverDateCanEdit or bond.canAmendFacility %}
-                    {% if requestedCoverDateCanEdit %}
+                  {% if requestedCoverDateCanEdit %}
+                    <div>
                       {{ requestedCoverStartDateLink.render(componentData) }}
-                    {% endif %}
-                    {% if requestedCoverDateCanEdit and bond.canAmendFacility %}
-                      <span>|</span>
-                    {% endif %}
-                    {% if bond.canAmendFacility %}
-                      <a href="/amend-facility/what-do-you-need-to-change" class="govuk-link" data-cy="create-facility-amendment-link-{{ bond._id }}">Amend</a>
-                    {% endif %}
+                    </div>
                   {% else %}
-                    {{ issueOrDeleteFacilityLink.render(componentData) }}
+                    <div>
+                      {{ issueOrDeleteFacilityLink.render(componentData) }}
+                    </div>
+                  {% endif %}
+                  {% if bond.canAmendFacility %}
+                    <div>
+                      <a href="/amend-facility/what-do-you-need-to-change" class="govuk-link" data-cy="create-facility-amendment-link-{{ bond._id }}">Amend</a>
+                    </div>
                   {% endif %}
                 </td>
               </tr>
