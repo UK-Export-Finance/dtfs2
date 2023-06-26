@@ -105,11 +105,11 @@ jobs:
       run: docker-compose exec -T dtfs-central-api npm run api-test
 
     - name: Run ACBS API tests
-      working-directory: ./azuere-functions/acbs-function
+      working-directory: ./azure-functions/acbs-function
       run: npm run api-test
 
     - name: Run NumGen API tests
-      working-directory: ./azuere-functions/number-generator-function
+      working-directory: ./azure-functions/number-generator-function
       run: npm run api-test
 
     - name: Stop containers
