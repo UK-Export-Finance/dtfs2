@@ -208,4 +208,22 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
   }
 }
 
+resource appServicePlanEgressSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+  parent: vnet
+  name: appServicePlanEgressSubnetName
+}
+
+resource gatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+  parent: vnet
+  name: gatewaySubnetName
+}
+
+resource privateEndpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+  parent: vnet
+  name: privateEndpointsSubnetName
+}
+
+output appServicePlanEgressSubnetId string = appServicePlanEgressSubnet.id
+output gatewaySubnetId string = gatewaySubnet.id
+output privateEndpointsSubnetId string = privateEndpointsSubnet.id
 output vnetId string = vnet.id
