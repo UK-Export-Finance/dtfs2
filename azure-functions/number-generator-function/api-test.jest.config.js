@@ -1,5 +1,5 @@
 module.exports = {
-  collectCoverageFrom: ['src/**/*.{js,}'],
+  collectCoverageFrom: ['numbergenerator*/*.{js,}', 'activity*/*.{js,}', 'helpers/**/*.{js,}', 'controllers/**/*.{js,}'],
   coverageDirectory: 'generated_reports/coverage/test',
-  testMatch: ['**/*.test.js'],
+  testMatch: ['**/*.api-test.js'],
 };

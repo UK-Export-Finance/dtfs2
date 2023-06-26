@@ -25,17 +25,15 @@ env:
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-  MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
-  MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
-  MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}
-  MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}
+  APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
+  APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
   MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
   MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
   MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
   APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
   APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
   APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
-  MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
+  APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
@@ -105,6 +103,14 @@ jobs:
 
     - name: Run Central API tests
       run: docker-compose exec -T dtfs-central-api npm run api-test
+
+    - name: Run ACBS API tests
+      working-directory: ./azuere-functions/acbs-function
+      run: npm run api-test
+
+    - name: Run NumGen API tests
+      working-directory: ./azuere-functions/number-generator-function
+      run: npm run api-test
 
     - name: Stop containers
       if: always()

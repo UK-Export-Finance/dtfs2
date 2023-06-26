@@ -6,10 +6,6 @@ export const schemas = {
 
     // 1. ACBS
     AZURE_ACBS_FUNCTION_URL: Joi.string().required(),
-    MULESOFT_API_SECRET: Joi.string().required(),
-    MULESOFT_API_KEY: Joi.string().required(),
-    MULESOFT_API_ACBS_FACILITY_URL: Joi.string().required(),
-    MULESOFT_API_ACBS_DEAL_URL: Joi.string().required(),
 
     // 2. PORT
     PORT: Joi.number().default(5002),
@@ -24,6 +20,9 @@ export const schemas = {
     APIM_MDM_URL: Joi.string().required(),
     APIM_MDM_KEY: Joi.string().required(),
     APIM_MDM_VALUE: Joi.string().required(),
+    APIM_TFS_URL: Joi.string().required(),
+    APIM_TFS_VALUE: Joi.string().required(),
+    APIM_TFS_KEY: Joi.string().required(),
 
     // 2. GOV NOTIFY
     GOV_NOTIFY_API_KEY: Joi.string().required(),

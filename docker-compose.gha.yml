@@ -165,13 +165,11 @@ services:
       - COMPANIES_HOUSE_API_KEY
       - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk
       - ORDNANCE_SURVEY_API_KEY
-      - MULESOFT_API_KEY
-      - MULESOFT_API_SECRET
+      - APIM_TFS_KEY
+      - APIM_TFS_VALUE
       - MULESOFT_API_PARTY_DB_KEY
       - MULESOFT_API_PARTY_DB_SECRET
       - MULESOFT_API_PARTY_DB_URL
-      - MULESOFT_API_ACBS_DEAL_URL
-      - MULESOFT_API_ACBS_FACILITY_URL
       - APIM_MDM_URL
       - APIM_MDM_KEY
       - APIM_MDM_VALUE
@@ -222,9 +220,9 @@ services:
   #     - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
   #     - FUNCTIONS_WORKER_RUNTIME=node
   #     - WEBSITE_HOSTNAME=localhost:7071
-  #     - MULESOFT_API_KEY
-  #     - MULESOFT_API_SECRET
-  #     - MULESOFT_API_UKEF_TF_EA_URL
+  #     - APIM_TFS_KEY
+  #     - APIM_TFS_VALUE
+  #     - APIM_TFS_URL
   #     - APIM_MDM_URL
   #     - APIM_MDM_KEY
   #     - APIM_MDM_VALUE
@@ -240,9 +238,9 @@ services:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - FUNCTIONS_WORKER_RUNTIME=node
       - WEBSITE_HOSTNAME=localhost:7072
-      - MULESOFT_API_UKEF_TF_EA_URL
-      - MULESOFT_API_KEY
-      - MULESOFT_API_SECRET
+      - APIM_TFS_URL
+      - APIM_TFS_KEY
+      - APIM_TFS_VALUE
       - APIM_MDM_URL
       - APIM_MDM_KEY
       - APIM_MDM_VALUE

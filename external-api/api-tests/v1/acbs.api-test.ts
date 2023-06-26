@@ -19,19 +19,19 @@ jest.mock('axios', () =>
   jest.fn((args: any) => {
     const { method, url, data } = args;
     if (method === 'get') {
-      if (url === `${process.env.MULESOFT_API_ACBS_DEAL_URL}/1234`) {
+      if (url === `${process.env.APIM_TFS_URL}/deals/1234`) {
         return Promise.resolve(mockResponses['200']);
       }
 
-      if (url === `${process.env.MULESOFT_API_ACBS_FACILITY_URL}/1234`) {
+      if (url === `${process.env.APIM_TFS_URL}/facilities/1234`) {
         return Promise.resolve(mockResponses['200']);
       }
 
-      if (url === `${process.env.MULESOFT_API_ACBS_DEAL_URL}/5678`) {
+      if (url === `${process.env.APIM_TFS_URL}/deals/5678`) {
         return Promise.reject(mockResponses['404']);
       }
 
-      if (url === `${process.env.MULESOFT_API_ACBS_FACILITY_URL}/5678`) {
+      if (url === `${process.env.APIM_TFS_URL}/facilities/5678`) {
         return Promise.reject(mockResponses['404']);
       }
     }
