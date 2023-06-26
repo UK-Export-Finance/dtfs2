@@ -170,6 +170,7 @@ module storage 'modules/storage.bicep' = {
     allowedIpsString: onPremiseNetworkIpsString
     networkAccessDefaultAction: storageNetworkAccessDefaultAction
     shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
+    filesDnsZoneId: filesDns.outputs.filesDnsZoneId
   }
 }
 
