@@ -185,3 +185,11 @@ module cosmosDb 'modules/cosmosdb.bicep' = {
     backupPolicyTier: cosmosDbBackupPolicyTier
   }
 }
+
+module redis 'modules/redis.bicep' = {
+  name: 'redis'
+  params: {
+    location: location
+    environment: environment
+  }
+}
