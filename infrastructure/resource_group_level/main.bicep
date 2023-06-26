@@ -44,6 +44,17 @@ param peeringAddressSpace string = '10.50.0.0/16'
 param frontDoorAccess string = 'Allow'
 param apiPortalAccessPort string = '44232' // not set in staging / prod
 
+@secure()
+param onPremiseNetworkIpsString string
+
+// For public access to storage, Dev has the default as 'Allow' but we may want to update this to Deny.
+// Staging has the default as Deny, corresponding to "Enabled from selected virtual networks and IP addresses".
+@allowed(['Allow', 'Deny'])
+param storageNetworkAccessDefaultAction string = 'Allow'
+
+@description('Enable 7-day soft deletes on file shares')
+param shareDeleteRetentionEnabled bool = false
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
   location: location
@@ -135,5 +146,19 @@ module redisCacheDns 'modules/privatelink-redis-cache-windows-net.bicep' = {
   name: 'redisCacheDns'
   params: {
     vnetId: vnet.outputs.vnetId
+  }
+}
+
+module storage 'modules/storage.bicep' = {
+  name: 'storage'
+  params: {
+    location: location
+    environment: environment
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    gatewaySubnetId: vnet.outputs.gatewaySubnetId
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    allowedIpsString: onPremiseNetworkIpsString
+    networkAccessDefaultAction: storageNetworkAccessDefaultAction
+    shareDeleteRetentionEnabled: shareDeleteRetentionEnabled
   }
 }

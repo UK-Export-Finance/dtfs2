@@ -1,0 +1,240 @@
+param environment string
+param location string
+
+// TODO:FN-417 why is there a production subnet? Remove if appropriate
+// param virtualNetworks_vnet_ukef_uks_prod_externalid string = '/subscriptions/08887298-3821-49f0-8303-f88859c12b9b/resourceGroups/rg-ukef-uks-network/providers/Microsoft.Network/virtualNetworks/vnet-ukef-uks-prod'
+
+param appServicePlanEgressSubnetId string
+param gatewaySubnetId string
+param privateEndpointsSubnetId string
+
+@description('IPs or CIDRs still allowed to access the storage if the default action is Deny')
+@secure()
+param allowedIpsString string
+
+@description('Is public access to the storage account allowed or denied for evertone')
+@allowed(['Allow', 'Deny'])
+param networkAccessDefaultAction string
+
+param shareDeleteRetentionEnabled bool
+
+var storageAccountName = 'tfs${environment}storage'
+
+var allowedIps = json(allowedIpsString)
+
+var ipRules = [for ip in allowedIps: {
+  value: ip
+  action: 'Allow'
+}]
+
+var queueNames = [
+  'acbs-control-00'
+  'acbs-control-01'
+  'acbs-control-02'
+  'acbs-control-03'
+  'acbs-workitems'
+  'durablefunctionshub-control-00'
+  'durablefunctionshub-control-01'
+  'durablefunctionshub-control-02'
+  'durablefunctionshub-control-03'
+  'durablefunctionshub-workitems'
+  'numbergenerator-control-00'
+  'numbergenerator-control-01'
+  'numbergenerator-control-02'
+  'numbergenerator-control-03'
+  'numbergenerator-workitems'
+]
+
+var tableNames = [
+  'acbsHistory'
+  'acbsInstances'
+  // TODO:FN-417 Is this needed? It seems rather transitory.
+  'AzureFunctionsDiagnosticEvents202304'
+  'DurableFunctionsHubHistory'
+  'DurableFunctionsHubInstances'
+  'numbergeneratorHistory'
+  'numbergeneratorInstances'
+]
+
+var blobContainerNames = [
+  'acbs-largemessages'
+  'acbs-leases'
+  'azure-webjobs-hosts'
+  'azure-webjobs-secrets'
+  'numbergenerator-leases'
+]
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
+  name: storageAccountName
+  location: location
+  tags: {
+    Environment: 'Preproduction'
+  }
+  sku: {
+    name: 'Standard_ZRS'
+  }
+  kind: 'StorageV2'
+  properties: {
+    defaultToOAuthAuthentication: false
+    publicNetworkAccess: 'Enabled'
+    minimumTlsVersion: 'TLS1_2'
+    allowBlobPublicAccess: false
+    allowSharedKeyAccess: true
+    networkAcls: {
+      resourceAccessRules: []
+      bypass: 'AzureServices'
+      virtualNetworkRules: [
+      // TODO:FN-417 why is there a production subnet here? Only include if proved necessary
+        // {
+        //   id: '${virtualNetworks_vnet_ukef_uks_prod_externalid}/subnets/snet-wvd'
+        //   action: 'Allow'
+        // }
+        {
+          id: appServicePlanEgressSubnetId
+          action: 'Allow'
+        }
+        {
+          id: gatewaySubnetId
+          action: 'Allow'
+        }
+        {
+          id: privateEndpointsSubnetId
+          action: 'Allow'
+        }
+      ]
+      ipRules: ipRules
+      defaultAction: networkAccessDefaultAction
+    }
+    supportsHttpsTrafficOnly: true
+    encryption: {
+      services: {
+        file: {
+          keyType: 'Account'
+          enabled: true
+        }
+        blob: {
+          keyType: 'Account'
+          enabled: true
+        }
+      }
+      keySource: 'Microsoft.Storage'
+    }
+    accessTier: 'Hot'
+  }
+}
+
+resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
+  parent: storageAccount
+  name: 'default'
+  properties: {
+    containerDeleteRetentionPolicy: {
+      enabled: true
+      days: 3
+    }
+    deleteRetentionPolicy: {
+      allowPermanentDelete: false
+      enabled: true
+      days: 3
+    }
+  }
+}
+
+resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
+  parent: storageAccount
+  name: 'default'
+  // TODO:DTFS-6422 Note that the extant envrionments don't have
+  // 7 day soft deletes enabled. We may want to enable this functionality.
+  properties: {
+    shareDeleteRetentionPolicy: {
+      enabled: shareDeleteRetentionEnabled
+      days: 7
+    }
+  }
+}
+
+resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2022-09-01' = {
+  parent: storageAccount
+  name: 'default'
+}
+
+resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2022-09-01' = {
+  parent: storageAccount
+  name: 'default'
+}
+
+resource blobContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = [for blobContainerName in blobContainerNames: {
+  parent: defaultBlobService
+  name: blobContainerName
+  properties: {
+    immutableStorageWithVersioning: {
+      enabled: false
+    }
+    defaultEncryptionScope: '$account-encryption-key'
+    denyEncryptionScopeOverride: false
+    publicAccess: 'None'
+  }
+}]
+
+resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
+  parent: defaultFileService
+  name: 'files'
+  properties: {
+    accessTier: 'TransactionOptimized'
+    shareQuota: 5120
+    enabledProtocols: 'SMB'
+  }
+}
+
+resource portalFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
+  parent: defaultFileService
+  name: 'portal'
+  properties: {
+    accessTier: 'TransactionOptimized'
+    shareQuota: 5120
+    enabledProtocols: 'SMB'
+  }
+}
+
+resource queues 'Microsoft.Storage/storageAccounts/queueServices/queues@2022-09-01' = [for queueName in queueNames: {
+  parent: queueService
+  name: queueName
+}]
+
+
+resource tables 'Microsoft.Storage/storageAccounts/tableServices/tables@2022-09-01' = [for tableName in tableNames: {
+  parent: tableService
+  name: tableName
+}]
+
+// This resource definition is taken from the storage-private-endpoint export 
+resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
+  name: storageAccountName
+  location: location
+  tags: {
+    Environment: 'Preproduction'
+  }
+  properties: {
+    privateLinkServiceConnections: [
+      {
+        name: storageAccountName
+        properties: {
+          privateLinkServiceId: storageAccount.id
+          groupIds: [
+            'file'
+          ]
+          privateLinkServiceConnectionState: {
+            status: 'Approved'
+            description: 'Auto-Approved'
+            actionsRequired: 'None'
+          }
+        }
+      }
+    ]
+    manualPrivateLinkServiceConnections: []
+    subnet: {
+      id: privateEndpointsSubnetId
+    }
+    ipConfigurations: []
+    // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
+  }
+}
