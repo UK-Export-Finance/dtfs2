@@ -12,6 +12,9 @@ param allowedIpsString string
 @allowed(['Provisioned Throughput', 'Serverless'])
 param capacityMode string
 
+@allowed(['Continuous7Days', 'Continuous30Days'])
+param backupPolicyTier string
+
 var cosmosDbName = 'tfs-${environment}-mongo'
 var privateEndpointName = 'tfs-${environment}-mongo'
 
@@ -107,7 +110,7 @@ resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
     backupPolicy: {
       type: 'Continuous'
       continuousModeProperties: {
-        tier: 'Continuous30Days'
+        tier: backupPolicyTier
       }
     }
     networkAclBypassResourceIds: []

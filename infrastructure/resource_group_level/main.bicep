@@ -60,6 +60,11 @@ param shareDeleteRetentionEnabled bool = false
 @allowed(['Provisioned Throughput', 'Serverless'])
 param cosmosDbCapacityMode string = 'Serverless'
 
+// TODO:DTFS-6422 Note that all extant environments currently use Continuous30Days.
+// Consider changing non-prod environments to Continuous7Days.
+@allowed(['Continuous7Days', 'Continuous30Days'])
+param cosmosDbBackupPolicyTier string = 'Continuous7Days'
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
   location: location
@@ -177,5 +182,6 @@ module cosmosDb 'modules/cosmosdb.bicep' = {
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     allowedIpsString: onPremiseNetworkIpsString
     capacityMode: cosmosDbCapacityMode
+    backupPolicyTier: cosmosDbBackupPolicyTier
   }
 }
