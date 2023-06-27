@@ -67,6 +67,7 @@ var additionalSettings = {
 }
 
 var nodeEnv = environment == 'dev' ? {NODE_ENV: 'development'} : {}
+
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
 var functionAcbsName = 'tfs-${environment}-function-acbs'
@@ -96,6 +97,23 @@ resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
       http20Enabled: true
       functionAppScaleLimit: 0
       minimumElasticInstanceCount: 1
+      // The following Fields have been added after comparing with dev
+      // TODO:FN-419 Check these values are ok.
+      vnetRouteAllEnabled: true
+      // Note that the following appear in the separate config object
+      ftpsState: 'Disabled'
+      scmMinTlsVersion: '1.0'
+      remoteDebuggingVersion: 'VS2019'
+      httpLoggingEnabled: true // false in staging
+      // TODO:FN-419 Note that the following appear in dev but not staging or prod
+      cors: {
+        allowedOrigins: [
+          'https://functions.azure.com'
+          'https://functions-staging.azure.com'
+          'https://functions-next.azure.com'
+        ]
+        supportCredentials: false
+      }
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }
@@ -141,5 +159,8 @@ resource privateEndpoints_tfs_dev_function_acbs_name_resource 'Microsoft.Network
 }
 
 // TODO:FN-419 Do we need to set up the basicPublishingCredentialsPolicies config?
+// It doesn't seem that we do - they appear to be created automatically
 
 // TODO:FN-419 Add automatic A Record generation like storage does.
+
+// TODO:FN-419 Add Application Insights
