@@ -6,18 +6,19 @@ import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
 
 dotenv.config();
 
+const url = `${process.env.AZURE_ACBS_FUNCTION_URL}`;
 const headers = {
   [String(process.env.APIM_TFS_KEY)]: process.env.APIM_TFS_VALUE,
   'Content-Type': 'application/json',
 };
 
 export const checkDealId = async (dealId: any) => {
-  const url = `${process.env.APIM_TFS_URL}/deals/${dealId}`;
+  const acbs = `${url}/deals/${dealId}`;
   console.info(`Checking deal id ${dealId} with ACBS`);
 
   const response: any = await axios({
     method: 'get',
-    url,
+    url: acbs,
     headers,
   });
 
@@ -33,12 +34,12 @@ export const checkDealId = async (dealId: any) => {
 };
 
 export const checkFacilityId = async (facilityId: any) => {
-  const url = `${process.env.APIM_TFS_URL}/facilities/${facilityId}`;
+  const acbs = `${url}/facilities/${facilityId}`;
   console.info(`Checking facility id ${facilityId} with ACBS`);
 
   const response = await axios({
     method: 'get',
-    url,
+    url: acbs,
     headers,
   }).catch((catchErr: any) => catchErr);
 
@@ -88,11 +89,11 @@ export const findOne = async (req: Request, res: Response) => {
  */
 const createAcbsRecord = async (deal: any, bank: any) => {
   if (deal) {
-    const url = `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs`;
+    const acbs = `${url}/api/orchestrators/acbs`;
 
     const response = await axios({
       method: 'post',
-      url,
+      url: acbs,
       data: {
         deal,
         bank,
@@ -143,11 +144,11 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
  */
 const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
   if (id) {
-    const url = `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`;
+    const acbs = `${url}/api/orchestrators/acbs-issue-facility`;
 
     const response = await axios({
       method: 'post',
-      url,
+      url: acbs,
       data: {
         facilityId: id,
         facility,
@@ -200,11 +201,11 @@ const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
 
   if (hasAmendment) {
-    const url = `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-amend-facility`;
+    const acbs = `${url}/api/orchestrators/acbs-amend-facility`;
 
     const response = await axios({
       method: 'post',
-      url,
+      url: acbs,
       data: {
         amendment,
       },
