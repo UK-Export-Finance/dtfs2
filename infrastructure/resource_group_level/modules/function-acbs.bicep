@@ -50,7 +50,7 @@ var settings = {
 
 // These values are taken from an export of Configuration on Dev
 var additionalSettings = {
-  APPINSIGHTS_INSTRUMENTATIONKEY: 'TODO:FN-419 replace with appInsights.properties.InstrumentationKey'
+  APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
   // TODO:FN-419 - Exported string had "EndpointSuffix=core.windows.net" in it. Check if needed
   AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccountKey}'
   // TODO:FN-419 I think DOCKER_CUSTOM_IMAGE_NAME is overridden by linuxFxVersion
@@ -72,6 +72,7 @@ var appSettings = union(settings, secureSettings, additionalSettings, additional
 
 var functionAcbsName = 'tfs-${environment}-function-acbs'
 var privateEndpointName = 'tfs-${environment}-function-acbs'
+var applicationInsightsName = 'tfs-${environment}-function-acbs'
 
 
 // Minimal setup from MS example
@@ -126,7 +127,7 @@ resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
 }
 
 
-// The private endpoint is taken from the function=acbs/private-endpoint export
+// The private endpoint is taken from the function-acbs/private-endpoint export
 resource privateEndpoints_tfs_dev_function_acbs_name_resource 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   name: privateEndpointName
   location: location
@@ -158,9 +159,14 @@ resource privateEndpoints_tfs_dev_function_acbs_name_resource 'Microsoft.Network
   }
 }
 
-// TODO:FN-419 Do we need to set up the basicPublishingCredentialsPolicies config?
-// It doesn't seem that we do - they appear to be created automatically
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: applicationInsightsName
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+  }
+}
 
-// TODO:FN-419 Add automatic A Record generation like storage does.
 
-// TODO:FN-419 Add Application Insights
+// TODO:FN-419 Add automatic A Record generation.
