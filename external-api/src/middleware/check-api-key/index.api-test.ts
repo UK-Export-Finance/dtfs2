@@ -12,12 +12,12 @@ describe('middleware/check-api-key', () => {
   const next = mockNext;
 
   describe('when x-api-key header is not provided', () => {
-    it('should call res.status with 400', () => {
+    it('should call res.status with 401', () => {
       req.headers = {};
 
       checkApiKey(req, res, next);
 
-      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.status).toHaveBeenCalledWith(401);
     });
   });
 
