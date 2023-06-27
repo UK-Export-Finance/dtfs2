@@ -26,6 +26,7 @@ const mandatoryFields = [
 ];
 const createFacilityGuarantee = async (context) => {
   const { acbsFacilityGuaranteeInput } = context.bindingData;
+  const { dealIdentifier, facilityIdentifier } = acbsFacilityGuaranteeInput;
 
   const missingMandatory = findMissingMandatory(acbsFacilityGuaranteeInput, mandatoryFields);
 
@@ -34,13 +35,13 @@ const createFacilityGuarantee = async (context) => {
   }
 
   const submittedToACBS = moment().format();
-  const { status, data } = await api.createFacilityGuarantee(acbsFacilityGuaranteeInput);
+  const { status, data } = await api.createFacilityGuarantee(facilityIdentifier, acbsFacilityGuaranteeInput);
 
   if (isHttpErrorStatus(status)) {
     throw new Error(
       JSON.stringify({
         name: 'ACBS Facility Guarantee create error',
-        dealIdentifier: acbsFacilityGuaranteeInput.dealIdentifier,
+        dealIdentifier,
         submittedToACBS,
         receivedFromACBS: moment().format(),
         dataReceived: data,

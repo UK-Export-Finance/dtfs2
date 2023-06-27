@@ -33,6 +33,8 @@ const mandatoryFields = [
 const createFacilityLoan = async (context) => {
   try {
     const { acbsFacilityLoanInput } = context.bindingData;
+    const { facilityIdentifier } = acbsFacilityLoanInput;
+
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
     if (missingMandatory.length) {
@@ -40,13 +42,13 @@ const createFacilityLoan = async (context) => {
     }
 
     const submittedToACBS = moment().format();
-    const { status, data } = await api.createFacilityLoan(acbsFacilityLoanInput);
+    const { status, data } = await api.createFacilityLoan(facilityIdentifier, acbsFacilityLoanInput);
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
         JSON.stringify({
           name: 'ACBS Facility loan record create error',
-          facilityIdentifier: acbsFacilityLoanInput.facilityIdentifier,
+          facilityIdentifier,
           submittedToACBS,
           receivedFromACBS: moment().format(),
           dataReceived: data,

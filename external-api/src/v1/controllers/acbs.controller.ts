@@ -8,7 +8,6 @@ dotenv.config();
 
 const url = `${process.env.AZURE_ACBS_FUNCTION_URL}`;
 const headers = {
-  [String(process.env.APIM_TFS_KEY)]: process.env.APIM_TFS_VALUE,
   'Content-Type': 'application/json',
 };
 
@@ -18,8 +17,8 @@ export const checkDealId = async (dealId: any) => {
 
   const response: any = await axios({
     method: 'get',
-    url: acbs,
     headers,
+    url: acbs,
   });
 
   if (response.status) {
@@ -39,8 +38,8 @@ export const checkFacilityId = async (facilityId: any) => {
 
   const response = await axios({
     method: 'get',
-    url: acbs,
     headers,
+    url: acbs,
   }).catch((catchErr: any) => catchErr);
 
   if (response.status) {
@@ -93,6 +92,7 @@ const createAcbsRecord = async (deal: any, bank: any) => {
 
     const response = await axios({
       method: 'post',
+      headers,
       url: acbs,
       data: {
         deal,
@@ -148,6 +148,7 @@ const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
 
     const response = await axios({
       method: 'post',
+      headers,
       url: acbs,
       data: {
         facilityId: id,
@@ -205,6 +206,7 @@ const amendAcbsFacility = async (amendment: Amendment) => {
 
     const response = await axios({
       method: 'post',
+      headers,
       url: acbs,
       data: {
         amendment,

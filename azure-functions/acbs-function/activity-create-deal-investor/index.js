@@ -22,6 +22,7 @@ const mandatoryFields = [
 
 const createDealInvestor = async (context) => {
   const { investor } = context.bindingData;
+  const { dealIdentifier } = investor;
 
   const missingMandatory = findMissingMandatory(investor, mandatoryFields);
 
@@ -31,13 +32,13 @@ const createDealInvestor = async (context) => {
 
   const submittedToACBS = moment().format();
 
-  const { status, data } = await api.createDealInvestor(investor);
+  const { status, data } = await api.createDealInvestor(dealIdentifier, investor);
 
   if (isHttpErrorStatus(status)) {
     throw new Error(JSON.stringify({
       name: 'ACBS Deal Investor create error',
       status,
-      dealIdentifier: investor.dealIdentifier,
+      dealIdentifier,
       submittedToACBS,
       receivedFromACBS: moment().format(),
       dataReceived: data,

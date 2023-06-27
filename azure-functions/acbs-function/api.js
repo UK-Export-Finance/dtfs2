@@ -13,10 +13,16 @@
 require('dotenv').config();
 const axios = require('axios');
 
-const headers = {
+// Headers declaration
+const tfs = {
   [String(process.env.APIM_TFS_KEY)]: process.env.APIM_TFS_VALUE,
   'Content-Type': 'application/json',
 };
+const mdm = {
+  [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
+  'Content-Type': 'application/json',
+};
+
 const badRequest = {
   status: 400,
   data: {},
@@ -29,12 +35,12 @@ const badRequest = {
  */
 const get = async (endpoint) => {
   if (endpoint) {
-    const url = `${process.env.APIM_MDM_URL}/${endpoint}`;
+    const url = `${process.env.APIM_TFS_URL}/${endpoint}`;
 
     return axios({
       method: 'get',
       url,
-      headers,
+      headers: tfs,
     }).catch((error) => {
       console.error('Error calling ACBS GET /%s', endpoint);
 
@@ -56,13 +62,40 @@ const get = async (endpoint) => {
  */
 const post = async (endpoint, payload) => {
   if (endpoint && payload) {
+    const url = `${process.env.APIM_TFS_URL}/${endpoint}`;
+
+    return axios({
+      method: 'post',
+      url,
+      headers: tfs,
+      data: [payload],
+    }).catch((error) => {
+      console.error('Error calling ACBS POST /%s', endpoint);
+
+      return {
+        status: error.response ? error.response.status : error,
+        data: { error: error.response ? error.response.data : error },
+      };
+    });
+  }
+
+  return badRequest;
+};
+
+/**
+ * Invokes MDM POST endpoint
+ * @param {String} endpoint MDM endpoint
+ * @param {Object} payload Payload object
+ * @returns {Object} API response object
+ */
+const postMdm = async (endpoint, payload) => {
+  if (endpoint && payload) {
     const url = `${process.env.APIM_MDM_URL}/${endpoint}`;
 
     return axios({
       method: 'post',
       url,
-
-      headers,
+      headers: mdm,
       data: [payload],
     }).catch((error) => {
       console.error('Error calling ACBS POST /%s', endpoint);
@@ -86,7 +119,7 @@ const post = async (endpoint, payload) => {
  */
 const put = async (endpoint, payload, etag) => {
   if (endpoint && payload) {
-    const url = `${process.env.APIM_MDM_URL}/${endpoint}`;
+    const url = `${process.env.APIM_TFS_URL}/${endpoint}`;
 
     const additionalHeader = etag
       ? {
@@ -98,7 +131,7 @@ const put = async (endpoint, payload, etag) => {
       method: 'put',
       url,
       headers: {
-        ...headers,
+        ...tfs,
         ...additionalHeader,
       },
       data: payload,
@@ -124,7 +157,7 @@ const put = async (endpoint, payload, etag) => {
  */
 const patch = async (endpoint, payload, eTag) => {
   if (endpoint && payload) {
-    const url = `${process.env.APIM_MDM_URL}/${endpoint}`;
+    const url = `${process.env.APIM_TFS_URL}/${endpoint}`;
 
     const additionalHeader = eTag
       ? {
@@ -136,7 +169,7 @@ const patch = async (endpoint, payload, eTag) => {
       method: 'patch',
       url,
       headers: {
-        ...headers,
+        ...tfs,
         ...additionalHeader,
       },
       data: payload,
@@ -158,30 +191,36 @@ const patch = async (endpoint, payload, eTag) => {
  * HTTP methods and endpoints.
  */
 
-// GET
-const getFacility = (facilityId) => get(`facility/${facilityId}`);
-const getLoanId = (facilityId) => get(`facility/${facilityId}/loan`);
+// *** MDM ***
 
 // POST
-const createParty = (payload) => post('party', payload);
-const createDeal = (payload) => post('deal', payload);
-const createDealInvestor = (payload) => post('deal/investor', payload);
-const createDealGuarantee = (payload) => post('deal/guarantee', payload);
-const createFacility = (payload) => post('facility', payload);
-const createFacilityInvestor = (payload) => post('facility/investor', payload);
-const createFacilityCovenantId = (payload) => post('numbers', payload);
-const createFacilityCovenant = (payload) => post('facility/covenant', payload);
-const createFacilityGuarantee = (payload) => post('facility/guarantee', payload);
-const createCodeValueTransaction = (payload) => post('facility/codeValueTransaction', payload);
-const createFacilityLoan = (payload) => post('facility/loan', payload);
-const createFacilityFee = (payload) => post('facility/fixedFee', payload);
-const updateFacilityLoanAmount = (facilityId, loanId, payload) => post(`facility/${facilityId}/loan/${loanId}/amountAmendment`, payload);
+const createFacilityCovenantId = (payload) => postMdm('numbers', payload);
+
+// *** TFS ***
+
+// GET
+const getFacility = (facilityId) => get(`facilities/${facilityId}`);
+const getLoanId = (facilityId) => get(`facilities/${facilityId}/loan`);
+
+// POST
+const createParty = (payload) => post('parties', payload);
+const createDeal = (payload) => post('deals', payload);
+const createDealInvestor = (dealIdentifier, payload) => post(`deals/${dealIdentifier}/investors`, payload);
+const createDealGuarantee = (dealIdentifier, payload) => post(`deals/${dealIdentifier}/guarantees`, payload);
+const createFacility = (payload) => post('facilities', payload);
+const createFacilityInvestor = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/investors`, payload);
+const createFacilityCovenant = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/covenants`, payload);
+const createFacilityGuarantee = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/guarantees`, payload);
+const createCodeValueTransaction = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/activation-transactions`, payload);
+const createFacilityLoan = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/loans`, payload);
+const createFacilityFee = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/fixed-fees`, payload);
+const updateFacilityLoanAmount = (facilityIdentifier, loanId, payload) => post(`facilities/${facilityIdentifier}/loans/${loanId}/amendments/amount`, payload);
 
 // PUT
-const updateFacility = (facilityId, updateType, payload, etag) => put(`facility/${facilityId}?op=${updateType}`, payload, etag);
+const updateFacility = (facilityIdentifier, updateType, payload, etag) => put(`facilities/${facilityIdentifier}?op=${updateType}`, payload, etag);
 
 // PATCH
-const updateFacilityLoan = (facilityId, loanId, payload) => patch(`facility/${facilityId}/loan/${loanId}`, payload);
+const updateFacilityLoan = (facilityIdentifier, loanId, payload) => patch(`facilities/${facilityIdentifier}/loans/${loanId}`, payload);
 
 module.exports = {
   getFacility,
