@@ -161,6 +161,7 @@ services:
       - ./external-api/src:/app/src:ro
     environment:
       - PORT=5002
+      - API_KEY
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk

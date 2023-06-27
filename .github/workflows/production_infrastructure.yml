@@ -1164,6 +1164,7 @@ jobs:
               WEBSITES_PORT=5000 \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
+              API_KEY="${{ secrets.API_KEY }}" \
               MULESOFT_API_ACBS_DEAL_URL="${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}" \
               MULESOFT_API_ACBS_FACILITY_URL="${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}" \
               MULESOFT_API_KEY="${{ secrets.MULESOFT_API_KEY }}" \
