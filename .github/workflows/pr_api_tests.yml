@@ -2,17 +2,17 @@ name: PR - API tests
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
-    - 'gef-ui/**'
-    - 'portal/**'
-    - 'portal-api/**'
-    - 'trade-finance-manager-ui/**'
-    - 'trade-finance-manager-api/**'
-    - 'external-api/**'
-    - 'dtfs-central-api/**'
-    - 'e2e-tests/**'
-    - 'utils/mock-data-loader/**'
+      - 'gef-ui/**'
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'external-api/**'
+      - 'dtfs-central-api/**'
+      - 'e2e-tests/**'
+      - 'utils/mock-data-loader/**'
 
 env:
   environment: dev
@@ -25,15 +25,15 @@ env:
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-  APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
-  APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
   MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
   MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
   MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
+  APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
+  APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
+  APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
   APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
   APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
   APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
-  APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
@@ -47,11 +47,11 @@ jobs:
     outputs:
       environment: ${{ env.environment }}
     steps:
-    - name: Initialise Environment
-      run: echo Setting environment to ${{ env.environment }}
+      - name: Initialise Environment
+        run: echo Setting environment to ${{ env.environment }}
 
   api-tests:
-    name: "Run API tests"
+    name: 'Docker containers API test'
 
     # Cancel Previous runs
     concurrency:
@@ -67,52 +67,62 @@ jobs:
     runs-on: [self-hosted, api-tests]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Start Docker Compose
-      working-directory: ./
-      run: |
-        docker network prune -f
-        docker-compose -f docker-compose.gha.yml up --build -d
+      - uses: actions/checkout@v3
+      - name: Start Docker Compose
+        working-directory: ./
+        run: |
+          docker network prune -f
+          docker-compose -f docker-compose.gha.yml up --build -d
 
-    - name: Sleep for 30 seconds
-      run: sleep 30s
+      - name: Sleep for 30 seconds
+        run: sleep 30s
 
-    - name: Install mock data dependencies
-      run: npm ci
+      - name: Install mock data dependencies
+        run: npm ci
 
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
+      - name: Load mock data
+        run: node ./re-insert-mocks.js
 
-    - name: Run TFM API tests
-      run: docker-compose exec -T trade-finance-manager-api npm run api-test
+      - name: Run TFM API tests
+        run: docker-compose exec -T trade-finance-manager-api npm run api-test
 
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
+      - name: Load mock data
+        run: node ./re-insert-mocks.js
 
-    - name: Run External API API tests
-      run: docker-compose exec -T external-api npm run api-test
+      - name: Run External API API tests
+        run: docker-compose exec -T external-api npm run api-test
 
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
+      - name: Load mock data
+        run: node ./re-insert-mocks.js
 
-    - name: Run Portal API tests
-      run: docker-compose exec -T portal-api npm run api-test
+      - name: Run Portal API tests
+        run: docker-compose exec -T portal-api npm run api-test
 
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
+      - name: Load mock data
+        run: node ./re-insert-mocks.js
 
-    - name: Run Central API tests
-      run: docker-compose exec -T dtfs-central-api npm run api-test
+      - name: Run Central API tests
+        run: docker-compose exec -T dtfs-central-api npm run api-test
 
-    - name: Run ACBS API tests
-      working-directory: ./azure-functions/acbs-function
-      run: npm run api-test
+      - name: Stop containers
+        if: always()
+        working-directory: ./
+        run: docker-compose -f docker-compose.gha.yml down
 
-    - name: Run NumGen API tests
-      working-directory: ./azure-functions/number-generator-function
-      run: npm run api-test
+  dof:
+    name: 'DOF API tests'
+    needs: set-environment
+    environment:
+      name: ${{ needs.set-environment.outputs.environment }}
+    runs-on: [self-hosted, api-tests]
 
-    - name: Stop containers
-      if: always()
-      working-directory: ./
-      run: docker-compose -f docker-compose.gha.yml down
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: ACBS api test
+        working-directory: ./azure-functions/acbs-function
+        run: npm run api-test
+
+      - name: NumGen api test
+        working-directory: ./azure-functions/number-generator-function
+        run: npm run api-test
