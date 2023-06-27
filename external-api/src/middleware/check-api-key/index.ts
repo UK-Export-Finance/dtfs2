@@ -6,7 +6,7 @@ dotenv.config();
 const { API_KEY } = process.env;
 
 /**
- * Check that the x-api-key header is valida
+ * Check that the x-api-key header is valid
  * @param {Object} req Request object
  * @param {Object} res Response object
  * @param {String} next Callback function name
