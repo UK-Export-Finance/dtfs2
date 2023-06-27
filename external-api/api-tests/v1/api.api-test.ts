@@ -13,14 +13,16 @@ describe('findACBSIndustrySector lookup', () => {
 
     expect(status).toEqual(200);
 
-    expect(data[0].ukefSectorName).toEqual(expected.ukefSectorName);
-    expect(data[0].internalNo).toEqual(expected.internalNo);
-    expect(data[0].acbsSectorName).toEqual(expected.acbsSectorName);
-    expect(data[0].acbsIndustryName).toEqual(expected.acbsIndustryName);
+    const responseData = data[0];
 
-    expect(data[0].created).toBeDefined();
-    expect(data[0].updated).toBeDefined();
-    expect(data[0].effectiveFrom).toBeDefined();
-    expect(data[0].effectiveTo).toBeDefined();
+    expect(responseData.ukefSectorName).toEqual(expected.ukefSectorName);
+    expect(responseData.internalNo).toEqual(expected.internalNo);
+    expect(responseData.acbsSectorName).toEqual(expected.acbsSectorName);
+    expect(responseData.acbsIndustryName).toEqual(expected.acbsIndustryName);
+
+    expect(responseData.created).toBeDefined();
+    expect(responseData.updated).toBeDefined();
+    expect(responseData.effectiveFrom).toBeDefined();
+    expect(responseData.effectiveTo).toBeDefined();
   });
 });
