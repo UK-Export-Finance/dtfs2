@@ -2,6 +2,7 @@ param location string
 param environment string
 param appServicePlanEgressSubnetId string
 param privateEndpointsSubnetId string
+param databaseName string
 
 
 @description('Netowrk IPs to permit access to CosmosDB')
@@ -15,7 +16,7 @@ param capacityMode string
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param backupPolicyTier string
 
-var cosmosDbName = 'tfs-${environment}-mongo'
+var cosmosDbAccountName = 'tfs-${environment}-mongo'
 var privateEndpointName = 'tfs-${environment}-mongo'
 
 var allowedIps = json(allowedIpsString)
@@ -55,8 +56,8 @@ var capabilities = capacityMode == 'Provisioned Throughput' ? [
 ]
 
 
-resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
-  name: cosmosDbName
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
+  name: cosmosDbAccountName
   location: location
   tags: {
     Environment: 'Preproduction'
@@ -122,11 +123,11 @@ resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
 
 
 resource submissionsDb 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases@2023-04-15' = {
-  parent: cosmosDb
-  name: 'dtfs-submissions'
+  parent: cosmosDbAccount
+  name: databaseName
   properties: {
     resource: {
-      id: 'dtfs-submissions'
+      id: databaseName
     }
   }
 }
@@ -542,7 +543,7 @@ resource mongoDbPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' 
       {
         name: privateEndpointName
         properties: {
-          privateLinkServiceId: cosmosDb.id
+          privateLinkServiceId: cosmosDbAccount.id
           groupIds: [
             'MongoDB'
           ]
@@ -561,3 +562,5 @@ resource mongoDbPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' 
     // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
   }
 }
+
+output cosmosDbAccountName string = cosmosDbAccount.name
