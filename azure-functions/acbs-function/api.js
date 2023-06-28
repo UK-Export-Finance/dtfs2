@@ -42,7 +42,7 @@ const get = async (endpoint) => {
       url,
       headers: tfs,
     }).catch((error) => {
-      console.error('Error calling ACBS GET /%s', endpoint);
+      console.error('Error calling TFS GET /%s', endpoint);
 
       return {
         status: error.response ? error.response.status : error,
@@ -70,7 +70,7 @@ const post = async (endpoint, payload) => {
       headers: tfs,
       data: [payload],
     }).catch((error) => {
-      console.error('Error calling ACBS POST /%s', endpoint);
+      console.error('Error calling TFS POST /%s', endpoint);
 
       return {
         status: error.response ? error.response.status : error,
@@ -98,7 +98,7 @@ const postMdm = async (endpoint, payload) => {
       headers: mdm,
       data: [payload],
     }).catch((error) => {
-      console.error('Error calling ACBS POST /%s', endpoint);
+      console.error('Error calling MDM POST /%s', endpoint);
 
       return {
         status: error.response ? error.response.status : error,
@@ -136,7 +136,7 @@ const put = async (endpoint, payload, etag) => {
       },
       data: payload,
     }).catch((error) => {
-      console.error('Error calling ACBS PUT /%s', endpoint);
+      console.error('Error calling TFS PUT /%s', endpoint);
 
       return {
         status: error.response ? error.response.status : error,
@@ -174,7 +174,7 @@ const patch = async (endpoint, payload, eTag) => {
       },
       data: payload,
     }).catch((error) => {
-      console.error('Error calling ACBS PATCH /%s', endpoint);
+      console.error('Error calling TFS PATCH /%s', endpoint);
 
       return {
         status: error.response ? error.response.status : error,
@@ -186,11 +186,6 @@ const patch = async (endpoint, payload, eTag) => {
   return badRequest;
 };
 
-/**
- * Various ACBS API calls, consuming myriads of
- * HTTP methods and endpoints.
- */
-
 // *** MDM ***
 
 // POST
@@ -200,7 +195,7 @@ const createFacilityCovenantId = (payload) => postMdm('numbers', payload);
 
 // GET
 const getFacility = (facilityId) => get(`facilities/${facilityId}`);
-const getLoanId = (facilityId) => get(`facilities/${facilityId}/loan`);
+const getLoanId = (facilityId) => get(`facilities/${facilityId}/loans`);
 
 // POST
 const createParty = (payload) => post('parties', payload);

@@ -62,14 +62,14 @@ const postAPI = async (endpoint, payload) => {
  * @param {String} dealId UKEF deal ID
  * @returns {Object} Response object
  */
-const checkDealId = (dealId) => getAPI(`deal/${dealId}`);
+const checkDealId = (dealId) => getAPI(`deals/${dealId}`);
 
 /**
  * UKEF facility ID validation check
  * @param {String} facilityId UKEF facility ID
  * @returns {Object} Response object
  */
-const checkFacilityId = (facilityId) => getAPI(`facility/${facilityId}`);
+const checkFacilityId = (facilityId) => getAPI(`facilities/${facilityId}`);
 
 /**
  * Call number generator
