@@ -8,10 +8,10 @@ describe('findACBSIndustrySector lookup', () => {
         internalNo: null,
         acbsSectorName: 'CIVIL: POWER',
         acbsIndustryName: 'GAS',
-        created: '2017-04-01T00:00:00',
-        updated: '2017-06-28T11:01:29',
-        effectiveFrom: '2017-04-01T00:00:00',
-        effectiveTo: '9999-12-31T00:00:00',
+        created: '2017-04-01T00:00:00.000Z',
+        updated: '2017-06-28T11:01:29.040Z',
+        effectiveFrom: '2017-04-01T00:00:00.000Z',
+        effectiveTo: '9999-12-31T00:00:00.000Z',
       },
     ];
     const { status, data } = await findACBSIndustrySector(35220);
