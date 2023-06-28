@@ -18,34 +18,35 @@ const mockResponses: any = {
 jest.mock('axios', () =>
   jest.fn((args: any) => {
     const { method, url, data } = args;
+
     if (method === 'get') {
-      if (url === `${process.env.APIM_TFS_URL}/deals/1234`) {
+      if (url === `${process.env.APIM_TFS_URL}deals/1234567890`) {
         return Promise.resolve(mockResponses['200']);
       }
 
-      if (url === `${process.env.APIM_TFS_URL}/facilities/1234`) {
+      if (url === `${process.env.APIM_TFS_URL}facilities/1234567890`) {
         return Promise.resolve(mockResponses['200']);
       }
 
-      if (url === `${process.env.APIM_TFS_URL}/deals/5678`) {
-        return Promise.reject(mockResponses['404']);
+      if (url === `${process.env.APIM_TFS_URL}deals/0000000000`) {
+        return Promise.resolve(mockResponses['404']);
       }
 
-      if (url === `${process.env.APIM_TFS_URL}/facilities/5678`) {
-        return Promise.reject(mockResponses['404']);
+      if (url === `${process.env.APIM_TFS_URL}facilities/0000000000`) {
+        return Promise.resolve(mockResponses['404']);
       }
     }
 
     if (method === 'post') {
       if (url === `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs`) {
         if (data.deal._id === 'errorId') {
-          return Promise.reject(mockResponses['404']);
+          return Promise.resolve(mockResponses['404']);
         }
         return Promise.resolve(mockResponses['200']);
       }
       if (url === `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`) {
         if (data.facilityId === 'errorId') {
-          return Promise.reject(mockResponses['404']);
+          return Promise.resolve(mockResponses['404']);
         }
         return Promise.resolve(mockResponses['200']);
       }
@@ -105,22 +106,27 @@ describe('/acbs', () => {
 
   describe('GET /v1/acbs/:dealId', () => {
     it('should return status code from ACBS response for a deal', async () => {
-      const { status } = await api.get('/acbs/deal/1234');
+      const { status } = await api.get('/acbs/deal/1234567890');
       expect(status).toEqual(200);
     });
 
     it('should return status code from ACBS response for a facility', async () => {
-      const { status } = await api.get('/acbs/facility/1234');
+      const { status } = await api.get('/acbs/facility/1234567890');
       expect(status).toEqual(200);
     });
 
+    it('should return 404 for a deal', async () => {
+      const { status } = await api.get('/acbs/deal/0000000000');
+      expect(status).toEqual(404);
+    });
+
     it('should return 404 for a facility', async () => {
-      const { status } = await api.get('/acbs/facility/5678');
+      const { status } = await api.get('/acbs/facility/0000000000');
       expect(status).toEqual(404);
     });
 
     it('should return 500 when entityType is not `deal` or `facility`', async () => {
-      const { status } = await api.get('/acbs/test/1234');
+      const { status } = await api.get('/acbs/test/1234567890');
       expect(status).toEqual(500);
     });
   });

@@ -7,7 +7,9 @@ import { validUkefId } from '../../utils/validUkefId';
 
 dotenv.config();
 
-const url = `${process.env.AZURE_ACBS_FUNCTION_URL}`;
+const apim = `${process.env.APIM_TFS_URL}`;
+const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}`;
+
 const headers = {
   'Content-Type': 'application/json',
 };
@@ -24,7 +26,7 @@ export const checkDealId = async (dealId: any) => {
   const response: any = await axios({
     method: 'get',
     headers,
-    url: `${url}/deals/${ukefId}`,
+    url: `${apim}deals/${ukefId}`,
   });
 
   if (response.status) {
@@ -50,7 +52,7 @@ export const checkFacilityId = async (facilityId: any) => {
   const response = await axios({
     method: 'get',
     headers,
-    url: `${url}/facilities/${ukefId}`,
+    url: `${apim}facilities/${ukefId}`,
   }).catch((catchErr: any) => catchErr);
 
   if (response.status) {
@@ -99,12 +101,10 @@ export const findOne = async (req: Request, res: Response) => {
  */
 const createAcbsRecord = async (deal: any, bank: any) => {
   if (deal) {
-    const acbs = `${url}/api/orchestrators/acbs`;
-
     const response = await axios({
       method: 'post',
       headers,
-      url: acbs,
+      url: `${acbs}/api/orchestrators/acbs`,
       data: {
         deal,
         bank,
@@ -155,12 +155,10 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
  */
 const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
   if (id) {
-    const acbs = `${url}/api/orchestrators/acbs-issue-facility`;
-
     const response = await axios({
       method: 'post',
       headers,
-      url: acbs,
+      url: `${acbs}/api/orchestrators/acbs-issue-facility`,
       data: {
         facilityId: id,
         facility,
@@ -213,12 +211,10 @@ const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
 
   if (hasAmendment) {
-    const acbs = `${url}/api/orchestrators/acbs-amend-facility`;
-
     const response = await axios({
       method: 'post',
       headers,
-      url: acbs,
+      url: `${acbs}/api/orchestrators/acbs-amend-facility`,
       data: {
         amendment,
       },
