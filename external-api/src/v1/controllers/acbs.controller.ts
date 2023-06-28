@@ -6,13 +6,12 @@ import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
 
 dotenv.config();
 
-const url = `${process.env.AZURE_ACBS_FUNCTION_URL}`;
 const headers = {
   'Content-Type': 'application/json',
 };
 
 export const checkDealId = async (dealId: any) => {
-  const acbs = `${url}/deals/${dealId}`;
+  const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}/deals/${dealId}`;
   console.info(`Checking deal id ${dealId} with ACBS`);
 
   const response: any = await axios({
@@ -33,7 +32,7 @@ export const checkDealId = async (dealId: any) => {
 };
 
 export const checkFacilityId = async (facilityId: any) => {
-  const acbs = `${url}/facilities/${facilityId}`;
+  const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}/facilities/${facilityId}`;
   console.info(`Checking facility id ${facilityId} with ACBS`);
 
   const response = await axios({
@@ -88,7 +87,7 @@ export const findOne = async (req: Request, res: Response) => {
  */
 const createAcbsRecord = async (deal: any, bank: any) => {
   if (deal) {
-    const acbs = `${url}/api/orchestrators/acbs`;
+    const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs`;
 
     const response = await axios({
       method: 'post',
@@ -144,7 +143,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
  */
 const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
   if (id) {
-    const acbs = `${url}/api/orchestrators/acbs-issue-facility`;
+    const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`;
 
     const response = await axios({
       method: 'post',
@@ -202,7 +201,7 @@ const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
 
   if (hasAmendment) {
-    const acbs = `${url}/api/orchestrators/acbs-amend-facility`;
+    const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-amend-facility`;
 
     const response = await axios({
       method: 'post',
