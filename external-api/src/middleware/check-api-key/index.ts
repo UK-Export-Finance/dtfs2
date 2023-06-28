@@ -21,7 +21,7 @@ export const checkApiKey = (req: Request, res: Response, next: NextFunction) => 
    * Reject the request.
    */
   if (!xApiKey) {
-    return res.status(401).send();
+    return res.status(401).send('Unauthorised');
   }
 
   /**
@@ -36,5 +36,5 @@ export const checkApiKey = (req: Request, res: Response, next: NextFunction) => 
    * x-api-key is invalid.
    * Reject the reuqest
    */
-  return res.status(401).send();
+  return res.status(401).send('Unauthorised');
 };

@@ -18,6 +18,7 @@ describe('middleware/check-api-key', () => {
       checkApiKey(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.send).toHaveBeenCalledWith('Unauthorised');
     });
   });
 
@@ -30,6 +31,7 @@ describe('middleware/check-api-key', () => {
       checkApiKey(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.send).toHaveBeenCalledWith('Unauthorised');
     });
   });
 
