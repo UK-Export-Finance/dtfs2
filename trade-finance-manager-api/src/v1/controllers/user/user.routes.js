@@ -149,7 +149,7 @@ module.exports.login = async (req, res, next) => {
     // otherwise this is a technical failure during the lookup
     return next(loginResult.err);
   }
-  
+
   const { tokenObject, user } = loginResult;
 
   return res.status(200).json({

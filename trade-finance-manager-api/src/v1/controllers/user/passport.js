@@ -17,7 +17,6 @@ const options = {
 const sanitize = (user) => ({
   username: user.username,
   roles: user.roles,
-  bank: user.bank,
   lastLogin: user.lastLogin,
   firstname: user.firstname,
   surname: user.surname,
