@@ -12,7 +12,7 @@ const routes = require('./routes');
 const eligibilityRoutes = require('./routes/contract/eligibility');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const { csrf: csrfToken, seo, security } = require('./routes/middleware');
+const { csrf: csrfToken, seo, security, queryParams } = require('./routes/middleware');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,6 +33,7 @@ const cookie = {
 
 app.use(seo);
 app.use(security);
+app.use(queryParams);
 
 if (!process.env.SESSION_SECRET) {
   console.error('Portal UI server - SESSION_SECRET missing');
