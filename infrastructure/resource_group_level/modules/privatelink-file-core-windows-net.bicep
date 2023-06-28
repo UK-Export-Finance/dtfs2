@@ -41,20 +41,4 @@ resource filesVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@20
   }
 }
 
-// TODO:DTFS-6422 Wire up A record IPs correctly, getting appropriate values.
-
-// // Dev A records
-
-// // TODO:DTFS-6422 update ip values
-// resource devStorage 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
-//   parent: filesDnsZone
-//   name: 'tfsdevstorage'
-//   properties: {
-//     ttl: 3600
-//     aRecords: [
-//       {
-//         ipv4Address: '172.16.40.4'
-//       }
-//     ]
-//   }
-// }
+output filesDnsZoneId string = filesDnsZone.id
