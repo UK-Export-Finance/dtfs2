@@ -3,21 +3,28 @@ import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
 import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
+import { validUkefId } from '../../utils/validUkefId';
 
 dotenv.config();
 
+const url = `${process.env.AZURE_ACBS_FUNCTION_URL}`;
 const headers = {
   'Content-Type': 'application/json',
 };
 
 export const checkDealId = async (dealId: any) => {
-  const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}/deals/${dealId}`;
   console.info(`Checking deal id ${dealId} with ACBS`);
+
+  const ukefId = validUkefId(dealId);
+
+  if (!ukefId) {
+    return new Error('Invalid deal id');
+  }
 
   const response: any = await axios({
     method: 'get',
     headers,
-    url: acbs,
+    url: `${url}/deals/${ukefId}`,
   });
 
   if (response.status) {
@@ -32,13 +39,18 @@ export const checkDealId = async (dealId: any) => {
 };
 
 export const checkFacilityId = async (facilityId: any) => {
-  const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}/facilities/${facilityId}`;
   console.info(`Checking facility id ${facilityId} with ACBS`);
+
+  const ukefId = validUkefId(facilityId);
+
+  if (!ukefId) {
+    return new Error('Invalid facility id');
+  }
 
   const response = await axios({
     method: 'get',
     headers,
-    url: acbs,
+    url: `${url}/facilities/${ukefId}`,
   }).catch((catchErr: any) => catchErr);
 
   if (response.status) {
@@ -87,7 +99,7 @@ export const findOne = async (req: Request, res: Response) => {
  */
 const createAcbsRecord = async (deal: any, bank: any) => {
   if (deal) {
-    const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs`;
+    const acbs = `${url}/api/orchestrators/acbs`;
 
     const response = await axios({
       method: 'post',
@@ -143,7 +155,7 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
  */
 const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
   if (id) {
-    const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-issue-facility`;
+    const acbs = `${url}/api/orchestrators/acbs-issue-facility`;
 
     const response = await axios({
       method: 'post',
@@ -201,7 +213,7 @@ const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
 
   if (hasAmendment) {
-    const acbs = `${process.env.AZURE_ACBS_FUNCTION_URL}/api/orchestrators/acbs-amend-facility`;
+    const acbs = `${url}/api/orchestrators/acbs-amend-facility`;
 
     const response = await axios({
       method: 'post',
