@@ -5,7 +5,8 @@ const { formattedNumber } = require('../../../helpers/number');
 
 const getAmendmentAnswers = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
-  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (status !== 200) {
     return res.redirect('/not-found');
@@ -39,8 +40,9 @@ const getAmendmentAnswers = async (req, res) => {
 
 const postAmendmentAnswers = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
+  const { userToken } = req.session;
 
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId, requireUkefApproval } = amendment;
 
   try {
@@ -77,7 +79,7 @@ const postAmendmentAnswers = async (req, res) => {
       payload.currentCoverEndDate = null;
     }
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);

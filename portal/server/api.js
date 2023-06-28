@@ -601,11 +601,12 @@ const downloadFile = async (id, fieldname, filename, token) => {
   return response.data;
 };
 
-const createFeedback = async (formData) => {
+const createFeedback = async (formData, token) => {
   const response = await axios({
     method: 'post',
     url: `${portalApi}/v1/feedback`,
     headers: {
+      Authorization: token,
       'Content-Type': 'application/json',
     },
     data: formData,

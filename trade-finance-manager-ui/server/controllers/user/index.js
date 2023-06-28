@@ -1,7 +1,6 @@
 const api = require('../../api');
 const { generateErrorSummary } = require('../../helpers/generateErrorSummary.helper');
 const { errorHref } = require('../../helpers/errorHref.helper');
-const { requestParams } = require('../../helpers/requestParams.helper');
 
 const getUserProfile = (req, res) => {
   if (req?.session?.user) {
@@ -15,10 +14,10 @@ const getUserProfile = (req, res) => {
 };
 
 const postUserProfile = async (req, res) => {
-  const { token } = requestParams(req);
+  const { userToken } = req.session;
   if (req?.session?.user) {
     const { _id } = req.session.user;
-    const { status, data } = await api.updateUserPassword(_id, req.body, token);
+    const { status, data } = await api.updateUserPassword(_id, req.body, userToken);
 
     if (status === 200) {
       return res.redirect('/user/change-password');
