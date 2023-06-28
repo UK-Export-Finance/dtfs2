@@ -1,5 +1,4 @@
 const { ObjectId } = require('mongodb');
-const utils = require('./utils');
 const { userNotFound, incorrectPassword, userIsDisabled } = require('../../../constants/login-results.constant');
 const {
   create, update, removeTfmUserById, findOne, findByUsername,
@@ -151,15 +150,12 @@ module.exports.login = async (req, res, next) => {
     return next(loginResult.err);
   }
   
-  const { sessionIdentifier, ...tokenObject } = utils.issueJWT(loginResult.user);
-  console.log('ayahwhawd');
-  console.log(tokenObject);
-  console.log(loginResult);
+  const { tokenObject, user } = loginResult;
 
   return res.status(200).json({
     success: true,
     token: tokenObject.token,
-    user: mapUserData(loginResult.user),
+    user: mapUserData(user),
     expiresIn: tokenObject.expires,
   });
 };
