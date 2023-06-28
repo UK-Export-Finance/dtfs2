@@ -119,7 +119,7 @@ describe('GET TFM amendments', () => {
       const { status, body } = await api.get('/v1/tfm/facilities/626a9270184ded001357c010/amendments/123');
 
       expect(status).toEqual(400);
-      expect(body).toEqual({ message: 'Invalid facility or amendment Id', status: 400 });
+      expect(body).toEqual({ message: 'Invalid amendment Id', status: 400 });
     });
 
     it('should return 400 status if the facilityId has the wrong format', async () => {
@@ -129,7 +129,7 @@ describe('GET TFM amendments', () => {
       const { status, body } = await api.get('/v1/tfm/facilities/123/amendments/626a9270184ded001357c010');
 
       expect(status).toEqual(400);
-      expect(body).toEqual({ status: 400, message: 'Invalid facility or amendment Id' });
+      expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
     });
 
     it('should return 400 status if the facilityId and amendmentId have the wrong format', async () => {
@@ -139,7 +139,7 @@ describe('GET TFM amendments', () => {
       const { status, body } = await api.get('/v1/tfm/facilities/123/amendments/1234');
 
       expect(status).toEqual(400);
-      expect(body).toEqual({ status: 400, message: 'Invalid facility or amendment Id' });
+      expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
     });
   });
 
@@ -295,7 +295,7 @@ describe('GET TFM amendments', () => {
     });
   });
 
-  describe('GET /v1/tfm/amendments/in-progress', () => {
+  describe('GET /v1/tfm/amendments', () => {
     it('should return 200 status and all amendments that are in progress', async () => {
       const postResult = await api.post({ facility: newFacility, user: mockUser }).to('/v1/portal/facilities');
       const facilityId1 = postResult.body._id;
@@ -315,7 +315,7 @@ describe('GET TFM amendments', () => {
       const updatePayload2 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
       await api.put(updatePayload2).to(`/v1/tfm/facilities/${facilityId2}/amendments/${bodyPostResponse2.amendmentId}`);
 
-      const { status, body } = await api.get('/v1/tfm/amendments/in-progress');
+      const { status, body } = await api.get('/v1/tfm/amendments');
 
       expect(status).toEqual(200);
       expect(body).toEqual([
