@@ -4,10 +4,14 @@ const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const CONSTANTS = require('../constants');
 require('dotenv').config();
 
-const centralApiUrl = process.env.DTFS_CENTRAL_API;
-const refDataUrl = process.env.EXTERNAL_API_URL;
-const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
-const azureNumberGeneratorUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
+const {
+  DTFS_CENTRAL_API: centralApiUrl,
+  EXTERNAL_API_URL,
+  API_KEY,
+  AZURE_ACBS_FUNCTION_URL,
+  AZURE_NUMBER_GENERATOR_FUNCTION_URL,
+} = process.env;
+
 const { DURABLE_FUNCTIONS } = CONSTANTS;
 
 const findOnePortalDeal = async (dealId) => {
@@ -572,9 +576,10 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/party-db/${encodeURIComponent(companyRegNo)}`,
+      url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
     return response.data;
@@ -592,9 +597,10 @@ const getCompanyInfo = async (partyUrn) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/party-db/urn/${encodeURIComponent(partyUrn)}`,
+      url: `${EXTERNAL_API_URL}/party-db/urn/${encodeURIComponent(partyUrn)}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -705,9 +711,10 @@ const getCurrencyExchangeRate = async (source, target) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/currency-exchange-rate/${source}/${target}`,
+      url: `${EXTERNAL_API_URL}/currency-exchange-rate/${source}/${target}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
     return response.data;
@@ -720,9 +727,10 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/exposure-period/${startDate}/${endDate}/${type}`,
+      url: `${EXTERNAL_API_URL}/exposure-period/${startDate}/${endDate}/${type}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -737,9 +745,10 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/premium-schedule`,
+      url: `${EXTERNAL_API_URL}/premium-schedule`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: premiumScheduleParameters,
     });
@@ -759,9 +768,10 @@ const createACBS = async (deal, bank) => {
     try {
       const response = await axios({
         method: 'post',
-        url: `${refDataUrl}/acbs`,
+        url: `${EXTERNAL_API_URL}/acbs`,
         headers: {
           'Content-Type': 'application/json',
+          'x-api-key': API_KEY,
         },
         data: {
           deal,
@@ -782,9 +792,10 @@ const updateACBSfacility = async (facility, deal) => {
     try {
       const response = await axios({
         method: 'post',
-        url: `${refDataUrl}/acbs/facility/${facility.ukefFacilityId}/issue`,
+        url: `${EXTERNAL_API_URL}/acbs/facility/${facility.ukefFacilityId}/issue`,
         headers: {
           'Content-Type': 'application/json',
+          'x-api-key': API_KEY,
         },
         data: {
           facility,
@@ -811,9 +822,10 @@ const amendACBSfacility = async (amendments, facility, deal) => {
     const { ukefFacilityId } = facility.facilitySnapshot;
     const response = await axios({
       method: 'post',
-      url: `${refDataUrl}/acbs/facility/${ukefFacilityId}/amendments`,
+      url: `${EXTERNAL_API_URL}/acbs/facility/${ukefFacilityId}/amendments`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         amendments,
@@ -836,11 +848,11 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
   let functionUrl;
   switch (type) {
     case DURABLE_FUNCTIONS.TYPE.ACBS:
-      functionUrl = azureAcbsFunctionUrl;
+      functionUrl = AZURE_ACBS_FUNCTION_URL;
       break;
 
     case DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR:
-      functionUrl = azureNumberGeneratorUrl;
+      functionUrl = AZURE_NUMBER_GENERATOR_FUNCTION_URL;
       break;
 
     default:
@@ -870,9 +882,10 @@ const createEstoreFolders = async (data) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${refDataUrl}/estore`,
+      url: `${EXTERNAL_API_URL}/estore`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data,
     });
@@ -887,9 +900,10 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${refDataUrl}/email`,
+      url: `${EXTERNAL_API_URL}/email`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         templateId,

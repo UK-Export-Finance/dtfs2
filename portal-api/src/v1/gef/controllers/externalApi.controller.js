@@ -4,12 +4,16 @@ require('dotenv').config();
 const { ERROR } = require('../enums');
 const mapCompaniesHouseData = require('../mappings/map-companies-house-data');
 
-const referenceProxyUrl = process.env.EXTERNAL_API_URL;
+const { EXTERNAL_API_URL, API_KEY } = process.env;
 
 const findSicCodes = async (companySicCodes) => {
   const response = await axios({
     method: 'get',
-    url: `${referenceProxyUrl}/industry-sectors`,
+    url: `${EXTERNAL_API_URL}/industry-sectors`,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+    },
   });
 
   if (companySicCodes && response && response.data) {
@@ -40,7 +44,11 @@ exports.getByRegistrationNumber = async (req, res) => {
     }
     const response = await axios({
       method: 'get',
-      url: `${referenceProxyUrl}/companies-house/${companyNumber}`,
+      url: `${EXTERNAL_API_URL}/companies-house/${companyNumber}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+      },
     });
 
     if (response.data.type === 'oversea-company') {
@@ -71,7 +79,11 @@ exports.getAddressesByPostcode = async (req, res) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${referenceProxyUrl}/ordnance-survey/${req.params.postcode}`,
+      url: `${EXTERNAL_API_URL}/ordnance-survey/${req.params.postcode}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+      },
     });
     const addresses = [];
     response.data.results.forEach((item) => {

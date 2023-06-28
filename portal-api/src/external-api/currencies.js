@@ -3,14 +3,15 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const referenceProxyUrl = process.env.EXTERNAL_API_URL;
+const { EXTERNAL_API_URL, API_KEY } = process.env;
 
 const getCurrencies = async () => {
   const response = await axios({
     method: 'get',
-    url: `${referenceProxyUrl}/currencies`,
+    url: `${EXTERNAL_API_URL}/currencies`,
     headers: {
       'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
     },
   }).catch((err) => {
     console.error('Error retrieving currencies from External API. ', err?.response?.data, err?.status);
@@ -23,9 +24,10 @@ const getCurrencies = async () => {
 const getCurrency = async (id) => {
   const response = await axios({
     method: 'get',
-    url: `${referenceProxyUrl}/currencies/${id}`,
+    url: `${EXTERNAL_API_URL}/currencies/${id}`,
     headers: {
       'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
     },
   }).catch((err) => {
     console.error('Error retrieving currency from External API. ', err?.response?.data, err?.status);
