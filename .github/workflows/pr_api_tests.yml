@@ -1,4 +1,10 @@
-name: PR - API tests
+# DTFS Git Hub Actions
+#####################################
+# This GHA is responsible for initiating api test
+# upon a PR creation for all the microservices.
+
+name: Quality Assurance - API tests
+run-name: Executing test QA on ${{ github.repository }} 🚀
 
 on:
   pull_request:
@@ -16,6 +22,8 @@ on:
 
 env:
   environment: dev
+  timezone: 'Europe/London'
+  node: ${{ vars.NODE_VERSION }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
@@ -25,104 +33,102 @@ env:
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-  MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
-  MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
-  MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
+  ORDNANCE_SURVEY_API_URL: 'https://api.os.co.uk'
+  ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
   APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
   APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
   APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
+  MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
+  MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
+  MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
   APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
   APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
   APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+  COMPANIES_HOUSE_API_URL: 'https://api.companieshouse.gov.uk'
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  NODE_ENV: ${{ secrets.NODE_ENV }}
 
 jobs:
-  set-environment:
-    name: Set Environment
-    runs-on: [self-hosted, api-tests]
+  # 1. Setup test infrastructure
+  setup:
+    name: Infrastructure setup 🔧
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
     steps:
-      - name: Initialise Environment
-        run: echo Setting environment to ${{ env.environment }}
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
 
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
+  # 2. API tests
   api-tests:
-    name: 'Docker containers API test'
-
-    # Cancel Previous runs
+    name: API 👷
+    needs: setup
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
 
-    needs: set-environment
-    environment:
-      name: ${{ needs.set-environment.outputs.environment }}
-    defaults:
-      run:
-        working-directory: utils/mock-data-loader
-    runs-on: [self-hosted, api-tests]
-
     steps:
-      - uses: actions/checkout@v3
-      - name: Start Docker Compose
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v3
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci:all
+
+      - name: Start
         working-directory: ./
         run: |
           docker network prune -f
           docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: Sleep for 30 seconds
+      - name: Sleep
         run: sleep 30s
 
-      - name: Install mock data dependencies
-        run: npm ci
+      - name: Mock data
+        working-directory: ./utils/mock-data-loader
+        run: npm run load
 
-      - name: Load mock data
-        run: node ./re-insert-mocks.js
-
-      - name: Run TFM API tests
-        run: docker-compose exec -T trade-finance-manager-api npm run api-test
-
-      - name: Load mock data
-        run: node ./re-insert-mocks.js
-
-      - name: Run External API API tests
-        run: docker-compose exec -T external-api npm run api-test
-
-      - name: Load mock data
-        run: node ./re-insert-mocks.js
-
-      - name: Run Portal API tests
+      - name: Portal
         run: docker-compose exec -T portal-api npm run api-test
 
-      - name: Load mock data
-        run: node ./re-insert-mocks.js
+      - name: TFM
+        run: docker-compose exec -T trade-finance-manager-api npm run api-test
 
-      - name: Run Central API tests
+      - name: Cental
         run: docker-compose exec -T dtfs-central-api npm run api-test
 
-      - name: Stop containers
-        if: always()
+      - name: External
+        run: docker-compose exec -T external-api npm run api-test
+
+      - name: Stop
         working-directory: ./
         run: docker-compose -f docker-compose.gha.yml down
 
-  dof:
-    name: 'DOF API tests'
-    needs: set-environment
-    environment:
-      name: ${{ needs.set-environment.outputs.environment }}
-    runs-on: [self-hosted, api-tests]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: ACBS api test
+      - name: ACBS
         working-directory: ./azure-functions/acbs-function
         run: npm run api-test
 
-      - name: NumGen api test
+      - name: Number generator
         working-directory: ./azure-functions/number-generator-function
         run: npm run api-test
