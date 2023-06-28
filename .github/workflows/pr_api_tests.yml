@@ -94,7 +94,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm ci:all
+        run: npm run ci:all
 
       - name: Start
         working-directory: ./
