@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const compression = require('compression');
 const swaggerUi = require('swagger-ui-express');
 const { ApolloServer } = require('apollo-server-express');
@@ -12,11 +13,15 @@ const {
 } = require('./graphql');
 const healthcheck = require('./healthcheck');
 const openRouter = require('./v1/routes');
+const loginController = require('./v1/controllers/user/user.routes');
 const initScheduler = require('./scheduler');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
+const configurePassport = require('./v1/controllers/user/passport');
 
 initScheduler();
+
+configurePassport(passport);
 
 const app = express();
 
@@ -25,6 +30,8 @@ app.use(security);
 app.use(express.json());
 app.use(compression());
 app.use(healthcheck);
+app.use(passport.initialize());
+app.post('/v1/login', loginController.login);
 app.use('/v1', openRouter);
 app.use(graphQlRouter);
 

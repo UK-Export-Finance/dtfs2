@@ -95,7 +95,8 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
-      - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
+      - JWT_SIGNING_KEY
+      - JWT_VALIDATING_KEY
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
     deploy:

@@ -2,6 +2,7 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 
 const openRouter = express.Router();
+const passport = require('passport');
 
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const dealSubmit = require('./controllers/deal.submit.controller');
@@ -11,6 +12,8 @@ const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
 const handleValidationResult = require('./validation/route-validators/validation-handler');
+
+openRouter.use(passport.authenticate('jwt', { session: false }));
 
 openRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
@@ -117,8 +120,6 @@ openRouter
   .get(validation.userIdEscapingSanitization, handleValidationResult, users.findTfmUser)
   .put(validation.userIdValidation, handleValidationResult, users.updateTfmUserById)
   .delete(validation.userIdValidation, handleValidationResult, users.removeTfmUserById);
-
-openRouter.route('/login').post(users.login);
 
 openRouter.route('/facilities/:facilityId/amendments').post(validation.facilityIdValidation, handleValidationResult, amendmentController.createFacilityAmendment);
 

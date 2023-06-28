@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const utils = require('../../../utils/crypto.util');
+const utils = require('./utils');
 const { userNotFound, incorrectPassword, userIsDisabled } = require('../../../constants/login-results.constant');
 const {
   create, update, removeTfmUserById, findOne, findByUsername,
@@ -150,12 +150,16 @@ module.exports.login = async (req, res, next) => {
     // otherwise this is a technical failure during the lookup
     return next(loginResult.err);
   }
-  const { tokenObject, user } = loginResult;
+  
+  const { sessionIdentifier, ...tokenObject } = utils.issueJWT(loginResult.user);
+  console.log('ayahwhawd');
+  console.log(tokenObject);
+  console.log(loginResult);
 
   return res.status(200).json({
     success: true,
     token: tokenObject.token,
-    user: mapUserData(user),
+    user: mapUserData(loginResult.user),
     expiresIn: tokenObject.expires,
   });
 };

@@ -60,6 +60,8 @@
     "mongodb": "4.2.0",
     "node-cron": "^3.0.2",
     "nodemon": "^2.0.22",
+    "passport": "0.6.0",
+    "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.10.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3"
