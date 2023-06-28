@@ -86,6 +86,7 @@ services:
     environment:
       - PORT=5004
       - EXTERNAL_API_URL=http://external-api:5002
+      - API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
