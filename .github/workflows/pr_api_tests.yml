@@ -1,21 +1,29 @@
-name: PR - API tests
+# DTFS Git Hub Actions
+#####################################
+# This GHA is responsible for initiating api test
+# upon a PR creation for all the microservices.
+
+name: Quality Assurance - API tests
+run-name: Executing test QA on ${{ github.repository }} 🚀
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
-    - 'gef-ui/**'
-    - 'portal/**'
-    - 'portal-api/**'
-    - 'trade-finance-manager-ui/**'
-    - 'trade-finance-manager-api/**'
-    - 'external-api/**'
-    - 'dtfs-central-api/**'
-    - 'e2e-tests/**'
-    - 'utils/mock-data-loader/**'
+      - 'gef-ui/**'
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'external-api/**'
+      - 'dtfs-central-api/**'
+      - 'e2e-tests/**'
+      - 'utils/mock-data-loader/**'
 
 env:
   environment: dev
+  timezone: 'Europe/London'
+  node: ${{ vars.NODE_VERSION }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
@@ -25,88 +33,102 @@ env:
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-  MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
-  MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
-  MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}
-  MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}
+  ORDNANCE_SURVEY_API_URL: 'https://api.os.co.uk'
+  ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
+  APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
+  APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
+  APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
   MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
   MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
   MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
   APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
   APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
   APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
-  MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+  COMPANIES_HOUSE_API_URL: 'https://api.companieshouse.gov.uk'
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  NODE_ENV: ${{ secrets.NODE_ENV }}
 
 jobs:
-  set-environment:
-    name: Set Environment
-    runs-on: [self-hosted, api-tests]
+  # 1. Setup test infrastructure
+  setup:
+    name: Infrastructure setup 🔧
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
+      timezone: ${{ env.timezone }}
     steps:
-    - name: Initialise Environment
-      run: echo Setting environment to ${{ env.environment }}
+      - name: Environment 🧪
+        run: echo "Environment set to ${{ env.environment }}"
 
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.timezone }}"
+
+  # 2. API tests
   api-tests:
-    name: "Run API tests"
-
-    # Cancel Previous runs
+    name: API 👷
+    needs: setup
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
 
-    needs: set-environment
-    environment:
-      name: ${{ needs.set-environment.outputs.environment }}
-    defaults:
-      run:
-        working-directory: utils/mock-data-loader
-    runs-on: [self-hosted, api-tests]
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Start Docker Compose
-      working-directory: ./
-      run: |
-        docker network prune -f
-        docker-compose -f docker-compose.gha.yml up --build -d
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
-    - name: Sleep for 30 seconds
-      run: sleep 30s
+      - name: Repository
+        uses: actions/checkout@v3
 
-    - name: Install mock data dependencies
-      run: npm ci
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node }}
 
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
+      - name: Dependencies
+        working-directory: ./
+        run: npm run ci:all
 
-    - name: Run TFM API tests
-      run: docker-compose exec -T trade-finance-manager-api npm run api-test
+      - name: Start
+        working-directory: ./
+        run: |
+          docker network prune -f
+          docker-compose -f docker-compose.gha.yml up --build -d
 
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
+      - name: Sleep
+        run: sleep 30s
 
-    - name: Run External API API tests
-      run: docker-compose exec -T external-api npm run api-test
+      - name: Mock data
+        working-directory: ./utils/mock-data-loader
+        run: npm run load
 
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
+      - name: Portal
+        run: docker-compose exec -T portal-api npm run api-test
 
-    - name: Run Portal API tests
-      run: docker-compose exec -T portal-api npm run api-test
+      - name: TFM
+        run: docker-compose exec -T trade-finance-manager-api npm run api-test
 
-    - name: Load mock data
-      run: node ./re-insert-mocks.js
+      - name: Cental
+        run: docker-compose exec -T dtfs-central-api npm run api-test
 
-    - name: Run Central API tests
-      run: docker-compose exec -T dtfs-central-api npm run api-test
+      - name: External
+        run: docker-compose exec -T external-api npm run api-test
 
-    - name: Stop containers
-      if: always()
-      working-directory: ./
-      run: docker-compose -f docker-compose.gha.yml down
+      - name: Stop
+        working-directory: ./
+        run: docker-compose -f docker-compose.gha.yml down
+
+      - name: ACBS
+        working-directory: ./azure-functions/acbs-function
+        run: npm run api-test
+
+      - name: Number generator
+        working-directory: ./azure-functions/number-generator-function
+        run: npm run api-test

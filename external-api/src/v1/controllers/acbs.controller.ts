@@ -1,30 +1,32 @@
-// ACBS API is used to check that deal/facility ids are not already being used.
-//
-// the flow is:
-// 1) number-generator API gives us deal and facility IDs
-// 2) ACBS API tells us if the deal/facility IDs are already in use.
-
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
 import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
+import { validUkefId } from '../../utils/validUkefId';
 
 dotenv.config();
 
-const acbsFunctionUrl: any = process.env.AZURE_ACBS_FUNCTION_URL;
-const acbsFacilityUrl: any = process.env.MULESOFT_API_ACBS_FACILITY_URL;
-const acbsDealUrl: any = process.env.MULESOFT_API_ACBS_DEAL_URL;
-const username: any = process.env.MULESOFT_API_KEY;
-const password: any = process.env.MULESOFT_API_SECRET;
+const apimUrl = process.env.APIM_TFS_URL;
+const acbsUrl = process.env.AZURE_ACBS_FUNCTION_URL;
+
+const headers = {
+  'Content-Type': 'application/json',
+};
 
 export const checkDealId = async (dealId: any) => {
   console.info(`Checking deal id ${dealId} with ACBS`);
 
+  const ukefId = validUkefId(dealId);
+
+  if (!ukefId) {
+    return new Error('Invalid deal id');
+  }
+
   const response: any = await axios({
     method: 'get',
-    url: `${acbsDealUrl}/${dealId}`,
-    auth: { username, password },
+    headers,
+    url: `${apimUrl}deals/${ukefId}`,
   });
 
   if (response.status) {
@@ -41,10 +43,16 @@ export const checkDealId = async (dealId: any) => {
 export const checkFacilityId = async (facilityId: any) => {
   console.info(`Checking facility id ${facilityId} with ACBS`);
 
+  const ukefId = validUkefId(facilityId);
+
+  if (!ukefId) {
+    return new Error('Invalid facility id');
+  }
+
   const response = await axios({
     method: 'get',
-    url: `${acbsFacilityUrl}/${facilityId}`,
-    auth: { username, password },
+    headers,
+    url: `${apimUrl}facilities/${ukefId}`,
   }).catch((catchErr: any) => catchErr);
 
   if (response.status) {
@@ -58,6 +66,13 @@ export const checkFacilityId = async (facilityId: any) => {
   return new Error('Error calling ACBS API (facility)');
 };
 
+/**
+ * Find UKEF ID consumption status, if the UKEF ID is allocated to either
+ * a deal or a facility then ID cannot be used.
+ * @param req Request
+ * @param res Response
+ * @returns API response
+ */
 export const findOne = async (req: Request, res: Response) => {
   const { entityType, id } = req.params;
 
@@ -78,11 +93,18 @@ export const findOne = async (req: Request, res: Response) => {
   return res.status(500).send();
 };
 
+/**
+ * Invokes acbsUrl DOF using HTTP `POST` method.
+ * @param deal Deal object
+ * @param bank Bank object
+ * @returns DOF response
+ */
 const createAcbsRecord = async (deal: any, bank: any) => {
   if (deal) {
     const response = await axios({
       method: 'post',
-      url: `${acbsFunctionUrl}/api/orchestrators/acbs`,
+      headers,
+      url: `${acbsUrl}/api/orchestrators/acbsUrl`,
       data: {
         deal,
         bank,
@@ -101,6 +123,12 @@ const createAcbsRecord = async (deal: any, bank: any) => {
   return null;
 };
 
+/**
+ * Create ACBS records
+ * @param req Request
+ * @param res Response
+ * @returns Response object
+ */
 export const createAcbsRecordPOST = async (req: Request, res: Response) => {
   try {
     const { deal, bank } = req.body;
@@ -118,11 +146,19 @@ export const createAcbsRecordPOST = async (req: Request, res: Response) => {
   return res.status(400).send();
 };
 
+/**
+ * Invokes facility issuance DOF using HTTP `POST` method.
+ * @param id Facility ID
+ * @param facility Facility object
+ * @param deal Deal object
+ * @returns DOF response
+ */
 const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
   if (id) {
     const response = await axios({
       method: 'post',
-      url: `${acbsFunctionUrl}/api/orchestrators/acbs-issue-facility`,
+      headers,
+      url: `${acbsUrl}/api/orchestrators/acbsUrl-issue-facility`,
       data: {
         facilityId: id,
         facility,
@@ -142,6 +178,12 @@ const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
   return null;
 };
 
+/**
+ * Issue facility in ACBS
+ * @param req Request
+ * @param res Response
+ * @returns Response object
+ */
 export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -171,7 +213,8 @@ const amendAcbsFacility = async (amendment: Amendment) => {
   if (hasAmendment) {
     const response = await axios({
       method: 'post',
-      url: `${acbsFunctionUrl}/api/orchestrators/acbs-amend-facility`,
+      headers,
+      url: `${acbsUrl}/api/orchestrators/acbsUrl-amend-facility`,
       data: {
         amendment,
       },

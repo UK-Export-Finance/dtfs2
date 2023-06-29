@@ -27,6 +27,7 @@ const mandatoryFields = [
 
 const createFacilityCovenant = async (context) => {
   const { acbsFacilityCovenantInput } = context.bindingData;
+  const { dealIdentifier, facilityIdentifier, currency } = acbsFacilityCovenantInput;
 
   const covenantReq = await api.createFacilityCovenantId({
     numberTypeId: 8,
@@ -39,7 +40,7 @@ const createFacilityCovenant = async (context) => {
   }
 
   // Replace ISO currency with ACBS currency code
-  const currencyReq = await mdm.getCurrency(acbsFacilityCovenantInput.currency);
+  const currencyReq = await mdm.getCurrency(currency);
 
   // Default currency code to GBP (O)
   acbsFacilityCovenantInput.currency = (currencyReq.status === 200 && currencyReq.data.length > 1) ? currencyReq.data[0].acbsCode : 'O';
@@ -51,11 +52,11 @@ const createFacilityCovenant = async (context) => {
   }
 
   const submittedToACBS = moment().format();
-  const { status, data } = await api.createFacilityCovenant(acbsFacilityCovenantInput);
+  const { status, data } = await api.createFacilityCovenant(facilityIdentifier, acbsFacilityCovenantInput);
   if (isHttpErrorStatus(status)) {
     throw new Error(JSON.stringify({
       name: 'ACBS Facility Covenant create error',
-      dealIdentifier: acbsFacilityCovenantInput.dealIdentifier,
+      dealIdentifier,
       submittedToACBS,
       receivedFromACBS: moment().format(),
       dataReceived: data,
