@@ -5,6 +5,11 @@ dotenv.config();
 
 const { EXTERNAL_API_URL, API_KEY } = process.env;
 
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': API_KEY,
+};
+    
 const create = async ({
   dealType, entityType, entityId, dealId, user,
 }) => {
@@ -13,10 +18,7 @@ const create = async ({
     resp = await axios({
       method: 'POST',
       url: `${EXTERNAL_API_URL}/number-generator`,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-      },
+      headers,
       data: {
         dealType, entityType, entityId, dealId, user,
       },

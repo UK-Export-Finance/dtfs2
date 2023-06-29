@@ -6,14 +6,16 @@ const mapCompaniesHouseData = require('../mappings/map-companies-house-data');
 
 const { EXTERNAL_API_URL, API_KEY } = process.env;
 
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': API_KEY,
+};
+
 const findSicCodes = async (companySicCodes) => {
   const response = await axios({
     method: 'get',
     url: `${EXTERNAL_API_URL}/industry-sectors`,
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
-    },
+    headers,
   });
 
   if (companySicCodes && response && response.data) {
@@ -45,10 +47,7 @@ exports.getByRegistrationNumber = async (req, res) => {
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/companies-house/${companyNumber}`,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-      },
+      headers,
     });
 
     if (response.data.type === 'oversea-company') {
@@ -80,10 +79,7 @@ exports.getAddressesByPostcode = async (req, res) => {
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/ordnance-survey/${req.params.postcode}`,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-      },
+      headers,
     });
     const addresses = [];
     response.data.results.forEach((item) => {
