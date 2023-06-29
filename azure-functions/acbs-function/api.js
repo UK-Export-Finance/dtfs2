@@ -25,7 +25,9 @@ const mdm = {
 
 const badRequest = {
   status: 400,
-  data: {},
+  data: {
+    error: 'Bad request',
+  },
 };
 
 /**
