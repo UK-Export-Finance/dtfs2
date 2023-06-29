@@ -449,10 +449,12 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
         }
         break;
       default:
-        if (ObjectId.isValid(amendmentIdOrStatus)) {
+        if (amendmentIdOrStatus && ObjectId.isValid(amendmentIdOrStatus)) {
           amendment = (await findAmendmentById(facilityId, amendmentIdOrStatus)) ?? {};
-        } else {
+        } else if (!amendmentIdOrStatus) {
           amendment = (await findAllAmendmentsByFacilityId(facilityId)) ?? [];
+        } else {
+          return res.status(400).send({ status: 400, message: 'Invalid amendment Id' });
         }
     }
     return res.status(200).send(amendment);
