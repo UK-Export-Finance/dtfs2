@@ -1,5 +1,4 @@
 const api = require('./api');
-const tokenFor = require('../temporary-token-handler');
 
 const cleanTeams = async (token) => {
   console.info('cleaning TFM teams');
@@ -29,15 +28,7 @@ const cleanTfmDeals = async (token) => {
   }
 };
 
-const cleanAllTables = async () => {
-  const token = await tokenFor({
-    username: 'admin',
-    email: 'admin-4@ukexportfinance.gov.uk',
-    password: 'AbC!2345',
-    roles: ['maker', 'editor'],
-    bank: { id: '*' },
-  });
-
+const cleanAllTables = async (token) => {
   await cleanTeams(token);
   await cleanUsers(token);
   await cleanTfmDeals(token);

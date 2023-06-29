@@ -1,7 +1,6 @@
 const api = require('./api');
 const gefApi = require('./gef/api');
 const centralApi = require('./centralApi');
-const tokenFor = require('./temporary-token-handler');
 
 const cleanBanks = async (token) => {
   console.info('cleaning banks');
@@ -71,29 +70,12 @@ const cleanEligibilityCriteria = async (token) => {
   }
 };
 
-const cleanUsers = async () => {
-  console.info('cleaning Portal users');
-
-  for (const user of await api.listUsers()) {
-    await api.deleteUser(user);
-  }
-};
-
-const cleanAllTables = async () => {
-  const token = await tokenFor({
-    username: 'admin',
-    email: 'admin-2@ukexportfinance.gov.uk',
-    password: 'AbC!2345',
-    roles: ['maker', 'editor'],
-    bank: { id: '*' },
-  });
-
+const cleanAllTables = async (token) => {
   await cleanBanks(token);
   await cleanDeals(token);
   await cleanFacilities(token);
   await cleanMandatoryCriteria(token);
   await cleanEligibilityCriteria(token);
-  await cleanUsers();
 };
 
 module.exports = cleanAllTables;

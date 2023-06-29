@@ -124,12 +124,13 @@ const createEligibilityCriteria = async (eligibilityCriteria, token) => {
   return response.data;
 };
 
-const createUser = async (user) => {
+const createUser = async (user, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/users`,
     data: user,
@@ -236,19 +237,6 @@ const deleteEligibilityCriteria = async (version, token) => {
   return response.data;
 };
 
-const deleteUser = async (user) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      'Content-Type': 'application/json',
-      Accepts: 'application/json',
-    },
-    url: `${portalApiUrl}/v1/users/${user._id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
-
-  return response.data;
-};
-
 const listBanks = async (token) => {
   const response = await axios({
     method: 'get',
@@ -347,18 +335,32 @@ const listEligibilityCriteria = async (token) => {
   return response.data.eligibilityCriteria;
 };
 
-const listUsers = async () => {
+const listUsers = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/users`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.users;
 };
+
+const login = async (user) => {
+  const response = await axios({
+    method: 'post',
+    url: `${portalApiUrl}/v1/login`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { username: user.username, password: user.password },
+  }).catch((err) => { console.error(`err: ${err}`); });
+
+  return response.data.token;
+}
 
 const updateCurrency = async (currency, token) => {
   const response = await axios({
@@ -416,6 +418,7 @@ module.exports = {
   listMandatoryCriteria,
   listEligibilityCriteria,
   listUsers,
+  login,
   updateCountry,
   updateCurrency,
   gef,
