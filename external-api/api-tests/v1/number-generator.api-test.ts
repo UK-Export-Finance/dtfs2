@@ -55,13 +55,13 @@ jest.mock('axios', () =>
     }
 
     if (method === 'get') {
-      if (url === `${process.env.MULESOFT_API_ACBS_DEAL_URL}/${mockId}`) {
+      if (url === `${process.env.APIM_TFS_URL}/${mockId}`) {
         return Promise.resolve(mockResponses.acbs);
       }
     }
 
     if (method === 'get') {
-      if (url === `${process.env.MULESOFT_API_ACBS_FACILITY_URL}/${mockId}`) {
+      if (url === `${process.env.APIM_TFS_URL}/${mockId}`) {
         return Promise.resolve(mockResponses.acbs);
       }
     }

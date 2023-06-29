@@ -22,6 +22,7 @@ const mandatoryFields = [
 
 const createCodeValueTransaction = async (context) => {
   const { acbsCodeValueTransactionInput } = context.bindingData;
+  const { dealIdentifier, facilityIdentifier } = acbsCodeValueTransactionInput;
 
   const missingMandatory = findMissingMandatory(acbsCodeValueTransactionInput, mandatoryFields);
 
@@ -30,13 +31,13 @@ const createCodeValueTransaction = async (context) => {
   }
 
   const submittedToACBS = moment().format();
-  const { status, data } = await api.createCodeValueTransaction(acbsCodeValueTransactionInput);
+  const { status, data } = await api.createCodeValueTransaction(facilityIdentifier, acbsCodeValueTransactionInput);
 
   if (isHttpErrorStatus(status)) {
     throw new Error(JSON.stringify({
       name: 'ACBS code create value transaction error',
       status,
-      dealIdentifier: acbsCodeValueTransactionInput.dealIdentifier,
+      dealIdentifier,
       submittedToACBS,
       receivedFromACBS: moment().format(),
       dataReceived: data,
