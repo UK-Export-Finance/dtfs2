@@ -30,19 +30,21 @@ const mandatoryFields = [
 const createFacilityFee = async (context) => {
   try {
     const { acbsFacilityFeeInput } = context.bindingData;
+    const { facilityIdentifier } = acbsFacilityFeeInput;
+
     const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
     if (missingMandatory.length) {
       return Promise.resolve({ missingMandatory });
     }
 
     const submittedToACBS = moment().format();
-    const { status, data } = await api.createFacilityFee(acbsFacilityFeeInput);
+    const { status, data } = await api.createFacilityFee(facilityIdentifier, acbsFacilityFeeInput);
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
         JSON.stringify({
           name: 'ACBS Facility fee record create error',
-          facilityIdentifier: acbsFacilityFeeInput.facilityIdentifier,
+          facilityIdentifier,
           submittedToACBS,
           receivedFromACBS: moment().format(),
           dataReceived: data,
