@@ -6,7 +6,7 @@ import {
   removeSingleAllDealsFilter,
   removeAllDealsFilters,
 } from '.';
-import mockResponse from '../../../helpers/responseMock';
+import { mockRes as mockResponse } from '../../../test-mocks';
 import { getFlashSuccessMessage } from '../../../helpers';
 import api from '../../../api';
 import {

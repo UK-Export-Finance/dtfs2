@@ -1,5 +1,5 @@
 import { getSchemeType, postSchemeType } from '.';
-import mockResponse from '../../helpers/responseMock';
+import { mockRes } from '../../test-mocks';
 
 jest.mock('../../helpers', () => ({
   __esModule: true,
@@ -9,13 +9,14 @@ jest.mock('../../helpers', () => ({
 describe('schemeType', () => {
   let req;
   let res;
+
   beforeEach(() => {
     req = {
       body: {},
       session: { user: 'mock-user' },
     };
 
-    res = mockResponse();
+    res = mockRes();
   });
 
   describe('getSchemeType', () => {

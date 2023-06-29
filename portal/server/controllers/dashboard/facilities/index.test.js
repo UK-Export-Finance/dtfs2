@@ -6,7 +6,7 @@ import {
   removeSingleAllFacilitiesFilter,
   removeAllFacilitiesFilters,
 } from '.';
-import mockResponse from '../../../helpers/responseMock';
+import { mockRes as mockResponse } from '../../../test-mocks';
 import { getFlashSuccessMessage } from '../../../helpers';
 import api from '../../../api';
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';

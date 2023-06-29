@@ -4,6 +4,7 @@ const mockReq = () => ({
 
 const mockRes = () => {
   const res = {};
+
   res.redirect = jest.fn();
   res.render = jest.fn();
   res.locals = {};

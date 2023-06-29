@@ -1,6 +1,6 @@
 import { reportsController } from '.';
 import api from '../../api';
-import mockResponse from '../../helpers/responseMock';
+import { mockRes } from '../../test-mocks';
 import CONSTANTS from '../../constants';
 
 jest.mock('../../api');
@@ -67,7 +67,7 @@ describe('controllers/reports.controller', () => {
   let res;
   const req = { session: { token: 'mock-token', user: { roles: ['maker'] } } };
   beforeEach(() => {
-    res = mockResponse();
+    res = mockRes();
   });
 
   describe('getPortalReports', () => {

@@ -70,7 +70,7 @@ describe('middleware/query-params', () => {
   });
 
   describe('when query params is populated with multiple allowed params over MAXIMUM_PARAMS', () => {
-    it('should return 400 status', () => {
+    it('should return 400 status and not return the param', () => {
       req.query = {
         passwordreset: mockPasswordResetParam,
         passwordupdated: mockPasswordUpdatedParam,
@@ -79,11 +79,12 @@ describe('middleware/query-params', () => {
       queryParams(req, res, nextSpy);
 
       expect(statusSpy).toHaveBeenCalledWith(400);
+      expect(req.query).toEqual({});
     });
   });
 
   describe('when query params is populated with a disallowed param', () => {
-    it('should return 400 status', () => {
+    it('should return 400 status and not return the param', () => {
       req.query = {
         notAllowed: mockPasswordResetParam,
       };
@@ -91,6 +92,7 @@ describe('middleware/query-params', () => {
       queryParams(req, res, nextSpy);
 
       expect(statusSpy).toHaveBeenCalledWith(400);
+      expect(req.query).toEqual({});
     });
   });
 
