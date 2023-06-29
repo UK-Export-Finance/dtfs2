@@ -24,6 +24,7 @@ const mandatoryFields = [
 
 const createFacilityInvestor = async (context) => {
   const { acbsFacilityInvestorInput } = context.bindingData;
+  const { dealIdentifier, facilityIdentifier } = acbsFacilityInvestorInput;
 
   const missingMandatory = findMissingMandatory(acbsFacilityInvestorInput, mandatoryFields);
 
@@ -33,13 +34,13 @@ const createFacilityInvestor = async (context) => {
 
   const submittedToACBS = moment().format();
 
-  const { status, data } = await api.createFacilityInvestor(acbsFacilityInvestorInput);
+  const { status, data } = await api.createFacilityInvestor(facilityIdentifier, acbsFacilityInvestorInput);
 
   if (isHttpErrorStatus(status)) {
     throw new Error(
       JSON.stringify({
         name: 'ACBS Facility Investor create error',
-        dealIdentifier: acbsFacilityInvestorInput.dealIdentifier,
+        dealIdentifier,
         submittedToACBS,
         receivedFromACBS: moment().format(),
         dataReceived: data,
