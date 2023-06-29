@@ -7,8 +7,8 @@ import { validUkefId } from '../../utils/validUkefId';
 
 dotenv.config();
 
-const apimUrl = `${process.env.APIM_TFS_URL}`;
-const acbsUrl = `${process.env.AZURE_ACBS_FUNCTION_URL}`;
+const apimUrl = process.env.APIM_TFS_URL;
+const acbsUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 
 const headers = {
   'Content-Type': 'application/json',

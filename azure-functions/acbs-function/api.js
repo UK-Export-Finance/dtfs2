@@ -13,6 +13,9 @@
 require('dotenv').config();
 const axios = require('axios');
 
+// Domain
+const apimUrl = process.env.APIM_TFS_URL;
+
 // Headers declaration
 const tfs = {
   [String(process.env.APIM_TFS_KEY)]: process.env.APIM_TFS_VALUE,
@@ -37,11 +40,9 @@ const badRequest = {
  */
 const get = async (endpoint) => {
   if (endpoint) {
-    const url = `${process.env.APIM_TFS_URL}/${endpoint}`;
-
     return axios({
       method: 'get',
-      url,
+      url: `${apimUrl}${endpoint}`,
       headers: tfs,
     }).catch((error) => {
       console.error('Error calling TFS GET /%s', endpoint);
@@ -64,11 +65,9 @@ const get = async (endpoint) => {
  */
 const post = async (endpoint, payload) => {
   if (endpoint && payload) {
-    const url = `${process.env.APIM_TFS_URL}/${endpoint}`;
-
     return axios({
       method: 'post',
-      url,
+      url: `${apimUrl}${endpoint}`,
       headers: tfs,
       data: [payload],
     }).catch((error) => {
@@ -92,11 +91,9 @@ const post = async (endpoint, payload) => {
  */
 const postMdm = async (endpoint, payload) => {
   if (endpoint && payload) {
-    const url = `${process.env.APIM_MDM_URL}/${endpoint}`;
-
     return axios({
       method: 'post',
-      url,
+      url: `${apimUrl}${endpoint}`,
       headers: mdm,
       data: [payload],
     }).catch((error) => {
@@ -121,8 +118,6 @@ const postMdm = async (endpoint, payload) => {
  */
 const put = async (endpoint, payload, etag) => {
   if (endpoint && payload) {
-    const url = `${process.env.APIM_TFS_URL}/${endpoint}`;
-
     const additionalHeader = etag
       ? {
         'If-Match': etag,
@@ -131,7 +126,7 @@ const put = async (endpoint, payload, etag) => {
 
     return axios({
       method: 'put',
-      url,
+      url: `${apimUrl}${endpoint}`,
       headers: {
         ...tfs,
         ...additionalHeader,
@@ -159,8 +154,6 @@ const put = async (endpoint, payload, etag) => {
  */
 const patch = async (endpoint, payload, eTag) => {
   if (endpoint && payload) {
-    const url = `${process.env.APIM_TFS_URL}/${endpoint}`;
-
     const additionalHeader = eTag
       ? {
         'If-Match': eTag,
@@ -169,7 +162,7 @@ const patch = async (endpoint, payload, eTag) => {
 
     return axios({
       method: 'patch',
-      url,
+      url: `${apimUrl}${endpoint}`,
       headers: {
         ...tfs,
         ...additionalHeader,
