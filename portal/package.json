@@ -15,7 +15,7 @@
     "build": "rimraf ./public/js && rimraf ./public/css && webpack --mode production --config webpack.prod.config.js",
     "start": "node server/index.js",
     "dev": "webpack --config webpack.config.dev.js --watch",
-    "test": "jest --coverage --verbose --config=jest.config.js",
+    "api-test": "jest --coverage --verbose --config=jest.config.js",
     "test-quick": "jest --config=jest.config.js",
     "test-watch": "jest --watchAll --coverage --verbose --config=jest.config.js --detectOpenHandles"
   },
