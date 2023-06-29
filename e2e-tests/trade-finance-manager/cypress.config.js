@@ -13,6 +13,7 @@ module.exports = defineConfig({
   referenceDataApiProtocol: 'http://',
   referenceDataApiHost: 'localhost',
   referenceDataApiPort: '5002',
+  apiKey: 'test',
   projectId: 'sefntb',
   responseTimeout: 100000,
   pageLoadTimeout: 120000,
