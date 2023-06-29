@@ -8,6 +8,7 @@ const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const refDataUrl = process.env.EXTERNAL_API_URL;
 const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 const azureNumberGeneratorUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
+const { API_KEY } = process.env;
 const { DURABLE_FUNCTIONS } = CONSTANTS;
 
 const findOnePortalDeal = async (dealId) => {
@@ -17,6 +18,7 @@ const findOnePortalDeal = async (dealId) => {
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -33,6 +35,7 @@ const updatePortalDeal = async (dealId, update) => {
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         dealUpdate: update,
@@ -54,6 +57,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
       url: `${centralApiUrl}/v1/portal/deals/${dealId}/status`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         status,
@@ -75,6 +79,7 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
       url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         dealId,
@@ -96,6 +101,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}/status`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         status,
@@ -117,6 +123,7 @@ const updatePortalFacility = async (facilityId, update) => {
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: update,
     });
@@ -136,6 +143,7 @@ const findOneDeal = async (dealId) => {
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
     return response.data.deal;
@@ -153,6 +161,7 @@ const updateDeal = async (dealId, dealUpdate) => {
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         dealUpdate,
@@ -172,6 +181,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}/snapshot`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: snapshotUpdate,
     });
@@ -189,6 +199,7 @@ const submitDeal = async (dealType, dealId) => {
       url: `${centralApiUrl}/v1/tfm/deals/submit`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         dealType,
@@ -209,6 +220,7 @@ const findOneFacility = async (facilityId) => {
       url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -227,6 +239,7 @@ const findFacilitesByDealId = async (dealId) => {
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}/facilities`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -243,6 +256,7 @@ const updateFacility = async (facilityId, facilityUpdate) => {
       url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         facilityUpdate,
@@ -262,7 +276,7 @@ const createFacilityAmendment = async (facilityId) => {
       const response = await axios({
         method: 'post',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
         data: { facilityId },
       });
 
@@ -284,7 +298,7 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
       const response = await axios({
         method: 'put',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
         data: payload,
       });
 
@@ -306,7 +320,7 @@ const getAmendmentInProgress = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/in-progress`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return { status: 200, data: response.data };
@@ -327,7 +341,7 @@ const getCompletedAmendment = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return response.data;
@@ -348,7 +362,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return response.data;
@@ -369,7 +383,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return response.data;
@@ -390,7 +404,7 @@ const getAmendmentById = async (facilityId, amendmentId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return response.data;
@@ -411,7 +425,7 @@ const getAmendmentByFacilityId = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return response.data;
@@ -432,7 +446,7 @@ const getAmendmentsByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return response.data;
@@ -453,7 +467,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/in-progress`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return response.data;
@@ -474,7 +488,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/completed`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return response.data;
@@ -495,7 +509,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/completed/latest`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return response.data;
@@ -516,7 +530,7 @@ const getAllAmendmentsInProgress = async () => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
       });
 
       return response.data;
@@ -537,6 +551,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
       url: `${centralApiUrl}/v1/portal/gef/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: facilityUpdate,
     });
@@ -554,6 +569,7 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
       url: `${centralApiUrl}/v1/tfm/deals`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         queryParams,
@@ -612,6 +628,7 @@ const findUser = async (username) => {
       url: `${centralApiUrl}/v1/tfm/users/${username}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
     return response.data;
@@ -627,6 +644,7 @@ const findUserById = async (userId) => {
       url: `${centralApiUrl}/v1/tfm/users/id/${userId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
     return response.data;
@@ -642,6 +660,7 @@ const findPortalUserById = async (userId) => {
       url: `${centralApiUrl}/v1/user/${userId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
     return response.data;
@@ -658,6 +677,7 @@ const updateUserTasks = async (userId, updatedTasks) => {
       url: `${centralApiUrl}/v1/tfm/users/${userId}/tasks`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         updatedTasks,
@@ -676,6 +696,7 @@ const findOneTeam = async (teamId) => {
       url: `${centralApiUrl}/v1/tfm/teams/${teamId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -692,6 +713,7 @@ const findTeamMembers = async (teamId) => {
       url: `${centralApiUrl}/v1/tfm/users/team/${teamId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -910,6 +932,7 @@ const findOneGefDeal = async (dealId) => {
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -928,6 +951,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/status`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         status,
@@ -949,6 +973,7 @@ const updatePortalGefDeal = async (dealId, update) => {
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         dealUpdate: update,
@@ -970,6 +995,7 @@ const updateGefMINActivity = async (dealId) => {
       url: `${centralApiUrl}/v1/portal/gef/deals/activity/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -988,6 +1014,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/comment`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: { dealId, commentType, comment },
     });
@@ -1007,6 +1034,7 @@ const getAllFacilities = async (searchString) => {
       url: `${centralApiUrl}/v1/tfm/facilities`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
     return response.data;
@@ -1021,7 +1049,7 @@ const findBankById = async (bankId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/bank/${bankId}`,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
     });
     return response.data;
   } catch (response) {
@@ -1035,7 +1063,7 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/version/${version}`,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, },
     });
 
     return response.data;

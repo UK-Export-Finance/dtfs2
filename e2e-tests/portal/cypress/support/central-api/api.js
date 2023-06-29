@@ -3,6 +3,8 @@ const api = () => {
   return url;
 };
 
+const apiKey = Cypress.config('apiKey');
+
 module.exports.createFacility = (facility, dealId, user) =>
   cy.request({
     method: 'POST',
@@ -13,6 +15,10 @@ module.exports.createFacility = (facility, dealId, user) =>
         dealId,
       },
       user,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
     },
   }).then((resp) => {
     expect(resp.status).to.equal(200);
@@ -26,6 +32,7 @@ module.exports.updateFacility = (facilityId, facilityUpdate, user) =>
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      'x-api-key': apiKey,
     },
     body: {
       ...facilityUpdate,
@@ -42,6 +49,10 @@ module.exports.deleteFacility = (facilityId, user) =>
     url: `${api()}/v1/portal/facilities/${facilityId}`,
     body: {
       user,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
     },
   }).then((resp) => {
     expect(resp.status).to.equal(200);

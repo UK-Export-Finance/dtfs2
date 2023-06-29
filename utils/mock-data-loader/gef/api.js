@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const centralApi = process.env.DTFS_CENTRAL_API;
 const portalApi = process.env.DEAL_API_URL;
+const { API_KEY } = process.env;
 
 const createApplication = async (data, token) => {
   const response = await axios({
@@ -83,6 +84,7 @@ const listFacilities = async (token) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
       Authorization: token || '',
+      'x-api-key': API_KEY,
     },
     url: `${centralApi}/v1/portal/gef/facilities`
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -227,6 +229,7 @@ const getDurableFunctions = async (token) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
       Authorization: token || '',
+      'x-api-key': API_KEY,
     },
     url: `${centralApi}/v1/portal/durable-functions`
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -240,6 +243,7 @@ const deleteCronJobs = async (token) => {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
       Authorization: token || '',
+      'x-api-key': API_KEY,
     },
     url: `${centralApi}/v1/portal/cron-jobs`
   }).catch((err) => { console.error(`err: ${err}`); });

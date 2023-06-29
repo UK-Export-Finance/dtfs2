@@ -11,6 +11,7 @@ module.exports = defineConfig({
   tfmApiHost: 'localhost',
   tfmApiPort: '5004',
   projectId: 'sefntb',
+  apiKey: 'test',
   pageLoadTimeout: 180000,
   numTestsKeptInMemory: 1,
   retries: {

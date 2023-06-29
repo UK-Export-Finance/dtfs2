@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const tfmUrl = process.env.TFM_API;
+const { API_KEY } = process.env;
 
 const findOneDeal = async (dealId) => {
   try {
@@ -12,6 +13,7 @@ const findOneDeal = async (dealId) => {
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -28,6 +30,7 @@ const createDeal = async (deal, user) => {
       url: `${centralApiUrl}/v1/portal/deals`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         deal,
@@ -46,6 +49,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         dealUpdate,
@@ -66,6 +70,7 @@ const deleteDeal = async (dealId) => {
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
   } catch (err) {
@@ -80,6 +85,7 @@ const addDealComment = async (dealId, commentType, comment) => {
       url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         commentType,
@@ -100,6 +106,7 @@ const createFacility = async (facility, user) => {
       url: `${centralApiUrl}/v1/portal/facilities`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         facility,
@@ -118,6 +125,7 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
       url: `${centralApiUrl}/v1/portal/multiple-facilities`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         facilities,
@@ -137,6 +145,7 @@ const findOneFacility = async (facilityId) => {
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
     });
 
@@ -153,6 +162,7 @@ const updateFacility = async (facilityId, facility, user) => {
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         ...facility,
@@ -171,6 +181,7 @@ const deleteFacility = async (facilityId, user) => {
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
       },
       data: {
         user,
@@ -207,7 +218,7 @@ const findLatestGefMandatoryCriteria = async () => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/latest`,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, }
     });
 
     return { status: 200, data: response.data };

@@ -2,11 +2,17 @@ const axios = require('axios');
 require('dotenv').config();
 
 const urlRoot = process.env.DTFS_CENTRAL_API;
+const { API_KEY } = process.env;
 
 const getDeal = async (dealId) => {
   const response = await axios({
     method: 'get',
     url: `${urlRoot}/v1/portal/deals/${dealId}`,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+      Accepts: 'application/json',
+    },
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
@@ -16,6 +22,11 @@ const createFacility = async (facility, dealId, user) => {
   const response = await axios({
     method: 'post',
     url: `${urlRoot}/v1/portal/facilities`,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+      Accepts: 'application/json',
+    },
     data: {
       facility: {
         ...facility,
@@ -34,6 +45,7 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
     url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
     headers: {
       'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
       Accepts: 'application/json',
     },
     data: {
@@ -52,6 +64,7 @@ const listFacilities = async () => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
       Accepts: 'application/json',
     },
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -66,6 +79,7 @@ const deleteFacility = async (facilityId) => {
     url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
     headers: {
       'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
       Accepts: 'application/json',
     },
   }).catch((err) => { console.error(`err: ${err}`); });
