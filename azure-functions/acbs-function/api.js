@@ -1,75 +1,123 @@
 /**
- * ACBS Functions API Library deals with following HTTP Methods:
+ * ACBS durable functions API library deals with following HTTP methods:
+ *
  * 1. GET
  * 2. POST
  * 3. PUT
  * 4. PATCH
  *
- * All the function have argument validation check and return object verification in
+ * All of the function have argument validation check and return object verification in
  * case err object does not have expected properties due to network connection, SSL verification or other issues.
  */
-const acbs = process.env.MULESOFT_API_UKEF_TF_EA_URL;
-const username = process.env.MULESOFT_API_KEY;
-const password = process.env.MULESOFT_API_SECRET;
-const axios = require('axios');
 
 require('dotenv').config();
+const axios = require('axios');
 
-const getACBS = async (apiRef) => {
-  if (apiRef) {
+// Domain
+const apimUrl = process.env.APIM_TFS_URL;
+
+// Headers declaration
+const tfs = {
+  [String(process.env.APIM_TFS_KEY)]: process.env.APIM_TFS_VALUE,
+  'Content-Type': 'application/json',
+};
+const mdm = {
+  [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
+  'Content-Type': 'application/json',
+};
+
+const badRequest = {
+  status: 400,
+  data: {
+    error: 'Bad request',
+  },
+};
+
+/**
+ * Invokes TFS GET endpoint
+ * @param {String} endpoint TFS endpoint
+ * @returns {Object} API response object
+ */
+const get = async (endpoint) => {
+  if (endpoint) {
     return axios({
       method: 'get',
-      url: `${acbs}/${apiRef}`,
-      auth: {
-        username,
-        password,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).catch((e) => {
-      console.error('Error calling GET to ACBS');
+      url: `${apimUrl}${endpoint}`,
+      headers: tfs,
+    }).catch((error) => {
+      console.error('Error calling TFS GET /%s', endpoint);
+
       return {
-        status: e.response ? e.response.status : e,
-        data: { error: e.response ? e.response.data : e },
+        status: error.response ? error.response.status : error,
+        data: { error: error.response ? error.response.data : error },
       };
     });
   }
-  return {
-    status: 400,
-    data: {},
-  };
+
+  return badRequest;
 };
 
-const postToAcbs = async (apiRef, acbsInput) => {
-  if (!!apiRef && !!acbsInput) {
+/**
+ * Invokes TFS POST endpoint
+ * @param {String} endpoint TFS endpoint
+ * @param {Object} payload Payload object
+ * @returns {Object} API response object
+ */
+const post = async (endpoint, payload) => {
+  if (endpoint && payload) {
     return axios({
       method: 'post',
-      url: `${acbs}/${apiRef}`,
-      auth: {
-        username,
-        password,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: [acbsInput],
-    }).catch((e) => {
-      console.error('Error calling POST to ACBS');
+      url: `${apimUrl}${endpoint}`,
+      headers: tfs,
+      data: [payload],
+    }).catch((error) => {
+      console.error('Error calling TFS POST /%s', endpoint);
+
       return {
-        status: e.response ? e.response.status : e,
-        data: { error: e.response ? e.response.data : e },
+        status: error.response ? error.response.status : error,
+        data: { error: error.response ? error.response.data : error },
       };
     });
   }
-  return {
-    status: 400,
-    data: {},
-  };
+
+  return badRequest;
 };
 
-const putToAcbs = async (apiRef, acbsInput, etag) => {
-  if (!!apiRef && !!acbsInput) {
+/**
+ * Invokes MDM POST endpoint
+ * @param {String} endpoint MDM endpoint
+ * @param {Object} payload Payload object
+ * @returns {Object} API response object
+ */
+const postMdm = async (endpoint, payload) => {
+  if (endpoint && payload) {
+    return axios({
+      method: 'post',
+      url: `${apimUrl}${endpoint}`,
+      headers: mdm,
+      data: [payload],
+    }).catch((error) => {
+      console.error('Error calling MDM POST /%s', endpoint);
+
+      return {
+        status: error.response ? error.response.status : error,
+        data: { error: error.response ? error.response.data : error },
+      };
+    });
+  }
+
+  return badRequest;
+};
+
+/**
+ * Invokes TFS PUT endpoint
+ * @param {String} endpoint TFS endpoint
+ * @param {Object} payload Payload object
+ * @param {String} etag Entity tag
+ * @returns {Object} API response object
+ */
+const put = async (endpoint, payload, etag) => {
+  if (endpoint && payload) {
     const additionalHeader = etag
       ? {
         'If-Match': etag,
@@ -78,32 +126,34 @@ const putToAcbs = async (apiRef, acbsInput, etag) => {
 
     return axios({
       method: 'put',
-      url: `${acbs}/${apiRef}`,
-      auth: {
-        username,
-        password,
-      },
+      url: `${apimUrl}${endpoint}`,
       headers: {
-        'Content-Type': 'application/json',
+        ...tfs,
         ...additionalHeader,
       },
-      data: acbsInput,
-    }).catch((e) => {
-      console.error('Error calling PUT to ACBS');
+      data: payload,
+    }).catch((error) => {
+      console.error('Error calling TFS PUT /%s', endpoint);
+
       return {
-        status: e.response ? e.response.status : e,
-        data: { error: e.response ? e.response.data : e },
+        status: error.response ? error.response.status : error,
+        data: { error: error.response ? error.response.data : error },
       };
     });
   }
-  return {
-    status: 400,
-    data: {},
-  };
+
+  return badRequest;
 };
 
-const patchToAcbs = async (apiRef, acbsInput, eTag) => {
-  if (!!apiRef && !!acbsInput) {
+/**
+ * Invokes TFS PATCH endpoint
+ * @param {String} endpoint TFS endpoint
+ * @param {Object} payload Payload object
+ * @param {String} etag Entity tag
+ * @returns {Object} API response object
+ */
+const patch = async (endpoint, payload, eTag) => {
+  if (endpoint && payload) {
     const additionalHeader = eTag
       ? {
         'If-Match': eTag,
@@ -112,47 +162,55 @@ const patchToAcbs = async (apiRef, acbsInput, eTag) => {
 
     return axios({
       method: 'patch',
-      url: `${acbs}/${apiRef}`,
-      auth: {
-        username,
-        password,
-      },
+      url: `${apimUrl}${endpoint}`,
       headers: {
-        'Content-Type': 'application/json',
+        ...tfs,
         ...additionalHeader,
       },
-      data: acbsInput,
-    }).catch((e) => {
-      console.error('Error calling PATCH to ACBS');
+      data: payload,
+    }).catch((error) => {
+      console.error('Error calling TFS PATCH /%s', endpoint);
+
       return {
-        status: e.response ? e.response.status : e,
-        data: { error: e.response ? e.response.data : e },
+        status: error.response ? error.response.status : error,
+        data: { error: error.response ? error.response.data : error },
       };
     });
   }
-  return {
-    status: 400,
-    data: {},
-  };
+
+  return badRequest;
 };
 
-const getFacility = (facilityId) => getACBS(`facility/${facilityId}`);
-const getLoanId = (facilityId) => getACBS(`facility/${facilityId}/loan`);
-const createParty = (acbsInput) => postToAcbs('party', acbsInput);
-const createDeal = (acbsInput) => postToAcbs('deal', acbsInput);
-const createDealInvestor = (acbsInput) => postToAcbs('deal/investor', acbsInput);
-const createDealGuarantee = (acbsInput) => postToAcbs('deal/guarantee', acbsInput);
-const createFacility = (acbsInput) => postToAcbs('facility', acbsInput);
-const createFacilityInvestor = (acbsInput) => postToAcbs('facility/investor', acbsInput);
-const createFacilityCovenantId = (acbsInput) => postToAcbs('numbers', acbsInput);
-const createFacilityCovenant = (acbsInput) => postToAcbs('facility/covenant', acbsInput);
-const createFacilityGuarantee = (acbsInput) => postToAcbs('facility/guarantee', acbsInput);
-const createCodeValueTransaction = (acbsInput) => postToAcbs('facility/codeValueTransaction', acbsInput);
-const createFacilityLoan = (acbsInput) => postToAcbs('facility/loan', acbsInput);
-const createFacilityFee = (acbsInput) => postToAcbs('facility/fixedFee', acbsInput);
-const updateFacility = (facilityId, updateType, acbsInput, etag) => putToAcbs(`facility/${facilityId}?op=${updateType}`, acbsInput, etag);
-const updateFacilityLoan = (facilityId, loanId, acbsInput) => patchToAcbs(`facility/${facilityId}/loan/${loanId}`, acbsInput);
-const updateFacilityLoanAmount = (facilityId, loanId, acbsInput) => postToAcbs(`facility/${facilityId}/loan/${loanId}/amountAmendment`, acbsInput);
+// *** MDM ***
+
+// POST
+const createFacilityCovenantId = (payload) => postMdm('numbers', payload);
+
+// *** TFS ***
+
+// GET
+const getFacility = (facilityId) => get(`facilities/${facilityId}`);
+const getLoanId = (facilityId) => get(`facilities/${facilityId}/loans`);
+
+// POST
+const createParty = (payload) => post('parties', payload);
+const createDeal = (payload) => post('deals', payload);
+const createDealInvestor = (dealIdentifier, payload) => post(`deals/${dealIdentifier}/investors`, payload);
+const createDealGuarantee = (dealIdentifier, payload) => post(`deals/${dealIdentifier}/guarantees`, payload);
+const createFacility = (payload) => post('facilities', payload);
+const createFacilityInvestor = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/investors`, payload);
+const createFacilityCovenant = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/covenants`, payload);
+const createFacilityGuarantee = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/guarantees`, payload);
+const createCodeValueTransaction = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/activation-transactions`, payload);
+const createFacilityLoan = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/loans`, payload);
+const createFacilityFee = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/fixed-fees`, payload);
+const updateFacilityLoanAmount = (facilityIdentifier, loanId, payload) => post(`facilities/${facilityIdentifier}/loans/${loanId}/amendments/amount`, payload);
+
+// PUT
+const updateFacility = (facilityIdentifier, updateType, payload, etag) => put(`facilities/${facilityIdentifier}?op=${updateType}`, payload, etag);
+
+// PATCH
+const updateFacilityLoan = (facilityIdentifier, loanId, payload) => patch(`facilities/${facilityIdentifier}/loans/${loanId}`, payload);
 
 module.exports = {
   getFacility,

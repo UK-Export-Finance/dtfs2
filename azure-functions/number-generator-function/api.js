@@ -1,25 +1,26 @@
 require('dotenv').config();
 const axios = require('axios');
 
-const headers = {
-  [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
-  'Content-Type': 'application/json',
-};
-
+/**
+ * Get to TFS endpoints
+ * @param {type} type Endpoint to invoke
+ * @returns API endpoint invoke response
+ */
 const getAPI = async (type) => {
+  console.info(`Invoking TFS GET /${type}`);
+
+  const url = `${process.env.APIM_TFS_URL}/${type}`;
+  const headers = {
+    [String(process.env.APIM_TFS_KEY)]: process.env.APIM_TFS_VALUE,
+    'Content-Type': 'application/json',
+  };
+
   const response = await axios({
     method: 'get',
-    url: `${process.env.MULESOFT_API_UKEF_TF_EA_URL}/${type}`,
-    auth: {
-      username: process.env.MULESOFT_API_KEY,
-      password: process.env.MULESOFT_API_SECRET,
-    },
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  }).catch((err) => ({
-    status: err.response.status,
-  }));
+    url,
+    headers,
+  })
+    .catch((error) => (error));
 
   return response;
 };
@@ -30,7 +31,7 @@ const getAPI = async (type) => {
  * @param {Object} payload Payload
  * @returns API endpoint invoke response
  */
-const postToAPI = async (endpoint, payload) => {
+const postAPI = async (endpoint, payload) => {
   console.info(`Invoking MDM POST ${endpoint}`);
 
   if (!process.env.APIM_MDM_URL) {
@@ -38,6 +39,11 @@ const postToAPI = async (endpoint, payload) => {
   }
 
   const url = `${process.env.APIM_MDM_URL}${endpoint}`;
+  const headers = {
+    [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
+    'Content-Type': 'application/json',
+  };
+
   const request = {
     method: 'post',
     url,
@@ -51,15 +57,26 @@ const postToAPI = async (endpoint, payload) => {
   return response;
 };
 
-const checkDealId = (dealId) => getAPI(`deal/${dealId}`);
-const checkFacilityId = (facilityId) => getAPI(`facility/${facilityId}`);
+/**
+ * UKEF deal ID validation check
+ * @param {String} dealId UKEF deal ID
+ * @returns {Object} Response object
+ */
+const checkDealId = (dealId) => getAPI(`deals/${dealId}`);
+
+/**
+ * UKEF facility ID validation check
+ * @param {String} facilityId UKEF facility ID
+ * @returns {Object} Response object
+ */
+const checkFacilityId = (facilityId) => getAPI(`facilities/${facilityId}`);
 
 /**
  * Call number generator
  * @param {Integer} numberType Number type usually `1` represents for deal and facilities
  * @returns Number generator response object
  */
-const callNumberGenerator = (numberType) => postToAPI('numbers', {
+const callNumberGenerator = (numberType) => postAPI('numbers', {
   numberTypeId: numberType,
   createdBy: 'Portal v2/TFM',
   requestingSystem: 'Portal v2/TFM',

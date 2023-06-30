@@ -805,9 +805,9 @@ jobs:
               FUNCTIONS_WORKER_RUNTIME="node" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
-              MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
-              MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} \
-              MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }} \
+              APIM_TFS_URL=${{ secrets.APIM_TFS_URL }} \
+              APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
+              APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
               APIM_MDM_URL=${{ secrets.APIM_MDM_URL }} \
               APIM_MDM_KEY=${{ secrets.APIM_MDM_KEY }} \
               APIM_MDM_VALUE=${{ secrets.APIM_MDM_VALUE }}
@@ -931,9 +931,9 @@ jobs:
               FUNCTIONS_WORKER_RUNTIME="node" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
-              MULESOFT_API_KEY=${{ secrets.MULESOFT_API_KEY }} \
-              MULESOFT_API_SECRET=${{ secrets.MULESOFT_API_SECRET }} \
-              MULESOFT_API_UKEF_TF_EA_URL=${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
+              APIM_TFS_URL=${{ secrets.APIM_TFS_URL }} \
+              APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
+              APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }}
 
     - name: Vnet integration
       uses: azure/cli@v1.0.0
@@ -1163,10 +1163,9 @@ jobs:
               WEBSITES_PORT=5000 \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
-              MULESOFT_API_ACBS_DEAL_URL="${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}" \
-              MULESOFT_API_ACBS_FACILITY_URL="${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}" \
-              MULESOFT_API_KEY="${{ secrets.MULESOFT_API_KEY }}" \
-              MULESOFT_API_SECRET="${{ secrets.MULESOFT_API_SECRET }}" \
+              APIM_TFS_URL=${{ secrets.APIM_TFS_URL }} \
+              APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
+              APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
               MULESOFT_API_PARTY_DB_KEY="${{ secrets.MULESOFT_API_PARTY_DB_KEY}}" \
               MULESOFT_API_PARTY_DB_SECRET="${{ secrets.MULESOFT_API_PARTY_DB_SECRET}}" \
               MULESOFT_API_PARTY_DB_URL="${{ secrets.MULESOFT_API_PARTY_DB_URL}}" \
