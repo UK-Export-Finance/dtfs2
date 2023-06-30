@@ -52,6 +52,8 @@ env:
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   API_KEY: ${{ secrets.API_KEY }}
+  MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
 jobs:
   # 1. Setup test infrastructure
