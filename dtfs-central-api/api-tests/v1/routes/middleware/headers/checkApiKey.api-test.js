@@ -6,7 +6,7 @@ dotenv.config();
 
 const { API_KEY } = process.env;
 
-describe('checkApiKey', () => {
+describe('routes/middleware/headers/checkApiKey', () => {
   const req = mockReq();
   const res = mockRes();
   const next = mockNext;
@@ -18,10 +18,24 @@ describe('checkApiKey', () => {
       checkApiKey(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.send).toHaveBeenCalledWith('Unauthorised');
     });
   });
 
-  describe('when x-api-key header is the correct key', () => {
+  describe('when x-api-key header is invalid', () => {
+    it('should call res.status with 401', () => {
+      req.headers = {
+        'x-api-key': `${API_KEY}-invalid`,
+      };
+
+      checkApiKey(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.send).toHaveBeenCalledWith('Unauthorised');
+    });
+  });
+
+  describe('when x-api-key header is valid', () => {
     it('should call next', () => {
       req.headers = {
         'x-api-key': API_KEY,
@@ -30,18 +44,6 @@ describe('checkApiKey', () => {
       checkApiKey(req, res, next);
 
       expect(next).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('when x-api-key header is invalid', () => {
-    it('should call res.status with 401', () => {
-      req.headers = {
-        'x-api-key': `${API_KEY}-123`,
-      };
-
-      checkApiKey(req, res, next);
-
-      expect(res.status).toHaveBeenCalledWith(401);
     });
   });
 });
