@@ -110,16 +110,16 @@ jobs:
         run: npm run load
 
       - name: Portal
-        run: docker-compose exec -it portal-api npm run api-test
+        run: docker-compose exec -T portal-api npm run api-test
 
       - name: TFM
-        run: docker-compose exec -it trade-finance-manager-api npm run api-test
+        run: docker-compose exec -T trade-finance-manager-api npm run api-test
 
       - name: Cental
-        run: docker-compose exec -it dtfs-central-api npm run api-test
+        run: docker-compose exec -T dtfs-central-api npm run api-test
 
       - name: External
-        run: docker-compose exec -it external-api npm run api-test
+        run: docker-compose exec -T external-api npm run api-test
 
       - name: Stop
         working-directory: ./
