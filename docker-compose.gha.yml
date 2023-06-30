@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   dtfs-submissions-data:
     image: mongo:5.0.5
@@ -8,7 +8,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     ports:
-      - '27017-27019:27017-27019'
+      - "27017-27019:27017-27019"
 
   dtfs-central-api:
     build: ./dtfs-central-api
@@ -18,7 +18,7 @@ services:
       - dtfs-submissions-data
       - external-api
     ports:
-      - '5005:5005'
+      - "5005:5005"
     volumes:
       - ./dtfs-central-api/src:/app/src:ro
     environment:
@@ -39,7 +39,7 @@ services:
     depends_on:
       - trade-finance-manager-api
     ports:
-      - '5003:5003'
+      - "5003:5003"
     volumes:
       - ./trade-finance-manager-ui/server:/app/server:ro
       - ./trade-finance-manager-ui/public:/app/public:ro
@@ -65,7 +65,7 @@ services:
       - dtfs-central-api
       - external-api
     ports:
-      - '5004:5004'
+      - "5004:5004"
     volumes:
       - ./trade-finance-manager-api/src:/app/src:ro
     environment:
@@ -97,7 +97,7 @@ services:
       - redis
       - portal-api
     ports:
-      - '5000:5000'
+      - "5000:5000"
     volumes:
       - ./portal/server:/app/server:ro
       - ./portal/public:/app/public:ro
@@ -121,7 +121,7 @@ services:
       - dtfs-central-api
       - external-api
     ports:
-      - '5001:5001'
+      - "5001:5001"
     volumes:
       - ./portal-api/src:/app/src:ro
     environment:
@@ -161,7 +161,7 @@ services:
     depends_on:
       - dtfs-submissions-data
     ports:
-      - '5002:5002'
+      - "5002:5002"
     volumes:
       - ./external-api/src:/app/src:ro
     environment:
@@ -202,7 +202,7 @@ services:
       - redis
       - portal-api
     ports:
-      - '5006:5006'
+      - "5006:5006"
     volumes:
       - ./gef-ui/server:/app/server:ro
       - ./gef-ui/public:/app/public:ro
@@ -241,7 +241,7 @@ services:
     image: dtfs/azure-function-number-generator
     restart: always
     ports:
-      - '7072:80'
+      - "7072:80"
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - FUNCTIONS_WORKER_RUNTIME=node
@@ -256,28 +256,28 @@ services:
       - NODE_ENV=${NODE_ENV}
 
   redis:
-    image: 'redis:alpine'
+    image: "redis:alpine"
     ports:
-      - '6379:6379'
+      - "6379:6379"
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
 
   reverse-proxy:
     build: ./reverse-proxy
-    image: 'dtfs/reverse-proxy'
+    image: "dtfs/reverse-proxy"
     depends_on:
       - portal
       - gef-ui
     ports:
-      - '80:80'
+      - "80:80"
     environment:
       - PORTAL_UI=portal:5000
       - GEF_UI=gef-ui:5006
     deploy:
       resources:
         limits:
-          cpus: '0.01'
+          cpus: "0.01"
           memory: 150M

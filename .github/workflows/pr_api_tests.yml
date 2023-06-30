@@ -53,8 +53,6 @@ env:
   NODE_ENV: ${{ secrets.NODE_ENV }}
   API_KEY: ${{ secrets.API_KEY }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
-  MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -77,7 +75,10 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
+    concurrency:
+      group: api-tests-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: Timezone
@@ -100,6 +101,7 @@ jobs:
       - name: Start
         working-directory: ./
         run: |
+          docker network prune -f
           docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Mock data
@@ -110,20 +112,16 @@ jobs:
         run: sleep 30s
 
       - name: Portal
-        working-directory: ./portal-api
-        run: npm run api-test
+        run: docker-compose exec -T portal-api npm run api-test
 
       - name: TFM
-        working-directory: ./trade-finance-manager-api
-        run: npm run api-test
+        run: docker-compose exec -T trade-finance-manager-api npm run api-test
 
       - name: Cental
-        working-directory: ./dtfs-central-api
-        run: npm run api-test
+        run: docker-compose exec -T dtfs-central-api npm run api-test
 
       - name: External
-        working-directory: ./external-api
-        run: npm run api-test
+        run: docker-compose exec -T external-api npm run api-test
 
       - name: Stop
         working-directory: ./
