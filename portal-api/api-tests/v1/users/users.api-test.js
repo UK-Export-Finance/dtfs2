@@ -1,29 +1,36 @@
 const wipeDB = require('../../wipeDB');
+const { setUpApiTestUser } = require('../../api-test-users');
 
 const app = require('../../../src/createApp');
-
 const { as } = require('../../api')(app);
 
 const users = require('./test-data');
-
 const aMaker = users.find((user) => user.username === 'MAKER');
+const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
 
 const PASSWORD_ERROR = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.' };
 const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
 
 describe('a user', () => {
-  beforeEach(async () => {
+  let loggedInUser;
+
+  beforeAll(async () => {
     await wipeDB.wipe(['users']);
+    loggedInUser = await setUpApiTestUser(as);
   });
+
+  beforeEach(async () => {
+    wipeDB.deleteUser(MOCK_USER);
+  })
 
   describe('creating a user:', () => {
     it('rejects if the provided password contains zero numeric characters', async () => {
-      const myMaker = {
-        ...aMaker,
+      const newUser = {
+        ...MOCK_USER,
         password: 'sdgkjbsdgkjbsdgkjdskj',
       };
 
-      const { status, body } = await as().post(myMaker).to('/v1/users');
+      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -31,12 +38,12 @@ describe('a user', () => {
     });
 
     it('rejects if the provided password contains zero upper-case characters', async () => {
-      const myMaker = {
-        ...aMaker,
+      const newUser = {
+        ...MOCK_USER,
         password: 'sdgkjbsdgkjbsdgkjdskj',
       };
 
-      const { status, body } = await as().post(myMaker).to('/v1/users');
+      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -44,12 +51,12 @@ describe('a user', () => {
     });
 
     it('rejects if the provided password contains zero lower-case characters', async () => {
-      const myMaker = {
-        ...aMaker,
+      const newUser = {
+        ...MOCK_USER,
         password: 'SDGASDFGHSDKGNL',
       };
 
-      const { status, body } = await as().post(myMaker).to('/v1/users');
+      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -57,12 +64,12 @@ describe('a user', () => {
     });
 
     it('rejects if the provided password contains zero special characters', async () => {
-      const myMaker = {
-        ...aMaker,
+      const newUser = {
+        ...MOCK_USER,
         password: 'SDGASDFGHSDKGNL',
       };
 
-      const { status, body } = await as().post(myMaker).to('/v1/users');
+      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -70,12 +77,12 @@ describe('a user', () => {
     });
 
     it('rejects if the provided password contains fewer than 8 characters', async () => {
-      const myMaker = {
-        ...aMaker,
+      const newUser = {
+        ...MOCK_USER,
         password: '1234567',
       };
 
-      const { status, body } = await as().post(myMaker).to('/v1/users');
+      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -83,12 +90,12 @@ describe('a user', () => {
     });
 
     it('rejects if the provided email address is not in valid format', async () => {
-      const myMaker = {
-        ...aMaker,
+      const newUser = {
+        ...MOCK_USER,
         email: 'abc'
       };
 
-      const { status, body } = await as().post(myMaker).to('/v1/users');
+      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -96,12 +103,12 @@ describe('a user', () => {
     });
 
     it('rejects if the provided email address is empty', async () => {
-      const myMaker = {
-        ...aMaker,
+      const newUser = {
+        ...MOCK_USER,
         email: ''
       };
 
-      const { status, body } = await as().post(myMaker).to('/v1/users');
+      const { status, body } = await as(loggedInUser).post(newUser).to('/v1/users');
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -109,22 +116,23 @@ describe('a user', () => {
     });
 
     it('creates the user if all provided data is valid', async () => {
-      await as().post(aMaker).to('/v1/users');
-      const { status, body } = await as().get('/v1/users');
+      await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+      const { status, body } = await as(loggedInUser).get('/v1/users');
 
       expect(status).toEqual(200);
       expect(body).toEqual({
         success: true,
-        count: 1,
+        count: 2,
         users: [
+          expect.objectContaining({ username: loggedInUser.username }),
           {
-            username: aMaker.username,
-            email: aMaker.email,
-            roles: aMaker.roles,
-            bank: aMaker.bank,
+            username: MOCK_USER.username,
+            email: MOCK_USER.email,
+            roles: MOCK_USER.roles,
+            bank: MOCK_USER.bank,
             _id: expect.any(String),
-            firstname: aMaker.firstname,
-            surname: aMaker.surname,
+            firstname: MOCK_USER.firstname,
+            surname: MOCK_USER.surname,
             timezone: 'Europe/London',
             'user-status': 'active',
           },
@@ -134,40 +142,40 @@ describe('a user', () => {
   });
 
   it('a user can be updated', async () => {
-    const response = await as().post(aMaker).to('/v1/users');
+    const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
     const createdUser = response.body.user;
 
     const updatedUserCredentials = {
       roles: ['checker', 'maker'],
     };
 
-    await as().put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+    await as(loggedInUser).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-    const { status, body } = await as().get(`/v1/users/${createdUser._id}`);
+    const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
 
     expect(status).toEqual(200);
     expect(body.roles).toEqual(['checker', 'maker']);
   });
 
   it('a user can be deleted', async () => {
-    const response = await as().post(aMaker).to('/v1/users');
+    const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
     const createdUser = response.body.user;
 
-    await as().remove(`/v1/users/${createdUser._id}`);
+    await as(loggedInUser).remove(`/v1/users/${createdUser._id}`);
 
-    const { status, body } = await as().get(`/v1/users/${createdUser._id}`);
+    const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
 
     expect(status).toEqual(200);
     expect(body).toMatchObject({});
   });
 
   it('a user can be disabled', async () => {
-    const response = await as().post(aMaker).to('/v1/users');
+    const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
     const createdUser = response.body.user;
 
-    await as().remove(`/v1/users/${createdUser._id}/disable`);
+    await as(loggedInUser).remove(`/v1/users/${createdUser._id}/disable`);
 
-    const { status, body } = await as().get(`/v1/users/${createdUser._id}`);
+    const { status, body } = await as(loggedInUser).get(`/v1/users/${createdUser._id}`);
 
     expect(status).toEqual(200);
     expect(body).toMatchObject({
@@ -176,31 +184,31 @@ describe('a user', () => {
   });
 
   it('an unknown user cannot log in', async () => {
-    const { username, password } = aMaker;
+    const { username, password } = MOCK_USER;
     const { status } = await as().post({ username, password }).to('/v1/login');
 
     expect(status).toEqual(401);
   });
 
   it('a disabled user cannot log in', async () => {
-    const response = await as().post(aMaker).to('/v1/users');
+    const response = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
     const createdUser = response.body.user;
-    await as().remove(`/v1/users/${createdUser._id}`);
+    await as(loggedInUser).remove(`/v1/users/${createdUser._id}`);
 
-    const { username, password } = aMaker;
+    const { username, password } = MOCK_USER;
     const { status } = await as().post({ username, password }).to('/v1/login');
 
     expect(status).toEqual(401);
   });
 
   it('a known user can log in', async () => {
-    const { username, password } = aMaker;
-    await as().post(aMaker).to('/v1/users');
+    const { username, password } = MOCK_USER;
+    await as(loggedInUser).post(MOCK_USER).to('/v1/users');
 
     const { status, body } = await as().post({ username, password }).to('/v1/login');
 
     const expectedUserData = {
-      ...aMaker,
+      ...MOCK_USER,
       _id: expect.any(String),
       timezone: 'Europe/London',
       'user-status': 'active',
@@ -217,8 +225,8 @@ describe('a user', () => {
   });
 
   it('a token can be validated', async () => {
-    const { username, password } = aMaker;
-    await as().post(aMaker).to('/v1/users');
+    const { username, password } = MOCK_USER;
+    await as(loggedInUser).post(MOCK_USER).to('/v1/users');
 
     const loginResult = await as().post({ username, password }).to('/v1/login');
 
@@ -239,11 +247,11 @@ describe('a user', () => {
 
   it('User already exists', async () => {
     // User creation - first instance
-    const first = await as().post(aMaker).to('/v1/users');
+    const first = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
     expect(first.status).toEqual(200);
 
     // User creation - second instance
-    const second = await as().post(aMaker).to('/v1/users');
+    const second = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
     expect(second.status).toEqual(400);
   });
 
@@ -252,7 +260,7 @@ describe('a user', () => {
   describe('Attempting to login with NoSQL injection ', () => {
     it('should return a user cannot be found message', async () => {
       const username = "{$or: [{role: { $ne: '' }}]}";
-      const { password } = aMaker;
+      const { password } = MOCK_USER;
 
       const { status, body } = await as().post({ username, password }).to('/v1/login');
 
@@ -265,13 +273,13 @@ describe('a user', () => {
     describe('when username is "{ "$ne": "" }"', () => {
       it('should return a user cannot be found message', async () => {
         const injectedUser = {
-          ...aMaker,
+          ...MOCK_USER,
           username: '{ "$ne": "" }',
           email: '{ "$ne": "" }',
         };
 
         const { username, password } = injectedUser;
-        await as().post(injectedUser).to('/v1/users');
+        await as(loggedInUser).post(injectedUser).to('/v1/users');
 
         const { status, body } = await as().post({ username, password }).to('/v1/login');
 
@@ -283,13 +291,13 @@ describe('a user', () => {
     describe('when username is "{ "$gt": "" }"', () => {
       it('should return a user cannot be found message', async () => {
         const injectedUser = {
-          ...aMaker,
+          ...MOCK_USER,
           username: '{ "$gt": "" }',
           email: '{ "$gt": "" }',
         };
 
         const { username, password } = injectedUser;
-        await as().post(injectedUser).to('/v1/users');
+        await as(loggedInUser).post(injectedUser).to('/v1/users');
 
         const { status, body } = await as().post({ username, password }).to('/v1/login');
 
@@ -300,13 +308,13 @@ describe('a user', () => {
       describe('when username is "{ "$lt": "" }"', () => {
         it('should return a user cannot be found message', async () => {
           const injectedUser = {
-            ...aMaker,
+            ...MOCK_USER,
             username: '{ "$lt": "" }',
             email: '{ "$lt": "" }',
           };
 
           const { username, password } = injectedUser;
-          await as().post(injectedUser).to('/v1/users');
+          await as(loggedInUser).post(injectedUser).to('/v1/users');
 
           const { status, body } = await as().post({ username, password }).to('/v1/login');
 

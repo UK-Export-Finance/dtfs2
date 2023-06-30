@@ -1,12 +1,14 @@
 const wipeDB = require('../../wipeDB');
+const { setUpApiTestUser } = require('../../api-test-users');
+
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 
 const { resetPassword, getUserByPasswordToken } = require('../../../src/v1/users/reset-password.controller');
 
 const users = require('./test-data');
-
 const aMaker = users.find((user) => user.username === 'MAKER_WITH_EMAIL');
+const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
 
 jest.mock('../../../src/v1/email');
 const sendEmail = require('../../../src/v1/email');
@@ -15,9 +17,16 @@ const resetPasswordEmailTemplateId = '6935e539-1a0c-4eca-a6f3-f239402c0987';
 const passwordUpdateConfirmationTemplateId = '41235821-7e52-4d63-a773-fa147362c5f0';
 
 describe('password reset', () => {
-  beforeEach(async () => {
+  let loggedInUser;
+
+  beforeAll(async () => {
     await wipeDB.wipe(['users']);
-    await as().post(aMaker).to('/v1/users');
+    loggedInUser = await setUpApiTestUser(as);
+  });
+
+  beforeEach(async () => {
+    wipeDB.deleteUser(MOCK_USER);
+    await as(loggedInUser).post(MOCK_USER).to('/v1/users');
   });
 
   afterEach(() => {
@@ -30,15 +39,15 @@ describe('password reset', () => {
   });
 
   it('should return success=true and sendEmail for existing email', async () => {
-    const reset = await resetPassword(aMaker.email);
+    const reset = await resetPassword(MOCK_USER.email);
     expect(reset).toMatchObject({ success: true });
-    expect(sendEmail).toHaveBeenCalledWith(resetPasswordEmailTemplateId, aMaker.email, {
+    expect(sendEmail).toHaveBeenCalledWith(resetPasswordEmailTemplateId, MOCK_USER.email, {
       resetToken: expect.any(String),
     });
   });
 
   it('should be case-insensitive when accepting email', async () => {
-    const reset = await resetPassword(aMaker.email.toUpperCase());
+    const reset = await resetPassword(MOCK_USER.email.toUpperCase());
     expect(reset).toMatchObject({ success: true });
   });
 
@@ -48,10 +57,10 @@ describe('password reset', () => {
   });
 
   it('should return the correct user for a given reset token', async () => {
-    const reset = await resetPassword(aMaker.email);
+    const reset = await resetPassword(MOCK_USER.email);
     const user = await getUserByPasswordToken(reset.resetToken);
 
-    const { password, ...makerWithoutPassword } = aMaker;
+    const { password, ...makerWithoutPassword } = MOCK_USER;
     expect(user).toMatchObject(makerWithoutPassword);
   });
 
@@ -65,10 +74,10 @@ describe('password reset', () => {
       });
 
       it('should send an email with reset token', async () => {
-        const { status, body } = await as().post({ email: aMaker.email }).to('/v1/users/reset-password');
+        const { status, body } = await as().post({ email: MOCK_USER.email }).to('/v1/users/reset-password');
         expect(status).toEqual(200);
         expect(body).toMatchObject({ success: true });
-        expect(sendEmail).toHaveBeenCalledWith(resetPasswordEmailTemplateId, aMaker.email, {
+        expect(sendEmail).toHaveBeenCalledWith(resetPasswordEmailTemplateId, MOCK_USER.email, {
           resetToken: expect.any(String),
         });
       });
@@ -108,18 +117,18 @@ describe('password reset', () => {
 
       it('should reset the users password when using correct reset token', async () => {
         const newPassword = 'XyZ!2345';
-        const { resetToken } = await resetPassword(aMaker.email);
-        const { status, body } = await as().post({ currentPassword: aMaker.password, password: newPassword, passwordConfirm: newPassword }).to(`/v1/users/reset-password/${resetToken}`);
+        const { resetToken } = await resetPassword(MOCK_USER.email);
+        const { status, body } = await as().post({ currentPassword: MOCK_USER.password, password: newPassword, passwordConfirm: newPassword }).to(`/v1/users/reset-password/${resetToken}`);
         expect(status).toEqual(200);
         expect(body.success).toEqual(true);
-        expect(sendEmail).toHaveBeenCalledWith(passwordUpdateConfirmationTemplateId, aMaker.email, {
+        expect(sendEmail).toHaveBeenCalledWith(passwordUpdateConfirmationTemplateId, MOCK_USER.email, {
           timestamp: expect.any(String),
         });
-        const login = await as().post({ username: aMaker.username, password: newPassword }).to('/v1/login');
+        const login = await as().post({ username: MOCK_USER.username, password: newPassword }).to('/v1/login');
         expect(login.body).toMatchObject(
           {
             success: true,
-            user: { email: aMaker.email },
+            user: { email: MOCK_USER.email },
           },
         );
       });
