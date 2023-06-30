@@ -3,7 +3,6 @@ services:
   dtfs-submissions-data:
     image: mongo:5.0.5
     restart: always
-    env_file: .env
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
@@ -34,7 +33,6 @@ services:
         limits:
           cpus: "0.1"
           memory: 400M
-    env_file: .env
     environment:
       - PORT=5005
       - CORS_ORIGIN
@@ -63,7 +61,6 @@ services:
         limits:
           cpus: "0.1"
           memory: 300M
-    env_file: .env
     environment:
       - PORT=5003
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
@@ -88,7 +85,6 @@ services:
       - "5004:5004"
     volumes:
       - ./trade-finance-manager-api/src:/app/src:ro
-    env_file: .env
     environment:
       - PORT=5004
       - CORS_ORIGIN
@@ -131,7 +127,6 @@ services:
         limits:
           cpus: "0.2"
           memory: 700M
-    env_file: .env
     environment:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -159,7 +154,6 @@ services:
         limits:
           cpus: "0.25"
           memory: 950M
-    env_file: .env
     environment:
       - PORT=5001
       - CORS_ORIGIN
@@ -196,7 +190,6 @@ services:
         limits:
           cpus: "0.1"
           memory: 400M
-    env_file: .env
     environment:
       - PORT=5002
       - CORS_ORIGIN
@@ -245,7 +238,6 @@ services:
         limits:
           cpus: "0.1"
           memory: 300M
-    env_file: .env
     environment:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -268,7 +260,6 @@ services:
         limits:
           cpus: "0.1"
           memory: 300M
-    env_file: .env
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - FUNCTIONS_WORKER_RUNTIME=node
@@ -291,7 +282,6 @@ services:
         limits:
           cpus: "0.1"
           memory: 300M
-
   reverse-proxy:
     build: ./reverse-proxy
     image: "dtfs/reverse-proxy"
