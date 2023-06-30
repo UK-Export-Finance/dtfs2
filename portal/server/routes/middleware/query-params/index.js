@@ -4,6 +4,26 @@ const ALLOWED_PARAMS = ['passwordreset', 'passwordupdated', 'passwordreseterror'
 const MAXIMUM_PARAMS = 1;
 
 /**
+ * Get a sanitised query value. Handles:
+ * 1) Query value as a string
+ * 2) Query value as an array of strings
+ * 3) Empty string or array
+ * @param {String} Query value
+ * @returns {String} Sanitised query value
+ */
+const getSanitisedQueryValue = (value) => {
+  if (value && value.length) {
+    if (Array.isArray(value)) {
+      return replaceCharactersWithCharacterCode(value[0]);
+    }
+
+    return replaceCharactersWithCharacterCode(value);
+  }
+
+  return null;
+};
+
+/**
  * Global middleware, ensures that only allowed query parameters are consumed and sanitised.
  * @param {Object} req Request object
  * @param {Object} res Response object
@@ -33,14 +53,12 @@ const queryParams = (req, res, next) => {
         /**
          * Only one allowed query param has been provided.
          * 1) Get the key.
-         * 2) Get the value.
+         * 2) Get a single value of key.
          * 3) Santise the value
          * 4) Construct a fresh query object.
          */
         const [firstKey] = filtered;
-        const firstValue = req.query[firstKey];
-
-        const sanitisedValue = replaceCharactersWithCharacterCode(firstValue);
+        const sanitisedValue = getSanitisedQueryValue(req.query[firstKey]);
 
         req.query = {
           [firstKey]: sanitisedValue,
@@ -63,4 +81,7 @@ const queryParams = (req, res, next) => {
   return next();
 };
 
-module.exports = queryParams;
+module.exports = {
+  getSanitisedQueryValue,
+  queryParams,
+};
