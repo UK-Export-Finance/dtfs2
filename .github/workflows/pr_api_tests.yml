@@ -58,7 +58,7 @@ jobs:
   # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
-    runs-on: [self-hosted]
+    runs-on: [ubuntu-latest]
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
@@ -75,7 +75,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted]
+    runs-on: [ubuntu-latest]
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -102,24 +102,24 @@ jobs:
         working-directory: ./
         run: docker-compose -f docker-compose.gha.yml up --build -d
 
+      - name: Wait
+        run: sleep 30s
+
       - name: Mock data
         working-directory: ./utils/mock-data-loader
         run: npm run load
 
-      - name: Sleep
-        run: sleep 30s
-
       - name: Portal
-        run: docker-compose exec -T portal-api npm run api-test
+        run: docker-compose exec -it portal-api npm run api-test
 
       - name: TFM
-        run: docker-compose exec -T trade-finance-manager-api npm run api-test
+        run: docker-compose exec -it trade-finance-manager-api npm run api-test
 
       - name: Cental
-        run: docker-compose exec -T dtfs-central-api npm run api-test
+        run: docker-compose exec -it dtfs-central-api npm run api-test
 
       - name: External
-        run: docker-compose exec -T external-api npm run api-test
+        run: docker-compose exec -it external-api npm run api-test
 
       - name: Stop
         working-directory: ./
