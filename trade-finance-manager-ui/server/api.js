@@ -20,6 +20,11 @@ require('dotenv').config();
 
 const tfmAPIurl = process.env.TRADE_FINANCE_MANAGER_API_URL;
 
+const headers = {
+  Authorization: token,
+  'Content-Type': 'application/json',
+};
+
 const getDeal = async (id, tasksFilters, activityFilters) => {
   const queryParams = {
     _id: id,
@@ -220,10 +225,7 @@ const updateUserPassword = async (id, update, token) => {
     const response = await axios({
       method: 'put',
       url: `${tfmAPIurl}/v1/users/${id}`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: update,
     }).catch((err) => err.response);
 
@@ -252,10 +254,7 @@ const getUser = async (userId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/users/${userId}`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return response.data.user;
@@ -270,10 +269,7 @@ const createFacilityAmendment = async (facilityId, token) => {
     const response = await axios({
       method: 'post',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: { facilityId },
     });
 
@@ -289,10 +285,7 @@ const updateAmendment = async (facilityId, amendmentId, data, token) => {
     const response = await axios({
       method: 'put',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
       data,
     });
 
@@ -308,10 +301,7 @@ const getAmendmentInProgress = async (facilityId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/in-progress`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -326,10 +316,7 @@ const getAllAmendmentsInProgress = async (token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/amendments/in-progress`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -344,10 +331,7 @@ const getCompletedAmendment = async (facilityId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -362,10 +346,7 @@ const getLatestCompletedAmendmentValue = async (facilityId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed/latest-value`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -380,10 +361,7 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -398,10 +376,7 @@ const getAmendmentById = async (facilityId, amendmentId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -416,10 +391,7 @@ const getAmendmentsByFacilityId = async (facilityId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -434,10 +406,7 @@ const getAmendmentsByDealId = async (dealId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/deals/${dealId}/amendments`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -452,10 +421,7 @@ const getAmendmentInProgressByDealId = async (dealId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/in-progress`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -470,10 +436,7 @@ const getCompletedAmendmentByDealId = async (dealId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/completed`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -488,10 +451,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/completed/latest`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return { status: 200, data: response.data };
@@ -506,10 +466,7 @@ const getParty = async (partyUrn, token) => {
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/party/urn/${partyUrn}`,
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return {
