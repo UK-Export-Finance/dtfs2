@@ -75,9 +75,6 @@ jobs:
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, linux]
-    concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
 
     steps:
       - name: Timezone
@@ -109,6 +106,9 @@ jobs:
       - name: Mock data
         working-directory: ./utils/mock-data-loader
         run: npm run load
+
+      - name: Sleep
+        run: sleep 30s
 
       - name: Portal
         working-directory: ./portal-api
