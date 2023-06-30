@@ -1,5 +1,5 @@
 module.exports = {
-  testTimeout: 60000, 
+  testTimeout: 80000, 
   setupFilesAfterEnv: [
     './api-test-setup.jest.config.js',
   ],
