@@ -74,7 +74,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, linux]
+    runs-on: [ubuntu-latest]
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -111,16 +111,20 @@ jobs:
         run: npm run load
 
       - name: Portal
-        run: docker-compose exec -T portal-api npm run api-test
+        working-directory: ./portal-api
+        run: npm run api-test
 
       - name: TFM
-        run: docker-compose exec -T trade-finance-manager-api npm run api-test
+        working-directory: ./trade-finance-manager-api
+        run: npm run api-test
 
       - name: Cental
-        run: docker-compose exec -T dtfs-central-api npm run api-test
+        working-directory: ./dtfs-central-api
+        run: npm run api-test
 
       - name: External
-        run: docker-compose exec -T external-api npm run api-test
+        working-directory: ./external-api
+        run: npm run api-test
 
       - name: Stop
         working-directory: ./
