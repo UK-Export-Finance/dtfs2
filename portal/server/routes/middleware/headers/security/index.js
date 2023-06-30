@@ -1,5 +1,8 @@
+const isRequestHeaderOriginValid = require('./is-request-header-origin-valid');
+
 /**
  * Global middleware, ensures myriads of imperative security headers.
+ * - Sanitise request "referer" and "origin" headers
  * - `HSTS` - 1 Year
  * - `X-Frame-Options` - Clickjacking
  * - `XSS`
@@ -19,12 +22,26 @@
  * @param {String} next Callback function name
  */
 const security = (req, res, next) => {
+  const { hostname } = req;
+
+  if (req.headers.referer) {
+    if (!isRequestHeaderOriginValid(hostname, req.headers.referer)) {
+      req.headers.referer = '';
+    }
+  }
+
+  if (req.headers.origin) {
+    if (!isRequestHeaderOriginValid(hostname, req.headers.origin)) {
+      req.headers.origin = '';
+    }
+  }
+
   res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains; preload');
   res.setHeader('X-Frame-Options', 'deny');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Content-Security-Policy', "default-src 'none';connect-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' data:;form-action 'self';frame-ancestors 'self';img-src 'self';object-src 'none';script-src 'self' 'unsafe-inline';script-src-attr 'self' 'unsafe-inline';style-src 'self';upgrade-insecure-requests");
-  res.setHeader('Cache-Control', 'no-cache, must-revalidate, max-age=604800');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=604800');
   res.setHeader('Referrer-Policy', 'same-origin');
   res.setHeader('X-Download-Options', 'noopen');
   res.setHeader('X-DNS-Prefetch-Control', 'on');
@@ -38,4 +55,6 @@ const security = (req, res, next) => {
   next();
 };
 
-module.exports = security;
+module.exports = {
+  security,
+};

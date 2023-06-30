@@ -1,4 +1,10 @@
-const mockResponse = () => {
+const mockReq = () => ({
+  session: {},
+  headers: {},
+  hostname: 'dtfs',
+});
+
+const mockRes = () => {
   const res = {};
   res.locals = {};
   res.redirect = jest.fn();
