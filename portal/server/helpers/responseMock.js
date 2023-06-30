@@ -15,4 +15,7 @@ const mockRes = () => {
   return res;
 };
 
-module.exports = mockResponse;
+module.exports = {
+  mockReq,
+  mockRes,
+};
