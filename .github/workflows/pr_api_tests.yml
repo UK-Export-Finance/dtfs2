@@ -100,9 +100,7 @@ jobs:
 
       - name: Start
         working-directory: ./
-        run: |
-          docker network prune -f
-          docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker-compose -f docker-compose.gha.yml up --build -d
 
       - name: Mock data
         working-directory: ./utils/mock-data-loader
