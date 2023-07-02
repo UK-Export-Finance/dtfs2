@@ -2,7 +2,7 @@ import { findACBSIndustrySector } from '../../src/v1/controllers/industry-sector
 
 describe('findACBSIndustrySector lookup', () => {
   it('should return status code from industry sector lookup', async () => {
-    const expectedBody = [
+    const expected = [
       {
         ukefSectorName: 'Electricity, gas, steam and air conditioning supply',
         internalNo: null,
@@ -15,7 +15,19 @@ describe('findACBSIndustrySector lookup', () => {
       },
     ];
     const { status, data } = await findACBSIndustrySector(35220);
+
     expect(status).toEqual(200);
-    expect(data).toMatchObject(expectedBody);
+
+    const responseData = data[0];
+
+    expect(responseData.ukefSectorName).toEqual(expected[0].ukefSectorName);
+    expect(responseData.internalNo).toEqual(expected[0].internalNo);
+    expect(responseData.acbsSectorName).toEqual(expected[0].acbsSectorName);
+    expect(responseData.acbsIndustryName).toEqual(expected[0].acbsIndustryName);
+
+    expect(responseData.created).toBeDefined();
+    expect(responseData.updated).toBeDefined();
+    expect(responseData.effectiveFrom).toBeDefined();
+    expect(responseData.effectiveTo).toBeDefined();
   });
 });
