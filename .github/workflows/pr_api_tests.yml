@@ -52,12 +52,14 @@ env:
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
   API_KEY: ${{ secrets.API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
+  API_KEY: ${{ secrets.API_KEY }}
+  CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
 
 jobs:
   # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest]
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
@@ -74,7 +76,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest]
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -99,11 +101,9 @@ jobs:
 
       - name: Start
         working-directory: ./
-        run: |
-          docker network prune -f
-          docker-compose -f docker-compose.gha.yml up --build -d
+        run: docker-compose -f docker-compose.gha.yml up --build -d
 
-      - name: Sleep
+      - name: Wait
         run: sleep 30s
 
       - name: Mock data

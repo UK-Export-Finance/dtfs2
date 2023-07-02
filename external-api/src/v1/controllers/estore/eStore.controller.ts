@@ -21,17 +21,8 @@ const validateEstoreInput = (eStoreData: any) => {
 };
 
 export const createEstore = async (req: Request, res: Response) => {
-  const { 
-    dealId,
-    siteName,
-    facilityIdentifiers,
-    supportingInformation,
-    exporterName,
-    buyerName,
-    dealIdentifier,
-    destinationMarket,
-    riskMarket
-  } = req.body;
+  const { dealId, siteName, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = req.body;
+
   let eStoreData = {} as Estore;
 
   if (!objectIsEmpty(req.body)) {
