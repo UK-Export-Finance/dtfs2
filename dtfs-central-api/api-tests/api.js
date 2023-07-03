@@ -8,6 +8,7 @@ const { API_KEY } = process.env;
 
 const headers = {
   'x-api-key': API_KEY,
+  'content-type': 'application/json'
 };
 
 module.exports = (app) => ({
