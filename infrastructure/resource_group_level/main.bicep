@@ -207,7 +207,7 @@ module functionAcbs 'modules/function-acbs.bicep' = {
   params: {
     environment: environment
     location: location
-    containerRegistryName: containerRegistryName
+    containerRegistryName: containerRegistry.name
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
