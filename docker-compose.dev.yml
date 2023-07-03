@@ -31,8 +31,8 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - TZ=Europe/London
-      - NODE_ENV=${NODE_ENV}
       - API_KEY
+      - NODE_ENV=${NODE_ENV}
     command: npx nodemon --inspect=0.0.0.0:9223 src/index.js -L
 
   trade-finance-manager-ui:
