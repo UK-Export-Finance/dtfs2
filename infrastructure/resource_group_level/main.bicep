@@ -20,7 +20,7 @@ param acrSku string = 'Basic'
 // Dev uses 172.16.4x.xx
 // Demo (legacy?) uses 172.16.6x.xx
 
-// Test uses 172.16.5x.xx 
+// Test uses 172.16.5x.xx
 // Staging uses 172.16.7x.xx
 
 // Feature can use 172.16.2x.xx
@@ -58,6 +58,7 @@ param storageNetworkAccessDefaultAction string = 'Allow'
 @description('Enable 7-day soft deletes on file shares')
 param shareDeleteRetentionEnabled bool = false
 
+param cosmosDbDatabaseName string = 'dtfs-submissions'
 // All current environments use 'Provisioned Throughput'
 // TODO:DTFS-6422 Ensure we use 'Provisioned Throughput' for extant environments, but consider changing.
 @allowed(['Provisioned Throughput', 'Serverless'])
@@ -67,6 +68,8 @@ param cosmosDbCapacityMode string = 'Serverless'
 // Consider changing non-prod environments to Continuous7Days.
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param cosmosDbBackupPolicyTier string = 'Continuous7Days'
+
+var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
@@ -91,6 +94,28 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-pr
   properties: {
     // Admin needs to be enabled for App Service continuous deployment
     adminUserEnabled: true
+  }
+}
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
+  name: logAnalyticsWorkspaceName
+  location: location
+  tags: {
+    Environment: 'Preproduction'
+  }
+  properties: {
+    sku: {
+      name: 'PerGB2018'
+    }
+    retentionInDays: 30
+    features: {
+      enableLogAccessUsingOnlyResourcePermissions: true
+    }
+    workspaceCapping: {
+      dailyQuotaGb: -1
+    }
+    publicNetworkAccessForIngestion: 'Enabled'
+    publicNetworkAccessForQuery: 'Enabled'
   }
 }
 
@@ -189,6 +214,7 @@ module cosmosDb 'modules/cosmosdb.bicep' = {
     environment: environment
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    databaseName: cosmosDbDatabaseName
     allowedIpsString: onPremiseNetworkIpsString
     capacityMode: cosmosDbCapacityMode
     backupPolicyTier: cosmosDbBackupPolicyTier
@@ -213,5 +239,20 @@ module functionAcbs 'modules/function-acbs.bicep' = {
     appServicePlanId: appServicePlan.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     storageAccountName: storage.outputs.storageAccountName
+  }
+}
+
+module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
+  name: 'dtfsCentralApi'
+  params: {
+    location: location
+    environment: environment
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDbDatabaseName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
   }
 }
