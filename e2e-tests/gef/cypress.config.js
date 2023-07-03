@@ -1,5 +1,7 @@
 const { defineConfig } = require('cypress');
 
+const apiKey = Cypress.env('API_KEY');
+
 module.exports = defineConfig({
   dealApiProtocol: 'http://',
   dealApiHost: 'localhost',
@@ -11,7 +13,7 @@ module.exports = defineConfig({
   tfmApiHost: 'localhost',
   tfmApiPort: '5004',
   projectId: 'sefntb',
-  apiKey: 'test',
+  apiKey,
   pageLoadTimeout: 120000,
   responseTimeout: 120000,
   numTestsKeptInMemory: 1,
