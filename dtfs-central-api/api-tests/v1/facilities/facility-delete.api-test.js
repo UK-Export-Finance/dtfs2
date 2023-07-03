@@ -1,9 +1,18 @@
 const axios = require('axios');
+const dotenv = require('dotenv');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 
+dotenv.config();
+
 const { DTFS_CENTRAL_API } = process.env;
+const { API_KEY } = process.env;
+
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': API_KEY,
+};
 
 const mockUser = {
   _id: '123456789',
@@ -45,6 +54,7 @@ describe('/v1/portal/facilities', () => {
       method: 'post',
       url: `${DTFS_CENTRAL_API}/v1/portal/deals`,
       data: { deal: newDeal, user: mockUser },
+      headers,
     });
 
     dealId = deal._id;
@@ -54,6 +64,7 @@ describe('/v1/portal/facilities', () => {
       method: 'post',
       url: `${DTFS_CENTRAL_API}/v1/portal/facilities`,
       data: { facility: newBondFacility, user: mockUser },
+      headers,
     });
 
     bondFacilityId = facility._id;
@@ -70,6 +81,7 @@ describe('/v1/portal/facilities', () => {
         method: 'delete',
         url: `${DTFS_CENTRAL_API}/v1/portal/facilities/${bondFacilityId}`,
         data: removeBody,
+        headers,
       });
 
       expect(status).toEqual(200);
