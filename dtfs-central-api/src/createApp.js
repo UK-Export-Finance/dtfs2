@@ -3,7 +3,7 @@ const compression = require('compression');
 const mongoSanitise = require('express-mongo-sanitize');
 const seo = require('./v1/routes/middleware/headers/seo');
 const security = require('./v1/routes/middleware/headers/security');
-const checkApiKey = require('./v1/routes/middleware/headers/checkApiKey');
+const checkApiKey = require('./v1/routes/middleware/headers/check-api-key');
 
 const {
   BANK_ROUTE,
