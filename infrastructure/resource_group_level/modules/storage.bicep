@@ -18,6 +18,8 @@ param networkAccessDefaultAction string
 
 param shareDeleteRetentionEnabled bool
 
+param filesDnsZoneId string
+
 var storageAccountName = 'tfs${environment}storage'
 
 var allowedIps = json(allowedIpsString)
@@ -206,7 +208,7 @@ resource tables 'Microsoft.Storage/storageAccounts/tableServices/tables@2022-09-
   name: tableName
 }]
 
-// This resource definition is taken from the storage-private-endpoint export 
+// This resource definition is taken from the storage-private-endpoint export
 resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   name: storageAccountName
   location: location
@@ -238,5 +240,26 @@ resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' 
     // Note that the customDnsConfigs array gets created automatically and doesn't need setting here.
   }
 }
+
+// We add this config in the "zone group" to trigger automatic CNAME (A Record) generation in the
+// Private DNS Zone in the private link.
+// https://stackoverflow.com/questions/69810938/what-is-azure-private-dns-zone-group
+// https://learn.microsoft.com/en-us/azure/private-link/create-private-endpoint-bicep?tabs=CLI
+// https://bhabalajinkya.medium.com/azure-bicep-private-communication-between-azure-resources-f4a17c171cfb
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+  parent: storagePrivateEndpoint
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: filesDnsZoneId
+        }
+      }
+    ]
+  }
+}
+
 
 output storageAccountName string = storageAccount.name
