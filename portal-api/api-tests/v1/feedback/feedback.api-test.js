@@ -42,12 +42,12 @@ describe('/v1/feedback', () => {
   };
 
   describe('POST /v1/feedback', () => {
-    it('200s requests that do not present a valid Authorization token', async () => {
+    it('returns 401 for requests that do not present a valid Authorization token', async () => {
       const { status } = await as().post(feedbackFormBody).to('/v1/feedback');
-      expect(status).toEqual(200);
+      expect(status).toEqual(401);
     });
 
-    it('200s requests that do not come from a user with role=maker || role=checker', async () => {
+    it('returns 200 for requests that do not come from a user with role=maker || role=checker', async () => {
       const { status } = await as(noRoles).post(feedbackFormBody).to('/v1/feedback');
       expect(status).toEqual(200);
     });

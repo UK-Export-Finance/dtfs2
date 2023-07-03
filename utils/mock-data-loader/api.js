@@ -237,6 +237,20 @@ const deleteEligibilityCriteria = async (version, token) => {
   return response.data;
 };
 
+const deleteUser = async (user, token) => {
+  const response = await axios({
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
+      Authorization: token || '',
+    },
+    url: `${portalApiUrl}/v1/users/${user._id}`,
+  }).catch((err) => { console.error(`err: ${err}`); });
+
+  return response.data;
+};
+
 const listBanks = async (token) => {
   const response = await axios({
     method: 'get',

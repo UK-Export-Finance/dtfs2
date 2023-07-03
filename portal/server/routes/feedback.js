@@ -1,6 +1,6 @@
 const express = require('express');
 const api = require('../api');
-const { generateErrorSummary } = require('../helpers');
+const { generateErrorSummary, requestParams } = require('../helpers');
 
 const router = express.Router();
 
@@ -16,18 +16,16 @@ router.post('/feedback', async (req, res) => {
   };
 
   try {
-    // generates the user object from session if logged in, else null
-    if (req.session.user) {
-      const { username, email } = req.session.user;
+    const { userToken } = requestParams(req);
+    const { username, email } = req.session.user;
 
-      userDetails.username = username;
-      userDetails.email = email;
-    }
+    userDetails.username = username;
+    userDetails.email = email;
 
     const feedbackBody = req.body;
     feedbackBody.submittedBy = userDetails;
 
-    const response = await api.createFeedback(feedbackBody);
+    const response = await api.createFeedback(feedbackBody, userToken);
     if (response) {
       return res.redirect('/thank-you-feedback');
     }
