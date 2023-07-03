@@ -1,7 +1,7 @@
 const api = require('./api');
 const db = require('../src/drivers/db-client');
 const { genPassword } = require('../src/crypto/utils');
-const wipeDB = require ('./wipeDB');
+const wipeDB = require('./wipeDB');
 
 const banks = {
   Barclays: {
@@ -43,17 +43,6 @@ const banks = {
   any: {
     id: '*',
   },
-};
-
-const apiTestUser = {
-  username: 'api-test-user',
-  password: 'P@ssword1234',
-  firstname: 'API',
-  surname: 'Test User',
-  email: 'api-tester@example.com',
-  timezone: 'Europe/London',
-  roles: ['maker'],
-  bank: banks.any,
 };
 
 const testUsers = [
@@ -213,6 +202,17 @@ const finder = () => {
   return fluidBuilder;
 };
 
+const apiTestUser = {
+  username: 'api-test-user',
+  password: 'P@ssword1234',
+  firstname: 'API',
+  surname: 'Test User',
+  email: 'api-tester@example.com',
+  timezone: 'Europe/London',
+  roles: ['maker'],
+  bank: banks.any,
+};
+
 const setUpApiTestUser = async (as) => {
   const { salt, hash } = genPassword(apiTestUser.password);
 
@@ -231,9 +231,9 @@ const setUpApiTestUser = async (as) => {
   await collection.insertOne(userToCreate);
 
   const apiTestUserLoginResponse = await as().post({ username: apiTestUser.username, password: apiTestUser.password })
-  .to('/v1/login');
+    .to('/v1/login');
   return { token: apiTestUserLoginResponse.body.token, ...userToCreate };
-}
+};
 
 const initialise = async (app) => {
   if (notYetInitialised) {

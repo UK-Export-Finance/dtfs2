@@ -31,7 +31,7 @@ const wipeAll = async () => {
 
 const deleteUser = async (user) => {
   const usersCollection = await db.getCollection('users');
-  await usersCollection.deleteMany({ username: { $eq: user.username }});
+  await usersCollection.deleteMany({ username: { $eq: user.username } });
 };
 
 module.exports = {

@@ -7,6 +7,7 @@ const { as } = require('../../api')(app);
 const { resetPassword, getUserByPasswordToken } = require('../../../src/v1/users/reset-password.controller');
 
 const users = require('./test-data');
+
 const aMaker = users.find((user) => user.username === 'MAKER_WITH_EMAIL');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
 

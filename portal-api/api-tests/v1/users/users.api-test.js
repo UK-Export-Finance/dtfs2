@@ -5,6 +5,7 @@ const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 
 const users = require('./test-data');
+
 const aMaker = users.find((user) => user.username === 'MAKER');
 const MOCK_USER = { ...aMaker, username: 'TEMPORARY_USER' };
 
@@ -21,7 +22,7 @@ describe('a user', () => {
 
   beforeEach(async () => {
     wipeDB.deleteUser(MOCK_USER);
-  })
+  });
 
   describe('creating a user:', () => {
     it('rejects if the provided password contains zero numeric characters', async () => {
