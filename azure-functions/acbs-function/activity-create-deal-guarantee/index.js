@@ -14,12 +14,12 @@ const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
 const mandatoryFields = [
-  'dealIdentifier',
-  'guarantorParty',
+  'effectiveDate',
   'limitKey',
   'guaranteeExpiryDate',
-  'effectiveDate',
   'maximumLiability',
+  'guarantorParty',
+  'guaranteeTypeCode',
 ];
 
 const createDealGuarantee = async (context) => {

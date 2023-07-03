@@ -14,10 +14,8 @@ const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
 const mandatoryFields = [
-  'dealIdentifier',
   'effectiveDate',
   'currency',
-  'maximumLiability',
 ];
 
 const createDealInvestor = async (context) => {
