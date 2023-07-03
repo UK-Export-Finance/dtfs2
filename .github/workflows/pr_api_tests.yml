@@ -52,7 +52,6 @@ env:
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
   API_KEY: ${{ secrets.API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
-  API_KEY: ${{ secrets.API_KEY }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
 
 jobs:
