@@ -8,6 +8,7 @@ param storageAccountName string
 
 
 // These values are taken from GitHub secrets
+// TODO:FN-686 Replace Mulesoft values, verify in GH Secrets.
 @secure()
 param secureSettings object = {
   MULESOFT_API_KEY: 'test-value'
@@ -19,7 +20,7 @@ param secureSettings object = {
 }
 
 // These values are taken from an export of Configuration on Dev
-// TODO:FN-419 Add to GitHub secrets?
+// TODO:FN-686 Replace Mulesoft values, verify in GH Secrets.
 @secure()
 param additionalSecureSettings object = {
   DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'  // different in staging and dev
@@ -31,8 +32,12 @@ param additionalSecureSettings object = {
 
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/azure-function-acbs:${environment}'
-
 var dockerRegistryServerUsername = 'tfs${environment}'
+
+// This is the IP address Azure uses for its DNS server.
+// https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances?tabs=redhat#considerations
+// https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16
+var azureDnsServerIp = '168.63.129.16'
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccountName
@@ -43,17 +48,15 @@ var storageAccountKey = storageAccount.listKeys().keys[0].value
 // These values are hardcoded in the CLI scripts
 var settings = {
   FUNCTIONS_WORKER_RUNTIME: 'node'
-  // TODO:FN-419 consider making this a parameter
-  WEBSITE_DNS_SERVER: '168.63.129.16'
+  WEBSITE_DNS_SERVER: azureDnsServerIp
   WEBSITE_VNET_ROUTE_ALL: '1'
 }
 
 // These values are taken from an export of Configuration on Dev
 var additionalSettings = {
   APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
-  // TODO:FN-419 - Exported string had "EndpointSuffix=core.windows.net" in it. Check if needed
   AzureWebJobsStorage: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccountKey}'
-  // TODO:FN-419 I think DOCKER_CUSTOM_IMAGE_NAME is overridden by linuxFxVersion
+  // TODO:FN-684 DOCKER_CUSTOM_IMAGE_NAME is overridden by linuxFxVersion. Remove if not necessary.
   DOCKER_CUSTOM_IMAGE_NAME: dockerImageName
   DOCKER_ENABLE_CI: 'true'
   DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
@@ -89,8 +92,7 @@ resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
     httpsOnly: false
     serverFarmId: appServicePlanId
     siteConfig: {
-      // TODO:FN-419 These siteConfig values are included in the much more comprehensive config object, produced by the export.
-      // Work out the reason for the duplication
+      // These siteConfig values appear inline and in a separate 'web' config object when exported. We just set them inline.
       numberOfWorkers: 1
       linuxFxVersion: 'DOCKER|${dockerImageName}'
       acrUseManagedIdentityCreds: false
@@ -98,15 +100,14 @@ resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
       http20Enabled: true
       functionAppScaleLimit: 0
       minimumElasticInstanceCount: 1
-      // The following Fields have been added after comparing with dev
-      // TODO:FN-419 Check these values are ok.
+      // The following Fields have been added after comparing the generated insance export with dev
       vnetRouteAllEnabled: true
-      // Note that the following appear in the separate config object
+      // Note that the following only appear in the separate config object on export, but we can set them inline.
       ftpsState: 'Disabled'
       scmMinTlsVersion: '1.0'
       remoteDebuggingVersion: 'VS2019'
       httpLoggingEnabled: true // false in staging
-      // TODO:FN-419 Note that the following appear in dev but not staging or prod
+      // TODO:FN-684 Note that the following appear in dev but not staging or prod. Remove if not needed.
       cors: {
         allowedOrigins: [
           'https://functions.azure.com'
@@ -169,4 +170,4 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
 }
 
 
-// TODO:FN-419 Add automatic A Record generation.
+// TODO:FN-685 Add automatic A Record generation.

@@ -1,5 +1,6 @@
 param location string  = resourceGroup().location
-// Expected values are 'feature', 'dev', 'test', 'staging' & 'prod'
+// Expected values are 'feature', 'dev', 'staging' & 'prod'
+// Note that legacy values of 'test' and 'qa' may be observed in some resources. These are equivalent to 'staging'.
 param environment string = 'feature'
 
 param appServicePlanName string = 'feature'
