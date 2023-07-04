@@ -42,8 +42,8 @@ env:
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
-  API_KEY: ${{ secrets.API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
+  API_KEY: ${{ secrets.API_KEY }}
 
 jobs:
   set-environment:

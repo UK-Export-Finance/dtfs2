@@ -3,25 +3,13 @@ require('dotenv').config();
 
 const centralApi = process.env.DTFS_CENTRAL_API;
 const portalApi = process.env.DEAL_API_URL;
-const { API_KEY } = process.env;
-
-const headers = {
-  portalApi: {
-    'Content-Type': 'application/json',
-    Accepts: 'application/json',
-  },
-  centralApi: {
-    'Content-Type': 'application/json',
-    Accepts: 'application/json',
-    'x-api-key': API_KEY,
-  }
-};
 
 const createApplication = async (data, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/application`,
@@ -35,7 +23,8 @@ const updateApplication = async (id, data, token) => {
   const response = await axios({
     method: 'put',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/application/${id}`,
@@ -49,7 +38,8 @@ const listDeals = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/application`,
@@ -61,7 +51,8 @@ const deleteDeal = async (dealId, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/application/${dealId}`,
@@ -74,7 +65,8 @@ const createFacilities = async (data, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/facilities`,
@@ -88,7 +80,8 @@ const listFacilities = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      ...headers.centralApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${centralApi}/v1/portal/gef/facilities`
@@ -101,7 +94,8 @@ const deleteFacilities = async (facility, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/facilities/${facility._id}`,
@@ -114,7 +108,8 @@ const updateFacilities = async (facility, data, token) => {
   const response = await axios({
     method: 'put',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/facilities/${facility._id}`,
@@ -128,7 +123,8 @@ const createEligibilityCriteria = async (data, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/eligibility-criteria`,
@@ -142,7 +138,8 @@ const deleteEligibilityCriteria = async (mandatoryCriteria, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/eligibility-criteria/${mandatoryCriteria._id}`,
@@ -155,7 +152,8 @@ const listEligibilityCriteria = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/eligibility-criteria`,
@@ -168,7 +166,8 @@ const latestEligibilityCriteria = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/eligibility-criteria/latest`,
@@ -182,7 +181,8 @@ const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/mandatory-criteria-versioned`,
@@ -196,7 +196,8 @@ const deleteMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/mandatory-criteria-versioned/${mandatoryCriteria._id}`,
@@ -209,7 +210,8 @@ const listMandatoryCriteriaVersioned = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      ...headers.portalApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${portalApi}/v1/gef/mandatory-criteria-versioned`,
@@ -222,7 +224,8 @@ const getDurableFunctions = async (token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.centralApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${centralApi}/v1/portal/durable-functions`
@@ -234,7 +237,8 @@ const deleteCronJobs = async (token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.centralApi,
+      'Content-Type': 'application/json',
+      Accepts: 'application/json',
       Authorization: token || '',
     },
     url: `${centralApi}/v1/portal/cron-jobs`

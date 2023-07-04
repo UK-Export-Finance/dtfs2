@@ -41,8 +41,8 @@ services:
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://localhost:5005
       - TZ=Europe/London
-      - API_KEY
       - NODE_ENV=${NODE_ENV}
+      - API_KEY
     entrypoint: npx nodemon src/index.js -L
 
   trade-finance-manager-ui:

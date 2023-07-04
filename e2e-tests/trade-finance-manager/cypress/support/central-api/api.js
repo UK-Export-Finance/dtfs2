@@ -3,13 +3,6 @@ const api = () => {
   return url;
 };
 
-const apiKey = Cypress.config('apiKey');
-
-const headers = {
-  'Content-Type': 'application/json',
-  'x-api-key': apiKey,
-};
-
 module.exports.createFacility = (facility, dealId, user) =>
   cy.request({
     method: 'POST',
@@ -21,7 +14,6 @@ module.exports.createFacility = (facility, dealId, user) =>
       },
       user,
     },
-    headers,
   }).then((resp) => {
     expect(resp.status).to.equal(200);
     return resp.body;
@@ -32,7 +24,7 @@ module.exports.updateFacility = (facilityId, facilityUpdate, user) =>
     method: 'PUT',
     url: `${api()}/v1/portal/facilities/${facilityId}`,
     headers: {
-      ...headers,
+      'Content-Type': 'application/json',
       Accepts: 'application/json',
     },
     body: {
@@ -51,7 +43,6 @@ module.exports.deleteFacility = (facilityId, user) =>
     body: {
       user,
     },
-    headers,
   }).then((resp) => {
     expect(resp.status).to.equal(200);
     return resp.body;
@@ -60,7 +51,9 @@ module.exports.deleteFacility = (facilityId, user) =>
 module.exports.deleteTfmDeal = (dealId) => cy.request({
   url: `${api()}/v1/tfm/deals/${dealId}`,
   method: 'DELETE',
-  headers,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body;
@@ -70,7 +63,9 @@ module.exports.getAllTfmDeals = () =>
   cy.request({
     url: `${api()}/v1/tfm/deals/`,
     method: 'GET',
-    headers,
+    headers: {
+      'Content-Type': 'application/json',
+    },
   }).then((resp) => {
     expect(resp.status).to.equal(200);
     return resp.body.deals;
@@ -83,7 +78,6 @@ module.exports.updateTFMDeal = (dealId, dealUpdate) =>
     body: {
       dealUpdate,
     },
-    headers,
   }).then((resp) => {
     expect(resp.status).to.equal(200);
     return resp.body;

@@ -4,19 +4,15 @@ require('dotenv').config();
 
 const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const tfmUrl = process.env.TFM_API;
-const { API_KEY } = process.env;
-
-const centralApiHeaders = {
-  'Content-Type': 'application/json',
-  'x-api-key': API_KEY,
-};
 
 const findOneDeal = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: centralApiHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
     return response.data.deal;
@@ -30,7 +26,9 @@ const createDeal = async (deal, user) => {
     return await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/deals`,
-      headers: centralApiHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       data: {
         deal,
         user,
@@ -46,7 +44,9 @@ const updateDeal = async (dealId, dealUpdate, user) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: centralApiHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       data: {
         dealUpdate,
         user,
@@ -64,7 +64,9 @@ const deleteDeal = async (dealId) => {
     return await axios({
       method: 'delete',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: centralApiHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
   } catch (err) {
     return err;
@@ -76,7 +78,9 @@ const addDealComment = async (dealId, commentType, comment) => {
     const response = await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
-      headers: centralApiHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       data: {
         commentType,
         comment,
@@ -94,7 +98,9 @@ const createFacility = async (facility, user) => {
     return await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/facilities`,
-      headers: centralApiHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       data: {
         facility,
         user,
@@ -110,7 +116,9 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
     return await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/multiple-facilities`,
-      headers: centralApiHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       data: {
         facilities,
         dealId,
@@ -127,7 +135,9 @@ const findOneFacility = async (facilityId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: centralApiHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
     return response.data;
@@ -141,7 +151,9 @@ const updateFacility = async (facilityId, facility, user) => {
     return await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: centralApiHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       data: {
         ...facility,
         user,
@@ -157,7 +169,9 @@ const deleteFacility = async (facilityId, user) => {
     return await axios({
       method: 'delete',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: centralApiHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+      },
       data: {
         user,
       },
@@ -193,7 +207,7 @@ const findLatestGefMandatoryCriteria = async () => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/latest`,
-      headers: centralApiHeaders,
+      headers: { 'Content-Type': 'application/json' }
     });
 
     return { status: 200, data: response.data };

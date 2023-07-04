@@ -4,13 +4,6 @@ const centralApiUrl = () => {
   return url;
 };
 
-const apiKey = Cypress.config('apiKey');
-
-const headers = {
-  'Content-Type': 'application/json',
-  'x-api-key': apiKey,
-};
-
 const tfmApiUrl = () => {
   const url = `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
   return url;
@@ -113,7 +106,9 @@ const addCommentObjToDeal = (dealId, commentType, comment) => cy.request({
   url: `${centralApiUrl()}/v1/portal/gef/deals/${dealId}/comment`,
   method: 'POST',
   body: { dealId, commentType, comment },
-  headers,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 }).then((res) => res);
 
 const submitDealAfterUkefIds = (dealId, dealType, checker) => cy.request({
@@ -132,7 +127,9 @@ const submitDealToTfm = (dealId, dealType) => cy.request({
   url: `${centralApiUrl()}/v1/tfm/deals/submit`,
   method: 'PUT',
   body: { dealId, dealType },
-  headers,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body;
@@ -142,7 +139,9 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) => cy.request({
   url: `${centralApiUrl()}/v1/tfm/deals/${dealId}`,
   method: 'put',
   body: { dealUpdate: underwriterComment },
-  headers,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body;

@@ -1,22 +1,11 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const request = require('supertest');
-const dotenv = require('dotenv');
-
-dotenv.config();
-
-const { API_KEY } = process.env;
-
-const headers = {
-  'x-api-key': API_KEY,
-  'content-type': 'application/json'
-};
 
 module.exports = (app) => ({
   post: (data) => ({
     to: async (url) => request(app)
       .post(url)
-      .send(data)
-      .set(headers),
+      .send(data),
   }),
 
   postEach: (list) => ({
@@ -26,8 +15,7 @@ module.exports = (app) => ({
       for (const data of list) {
         const result = await request(app)
           .post(url)
-          .send(data)
-          .set(headers);
+          .send(data);
 
         results.push(result);
       }
@@ -39,15 +27,13 @@ module.exports = (app) => ({
   put: (data) => ({
     to: async (url) => request(app)
       .put(url)
-      .send(data)
-      .set(headers),
+      .send(data),
   }),
 
   putMultipartForm: (data, files = []) => ({
     to: async (url) => {
       const apiRequest = request(app)
-        .put(url)
-        .set(headers);
+        .put(url);
 
       if (files.length) {
         files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
@@ -63,15 +49,13 @@ module.exports = (app) => ({
 
   get: async (url, data) => request(app)
     .get(url)
-    .send(data)
-    .set(headers),
+    .send(data),
 
   remove: (data) => ({
     to: async (url) =>
       request(app)
         .delete(url)
-        .send(data)
-        .set(headers),
+        .send(data),
   }),
 
   as: (user) => {
@@ -82,8 +66,7 @@ module.exports = (app) => ({
         to: async (url) => request(app)
           .post(url)
           .set({ Authorization: token || '' })
-          .send(data)
-          .set(headers),
+          .send(data),
       }),
 
       postEach: (list) => ({
@@ -91,8 +74,7 @@ module.exports = (app) => ({
           const results = list.map((data) => request(app)
             .post(url)
             .set({ Authorization: token || '' })
-            .send(data)
-            .set(headers));
+            .send(data));
 
           return Promise.all(results);
         },
@@ -102,21 +84,18 @@ module.exports = (app) => ({
         to: async (url) => request(app)
           .put(url)
           .set({ Authorization: token || '' })
-          .send(data)
-          .set(headers),
+          .send(data),
       }),
 
       get: async (url, query = {}) => request(app)
         .get(url)
         .set({ Authorization: token || '' })
-        .query(query)
-        .set(headers),
+        .query(query),
 
       remove: async (url) => request(app)
         .delete(url)
         .set({ Authorization: token || '' })
-        .send()
-        .set(headers),
+        .send(),
     };
   },
 });

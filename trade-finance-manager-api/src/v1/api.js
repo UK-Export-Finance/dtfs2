@@ -15,8 +15,13 @@ const {
 const { DURABLE_FUNCTIONS } = CONSTANTS;
 
 const headers = {
-  'Content-Type': 'application/json',
-  'x-api-key': API_KEY,
+  centralApi: {
+    'Content-Type': 'application/json',
+  },
+  externalApi: {
+    'Content-Type': 'application/json',
+    'x-api-key': API_KEY,    
+  },
 };
 
 const findOnePortalDeal = async (dealId) => {
@@ -24,7 +29,7 @@ const findOnePortalDeal = async (dealId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers,
+      headers: headers.centralApi,
     });
 
     return response.data.deal;
@@ -38,7 +43,7 @@ const updatePortalDeal = async (dealId, update) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers,
+      headers: headers.centralApi,
       data: {
         dealUpdate: update,
       },
@@ -57,7 +62,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}/status`,
-      headers,
+      headers: headers.centralApi,
       data: {
         status,
       },
@@ -76,7 +81,7 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
     const response = await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
-      headers,
+      headers: headers.centralApi,
       data: {
         dealId,
         commentType,
@@ -95,7 +100,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}/status`,
-      headers,
+      headers: headers.centralApi,
       data: {
         status,
       },
@@ -114,7 +119,7 @@ const updatePortalFacility = async (facilityId, update) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers,
+      headers: headers.centralApi,
       data: update,
     });
 
@@ -131,7 +136,7 @@ const findOneDeal = async (dealId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
-      headers,
+      headers: headers.centralApi,
     });
     return response.data.deal;
   } catch ({ response }) {
@@ -146,7 +151,7 @@ const updateDeal = async (dealId, dealUpdate) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
-      headers,
+      headers: headers.centralApi,
       data: {
         dealUpdate,
       },
@@ -163,7 +168,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}/snapshot`,
-      headers,
+      headers: headers.centralApi,
       data: snapshotUpdate,
     });
 
@@ -178,7 +183,7 @@ const submitDeal = async (dealType, dealId) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/deals/submit`,
-      headers,
+      headers: headers.centralApi,
       data: {
         dealType,
         dealId,
@@ -196,7 +201,7 @@ const findOneFacility = async (facilityId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
-      headers,
+      headers: headers.centralApi,
     });
 
     return response.data;
@@ -212,7 +217,7 @@ const findFacilitesByDealId = async (dealId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}/facilities`,
-      headers,
+      headers: headers.centralApi,
     });
 
     return response.data;
@@ -226,7 +231,7 @@ const updateFacility = async (facilityId, facilityUpdate) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
-      headers,
+      headers: headers.centralApi,
       data: {
         facilityUpdate,
       },
@@ -245,7 +250,7 @@ const createFacilityAmendment = async (facilityId) => {
       const response = await axios({
         method: 'post',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
         data: { facilityId },
       });
 
@@ -267,7 +272,7 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
       const response = await axios({
         method: 'put',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
         data: payload,
       });
 
@@ -289,7 +294,7 @@ const getAmendmentInProgress = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/in-progress`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return { status: 200, data: response.data };
@@ -310,7 +315,7 @@ const getCompletedAmendment = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
@@ -331,7 +336,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
@@ -352,7 +357,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
@@ -373,7 +378,7 @@ const getAmendmentById = async (facilityId, amendmentId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
@@ -394,7 +399,7 @@ const getAmendmentByFacilityId = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
@@ -415,7 +420,7 @@ const getAmendmentsByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
@@ -436,7 +441,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/in-progress`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
@@ -457,7 +462,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/completed`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
@@ -478,7 +483,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/completed/latest`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
@@ -499,7 +504,7 @@ const getAllAmendmentsInProgress = async () => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/amendments`,
-        headers,
+        headers: { 'Content-Type': 'application/json' },
       });
 
       return response.data;
@@ -518,7 +523,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/gef/facilities/${facilityId}`,
-      headers,
+      headers: headers.centralApi,
       data: facilityUpdate,
     });
 
@@ -533,7 +538,7 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/deals`,
-      headers,
+      headers: headers.centralApi,
       data: {
         queryParams,
         start,
@@ -552,7 +557,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
-      headers,
+      headers: headers.externalApi,
     });
     return response.data;
   } catch ({ response }) {
@@ -570,7 +575,7 @@ const getCompanyInfo = async (partyUrn) => {
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/party-db/urn/${encodeURIComponent(partyUrn)}`,
-      headers,
+      headers: headers.externalApi,
     });
 
     return response.data;
@@ -585,7 +590,7 @@ const findUser = async (username) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/users/${username}`,
-      headers,
+      headers: headers.centralApi,
     });
     return response.data;
   } catch ({ response }) {
@@ -598,7 +603,7 @@ const findUserById = async (userId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/users/id/${userId}`,
-      headers,
+      headers: headers.centralApi,
     });
     return response.data;
   } catch ({ response }) {
@@ -611,7 +616,7 @@ const findPortalUserById = async (userId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/user/${userId}`,
-      headers,
+      headers: headers.centralApi,
     });
     return response.data;
   } catch ({ response }) {
@@ -625,7 +630,7 @@ const updateUserTasks = async (userId, updatedTasks) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/users/${userId}/tasks`,
-      headers,
+      headers: headers.centralApi,
       data: {
         updatedTasks,
       },
@@ -641,7 +646,7 @@ const findOneTeam = async (teamId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/teams/${teamId}`,
-      headers,
+      headers: headers.centralApi,
     });
 
     return response.data.team;
@@ -655,7 +660,7 @@ const findTeamMembers = async (teamId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/users/team/${teamId}`,
-      headers,
+      headers: headers.centralApi,
     });
 
     return response.data;
@@ -669,7 +674,7 @@ const getCurrencyExchangeRate = async (source, target) => {
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/currency-exchange-rate/${source}/${target}`,
-      headers,
+      headers: headers.externalApi,
     });
     return response.data;
   } catch (err) {
@@ -682,7 +687,7 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/exposure-period/${startDate}/${endDate}/${type}`,
-      headers,
+      headers: headers.externalApi,
     });
 
     return response.data;
@@ -697,7 +702,7 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/premium-schedule`,
-      headers,
+      headers: headers.externalApi,
       data: premiumScheduleParameters,
     });
 
@@ -717,7 +722,10 @@ const createACBS = async (deal, bank) => {
       const response = await axios({
         method: 'post',
         url: `${EXTERNAL_API_URL}/acbs`,
-        headers,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': API_KEY,
+        },
         data: {
           deal,
           bank,
@@ -738,7 +746,10 @@ const updateACBSfacility = async (facility, deal) => {
       const response = await axios({
         method: 'post',
         url: `${EXTERNAL_API_URL}/acbs/facility/${facility.ukefFacilityId}/issue`,
-        headers,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': API_KEY,
+        },
         data: {
           facility,
           deal,
@@ -765,7 +776,7 @@ const amendACBSfacility = async (amendments, facility, deal) => {
     const response = await axios({
       method: 'post',
       url: `${EXTERNAL_API_URL}/acbs/facility/${ukefFacilityId}/amendments`,
-      headers,
+      headers: headers.externalApi,
       data: {
         amendments,
         deal,
@@ -806,7 +817,7 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
     const response = await axios({
       method: 'get',
       url: modifiedUrl,
-      headers,
+      headers: headers.centralApi,
     });
     return response.data;
   } catch (err) {
@@ -820,7 +831,7 @@ const createEstoreFolders = async (data) => {
     const response = await axios({
       method: 'post',
       url: `${EXTERNAL_API_URL}/estore`,
-      headers,
+      headers: headers.externalApi,
       data,
     });
     return response.data;
@@ -835,7 +846,7 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
     const response = await axios({
       method: 'post',
       url: `${EXTERNAL_API_URL}/email`,
-      headers,
+      headers: headers.externalApi,
       data: {
         templateId,
         sendToEmailAddress,
@@ -853,7 +864,7 @@ const findOneGefDeal = async (dealId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
-      headers,
+      headers: headers.centralApi,
     });
 
     return response.data;
@@ -869,7 +880,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/status`,
-      headers,
+      headers: headers.centralApi,
       data: {
         status,
       },
@@ -888,7 +899,7 @@ const updatePortalGefDeal = async (dealId, update) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
-      headers,
+      headers: headers.centralApi,
       data: {
         dealUpdate: update,
       },
@@ -907,7 +918,7 @@ const updateGefMINActivity = async (dealId) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/gef/deals/activity/${dealId}`,
-      headers,
+      headers: headers.centralApi,
     });
 
     return response.data;
@@ -923,7 +934,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
     const response = await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/comment`,
-      headers,
+      headers: headers.centralApi,
       data: { dealId, commentType, comment },
     });
 
@@ -940,7 +951,7 @@ const getAllFacilities = async (searchString) => {
       method: 'GET',
       data: searchString,
       url: `${centralApiUrl}/v1/tfm/facilities`,
-      headers,
+      headers: headers.centralApi,
     });
     return response.data;
   } catch ({ response }) {
@@ -954,7 +965,7 @@ const findBankById = async (bankId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/bank/${bankId}`,
-      headers,
+      headers: { 'Content-Type': 'application/json' },
     });
     return response.data;
   } catch (response) {
@@ -968,7 +979,7 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/version/${version}`,
-      headers,
+      headers: { 'Content-Type': 'application/json' },
     });
 
     return response.data;
