@@ -1,11 +1,13 @@
 const express = require('express');
 const api = require('../api');
 const { generateErrorSummary, requestParams } = require('../helpers');
+const { validateToken } = require('./middleware');
 
 const router = express.Router();
 
 const errorHref = (id) => `#${id}`;
 
+router.use('/feedback', validateToken);
 router.get('/feedback', (req, res) =>
   res.render('feedback/feedback-form.njk'));
 
