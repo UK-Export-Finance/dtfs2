@@ -9,7 +9,7 @@ const axios = require('axios');
 const getAPI = async (type) => {
   console.info(`Invoking TFS GET /${type}`);
 
-  const url = `${process.env.APIM_TFS_URL}/${type}`;
+  const url = `${process.env.APIM_TFS_URL}${type}`;
   const headers = {
     [String(process.env.APIM_TFS_KEY)]: process.env.APIM_TFS_VALUE,
     'Content-Type': 'application/json',

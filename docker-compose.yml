@@ -35,11 +35,13 @@ services:
           memory: 400M
     environment:
       - PORT=5005
+      - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://localhost:5005
       - TZ=Europe/London
+      - API_KEY
       - NODE_ENV=${NODE_ENV}
     entrypoint: npx nodemon src/index.js -L
 
@@ -85,7 +87,9 @@ services:
       - ./trade-finance-manager-api/src:/app/src:ro
     environment:
       - PORT=5004
+      - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
+      - API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
@@ -152,7 +156,7 @@ services:
           memory: 950M
     environment:
       - PORT=5001
-      - CORS_ORIGIN=http://localhost:5000
+      - CORS_ORIGIN
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
@@ -164,6 +168,7 @@ services:
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - EXTERNAL_API_URL=http://external-api:5002
+      - API_KEY
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
       - TZ=Europe/London
@@ -187,6 +192,8 @@ services:
           memory: 400M
     environment:
       - PORT=5002
+      - CORS_ORIGIN
+      - API_KEY
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk
@@ -275,7 +282,6 @@ services:
         limits:
           cpus: "0.1"
           memory: 300M
-
   reverse-proxy:
     build: ./reverse-proxy
     image: "dtfs/reverse-proxy"
