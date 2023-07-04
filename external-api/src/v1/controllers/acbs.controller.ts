@@ -94,7 +94,7 @@ export const findOne = async (req: Request, res: Response) => {
 };
 
 /**
- * Invokes acbsUrl DOF using HTTP `POST` method.
+ * Invokes ACBS DOF using HTTP `POST` method.
  * @param deal Deal object
  * @param bank Bank object
  * @returns DOF response
@@ -104,7 +104,7 @@ const createAcbsRecord = async (deal: any, bank: any) => {
     const response = await axios({
       method: 'post',
       headers,
-      url: `${acbsUrl}/api/orchestrators/acbsUrl`,
+      url: `${acbsUrl}/api/orchestrators/acbs`,
       data: {
         deal,
         bank,
@@ -158,7 +158,7 @@ const issueAcbsFacility = async (id: any, facility: object, deal: object) => {
     const response = await axios({
       method: 'post',
       headers,
-      url: `${acbsUrl}/api/orchestrators/acbsUrl-issue-facility`,
+      url: `${acbsUrl}/api/orchestrators/acbs-issue-facility`,
       data: {
         facilityId: id,
         facility,
@@ -214,7 +214,7 @@ const amendAcbsFacility = async (amendment: Amendment) => {
     const response = await axios({
       method: 'post',
       headers,
-      url: `${acbsUrl}/api/orchestrators/acbsUrl-amend-facility`,
+      url: `${acbsUrl}/api/orchestrators/acbs-amend-facility`,
       data: {
         amendment,
       },
