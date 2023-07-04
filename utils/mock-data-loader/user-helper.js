@@ -1,9 +1,5 @@
-const axios = require('axios');
+const api = require('./api');
 const MOCK_BANKS = require('./banks');
-require('dotenv').config();
-
-const portalApiUrl = process.env.DEAL_API_URL;
-const API_KEY = process.env.API_KEY;
 
 const mockDataLoaderUser = {
   username: 're-insert-mocks',
@@ -15,19 +11,16 @@ const mockDataLoaderUser = {
   bank: MOCK_BANKS.find((bank) => bank.id === '9'),
 };
 
-const createMockDataLoaderUser = async () => {
-  console.info(`Creating user "${mockDataLoaderUser.username}"`);
+const createAndLogInAsInitialUser = async () => {
+  let token = await api.login(mockDataLoaderUser);
 
-  await axios({
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
-      Accepts: 'application/json',
-    },
-    url: `${portalApiUrl}/v1/user`,
-    data: mockDataLoaderUser,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  if (!token) {
+    console.info(`Creating user "${mockDataLoaderUser.username}"`);
+    await api.createInitialUser(mockDataLoaderUser);
+    token = await api.login(mockDataLoaderUser);
+  }
+
+  return token;
 };
 
-module.exports = { mockDataLoaderUser, createMockDataLoaderUser };
+module.exports = { mockDataLoaderUser, createAndLogInAsInitialUser };

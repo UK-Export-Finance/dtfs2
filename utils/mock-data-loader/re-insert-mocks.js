@@ -1,5 +1,4 @@
-const { createMockDataLoaderUser, mockDataLoaderUser } = require('./user-helper');
-const api = require('./api');
+const { createAndLogInAsInitialUser } = require('./user-helper');
 
 const cleanAllTables = require('./clean-all-tables');
 const insertMocks = require('./insert-mocks');
@@ -13,8 +12,7 @@ const cleanAllTablesTfm = require('./tfm/clean-all-tables-tfm');
 const insertMocksTfm = require('./tfm/insert-mocks-tfm');
 
 const init = async () => {
-  await createMockDataLoaderUser();
-  const token = await api.login(mockDataLoaderUser);
+  const token = await createAndLogInAsInitialUser();
 
   await cleanAllTables(token);
   await insertMocks(token);
