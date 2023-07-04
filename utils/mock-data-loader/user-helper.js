@@ -6,7 +6,7 @@ const mockDataLoaderUser = {
   password: 'AbC!2345',
   firstname: 'Mock',
   surname: 'DataLoader',
-  roles: [],
+  roles: ['editor', 'maker'],
   email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
   bank: MOCK_BANKS.find((bank) => bank.id === '9'),
 };
