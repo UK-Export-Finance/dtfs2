@@ -4,6 +4,13 @@ const centralApiUrl = () => {
   return url;
 };
 
+const apiKey = Cypress.config('apiKey');
+
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': apiKey,
+};
+
 const tfmApiUrl = () => {
   const url = `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
   return url;
@@ -24,6 +31,15 @@ const login = (credentials) => {
 
 const fetchAllApplications = (token) => cy.request({
   url: `${portalApi}/gef/application`,
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  },
+}).then((res) => res);
+
+const fetchApplicationById = (dealId, token) => cy.request({
+  url: `${portalApi}/gef/application/${dealId}`,
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
@@ -97,9 +113,7 @@ const addCommentObjToDeal = (dealId, commentType, comment) => cy.request({
   url: `${centralApiUrl()}/v1/portal/gef/deals/${dealId}/comment`,
   method: 'POST',
   body: { dealId, commentType, comment },
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers,
 }).then((res) => res);
 
 const submitDealAfterUkefIds = (dealId, dealType, checker) => cy.request({
@@ -118,9 +132,7 @@ const submitDealToTfm = (dealId, dealType) => cy.request({
   url: `${centralApiUrl()}/v1/tfm/deals/submit`,
   method: 'PUT',
   body: { dealId, dealType },
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers,
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body;
@@ -130,9 +142,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) => cy.request({
   url: `${centralApiUrl()}/v1/tfm/deals/${dealId}`,
   method: 'put',
   body: { dealUpdate: underwriterComment },
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers,
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body;
@@ -141,6 +151,7 @@ const addUnderwriterCommentToTfm = (dealId, underwriterComment) => cy.request({
 export {
   login,
   fetchAllApplications,
+  fetchApplicationById,
   fetchAllFacilities,
   updateApplication,
   setApplicationStatus,

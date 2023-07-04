@@ -1,5 +1,7 @@
 const db = require('../../drivers/db-client');
 const api = require('../api');
+const { escapeOperators } = require('../helpers/escapeOperators');
+const computeSkipPosition = require('../helpers/computeSkipPosition');
 const { updateDeal } = require('./deal.controller');
 
 /**
@@ -89,6 +91,8 @@ const queryAllFacilities = async (
   start = 0,
   pagesize = 0,
 ) => {
+  const startPage = computeSkipPosition(start, filters, sort);
+
   const collection = await db.getCollection('facilities');
 
   const results = await collection
@@ -102,7 +106,7 @@ const queryAllFacilities = async (
         },
       },
       { $unwind: '$deal' },
-      { $match: filters },
+      { $match: escapeOperators(filters) },
       {
         $project: {
           _id: 1,
@@ -131,7 +135,7 @@ const queryAllFacilities = async (
         $facet: {
           count: [{ $count: 'total' }],
           facilities: [
-            { $skip: start },
+            { $skip: startPage },
             ...(pagesize ? [{ $limit: pagesize }] : []),
           ],
         },

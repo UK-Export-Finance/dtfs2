@@ -32,7 +32,7 @@ const cleanTfmDeals = async (token) => {
 const cleanAllTables = async () => {
   const token = await tokenFor({
     username: 'admin',
-    email: 'admin-4',
+    email: 'admin-4@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     roles: ['maker', 'editor'],
     bank: { id: '*' },

@@ -18,6 +18,7 @@ const {
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
+const { isValidEmail } = require('../../utils/string');
 
 module.exports.list = (req, res, next) => {
   list((err, users) => {
@@ -52,6 +53,25 @@ module.exports.create = async (req, res, next) => {
   if (req?.body?._csrf) {
     delete req.body._csrf;
   }
+
+  if (!isValidEmail(req.body?.email)) {
+    // Empty email address
+    const invalidEmail = {
+      email: {
+        order: '1',
+        text: 'Enter an email address in the correct format, for example, name@example.com',
+      },
+    };
+
+    return res.status(400).json({
+      success: false,
+      errors: {
+        count: invalidEmail.length,
+        errorList: invalidEmail,
+      },
+    });
+  }
+
   await findByEmail(req.body.email, (error, account) => {
     let userExists = {};
     if (account) {
@@ -106,6 +126,8 @@ module.exports.create = async (req, res, next) => {
       return res.json({ success: true, user });
     });
   });
+
+  return null;
 };
 
 module.exports.findById = (req, res, next) => {
@@ -215,7 +237,7 @@ module.exports.resetPassword = async (req, res) => {
 /**
  * Portal reset password route caters for following user scenarios:
  * 1. User initiated password reset
- * 2. Adminstrator adds a new user, where user need to specify the password.
+ * 2. Administrator adds a new user, where user need to specify the password.
  */
 module.exports.resetPasswordWithToken = async (req, res, next) => {
   const { resetPwdToken } = req.params;

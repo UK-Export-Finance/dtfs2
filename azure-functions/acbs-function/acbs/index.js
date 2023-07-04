@@ -135,6 +135,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
         parties.exporter.partyIdentifier,
         acbsReference,
       );
+      const { dealIdentifier } = acbsDealInput;
 
       const dealRecord = yield context.df.callActivityWithRetry(
         'activity-create-deal',
@@ -147,7 +148,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
       const dealInvestorRecord = yield context.df.callActivityWithRetry(
         'activity-create-deal-investor',
         retryOptions,
-        { investor: acbsDealInvestorInput },
+        { dealIdentifier, investor: acbsDealInvestorInput },
       );
 
       // 4. Create Deal Guarantee
@@ -160,7 +161,7 @@ module.exports = df.orchestrator(function* HDeal(context) {
       const dealGuaranteeRecord = yield context.df.callActivityWithRetry(
         'activity-create-deal-guarantee',
         retryOptions,
-        { guarantee: acbsDealGuaranteeInput },
+        { dealIdentifier, guarantee: acbsDealGuaranteeInput },
       );
 
       const dealAcbsData = {

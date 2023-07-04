@@ -1,6 +1,7 @@
 const DASHBOARD = require('./dashboard');
 const FACILITY_HAS_BEEN_ISSUED = require('./facility-has-been-issued');
 const FACILITY_TYPE = require('./facility-type');
+const FACILITY_STAGE = require('./facility-stage');
 const FIELD_NAMES = require('./field-names');
 const PRODUCT = require('./product');
 const STATUS = require('./status');
@@ -9,11 +10,13 @@ const TRANSACTION_STAGE = require('./transaction-stage');
 const TRANSACTION_TYPE = require('./transaction-type');
 const PORTAL_URL = require('./portalUrl.constant');
 const SORT_BY = require('./sort');
+const CURRENCY = require('./currency');
 
 module.exports = {
   DASHBOARD,
   FACILITY_HAS_BEEN_ISSUED,
   FACILITY_TYPE,
+  FACILITY_STAGE,
   FIELD_NAMES,
   PRODUCT,
   STATUS,
@@ -22,4 +25,5 @@ module.exports = {
   TRANSACTION_TYPE,
   PORTAL_URL,
   SORT_BY,
+  CURRENCY,
 };

@@ -108,7 +108,7 @@ const validateAboutExporter = async (req, res) => {
     const applicationExporterUpdate = {
       exporter: {
         ...exporter,
-        ...body,
+        smeType: body.smeType,
         selectedIndustry: body.selectedIndustry ? JSON.parse(body.selectedIndustry) : exporter.selectedIndustry,
         probabilityOfDefault: Number(body.probabilityOfDefault),
         isFinanceIncreasing: isTrueSet(body.isFinanceIncreasing),

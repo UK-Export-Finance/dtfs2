@@ -4,20 +4,27 @@ const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const CONSTANTS = require('../constants');
 require('dotenv').config();
 
-const centralApiUrl = process.env.DTFS_CENTRAL_API;
-const refDataUrl = process.env.REFERENCE_DATA_PROXY_URL;
-const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
-const azureNumberGeneratorUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
+const {
+  DTFS_CENTRAL_API: centralApiUrl,
+  EXTERNAL_API_URL,
+  API_KEY,
+  AZURE_ACBS_FUNCTION_URL,
+  AZURE_NUMBER_GENERATOR_FUNCTION_URL,
+} = process.env;
+
 const { DURABLE_FUNCTIONS } = CONSTANTS;
+
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': API_KEY,
+};
 
 const findOnePortalDeal = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return response.data.deal;
@@ -31,9 +38,7 @@ const updatePortalDeal = async (dealId, update) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         dealUpdate: update,
       },
@@ -52,9 +57,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}/status`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         status,
       },
@@ -73,9 +76,7 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
     const response = await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         dealId,
         commentType,
@@ -94,9 +95,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}/status`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         status,
       },
@@ -115,9 +114,7 @@ const updatePortalFacility = async (facilityId, update) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: update,
     });
 
@@ -134,9 +131,7 @@ const findOneDeal = async (dealId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
     return response.data.deal;
   } catch ({ response }) {
@@ -151,9 +146,7 @@ const updateDeal = async (dealId, dealUpdate) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         dealUpdate,
       },
@@ -170,9 +163,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}/snapshot`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: snapshotUpdate,
     });
 
@@ -187,9 +178,7 @@ const submitDeal = async (dealType, dealId) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/deals/submit`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         dealType,
         dealId,
@@ -207,9 +196,7 @@ const findOneFacility = async (facilityId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return response.data;
@@ -225,9 +212,7 @@ const findFacilitesByDealId = async (dealId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/deals/${dealId}/facilities`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return response.data;
@@ -241,9 +226,7 @@ const updateFacility = async (facilityId, facilityUpdate) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         facilityUpdate,
       },
@@ -262,7 +245,7 @@ const createFacilityAmendment = async (facilityId) => {
       const response = await axios({
         method: 'post',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         data: { facilityId },
       });
 
@@ -284,7 +267,7 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
       const response = await axios({
         method: 'put',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         data: payload,
       });
 
@@ -306,7 +289,7 @@ const getAmendmentInProgress = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/in-progress`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return { status: 200, data: response.data };
@@ -327,7 +310,7 @@ const getCompletedAmendment = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return response.data;
@@ -348,7 +331,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return response.data;
@@ -369,7 +352,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return response.data;
@@ -390,7 +373,7 @@ const getAmendmentById = async (facilityId, amendmentId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return response.data;
@@ -411,7 +394,7 @@ const getAmendmentByFacilityId = async (facilityId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return response.data;
@@ -432,7 +415,7 @@ const getAmendmentsByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return response.data;
@@ -453,7 +436,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/in-progress`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return response.data;
@@ -474,7 +457,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/completed`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return response.data;
@@ -495,7 +478,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/completed/latest`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return response.data;
@@ -516,7 +499,7 @@ const getAllAmendmentsInProgress = async () => {
       const response = await axios({
         method: 'get',
         url: `${centralApiUrl}/v1/tfm/amendments`,
-        headers: { 'Content-Type': 'application/json' },
+        headers,
       });
 
       return response.data;
@@ -535,9 +518,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/gef/facilities/${facilityId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: facilityUpdate,
     });
 
@@ -552,9 +533,7 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/deals`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         queryParams,
         start,
@@ -572,10 +551,8 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/party-db/${encodeURIComponent(companyRegNo)}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
+      headers,
     });
     return response.data;
   } catch ({ response }) {
@@ -592,10 +569,8 @@ const getCompanyInfo = async (partyUrn) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/party-db/urn/${encodeURIComponent(partyUrn)}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/party-db/urn/${encodeURIComponent(partyUrn)}`,
+      headers,
     });
 
     return response.data;
@@ -610,9 +585,7 @@ const findUser = async (username) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/users/${username}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
     return response.data;
   } catch ({ response }) {
@@ -625,9 +598,7 @@ const findUserById = async (userId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/users/id/${userId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
     return response.data;
   } catch ({ response }) {
@@ -640,9 +611,7 @@ const findPortalUserById = async (userId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/user/${userId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
     return response.data;
   } catch ({ response }) {
@@ -656,9 +625,7 @@ const updateUserTasks = async (userId, updatedTasks) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/tfm/users/${userId}/tasks`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         updatedTasks,
       },
@@ -674,9 +641,7 @@ const findOneTeam = async (teamId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/teams/${teamId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return response.data.team;
@@ -690,9 +655,7 @@ const findTeamMembers = async (teamId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/tfm/users/team/${teamId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return response.data;
@@ -705,10 +668,8 @@ const getCurrencyExchangeRate = async (source, target) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/currency-exchange-rate/${source}/${target}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/currency-exchange-rate/${source}/${target}`,
+      headers,
     });
     return response.data;
   } catch (err) {
@@ -720,10 +681,8 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/exposure-period/${startDate}/${endDate}/${type}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/exposure-period/${startDate}/${endDate}/${type}`,
+      headers,
     });
 
     return response.data;
@@ -737,10 +696,8 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${refDataUrl}/premium-schedule`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/premium-schedule`,
+      headers,
       data: premiumScheduleParameters,
     });
 
@@ -759,10 +716,8 @@ const createACBS = async (deal, bank) => {
     try {
       const response = await axios({
         method: 'post',
-        url: `${refDataUrl}/acbs`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        url: `${EXTERNAL_API_URL}/acbs`,
+        headers,
         data: {
           deal,
           bank,
@@ -782,10 +737,8 @@ const updateACBSfacility = async (facility, deal) => {
     try {
       const response = await axios({
         method: 'post',
-        url: `${refDataUrl}/acbs/facility/${facility.ukefFacilityId}/issue`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        url: `${EXTERNAL_API_URL}/acbs/facility/${facility.ukefFacilityId}/issue`,
+        headers,
         data: {
           facility,
           deal,
@@ -811,10 +764,8 @@ const amendACBSfacility = async (amendments, facility, deal) => {
     const { ukefFacilityId } = facility.facilitySnapshot;
     const response = await axios({
       method: 'post',
-      url: `${refDataUrl}/acbs/facility/${ukefFacilityId}/amendments`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/acbs/facility/${ukefFacilityId}/amendments`,
+      headers,
       data: {
         amendments,
         deal,
@@ -836,11 +787,11 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
   let functionUrl;
   switch (type) {
     case DURABLE_FUNCTIONS.TYPE.ACBS:
-      functionUrl = azureAcbsFunctionUrl;
+      functionUrl = AZURE_ACBS_FUNCTION_URL;
       break;
 
     case DURABLE_FUNCTIONS.TYPE.NUMBER_GENERATOR:
-      functionUrl = azureNumberGeneratorUrl;
+      functionUrl = AZURE_NUMBER_GENERATOR_FUNCTION_URL;
       break;
 
     default:
@@ -855,9 +806,7 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
     const response = await axios({
       method: 'get',
       url: modifiedUrl,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
     return response.data;
   } catch (err) {
@@ -870,10 +819,8 @@ const createEstoreFolders = async (data) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${refDataUrl}/estore`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/estore`,
+      headers,
       data,
     });
     return response.data;
@@ -887,10 +834,8 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${refDataUrl}/email`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${EXTERNAL_API_URL}/email`,
+      headers,
       data: {
         templateId,
         sendToEmailAddress,
@@ -908,9 +853,7 @@ const findOneGefDeal = async (dealId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return response.data;
@@ -926,9 +869,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/status`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         status,
       },
@@ -947,9 +888,7 @@ const updatePortalGefDeal = async (dealId, update) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: {
         dealUpdate: update,
       },
@@ -968,9 +907,7 @@ const updateGefMINActivity = async (dealId) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/gef/deals/activity/${dealId}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
 
     return response.data;
@@ -986,9 +923,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
     const response = await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/comment`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       data: { dealId, commentType, comment },
     });
 
@@ -1005,9 +940,7 @@ const getAllFacilities = async (searchString) => {
       method: 'GET',
       data: searchString,
       url: `${centralApiUrl}/v1/tfm/facilities`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
     return response.data;
   } catch ({ response }) {
@@ -1021,7 +954,7 @@ const findBankById = async (bankId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/bank/${bankId}`,
-      headers: { 'Content-Type': 'application/json' },
+      headers,
     });
     return response.data;
   } catch (response) {
@@ -1035,7 +968,7 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/version/${version}`,
-      headers: { 'Content-Type': 'application/json' },
+      headers,
     });
 
     return response.data;

@@ -14,16 +14,15 @@ const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
 const mandatoryFields = [
-  'dealIdentifier',
-  'guarantorParty',
+  'effectiveDate',
   'limitKey',
   'guaranteeExpiryDate',
-  'effectiveDate',
   'maximumLiability',
+  'guarantorParty',
 ];
 
 const createDealGuarantee = async (context) => {
-  const { guarantee } = context.bindingData;
+  const { dealIdentifier, guarantee } = context.bindingData;
 
   const missingMandatory = findMissingMandatory(guarantee, mandatoryFields);
 
@@ -33,13 +32,13 @@ const createDealGuarantee = async (context) => {
 
   const submittedToACBS = moment().format();
 
-  const { status, data } = await api.createDealGuarantee(guarantee);
+  const { status, data } = await api.createDealGuarantee(dealIdentifier, guarantee);
 
   if (isHttpErrorStatus(status)) {
     throw new Error(JSON.stringify({
       name: 'ACBS Deal Guarantee create error',
       status,
-      dealIdentifier: guarantee.dealIdentifier,
+      dealIdentifier,
       submittedToACBS,
       receivedFromACBS: moment().format(),
       dataReceived: data,

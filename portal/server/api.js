@@ -120,20 +120,6 @@ const createDeal = async (deal, token) => {
   return response.data;
 };
 
-const updateDeal = async (deal, token) => {
-  const response = await axios({
-    method: 'put',
-    url: `${portalApi}/v1/deals/${deal._id}`,
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
-    data: deal,
-  });
-
-  return response;
-};
-
 const updateDealName = async (id, newName, token) => {
   const response = await axios({
     method: 'put',
@@ -679,7 +665,6 @@ module.exports = {
   updateBondIssueFacility,
   updateBondCoverStartDate,
   deleteBond,
-  updateDeal,
   updateLoan,
   updateLoanIssueFacility,
   updateLoanCoverStartDate,

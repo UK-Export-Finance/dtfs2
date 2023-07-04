@@ -9,7 +9,7 @@ on:
     - 'portal-api/**'
     - 'trade-finance-manager-ui/**'
     - 'trade-finance-manager-api/**'
-    - 'reference-data-proxy/**'
+    - 'external-api/**'
     - 'dtfs-central-api/**'
     - 'e2e-tests/**'
     - 'utils/mock-data-loader/**'
@@ -27,11 +27,9 @@ env:
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
   ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
   ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
-  MULESOFT_API_UKEF_TF_EA_URL: ${{ secrets.MULESOFT_API_UKEF_TF_EA_URL }}
-  MULESOFT_API_KEY: ${{ secrets.MULESOFT_API_KEY }}
-  MULESOFT_API_SECRET: ${{ secrets.MULESOFT_API_SECRET }}
-  MULESOFT_API_ACBS_DEAL_URL: ${{ secrets.MULESOFT_API_ACBS_DEAL_URL }}
-  MULESOFT_API_ACBS_FACILITY_URL: ${{ secrets.MULESOFT_API_ACBS_FACILITY_URL }}
+  APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
+  APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
+  APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
   MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
   MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
   MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
@@ -44,6 +42,7 @@ env:
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+  API_KEY: ${{ secrets.API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
 
 jobs:

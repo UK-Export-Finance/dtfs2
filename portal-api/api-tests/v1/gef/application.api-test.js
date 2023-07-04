@@ -14,11 +14,11 @@ const CONSTANTS = require('../../../src/constants');
 const mockApplications = require('../../fixtures/gef/application');
 const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 const mockFacilities = require('../../fixtures/gef/facilities');
-const referenceData = require('../../../src/reference-data/api');
+const referenceData = require('../../../src/external-api/api');
 
 const api = require('../../../src/v1/api');
 
-jest.mock('../../../src/reference-data/api', () => ({
+jest.mock('../../../src/external-api/api', () => ({
   sendEmail: jest.fn(() => Promise.resolve({})),
   numberGenerator: {
     create: () => ({ ukefId: '1' }),

@@ -1,5 +1,5 @@
 const utils = require('../../utils/array');
-const refDataApi = require('../../reference-data/api');
+const refDataApi = require('../../external-api/api');
 
 const sortIndustrySectors = (industrySectors) => utils.sortArrayAlphabetically(industrySectors, 'name').map((sector) => ({
   ...sector,

@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   dtfs-submissions-data:
     image: mongo:5.0.5
@@ -8,7 +8,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     ports:
-      - "27017-27019:27017-27019"
+      - '27017-27019:27017-27019'
 
   dtfs-central-api:
     build: ./dtfs-central-api
@@ -16,19 +16,21 @@ services:
     restart: always
     depends_on:
       - dtfs-submissions-data
-      - reference-data-proxy
+      - external-api
     ports:
-      - "5005:5005"
+      - '5005:5005'
     volumes:
       - ./dtfs-central-api/src:/app/src:ro
     environment:
       - PORT=5005
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - CORS_ORIGIN
+      - EXTERNAL_API_URL=http://external-api:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://localhost:5005
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - API_KEY
     entrypoint: npx nodemon src/index.js -L
 
   trade-finance-manager-ui:
@@ -37,7 +39,7 @@ services:
     depends_on:
       - trade-finance-manager-api
     ports:
-      - "5003:5003"
+      - '5003:5003'
     volumes:
       - ./trade-finance-manager-ui/server:/app/server:ro
       - ./trade-finance-manager-ui/public:/app/public:ro
@@ -45,7 +47,7 @@ services:
     environment:
       - PORT=5003
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://external-api:5002
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL=${ESTORE_URL}
       - REDIS_HOSTNAME=redis
@@ -61,14 +63,16 @@ services:
     depends_on:
       - portal-api
       - dtfs-central-api
-      - reference-data-proxy
+      - external-api
     ports:
-      - "5004:5004"
+      - '5004:5004'
     volumes:
       - ./trade-finance-manager-api/src:/app/src:ro
     environment:
       - PORT=5004
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - CORS_ORIGIN
+      - EXTERNAL_API_URL=http://external-api:5002
+      - API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
@@ -78,7 +82,6 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
-      - SENTRY_DSN=${SENTRY_DSN}
       - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
       - TZ=Europe/London
       - UKEF_INTERNAL_NOTIFICATION=test
@@ -93,7 +96,7 @@ services:
       - redis
       - portal-api
     ports:
-      - "5000:5000"
+      - '5000:5000'
     volumes:
       - ./portal/server:/app/server:ro
       - ./portal/public:/app/public:ro
@@ -102,7 +105,7 @@ services:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://external-api:5002
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
@@ -115,14 +118,14 @@ services:
     restart: always
     depends_on:
       - dtfs-central-api
-      - reference-data-proxy
+      - external-api
     ports:
-      - "5001:5001"
+      - '5001:5001'
     volumes:
       - ./portal-api/src:/app/src:ro
     environment:
       - PORT=5001
-      - CORS_ORIGIN=http://localhost:5000
+      - CORS_ORIGIN
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
@@ -141,7 +144,8 @@ services:
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - DTFS_PORTAL_SCHEDULER=true
       - FETCH_WORKFLOW_TYPE_B_SCHEDULE=*/1 * * * * *
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://external-api:5002
+      - API_KEY
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
       - TZ=Europe/London
@@ -149,29 +153,30 @@ services:
 
     entrypoint: npx nodemon src/index.js -L
 
-  reference-data-proxy:
-    build: ./reference-data-proxy
-    image: dtfs/reference-data-proxy
+  external-api:
+    build: ./external-api
+    image: dtfs/external-api
     restart: always
     depends_on:
       - dtfs-submissions-data
     ports:
-      - "5002:5002"
+      - '5002:5002'
     volumes:
-      - ./reference-data-proxy/src:/app/src:ro
+      - ./external-api/src:/app/src:ro
     environment:
       - PORT=5002
+      - CORS_ORIGIN
+      - API_KEY
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk
       - ORDNANCE_SURVEY_API_KEY
-      - MULESOFT_API_KEY
-      - MULESOFT_API_SECRET
+      - APIM_TFS_URL
+      - APIM_TFS_KEY
+      - APIM_TFS_VALUE
       - MULESOFT_API_PARTY_DB_KEY
       - MULESOFT_API_PARTY_DB_SECRET
       - MULESOFT_API_PARTY_DB_URL
-      - MULESOFT_API_ACBS_DEAL_URL
-      - MULESOFT_API_ACBS_FACILITY_URL
       - APIM_MDM_URL
       - APIM_MDM_KEY
       - APIM_MDM_VALUE
@@ -183,7 +188,7 @@ services:
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://external-api:5002
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
     entrypoint: npx nodemon src/index.ts -L
@@ -196,7 +201,7 @@ services:
       - redis
       - portal-api
     ports:
-      - "5006:5006"
+      - '5006:5006'
     volumes:
       - ./gef-ui/server:/app/server:ro
       - ./gef-ui/public:/app/public:ro
@@ -205,44 +210,26 @@ services:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://external-api:5002
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
       - REDIS_HOSTNAME=redis
     command: npx nodemon server/index.js -L
 
-  # acbs-function:
-  #   build: ./azure-functions/acbs-function
-  #   image: dtfs/azure-function-acbs
-  #   restart: always
-  #   ports:
-  #     - "7071:80"
-  #   environment:
-  #     - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
-  #     - FUNCTIONS_WORKER_RUNTIME=node
-  #     - WEBSITE_HOSTNAME=localhost:7071
-  #     - MULESOFT_API_KEY
-  #     - MULESOFT_API_SECRET
-  #     - MULESOFT_API_UKEF_TF_EA_URL
-  #     - APIM_MDM_URL
-  #     - APIM_MDM_KEY
-  #     - APIM_MDM_VALUE
-  #     - TZ=Europe/London
-
   number-generator-function:
     build: ./azure-functions/number-generator-function
     image: dtfs/azure-function-number-generator
     restart: always
     ports:
-      - "7072:80"
+      - '7072:80'
     environment:
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - FUNCTIONS_WORKER_RUNTIME=node
       - WEBSITE_HOSTNAME=localhost:7072
-      - MULESOFT_API_UKEF_TF_EA_URL
-      - MULESOFT_API_KEY
-      - MULESOFT_API_SECRET
+      - APIM_TFS_URL
+      - APIM_TFS_KEY
+      - APIM_TFS_VALUE
       - APIM_MDM_URL
       - APIM_MDM_KEY
       - APIM_MDM_VALUE
@@ -250,28 +237,28 @@ services:
       - NODE_ENV=${NODE_ENV}
 
   redis:
-    image: "redis:alpine"
+    image: 'redis:alpine'
     ports:
-      - "6379:6379"
+      - '6379:6379'
     deploy:
       resources:
         limits:
-          cpus: "0.1"
+          cpus: '0.1'
           memory: 300M
 
   reverse-proxy:
     build: ./reverse-proxy
-    image: "dtfs/reverse-proxy"
+    image: 'dtfs/reverse-proxy'
     depends_on:
       - portal
       - gef-ui
     ports:
-      - "80:80"
+      - '80:80'
     environment:
       - PORTAL_UI=portal:5000
       - GEF_UI=gef-ui:5006
     deploy:
       resources:
         limits:
-          cpus: "0.01"
+          cpus: '0.01'
           memory: 150M

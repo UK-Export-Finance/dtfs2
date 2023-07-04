@@ -42,6 +42,15 @@ const FACILITY_STAGE = {
   UNCONDITIONAL: 'Unconditional',
 };
 
+const COMPANIES_HOUSE_NUMBERS = {
+  1: '08547313',
+};
+
+const INDUSTRY_SECTOR_CODES = {
+  INFORMATION: '1009',
+  BUSINESS: '62012',
+};
+
 module.exports = {
   DEALS: {
     DEAL_TYPE,
@@ -53,4 +62,6 @@ module.exports = {
     FACILITY_TYPE,
     FACILITY_STAGE,
   },
+  COMPANIES_HOUSE_NUMBERS,
+  INDUSTRY_SECTOR_CODES,
 };

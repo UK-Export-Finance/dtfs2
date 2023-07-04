@@ -9,6 +9,7 @@ const users = require('./test-data');
 const aMaker = users.find((user) => user.username === 'MAKER');
 
 const PASSWORD_ERROR = { text: 'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.' };
+const EMAIL_ERROR = { text: 'Enter an email address in the correct format, for example, name@example.com' };
 
 describe('a user', () => {
   beforeEach(async () => {
@@ -79,6 +80,32 @@ describe('a user', () => {
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
       expect(body.errors.errorList.password).toEqual(PASSWORD_ERROR);
+    });
+
+    it('rejects if the provided email address is not in valid format', async () => {
+      const myMaker = {
+        ...aMaker,
+        email: 'abc'
+      };
+
+      const { status, body } = await as().post(myMaker).to('/v1/users');
+
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+      expect(body.errors.errorList.email.text).toEqual(EMAIL_ERROR.text);
+    });
+
+    it('rejects if the provided email address is empty', async () => {
+      const myMaker = {
+        ...aMaker,
+        email: ''
+      };
+
+      const { status, body } = await as().post(myMaker).to('/v1/users');
+
+      expect(status).toEqual(400);
+      expect(body.success).toEqual(false);
+      expect(body.errors.errorList.email.text).toEqual(EMAIL_ERROR.text);
     });
 
     it('creates the user if all provided data is valid', async () => {
@@ -218,5 +245,75 @@ describe('a user', () => {
     // User creation - second instance
     const second = await as().post(aMaker).to('/v1/users');
     expect(second.status).toEqual(400);
+  });
+
+  const expectedBody = { msg: 'could not find user', success: false };
+
+  describe('Attempting to login with NoSQL injection ', () => {
+    it('should return a user cannot be found message', async () => {
+      const username = "{$or: [{role: { $ne: '' }}]}";
+      const { password } = aMaker;
+
+      const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+      expect(status).toEqual(401);
+      expect(body).toEqual(expectedBody);
+    });
+  });
+
+  describe('NoSQL injection attempts', () => {
+    describe('when username is "{ "$ne": "" }"', () => {
+      it('should return a user cannot be found message', async () => {
+        const injectedUser = {
+          ...aMaker,
+          username: '{ "$ne": "" }',
+          email: '{ "$ne": "" }',
+        };
+
+        const { username, password } = injectedUser;
+        await as().post(injectedUser).to('/v1/users');
+
+        const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+        expect(status).toEqual(401);
+        expect(body).toEqual(expectedBody);
+      });
+    });
+
+    describe('when username is "{ "$gt": "" }"', () => {
+      it('should return a user cannot be found message', async () => {
+        const injectedUser = {
+          ...aMaker,
+          username: '{ "$gt": "" }',
+          email: '{ "$gt": "" }',
+        };
+
+        const { username, password } = injectedUser;
+        await as().post(injectedUser).to('/v1/users');
+
+        const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+        expect(status).toEqual(401);
+        expect(body).toEqual(expectedBody);
+      });
+
+      describe('when username is "{ "$lt": "" }"', () => {
+        it('should return a user cannot be found message', async () => {
+          const injectedUser = {
+            ...aMaker,
+            username: '{ "$lt": "" }',
+            email: '{ "$lt": "" }',
+          };
+
+          const { username, password } = injectedUser;
+          await as().post(injectedUser).to('/v1/users');
+
+          const { status, body } = await as().post({ username, password }).to('/v1/login');
+
+          expect(status).toEqual(401);
+          expect(body).toEqual(expectedBody);
+        });
+      });
+    });
   });
 });

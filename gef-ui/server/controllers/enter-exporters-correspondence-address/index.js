@@ -1,6 +1,7 @@
 const api = require('../../services/api');
 const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
 const { DEFAULT_COUNTRY } = require('../../constants');
+const constructPayload = require('../../utils/constructPayload');
 
 const enterExportersCorrespondenceAddress = async (req, res) => {
   const { params, session, query } = req;
@@ -89,15 +90,27 @@ const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   // https://ukef-dtfs.atlassian.net/browse/DTFS2-4456?focusedCommentId=15031
   if (body.addressLine1 && body.postalCode) {
     body.country = DEFAULT_COUNTRY;
+  } else {
+    delete body.country;
   }
 
   try {
     const { exporter } = await api.getApplication(dealId);
 
+    const correspondenceAddressFields = [
+      'addressLine1',
+      'addressLine2',
+      'addressLine3',
+      'locality',
+      'postalCode',
+      'country',
+    ];
+    const sanitizedBody = constructPayload(body, correspondenceAddressFields);
+
     const applicationExporterUpdate = {
       exporter: {
         ...exporter,
-        correspondenceAddress: body,
+        correspondenceAddress: sanitizedBody,
       },
       editorId,
     };

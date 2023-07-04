@@ -1,7 +1,9 @@
 const express = require('express');
 const compression = require('compression');
+const mongoSanitise = require('express-mongo-sanitize');
 const seo = require('./v1/routes/middleware/headers/seo');
 const security = require('./v1/routes/middleware/headers/security');
+const checkApiKey = require('./v1/routes/middleware/headers/check-api-key');
 
 const {
   BANK_ROUTE,
@@ -25,11 +27,16 @@ const app = express();
 
 app.use(seo);
 app.use(security);
-
+app.use(checkApiKey);
 app.use(healthcheck);
 // added limit for larger payloads - 500kb
 app.use(express.json({ limit: '500kb' }));
 app.use(compression());
+
+// MongoDB sanitisation
+app.use(mongoSanitise({
+  allowDots: true,
+}));
 
 app.use(`/v1/${BANK_ROUTE}`, bankRoutes);
 app.use(`/v1/${PORTAL_ROUTE}`, portalRoutes);
