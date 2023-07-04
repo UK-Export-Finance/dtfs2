@@ -21,10 +21,6 @@ const PARTY = {
   GUARANTOR: '00000141',
 };
 
-const GUARANTEE_TYPE_CODE = {
-  DEFAULT: '450',
-};
-
 const CURRENCY = {
   DEFAULT: 'GBP',
 };
@@ -55,5 +51,4 @@ module.exports = {
   COUNTRY,
   UNITED_KINGDOM,
   EXPORTER_CREDIT_RATING,
-  GUARANTEE_TYPE_CODE,
 };

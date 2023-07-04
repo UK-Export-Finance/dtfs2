@@ -11,7 +11,6 @@ const CONSTANT = require('../../constants');
   "guaranteeExpiryDate" date    Effective date plus 20 years
   "maximumLiability"    float   Contract Value
   "guarantorParty"      string  00000141
-  "guaranteeTypeCode"   string  450
 */
 
 const dealInvestor = (deal, limitKey) => ({
@@ -20,7 +19,6 @@ const dealInvestor = (deal, limitKey) => ({
   guaranteeExpiryDate: getDealGuaranteeExpiryDate(deal),
   maximumLiability: getDealGuaranteeValue(deal),
   guarantorParty: CONSTANT.DEAL.PARTY.GUARANTOR,
-  guaranteeTypeCode: CONSTANT.DEAL.GUARANTEE_TYPE_CODE.DEFAULT,
 });
 
 module.exports = dealInvestor;

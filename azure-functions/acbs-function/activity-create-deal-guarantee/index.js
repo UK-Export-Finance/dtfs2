@@ -19,12 +19,10 @@ const mandatoryFields = [
   'guaranteeExpiryDate',
   'maximumLiability',
   'guarantorParty',
-  'guaranteeTypeCode',
 ];
 
 const createDealGuarantee = async (context) => {
-  const { guarantee } = context.bindingData;
-  const { dealIdentifier } = guarantee;
+  const { dealIdentifier, guarantee } = context.bindingData;
 
   const missingMandatory = findMissingMandatory(guarantee, mandatoryFields);
 

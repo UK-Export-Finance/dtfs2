@@ -19,8 +19,7 @@ const mandatoryFields = [
 ];
 
 const createDealInvestor = async (context) => {
-  const { investor } = context.bindingData;
-  const { dealIdentifier } = investor;
+  const { dealIdentifier, investor } = context.bindingData;
 
   const missingMandatory = findMissingMandatory(investor, mandatoryFields);
 
