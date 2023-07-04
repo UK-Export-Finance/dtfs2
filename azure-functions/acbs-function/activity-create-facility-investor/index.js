@@ -13,18 +13,10 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'facilityIdentifier',
-  'guaranteeCommencementDate',
-  'guaranteeExpiryDate',
-  'effectiveDate',
-  'currency',
-  'maximumLiability',
-];
+const mandatoryFields = ['maximumLiability', 'currency', 'guaranteeExpiryDate', 'effectiveDate'];
 
 const createFacilityInvestor = async (context) => {
-  const { acbsFacilityInvestorInput } = context.bindingData;
-  const { dealIdentifier, facilityIdentifier } = acbsFacilityInvestorInput;
+  const { facilityIdentifier, acbsFacilityInvestorInput } = context.bindingData;
 
   const missingMandatory = findMissingMandatory(acbsFacilityInvestorInput, mandatoryFields);
 
@@ -38,14 +30,18 @@ const createFacilityInvestor = async (context) => {
 
   if (isHttpErrorStatus(status)) {
     throw new Error(
-      JSON.stringify({
-        name: 'ACBS Facility Investor create error',
-        dealIdentifier,
-        submittedToACBS,
-        receivedFromACBS: moment().format(),
-        dataReceived: data,
-        dataSent: acbsFacilityInvestorInput,
-      }, null, 4),
+      JSON.stringify(
+        {
+          name: 'ACBS Facility Investor create error',
+          facilityIdentifier,
+          submittedToACBS,
+          receivedFromACBS: moment().format(),
+          dataReceived: data,
+          dataSent: acbsFacilityInvestorInput,
+        },
+        null,
+        4,
+      ),
     );
   }
 

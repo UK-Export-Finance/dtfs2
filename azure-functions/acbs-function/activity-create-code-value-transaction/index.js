@@ -14,15 +14,10 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'facilityIdentifier',
-  'lenderTypeCode',
-  'initialBundleStatusCode',
-];
+const mandatoryFields = ['lenderTypeCode', 'initialBundleStatusCode', 'facilityTransactionCodeValueCode'];
 
 const createCodeValueTransaction = async (context) => {
-  const { acbsCodeValueTransactionInput } = context.bindingData;
-  const { dealIdentifier, facilityIdentifier } = acbsCodeValueTransactionInput;
+  const { facilityIdentifier, acbsCodeValueTransactionInput } = context.bindingData;
 
   const missingMandatory = findMissingMandatory(acbsCodeValueTransactionInput, mandatoryFields);
 
@@ -34,15 +29,21 @@ const createCodeValueTransaction = async (context) => {
   const { status, data } = await api.createCodeValueTransaction(facilityIdentifier, acbsCodeValueTransactionInput);
 
   if (isHttpErrorStatus(status)) {
-    throw new Error(JSON.stringify({
-      name: 'ACBS code create value transaction error',
-      status,
-      dealIdentifier,
-      submittedToACBS,
-      receivedFromACBS: moment().format(),
-      dataReceived: data,
-      dataSent: acbsCodeValueTransactionInput,
-    }, null, 4));
+    throw new Error(
+      JSON.stringify(
+        {
+          name: 'ACBS code create value transaction error',
+          status,
+          facilityIdentifier,
+          submittedToACBS,
+          receivedFromACBS: moment().format(),
+          dataReceived: data,
+          dataSent: acbsCodeValueTransactionInput,
+        },
+        null,
+        4,
+      ),
+    );
   }
 
   return {

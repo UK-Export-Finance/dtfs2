@@ -1,7 +1,4 @@
-const {
-  getDealEffectiveDate,
-  getDealCurrency,
-} = require('./helpers');
+const { getDealEffectiveDate, getDealCurrency } = require('./helpers');
 const CONSTANTS = require('../../constants');
 
 /*
