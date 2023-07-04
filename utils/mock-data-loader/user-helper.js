@@ -12,13 +12,13 @@ const mockDataLoaderUser = {
 };
 
 const createAndLogInAsInitialUser = async () => {
-  console.info(`try login as "${mockDataLoaderUser.username}"`);
+  console.info(`try log in as "${mockDataLoaderUser.username}"`);
   let token = await api.login(mockDataLoaderUser);
 
   if (!token) {
     console.info(`creating user "${mockDataLoaderUser.username}"`);
     await api.createInitialUser(mockDataLoaderUser);
-    console.info(`login as "${mockDataLoaderUser.username}"`);
+    console.info(`log in as "${mockDataLoaderUser.username}"`);
     token = await api.login(mockDataLoaderUser);
   }
 

@@ -27,6 +27,8 @@ describe('/v1/feedback', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
+
+    noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
     aDataAdmin = testUsers().withRole('data-admin').one();

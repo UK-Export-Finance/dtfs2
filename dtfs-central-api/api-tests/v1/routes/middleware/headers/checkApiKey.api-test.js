@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-const checkApiKey = require('../../../../../src/v1/routes/middleware/headers/checkApiKey');
+const checkApiKey = require('../../../../../src/v1/routes/middleware/headers/check-api-key');
 const { mockReq, mockRes, mockNext } = require('../../../mocks');
 
 dotenv.config();
