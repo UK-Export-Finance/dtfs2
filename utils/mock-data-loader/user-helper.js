@@ -1,30 +1,33 @@
-const db = require('./db-client');
-const crypto = require('crypto');
+const axios = require('axios');
+const MOCK_BANKS = require('./banks');
+require('dotenv').config();
 
-const createUser = async (user) => {
-  console.info(`Creating user "${user.username}"`);
+const portalApiUrl = process.env.DEAL_API_URL;
+const API_KEY = process.env.API_KEY;
 
-  const salt = crypto.randomBytes(32).toString('hex');
-  const hash = crypto.pbkdf2Sync(user.password, salt, 10000, 64, 'sha512').toString('hex');
-
-  const userToCreate = {
-    'user-status': 'active',
-    timezone: user.timezone || 'Europe/London',
-    salt,
-    hash,
-    ...user,
-  };
-
-  userToCreate.password = '';
-  userToCreate.passwordConfirm = '';
-
-  const collection = await db.getCollection('users');
-  await collection.insertOne(userToCreate);
+const mockDataLoaderUser = {
+  username: 're-insert-mocks',
+  password: 'AbC!2345',
+  firstname: 'Mock',
+  surname: 'DataLoader',
+  roles: [],
+  email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
+  bank: MOCK_BANKS.find((bank) => bank.id === '9'),
 };
 
-const deleteAllUsers = async () => {
-  const collection = await db.getCollection('users');
-  await collection.deleteMany({});
-}
+const createMockDataLoaderUser = async () => {
+  console.info(`Creating user "${mockDataLoaderUser.username}"`);
 
-module.exports = { createUser, deleteAllUsers };
+  await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+      Accepts: 'application/json',
+    },
+    url: `${portalApiUrl}/v1/user`,
+    data: mockDataLoaderUser,
+  }).catch((err) => { console.error(`err: ${err}`); });
+};
+
+module.exports = { mockDataLoaderUser, createMockDataLoaderUser };
