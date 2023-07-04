@@ -12,15 +12,24 @@ const mockDataLoaderUser = {
 };
 
 const createAndLogInAsInitialUser = async () => {
+  console.info(`try login as "${mockDataLoaderUser.username}"`);
   let token = await api.login(mockDataLoaderUser);
 
   if (!token) {
-    console.info(`Creating user "${mockDataLoaderUser.username}"`);
+    console.info(`creating user "${mockDataLoaderUser.username}"`);
     await api.createInitialUser(mockDataLoaderUser);
+    console.info(`login as "${mockDataLoaderUser.username}"`);
     token = await api.login(mockDataLoaderUser);
   }
 
   return token;
 };
 
-module.exports = { mockDataLoaderUser, createAndLogInAsInitialUser };
+const deleteInitialUser = async (token) => {
+  const allUsers = await api.listUsers(token)
+  const userToDelete = allUsers.find((user) => user.username === mockDataLoaderUser.username);
+  console.info(`deleting user "${userToDelete.username}"`);
+  await api.deleteUser(userToDelete, token);
+}
+
+module.exports = { mockDataLoaderUser, createAndLogInAsInitialUser, deleteInitialUser };

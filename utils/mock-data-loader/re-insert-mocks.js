@@ -1,4 +1,4 @@
-const { createAndLogInAsInitialUser } = require('./user-helper');
+const { createAndLogInAsInitialUser, deleteInitialUser } = require('./user-helper');
 
 const cleanAllTables = require('./clean-all-tables');
 const insertMocks = require('./insert-mocks');
@@ -20,6 +20,8 @@ const init = async () => {
   await insertMocksGef(token);
   await cleanAllTablesTfm(token);
   await insertMocksTfm(token);
+
+  await deleteInitialUser(token);
 };
 
 init();
