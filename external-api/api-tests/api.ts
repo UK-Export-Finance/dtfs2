@@ -1,20 +1,11 @@
 import agent = require('supertest');
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const { API_KEY } = process.env;
-
-const headers = {
-  'x-api-key': API_KEY,
-};
 
 module.exports = (app: any) => ({
-  get: async (url: string) => agent(app).get(url).set(headers),
+  get: async (url: string) => agent(app).get(url),
   getWithRequestBody: (data: any) => ({
-    to: async (url: string) => agent(app).get(url).send(data).set(headers),
+    to: async (url: string) => agent(app).get(url).send(data),
   }),
   post: (data: any) => ({
-    to: async (url: string) => agent(app).post(url).send(data).set(headers),
+    to: async (url: string) => agent(app).post(url).send(data),
   }),
 });

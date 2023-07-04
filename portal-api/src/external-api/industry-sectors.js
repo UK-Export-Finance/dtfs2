@@ -3,18 +3,15 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const { EXTERNAL_API_URL, API_KEY } = process.env;
-
-const headers = {
-  'Content-Type': 'application/json',
-  'x-api-key': API_KEY,
-};
+const referenceProxyUrl = process.env.EXTERNAL_API_URL;
 
 const getIndustrySectors = async () => {
   const { status, data } = await axios({
     method: 'get',
-    url: `${EXTERNAL_API_URL}/industry-sectors`,
-    headers,
+    url: `${referenceProxyUrl}/industry-sectors`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
   }).catch((err) => {
     console.error('Error retrieving industry sectors from External API. ', err);
     return err;
@@ -29,8 +26,10 @@ const getIndustrySectors = async () => {
 const getIndustrySector = async (id) => {
   const { status, data } = await axios({
     method: 'get',
-    url: `${EXTERNAL_API_URL}/industry-sectors/${id}`,
-    headers,
+    url: `${referenceProxyUrl}/industry-sectors/${id}`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
   }).catch((err) => {
     console.error('Error retrieving industry sector from External API. ', err);
     return err;

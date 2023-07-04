@@ -1,7 +1,6 @@
 import express from 'express';
 
 export const apiRoutes = express.Router();
-
 import * as countries from '../controllers/countries.controller';
 import * as currencies from '../controllers/currencies.controller';
 import * as industrySectors from '../controllers/industry-sectors.controller';

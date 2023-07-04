@@ -2,8 +2,7 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 
 dotenv.config();
-
-const { EXTERNAL_API_URL, API_KEY } = process.env;
+const referenceProxyUrl = process.env.EXTERNAL_API_URL;
 
 const sendEmail = async (
   templateId,
@@ -13,10 +12,9 @@ const sendEmail = async (
   try {
     const { data } = await axios({
       method: 'post',
-      url: `${EXTERNAL_API_URL}/email`,
+      url: `${referenceProxyUrl}/email`,
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
       },
       data: {
         templateId,

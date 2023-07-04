@@ -1,15 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const request = require('supertest');
-const dotenv = require('dotenv');
-
-dotenv.config();
-
-const { API_KEY } = process.env;
-
-const headers = (token) => ({
-  'x-api-key': API_KEY,
-  Authorization: token || '',
-});
 
 module.exports = (app) => ({
   as: (user) => {
@@ -19,7 +9,7 @@ module.exports = (app) => ({
       post: (data) => ({
         to: async (url) => request(app)
           .post(url)
-          .set(headers(token))
+          .set({ Authorization: token || '' })
           .send(data),
       }),
 
@@ -27,7 +17,7 @@ module.exports = (app) => ({
         to: async (url) => {
           const apiRequest = request(app)
             .post(url)
-            .set(headers(token));
+            .set({ Authorization: token || '' });
 
           if (files.length) {
             files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
@@ -45,7 +35,7 @@ module.exports = (app) => ({
         to: async (url) => {
           const results = list.map((data) => request(app)
             .post(url)
-            .set(headers(token))
+            .set({ Authorization: token || '' })
             .send(data));
 
           return Promise.all(results);
@@ -55,7 +45,7 @@ module.exports = (app) => ({
       put: (data) => ({
         to: async (url) => request(app)
           .put(url)
-          .set(headers(token))
+          .set({ Authorization: token || '' })
           .send(data),
       }),
 
@@ -63,7 +53,7 @@ module.exports = (app) => ({
         to: async (url) => {
           const apiRequest = request(app)
             .put(url)
-            .set(headers(token));
+            .set({ Authorization: token || '' });
 
           if (files.length) {
             files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
@@ -79,12 +69,12 @@ module.exports = (app) => ({
 
       get: async (url, query = {}) => request(app)
         .get(url)
-        .set(headers(token))
+        .set({ Authorization: token || '' })
         .query(query),
 
       remove: async (url) => request(app)
         .delete(url)
-        .set(headers(token))
+        .set({ Authorization: token || '' })
         .send(),
     };
   },
