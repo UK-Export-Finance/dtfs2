@@ -28,6 +28,7 @@ const dealImportBssEwcsController = require('./controllers/data-migration/deal-i
 const dealImportGefController = require('./controllers/data-migration/deal-import-gef.controller');
 
 const { fileUpload } = require('./middleware');
+const checkApiKey = require('./middleware/headers/check-api-key');
 
 const users = require('./users/routes');
 const gef = require('./gef/routes');
@@ -41,6 +42,8 @@ openRouter.route('/users/reset-password').post(users.resetPassword);
 
 // 2. Password reset post request
 openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswordWithToken);
+
+openRouter.route('/user').post(checkApiKey, users.create);
 
 const authRouterAllowXss = express.Router();
 
