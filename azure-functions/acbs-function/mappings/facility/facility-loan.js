@@ -34,7 +34,6 @@ const facilityLoan = (deal, facility, acbsData) => {
     const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
     let loanRecord = {
-      portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
       postingDate: date.now(),
       facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
       borrowerPartyIdentifier: acbsData.parties.exporter.partyIdentifier,

@@ -14,7 +14,10 @@ require('dotenv').config();
 const axios = require('axios');
 
 // Domain
-const apimUrl = process.env.APIM_TFS_URL;
+const apim = {
+  tfs: process.env.APIM_TFS_URL,
+  mdm: process.env.APIM_MDM_URL,
+};
 
 // Headers declaration
 const tfs = {
@@ -42,7 +45,7 @@ const get = async (endpoint) => {
   if (endpoint) {
     return axios({
       method: 'get',
-      url: `${apimUrl}${endpoint}`,
+      url: `${apim.tfs}${endpoint}`,
       headers: tfs,
     }).catch((error) => {
       console.error('Error calling TFS GET /%s', endpoint);
@@ -67,7 +70,7 @@ const post = async (endpoint, payload) => {
   if (endpoint && payload) {
     return axios({
       method: 'post',
-      url: `${apimUrl}${endpoint}`,
+      url: `${apim.tfs}${endpoint}`,
       headers: tfs,
       data: [payload],
     }).catch((error) => {
@@ -93,7 +96,7 @@ const postMdm = async (endpoint, payload) => {
   if (endpoint && payload) {
     return axios({
       method: 'post',
-      url: `${apimUrl}${endpoint}`,
+      url: `${apim.mdm}${endpoint}`,
       headers: mdm,
       data: [payload],
     }).catch((error) => {
@@ -126,7 +129,7 @@ const put = async (endpoint, payload, etag) => {
 
     return axios({
       method: 'put',
-      url: `${apimUrl}${endpoint}`,
+      url: `${apim.tfs}${endpoint}`,
       headers: {
         ...tfs,
         ...additionalHeader,
@@ -162,7 +165,7 @@ const patch = async (endpoint, payload, eTag) => {
 
     return axios({
       method: 'patch',
-      url: `${apimUrl}${endpoint}`,
+      url: `${apim.tfs}${endpoint}`,
       headers: {
         ...tfs,
         ...additionalHeader,

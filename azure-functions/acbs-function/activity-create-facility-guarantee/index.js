@@ -14,19 +14,9 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'facilityIdentifier',
-  'guaranteeCommencementDate',
-  'guarantorParty',
-  'limitKey',
-  'guaranteeExpiryDate',
-  'effectiveDate',
-  'maximumLiability',
-  'guaranteeTypeCode',
-];
+const mandatoryFields = ['guarantorParty', 'limitKey', 'guaranteeExpiryDate', 'effectiveDate', 'maximumLiability', 'guaranteeTypeCode'];
 const createFacilityGuarantee = async (context) => {
-  const { acbsFacilityGuaranteeInput } = context.bindingData;
-  const { dealIdentifier, facilityIdentifier } = acbsFacilityGuaranteeInput;
+  const { facilityIdentifier, acbsFacilityGuaranteeInput } = context.bindingData;
 
   const missingMandatory = findMissingMandatory(acbsFacilityGuaranteeInput, mandatoryFields);
 
@@ -39,14 +29,18 @@ const createFacilityGuarantee = async (context) => {
 
   if (isHttpErrorStatus(status)) {
     throw new Error(
-      JSON.stringify({
-        name: 'ACBS Facility Guarantee create error',
-        dealIdentifier,
-        submittedToACBS,
-        receivedFromACBS: moment().format(),
-        dataReceived: data,
-        dataSent: acbsFacilityGuaranteeInput,
-      }, null, 4),
+      JSON.stringify(
+        {
+          name: 'ACBS Facility Guarantee create error',
+          facilityIdentifier,
+          submittedToACBS,
+          receivedFromACBS: moment().format(),
+          dataReceived: data,
+          dataSent: acbsFacilityGuaranteeInput,
+        },
+        null,
+        4,
+      ),
     );
   }
 

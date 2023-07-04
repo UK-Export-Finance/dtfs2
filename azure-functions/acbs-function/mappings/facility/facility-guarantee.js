@@ -1,23 +1,18 @@
 /*
-  "facilityIdentifier",
-  "guaranteeCommencementDate",
-  "guarantorParty": ACBS Party Identifier based on the type for investor,
-          Bond Issuer, Bond Beneficiary, EWCS Facility Provider, EWCSBuyer Exporter,
-  "limitKey": ACBS Party Identifier
-  "guaranteeExpiryDate",
-  "effectiveDate",
-  "maximumLiability",
-  "guaranteeTypeCode": BOND GIVER(315),BOND BENEFICIARY (310),FACILITY PROVIDER (500),BUYER FOR (EXPORTER EWCS) - 321
+  "guarantorParty"        ACBS Party Identifier based on the type for party (Exporter, Agent, Indemnifier, Buyer, Bank)
+  "limitKey"              ACBS Party Identifier
+  "guaranteeExpiryDate"   Facility cover end date
+  "effectiveDate"         Facility effective from date
+  "maximumLiability"      Facility maximum UKEF exposure
+  "guaranteeTypeCode"     Guarantee type code (CONSTANTS.FACILITY.GUARANTEE_TYPE)
   */
 
 const helpers = require('./helpers');
 
 const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
-  const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
+  const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
 
   return {
-    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
-    guaranteeCommencementDate,
     guarantorParty: helpers.getGuarantorParty(acbsData, guaranteeTypeCode),
     limitKey: acbsData.dealAcbsData.parties.exporter.partyIdentifier,
     guaranteeExpiryDate,

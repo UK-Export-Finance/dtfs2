@@ -1,8 +1,4 @@
-const {
-  getDealGuaranteeValue,
-  getDealEffectiveDate,
-  getDealGuaranteeExpiryDate,
-} = require('./helpers');
+const { getDealGuaranteeValue, getDealEffectiveDate, getDealGuaranteeExpiryDate } = require('./helpers');
 const CONSTANT = require('../../constants');
 
 /*

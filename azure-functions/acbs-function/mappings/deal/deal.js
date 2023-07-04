@@ -1,9 +1,4 @@
-const {
-  getDealEffectiveDate,
-  getDealValue,
-  getDealId,
-  getDealCurrency,
-} = require('./helpers');
+const { getDealEffectiveDate, getDealValue, getDealId, getDealCurrency } = require('./helpers');
 const { formatTimestamp } = require('../../helpers/date');
 const getDealSubmissionDate = require('./helpers/get-deal-submission-date');
 
