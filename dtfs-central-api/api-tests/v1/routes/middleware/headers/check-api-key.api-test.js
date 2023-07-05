@@ -6,7 +6,7 @@ dotenv.config();
 
 const { API_KEY } = process.env;
 
-describe('routes/middleware/headers/checkApiKey', () => {
+describe('routes/middleware/headers/check-api-key', () => {
   const req = mockReq();
   const res = mockRes();
   const next = mockNext;
