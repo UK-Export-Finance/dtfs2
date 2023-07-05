@@ -109,7 +109,6 @@ jobs:
         working-directory: ./utils/mock-data-loader
         env:
           API_KEY: ${{ secrets.API_KEY }}
-          DEAL_API_URL: http://portal-api:5001
         run: npm run load
 
       - name: Portal

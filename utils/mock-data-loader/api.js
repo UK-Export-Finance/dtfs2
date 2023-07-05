@@ -153,7 +153,9 @@ const createInitialUser = async (user) => {
   }).catch((err) => { console.error(`err: ${err}`); });
   console.log('create API call');
   console.log(API_KEY);
-  console.log(portalApiUrl);
+  console.log(process.env.ESTORE_URL);
+  console.log(response.status);
+  console.log(response);
 
   return response.data;
 };
