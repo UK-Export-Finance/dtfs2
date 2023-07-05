@@ -1,25 +1,20 @@
 /*
-  "facilityIdentifier",
-  "guaranteeCommencementDate",
-  "guaranteeExpiryDate",
-  "effectiveDate",
-  "currency",
-  "maximumLiability"
+  "maximumLiability"      Maximum facility UKEF exposure
+  "currency"              Facility currency
+  "guaranteeExpiryDate"   Facility cover end date
+  "effectiveDate"         Facility effective from date
   */
 
 const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
 const facilityInvestor = (deal, facility) => {
-  const { guaranteeCommencementDate, guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
+  const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
   const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
   return {
-    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
-    portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
     maximumLiability: helpers.getMaximumLiability(facility),
     currency,
-    guaranteeCommencementDate,
     guaranteeExpiryDate,
     effectiveDate,
   };

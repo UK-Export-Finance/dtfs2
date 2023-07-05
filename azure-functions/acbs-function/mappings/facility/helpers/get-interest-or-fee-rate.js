@@ -18,7 +18,7 @@ const getInterestOrFeeRate = (facility) => {
    * Facility record update
    */
   if (facility.update) {
-    return decimalPoint(facility.update.intrestOrFeeRate);
+    return decimalPoint(facility.update.interestOrFeeRate);
   }
 
   /**

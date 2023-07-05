@@ -13,16 +13,10 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'dealIdentifier',
-  'effectiveDate',
-  'currency',
-  'maximumLiability',
-];
+const mandatoryFields = ['effectiveDate', 'currency'];
 
 const createDealInvestor = async (context) => {
-  const { investor } = context.bindingData;
-  const { dealIdentifier } = investor;
+  const { dealIdentifier, investor } = context.bindingData;
 
   const missingMandatory = findMissingMandatory(investor, mandatoryFields);
 
@@ -35,15 +29,21 @@ const createDealInvestor = async (context) => {
   const { status, data } = await api.createDealInvestor(dealIdentifier, investor);
 
   if (isHttpErrorStatus(status)) {
-    throw new Error(JSON.stringify({
-      name: 'ACBS Deal Investor create error',
-      status,
-      dealIdentifier,
-      submittedToACBS,
-      receivedFromACBS: moment().format(),
-      dataReceived: data,
-      dataSent: investor,
-    }, null, 4));
+    throw new Error(
+      JSON.stringify(
+        {
+          name: 'ACBS Deal Investor create error',
+          status,
+          dealIdentifier,
+          submittedToACBS,
+          receivedFromACBS: moment().format(),
+          dataReceived: data,
+          dataSent: investor,
+        },
+        null,
+        4,
+      ),
+    );
   }
 
   return {

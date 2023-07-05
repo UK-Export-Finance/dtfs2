@@ -37,15 +37,21 @@ const createDeal = async (context) => {
   const { status, data } = await api.createDeal(deal);
 
   if (isHttpErrorStatus(status)) {
-    throw new Error(JSON.stringify({
-      name: 'ACBS Deal create error',
-      status,
-      dealIdentifier: deal.dealIdentifier,
-      submittedToACBS,
-      receivedFromACBS: moment().format(),
-      dataReceived: data,
-      dataSent: deal,
-    }, null, 4));
+    throw new Error(
+      JSON.stringify(
+        {
+          name: 'ACBS Deal create error',
+          status,
+          dealIdentifier: deal.dealIdentifier,
+          submittedToACBS,
+          receivedFromACBS: moment().format(),
+          dataReceived: data,
+          dataSent: deal,
+        },
+        null,
+        4,
+      ),
+    );
   }
 
   return {

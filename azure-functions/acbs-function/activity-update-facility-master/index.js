@@ -23,41 +23,31 @@ const { findMissingMandatory } = require('../helpers/mandatoryFields');
 const mandatoryFields = [
   'dealIdentifier',
   'facilityIdentifier',
-  'portfolioIdentifier',
   'dealBorrowerIdentifier',
   'maximumLiability',
   'productTypeId',
   'productTypeName',
   'currency',
-  'guaranteeCommencementDate',
   'guaranteeExpiryDate',
   'nextQuarterEndDate',
   'delegationType',
-  'intrestOrFeeRate',
+  'interestOrFeeRate',
   'facilityStageCode',
   'exposurePeriod',
   'creditRatingCode',
-  'guaranteePercentage',
   'premiumFrequencyCode',
   'riskCountryCode',
   'riskStatusCode',
   'effectiveDate',
-  'foreCastPercentage',
-  'description',
+  'forecastPercentage',
   'agentBankIdentifier',
   'obligorPartyIdentifier',
-  'obligorName',
   'obligorIndustryClassification',
 ];
 
 const updateFacilityMaster = async (context) => {
   try {
-    const {
-      facilityId,
-      acbsFacilityMasterInput,
-      updateType,
-      etag,
-    } = context.bindingData;
+    const { facilityId, acbsFacilityMasterInput, updateType, etag } = context.bindingData;
 
     const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
 
@@ -71,13 +61,17 @@ const updateFacilityMaster = async (context) => {
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
-        JSON.stringify({
-          name: 'ACBS Facility update error',
-          submittedToACBS,
-          receivedFromACBS: moment().format(),
-          dataReceived: data,
-          dataSent: acbsFacilityMasterInput,
-        }, null, 4),
+        JSON.stringify(
+          {
+            name: 'ACBS Facility update error',
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: acbsFacilityMasterInput,
+          },
+          null,
+          4,
+        ),
       );
     }
 

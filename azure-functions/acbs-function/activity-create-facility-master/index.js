@@ -16,30 +16,25 @@ const { findMissingMandatory } = require('../helpers/mandatoryFields');
 const mandatoryFields = [
   'dealIdentifier',
   'facilityIdentifier',
-  'portfolioIdentifier',
   'dealBorrowerIdentifier',
   'maximumLiability',
   'productTypeId',
   'productTypeName',
   'currency',
-  'guaranteeCommencementDate',
   'guaranteeExpiryDate',
   'nextQuarterEndDate',
   'delegationType',
-  'intrestOrFeeRate',
+  'interestOrFeeRate',
   'facilityStageCode',
   'exposurePeriod',
   'creditRatingCode',
-  'guaranteePercentage',
   'premiumFrequencyCode',
   'riskCountryCode',
   'riskStatusCode',
   'effectiveDate',
-  'foreCastPercentage',
-  'description',
+  'forecastPercentage',
   'agentBankIdentifier',
   'obligorPartyIdentifier',
-  'obligorName',
   'obligorIndustryClassification',
 ];
 
@@ -58,14 +53,18 @@ const createFacilityMaster = async (context) => {
 
   if (isHttpErrorStatus(status)) {
     throw new Error(
-      JSON.stringify({
-        name: 'ACBS Facility Master create error',
-        dealIdentifier: acbsFacilityMasterInput.dealIdentifier,
-        submittedToACBS,
-        receivedFromACBS: moment().format(),
-        dataReceived: data,
-        dataSent: acbsFacilityMasterInput,
-      }, null, 4),
+      JSON.stringify(
+        {
+          name: 'ACBS Facility Master create error',
+          dealIdentifier: acbsFacilityMasterInput.dealIdentifier,
+          submittedToACBS,
+          receivedFromACBS: moment().format(),
+          dataReceived: data,
+          dataSent: acbsFacilityMasterInput,
+        },
+        null,
+        4,
+      ),
     );
   }
 
