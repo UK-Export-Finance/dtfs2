@@ -10,9 +10,7 @@ const headers = {
   'x-api-key': API_KEY,
 };
 
-const create = async ({
-  dealType, entityType, entityId, dealId, user,
-}) => {
+const create = async ({ dealType, entityType, entityId, dealId, user }) => {
   let resp;
   try {
     resp = await axios({
@@ -20,7 +18,11 @@ const create = async ({
       url: `${EXTERNAL_API_URL}/number-generator`,
       headers,
       data: {
-        dealType, entityType, entityId, dealId, user,
+        dealType,
+        entityType,
+        entityId,
+        dealId,
+        user,
       },
     }).catch((err) => {
       throw new Error(err.response);
