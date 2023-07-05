@@ -94,7 +94,7 @@ export const findOne = async (req: Request, res: Response) => {
 };
 
 /**
- * Invokes acbs DOF using HTTP `POST` method.
+ * Invokes ACBS DOF using HTTP `POST` method.
  * @param deal Deal object
  * @param bank Bank object
  * @returns DOF response

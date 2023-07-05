@@ -99,7 +99,7 @@
  *           delegationType:
  *             type: string
  *             example: 'A'
- *           intrestOrFeeRate:
+ *           interestOrFeeRate:
  *             type: integer
  *             example: 2.35
  *           facilityStageCode:
@@ -126,7 +126,7 @@
  *           effectiveDate:
  *             type: string
  *             example: '2018-10-11'
- *           foreCastPercentage:
+ *           forecastPercentage:
  *             type: integer
  *             example: 75
  *           issueDate:
