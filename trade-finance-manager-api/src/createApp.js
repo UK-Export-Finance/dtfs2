@@ -12,7 +12,7 @@ const {
   resolvers, typeDefs, graphQlRouter,
 } = require('./graphql');
 const healthcheck = require('./healthcheck');
-const openRouter = require('./v1/routes');
+const { authRouter, openRouter } = require('./v1/routes');
 const loginController = require('./v1/controllers/user/user.routes');
 const initScheduler = require('./scheduler');
 const seo = require('./v1/middleware/headers/seo');
@@ -33,6 +33,7 @@ app.use(healthcheck);
 app.use(passport.initialize());
 app.post('/v1/login', loginController.login);
 app.use('/v1', openRouter);
+app.use('/v1', authRouter);
 app.use(graphQlRouter);
 
 // MongoDB sanitisation

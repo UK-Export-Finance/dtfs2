@@ -2,6 +2,8 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 
 const openRouter = express.Router();
+const authRouter = express.Router();
+
 const passport = require('passport');
 
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
@@ -12,10 +14,12 @@ const users = require('./controllers/user/user.routes');
 const party = require('./controllers/deal.party-db');
 const validation = require('./validation/route-validators/route-validators');
 const handleValidationResult = require('./validation/route-validators/validation-handler');
+const checkApiKey = require('./middleware/headers/check-api-key');
 
-openRouter.use(passport.authenticate('jwt', { session: false }));
+openRouter.use(checkApiKey);
+authRouter.use(passport.authenticate('jwt', { session: false }));
 
-openRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
+authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
 /**
  * @openapi
@@ -78,7 +82,7 @@ openRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions)
  */
 openRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
 
-openRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
+authRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
 
 /**
  * @openapi
@@ -111,17 +115,18 @@ openRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfter
  *       400:
  *         description: validation errors
  */
-openRouter.route('/feedback').post(feedbackController.create);
+authRouter.route('/feedback').post(feedbackController.create);
 
-openRouter.route('/users').post(users.createTfmUser);
+openRouter.route('/user').post(users.createTfmUser);
+authRouter.route('/users').post(users.createTfmUser);
 
-openRouter
+authRouter
   .route('/users/:user')
   .get(validation.userIdEscapingSanitization, handleValidationResult, users.findTfmUser)
   .put(validation.userIdValidation, handleValidationResult, users.updateTfmUserById)
   .delete(validation.userIdValidation, handleValidationResult, users.removeTfmUserById);
 
-openRouter.route('/facilities/:facilityId/amendments').post(validation.facilityIdValidation, handleValidationResult, amendmentController.createFacilityAmendment);
+authRouter.route('/facilities/:facilityId/amendments').post(validation.facilityIdValidation, handleValidationResult, amendmentController.createFacilityAmendment);
 
 /**
  * @openapi
@@ -146,12 +151,12 @@ openRouter.route('/facilities/:facilityId/amendments').post(validation.facilityI
  *       400:
  *         description: Cannot update the amendment
  */
-openRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
-openRouter.route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?').get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
-openRouter
+authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
+authRouter.route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?').get(validation.facilityIdValidation, handleValidationResult, amendmentController.getAmendmentByFacilityId);
+authRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
   .put(validation.facilityIdAndAmendmentIdValidations, handleValidationResult, amendmentController.updateFacilityAmendment);
-openRouter.route('/deals/:dealId/amendments/:status?/:type?').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
-openRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
+authRouter.route('/deals/:dealId/amendments/:status?/:type?').get(validation.dealIdValidation, handleValidationResult, amendmentController.getAmendmentsByDealId);
+authRouter.route('/party/urn/:urn').get(validation.partyUrnValidation, handleValidationResult, party.getCompany);
 
-module.exports = openRouter;
+module.exports = { authRouter, openRouter };

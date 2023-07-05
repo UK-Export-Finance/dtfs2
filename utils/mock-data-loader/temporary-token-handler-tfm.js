@@ -1,14 +1,14 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const urlRoot = process.env.DEAL_API_URL;
+const urlRoot = process.env.TFM_API;
 const { API_KEY } = process.env;
 
 module.exports = async (user) => {
   console.info(`Creating temp user "${user.username}"`);
   await axios({
     method: 'post',
-    url: `${urlRoot}/v1/users`,
+    url: `${urlRoot}/v1/user`,
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': API_KEY,

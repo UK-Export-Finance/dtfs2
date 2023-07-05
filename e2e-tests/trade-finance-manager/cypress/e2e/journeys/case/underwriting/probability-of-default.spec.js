@@ -19,7 +19,7 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
     });
   });
 

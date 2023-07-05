@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const utils = require('../../../utils/crypto.util');
 const { userNotFound, incorrectPassword, userIsDisabled } = require('../../../constants/login-results.constant');
 const {
   create, update, removeTfmUserById, findOne, findByUsername,

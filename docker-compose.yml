@@ -63,6 +63,7 @@ services:
           memory: 300M
     environment:
       - PORT=5003
+      - API_KEY
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
       - EXTERNAL_API_URL=http://external-api:5002
       - UKEF_TFM_API_SYSTEM_KEY

@@ -20,7 +20,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Form and Validati
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
     });
   });
 
@@ -185,7 +185,7 @@ context('Case Underwriting - Underwriter Manager\'s decision - Submit Form', () 
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
     });
   });
 
@@ -266,7 +266,7 @@ context('Case Underwriting - Underwriter Manager\'s decision AIN', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
     });
   });
 

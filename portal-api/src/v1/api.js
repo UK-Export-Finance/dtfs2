@@ -6,7 +6,7 @@ const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const tfmUrl = process.env.TFM_API;
 const { API_KEY } = process.env;
 
-const centralApiHeaders = {
+const genericHeaders = {
   'Content-Type': 'application/json',
   'x-api-key': API_KEY,
 };
@@ -16,7 +16,7 @@ const findOneDeal = async (dealId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
     });
 
     return response.data.deal;
@@ -30,7 +30,7 @@ const createDeal = async (deal, user) => {
     return await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/deals`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
       data: {
         deal,
         user,
@@ -46,7 +46,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
     const response = await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
       data: {
         dealUpdate,
         user,
@@ -64,7 +64,7 @@ const deleteDeal = async (dealId) => {
     return await axios({
       method: 'delete',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
     });
   } catch (err) {
     return err;
@@ -76,7 +76,7 @@ const addDealComment = async (dealId, commentType, comment) => {
     const response = await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
       data: {
         commentType,
         comment,
@@ -94,7 +94,7 @@ const createFacility = async (facility, user) => {
     return await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/facilities`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
       data: {
         facility,
         user,
@@ -110,7 +110,7 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
     return await axios({
       method: 'post',
       url: `${centralApiUrl}/v1/portal/multiple-facilities`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
       data: {
         facilities,
         dealId,
@@ -127,7 +127,7 @@ const findOneFacility = async (facilityId) => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
     });
 
     return response.data;
@@ -141,7 +141,7 @@ const updateFacility = async (facilityId, facility, user) => {
     return await axios({
       method: 'put',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
       data: {
         ...facility,
         user,
@@ -157,7 +157,7 @@ const deleteFacility = async (facilityId, user) => {
     return await axios({
       method: 'delete',
       url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
       data: {
         user,
       },
@@ -172,9 +172,7 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
     const response = await axios({
       method: 'put',
       url: `${tfmUrl}/v1/deals/submit`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: genericHeaders,
       data: {
         dealId,
         dealType,
@@ -193,7 +191,7 @@ const findLatestGefMandatoryCriteria = async () => {
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/latest`,
-      headers: centralApiHeaders,
+      headers: genericHeaders,
     });
 
     return { status: 200, data: response.data };

@@ -1,5 +1,6 @@
 const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { as } = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
 
 describe('/feedback', () => {
   const feedbackFormBody = {
@@ -18,13 +19,15 @@ describe('/feedback', () => {
 
   describe('POST /v1/feedback', () => {
     it('it successfully sends feedback form', async () => {
-      const { status } = await api.post(feedbackFormBody).to('/v1/feedback');
+      const user = await testUserCache.initialise(app);
+      const { status } = await as(user).post(feedbackFormBody).to('/v1/feedback');
       expect(status).toEqual(200);
     });
 
     it('does not create a feedback when there are validation errors', async () => {
-      await api.post({}).to('/v1/feedback');
-      const { status } = await api.post({}).to('/v1/feedback');
+      const user = await testUserCache.initialise(app);
+      await as(user).post({}).to('/v1/feedback');
+      const { status } = await as(user).post({}).to('/v1/feedback');
       expect(status).toEqual(400);
     });
   });

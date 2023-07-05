@@ -5,6 +5,8 @@ import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import * as MOCK_USERS from '../../../../../../e2e-fixtures';
 import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
+const { T1_USER_1 } = MOCK_USERS;
+
 context('Case tasks - AIN deal', () => {
   let dealId;
   const dealFacilities = [];
@@ -13,7 +15,7 @@ context('Case tasks - AIN deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
+    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username, T1_USER_1).then((userObj) => {
       userId = userObj._id;
     });
 
@@ -30,7 +32,7 @@ context('Case tasks - AIN deal', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
 
       cy.login(MOCK_USERS.BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));

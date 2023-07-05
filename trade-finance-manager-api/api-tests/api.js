@@ -1,61 +1,84 @@
 /* eslint-disable */
 const request = require('supertest');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const { API_KEY } = process.env;
+
+const headers = (token) => ({
+  'content-type': 'application/json',
+  'x-api-key': API_KEY,
+  Authorization: token || '',
+});
 
 module.exports = (app) => ({
-  post: (data) => ({
-    to: async (url) => request(app)
-      .post(url)
-      .send(data),
-  }),
+  as: (user) => {
+    const token = (user && user.token) ? user.token : '';
 
-  postEach: (list) => ({
-    to: async (url) => {
-      const results = [];
-
-      for (const data of list) {
-        const result = await request(app)
+    return {
+      post: (data) => ({
+        to: async (url) => request(app)
           .post(url)
-          .send(data);
+          .send(data)
+          .set(headers(token)),
+      }),
 
-        results.push(result);
-      }
+      postEach: (list) => ({
+        to: async (url) => {
+          const results = [];
 
-      return results;
-    },
-  }),
+          for (const data of list) {
+            const result = await request(app)
+              .post(url)
+              .send(data)
+              .set(headers(token));
 
-  put: (data) => ({
-    to: async (url) => request(app)
-      .put(url)
-      .send(data),
-  }),
+            results.push(result);
+          }
 
-  putMultipartForm: (data, files = []) => ({
-    to: async (url) => {
-      const apiRequest = request(app)
-        .put(url);
+          return results;
+        },
+      }),
 
-      if (files.length) {
-        files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
-      }
+      put: (data) => ({
+        to: async (url) => request(app)
+          .put(url)
+          .send(data)
+          .set(headers(token)),
+      }),
 
-      Object.entries(data).forEach(([fieldname, value]) => {
-        apiRequest.field(fieldname, value);
-      });
+      putMultipartForm: (data, files = []) => ({
+        to: async (url) => {
+          const apiRequest = request(app)
+            .put(url)
+            .set(headers(token));
 
-      return apiRequest;
-    },
-  }),
+          if (files.length) {
+            files.forEach((file) => apiRequest.attach(file.fieldname, file.filepath));
+          }
 
-  get: async (url) => request(app)
-    .get(url),
+          Object.entries(data).forEach(([fieldname, value]) => {
+            apiRequest.field(fieldname, value);
+          });
 
-  remove: (data) => ({
-    to: async (url) =>
-      request(app)
-        .delete(url)
-        .send(data),
-  }),
+          return apiRequest;
+        },
+      }),
+
+      get: async (url) => request(app)
+        .get(url)
+        .set(headers(token)),
+
+      remove: (data) => ({
+        to: async (url) =>
+          request(app)
+            .delete(url)
+            .send(data)
+            .set(headers(token)),
+      }),
+    }
+  },
 });
 
 /* eslint-enable */

@@ -1,7 +1,7 @@
 const api = require('./api');
 const MOCKS = require('./mocks');
 
-const tokenFor = require('../temporary-token-handler');
+const tokenFor = require('../temporary-token-handler-tfm');
 
 const insertMocks = async () => {
   const token = await tokenFor({
@@ -20,7 +20,7 @@ const insertMocks = async () => {
 
   console.info('inserting TFM users');
   for (const user of MOCKS.USERS) {
-    await api.createTfmUser(user);
+    await api.createTfmUser(user, token);
   }
 };
 

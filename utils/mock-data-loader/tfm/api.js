@@ -51,12 +51,14 @@ const deleteTeam = async (team, token) => {
   return response.data;
 };
 
-const createTfmUser = async (user) => {
+const createTfmUser = async (user, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token || '',
+      'x-api-key': API_KEY,
     },
     url: `${tfmApi}/v1/users`,
     data: user,
