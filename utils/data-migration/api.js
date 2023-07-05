@@ -3,12 +3,13 @@ require('dotenv').config();
 
 const portalApiUrl = process.env.DEAL_API_URL;
 
-const createUser = async (user) => {
+const createUser = async (user, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/users`,
     data: user,
@@ -56,12 +57,13 @@ const importGefDeal = async (deal, facilities, token) => {
   };
 };
 
-const listUsers = async () => {
+const listUsers = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/users`,
   }).catch((err) => { console.info(`err: ${err}`); });
