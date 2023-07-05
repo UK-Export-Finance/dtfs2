@@ -7,27 +7,22 @@ param privateEndpointsSubnetId string
 param storageAccountName string
 
 
-// These values are taken from GitHub secrets
-// TODO:FN-686 Replace Mulesoft values, verify in GH Secrets.
+// These values are taken from GitHub secrets injected in the GHA Action
 @secure()
 param secureSettings object = {
-  MULESOFT_API_KEY: 'test-value'
-  MULESOFT_API_SECRET: 'test-value'
-  MULESOFT_API_UKEF_TF_EA_URL: 'test-value'
+  APIM_TFS_KEY: 'test-value'
+  APIM_TFS_VALUE: 'test-value'
+  APIM_TFS_URL: 'test-value'
   APIM_MDM_KEY: 'test-value'
   APIM_MDM_URL: 'test-value'
   APIM_MDM_VALUE: 'test-value' // different in staging and dev
 }
 
 // These values are taken from an export of Configuration on Dev
-// TODO:FN-686 Replace Mulesoft values, verify in GH Secrets.
 @secure()
 param additionalSecureSettings object = {
   DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'  // different in staging and dev
   MACHINEKEY_DecryptionKey: 'test-value' // different in staging and dev
-  MULESOFT_API_UKEF_MDM_EA_KEY: 'test-value'
-  MULESOFT_API_UKEF_MDM_EA_SECRET: 'test-value'
-  MULESOFT_API_UKEF_MDM_EA_URL: 'test-value' // different in staging and dev
 }
 
 
