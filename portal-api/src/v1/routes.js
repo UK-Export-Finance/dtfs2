@@ -43,12 +43,11 @@ openRouter.route('/users/reset-password').post(users.resetPassword);
 // 2. Password reset post request
 openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswordWithToken);
 
-// This endpoint is only used by mock-data-loader, for setting up an initial user
-openRouter.route('/user').post(checkApiKey, users.create);
+// API Key Routes
+openRouter.route('/feedback').post(checkApiKey, feedback.create);
+openRouter.route('/user').post(checkApiKey, users.create); // This endpoint is only used by mock-data-loader, for setting up an initial user
 
 const authRouterAllowXss = express.Router();
-
-authRouterAllowXss.route('/feedback').post(feedback.create);
 
 authRouterAllowXss.route('/users').get(users.list).post(users.create);
 authRouterAllowXss.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);

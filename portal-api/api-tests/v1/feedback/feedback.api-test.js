@@ -44,9 +44,9 @@ describe('/v1/feedback', () => {
   };
 
   describe('POST /v1/feedback', () => {
-    it('returns 401 for requests that do not present a valid Authorization token', async () => {
+    it('returns 200 for requests that do not present a valid Authorization token', async () => {
       const { status } = await as().post(feedbackFormBody).to('/v1/feedback');
-      expect(status).toEqual(401);
+      expect(status).toEqual(200);
     });
 
     it('returns 200 for requests that do not come from a user with role=maker || role=checker', async () => {

@@ -4,6 +4,7 @@ const FormData = require('form-data');
 require('dotenv').config();
 
 const portalApi = process.env.DEAL_API_URL;
+const API_KEY = process.env.API_KEY;
 
 const login = async (username, password) => {
   try {
@@ -601,13 +602,13 @@ const downloadFile = async (id, fieldname, filename, token) => {
   return response.data;
 };
 
-const createFeedback = async (formData, token) => {
+const createFeedback = async (formData) => {
   const response = await axios({
     method: 'post',
     url: `${portalApi}/v1/feedback`,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token,
+      'x-api-key': API_KEY,
     },
     data: formData,
   });
