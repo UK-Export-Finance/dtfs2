@@ -1,10 +1,10 @@
 const api = require('./api');
 const gefApi = require('./gef/api');
 const centralApi = require('./centralApi');
+const { mockDataLoaderUser } = require('./user-helper');
 
 const cleanBanks = async (token) => {
   console.info('cleaning banks');
-
   const banks = await api.listBanks(token);
 
   if (banks.length > 0) {
@@ -70,12 +70,23 @@ const cleanEligibilityCriteria = async (token) => {
   }
 };
 
+const cleanUsers = async (token) => {
+  console.info('cleaning Portal users');
+
+  for (const user of await api.listUsers(token)) {
+    if (user.username !== mockDataLoaderUser.username) {
+      await api.deleteUser(user, token);
+    }
+  }
+}
+
 const cleanAllTables = async (token) => {
   await cleanBanks(token);
   await cleanDeals(token);
   await cleanFacilities(token);
   await cleanMandatoryCriteria(token);
   await cleanEligibilityCriteria(token);
+  await cleanUsers(token);
 };
 
 module.exports = cleanAllTables;

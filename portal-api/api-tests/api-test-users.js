@@ -218,7 +218,6 @@ const setUpApiTestUser = async (as) => {
 
   const userToCreate = {
     'user-status': 'active',
-    timezone: apiTestUser.timezone || 'Europe/London',
     salt,
     hash,
     ...apiTestUser,

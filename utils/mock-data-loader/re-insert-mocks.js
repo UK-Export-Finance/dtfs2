@@ -1,7 +1,4 @@
-const { createUser, deleteAllUsers } = require('./user-helper');
-const api = require('./api');
-const MOCK_BANKS = require('./banks');
-const { closeDbConnection } = require('./db-client');
+const { createAndLogInAsInitialUser, deleteInitialUser } = require('./user-helper');
 
 const cleanAllTables = require('./clean-all-tables');
 const insertMocks = require('./insert-mocks');
@@ -15,20 +12,7 @@ const cleanAllTablesTfm = require('./tfm/clean-all-tables-tfm');
 const insertMocksTfm = require('./tfm/insert-mocks-tfm');
 
 const init = async () => {
-  deleteAllUsers()
-
-  const mockDataLoaderUser = {
-    username: 're-insert-mocks',
-    password: 'AbC!2345',
-    firstname: 'Mock',
-    surname: 'DataLoader',
-    roles: ['maker', 'checker', 'editor', 'data-admin'],
-    email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
-    bank: MOCK_BANKS.find((bank) => bank.id === '9'),
-  };
-
-  await createUser(mockDataLoaderUser);
-  const token = await api.login(mockDataLoaderUser);
+  const token = await createAndLogInAsInitialUser();
 
   await cleanAllTables(token);
   await insertMocks(token);
@@ -37,7 +21,7 @@ const init = async () => {
   await cleanAllTablesTfm(token);
   await insertMocksTfm(token);
 
-  await closeDbConnection();
+  await deleteInitialUser(token);
 };
 
 init();

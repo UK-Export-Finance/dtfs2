@@ -41,8 +41,7 @@ const AZURE_WORKFLOW_FILESHARE_CONFIG = {
   STORAGE_ACCESS_KEY: process.env.MIGRATION_AZURE_WORKFLOW_STORAGE_ACCESS_KEY,
 };
 
-const init = async () => {
-  token = await getToken();
+const init = async (token) => {
   banks = await initBanks(token);
   await initUsers(token);
   await initCountries(token);
@@ -52,8 +51,8 @@ const init = async () => {
   logFile = log.init('migrate-deals');
 };
 
-const teardown = async () => {
-  await removeMigrationUser();
+const teardown = async (token) => {
+  await removeMigrationUser(token);
   const successCount = log.getSuccessCount();
   consoleLogColor(`Migrated ${successCount} of ${importDealCount}`, successCount === importDealCount ? 'green' : 'red');
   console.info(`Log file: ${logFile}`);
@@ -170,9 +169,11 @@ const migrateDeals = async () => {
 };
 
 const doMigrate = async () => {
-  await init();
+  token = await getToken();
+
+  await init(token);
   await migrateDeals();
-  await teardown();
+  await teardown(token);
 };
 
 doMigrate();

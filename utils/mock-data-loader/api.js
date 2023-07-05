@@ -4,6 +4,7 @@ require('dotenv').config();
 const { gef } = require('./gef/api');
 
 const portalApiUrl = process.env.DEAL_API_URL;
+const API_KEY = process.env.API_KEY;
 
 const createBank = async (bank, token) => {
   const response = await axios({
@@ -133,6 +134,21 @@ const createUser = async (user, token) => {
       Authorization: token || '',
     },
     url: `${portalApiUrl}/v1/users`,
+    data: user,
+  }).catch((err) => { console.error(`err: ${err}`); });
+
+  return response.data;
+};
+
+const createInitialUser = async (user) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+      Accepts: 'application/json',
+    },
+    url: `${portalApiUrl}/v1/user`,
     data: user,
   }).catch((err) => { console.error(`err: ${err}`); });
 
@@ -373,7 +389,7 @@ const login = async (user) => {
     data: { username: user.username, password: user.password },
   }).catch((err) => { console.error(`err: ${err}`); });
 
-  return response.data.token;
+  return response?.data?.token;
 }
 
 const updateCurrency = async (currency, token) => {
@@ -416,6 +432,7 @@ module.exports = {
   createMandatoryCriteria,
   createEligibilityCriteria,
   createUser,
+  createInitialUser,
   deleteBank,
   deleteCurrency,
   deleteCountry,

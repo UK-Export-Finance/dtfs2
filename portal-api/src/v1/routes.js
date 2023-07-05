@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 
 const { validate } = require('../role-validator');
 
@@ -27,13 +28,17 @@ const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/
 const dealImportBssEwcsController = require('./controllers/data-migration/deal-import-bss-ewcs.controller');
 const dealImportGefController = require('./controllers/data-migration/deal-import-gef.controller');
 
-const { fileUpload } = require('./middleware');
+const { cleanXss, fileUpload } = require('./middleware');
+const checkApiKey = require('./middleware/headers/check-api-key');
 
 const users = require('./users/routes');
 const gef = require('./gef/routes');
 
 const openRouter = express.Router();
 const authRouter = express.Router();
+
+authRouter.use(cleanXss);
+authRouter.use(passport.authenticate('jwt', { session: false }));
 
 openRouter.route('/login').post(users.login);
 
@@ -43,11 +48,9 @@ openRouter.route('/users/reset-password').post(users.resetPassword);
 // 2. Password reset post request
 openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswordWithToken);
 
-authRouter.route('/feedback').post(feedback.create);
-
-authRouter.route('/users').get(users.list).post(users.create);
-authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
-authRouter.route('/users/:_id/disable').delete(users.disable);
+// API Key Routes
+openRouter.route('/feedback').post(checkApiKey, feedback.create);
+openRouter.route('/user').post(checkApiKey, users.create); // This endpoint is only used by mock-data-loader, for setting up an initial user
 
 authRouter
   .route('/mandatory-criteria')
