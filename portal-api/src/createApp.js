@@ -12,7 +12,6 @@ const configurePassport = require('./v1/users/passport');
 const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
-const { cleanXss } = require('./v1/middleware');
 
 configurePassport(passport);
 
@@ -36,11 +35,7 @@ app.use(cors({
 }));
 
 app.use('/v1', openRouter);
-
-app.use(passport.authenticate('jwt', { session: false }));
 app.use('/v1', authRouterAllowXss);
-
-app.use(cleanXss);
 app.use('/v1', authRouter);
 
 // Return 200 on get to / to confirm to Azure that

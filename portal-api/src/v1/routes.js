@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 
 const { validate } = require('../role-validator');
 
@@ -27,7 +28,7 @@ const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/
 const dealImportBssEwcsController = require('./controllers/data-migration/deal-import-bss-ewcs.controller');
 const dealImportGefController = require('./controllers/data-migration/deal-import-gef.controller');
 
-const { fileUpload } = require('./middleware');
+const { cleanXss, fileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
 
 const users = require('./users/routes');
@@ -48,6 +49,7 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
 openRouter.route('/user').post(checkApiKey, users.create); // This endpoint is only used by mock-data-loader, for setting up an initial user
 
 const authRouterAllowXss = express.Router();
+authRouterAllowXss.use(passport.authenticate('jwt', { session: false }));
 
 authRouterAllowXss.route('/users').get(users.list).post(users.create);
 authRouterAllowXss.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
@@ -69,7 +71,7 @@ authRouterAllowXss
   .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);
 
 const authRouter = express.Router();
-
+authRouter.use(cleanXss);
 authRouter.use('/gef', gef);
 
 authRouter.route('/deals/import/BSS-EWCS').post(validate({ role: ['data-admin'] }), dealImportBssEwcsController.import);
