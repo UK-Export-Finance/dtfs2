@@ -260,6 +260,9 @@ const listBanks = async (token) => {
     url: `${portalApiUrl}/v1/banks`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
+  console.log('Testing env vars');
+  console.log(response);
+  console.log(portalApiUrl);
   return response.data.banks;
 };
 
