@@ -50,6 +50,10 @@ openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswor
 openRouter.route('/feedback').post(checkApiKey, feedback.create);
 openRouter.route('/user').post(checkApiKey, users.create); // This endpoint is only used by mock-data-loader, for setting up an initial user
 
+authRouter.route('/users').get(users.list).post(users.create);
+authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
+authRouter.route('/users/:_id/disable').delete(users.disable);
+
 authRouter
   .route('/mandatory-criteria')
   .get(mandatoryCriteria.findAll)
