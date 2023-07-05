@@ -25,8 +25,6 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const dealImportBssEwcsController = require('./controllers/data-migration/deal-import-bss-ewcs.controller');
-const dealImportGefController = require('./controllers/data-migration/deal-import-gef.controller');
 
 const { cleanXss, fileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
@@ -69,23 +67,24 @@ authRouter
 
 authRouter.use('/gef', gef);
 
-authRouter.route('/deals/import/BSS-EWCS').post(validate({ role: ['data-admin'] }), dealImportBssEwcsController.import);
-authRouter.route('/deals/import/GEF').post(validate({ role: ['data-admin'] }), dealImportGefController.import);
 authRouter.route('/deals').post(validate({ role: ['maker'] }), dealsController.create);
 authRouter.route('/deals').get(validate({ role: ['maker', 'checker', 'admin'] }), dealsController.getQueryAllDeals);
 
-authRouter.route('/deals/:id/status')
+authRouter
+  .route('/deals/:id/status')
   .get(validate({ role: ['maker', 'checker', 'admin'] }), dealStatus.findOne)
   .put(validate({ role: ['maker', 'checker', 'interface'] }), dealStatus.update);
 
-authRouter.route('/deals/:id/submission-details')
+authRouter
+  .route('/deals/:id/submission-details')
   .get(validate({ role: ['maker', 'checker', 'admin'] }), dealSubmissionDetails.findOne)
   .put(validate({ role: ['maker'] }), dealSubmissionDetails.update);
 
 authRouter.route('/deals/:id/additionalRefName').put(validate({ role: ['maker'] }), dealName.update);
 authRouter.route('/deals/:id/loan/create').put(validate({ role: ['maker'] }), loans.create);
 
-authRouter.route('/deals/:id/loan/:loanId')
+authRouter
+  .route('/deals/:id/loan/:loanId')
   .get(validate({ role: ['maker', 'admin'] }), loans.getLoan)
   .put(validate({ role: ['maker'] }), loans.updateLoan)
   .delete(validate({ role: ['maker'] }), loans.deleteLoan);
@@ -137,9 +136,7 @@ authRouter.route('/currencies/:id').get(currencies.findOne);
 authRouter.route('/countries').get(countries.findAll);
 authRouter.route('/countries/:code').get(countries.findOne);
 
-authRouter
-  .route('/feedback')
-  .get(validate({ role: ['data-admin', 'admin'] }), feedback.findAll);
+authRouter.route('/feedback').get(validate({ role: ['data-admin', 'admin'] }), feedback.findAll);
 
 authRouter
   .route('/feedback/:id')
@@ -154,9 +151,7 @@ authRouter
   .get(eligibilityCriteria.findAll)
   .post(validate({ role: ['editor'] }), eligibilityCriteria.create);
 
-authRouter
-  .route('/eligibility-criteria/latest')
-  .get(eligibilityCriteria.findLatestGET);
+authRouter.route('/eligibility-criteria/latest').get(eligibilityCriteria.findLatestGET);
 
 authRouter
   .route('/eligibility-criteria/:version')
