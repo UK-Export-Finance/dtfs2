@@ -151,6 +151,9 @@ const createInitialUser = async (user) => {
     url: `${portalApiUrl}/v1/user`,
     data: user,
   }).catch((err) => { console.error(`err: ${err}`); });
+  console.log('create API call');
+  console.log(response);
+  console.log(response?.data);
 
   return response.data;
 };
@@ -388,6 +391,9 @@ const login = async (user) => {
     },
     data: { username: user.username, password: user.password },
   }).catch((err) => { console.error(`err: ${err}`); });
+  console.log('Login API call');
+  console.log(response);
+  console.log(response?.data);
 
   return response?.data?.token;
 }
