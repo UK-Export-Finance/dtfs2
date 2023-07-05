@@ -9,7 +9,7 @@ const headers = {
   'Content-Type': 'application/json',
   'x-api-key': API_KEY,
 };
-    
+
 const create = async ({
   dealType, entityType, entityId, dealId, user,
 }) => {

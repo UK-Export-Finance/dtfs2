@@ -1,6 +1,6 @@
 const express = require('express');
 const api = require('../api');
-const { generateErrorSummary, requestParams } = require('../helpers');
+const { generateErrorSummary } = require('../helpers');
 
 const router = express.Router();
 
