@@ -41,7 +41,7 @@ describe('controllers - feedback', () => {
     });
 
     const mockReq = {
-      session: { user: { username: 'Tester', email: 'test@test.test' } },
+      session: { user: { username: 'Tester', email: 'test@test.test' }, userToken: 'mockToken' },
       body: {
         role: 'computers',
         team: 'Test ltd',
@@ -62,7 +62,7 @@ describe('controllers - feedback', () => {
         email: 'test@test.test',
       };
 
-      expect(createFeedbackSpy).toHaveBeenCalledWith(mockReq.body);
+      expect(createFeedbackSpy).toHaveBeenCalledWith(mockReq.body, mockReq.session.userToken);
 
       expect(res.redirect).toHaveBeenCalledWith('/thank-you-feedback');
     });
@@ -88,7 +88,7 @@ describe('controllers - feedback', () => {
         email: null,
       };
 
-      expect(createFeedbackSpy).toHaveBeenCalledWith(mockReqNoUser.body);
+      expect(createFeedbackSpy).toHaveBeenCalledWith(mockReqNoUser.body, mockReqNoUser.session.userToken);
 
       expect(res.redirect).toHaveBeenCalledWith('/thank-you-feedback');
     });
