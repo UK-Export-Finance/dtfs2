@@ -9,7 +9,7 @@ const healthcheck = require('./healthcheck');
 dotenv.config();
 const { CORS_ORIGIN } = process.env;
 const configurePassport = require('./v1/users/passport');
-const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
+const { authRouter, openRouter } = require('./v1/routes');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
 const { cleanXss } = require('./v1/middleware');
@@ -38,7 +38,7 @@ app.use(cors({
 app.use('/v1', openRouter);
 
 app.use(passport.authenticate('jwt', { session: false }));
-app.use('/v1', authRouterAllowXss);
+app.use('/v1', authRouter);
 
 app.use(cleanXss);
 app.use('/v1', authRouter);

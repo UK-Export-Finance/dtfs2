@@ -33,6 +33,7 @@ const users = require('./users/routes');
 const gef = require('./gef/routes');
 
 const openRouter = express.Router();
+const authRouter = express.Router();
 
 openRouter.route('/login').post(users.login);
 
@@ -42,30 +43,26 @@ openRouter.route('/users/reset-password').post(users.resetPassword);
 // 2. Password reset post request
 openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswordWithToken);
 
-const authRouterAllowXss = express.Router();
+authRouter.route('/feedback').post(feedback.create);
 
-authRouterAllowXss.route('/feedback').post(feedback.create);
+authRouter.route('/users').get(users.list).post(users.create);
+authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
+authRouter.route('/users/:_id/disable').delete(users.disable);
 
-authRouterAllowXss.route('/users').get(users.list).post(users.create);
-authRouterAllowXss.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
-authRouterAllowXss.route('/users/:_id/disable').delete(users.disable);
-
-authRouterAllowXss
+authRouter
   .route('/mandatory-criteria')
   .get(mandatoryCriteria.findAll)
   .post(validate({ role: ['editor'] }), mandatoryCriteria.create);
 
-authRouterAllowXss
+authRouter
   .route('/mandatory-criteria/latest')
   .get(mandatoryCriteria.findLatest);
 
-authRouterAllowXss
+authRouter
   .route('/mandatory-criteria/:version')
   .get(mandatoryCriteria.findOne)
   .put(validate({ role: ['editor'] }), mandatoryCriteria.update)
   .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);
-
-const authRouter = express.Router();
 
 authRouter.use('/gef', gef);
 
@@ -176,4 +173,4 @@ authRouter.get('/validate', validate(), (req, res) => {
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
-module.exports = { openRouter, authRouterAllowXss, authRouter };
+module.exports = { openRouter, authRouter };
