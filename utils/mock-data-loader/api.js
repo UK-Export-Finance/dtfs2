@@ -152,6 +152,7 @@ const createInitialUser = async (user) => {
     data: user,
   }).catch((err) => { console.error(`err: ${err}`); });
   console.log('create API call');
+  console.log(API_KEY);
   console.log(response);
   console.log(response?.data);
 
