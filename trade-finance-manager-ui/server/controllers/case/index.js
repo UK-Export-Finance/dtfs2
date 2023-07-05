@@ -371,7 +371,7 @@ const confirmTfmFacility = async (req, res) => {
 
     const party = partyType(req.url);
     const bond = bondType(party);
-    const { user } = req.session;
+    const { user, userToken } = req.session;
 
     const canEdit = userCanEdit(user);
 
@@ -442,7 +442,7 @@ const confirmTfmFacility = async (req, res) => {
     // Fetches company information from URN
     const companies = req.body[bond].map((urn) =>
       api
-        .getParty(urn)
+        .getParty(urn, userToken)
         // Non-existent party urn
         .then((company) => (!company || !company.data ? Promise.resolve(false) : Promise.resolve(true))));
 

@@ -33,7 +33,7 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType, T1_USER_1);
+      cy.submitDeal(dealId, dealType, BUSINESS_SUPPORT_USER_1);
     });
   });
 
