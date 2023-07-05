@@ -5,9 +5,7 @@ const { mockDataLoaderUser } = require('./user-helper');
 
 const cleanBanks = async (token) => {
   console.info('cleaning banks');
-  console.log(token);
   const banks = await api.listBanks(token);
-  console.log(banks);
 
   if (banks.length > 0) {
     for (const bank of banks) {
