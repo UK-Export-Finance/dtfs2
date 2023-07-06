@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 
 dotenv.config();
 
-const { API_KEY } = process.env;
+const { EXTERNAL_API_KEY } = process.env;
 
 /**
  * Check that the x-api-key header is valid
