@@ -35,7 +35,6 @@ const gef = require('./gef/routes');
 const openRouter = express.Router();
 const authRouter = express.Router();
 
-authRouter.use(cleanXss);
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
 openRouter.route('/login').post(users.login);
@@ -48,16 +47,29 @@ openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswor
 
 // API Key Routes
 openRouter.route('/feedback').post(checkApiKey, feedback.create);
-openRouter.route('/user').post(checkApiKey, users.create); // This endpoint is only used by mock-data-loader, for setting up an initial user
+// This endpoint is only used by mock-data-loader, for setting up an initial user
+openRouter.route('/user').post(checkApiKey, users.create);
 
-authRouter.route('/users').get(users.list).post(users.create);
-authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
-authRouter.route('/users/:_id/disable').delete(users.disable);
-
+/**
+ * Mandatory Criteria routes
+ * Allow POST & PUT of MC HTML tags
+ * on non-production environments only
+ */
 authRouter
   .route('/mandatory-criteria')
-  .get(mandatoryCriteria.findAll)
   .post(validate({ role: ['editor'] }), mandatoryCriteria.create);
+
+authRouter
+  .route('/mandatory-criteria/:version')
+  .put(validate({ role: ['editor'] }), mandatoryCriteria.update);
+
+// Enable XSS
+authRouter.use(cleanXss);
+
+// Mandatory Criteria Routes
+authRouter
+  .route('/mandatory-criteria')
+  .get(mandatoryCriteria.findAll);
 
 authRouter
   .route('/mandatory-criteria/latest')
@@ -66,8 +78,11 @@ authRouter
 authRouter
   .route('/mandatory-criteria/:version')
   .get(mandatoryCriteria.findOne)
-  .put(validate({ role: ['editor'] }), mandatoryCriteria.update)
   .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);
+
+authRouter.route('/users').get(users.list).post(users.create);
+authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
+authRouter.route('/users/:_id/disable').delete(users.disable);
 
 authRouter.use('/gef', gef);
 
