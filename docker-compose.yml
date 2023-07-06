@@ -211,7 +211,10 @@ services:
     environment:
       - PORT=5002
       - CORS_ORIGIN
-      - API_KEY
+      - EXTERNAL_API_KEY
+      - TFM_API_KEY
+      - PORTAL_API_KEY
+      - CENTRAL_API_KEY
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk

@@ -247,6 +247,7 @@ services:
       - TFM_API_KEY
       - PORTAL_API_KEY
       - CENTRAL_API_KEY
+      - API_KEY
     command: npx nodemon server/index.js -L
 
   number-generator-function:
