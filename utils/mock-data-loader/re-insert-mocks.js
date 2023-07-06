@@ -15,6 +15,12 @@ const tokenForTfmUser = require('./temporary-token-handler-tfm');
 const init = async () => {
   const portalToken = await createAndLogInAsInitialUser();
 
+  await cleanAllTables(portalToken);
+  await insertMocks(portalToken);
+  await cleanAllTablesGef(portalToken);
+  await insertMocksGef(portalToken);
+  await cleanAllTablesTfm();
+
   const tfmToken = await tokenForTfmUser({
     username: 're-insert-mocks',
     password: 'AbC!2345',
@@ -23,14 +29,6 @@ const init = async () => {
     roles: ['data-admin'],
     email: 're-insert-mocks-data-loader-tfm@ukexportfinance.gov.uk',
   });
-  console.log(portalToken);
-  console.log(tfmToken);
-
-  await cleanAllTables(portalToken);
-  await insertMocks(portalToken);
-  await cleanAllTablesGef(portalToken);
-  await insertMocksGef(portalToken);
-  await cleanAllTablesTfm(tfmToken);
   await insertMocksTfm(tfmToken);
 
   await deleteInitialUser(portalToken);
