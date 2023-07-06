@@ -5,5 +5,5 @@ module.exports = (dealId, dealType) => {
   console.info('submitDeal::');
   const { username, password } = TFM_USER;
 
-  return login(username, password).then((token) => submitDealAfterUkefIds(dealId, dealType, token));
+  return login(username, password).then((token) => submitDealAfterUkefIds(dealId, dealType, null, token));
 };
