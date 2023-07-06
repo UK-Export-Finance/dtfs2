@@ -32,11 +32,10 @@ const checkApiKey = require('./middleware/headers/check-api-key');
 const users = require('./users/routes');
 const gef = require('./gef/routes');
 
+// Open router requires no authentication
 const openRouter = express.Router();
-const authRouter = express.Router();
 
-authRouter.use(passport.authenticate('jwt', { session: false }));
-
+// Login route
 openRouter.route('/login').post(users.login);
 
 // 1. Request password reset
@@ -49,6 +48,12 @@ openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswor
 openRouter.route('/feedback').post(checkApiKey, feedback.create);
 // This endpoint is only used by mock-data-loader, for setting up an initial user
 openRouter.route('/user').post(checkApiKey, users.create);
+
+// Auth router requires authentication
+const authRouter = express.Router();
+
+// Authentication type: JWT + Passport
+authRouter.use(passport.authenticate('jwt', { session: false }));
 
 /**
  * Mandatory Criteria routes
