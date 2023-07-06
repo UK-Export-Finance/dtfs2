@@ -7,6 +7,7 @@ param privateEndpointsSubnetId string
 param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
+param externalApiHostname string
 
 var dockerImageName = '${containerRegistryName}.azurecr.io/dtfs-central-api:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
@@ -60,11 +61,12 @@ var applicationInsightsName = 'tfs-${environment}-dtfs-central-api'
 
 // These have come from the CLI scripts
 var mongoDbConnectionString = replace(cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString, '&replicaSet=globaldb', '')
+// Note that in the CLI script, http was used, but the value in the exported config was https.
+var externalApiUrl = 'https://${externalApiHostname}'
 var connectionStrings = {
   EXTERNAL_API_URL: {
     type: 'Custom'
-    // TODO:FN-421 get external-api (reference-data-proxy) default hostname.
-    value: 'https://tfs-feature-external-api.azurewebsites.net/'
+    value: externalApiUrl
   }
   MONGO_INITDB_DATABASE: {
     type: 'Custom'

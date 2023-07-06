@@ -182,3 +182,4 @@ resource dtfsCentralApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-
 //   }
 // }
 
+output defaultHostName string = externalApi.properties.defaultHostName

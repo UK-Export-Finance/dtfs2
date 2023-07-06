@@ -271,5 +271,6 @@ module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDbDatabaseName
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    externalApiHostname: externalApi.outputs.defaultHostName
   }
 }
