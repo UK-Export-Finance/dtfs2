@@ -23,6 +23,8 @@ const init = async () => {
     roles: ['data-admin'],
     email: 're-insert-mocks-data-loader-tfm@ukexportfinance.gov.uk',
   });
+  console.log(portalToken);
+  console.log(tfmToken);
 
   await cleanAllTables(portalToken);
   await insertMocks(portalToken);
@@ -31,7 +33,7 @@ const init = async () => {
   await cleanAllTablesTfm(tfmToken);
   await insertMocksTfm(tfmToken);
 
-  await deleteInitialUser(token);
+  await deleteInitialUser(portalToken);
 };
 
 init();

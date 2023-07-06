@@ -52,6 +52,7 @@ const deleteTeam = async (team, token) => {
 };
 
 const createTfmUser = async (user, token) => {
+  console.log(token);
   const response = await axios({
     method: 'post',
     headers: {
@@ -63,6 +64,8 @@ const createTfmUser = async (user, token) => {
     url: `${tfmApi}/v1/users`,
     data: user,
   }).catch((err) => { console.error(`err: ${err}`); });
+  console.log(response);
+  
 
   return response.data;
 };
