@@ -28,7 +28,7 @@ const checkApiKey = (req, res, next) => {
    * x-api-key is valid.
    * Allow the request to continue.
    */
-  if (xApiKey === API_KEY) {
+  if (xApiKey === CENTRAL_API_KEY) {
     return next();
   }
 

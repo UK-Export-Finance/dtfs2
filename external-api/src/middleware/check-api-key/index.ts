@@ -28,7 +28,7 @@ export const checkApiKey = (req: Request, res: Response, next: NextFunction) => 
    * x-api-key is valid.
    * Allow the request to continue.
    */
-  if (xApiKey === API_KEY) {
+  if (xApiKey === EXTERNAL_API_KEY) {
     return next();
   }
 
