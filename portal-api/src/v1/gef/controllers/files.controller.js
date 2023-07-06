@@ -45,7 +45,10 @@ const errorFormat = (file, parentId, error) => ({
 });
 
 exports.create = async (req, res) => {
-  const { files, body: { parentId, maxSize, documentPath } } = req;
+  const {
+    files,
+    body: { parentId, maxSize, documentPath },
+  } = req;
 
   const maxFileSize = maxSize || DEFAULT_MAX_SIZE;
 
@@ -64,38 +67,40 @@ exports.create = async (req, res) => {
   if (!userHasAccess(req.user, deal, ['maker'])) return res.sendStatus(401);
 
   try {
-    const processedFiles = await Promise.all(files.map(async (item) => {
-      const file = item;
-      const error = fileError(file, maxFileSize);
-      if (error) return errorFormat(file, parentId, error);
+    const processedFiles = await Promise.all(
+      files.map(async (item) => {
+        const file = item;
+        const error = fileError(file, maxFileSize);
+        if (error) return errorFormat(file, parentId, error);
 
-      file.originalname = formatFilenameForSharepoint(file.originalname);
-      const fileResult = await fileshare.uploadFile({
-        buffer: fs.readFileSync(file.path),
-        fileshare: FILESHARE,
-        folder: `${EXPORT_FOLDER}/${parentId}/${documentPath}`,
-        filename: formatFilenameForSharepoint(file.originalname),
-      });
+        file.originalname = formatFilenameForSharepoint(file.originalname);
+        const fileResult = await fileshare.uploadFile({
+          buffer: fs.readFileSync(file.path),
+          fileshare: FILESHARE,
+          folder: `${EXPORT_FOLDER}/${parentId}/${documentPath}`,
+          filename: formatFilenameForSharepoint(file.originalname),
+        });
 
-      if (fileResult.error) return errorFormat(fileResult, parentId, `${file.originalname} ${fileResult.error.message}`);
+        if (fileResult.error) return errorFormat(fileResult, parentId, `${file.originalname} ${fileResult.error.message}`);
 
-      const fileObject = { ...file, documentPath };
+        const fileObject = { ...file, documentPath };
 
-      const collection = await db.getCollection(filesCollection);
-      const insertedFile = await collection.insertOne(new File(fileObject, parentId));
-      const fileData = await collection.findOne({
-        _id: ObjectId(String(insertedFile.insertedId)),
-      });
+        const collection = await db.getCollection(filesCollection);
+        const insertedFile = await collection.insertOne(new File(fileObject, parentId));
+        const fileData = await collection.findOne({
+          _id: ObjectId(String(insertedFile.insertedId)),
+        });
 
-      return fileData;
-    }));
+        return fileData;
+      }),
+    );
 
     const status = processedFiles.every((file) => !!file.error) ? 200 : 201;
 
     return res.status(status).send(processedFiles);
   } catch (err) {
     console.error(`Error uploading file(s): ${err}`);
-    return res.status(500).send(err.message);
+    return res.status(500).send();
   }
 };
 
@@ -153,7 +158,7 @@ exports.downloadFile = async (req, res) => {
     return readStream.pipe(res);
   } catch (err) {
     console.error(`Error downloading file: ${err}`);
-    return res.status(500).send(err.message);
+    return res.status(500).send();
   }
 };
 
@@ -175,6 +180,6 @@ exports.delete = async (req, res) => {
     return res.status(utils.mongoStatus(response)).send(response.value);
   } catch (err) {
     console.error(`Error deleting file: ${err}`);
-    return res.status(500).send(err.message);
+    return res.status(500).send();
   }
 };
