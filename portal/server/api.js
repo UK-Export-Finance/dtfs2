@@ -4,6 +4,7 @@ const FormData = require('form-data');
 require('dotenv').config();
 
 const portalApi = process.env.DEAL_API_URL;
+const { API_KEY } = process.env;
 
 const login = async (username, password) => {
   try {
@@ -608,6 +609,7 @@ const createFeedback = async (formData, token) => {
     headers: {
       Authorization: token,
       'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
     },
     data: formData,
   });

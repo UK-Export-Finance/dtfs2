@@ -27,6 +27,8 @@ describe('/v1/feedback', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
+
+    noRoles = testUsers().withoutAnyRoles().one();
     aBarclaysMaker = testUsers().withRole('maker').withBankName('Barclays Bank').one();
     aBarclaysChecker = testUsers().withRole('checker').withBankName('Barclays Bank').one();
     aDataAdmin = testUsers().withRole('data-admin').one();
@@ -42,12 +44,12 @@ describe('/v1/feedback', () => {
   };
 
   describe('POST /v1/feedback', () => {
-    it('200s requests that do not present a valid Authorization token', async () => {
+    it('returns 200 for requests that do not present a valid Authorization token', async () => {
       const { status } = await as().post(feedbackFormBody).to('/v1/feedback');
       expect(status).toEqual(200);
     });
 
-    it('200s requests that do not come from a user with role=maker || role=checker', async () => {
+    it('returns 200 for requests that do not come from a user with role=maker || role=checker', async () => {
       const { status } = await as(noRoles).post(feedbackFormBody).to('/v1/feedback');
       expect(status).toEqual(200);
     });

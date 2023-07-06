@@ -134,6 +134,7 @@ services:
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
+      - API_KEY
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - TZ=Europe/London

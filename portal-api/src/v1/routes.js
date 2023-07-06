@@ -25,52 +25,77 @@ const bondIssueFacility = require('./controllers/bond-issue-facility.controller'
 const bondChangeCoverStartDate = require('./controllers/bond-change-cover-start-date.controller');
 const loanChangeCoverStartDate = require('./controllers/loan-change-cover-start-date.controller');
 const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/reports');
-const dealImportBssEwcsController = require('./controllers/data-migration/deal-import-bss-ewcs.controller');
-const dealImportGefController = require('./controllers/data-migration/deal-import-gef.controller');
+
+const { cleanXss, fileUpload } = require('./middleware');
+const checkApiKey = require('./middleware/headers/check-api-key');
 
 const users = require('./users/routes');
-const { cleanXss, fileUpload } = require('./middleware');
-
 const gef = require('./gef/routes');
 
-const authRouter = express.Router();
 const openRouter = express.Router();
-const authRouterAllowXss = express.Router();
 
+openRouter.route('/login').post(users.login);
+
+// 1. Request password reset
+openRouter.route('/users/reset-password').post(users.resetPassword);
+
+// 2. Password reset post request
+openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswordWithToken);
+
+// API Key Routes
+openRouter.route('/feedback').post(checkApiKey, feedback.create);
+openRouter.route('/user').post(checkApiKey, users.create); // This endpoint is only used by mock-data-loader, for setting up an initial user
+
+const authRouterAllowXss = express.Router();
 authRouterAllowXss.use(passport.authenticate('jwt', { session: false }));
 
-authRouter.use(passport.authenticate('jwt', { session: false }), cleanXss);
+authRouterAllowXss.route('/users').get(users.list).post(users.create);
+authRouterAllowXss.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
+authRouterAllowXss.route('/users/:_id/disable').delete(users.disable);
 
+authRouterAllowXss
+  .route('/mandatory-criteria')
+  .get(mandatoryCriteria.findAll)
+  .post(validate({ role: ['editor'] }), mandatoryCriteria.create);
+
+authRouterAllowXss
+  .route('/mandatory-criteria/latest')
+  .get(mandatoryCriteria.findLatest);
+
+authRouterAllowXss
+  .route('/mandatory-criteria/:version')
+  .get(mandatoryCriteria.findOne)
+  .put(validate({ role: ['editor'] }), mandatoryCriteria.update)
+  .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);
+
+const authRouter = express.Router();
+authRouter.use(cleanXss);
 authRouter.use('/gef', gef);
-
-authRouter.route('/deals/import/BSS-EWCS').post(validate({ role: ['data-admin'] }), dealImportBssEwcsController.import);
-
-authRouter.route('/deals/import/GEF').post(validate({ role: ['data-admin'] }), dealImportGefController.import);
 
 authRouter.route('/deals').post(validate({ role: ['maker'] }), dealsController.create);
 authRouter.route('/deals').get(validate({ role: ['maker', 'checker', 'admin'] }), dealsController.getQueryAllDeals);
 
-authRouter.route('/deals/:id/status')
+authRouter
+  .route('/deals/:id/status')
   .get(validate({ role: ['maker', 'checker', 'admin'] }), dealStatus.findOne)
   .put(validate({ role: ['maker', 'checker', 'interface'] }), dealStatus.update);
 
-authRouter.route('/deals/:id/submission-details')
+authRouter
+  .route('/deals/:id/submission-details')
   .get(validate({ role: ['maker', 'checker', 'admin'] }), dealSubmissionDetails.findOne)
   .put(validate({ role: ['maker'] }), dealSubmissionDetails.update);
 
 authRouter.route('/deals/:id/additionalRefName').put(validate({ role: ['maker'] }), dealName.update);
-
 authRouter.route('/deals/:id/loan/create').put(validate({ role: ['maker'] }), loans.create);
 
-authRouter.route('/deals/:id/loan/:loanId')
+authRouter
+  .route('/deals/:id/loan/:loanId')
   .get(validate({ role: ['maker', 'admin'] }), loans.getLoan)
   .put(validate({ role: ['maker'] }), loans.updateLoan)
   .delete(validate({ role: ['maker'] }), loans.deleteLoan);
 
 authRouter.route('/deals/:id/loan/:loanId/issue-facility').put(validate({ role: ['maker'] }), loanIssueFacility.updateLoanIssueFacility);
-
 authRouter.route('/deals/:id/loan/:loanId/change-cover-start-date').put(validate({ role: ['maker'] }), loanChangeCoverStartDate.updateLoanCoverStartDate);
-
 authRouter.route('/deals/:id/bond/create').put(validate({ role: ['maker'] }), bonds.create);
 
 authRouter
@@ -80,9 +105,7 @@ authRouter
   .delete(validate({ role: ['maker'] }), bonds.deleteBond);
 
 authRouter.route('/deals/:id/bond/:bondId/issue-facility').put(validate({ role: ['maker'] }), bondIssueFacility.updateBondIssueFacility);
-
 authRouter.route('/deals/:id/bond/:bondId/change-cover-start-date').put(validate({ role: ['maker'] }), bondChangeCoverStartDate.updateBondCoverStartDate);
-
 authRouter.route('/deals/:id/multiple-facilities').post(validate({ role: ['maker'] }), facilitiesController.createMultiple);
 
 authRouter.route('/facilities').get(validate({ role: ['maker', 'checker', 'admin'] }), facilitiesController.getQueryAllFacilities);
@@ -94,9 +117,7 @@ authRouter
   .delete(validate({ role: ['maker'] }), dealsController.delete);
 
 authRouter.route('/deals/:id/clone').post(validate({ role: ['maker'] }), dealClone.clone);
-
 authRouter.route('/deals/:id/eligibility-criteria').put(validate({ role: ['maker'] }), dealEligibilityCriteria.update);
-
 authRouter.route('/deals/:id/eligibility-documentation').put(validate({ role: ['maker'] }), fileUpload.any(), dealEligibilityDocumentation.update);
 
 authRouter
@@ -115,20 +136,12 @@ authRouter
   .delete(validate({ role: ['editor'] }), banks.delete);
 
 authRouter.route('/currencies').get(currencies.findAll);
-
 authRouter.route('/currencies/:id').get(currencies.findOne);
 
 authRouter.route('/countries').get(countries.findAll);
-
 authRouter.route('/countries/:code').get(countries.findOne);
 
-authRouter
-  .route('/feedback')
-  .get(validate({ role: ['data-admin', 'admin'] }), feedback.findAll);
-
-openRouter
-  .route('/feedback')
-  .post(feedback.create);
+authRouter.route('/feedback').get(validate({ role: ['data-admin', 'admin'] }), feedback.findAll);
 
 authRouter
   .route('/feedback/:id')
@@ -136,7 +149,6 @@ authRouter
   .delete(validate({ role: ['data-admin'] }), feedback.delete);
 
 authRouter.route('/industry-sectors').get(industrySectors.findAll);
-
 authRouter.route('/industry-sectors/:code').get(industrySectors.findOne);
 
 authRouter
@@ -144,44 +156,13 @@ authRouter
   .get(eligibilityCriteria.findAll)
   .post(validate({ role: ['editor'] }), eligibilityCriteria.create);
 
-authRouter
-  .route('/eligibility-criteria/latest')
-  .get(eligibilityCriteria.findLatestGET);
+authRouter.route('/eligibility-criteria/latest').get(eligibilityCriteria.findLatestGET);
 
 authRouter
   .route('/eligibility-criteria/:version')
   .get(eligibilityCriteria.findOne)
   .put(validate({ role: ['editor'] }), eligibilityCriteria.update)
   .delete(validate({ role: ['editor'] }), eligibilityCriteria.delete);
-
-authRouterAllowXss
-  .route('/mandatory-criteria')
-  .get(mandatoryCriteria.findAll)
-  .post(validate({ role: ['editor'] }), mandatoryCriteria.create);
-
-authRouterAllowXss
-  .route('/mandatory-criteria/latest')
-  .get(mandatoryCriteria.findLatest);
-
-authRouterAllowXss
-  .route('/mandatory-criteria/:version')
-  .get(mandatoryCriteria.findOne)
-  .put(validate({ role: ['editor'] }), mandatoryCriteria.update)
-  .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);
-
-openRouter.route('/users').get(users.list).post(users.create);
-
-openRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
-
-openRouter.route('/users/:_id/disable').delete(users.disable);
-
-openRouter.route('/login').post(users.login);
-
-// 1. Request password reset
-openRouter.route('/users/reset-password').post(users.resetPassword);
-
-// 2. Password reset post request
-openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswordWithToken);
 
 // Portal reports
 authRouter.route('/reports/unissued-facilities').get(validate({ role: ['maker', 'checker', 'admin'] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
@@ -195,4 +176,4 @@ authRouter.get('/validate', validate(), (req, res) => {
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
-module.exports = { authRouter, openRouter, authRouterAllowXss };
+module.exports = { openRouter, authRouterAllowXss, authRouter };

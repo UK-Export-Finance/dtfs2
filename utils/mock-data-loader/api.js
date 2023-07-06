@@ -4,6 +4,7 @@ require('dotenv').config();
 const { gef } = require('./gef/api');
 
 const portalApiUrl = process.env.DEAL_API_URL;
+const { API_KEY } = process.env;
 
 const createBank = async (bank, token) => {
   const response = await axios({
@@ -11,7 +12,7 @@ const createBank = async (bank, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/banks`,
     data: bank,
@@ -26,7 +27,7 @@ const createCurrency = async (currency, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/currencies`,
     data: currency,
@@ -41,7 +42,7 @@ const createCountry = async (country, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/countries`,
     data: country,
@@ -56,7 +57,7 @@ const createDeal = async (deal, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/deals`,
     data: deal,
@@ -71,7 +72,7 @@ const getDeal = async (dealId, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/deals/${dealId}`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -85,7 +86,7 @@ const createIndustrySector = async (industrySector, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/industry-sectors`,
     data: industrySector,
@@ -100,7 +101,7 @@ const createMandatoryCriteria = async (mandatoryCriteria, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/mandatory-criteria`,
     data: mandatoryCriteria,
@@ -115,7 +116,7 @@ const createEligibilityCriteria = async (eligibilityCriteria, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/eligibility-criteria`,
     data: eligibilityCriteria,
@@ -124,16 +125,32 @@ const createEligibilityCriteria = async (eligibilityCriteria, token) => {
   return response.data;
 };
 
-const createUser = async (user) => {
+const createUser = async (user, token) => {
   const response = await axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/users`,
     data: user,
   }).catch((err) => { console.error(`err: ${err}`); });
+
+  return response.data;
+};
+
+const createInitialUser = async (user) => {
+  const response = await axios({
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+      Accepts: 'application/json',
+    },
+    url: `${portalApiUrl}/v1/user`,
+    data: user,
+  }).catch((err) => { console.error('Unable to create initial user %s', { err }); });
 
   return response.data;
 };
@@ -144,7 +161,7 @@ const deleteBank = async (deal, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/banks/${deal.id}`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -158,7 +175,7 @@ const deleteCurrency = async (currency, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/currencies/${currency.id}`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -172,7 +189,7 @@ const deleteCountry = async (country, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/countries/${country.code}`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -186,7 +203,7 @@ const deleteDeal = async (dealId, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/deals/${dealId}`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -200,7 +217,7 @@ const deleteIndustrySector = async (industrySector, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/industry-sectors/${industrySector.code}`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -214,7 +231,7 @@ const deleteMandatoryCriteria = async (version, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/mandatory-criteria/${version}`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -228,7 +245,7 @@ const deleteEligibilityCriteria = async (version, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/eligibility-criteria/${version}`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -236,12 +253,13 @@ const deleteEligibilityCriteria = async (version, token) => {
   return response.data;
 };
 
-const deleteUser = async (user) => {
+const deleteUser = async (user, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/users/${user._id}`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -255,7 +273,7 @@ const listBanks = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/banks`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -269,7 +287,7 @@ const listCurrencies = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/currencies`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -283,7 +301,7 @@ const listCountries = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/countries`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -297,7 +315,7 @@ const listDeals = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/deals`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -311,7 +329,7 @@ const listIndustrySectors = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/industry-sectors`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -325,7 +343,7 @@ const listMandatoryCriteria = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/mandatory-criteria`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -339,7 +357,7 @@ const listEligibilityCriteria = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/eligibility-criteria`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -347,12 +365,13 @@ const listEligibilityCriteria = async (token) => {
   return response.data.eligibilityCriteria;
 };
 
-const listUsers = async () => {
+const listUsers = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/users`,
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -360,13 +379,26 @@ const listUsers = async () => {
   return response.data.users;
 };
 
+const login = async (user) => {
+  const response = await axios({
+    method: 'post',
+    url: `${portalApiUrl}/v1/login`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { username: user.username, password: user.password },
+  }).catch((err) => { console.error('Unable to login %s', { err }); });
+
+  return response?.data?.token;
+}
+
 const updateCurrency = async (currency, token) => {
   const response = await axios({
     method: 'put',
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/currencies/${currency.id}`,
     data: currency,
@@ -381,7 +413,7 @@ const updateCountry = async (country, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/countries/${country.code}`,
     data: country,
@@ -400,6 +432,7 @@ module.exports = {
   createMandatoryCriteria,
   createEligibilityCriteria,
   createUser,
+  createInitialUser,
   deleteBank,
   deleteCurrency,
   deleteCountry,
@@ -416,6 +449,7 @@ module.exports = {
   listMandatoryCriteria,
   listEligibilityCriteria,
   listUsers,
+  login,
   updateCountry,
   updateCurrency,
   gef,

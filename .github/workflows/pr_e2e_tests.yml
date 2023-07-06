@@ -44,6 +44,9 @@ env:
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
   API_KEY: ${{ secrets.API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
+  DEAL_API_URL: http://localhost:5001
+  DTFS_CENTRAL_API: http://localhost:5005
+  TFM_API: http://localhost:5004
 
 jobs:
   set-environment:
