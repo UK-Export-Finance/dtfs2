@@ -19,12 +19,12 @@ const createActivityMutation = require('./graphql/mutations/create-activity');
 require('dotenv').config();
 
 const tfmAPIurl = process.env.TRADE_FINANCE_MANAGER_API_URL;
-const { API_KEY } = process.env;
+const { TFM_API_KEY } = process.env;
 
 const generateHeaders = (token) => ({
   Authorization: token,
   'Content-Type': 'application/json',
-  'x-api-key': API_KEY,
+  'x-api-key': TFM_API_KEY,
 });
 
 const getDeal = async (id, tasksFilters, activityFilters) => {

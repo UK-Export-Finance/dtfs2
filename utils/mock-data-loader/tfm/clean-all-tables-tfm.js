@@ -28,10 +28,10 @@ const cleanTfmDeals = async (token) => {
   }
 };
 
-const cleanAllTables = async () => {
-  await cleanTeams();
-  await cleanUsers();
-  await cleanTfmDeals();
+const cleanAllTables = async (token) => {
+  await cleanTeams(token);
+  await cleanUsers(token);
+  await cleanTfmDeals(token);
 };
 
 module.exports = cleanAllTables;

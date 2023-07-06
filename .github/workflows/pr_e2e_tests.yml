@@ -42,7 +42,10 @@ env:
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
-  API_KEY: ${{ secrets.API_KEY }}
+  TFM_API_KEY: ${{ secrets.API_KEY }}
+  PORTAL_API_KEY: ${{ secrets.API_KEY }}
+  CENTRAL_API_KEY: ${{ secrets.API_KEY }}
+  EXTERNAL_API_KEY: ${{ secrets.API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   DEAL_API_URL: http://localhost:5001
   DTFS_CENTRAL_API: http://localhost:5005
