@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 require('./azure-env');
 const routes = require('./routes');
-const supportingDocuments = require('./routes/supporting-documents.route');
+const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 const { csrf: csrfToken, security, seo } = require('./middleware');
@@ -82,7 +82,11 @@ app.set('trustproxy', true);
 app.use(session(sessionOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use('/', supportingDocuments);
+
+// These routes cannot use the csrf check below so must come before it
+// They implement their own separate csrf check
+app.use('/', supportingInformationUploadRoutes);
+
 app.use(csrf());
 app.use(csrfToken());
 app.use(flash());
