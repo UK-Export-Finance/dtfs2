@@ -115,7 +115,7 @@ authRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfter
  *       400:
  *         description: validation errors
  */
-authRouter.route('/feedback').post(feedbackController.create);
+openRouter.route('/feedback').post(feedbackController.create);
 
 openRouter.route('/user').post(users.createTfmUser);
 authRouter.route('/users').post(users.createTfmUser);
