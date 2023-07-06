@@ -1,8 +1,7 @@
-const { listAllUsers } = require('./api');
+const { listAllUsers, logIn } = require('./api');
 
-// eslint-disable-next-line no-unused-vars
-module.exports = (id, status, opts) => {
+module.exports = (opts) => {
   console.info('listAllUsers::');
 
-  listAllUsers().then((users) => users);
+  logIn(opts).then((token) => listAllUsers(token)).then((users) => users);
 };

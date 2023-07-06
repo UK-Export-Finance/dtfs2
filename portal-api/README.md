@@ -32,7 +32,7 @@ Test coverage will be generated.
 ### **Run a single API test**
 
 ```shell
-npm run api-test-file "**/*/deals-party-db.api-test.js"
+npm run api-test "**/*/deals-party-db.api-test.js"
 ```
 
 ## The current shape of the API

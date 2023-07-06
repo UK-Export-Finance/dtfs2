@@ -14,7 +14,7 @@ module.exports.initialise = async (app, user) => {
     const existingECs = currentECResponse.body.eligibilityCriteria;
 
     for (const existingEC of existingECs) {
-      await remove(`/v1/users/${existingEC._id}`);
+      await remove(`/v1/eligibility-criteria/${existingEC._id}`);
     }
 
     for (const ec of ECs) {
