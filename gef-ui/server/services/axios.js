@@ -10,6 +10,6 @@ module.exports = axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    'x-api-key': PORTAL_API_KEY
+    'x-api-key': PORTAL_API_KEY,
   },
 });
