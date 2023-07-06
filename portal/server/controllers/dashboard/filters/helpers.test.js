@@ -1,9 +1,4 @@
-import {
-  submittedFiltersArray,
-  submittedFiltersObject,
-  formatFieldValue,
-  filtersToText,
-} from './helpers';
+import { submittedFiltersArray, submittedFiltersObject, formatFieldValue, filtersToText } from './helpers';
 
 describe('controllers/dashboard/filters - helpers', () => {
   describe('submittedFiltersArray', () => {
@@ -15,9 +10,7 @@ describe('controllers/dashboard/filters - helpers', () => {
 
         const result = submittedFiltersArray(mockSubmittedFilters);
 
-        const expected = [
-          { dealType: [mockSubmittedFilters.dealType] },
-        ];
+        const expected = [{ dealType: [mockSubmittedFilters.dealType] }];
 
         expect(result).toEqual(expected);
       });
@@ -31,9 +24,7 @@ describe('controllers/dashboard/filters - helpers', () => {
 
         const result = submittedFiltersArray(mockSubmittedFilters);
 
-        const expected = [
-          { hasBeenIssued: [false] },
-        ];
+        const expected = [{ hasBeenIssued: [false] }];
 
         expect(result).toEqual(expected);
       });
@@ -47,9 +38,7 @@ describe('controllers/dashboard/filters - helpers', () => {
 
         const result = submittedFiltersArray(mockSubmittedFilters);
 
-        const expected = [
-          { dealType: [...mockSubmittedFilters.dealType] },
-        ];
+        const expected = [{ dealType: [...mockSubmittedFilters.dealType] }];
 
         expect(result).toEqual(expected);
       });
@@ -64,10 +53,7 @@ describe('controllers/dashboard/filters - helpers', () => {
 
         const result = submittedFiltersArray(mockSubmittedFilters);
 
-        const expected = [
-          { dealType: [...mockSubmittedFilters.dealType] },
-          { submissionType: [mockSubmittedFilters.submissionType] },
-        ];
+        const expected = [{ dealType: [...mockSubmittedFilters.dealType] }, { submissionType: [mockSubmittedFilters.submissionType] }];
 
         expect(result).toEqual(expected);
       });
@@ -112,40 +98,36 @@ describe('controllers/dashboard/filters - helpers', () => {
   });
 
   describe('formatFieldValue', () => {
-    it('replaces/removes special characters from a string', () => {
-      const mockValue = 'Ready for Checker\'s Approval BSS/EWCS';
-
-      const result = formatFieldValue(mockValue);
-
+    it('replaces white spaces and slashes with a hyphen, and removes single quotes', () => {
+      const mockValue = "Ready for Checker's Approval BSS/EWCS";
       const expected = 'Ready-for-Checkers-Approval-BSS-EWCS';
-
-      expect(result).toEqual(expected);
+      expect(formatFieldValue(mockValue)).toEqual(expected);
     });
 
-    it('returns a string when true boolean is passed', () => {
-      const mockValue = true;
-
-      const result = formatFieldValue(mockValue);
-
-      const expected = String(true);
-
-      expect(result).toEqual(expected);
+    it('handles boolean values', () => {
+      expect(formatFieldValue(true)).toBe('true');
+      expect(formatFieldValue(false)).toBe('false');
     });
 
-    it('returns a string when false boolean is passed', () => {
-      const mockValue = false;
-
-      const result = formatFieldValue(mockValue);
-
-      const expected = String(false);
-
-      expect(result).toEqual(expected);
+    it('returns null for null or undefined values', () => {
+      expect(formatFieldValue(null)).toBe(null);
+      expect(formatFieldValue(undefined)).toBe(null);
     });
 
-    it('returns null', () => {
-      const result = formatFieldValue();
+    it('returns null for empty string', () => {
+      expect(formatFieldValue('')).toBe(null);
+    });
 
-      expect(result).toEqual(null);
+    it('returns null for numeric zero', () => {
+      expect(formatFieldValue(0)).toBe(null);
+    });
+
+    it('handles numeric non-zero values', () => {
+      expect(formatFieldValue(123)).toBe('123');
+    });
+
+    it('handles NaN values', () => {
+      expect(formatFieldValue(NaN)).toBe(null);
     });
   });
 
@@ -162,27 +144,33 @@ describe('controllers/dashboard/filters - helpers', () => {
       const filters = [
         {
           heading: { text: 'Product' },
-          items: [{
-            text: 'BSS/EWCS',
-            href: 'filters/remove/dealType/BSS-EWCS',
-            formattedValue: 'BSS-EWCS',
-          }],
+          items: [
+            {
+              text: 'BSS/EWCS',
+              href: 'filters/remove/dealType/BSS-EWCS',
+              formattedValue: 'BSS-EWCS',
+            },
+          ],
         },
         {
           heading: { text: 'Notice Type' },
-          items: [{
-            text: 'Automatic Inclusion Notice',
-            href: 'filters/remove/dealType/BSS-EWCS',
-            formattedValue: 'BSS-EWCS',
-          }],
+          items: [
+            {
+              text: 'Automatic Inclusion Notice',
+              href: 'filters/remove/dealType/BSS-EWCS',
+              formattedValue: 'BSS-EWCS',
+            },
+          ],
         },
         {
           heading: { text: 'Status' },
-          items: [{
-            text: 'Draft',
-            href: 'filters/remove/status/Draft',
-            formattedValue: 'Draft',
-          }],
+          items: [
+            {
+              text: 'Draft',
+              href: 'filters/remove/status/Draft',
+              formattedValue: 'Draft',
+            },
+          ],
         },
       ];
       const result = filtersToText(filters);
