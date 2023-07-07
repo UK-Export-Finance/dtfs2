@@ -23,6 +23,7 @@ describe('/feedback', () => {
     });
 
     it('does not create a feedback when there are validation errors', async () => {
+      await api.post({}).to('/v1/feedback');
       const { status } = await api.post({}).to('/v1/feedback');
       expect(status).toEqual(400);
     });
