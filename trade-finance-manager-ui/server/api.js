@@ -295,6 +295,12 @@ const updateAmendment = async (facilityId, amendmentId, data) => {
 
 const getAmendmentInProgress = async (facilityId) => {
   try {
+    const facilityId = isMongoIdValid(facilityId);
+
+    if (!facilityId) {
+      throw new Error(`Invalid facility id %s`, facilityId);
+    }
+    
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/in-progress`,
@@ -432,7 +438,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
     if (!dealId) {
       throw new Error(`Invalid facility id %s`, dealId);
     }
-    
+
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/in-progress`,
