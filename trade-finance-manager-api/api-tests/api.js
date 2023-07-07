@@ -4,11 +4,11 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const { API_KEY } = process.env;
+const { TFM_API_KEY } = process.env;
 
 const headers = (token) => ({
   'content-type': 'application/json',
-  'x-api-key': API_KEY,
+  'x-api-key': TFM_API_KEY,
   Authorization: token || '',
 });
 

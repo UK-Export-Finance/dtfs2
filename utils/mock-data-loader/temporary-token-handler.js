@@ -2,7 +2,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 const urlRoot = process.env.DEAL_API_URL;
-const { API_KEY } = process.env;
+const { PORTAL_API_KEY } = process.env;
 
 module.exports = async (user) => {
   console.info(`Creating temp user "${user.username}"`);
@@ -11,7 +11,7 @@ module.exports = async (user) => {
     url: `${urlRoot}/v1/users`,
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
+      'x-api-key': PORTAL_API_KEY,
     },
     data: user,
   }).catch((err) => {
