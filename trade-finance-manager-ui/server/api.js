@@ -15,6 +15,7 @@ const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-p
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
 const createActivityMutation = require('./graphql/mutations/create-activity');
+const isMongoIdValid = require('./helpers/validateIds');
 
 require('dotenv').config();
 
@@ -339,6 +340,12 @@ const getCompletedAmendment = async (facilityId) => {
 
 const getLatestCompletedAmendmentValue = async (facilityId) => {
   try {
+    const facilityId = isMongoIdValid(facilityId);
+
+    if (!facilityId) {
+      throw new Error(`Invalid facility id %s`, facilityId);
+    }
+
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed/latest-value`,
@@ -354,6 +361,12 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
 
 const getLatestCompletedAmendmentDate = async (facilityId) => {
   try {
+    const facilityId = isMongoIdValid(facilityId);
+
+    if (!facilityId) {
+      throw new Error(`Invalid facility id %s`, facilityId);
+    }
+
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
@@ -414,6 +427,12 @@ const getAmendmentsByDealId = async (dealId) => {
 
 const getAmendmentInProgressByDealId = async (dealId) => {
   try {
+    const dealId = isMongoIdValid(dealId);
+
+    if (!dealId) {
+      throw new Error(`Invalid facility id %s`, dealId);
+    }
+    
     const response = await axios({
       method: 'get',
       url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/in-progress`,
