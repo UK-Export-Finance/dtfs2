@@ -1,12 +1,9 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
-import { T1_USER_1 } from '../../../../../e2e-fixtures';
 
 context('User submit feedback on TFM', () => {
   it('feedback should contain correct components and text', () => {
-    cy.login(T1_USER_1);
-
     pages.landingPage.visit();
     partials.header.betaBannerHref().should('have.attr', 'target', '_blank');
 
@@ -38,8 +35,6 @@ context('User submit feedback on TFM', () => {
   });
 
   it('feedback should give errors if incorrectly filled up', () => {
-    cy.login(T1_USER_1);
-
     pages.feedbackPage.visit();
 
     pages.feedbackPage.emailAddress().type('a');
@@ -62,8 +57,6 @@ context('User submit feedback on TFM', () => {
   });
 
   it('feedback should submit without errors and with correct thank you page', () => {
-    cy.login(T1_USER_1);
-
     pages.feedbackPage.visit();
 
     pages.feedbackPage.role().type('test');

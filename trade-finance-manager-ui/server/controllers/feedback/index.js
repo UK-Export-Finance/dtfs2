@@ -22,13 +22,11 @@ const postFeedback = async (req, res) => {
       userDetails.username = username;
       userDetails.email = email;
     }
-    // TODO: Protecting this behind JWT needing to be logged in nullifies the req.session.user above
-    const { userToken } = req.session;
 
     const feedbackBody = req.body;
     feedbackBody.submittedBy = userDetails;
 
-    const response = await api.createFeedback(feedbackBody, userToken);
+    const response = await api.createFeedback(feedbackBody);
 
     if (response) {
       return res.redirect('/thank-you-feedback');
