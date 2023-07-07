@@ -30,7 +30,6 @@ services:
       - DTFS_CENTRAL_API=http://localhost:5005
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
-      - API_KEY
       - EXTERNAL_API_KEY
       - TFM_API_KEY
       - PORTAL_API_KEY
@@ -50,7 +49,6 @@ services:
       - ./trade-finance-manager-ui/templates:/app/templates:ro
     environment:
       - PORT=5003
-      - API_KEY
       - EXTERNAL_API_KEY
       - TFM_API_KEY
       - PORTAL_API_KEY
@@ -81,7 +79,6 @@ services:
       - PORT=5004
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
-      - API_KEY
       - EXTERNAL_API_KEY
       - TFM_API_KEY
       - PORTAL_API_KEY
@@ -121,7 +118,6 @@ services:
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
-      - API_KEY
       - EXTERNAL_API_KEY
       - TFM_API_KEY
       - PORTAL_API_KEY
@@ -165,7 +161,6 @@ services:
       - DTFS_PORTAL_SCHEDULER=true
       - FETCH_WORKFLOW_TYPE_B_SCHEDULE=*/1 * * * * *
       - EXTERNAL_API_URL=http://external-api:5002
-      - API_KEY
       - EXTERNAL_API_KEY
       - TFM_API_KEY
       - PORTAL_API_KEY
@@ -190,7 +185,6 @@ services:
     environment:
       - PORT=5002
       - CORS_ORIGIN
-      - API_KEY
       - EXTERNAL_API_KEY
       - TFM_API_KEY
       - PORTAL_API_KEY
@@ -247,7 +241,6 @@ services:
       - TFM_API_KEY
       - PORTAL_API_KEY
       - CENTRAL_API_KEY
-      - API_KEY
     command: npx nodemon server/index.js -L
 
   number-generator-function:
