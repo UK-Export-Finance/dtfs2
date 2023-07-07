@@ -79,6 +79,12 @@ module.exports = (app) => ({
       }),
     }
   },
+  post: (data) => ({
+    to: async (url) => request(app)
+      .post(url)
+      .send(data)
+      .set(headers(null)),
+  }),
 });
 
 /* eslint-enable */
