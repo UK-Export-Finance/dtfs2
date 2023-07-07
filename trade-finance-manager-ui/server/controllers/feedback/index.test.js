@@ -62,7 +62,7 @@ describe('controllers - feedback', () => {
         email: 'test@test.test',
       };
 
-      expect(createFeedbackSpy).toHaveBeenCalledWith(mockReq.body, mockReq.session.userToken);
+      expect(createFeedbackSpy).toHaveBeenCalledWith(mockReq.body);
 
       expect(res.redirect).toHaveBeenCalledWith('/thank-you-feedback');
     });
@@ -88,7 +88,7 @@ describe('controllers - feedback', () => {
         email: null,
       };
 
-      expect(createFeedbackSpy).toHaveBeenCalledWith(mockReqNoUser.body, mockReqNoUser.session.userToken);
+      expect(createFeedbackSpy).toHaveBeenCalledWith(mockReqNoUser.body);
 
       expect(res.redirect).toHaveBeenCalledWith('/thank-you-feedback');
     });
