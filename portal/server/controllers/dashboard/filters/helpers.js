@@ -21,13 +21,9 @@ const submittedFiltersArray = (allSubmittedFilters = {}) => {
       // NOTE: some filter values can have a value of false.
       if (submittedValue || submittedValue === false) {
         if (fieldHasMultipleValues) {
-          consistentArray.push(
-            { [field]: [...submittedValue] },
-          );
+          consistentArray.push({ [field]: [...submittedValue] });
         } else {
-          consistentArray.push(
-            { [field]: [submittedValue] },
-          );
+          consistentArray.push({ [field]: [submittedValue] });
         }
       }
     });
@@ -70,7 +66,7 @@ const submittedFiltersObject = (filtersArray) => {
  */
 const formatFieldValue = (fieldValue) => {
   if (fieldValue || typeof fieldValue === 'boolean') {
-    return String(fieldValue).replace(/[\s/]/g, '-').replace('\'', '');
+    return String(fieldValue).replace(/[\s/]/g, '-').replace(/'/g, '');
   }
 
   return null;
