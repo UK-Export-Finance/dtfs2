@@ -1,14 +1,13 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const urlRoot = process.env.TFM_API;
-const { TFM_API_KEY } = process.env;
+const { TFM_API, TFM_API_KEY } = process.env;
 
 module.exports = async (user) => {
   console.info(`Creating temp user "${user.username}"`);
   await axios({
     method: 'post',
-    url: `${urlRoot}/v1/user`,
+    TFM_API: `${TFM_API}/v1/user`,
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': TFM_API_KEY,
@@ -21,7 +20,7 @@ module.exports = async (user) => {
   console.info(`Logging in as "${user.username}"`);
   const { data } = await axios({
     method: 'post',
-    url: `${urlRoot}/v1/login`,
+    TFM_API: `${TFM_API}/v1/login`,
     headers: {
       'Content-Type': 'application/json',
     },
