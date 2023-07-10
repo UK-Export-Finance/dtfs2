@@ -14,7 +14,7 @@ const headers = (token) => ({
 
 module.exports = (app) => ({
   as: (user) => {
-    const token = (user && user.token) ? user.token : '';
+    const token = user?.token ? user.token : '';
 
     return {
       post: (data) => ({

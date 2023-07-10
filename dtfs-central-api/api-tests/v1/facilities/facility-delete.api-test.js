@@ -6,8 +6,7 @@ const { MOCK_DEAL } = require('../mocks/mock-data');
 
 dotenv.config();
 
-const { DTFS_CENTRAL_API } = process.env;
-const { CENTRAL_API_KEY } = process.env;
+const { DTFS_CENTRAL_API, CENTRAL_API_KEY } = process.env;
 
 const headers = {
   'Content-Type': 'application/json',
