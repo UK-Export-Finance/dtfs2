@@ -1,4 +1,4 @@
-const validMongoId = require('../helpers/validMongoId');
+const { isValidMongoId } = require('../validation/validateIds');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
@@ -21,7 +21,7 @@ const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
 exports.create = async (req, res) => {
-  if (!validMongoId(req.params.id)) {
+  if (!isValidMongoId(req.params.id)) {
     console.error('loans.create - invalid object id provided ', req.params.id);
     return res.status(400).send({ status: 400, message: `Invalid id' ${req.params.id}` });
   }
@@ -54,7 +54,7 @@ exports.getLoan = async (req, res) => {
     loanId,
   } = req.params;
 
-  if (!validMongoId(req.params.id) || !validMongoId(req.params.loanId)) {
+  if (!isValidMongoId(req.params.id) || !isValidMongoId(req.params.loanId)) {
     console.error('loans.get - invalid object id provided ', req.params.id, req.params.loanId);
     return res.status(400).send({ status: 400, message: `Invalid id' ${req.params.id} ${req.params.loanId}` });
   }
