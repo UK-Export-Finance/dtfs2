@@ -221,7 +221,7 @@ const updateUserPassword = async (userId, update) => {
     const validatedUserId = validMongoId(userId);
 
     if (validatedUserId) {
-      throw new Error(`Invalid user id %s`, userId)
+      throw new Error('Invalid user id %s', userId);
     }
 
     const response = await axios({
@@ -257,7 +257,7 @@ const getUser = async (userId) => {
     const validatedUserId = validMongoId(userId);
 
     if (validatedUserId) {
-      throw new Error(`Invalid user id %s`, userId)
+      throw new Error('Invalid user id %s', userId);
     }
 
     const response = await axios({
@@ -278,7 +278,7 @@ const createFacilityAmendment = async (facilityId) => {
     const validatedFacilityId = validMongoId(facilityId);
 
     if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+      throw new Error('Invalid facility id %s', facilityId);
     }
 
     const response = await axios({
@@ -301,11 +301,11 @@ const updateAmendment = async (facilityId, amendmentId, data) => {
     const validatedAmendmentId = validMongoId(amendmentId);
 
     if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+      throw new Error('Invalid facility id %s', facilityId);
     }
 
     if (!validatedAmendmentId) {
-      throw new Error(`Invalid amendment id %s`, amendmentId);
+      throw new Error('Invalid amendment id %s', amendmentId);
     }
 
     const response = await axios({
@@ -327,7 +327,7 @@ const getAmendmentInProgress = async (facilityId) => {
     const validatedFacilityId = validMongoId(facilityId);
 
     if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+      throw new Error('Invalid facility id %s', facilityId);
     }
 
     const response = await axios({
@@ -363,7 +363,7 @@ const getCompletedAmendment = async (facilityId) => {
     const validatedFacilityId = validMongoId(facilityId);
 
     if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+      throw new Error('Invalid facility id %s', facilityId);
     }
 
     const response = await axios({
@@ -384,7 +384,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
     const validatedFacilityId = validMongoId(facilityId);
 
     if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+      throw new Error('Invalid facility id %s', facilityId);
     }
 
     const response = await axios({
@@ -405,7 +405,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
     const validatedFacilityId = validMongoId(facilityId);
 
     if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+      throw new Error('Invalid facility id %s', facilityId);
     }
 
     const response = await axios({
@@ -427,11 +427,11 @@ const getAmendmentById = async (facilityId, amendmentId) => {
     const validatedAmendmentId = validMongoId(amendmentId);
 
     if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+      throw new Error('Invalid facility id %s', facilityId);
     }
 
     if (!validatedAmendmentId) {
-      throw new Error(`Invalid amendment id %s`, amendmentId);
+      throw new Error('Invalid amendment id %s', amendmentId);
     }
 
     const response = await axios({
@@ -452,7 +452,7 @@ const getAmendmentsByFacilityId = async (facilityId) => {
     const validatedFacilityId = validMongoId(facilityId);
 
     if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+      throw new Error('Invalid facility id %s', facilityId);
     }
 
     const response = await axios({
@@ -473,7 +473,7 @@ const getAmendmentsByDealId = async (dealId) => {
     const validatedDealId = validMongoId(dealId);
 
     if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+      throw new Error('Invalid deal id %s', dealId);
     }
 
     const response = await axios({
@@ -494,7 +494,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
     const validatedDealId = validMongoId(dealId);
 
     if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+      throw new Error('Invalid deal id %s', dealId);
     }
 
     const response = await axios({
@@ -515,7 +515,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
     const validatedDealId = validMongoId(dealId);
 
     if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+      throw new Error('Invalid deal id %s', dealId);
     }
 
     const response = await axios({
@@ -536,7 +536,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
     const validatedDealId = validMongoId(dealId);
 
     if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+      throw new Error('Invalid deal id %s', dealId);
     }
 
     const response = await axios({
@@ -557,7 +557,7 @@ const getParty = async (partyUrn) => {
     const validatedPartyUrn = validPartyUrn(partyUrn);
 
     if (!validatedPartyUrn) {
-      throw new Error(`Invalid party urn %s`, validatedPartyUrn);
+      throw new Error('Invalid party urn %s', validatedPartyUrn);
     }
 
     const response = await axios({
