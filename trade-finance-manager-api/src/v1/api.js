@@ -22,11 +22,9 @@ const headers = {
 const findOnePortalDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
-
     if (!isValidDealId) {
       return { status: 400, data: 'Invalid deal id' };
     }
-
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
