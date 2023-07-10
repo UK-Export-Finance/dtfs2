@@ -1,14 +1,8 @@
 const { ObjectId } = require('mongodb');
 
-const validMongoId = (mongoId) => {
-  if (!ObjectId.isValid(mongoId)) {
-    return false;
-  }
+const isValidMongoId = (mongoId) => ObjectId.isValid(mongoId);
 
-  return mongoId;
-};
-
-const validUkefNumericId = (ukefId) => {
+const isValidUkefNumericId = (ukefId) => {
   const id = parseInt(ukefId, 10);
 
   if (Number.isNaN(id)) {
@@ -24,7 +18,7 @@ const validUkefNumericId = (ukefId) => {
   return ukefId;
 };
 
-const validPartyUrn = (partyUrn) => {
+const isValidPartyUrn = (partyUrn) => {
   const regex = /^[0-9]{8}$/;
 
   if (!regex.test(partyUrn)) {
@@ -34,7 +28,7 @@ const validPartyUrn = (partyUrn) => {
   return partyUrn;
 };
 
-const validNumericId = (numericId) => {
+const isValidNumericId = (numericId) => {
   const id = parseInt(numericId);
 
   if (Number.isNaN(id)) {
@@ -45,8 +39,8 @@ const validNumericId = (numericId) => {
 }
 
 module.exports = {
-  validMongoId,
-  validUkefNumericId,
-  validPartyUrn,
-  validNumericId,
+  isValidMongoId,
+  isValidUkefNumericId,
+  isValidPartyUrn,
+  isValidNumericId,
 };

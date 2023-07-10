@@ -1,7 +1,6 @@
 const axios = require('axios');
-const { hasValidObjectId } = require('./helpers/hasValidObjectId.helper');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
-const { validMongoId, validPartyUrn } = require('./validation/validateIds');
+const { isValidMongoId, isValidPartyUrn, isValidNumericId } = require('./validation/validateIds');
 const CONSTANTS = require('../constants');
 require('dotenv').config();
 
@@ -22,15 +21,15 @@ const headers = {
 
 const findOnePortalDeal = async (dealId) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/deals/${validatedDealId}`,
+      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
       headers,
     });
 
@@ -42,15 +41,15 @@ const findOnePortalDeal = async (dealId) => {
 
 const updatePortalDeal = async (dealId, update) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/deals/${validatedDealId}`,
+      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
       headers,
       data: {
         dealUpdate: update,
@@ -67,15 +66,15 @@ const updatePortalDeal = async (dealId, update) => {
 
 const updatePortalBssDealStatus = async (dealId, status) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/deals/${validatedDealId}/status`,
+      url: `${centralApiUrl}/v1/portal/deals/${dealId}/status`,
       headers,
       data: {
         status,
@@ -92,15 +91,15 @@ const updatePortalBssDealStatus = async (dealId, status) => {
 
 const addPortalDealComment = async (dealId, commentType, comment) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'post',
-      url: `${centralApiUrl}/v1/portal/deals/${validatedDealId}/comment`,
+      url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
       headers,
       data: {
         dealId,
@@ -117,15 +116,15 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
 
 const updatePortalFacilityStatus = async (facilityId, status) => {
   try {
-    const validatedFacilityId = validMongoId(dealId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, dealId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/facilities/${validatedFacilityId}/status`,
+      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}/status`,
       headers,
       data: {
         status,
@@ -142,15 +141,15 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
 
 const updatePortalFacility = async (facilityId, update) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/facilities/${validatedFacilityId}`,
+      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
       headers,
       data: update,
     });
@@ -165,15 +164,15 @@ const updatePortalFacility = async (facilityId, update) => {
 
 const findOneDeal = async (dealId) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/deals/${validatedDealId}`,
+      url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
       headers,
     });
     return response.data.deal;
@@ -186,15 +185,15 @@ const findOneDeal = async (dealId) => {
 
 const updateDeal = async (dealId, dealUpdate) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/${validatedDealId}`,
+      url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
       headers,
       data: {
         dealUpdate,
@@ -209,15 +208,15 @@ const updateDeal = async (dealId, dealUpdate) => {
 
 const updateDealSnapshot = async (dealId, snapshotUpdate) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/${validatedDealId}/snapshot`,
+      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/snapshot`,
       headers,
       data: snapshotUpdate,
     });
@@ -248,15 +247,15 @@ const submitDeal = async (dealType, dealId) => {
 
 const findOneFacility = async (facilityId) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error(`Invalid deal id %s`, facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/facilities/${validatedFacilityId}`,
+      url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
       headers,
     });
 
@@ -270,15 +269,15 @@ const findOneFacility = async (facilityId) => {
 
 const findFacilitesByDealId = async (dealId) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id %s`, dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/deals/${validatedDealId}/facilities`,
+      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/facilities`,
       headers,
     });
 
@@ -290,15 +289,15 @@ const findFacilitesByDealId = async (dealId) => {
 
 const updateFacility = async (facilityId, facilityUpdate) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/facilities/${validatedFacilityId}`,
+      url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
       headers,
       data: {
         facilityUpdate,
@@ -312,13 +311,12 @@ const updateFacility = async (facilityId, facilityUpdate) => {
 };
 
 const createFacilityAmendment = async (facilityId) => {
-  const validatedFacilityId = validMongoId(facilityId);
-  const isValid = validatedFacilityId && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'post',
-        url: `${centralApiUrl}/v1/tfm/facilities/${validatedFacilityId}/amendments`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
         headers,
         data: { facilityId },
       });
@@ -335,14 +333,12 @@ const createFacilityAmendment = async (facilityId) => {
 };
 
 const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
-  const validatedFacilityId = validMongoId(facilityId);
-  const validatedAmendmentId = validMongoId(amendmentId);
-  const isValid = validatedFacilityId && validatedAmendmentId && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'put',
-        url: `${centralApiUrl}/v1/tfm/facilities/${validatedFacilityId}/amendments/${validatedAmendmentId}`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
         headers,
         data: payload,
       });
@@ -359,13 +355,12 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
 };
 
 const getAmendmentInProgress = async (facilityId) => {
-  const validatedFacilityId = validMongoId(facilityId);
-  const isValid = validatedFacilityId && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${validatedFacilityId}/amendments/in-progress`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/in-progress`,
         headers,
       });
 
@@ -381,13 +376,12 @@ const getAmendmentInProgress = async (facilityId) => {
 };
 
 const getCompletedAmendment = async (facilityId) => {
-  const validatedFacilityId = validMongoId(facilityId);
-  const isValid = validatedFacilityId && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${validatedFacilityId}/amendments/completed`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed`,
         headers,
       });
 
@@ -403,7 +397,7 @@ const getCompletedAmendment = async (facilityId) => {
 };
 
 const getLatestCompletedAmendmentValue = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
@@ -424,13 +418,12 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
 };
 
 const getLatestCompletedAmendmentDate = async (facilityId) => {
-  const validatedFacilityId = validMongoId(facilityId);
-  const isValid = validatedFacilityId && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${validatedFacilityId}/amendments/completed/latest-cover-end-date`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
         headers,
       });
 
@@ -446,14 +439,12 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
 };
 
 const getAmendmentById = async (facilityId, amendmentId) => {
-  const validatedFacilityId = validMongoId(facilityId);
-  const validatedAmendmentId = validMongoId(amendmentId);
-  const isValid = validatedFacilityId && validatedAmendmentId && hasValidUri(centralApiUrl);
+  const isValid = validatedFacilisValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${validatedFacilityId}/amendments/${validatedAmendmentId}`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
         headers,
       });
 
@@ -469,13 +460,12 @@ const getAmendmentById = async (facilityId, amendmentId) => {
 };
 
 const getAmendmentByFacilityId = async (facilityId) => {
-  const validatedFacilityId = validMongoId(facilityId);
-  const isValid = validatedFacilityId && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${validatedFacilityId}/amendments`,
+        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
         headers,
       });
 
@@ -485,19 +475,18 @@ const getAmendmentByFacilityId = async (facilityId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid facility Id: ${validatedFacilityId}`);
+    console.error(`Invalid facility Id: ${facilityId}`);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
 
 const getAmendmentsByDealId = async (dealId) => {
-  const validatedDealId = validMongoId(dealId);
-  const isValid = validatedDealId && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(dealId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${validatedDealId}/amendments`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments`,
         headers,
       });
 
@@ -513,13 +502,12 @@ const getAmendmentsByDealId = async (dealId) => {
 };
 
 const getAmendmentInProgressByDealId = async (dealId) => {
-  const validatedDealId = validMongoId(dealId);
-  const isValid = validatedDealId && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(dealId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${validatedDealId}/amendments/in-progress`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/in-progress`,
         headers,
       });
 
@@ -535,13 +523,12 @@ const getAmendmentInProgressByDealId = async (dealId) => {
 };
 
 const getCompletedAmendmentByDealId = async (dealId) => {
-  const validatedDealId = validMongoId(dealId);
-  const isValid = validatedDealId && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(dealId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${validatedDealId}/amendments/completed`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/completed`,
         headers,
       });
 
@@ -557,13 +544,12 @@ const getCompletedAmendmentByDealId = async (dealId) => {
 };
 
 const getLatestCompletedAmendmentByDealId = async (dealId) => {
-  const validatedDealId = validMongoId(dealId);
-  const isValid = validatedDealId && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(dealId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${validatedDealId}/amendment/completed/latest`,
+        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/completed/latest`,
         headers,
       });
 
@@ -601,15 +587,15 @@ const getAllAmendmentsInProgress = async () => {
 
 const updateGefFacility = async (facilityId, facilityUpdate) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error(`Invalid facility id %s`, facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility Id provided'};
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/facilities/${validatedFacilityId}`,
+      url: `${centralApiUrl}/v1/portal/gef/facilities/${facilityId}`,
       headers,
       data: facilityUpdate,
     });
@@ -660,15 +646,15 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
-    const validatedPartyUrn = validPartyUrn(partyUrn);
+    const isValidUrn = isValidPartyUrn(partyUrn);
 
-    if (!validatedPartyUrn) {
-      throw new Error(`Invalid party urn %s`, partyUrn);
+    if (!isValidUrn) {
+      return { status: 400, data: 'Invalid party urn provided'};
     }
 
     const response = await axios({
       method: 'get',
-      url: `${EXTERNAL_API_URL}/party-db/urn/${encodeURIComponent(validatedPartyUrn)}`,
+      url: `${EXTERNAL_API_URL}/party-db/urn/${encodeURIComponent(partyUrn)}`,
       headers,
     });
 
@@ -694,15 +680,15 @@ const findUser = async (username) => {
 
 const findUserById = async (userId) => {
   try {
-    const validatedUserId = validMongoId(userId);
+    const isValidUserId = isValidMongoId(userId);
 
-    if (!validatedUserId) {
-      throw new Error(`Invalid user id %s`, userId);
+    if (!isValidUserId) {
+      return { status: 400, data: 'Invalid user id provided'};
     }
 
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/users/id/${validatedUserId}`,
+      url: `${centralApiUrl}/v1/tfm/users/id/${userId}`,
       headers,
     });
     return response.data;
@@ -713,15 +699,15 @@ const findUserById = async (userId) => {
 
 const findPortalUserById = async (userId) => {
   try {
-    const validatedUserId = validMongoId(userId);
+    const isValidUserId = isValidMongoId(userId);
 
-    if (!validatedUserId) {
-      throw new Error(`Invalid user id %s`, userId);
+    if (!isValidUserId) {
+      return { status: 400, data: 'Invalid user id provided'};
     }
 
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/user/${validatedUserId}`,
+      url: `${centralApiUrl}/v1/user/${userId}`,
       headers,
     });
     return response.data;
@@ -733,15 +719,15 @@ const findPortalUserById = async (userId) => {
 
 const updateUserTasks = async (userId, updatedTasks) => {
   try {
-    const validatedUserId = validMongoId(userId);
+    const isValidUserId = isValidMongoId(userId);
 
-    if (!validatedUserId) {
-      throw new Error(`Invalid user id %s`, userId);
+    if (!isValidUserId) {
+      return { status: 400, data: 'Invalid user id provided'};
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/users/${validatedUserId}/tasks`,
+      url: `${centralApiUrl}/v1/tfm/users/${userId}/tasks`,
       headers,
       data: {
         updatedTasks,
@@ -755,10 +741,10 @@ const updateUserTasks = async (userId, updatedTasks) => {
 
 const findOneTeam = async (teamId) => {
   try {
-    const validatedTeamId = validMongoId(teamId);
+    const isValidTeamId = isValidMongoId(teamId);
 
-    if (!validatedTeamId) {
-      throw new Error(`Invalid team id %s`, validatedTeamId);
+    if (!isValidTeamId) {
+      return { status: 400, data: 'Invalid team id provided'};
     }
 
     const response = await axios({
@@ -775,15 +761,15 @@ const findOneTeam = async (teamId) => {
 
 const findTeamMembers = async (teamId) => {
   try {
-    const validatedTeamId = validMongoId(teamId);
+    const isValidTeamId = isValidMongoId(teamId);
 
-    if (!validatedTeamId) {
-      throw new Error(`Invalid team id %s`, validatedTeamId);
+    if (!isValidTeamId) {
+      return { status: 400, data: 'Invalid team id provided'};
     }
 
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/users/team/${validatedTeamId}`,
+      url: `${centralApiUrl}/v1/tfm/users/team/${teamId}`,
       headers,
     });
 
@@ -979,15 +965,15 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
 
 const findOneGefDeal = async (dealId) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id: ${dealId}`);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id provided'};
     }
 
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${validatedDealId}`,
+      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
       headers,
     });
 
@@ -1001,15 +987,15 @@ const findOneGefDeal = async (dealId) => {
 
 const updatePortalGefDealStatus = async (dealId, status) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id: ${dealId}`);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id provided'};
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${validatedDealId}/status`,
+      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/status`,
       headers,
       data: {
         status,
@@ -1026,15 +1012,15 @@ const updatePortalGefDealStatus = async (dealId, status) => {
 
 const updatePortalGefDeal = async (dealId, update) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id: ${dealId}`);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id provided'};
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${validatedDealId}`,
+      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
       headers,
       data: {
         dealUpdate: update,
@@ -1051,15 +1037,15 @@ const updatePortalGefDeal = async (dealId, update) => {
 
 const updateGefMINActivity = async (dealId) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id: ${dealId}`);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id provided'};
     }
 
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/deals/activity/${validatedDealId}`,
+      url: `${centralApiUrl}/v1/portal/gef/deals/activity/${dealId}`,
       headers,
     });
 
@@ -1073,15 +1059,15 @@ const updateGefMINActivity = async (dealId) => {
 
 const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error(`Invalid deal id: ${dealId}`);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id provided'};
     }
 
     const response = await axios({
       method: 'post',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${validatedDealId}/comment`,
+      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/comment`,
       headers,
       data: { dealId, commentType, comment },
     });
@@ -1110,7 +1096,6 @@ const getAllFacilities = async (searchString) => {
 
 const findBankById = async (bankId) => {
   try {
-
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/bank/${bankId}`,
@@ -1125,15 +1110,15 @@ const findBankById = async (bankId) => {
 
 const getGefMandatoryCriteriaByVersion = async (version) => {
   try {
-    const validatedVersion = validNumericId(version);
+    const isValidVersion = isValidNumericId(version);
 
-    if(!validatedVersion) {
+    if(!isValidVersion) {
       throw new Error(`Invalid version: ${version}`);
     }
 
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/version/${validatedVersion}`,
+      url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/version/${version}`,
       headers,
     });
 

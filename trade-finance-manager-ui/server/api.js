@@ -554,9 +554,9 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
 
 const getParty = async (partyUrn) => {
   try {
-    const isValidPartyUrn = isValidPartyUrn(partyUrn);
+    const isValidUrn = isValidPartyUrn(partyUrn);
 
-    if (!isValidPartyUrn) {
+    if (!isValidUrn) {
       return { status: 400, data: 'Invalid party urn' };
     }
 
