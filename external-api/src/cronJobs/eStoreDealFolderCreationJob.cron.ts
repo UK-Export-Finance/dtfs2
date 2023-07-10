@@ -12,7 +12,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
 
     // create the Deal folder
     console.info('API Call started: Create the Deal folder for ', eStoreData.dealIdentifier);
-    const dealFolderResponse = await createDealFolder(eStoreData.siteName, {
+    const dealFolderResponse = await createDealFolder(eStoreData.siteId, {
       exporterName: eStoreData.exporterName,
       buyerName: eStoreData.buyerName,
       dealIdentifier: eStoreData.dealIdentifier,

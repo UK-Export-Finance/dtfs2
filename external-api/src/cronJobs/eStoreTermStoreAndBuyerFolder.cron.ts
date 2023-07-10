@@ -53,7 +53,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
   // ensure that there is less than 3 retries for buyer folder creation
   if (response?.value?.buyerFolderRetries <= 3) {
     // create the Buyer folder
-    const buyerFolderResponse: BuyerFolderResponse = await createBuyerFolder(eStoreData.siteName, {
+    const buyerFolderResponse: BuyerFolderResponse = await createBuyerFolder(eStoreData.siteId, {
       exporterName: eStoreData.exporterName,
       buyerName: eStoreData.buyerName,
     });
@@ -73,7 +73,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
       );
       const tfmDealsCollection = await getCollection('tfm-deals');
       // update the `tfm-deals` collection once the buyer and deal folders have been created
-      tfmDealsCollection.updateOne({ _id: ObjectId(eStoreData.dealId) }, { $set: { 'tfm.estore': { siteName: eStoreData.siteName } } });
+      tfmDealsCollection.updateOne({ _id: ObjectId(eStoreData.dealId) }, { $set: { 'tfm.estore': { siteName: eStoreData.siteId } } });
 
       console.info('Cron job started: eStore Deal folder Cron Job started');
       eStoreCronJobManager.start(`Deal${eStoreData.dealId}`);

@@ -1,7 +1,7 @@
 const { ShareServiceClient, StorageSharedKeyCredential } = require('@azure/storage-file-share');
 const fetch = require('node-fetch');
 
-const { AZURE_WORKFLOW_FILESHARE_CONFIG, AZURE_PORTAL_FILESHARE_CONFIG } = require('../config/fileshare.config');
+const { AZURE_PORTAL_FILESHARE_CONFIG } = require('../config/fileshare.config');
 
 let userDefinedConfig;
 
@@ -9,17 +9,10 @@ const setConfig = (fileshareConfig) => {
   userDefinedConfig = fileshareConfig;
 };
 
-const getConfig = (fileshare = 'portal') => {
-  const config = fileshare === 'workflow'
-    ? AZURE_WORKFLOW_FILESHARE_CONFIG
-    : AZURE_PORTAL_FILESHARE_CONFIG;
-  return userDefinedConfig || config;
-};
+const getConfig = () => userDefinedConfig || AZURE_PORTAL_FILESHARE_CONFIG;
 
 const getCredentials = async (fileshare = 'portal') => {
-  const {
-    STORAGE_ACCOUNT, STORAGE_ACCESS_KEY,
-  } = getConfig(fileshare);
+  const { STORAGE_ACCOUNT, STORAGE_ACCESS_KEY } = getConfig(fileshare);
 
   const credentials = await new StorageSharedKeyCredential(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY);
 
@@ -29,10 +22,7 @@ const getCredentials = async (fileshare = 'portal') => {
 const getShareClient = async (fileshare) => {
   const credentials = await getCredentials(fileshare);
   const { STORAGE_ACCOUNT, FILESHARE_NAME } = getConfig(fileshare);
-  const serviceClient = new ShareServiceClient(
-    `https://${STORAGE_ACCOUNT}.file.core.windows.net`,
-    credentials,
-  );
+  const serviceClient = new ShareServiceClient(`https://${STORAGE_ACCOUNT}.file.core.windows.net`, credentials);
 
   if (process.env.AZURE_LOG_LEVEL) {
     console.info('get Share props');
@@ -86,9 +76,7 @@ const tmpTests = async () => {
   });
 };
 
-const uploadFile = async ({
-  fileshare, folder, filename, buffer, allowOverwrite,
-}) => {
+const uploadFile = async ({ fileshare, folder, filename, buffer, allowOverwrite }) => {
   if (process.env.AZURE_LOG_LEVEL) {
     tmpTests();
   }
@@ -133,9 +121,7 @@ const uploadFile = async ({
   };
 };
 
-const readFile = async ({
-  fileshare, folder = '', filename,
-}) => {
+const readFile = async ({ fileshare, folder = '', filename }) => {
   const directory = await getDirectory(fileshare, folder);
 
   const fileClient = await directory.getFileClient(`${filename}`);

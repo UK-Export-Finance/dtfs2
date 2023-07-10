@@ -10,12 +10,10 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
     // create the Facility folders
     const facilityFoldersResponse: any = await Promise.all(
       eStoreData.facilityIdentifiers.map((facilityIdentifier: number) =>
-        createFacilityFolder(eStoreData.siteName, eStoreData.dealIdentifier, {
+        createFacilityFolder(eStoreData.siteId, eStoreData.dealIdentifier, {
           exporterName: eStoreData.exporterName,
           buyerName: eStoreData.buyerName,
           facilityIdentifier: facilityIdentifier.toString(),
-          destinationMarket: eStoreData.destinationMarket,
-          riskMarket: eStoreData.riskMarket,
         }),
       ),
     );
@@ -41,7 +39,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
         console.info('Task started: Upload the supporting documents');
         const uploadDocuments = Promise.all(
           eStoreData.supportingInformation.map((file: any) =>
-            uploadSupportingDocuments(eStoreData.siteName, eStoreData.dealIdentifier, eStoreData.buyerName, { ...file }),
+            uploadSupportingDocuments(eStoreData.siteId, eStoreData.dealIdentifier, eStoreData.buyerName, { ...file }),
           ),
         );
         uploadDocuments.then((response) => console.info('Task completed: Supporting documents uploaded successfully', response[0].data));

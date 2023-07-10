@@ -21,14 +21,14 @@ const validateEstoreInput = (eStoreData: any) => {
 };
 
 export const createEstore = async (req: Request, res: Response) => {
-  const { dealId, siteName, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = req.body;
+  const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = req.body;
 
   let eStoreData = {} as Estore;
 
   if (!objectIsEmpty(req.body)) {
     eStoreData = {
       dealId,
-      siteName,
+      siteId,
       facilityIdentifiers,
       supportingInformation,
       exporterName,
@@ -60,7 +60,7 @@ export const createEstore = async (req: Request, res: Response) => {
         ...eStoreData,
         timestamp: new Date(),
         siteExists: false,
-        siteName: null,
+        siteId: null,
         facilityCronJob: { status: ESTORE_CRON_STATUS.PENDING },
         dealCronJob: { status: ESTORE_CRON_STATUS.PENDING },
       });
@@ -70,13 +70,13 @@ export const createEstore = async (req: Request, res: Response) => {
       // check if site exists in eStore
       if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
         // update the database to indicate that the site exists in eStore
-        await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteExists: true, siteName: siteExistsResponse.data.siteName } });
+        await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteExists: true, siteId: siteExistsResponse.data.siteId } });
 
-        eStoreData.siteName = siteExistsResponse.data.siteName;
+        eStoreData.siteId = siteExistsResponse.data.siteId;
 
         // add facilityIds to termStore and create the buyer folder
         eStoreTermStoreAndBuyerFolder(eStoreData);
-      } else if (siteExistsResponse?.status === 404 && siteExistsResponse?.data?.siteName === '') {
+      } else if (siteExistsResponse?.status === 404) {
         // update the database to indicate that a new cron job needs to be created to add a new site to Sharepoint
         await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteCronJob: { status: ESTORE_CRON_STATUS.PENDING } } });
 
@@ -84,22 +84,22 @@ export const createEstore = async (req: Request, res: Response) => {
         console.info('API Call started: Create a new eStore site for ', eStoreData.exporterName);
         const siteCreationResponse = await createExporterSite({ exporterName: eStoreData.exporterName });
 
-        // check if the siteCreation endpoint returns a siteName - this is usually a number (i.e. 12345)
-        if (siteCreationResponse?.data?.siteName) {
-          // update the database with the new siteName
-          await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteName: siteCreationResponse.data.siteName } });
+        // check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
+        if (siteCreationResponse?.data?.siteId) {
+          // update the database with the new siteId
+          await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { siteName: siteCreationResponse.data.siteId } });
           // add a new job to the `Cron Job Manager` queue that runs every 50 seconds
           // in general, the site creation should take around 4 minutes, but we can check regularly to see if the site was created
-          eStoreCronJobManager.add(siteCreationResponse.data.siteName, siteCreationTimer, async () => {
+          eStoreCronJobManager.add(siteCreationResponse.data.siteId, siteCreationTimer, async () => {
             await eStoreSiteCreationJob(eStoreData);
           });
-          console.info('Cron job started: eStore Site Creation Cron Job started ', siteCreationResponse.data.siteName);
+          console.info('Cron job started: eStore Site Creation Cron Job started ', siteCreationResponse.data.siteId);
           // update the database to indicate that the `site cron job` started
           await cronJobLogsCollection.updateOne(
             { dealId: eStoreData.dealId },
             { $set: { 'siteCronJob.status': ESTORE_CRON_STATUS.RUNNING, 'siteCronJob.startDate': new Date() } },
           );
-          eStoreCronJobManager.start(siteCreationResponse.data.siteName);
+          eStoreCronJobManager.start(siteCreationResponse.data.siteId);
         } else {
           console.error('API Call failed: Unable to create a new site in eStore', { siteCreationResponse });
           // update the database to indicate that the API call failed
