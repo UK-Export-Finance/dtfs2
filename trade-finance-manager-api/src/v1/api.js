@@ -439,7 +439,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
 };
 
 const getAmendmentById = async (facilityId, amendmentId) => {
-  const isValid = validatedFacilisValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(centralApiUrl);
+  const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(centralApiUrl);
   if (isValid) {
     try {
       const response = await axios({
@@ -590,7 +590,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
-      return { status: 400, data: 'Invalid facility Id provided'};
+      return { status: 400, data: 'Invalid facility Id provided' };
     }
 
     const response = await axios({
@@ -649,7 +649,7 @@ const getCompanyInfo = async (partyUrn) => {
     const isValidUrn = isValidPartyUrn(partyUrn);
 
     if (!isValidUrn) {
-      return { status: 400, data: 'Invalid party urn provided'};
+      return { status: 400, data: 'Invalid party urn provided' };
     }
 
     const response = await axios({
@@ -683,7 +683,7 @@ const findUserById = async (userId) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
-      return { status: 400, data: 'Invalid user id provided'};
+      return { status: 400, data: 'Invalid user id provided' };
     }
 
     const response = await axios({
@@ -702,7 +702,7 @@ const findPortalUserById = async (userId) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
-      return { status: 400, data: 'Invalid user id provided'};
+      return { status: 400, data: 'Invalid user id provided' };
     }
 
     const response = await axios({
@@ -722,7 +722,7 @@ const updateUserTasks = async (userId, updatedTasks) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
-      return { status: 400, data: 'Invalid user id provided'};
+      return { status: 400, data: 'Invalid user id provided' };
     }
 
     const response = await axios({
@@ -744,7 +744,7 @@ const findOneTeam = async (teamId) => {
     const isValidTeamId = isValidMongoId(teamId);
 
     if (!isValidTeamId) {
-      return { status: 400, data: 'Invalid team id provided'};
+      return { status: 400, data: 'Invalid team id provided' };
     }
 
     const response = await axios({
@@ -764,7 +764,7 @@ const findTeamMembers = async (teamId) => {
     const isValidTeamId = isValidMongoId(teamId);
 
     if (!isValidTeamId) {
-      return { status: 400, data: 'Invalid team id provided'};
+      return { status: 400, data: 'Invalid team id provided' };
     }
 
     const response = await axios({
@@ -968,7 +968,7 @@ const findOneGefDeal = async (dealId) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      return { status: 400, data: 'Invalid deal id provided'};
+      return { status: 400, data: 'Invalid deal id provided' };
     }
 
     const response = await axios({
@@ -990,7 +990,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      return { status: 400, data: 'Invalid deal id provided'};
+      return { status: 400, data: 'Invalid deal id provided' };
     }
 
     const response = await axios({
@@ -1015,7 +1015,7 @@ const updatePortalGefDeal = async (dealId, update) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      return { status: 400, data: 'Invalid deal id provided'};
+      return { status: 400, data: 'Invalid deal id provided' };
     }
 
     const response = await axios({
@@ -1040,7 +1040,7 @@ const updateGefMINActivity = async (dealId) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      return { status: 400, data: 'Invalid deal id provided'};
+      return { status: 400, data: 'Invalid deal id provided' };
     }
 
     const response = await axios({
@@ -1062,7 +1062,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
-      return { status: 400, data: 'Invalid deal id provided'};
+      return { status: 400, data: 'Invalid deal id provided' };
     }
 
     const response = await axios({
@@ -1112,8 +1112,8 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
   try {
     const isValidVersion = isValidNumericId(version);
 
-    if(!isValidVersion) {
-      throw new Error(`Invalid version: ${version}`);
+    if (!isValidVersion) {
+      return { status: 400, data: 'Invalid mandatory criteria version provided' };
     }
 
     const response = await axios({

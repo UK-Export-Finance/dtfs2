@@ -29,14 +29,14 @@ const isValidPartyUrn = (partyUrn) => {
 };
 
 const isValidNumericId = (numericId) => {
-  const id = parseInt(numericId);
+  const id = parseInt(numericId, 10);
 
   if (Number.isNaN(id)) {
     return false;
   }
 
   return numericId;
-}
+};
 
 module.exports = {
   isValidMongoId,
