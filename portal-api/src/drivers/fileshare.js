@@ -11,8 +11,8 @@ const setConfig = (fileshareConfig) => {
 
 const getConfig = () => userDefinedConfig || AZURE_PORTAL_FILESHARE_CONFIG;
 
-const getCredentials = async (fileshare = 'portal') => {
-  const { STORAGE_ACCOUNT, STORAGE_ACCESS_KEY } = getConfig(fileshare);
+const getCredentials = async () => {
+  const { STORAGE_ACCOUNT, STORAGE_ACCESS_KEY } = getConfig();
 
   const credentials = await new StorageSharedKeyCredential(STORAGE_ACCOUNT, STORAGE_ACCESS_KEY);
 
@@ -21,7 +21,7 @@ const getCredentials = async (fileshare = 'portal') => {
 
 const getShareClient = async (fileshare) => {
   const credentials = await getCredentials(fileshare);
-  const { STORAGE_ACCOUNT, FILESHARE_NAME } = getConfig(fileshare);
+  const { STORAGE_ACCOUNT, FILESHARE_NAME } = getConfig();
   const serviceClient = new ShareServiceClient(`https://${STORAGE_ACCOUNT}.file.core.windows.net`, credentials);
 
   if (process.env.AZURE_LOG_LEVEL) {
