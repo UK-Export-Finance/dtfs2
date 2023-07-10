@@ -21,7 +21,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
 
     // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
     await cronJobLogsCollection.updateOne(
-      { dealId: eStoreData.dealId },
+      { dealId: { $eq: eStoreData.dealId } },
       {
         $set: {
           siteName: siteExistsResponse.data.siteId,
@@ -39,7 +39,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
     console.info('Cron job continues: eStore Site Creation Cron Job continues to run');
     // increment the siteCreationRetries by 1
     const response = await cronJobLogsCollection.findOneAndUpdate(
-      { dealId: eStoreData.dealId },
+      { dealId: { $eq: eStoreData.dealId } },
       { $inc: { siteCreationRetries: 1 } },
       { returnNewDocument: true, returnDocument: 'after' },
     );
@@ -50,7 +50,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
       eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
       // update the record inside `cron-job-logs` collection
       await cronJobLogsCollection.updateOne(
-        { exporterName: eStoreData.exporterName },
+        { exporterName: { $eq: eStoreData.dealId } },
         { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': new Date() } },
       );
     }
@@ -60,7 +60,7 @@ export const eStoreSiteCreationJob = async (eStoreData: any) => {
     eStoreCronJobManager.deleteJob(siteExistsResponse.data.siteId);
     // update the record inside `cron-job-logs` collection
     await cronJobLogsCollection.updateOne(
-      { exporterName: eStoreData.exporterName },
+      { exporterName: { $eq: eStoreData.dealId } },
       { $set: { siteExistsResponse, 'siteCronJob.status': ESTORE_CRON_STATUS.FAILED, 'siteCronJob.completionDate': new Date() } },
     );
   }

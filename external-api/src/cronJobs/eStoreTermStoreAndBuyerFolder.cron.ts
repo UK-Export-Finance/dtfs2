@@ -37,7 +37,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
       } else {
         console.error('API Call failed: Unable to add the facilityIds to TermStore', { termStoreResponse });
         // update the database to indicate that there was an issue adding the facilityIds to TermStore
-        await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { termStoreResponse } });
+        await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { termStoreResponse } });
       }
     }
   }
@@ -45,7 +45,7 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
   console.info('API Call started: Create the Buyer folder for ', eStoreData.buyerName);
   // increment the buyerFolderRetries by 1
   const response = await cronJobLogsCollection.findOneAndUpdate(
-    { dealId: eStoreData.dealId },
+    { dealId: { $eq: eStoreData.dealId } },
     { $inc: { buyerFolderRetries: 1 } },
     { returnNewDocument: true, returnDocument: 'after' },
   );
@@ -73,14 +73,14 @@ export const eStoreTermStoreAndBuyerFolder = async (eStoreData: any) => {
       );
       const tfmDealsCollection = await getCollection('tfm-deals');
       // update the `tfm-deals` collection once the buyer and deal folders have been created
-      tfmDealsCollection.updateOne({ _id: ObjectId(eStoreData.dealId) }, { $set: { 'tfm.estore': { siteName: eStoreData.siteId } } });
+      tfmDealsCollection.updateOne({ _id: { $eq: ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore': { siteName: eStoreData.siteId } } });
 
       console.info('Cron job started: eStore Deal folder Cron Job started');
       eStoreCronJobManager.start(`Deal${eStoreData.dealId}`);
     } else {
       console.error(`API Call failed: Unable to create the buyer folder for ${eStoreData.buyerName}`, buyerFolderResponse);
       // update the database to indicate that there was an issue creating the buyer Folder
-      await cronJobLogsCollection.updateOne({ dealId: eStoreData.dealId }, { $set: { buyerFolderResponse } });
+      await cronJobLogsCollection.updateOne({ dealId: { $eq: eStoreData.dealId } }, { $set: { buyerFolderResponse } });
     }
   }
 };

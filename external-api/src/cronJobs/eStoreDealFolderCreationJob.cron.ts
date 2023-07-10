@@ -27,7 +27,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
 
       // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
       await cronJobLogsCollection.updateOne(
-        { dealId: eStoreData.dealId },
+        { dealId: { $eq: eStoreData.dealId } },
         {
           $set: {
             'dealCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
@@ -54,7 +54,7 @@ export const eStoreDealFolderCreationJob = async (eStoreData: Estore) => {
       eStoreCronJobManager.deleteJob(`Deal${eStoreData.dealId}`);
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
-        { dealId: eStoreData.dealId },
+        { dealId: { $eq: eStoreData.dealId } },
         { $set: { dealFolderResponse, 'dealCronJob.status': ESTORE_CRON_STATUS.FAILED, 'dealCronJob.completionDate': new Date() } },
       );
     }

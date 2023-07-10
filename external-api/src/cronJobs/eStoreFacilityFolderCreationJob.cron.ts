@@ -22,7 +22,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
 
       // update the record inside `cron-job-logs` collection to indicate that the cron job finished executing
       await cronJobLogsCollection.updateOne(
-        { dealId: eStoreData.dealId },
+        { dealId: { $eq: eStoreData.dealId } },
         {
           $set: {
             'facilityCronJob.status': ESTORE_CRON_STATUS.COMPLETED,
@@ -50,7 +50,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       console.error(`Unable to create the Facility Folders for ${eStoreData.dealIdentifier} deal`, facilityFoldersResponse);
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
-        { dealId: eStoreData.dealId },
+        { dealId: { $eq: eStoreData.dealId } },
         { $set: { facilityFoldersResponse, 'facilityCronJob.status': ESTORE_CRON_STATUS.FAILED, 'facilityCronJob.completionDate': new Date() } },
       );
     }
