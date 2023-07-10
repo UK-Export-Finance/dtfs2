@@ -1,3 +1,4 @@
+const validMongoId = require('../helpers/validMongoId');
 const { findOneDeal } = require('./deal.controller');
 const { userHasAccessTo } = require('../users/checks');
 const loanValidationErrors = require('../validation/loan');
@@ -20,7 +21,12 @@ const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
 exports.create = async (req, res) => {
-  await findOneDeal(req.params.id, async (deal) => {
+  if (!validMongoId(req.params.id)) {
+    console.error('loans.create - invalid object id provided ', req.params.id);
+    return res.status(400).send({ status: 400, message: `Invalid id' ${req.params.id}` });
+  }
+
+  return findOneDeal(req.params.id, async (deal) => {
     if (!deal) return res.status(404).send();
 
     if (!userHasAccessTo(req.user, deal)) {
@@ -48,7 +54,12 @@ exports.getLoan = async (req, res) => {
     loanId,
   } = req.params;
 
-  await findOneDeal(req.params.id, async (deal) => {
+  if (!validMongoId(req.params.id) || !validMongoId(req.params.loanId)) {
+    console.error('loans.get - invalid object id provided ', req.params.id, req.params.loanId);
+    return res.status(400).send({ status: 400, message: `Invalid id' ${req.params.id} ${req.params.loanId}` });
+  }
+
+  return findOneDeal(req.params.id, async (deal) => {
     if (deal) {
       if (!userHasAccessTo(req.user, deal)) {
         res.status(401).send();

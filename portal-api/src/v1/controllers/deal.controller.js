@@ -1,5 +1,6 @@
 const DEFAULTS = require('../defaults');
 const db = require('../../drivers/db-client');
+const validMongoId = require('../helpers/validMongoId');
 const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
 const calculateStatuses = require('../section-status/calculateStatuses');
@@ -91,7 +92,12 @@ exports.create = async (req, res) => {
  * Find a deal (BSS, EWCS only)
  */
 exports.findOne = (req, res) => {
-  findOneDeal(req.params.id, (deal) => {
+  if (!validMongoId(req.params.id)) {
+    console.error('deals.findOne - invalid object id provided ', req.params.id);
+    return res.status(400).send({ status: 400, message: `Invalid id' ${req.params.id}` });
+  }
+
+  return findOneDeal(req.params.id, (deal) => {
     if (!deal) {
       res.status(404).send();
     } else if (!userHasAccessTo(req.user, deal)) {

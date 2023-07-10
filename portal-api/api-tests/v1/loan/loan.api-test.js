@@ -92,6 +92,18 @@ describe('/v1/deals/:id/loan', () => {
       expect(status).toEqual(401);
     });
 
+    it('400s requests that do not present with a valid deal id parameter', async () => {
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/1345/loan/620a1aa095a618b12da38c7b');
+
+      expect(status).toEqual(400);
+    });
+
+    it('400s requests that do not present with a valid loan id parameter', async () => {
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/loan/12345');
+
+      expect(status).toEqual(400);
+    });
+
     it('401s requests that do not come from a user with role=maker', async () => {
       const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
 
@@ -216,6 +228,14 @@ describe('/v1/deals/:id/loan', () => {
       const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(404);
+    });
+
+    it('400s requests if deal id is invalid', async () => {
+      await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+
+      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/12345/loan/create');
+
+      expect(status).toEqual(400);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {

@@ -105,6 +105,18 @@ describe('/v1/deals/:id/bond', () => {
       expect(status).toEqual(401);
     });
 
+    it('400s requests that do not with a valid bond id param', async () => {
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/bond/123456');
+
+      expect(status).toEqual(400);
+    });
+
+    it('400s requests that do not with a valid deal id param', async () => {
+      const { status } = await as(aBarclaysMaker).get('/v1/deals/13456/bond/620a1aa095a618b12da38c7b');
+
+      expect(status).toEqual(400);
+    });
+
     it('401s requests that do not come from a user with role=maker', async () => {
       const { status } = await as(noRoles).get('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
@@ -200,6 +212,12 @@ describe('/v1/deals/:id/bond', () => {
       const { status } = await as().put().to('/v1/deals/620a1aa095a618b12da38c7b/bond/create');
 
       expect(status).toEqual(401);
+    });
+
+    it('400s requests that do not present with a valid id parameter', async () => {
+      const { status } = await as(aBarclaysMaker).put().to('/v1/deals/12345/bond/create');
+
+      expect(status).toEqual(400);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
