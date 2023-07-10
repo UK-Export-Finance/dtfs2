@@ -56,6 +56,7 @@
     "dotenv": "16.0.3",
     "express": "^4.18.2",
     "express-session": "1.17.3",
+    "express-validator": "7.0.1",
     "express-xss-sanitizer": "^1.1.6",
     "govuk-frontend": "4.6.0",
     "graphql": "^16.7.1",
@@ -66,14 +67,14 @@
     "lodash.isequal": "^4.5.0",
     "moment": "2.29.4",
     "moment-timezone": "^0.5.43",
-    "mongodb": "4.2.0",
     "morgan": "1.10.0",
     "node-fetch": "^2.6.12",
     "nodemon": "^2.0.22",
     "nunjucks": "3.2.4",
     "path": "0.12.7",
     "redis": "^3.1.2",
-    "sanitize-html": "^2.11.0"
+    "sanitize-html": "^2.11.0",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "@babel/core": "7.21.5",

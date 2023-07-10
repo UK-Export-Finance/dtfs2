@@ -15,7 +15,7 @@ const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-p
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
 const createActivityMutation = require('./graphql/mutations/create-activity');
-const { validMongoId, validPartyUrn } = require('./helpers/validateIds');
+const { isValidMongoId, isValidPartyUrn } = require('./helpers/validateIds');
 
 require('dotenv').config();
 
@@ -218,15 +218,15 @@ const login = async (username, password) => {
 
 const updateUserPassword = async (userId, update) => {
   try {
-    const validatedUserId = validMongoId(userId);
+    const isValidUserId = isValidMongoId(userId);
 
-    if (validatedUserId) {
-      throw new Error('Invalid user id %s', userId);
+    if (!isValidUserId) {
+      return { status: 400, data: 'Invalid user id' };
     }
 
     const response = await axios({
       method: 'put',
-      url: `${tfmAPIurl}/v1/users/${validatedUserId}`,
+      url: `${tfmAPIurl}/v1/users/${userId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -254,15 +254,15 @@ const createFeedback = async (formData) => {
 
 const getUser = async (userId) => {
   try {
-    const validatedUserId = validMongoId(userId);
+    const isValidUserId = isValidMongoId(userId);
 
-    if (validatedUserId) {
-      throw new Error('Invalid user id %s', userId);
+    if (!isValidUserId) {
+      return { status: 400, data: 'Invalid user id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/users/${validatedUserId}`,
+      url: `${tfmAPIurl}/v1/users/${userId}`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -275,15 +275,15 @@ const getUser = async (userId) => {
 
 const createFacilityAmendment = async (facilityId) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error('Invalid facility id %s', facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'post',
-      url: `${tfmAPIurl}/v1/facilities/${validatedFacilityId}/amendments`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments`,
       headers: { 'Content-Type': 'application/json' },
       data: { facilityId },
     });
@@ -297,20 +297,20 @@ const createFacilityAmendment = async (facilityId) => {
 
 const updateAmendment = async (facilityId, amendmentId, data) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
-    const validatedAmendmentId = validMongoId(amendmentId);
+    const isValidFacilityId = isValidMongoId(facilityId);
+    const isValidAmendmentId = isValidMongoId(amendmentId);
 
-    if (!validatedFacilityId) {
-      throw new Error('Invalid facility id %s', facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
-    if (!validatedAmendmentId) {
-      throw new Error('Invalid amendment id %s', amendmentId);
+    if (!isValidAmendmentId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'put',
-      url: `${tfmAPIurl}/v1/facilities/${validatedFacilityId}/amendments/${validatedAmendmentId}`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
       headers: { 'Content-Type': 'application/json' },
       data,
     });
@@ -324,15 +324,15 @@ const updateAmendment = async (facilityId, amendmentId, data) => {
 
 const getAmendmentInProgress = async (facilityId) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error('Invalid facility id %s', facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${validatedFacilityId}/amendments/in-progress`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/in-progress`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -360,15 +360,15 @@ const getAllAmendmentsInProgress = async () => {
 
 const getCompletedAmendment = async (facilityId) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error('Invalid facility id %s', facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${validatedFacilityId}/amendments/completed`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -381,15 +381,15 @@ const getCompletedAmendment = async (facilityId) => {
 
 const getLatestCompletedAmendmentValue = async (facilityId) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error('Invalid facility id %s', facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${validatedFacilityId}/amendments/completed/latest-value`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed/latest-value`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -402,15 +402,15 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
 
 const getLatestCompletedAmendmentDate = async (facilityId) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error('Invalid facility id %s', facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${validatedFacilityId}/amendments/completed/latest-cover-end-date`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -423,20 +423,20 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
 
 const getAmendmentById = async (facilityId, amendmentId) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
-    const validatedAmendmentId = validMongoId(amendmentId);
+    const isValidFacilityId = isValidMongoId(facilityId);
+    const isValidAmendmentId = isValidMongoId(amendmentId);
 
-    if (!validatedFacilityId) {
-      throw new Error('Invalid facility id %s', facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
-    if (!validatedAmendmentId) {
-      throw new Error('Invalid amendment id %s', amendmentId);
+    if (!isValidAmendmentId) {
+      return { status: 400, data: 'Invalid amendment id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${validatedFacilityId}/amendments/${validatedAmendmentId}`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -449,15 +449,15 @@ const getAmendmentById = async (facilityId, amendmentId) => {
 
 const getAmendmentsByFacilityId = async (facilityId) => {
   try {
-    const validatedFacilityId = validMongoId(facilityId);
+    const isValidFacilityId = isValidMongoId(facilityId);
 
-    if (!validatedFacilityId) {
-      throw new Error('Invalid facility id %s', facilityId);
+    if (!isValidFacilityId) {
+      return { status: 400, data: 'Invalid facility id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${validatedFacilityId}/amendments`,
+      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -470,15 +470,15 @@ const getAmendmentsByFacilityId = async (facilityId) => {
 
 const getAmendmentsByDealId = async (dealId) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error('Invalid deal id %s', dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${validatedDealId}/amendments`,
+      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -491,15 +491,15 @@ const getAmendmentsByDealId = async (dealId) => {
 
 const getAmendmentInProgressByDealId = async (dealId) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error('Invalid deal id %s', dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${validatedDealId}/amendments/in-progress`,
+      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/in-progress`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -512,15 +512,15 @@ const getAmendmentInProgressByDealId = async (dealId) => {
 
 const getCompletedAmendmentByDealId = async (dealId) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error('Invalid deal id %s', dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${validatedDealId}/amendments/completed`,
+      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/completed`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -533,15 +533,15 @@ const getCompletedAmendmentByDealId = async (dealId) => {
 
 const getLatestCompletedAmendmentByDealId = async (dealId) => {
   try {
-    const validatedDealId = validMongoId(dealId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!validatedDealId) {
-      throw new Error('Invalid deal id %s', dealId);
+    if (!isValidDealId) {
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${validatedDealId}/amendments/completed/latest`,
+      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/completed/latest`,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -554,15 +554,15 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
 
 const getParty = async (partyUrn) => {
   try {
-    const validatedPartyUrn = validPartyUrn(partyUrn);
+    const isValidPartyUrn = isValidPartyUrn(partyUrn);
 
-    if (!validatedPartyUrn) {
-      throw new Error('Invalid party urn %s', validatedPartyUrn);
+    if (!isValidPartyUrn) {
+      return { status: 400, data: 'Invalid party urn' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/party/urn/${validatedPartyUrn}`,
+      url: `${tfmAPIurl}/v1/party/urn/${partyUrn}`,
       headers: { 'Content-Type': 'application/json' },
     });
 
