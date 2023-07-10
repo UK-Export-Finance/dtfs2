@@ -7,7 +7,7 @@ module.exports = async (user) => {
   console.info(`Creating temp user "${user.username}"`);
   await axios({
     method: 'post',
-    TFM_API: `${TFM_API}/v1/user`,
+    url: `${TFM_API}/v1/user`,
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': TFM_API_KEY,
@@ -20,7 +20,7 @@ module.exports = async (user) => {
   console.info(`Logging in as "${user.username}"`);
   const { data } = await axios({
     method: 'post',
-    TFM_API: `${TFM_API}/v1/login`,
+    url: `${TFM_API}/v1/login`,
     headers: {
       'Content-Type': 'application/json',
     },
