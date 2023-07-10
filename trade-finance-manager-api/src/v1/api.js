@@ -781,6 +781,13 @@ const findTeamMembers = async (teamId) => {
 
 const getCurrencyExchangeRate = async (source, target) => {
   try {
+    const sourceIsValid = isValidCurrency(source);
+    const targetIsValid = isValidCurrency(target);
+
+    if (!sourceIsValid || !targetIsValid) {
+      return { status: 400, data: 'Invalid currency provided' };
+    };
+
     const response = await axios({
       method: 'get',
       url: `${EXTERNAL_API_URL}/currency-exchange-rate/${source}/${target}`,
