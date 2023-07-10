@@ -16,6 +16,6 @@ describe('validMongoId', () => {
   it('should return true if an id is a valid mongo id', () => {
     const result = validMongoId('620a1aa095a618b12da38c7b');
 
-    expect(result).toEqual(false);
+    expect(result).toEqual(true);
   });
 });
