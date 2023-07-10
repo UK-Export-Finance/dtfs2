@@ -11,9 +11,9 @@ const headers = {
 };
 
 const create = async ({ dealType, entityType, entityId, dealId, user }) => {
-  let resp;
+  let response;
   try {
-    resp = await axios({
+    response = await axios({
       method: 'POST',
       url: `${EXTERNAL_API_URL}/number-generator`,
       headers,
@@ -31,7 +31,7 @@ const create = async ({ dealType, entityType, entityId, dealId, user }) => {
     throw new Error(err);
   }
 
-  const { data } = resp;
+  const { data } = response;
 
   return data;
 };

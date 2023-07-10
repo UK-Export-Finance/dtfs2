@@ -131,7 +131,7 @@
       "minimumQuarterlyFee": "",
       "ukefExposure": "148.08",
       "dayCountBasis": "365",
-      "premiumFrequency": null,
+      "premiumFrequency": "Monthly",
       "premiumType": "At maturity",
       "status": "Completed"
     },
@@ -158,7 +158,7 @@
       "riskMarginFee": "12",
       "ukefExposure": "576.00",
       "dayCountBasis": "365",
-      "feeFrequency": null,
+      "feeFrequency": "Monthly",
       "feeType": "At maturity"
     }
   ],

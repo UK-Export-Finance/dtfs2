@@ -812,7 +812,6 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
     const response = await axios({
       method: 'get',
       url: modifiedUrl,
-      headers: centralApiHeaders,
     });
     return response.data;
   } catch (err) {
