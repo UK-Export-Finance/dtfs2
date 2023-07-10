@@ -66,6 +66,7 @@
     "lodash.isequal": "^4.5.0",
     "moment": "2.29.4",
     "moment-timezone": "^0.5.43",
+    "mongodb": "4.2.0",
     "morgan": "1.10.0",
     "node-fetch": "^2.6.12",
     "nodemon": "^2.0.22",

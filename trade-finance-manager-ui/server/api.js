@@ -15,7 +15,7 @@ const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-p
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
 const createActivityMutation = require('./graphql/mutations/create-activity');
-const validMongoId = require('./helpers/validateIds');
+const { validMongoId, validPartyUrn } = require('./helpers/validateIds');
 
 require('dotenv').config();
 
@@ -554,9 +554,15 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
 
 const getParty = async (partyUrn) => {
   try {
+    const validatedPartyUrn = validPartyUrn(partyUrn);
+
+    if (!validatedPartyUrn) {
+      throw new Error(`Invalid party urn %s`, validatedPartyUrn);
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/party/urn/${partyUrn}`,
+      url: `${tfmAPIurl}/v1/party/urn/${validatedPartyUrn}`,
       headers: { 'Content-Type': 'application/json' },
     });
 

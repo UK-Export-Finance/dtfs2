@@ -34,8 +34,19 @@ const validPartyUrn = (partyUrn) => {
   return partyUrn;
 };
 
+const validNumericId = (numericId) => {
+  const id = parseInt(numericId);
+
+  if (Number.isNaN(id)) {
+    return false;
+  }
+
+  return numericId;
+}
+
 module.exports = {
   validMongoId,
   validUkefNumericId,
   validPartyUrn,
+  validNumericId,
 };
