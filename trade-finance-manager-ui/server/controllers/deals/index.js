@@ -6,9 +6,10 @@ const getDeals = async (req, res) => {
   const queryParams = {
     sortBy: CONSTANTS.DEALS.TFM_SORT_BY_DEFAULT,
   };
+  const { userToken } = req.session;
 
   const apiResponse = await api.getDeals(queryParams);
-  const { data: amendments } = await api.getAllAmendmentsInProgress();
+  const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 
   // override the deal stage if there is an amendment in progress
   if (amendments?.length > 0) {
@@ -46,6 +47,7 @@ const queryDeals = async (req, res) => {
   let activeSortByOrder = CONSTANTS.DEALS.TFM_SORT_BY.ASCENDING;
   let activeSortByField = '';
   let searchString = '';
+  const { userToken } = req.session;
 
   delete req.body._csrf;
 
@@ -72,7 +74,7 @@ const queryDeals = async (req, res) => {
     activeSortByOrder = CONSTANTS.DEALS.TFM_SORT_BY.DESCENDING;
   }
 
-  const { data: amendments } = await api.getAllAmendmentsInProgress();
+  const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 
   // override the deal stage if there is an amendment in progress
   if (amendments?.length > 0) {

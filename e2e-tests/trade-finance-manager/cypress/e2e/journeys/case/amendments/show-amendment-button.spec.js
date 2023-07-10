@@ -25,7 +25,7 @@ context('Amendments page', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId, dealType);
+        cy.submitDeal(dealId, dealType, PIM_USER_1);
       });
     });
 
@@ -70,7 +70,7 @@ context('Amendments page', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId, dealType);
+        cy.submitDeal(dealId, dealType, PIM_USER_1);
       });
     });
 
@@ -115,7 +115,7 @@ context('Amendments page', () => {
           dealFacilities = createdFacilities.details;
         });
 
-        cy.submitDeal(dealId, CONSTANTS.DEAL_TYPE.GEF);
+        cy.submitDeal(dealId, CONSTANTS.DEAL_TYPE.GEF, PIM_USER_1);
 
         const statusConfirmed = {
           tfm: {

@@ -31,7 +31,7 @@ const EXPORTER_HALF_COMPLETE = {
 };
 
 const EXPORTER_COMPLETED = {
-  companiesHouseRegistrationNumber: '08547313',
+  companiesHouseRegistrationNumber: '06771815',
   companyName: chance.company(),
   registeredAddress: {
     line1: chance.street({ syllables: 8 }),

@@ -16,7 +16,7 @@ const user = {
   email: 'test@localhost',
 };
 
-const session = { user };
+const session = { user, userToken: 'mockToken' };
 
 describe('GET getAmendmentBankDecisionChoice', () => {
   describe('an existing amendment', () => {
@@ -380,6 +380,7 @@ describe('POST postAmendmentBankDecisionReceivedDate', () => {
         req.params.facilityId,
         req.params.amendmentId,
         expectedUpdateObj,
+        session.userToken,
       );
     });
 

@@ -22,7 +22,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
     });
   });
 

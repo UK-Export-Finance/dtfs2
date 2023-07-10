@@ -31,7 +31,7 @@ const mappedActivities = (activities) => {
 const getActivity = async (req, res) => {
   const dealId = req.params._id;
 
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
   // default to all activity
   const activityFilters = {
@@ -40,17 +40,17 @@ const getActivity = async (req, res) => {
   const blankObj = {};
 
   const deal = await api.getDeal(dealId, blankObj, activityFilters);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
-  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+  const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
   const activities = mappedActivities(deal.tfm.activities);
 
@@ -73,24 +73,24 @@ const filterActivities = async (req, res) => {
 
   const { filterType } = req.body;
 
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
   const activityFilters = {
     filterType,
   };
   const blankObj = {};
   const deal = await api.getDeal(dealId, blankObj, activityFilters);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
   if (!deal) {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
-  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+  const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
   const activities = mappedActivities(deal.tfm.activities);
 

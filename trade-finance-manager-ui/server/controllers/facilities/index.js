@@ -2,9 +2,10 @@ const api = require('../../api');
 const CONSTANTS = require('../../constants');
 
 const getFacilities = async (req, res) => {
+  const { userToken } = req.session;
   const apiResponse = await api.getFacilities();
 
-  const { data: amendments } = await api.getAllAmendmentsInProgress();
+  const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 
   // override the deal stage if there is an amendment in progress
   if (amendments?.length > 0) {
@@ -38,11 +39,12 @@ const getFacilities = async (req, res) => {
 
 const queryFacilities = async (req, res) => {
   const searchString = req.body.search || '';
+  const { userToken } = req.session;
 
   const queryParams = { searchString };
   const apiResponse = await api.getFacilities(queryParams);
 
-  const { data: amendments } = await api.getAllAmendmentsInProgress();
+  const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 
   // override the deal stage if there is an amendment in progress
   if (amendments?.length > 0) {

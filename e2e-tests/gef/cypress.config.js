@@ -17,7 +17,7 @@ module.exports = defineConfig({
   responseTimeout: 120000,
   numTestsKeptInMemory: 1,
   retries: {
-    runMode: 3,
+    runMode: 2,
     openMode: 0,
   },
   e2e: {

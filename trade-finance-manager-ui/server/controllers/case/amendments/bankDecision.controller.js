@@ -10,7 +10,8 @@ const { amendmentBankDecisionDateValidation } = require('./validation/amendmentB
 // renders first page of amendment managers decision if can be edited by user
 const getAmendmentBankDecisionChoice = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId) {
     return res.redirect('/not-found');
@@ -30,9 +31,9 @@ const getAmendmentBankDecisionChoice = async (req, res) => {
 const postAmendmentBankDecisionChoice = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { banksDecision: decision } = req.body;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId) {
     return res.redirect('/not-found');
@@ -57,7 +58,7 @@ const postAmendmentBankDecisionChoice = async (req, res) => {
     // updates amendment with decision
     const payload = { bankDecision: { decision } };
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/received-date`);
@@ -74,7 +75,8 @@ const postAmendmentBankDecisionChoice = async (req, res) => {
 // get request for date bank decision was received page
 const getAmendmentBankDecisionReceivedDate = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId || !amendment?.bankDecision?.decision) {
     return res.redirect('/not-found');
@@ -102,9 +104,9 @@ const getAmendmentBankDecisionReceivedDate = async (req, res) => {
 const postAmendmentBankDecisionReceivedDate = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { body } = req;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId || !amendment?.bankDecision?.decision) {
     return res.redirect('/not-found');
@@ -139,7 +141,7 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
       payload.bankDecision.effectiveDate = null;
     }
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       if (amendment.bankDecision.decision === AMENDMENT_BANK_DECISION.PROCEED) {
@@ -159,7 +161,8 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
 // gets template for effective date for banks decision
 const getAmendmentBankDecisionEffectiveDate = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId || !amendment?.bankDecision?.decision || !amendment?.bankDecision?.receivedDate) {
     return res.redirect('/not-found');
@@ -187,9 +190,9 @@ const getAmendmentBankDecisionEffectiveDate = async (req, res) => {
 const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { body } = req;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId || !amendment?.bankDecision?.decision) {
     return res.redirect('/not-found');
@@ -219,7 +222,7 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
   try {
     const payload = { bankDecision: { effectiveDate: amendmentBankEffectiveDate } };
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/banks-decision/check-answers`);
@@ -236,7 +239,8 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
 // gets check your answers page for bank decision
 const getAmendmentBankDecisionAnswers = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId || !amendment?.bankDecision?.decision) {
     return res.redirect('/not-found');
@@ -262,7 +266,8 @@ const getAmendmentBankDecisionAnswers = async (req, res) => {
 // posts bank decision and completes process by changing status to complete and redirects to underwriting page
 const postAmendmentBankDecisionAnswers = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId || !amendment?.bankDecision?.decision) {
     return res.redirect('/not-found');
@@ -287,7 +292,7 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
       updateTfmLastUpdated: true,
     };
 
-    await api.updateAmendment(facilityId, amendmentId, payload);
+    await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (err) {
