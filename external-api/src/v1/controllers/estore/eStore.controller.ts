@@ -47,7 +47,7 @@ export const createEstore = async (req: Request, res: Response) => {
     }
 
     const cronJobLogsCollection = await getCollection('cron-job-logs');
-    const cronAlreadyExists = await cronJobLogsCollection.findOne({ dealIdentifier: eStoreData.dealIdentifier, dealId: eStoreData.dealId });
+    const cronAlreadyExists = await cronJobLogsCollection.findOne({ dealIdentifier: { $eq: eStoreData.dealIdentifier }, dealId: { $eq: eStoreData.dealId } });
 
     // check if the deal doesn't exist in the cron-job-logs collection
     if (!cronAlreadyExists) {

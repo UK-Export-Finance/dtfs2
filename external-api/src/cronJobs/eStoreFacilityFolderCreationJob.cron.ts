@@ -47,7 +47,7 @@ export const eStoreFacilityFolderCreationJob = async (eStoreData: Estore) => {
       }
     } else {
       eStoreCronJobManager.deleteJob(`Facility${eStoreData.dealId}`);
-      console.error(`Unable to create the Facility Folders for ${eStoreData.dealIdentifier} deal`, facilityFoldersResponse);
+      console.error(`Unable to create the Facility Folders`, facilityFoldersResponse);
       // update the record inside `cron-job-logs` collection to indicate that the cron job failed
       await cronJobLogsCollection.updateOne(
         { dealId: { $eq: eStoreData.dealId } },
