@@ -242,6 +242,23 @@ module functionAcbs 'modules/function-acbs.bicep' = {
   }
 }
 
+module externalApi 'modules/external-api.bicep' = {
+  name: 'externalApi'
+  params: {
+    location: location
+    environment: environment
+    appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
+    appServicePlanId: appServicePlan.id
+    containerRegistryName: containerRegistry.name
+    privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
+    cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
+    cosmosDbDatabaseName: cosmosDbDatabaseName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    acbsFunctionDefaultHostName: functionAcbs.outputs.defaultHostName
+    numberGeneratorFunctionDefaultHostName: 'TODO:FN-420'
+  }
+}
+
 module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
   name: 'dtfsCentralApi'
   params: {
@@ -254,5 +271,6 @@ module dtfsCentralApi 'modules/dtfs-central-api.bicep' = {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDbDatabaseName
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+    externalApiHostname: externalApi.outputs.defaultHostName
   }
 }
