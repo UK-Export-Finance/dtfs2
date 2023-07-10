@@ -1096,6 +1096,12 @@ const getAllFacilities = async (searchString) => {
 
 const findBankById = async (bankId) => {
   try {
+    const isValidBankId = isValidNumericId(bankId);
+
+    if (!isValidBankId) {
+      return { status: 400, data: 'Invalid bank id provided' };
+    }
+
     const response = await axios({
       method: 'get',
       url: `${centralApiUrl}/v1/bank/${bankId}`,
