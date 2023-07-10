@@ -11,6 +11,7 @@ const numberGeneratorHttp = async (context, req) => {
     const instanceId = await client.startNew(req.params.functionName, undefined, req.body);
     return client.createCheckStatusResponse(context.bindingData.req, instanceId);
   } catch (err) {
+    console.error('Error calling number generator %s', err);
     return { err };
   }
 };

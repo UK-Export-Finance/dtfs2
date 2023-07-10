@@ -4,10 +4,10 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const { API_KEY } = process.env;
+const { CENTRAL_API_KEY } = process.env;
 
 const headers = {
-  'x-api-key': API_KEY,
+  'x-api-key': CENTRAL_API_KEY,
   'content-type': 'application/json'
 };
 

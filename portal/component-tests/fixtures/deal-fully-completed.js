@@ -224,7 +224,7 @@ const deal = {
     'indemnifier-address-line-2': 'Test Road',
     'indemnifier-address-postcode': 'test',
     'indemnifier-address-town': 'London',
-    'indemnifier-companies-house-registration-number': '08547313',
+    'indemnifier-companies-house-registration-number': '06771815',
     'indemnifier-correspondence-address-country': {
       code: 'GBR',
       name: 'United Kingdom',

@@ -41,7 +41,7 @@ describe('controllers - feedback', () => {
     });
 
     const mockReq = {
-      session: { user: { username: 'Tester', email: 'test@test.test' } },
+      session: { user: { username: 'Tester', email: 'test@test.test' }, userToken: 'mockToken' },
       body: {
         role: 'computers',
         team: 'Test ltd',

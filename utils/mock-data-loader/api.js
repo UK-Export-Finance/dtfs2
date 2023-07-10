@@ -4,7 +4,7 @@ require('dotenv').config();
 const { gef } = require('./gef/api');
 
 const portalApiUrl = process.env.DEAL_API_URL;
-const { API_KEY } = process.env;
+const { PORTAL_API_KEY } = process.env;
 
 const createBank = async (bank, token) => {
   const response = await axios({
@@ -145,7 +145,7 @@ const createInitialUser = async (user) => {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
+      'x-api-key': PORTAL_API_KEY,
       Accepts: 'application/json',
     },
     url: `${portalApiUrl}/v1/user`,

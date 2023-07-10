@@ -9,7 +9,7 @@ const insertMocks = async (token) => {
 
   console.info('inserting TFM users');
   for (const user of MOCKS.USERS) {
-    await api.createTfmUser(user);
+    await api.createTfmUser(user, token);
   }
 };
 
