@@ -1,5 +1,5 @@
 const exporterOne = {
-  companiesHouseRegistrationNumber: '08547313',
+  companiesHouseRegistrationNumber: '06771815',
   companyName: 'Delta',
   registeredAddress: {
     line1: null,
@@ -24,7 +24,7 @@ const exporterOne = {
 };
 
 const exporterTwo = {
-  companiesHouseRegistrationNumber: '08547313',
+  companiesHouseRegistrationNumber: '06771815',
   companyName: 'Charlie',
   registeredAddress: {
     line1: null,
@@ -49,7 +49,7 @@ const exporterTwo = {
 };
 
 const exporterThree = {
-  companiesHouseRegistrationNumber: '08547313',
+  companiesHouseRegistrationNumber: '06771815',
   companyName: 'Alpha',
   registeredAddress: {
     line1: null,
@@ -74,7 +74,7 @@ const exporterThree = {
 };
 
 const exporterFour = {
-  companiesHouseRegistrationNumber: '08547313',
+  companiesHouseRegistrationNumber: '06771815',
   companyName: '',
   registeredAddress: {
     line1: null,

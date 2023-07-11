@@ -24,7 +24,7 @@ context('Buyer Party URN - User can add, edit, confirm and submit URN to the TFM
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
     });
   });
 

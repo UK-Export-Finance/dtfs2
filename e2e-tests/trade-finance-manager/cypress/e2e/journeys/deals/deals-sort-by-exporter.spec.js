@@ -44,7 +44,7 @@ context('User can view and sort deals by exporter', () => {
         });
       });
 
-      cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
+      cy.submitManyDeals(insertedDeals, T1_USER_1).then((submittedDeals) => {
         // sort by ascending order
         ALL_SUBMITTED_DEALS = submittedDeals.sort((a, b) => {
           const dealASupplier = a.dealSnapshot.submissionDetails['supplier-name'];

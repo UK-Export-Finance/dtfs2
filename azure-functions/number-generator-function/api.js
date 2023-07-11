@@ -19,8 +19,15 @@ const getAPI = async (type) => {
     method: 'get',
     url,
     headers,
+    validateStatus(status) {
+      // Resolve only if the status code is less than 500
+      return status < 500;
+    },
   })
-    .catch((error) => (error));
+    .catch((error) => {
+      console.error('🚩 Error while invoking TFS GET %s', error);
+      return false;
+    });
 
   return response;
 };
@@ -52,7 +59,10 @@ const postAPI = async (endpoint, payload) => {
   };
 
   const response = await axios(request)
-    .catch((error) => error);
+    .catch((error) => {
+      console.error(`🚩 Error while invoking TFS POST /${endpoint} %s`, error);
+      return false;
+    });
 
   return response;
 };

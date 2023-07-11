@@ -20,7 +20,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, PIM_USER_1);
     });
   });
 

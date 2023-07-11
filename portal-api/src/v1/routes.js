@@ -32,8 +32,10 @@ const checkApiKey = require('./middleware/headers/check-api-key');
 const users = require('./users/routes');
 const gef = require('./gef/routes');
 
+// Open router requires no authentication
 const openRouter = express.Router();
 
+// Login route
 openRouter.route('/login').post(users.login);
 
 // 1. Request password reset
@@ -44,32 +46,49 @@ openRouter.route('/users/reset-password/:resetPwdToken').post(users.resetPasswor
 
 // API Key Routes
 openRouter.route('/feedback').post(checkApiKey, feedback.create);
-openRouter.route('/user').post(checkApiKey, users.create); // This endpoint is only used by mock-data-loader, for setting up an initial user
+// This endpoint is only used by mock-data-loader, for setting up an initial user
+openRouter.route('/user').post(checkApiKey, users.create);
 
-const authRouterAllowXss = express.Router();
-authRouterAllowXss.use(passport.authenticate('jwt', { session: false }));
+// Auth router requires authentication
+const authRouter = express.Router();
 
-authRouterAllowXss.route('/users').get(users.list).post(users.create);
-authRouterAllowXss.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
-authRouterAllowXss.route('/users/:_id/disable').delete(users.disable);
+// Authentication type: JWT + Passport
+authRouter.use(passport.authenticate('jwt', { session: false }));
 
-authRouterAllowXss
+/**
+ * Mandatory Criteria routes
+ * Allow POST & PUT of MC HTML tags
+ * on non-production environments only
+ */
+authRouter
   .route('/mandatory-criteria')
-  .get(mandatoryCriteria.findAll)
   .post(validate({ role: ['editor'] }), mandatoryCriteria.create);
 
-authRouterAllowXss
+authRouter
+  .route('/mandatory-criteria/:version')
+  .put(validate({ role: ['editor'] }), mandatoryCriteria.update);
+
+// Enable XSS
+authRouter.use(cleanXss);
+
+// Mandatory Criteria Routes
+authRouter
+  .route('/mandatory-criteria')
+  .get(mandatoryCriteria.findAll);
+
+authRouter
   .route('/mandatory-criteria/latest')
   .get(mandatoryCriteria.findLatest);
 
-authRouterAllowXss
+authRouter
   .route('/mandatory-criteria/:version')
   .get(mandatoryCriteria.findOne)
-  .put(validate({ role: ['editor'] }), mandatoryCriteria.update)
   .delete(validate({ role: ['editor'] }), mandatoryCriteria.delete);
 
-const authRouter = express.Router();
-authRouter.use(cleanXss);
+authRouter.route('/users').get(users.list).post(users.create);
+authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
+authRouter.route('/users/:_id/disable').delete(users.disable);
+
 authRouter.use('/gef', gef);
 
 authRouter.route('/deals').post(validate({ role: ['maker'] }), dealsController.create);
@@ -176,4 +195,4 @@ authRouter.get('/validate', validate(), (req, res) => {
 // bank-validator
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
-module.exports = { openRouter, authRouterAllowXss, authRouter };
+module.exports = { openRouter, authRouter };

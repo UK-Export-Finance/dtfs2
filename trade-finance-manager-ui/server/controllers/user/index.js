@@ -14,9 +14,10 @@ const getUserProfile = (req, res) => {
 };
 
 const postUserProfile = async (req, res) => {
+  const { userToken } = req.session;
   if (req?.session?.user) {
     const { _id } = req.session.user;
-    const { status, data } = await api.updateUserPassword(_id, req.body);
+    const { status, data } = await api.updateUserPassword(_id, req.body, userToken);
 
     if (status === 200) {
       return res.redirect('/user/change-password');

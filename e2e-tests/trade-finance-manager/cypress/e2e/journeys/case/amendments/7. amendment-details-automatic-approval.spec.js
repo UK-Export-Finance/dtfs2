@@ -23,7 +23,7 @@ context('Amendments - automatic approval journey', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId, dealType);
+        cy.submitDeal(dealId, dealType, PIM_USER_1);
       });
     });
 
@@ -252,7 +252,7 @@ context('Amendments - automatic approval journey', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId, dealType);
+        cy.submitDeal(dealId, dealType, PIM_USER_1);
       });
     });
 
@@ -414,7 +414,7 @@ context('Amendments - automatic approval journey', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId, dealType);
+        cy.submitDeal(dealId, dealType, PIM_USER_1);
       });
     });
 

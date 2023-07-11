@@ -70,9 +70,11 @@ describe('GET underwriting - lead underwriter', () => {
     });
 
     it('should call getUser API to get current lead underwriter user data', async () => {
-      await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL, MOCK_USER_UNDERWRITER_MANAGER);
+      const mockToken = 'mockToken';
 
-      expect(apiGetUserSpy).toHaveBeenCalledWith(MOCK_DEAL.tfm.leadUnderwriter);
+      await underwriterLeadUnderwriterController.getLeadUnderwriter(MOCK_DEAL, MOCK_USER_UNDERWRITER_MANAGER, mockToken);
+
+      expect(apiGetUserSpy).toHaveBeenCalledWith(MOCK_DEAL.tfm.leadUnderwriter, mockToken);
     });
   });
 

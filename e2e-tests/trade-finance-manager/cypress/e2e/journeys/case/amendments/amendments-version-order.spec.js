@@ -21,7 +21,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, PIM_USER_1);
     });
   });
 
