@@ -1,5 +1,5 @@
 const now = require('../../../now');
-const refDataApi = require('../../../external-api/api');
+const externalApi = require('../../../external-api/api');
 const {
   getAllFacilitiesByDealId,
   update: updateFacility,
@@ -27,7 +27,7 @@ const generateSubmissionData = async (existingApplication) => {
 
 const generateId = async ({
   entityId, entityType, dealId, user,
-}) => refDataApi.numberGenerator.create({
+}) => externalApi.numberGenerator.create({
   dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   entityId,
   entityType,

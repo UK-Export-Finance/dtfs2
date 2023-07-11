@@ -31,7 +31,10 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - TZ=Europe/London
-      - API_KEY
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
     command: npx nodemon --inspect=0.0.0.0:9223 src/index.js -L
 
@@ -49,6 +52,10 @@ services:
       - ./trade-finance-manager-ui/templates:/app/templates:ro
     environment:
       - PORT=5003
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
       - EXTERNAL_API_URL=http://external-api:5002
       - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
@@ -77,7 +84,10 @@ services:
       - PORT=5004
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
-      - API_KEY
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
@@ -87,7 +97,8 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_URI=http://localhost:5003
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
-      - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
+      - JWT_SIGNING_KEY
+      - JWT_VALIDATING_KEY
       - TZ=Europe/London
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV=${NODE_ENV}
@@ -112,7 +123,10 @@ services:
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
-      - API_KEY
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - TZ=Europe/London
@@ -146,7 +160,10 @@ services:
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - DTFS_PORTAL_SCHEDULER=true
       - EXTERNAL_API_URL=http://external-api:5002
-      - API_KEY
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
       - TZ=Europe/London
@@ -167,7 +184,10 @@ services:
       - ./external-api/src:/app/src:ro
     environment:
       - PORT=5002
-      - API_KEY
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
       - CORS_ORIGIN
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
@@ -220,6 +240,10 @@ services:
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
+      - PORTAL_API_KEY
+      - TFM_API_KEY
+      - CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
     command: npx nodemon --inspect=0.0.0.0:9229 server/index.js -L --max_old_space_size=250
 
   number-generator-function:

@@ -4,12 +4,17 @@ require('dotenv').config();
 
 const centralApiUrl = process.env.DTFS_CENTRAL_API;
 const tfmUrl = process.env.TFM_API;
-const { API_KEY } = process.env;
+const { CENTRAL_API_KEY, TFM_API_KEY } = process.env;
 
 const centralApiHeaders = {
   'Content-Type': 'application/json',
-  'x-api-key': API_KEY,
+  'x-api-key': CENTRAL_API_KEY,
 };
+
+const tfmApiHeaders = {
+  'Content-Type': 'application/json',
+  'x-api-key': TFM_API_KEY,
+}
 
 const findOneDeal = async (dealId) => {
   try {
@@ -172,9 +177,7 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
     const response = await axios({
       method: 'put',
       url: `${tfmUrl}/v1/deals/submit`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: tfmApiHeaders,
       data: {
         dealId,
         dealType,

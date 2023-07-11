@@ -15,8 +15,9 @@ const { DEAL } = CONSTANTS;
 const getAllParties = async (req, res) => {
   try {
     const dealId = req.params._id;
+    const { userToken } = req.session;
     const deal = await api.getDeal(dealId);
-    const { data: amendments } = await api.getAmendmentsByDealId(dealId);
+    const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
     const { user } = req.session;
 
     if (!deal?.tfm) {
@@ -24,11 +25,11 @@ const getAllParties = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+    const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
     if (hasAmendmentInProgress) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
-    const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
+    const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
     const canEdit = userCanEdit(user);
 
@@ -113,7 +114,7 @@ const getPartyDetails = async (req, res) => {
  */
 const getPartyUrnDetails = async (req, res) => {
   try {
-    const { user } = req.session;
+    const { user, userToken } = req.session;
     const party = partyType(req.url);
 
     const canEdit = userCanEdit(user);
@@ -143,7 +144,7 @@ const getPartyUrnDetails = async (req, res) => {
     }
 
     // Fetches company information from URN
-    const company = await api.getParty(partyUrn);
+    const company = await api.getParty(partyUrn, userToken);
 
     if (!company || !company.data) {
       return res.render('case/parties/non-existent.njk', {
@@ -185,7 +186,7 @@ const getPartyUrnDetails = async (req, res) => {
  */
 const getBondUrnDetails = async (req, res) => {
   try {
-    const { user } = req.session;
+    const { user, userToken } = req.session;
     const party = partyType(req.url);
 
     const canEdit = userCanEdit(user);
@@ -210,7 +211,7 @@ const getBondUrnDetails = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const companies = partyUrns.map((urn) => api.getParty(urn)
+    const companies = partyUrns.map((urn) => api.getParty(urn, userToken)
       // Non-existent party urn
       .then((company) => (!company?.data?.length ? Promise.resolve() : Promise.resolve(company.data[0].name))));
 
@@ -245,7 +246,7 @@ const getBondUrnDetails = async (req, res) => {
 const confirmPartyUrn = async (req, res) => {
   try {
     const party = partyType(req.url);
-    const { user } = req.session;
+    const { user, userToken } = req.session;
 
     const canEdit = userCanEdit(user);
 
@@ -311,7 +312,7 @@ const confirmPartyUrn = async (req, res) => {
     }
 
     // Fetches company information from URN
-    const company = await api.getParty(partyUrn);
+    const company = await api.getParty(partyUrn, userToken);
 
     // Non-existent party urn
     if (!company && !company.data) {

@@ -5,14 +5,15 @@ const { formattedNumber } = require('../../../helpers/number');
 
 const getAmendFacilityValue = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
-  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (status !== 200) {
     return res.redirect('/not-found');
   }
 
   const facility = await api.getFacility(facilityId);
-  const { data: latestAmendmentValue } = await api.getLatestCompletedAmendmentValue(facilityId);
+  const { data: latestAmendmentValue } = await api.getLatestCompletedAmendmentValue(facilityId, userToken);
 
   const { dealId, value } = amendment;
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
@@ -36,11 +37,12 @@ const getAmendFacilityValue = async (req, res) => {
 
 const postAmendFacilityValue = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
+  const { userToken } = req.session;
   const { value } = req.body;
 
   const facility = await api.getFacility(facilityId);
 
-  const { data: latestAmendmentValue } = await api.getLatestCompletedAmendmentValue(facilityId);
+  const { data: latestAmendmentValue } = await api.getLatestCompletedAmendmentValue(facilityId, userToken);
   const { currency } = facility.facilitySnapshot;
   let { coveredPercentage } = facility.facilitySnapshot;
   let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
@@ -51,7 +53,7 @@ const postAmendFacilityValue = async (req, res) => {
 
   const { errorsObject, amendFacilityValueErrors } = amendFacilityValueValidation(currentFacilityValue, value, currency);
 
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
 
   if (amendFacilityValueErrors.length) {
@@ -80,7 +82,7 @@ const postAmendFacilityValue = async (req, res) => {
       coveredPercentage,
       currency,
     };
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);

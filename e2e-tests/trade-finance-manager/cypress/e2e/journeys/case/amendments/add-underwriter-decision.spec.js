@@ -25,7 +25,7 @@ context('Amendments underwriting - add underwriter decision', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, PIM_USER_1);
     });
   });
 

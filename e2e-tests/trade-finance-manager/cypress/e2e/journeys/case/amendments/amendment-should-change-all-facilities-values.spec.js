@@ -18,7 +18,7 @@ context('Amendments all facilities table - should show amendment value and cover
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, PIM_USER_1);
     });
   });
 

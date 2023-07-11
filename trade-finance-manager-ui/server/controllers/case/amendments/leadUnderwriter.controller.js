@@ -11,7 +11,7 @@ const { sortArrayOfObjectsAlphabetically } = require('../../../helpers/array');
  * @returns {Object}
  * checks if leadUnderwriter already set and returns an object with currentLeadUnderwriter if set
  */
-const getAmendmentLeadUnderwriter = async (amendment, user) => {
+const getAmendmentLeadUnderwriter = async (amendment, user, token) => {
   let leadUnderwriter;
   let leadUnderwriterId;
 
@@ -22,7 +22,7 @@ const getAmendmentLeadUnderwriter = async (amendment, user) => {
 
   // checks if set and not unassigned and gets details
   if (leadUnderwriterId && leadUnderwriterId !== CONSTANTS.TASKS.UNASSIGNED) {
-    leadUnderwriter = await api.getUser(leadUnderwriterId);
+    leadUnderwriter = await api.getUser(leadUnderwriterId, token);
   }
 
   // checks if user has ability to assign or change lead-underwriter to render change link or add button
@@ -44,7 +44,8 @@ const getAmendmentLeadUnderwriter = async (amendment, user) => {
  */
 const getAssignAmendmentLeadUnderwriter = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
-  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId || status !== 200) {
     return res.redirect('/not-found');
@@ -90,8 +91,9 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
  */
 const postAssignAmendmentLeadUnderwriter = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
+  const { userToken } = req.session;
   try {
-    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
     if (!amendment?.amendmentId || status !== 200) {
       return res.redirect('/not-found');
@@ -99,7 +101,7 @@ const postAssignAmendmentLeadUnderwriter = async (req, res) => {
 
     const { assignedTo: assignedToValue } = req.body;
     // assignedToValue is only the id so have to get the user's name from api call
-    const user = await api.getUser(assignedToValue);
+    const user = await api.getUser(assignedToValue, userToken);
 
     // if no user.firstName or lastName, then values set to null
     const leadUnderwriter = {
@@ -110,7 +112,7 @@ const postAssignAmendmentLeadUnderwriter = async (req, res) => {
 
     const update = { leadUnderwriter };
 
-    await api.updateAmendment(facilityId, amendmentId, update);
+    await api.updateAmendment(facilityId, amendmentId, update, userToken);
   } catch (err) {
     console.error('TFM-UI- postAssignAmendmentLeadUnderwriter - error updating leadUnderwriter', { err });
   }

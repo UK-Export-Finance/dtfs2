@@ -5,9 +5,9 @@ const mapAssignToSelectOptions = require('../../../helpers/map-assign-to-select-
 const getAmendmentTask = async (req, res) => {
   try {
     const { _id: dealId, facilityId, amendmentId, groupId, taskId } = req.params;
-    const { user } = req.session;
+    const { user, userToken } = req.session;
 
-    let { data: amendment } = await api.getAmendmentsByDealId(dealId);
+    let { data: amendment } = await api.getAmendmentsByDealId(dealId, userToken);
     [amendment] = amendment.filter((a) => a.amendmentId === amendmentId && a.facilityId === facilityId);
     const task = getTask(Number(groupId), taskId, amendment.tasks);
     if (!task) {
@@ -33,7 +33,7 @@ const getAmendmentTask = async (req, res) => {
 const postAmendmentTask = async (req, res) => {
   try {
     const { _id: dealId, facilityId, amendmentId, groupId, taskId } = req.params;
-
+    const { userToken } = req.session;
     const { assignedTo: assignedToValue, status } = req.body;
 
     const update = {
@@ -48,7 +48,7 @@ const postAmendmentTask = async (req, res) => {
       },
     };
 
-    await api.updateAmendment(facilityId, amendmentId, update);
+    await api.updateAmendment(facilityId, amendmentId, update, userToken);
     return res.redirect(`/case/${dealId}/tasks`);
   } catch (error) {
     return res.redirect('/');

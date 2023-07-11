@@ -43,7 +43,7 @@ const FACILITY_STAGE = {
 };
 
 const COMPANIES_HOUSE_NUMBERS = {
-  1: '08547313',
+  1: '06771815',
 };
 
 const INDUSTRY_SECTOR_CODES = {

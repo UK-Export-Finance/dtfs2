@@ -5,7 +5,8 @@ const { AMENDMENT_STATUS, SUBMISSION_TYPE } = require('../../../constants/amendm
 const getAmendmentRequestApproval = async (req, res) => {
   try {
     const { facilityId, amendmentId } = req.params;
-    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+    const { userToken } = req.session;
+    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
     if (status !== 200) {
       return res.redirect('/not-found');
     }
@@ -29,12 +30,13 @@ const getAmendmentRequestApproval = async (req, res) => {
 
 const postAmendmentRequestApproval = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
+  const { userToken } = req.session;
   const { requireUkefApproval } = req.body;
   const approval = requireUkefApproval === 'Yes';
   const submissionType = approval ? SUBMISSION_TYPE.MANUAL_AMENDMENT : SUBMISSION_TYPE.AUTOMATIC_AMENDMENT;
 
   const { errorsObject, amendmentRequestApprovalErrors } = requestApprovalValidation(requireUkefApproval);
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
 
   if (amendmentRequestApprovalErrors.length) {
@@ -52,7 +54,7 @@ const postAmendmentRequestApproval = async (req, res) => {
   try {
     const payload = { requireUkefApproval: approval, submissionType };
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       if (approval) {
