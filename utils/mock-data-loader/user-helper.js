@@ -1,5 +1,4 @@
 const api = require('./api');
-const MOCK_BANKS = require('./banks');
 
 const mockDataLoaderUser = {
   username: 're-insert-mocks',
