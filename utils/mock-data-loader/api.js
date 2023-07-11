@@ -52,6 +52,7 @@ const createCountry = async (country, token) => {
 };
 
 const createDeal = async (deal, token) => {
+  console.log(token);
   const response = await axios({
     method: 'post',
     headers: {
@@ -277,6 +278,7 @@ const listBanks = async (token) => {
     },
     url: `${portalApiUrl}/v1/banks`,
   }).catch((err) => { console.error(`err: ${err}`); });
+  console.log(response);
 
   return response.data.banks;
 };
