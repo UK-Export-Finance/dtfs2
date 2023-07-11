@@ -5,7 +5,7 @@ const CONSTANTS = require('../constants');
 require('dotenv').config();
 
 const {
-  DTFS_CENTRAL_API: centralApiUrl,
+  DTFS_CENTRAL_API_URL: centralApiUrl,
   EXTERNAL_API_URL,
   CENTRAL_API_KEY,
   EXTERNAL_API_KEY,

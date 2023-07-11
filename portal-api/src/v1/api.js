@@ -2,8 +2,8 @@ const axios = require('axios');
 
 require('dotenv').config();
 
-const centralApiUrl = process.env.DTFS_CENTRAL_API;
-const tfmUrl = process.env.TFM_API;
+const centralApiUrl = process.env.DTFS_CENTRAL_API_URL;
+const tfmUrl = process.env.TFM_API_URL;
 const { CENTRAL_API_KEY, TFM_API_KEY } = process.env;
 
 const centralApiHeaders = {
@@ -14,7 +14,7 @@ const centralApiHeaders = {
 const tfmApiHeaders = {
   'Content-Type': 'application/json',
   'x-api-key': TFM_API_KEY,
-}
+};
 
 const findOneDeal = async (dealId) => {
   try {

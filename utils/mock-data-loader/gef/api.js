@@ -1,8 +1,8 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const centralApi = process.env.DTFS_CENTRAL_API;
-const portalApi = process.env.DEAL_API_URL;
+const centralApi = process.env.DTFS_CENTRAL_API_URL;
+const portalApi = process.env.PORTAL_API_URL;
 const { CENTRAL_API_KEY } = process.env;
 
 const headers = {

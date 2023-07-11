@@ -1,8 +1,8 @@
 const axios = require('axios');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
-const urlCentralApi = process.env.DTFS_CENTRAL_API;
-const tfmApi = process.env.TFM_API;
+const urlCentralApi = process.env.DTFS_CENTRAL_API_URL;
+const tfmApi = process.env.TFM_API_URL;
 const { TFM_API_KEY, CENTRAL_API_KEY } = process.env;
 
 const createTeam = async (team, token) => {

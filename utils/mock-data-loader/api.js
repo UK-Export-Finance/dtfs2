@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const { gef } = require('./gef/api');
 
-const portalApiUrl = process.env.DEAL_API_URL;
+const portalApiUrl = process.env.PORTAL_API_URL;
 const { PORTAL_API_KEY } = process.env;
 
 const createBank = async (bank, token) => {
@@ -390,7 +390,7 @@ const login = async (user) => {
   }).catch((err) => { console.error('Unable to login %s', { err }); });
 
   return response?.data?.token;
-}
+};
 
 const updateCurrency = async (currency, token) => {
   const response = await axios({

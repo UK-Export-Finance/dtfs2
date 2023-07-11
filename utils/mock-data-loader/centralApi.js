@@ -1,7 +1,7 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const urlRoot = process.env.DTFS_CENTRAL_API;
+const urlRoot = process.env.DTFS_CENTRAL_API_URL;
 const { CENTRAL_API_KEY } = process.env;
 
 const headers = {

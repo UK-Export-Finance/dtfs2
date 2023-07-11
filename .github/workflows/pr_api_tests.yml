@@ -56,9 +56,9 @@ env:
   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  DEAL_API_URL: http://localhost:5001
-  DTFS_CENTRAL_API: http://localhost:5005
-  TFM_API: http://localhost:5004
+  PORTAL_API_URL: http://localhost:5001
+  DTFS_CENTRAL_API_URL: http://localhost:5005
+  TFM_API_URL: http://localhost:5004
 
 jobs:
   # 1. Setup test infrastructure

@@ -61,7 +61,7 @@ services:
       - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
       - ESTORE_URL=${ESTORE_URL}
       - REDIS_HOSTNAME=redis
-      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+      - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
@@ -90,7 +90,7 @@ services:
       - EXTERNAL_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
+      - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
       - AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
       - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
@@ -119,7 +119,7 @@ services:
       - ./portal/public:/app/public:ro
       - ./portal/templates:/app/templates:ro
     environment:
-      - DEAL_API_URL=http://portal-api:5001
+      - PORTAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
@@ -169,8 +169,8 @@ services:
       - TFM_API_KEY
       - CENTRAL_API_KEY
       - EXTERNAL_API_KEY
-      - DTFS_CENTRAL_API=http://dtfs-central-api:5005
-      - TFM_API=http://trade-finance-manager-api:5004
+      - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
+      - TFM_API_URL=http://trade-finance-manager-api:5004
       - TZ=Europe/London
       - NODE_ENV=${NODE_ENV}
 
@@ -235,7 +235,7 @@ services:
       - ./gef-ui/public:/app/public:ro
       - ./gef-ui/templates:/app/templates:ro
     environment:
-      - DEAL_API_URL=http://portal-api:5001
+      - PORTAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002

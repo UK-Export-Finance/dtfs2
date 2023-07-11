@@ -1,7 +1,7 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const portalApiUrl = process.env.DEAL_API_URL;
+const portalApiUrl = process.env.PORTAL_API_URL;
 
 const createUser = async (user, token) => {
   const response = await axios({

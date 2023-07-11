@@ -3,7 +3,7 @@ const FormData = require('form-data');
 
 require('dotenv').config();
 
-const portalApi = process.env.DEAL_API_URL;
+const portalApi = process.env.PORTAL_API_URL;
 const { PORTAL_API_KEY } = process.env;
 
 const login = async (username, password) => {
