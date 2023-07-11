@@ -31,7 +31,7 @@ const mockDealTfm = {
 const GET_FACILITY = gql`
   query Facility($id: ID!) {
     facility(_id: $id) {
-      _id,
+      _id
       facilitySnapshot {
         _id
         ukefFacilityId
@@ -89,7 +89,7 @@ const GET_FACILITY = gql`
           effectiveTo
           created
           updated
-          isAtive
+          isActive
         }
         premiumTotals
         creditRating
@@ -137,11 +137,7 @@ describe('graphql query - get facility', () => {
       tfm: mockFacility.tfm,
     };
 
-    const reducerResult = await facilityReducer(
-      initFacilityShape,
-      MOCK_DEAL,
-      mockDealTfm,
-    );
+    const reducerResult = await facilityReducer(initFacilityShape, MOCK_DEAL, mockDealTfm);
 
     expect(data.facility._id).toEqual(MOCK_FACILITIES[0]._id);
 

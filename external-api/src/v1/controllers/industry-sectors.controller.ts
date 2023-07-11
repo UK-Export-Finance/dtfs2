@@ -5,9 +5,9 @@ import * as utils from '../../utils';
 import { INDUSTRY_SECTORS } from '../../external-api';
 
 dotenv.config();
-const mdm: any = process.env.APIM_MDM_URL;
-const headers: any = {
-  [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
+const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const headers = {
+  [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
 /**
@@ -18,7 +18,7 @@ const headers: any = {
 export const findACBSIndustrySector = async (industryId: any) => {
   const response = await axios({
     method: 'GET',
-    url: `${mdm}sector-industries?ukefIndustryId=${industryId}`,
+    url: `${APIM_MDM_URL}sector-industries?ukefIndustryId=${industryId}`,
     headers,
   }).catch((error: any) => {
     console.error('Error calling ACBS industry sector', error.response.data, error.response.status);

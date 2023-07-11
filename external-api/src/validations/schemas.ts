@@ -30,16 +30,11 @@ export const schemas = {
     // 2. GOV NOTIFY
     GOV_NOTIFY_API_KEY: Joi.string().required(),
 
-    // 4. ORDNANCE SURVEY
+    // 3. ORDNANCE SURVEY
     ORDNANCE_SURVEY_API_URL: Joi.string().required(),
     ORDNANCE_SURVEY_API_KEY: Joi.string().required(),
 
-    // 5. PARTY DB
-    MULESOFT_API_PARTY_DB_URL: Joi.string().required(),
-    MULESOFT_API_PARTY_DB_KEY: Joi.string().required(),
-    MULESOFT_API_PARTY_DB_SECRET: Joi.string().required(),
-
-    // 6. COMPANIES HOUSE
+    // 4. COMPANIES HOUSE
     COMPANIES_HOUSE_API_KEY: Joi.string().required(),
     COMPANIES_HOUSE_API_URL: Joi.string().required(),
   }).unknown(),

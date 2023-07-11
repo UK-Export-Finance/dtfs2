@@ -3,50 +3,50 @@ const gql = require('graphql-tag');
 const facilityQuery = gql`
   query Facility($id: ID!) {
     facility(_id: $id) {
-      _id,
+      _id
       facilitySnapshot {
-        ukefFacilityId,
-        dealId,
+        ukefFacilityId
+        dealId
         facilityProduct {
           name
-        },
-        type,
-        facilityStage,
-        facilityValueExportCurrency,
-        value,
-        hasBeenIssued,
-        coveredPercentage,
-        bankFacilityReference,
-        guaranteeFeePayableToUkef,
-        bondIssuer,
-        bondBeneficiary,
-        bankFacilityReference,
-        ukefExposure,
-        banksInterestMargin,
-        firstDrawdownAmountInExportCurrency,
-        currency,
-        feeType,
-        feeFrequency,
-        dayCountBasis,
-        providedOn,
-        providedOnOther,
+        }
+        type
+        facilityStage
+        facilityValueExportCurrency
+        value
+        hasBeenIssued
+        coveredPercentage
+        bankFacilityReference
+        guaranteeFeePayableToUkef
+        bondIssuer
+        bondBeneficiary
+        bankFacilityReference
+        ukefExposure
+        banksInterestMargin
+        firstDrawdownAmountInExportCurrency
+        currency
+        feeType
+        feeFrequency
+        dayCountBasis
+        providedOn
+        providedOnOther
         dates {
-          inclusionNoticeReceived,
-          bankIssueNoticeReceived,
-          coverStartDate,
-          coverEndDate,
+          inclusionNoticeReceived
+          bankIssueNoticeReceived
+          coverStartDate
+          coverEndDate
           tenor
         }
-      },
+      }
       tfm {
-        bondIssuerPartyUrn,
-        bondBeneficiaryPartyUrn,
-        exchangeRate,
-        facilityValueInGBP,
+        bondIssuerPartyUrn
+        bondBeneficiaryPartyUrn
+        exchangeRate
+        facilityValueInGBP
         ukefExposure {
-          exposure,
+          exposure
           timestamp
-        },
+        }
         premiumSchedule {
           id
           calculationDate
@@ -59,8 +59,8 @@ const facilityQuery = gql`
           effectiveTo
           created
           updated
-          isAtive
-        },
+          isActive
+        }
         premiumTotals
         creditRating
         feeRecord

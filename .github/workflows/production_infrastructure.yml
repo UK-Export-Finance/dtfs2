@@ -21,7 +21,6 @@ env:
   vm_cidr: 172.16.33.0/28
   vnet_address_prefixes: '172.16.30.0/23 172.16.32.0/23'
   production_subnet_cidr: 10.60.0.0/16
-  mulesoft_subnet_cidr: 172.16.10.0/23
   palo_alto_next_hop: 10.50.0.100
   # App service settings
   COMPANIES_HOUSE_API_URL: 'https://api.companieshouse.gov.uk'
@@ -76,11 +75,6 @@ jobs:
               --address-prefix ${{ env.production_subnet_cidr }} \
               --next-hop-ip-address ${{ env.palo_alto_next_hop }}
 
-            az network route-table route create --name MulesoftSubnet \
-              --route-table-name ${{secrets.RESOURCE_GROUP }}-UDR  \
-              --next-hop-type VirtualAppliance \
-              --address-prefix ${{ env.mulesoft_subnet_cidr }} \
-              --next-hop-ip-address ${{ env.palo_alto_next_hop }}
   # END route table
   # START Virtual Network setup
   vnet:
@@ -1143,7 +1137,6 @@ jobs:
           # Apparently the only way to resolve private DNS entries is to use theIP address below. Cool story.
           # See: https://docs.microsoft.com/en-us/azure/app-service/web-sites-integrate-with-vnet#azure-dns-private-zones
           # NB we're setting PORT for the container and WEBSITES_PORT for Azure.
-          # NOTE: MULESOFT envs were producing an error when used in connection_string so have been moved to appsettings
           # ref: https://docs.microsoft.com/en-us/azure/app-service/configure-common
           inlineScript: |
             acbs_function_url=$(az functionapp show --resource-group ${{ secrets.RESOURCE_GROUP }} --name tfs-${{ env.environment }}-function-acbs --query "defaultHostName" -o tsv)
@@ -1162,9 +1155,6 @@ jobs:
                 APIM_TFS_URL=${{ secrets.APIM_TFS_URL }} \
                 APIM_TFS_KEY=${{ secrets.APIM_TFS_KEY }} \
                 APIM_TFS_VALUE=${{ secrets.APIM_TFS_VALUE }} \
-                MULESOFT_API_PARTY_DB_KEY="${{ secrets.MULESOFT_API_PARTY_DB_KEY}}" \
-                MULESOFT_API_PARTY_DB_SECRET="${{ secrets.MULESOFT_API_PARTY_DB_SECRET}}" \
-                MULESOFT_API_PARTY_DB_URL="${{ secrets.MULESOFT_API_PARTY_DB_URL}}" \
                 APIM_MDM_URL="${{ secrets.APIM_MDM_URL }}" \
                 APIM_MDM_KEY="${{ secrets.APIM_MDM_KEY }}" \
                 APIM_MDM_VALUE="${{ secrets.APIM_MDM_VALUE }}" \

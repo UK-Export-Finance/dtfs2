@@ -3,9 +3,10 @@ import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 dotenv.config();
 
-const username: any = process.env.MULESOFT_API_PARTY_DB_KEY;
-const password: any = process.env.MULESOFT_API_PARTY_DB_SECRET;
-const partyDbURL: any = process.env.MULESOFT_API_PARTY_DB_URL;
+const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const headers = {
+  [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
+};
 
 /**
  * Fetches company information from party URN
@@ -19,8 +20,8 @@ export const lookup = async (req: Request, res: Response) => {
 
     const response = await axios({
       method: 'get',
-      url: `${partyDbURL}/find-customers?partyUrn=${urn}`,
-      auth: { username, password },
+      url: `${APIM_MDM_URL}/customers?partyUrn=${urn}`,
+      headers,
     }).catch((error: any) => {
       console.error('Error calling Party URN lookup', { error });
       return { data: error?.response?.data, status: error?.response?.status };

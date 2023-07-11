@@ -1,6 +1,4 @@
 // Premium Schedule API returns the premium schedule for a given facility
-//
-// the flow is:
 // 1) Post parameters to Premium Schedule API, returns  header location to load the segments
 // 2) Premium Schedule Segments gets the segments by facilityURN
 
@@ -12,11 +10,11 @@ import { PremiumSchedule } from '../../interfaces';
 import { UKEF_ID } from '../../constants';
 dotenv.config();
 
-const mdm: any = process.env.APIM_MDM_URL;
-const headers: any = {
-  'Content-Type': 'application/json',
-  [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
+const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const headers = {
+  [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
+
 const successStatus: Array<number> = [200, 201];
 
 const premiumScheduleCalls = {
@@ -33,14 +31,14 @@ const premiumScheduleCalls = {
       return null;
     }
 
-    // Convert UKEF Facility ID to number else Mulesoft will throw 400
+    // Convert UKEF Facility ID to number
     if (premiumSchedulePayload.facilityURN) {
       premiumSchedulePayloadFormatted.facilityURN = Number(premiumSchedulePayload.facilityURN);
     }
     try {
       const response = await axios({
         method: 'post',
-        url: `${mdm}premium/schedule`,
+        url: `${APIM_MDM_URL}premium/schedule`,
         headers,
         data: [premiumSchedulePayloadFormatted],
       }).catch((error: any) => {
@@ -66,10 +64,10 @@ const premiumScheduleCalls = {
    * @returns {Array} Array of premium schedule segments
    */
   getScheduleData: async (facilityId: any) => {
-    const url = `${mdm}premium/segments/${facilityId}`;
+    const url = `${APIM_MDM_URL}premium/segments/${facilityId}`;
 
     const response = await axios({
-      method: 'GET',
+      method: 'get',
       url,
       headers,
     }).catch((error: any) => error);
