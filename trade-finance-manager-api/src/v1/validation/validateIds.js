@@ -1,7 +1,11 @@
-const { ObjectId } = require('mongodb');
 const validator = require('validator');
 
-const isValidMongoId = (mongoId) => ObjectId.isValid(mongoId);
+const isValidMongoId = (mongoId) => {
+  if (!mongoId) {
+    return false;
+  }
+  return validator.isMongoId(mongoId);
+};
 
 const isValidUkefNumericId = (ukefId) => {
   const id = parseInt(ukefId, 10);

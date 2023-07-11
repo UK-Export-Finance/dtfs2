@@ -6,11 +6,9 @@ const api = require('../src/v1/api');
 const mockAxios = new MockAdapter(axios);
 
 describe('API is protected against SSRF attacks', () => {
-  beforeEach(() => {
-    mockAxios.reset();
-  });
 
   describe('findOnePortalDeal', () => {
+    mockAxios.reset();
     const mockResponse = {
       deal: 'Mock deal',
     };
@@ -44,6 +42,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updatePortalDeal', () => {
+    mockAxios.reset();
     const mockResponse = 'Mock deal';
     const url = /^.*\/v1\/portal\/deals\/.*$/;
     mockAxios.onPut(url).reply(200, mockResponse);
@@ -75,6 +74,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updatePortalBssDealStatus', () => {
+    mockAxios.reset();
     const mockResponse = 'Mock status';
     const url = /^.*\/v1\/portal\/deals\/.*\/status$/;
     mockAxios.onPut(url).reply(200, mockResponse);
@@ -106,6 +106,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('addPortalDealComment', () => {
+    mockAxios.reset();
     const mockResponse = 'Mock comment';
     const url = /^.*\/v1\/portal\/deals\/.*\/comment$/;
     mockAxios.onPost(url).reply(200, mockResponse);
@@ -137,6 +138,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updatePortalFacilityStatus', () => {
+    mockAxios.reset();
     const mockResponse = 'Mock status';
     const url = /^.*\/v1\/portal\/facilities\/.*\/status$/;
     mockAxios.onPut(url).reply(200, mockResponse);
@@ -168,6 +170,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findOneDeal', () => {
+    mockAxios.reset();
     const mockResponse = { deal: 'Mock deal' };
     const url = /^.*\/v1\/tfm\/deals\/.*$/;
     mockAxios.onGet(url).reply(200, mockResponse);
@@ -199,6 +202,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updateDeal', () => {
+    mockAxios.reset();
     const mockResponse = 'Mock deal';
     const url = /^.*\/v1\/tfm\/deals\/.*$/;
     mockAxios.onPut(url).reply(200, mockResponse);
@@ -230,6 +234,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updateDealSnapshot', () => {
+    mockAxios.reset();
     const mockResponse = 'Mock deal';
     const url = /^.*\/v1\/tfm\/deals\/.*\/snapshot$/;
     mockAxios.onPut(url).reply(200, mockResponse);
@@ -261,6 +266,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findOneFacility', () => {
+    mockAxios.reset();
     const mockResponse = 'Mock facility';
     const url = /^.*\/v1\/tfm\/facilities\/.*$/;
     mockAxios.onGet(url).reply(200, mockResponse);
@@ -292,6 +298,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findFacilitesByDealId', () => {
+    mockAxios.reset();
     const mockResponse = 'Mock facilities';
     const url = /^.*\/v1\/tfm\/deals\/.*\/facilities$/;
     mockAxios.onGet(url).reply(200, mockResponse);
@@ -323,6 +330,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updateFacility', () => {
+    mockAxios.reset();
     const mockResponse = 'Mock facility';
     const url = /^.*\/v1\/tfm\/facilities\/.*$/;
     mockAxios.onPut(url).reply(200, mockResponse);
@@ -354,6 +362,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('createFacilityAmendment', () => {
+    mockAxios.reset();
     const mockResponse = 'Mock amendment';
     const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments$/;
     mockAxios.onPost('http://localhost:5005/v1/tfm/facilities/5ce819935e539c343f141ece/amendments').reply(200, mockResponse);
@@ -378,7 +387,6 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the deal id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
-      console.log(url.test('http://localhost:5005/v1/tfm/facilities/5ce819935e539c343f141ece/amendments'));
       const response = await api.createFacilityAmendment(validFacilityId);
 
       expect(response).toEqual(mockResponse);
