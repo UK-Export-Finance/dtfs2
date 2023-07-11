@@ -19,15 +19,15 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   const underwriterFullName = `${UNDERWRITER_1.firstName} ${UNDERWRITER_1.lastName}`;
 
   before(() => {
-    cy.getUser(UNDERWRITER_MANAGER_1.username).then((userObj) => {
+    cy.getUser(UNDERWRITER_MANAGER_1.username, T1_USER_1).then((userObj) => {
       underwriterManager1UserId = userObj._id;
     });
 
-    cy.getUser(UNDERWRITER_MANAGER_2.username).then((userObj) => {
+    cy.getUser(UNDERWRITER_MANAGER_2.username, T1_USER_1).then((userObj) => {
       underwriterManager2UserId = userObj._id;
     });
 
-    cy.getUser(UNDERWRITER_1.username).then((userObj) => {
+    cy.getUser(UNDERWRITER_1.username, T1_USER_1).then((userObj) => {
       underwriterUserId = userObj._id;
     });
 
@@ -41,7 +41,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
           dealFacilities.push(...createdFacilities);
         });
 
-        cy.submitDeal(dealId, dealType);
+        cy.submitDeal(dealId, dealType, T1_USER_1);
       });
   });
 

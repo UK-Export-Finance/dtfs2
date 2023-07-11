@@ -18,7 +18,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, RISK_MANAGER_1);
     });
   });
 

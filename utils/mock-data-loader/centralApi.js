@@ -2,11 +2,11 @@ const axios = require('axios');
 require('dotenv').config();
 
 const urlRoot = process.env.DTFS_CENTRAL_API;
-const { API_KEY } = process.env;
+const { CENTRAL_API_KEY } = process.env;
 
 const headers = {
   'Content-Type': 'application/json',
-  'x-api-key': API_KEY,
+  'x-api-key': CENTRAL_API_KEY,
   Accepts: 'application/json',
 };
 

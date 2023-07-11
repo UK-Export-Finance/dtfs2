@@ -36,13 +36,15 @@ const postFeedback = async (req, res) => {
 
     let validationErrors;
 
+    if (data?.validationErrors?.errorList) {
     // maps through errorlist
-    Object.keys(data.validationErrors.errorList).forEach((errorName) => {
+      Object.keys(data.validationErrors.errorList).forEach((errorName) => {
       // get error by its key (errorName)
-      const error = data.validationErrors.errorList[errorName];
-      // generate errors
-      validationErrors = generateValidationErrors(errorName, error.text, data.validationErrors.count, validationErrors);
-    });
+        const error = data.validationErrors.errorList[errorName];
+        // generate errors
+        validationErrors = generateValidationErrors(errorName, error.text, data.validationErrors.count, validationErrors);
+      });
+    }
 
     return res.render('feedback/feedback-form.njk', {
       feedback: data.feedback,

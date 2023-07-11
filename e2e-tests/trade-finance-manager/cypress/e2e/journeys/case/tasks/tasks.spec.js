@@ -7,8 +7,10 @@ import { MOCK_MAKER_TFM, ADMIN_LOGIN } from '../../../../fixtures/users-portal';
 
 const TOTAL_DEFAULT_AIN_TASKS = 2;
 
+const { T1_USER_1 } = MOCK_USERS;
+
 const assignTaskToSomeoneElseInMyTeam = (dealId, differentUserInSameTeam) => new Cypress.Promise((resolve) => {
-  cy.getUser(differentUserInSameTeam.username).then((userObj) => {
+  cy.getUser(differentUserInSameTeam.username, T1_USER_1).then((userObj) => {
     const differentUserInSameTeamObj = userObj;
 
     // choose a user in `assigned to` select input, that is not the currently logged in
@@ -32,7 +34,7 @@ context('Case tasks - AIN deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
+    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username, T1_USER_1).then((userObj) => {
       userId = userObj._id;
     });
 
@@ -49,7 +51,7 @@ context('Case tasks - AIN deal', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
 
       cy.login(MOCK_USERS.BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));

@@ -26,10 +26,15 @@ const findOneMandatoryCriteria = async (version, callback) => {
 };
 
 exports.create = async (req, res) => {
-  const collection = await db.getCollection('mandatoryCriteria');
-  const mandatoryCriteria = await collection.insertOne(req.body);
+  // MC insertion on non-production environments
+  if (process.env.NODE_ENV !== 'production') {
+    const collection = await db.getCollection('mandatoryCriteria');
+    const mandatoryCriteria = await collection.insertOne(req.body);
 
-  res.status(200).send(mandatoryCriteria);
+    res.status(200).send(mandatoryCriteria);
+  }
+
+  res.status(400).send();
 };
 
 exports.findAll = (req, res) => (
@@ -61,9 +66,14 @@ exports.findLatest = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const collection = await db.getCollection('mandatoryCriteria');
-  const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
-  res.status(200).send(status);
+  // MC insertion on non-production environments
+  if (process.env.NODE_ENV !== 'production') {
+    const collection = await db.getCollection('mandatoryCriteria');
+    const status = await collection.updateOne({ version: { $eq: Number(req.params.version) } }, { $set: { criteria: req.body.criteria } }, {});
+    res.status(200).send(status);
+  }
+
+  res.status(400).send();
 };
 
 exports.delete = async (req, res) => {

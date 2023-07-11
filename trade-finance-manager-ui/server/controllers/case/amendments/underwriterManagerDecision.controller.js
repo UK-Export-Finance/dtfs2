@@ -13,7 +13,8 @@ const { formattedNumber } = require('../../../helpers/number');
  */
 const getAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId) {
     return res.redirect('/not-found');
@@ -37,10 +38,10 @@ const getAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) 
 const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { underwriterManagerDecisionCoverEndDate: decision } = req.body;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
   const { errorsObject, amendmentUnderwriterManagerValidationErrors } = amendmentUnderwriterManagerDecisionValidation(decision, 'coverEndDate');
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (amendmentUnderwriterManagerValidationErrors.length) {
     const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
@@ -60,7 +61,7 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
   try {
     const payload = { ukefDecision: { coverEndDate: decision } };
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       if (amendment.changeFacilityValue) {
@@ -78,7 +79,8 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
 
 const getAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (!amendment?.amendmentId) {
     return res.redirect('/not-found');
@@ -102,10 +104,10 @@ const getAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
 const postAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { underwriterManagerDecisionFacilityValue: decision } = req.body;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
   const { errorsObject, amendmentUnderwriterManagerValidationErrors } = amendmentUnderwriterManagerDecisionValidation(decision, 'value');
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (amendmentUnderwriterManagerValidationErrors.length) {
     const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
@@ -125,7 +127,7 @@ const postAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
   try {
     const payload = { ukefDecision: { value: decision } };
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/managers-conditions`);

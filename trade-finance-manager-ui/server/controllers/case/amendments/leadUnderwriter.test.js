@@ -191,7 +191,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
         amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
         facilityId: '9999',
       },
-      session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
+      session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER, userToken: 'mockToken' },
       body: {
         assignedTo: '12345678',
       },
@@ -211,6 +211,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
       req.params.facilityId,
       req.params.amendmentId,
       expectedUpdateObj,
+      req.session.userToken,
     );
 
     expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/underwriting`);
@@ -224,7 +225,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
         amendmentId: MOCKS.MOCK_AMENDMENT.amendmentId,
         facilityId: '9999',
       },
-      session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER },
+      session: { user: MOCKS.MOCK_USER_UNDERWRITER_MANAGER, userToken: 'mockToken' },
       body: {
         assignedTo: 'Unassigned',
       },
@@ -244,6 +245,7 @@ describe('postAssignAmendmentLeadUnderwriter()', () => {
       req.params.facilityId,
       req.params.amendmentId,
       expectedUpdateObj,
+      req.session.userToken,
     );
 
     expect(res.redirect).toHaveBeenCalledWith(`/case/${MOCKS.MOCK_DEAL._id}/underwriting`);
