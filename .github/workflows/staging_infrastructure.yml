@@ -1690,7 +1690,8 @@ jobs:
               TFM_URI="${{ secrets.TFM_URI }}" \
               AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
               AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}" \
-              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}"
+              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
+              JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}"
 
   # END API setup
 
