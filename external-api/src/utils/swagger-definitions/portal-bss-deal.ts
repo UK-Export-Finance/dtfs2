@@ -128,7 +128,7 @@
  *                example: United Kingdom
  *           indemnifier-companies-house-registration-number:
  *             type: string
- *             example: '08547313'
+ *             example: '06771815'
  *           indemnifier-correspondence-address-line-1:
  *             type: string
  *             example: Test address
@@ -209,7 +209,7 @@
  *                example: United Kingdom
  *           supplier-companies-house-registration-number:
  *             type: string
- *             example: '08547313'
+ *             example: '06771815'
  *           supplier-correspondence-line-1:
  *             type: string
  *             example: Test address

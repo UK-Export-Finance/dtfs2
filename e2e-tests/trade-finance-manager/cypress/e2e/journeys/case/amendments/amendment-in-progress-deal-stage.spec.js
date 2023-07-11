@@ -23,7 +23,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, PIM_USER_1);
     });
   });
 

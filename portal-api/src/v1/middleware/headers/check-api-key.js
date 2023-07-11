@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const { API_KEY } = process.env;
+const { PORTAL_API_KEY } = process.env;
 
 /**
  * Check that the x-api-key header is valid
@@ -28,7 +28,7 @@ const checkApiKey = (req, res, next) => {
    * x-api-key is valid.
    * Allow the request to continue.
    */
-  if (xApiKey === API_KEY) {
+  if (xApiKey === PORTAL_API_KEY) {
     return next();
   }
 

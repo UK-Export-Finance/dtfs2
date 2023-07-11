@@ -56,7 +56,7 @@ context('User can view and sort deals by product', () => {
         });
       });
 
-      cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
+      cy.submitManyDeals(insertedDeals, T1_USER_1).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
         dealWith1FacilityBond = ALL_SUBMITTED_DEALS.find((deal) =>

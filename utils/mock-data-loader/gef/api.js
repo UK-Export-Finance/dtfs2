@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const centralApi = process.env.DTFS_CENTRAL_API;
 const portalApi = process.env.DEAL_API_URL;
-const { API_KEY } = process.env;
+const { CENTRAL_API_KEY } = process.env;
 
 const headers = {
   portalApi: {
@@ -13,7 +13,7 @@ const headers = {
   centralApi: {
     'Content-Type': 'application/json',
     Accepts: 'application/json',
-    'x-api-key': API_KEY,
+    'x-api-key': CENTRAL_API_KEY,
   }
 };
 

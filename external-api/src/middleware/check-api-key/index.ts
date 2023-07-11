@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 
 dotenv.config();
 
-const { API_KEY } = process.env;
+const { EXTERNAL_API_KEY } = process.env;
 
 /**
  * Check that the x-api-key header is valid
@@ -28,7 +28,7 @@ export const checkApiKey = (req: Request, res: Response, next: NextFunction) => 
    * x-api-key is valid.
    * Allow the request to continue.
    */
-  if (xApiKey === API_KEY) {
+  if (xApiKey === EXTERNAL_API_KEY) {
     return next();
   }
 

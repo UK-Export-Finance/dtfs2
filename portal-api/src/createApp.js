@@ -9,7 +9,7 @@ const healthcheck = require('./healthcheck');
 dotenv.config();
 const { CORS_ORIGIN } = process.env;
 const configurePassport = require('./v1/users/passport');
-const { authRouter, openRouter, authRouterAllowXss } = require('./v1/routes');
+const { authRouter, openRouter } = require('./v1/routes');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
 
@@ -35,7 +35,6 @@ app.use(cors({
 }));
 
 app.use('/v1', openRouter);
-app.use('/v1', authRouterAllowXss);
 app.use('/v1', authRouter);
 
 // Return 200 on get to / to confirm to Azure that
