@@ -25,7 +25,7 @@ headers: {
 ```
 
 ## Why
-Some external TFS APIs can take a long time complete, for example ACBS has over 10 API calls. Some endpoints can fail and need retrying.
+Some external APIM APIs can take a long time complete, for example ACBS has over 10 API calls. Some endpoints can fail and need retrying.
 
 By running these as background tasks, we take the load off of deal submission calls. Also allows us to retry and endpoints that fail (service could be down or having performance issues for example).
 

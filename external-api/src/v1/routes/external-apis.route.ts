@@ -333,7 +333,7 @@ apiRoutes.post('/acbs/facility/:id/amendments', acbs.amendAcbsFacilityPost);
  * /party-db/:partyDbCompanyRegistrationNumber:
  *   get:
  *     summary: Get a UKEF party
- *     tags: [PartyDB, APIM]
+ *     tags: [APIM, Salesforce]
  *     description: We only consume the Party URN (Unique Reference Number). Not all fields are in the response example.
  *     parameters:
  *       - in: path
@@ -360,7 +360,7 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  * /party-db/urn/:urn:
  *   get:
  *     summary: Get a UKEF company
- *     tags: [PartyDB, APIM, Salesforce, MCD]
+ *     tags: [APIM, Salesforce]
  *     description: Fetches complete company object from Party URN
  *     parameters:
  *       - in: path
