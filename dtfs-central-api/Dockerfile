@@ -31,7 +31,7 @@ RUN npm cache clean --force
 COPY . .
 
 # Execute Script
-ENTRYPOINT ["/bin/init.sh"]
+# ENTRYPOINT ["/bin/init.sh"]
 
 # Hot reloading
-# CMD node src/index.js
+CMD node src/index.js

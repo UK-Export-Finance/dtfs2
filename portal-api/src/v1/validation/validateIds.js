@@ -1,6 +1,11 @@
 const validator = require('validator');
 
-const isValidMongoId = (mongoId) => validator.isMongoId(mongoId);
+const isValidMongoId = (mongoId) => {
+  if (!mongoId) {
+    return false;
+  }
+  return validator.isMongoId(mongoId);
+};
 
 module.exports = {
   isValidMongoId,
