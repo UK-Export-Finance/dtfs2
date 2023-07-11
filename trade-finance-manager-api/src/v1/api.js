@@ -411,7 +411,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
     }
   } else {
     console.error(`Invalid facility Id: ${facilityId}`);
-    return { status: 400, data: 'Invalid facility Id amendment Id provided' };
+    return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
 
@@ -432,7 +432,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
     }
   } else {
     console.error(`Invalid facility Id: ${facilityId}`);
-    return { status: 400, data: 'Invalid facility Id amendment Id provided' };
+    return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
 
@@ -624,6 +624,7 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
   }
 };
 
+// TODO need to figure out if this is vulnerable to SSRF
 const getPartyDbInfo = async ({ companyRegNo }) => {
   try {
     const response = await axios({
@@ -663,6 +664,7 @@ const getCompanyInfo = async (partyUrn) => {
   }
 };
 
+// TODO validation on username here
 const findUser = async (username) => {
   try {
     const response = await axios({
@@ -1113,7 +1115,7 @@ const findBankById = async (bankId) => {
       headers,
     });
     return response.data;
-  } catch (response) {
+  } catch ({ response }) {
     console.error('Unable to get bank by id', response?.data);
     return response?.data;
   }

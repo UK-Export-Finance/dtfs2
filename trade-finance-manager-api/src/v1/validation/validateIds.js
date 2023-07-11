@@ -40,6 +40,12 @@ const isValidNumericId = (numericId) => {
     return false;
   }
 
+  const regex = /^\d+$/;
+
+  if (!regex.test(numericId)) {
+    return false;
+  }
+
   return true;
 };
 

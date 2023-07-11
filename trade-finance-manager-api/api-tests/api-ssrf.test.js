@@ -1,4 +1,3 @@
-
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
 const api = require('../src/v1/api');
@@ -6,7 +5,6 @@ const api = require('../src/v1/api');
 const mockAxios = new MockAdapter(axios);
 
 describe('API is protected against SSRF attacks', () => {
-
   describe('findOnePortalDeal', () => {
     mockAxios.reset();
     const mockResponse = {
@@ -365,7 +363,7 @@ describe('API is protected against SSRF attacks', () => {
     mockAxios.reset();
     const mockResponse = 'Mock amendment';
     const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments$/;
-    mockAxios.onPost('http://localhost:5005/v1/tfm/facilities/5ce819935e539c343f141ece/amendments').reply(200, mockResponse);
+    mockAxios.onPost(url).reply(200, mockResponse);
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
@@ -393,6 +391,876 @@ describe('API is protected against SSRF attacks', () => {
     });
   });
 
+  describe('updateFacilityAmendment', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock amendment';
+    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/.*$/;
+    mockAxios.onPut(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const validAmendmentId = '5ce819935e539c343f141ece';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id or amendment Id provided' };
 
+      const response = await api.updateFacilityAmendment(urlTraversal);
 
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const validFacilityId = '5ce819935e539c343f141ece';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id or amendment Id provided' };
+
+      const response = await api.updateFacilityAmendment(validFacilityId, localIp, 'Mock update');
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validFacilityId = '5ce819935e539c343f141ece';
+      const validAmendmentId = '5ce819935e539c343f141ece';
+
+      const response = await api.updateFacilityAmendment(validFacilityId, validAmendmentId, 'Mock update');
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getAmendmentInProgress', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock amendment';
+    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/in-progress$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.getAmendmentInProgress(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.getAmendmentInProgress(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validFacilityId = '5ce819935e539c343f141ece';
+
+      const response = await api.getAmendmentInProgress(validFacilityId);
+
+      expect(response).toMatchObject({ data: mockResponse, status: 200 });
+    });
+  });
+
+  describe('getCompletedAmendment', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock amendment';
+    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.getCompletedAmendment(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.getCompletedAmendment(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validFacilityId = '5ce819935e539c343f141ece';
+
+      const response = await api.getCompletedAmendment(validFacilityId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getLatestCompletedAmendmentValue', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock value';
+    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-value$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.getLatestCompletedAmendmentValue(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.getLatestCompletedAmendmentValue(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validFacilityId = '5ce819935e539c343f141ece';
+
+      const response = await api.getLatestCompletedAmendmentValue(validFacilityId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getLatestCompletedAmendmentDate', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock value';
+    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-cover-end-date$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.getLatestCompletedAmendmentDate(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.getLatestCompletedAmendmentDate(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validFacilityId = '5ce819935e539c343f141ece';
+
+      const response = await api.getLatestCompletedAmendmentDate(validFacilityId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getAmendmentById', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock value';
+    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const validAmendmentId = '5ce819935e539c343f141ece';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id or amendment Id provided' };
+
+      const response = await api.getAmendmentById(urlTraversal, validAmendmentId);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const validFacilityId = '5ce819935e539c343f141ece';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id or amendment Id provided' };
+
+      const response = await api.getAmendmentById(validFacilityId, localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validFacilityId = '5ce819935e539c343f141ece';
+      const validAmendmentId = '5ce819935e539c343f141ece';
+
+      const response = await api.getAmendmentById(validFacilityId, validAmendmentId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getAmendmentByFacilityId', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock amendment';
+    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.getAmendmentByFacilityId(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.getAmendmentByFacilityId(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validFacilityId = '5ce819935e539c343f141ece';
+
+      const response = await api.getAmendmentByFacilityId(validFacilityId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getAmendmentsByDealId', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock amendments';
+    const url = /^.*\/v1\/tfm\/deals\/.*\/amendments$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
+
+      const response = await api.getAmendmentsByDealId(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
+
+      const response = await api.getAmendmentsByDealId(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validDealId = '5ce819935e539c343f141ece';
+
+      const response = await api.getAmendmentsByDealId(validDealId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getAmendmentInProgressByDealId', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock amendment';
+    const url = /^.*\/v1\/tfm\/deals\/.*\/amendments\/in-progress$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
+
+      const response = await api.getAmendmentInProgressByDealId(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
+
+      const response = await api.getAmendmentInProgressByDealId(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validDealId = '5ce819935e539c343f141ece';
+
+      const response = await api.getAmendmentInProgressByDealId(validDealId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getCompletedAmendmentByDealId', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock amendment';
+    const url = /^.*\/v1\/tfm\/deals\/.*\/amendments\/completed$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
+
+      const response = await api.getCompletedAmendmentByDealId(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
+
+      const response = await api.getCompletedAmendmentByDealId(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validDealId = '5ce819935e539c343f141ece';
+
+      const response = await api.getCompletedAmendmentByDealId(validDealId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getLatestCompletedAmendmentByDealId', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock amendment';
+    const url = /^.*\/v1\/tfm\/deals\/.*\/amendment\/completed\/latest$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
+
+      const response = await api.getLatestCompletedAmendmentByDealId(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
+
+      const response = await api.getLatestCompletedAmendmentByDealId(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validDealId = '5ce819935e539c343f141ece';
+
+      const response = await api.getLatestCompletedAmendmentByDealId(validDealId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('updateGefFacility', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock facility';
+    const url = /^.*\/v1\/portal\/gef\/facilities\/.*$/;
+    mockAxios.onPut(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.updateGefFacility(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
+
+      const response = await api.updateGefFacility(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the facility id is valid', async () => {
+      const validFacility = '5ce819935e539c343f141ece';
+
+      const response = await api.updateGefFacility(validFacility);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getCompanyInfo', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock company';
+    const url = /^.*\/party-db\/urn\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid party urn provided' };
+
+      const response = await api.getCompanyInfo(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid party urn provided' };
+
+      const response = await api.getCompanyInfo(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the party URN is valid', async () => {
+      const validPartyUrn = '00381743';
+
+      const response = await api.getCompanyInfo(validPartyUrn);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getCompanyInfo', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock company';
+    const url = /^.*\/party-db\/urn\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid party urn provided' };
+
+      const response = await api.getCompanyInfo(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid party urn provided' };
+
+      const response = await api.getCompanyInfo(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the party URN is valid', async () => {
+      const validPartyUrn = '00381743';
+
+      const response = await api.getCompanyInfo(validPartyUrn);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('findUserById', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock user';
+    const url = /^.*\/v1\/tfm\/users\/id\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid user id provided' };
+
+      const response = await api.findUserById(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid user id provided' };
+
+      const response = await api.findUserById(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the user id is valid', async () => {
+      const validUserId = '5ce819935e539c343f141ece';
+
+      const response = await api.findUserById(validUserId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('findPortalUserById', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock user';
+    const url = /^.*\/v1\/user\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid user id provided' };
+
+      const response = await api.findPortalUserById(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid user id provided' };
+
+      const response = await api.findPortalUserById(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the user id is valid', async () => {
+      const validUserId = '5ce819935e539c343f141ece';
+
+      const response = await api.findPortalUserById(validUserId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('updateUserTasks', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock user';
+    const url = /^.*\/v1\/tfm\/users\/.*\/tasks$/;
+    mockAxios.onPut(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid user id provided' };
+
+      const response = await api.updateUserTasks(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid user id provided' };
+
+      const response = await api.updateUserTasks(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the user id is valid', async () => {
+      const validUserId = '5ce819935e539c343f141ece';
+
+      const response = await api.updateUserTasks(validUserId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('findOneTeam', () => {
+    mockAxios.reset();
+    const mockResponse = { team: 'Mock team' };
+    const url = /^.*\/v1\/tfm\/teams\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid team id provided' };
+
+      const response = await api.findOneTeam(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid team id provided' };
+
+      const response = await api.findOneTeam(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the team id is valid', async () => {
+      const validTeamId = '5ce819935e539c343f141ece';
+
+      const response = await api.findOneTeam(validTeamId);
+
+      expect(response).toEqual(mockResponse.team);
+    });
+  });
+
+  describe('findTeamMembers', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock team members';
+    const url = /^.*\/v1\/tfm\/users\/team\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid team id provided' };
+
+      const response = await api.findTeamMembers(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid team id provided' };
+
+      const response = await api.findTeamMembers(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the team id is valid', async () => {
+      const validTeamId = '5ce819935e539c343f141ece';
+
+      const response = await api.findTeamMembers(validTeamId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getCurrencyExchangeRate', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock exchange rate';
+    const url = /^.*\/currency-exchange-rate\/.*\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const validCurrencyCode = 'USD';
+      const expectedResponse = { status: 400, data: 'Invalid currency provided' };
+
+      const response = await api.getCurrencyExchangeRate(urlTraversal, validCurrencyCode);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const validCurrencyCode = 'USD';
+      const expectedResponse = { status: 400, data: 'Invalid currency provided' };
+
+      const response = await api.getCurrencyExchangeRate(validCurrencyCode, localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the currencies are valid', async () => {
+      const validCurrencyCodeUSD = 'USD';
+      const validCurrencyCodeGBP = 'GBP';
+
+      const response = await api.getCurrencyExchangeRate(validCurrencyCodeGBP, validCurrencyCodeUSD);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('findOneGefDeal', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock deal';
+    const url = /^.*\/v1\/portal\/gef\/deals\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
+
+      const response = await api.findOneGefDeal(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
+
+      const response = await api.findOneGefDeal(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validDealId = '5ce819935e539c343f141ece';
+
+      const response = await api.findOneGefDeal(validDealId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('updatePortalGefDealStatus', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock deal';
+    const url = /^.*\/v1\/portal\/gef\/deals\/.*\/status$/;
+    mockAxios.onPut(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
+
+      const response = await api.updatePortalGefDealStatus(urlTraversal, 'mock status');
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
+
+      const response = await api.updatePortalGefDealStatus(localIp, 'mock status');
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validDealId = '5ce819935e539c343f141ece';
+
+      const response = await api.updatePortalGefDealStatus(validDealId, 'mock status');
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('updatePortalGefDeal', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock deal';
+    const url = /^.*\/v1\/portal\/gef\/deals\/.*$/;
+    mockAxios.onPut(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
+
+      const response = await api.updatePortalGefDealStatus(urlTraversal, 'mock update');
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
+
+      const response = await api.updatePortalGefDealStatus(localIp, 'mock update');
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validDealId = '5ce819935e539c343f141ece';
+
+      const response = await api.updatePortalGefDealStatus(validDealId, 'mock update');
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('updateGefMINActivity', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock deal';
+    const url = /^.*\/v1\/portal\/gef\/deals\/activity\/.*$/;
+    mockAxios.onPut(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
+
+      const response = await api.updateGefMINActivity(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
+
+      const response = await api.updateGefMINActivity(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validDealId = '5ce819935e539c343f141ece';
+
+      const response = await api.updateGefMINActivity(validDealId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('addUnderwriterCommentToGefDeal', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock deal';
+    const url = /^.*\/v1\/portal\/gef\/deals\/.*\/comment$/;
+    mockAxios.onPost(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
+
+      const response = await api.addUnderwriterCommentToGefDeal(urlTraversal, 'mock comment type', 'mock comment');
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
+
+      const response = await api.addUnderwriterCommentToGefDeal(localIp, 'mock comment type', 'mock comment');
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validDealId = '5ce819935e539c343f141ece';
+
+      const response = await api.addUnderwriterCommentToGefDeal(validDealId, 'mock comment type', 'mock comment');
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('findBankById', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock bank';
+    const url = /^.*\/v1\/bank\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid bank id provided' };
+
+      const response = await api.findBankById(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid bank id provided' };
+
+      const response = await api.findBankById(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the bank id is valid', async () => {
+      const validBankId = 3;
+
+      const response = await api.findBankById(validBankId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('getGefMandatoryCriteriaByVersion', () => {
+    mockAxios.reset();
+    const mockResponse = 'Mock mandatory criteria';
+    const url = /^.*\/v1\/portal\/gef\/mandatory-criteria\/version\/.*$/;
+    mockAxios.onGet(url).reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid mandatory criteria version provided' };
+
+      const response = await api.getGefMandatoryCriteriaByVersion(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid mandatory criteria version provided' };
+
+      const response = await api.getGefMandatoryCriteriaByVersion(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validVersion = '37';
+
+      const response = await api.getGefMandatoryCriteriaByVersion(validVersion);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
 });
