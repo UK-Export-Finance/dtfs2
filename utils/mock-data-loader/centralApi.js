@@ -53,6 +53,8 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
 };
 
 const listFacilities = async () => {
+  console.log(headers);
+  console.log(CENTRAL_API_KEY);
   const response = await axios({
     url: `${urlRoot}/v1/portal/facilities`,
     method: 'get',
