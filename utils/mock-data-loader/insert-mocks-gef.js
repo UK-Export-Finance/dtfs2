@@ -3,7 +3,6 @@ const api = require('./gef/api');
 const MOCKS = require('./gef');
 
 const insertMocks = async (token) => {
-
   console.info('inserting GEF mandatory-criteria-versioned');
   for (const item of MOCKS.MANDATORY_CRITERIA_VERSIONED) {
     await api.createMandatoryCriteriaVersioned(item, token);
