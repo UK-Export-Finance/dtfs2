@@ -1,4 +1,4 @@
-const { 
+const {
   isValidMongoId,
   isValidUkefNumericId,
   isValidPartyUrn,

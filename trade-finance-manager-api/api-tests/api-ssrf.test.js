@@ -1,10 +1,11 @@
-const api = require('../src/v1/api');
+
 const axios = require('axios');
-var MockAdapter = require('axios-mock-adapter');
+const MockAdapter = require('axios-mock-adapter');
+const api = require('../src/v1/api');
+
 const mockAxios = new MockAdapter(axios);
 
 describe('API is protected against SSRF attacks', () => {
-
   beforeEach(() => {
     mockAxios.reset();
   });
@@ -351,6 +352,39 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toEqual(mockResponse);
     });
   });
+
+  describe('createFacilityAmendment', () => {
+    const mockResponse = 'Mock amendment';
+    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments$/;
+    mockAxios.onPost('http://localhost:5005/v1/tfm/facilities/5ce819935e539c343f141ece/amendments').reply(200, mockResponse);
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid facility id' };
+
+      const response = await api.createFacilityAmendment(urlTraversal);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid facility id' };
+
+      const response = await api.createFacilityAmendment(localIp);
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validFacilityId = '5ce819935e539c343f141ece';
+
+      console.log(url.test('http://localhost:5005/v1/tfm/facilities/5ce819935e539c343f141ece/amendments'));
+      const response = await api.createFacilityAmendment(validFacilityId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
 
 
 });

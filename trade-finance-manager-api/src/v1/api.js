@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
-const { isValidMongoId, isValidPartyUrn, isValidNumericId } = require('./validation/validateIds');
+const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode } = require('./validation/validateIds');
 const CONSTANTS = require('../constants');
 require('dotenv').config();
 
@@ -779,12 +779,12 @@ const findTeamMembers = async (teamId) => {
 
 const getCurrencyExchangeRate = async (source, target) => {
   try {
-    const sourceIsValid = isValidCurrency(source);
-    const targetIsValid = isValidCurrency(target);
+    const sourceIsValid = isValidCurrencyCode(source);
+    const targetIsValid = isValidCurrencyCode(target);
 
     if (!sourceIsValid || !targetIsValid) {
       return { status: 400, data: 'Invalid currency provided' };
-    };
+    }
 
     const response = await axios({
       method: 'get',
