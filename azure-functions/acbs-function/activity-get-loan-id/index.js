@@ -62,7 +62,7 @@ const getLoanId = async (context) => {
 
     return null;
   } catch (error) {
-    console.error('Error fetching loan id for facility: ', { error });
+    console.error('Error getting loan id for facility: ', { error });
     throw new Error(error);
   }
 };

@@ -16,42 +16,47 @@ const { findMissingMandatory } = require('../helpers/mandatoryFields');
 const mandatoryFields = ['maximumLiability', 'currency', 'guaranteeExpiryDate', 'effectiveDate'];
 
 const createFacilityInvestor = async (context) => {
-  const { facilityIdentifier, acbsFacilityInvestorInput } = context.bindingData;
+  try {
+    const { facilityIdentifier, acbsFacilityInvestorInput } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(acbsFacilityInvestorInput, mandatoryFields);
+    const missingMandatory = findMissingMandatory(acbsFacilityInvestorInput, mandatoryFields);
 
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
+
+    const submittedToACBS = moment().format();
+
+    const { status, data } = await api.createFacilityInvestor(facilityIdentifier, acbsFacilityInvestorInput);
+
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'ACBS Facility Investor create error',
+            facilityIdentifier,
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: acbsFacilityInvestorInput,
+          },
+          null,
+          4,
+        ),
+      );
+    }
+
+    return {
+      status,
+      dataSent: acbsFacilityInvestorInput,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      ...data,
+    };
+  } catch (error) {
+    console.error('Unable to create facility investor record.', { error });
+    throw new Error(error);
   }
-
-  const submittedToACBS = moment().format();
-
-  const { status, data } = await api.createFacilityInvestor(facilityIdentifier, acbsFacilityInvestorInput);
-
-  if (isHttpErrorStatus(status)) {
-    throw new Error(
-      JSON.stringify(
-        {
-          name: 'ACBS Facility Investor create error',
-          facilityIdentifier,
-          submittedToACBS,
-          receivedFromACBS: moment().format(),
-          dataReceived: data,
-          dataSent: acbsFacilityInvestorInput,
-        },
-        null,
-        4,
-      ),
-    );
-  }
-
-  return {
-    status,
-    dataSent: acbsFacilityInvestorInput,
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
 };
 
 module.exports = createFacilityInvestor;

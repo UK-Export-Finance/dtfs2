@@ -17,42 +17,47 @@ const { findMissingMandatory } = require('../helpers/mandatoryFields');
 const mandatoryFields = ['lenderTypeCode', 'initialBundleStatusCode', 'facilityTransactionCodeValueCode'];
 
 const createCodeValueTransaction = async (context) => {
-  const { facilityIdentifier, acbsCodeValueTransactionInput } = context.bindingData;
+  try {
+    const { facilityIdentifier, acbsCodeValueTransactionInput } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(acbsCodeValueTransactionInput, mandatoryFields);
+    const missingMandatory = findMissingMandatory(acbsCodeValueTransactionInput, mandatoryFields);
 
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
+
+    const submittedToACBS = moment().format();
+    const { status, data } = await api.createCodeValueTransaction(facilityIdentifier, acbsCodeValueTransactionInput);
+
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'ACBS code create value transaction error',
+            status,
+            facilityIdentifier,
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: acbsCodeValueTransactionInput,
+          },
+          null,
+          4,
+        ),
+      );
+    }
+
+    return {
+      status,
+      dataSent: acbsCodeValueTransactionInput,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      ...data,
+    };
+  } catch (error) {
+    console.error('Error creating facility code value transaction record: ', { error });
+    throw new Error(error);
   }
-
-  const submittedToACBS = moment().format();
-  const { status, data } = await api.createCodeValueTransaction(facilityIdentifier, acbsCodeValueTransactionInput);
-
-  if (isHttpErrorStatus(status)) {
-    throw new Error(
-      JSON.stringify(
-        {
-          name: 'ACBS code create value transaction error',
-          status,
-          facilityIdentifier,
-          submittedToACBS,
-          receivedFromACBS: moment().format(),
-          dataReceived: data,
-          dataSent: acbsCodeValueTransactionInput,
-        },
-        null,
-        4,
-      ),
-    );
-  }
-
-  return {
-    status,
-    dataSent: acbsCodeValueTransactionInput,
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
 };
 
 module.exports = createCodeValueTransaction;

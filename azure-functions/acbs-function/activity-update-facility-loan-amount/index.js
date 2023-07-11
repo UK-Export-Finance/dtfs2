@@ -21,7 +21,6 @@ const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
 const mandatoryFields = [
-  'portfolioIdentifier',
   'effectiveDate',
   'amountAmendment',
 ];

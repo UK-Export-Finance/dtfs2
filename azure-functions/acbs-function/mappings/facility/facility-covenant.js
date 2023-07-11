@@ -11,16 +11,21 @@ const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
 const facilityCovenant = (deal, facility, covenantType) => {
-  const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
-  const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
+  try {
+    const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
+    const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
-  return {
-    covenantType,
-    maximumLiability: helpers.getMaximumLiability(facility, true),
-    currency,
-    guaranteeExpiryDate,
-    effectiveDate,
-  };
+    return {
+      covenantType,
+      maximumLiability: helpers.getMaximumLiability(facility, true),
+      currency,
+      guaranteeExpiryDate,
+      effectiveDate,
+    };
+  } catch (error) {
+    console.error('Unable to map facility covenant record.', { error });
+    return error;
+  }
 };
 
 module.exports = facilityCovenant;
