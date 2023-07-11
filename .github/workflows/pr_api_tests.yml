@@ -121,7 +121,7 @@ jobs:
       - name: TFM
         run: docker-compose exec -T trade-finance-manager-api npm run api-test
 
-      - name: Cental
+      - name: Central
         run: docker-compose exec -T dtfs-central-api npm run api-test
 
       - name: External
