@@ -16,17 +16,17 @@ const isValidUkefNumericId = (ukefId) => {
     return false;
   }
 
-  return ukefId;
+  return true;
 };
 
 const isValidPartyUrn = (partyUrn) => {
   const regex = /^[0-9]{8}$/;
 
-  if (!regex.test(partyUrn)) {
-    return false;
+  if (regex.test(partyUrn)) {
+    return true;
   }
 
-  return partyUrn;
+  return false;
 };
 
 const isValidNumericId = (numericId) => {
@@ -36,10 +36,15 @@ const isValidNumericId = (numericId) => {
     return false;
   }
 
-  return numericId;
+  return true;
 };
 
-const isValidCurrencyCode = (currencyCode) => validator.isCurrency(currencyCode);
+const isValidCurrencyCode = (currencyCode) => {
+  if (!currencyCode) {
+    return false;
+  }
+  return validator.isISO4217(currencyCode);
+};
 
 module.exports = {
   isValidMongoId,

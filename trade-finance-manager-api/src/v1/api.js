@@ -326,7 +326,7 @@ const createFacilityAmendment = async (facilityId) => {
     }
   } else {
     console.error('Invalid facilityId provided');
-    return { status: 400, data: 'Invalid ObjectId' };
+    return { status: 400, data: 'Invalid facility id' };
   }
 };
 

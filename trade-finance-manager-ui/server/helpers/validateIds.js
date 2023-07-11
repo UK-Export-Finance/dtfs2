@@ -1,15 +1,20 @@
 const validator = require('validator');
 
-const isValidMongoId = (mongoId) => validator.isMongoId(mongoId);
+const isValidMongoId = (mongoId) => {
+  if (!mongoId) {
+    return false;
+  }
+  return validator.isMongoId(mongoId);
+};
 
 const isValidPartyUrn = (partyUrn) => {
   const regex = /^[0-9]{8}$/;
 
-  if (!regex.test(partyUrn)) {
-    return false;
+  if (regex.test(partyUrn)) {
+    return true;
   }
 
-  return partyUrn;
+  return false;
 };
 
 module.exports = {
