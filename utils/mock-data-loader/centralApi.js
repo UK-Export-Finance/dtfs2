@@ -58,6 +58,7 @@ const listFacilities = async () => {
     method: 'get',
     headers
   }).catch((err) => { console.error(`err: ${err}`); });
+  console.log(response);
 
   if (!response) return [];
   return response.data;
@@ -69,6 +70,8 @@ const deleteFacility = async (facilityId) => {
     url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
     headers,
   }).catch((err) => { console.error(`err: ${err}`); });
+  console.log(1);
+  console.log(response);
 
   return response.data;
 };
