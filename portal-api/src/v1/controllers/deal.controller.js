@@ -83,9 +83,7 @@ const createDeal = async (dealBody, user) => {
 exports.createDeal = createDeal;
 
 exports.create = async (req, res) => {
-  console.log('==HERE==');
   const { status, data } = await createDeal(req.body, req.user);
-  console.log('==HERE==1', status, data);
   return res.status(status).send(data);
 };
 
