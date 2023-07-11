@@ -2,26 +2,24 @@ const axios = require('axios');
 
 require('dotenv').config();
 
-const centralApiUrl = process.env.DTFS_CENTRAL_API_URL;
-const tfmUrl = process.env.TFM_API_URL;
-const { DTFS_CENTRAL_API_KEY, TFM_API_KEY } = process.env;
-
-const centralApiHeaders = {
-  'Content-Type': 'application/json',
-  'x-api-key': DTFS_CENTRAL_API_KEY,
-};
-
-const tfmApiHeaders = {
-  'Content-Type': 'application/json',
-  'x-api-key': TFM_API_KEY,
+const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY, TFM_API_URL, TFM_API_KEY } = process.env;
+const headers = {
+  central: {
+    'Content-Type': 'application/json',
+    'x-api-key': DTFS_CENTRAL_API_KEY,
+  },
+  tfm: {
+    'Content-Type': 'application/json',
+    'x-api-key': TFM_API_KEY,
+  }
 };
 
 const findOneDeal = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
+      headers: headers.central,
     });
 
     return response.data.deal;
@@ -34,8 +32,8 @@ const createDeal = async (deal, user) => {
   try {
     return await axios({
       method: 'post',
-      url: `${centralApiUrl}/v1/portal/deals`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals`,
+      headers: headers.central,
       data: {
         deal,
         user,
@@ -50,8 +48,8 @@ const updateDeal = async (dealId, dealUpdate, user) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
+      headers: headers.central,
       data: {
         dealUpdate,
         user,
@@ -68,8 +66,8 @@ const deleteDeal = async (dealId) => {
   try {
     return await axios({
       method: 'delete',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
+      headers: headers.central,
     });
   } catch (err) {
     return err;
@@ -80,8 +78,8 @@ const addDealComment = async (dealId, commentType, comment) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/comment`,
+      headers: headers.central,
       data: {
         commentType,
         comment,
@@ -98,8 +96,8 @@ const createFacility = async (facility, user) => {
   try {
     return await axios({
       method: 'post',
-      url: `${centralApiUrl}/v1/portal/facilities`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities`,
+      headers: headers.central,
       data: {
         facility,
         user,
@@ -114,8 +112,8 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
   try {
     return await axios({
       method: 'post',
-      url: `${centralApiUrl}/v1/portal/multiple-facilities`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/multiple-facilities`,
+      headers: headers.central,
       data: {
         facilities,
         dealId,
@@ -131,8 +129,8 @@ const findOneFacility = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
+      headers: headers.central,
     });
 
     return response.data;
@@ -145,8 +143,8 @@ const updateFacility = async (facilityId, facility, user) => {
   try {
     return await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
+      headers: headers.central,
       data: {
         ...facility,
         user,
@@ -161,8 +159,8 @@ const deleteFacility = async (facilityId, user) => {
   try {
     return await axios({
       method: 'delete',
-      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
+      headers: headers.central,
       data: {
         user,
       },
@@ -176,8 +174,8 @@ const tfmDealSubmit = async (dealId, dealType, checker) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${tfmUrl}/v1/deals/submit`,
-      headers: tfmApiHeaders,
+      url: `${TFM_API_URL}/v1/deals/submit`,
+      headers: headers.tfm,
       data: {
         dealId,
         dealType,
@@ -195,8 +193,8 @@ const findLatestGefMandatoryCriteria = async () => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/latest`,
-      headers: centralApiHeaders,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/mandatory-criteria/latest`,
+      headers: headers.central,
     });
 
     return { status: 200, data: response.data };
