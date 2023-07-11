@@ -14,23 +14,15 @@ const isValidUkefNumericId = (ukefId) => {
     return false;
   }
 
-  const regex = /^[0-9]{10}$/;
+  const regex = /^\d{10}$/;
 
-  if (!regex.test(ukefId)) {
-    return false;
-  }
-
-  return true;
+  return regex.test(ukefId)
 };
 
 const isValidPartyUrn = (partyUrn) => {
-  const regex = /^[0-9]{8}$/;
+  const regex = /^\d{8}$/;
 
-  if (regex.test(partyUrn)) {
-    return true;
-  }
-
-  return false;
+  return regex.test(partyUrn);
 };
 
 const isValidNumericId = (numericId) => {
@@ -42,11 +34,7 @@ const isValidNumericId = (numericId) => {
 
   const regex = /^\d+$/;
 
-  if (!regex.test(numericId)) {
-    return false;
-  }
-
-  return true;
+  return regex.test(numericId);
 };
 
 const isValidCurrencyCode = (currencyCode) => {

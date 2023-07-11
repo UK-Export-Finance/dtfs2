@@ -401,7 +401,7 @@ describe('API is protected against SSRF attacks', () => {
       const validAmendmentId = '5ce819935e539c343f141ece';
       const expectedResponse = { status: 400, data: 'Invalid facility Id or amendment Id provided' };
 
-      const response = await api.updateFacilityAmendment(urlTraversal);
+      const response = await api.updateFacilityAmendment(urlTraversal, validAmendmentId, 'Mock update');
 
       expect(response).toMatchObject(expectedResponse);
     });

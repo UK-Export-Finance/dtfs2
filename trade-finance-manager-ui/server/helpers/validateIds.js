@@ -8,13 +8,9 @@ const isValidMongoId = (mongoId) => {
 };
 
 const isValidPartyUrn = (partyUrn) => {
-  const regex = /^[0-9]{8}$/;
+  const regex = /^\d{8}$/;
 
-  if (regex.test(partyUrn)) {
-    return true;
-  }
-
-  return false;
+  return regex.test(partyUrn);
 };
 
 module.exports = {
