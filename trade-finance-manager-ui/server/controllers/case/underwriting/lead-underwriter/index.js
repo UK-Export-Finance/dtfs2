@@ -4,7 +4,7 @@ const mapAssignToSelectOptions = require('../../../../helpers/map-assign-to-sele
 const { userIsInTeam } = require('../../../../helpers/user');
 const { sortArrayOfObjectsAlphabetically } = require('../../../../helpers/array');
 
-const getLeadUnderwriter = async (deal, user) => {
+const getLeadUnderwriter = async (deal, user, token) => {
   let currentLeadUnderWriter;
   let currentLeadUnderWriterUserId;
 
@@ -13,7 +13,7 @@ const getLeadUnderwriter = async (deal, user) => {
   }
 
   if (currentLeadUnderWriterUserId && currentLeadUnderWriterUserId !== CONSTANTS.TASKS.UNASSIGNED) {
-    currentLeadUnderWriter = await api.getUser(currentLeadUnderWriterUserId);
+    currentLeadUnderWriter = await api.getUser(currentLeadUnderWriterUserId, token);
   }
 
   const userCanEdit = userIsInTeam(user, [CONSTANTS.TEAMS.UNDERWRITER_MANAGERS, CONSTANTS.TEAMS.UNDERWRITERS]);

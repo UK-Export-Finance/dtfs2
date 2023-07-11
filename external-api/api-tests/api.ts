@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const { API_KEY } = process.env;
+const { EXTERNAL_API_KEY } = process.env;
 
 const headers = {
-  'x-api-key': API_KEY,
+  'x-api-key': EXTERNAL_API_KEY,
 };
 
 module.exports = (app: any) => ({

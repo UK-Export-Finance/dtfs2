@@ -24,7 +24,7 @@ context('Facility page', () => {
         dealOneFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealOne._id, dealType);
+      cy.submitDeal(dealOne._id, dealType, T1_USER_1);
     });
 
     cy.insertOneDeal(MOCK_DEAL_MIA, MOCK_MAKER_TFM).then((insertedDeal) => {
@@ -35,7 +35,7 @@ context('Facility page', () => {
         dealTwoFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealTwo._id, dealType);
+      cy.submitDeal(dealTwo._id, dealType, T1_USER_1);
     });
   });
 

@@ -9,6 +9,8 @@ import {
   submitTaskComplete,
 } from './tasks-helpers';
 
+const { T1_USER_1 } = MOCK_USERS;
+
 context('Case tasks - MIA deal', () => {
   let dealId;
   const dealFacilities = [];
@@ -17,7 +19,7 @@ context('Case tasks - MIA deal', () => {
   let usersInTeam;
 
   before(() => {
-    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username).then((userObj) => {
+    cy.getUser(MOCK_USERS.BUSINESS_SUPPORT_USER_1.username, T1_USER_1).then((userObj) => {
       userId = userObj._id;
     });
 
@@ -34,7 +36,7 @@ context('Case tasks - MIA deal', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, T1_USER_1);
 
       cy.login(MOCK_USERS.BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));

@@ -5,7 +5,8 @@ const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 
 const getAmendmentEffectiveDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
-  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (status !== 200) {
     return res.redirect('/not-found');
@@ -36,8 +37,9 @@ const getAmendmentEffectiveDate = async (req, res) => {
 
 const postAmendmentEffectiveDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
-  const { effectiveDate, errorsObject, effectiveDateErrors } = await effectiveDateValidation(req.body);
+  const { userToken } = req.session;
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
+  const { effectiveDate, errorsObject, effectiveDateErrors } = effectiveDateValidation(req.body);
   const { dealId } = amendment;
 
   if (effectiveDateErrors.length) {
@@ -56,7 +58,7 @@ const postAmendmentEffectiveDate = async (req, res) => {
 
   try {
     const payload = { effectiveDate };
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);

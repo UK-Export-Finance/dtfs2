@@ -21,7 +21,7 @@ context('User can view a case deal', () => {
           dealFacilities = createdFacilities;
         });
 
-        cy.submitDeal(dealId, dealType);
+        cy.submitDeal(dealId, dealType, T1_USER_1);
       });
   });
 

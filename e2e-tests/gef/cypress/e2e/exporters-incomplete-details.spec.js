@@ -32,7 +32,7 @@ context('Incomplete exporter section - application details page', () => {
     it('add the exporter', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
-      companiesHouse.regNumberField().type('8989898');
+      companiesHouse.regNumberField().type('06771815');
       companiesHouse.continueButton().click();
       automaticCover.noRadioButton().click();
       automaticCover.continueButton().click();
