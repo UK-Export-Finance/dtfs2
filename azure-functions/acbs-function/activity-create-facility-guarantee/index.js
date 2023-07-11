@@ -16,41 +16,46 @@ const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
 const mandatoryFields = ['guarantorParty', 'limitKey', 'guaranteeExpiryDate', 'effectiveDate', 'maximumLiability', 'guaranteeTypeCode'];
 const createFacilityGuarantee = async (context) => {
-  const { facilityIdentifier, acbsFacilityGuaranteeInput } = context.bindingData;
+  try {
+    const { facilityIdentifier, acbsFacilityGuaranteeInput } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(acbsFacilityGuaranteeInput, mandatoryFields);
+    const missingMandatory = findMissingMandatory(acbsFacilityGuaranteeInput, mandatoryFields);
 
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
+
+    const submittedToACBS = moment().format();
+    const { status, data } = await api.createFacilityGuarantee(facilityIdentifier, acbsFacilityGuaranteeInput);
+
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'ACBS Facility Guarantee create error',
+            facilityIdentifier,
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: acbsFacilityGuaranteeInput,
+          },
+          null,
+          4,
+        ),
+      );
+    }
+
+    return {
+      status,
+      dataSent: acbsFacilityGuaranteeInput,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      ...data,
+    };
+  } catch (error) {
+    console.error('Unable to create facility guarantee record.', { error });
+    throw new Error(error);
   }
-
-  const submittedToACBS = moment().format();
-  const { status, data } = await api.createFacilityGuarantee(facilityIdentifier, acbsFacilityGuaranteeInput);
-
-  if (isHttpErrorStatus(status)) {
-    throw new Error(
-      JSON.stringify(
-        {
-          name: 'ACBS Facility Guarantee create error',
-          facilityIdentifier,
-          submittedToACBS,
-          receivedFromACBS: moment().format(),
-          dataReceived: data,
-          dataSent: acbsFacilityGuaranteeInput,
-        },
-        null,
-        4,
-      ),
-    );
-  }
-
-  return {
-    status,
-    dataSent: acbsFacilityGuaranteeInput,
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
 };
 
 module.exports = createFacilityGuarantee;

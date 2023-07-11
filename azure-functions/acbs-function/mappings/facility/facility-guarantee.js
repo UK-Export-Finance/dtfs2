@@ -10,16 +10,21 @@
 const helpers = require('./helpers');
 
 const facilityGuarantee = (deal, facility, acbsData, guaranteeTypeCode) => {
-  const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
+  try {
+    const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
 
-  return {
-    guarantorParty: helpers.getGuarantorParty(acbsData, guaranteeTypeCode),
-    limitKey: acbsData.dealAcbsData.parties.exporter.partyIdentifier,
-    guaranteeExpiryDate,
-    effectiveDate,
-    maximumLiability: helpers.getMaximumLiability(facility),
-    guaranteeTypeCode,
-  };
+    return {
+      guarantorParty: helpers.getGuarantorParty(acbsData, guaranteeTypeCode),
+      limitKey: acbsData.dealAcbsData.parties.exporter.partyIdentifier,
+      guaranteeExpiryDate,
+      effectiveDate,
+      maximumLiability: helpers.getMaximumLiability(facility),
+      guaranteeTypeCode,
+    };
+  } catch (error) {
+    console.error('Unable to map facility guarantee record.', { error });
+    return error;
+  }
 };
 
 module.exports = facilityGuarantee;
