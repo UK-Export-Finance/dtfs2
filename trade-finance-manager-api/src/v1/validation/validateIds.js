@@ -56,10 +56,15 @@ const isValidCurrencyCode = (currencyCode) => {
   return validator.isISO4217(currencyCode);
 };
 
+const sanitizeUsername = (username) => {
+  return validator.escape(username);
+}
+
 module.exports = {
   isValidMongoId,
   isValidUkefNumericId,
   isValidPartyUrn,
   isValidNumericId,
   isValidCurrencyCode,
+  sanitizeUsername,
 };

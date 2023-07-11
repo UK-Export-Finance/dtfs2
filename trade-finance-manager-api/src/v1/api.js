@@ -1,6 +1,12 @@
 const axios = require('axios');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
-const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode } = require('./validation/validateIds');
+const {
+  isValidMongoId,
+  isValidPartyUrn,
+  isValidNumericId,
+  isValidCurrencyCode,
+  sanitizeUsername
+} = require('./validation/validateIds');
 const CONSTANTS = require('../constants');
 require('dotenv').config();
 
@@ -630,7 +636,6 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
   }
 };
 
-// TODO need to figure out if this is vulnerable to SSRF
 const getPartyDbInfo = async ({ companyRegNo }) => {
   try {
     const response = await axios({
@@ -670,12 +675,13 @@ const getCompanyInfo = async (partyUrn) => {
   }
 };
 
-// TODO validation on username here
 const findUser = async (username) => {
   try {
+    const sanitizedUsername = sanitizeUsername(username);
+
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/users/${username}`,
+      url: `${centralApiUrl}/v1/tfm/users/${sanitizedUsername}`,
       headers: centralApiHeaders,
     });
     return response.data;
