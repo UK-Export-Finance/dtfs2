@@ -53,14 +53,11 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
 };
 
 const listFacilities = async () => {
-  console.log(headers);
-  console.log(CENTRAL_API_KEY);
   const response = await axios({
     url: `${urlRoot}/v1/portal/facilities`,
     method: 'get',
     headers
   }).catch((err) => { console.error(`err: ${err}`); });
-  console.log(response);
 
   if (!response) return [];
   return response.data;
@@ -72,8 +69,6 @@ const deleteFacility = async (facilityId) => {
     url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
     headers,
   }).catch((err) => { console.error(`err: ${err}`); });
-  console.log(1);
-  console.log(response);
 
   return response.data;
 };

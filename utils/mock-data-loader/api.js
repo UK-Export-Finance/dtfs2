@@ -62,7 +62,6 @@ const createDeal = async (deal, token) => {
     url: `${portalApiUrl}/v1/deals`,
     data: deal,
   }).catch((err) => { console.error(`err: ${err}`); });
-  console.log(response);
 
   return response.data;
 };
@@ -77,7 +76,6 @@ const getDeal = async (dealId, token) => {
     },
     url: `${portalApiUrl}/v1/deals/${dealId}`,
   }).catch((err) => { console.error(`err: ${err}`); });
-  console.log(response);
 
   return response.data;
 };
