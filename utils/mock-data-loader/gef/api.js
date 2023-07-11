@@ -98,6 +98,8 @@ const listFacilities = async (token) => {
 };
 
 const deleteFacilities = async (facility, token) => {
+  console.log(facility);
+  console.log(token);
   const response = await axios({
     method: 'delete',
     headers: {
@@ -106,6 +108,7 @@ const deleteFacilities = async (facility, token) => {
     },
     url: `${portalApi}/v1/gef/facilities/${facility._id}`,
   }).catch((err) => { console.error(`err: ${err}`); });
+  console.log(response);
 
   return response;
 };
