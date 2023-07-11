@@ -309,7 +309,7 @@ const updateAmendment = async (facilityId, amendmentId, data, token) => {
     }
 
     if (!isValidAmendmentId) {
-      return { status: 400, data: 'Invalid facility id' };
+      return { status: 400, data: 'Invalid amendment id' };
     }
 
     const response = await axios({
