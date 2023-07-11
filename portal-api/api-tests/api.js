@@ -8,7 +8,7 @@ const { PORTAL_API_KEY } = process.env;
 
 const headers = (token) => ({
   'x-api-key': PORTAL_API_KEY,
-  Authorization: token || '',
+  Authorization: token,
 });
 
 module.exports = (app) => ({
