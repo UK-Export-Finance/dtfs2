@@ -4,7 +4,7 @@ const { mockReq, mockRes, mockNext } = require('../../../mocks');
 
 dotenv.config();
 
-const { CENTRAL_API_KEY } = process.env;
+const { DTFS_CENTRAL_API_KEY } = process.env;
 
 describe('routes/middleware/headers/check-api-key', () => {
   const req = mockReq();
@@ -25,7 +25,7 @@ describe('routes/middleware/headers/check-api-key', () => {
   describe('when x-api-key header is invalid', () => {
     it('should call res.status with 401', () => {
       req.headers = {
-        'x-api-key': `${CENTRAL_API_KEY}-invalid`,
+        'x-api-key': `${DTFS_CENTRAL_API_KEY}-invalid`,
       };
 
       checkApiKey(req, res, next);
@@ -38,7 +38,7 @@ describe('routes/middleware/headers/check-api-key', () => {
   describe('when x-api-key header is valid', () => {
     it('should call next', () => {
       req.headers = {
-        'x-api-key': CENTRAL_API_KEY,
+        'x-api-key': DTFS_CENTRAL_API_KEY,
       };
 
       checkApiKey(req, res, next);

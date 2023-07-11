@@ -33,7 +33,7 @@ services:
       - TZ=Europe/London
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - NODE_ENV=${NODE_ENV}
     command: npx nodemon --inspect=0.0.0.0:9223 src/index.js -L
@@ -54,7 +54,7 @@ services:
       - PORT=5003
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
       - EXTERNAL_API_URL=http://external-api:5002
@@ -86,7 +86,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
@@ -125,7 +125,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
@@ -167,7 +167,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
@@ -191,7 +191,7 @@ services:
       - PORT=5002
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - CORS_ORIGIN
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
@@ -247,7 +247,7 @@ services:
       - NODE_ENV=${NODE_ENV}
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
     command: npx nodemon --inspect=0.0.0.0:9229 server/index.js -L --max_old_space_size=250
 

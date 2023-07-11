@@ -52,7 +52,7 @@ env:
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
   TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
   PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
-  CENTRAL_API_KEY: ${{ secrets.CENTRAL_API_KEY }}
+  DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}

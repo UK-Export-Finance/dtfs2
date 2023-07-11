@@ -9,7 +9,7 @@ const createUser = async (user, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/users`,
     data: user,
@@ -24,7 +24,7 @@ const importBssEwcsDeal = async (deal, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/deals/import/BSS-EWCS`,
     data: deal,
@@ -42,7 +42,7 @@ const importGefDeal = async (deal, facilities, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/deals/import/GEF`,
     data: {
@@ -63,7 +63,7 @@ const listUsers = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/users`,
   }).catch((err) => { console.info(`err: ${err}`); });
@@ -91,7 +91,7 @@ const listCountries = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/countries`,
   }).catch((err) => { console.info(`err: ${err}`); });
@@ -105,7 +105,7 @@ const listCurrencies = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/currencies`,
   }).catch((err) => { console.info(`err: ${err}`); });
@@ -119,7 +119,7 @@ const listIndustrySectors = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${portalApiUrl}/v1/industry-sectors`,
   }).catch((err) => { console.info(`err: ${err}`); });

@@ -32,7 +32,7 @@ services:
       - NODE_ENV=${NODE_ENV}
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
     entrypoint: npx nodemon src/index.js -L
 
@@ -51,7 +51,7 @@ services:
       - PORT=5003
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
       - EXTERNAL_API_URL=http://external-api:5002
@@ -81,7 +81,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
@@ -120,7 +120,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - SESSION_SECRET
       - TZ=Europe/London
@@ -163,7 +163,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
@@ -187,7 +187,7 @@ services:
       - CORS_ORIGIN
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
@@ -239,7 +239,7 @@ services:
       - REDIS_HOSTNAME=redis
       - PORTAL_API_KEY
       - TFM_API_KEY
-      - CENTRAL_API_KEY
+      - DTFS_CENTRAL_API_KEY
     command: npx nodemon server/index.js -L
 
   number-generator-function:

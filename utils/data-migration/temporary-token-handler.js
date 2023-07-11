@@ -25,7 +25,7 @@ module.exports.removeMigrationUser = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${urlRoot}/v1/users/${migrationUserId}`,
   }).catch((err) => { console.error(`Error removing migration user ${err}`); });

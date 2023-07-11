@@ -7,7 +7,7 @@ require('dotenv').config();
 const {
   DTFS_CENTRAL_API_URL: centralApiUrl,
   EXTERNAL_API_URL,
-  CENTRAL_API_KEY,
+  DTFS_CENTRAL_API_KEY,
   EXTERNAL_API_KEY,
   AZURE_ACBS_FUNCTION_URL,
   AZURE_NUMBER_GENERATOR_FUNCTION_URL,
@@ -17,7 +17,7 @@ const { DURABLE_FUNCTIONS } = CONSTANTS;
 
 const centralApiHeaders = {
   'Content-Type': 'application/json',
-  'x-api-key': CENTRAL_API_KEY,
+  'x-api-key': DTFS_CENTRAL_API_KEY,
 };
 
 const externalApiHeaders = {

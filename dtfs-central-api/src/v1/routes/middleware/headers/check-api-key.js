@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const { CENTRAL_API_KEY } = process.env;
+const { DTFS_CENTRAL_API_KEY } = process.env;
 
 /**
  * Check that the x-api-key header is valid
@@ -28,7 +28,7 @@ const checkApiKey = (req, res, next) => {
    * x-api-key is valid.
    * Allow the request to continue.
    */
-  if (xApiKey === CENTRAL_API_KEY) {
+  if (xApiKey === DTFS_CENTRAL_API_KEY) {
     return next();
   }
 
