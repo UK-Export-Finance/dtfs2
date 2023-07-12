@@ -27,6 +27,11 @@ const getCaseDeal = async (req, res) => {
     return res.redirect('/not-found');
   }
 
+  if (!amendments) {
+    console.error('Unable to get amendments for deal id %s', dealId);
+    return res.redirect('/not-found');
+  }
+
   const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
   const hasAmendmentInProgress = amendmentsInProgress.length > 0;
   if (hasAmendmentInProgress) {
@@ -69,7 +74,7 @@ const getCaseTasks = async (req, res) => {
   }
   const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
-  if (amendments.length > 0) {
+  if (Array.isArray(amendments) && amendments.length > 0) {
     amendments.map((a) => {
       const amendment = a;
       amendment.tasks = filterTasks(amendment.tasks, tasksFilters);
@@ -124,7 +129,7 @@ const filterCaseTasks = async (req, res) => {
   }
   const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
-  if (amendments.length > 0) {
+  if (Array.isArray(amendments) && amendments.length > 0) {
     amendments.map((a) => {
       const amendment = a;
       amendment.tasks = filterTasks(amendment.tasks, tasksFilters);
