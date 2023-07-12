@@ -23,7 +23,7 @@ const getAmendmentRequestApproval = async (req, res) => {
       user: req.session.user,
     });
   } catch (err) {
-    console.error('Unable to get the amendment approval page %S', err);
+    console.error('Unable to get the amendment approval page %s', err);
     return res.redirect('/not-found');
   }
 };
@@ -65,7 +65,7 @@ const postAmendmentRequestApproval = async (req, res) => {
     console.error('Unable to update the amendment request approval');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-approval`);
   } catch (err) {
-    console.error('There was a problem creating the amendment approval %S', err);
+    console.error('There was a problem creating the amendment approval %s', err);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

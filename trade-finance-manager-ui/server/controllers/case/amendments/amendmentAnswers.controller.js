@@ -87,7 +87,7 @@ const postAmendmentAnswers = async (req, res) => {
     console.error('Unable to submit the amendment');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
   } catch (err) {
-    console.error('There was a problem creating the amendment approval %S', err);
+    console.error('There was a problem creating the amendment approval %s', err);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

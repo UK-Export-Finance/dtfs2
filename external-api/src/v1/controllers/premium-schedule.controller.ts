@@ -45,7 +45,7 @@ const premiumScheduleCalls = {
         data: [premiumSchedulePayloadFormatted],
       }).catch((error: any) => {
         console.error(
-          `Error calling POST Premium schedule with facilityURN: %S:`,
+          `Error calling POST Premium schedule with facilityURN: %s:`,
           premiumSchedulePayloadFormatted?.facilityURN,
           error?.response?.data,
           error?.response?.status,

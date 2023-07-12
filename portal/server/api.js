@@ -491,7 +491,7 @@ const validateBank = async (dealId, bankId, token) => {
     });
     return data;
   } catch (err) {
-    console.error('Unable to validate the bank %S', err);
+    console.error('Unable to validate the bank %s', err);
     return err?.response?.data;
   }
 };
