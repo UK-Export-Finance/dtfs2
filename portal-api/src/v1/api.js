@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { isValidMongoId } = require('./validation/validateIds');
 
 require('dotenv').config();
 
@@ -17,6 +18,11 @@ const headers = {
 
 const findOneDeal = async (dealId) => {
   try {
+    if (!isValidMongoId(dealId)) {
+      console.error('api.findOneDeal - invalid dealId provided ', dealId);
+      return false;
+    }
+
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
@@ -47,6 +53,11 @@ const createDeal = async (deal, user) => {
 
 const updateDeal = async (dealId, dealUpdate, user) => {
   try {
+    if (!isValidMongoId(dealId)) {
+      console.error('api.updateDeal - invalid dealId provided ', dealId);
+      return false;
+    }
+
     const response = await axios({
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
@@ -65,6 +76,11 @@ const updateDeal = async (dealId, dealUpdate, user) => {
 
 const deleteDeal = async (dealId) => {
   try {
+    if (!isValidMongoId(dealId)) {
+      console.error('api.deleteDeal - invalid dealId provided ', dealId);
+      return false;
+    }
+
     return await axios({
       method: 'delete',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
@@ -77,6 +93,11 @@ const deleteDeal = async (dealId) => {
 
 const addDealComment = async (dealId, commentType, comment) => {
   try {
+    if (!isValidMongoId(dealId)) {
+      console.error('api.addDealComment - invalid dealId provided ', dealId);
+      return false;
+    }
+
     const response = await axios({
       method: 'post',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/comment`,
@@ -128,6 +149,11 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
 
 const findOneFacility = async (facilityId) => {
   try {
+    if (!isValidMongoId(facilityId)) {
+      console.error('api.findOneFacility - invalid facilityId provided ', facilityId);
+      return false;
+    }
+
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
@@ -142,6 +168,11 @@ const findOneFacility = async (facilityId) => {
 
 const updateFacility = async (facilityId, facility, user) => {
   try {
+    if (!isValidMongoId(facilityId)) {
+      console.error('api.updateFacility - invalid facilityId provided ', facilityId);
+      return false;
+    }
+
     return await axios({
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
@@ -158,6 +189,11 @@ const updateFacility = async (facilityId, facility, user) => {
 
 const deleteFacility = async (facilityId, user) => {
   try {
+    if (!isValidMongoId(facilityId)) {
+      console.error('api.deleteFacility - invalid facilityId provided ', facilityId);
+      return false;
+    }
+
     return await axios({
       method: 'delete',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
