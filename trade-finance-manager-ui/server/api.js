@@ -18,8 +18,7 @@ const createActivityMutation = require('./graphql/mutations/create-activity');
 
 require('dotenv').config();
 
-const tfmAPIurl = process.env.TRADE_FINANCE_MANAGER_API_URL;
-const { TFM_API_KEY } = process.env;
+const { TFM_API_URL, TFM_API_KEY } = process.env;
 
 const generateHeaders = (token) => ({
   Authorization: token,
@@ -199,7 +198,7 @@ const login = async (username, password) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${tfmAPIurl}/v1/login`,
+      url: `${TFM_API_URL}/v1/login`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -226,7 +225,7 @@ const updateUserPassword = async (id, update, token) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${tfmAPIurl}/v1/users/${id}`,
+      url: `${TFM_API_URL}/v1/users/${id}`,
       headers: generateHeaders(token),
       data: update,
     }).catch((err) => err.response);
@@ -241,7 +240,7 @@ const updateUserPassword = async (id, update, token) => {
 const createFeedback = async (formData, token) => {
   const response = await axios({
     method: 'post',
-    url: `${tfmAPIurl}/v1/feedback`,
+    url: `${TFM_API_URL}/v1/feedback`,
     headers: generateHeaders(token),
     data: formData,
   });
@@ -252,7 +251,7 @@ const getUser = async (userId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/users/${userId}`,
+      url: `${TFM_API_URL}/v1/users/${userId}`,
       headers: generateHeaders(token),
     });
 
@@ -267,14 +266,14 @@ const createFacilityAmendment = async (facilityId, token) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments`,
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments`,
       headers: generateHeaders(token),
       data: { facilityId },
     });
 
     return response.data;
   } catch (err) {
-    console.error('Unable to create new amendment %O', { response: err?.response?.data });
+    console.error('Unable to create new amendment %s', err);
     return err?.response?.data;
   }
 };
@@ -283,14 +282,14 @@ const updateAmendment = async (facilityId, amendmentId, data, token) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
       headers: generateHeaders(token),
       data,
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to create amendment request %O', { response: err?.response?.data });
+    console.error('Unable to create amendment request %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -299,13 +298,13 @@ const getAmendmentInProgress = async (facilityId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/in-progress`,
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/in-progress`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment in progress %O', { response: err?.response?.data });
+    console.error('Unable to get the amendment in progress %s', err);
     return { status: err?.response?.status || 500, data: err?.response?.data };
   }
 };
@@ -314,13 +313,13 @@ const getAllAmendmentsInProgress = async (token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/amendments/in-progress`,
+      url: `${TFM_API_URL}/v1/amendments/in-progress`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendments in progress %O', { response: err?.response?.data });
+    console.error('Unable to get the amendments in progress %s', err);
     return { status: err?.response?.status || 500, data: err?.response?.data };
   }
 };
@@ -329,13 +328,13 @@ const getCompletedAmendment = async (facilityId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed`,
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the completed amendment %O', { response: err?.response?.data });
+    console.error('Unable to get the completed amendment %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -344,13 +343,13 @@ const getLatestCompletedAmendmentValue = async (facilityId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed/latest-value`,
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed/latest-value`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the latest completed value amendment %O', { response: err?.response?.data });
+    console.error('Unable to get the latest completed value amendment %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -359,13 +358,13 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the latest completed coverEndDate amendment %O', { response: err?.response?.data });
+    console.error('Unable to get the latest completed coverEndDate amendment %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -374,13 +373,13 @@ const getAmendmentById = async (facilityId, amendmentId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment by Id %O', { response: err?.response?.data });
+    console.error('Unable to get the amendment by Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -389,13 +388,13 @@ const getAmendmentsByFacilityId = async (facilityId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments`,
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment by Id %O', { response: err?.response?.data });
+    console.error('Unable to get the amendment by Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -404,13 +403,13 @@ const getAmendmentsByDealId = async (dealId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments`,
+      url: `${TFM_API_URL}/v1/deals/${dealId}/amendments`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment by deal Id %O', { response: err?.response?.data });
+    console.error('Unable to get the amendment by deal Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -419,13 +418,13 @@ const getAmendmentInProgressByDealId = async (dealId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/in-progress`,
+      url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/in-progress`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment in progress by deal Id %O', { response: err?.response?.data });
+    console.error('Unable to get the amendment in progress by deal Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -434,13 +433,13 @@ const getCompletedAmendmentByDealId = async (dealId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/completed`,
+      url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/completed`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the completed amendment by deal Id %O', { response: err?.response?.data });
+    console.error('Unable to get the completed amendment by deal Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -449,13 +448,13 @@ const getLatestCompletedAmendmentByDealId = async (dealId, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/completed/latest`,
+      url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/completed/latest`,
       headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the latest completed amendment by deal Id %O', { response: err?.response?.data });
+    console.error('Unable to get the latest completed amendment by deal Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
@@ -464,7 +463,7 @@ const getParty = async (partyUrn, token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/party/urn/${partyUrn}`,
+      url: `${TFM_API_URL}/v1/party/urn/${partyUrn}`,
       headers: generateHeaders(token),
     });
 
@@ -473,7 +472,7 @@ const getParty = async (partyUrn, token) => {
       data: response.data,
     };
   } catch (err) {
-    console.error('Unable to get party %O', { response: err?.response?.data });
+    console.error('Unable to get party %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };

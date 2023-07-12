@@ -236,7 +236,7 @@ const findLatestGefMandatoryCriteria = async () => {
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the latest mandatory criteria for GEF deals %O', { response: err?.response?.data });
+    console.error('Unable to get the latest mandatory criteria for GEF deals %s', err);
     return { status: 500, data: err?.response?.data };
   }
 };
