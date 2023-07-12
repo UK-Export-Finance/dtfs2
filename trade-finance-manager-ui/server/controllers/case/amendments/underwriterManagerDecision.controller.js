@@ -72,7 +72,7 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
     console.error('Unable to add the underwriter managers decision');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (err) {
-    console.error('There was a problem adding the manager\'s decision %s', err);
+    console.error('There was a problem adding the manager\'s decision %S', err);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };
@@ -135,7 +135,7 @@ const postAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
     console.error('Unable to add the underwriter managers decision');
     return res.redirect(`/case/${dealId}/underwriting`);
   } catch (err) {
-    console.error('There was a problem adding the manager\'s decision %s', err);
+    console.error('There was a problem adding the manager\'s decision %S', err);
     return res.redirect(`/case/${dealId}/underwriting`);
   }
 };

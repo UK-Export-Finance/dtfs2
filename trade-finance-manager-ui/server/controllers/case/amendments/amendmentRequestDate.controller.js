@@ -86,7 +86,7 @@ const postAmendmentRequestDate = async (req, res) => {
     console.error('Unable to update the amendment request date');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-date`);
   } catch (err) {
-    console.error('There was a problem creating the amendment request date %s', err);
+    console.error('There was a problem creating the amendment request date %S', err);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

@@ -149,7 +149,7 @@ const createInitialUser = async (user) => {
     },
     url: `${PORTAL_API_URL}/v1/user`,
     data: user,
-  }).catch((err) => { console.error('Unable to create initial user %s', { err }); });
+  }).catch((err) => { console.error('Unable to create initial user %S', { err }); });
 
   return response.data;
 };
@@ -386,7 +386,7 @@ const login = async (user) => {
       'Content-Type': 'application/json',
     },
     data: { username: user.username, password: user.password },
-  }).catch((err) => { console.error('Unable to login %s', { err }); });
+  }).catch((err) => { console.error('Unable to login %S', { err }); });
 
   return response?.data?.token;
 };

@@ -25,7 +25,7 @@ const getAPI = async (type) => {
     },
   })
     .catch((error) => {
-      console.error('🚩 Error while invoking TFS GET %s', error);
+      console.error('🚩 Error while invoking TFS GET %S', error);
       return false;
     });
 
@@ -60,7 +60,7 @@ const postAPI = async (endpoint, payload) => {
 
   const response = await axios(request)
     .catch((error) => {
-      console.error(`🚩 Error while invoking TFS POST /${endpoint} %s`, error);
+      console.error(`🚩 Error while invoking TFS POST /${endpoint} %S`, error);
       return false;
     });
 
