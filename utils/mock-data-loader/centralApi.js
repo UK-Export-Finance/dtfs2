@@ -1,19 +1,18 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const urlRoot = process.env.DTFS_CENTRAL_API;
-const { CENTRAL_API_KEY } = process.env;
+const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 
 const headers = {
   'Content-Type': 'application/json',
-  'x-api-key': CENTRAL_API_KEY,
+  'x-api-key': DTFS_CENTRAL_API_KEY,
   Accepts: 'application/json',
 };
 
 const getDeal = async (dealId) => {
   const response = await axios({
     method: 'get',
-    url: `${urlRoot}/v1/portal/deals/${dealId}`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
     headers,
   }).catch((err) => { console.error(`err: ${err}`); });
 
@@ -23,7 +22,7 @@ const getDeal = async (dealId) => {
 const createFacility = async (facility, dealId, user) => {
   const response = await axios({
     method: 'post',
-    url: `${urlRoot}/v1/portal/facilities`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities`,
     headers,
     data: {
       facility: {
@@ -40,7 +39,7 @@ const createFacility = async (facility, dealId, user) => {
 const updateFacility = async (facilityId, facilityUpdate, user) => {
   const response = await axios({
     method: 'put',
-    url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
     headers,
     data: {
       ...facilityUpdate,
@@ -54,7 +53,7 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
 
 const listFacilities = async () => {
   const response = await axios({
-    url: `${urlRoot}/v1/portal/facilities`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities`,
     method: 'get',
     headers
   }).catch((err) => { console.error(`err: ${err}`); });
@@ -66,7 +65,7 @@ const listFacilities = async () => {
 const deleteFacility = async (facilityId) => {
   const response = await axios({
     method: 'delete',
-    url: `${urlRoot}/v1/portal/facilities/${facilityId}`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
     headers,
   }).catch((err) => { console.error(`err: ${err}`); });
 

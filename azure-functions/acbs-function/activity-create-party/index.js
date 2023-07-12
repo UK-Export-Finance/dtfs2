@@ -16,46 +16,51 @@ const { findMissingMandatory } = require('../helpers/mandatoryFields');
 const mandatoryFields = ['alternateIdentifier', 'industryClassification', 'name1', 'smeType', 'citizenshipClass', 'officerRiskDate', 'countryCode'];
 
 const createParty = async (context) => {
-  const { bindingData } = context;
+  try {
+    const { bindingData } = context;
 
-  if (bindingData.party) {
-    const { party } = context.bindingData;
-    const missingMandatory = findMissingMandatory(party, mandatoryFields);
+    if (bindingData.party) {
+      const { party } = context.bindingData;
+      const missingMandatory = findMissingMandatory(party, mandatoryFields);
 
-    if (missingMandatory.length) {
-      return Promise.resolve({ missingMandatory });
+      if (missingMandatory.length) {
+        return Promise.resolve({ missingMandatory });
+      }
+
+      const submittedToACBS = moment().format();
+      const { status, data } = await api.createParty(party);
+      if (isHttpErrorStatus(status)) {
+        throw new Error(
+          JSON.stringify(
+            {
+              name: 'ACBS Party create error',
+              status,
+              UKEF_ID: party.alternateIdentifier,
+              submittedToACBS,
+              receivedFromACBS: moment().format(),
+              dataReceived: data,
+              dataSent: party,
+            },
+            null,
+            4,
+          ),
+        );
+      }
+
+      return {
+        status,
+        dataSent: party,
+        submittedToACBS,
+        receivedFromACBS: moment().format(),
+        ...data,
+      };
     }
 
-    const submittedToACBS = moment().format();
-    const { status, data } = await api.createParty(party);
-    if (isHttpErrorStatus(status)) {
-      throw new Error(
-        JSON.stringify(
-          {
-            name: 'ACBS Party create error',
-            status,
-            UKEF_ID: party.alternateIdentifier,
-            submittedToACBS,
-            receivedFromACBS: moment().format(),
-            dataReceived: data,
-            dataSent: party,
-          },
-          null,
-          4,
-        ),
-      );
-    }
-
-    return {
-      status,
-      dataSent: party,
-      submittedToACBS,
-      receivedFromACBS: moment().format(),
-      ...data,
-    };
+    return {};
+  } catch (error) {
+    console.error('Unable to create party record.', { error });
+    throw new Error(error);
   }
-
-  return {};
 };
 
 module.exports = createParty;

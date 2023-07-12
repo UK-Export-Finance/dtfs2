@@ -14,9 +14,7 @@ const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
 const mandatoryFields = [
-  'portfolioIdentifier',
   'postingDate',
-  'facilityIdentifier',
   'borrowerPartyIdentifier',
   'productTypeId',
   'productTypeGroup',
@@ -32,8 +30,7 @@ const mandatoryFields = [
 
 const createFacilityLoan = async (context) => {
   try {
-    const { acbsFacilityLoanInput } = context.bindingData;
-    const { facilityIdentifier } = acbsFacilityLoanInput;
+    const { facilityIdentifier, acbsFacilityLoanInput } = context.bindingData;
 
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
@@ -65,8 +62,8 @@ const createFacilityLoan = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility loan.', { error });
-    return error;
+    console.error('Unable to create facility loan record.', { error });
+    throw new Error(error);
   }
 };
 

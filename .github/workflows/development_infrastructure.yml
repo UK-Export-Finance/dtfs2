@@ -1485,26 +1485,26 @@ jobs:
             portal_file_storage_key=$(az storage account keys list --account-name tfs${{ env.environment }}storage --query [0].value -o tsv)
 
 
-            az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
-              --connection-string-type custom \
-              --settings \
-                CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
-                AZURE_PORTAL_EXPORT_FOLDER="${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}" \
-                AZURE_PORTAL_FILESHARE_NAME="${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}" \
-                AZURE_PORTAL_STORAGE_ACCESS_KEY="$portal_file_storage_key" \
-                AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
-                MONGO_INITDB_DATABASE="${{ env.database_name }}" \
-                MONGODB_URI="$mongo_connection_string" \
-                JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
-                JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
-                GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
-                GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
-                DTFS_PORTAL_SCHEDULER="${{ secrets.DTFS_PORTAL_SCHEDULER }}" \
-                EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
-                DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
-                TFM_API="http://$tfm_api_url" \
-                COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-                COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
+          az webapp config connection-string set --name tfs-${{ env.environment }}-portal-api \
+            --connection-string-type custom \
+            --settings \
+              CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
+              AZURE_PORTAL_EXPORT_FOLDER="${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}" \
+              AZURE_PORTAL_FILESHARE_NAME="${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}" \
+              AZURE_PORTAL_STORAGE_ACCESS_KEY="$portal_file_storage_key" \
+              AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
+              MONGO_INITDB_DATABASE="${{ env.database_name }}" \
+              MONGODB_URI="$mongo_connection_string" \
+              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
+              JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
+              GOV_NOTIFY_API_KEY="${{ secrets.GOV_NOTIFY_API_KEY }}" \
+              GOV_NOTIFY_EMAIL_RECIPIENT="${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}" \
+              DTFS_PORTAL_SCHEDULER="${{ secrets.DTFS_PORTAL_SCHEDULER }}" \
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
+              DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
+              TFM_API_URL="http://$tfm_api_url" \
+              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
+              COMPANIES_HOUSE_API_KEY="${{ env.COMPANIES_HOUSE_API_KEY }}"
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
@@ -1657,20 +1657,21 @@ jobs:
 
             num_gen_function_url=$(az functionapp show --resource-group ${{ secrets.RESOURCE_GROUP }} --name tfs-${{ env.environment }}-function-number-generator --query "defaultHostName" -o tsv)
 
-            az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-api \
-              --connection-string-type custom \
-              --settings \
-                CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
-                MONGO_INITDB_DATABASE="${{ env.database_name }}" \
-                MONGODB_URI="$mongo_connection_string" \
-                EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
-                DTFS_CENTRAL_API="http://$dtfs_central_api_url" \
-                UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
-                UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
-                TFM_URI="${{ secrets.TFM_URI }}" \
-                AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
-                AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}" \
-                JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}"
+          az webapp config connection-string set --name tfs-${{ env.environment }}-trade-finance-manager-api \
+            --connection-string-type custom \
+            --settings \
+              CORS_ORIGIN=${{ secrets.CORS_ORIGIN }} \
+              MONGO_INITDB_DATABASE="${{ env.database_name }}" \
+              MONGODB_URI="$mongo_connection_string" \
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
+              DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
+              UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
+              UKEF_TFM_API_REPORTS_KEY="${{ secrets.UKEF_TFM_API_REPORTS_KEY }}" \
+              TFM_URI="${{ secrets.TFM_URI }}" \
+              AZURE_NUMBER_GENERATOR_FUNCTION_URL="https://$num_gen_function_url" \
+              AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE="${{ secrets.AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE }}" \
+              JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
+              JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}"
 
   # END API setup
 
@@ -1811,19 +1812,19 @@ jobs:
             redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
             echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
 
-            az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
-              --settings \
-                PORT=5000 \
-                WEBSITES_PORT=5000 \
-                DEAL_API_URL="https://$deal_api" \
-                COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-                WEBSITE_DNS_SERVER="168.63.129.16" \
-                WEBSITE_VNET_ROUTE_ALL=1 \
-                REDIS_HOSTNAME="$redis_hostname" \
-                REDIS_PORT="$redis_sslPort" \
-                REDIS_KEY="$redis_key" \
-                EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
-                HTTPS=1
+          az webapp config appsettings set --name tfs-${{ env.environment }}-portal-ui \
+            --settings \
+              PORT=5000 \
+              WEBSITES_PORT=5000 \
+              PORTAL_API_URL="https://$deal_api" \
+              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
+              REDIS_HOSTNAME="$redis_hostname" \
+              REDIS_PORT="$redis_sslPort" \
+              REDIS_KEY="$redis_key" \
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
+              HTTPS=1
 
       - name: Secrets
         uses: azure/cli@v1.0.0
@@ -1971,20 +1972,20 @@ jobs:
             redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
             echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
 
-            az webapp config appsettings set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
-              --settings \
-                PORT=5000 \
-                WEBSITES_PORT=5000 \
-                TRADE_FINANCE_MANAGER_API_URL="https://$tfm_api" \
-                WEBSITE_DNS_SERVER="168.63.129.16" \
-                WEBSITE_VNET_ROUTE_ALL=1 \
-                REDIS_HOSTNAME="$redis_hostname" \
-                REDIS_PORT="$redis_sslPort" \
-                REDIS_KEY="$redis_key" \
-                EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
-                UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
-                ESTORE_URL="${{ secrets.ESTORE_URL }}" \
-                HTTPS=1
+          az webapp config appsettings set --name tfs-${{ env.environment }}-trade-finance-manager-ui \
+            --settings \
+              PORT=5000 \
+              WEBSITES_PORT=5000 \
+              TFM_API_URL="https://$tfm_api" \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
+              REDIS_HOSTNAME="$redis_hostname" \
+              REDIS_PORT="$redis_sslPort" \
+              REDIS_KEY="$redis_key" \
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
+              UKEF_TFM_API_SYSTEM_KEY="${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}" \
+              ESTORE_URL="${{ secrets.ESTORE_URL }}" \
+              HTTPS=1
 
       - name: Secrets
         uses: azure/cli@v1.0.0
@@ -2131,19 +2132,19 @@ jobs:
             redis_key=$(az redis list-keys --name tfs-${{ env.environment }}-redis --query primaryKey --output tsv)
             echo "REDIS CONNECTION: $redis_key@$redis_hostname:$redis_sslPort"
 
-            az webapp config appsettings set --name tfs-${{ env.environment }}-gef-ui \
-              --settings \
-                PORT=5000 \
-                WEBSITES_PORT=5000 \
-                DEAL_API_URL="https://$deal_api" \
-                COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
-                WEBSITE_DNS_SERVER="168.63.129.16" \
-                WEBSITE_VNET_ROUTE_ALL=1 \
-                REDIS_HOSTNAME="$redis_hostname" \
-                REDIS_PORT="$redis_sslPort" \
-                REDIS_KEY="$redis_key" \
-                EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
-                HTTPS=1
+          az webapp config appsettings set --name tfs-${{ env.environment }}-gef-ui \
+            --settings \
+              PORT=5000 \
+              WEBSITES_PORT=5000 \
+              PORTAL_API_URL="https://$deal_api" \
+              COMPANIES_HOUSE_API_URL="${{ env.COMPANIES_HOUSE_API_URL }}" \
+              WEBSITE_DNS_SERVER="168.63.129.16" \
+              WEBSITE_VNET_ROUTE_ALL=1 \
+              REDIS_HOSTNAME="$redis_hostname" \
+              REDIS_PORT="$redis_sslPort" \
+              REDIS_KEY="$redis_key" \
+              EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
+              HTTPS=1
 
       - name: Secrets
         uses: azure/cli@v1.0.0

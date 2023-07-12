@@ -5,10 +5,17 @@
  */
 const CONSTANTS = require('../../constants');
 
-const codeValueTransaction = () => ({
-  lenderTypeCode: CONSTANTS.FACILITY.LENDER_TYPE.TYPE1,
-  initialBundleStatusCode: CONSTANTS.FACILITY.BUNDLE_STATUS.STATUS3,
-  facilityTransactionCodeValueCode: CONSTANTS.FACILITY.TRANSACTION_CODE.TYPEA,
-});
+const codeValueTransaction = () => {
+  try {
+    return {
+      lenderTypeCode: CONSTANTS.FACILITY.LENDER_TYPE.TYPE1,
+      initialBundleStatusCode: CONSTANTS.FACILITY.BUNDLE_STATUS.STATUS3,
+      facilityTransactionCodeValueCode: CONSTANTS.FACILITY.TRANSACTION_CODE.TYPEA,
+    };
+  } catch (error) {
+    console.error('Unable to map facility code value transaction record.', { error });
+    return error;
+  }
+};
 
 module.exports = codeValueTransaction;

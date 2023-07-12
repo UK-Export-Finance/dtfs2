@@ -8,7 +8,7 @@ const getFacilities = async (req, res) => {
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 
   // override the deal stage if there is an amendment in progress
-  if (amendments?.length > 0) {
+  if (Array.isArray(amendments) && amendments?.length > 0) {
     amendments.map((item) => {
       const amendmentInProgress = item.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
       if (amendmentInProgress) {
@@ -47,7 +47,7 @@ const queryFacilities = async (req, res) => {
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 
   // override the deal stage if there is an amendment in progress
-  if (amendments?.length > 0) {
+  if (Array.isArray(amendments) && amendments?.length > 0) {
     amendments.map((item) => {
       const amendmentInProgress = item.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
       if (amendmentInProgress) {

@@ -31,39 +31,44 @@ const CONSTANTS = require('../../constants');
 const getDealSubmissionDate = require('../deal/helpers/get-deal-submission-date');
 
 const facilityMaster = (deal, facility, acbsData, acbsReference) => {
-  const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
-  const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
-  const facilityStageCode = helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType);
-  const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
+  try {
+    const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
+    const issueDate = helpers.getIssueDate(facility, getDealSubmissionDate(deal));
+    const facilityStageCode = helpers.getFacilityStageCode(facility.facilitySnapshot, deal.dealSnapshot.dealType);
+    const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
-  return {
-    _id: deal._id,
-    dealIdentifier: acbsData.deal.dealIdentifier.padStart(10, 0),
-    facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
-    dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
-    maximumLiability: helpers.getMaximumLiability(facility),
-    productTypeId: helpers.getProductTypeId(facility, true),
-    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
-    productTypeName: deal.dealSnapshot.dealType,
-    currency,
-    guaranteeExpiryDate,
-    nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
-    delegationType: helpers.getDelegationType(deal.dealSnapshot.submissionType),
-    interestOrFeeRate: helpers.getInterestOrFeeRate(facility),
-    facilityStageCode,
-    exposurePeriod: helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType),
-    creditRatingCode: helpers.getCreditRatingCode(deal),
-    premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility.facilitySnapshot),
-    riskCountryCode: CONSTANTS.FACILITY.RISK.COUNTRY.UNITED_KINGDOM,
-    riskStatusCode: CONSTANTS.FACILITY.RISK.STATUS.TYPE03,
-    effectiveDate,
-    forecastPercentage: helpers.getForecastPercentage(facility.facilitySnapshot, deal.dealSnapshot.dealType),
-    issueDate,
-    agentBankIdentifier: CONSTANTS.FACILITY.BANK_IDENTIFIER.DEFAULT,
-    obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
-    obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
-    probabilityOfDefault: deal.tfm.probabilityOfDefault,
-  };
+    return {
+      _id: deal._id,
+      dealIdentifier: acbsData.deal.dealIdentifier.padStart(10, 0),
+      facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
+      dealBorrowerIdentifier: acbsData.parties.exporter.partyIdentifier,
+      maximumLiability: helpers.getMaximumLiability(facility),
+      productTypeId: helpers.getProductTypeId(facility, true),
+      capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
+      productTypeName: deal.dealSnapshot.dealType,
+      currency,
+      guaranteeExpiryDate,
+      nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
+      delegationType: helpers.getDelegationType(deal.dealSnapshot.submissionType),
+      interestOrFeeRate: helpers.getInterestOrFeeRate(facility),
+      facilityStageCode,
+      exposurePeriod: helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType),
+      creditRatingCode: helpers.getCreditRatingCode(deal),
+      premiumFrequencyCode: helpers.getPremiumFrequencyCode(facility.facilitySnapshot),
+      riskCountryCode: CONSTANTS.FACILITY.RISK.COUNTRY.UNITED_KINGDOM,
+      riskStatusCode: CONSTANTS.FACILITY.RISK.STATUS.TYPE03,
+      effectiveDate,
+      forecastPercentage: helpers.getForecastPercentage(facility.facilitySnapshot, deal.dealSnapshot.dealType),
+      issueDate,
+      agentBankIdentifier: CONSTANTS.FACILITY.BANK_IDENTIFIER.DEFAULT,
+      obligorPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
+      obligorIndustryClassification: acbsReference.supplierAcbsIndustryCode,
+      probabilityOfDefault: deal.tfm.probabilityOfDefault,
+    };
+  } catch (error) {
+    console.error('Unable to map facility master record.', { error });
+    return error;
+  }
 };
 
 module.exports = facilityMaster;

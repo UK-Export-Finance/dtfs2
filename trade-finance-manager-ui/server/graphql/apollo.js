@@ -5,11 +5,10 @@ const { InMemoryCache } = require('apollo-cache-inmemory');
 
 require('dotenv').config();
 
-const urlRoot = process.env.TRADE_FINANCE_MANAGER_API_URL;
-const apiToken = process.env.UKEF_TFM_API_SYSTEM_KEY;
+const { TFM_API_URL, UKEF_TFM_API_SYSTEM_KEY } = process.env;
 
 const httpLink = createHttpLink({
-  uri: `${urlRoot}/graphql`,
+  uri: `${TFM_API_URL}/graphql`,
   fetch,
 });
 
@@ -37,7 +36,7 @@ const doQuery = async (query, variables) => {
       variables,
       context: {
         headers: {
-          Authorization: apiToken,
+          Authorization: UKEF_TFM_API_SYSTEM_KEY,
         },
       },
     });
@@ -53,7 +52,7 @@ const doMutate = async (mutation, variables) => {
       variables,
       context: {
         headers: {
-          Authorization: apiToken,
+          Authorization: UKEF_TFM_API_SYSTEM_KEY,
         },
       },
     });
