@@ -23,7 +23,7 @@ const CONSTANTS = require('../../constants');
 exports.create = async (req, res) => {
   if (!isValidMongoId(req.params.id)) {
     console.error('loans.create - invalid object id provided ', req.params.id);
-    return res.status(400).send({ status: 400, message: `Invalid id' ${req.params.id}` });
+    return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 
   return findOneDeal(req.params.id, async (deal) => {
@@ -56,7 +56,7 @@ exports.getLoan = async (req, res) => {
 
   if (!isValidMongoId(req.params.id) || !isValidMongoId(req.params.loanId)) {
     console.error('loans.get - invalid object id provided ', req.params.id, req.params.loanId);
-    return res.status(400).send({ status: 400, message: `Invalid id' ${req.params.id} ${req.params.loanId}` });
+    return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 
   return findOneDeal(req.params.id, async (deal) => {

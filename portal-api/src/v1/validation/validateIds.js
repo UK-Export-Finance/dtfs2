@@ -7,12 +7,7 @@ const validator = require('validator');
  * @param {String} mongoId
  * @returns {Boolean}
  */
-const isValidMongoId = (mongoId) => {
-  if (!mongoId) {
-    return false;
-  }
-  return validator.isMongoId(mongoId);
-};
+const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId) : false);
 
 module.exports = {
   isValidMongoId,

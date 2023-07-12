@@ -94,7 +94,7 @@ exports.create = async (req, res) => {
 exports.findOne = (req, res) => {
   if (!isValidMongoId(req.params.id)) {
     console.error('deals.findOne - invalid object id provided ', req.params.id);
-    return res.status(400).send({ status: 400, message: `Invalid id' ${req.params.id}` });
+    return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 
   return findOneDeal(req.params.id, (deal) => {
