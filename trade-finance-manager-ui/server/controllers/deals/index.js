@@ -8,9 +8,6 @@ const getDeals = async (req, res) => {
   };
   const { userToken } = req.session;
 
-  // TODO: Remove post production deployment
-  console.info('Debug on dev only: ', userToken, req.session);
-
   const apiResponse = await api.getDeals(queryParams);
   const { data: amendments } = await api.getAllAmendmentsInProgress(userToken);
 

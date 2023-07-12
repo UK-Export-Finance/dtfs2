@@ -92,7 +92,7 @@ const postAmendCoverEndDate = async (req, res) => {
     console.error('Unable to update the cover end date');
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   } catch (err) {
-    console.error('There was a problem adding the cover end date %O', { response: err?.response?.data });
+    console.error('There was a problem adding the cover end date %s', err);
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}#amendments`);
   }
 };
