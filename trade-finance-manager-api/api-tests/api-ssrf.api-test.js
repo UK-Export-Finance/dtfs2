@@ -1,4 +1,5 @@
 const axios = require('axios');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const MockAdapter = require('axios-mock-adapter');
 const api = require('../src/v1/api');
 

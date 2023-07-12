@@ -1,8 +1,6 @@
 const validator = require('validator');
 
-const isValidMongoId = (mongoId) => {
-  return mongoId ? validator.isMongoId(mongoId) : false;
-};
+const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId) : false);
 
 const isValidUkefNumericId = (ukefId) => {
   const id = parseInt(ukefId, 10);
@@ -34,13 +32,9 @@ const isValidNumericId = (numericId) => {
   return regex.test(numericId);
 };
 
-const isValidCurrencyCode = (currencyCode) => {
-  return currencyCode ? validator.isISO4217(currencyCode) : false;
-};
+const isValidCurrencyCode = (currencyCode) => (currencyCode ? validator.isISO4217(currencyCode) : false);
 
-const sanitizeUsername = (username) => {
-  return validator.escape(username);
-};
+const sanitizeUsername = (username) => validator.escape(username);
 
 module.exports = {
   isValidMongoId,
