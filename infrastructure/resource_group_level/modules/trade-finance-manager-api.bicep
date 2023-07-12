@@ -11,7 +11,7 @@ param externalApiHostname string
 param dtfsCentralApiHostname string
 param storageAccountName string
 
-var dockerImageName = '${containerRegistryName}.azurecr.io/portal-api:${environment}'
+var dockerImageName = '${containerRegistryName}.azurecr.io/trade-finance-manager-api:${environment}'
 var dockerRegistryServerUsername = 'tfs${environment}'
 
 // These values are taken from GitHub secrets injected in the GHA Action
@@ -24,6 +24,13 @@ param secureSettings object = {
 @secure()
 param additionalSecureSettings object = {
   DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
+  UKEF_INTERNAL_NOTIFICATION: 'test-value'
+  // TODO:FN-424 All of these were found on dev but not staging, remove if appropriate
+  DTFS_CENTRAL_API_KEY: 'test-value'
+  EXTERNAL_API_KEY: 'test-value'
+  JWT_VALIDATING_KEY: 'test-value'
+  PORTAL_API_KEY: 'test-value'
+  TFM_API_KEY: 'test-value'
 }
 
 // These values are taken from GitHub secrets injected in the GHA Action
@@ -31,21 +38,19 @@ param additionalSecureSettings object = {
 param secureConnectionStrings object = {
   // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging
   CORS_ORIGIN: 'test-value'
-  AZURE_PORTAL_EXPORT_FOLDER: 'test-value'
-  AZURE_PORTAL_FILESHARE_NAME: 'test-value'
-  AZURE_WORKFLOW_EXPORT_FOLDER: 'test-value'
-  AZURE_WORKFLOW_FILESHARE_NAME: 'test-value'
-  AZURE_WORKFLOW_IMPORT_FOLDER: 'test-value'
-  AZURE_WORKFLOW_STORAGE_ACCOUNT: 'test-value'
-  AZURE_WORKFLOW_STORAGE_ACCESS_KEY: 'test-value'
-  JWT_SIGNING_KEY: 'test-value'
-  JWT_VALIDATING_KEY: 'test-value'
-  GOV_NOTIFY_API_KEY: 'test-value'
+  UKEF_TFM_API_SYSTEM_KEY: 'test-value'
+  UKEF_TFM_API_REPORTS_KEY: 'test-value'
+  // TODO:FN-429 Note that this has a value like https://tfs-dev-tfm-fd.azurefd.net 
+  // while in the CLI it is injected as a secret, we can probably calculate it from the Front Door component.
+  TFM_URI: 'test-value'
+  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: 'test-value'
+  JWT_SIGNING_KEY: 'test-value' // NOTE - in the export this appears to be a slot setting.
+}
+
+// These values are taken from an export of Connection strings on Dev (& validating with staging).
+@secure()
+param additionalSecureConnectionStrings object = {
   GOV_NOTIFY_EMAIL_RECIPIENT: 'test-value'
-  DTFS_PORTAL_SCHEDULER: 'test-value'
-  FETCH_WORKFLOW_TYPE_B_SCHEDULE: 'test-value'
-  COMPANIES_HOUSE_API_URL: 'test-value' // from env
-  COMPANIES_HOUSE_API_KEY: 'test-value' // from env but looks a secret
 }
 
 
@@ -71,24 +76,28 @@ var additionalSettings = {
   DOCKER_REGISTRY_SERVER_URL: '${containerRegistryName}.azurecr.io'
   DOCKER_REGISTRY_SERVER_USERNAME: dockerRegistryServerUsername
   LOG4J_FORMAT_MSG_NO_LOOKUPS: 'true'
-  TZ: 'Europe/London' // Dev only
-  WEBSITE_DYNAMIC_CACHE: '0'
+  TZ: 'Europe/London'
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
-  WEBSITE_LOCAL_CACHE_OPTION: 'Never'
-  WEBSITE_NODE_DEFAULT_VERSION: '16.14.0' // TODO:DTFS2-6422 consider making parameterisable
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
+  
+  // All of these were found on dev but not staging
+  DTFS_CENTRAL_API_URL: 'TODO:FN-424' // https://tfs-dev-dtfs-central-api.azurewebsites.net/
+  // Note that EXTERNAL_API_URL is also in Connection Strings! (via CLI)
+  EXTERNAL_API_URL: 'TODO:FN-424' // https://tfs-dev-external-api.azurewebsites.net/ 
+  PORTAL_API_URL: 'TODO:FN-424' //https://tfs-dev-portal-api.azurewebsites.net/
+  TFM_API_URL: 'TODO:FN-424' // https://tfs-dev-trade-finance-manager-api.azurewebsites.net/
 }
 
 var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var tfmApiName = 'tfs-${environment}-portal-api'
-var privateEndpointName = 'tfs-${environment}-portal-api'
-var applicationInsightsName = 'tfs-${environment}-portal-api'
+var tfmApiName = 'tfs-${environment}-trade-finance-manager-api'
+var privateEndpointName = 'tfs-${environment}-trade-finance-manager-api'
+var applicationInsightsName = 'tfs-${environment}-trade-finance-manager-api'
 
 
-var connectionStringsList = [for item in items(secureConnectionStrings): {
+var connectionStringsList = [for item in items(union(secureConnectionStrings, additionalSecureConnectionStrings)): {
   name: item.key
   value: item.value
 } ]
@@ -113,14 +122,6 @@ var externalApiUrl = 'https://${externalApiHostname}'
 var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
 
 var connectionStringsCalculated = {  
-  AZURE_PORTAL_STORAGE_ACCESS_KEY: {
-    type: 'Custom'
-    value: storageAccountKey
-  }
-  AZURE_PORTAL_STORAGE_ACCOUNT: {
-    type: 'Custom'
-    value: storageAccountName
-  }
   MONGO_INITDB_DATABASE: {
     type: 'Custom'
     value: cosmosDbDatabaseName
@@ -137,9 +138,9 @@ var connectionStringsCalculated = {
     type: 'Custom'
     value: dtfsCentralApiUrl
   }
-  TFM_API: {
+  AZURE_NUMBER_GENERATOR_FUNCTION_URL: {
     type: 'Custom'
-    value: 'TODO:FN-424'
+    value: 'TODO:FN-420'
   }
 } 
 
