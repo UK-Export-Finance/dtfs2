@@ -223,7 +223,6 @@ const login = async (username, password) => {
   }
 };
 
-
 const updateUserPassword = async (userId, update, token) => {
   try {
     const isValidUserId = isValidMongoId(userId);

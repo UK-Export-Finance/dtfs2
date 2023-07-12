@@ -1,11 +1,6 @@
 const validator = require('validator');
 
-const isValidMongoId = (mongoId) => {
-  if (!mongoId) {
-    return false;
-  }
-  return validator.isMongoId(mongoId);
-};
+const isValidMongoId = (mongoId) => mongoId ? validator.isMongoId(mongoId) : false;
 
 const isValidPartyUrn = (partyUrn) => {
   const regex = /^\d{8}$/;
