@@ -7,12 +7,14 @@ const mockAxios = new MockAdapter(axios);
 
 describe('API is protected against SSRF attacks', () => {
   describe('findOnePortalDeal', () => {
-    mockAxios.reset();
     const mockResponse = {
       deal: 'Mock deal',
     };
-    const url = /^.*\/v1\/portal\/deals\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/deals\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
@@ -41,10 +43,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updatePortalDeal', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock deal';
-    const url = /^.*\/v1\/portal\/deals\/.*$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/deals\/.*$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
@@ -73,10 +78,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updatePortalBssDealStatus', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock status';
-    const url = /^.*\/v1\/portal\/deals\/.*\/status$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/deals\/.*\/status$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
@@ -105,10 +113,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('addPortalDealComment', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock comment';
-    const url = /^.*\/v1\/portal\/deals\/.*\/comment$/;
-    mockAxios.onPost(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/deals\/.*\/comment$/;
+      mockAxios.onPost(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
@@ -137,10 +148,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updatePortalFacilityStatus', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock status';
-    const url = /^.*\/v1\/portal\/facilities\/.*\/status$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/facilities\/.*\/status$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
@@ -169,10 +183,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findOneDeal', () => {
-    mockAxios.reset();
     const mockResponse = { deal: 'Mock deal' };
-    const url = /^.*\/v1\/tfm\/deals\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/deals\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
@@ -201,10 +218,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updateDeal', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock deal';
-    const url = /^.*\/v1\/tfm\/deals\/.*$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/deals\/.*$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
@@ -233,10 +253,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updateDealSnapshot', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock deal';
-    const url = /^.*\/v1\/tfm\/deals\/.*\/snapshot$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/deals\/.*\/snapshot$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
@@ -265,10 +288,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findOneFacility', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock facility';
-    const url = /^.*\/v1\/tfm\/facilities\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/facilities\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
@@ -297,10 +323,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findFacilitesByDealId', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock facilities';
-    const url = /^.*\/v1\/tfm\/deals\/.*\/facilities$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/deals\/.*\/facilities$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
@@ -329,10 +358,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updateFacility', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock facility';
-    const url = /^.*\/v1\/tfm\/facilities\/.*$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/facilities\/.*$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
@@ -361,10 +393,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('createFacilityAmendment', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock amendment';
-    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments$/;
-    mockAxios.onPost(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments$/;
+      mockAxios.onPost(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
@@ -393,10 +428,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updateFacilityAmendment', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock amendment';
-    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/.*$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/.*$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const validAmendmentId = '5ce819935e539c343f141ece';
@@ -428,10 +466,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getAmendmentInProgress', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock amendment';
-    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/in-progress$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/in-progress$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
@@ -460,10 +501,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getCompletedAmendment', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock amendment';
-    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
@@ -492,10 +536,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getLatestCompletedAmendmentValue', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock value';
-    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-value$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-value$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
@@ -524,10 +571,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getLatestCompletedAmendmentDate', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock value';
-    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-cover-end-date$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-cover-end-date$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
@@ -556,10 +606,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getAmendmentById', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock value';
-    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const validAmendmentId = '5ce819935e539c343f141ece';
@@ -591,10 +644,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getAmendmentByFacilityId', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock amendment';
-    const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
@@ -623,10 +679,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getAmendmentsByDealId', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock amendments';
-    const url = /^.*\/v1\/tfm\/deals\/.*\/amendments$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/deals\/.*\/amendments$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
@@ -655,10 +714,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getAmendmentInProgressByDealId', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock amendment';
-    const url = /^.*\/v1\/tfm\/deals\/.*\/amendments\/in-progress$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/deals\/.*\/amendments\/in-progress$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
@@ -687,10 +749,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getCompletedAmendmentByDealId', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock amendment';
-    const url = /^.*\/v1\/tfm\/deals\/.*\/amendments\/completed$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/deals\/.*\/amendments\/completed$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
@@ -719,10 +784,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getLatestCompletedAmendmentByDealId', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock amendment';
-    const url = /^.*\/v1\/tfm\/deals\/.*\/amendment\/completed\/latest$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/deals\/.*\/amendment\/completed\/latest$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal Id provided' };
@@ -751,10 +819,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updateGefFacility', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock facility';
-    const url = /^.*\/v1\/portal\/gef\/facilities\/.*$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/gef\/facilities\/.*$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
@@ -783,10 +854,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getCompanyInfo', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock company';
-    const url = /^.*\/party-db\/urn\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/party-db\/urn\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid party urn provided' };
@@ -815,10 +889,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getCompanyInfo', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock company';
-    const url = /^.*\/party-db\/urn\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/party-db\/urn\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid party urn provided' };
@@ -847,10 +924,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findUserById', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock user';
-    const url = /^.*\/v1\/tfm\/users\/id\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/users\/id\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid user id provided' };
@@ -879,10 +959,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findPortalUserById', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock user';
-    const url = /^.*\/v1\/user\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/user\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid user id provided' };
@@ -911,10 +994,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updateUserTasks', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock user';
-    const url = /^.*\/v1\/tfm\/users\/.*\/tasks$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/users\/.*\/tasks$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid user id provided' };
@@ -943,10 +1029,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findOneTeam', () => {
-    mockAxios.reset();
     const mockResponse = { team: 'Mock team' };
-    const url = /^.*\/v1\/tfm\/teams\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/teams\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid team id provided' };
@@ -975,10 +1064,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findTeamMembers', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock team members';
-    const url = /^.*\/v1\/tfm\/users\/team\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/tfm\/users\/team\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid team id provided' };
@@ -1007,10 +1099,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getCurrencyExchangeRate', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock exchange rate';
-    const url = /^.*\/currency-exchange-rate\/.*\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/currency-exchange-rate\/.*\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const validCurrencyCode = 'USD';
@@ -1042,10 +1137,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findOneGefDeal', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock deal';
-    const url = /^.*\/v1\/portal\/gef\/deals\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/gef\/deals\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
@@ -1074,10 +1172,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updatePortalGefDealStatus', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock deal';
-    const url = /^.*\/v1\/portal\/gef\/deals\/.*\/status$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/gef\/deals\/.*\/status$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
@@ -1106,10 +1207,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updatePortalGefDeal', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock deal';
-    const url = /^.*\/v1\/portal\/gef\/deals\/.*$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/gef\/deals\/.*$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
@@ -1138,10 +1242,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updateGefMINActivity', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock deal';
-    const url = /^.*\/v1\/portal\/gef\/deals\/activity\/.*$/;
-    mockAxios.onPut(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/gef\/deals\/activity\/.*$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
@@ -1170,10 +1277,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('addUnderwriterCommentToGefDeal', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock deal';
-    const url = /^.*\/v1\/portal\/gef\/deals\/.*\/comment$/;
-    mockAxios.onPost(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/gef\/deals\/.*\/comment$/;
+      mockAxios.onPost(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
@@ -1202,10 +1312,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('findBankById', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock bank';
-    const url = /^.*\/v1\/bank\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/bank\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid bank id provided' };
@@ -1234,10 +1347,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getGefMandatoryCriteriaByVersion', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock mandatory criteria';
-    const url = /^.*\/v1\/portal\/gef\/mandatory-criteria\/version\/.*$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/portal\/gef\/mandatory-criteria\/version\/.*$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid mandatory criteria version provided' };
