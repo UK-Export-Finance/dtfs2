@@ -431,10 +431,13 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getCompletedAmendmentByDealId', () => {
-    mockAxios.reset();
     const mockResponse = 'Mock amendment';
-    const url = /^.*\/v1\/deals\/.*\/amendments\/completed$/;
-    mockAxios.onGet(url).reply(200, mockResponse);
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/deals\/.*\/amendments\/completed$/;
+      mockAxios.onGet(url).reply(200, mockResponse);
+    });
+
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
