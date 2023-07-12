@@ -444,7 +444,8 @@ const confirmTfmFacility = async (req, res) => {
       api
         .getParty(urn, userToken)
         // Non-existent party urn
-        .then((company) => (!company || !company.data ? Promise.resolve(false) : Promise.resolve(true))));
+        .then((company) => (!company || !company.data || company.status !== 200 ? Promise.resolve(false) : Promise.resolve(true))),
+    );
 
     const responses = await Promise.all(companies);
     let invalidUrn = 0;

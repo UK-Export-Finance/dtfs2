@@ -84,9 +84,7 @@ const getPartyDetails = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const urn = deal.tfm.parties[party]
-      ? deal.tfm.parties[party].partyUrn
-      : '';
+    const urn = deal.tfm.parties[party] ? deal.tfm.parties[party].partyUrn : '';
 
     return res.render(`case/parties/edit/${party}.njk`, {
       userCanEdit: canEdit,
@@ -154,9 +152,7 @@ const getPartyUrnDetails = async (req, res) => {
       });
     }
 
-    const name = company.data.length
-      ? company.data[0].name
-      : '';
+    const name = company.data.length ? company.data[0].name : '';
 
     return res.render('case/parties/summary/party.njk', {
       userCanEdit: canEdit,
@@ -211,9 +207,12 @@ const getBondUrnDetails = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const companies = partyUrns.map((urn) => api.getParty(urn, userToken)
-      // Non-existent party urn
-      .then((company) => (!company?.data?.length ? Promise.resolve() : Promise.resolve(company.data[0].name))));
+    const companies = partyUrns.map((urn) =>
+      api
+        .getParty(urn, userToken)
+        // Non-existent party urn
+        .then((company) => (!company?.data?.length ? Promise.resolve() : Promise.resolve(company.data[0].name))),
+    );
 
     const name = await Promise.all(companies);
 
@@ -294,7 +293,7 @@ const confirmPartyUrn = async (req, res) => {
       const validationError = validatePartyURN(partyUrnParams);
 
       if (validationError.errorsObject) {
-      // Render party specific page with error
+        // Render party specific page with error
         return res.render(`case/parties/edit/${party}.njk`, {
           userCanEdit: canEdit,
           renderEditLink: false,
@@ -315,7 +314,7 @@ const confirmPartyUrn = async (req, res) => {
     const company = await api.getParty(partyUrn, userToken);
 
     // Non-existent party urn
-    if (!company && !company.data) {
+    if ((!company && !company.data) || company.status !== 200) {
       return res.render('case/parties/non-existent.njk', {
         dealId,
         party,
