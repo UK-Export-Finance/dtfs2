@@ -78,7 +78,7 @@ const cleanUsers = async (token) => {
       await api.deleteUser(user, token);
     }
   }
-}
+};
 
 const cleanAllTables = async (token) => {
   await cleanBanks(token);

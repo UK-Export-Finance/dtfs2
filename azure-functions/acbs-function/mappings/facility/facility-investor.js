@@ -9,15 +9,20 @@ const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
 const facilityInvestor = (deal, facility) => {
-  const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
-  const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
+  try {
+    const { guaranteeExpiryDate, effectiveDate } = facility.tfm.facilityGuaranteeDates;
+    const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
-  return {
-    maximumLiability: helpers.getMaximumLiability(facility),
-    currency,
-    guaranteeExpiryDate,
-    effectiveDate,
-  };
+    return {
+      maximumLiability: helpers.getMaximumLiability(facility),
+      currency,
+      guaranteeExpiryDate,
+      effectiveDate,
+    };
+  } catch (error) {
+    console.error('Unable to map facility investor record.', { error });
+    return error;
+  }
 };
 
 module.exports = facilityInvestor;

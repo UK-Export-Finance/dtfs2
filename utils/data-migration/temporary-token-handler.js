@@ -1,7 +1,7 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const urlRoot = process.env.DEAL_API_URL;
+const urlRoot = process.env.PORTAL_API_URL;
 const { PORTAL_API_KEY } = process.env;
 
 let migrationUserId;
@@ -25,7 +25,7 @@ module.exports.removeMigrationUser = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
     url: `${urlRoot}/v1/users/${migrationUserId}`,
   }).catch((err) => { console.error(`Error removing migration user ${err}`); });

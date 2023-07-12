@@ -25,59 +25,64 @@ const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
 
 module.exports = df.orchestrator(function* Facility(context) {
-  if (context.df.getInput()) {
-    const {
-      facilityId,
-      facility,
-      amendments,
-      fmr,
-    } = context.df.getInput();
-    const { amendment } = amendments;
-    let facilityLoanRecordAmendments;
+  try {
+    if (context.df.getInput()) {
+      const {
+        facilityId,
+        facility,
+        amendments,
+        fmr,
+      } = context.df.getInput();
+      const { amendment } = amendments;
+      let facilityLoanRecordAmendments;
 
-    // 1.1. Facility Loan Record (FLR) amendment mapping
-    const flrMApped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
+      // 1.1. Facility Loan Record (FLR) amendment mapping
+      const flrMApped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
 
-    // 1.2. Extract loan id for facility id
-    const loanId = yield context.df.callActivityWithRetry('activity-get-loan-id', retryOptions, {
-      facilityId,
-    });
+      // 1.2. Extract loan id for facility id
+      const loanId = yield context.df.callActivityWithRetry('activity-get-loan-id', retryOptions, {
+        facilityId,
+      });
 
-    if (loanId) {
-      facilityLoanRecordAmendments = {
-        loanId,
-      };
-
-      // 1.3.1 - UKEF Exposure
-      if (amendment.amount) {
-        const amount = yield context.df.callActivityWithRetry('activity-update-facility-loan-amount', retryOptions, {
-          loanId,
-          facilityId,
-          acbsFacilityLoanInput: flrMApped,
-        });
-
+      if (loanId) {
         facilityLoanRecordAmendments = {
-          ...facilityLoanRecordAmendments,
-          amount,
+          loanId,
         };
+
+        // 1.3.1 - UKEF Exposure
+        if (amendment.amount) {
+          const amount = yield context.df.callActivityWithRetry('activity-update-facility-loan-amount', retryOptions, {
+            loanId,
+            facilityId,
+            acbsFacilityLoanInput: flrMApped,
+          });
+
+          facilityLoanRecordAmendments = {
+            ...facilityLoanRecordAmendments,
+            amount,
+          };
+        }
+
+        // 1.3.2 - Cover end date
+        if (amendment.coverEndDate) {
+          const coverEndDate = yield context.df.callActivityWithRetry('activity-update-facility-loan', retryOptions, {
+            loanId,
+            facilityId,
+            acbsFacilityLoanInput: flrMApped,
+          });
+
+          facilityLoanRecordAmendments = {
+            ...facilityLoanRecordAmendments,
+            coverEndDate,
+          };
+        }
       }
 
-      // 1.3.2 - Cover end date
-      if (amendment.coverEndDate) {
-        const coverEndDate = yield context.df.callActivityWithRetry('activity-update-facility-loan', retryOptions, {
-          loanId,
-          facilityId,
-          acbsFacilityLoanInput: flrMApped,
-        });
-
-        facilityLoanRecordAmendments = {
-          ...facilityLoanRecordAmendments,
-          coverEndDate,
-        };
-      }
+      return facilityLoanRecordAmendments;
     }
-
-    return facilityLoanRecordAmendments;
+    console.error('No input specified');
+  } catch (error) {
+    console.error('Error amending facility loan record: ', { error });
+    throw new Error(error);
   }
-  console.error('No input specified');
 });

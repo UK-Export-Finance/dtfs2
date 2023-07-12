@@ -60,9 +60,6 @@
  *           facilityIdentifier:
  *             type: string
  *             example: '0020900041'
- *           portfolioIdentifier:
- *             type: string
- *             example: 'E1'
  *           dealBorrowerIdentifier:
  *             type: string
  *             example: '00000000'

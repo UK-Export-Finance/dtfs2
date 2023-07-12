@@ -1,17 +1,14 @@
 /*
-"facilityIdentifier":           UKEF facilityId
-"amount":                       feeRecord (GEF)
-"effectiveDate":                SEE Deal + deal investor calculation
-"expirationDate":               Facility expiry date
-"nextDueDate":                  Facility expiry date (GEF)
-"nextAccrueToDate":             Facility expiry date (GEF)
-"period":                       TFM Premium schedule, `01` for GEF month count
-                                `01`, `02`.. for EWCS/BSS
-"currency":                     Facility currency code
-"lenderTypeCode":               Set lender to 100, this will trigger automatic 500 record creation
-                                thus creating minimum two records.
-"incomeClassCode":              ACBS income class code
-"spreadToInvestorsIndicator":   True (Added in 11/2021)
+"amount"                        Facility Fixed fee period amount
+"effectiveDate"                 Facility fixed fee period effective date
+"expirationDate"                Facility fixed fee period expiry date
+"nextDueDate"                   Facility fixed fee period due date
+"nextAccrueToDate"              Facility fixed fee period accrue date
+"period"                        Facility fixed fee period (double digit numerical only)
+"currency"                      Facility currency code
+"lenderTypeCode"                Facility fixed fee lender code (`100` will automatically create `500`)
+"incomeClassCode"               Facility fixed fee period ACBS income class code
+"spreadToInvestorsIndicator"    Facility fixed fee period investor indicator (default to `true`)
 */
 
 const helpers = require('./helpers');
@@ -29,7 +26,6 @@ const constructFeeRecord = (deal, facility, premiumScheduleIndex = 0) => {
     const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
     return {
-      facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
       effectiveDate,
       amount: helpers.getFeeAmount(facility, deal.dealSnapshot.dealType, premiumScheduleIndex),
       expirationDate,

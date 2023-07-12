@@ -24,43 +24,48 @@ const mandatoryFields = [
 ];
 
 const createDeal = async (context) => {
-  const { deal } = context.bindingData;
+  try {
+    const { deal } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(deal, mandatoryFields);
+    const missingMandatory = findMissingMandatory(deal, mandatoryFields);
 
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
+
+    const submittedToACBS = moment().format();
+
+    const { status, data } = await api.createDeal(deal);
+
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'ACBS Deal create error',
+            status,
+            dealIdentifier: deal.dealIdentifier,
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: deal,
+          },
+          null,
+          4,
+        ),
+      );
+    }
+
+    return {
+      status,
+      dataSent: deal,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      ...data,
+    };
+  } catch (error) {
+    console.error('Unable to create deal master record.', { error });
+    throw new Error(error);
   }
-
-  const submittedToACBS = moment().format();
-
-  const { status, data } = await api.createDeal(deal);
-
-  if (isHttpErrorStatus(status)) {
-    throw new Error(
-      JSON.stringify(
-        {
-          name: 'ACBS Deal create error',
-          status,
-          dealIdentifier: deal.dealIdentifier,
-          submittedToACBS,
-          receivedFromACBS: moment().format(),
-          dataReceived: data,
-          dataSent: deal,
-        },
-        null,
-        4,
-      ),
-    );
-  }
-
-  return {
-    status,
-    dataSent: deal,
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
 };
 
 module.exports = createDeal;
