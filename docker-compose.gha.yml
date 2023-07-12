@@ -53,7 +53,7 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
-      - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
+      - TFM_API_URL=http://trade-finance-manager-api:5004
       - EXTERNAL_API_URL=http://external-api:5002
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL=${ESTORE_URL}
