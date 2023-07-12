@@ -1996,7 +1996,7 @@ jobs:
             --settings \
               PORT=5000 \
               WEBSITES_PORT=5000 \
-              TRADE_FINANCE_MANAGER_API_URL="https://$tfm_api" \
+              TFM_API_URL="https://$tfm_api" \
               WEBSITE_DNS_SERVER="168.63.129.16" \
               WEBSITE_VNET_ROUTE_ALL=1 \
               REDIS_HOSTNAME="$redis_hostname" \
