@@ -1,4 +1,5 @@
 import agent = require('supertest');
+// eslint-disable-next-line import/no-import-module-exports
 import dotenv from 'dotenv';
 
 dotenv.config();

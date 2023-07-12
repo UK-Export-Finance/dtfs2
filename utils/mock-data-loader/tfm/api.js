@@ -1,9 +1,12 @@
 const axios = require('axios');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 
-const urlCentralApi = process.env.DTFS_CENTRAL_API;
-const tfmApi = process.env.TFM_API;
-const { TFM_API_KEY, CENTRAL_API_KEY } = process.env;
+const {
+  TFM_API_URL,
+  TFM_API_KEY,
+  DTFS_CENTRAL_API_URL,
+  DTFS_CENTRAL_API_KEY
+} = process.env;
 
 const createTeam = async (team, token) => {
   const response = await axios({
@@ -11,10 +14,10 @@ const createTeam = async (team, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
-      'x-api-key': CENTRAL_API_KEY,
+      Authorization: token,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/teams`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
     data: { team },
   }).catch((err) => { console.error(`err: ${err}`); });
 
@@ -27,10 +30,10 @@ const listTeams = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
-      'x-api-key': CENTRAL_API_KEY,
+      Authorization: token,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/teams`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.teams;
@@ -42,10 +45,10 @@ const deleteTeam = async (team, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
-      'x-api-key': CENTRAL_API_KEY,
+      Authorization: token,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/teams/${team.id}`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${team.id}`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
@@ -57,10 +60,10 @@ const createTfmUser = async (user, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
+      Authorization: token,
       'x-api-key': TFM_API_KEY,
     },
-    url: `${tfmApi}/v1/users`,
+    url: `${TFM_API_URL}/v1/users`,
     data: user,
   }).catch((err) => { console.error(`err: ${err}`); });
 
@@ -73,10 +76,10 @@ const listUsers = async (token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
-      'x-api-key': CENTRAL_API_KEY,
+      Authorization: token,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/users`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.users;
@@ -88,9 +91,9 @@ const deleteUser = async (user) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      'x-api-key': CENTRAL_API_KEY,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/users/${user.username}`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/${user.username}`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data;
@@ -102,9 +105,9 @@ const listDeals = async () => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      'x-api-key': CENTRAL_API_KEY,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/deals`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
   }).catch((err) => { console.error(`err: ${err}`); });
 
   return response.data.deals;
@@ -116,10 +119,10 @@ const deleteDeal = async (deal, token) => {
     headers: {
       'Content-Type': 'application/json',
       Accepts: 'application/json',
-      Authorization: token || '',
-      'x-api-key': CENTRAL_API_KEY,
+      Authorization: token,
+      'x-api-key': DTFS_CENTRAL_API_KEY,
     },
-    url: `${urlCentralApi}/v1/tfm/deals/${deal._id}`,
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${deal._id}`,
   }).catch(() => { });
 
   return response && response.data;

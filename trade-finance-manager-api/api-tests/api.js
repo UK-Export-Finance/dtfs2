@@ -9,7 +9,7 @@ const { TFM_API_KEY } = process.env;
 const headers = (token) => ({
   'content-type': 'application/json',
   'x-api-key': TFM_API_KEY,
-  Authorization: token || '',
+  Authorization: token,
 });
 
 module.exports = (app) => ({

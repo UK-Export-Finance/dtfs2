@@ -26,10 +26,10 @@ const createAndLogInAsInitialUser = async () => {
 };
 
 const deleteInitialUser = async (token) => {
-  const allUsers = await api.listUsers(token)
+  const allUsers = await api.listUsers(token);
   const userToDelete = allUsers.find((user) => user.username === mockDataLoaderUser.username);
   console.info(`deleting user ${userToDelete.username}`);
   await api.deleteUser(userToDelete, token);
-}
+};
 
 module.exports = { mockDataLoaderUser, createAndLogInAsInitialUser, deleteInitialUser };

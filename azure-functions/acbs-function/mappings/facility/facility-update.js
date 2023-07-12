@@ -30,20 +30,25 @@ const helpers = require('./helpers');
 const CONSTANTS = require('../../constants');
 
 const facilityUpdate = (facility, acbsFacility, deal) => {
-  const issueDate = helpers.getIssueDate(facility, acbsFacility.effectiveDate);
-  const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
+  try {
+    const issueDate = helpers.getIssueDate(facility, acbsFacility.effectiveDate);
+    const { guaranteeExpiryDate } = facility.tfm.facilityGuaranteeDates;
 
-  return {
-    ...acbsFacility,
-    issueDate,
-    guaranteeExpiryDate,
-    nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
-    exposurePeriod: helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType),
-    capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
-    facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
-    forecastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
-    productTypeName: deal.dealSnapshot.dealType,
-  };
+    return {
+      ...acbsFacility,
+      issueDate,
+      guaranteeExpiryDate,
+      nextQuarterEndDate: helpers.getNextQuarterDate(issueDate),
+      exposurePeriod: helpers.getExposurePeriod(facility, deal.dealSnapshot.dealType),
+      capitalConversionFactorCode: helpers.getCapitalConversionFactorCode(facility),
+      facilityStageCode: CONSTANTS.FACILITY.STAGE_CODE.ISSUED,
+      forecastPercentage: CONSTANTS.FACILITY.FORECAST_PERCENTAGE.ISSUED,
+      productTypeName: deal.dealSnapshot.dealType,
+    };
+  } catch (error) {
+    console.error('Unable to map facility issue master record.', { error });
+    return error;
+  }
 };
 
 module.exports = facilityUpdate;
