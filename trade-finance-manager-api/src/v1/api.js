@@ -510,7 +510,7 @@ const getAllAmendmentsInProgress = async () => {
 
       return response.data;
     } catch (err) {
-      console.error('Unable to get all amendments in progress %O', { response: err?.response?.data });
+      console.error('Unable to get all amendments in progress %S', err);
       return { status: 500, data: err?.response?.data };
     }
   } else {
