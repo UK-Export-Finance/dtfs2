@@ -19,7 +19,7 @@ const createTeam = async (team, token) => {
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
     data: { team },
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -34,7 +34,7 @@ const listTeams = async (token) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data.teams;
 };
@@ -49,7 +49,7 @@ const deleteTeam = async (team, token) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${team.id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -65,7 +65,7 @@ const createTfmUser = async (user, token) => {
     },
     url: `${TFM_API_URL}/v1/users`,
     data: user,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -80,7 +80,7 @@ const listUsers = async (token) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data.users;
 };
@@ -94,7 +94,7 @@ const deleteUser = async (user) => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/${user.username}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -108,7 +108,7 @@ const listDeals = async () => {
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
     url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data.deals;
 };
