@@ -108,5 +108,13 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="/assets/js/fileUpload.js"></script>
+  <script>
+    if (typeof MOJFrontend.MultiFileUpload !== 'undefined') {
+      new MOJFrontend.MultiFileUpload({
+        container: $('.moj-multi-file-upload'),
+        uploadUrl: `${window.location.href}/upload?uploadCsrf={{ uploadCsrf }}`,
+        deleteUrl: `${window.location.href}/delete`,
+      });
+    }
+  </script>
 {% endblock %}

@@ -109,6 +109,10 @@ const getSupportingDocuments = async (req, res, next) => {
   } = req;
   let application;
 
+  const uploadCsrf = 'TestToken';
+
+  req.session.uploadCsrf = uploadCsrf;
+
   try {
     application = await getApplication(dealId, user, userToken);
     const { fieldName, title } = mapDocTypeParameterToProps(documentType);
@@ -123,6 +127,7 @@ const getSupportingDocuments = async (req, res, next) => {
       user,
       dealId,
       files,
+      uploadCsrf,
     });
   } catch (err) {
     console.error('GEF UI - Error getting Supporting Documents ', err);
