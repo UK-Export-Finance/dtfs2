@@ -1056,7 +1056,7 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the team id is valid', async () => {
-      const validTeamId = '5ce819935e539c343f141ece';
+      const validTeamId = 'UNDERWRITERS';
 
       const response = await api.findTeamMembers(validTeamId);
 
