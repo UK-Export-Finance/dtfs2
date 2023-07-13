@@ -194,6 +194,10 @@ const TRANSACTION_CODE = {
   TYPEA: 'A',
 };
 
+const OPERATION = {
+  ISSUE: 'issue',
+};
+
 module.exports = {
   FACILITY_TYPE,
   FACILITY_TYPE_CODE,
@@ -222,4 +226,5 @@ module.exports = {
   ACBS_INCOME_CLASS_CODE,
   NUMBER_GENERATOR_PAYLOAD,
   TRANSACTION_CODE,
+  OPERATION,
 };

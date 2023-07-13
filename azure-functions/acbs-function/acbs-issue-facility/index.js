@@ -12,19 +12,17 @@
 const df = require('durable-functions');
 const retryOptions = require('../helpers/retryOptions');
 const mappings = require('../mappings');
+const CONSTANTS = require('../constants');
 
 module.exports = df.orchestrator(function* updateACBSfacility(context) {
   try {
-    const {
-      facilityId, facility, deal,
-    } = context.df.getInput();
+    const { facilityId, facility, deal } = context.df.getInput();
 
     let facilityFee;
     // Constants declaration for mapping functions
     const acbsParties = {
       parties: {
-        exporter: {
-        },
+        exporter: {},
       },
     };
     const facilitySnapshot = {
@@ -37,30 +35,24 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
           id: facility.currencyCode,
         },
       },
-      update: {
-      },
+      update: {},
     };
 
     if (facilityId) {
-    // 1. GET Facility master record object
-      const { acbsFacility, etag } = yield context.df.callActivityWithRetry(
-        'activity-get-facility-master',
-        retryOptions,
-        { facilityId },
-      );
+      // 1. GET Facility master record object
+      const { acbsFacility, etag } = yield context.df.callActivityWithRetry('activity-get-facility-master', retryOptions, { facilityId });
 
       if (acbsFacility && etag) {
-      // 2.1. Create updated facility master record object
+        // 2.1. Create updated facility master record object
         const acbsFacilityMasterInput = mappings.facility.facilityUpdate(facilitySnapshot, acbsFacility, deal);
 
         // 2.2. PUT updated facility master record object
-        const issuedFacilityMaster = yield context.df.callActivityWithRetry(
-          'activity-update-facility-master',
-          retryOptions,
-          {
-            facilityId, acbsFacilityMasterInput, updateType: 'issue', etag,
-          },
-        );
+        const issuedFacilityMaster = yield context.df.callActivityWithRetry('activity-update-facility-master', retryOptions, {
+          facilityId,
+          acbsFacilityMasterInput,
+          updateType: CONSTANTS.FACILITY.OPERATION.ISSUE,
+          etag,
+        });
 
         // Records only created for `Issued` and `Activated` facilities only
         // Loan record consumes ACBS exporter ID, extracted from master facility record
@@ -72,24 +64,13 @@ module.exports = df.orchestrator(function* updateACBSfacility(context) {
         };
 
         // 3.1. Facility loan record
-        const acbsFacilityLoanInput = mappings.facility.facilityLoan(
-          deal,
-          facilitySnapshot,
-          acbsParties,
-        );
+        const acbsFacilityLoanInput = mappings.facility.facilityLoan(deal, facilitySnapshot, acbsParties);
 
         // 3.2. Create facility loan record
-        const facilityLoan = yield context.df.callActivityWithRetry(
-          'activity-create-facility-loan',
-          retryOptions,
-          { acbsFacilityLoanInput },
-        );
+        const facilityLoan = yield context.df.callActivityWithRetry('activity-create-facility-loan', retryOptions, { acbsFacilityLoanInput });
 
         // 4.1. Map Facility fixed-fee / premium schedule record(s)
-        const acbsFacilityFeeInput = mappings.facility.facilityFee(
-          deal,
-          facilitySnapshot,
-        );
+        const acbsFacilityFeeInput = mappings.facility.facilityFee(deal, facilitySnapshot);
 
         // 4.2. Facility fixed-fee record(s) creation
         if (Array.isArray(acbsFacilityFeeInput)) {
