@@ -19,6 +19,7 @@ import {
   displayChangeSupportingInfo,
   canUpdateUnissuedFacilitiesCheck,
   returnToMakerNoFacilitiesChanged,
+  getCurrentTimePlusMinutes,
 } from './helpers';
 
 import {
@@ -1444,132 +1445,158 @@ describe('futureDateInRange', () => {
     const date = new Date();
     expect(futureDateInRange({ day: date.getDate(), month: (date.getMonth() + 1), year: date.getFullYear() }, 365)).toEqual(true);
   });
+});
 
-  describe('getFacilityCoverStartDate', () => {
-    it('Should return expected date object for mock facility', () => {
-      const expected = {
-        date: '2',
-        month: '12',
-        year: '2021',
-      };
-      expect(getFacilityCoverStartDate(MOCK_FACILITY.items[1])).toEqual(expected);
-    });
+describe('getCurrentTimePlusMinutes', () => {
+  it('should add the specified number of minutes to the current time', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01 12:00:00'));
 
-    it('Should return expected date object for mock facility', () => {
-      const expected = {
-        date: '3',
-        month: '12',
-        year: '2021',
-      };
-      expect(getFacilityCoverStartDate(MOCK_FACILITY.items[0])).toEqual(expected);
-    });
+    expect(getCurrentTimePlusMinutes(15)).toEqual(new Date('2020-01-01 12:15:00'));
   });
 
-  describe('displayChangeSupportingInfo()', () => {
-    it('Should return false if preview mode', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
-      expect(result).toEqual(false);
-    });
+  it('should allow adding more than sixty minutes', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01 12:00:00'));
 
-    it('Should return false if preview mode and submission count over 0', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
-      expect(result).toEqual(false);
-    });
-
-    it('Should return true if not preview mode and submission count is 0', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
-      expect(result).toEqual(true);
-    });
-
-    it('Should return true if not preview mode and submission count is 0', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
-      expect(result).toEqual(true);
-    });
+    expect(getCurrentTimePlusMinutes(80)).toEqual(new Date('2020-01-01 13:20:00'));
   });
 
-  describe('canUpdateUnissuedFacilitiesCheck()', () => {
-    it('if AIN, returns true if unissuedFacilities and no facilitiesChanged to issued', () => {
-      const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, true, [], null);
-      expect(result).toEqual(true);
-    });
+  it('should subtract minutes when given a negative number', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01 12:00:00'));
 
-    it('if AIN, returns false if unissuedFacilities and facilitiesChanged to issued', () => {
-      const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, true, ['mock1'], null);
-      expect(result).toEqual(false);
-    });
-
-    it('if AIN, returns false if no unissuedFacilities and no facilitiesChanged to issued', () => {
-      const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false, [], null);
-      expect(result).toEqual(false);
-    });
-
-    it('if AIN, returns false if no unissuedFacilities and facilitiesChanged to issued', () => {
-      const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false, ['mock1'], null);
-      expect(result).toEqual(false);
-    });
-
-    it('if MIA, returns true if unissuedFacilities and no facilitiesChanged to issued and ukefDecisionAccepted is true', () => {
-      const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, true, [], true);
-      expect(result).toEqual(true);
-    });
-
-    it('if MIA, returns false if no unissuedFacilities and no facilitiesChanged to issued and ukefDecisionAccepted is true', () => {
-      const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, false, [], true);
-      expect(result).toEqual(false);
-    });
-
-    it('if MIA, returns false if unissuedFacilities and facilitiesChanged to issued and ukefDecisionAccepted is true', () => {
-      const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, true, ['mock1'], true);
-      expect(result).toEqual(false);
-    });
-
-    it('if MIA, returns false if unissuedFacilities and no facilitiesChanged to issued and ukefDecisionAccepted is false', () => {
-      const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, true, [], false);
-      expect(result).toEqual(false);
-    });
+    expect(getCurrentTimePlusMinutes(-15)).toEqual(new Date('2020-01-01 11:45:00'));
   });
 
-  describe('displayChangeSupportingInfo()', () => {
-    it('Should return false if preview mode', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
-      expect(result).toEqual(false);
-    });
+  it('should allow passing into a new day', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2019-12-31 23:50:00'));
 
-    it('Should return false if preview mode and submission count over 0', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
-      expect(result).toEqual(false);
-    });
+    expect(getCurrentTimePlusMinutes(15)).toEqual(new Date('2020-01-01 00:05:00'));
+  });
+});
 
-    it('Should return true if not preview mode and submission count is 0', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
-      expect(result).toEqual(true);
-    });
-
-    it('Should return true if not preview mode and submission count is 0', () => {
-      const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
-      expect(result).toEqual(true);
-    });
+describe('getFacilityCoverStartDate', () => {
+  it('Should return expected date object for mock facility', () => {
+    const expected = {
+      date: '2',
+      month: '12',
+      year: '2021',
+    };
+    expect(getFacilityCoverStartDate(MOCK_FACILITY.items[1])).toEqual(expected);
   });
 
-  describe('returnToMakerNoFacilitiesChanged()', () => {
-    it('returns false if wrong status and no hasChangedFacilities', () => {
-      const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false);
-      expect(result).toEqual(false);
-    });
+  it('Should return expected date object for mock facility', () => {
+    const expected = {
+      date: '3',
+      month: '12',
+      year: '2021',
+    };
+    expect(getFacilityCoverStartDate(MOCK_FACILITY.items[0])).toEqual(expected);
+  });
+});
 
-    it('returns false if wrong status and hasChangedFacilities', () => {
-      const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_UNISSUED_ONLY, true);
-      expect(result).toEqual(false);
-    });
+describe('displayChangeSupportingInfo()', () => {
+  it('Should return false if preview mode', () => {
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
+    expect(result).toEqual(false);
+  });
 
-    it('returns false if right status and hasChangedFacilities', () => {
-      const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_RETURN_MAKER, true);
-      expect(result).toEqual(false);
-    });
+  it('Should return false if preview mode and submission count over 0', () => {
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
+    expect(result).toEqual(false);
+  });
 
-    it('returns true changes required and no hasChangedFacilities', () => {
-      const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_RETURN_MAKER, false);
-      expect(result).toEqual(true);
-    });
+  it('Should return true if not preview mode and submission count is 0', () => {
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
+    expect(result).toEqual(true);
+  });
+
+  it('Should return true if not preview mode and submission count is 0', () => {
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
+    expect(result).toEqual(true);
+  });
+});
+
+describe('canUpdateUnissuedFacilitiesCheck()', () => {
+  it('if AIN, returns true if unissuedFacilities and no facilitiesChanged to issued', () => {
+    const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, true, [], null);
+    expect(result).toEqual(true);
+  });
+
+  it('if AIN, returns false if unissuedFacilities and facilitiesChanged to issued', () => {
+    const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, true, ['mock1'], null);
+    expect(result).toEqual(false);
+  });
+
+  it('if AIN, returns false if no unissuedFacilities and no facilitiesChanged to issued', () => {
+    const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false, [], null);
+    expect(result).toEqual(false);
+  });
+
+  it('if AIN, returns false if no unissuedFacilities and facilitiesChanged to issued', () => {
+    const result = canUpdateUnissuedFacilitiesCheck(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false, ['mock1'], null);
+    expect(result).toEqual(false);
+  });
+
+  it('if MIA, returns true if unissuedFacilities and no facilitiesChanged to issued and ukefDecisionAccepted is true', () => {
+    const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, true, [], true);
+    expect(result).toEqual(true);
+  });
+
+  it('if MIA, returns false if no unissuedFacilities and no facilitiesChanged to issued and ukefDecisionAccepted is true', () => {
+    const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, false, [], true);
+    expect(result).toEqual(false);
+  });
+
+  it('if MIA, returns false if unissuedFacilities and facilitiesChanged to issued and ukefDecisionAccepted is true', () => {
+    const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, true, ['mock1'], true);
+    expect(result).toEqual(false);
+  });
+
+  it('if MIA, returns false if unissuedFacilities and no facilitiesChanged to issued and ukefDecisionAccepted is false', () => {
+    const result = canUpdateUnissuedFacilitiesCheck(MOCK_MIA_APPLICATION_UNISSUED_ONLY, true, [], false);
+    expect(result).toEqual(false);
+  });
+});
+
+describe('displayChangeSupportingInfo()', () => {
+  it('Should return false if preview mode', () => {
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 0), true);
+    expect(result).toEqual(false);
+  });
+
+  it('Should return false if preview mode and submission count over 0', () => {
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, 1), true);
+    expect(result).toEqual(false);
+  });
+
+  it('Should return true if not preview mode and submission count is 0', () => {
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.DRAFT, 0), false);
+    expect(result).toEqual(true);
+  });
+
+  it('Should return true if not preview mode and submission count is 0', () => {
+    const result = displayChangeSupportingInfo(MOCK_AIN_APPLICATION_SUPPORTING_INFO(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, 0), false);
+    expect(result).toEqual(true);
+  });
+});
+
+describe('returnToMakerNoFacilitiesChanged()', () => {
+  it('returns false if wrong status and no hasChangedFacilities', () => {
+    const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false);
+    expect(result).toEqual(false);
+  });
+
+  it('returns false if wrong status and hasChangedFacilities', () => {
+    const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_UNISSUED_ONLY, true);
+    expect(result).toEqual(false);
+  });
+
+  it('returns false if right status and hasChangedFacilities', () => {
+    const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_RETURN_MAKER, true);
+    expect(result).toEqual(false);
+  });
+
+  it('returns true changes required and no hasChangedFacilities', () => {
+    const result = returnToMakerNoFacilitiesChanged(MOCK_AIN_APPLICATION_RETURN_MAKER, false);
+    expect(result).toEqual(true);
   });
 });

@@ -81,7 +81,7 @@ describe('controllers/supporting-documents', () => {
           _id: 'mockFileId',
           filename: 'mock-file.pdf',
         }],
-        uploadCsrf: 'TestToken',
+        uploadCsrf: expect.any(String),
       });
     });
   });

@@ -13,8 +13,8 @@ const router = express.Router();
 
 const checkUploadCsrfToken = (req, res, next) => {
   if (req.session.uploadCsrf
-    && req.query.uploadCsrf
-    && req.session.uploadCsrf === req.query.uploadCsrf) {
+    && req.session.uploadCsrf.token === req.query.uploadCsrf
+    && new Date() < new Date(req.session.uploadCsrf.expiry)) {
     next();
   } else {
     console.error(`Error! CSRF tokens do not match.\nSESSION VALUE: ${req.session.uploadCsrf}.\nQUERY VALUE: ${req.query.uploadCsrf}`);
