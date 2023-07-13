@@ -91,18 +91,12 @@ const getFacility = async (id) => {
 
 const getTeamMembers = async (teamId) => {
   try {
-    console.log(teamId);
     const response = await apollo('GET', teamMembersQuery, { teamId });
-    console.log(response);
-    return response.data.teamMembers;
-  } catch(err) {
+    return response?.data?.teamMembers ? response?.data?.teamMembers : [];
+  } catch (err) {
     console.error('Error getting team members %s', err);
     return [];
   }
-  // const response = await apollo('GET', teamMembersQuery, { teamId });
-
-  // return response.data.teamMembers;
-  
 };
 
 const updateParty = async (id, partyUpdate) => {
@@ -196,13 +190,15 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
-const createActivity = (dealId, activityUpdate) => {
+const createActivity = async (dealId, activityUpdate) => {
   const updateVariable = {
     dealId,
     activityUpdate,
   };
 
-  return apollo('PUT', createActivityMutation, updateVariable);
+  const response = await apollo('PUT', createActivityMutation, updateVariable);
+
+  return response;
 };
 
 const login = async (username, password) => {

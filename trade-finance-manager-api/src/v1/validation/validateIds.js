@@ -39,7 +39,7 @@ const sanitizeUsername = (username) => validator.escape(username);
 
 const isValidTeamId = (teamId) => {
   const teamIds = [teams.BUSINESS_SUPPORT.id, teams.PIM.id, teams.RISK_MANAGERS.id, teams.UNDERWRITERS.id, teams.UNDERWRITER_MANAGERS.id, teams.UNDERWRITING_SUPPORT.id];
-  return teamIds.contains(teamId);
+  return teamIds.includes(teamId);
 };
 
 module.exports = {

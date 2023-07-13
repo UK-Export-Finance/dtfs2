@@ -3,7 +3,8 @@ const {
   isValidUkefNumericId,
   isValidPartyUrn,
   isValidNumericId,
-  isValidCurrencyCode
+  isValidCurrencyCode,
+  isValidTeamId,
 } = require('../../../src/v1/validation/validateIds');
 
 describe('validateIds', () => {
@@ -102,6 +103,26 @@ describe('validateIds', () => {
 
     it('should return true if a code is a valid currency code', () => {
       const result = isValidCurrencyCode('USD');
+
+      expect(result).toEqual(true);
+    });
+  });
+
+  describe('isValidTeamId', () => {
+    it('should return false if a team id is not provided', () => {
+      const result = isValidCurrencyCode();
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if the team id is not a valid', () => {
+      const result = isValidCurrencyCode('12345');
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return true if a team id is a valid currency code', () => {
+      const result = isValidCurrencyCode('UNDERWRITERS');
 
       expect(result).toEqual(true);
     });

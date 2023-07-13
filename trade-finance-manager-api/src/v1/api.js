@@ -741,13 +741,11 @@ const updateUserTasks = async (userId, updatedTasks) => {
 
 const findOneTeam = async (teamId) => {
   try {
-    const isValidTeamId = isValidTeamId(teamId)
-    console.log(teamId);
-    console.log(isValidTeamId);;
+    const isValidId = isValidTeamId(teamId);
 
-    // if (!isValidTeamId) {
-    //   return { status: 400, data: 'Invalid team id provided' };
-    // }
+    if (!isValidId) {
+      return { status: 400, data: 'Invalid team id provided' };
+    }
 
     const response = await axios({
       method: 'get',
@@ -763,13 +761,11 @@ const findOneTeam = async (teamId) => {
 
 const findTeamMembers = async (teamId) => {
   try {
-    const isValidTeamId = isValidTeamId(teamId);
-    console.log(teamId);
-    console.log(isValidTeamId);
+    const isValidId = isValidTeamId(teamId);
 
-    // if (!isValidTeamId) {
-    //   return { status: 400, data: 'Invalid team id provided' };
-    // }
+    if (!isValidId) {
+      return { status: 400, data: 'Invalid team id provided' };
+    }
 
     const response = await axios({
       method: 'get',
