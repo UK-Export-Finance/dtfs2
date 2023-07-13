@@ -1,4 +1,5 @@
 const validator = require('validator');
+const teams = require('../../constants/teams');
 
 const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId) : false);
 
@@ -36,7 +37,10 @@ const isValidCurrencyCode = (currencyCode) => (currencyCode ? validator.isISO421
 
 const sanitizeUsername = (username) => validator.escape(username);
 
-const isValidTeamId = (teamId) => true;
+const isValidTeamId = (teamId) => {
+  const teamIds = [teams.BUSINESS_SUPPORT.id, teams.PIM.id, teams.RISK_MANAGERS.id, teams.UNDERWRITERS.id, teams.UNDERWRITER_MANAGERS.id, teams.UNDERWRITING_SUPPORT.id];
+  return teamIds.contains(teamId);
+};
 
 module.exports = {
   isValidMongoId,
