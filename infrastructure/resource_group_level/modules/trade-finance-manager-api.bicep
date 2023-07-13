@@ -8,6 +8,7 @@ param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param logAnalyticsWorkspaceId string
 param externalApiHostname string
+param portalApiHostname string
 param dtfsCentralApiHostname string
 param storageAccountName string
 
@@ -24,8 +25,9 @@ param secureSettings object = {
 @secure()
 param additionalSecureSettings object = {
   DOCKER_REGISTRY_SERVER_PASSWORD: 'test-value'
+  // TODO:FN-737 UKEF_INTERNAL_NOTIFICATION is new and necessary
   UKEF_INTERNAL_NOTIFICATION: 'test-value'
-  // TODO:FN-424 All of these were found on dev but not staging, remove if appropriate
+  // TODO:FN-737 The following 5 secrets are from the APIM changes
   DTFS_CENTRAL_API_KEY: 'test-value'
   EXTERNAL_API_KEY: 'test-value'
   JWT_VALIDATING_KEY: 'test-value'
@@ -66,6 +68,11 @@ var settings = {
 }
 
 // These values are taken from an export of Configuration on Dev (& validating with staging).
+var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
+// Note that in the CLI script, http was used, but the value in the exported config was https.
+var externalApiUrl = 'https://${externalApiHostname}'
+var portalApiUrl = 'https://${portalApiHostname}'
+
 var additionalSettings = {
   // Note that the dev & staging didn't have AI enabled
   // If enabling, consider using APPLICATIONINSIGHTS_CONNECTION_STRING instead
@@ -80,12 +87,13 @@ var additionalSettings = {
   WEBSITE_HTTPLOGGING_RETENTION_DAYS: '3'
   WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
   
-  // All of these were found on dev but not staging
-  DTFS_CENTRAL_API_URL: 'TODO:FN-424' // https://tfs-dev-dtfs-central-api.azurewebsites.net/
-  // Note that EXTERNAL_API_URL is also in Connection Strings! (via CLI)
-  EXTERNAL_API_URL: 'TODO:FN-424' // https://tfs-dev-external-api.azurewebsites.net/ 
-  PORTAL_API_URL: 'TODO:FN-424' //https://tfs-dev-portal-api.azurewebsites.net/
-  TFM_API_URL: 'TODO:FN-424' // https://tfs-dev-trade-finance-manager-api.azurewebsites.net/
+  // TODO:FN-737 The following 4 secrets are from the APIM changes
+  // Note that DTFS_CENTRAL_API_URL & EXTERNAL_API_URL are also in Connection Strings! (via CLI)
+  DTFS_CENTRAL_API_URL: dtfsCentralApiUrl
+  EXTERNAL_API_URL: externalApiUrl
+  PORTAL_API_URL: portalApiUrl
+  // TODO:FN-737 - This is a self-reference. I don't think it is needed. Double check and remove.
+  TFM_API_URL: 'TODO:FN-737' // https://tfs-dev-trade-finance-manager-api.azurewebsites.net/
 }
 
 var nodeEnv = environment == 'dev' ? { NODE_ENV: 'development' } : {}
@@ -116,11 +124,6 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' existing 
 }
 var storageAccountKey = storageAccount.listKeys().keys[0].value
 
-// Note that in the CLI script, http was used, but the value in the exported config was https.
-var externalApiUrl = 'https://${externalApiHostname}'
-
-var dtfsCentralApiUrl = 'http://${dtfsCentralApiHostname}'
-
 var connectionStringsCalculated = {  
   MONGO_INITDB_DATABASE: {
     type: 'Custom'
@@ -134,6 +137,7 @@ var connectionStringsCalculated = {
     type: 'Custom'
     value: externalApiUrl
   }
+  // TODO:FN-737 Note that DTFS_CENTRAL_API becomes DTFS_CENTRAL_API_URL
   DTFS_CENTRAL_API: {
     type: 'Custom'
     value: dtfsCentralApiUrl

@@ -244,3 +244,5 @@ resource portalApiPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01
 //     publicNetworkAccessForQuery: 'Enabled'
 //   }
 // }
+
+output defaultHostName string = portalApi.properties.defaultHostName
