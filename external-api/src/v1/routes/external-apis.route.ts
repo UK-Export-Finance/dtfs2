@@ -154,7 +154,7 @@ apiRoutes.get('/industry-sectors/:code', industrySectors.findOne);
  * /industry-sectors/:code/acbs-sector:
  *   get:
  *     summary: Get UKEF/ACBS industry sector and code
- *     tags: [Industry Sectors, ACBS, Mulesoft]
+ *     tags: [Industry Sectors, ACBS, APIM]
  *     description: Get UKEF/ACBS industry sector and code by our local sector code. ACBS has it's own industry codes
  *     parameters:
  *       - in: path
@@ -215,7 +215,7 @@ apiRoutes.post('/number-generator', numberGenerator.callNumberGeneratorPOST);
  * /acbs:
  *   post:
  *     summary: Calls ACBS Azure Function / Orchestrator
- *     tags: [ACBS, Mulesoft]
+ *     tags: [ACBS, APIM]
  *     description: Calls ACBS Azure Function / Orchestrator. Triggers API calls to ACBS API.
  *     requestBody:
  *       required: true
@@ -239,7 +239,7 @@ apiRoutes.post('/acbs', acbs.createAcbsRecordPOST);
  * /acbs/:entityType/:id:
  *   get:
  *     summary: Check if an ID from Number Generator API is being used
- *     tags: [ACBS, Mulesoft]
+ *     tags: [ACBS, APIM]
  *     description: If a 404 is returned, the ID is not in use and is OK to use
  *     parameters:
  *       - in: path
@@ -269,7 +269,7 @@ apiRoutes.get('/acbs/:entityType/:id', acbs.findOne);
  * /acbs/facility/:id/issue:
  *   post:
  *     summary: Mark a facility as issued in ACBS. Calls Azure Function / Orchestrator
- *     tags: [ACBS, Mulesoft]
+ *     tags: [ACBS, APIM]
  *     description: Calls ACBS Azure Function / Orchestrator. Triggers API calls to ACBS API.
  *     parameters:
  *       - in: path
@@ -301,7 +301,7 @@ apiRoutes.post('/acbs/facility/:id/issue', acbs.issueAcbsFacilityPOST);
  * /acbs/facility/:id/amendments:
  *   post:
  *     summary: Amend's ACBS facility records. Facility properties are updated as per payload.
- *     tags: [ACBS, Mulesoft]
+ *     tags: [ACBS, APIM]
  *     description: Azure DOF `acbs-amend-facility` is invoked.
  *     parameters:
  *       - in: path
@@ -333,7 +333,7 @@ apiRoutes.post('/acbs/facility/:id/amendments', acbs.amendAcbsFacilityPost);
  * /party-db/:partyDbCompanyRegistrationNumber:
  *   get:
  *     summary: Get a UKEF party
- *     tags: [PartyDB, Mulesoft]
+ *     tags: [APIM, Salesforce]
  *     description: We only consume the Party URN (Unique Reference Number). Not all fields are in the response example.
  *     parameters:
  *       - in: path
@@ -360,7 +360,7 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  * /party-db/urn/:urn:
  *   get:
  *     summary: Get a UKEF company
- *     tags: [PartyDB, Mulesoft, Salesforce, MCD]
+ *     tags: [APIM, Salesforce]
  *     description: Fetches complete company object from Party URN
  *     parameters:
  *       - in: path
@@ -387,10 +387,10 @@ apiRoutes.get('/party-db/urn/:urn', partyUrn.lookup);
  * /currency-exchange-rate/:source/:target:
  *   get:
  *     summary: Get the active exchange rate for the provided source and target currency codes
- *     tags: [Currency Exchange, Mulesoft]
+ *     tags: [Currency Exchange, APIM]
  *     description: >-
  *       ISO 3 currency codes.
- *       Note - the Mulesoft API does not support XYZ to GBP conversion.
+ *       Note - the APIM API does not support XYZ to GBP conversion.
  *       To handle this scenario - behind the scenes in our controller, the source and target are reversed.
  *       In our response handler, we only return the `exchangeRate` (midPrice) field.
  *     parameters:
@@ -432,7 +432,7 @@ apiRoutes.get('/currency-exchange-rate/:source/:target', currencyExchangeRate.ge
  * /exposure-period/:startDate/:endDate/:facilityType:
  *   get:
  *     summary: Get the exposure period in months for a facility
- *     tags: [Exposure Period, Mulesoft]
+ *     tags: [Exposure Period, APIM]
  *     description: Get the exposure period in months for a facility
  *     parameters:
  *       - in: path
@@ -470,7 +470,7 @@ apiRoutes.get('/exposure-period/:startDate/:endDate/:facilityType', exposurePeri
  * /premium-schedule:
  *   get:
  *     summary: Get a repayment schedule for a facility
- *     tags: [Premium Schedule, Mulesoft]
+ *     tags: [Premium Schedule, APIM]
  *     description: Get a repayment schedule for a facility
  *     requestBody:
  *       required: true
@@ -548,7 +548,7 @@ apiRoutes.get('/ordnance-survey/:OSPostcode', ordnanceSurvey.lookup);
  * /estore:
  *   get:
  *     summary: Create Estore folders
- *     tags: [Estore, Mulesoft]
+ *     tags: [Estore, APIM]
  *     description: Creates an Estore site and then folders for buyer, deal and facilities. Multiple API calls.
  *     requestBody:
  *       required: true
