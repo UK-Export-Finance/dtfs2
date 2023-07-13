@@ -144,7 +144,7 @@ const getPartyUrnDetails = async (req, res) => {
     // Fetches company information from URN
     const company = await api.getParty(partyUrn, userToken);
 
-    if (!company || !company.data || company.status !== 200) {
+    if (!company?.data || company.status !== 200) {
       return res.render('case/parties/non-existent.njk', {
         dealId,
         party,
@@ -313,7 +313,7 @@ const confirmPartyUrn = async (req, res) => {
     const company = await api.getParty(partyUrn, userToken);
 
     // Non-existent party urn
-    if ((!company && !company.data) || company.status !== 200) {
+    if (!company?.data || company.status !== 200) {
       return res.render('case/parties/non-existent.njk', {
         dealId,
         party,
