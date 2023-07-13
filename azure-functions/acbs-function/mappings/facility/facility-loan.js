@@ -1,24 +1,20 @@
 /*
-"portfolioIdentifier":              Facility portfolio idenfifier. Default to "E1"
-"postingDate":                      Date of submission to ACBS
-"facilityIdentifier":               UKEF facilityId
-"borrowerPartyIdentifier":          exporter ACBS ID
-"productTypeId":                    Facility Type i.e. 250 for BOND
-"productTypeGroup":                 Product group EWCS (EW) , Bond (BS) and GEF (GM)
-"currency":                         Facility currency code
-"dealCustomerUsageRate":            This is Currency exchange rate (FX rate)
-"dealCustomerUsageOperationType":   This is Currency exchange rate operation (D for divide, M for Multiply), set to `D`
-"amount":                           ukefExposure
-"issueDate":                        At Commitment stage its not required ,
-                                    Issued when issued it would be Issue Date for Bond OR Disbursement Date for Loan
-"expiryDate":                       Facility expiry date
-"spreadRate":                       Used for Premium Accrual Schedule. For GEF, BSS and EWCS.
-"spreadRateCTL":                    Used for Contractual Interest Accrual Schedule (CTL).
-                                    For EWCS. EWCS needs two spread rates.
-"nextDueDate":                      guaranteeCommencementDate + Fee frequency in months
-"yearBasis":                        dayCountBasis : 360 = 5, 365 = 1
-"indexRateChangeFrequency":         feeFrequency
-"loanBillingFrequencyType":         feeType
+"postingDate"                      Date of submission to ACBS
+"borrowerPartyIdentifier"          exporter ACBS ID
+"productTypeId"                    Facility type ID
+"productTypeGroup"                 Facility product group type
+"currency"                         Facility currency code
+"dealCustomerUsageRate"            This is Currency exchange rate (FX rate)
+"dealCustomerUsageOperationType"   This is Currency exchange rate operation (D for divide)
+"amount"                           UKEF facility maximum exposure
+"issueDate"                        At Commitment stage its not required, issued when issued it would be Issue Date for Bond OR Disbursement Date for Loan
+"expiryDate"                       Facility expiry date
+"spreadRate"                       Used for premium accrual schedule
+"spreadRateCtl"                    Used for Contractual Interest Accrual Schedule (CTL).
+"nextDueDate"                      guaranteeCommencementDate + Fee frequency in months
+"yearBasis"                        dayCountBasis : 360 = 5, 365 = 1
+"indexRateChangeFrequency"         Facility fee frequency type
+"loanBillingFrequencyType"         Facility fee type
 */
 
 const helpers = require('./helpers');
@@ -34,9 +30,7 @@ const facilityLoan = (deal, facility, acbsData) => {
     const currency = facility.facilitySnapshot.currency.id || CONSTANTS.DEAL.CURRENCY.DEFAULT;
 
     let loanRecord = {
-      portfolioIdentifier: CONSTANTS.FACILITY.PORTFOLIO.E1,
       postingDate: date.now(),
-      facilityIdentifier: facility.facilitySnapshot.ukefFacilityId.padStart(10, 0),
       borrowerPartyIdentifier: acbsData.parties.exporter.partyIdentifier,
       productTypeId: helpers.getProductTypeId(facility),
       productTypeGroup: helpers.getProductTypeGroup(facility, deal.dealSnapshot.dealType),
@@ -63,14 +57,14 @@ const facilityLoan = (deal, facility, acbsData) => {
     if (deal.dealSnapshot.dealType === CONSTANTS.PRODUCT.TYPE.BSS_EWCS) {
       loanRecord = {
         ...loanRecord,
-        spreadRateCTL: helpers.getInterestOrFeeRate(facility),
+        spreadRateCtl: helpers.getInterestOrFeeRate(facility),
         indexRateChangeFrequency: helpers.getFeeFrequency(facility),
       };
     }
 
     return loanRecord;
   } catch (error) {
-    console.error('Unable to map Facility Loan Record.', { error });
+    console.error('Unable to map facility loan record.', { error });
     return error;
   }
 };

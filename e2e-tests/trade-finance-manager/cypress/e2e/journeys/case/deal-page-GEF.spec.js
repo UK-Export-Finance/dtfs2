@@ -23,7 +23,7 @@ context('User can view a GEF MIA case deal', () => {
         dealFacilities = createdFacilities.details;
       });
 
-      cy.submitDeal(dealId, DEAL_TYPE.GEF);
+      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
     });
   });
 
@@ -109,7 +109,7 @@ context('User can view a GEF AIN case deal', () => {
         dealFacilities = createdFacilities.details;
       });
 
-      cy.submitDeal(dealId, DEAL_TYPE.GEF);
+      cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
     });
   });
 

@@ -5,7 +5,8 @@ const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 
 const getAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
-  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
   if (status !== 200) {
     return res.redirect('/not-found');
@@ -24,7 +25,7 @@ const getAmendCoverEndDate = async (req, res) => {
   }
 
   const facility = await api.getFacility(facilityId);
-  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, amendmentId);
+  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, amendmentId, userToken);
 
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
@@ -46,10 +47,11 @@ const getAmendCoverEndDate = async (req, res) => {
 
 const postAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
   const facility = await api.getFacility(facilityId);
-  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, amendmentId);
+  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, amendmentId, userToken);
 
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
@@ -57,7 +59,7 @@ const postAmendCoverEndDate = async (req, res) => {
     currentCoverEndDate = format(fromUnixTime(latestAmendmentCoverEndDate.coverEndDate), 'dd MMMM yyyy');
   }
 
-  const { coverEndDate, errorsObject, coverEndDateErrors } = await coverEndDateValidation(req.body, currentCoverEndDate);
+  const { coverEndDate, errorsObject, coverEndDateErrors } = coverEndDateValidation(req.body, currentCoverEndDate);
 
   if (coverEndDateErrors.length) {
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate;
@@ -79,7 +81,7 @@ const postAmendCoverEndDate = async (req, res) => {
     // convert the current end date to EPOCH format
     formatCurrentCoverEndDate = getUnixTime((new Date(formatCurrentCoverEndDate)).setHours(2, 2, 2, 2));
     const payload = { coverEndDate, currentCoverEndDate: formatCurrentCoverEndDate };
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       if (amendment.changeFacilityValue) {
@@ -90,7 +92,7 @@ const postAmendCoverEndDate = async (req, res) => {
     console.error('Unable to update the cover end date');
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   } catch (err) {
-    console.error('There was a problem adding the cover end date %O', { response: err?.response?.data });
+    console.error('There was a problem adding the cover end date %s', err);
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}#amendments`);
   }
 };

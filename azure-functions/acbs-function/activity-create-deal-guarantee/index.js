@@ -13,46 +13,51 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'effectiveDate',
-  'limitKey',
-  'guaranteeExpiryDate',
-  'maximumLiability',
-  'guarantorParty',
-];
+const mandatoryFields = ['effectiveDate', 'limitKey', 'guaranteeExpiryDate', 'maximumLiability', 'guarantorParty'];
 
 const createDealGuarantee = async (context) => {
-  const { dealIdentifier, guarantee } = context.bindingData;
+  try {
+    const { dealIdentifier, guarantee } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(guarantee, mandatoryFields);
+    const missingMandatory = findMissingMandatory(guarantee, mandatoryFields);
 
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
-  }
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
 
-  const submittedToACBS = moment().format();
+    const submittedToACBS = moment().format();
 
-  const { status, data } = await api.createDealGuarantee(dealIdentifier, guarantee);
+    const { status, data } = await api.createDealGuarantee(dealIdentifier, guarantee);
 
-  if (isHttpErrorStatus(status)) {
-    throw new Error(JSON.stringify({
-      name: 'ACBS Deal Guarantee create error',
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'ACBS Deal Guarantee create error',
+            status,
+            dealIdentifier,
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: guarantee,
+          },
+          null,
+          4,
+        ),
+      );
+    }
+
+    return {
       status,
-      dealIdentifier,
+      dataSent: guarantee,
       submittedToACBS,
       receivedFromACBS: moment().format(),
-      dataReceived: data,
-      dataSent: guarantee,
-    }, null, 4));
+      ...data,
+    };
+  } catch (error) {
+    console.error('Unable to create deal guarantee record.', { error });
+    throw new Error(error);
   }
-
-  return {
-    status,
-    dataSent: guarantee,
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
 };
 
 module.exports = createDealGuarantee;

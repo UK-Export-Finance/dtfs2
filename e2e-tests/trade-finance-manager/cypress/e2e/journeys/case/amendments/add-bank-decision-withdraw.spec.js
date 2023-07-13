@@ -24,7 +24,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, PIM_USER_1);
     });
   });
 
@@ -315,7 +315,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, PIM_USER_1);
     });
   });
 

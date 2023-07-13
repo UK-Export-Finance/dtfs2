@@ -14,7 +14,6 @@ const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
 const mandatoryFields = [
-  'facilityIdentifier',
   'amount',
   'effectiveDate',
   'expirationDate',
@@ -29,8 +28,7 @@ const mandatoryFields = [
 
 const createFacilityFee = async (context) => {
   try {
-    const { acbsFacilityFeeInput } = context.bindingData;
-    const { facilityIdentifier } = acbsFacilityFeeInput;
+    const { facilityIdentifier, acbsFacilityFeeInput } = context.bindingData;
 
     const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
     if (missingMandatory.length) {
@@ -61,8 +59,8 @@ const createFacilityFee = async (context) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility fee', { error });
-    return error;
+    console.error('Unable to create facility fee record.', { error });
+    throw new Error(error);
   }
 };
 

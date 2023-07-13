@@ -4,11 +4,11 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const { API_KEY } = process.env;
+const { PORTAL_API_KEY } = process.env;
 
 const headers = (token) => ({
-  'x-api-key': API_KEY,
-  Authorization: token || '',
+  'x-api-key': PORTAL_API_KEY,
+  Authorization: token,
 });
 
 module.exports = (app) => ({

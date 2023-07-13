@@ -7,7 +7,7 @@ const { FACILITY } = CONSTANTS;
 const facilityLoanAmend = (amendments, facility, facilityMasterRecord) => {
   try {
     // Default facility loan record
-    let record = { portfolioIdentifier: FACILITY.PORTFOLIO.E1 };
+    let record = {};
     // De-structure
     const { amendment } = amendments;
     const { facilitySnapshot } = facility;
@@ -49,7 +49,7 @@ const facilityLoanAmend = (amendments, facility, facilityMasterRecord) => {
 
     return record;
   } catch (error) {
-    console.error('Unable to map facility loan record: ', { error });
+    console.error('Unable to map facility loan amendment record: ', { error });
     return error;
   }
 };

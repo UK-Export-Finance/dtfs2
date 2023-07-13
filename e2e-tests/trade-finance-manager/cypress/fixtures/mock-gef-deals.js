@@ -104,7 +104,7 @@ const commonApplicationDetails = {
   previousStatus: DEAL_STATUS.DRAFT,
   id: '61a7710b2ae62b0013dae687',
   exporter: {
-    companiesHouseRegistrationNumber: '08547313',
+    companiesHouseRegistrationNumber: '06771815',
     companyName: chance.company(),
     registeredAddress: {
       line1: chance.street({ syllables: 8 }),

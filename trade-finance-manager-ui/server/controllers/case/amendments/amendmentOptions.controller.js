@@ -4,7 +4,8 @@ const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 
 const getAmendmentOptions = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
-  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+  const { userToken } = req.session;
+  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   if (status !== 200) {
     return res.redirect('/not-found');
   }
@@ -29,13 +30,14 @@ const getAmendmentOptions = async (req, res) => {
 
 const postAmendmentOptions = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
+  const { userToken } = req.session;
   const { amendmentOptions } = req.body;
 
   const facility = await api.getFacility(facilityId);
   const { hasBeenIssued } = facility.facilitySnapshot;
   const { errorsObject, amendmentOptionsValidationErrors } = amendmentOptionsValidation(amendmentOptions, hasBeenIssued);
 
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
 
   if (amendmentOptionsValidationErrors.length) {
@@ -67,7 +69,7 @@ const postAmendmentOptions = async (req, res) => {
 
   try {
     const payload = { changeFacilityValue, changeCoverEndDate };
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       if (changeCoverEndDate) {
@@ -78,7 +80,7 @@ const postAmendmentOptions = async (req, res) => {
     console.error('Unable to update the amendment options');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
   } catch (err) {
-    console.error('There was a problem creating the amendment approval %O', { response: err?.response?.data });
+    console.error('There was a problem creating the amendment approval %s', err);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

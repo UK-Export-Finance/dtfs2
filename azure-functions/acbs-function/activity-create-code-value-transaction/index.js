@@ -14,44 +14,50 @@ const api = require('../api');
 const { isHttpErrorStatus } = require('../helpers/http');
 const { findMissingMandatory } = require('../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'facilityIdentifier',
-  'lenderTypeCode',
-  'initialBundleStatusCode',
-];
+const mandatoryFields = ['lenderTypeCode', 'initialBundleStatusCode', 'facilityTransactionCodeValueCode'];
 
 const createCodeValueTransaction = async (context) => {
-  const { acbsCodeValueTransactionInput } = context.bindingData;
-  const { dealIdentifier, facilityIdentifier } = acbsCodeValueTransactionInput;
+  try {
+    const { facilityIdentifier, acbsCodeValueTransactionInput } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(acbsCodeValueTransactionInput, mandatoryFields);
+    const missingMandatory = findMissingMandatory(acbsCodeValueTransactionInput, mandatoryFields);
 
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
-  }
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
 
-  const submittedToACBS = moment().format();
-  const { status, data } = await api.createCodeValueTransaction(facilityIdentifier, acbsCodeValueTransactionInput);
+    const submittedToACBS = moment().format();
+    const { status, data } = await api.createCodeValueTransaction(facilityIdentifier, acbsCodeValueTransactionInput);
 
-  if (isHttpErrorStatus(status)) {
-    throw new Error(JSON.stringify({
-      name: 'ACBS code create value transaction error',
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'ACBS code create value transaction error',
+            status,
+            facilityIdentifier,
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: acbsCodeValueTransactionInput,
+          },
+          null,
+          4,
+        ),
+      );
+    }
+
+    return {
       status,
-      dealIdentifier,
+      dataSent: acbsCodeValueTransactionInput,
       submittedToACBS,
       receivedFromACBS: moment().format(),
-      dataReceived: data,
-      dataSent: acbsCodeValueTransactionInput,
-    }, null, 4));
+      ...data,
+    };
+  } catch (error) {
+    console.error('Error creating facility code value transaction record: ', { error });
+    throw new Error(error);
   }
-
-  return {
-    status,
-    dataSent: acbsCodeValueTransactionInput,
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
 };
 
 module.exports = createCodeValueTransaction;

@@ -28,9 +28,9 @@ const apiSummary = (createdUsers) => ({
   apiUserErrors: createdUsers.filter((createdUser) => !createdUser.success).map(({ username }) => username),
 });
 
-const teardown = async (logData) => {
+const teardown = async (logData, token) => {
   // remove migration user
-  await removeMigrationUser();
+  await removeMigrationUser(token);
 
   // log file
   const logFolder = './logs';
@@ -45,8 +45,8 @@ const teardown = async (logData) => {
 };
 
 const migrateUsers = async () => {
-  const existingUsers = await api.listUsers();
   const token = await getToken();
+  const existingUsers = await api.listUsers(token);
   const banks = await api.listBanks(token);
 
   const existingUsersList = existingUsers.map(({ username }) => username);
@@ -111,7 +111,7 @@ const migrateUsers = async () => {
       existingUserErrors.push(user.username);
       return;
     }
-    const userCreate = api.createUser(user).then((createResult) => {
+    const userCreate = api.createUser(user, token).then((createResult) => {
       if (createResult.success) {
         consoleLogColor(`created user: ${createResult.user.username}`, 'green');
       } else {
@@ -158,7 +158,7 @@ const migrateUsers = async () => {
     userNoBanksError,
   });
 
-  teardown(logData);
+  teardown(logData, token);
 };
 
 migrateUsers();

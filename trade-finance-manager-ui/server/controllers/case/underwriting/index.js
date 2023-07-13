@@ -21,21 +21,27 @@ const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require(
  */
 const getUnderwriterPage = async (req, res) => {
   const dealId = req.params._id;
-  const { user } = req.session;
+  const { user, userToken } = req.session;
 
   const deal = await api.getDeal(dealId);
 
-  const dealLeadUnderWriter = await leadUnderwriter.getLeadUnderwriter(deal, user);
-  const dealPricingAndRisk = await pricingAndRisk.getUnderWritingPricingAndRisk(deal, user);
-  const dealUnderwriterManagersDecision = await underwriterManagersDecision.getUnderwriterManagersDecision(deal, user);
+  const dealLeadUnderWriter = await leadUnderwriter.getLeadUnderwriter(deal, user, userToken);
+  const dealPricingAndRisk = pricingAndRisk.getUnderWritingPricingAndRisk(deal, user);
+  const dealUnderwriterManagersDecision = underwriterManagersDecision.getUnderwriterManagersDecision(deal, user);
   const submittedAmendments = [];
   // gets latest amendment in progress
-  let { data: amendments } = await api.getAmendmentsByDealId(dealId);
+  let { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
+
+  if (!amendments) {
+    console.error('Unable to get amendments for deal id %s', dealId);
+    return res.redirect('/not-found');
+  }
+
   // filters the amendments submittedByPim and also which are not automatic
   amendments = amendments.filter(({ submittedByPim, requireUkefApproval }) => submittedByPim && requireUkefApproval);
 
-  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments);
-  const hasAmendmentInProgress = await hasAmendmentInProgressDealStage(amendments);
+  const amendmentsInProgress = await amendmentsInProgressByDeal(amendments, userToken);
+  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
   if (hasAmendmentInProgress) {
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
@@ -61,7 +67,7 @@ const getUnderwriterPage = async (req, res) => {
         amendment.ukefDecision = { isEditable: userCanEditManagersDecision(amendment, user) };
       }
 
-      const response = await getAmendmentLeadUnderwriter(amendment, user);
+      const response = await getAmendmentLeadUnderwriter(amendment, user, userToken);
       amendment.leadUnderwriter = {
         isEditable: response.isEditable,
         ...response.leadUnderwriter,
