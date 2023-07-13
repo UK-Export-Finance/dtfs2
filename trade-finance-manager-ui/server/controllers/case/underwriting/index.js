@@ -31,6 +31,12 @@ const getUnderwriterPage = async (req, res) => {
   const submittedAmendments = [];
   // gets latest amendment in progress
   let { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
+
+  if (!amendments) {
+    console.error('Unable to get amendments for deal id %s', dealId);
+    return res.redirect('/not-found');
+  }
+
   // filters the amendments submittedByPim and also which are not automatic
   amendments = amendments.filter(({ submittedByPim, requireUkefApproval }) => submittedByPim && requireUkefApproval);
 

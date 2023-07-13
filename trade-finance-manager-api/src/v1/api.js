@@ -5,7 +5,7 @@ const CONSTANTS = require('../constants');
 require('dotenv').config();
 
 const {
-  DTFS_CENTRAL_API_URL: centralApiUrl,
+  DTFS_CENTRAL_API_URL,
   EXTERNAL_API_URL,
   DTFS_CENTRAL_API_KEY,
   EXTERNAL_API_KEY,
@@ -29,7 +29,7 @@ const findOnePortalDeal = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
       headers: headers.central,
     });
 
@@ -43,7 +43,7 @@ const updatePortalDeal = async (dealId, update) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}`,
       headers: headers.central,
       data: {
         dealUpdate: update,
@@ -62,7 +62,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}/status`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/status`,
       headers: headers.central,
       data: {
         status,
@@ -81,7 +81,7 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${centralApiUrl}/v1/portal/deals/${dealId}/comment`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/comment`,
       headers: headers.central,
       data: {
         dealId,
@@ -100,7 +100,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}/status`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/status`,
       headers: headers.central,
       data: {
         status,
@@ -119,7 +119,7 @@ const updatePortalFacility = async (facilityId, update) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/facilities/${facilityId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
       headers: headers.central,
       data: update,
     });
@@ -136,7 +136,7 @@ const findOneDeal = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`,
       headers: headers.central,
     });
     return response.data.deal;
@@ -151,7 +151,7 @@ const updateDeal = async (dealId, dealUpdate) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`,
       headers: headers.central,
       data: {
         dealUpdate,
@@ -168,7 +168,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/snapshot`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/snapshot`,
       headers: headers.central,
       data: snapshotUpdate,
     });
@@ -183,7 +183,7 @@ const submitDeal = async (dealType, dealId) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/deals/submit`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/submit`,
       headers: headers.central,
       data: {
         dealType,
@@ -201,7 +201,7 @@ const findOneFacility = async (facilityId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}`,
       headers: headers.central,
     });
 
@@ -217,7 +217,7 @@ const findFacilitesByDealId = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/deals/${dealId}/facilities`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/facilities`,
       headers: headers.central,
     });
 
@@ -231,7 +231,7 @@ const updateFacility = async (facilityId, facilityUpdate) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}`,
       headers: headers.central,
       data: {
         facilityUpdate,
@@ -245,12 +245,12 @@ const updateFacility = async (facilityId, facilityUpdate) => {
 };
 
 const createFacilityAmendment = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'post',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments`,
         headers: headers.central,
         data: { facilityId },
       });
@@ -267,12 +267,12 @@ const createFacilityAmendment = async (facilityId) => {
 };
 
 const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidObjectId(amendmentId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(facilityId) && hasValidObjectId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'put',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
         headers: headers.central,
         data: payload,
       });
@@ -289,12 +289,12 @@ const updateFacilityAmendment = async (facilityId, amendmentId, payload) => {
 };
 
 const getAmendmentInProgress = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/in-progress`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/in-progress`,
         headers: headers.central,
       });
 
@@ -310,12 +310,12 @@ const getAmendmentInProgress = async (facilityId) => {
 };
 
 const getCompletedAmendment = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed`,
         headers: headers.central,
       });
 
@@ -331,12 +331,12 @@ const getCompletedAmendment = async (facilityId) => {
 };
 
 const getLatestCompletedAmendmentValue = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-value`,
         headers: headers.central,
       });
 
@@ -352,12 +352,12 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
 };
 
 const getLatestCompletedAmendmentDate = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
         headers: headers.central,
       });
 
@@ -373,12 +373,12 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
 };
 
 const getAmendmentById = async (facilityId, amendmentId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidObjectId(amendmentId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(facilityId) && hasValidObjectId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`,
         headers: headers.central,
       });
 
@@ -394,12 +394,12 @@ const getAmendmentById = async (facilityId, amendmentId) => {
 };
 
 const getAmendmentByFacilityId = async (facilityId) => {
-  const isValid = hasValidObjectId(facilityId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/facilities/${facilityId}/amendments`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments`,
         headers: headers.central,
       });
 
@@ -415,12 +415,12 @@ const getAmendmentByFacilityId = async (facilityId) => {
 };
 
 const getAmendmentsByDealId = async (dealId) => {
-  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendments`,
         headers: headers.central,
       });
 
@@ -436,12 +436,12 @@ const getAmendmentsByDealId = async (dealId) => {
 };
 
 const getAmendmentInProgressByDealId = async (dealId) => {
-  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/in-progress`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendments/in-progress`,
         headers: headers.central,
       });
 
@@ -457,12 +457,12 @@ const getAmendmentInProgressByDealId = async (dealId) => {
 };
 
 const getCompletedAmendmentByDealId = async (dealId) => {
-  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendments/completed`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendments/completed`,
         headers: headers.central,
       });
 
@@ -478,12 +478,12 @@ const getCompletedAmendmentByDealId = async (dealId) => {
 };
 
 const getLatestCompletedAmendmentByDealId = async (dealId) => {
-  const isValid = hasValidObjectId(dealId) && hasValidUri(centralApiUrl);
+  const isValid = hasValidObjectId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/deals/${dealId}/amendment/completed/latest`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendment/completed/latest`,
         headers: headers.central,
       });
 
@@ -499,12 +499,12 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
 };
 
 const getAllAmendmentsInProgress = async () => {
-  const isValid = hasValidUri(centralApiUrl);
+  const isValid = hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${centralApiUrl}/v1/tfm/amendments`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/amendments`,
         headers: headers.central,
       });
 
@@ -523,7 +523,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/facilities/${facilityId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities/${facilityId}`,
       headers: headers.central,
       data: facilityUpdate,
     });
@@ -538,7 +538,7 @@ const queryDeals = async ({ queryParams, start = 0, pagesize = 0 }) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/deals`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals`,
       headers: headers.central,
       data: {
         queryParams,
@@ -590,7 +590,7 @@ const findUser = async (username) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/users/${username}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/${username}`,
       headers: headers.central,
     });
     return response.data;
@@ -603,7 +603,7 @@ const findUserById = async (userId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/users/id/${userId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/id/${userId}`,
       headers: headers.central,
     });
     return response.data;
@@ -616,7 +616,7 @@ const findPortalUserById = async (userId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/user/${userId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/user/${userId}`,
       headers: headers.central,
     });
     return response.data;
@@ -630,7 +630,7 @@ const updateUserTasks = async (userId, updatedTasks) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/tfm/users/${userId}/tasks`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/${userId}/tasks`,
       headers: headers.central,
       data: {
         updatedTasks,
@@ -646,7 +646,7 @@ const findOneTeam = async (teamId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/teams/${teamId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${teamId}`,
       headers: headers.central,
     });
 
@@ -660,7 +660,7 @@ const findTeamMembers = async (teamId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/tfm/users/team/${teamId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/users/team/${teamId}`,
       headers: headers.central,
     });
 
@@ -857,7 +857,7 @@ const findOneGefDeal = async (dealId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}`,
       headers: headers.central,
     });
 
@@ -873,7 +873,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/status`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/status`,
       headers: headers.central,
       data: {
         status,
@@ -892,7 +892,7 @@ const updatePortalGefDeal = async (dealId, update) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}`,
       headers: headers.central,
       data: {
         dealUpdate: update,
@@ -911,7 +911,7 @@ const updateGefMINActivity = async (dealId) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${centralApiUrl}/v1/portal/gef/deals/activity/${dealId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/activity/${dealId}`,
       headers: headers.central,
     });
 
@@ -927,7 +927,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${centralApiUrl}/v1/portal/gef/deals/${dealId}/comment`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/comment`,
       headers: headers.central,
       data: { dealId, commentType, comment },
     });
@@ -944,7 +944,7 @@ const getAllFacilities = async (searchString) => {
     const response = await axios({
       method: 'GET',
       data: searchString,
-      url: `${centralApiUrl}/v1/tfm/facilities`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities`,
       headers: headers.central,
     });
     return response.data;
@@ -958,7 +958,7 @@ const findBankById = async (bankId) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/bank/${bankId}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}`,
       headers: headers.central,
     });
     return response.data;
@@ -972,7 +972,7 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${centralApiUrl}/v1/portal/gef/mandatory-criteria/version/${version}`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/mandatory-criteria/version/${version}`,
       headers: headers.central,
     });
 
