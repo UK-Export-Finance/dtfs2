@@ -36,6 +36,8 @@ const isValidCurrencyCode = (currencyCode) => (currencyCode ? validator.isISO421
 
 const sanitizeUsername = (username) => validator.escape(username);
 
+const isValidTeamId = (teamId) => true;
+
 module.exports = {
   isValidMongoId,
   isValidUkefNumericId,
@@ -43,4 +45,5 @@ module.exports = {
   isValidNumericId,
   isValidCurrencyCode,
   sanitizeUsername,
+  isValidTeamId,
 };

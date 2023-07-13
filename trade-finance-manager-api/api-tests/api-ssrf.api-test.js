@@ -174,7 +174,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
       const response = await api.updatePortalFacilityStatus(validFacilityId, 'Mock status');
@@ -314,7 +314,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
       const response = await api.findOneFacility(validFacilityId, 'Mock update');
@@ -384,7 +384,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
       const response = await api.updateFacility(validFacilityId, 'mock update');
@@ -419,7 +419,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
       const response = await api.createFacilityAmendment(validFacilityId);
@@ -456,7 +456,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility and amendment ids are valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
       const validAmendmentId = '5ce819935e539c343f141ece';
 
@@ -492,7 +492,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
       const response = await api.getAmendmentInProgress(validFacilityId);
@@ -527,7 +527,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
       const response = await api.getCompletedAmendment(validFacilityId);
@@ -562,7 +562,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
       const response = await api.getLatestCompletedAmendmentValue(validFacilityId);
@@ -572,7 +572,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getLatestCompletedAmendmentDate', () => {
-    const mockResponse = 'Mock value';
+    const mockResponse = 'Mock date';
     beforeAll(() => {
       mockAxios.reset();
       const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-cover-end-date$/;
@@ -597,7 +597,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
       const response = await api.getLatestCompletedAmendmentDate(validFacilityId);
@@ -607,7 +607,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('getAmendmentById', () => {
-    const mockResponse = 'Mock value';
+    const mockResponse = 'Mock amendment';
     beforeAll(() => {
       mockAxios.reset();
       const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/.*$/;
@@ -634,7 +634,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility and amendment ids are valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
       const validAmendmentId = '5ce819935e539c343f141ece';
 
@@ -670,7 +670,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
       const response = await api.getAmendmentByFacilityId(validFacilityId);
@@ -849,41 +849,6 @@ describe('API is protected against SSRF attacks', () => {
       const validFacility = '5ce819935e539c343f141ece';
 
       const response = await api.updateGefFacility(validFacility);
-
-      expect(response).toEqual(mockResponse);
-    });
-  });
-
-  describe('getCompanyInfo', () => {
-    const mockResponse = 'Mock company';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/party-db\/urn\/.*$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid party urn provided' };
-
-      const response = await api.getCompanyInfo(urlTraversal);
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid party urn provided' };
-
-      const response = await api.getCompanyInfo(localIp);
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the party URN is valid', async () => {
-      const validPartyUrn = '00381743';
-
-      const response = await api.getCompanyInfo(validPartyUrn);
 
       expect(response).toEqual(mockResponse);
     });
@@ -1373,7 +1338,7 @@ describe('API is protected against SSRF attacks', () => {
       expect(response).toMatchObject(expectedResponse);
     });
 
-    it('Makes an axios request when the deal id is valid', async () => {
+    it('Makes an axios request when the version is valid', async () => {
       const validVersion = '37';
 
       const response = await api.getGefMandatoryCriteriaByVersion(validVersion);

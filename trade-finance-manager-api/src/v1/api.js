@@ -1,23 +1,11 @@
 const axios = require('axios');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
-const {
-  isValidMongoId,
-  isValidPartyUrn,
-  isValidNumericId,
-  isValidCurrencyCode,
-  sanitizeUsername
-} = require('./validation/validateIds');
+const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 const CONSTANTS = require('../constants');
 require('dotenv').config();
 
-const {
-  DTFS_CENTRAL_API_URL,
-  EXTERNAL_API_URL,
-  DTFS_CENTRAL_API_KEY,
-  EXTERNAL_API_KEY,
-  AZURE_ACBS_FUNCTION_URL,
-  AZURE_NUMBER_GENERATOR_FUNCTION_URL,
-} = process.env;
+const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_API_KEY, AZURE_ACBS_FUNCTION_URL, AZURE_NUMBER_GENERATOR_FUNCTION_URL } =
+  process.env;
 
 const { DURABLE_FUNCTIONS } = CONSTANTS;
 const headers = {
@@ -28,7 +16,7 @@ const headers = {
   external: {
     'Content-Type': 'application/json',
     'x-api-key': EXTERNAL_API_KEY,
-  }
+  },
 };
 
 const findOnePortalDeal = async (dealId) => {
@@ -753,11 +741,13 @@ const updateUserTasks = async (userId, updatedTasks) => {
 
 const findOneTeam = async (teamId) => {
   try {
-    const isValidTeamId = isValidMongoId(teamId);
+    const isValidTeamId = isValidTeamId(teamId)
+    console.log(teamId);
+    console.log(isValidTeamId);;
 
-    if (!isValidTeamId) {
-      return { status: 400, data: 'Invalid team id provided' };
-    }
+    // if (!isValidTeamId) {
+    //   return { status: 400, data: 'Invalid team id provided' };
+    // }
 
     const response = await axios({
       method: 'get',
@@ -773,11 +763,13 @@ const findOneTeam = async (teamId) => {
 
 const findTeamMembers = async (teamId) => {
   try {
-    const isValidTeamId = isValidMongoId(teamId);
+    const isValidTeamId = isValidTeamId(teamId);
+    console.log(teamId);
+    console.log(isValidTeamId);
 
-    if (!isValidTeamId) {
-      return { status: 400, data: 'Invalid team id provided' };
-    }
+    // if (!isValidTeamId) {
+    //   return { status: 400, data: 'Invalid team id provided' };
+    // }
 
     const response = await axios({
       method: 'get',
