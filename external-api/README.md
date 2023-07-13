@@ -36,7 +36,7 @@ CS entity fetch
 ### 3. OS
 
 Places API
-The service also hosts some External API for countries, currencies and industry sectors. These need to be removed and obtained through Mulesoft API calls.
+The service also hosts some External API for countries, currencies and industry sectors. These need to be removed and obtained through APIM API calls.
 
 ## Why
 

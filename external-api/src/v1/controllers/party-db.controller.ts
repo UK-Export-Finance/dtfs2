@@ -3,16 +3,19 @@ import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 dotenv.config();
 
-const username: any = process.env.MULESOFT_API_PARTY_DB_KEY;
-const password: any = process.env.MULESOFT_API_PARTY_DB_SECRET;
-const partyDbURL: any = process.env.MULESOFT_API_PARTY_DB_URL;
+const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const headers = {
+  'Content-Type': 'application/json',
+  [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
+};
+
 export const lookup = async (req: Request, res: Response) => {
-  const { partyDbCompanyRegistrationNumber } = req.params;
+  const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
 
   const response = await axios({
     method: 'get',
-    url: `${partyDbURL}/companyreg/${partyDbCompanyRegistrationNumber}`,
-    auth: { username, password },
+    url: `${APIM_MDM_URL}/customers?companyReg=${companyReg}`,
+    headers,
   }).catch((error: any) => {
     console.error('Error calling Party DB API', { error });
     return { data: error?.response?.data, status: error?.response?.status };
