@@ -110,19 +110,19 @@ describe('validateIds', () => {
 
   describe('isValidTeamId', () => {
     it('should return false if a team id is not provided', () => {
-      const result = isValidCurrencyCode();
+      const result = isValidTeamId();
 
       expect(result).toEqual(false);
     });
 
     it('should return false if the team id is not a valid', () => {
-      const result = isValidCurrencyCode('12345');
+      const result = isValidTeamId('12345');
 
       expect(result).toEqual(false);
     });
 
     it('should return true if a team id is a valid currency code', () => {
-      const result = isValidCurrencyCode('UNDERWRITERS');
+      const result = isValidTeamId('UNDERWRITERS');
 
       expect(result).toEqual(true);
     });
