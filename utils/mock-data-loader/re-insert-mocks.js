@@ -19,6 +19,7 @@ const init = async () => {
   await insertMocks(portalToken);
   await cleanAllTablesGef(portalToken);
   await insertMocksGef(portalToken);
+  await cleanAllTablesTfm();
 
   const tfmToken = await tokenForTfmUser({
     username: 're-insert-mocks',
@@ -28,9 +29,6 @@ const init = async () => {
     roles: ['data-admin'],
     email: 're-insert-mocks-data-loader-tfm@ukexportfinance.gov.uk',
   });
-
-  await cleanAllTablesTfm(tfmToken);
-
   await insertMocksTfm(tfmToken);
 
   await deleteInitialUser(portalToken);
