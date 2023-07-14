@@ -1,42 +1,70 @@
 const validator = require('validator');
 const teams = require('../../constants/teams');
+const regexes = require('../../constants/regex');
 
-const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId) : false);
+/**
+  Helper function to validate a given value against a given regex
 
-const isValidUkefNumericId = (ukefId) => {
-  const id = parseInt(ukefId, 10);
+ * @param regex - the regex to validate against
+ * @param value - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
+const isValidRegex = (regex, value) => regex.test(value);
 
-  if (Number.isNaN(id)) {
-    return false;
-  }
+/**
+  Validates if a value is a valid mongo id
 
-  const regex = /^\d{10}$/;
+ * @param mongoId - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
+const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId.toString()) : false);
 
-  return regex.test(ukefId);
-};
+/**
+  Validates if a value is a valid ukefNumericId using a regex defined in constants/regex.js
 
-const isValidPartyUrn = (partyUrn) => {
-  const regex = /^\d{8}$/;
+ * @param ukefId - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
+const isValidUkefNumericId = (ukefId) => isValidRegex(regexes.UKEF_ID, ukefId);
 
-  return regex.test(partyUrn);
-};
+/**
+  Validates if a value is a valid party urn using a regex defined in constants/regex.js
 
-const isValidNumericId = (numericId) => {
-  const id = parseInt(numericId, 10);
+ * @param partyUrn - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
+const isValidPartyUrn = (partyUrn) => isValidRegex(regexes.PARTY_URN, partyUrn);
 
-  if (Number.isNaN(id)) {
-    return false;
-  }
+/**
+  Validates if a value is a valid numeric ID using a regex defined in constants/regex.js
 
-  const regex = /^\d+$/;
+ * @param numericId - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
+const isValidNumericId = (numericId) => isValidRegex(regexes.NUMERIC_ID, numericId);
 
-  return regex.test(numericId);
-};
+/**
+  Validates if a value is a valid ISO 4217 currency code using validator.js package
 
-const isValidCurrencyCode = (currencyCode) => (currencyCode ? validator.isISO4217(currencyCode) : false);
+ * @param currencyCode - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
+const isValidCurrencyCode = (currencyCode) => (currencyCode ? validator.isISO4217(currencyCode.toString()) : false);
 
-const sanitizeUsername = (username) => validator.escape(username);
+/**
+  Sanitizes a username using validator.js package, escaping dangerous characters
 
+ * @param username - the value to validate
+ * @returns string - the sanitized username
+ */
+const sanitizeUsername = (username) => validator.escape(username.toString());
+
+/**
+  Validates if a value is a valid team ID using a list of all team IDs defined in constants/teams.js
+
+ * @param teamId - the value to validate
+ * @returns Boolean - true if valid, false if not
+ */
 const isValidTeamId = (teamId) => {
   const teamIds = [
     teams.BUSINESS_SUPPORT.id,

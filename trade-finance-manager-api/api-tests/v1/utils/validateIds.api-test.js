@@ -5,6 +5,7 @@ const {
   isValidNumericId,
   isValidCurrencyCode,
   isValidTeamId,
+  sanitizeUsername,
 } = require('../../../src/v1/validation/validateIds');
 
 describe('validateIds', () => {
@@ -17,6 +18,18 @@ describe('validateIds', () => {
 
     it('should return false if an id is not a valid mongo id', () => {
       const result = isValidMongoId('12345');
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if provided an empty object', () => {
+      const result = isValidMongoId({});
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if provided an empty array', () => {
+      const result = isValidMongoId([]);
 
       expect(result).toEqual(false);
     });
@@ -41,6 +54,18 @@ describe('validateIds', () => {
       expect(result).toEqual(false);
     });
 
+    it('should return false if provided an empty object', () => {
+      const result = isValidPartyUrn({});
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if provided an empty array', () => {
+      const result = isValidPartyUrn([]);
+
+      expect(result).toEqual(false);
+    });
+
     it('should return true if the party URN is a valid URN', () => {
       const result = isValidPartyUrn('00364783');
 
@@ -57,6 +82,18 @@ describe('validateIds', () => {
 
     it('should return false if an id is not a valid UKEF id', () => {
       const result = isValidUkefNumericId('12345');
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if provided an empty object', () => {
+      const result = isValidUkefNumericId({});
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if provided an empty array', () => {
+      const result = isValidUkefNumericId([]);
 
       expect(result).toEqual(false);
     });
@@ -81,6 +118,18 @@ describe('validateIds', () => {
       expect(result).toEqual(false);
     });
 
+    it('should return false if provided an empty object', () => {
+      const result = isValidNumericId({});
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if provided an empty array', () => {
+      const result = isValidNumericId([]);
+
+      expect(result).toEqual(false);
+    });
+
     it('should return true if an id is a valid numeric id', () => {
       const result = isValidNumericId('00364783');
 
@@ -97,6 +146,18 @@ describe('validateIds', () => {
 
     it('should return false if a code is not a valid currency code', () => {
       const result = isValidCurrencyCode('12345');
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if provided an empty object', () => {
+      const result = isValidCurrencyCode({});
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if provided an empty array', () => {
+      const result = isValidCurrencyCode([]);
 
       expect(result).toEqual(false);
     });
@@ -121,10 +182,37 @@ describe('validateIds', () => {
       expect(result).toEqual(false);
     });
 
+    it('should return false if provided an empty object', () => {
+      const result = isValidTeamId({});
+
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if provided an empty array', () => {
+      const result = isValidTeamId([]);
+
+      expect(result).toEqual(false);
+    });
+
     it('should return true if a team id is a valid currency code', () => {
       const result = isValidTeamId('UNDERWRITERS');
 
       expect(result).toEqual(true);
+    });
+  });
+
+  describe('sanitizeUsername', () => {
+    it('should not change an alphanumeric string', () => {
+      const result = sanitizeUsername('ABC123');
+
+      expect(result).toEqual('ABC123');
+    });
+
+    it('should escape dangerous characters', () => {
+      // eslint-disable-next-line no-useless-escape, quotes
+      const result = sanitizeUsername(`/a\a"a'a<`);
+
+      expect(result).toEqual('&#x2F;aa&quot;a&#x27;a&lt;');
     });
   });
 });

@@ -152,7 +152,7 @@ const getPartyUrnDetails = async (req, res) => {
       });
     }
 
-    const name = company.data.length ? company.data[0].name : '';
+    const name = company?.data?.length ? company?.data[0]?.name : '';
 
     return res.render('case/parties/summary/party.njk', {
       userCanEdit: canEdit,
@@ -211,7 +211,7 @@ const getBondUrnDetails = async (req, res) => {
       api
         .getParty(urn, userToken)
         // Non-existent party urn
-        .then((company) => (!company?.data?.length ? Promise.resolve() : Promise.resolve(company.data[0].name))));
+        .then((company) => (!company?.data?.length ? Promise.reject() : Promise.resolve(company.data[0].name))));
 
     const name = await Promise.all(companies);
 

@@ -29,6 +29,7 @@ const findOnePortalDeal = async (dealId) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
     if (!isValidDealId) {
+      console.error('findOnePortalDeal: Invalid deal id: %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
     const response = await axios({
@@ -48,6 +49,7 @@ const updatePortalDeal = async (dealId, update) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('updatePortalDeal: Invalid deal id: %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -73,6 +75,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('updatePortalBssDealStatus: Invalid deal id: %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -98,6 +101,7 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('addPortalDealComment: Invalid deal id: %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -123,6 +127,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
+      console.error('updatePortalFacilityStatus: Invalid facility id: %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -148,6 +153,7 @@ const updatePortalFacility = async (facilityId, update) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
+      console.error('updatePortalFacility: Invalid facility id: %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -171,6 +177,7 @@ const findOneDeal = async (dealId) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('findOneDeal: Invalid deal id: %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -192,6 +199,7 @@ const updateDeal = async (dealId, dealUpdate) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('updateDeal: Invalid deal id: %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -215,6 +223,7 @@ const updateDealSnapshot = async (dealId, snapshotUpdate) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('updateDealSnapshot: Invalid deal id: %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -254,6 +263,7 @@ const findOneFacility = async (facilityId) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
+      console.error('findOneFacility: Invalid facility id: %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -276,6 +286,7 @@ const findFacilitesByDealId = async (dealId) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('findFacilitesByDealId: Invalid deal id: %s', dealId);
       return { status: 400, data: 'Invalid deal id' };
     }
 
@@ -296,6 +307,7 @@ const updateFacility = async (facilityId, facilityUpdate) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
+      console.error('updateFacility: Invalid facility id: %s', facilityId);
       return { status: 400, data: 'Invalid facility id' };
     }
 
@@ -594,6 +606,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
     const isValidFacilityId = isValidMongoId(facilityId);
 
     if (!isValidFacilityId) {
+      console.error('updateGefFacility: Invalid facility id: %s', facilityId);
       return { status: 400, data: 'Invalid facility Id provided' };
     }
 
@@ -653,6 +666,7 @@ const getCompanyInfo = async (partyUrn) => {
     const isValidUrn = isValidPartyUrn(partyUrn);
 
     if (!isValidUrn) {
+      console.error('getCompanyInfo: Invalid party Urn: %s', partyUrn);
       return { status: 400, data: 'Invalid party urn provided' };
     }
 
@@ -689,6 +703,7 @@ const findUserById = async (userId) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
+      console.error('findUserById: Invalid user id: %s', userId);
       return { status: 400, data: 'Invalid user id provided' };
     }
 
@@ -708,6 +723,7 @@ const findPortalUserById = async (userId) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
+      console.error('findPortalUserById: Invalid user id: %s', userId);
       return { status: 400, data: 'Invalid user id provided' };
     }
 
@@ -728,6 +744,7 @@ const updateUserTasks = async (userId, updatedTasks) => {
     const isValidUserId = isValidMongoId(userId);
 
     if (!isValidUserId) {
+      console.error('updateUserTasks: Invalid user id: %s', userId);
       return { status: 400, data: 'Invalid user id provided' };
     }
 
@@ -750,6 +767,7 @@ const findOneTeam = async (teamId) => {
     const isValidId = isValidTeamId(teamId);
 
     if (!isValidId) {
+      console.error('findOneTeam: Invalid team id: %s', teamId);
       return { status: 400, data: 'Invalid team id provided' };
     }
 
@@ -770,6 +788,7 @@ const findTeamMembers = async (teamId) => {
     const isValidId = isValidTeamId(teamId);
 
     if (!isValidId) {
+      console.error('findTeamMembers: Invalid team id: %s', teamId);
       return { status: 400, data: 'Invalid team id provided' };
     }
 
@@ -791,6 +810,7 @@ const getCurrencyExchangeRate = async (source, target) => {
     const targetIsValid = isValidCurrencyCode(target);
 
     if (!sourceIsValid || !targetIsValid) {
+      console.error('getCurrencyExchangeRate: Invalid currency provided: %s, %s', source, target);
       return { status: 400, data: 'Invalid currency provided' };
     }
 
@@ -980,6 +1000,7 @@ const findOneGefDeal = async (dealId) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('findOneGefDeal: Invalid deal Id provided: %s', dealId);
       return { status: 400, data: 'Invalid deal id provided' };
     }
 
@@ -1002,6 +1023,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('updatePortalGefDealStatus: Invalid deal Id provided: %s', dealId);
       return { status: 400, data: 'Invalid deal id provided' };
     }
 
@@ -1027,6 +1049,7 @@ const updatePortalGefDeal = async (dealId, update) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('updatePortalGefDeal: Invalid deal Id provided: %s', dealId);
       return { status: 400, data: 'Invalid deal id provided' };
     }
 
@@ -1052,6 +1075,7 @@ const updateGefMINActivity = async (dealId) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('updateGefMINActivity: Invalid deal Id provided: %s', dealId);
       return { status: 400, data: 'Invalid deal id provided' };
     }
 
@@ -1074,6 +1098,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
     const isValidDealId = isValidMongoId(dealId);
 
     if (!isValidDealId) {
+      console.error('addUnderwriterCommentToGefDeal: Invalid deal Id provided: %s', dealId);
       return { status: 400, data: 'Invalid deal id provided' };
     }
 
@@ -1111,6 +1136,7 @@ const findBankById = async (bankId) => {
     const isValidBankId = isValidNumericId(bankId);
 
     if (!isValidBankId) {
+      console.error('findBankById: Invalid bank Id provided: %s', bankId);
       return { status: 400, data: 'Invalid bank id provided' };
     }
 
@@ -1131,6 +1157,7 @@ const getGefMandatoryCriteriaByVersion = async (version) => {
     const isValidVersion = isValidNumericId(version);
 
     if (!isValidVersion) {
+      console.error('getGefMandatoryCriteriaByVersion: Invalid version provided: %s', version);
       return { status: 400, data: 'Invalid mandatory criteria version provided' };
     }
 
