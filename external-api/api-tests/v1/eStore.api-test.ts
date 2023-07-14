@@ -46,7 +46,7 @@ mock.onPost(`${APIM_ESTORE_URL}/site/sites?exporterName=testName`).reply(200, mo
 describe('/estore', () => {
   const payload = {
     dealId: '12345',
-    siteId: 'google',
+    siteId: 'ukef',
     facilityIdentifiers: '99999',
     supportingInformation: 'test',
     exporterName: 'testName',

@@ -25,6 +25,7 @@ dotenv.config();
 const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE } = process.env;
 
 const headers = {
+  'Content-Type': 'application/json',
   [String(APIM_ESTORE_KEY)]: APIM_ESTORE_VALUE,
 };
 
@@ -64,7 +65,7 @@ const postToEstore = async (
 };
 
 export const siteExists = async (exporterName: EstoreSite): Promise<SiteExistsResponse> => {
-  console.info('Checking if a site exists');
+  console.info('Checking if a site exists for exporter %s', exporterName);
 
   const response = await axios({
     method: 'get',
