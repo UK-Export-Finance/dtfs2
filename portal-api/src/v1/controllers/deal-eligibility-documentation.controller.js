@@ -180,8 +180,8 @@ exports.update = async (req, res) => {
 exports.downloadFile = async (req, res) => {
   const { id, fieldname, filename } = req.params;
 
-  if (!isValidMongoId(req.params.id)) {
-    console.error('downloadFile - invalid object id provided ', req.params.id);
+  if (!isValidMongoId(req?.params?.id)) {
+    console.error('Download file API failed for deal id %s', req.params.id);
     return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 

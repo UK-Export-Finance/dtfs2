@@ -19,7 +19,7 @@ const headers = {
 const findOneDeal = async (dealId) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('api.findOneDeal - invalid dealId provided ', dealId);
+      console.error('Find one deal API failed for deal id %s', dealId);
       return false;
     }
 
@@ -54,7 +54,7 @@ const createDeal = async (deal, user) => {
 const updateDeal = async (dealId, dealUpdate, user) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('api.updateDeal - invalid dealId provided ', dealId);
+      console.error('Update deal API failed for deal id %s', dealId);
       return false;
     }
 
@@ -77,7 +77,7 @@ const updateDeal = async (dealId, dealUpdate, user) => {
 const deleteDeal = async (dealId) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('api.deleteDeal - invalid dealId provided ', dealId);
+      console.error('Delete deal API failed for deal id %s', dealId);
       return false;
     }
 
@@ -94,7 +94,7 @@ const deleteDeal = async (dealId) => {
 const addDealComment = async (dealId, commentType, comment) => {
   try {
     if (!isValidMongoId(dealId)) {
-      console.error('api.addDealComment - invalid dealId provided ', dealId);
+      console.error('Add deal comment API failed for deal id %s', dealId);
       return false;
     }
 
@@ -150,7 +150,7 @@ const createMultipleFacilities = async (facilities, dealId, user) => {
 const findOneFacility = async (facilityId) => {
   try {
     if (!isValidMongoId(facilityId)) {
-      console.error('api.findOneFacility - invalid facilityId provided ', facilityId);
+      console.error('Find one facility API failed for facility id %s', facilityId);
       return false;
     }
 
@@ -169,7 +169,7 @@ const findOneFacility = async (facilityId) => {
 const updateFacility = async (facilityId, facility, user) => {
   try {
     if (!isValidMongoId(facilityId)) {
-      console.error('api.updateFacility - invalid facilityId provided ', facilityId);
+      console.error('Update facility API failed for facility id %s', facilityId);
       return false;
     }
 
@@ -190,7 +190,7 @@ const updateFacility = async (facilityId, facility, user) => {
 const deleteFacility = async (facilityId, user) => {
   try {
     if (!isValidMongoId(facilityId)) {
-      console.error('api.deleteFacility - invalid facilityId provided ', facilityId);
+      console.error('Delete facility API failed for facility id %s', facilityId);
       return false;
     }
 

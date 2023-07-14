@@ -21,8 +21,8 @@ const facilitiesController = require('./facilities.controller');
 const CONSTANTS = require('../../constants');
 
 exports.create = async (req, res) => {
-  if (!isValidMongoId(req.params.id)) {
-    console.error('bonds.create - invalid object id provided ', req.params.id);
+  if (!isValidMongoId(req?.params?.id)) {
+    console.error('Create bond API failed for deal id %s', req.params.id);
     return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 
@@ -54,9 +54,9 @@ exports.getBond = async (req, res) => {
     bondId,
   } = req.params;
 
-  if (!isValidMongoId(req.params.id) || !isValidMongoId(req.params.bondId)) {
-    console.error('loans.get - invalid object id provided ', req.params.id, req.params.loanId);
-    return res.status(400).send({ status: 400, message: 'Invalid id provided' });
+  if (!isValidMongoId(req?.params?.id) || !isValidMongoId(req?.params?.bondId)) {
+    console.error('Get bond API failed for deal/bond id %s', req.params.id, req.params.loanId);
+    return res.status(400).send({ status: 400, message: 'Invalid deal or bond id provided' });
   }
 
   return findOneDeal(req.params.id, async (deal) => {

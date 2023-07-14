@@ -16,8 +16,8 @@ const sortCountries = (countries) => {
 };
 
 const findOneCountry = async (code) => {
-  const country = await externalApi.countries.getCountry(code);
-  return country;
+  const response = await externalApi.countries.getCountry(code);
+  return response;
 };
 
 exports.findOneCountry = findOneCountry;
@@ -32,8 +32,13 @@ exports.findAll = async (req, res) => {
 };
 
 exports.findOne = async (req, res) => {
-  const country = await findOneCountry(req.params.code);
-  const status = country ? 200 : 404;
+  const response = await findOneCountry(req.params.code);
 
-  res.status(status).send(country);
+  const { status, data } = response;
+
+  if (data) {
+    return res.status(status).send(data);
+  }
+
+  return res.status(status).send({});
 };

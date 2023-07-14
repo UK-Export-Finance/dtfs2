@@ -92,8 +92,8 @@ exports.create = async (req, res) => {
  * Find a deal (BSS, EWCS only)
  */
 exports.findOne = (req, res) => {
-  if (!isValidMongoId(req.params.id)) {
-    console.error('deals.findOne - invalid object id provided ', req.params.id);
+  if (!isValidMongoId(req?.params?.id)) {
+    console.error('Find one deal API failed for deal id %s', req.params.id);
     return res.status(400).send({ status: 400, message: 'Invalid id provided' });
   }
 
