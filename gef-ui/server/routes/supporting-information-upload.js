@@ -11,20 +11,23 @@ const { validateRole, validateToken, validateBank } = require('../middleware');
 // So we instead make a separate uploadCsrf token and check it here.
 const router = express.Router();
 
-const checkUploadCsrfToken = (req, res, next) => {
+// eslint-disable-next-line consistent-return
+const validateUploadCsrfToken = (req, res, next) => {
   if (req.session.uploadCsrf
     && req.session.uploadCsrf.token === req.query.uploadCsrf
     && new Date() < new Date(req.session.uploadCsrf.expiry)) {
     next();
   } else {
-    console.error(`Error! CSRF tokens do not match.\nSESSION VALUE: ${req.session.uploadCsrf}.\nQUERY VALUE: ${req.query.uploadCsrf}`);
+    // MOJ multi-file-upload expects a 200 response when the request is not valid
+    // It will only display the error messages when the response is 200.
+    return res.status(200).send({ error: { message: 'Error. Please refresh your browser and try again' } });
   }
 };
 
-const addFilesToRequestBody = multer({ fileFilter: multerFilter }).single('documents');
-const processUploadRequest = (req, res, next) => {
+const validateFiles = multer({ fileFilter: multerFilter }).single('documents');
+const validateUploadRequest = (req, res, next) => {
   // eslint-disable-next-line consistent-return
-  addFilesToRequestBody(req, res, (err) => {
+  validateFiles(req, res, (err) => {
     if (!err) {
       next();
     } else {
@@ -35,7 +38,7 @@ const processUploadRequest = (req, res, next) => {
 
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/upload',
-  [checkUploadCsrfToken, validateToken, validateBank, validateRole({ role: ['maker'] }), processUploadRequest],
+  [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: ['maker'] }), validateUploadRequest],
   uploadSupportingDocument,
 );
 router.post(
