@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
+import { isValidPartyUrn } from 'src/validations';
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
@@ -18,6 +19,11 @@ const headers = {
 export const lookup = async (req: Request, res: Response) => {
   try {
     const { urn } = req.params;
+
+    if (!isValidPartyUrn(urn)) {
+      console.error('Invalid party URN provided: %s', urn);
+      return res.status(400).send({ status: 400, data: 'Invalid party URN' });
+    }
 
     const response = await axios({
       method: 'get',

@@ -1,12 +1,18 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
+import { isValidPostcode } from 'src/validations';
 dotenv.config();
 
 const ordnanceSurveyBaseUrl = process.env.ORDNANCE_SURVEY_API_URL;
 const ordnanceSurveyApiKey = process.env.ORDNANCE_SURVEY_API_KEY;
 export const lookup = async (req: Request, res: Response) => {
   const { OSPostcode } = req.params;
+
+  if (!isValidPostcode(OSPostcode)) {
+    console.error('Invalid postcode: %s', OSPostcode);
+    return res.status(400).send({ status: 400, data: 'Invalid postcode' });
+  }
 
   console.info('Calling Ordnance Survey API ', OSPostcode);
   const url = `${ordnanceSurveyBaseUrl}/search/places/v1/postcode?postcode=${OSPostcode}&key=${ordnanceSurveyApiKey}`;

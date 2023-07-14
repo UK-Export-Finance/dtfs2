@@ -8,6 +8,7 @@ import { Request, Response } from 'express';
 import { objectIsEmpty } from '../../utils';
 import { PremiumSchedule } from '../../interfaces';
 import { UKEF_ID } from '../../constants';
+import { validUkefId } from 'src/utils/validUkefId';
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
@@ -120,6 +121,11 @@ export const getPremiumSchedule = async (req: Request, res: Response) => {
       maximumLiability,
       cumulativeAmount,
     };
+  }
+
+  if (!validUkefId(premiumScheduleParameters.facilityURN.toString())) {
+    console.error('Invalid facility URN: %s', premiumScheduleParameters.facilityURN);
+    return res.status(400).send({ status: 400, data: 'Invalid facility URN' });
   }
 
   const postPremiumScheduleResponse = await premiumScheduleCalls.postPremiumSchedule(premiumScheduleParameters);
