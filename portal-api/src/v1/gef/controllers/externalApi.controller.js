@@ -1,7 +1,6 @@
 const axios = require('axios');
 const { companiesHouseError } = require('./validation/external');
-const { isValidRegex, isNotValidCompaniesHouseNumber } = require('../../validation/validateIds');
-const { UK_POSTCODE } = require('../../../constants/regex');
+const { isValidPostcode, isNotValidCompaniesHouseNumber } = require('../../validation/validateIds');
 
 require('dotenv').config();
 const { ERROR } = require('../enums');
@@ -50,7 +49,12 @@ exports.getByRegistrationNumber = async (req, res) => {
 
     if (isNotValidCompaniesHouseNumber(companyNumber)) {
       console.error('Get company house information API failed for companyNumber %s', companyNumber);
-      return res.status(400).send({ status: 400, message: 'invalid companies house number provided' });
+      // returns invalid companies house registration number error
+      return res.status(400).send([{
+        errCode: 'company-profile-not-found',
+        errRef: 'regNumber',
+        errMsg: 'Invalid Companies House registration number',
+      }]);
     }
 
     const response = await axios({
@@ -87,9 +91,13 @@ exports.getAddressesByPostcode = async (req, res) => {
   try {
     const { postcode } = req.params;
 
-    if (!isValidRegex(UK_POSTCODE, postcode)) {
+    if (!isValidPostcode(postcode)) {
       console.error('Get addresses by postcode failed for postcode %s', postcode);
-      return res.status(400).send({ status: 400, message: 'Invalid postcode provided' });
+      return res.status(400).send([{
+        errCode: 'ERROR',
+        errRef: 'postcode',
+        errMsg: 'Invalid postcode',
+      }]);
     }
 
     const response = await axios({

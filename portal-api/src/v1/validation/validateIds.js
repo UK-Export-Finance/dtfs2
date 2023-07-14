@@ -11,6 +11,22 @@ const joi = require('joi');
 const isValidMongoId = (mongoId) => (mongoId ? validator.isMongoId(mongoId) : false);
 
 /**
+ * isValidPostcode
+ * validates if a postcode is a valid or not
+ * @param {String} mongoId
+ * @returns {Boolean}
+ */
+const isValidPostcode = (postcode) => (postcode ? validator.isPostalCode(postcode, 'GB') : false);
+
+/**
+ * isValidCurrencyCode
+ * validates if a currency code is a valid or not
+ * @param {String} mongoId
+ * @returns {Boolean}
+ */
+const isValidCurrencyCode = (code) => (code ? validator.isISO4217(code) : false);
+
+/**
  * isValidRegex
  * validates value conforms to passed regex rules
  * @param {String} regex
@@ -37,6 +53,8 @@ const isNotValidCompaniesHouseNumber = (companiesHouseNumber) => {
 
 module.exports = {
   isValidMongoId,
+  isValidPostcode,
+  isValidCurrencyCode,
   isValidRegex,
   isNotValidCompaniesHouseNumber,
 };
