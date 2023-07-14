@@ -1,5 +1,4 @@
 const api = require('./api');
-const MOCK_BANKS = require('./banks');
 
 const mockDataLoaderUser = {
   username: 're-insert-mocks',
@@ -8,7 +7,7 @@ const mockDataLoaderUser = {
   surname: 'DataLoader',
   roles: ['editor', 'maker'],
   email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
-  bank: MOCK_BANKS.find((bank) => bank.id === '9'),
+  bank: { id: '*' },
 };
 
 const createAndLogInAsInitialUser = async () => {
