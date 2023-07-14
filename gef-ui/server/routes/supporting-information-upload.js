@@ -43,7 +43,7 @@ router.post(
 );
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/delete',
-  [validateToken, validateBank, validateRole({ role: ['maker'] })],
+  [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: ['maker'] })],
   deleteSupportingDocument,
 );
 

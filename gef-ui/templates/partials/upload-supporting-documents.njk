@@ -110,10 +110,18 @@
 {% block scripts %}
   <script>
     if (typeof MOJFrontend.MultiFileUpload !== 'undefined') {
+      const onFileDelete = (mojFileUpload, response) => {
+        if (response.error) {
+          const errorRow = `<div class="govuk-summary-list__row moj-multi-file-upload__row"><div class="govuk-summary-list__value moj-multi-file-upload__message">${mojFileUpload.getErrorHtml(response.error)}</div></div>`;
+          $('.moj-multi-file-upload__list').append(errorRow);
+        }
+      };
+
       new MOJFrontend.MultiFileUpload({
         container: $('.moj-multi-file-upload'),
         uploadUrl: `${window.location.href}/upload?uploadCsrf={{ uploadCsrf }}`,
-        deleteUrl: `${window.location.href}/delete`,
+        deleteUrl: `${window.location.href}/delete?uploadCsrf={{ uploadCsrf }}`,
+        fileDeleteHook: onFileDelete
       });
     }
   </script>

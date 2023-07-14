@@ -32,7 +32,7 @@ describe('Routes', () => {
     );
     expect(postSpy).toHaveBeenCalledWith(
       '/application-details/:dealId/supporting-information/document/:documentType/delete',
-      [validateToken, validateBank, expect.any(Function)],
+      [expect.any(Function), validateToken, validateBank, expect.any(Function)],
       expect.any(Function),
     );
   });
