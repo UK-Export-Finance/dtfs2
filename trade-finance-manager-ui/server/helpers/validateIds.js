@@ -1,5 +1,5 @@
 const validator = require('validator');
-const regexes = require('../../constants/regex');
+const regexes = require('../constants/regex');
 
 /**
   Helper function to validate a given value against a given regex

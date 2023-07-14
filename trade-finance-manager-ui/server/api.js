@@ -246,7 +246,7 @@ const updateUserPassword = async (userId, update, token) => {
 
     return response;
   } catch (error) {
-    console.error('Unable to update user details', { error });
+    console.error('Unable to update user details %s', error);
     return error;
   }
 };
@@ -581,7 +581,7 @@ const getParty = async (partyUrn, token) => {
     const isValidUrn = isValidPartyUrn(partyUrn);
 
     if (!isValidUrn) {
-      console.error('getParty: Invalid party urn provided: %s', dealId);
+      console.error('getParty: Invalid party urn provided: %s', partyUrn);
       return { status: 400, data: 'Invalid party urn' };
     }
 

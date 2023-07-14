@@ -64,7 +64,7 @@ const updatePortalDeal = async (dealId, update) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error(`TFM API - error updating BSS deal ${dealId}`);
+    console.error('TFM API - error updating BSS deal: %s', dealId);
 
     return false;
   }
@@ -90,7 +90,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error(`TFM API - error updating BSS deal status ${dealId}`);
+    console.error('TFM API - error updating BSS deal status: %s', dealId);
 
     return false;
   }
@@ -142,7 +142,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error(`TFM API - error updating BSS facility status ${facilityId}`, response);
+    console.error('TFM API - error updating BSS facility status %s', facilityId, response);
 
     return false;
   }
@@ -166,7 +166,7 @@ const updatePortalFacility = async (facilityId, update) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error(`TFM API - error updating BSS facility ${facilityId}`);
+    console.error('TFM API - error updating BSS facility: %s', facilityId);
 
     return false;
   }
@@ -188,7 +188,7 @@ const findOneDeal = async (dealId) => {
     });
     return response.data.deal;
   } catch ({ response }) {
-    console.error(`TFM API - error finding deal ${dealId}`);
+    console.error('TFM API - error finding deal: %s', dealId);
 
     return false;
   }
@@ -275,7 +275,7 @@ const findOneFacility = async (facilityId) => {
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error finding BSS facility ${facilityId}`);
+    console.error('TFM API - error finding BSS facility: %s', facilityId);
 
     return err;
   }
@@ -386,7 +386,7 @@ const getAmendmentInProgress = async (facilityId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid facility Id: ${facilityId}`);
+    console.error('Invalid facility Id: %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
@@ -407,7 +407,7 @@ const getCompletedAmendment = async (facilityId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid facility Id: ${facilityId}`);
+    console.error(`Invalid facility Id: %s`, facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
@@ -428,7 +428,7 @@ const getLatestCompletedAmendmentValue = async (facilityId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid facility Id: ${facilityId}`);
+    console.error(`Invalid facility Id: %s`, facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
@@ -449,7 +449,7 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid facility Id: ${facilityId}`);
+    console.error('Invalid facility Id: %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
@@ -491,7 +491,7 @@ const getAmendmentByFacilityId = async (facilityId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid facility Id: ${facilityId}`);
+    console.error('Invalid facility Id: %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
@@ -512,7 +512,7 @@ const getAmendmentsByDealId = async (dealId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid deal Id: ${dealId}`);
+    console.error('Invalid deal Id: %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
@@ -533,7 +533,7 @@ const getAmendmentInProgressByDealId = async (dealId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid deal Id: ${dealId}`);
+    console.error('Invalid deal Id: %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
@@ -554,7 +554,7 @@ const getCompletedAmendmentByDealId = async (dealId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid deal Id: ${dealId}`);
+    console.error('Invalid deal Id: %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
@@ -575,7 +575,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid deal Id: ${dealId}`);
+    console.error('Invalid deal Id %s', dealId);
     return { status: 400, data: 'Invalid deal Id provided' };
   }
 };
@@ -835,7 +835,7 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
 
     return response.data;
   } catch (err) {
-    console.error('TFM-API - Failed api call to getFacilityExposurePeriod', { err });
+    console.error('TFM-API - Failed api call to getFacilityExposurePeriod: %s', { err });
     return err;
   }
 };
@@ -854,7 +854,7 @@ const getPremiumSchedule = async (premiumScheduleParameters) => {
     }
     return null;
   } catch ({ response }) {
-    console.error('TFM-API error calling premium schedule', { response });
+    console.error('TFM-API error calling premium schedule: %s', response);
     return null;
   }
 };
@@ -894,7 +894,7 @@ const updateACBSfacility = async (facility, deal) => {
       });
       return response.data;
     } catch (err) {
-      console.error('TFM-API Facility update error', { err });
+      console.error('TFM-API Facility update error: %s', { err });
       return err;
     }
   }
@@ -957,7 +957,7 @@ const getFunctionsAPI = async (type = DURABLE_FUNCTIONS.TYPE.ACBS, url = '') => 
     });
     return response.data;
   } catch (err) {
-    console.error(`Unable to getFunctionsAPI for ${modifiedUrl}`, { err });
+    console.error('Unable to getFunctionsAPI for %s', modifiedUrl, { err });
     return err;
   }
 };
@@ -1012,7 +1012,7 @@ const findOneGefDeal = async (dealId) => {
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error finding GEF deal ${dealId}`);
+    console.error('TFM API - error finding GEF deal: %s', dealId);
 
     return false;
   }
@@ -1038,7 +1038,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error updating GEF deal status ${dealId}`);
+    console.error('TFM API - error updating GEF deal status: %s', dealId);
 
     return false;
   }
@@ -1064,7 +1064,7 @@ const updatePortalGefDeal = async (dealId, update) => {
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error updating GEF deal ${dealId}`, { err });
+    console.error('TFM API - error updating GEF deal %s, %s', dealId, { err });
 
     return false;
   }
@@ -1087,7 +1087,7 @@ const updateGefMINActivity = async (dealId) => {
 
     return response.data;
   } catch (err) {
-    console.error(`TFM API - error updating GEF deal MIN activity ${dealId}`, { err });
+    console.error('TFM API - error updating GEF deal MIN activity %s, %s', dealId, { err });
 
     return false;
   }
@@ -1111,7 +1111,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
 
     return response.data;
   } catch ({ response }) {
-    console.error('Unable to add a comment as an underwriter ', response);
+    console.error('Unable to add a comment as an underwriter %s', response);
     return false;
   }
 };
@@ -1126,7 +1126,7 @@ const getAllFacilities = async (searchString) => {
     });
     return response.data;
   } catch ({ response }) {
-    console.error('Unable to get all facilities', response);
+    console.error('Unable to get all facilities %s', response);
     return response;
   }
 };
@@ -1147,7 +1147,7 @@ const findBankById = async (bankId) => {
     });
     return response.data;
   } catch ({ response }) {
-    console.error('Unable to get bank by id', response?.data);
+    console.error('Unable to get bank by id: %s', response?.data);
     return response?.data;
   }
 };
