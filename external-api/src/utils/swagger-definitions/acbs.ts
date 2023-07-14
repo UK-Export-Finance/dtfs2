@@ -87,12 +87,6 @@
  *           nextQuarterEndDate:
  *             type: string
  *             example: '2018-12-31'
- *           facilityInitialStatus:
- *             type: string
- *             example: 'P'
- *           facilityOverallStatus:
- *             type: string
- *             example: 'D'
  *           delegationType:
  *             type: string
  *             example: 'A'
@@ -108,9 +102,6 @@
  *           creditRatingCode:
  *             type: string
  *             example: '14'
- *           guaranteePercentage:
- *             type: integer
- *             example: 80
  *           premiumFrequencyCode:
  *             type: string
  *             example: '2'
@@ -129,18 +120,12 @@
  *           issueDate:
  *             type: string
  *             example: '2018-10-11'
- *           description:
- *             type: string
- *             example: 'D:TRUEFORM-WAY-FINDER POSTS'
  *           agentBankIdentifier:
  *             type: string
  *             example: '00000000'
  *           obligorPartyIdentifier:
  *             type: string
  *             example: '00510701'
- *           obligorName:
- *             type: string
- *             example: 'Automation KE 97'
  *           obligorIndustryClassification:
  *             type: string
  *             example: '0116'

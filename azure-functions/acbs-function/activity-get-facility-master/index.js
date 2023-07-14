@@ -16,15 +16,23 @@ const getFacilityMaster = async (context) => {
     const { facilityId } = context.bindingData;
 
     if (facilityId) {
-      const { status, data, headers: { etag } } = await api.getFacility(facilityId);
+      const {
+        status,
+        data,
+        headers: { etag },
+      } = await api.getFacility(facilityId);
 
       if (isHttpErrorStatus(status)) {
         throw new Error(
-          JSON.stringify({
-            name: 'ACBS Facility fetch error',
-            facilityId,
-            dataReceived: data,
-          }, null, 4),
+          JSON.stringify(
+            {
+              name: 'ACBS Facility fetch error',
+              facilityId,
+              dataReceived: data,
+            },
+            null,
+            4,
+          ),
         );
       }
 

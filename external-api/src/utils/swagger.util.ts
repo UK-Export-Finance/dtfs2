@@ -6,7 +6,7 @@ export const swaggerDefinition = {
     title: 'External API API',
     version: '1.0.0',
     description:
-      'API to call external APIs and handle requests/responses. To see the Mulesoft endpoints we consume, see the "External APIs we call" page in Confluence. This API also contains some local data instead of integrating with an API.',
+      'API to call external APIs and handle requests/responses. To see the APIM endpoints we consume, see the "External APIs we call" page in Confluence. This API also contains some local data instead of integrating with an API.',
   },
   tags: [
     {
@@ -26,32 +26,32 @@ export const swaggerDefinition = {
       description: 'Locally stored data',
     },
     {
-      name: 'Mulesoft',
+      name: 'APIM',
       description: 'UKEF APIs',
     },
     {
       name: 'ACBS',
-      description: 'Mulesoft API endpoints',
+      description: 'APIM API endpoints',
     },
     {
       name: 'Number Generator',
-      description: 'Triggers calls to Mulesoft API endpoints',
+      description: 'APIM API endpoints',
     },
     {
       name: 'PartyDB',
-      description: 'Mulesoft API endpoints',
+      description: 'APIM API endpoints',
     },
     {
       name: 'Currency Exchange',
-      description: 'Mulesoft API endpoint',
+      description: 'APIM API endpoint',
     },
     {
       name: 'Exposure Period',
-      description: 'Mulesoft API endpoint',
+      description: 'APIM API endpoint',
     },
     {
       name: 'Premium Schedule',
-      description: 'Mulesoft API endpoints',
+      description: 'APIM API endpoints',
     },
     {
       name: 'Estore',
