@@ -407,7 +407,7 @@ const getCompletedAmendment = async (facilityId) => {
       return { status: 500, data: err?.response?.data };
     }
   } else {
-    console.error(`Invalid facility Id: %s`, facilityId);
+    console.error('Invalid facility Id: %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
   }
 };
