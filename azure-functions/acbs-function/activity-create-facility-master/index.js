@@ -39,42 +39,47 @@ const mandatoryFields = [
 ];
 
 const createFacilityMaster = async (context) => {
-  const { acbsFacilityMasterInput } = context.bindingData;
+  try {
+    const { acbsFacilityMasterInput } = context.bindingData;
 
-  const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
+    const missingMandatory = findMissingMandatory(acbsFacilityMasterInput, mandatoryFields);
 
-  if (missingMandatory.length) {
-    return Promise.resolve({ missingMandatory });
+    if (missingMandatory.length) {
+      return Promise.resolve({ missingMandatory });
+    }
+
+    const submittedToACBS = moment().format();
+
+    const { status, data } = await api.createFacility(acbsFacilityMasterInput);
+
+    if (isHttpErrorStatus(status)) {
+      throw new Error(
+        JSON.stringify(
+          {
+            name: 'ACBS Facility Master create error',
+            dealIdentifier: acbsFacilityMasterInput.dealIdentifier,
+            submittedToACBS,
+            receivedFromACBS: moment().format(),
+            dataReceived: data,
+            dataSent: acbsFacilityMasterInput,
+          },
+          null,
+          4,
+        ),
+      );
+    }
+
+    return {
+      status,
+      dataSent: acbsFacilityMasterInput,
+      submittedToACBS,
+      receivedFromACBS: moment().format(),
+      ...data,
+    };
+  } catch (error) {
+    console.error('Unable to create facility master record.', { error });
+    throw new Error(error);
   }
-
-  const submittedToACBS = moment().format();
-
-  const { status, data } = await api.createFacility(acbsFacilityMasterInput);
-
-  if (isHttpErrorStatus(status)) {
-    throw new Error(
-      JSON.stringify(
-        {
-          name: 'ACBS Facility Master create error',
-          dealIdentifier: acbsFacilityMasterInput.dealIdentifier,
-          submittedToACBS,
-          receivedFromACBS: moment().format(),
-          dataReceived: data,
-          dataSent: acbsFacilityMasterInput,
-        },
-        null,
-        4,
-      ),
-    );
-  }
-
-  return {
-    status,
-    dataSent: acbsFacilityMasterInput,
-    submittedToACBS,
-    receivedFromACBS: moment().format(),
-    ...data,
-  };
 };
 
 module.exports = createFacilityMaster;

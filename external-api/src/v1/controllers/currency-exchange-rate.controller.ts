@@ -29,12 +29,11 @@ import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 dotenv.config();
-const key: any = process.env.APIM_MDM_KEY;
-const value: any = process.env.APIM_MDM_VALUE;
-const mdm: any = process.env.APIM_MDM_URL;
 
+const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
-  [String(key)]: value,
+  'Content-Type': 'application/json',
+  [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
 /**
@@ -64,7 +63,7 @@ export const getExchangeRate = async (req: Request, res: Response) => {
       targetCurrency = source;
     }
 
-    let url = `${mdm}currencies/exchange?source=${sourceCurrency}&target=${targetCurrency}`;
+    let url = `${APIM_MDM_URL}currencies/exchange?source=${sourceCurrency}&target=${targetCurrency}`;
 
     if (date) {
       url = `${url}&exchangeRateDate=${date}`;

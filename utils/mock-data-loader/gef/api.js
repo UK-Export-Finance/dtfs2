@@ -1,19 +1,17 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const centralApi = process.env.DTFS_CENTRAL_API;
-const portalApi = process.env.DEAL_API_URL;
-const { CENTRAL_API_KEY } = process.env;
+const { PORTAL_API_URL, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 
 const headers = {
-  portalApi: {
+  portal: {
     'Content-Type': 'application/json',
     Accepts: 'application/json',
   },
-  centralApi: {
+  central: {
     'Content-Type': 'application/json',
     Accepts: 'application/json',
-    'x-api-key': CENTRAL_API_KEY,
+    'x-api-key': DTFS_CENTRAL_API_KEY,
   }
 };
 
@@ -21,12 +19,12 @@ const createApplication = async (data, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/application`,
+    url: `${PORTAL_API_URL}/v1/gef/application`,
     data,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -35,12 +33,12 @@ const updateApplication = async (id, data, token) => {
   const response = await axios({
     method: 'put',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/application/${id}`,
+    url: `${PORTAL_API_URL}/v1/gef/application/${id}`,
     data,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -49,11 +47,11 @@ const listDeals = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/application`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${PORTAL_API_URL}/v1/gef/application`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
   return response.data.items;
 };
 
@@ -61,11 +59,11 @@ const deleteDeal = async (dealId, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/application/${dealId}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${PORTAL_API_URL}/v1/gef/application/${dealId}`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -74,12 +72,12 @@ const createFacilities = async (data, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/facilities`,
+    url: `${PORTAL_API_URL}/v1/gef/facilities`,
     data,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -88,11 +86,11 @@ const listFacilities = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      ...headers.centralApi,
-      Authorization: token || '',
+      ...headers.central,
+      Authorization: token,
     },
-    url: `${centralApi}/v1/portal/gef/facilities`
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities`
+  }).catch((err) => { console.error('Error calling API %s', err); });
   if (!response) return [];
   return response.data;
 };
@@ -101,11 +99,11 @@ const deleteFacilities = async (facility, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/facilities/${facility._id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${PORTAL_API_URL}/v1/gef/facilities/${facility._id}`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response;
 };
@@ -114,12 +112,12 @@ const updateFacilities = async (facility, data, token) => {
   const response = await axios({
     method: 'put',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/facilities/${facility._id}`,
+    url: `${PORTAL_API_URL}/v1/gef/facilities/${facility._id}`,
     data,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response;
 };
@@ -128,12 +126,12 @@ const createEligibilityCriteria = async (data, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/eligibility-criteria`,
+    url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria`,
     data,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -142,11 +140,11 @@ const deleteEligibilityCriteria = async (mandatoryCriteria, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/eligibility-criteria/${mandatoryCriteria._id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria/${mandatoryCriteria._id}`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -155,11 +153,11 @@ const listEligibilityCriteria = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/eligibility-criteria`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data.items;
 };
@@ -168,11 +166,11 @@ const latestEligibilityCriteria = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/eligibility-criteria/latest`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria/latest`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
   return response.data;
 };
 
@@ -182,12 +180,12 @@ const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/mandatory-criteria-versioned`,
+    url: `${PORTAL_API_URL}/v1/gef/mandatory-criteria-versioned`,
     data: mandatoryCriteria,
-  }).catch((err) => { console.error(`err: ${err}`); });
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -196,11 +194,11 @@ const deleteMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/mandatory-criteria-versioned/${mandatoryCriteria._id}`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${PORTAL_API_URL}/v1/gef/mandatory-criteria-versioned/${mandatoryCriteria._id}`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data;
 };
@@ -209,11 +207,11 @@ const listMandatoryCriteriaVersioned = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      ...headers.portalApi,
-      Authorization: token || '',
+      ...headers.portal,
+      Authorization: token,
     },
-    url: `${portalApi}/v1/gef/mandatory-criteria-versioned`,
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${PORTAL_API_URL}/v1/gef/mandatory-criteria-versioned`,
+  }).catch((err) => { console.error('Error calling API %s', err); });
 
   return response.data.items;
 };
@@ -222,11 +220,11 @@ const getDurableFunctions = async (token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.centralApi,
-      Authorization: token || '',
+      ...headers.central,
+      Authorization: token,
     },
-    url: `${centralApi}/v1/portal/durable-functions`
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/durable-functions`
+  }).catch((err) => { console.error('Error calling API %s', err); });
   return response;
 };
 
@@ -234,11 +232,11 @@ const deleteCronJobs = async (token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      ...headers.centralApi,
-      Authorization: token || '',
+      ...headers.central,
+      Authorization: token,
     },
-    url: `${centralApi}/v1/portal/cron-jobs`
-  }).catch((err) => { console.error(`err: ${err}`); });
+    url: `${DTFS_CENTRAL_API_URL}/v1/portal/cron-jobs`
+  }).catch((err) => { console.error('Error calling API %s', err); });
   return response;
 };
 

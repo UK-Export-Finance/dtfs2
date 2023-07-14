@@ -38,9 +38,6 @@ env:
   APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
   APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
   APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
-  MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
-  MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
-  MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
   APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
   APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
   APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
@@ -52,19 +49,19 @@ env:
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
   TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
   PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
-  CENTRAL_API_KEY: ${{ secrets.CENTRAL_API_KEY }}
+  DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  DEAL_API_URL: http://localhost:5001
-  DTFS_CENTRAL_API: http://localhost:5005
-  TFM_API: http://localhost:5004
+  PORTAL_API_URL: http://localhost:5001
+  DTFS_CENTRAL_API_URL: http://localhost:5005
+  TFM_API_URL: http://localhost:5004
 
 jobs:
   # 1. Setup test infrastructure
   setup:
     name: Infrastructure setup 🔧
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ env.environment }}
       timezone: ${{ env.timezone }}
@@ -81,7 +78,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -121,7 +118,7 @@ jobs:
       - name: TFM
         run: docker-compose exec -T trade-finance-manager-api npm run api-test
 
-      - name: Cental
+      - name: Central
         run: docker-compose exec -T dtfs-central-api npm run api-test
 
       - name: External

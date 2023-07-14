@@ -25,7 +25,7 @@ headers: {
 ```
 
 ## Why
-Some external Mulesoft APIs can take a long time complete, for example ACBS has over 10 API calls. Some endpoints can fail and need retrying.
+Some external APIM APIs can take a long time complete, for example ACBS has over 10 API calls. Some endpoints can fail and need retrying.
 
 By running these as background tasks, we take the load off of deal submission calls. Also allows us to retry and endpoints that fail (service could be down or having performance issues for example).
 
@@ -43,7 +43,7 @@ Number Generator Function is now run in root `docker-compose.yml`.
 | Number Generator | Generates UKEF IDs required for other APIs | Also uses an ACBS function to 'double check' the IDs |
 
 ## Moving forwards
-On submission to UKEF/TFM, there are _alot_ of calls to external Mulesoft APIs. This eats up submission time and therefore causes some e2e tests to take a long time.
+On submission to UKEF/TFM, there are _alot_ of calls to external APIM APIs. This eats up submission time and therefore causes some e2e tests to take a long time.
 
 It can also cause problems - for example if an API call fails and we don't get the required data, submission can fail. Some API calls rely on data from other APIs.
 

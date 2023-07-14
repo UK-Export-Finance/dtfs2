@@ -2,17 +2,17 @@ name: PR - End-To-End tests
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
-    - 'gef-ui/**'
-    - 'portal/**'
-    - 'portal-api/**'
-    - 'trade-finance-manager-ui/**'
-    - 'trade-finance-manager-api/**'
-    - 'external-api/**'
-    - 'dtfs-central-api/**'
-    - 'e2e-tests/**'
-    - 'utils/mock-data-loader/**'
+      - 'gef-ui/**'
+      - 'portal/**'
+      - 'portal-api/**'
+      - 'trade-finance-manager-ui/**'
+      - 'trade-finance-manager-api/**'
+      - 'external-api/**'
+      - 'dtfs-central-api/**'
+      - 'e2e-tests/**'
+      - 'utils/mock-data-loader/**'
 
 env:
   environment: dev
@@ -25,31 +25,28 @@ env:
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-  ORDNANCE_SURVEY_API_URL: "https://api.os.co.uk"
+  ORDNANCE_SURVEY_API_URL: 'https://api.os.co.uk'
   ORDNANCE_SURVEY_API_KEY: ${{ secrets.ORDNANCE_SURVEY_API_KEY }}
   APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
   APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
   APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
-  MULESOFT_API_PARTY_DB_KEY: ${{ secrets.MULESOFT_API_PARTY_DB_KEY }}
-  MULESOFT_API_PARTY_DB_SECRET: ${{ secrets.MULESOFT_API_PARTY_DB_SECRET }}
-  MULESOFT_API_PARTY_DB_URL: ${{ secrets.MULESOFT_API_PARTY_DB_URL }}
   APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
   APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
   APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-  COMPANIES_HOUSE_API_URL: "https://api.companieshouse.gov.uk"
+  COMPANIES_HOUSE_API_URL: 'https://api.companieshouse.gov.uk'
   COMPANIES_HOUSE_API_KEY: ${{ secrets.COMPANIES_HOUSE_API_KEY }}
   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
   ESTORE_URL: ${{ secrets.ESTORE_URL }}
   TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
   PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
-  CENTRAL_API_KEY: ${{ secrets.CENTRAL_API_KEY }}
+  DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
-  DEAL_API_URL: http://localhost:5001
-  DTFS_CENTRAL_API: http://localhost:5005
-  TFM_API: http://localhost:5004
+  PORTAL_API_URL: http://localhost:5001
+  DTFS_CENTRAL_API_URL: http://localhost:5005
+  TFM_API_URL: http://localhost:5004
 
 jobs:
   set-environment:
@@ -58,13 +55,13 @@ jobs:
     outputs:
       environment: ${{ env.environment }}
     steps:
-    - name: Initialise Environment
-      run: echo Setting environment to ${{ env.environment }}
+      - name: Initialise Environment
+        run: echo Setting environment to ${{ env.environment }}
 
   # Run GEF-UI End-To-End tests
   # these tests are part of e2e-tests/gef-ui
   gef-tests:
-    name: "Run - GEF-UI End-To-End tests"
+    name: 'Run - GEF-UI End-To-End tests'
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -76,7 +73,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [ 1, 2, 3, 4 ]
+        containers: [1, 2, 3, 4]
 
     # Cancel Previous runs
     concurrency:
@@ -84,43 +81,43 @@ jobs:
       cancel-in-progress: true
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Start Docker Compose
-      run: docker-compose -f docker-compose.gha.yml up --build -d
-    - name: Sleep for 30 seconds
-      run: sleep 30s
+      - uses: actions/checkout@v3
+      - name: Start Docker Compose
+        run: docker-compose -f docker-compose.gha.yml up --build -d
+      - name: Sleep for 30 seconds
+        run: sleep 30s
 
-    - name: Install mock data dependencies
-      working-directory: utils/mock-data-loader
-      run: npm ci
-    - name: Load mock data
-      working-directory: utils/mock-data-loader
-      run: node ./re-insert-mocks.js
+      - name: Install mock data dependencies
+        working-directory: utils/mock-data-loader
+        run: npm ci
+      - name: Load mock data
+        working-directory: utils/mock-data-loader
+        run: node ./re-insert-mocks.js
 
-    - name: Wake up Azure Function
-      run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: Run GEF-UI E2E tests
-      uses: cypress-io/github-action@v4
-      with:
-        record: true
-        parallel: true
-        browser: chrome
-        group: 'GEF UI'
-        project: ./e2e-tests/gef
-        config: video=false
-      env:
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TZ: Europe/London
-    - name: Save Cypress screenshots
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@main
-      with:
-        name: screenshots
-        path: './cypress/screenshots'
+      - name: Wake up Azure Function
+        run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      - name: Run GEF-UI E2E tests
+        uses: cypress-io/github-action@v4
+        with:
+          record: true
+          parallel: true
+          browser: chrome
+          group: 'GEF UI'
+          project: ./e2e-tests/gef
+          config: video=false
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TZ: Europe/London
+      - name: Save Cypress screenshots
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@main
+        with:
+          name: screenshots
+          path: './cypress/screenshots'
 
   portal-tests:
-    name: "Run - Portal End-To-End tests"
+    name: 'Run - Portal End-To-End tests'
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -132,7 +129,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [ 1, 2, 3, 4 ]
+        containers: [1, 2, 3, 4]
 
     # Cancel Previous runs
     concurrency:
@@ -140,43 +137,43 @@ jobs:
       cancel-in-progress: true
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Start Docker Compose
-      run: docker-compose -f docker-compose.gha.yml up --build -d
-    - name: Sleep for 30 seconds
-      run: sleep 30s
+      - uses: actions/checkout@v3
+      - name: Start Docker Compose
+        run: docker-compose -f docker-compose.gha.yml up --build -d
+      - name: Sleep for 30 seconds
+        run: sleep 30s
 
-    - name: Install mock data dependencies
-      working-directory: utils/mock-data-loader
-      run: npm ci
-    - name: Load mock data
-      working-directory: utils/mock-data-loader
-      run: node ./re-insert-mocks.js
+      - name: Install mock data dependencies
+        working-directory: utils/mock-data-loader
+        run: npm ci
+      - name: Load mock data
+        working-directory: utils/mock-data-loader
+        run: node ./re-insert-mocks.js
 
-    - name: Wake up Azure Function
-      run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: Run E2E tests
-      uses: cypress-io/github-action@v4
-      with:
-        record: true
-        parallel: true
-        browser: chrome
-        group: 'Portal UI'
-        project: ./e2e-tests/portal
-        config: video=false
-      env:
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TZ: Europe/London
-    - name: Save Cypress screenshots
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@main
-      with:
-        name: screenshots
-        path: './cypress/screenshots'
+      - name: Wake up Azure Function
+        run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      - name: Run E2E tests
+        uses: cypress-io/github-action@v4
+        with:
+          record: true
+          parallel: true
+          browser: chrome
+          group: 'Portal UI'
+          project: ./e2e-tests/portal
+          config: video=false
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TZ: Europe/London
+      - name: Save Cypress screenshots
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@main
+        with:
+          name: screenshots
+          path: './cypress/screenshots'
 
   tfm-tests:
-    name: "Run - Trade Finance Manager End-To-End tests"
+    name: 'Run - Trade Finance Manager End-To-End tests'
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -188,7 +185,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [ 1, 2, 3 ]
+        containers: [1, 2, 3]
 
     # Cancel Previous runs
     concurrency:
@@ -196,44 +193,43 @@ jobs:
       cancel-in-progress: true
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Start Docker Compose
-      run: docker-compose -f docker-compose.gha.yml up --build -d
-    - name: Sleep for 30 seconds
-      run: sleep 30s
+      - uses: actions/checkout@v3
+      - name: Start Docker Compose
+        run: docker-compose -f docker-compose.gha.yml up --build -d
+      - name: Sleep for 30 seconds
+        run: sleep 30s
 
-    - name: Install mock data dependencies
-      working-directory: utils/mock-data-loader
-      run: npm ci
-    - name: Load mock data
-      working-directory: utils/mock-data-loader
-      run: node ./re-insert-mocks.js
+      - name: Install mock data dependencies
+        working-directory: utils/mock-data-loader
+        run: npm ci
+      - name: Load mock data
+        working-directory: utils/mock-data-loader
+        run: node ./re-insert-mocks.js
 
-    - name: Wake up Azure Function
-      run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: Run E2E tests
-      uses: cypress-io/github-action@v4
-      with:
-        record: true
-        parallel: true
-        browser: chrome
-        group: 'TFM UI'
-        project: ./e2e-tests/trade-finance-manager
-        config: video=false
-      env:
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TZ: Europe/London
-    - name: Save Cypress screenshots
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@main
-      with:
-        name: screenshots
-        path: './cypress/screenshots'
-
+      - name: Wake up Azure Function
+        run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      - name: Run E2E tests
+        uses: cypress-io/github-action@v4
+        with:
+          record: true
+          parallel: true
+          browser: chrome
+          group: 'TFM UI'
+          project: ./e2e-tests/trade-finance-manager
+          config: video=false
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TZ: Europe/London
+      - name: Save Cypress screenshots
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@main
+        with:
+          name: screenshots
+          path: './cypress/screenshots'
 
   tfm-submit-tests:
-    name: "Run - Submit to TFM End-To-End tests"
+    name: 'Run - Submit to TFM End-To-End tests'
     needs: set-environment
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
@@ -245,7 +241,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [ 1, 2, 3 ]
+        containers: [1, 2, 3]
 
     # Cancel Previous runs
     concurrency:
@@ -253,39 +249,39 @@ jobs:
       cancel-in-progress: true
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Start Docker Compose
-      run: |
-        source secrets/set_jwt_keypair.sh
-        docker-compose -f docker-compose.gha.yml up --build -d
-    - name: Sleep for 30 seconds
-      run: sleep 30s
+      - uses: actions/checkout@v3
+      - name: Start Docker Compose
+        run: |
+          source secrets/set_jwt_keypair.sh
+          docker-compose -f docker-compose.gha.yml up --build -d
+      - name: Sleep for 30 seconds
+        run: sleep 30s
 
-    - name: Install mock data dependencies
-      working-directory: utils/mock-data-loader
-      run: npm ci
-    - name: Load mock data
-      working-directory: utils/mock-data-loader
-      run: node ./re-insert-mocks.js
+      - name: Install mock data dependencies
+        working-directory: utils/mock-data-loader
+        run: npm ci
+      - name: Load mock data
+        working-directory: utils/mock-data-loader
+        run: node ./re-insert-mocks.js
 
-    - name: Wake up Azure Function
-      run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
-    - name: Run E2E tests
-      uses: cypress-io/github-action@v4
-      with:
-        record: true
-        parallel: true
-        browser: chrome
-        group: 'TFM Submit'
-        project: ./e2e-tests/submit-to-trade-finance-manager
-        config: video=false
-      env:
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TZ: Europe/London
-    - name: Save Cypress screenshots
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@main
-      with:
-        name: screenshots
-        path: './cypress/screenshots'
+      - name: Wake up Azure Function
+        run: curl "http://localhost:7072/api/orchestrators/numbergenerator" -d '{ "entityType":"facility", "entityId":"12211" }'
+      - name: Run E2E tests
+        uses: cypress-io/github-action@v4
+        with:
+          record: true
+          parallel: true
+          browser: chrome
+          group: 'TFM Submit'
+          project: ./e2e-tests/submit-to-trade-finance-manager
+          config: video=false
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TZ: Europe/London
+      - name: Save Cypress screenshots
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@main
+        with:
+          name: screenshots
+          path: './cypress/screenshots'

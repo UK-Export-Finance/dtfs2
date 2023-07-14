@@ -60,7 +60,7 @@ const ukefDecisionRejected = (amendment) => {
 const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.coverEndDate === decisionType || ukefDecision?.value === decisionType;
 
 const hasAmendmentInProgressDealStage = (amendments) => {
-  if (amendments.length) {
+  if (Array.isArray(amendments) && amendments.length) {
     const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => (status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS) && submittedByPim);
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
     if (hasAmendmentInProgress) {

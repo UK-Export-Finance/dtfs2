@@ -6,11 +6,11 @@ const { MOCK_DEAL } = require('../mocks/mock-data');
 
 dotenv.config();
 
-const { DTFS_CENTRAL_API, CENTRAL_API_KEY } = process.env;
+const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 
 const headers = {
   'Content-Type': 'application/json',
-  'x-api-key': CENTRAL_API_KEY,
+  'x-api-key': DTFS_CENTRAL_API_KEY,
 };
 
 const mockUser = {
@@ -51,7 +51,7 @@ describe('/v1/portal/facilities', () => {
   beforeEach(async () => {
     const { data: deal } = await axios({
       method: 'post',
-      url: `${DTFS_CENTRAL_API}/v1/portal/deals`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals`,
       data: { deal: newDeal, user: mockUser },
       headers,
     });
@@ -61,7 +61,7 @@ describe('/v1/portal/facilities', () => {
 
     const { data: facility } = await axios({
       method: 'post',
-      url: `${DTFS_CENTRAL_API}/v1/portal/facilities`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities`,
       data: { facility: newBondFacility, user: mockUser },
       headers,
     });
@@ -78,7 +78,7 @@ describe('/v1/portal/facilities', () => {
 
       const { status } = await axios({
         method: 'delete',
-        url: `${DTFS_CENTRAL_API}/v1/portal/facilities/${bondFacilityId}`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${bondFacilityId}`,
         data: removeBody,
         headers,
       });

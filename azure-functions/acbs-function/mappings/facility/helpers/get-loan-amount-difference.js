@@ -5,7 +5,7 @@ const { FACILITY } = CONSTANTS;
 /**
  * Calculates amended facility loan amount difference between amended amount
  * and previous amount.
- * Due to Mulesoft API restriction a new amended UKEF exposure amount cannot
+ * Due to APIM API restriction a new amended UKEF exposure amount cannot
  * be send in a payload, instead difference between the amount is expected.
  *
  * `GEF` facilities type will return 10% of the difference.
