@@ -227,5 +227,63 @@ describe('/currency-exchange-rate', () => {
         expect(body.exchangeRate).toEqual(inverted);
       });
     });
+
+    describe('Invalid inputs', () => {
+      it('returns a 400 if you provide an invalid currency source', async () => {
+        const { status, body } = await get('/currency-exchange-rate/abc/GBP');
+  
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid currency provided', status: 400 });
+      });
+  
+      it('returns a 400 if you provide an invalid currency target', async () => {
+        const { status, body } = await get('/currency-exchange-rate/EUR/123');
+  
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid currency provided', status: 400 });
+      });
+  
+      it('returns a 400 if you provide a malicious currency source', async () => {
+        const { status, body } = await get('/currency-exchange-rate/localhost/GBP');
+  
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid currency provided', status: 400 });
+      });
+  
+      it('returns a 400 if you provide a malicious currency target', async () => {
+        const { status, body } = await get('/currency-exchange-rate/EUR/127.0.0.1');
+  
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid currency provided', status: 400 });
+      });
+
+      it('returns a 400 if you provide an empty object as the currency source', async () => {
+        const { status, body } = await get('/currency-exchange-rate/{}/GBP');
+  
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid currency provided', status: 400 });
+      });
+
+      it('returns a 400 if you provide an empty object as the currency target', async () => {
+        const { status, body } = await get('/currency-exchange-rate/EUR/{}');
+  
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid currency provided', status: 400 });
+      });
+  
+      it('returns a 400 if you provide an empty object as the currency source', async () => {
+        const { status, body } = await get('/currency-exchange-rate/[]/GBP');
+  
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid currency provided', status: 400 });
+      });
+
+      it('returns a 400 if you provide an empty array as the currency target', async () => {
+        const { status, body } = await get('/currency-exchange-rate/EUR/[]');
+  
+        expect(status).toEqual(400);
+        expect(body).toMatchObject({ data: 'Invalid currency provided', status: 400 });
+      });
+    });
   });
 });

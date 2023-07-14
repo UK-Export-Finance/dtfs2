@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as dotenv from 'dotenv';
 import * as utils from '../../utils';
 import { INDUSTRY_SECTORS } from '../../external-api';
-import { isValidIndustryId } from 'src/validations';
+import { isValidIndustryId } from '../../utils/inputValidations';
 
 dotenv.config();
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;

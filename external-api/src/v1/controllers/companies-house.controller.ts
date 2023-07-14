@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
-import { isValidCompaniesHouseNumber } from 'src/validations';
+import { isValidCompaniesHouseNumber } from '../../utils/inputValidations';
 
 dotenv.config();
 const username: any = process.env.COMPANIES_HOUSE_API_KEY;

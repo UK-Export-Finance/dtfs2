@@ -8,7 +8,7 @@ import { Request, Response } from 'express';
 import { objectIsEmpty } from '../../utils';
 import { PremiumSchedule } from '../../interfaces';
 import { UKEF_ID } from '../../constants';
-import { validUkefId } from 'src/utils/validUkefId';
+import { validUkefId } from '../../utils/validUkefId';
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
