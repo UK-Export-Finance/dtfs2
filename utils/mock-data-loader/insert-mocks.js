@@ -30,7 +30,6 @@ const insertMocks = async (mockDataLoaderToken) => {
 
   console.info('inserting BSS deals');
   const insertedDeals = [];
-
   for (const deal of MOCKS.DEALS) {
     const { _id } = await api.createDeal(deal, makerToken);
     const { deal: createdDeal } = await api.getDeal(_id, makerToken);
