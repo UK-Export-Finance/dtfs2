@@ -3,37 +3,60 @@ const api = () => {
   return url;
 };
 
-module.exports.submitDeal = (dealId, dealType) => cy.request({
+const apiKey = Cypress.config('apiKey');
+
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': apiKey,
+};
+
+module.exports.submitDeal = (dealId, dealType, token) => cy.request({
   url: `${api()}/v1/deals/submit`,
   method: 'PUT',
   body: { dealId, dealType },
   headers: {
-    'Content-Type': 'application/json',
+    ...headers,
+    Authorization: token,
   },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body;
 });
 
-module.exports.submitDealAfterUkefIds = (dealId, dealType, checker) => cy.request({
+module.exports.submitDealAfterUkefIds = (dealId, dealType, checker, token) => cy.request({
   url: `${api()}/v1/deals/submitDealAfterUkefIds`,
   method: 'PUT',
   body: { dealId, dealType, checker },
   headers: {
-    'Content-Type': 'application/json',
+    ...headers,
+    Authorization: token,
   },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body;
 });
 
-module.exports.getUser = (username) => cy.request({
+module.exports.getUser = (username, token) => cy.request({
   url: `${api()}/v1/users/${username}`,
   method: 'GET',
   headers: {
-    'Content-Type': 'application/json',
+    ...headers,
+    Authorization: token,
   },
 }).then((resp) => {
   expect(resp.status).to.equal(200);
   return resp.body.user;
+});
+
+module.exports.login = (username, password) => cy.request({
+  url: `${api()}/v1/login`,
+  method: 'POST',
+  body: { username, password },
+  headers: {
+    ...headers,
+  },
+}).then((resp) => {
+  expect(resp.status).to.equal(200);
+
+  return resp.body.token;
 });

@@ -13,7 +13,7 @@ context('Users can create and submit comments', () => {
   const userFullName = `${BUSINESS_SUPPORT_USER_1.firstName} ${BUSINESS_SUPPORT_USER_1.lastName}`;
 
   before(() => {
-    cy.getUser(BUSINESS_SUPPORT_USER_1.username);
+    cy.getUser(BUSINESS_SUPPORT_USER_1.username, BUSINESS_SUPPORT_USER_1);
 
     cy.insertOneDeal(MOCK_DEAL_AIN, MOCK_MAKER_TFM).then((insertedDeal) => {
       dealId = insertedDeal._id;
@@ -24,7 +24,7 @@ context('Users can create and submit comments', () => {
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, BUSINESS_SUPPORT_USER_1);
       // adds a non-comment type
       const otherActivity = {
         tfm: {

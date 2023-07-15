@@ -15,10 +15,17 @@ const updateProbabilityOfDefaultMutation = require('./graphql/mutations/update-p
 const postUnderwriterManagersDecision = require('./graphql/mutations/update-underwriter-managers-decision');
 const updateLeadUnderwriterMutation = require('./graphql/mutations/update-lead-underwriter');
 const createActivityMutation = require('./graphql/mutations/create-activity');
+const { isValidMongoId, isValidPartyUrn } = require('./helpers/validateIds');
 
 require('dotenv').config();
 
-const tfmAPIurl = process.env.TRADE_FINANCE_MANAGER_API_URL;
+const { TFM_API_URL, TFM_API_KEY } = process.env;
+
+const generateHeaders = (token) => ({
+  Authorization: token,
+  'Content-Type': 'application/json',
+  'x-api-key': TFM_API_KEY,
+});
 
 const getDeal = async (id, tasksFilters, activityFilters) => {
   const queryParams = {
@@ -83,9 +90,13 @@ const getFacility = async (id) => {
 };
 
 const getTeamMembers = async (teamId) => {
-  const response = await apollo('GET', teamMembersQuery, { teamId });
-
-  return response.data.teamMembers;
+  try {
+    const response = await apollo('GET', teamMembersQuery, { teamId });
+    return response?.data?.teamMembers ? response?.data?.teamMembers : [];
+  } catch (err) {
+    console.error('Error getting team members %s', err);
+    return [];
+  }
 };
 
 const updateParty = async (id, partyUpdate) => {
@@ -179,20 +190,22 @@ const updateLeadUnderwriter = async (dealId, leadUnderwriterUpdate) => {
   return response;
 };
 
-const createActivity = (dealId, activityUpdate) => {
+const createActivity = async (dealId, activityUpdate) => {
   const updateVariable = {
     dealId,
     activityUpdate,
   };
 
-  return apollo('PUT', createActivityMutation, updateVariable);
+  const response = await apollo('PUT', createActivityMutation, updateVariable);
+
+  return response;
 };
 
 const login = async (username, password) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${tfmAPIurl}/v1/login`,
+      url: `${TFM_API_URL}/v1/login`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -215,42 +228,52 @@ const login = async (username, password) => {
   }
 };
 
-const updateUserPassword = async (id, update) => {
+const updateUserPassword = async (userId, update, token) => {
   try {
+    const isValidUserId = isValidMongoId(userId);
+
+    if (!isValidUserId) {
+      console.error('updateUserPassword: Invalid user id provided: %s', userId);
+      return { status: 400, data: 'Invalid user id' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${tfmAPIurl}/v1/users/${id}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      url: `${TFM_API_URL}/v1/users/${userId}`,
+      headers: generateHeaders(token),
       data: update,
     }).catch((err) => err.response);
 
     return response;
   } catch (error) {
-    console.error('Unable to update user details', { error });
+    console.error('Unable to update user details %s', error);
     return error;
   }
 };
 
-const createFeedback = async (formData) => {
+const createFeedback = async (formData, token) => {
   const response = await axios({
     method: 'post',
-    url: `${tfmAPIurl}/v1/feedback`,
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    url: `${TFM_API_URL}/v1/feedback`,
+    headers: generateHeaders(token),
     data: formData,
   });
   return response.data;
 };
 
-const getUser = async (userId) => {
+const getUser = async (userId, token) => {
   try {
+    const isValidUserId = isValidMongoId(userId);
+
+    if (!isValidUserId) {
+      console.error('getUser: Invalid user id provided: %s', userId);
+      return { status: 400, data: 'Invalid user id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/users/${userId}`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/users/${userId}`,
+      headers: generateHeaders(token),
     });
 
     return response.data.user;
@@ -260,209 +283,312 @@ const getUser = async (userId) => {
   }
 };
 
-const createFacilityAmendment = async (facilityId) => {
+const createFacilityAmendment = async (facilityId, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('createFacilityAmendment: Invalid facility id provided: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'post',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments`,
+      headers: generateHeaders(token),
       data: { facilityId },
     });
 
     return response.data;
   } catch (err) {
-    console.error('Unable to create new amendment %O', { response: err?.response?.data });
+    console.error('Unable to create new amendment %s', err);
     return err?.response?.data;
   }
 };
 
-const updateAmendment = async (facilityId, amendmentId, data) => {
+const updateAmendment = async (facilityId, amendmentId, data, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+    const isValidAmendmentId = isValidMongoId(amendmentId);
+
+    if (!isValidFacilityId) {
+      console.error('updateAmendment: Invalid facility id provided: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    if (!isValidAmendmentId) {
+      console.error('updateAmendment: Invalid amendment id provided: %s', amendmentId);
+      return { status: 400, data: 'Invalid amendment id' };
+    }
+
     const response = await axios({
       method: 'put',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
+      headers: generateHeaders(token),
       data,
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to create amendment request %O', { response: err?.response?.data });
+    console.error('Unable to create amendment request %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
-const getAmendmentInProgress = async (facilityId) => {
+const getAmendmentInProgress = async (facilityId, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('getAmendmentInProgress: Invalid facility id provided: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/in-progress`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/in-progress`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment in progress %O', { response: err?.response?.data });
+    console.error('Unable to get the amendment in progress %s', err);
     return { status: err?.response?.status || 500, data: err?.response?.data };
   }
 };
 
-const getAllAmendmentsInProgress = async () => {
+const getAllAmendmentsInProgress = async (token) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/amendments/in-progress`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/amendments/in-progress`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendments in progress %O', { response: err?.response?.data });
+    console.error('Unable to get the amendments in progress %s', err);
     return { status: err?.response?.status || 500, data: err?.response?.data };
   }
 };
 
-const getCompletedAmendment = async (facilityId) => {
+const getCompletedAmendment = async (facilityId, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('getCompletedAmendment: Invalid facility id provided: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the completed amendment %O', { response: err?.response?.data });
+    console.error('Unable to get the completed amendment %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
-const getLatestCompletedAmendmentValue = async (facilityId) => {
+const getLatestCompletedAmendmentValue = async (facilityId, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('getLatestCompletedAmendmentValue: Invalid facility id provided: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed/latest-value`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed/latest-value`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the latest completed value amendment %O', { response: err?.response?.data });
+    console.error('Unable to get the latest completed value amendment %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
-const getLatestCompletedAmendmentDate = async (facilityId) => {
+const getLatestCompletedAmendmentDate = async (facilityId, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('getLatestCompletedAmendmentDate: Invalid facility id provided: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the latest completed coverEndDate amendment %O', { response: err?.response?.data });
+    console.error('Unable to get the latest completed coverEndDate amendment %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
-const getAmendmentById = async (facilityId, amendmentId) => {
+const getAmendmentById = async (facilityId, amendmentId, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+    const isValidAmendmentId = isValidMongoId(amendmentId);
+
+    if (!isValidFacilityId) {
+      console.error('getAmendmentById: Invalid facility id provided: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    if (!isValidAmendmentId) {
+      console.error('getAmendmentById: Invalid amendment id provided: %s', amendmentId);
+      return { status: 400, data: 'Invalid amendment id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment by Id %O', { response: err?.response?.data });
+    console.error('Unable to get the amendment by Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
-const getAmendmentsByFacilityId = async (facilityId) => {
+const getAmendmentsByFacilityId = async (facilityId, token) => {
   try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('getAmendmentsByFacilityId: Invalid facility id provided: %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/facilities/${facilityId}/amendments`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment by Id %O', { response: err?.response?.data });
+    console.error('Unable to get the amendment by Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
-const getAmendmentsByDealId = async (dealId) => {
+const getAmendmentsByDealId = async (dealId, token) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('getAmendmentsByDealId: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/deals/${dealId}/amendments`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment by deal Id %O', { response: err?.response?.data });
+    console.error('Unable to get the amendment by deal Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
-const getAmendmentInProgressByDealId = async (dealId) => {
+const getAmendmentInProgressByDealId = async (dealId, token) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('getAmendmentInProgressByDealId: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/in-progress`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/in-progress`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the amendment in progress by deal Id %O', { response: err?.response?.data });
+    console.error('Unable to get the amendment in progress by deal Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
-const getCompletedAmendmentByDealId = async (dealId) => {
+const getCompletedAmendmentByDealId = async (dealId, token) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('getCompletedAmendmentByDealId: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/completed`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/completed`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the completed amendment by deal Id %O', { response: err?.response?.data });
+    console.error('Unable to get the completed amendment by deal Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
-const getLatestCompletedAmendmentByDealId = async (dealId) => {
+const getLatestCompletedAmendmentByDealId = async (dealId, token) => {
   try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('getLatestCompletedAmendmentByDealId: Invalid deal id provided: %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/deals/${dealId}/amendments/completed/latest`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/completed/latest`,
+      headers: generateHeaders(token),
     });
 
     return { status: 200, data: response.data };
   } catch (err) {
-    console.error('Unable to get the latest completed amendment by deal Id %O', { response: err?.response?.data });
+    console.error('Unable to get the latest completed amendment by deal Id %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };
 
-const getParty = async (partyUrn) => {
+const getParty = async (partyUrn, token) => {
   try {
+    const isValidUrn = isValidPartyUrn(partyUrn);
+
+    if (!isValidUrn) {
+      console.error('getParty: Invalid party urn provided: %s', partyUrn);
+      return { status: 400, data: 'Invalid party urn' };
+    }
+
     const response = await axios({
       method: 'get',
-      url: `${tfmAPIurl}/v1/party/urn/${partyUrn}`,
-      headers: { 'Content-Type': 'application/json' },
+      url: `${TFM_API_URL}/v1/party/urn/${partyUrn}`,
+      headers: generateHeaders(token),
     });
 
     return {
@@ -470,7 +596,7 @@ const getParty = async (partyUrn) => {
       data: response.data,
     };
   } catch (err) {
-    console.error('Unable to get party %O', { response: err?.response?.data });
+    console.error('Unable to get party %s', err);
     return { status: err?.response?.status, data: err?.response?.data };
   }
 };

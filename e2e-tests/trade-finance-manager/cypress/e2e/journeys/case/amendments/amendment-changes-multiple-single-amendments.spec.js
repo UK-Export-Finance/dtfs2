@@ -20,7 +20,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
         dealFacilities.push(...createdFacilities);
       });
 
-      cy.submitDeal(dealId, dealType);
+      cy.submitDeal(dealId, dealType, PIM_USER_1);
     });
   });
 

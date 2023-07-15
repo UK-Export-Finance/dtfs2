@@ -52,7 +52,7 @@ context('View dashboard facilities as a maker', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.listAllUsers().then((usersInDb) => {
+    cy.listAllUsers(ADMIN).then((usersInDb) => {
       const maker = usersInDb.find((user) => user.username === BANK1_MAKER1.username);
       BSS_DEAL.maker = maker;
     });

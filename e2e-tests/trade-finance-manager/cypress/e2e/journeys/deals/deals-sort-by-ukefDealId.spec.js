@@ -48,7 +48,7 @@ context('User can view and sort deals by ukefDealId', () => {
         });
       });
 
-      cy.submitManyDeals(insertedDeals).then((submittedDeals) => {
+      cy.submitManyDeals(insertedDeals, T1_USER_1).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
         ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER = ALL_SUBMITTED_DEALS.sort((a, b) => {

@@ -2,21 +2,7 @@ const portalApi = require('./api');
 const api = require('./gef/api');
 const MOCKS = require('./gef');
 
-const tokenFor = require('./temporary-token-handler');
-
-const insertMocks = async () => {
-  const token = await tokenFor({
-    username: 're-insert-mocks',
-    password: 'AbC!2345',
-    firstname: 'Mock',
-    surname: 'DataLoader',
-    roles: ['maker', 'editor', 'checker', 'data-admin'],
-    email: 're-insert-mocks-gef@ukexportfinance.gov.uk',
-  });
-
-  const allUsers = await portalApi.listUsers();
-  const makerUserId = allUsers.find((user) => user.username === 'BANK1_MAKER1')._id;
-
+const insertMocks = async (token) => {
   console.info('inserting GEF mandatory-criteria-versioned');
   for (const item of MOCKS.MANDATORY_CRITERIA_VERSIONED) {
     await api.createMandatoryCriteriaVersioned(item, token);
@@ -29,6 +15,8 @@ const insertMocks = async () => {
 
   console.info('inserting GEF deals');
 
+  const allUsers = await portalApi.listUsers(token);
+  const makerUserId = allUsers.find((user) => user.username === 'BANK1_MAKER1')._id;
   const latestEligibilityCriteria = await api.latestEligibilityCriteria(token);
 
   // eslint-disable-next-line no-unused-vars

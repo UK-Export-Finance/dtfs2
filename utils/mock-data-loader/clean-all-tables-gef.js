@@ -1,5 +1,4 @@
 const api = require('./gef/api');
-const tokenFor = require('./temporary-token-handler');
 
 const cleanEligibilityCriteria = async (token) => {
   console.info('cleaning GEF eligibility-criteria');
@@ -27,15 +26,7 @@ const deleteCronJobs = async (token) => {
   await api.deleteCronJobs(token);
 };
 
-const cleanAllTables = async () => {
-  const token = await tokenFor({
-    username: 'admin',
-    password: 'AbC!2345',
-    email: 'admin-1@ukexportfinance.gov.uk',
-    roles: ['maker', 'editor', 'checker'],
-    bank: { id: '*' },
-  });
-
+const cleanAllTables = async (token) => {
   await cleanEligibilityCriteria(token);
   await cleanMandatoryCriteriaVersioned(token);
   await cleanDurableFunctions(token);

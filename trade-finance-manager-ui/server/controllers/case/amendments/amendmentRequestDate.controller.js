@@ -7,8 +7,9 @@ const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const getAmendmentRequestDate = async (req, res) => {
   try {
     const { facilityId, amendmentId } = req.params;
+    const { userToken } = req.session;
 
-    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId);
+    const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
     if (status !== 200) {
       return res.redirect('/not-found');
     }
@@ -45,11 +46,11 @@ const getAmendmentRequestDate = async (req, res) => {
  */
 const postAmendmentRequestDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
+  const { user, userToken } = req.session;
   const facility = await api.getFacility(facilityId);
-  const { user } = req.session;
 
-  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId);
-  const { amendmentRequestDate, errorsObject, amendmentRequestDateErrors } = await amendmentRequestDateValidation(req.body, facility);
+  const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
+  const { amendmentRequestDate, errorsObject, amendmentRequestDateErrors } = amendmentRequestDateValidation(req.body, facility);
   const { dealId } = amendment;
 
   if (amendmentRequestDateErrors.length) {
@@ -77,7 +78,7 @@ const postAmendmentRequestDate = async (req, res) => {
       },
     };
 
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
       return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-approval`);
@@ -85,7 +86,7 @@ const postAmendmentRequestDate = async (req, res) => {
     console.error('Unable to update the amendment request date');
     return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-date`);
   } catch (err) {
-    console.error('There was a problem creating the amendment request date %O', { response: err?.response?.data });
+    console.error('There was a problem creating the amendment request date %s', err);
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   }
 };

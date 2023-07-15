@@ -90,7 +90,7 @@ const addToDatabase = async (v2Deal, v2Facilities) => {
 };
 
 const teardown = async () => {
-  await removeMigrationUser();
+  await removeMigrationUser(token);
   console.info(`Log file: ${logFile}`);
 };
 

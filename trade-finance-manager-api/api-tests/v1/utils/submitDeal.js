@@ -1,6 +1,11 @@
 const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { as } = require('../../api')(app);
+const testUserCache = require('../../api-test-users');
 
-const submitDeal = (deal) => api.put(deal).to('/v1/deals/submit');
+const submitDeal = async (deal) => {
+  const user = await testUserCache.initialise(app);
+
+  return as(user).put(deal).to('/v1/deals/submit');
+};
 
 module.exports = submitDeal;
